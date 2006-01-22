@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.9 2005/12/13 04:15:33 fang Exp $
+	$Id: substructure_alias_base.h,v 1.10 2006/01/22 06:53:02 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -46,9 +46,12 @@ protected:
 	 */
 	subinstance_manager			subinstances;
 public:
+	size_t					instance_index;
 virtual	~substructure_alias_base() { }
 
 protected:
+	substructure_alias_base() : instance_index(0) { }
+
 	/**
 		Visits children of the subinstance manager and 
 		restores parent-child back-link.  
@@ -96,6 +99,9 @@ public:
 	// just a forwarded call
 	subinstance_manager::value_type
 	lookup_port_instance(const port_type& i) const;
+
+	subinstance_manager::value_type
+	lookup_member_instance(const port_type& i) const;
 
 virtual	never_ptr<const physical_instance_collection>
 	get_container_base(void) const;
@@ -163,7 +169,10 @@ class substructure_alias_base<false> {
 	typedef	substructure_alias_base<false>		this_type;
 protected:
 	// has no sub-instances
+public:
+	size_t					instance_index;
 protected:
+	substructure_alias_base() : instance_index(0) { }
 	/**
 		No-op.
 	 */

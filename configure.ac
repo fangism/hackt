@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.24 2005/12/13 16:09:39 fang Exp $
+#	$Id: configure.ac,v 1.25 2006/01/22 06:52:45 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20051212, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060122, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -90,6 +90,8 @@ then
 fi
 AC_MSG_CHECKING([for *enough* sleep])
 AC_MSG_RESULT([maybe])
+AC_CHECK_PROG([INDENT], indent, indent)
+AC_CHECK_PROGS([M4], gm4 m4, m4)
 
 # comment out until time for release
 # this causes too many rebuilds during development
@@ -122,7 +124,7 @@ AC_ARG_ENABLE(god_mode,
 	[AC_MSG_RESULT([no (default)])]
 )
 
-dnl enlable or disable anal header tests in src/Make.hchk-tail.am
+dnl enable or disable anal header tests in src/Make.hchk-tail.am
 AC_MSG_CHECKING([whether header validation is desired])
 AC_ARG_ENABLE(header_validation,
 	dnl help text
@@ -142,20 +144,134 @@ AC_ARG_ENABLE(header_validation,
 	AC_MSG_RESULT([yes (default)])]
 )
 
+dnl whether or not to build universal binary
+AC_MSG_CHECKING([whether universal binaries are requested])
+AC_ARG_ENABLE(fat_binary,
+	AC_HELP_STRING([--enable-fat-binary],
+		[Compile programs for multiple architectures.]),
+	[AC_MSG_RESULT([yes, but...])
+	dnl AC_CHECK_PROG(lipo)
+	dnl check whether or not compiler support multiple -arch flags
+	AC_MSG_NOTICE([Support for this is forthcoming for Darwin.])
+	dnl if enabled, then disable dynamic dependence-tracking
+	],
+	[AC_MSG_RESULT([no])]
+)
+
+dnl enable or disable fun modules
+AC_MSG_CHECKING([how bored we are])
+AC_ARG_ENABLE(fun, 
+	AC_HELP_STRING([--enable-fun],
+		[Miscellanous fun modules. (default=disabled)]),
+	AM_CONDITIONAL(WANT_LIBMISCFUN, test "$enable_fun" = "yes"),
+	AM_CONDITIONAL(WANT_LIBMISCFUN, test ! "yes")
+)
+if test "$enable_fun" = "yes"
+then	AC_MSG_RESULT([quite])
+	AC_DEFINE(WANT_TO_HAVE_FUN, 1, [Conditional inclusion of fun modules.])
+else	AC_MSG_RESULT([not yet])
+	AC_DEFINE(WANT_TO_HAVE_FUN, 0, [Conditional inclusion of fun modules.])
+fi
+
 dnl define WORDS_BIGENDIAN if is big endian
 dnl not actually needed in this project yet
 AC_C_BIGENDIAN
 
 AC_PROG_CXX
-# need to set LANG to C++ to check for C++ headers
-# TODO: should use AC_SAVE_LANG and AC_RESTORE_LANG
+dnl we need these anal flags for checking for certain charateristics
+dnl TODO: what are the equivalent flags for other compilers?
+ANAL_FLAGS="-W -Wall -ansi -pedantic-errors -Werror"
+cat > conftest.c <<CEOF
+extern int main(int, char**);
+CEOF
+cp conftest.c conftest.cc
+if $CC $ANAL_FLAGS -c conftest.c
+then :
+else AC_MSG_ERROR([Your C compiler doesn't like flags: $ANAL_FLAGS])
+fi
+if $CXX $ANAL_FLAGS -c conftest.cc
+then :
+else AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS])
+fi
+
+dnl test what flags to set in AM_CFLAGS and AM_CXXFLAGS
+TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
+TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual -Wcast-align"
+TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wconversion -Werror"
+TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
+TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
+TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
+TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
+FANG_WARN_FLAGS=""
+FANG_WARN_CFLAGS=""
+FANG_WARN_CXXFLAGS=""
+FANG_DIALECT_FLAGS=""
+for f in $TRY_WARN_FLAGS
+do
+	AC_MSG_CHECKING([whether C and C++ compilers accept flag $f])
+	if ( $CC $f -c conftest.c && $CXX $f -c conftest.cc )
+	then
+		AC_MSG_RESULT([yes])
+		FANG_WARN_FLAGS="$FANG_WARN_FLAGS $f"
+	else
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C or C++ compiler doesn't like flag: $f])
+	fi
+done
+for f in $TRY_DIALECT_FLAGS
+do
+	AC_MSG_CHECKING([whether C and C++ compilers accept flag $f])
+	if ( $CC $f -c conftest.c && $CXX $f -c conftest.cc )
+	then
+		AC_MSG_RESULT([yes])
+		FANG_DIALECT_FLAGS="$FANG_DIALECT_FLAGS $f"
+	else
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C or C++ compiler doesn't like flag: $f])
+	fi
+done
+for f in $TRY_WARN_CFLAGS
+do
+	AC_MSG_CHECKING([whether C compiler accepts flag $f])
+	if $CC $f -c conftest.c
+	then
+		AC_MSG_RESULT([yes])
+		FANG_WARN_CFLAGS="$FANG_WARN_CFLAGS $f"
+	else
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C compiler doesn't like flag: $f])
+	fi
+done
+for f in $TRY_WARN_CXXFLAGS
+do
+	AC_MSG_CHECKING([whether C++ compiler accepts flag $f])
+	if $CXX $f -c conftest.cc
+	then
+		AC_MSG_RESULT([yes])
+		FANG_WARN_CXXFLAGS="$FANG_WARN_CXXFLAGS $f"
+	else
+		AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C++ compiler doesn't like flag: $f])
+	fi
+done
+dnl AC_MSG_NOTICE([general warning flags: $FANG_WARN_FLAGS])
+dnl AC_MSG_NOTICE([general C warning flags: $FANG_WARN_CFLAGS])
+dnl AC_MSG_NOTICE([general C++ warning flags: $FANG_WARN_CXXFLAGS])
+dnl AC_MSG_NOTICE([general C/C++ dialect flags: $FANG_DIALECT_FLAGS])
+AC_SUBST(FANG_WARN_FLAGS)
+AC_SUBST(FANG_WARN_CFLAGS)
+AC_SUBST(FANG_WARN_CXXFLAGS)
+AC_SUBST(FANG_DIALECT_FLAGS)
+
 CXX_VERSION=`$CXX --version | head -n 1`
 AC_SUBST(CXX_VERSION)
 
-# which set of pre-determined compiler flags to apply?
+dnl need to set LANG to C++ to check for C++ headers
+
+dnl which set of pre-determined compiler flags to apply?
 AM_CONDITIONAL(HAVE_GXX, test "$ac_cv_cxx_compiler_gnu" = "yes")
-# TODO: add other conditionals for other common compilers
-# XLC++, ICC, HPCC, etc...
+dnl TODO: add other conditionals for other common compilers
+dnl XLC++, ICC, HPCC, etc...
 
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
@@ -170,7 +286,9 @@ AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 # C++ wrappers to standard C headers
-AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath])
+AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath cctype])
+AC_CHECK_HEADERS([cerrno cfloat climits clocale csignal csetjmp cstdarg ctime])
+AC_CHECK_HEADERS([cwchar cwctype])
 # checking all possible locations of (some equivalent) header files
 # spanning versions gcc-2.95 to 4.x
 # I bet you didn't know some of these locations were ever used!
@@ -206,13 +324,29 @@ AC_C_INLINE
 AC_C_RESTRICT
 AC_TYPE_SIZE_T
 AC_C_VOLATILE
+AC_CHECK_TYPES([struct __sFILE])	dnl BSD, Darwin
+AC_CHECK_TYPES([struct _IO_FILE])	dnl linux
+AC_CHECK_TYPES([__FILE_TAG])		dnl Sun (C++)
+AC_CHECK_TYPES([struct __FILE_TAG])	dnl Sun (C)
+AC_CHECK_TYPES([__FILE])		dnl Sun
 AC_CHECK_TYPES([ptrdiff_t])
 AC_CHECK_FUNCS([sqrt])
 AC_CHECK_FUNCS([getopt])
-AC_CHECK_FUNCS([strsep strtok])	dnl strsep is missing on Solaris 2.9
-AC_CHECK_FUNCS([fgets])
-AC_CHECK_FUNCS([isspace])
+AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
+AC_CHECK_FUNCS([strdup])
+dnl <stdio.h>
+AC_CHECK_FUNCS([fgets fputs fputc fgetc fopen fclose fflush])
+AC_CHECK_FUNCS([ferror feof clearerr])
+AC_CHECK_FUNCS([fseek ftell rewind fgetpos fsetpos])
+AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
+AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
+dnl <ctype.h>
+AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
+AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
+AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
+
 AC_CHECK_FUNCS([system])
+AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
 
 # library functions
 AC_FUNC_ERROR_AT_LINE
@@ -347,17 +481,13 @@ else
 fi
 
 if test -n "$LATEX"
-then
-	AC_SUBST(HAVE_LATEX, "YES")
-else
-	AC_SUBST(HAVE_LATEX, "NO")
+then AC_SUBST(HAVE_LATEX, "YES")
+else AC_SUBST(HAVE_LATEX, "NO")
 fi
 
 if test -n "$PDFLATEX"
-then
-	AC_SUBST(HAVE_PDFLATEX, "YES")
-else
-	AC_SUBST(HAVE_PDFLATEX, "NO")
+then AC_SUBST(HAVE_PDFLATEX, "YES")
+else AC_SUBST(HAVE_PDFLATEX, "NO")
 fi
 
 # figure related stuff
@@ -393,7 +523,7 @@ else
 		AC_MSG_ERROR(Found neither ncurses or termcap))
 	AC_CHECK_LIB(readline, readline,
 		[LIBS="$LIBS -lreadline"],
-		[AC_MSG_ERROR(Couldn't find readline libraries.)])
+		[AC_MSG_ERROR(Couldn't find readline libraries.  Try passing extra LDFLAGS.)])
 fi
 
 dnl	Option to include BSD editline support in ngspice CLI
@@ -412,10 +542,43 @@ else
 		AC_MSG_ERROR(Found neither ncurses or termcap))
 	AC_CHECK_LIB(edit, readline,
 		[LIBS="$LIBS -ledit"],
-		[AC_MSG_ERROR(Couldn't find editline libraries.)],
+		[AC_MSG_ERROR(Couldn't find editline libraries.  Try passing extra LDFLAGS.)],
 		-lncurses )
 fi
-# end shameless copying from ngspice::configure.in
+
+dnl if test "$ac_cv_header_readline_readline_h" = "yes" || \
+dnl	test "$ac_cv_header_editline_readline_h" = "yes"
+if test "$with_readline" = "yes" || test "$with_editline" = "yes"
+then
+AC_MSG_CHECKING([if readline()'s prompt argument is const char*])
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+dnl need to have warnings enabled and turned to errors here
+SAVE_CXXFLAGS=$CXXFLAGS
+CXXFLAGS="$SAVE_CXXFLAGS $ANAL_FLAGS"
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM([
+#include <cstdio>
+#if defined(HAVE_GNUREADLINE)
+#include <readline/readline.h>
+#elif defined(HAVE_BSDEDITLINE)
+#include <editline/readline.h>
+#endif
+],[[[const char null[] = "foo"; readline(null) ]]]),
+dnl action on success
+[AC_MSG_RESULT([yes])
+AC_DEFINE(READLINE_PROMPT_CONST, 1,
+	[True if readline's argument is const char*])],
+dnl action on failure
+[AC_MSG_RESULT([no (you suck!)])
+AC_DEFINE(READLINE_PROMPT_CONST, 0,
+	[True if readline's argument is const char*])
+])
+dnl restore compile flags
+CXXFLAGS=$SAVE_CXXFLAGS
+AC_LANG_RESTORE
+fi
+
 
 dnl first, create a useful variable substitution script for use in config.status
 AC_CONFIG_FILES([config_subst.awk.sh:config/config_subst.awk],
@@ -466,6 +629,8 @@ AC_CONFIG_FILES([scripts/replace_if_changed.sh],
 	[chmod +x scripts/replace_if_changed.sh])
 AC_CONFIG_FILES([src/util/test/test-expect.sh],
 	[chmod +x src/util/test/test-expect.sh])
+AC_CONFIG_FILES([src/scripts/deps_to_dot.awk],
+	[chmod +x src/scripts/deps_to_dot.awk])
 AC_CONFIG_FILES([test/parse-test-expect.sh],
 	[chmod +x test/parse-test-expect.sh])
 AC_CONFIG_FILES([test/hackt-obj-diff.sh],
@@ -478,6 +643,8 @@ AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
 	[chmod +x test/hackt-alloc-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
 	[chmod +x test/hackt-cflat-expect.sh])
+AC_CONFIG_FILES([test/hackt-prsim-expr-alloc-expect.sh],
+	[chmod +x test/hackt-prsim-expr-alloc-expect.sh])
 AC_CONFIG_FILES([test/test-series.sh],
 	[chmod +x test/test-series.sh])
 
@@ -509,6 +676,27 @@ AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
 	scripts/replace_if_changed.sh $out~ $out
 	])
 
+AC_CONFIG_FILES([src/parser/instref-parse.yy:src/parser/instref-parse.yy.in],
+	[out=src/parser/instref-parse.yy
+	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
+	then
+		sed '/%pure.parser/d' $srcdir/$out.in > $out~
+	else
+		cp $srcdir/$out.in $out~
+	fi
+	scripts/replace_if_changed.sh $out~ $out
+	])
+
+AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy:src/util/lang/CX/cx-parse.yy.in],
+	[out=src/util/lang/CX/cx-parse.yy
+	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
+	then
+		sed '/%pure.parser/d' $srcdir/$out.in > $out~
+	else
+		cp $srcdir/$out.in $out~
+	fi
+	scripts/replace_if_changed.sh $out~ $out
+	])
 dnl initialize and reset header check dependencies
 dnl also depend on Makefile?
 dnl can't run make until depfiles has run! doh... work on this later...

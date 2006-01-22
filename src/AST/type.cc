@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.2 2005/12/13 04:15:14 fang Exp $
+	$Id: type.cc,v 1.3 2006/01/22 06:52:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -65,7 +65,6 @@ using entity::user_def_chan;
 #include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
-USING_STACKTRACE
 
 //=============================================================================
 // class type_id method definitions

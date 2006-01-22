@@ -1,0 +1,23 @@
+// "import-014-a.hac"
+// contributed by: Clint Kelly
+// reduced by: David Fang
+
+defproc ch1of2 (bool d[2]; bool t,f)
+{
+	d[0]=f;
+	d[1]=t;
+}
+
+defproc pbit (bool d[2]; bool t,f)
+{
+	d[0]=f;
+	d[1]=t;
+}
+
+defproc e1of2 (bool d[2]; bool t,f,e)
+{
+	d[0]=f;
+	d[1]=t;
+}
+
+

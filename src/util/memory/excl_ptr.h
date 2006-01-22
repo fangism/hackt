@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.8 2005/12/10 03:56:59 fang Exp $
+	$Id: excl_ptr.h,v 1.9 2006/01/22 06:53:43 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -27,19 +27,12 @@
 // lock pointers? non-transferrable exclusive pointers.  
 
 #ifndef	__UTIL_MEMORY_EXCL_PTR_H__
-/**
-	Pre-defining the DELETE_POLICY() macro declared the intent
-	to re-use this file as a template for other pointer types.  
-	This file will always undefine DELETE_POLICY when this file is done,
-	i.e. DELETE_POLICY only lives for the duration of this file.  
- */
-#ifndef	DELETE_POLICY
 #define	__UTIL_MEMORY_EXCL_PTR_H__
-#endif
 
 #include "util/macros.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/pointer_manipulator.h"
+#include "util/memory/deallocation_policy_fwd.h"
 #include "util/STL/construct_fwd.h"
 
 //=============================================================================
@@ -60,22 +53,12 @@
 	#define	EXCL_PTR_NEVER_NULL(x)
 #endif
 
-/**
-	Overrideable delete policy, 
-	so this file can serve as a template for 
-	excl_malloc_ptr, and excl_array_ptr.  
-	This is undefined at the end-of-file.  
- */
-#ifndef	DELETE_POLICY
-#define	DELETE_POLICY(x)			delete x
-#endif
-
 #ifndef	EXCL_PTR_TEMPLATE_SIGNATURE
-#define	EXCL_PTR_TEMPLATE_SIGNATURE		template <class T, class TP>
+#define	EXCL_PTR_TEMPLATE_SIGNATURE	template <class T, class Dealloc>
 #endif
 
 #ifndef	EXCL_PTR_TEMPLATE_CLASS
-#define	EXCL_PTR_TEMPLATE_CLASS			excl_ptr<T,TP>
+#define	EXCL_PTR_TEMPLATE_CLASS		excl_ptr<T,Dealloc>
 #endif
 
 //=============================================================================
@@ -84,19 +67,18 @@ namespace util {
 namespace memory {
 //=============================================================================
 // forward declarations (repeated)
-
 template <class> class never_ptr;
-template <class> class some_ptr;
+template <class, class> class some_ptr;
 
 //=============================================================================
 /**
 	Helper class for type-casting.  
 	Is private to the outside world, only usable by template friends.  
  */
-template <class S>
+template <class S, class Dealloc>
 class excl_ptr_ref {
 template <class, class> friend class excl_ptr;
-template <class> friend class some_ptr;
+template <class, class> friend class some_ptr;
 template <class> friend class never_ptr;
 private:
 	S*	ptr;
@@ -121,21 +103,23 @@ private:
 		This may be overridden to do some crazy things.  
  */
 // EXCL_PTR_TEMPLATE_SIGNATURE
-template <class T, class TP = T*>
+template <class T, class Dealloc>
 class excl_ptr {
 friend class pointer_manipulator;
 template <class, class> friend class excl_ptr;
-template <class> friend class sticky_ptr;
+template <class, class> friend class sticky_ptr;
 template <class> friend class never_ptr;
-template <class> friend class some_ptr;
-
+template <class, class> friend class some_ptr;
+	typedef	excl_ptr<T, Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
+	typedef	Dealloc			deallocation_policy;
 	typedef	T&			reference;
 	/**
 		The underlying pointer member type.  
 	 */
-	typedef	TP			pointer;
+	typedef	T*			pointer;
 	/**
 		This is always a native pointer type, 
 		regardless of what TP is.  
@@ -151,7 +135,7 @@ public:
 	static const bool		never_owns = false;
 	// really wish for template typedefs!!!
 	typedef	never_ptr<T>		nontransfer_cast_type;
-	typedef	excl_ptr<T>		transfer_cast_type;
+	typedef	this_type		transfer_cast_type;
 private:
 	pointer				ptr;
 
@@ -188,7 +172,7 @@ private:
 			INVARIANT(this->ptr != p);
 			// violation of exclusion!
 			// delete this->ptr;
-			DELETE_POLICY(this->ptr);
+			deallocation_policy()(this->ptr);
 		}
 		this->ptr = p;
 	}
@@ -218,20 +202,21 @@ public:
 	To make non-transferrable, declare as const excl_ptr<>.  
 	This is not redundant, need this.  
  */
-	excl_ptr(excl_ptr<T>& e) throw() : ptr(e.release()) { }
+	excl_ptr(this_type& e) throw() : ptr(e.release()) { }
 
 /**
 	For safe up-cast, pointer constructor.  
  */
 	template <class S>
-	excl_ptr(excl_ptr<S>& e) throw() : ptr(e.release()) { }
+	excl_ptr(excl_ptr<S, deallocation_policy>& e) throw() :
+		ptr(e.release()) { }
 
 /**
 	Transfer from some_ptr, changes ownership, while leaving
 	the argument's pointer intact.  
  */
 	explicit
-	excl_ptr(some_ptr<T>& s) throw();
+	excl_ptr(some_ptr<T, deallocation_policy>& s) throw();
 
 #if 0
 /**
@@ -254,7 +239,7 @@ public:
 private:
 	// intentionally inaccessible undefined copy-constructor
 	explicit
-	excl_ptr(const excl_ptr<T>& e);
+	excl_ptr(const this_type& e);
 
 public:
 /**
@@ -286,14 +271,14 @@ public:
 	Will not accept const pointer of p.  
 	Naked p MUST be an exclusive owner.  
 	Forbidding direct interaction with naked pointer.  
-	excl_ptr<T>&
+	this_type&
 	operator = (T* p) throw() {
 		reset(p);
 		return *this;
 	}
 **/
-	excl_ptr<T>&
-	operator = (excl_ptr<T>& e) throw() {
+	this_type&
+	operator = (this_type& e) throw() {
 		reset(e.release());
 		return *this;
 	}
@@ -302,24 +287,26 @@ public:
 		Acceptable transfer for safe-casts.  
 	 */
 	template <class S>
-	excl_ptr<T>&
-	operator = (excl_ptr<S>& e) throw() {
+	this_type&
+	operator = (excl_ptr<S, deallocation_policy>& e) throw() {
 		reset(e.release());
 		return *this;
 	}
 
 
 	// copied from auto_ptr_ref
-	excl_ptr(excl_ptr_ref<T> r) throw() : ptr(r.ptr) { }
+	excl_ptr(excl_ptr_ref<T, deallocation_policy> r) throw() :
+		ptr(r.ptr) { }
 
 #if 1
 	// not in book...
 	template <class S>
-	excl_ptr(excl_ptr_ref<S> r) throw() : ptr(r.ptr) { }
+	excl_ptr(excl_ptr_ref<S, deallocation_policy> r) throw() :
+		ptr(r.ptr) { }
 #endif
 
-	excl_ptr<T>&
-	operator = (excl_ptr_ref<T> r) throw() {
+	this_type&
+	operator = (excl_ptr_ref<T, deallocation_policy> r) throw() {
 		reset(r.ptr);
 		r.ptr = NULL;
 		return *this;
@@ -329,8 +316,8 @@ public:
 		Acquiring ownership from a some_ptr, destructive transfer.
 		Transfer is conditional on the ownership of the source.  
 	 */
-	excl_ptr<T>&
-	operator = (some_ptr<T>& r) throw() {
+	this_type&
+	operator = (some_ptr<T, deallocation_policy>& r) throw() {
 		if (r.owned())
 			this->ptr = r.release();
 		return *this;
@@ -340,7 +327,7 @@ public:
 	/**
 		Does nothing!  can't acquire ownership from a const source.  
 	 */
-	excl_ptr<T>&
+	this_type&
 	operator = (const some_ptr<T>& r) throw() { }
 #endif
 
@@ -355,14 +342,14 @@ public:
 
 	// destructive transfer to up-cast
 	template <class S>
-	operator excl_ptr<S> () throw() {
-		return excl_ptr<S>(this->release());
+	operator excl_ptr<S, deallocation_policy> () throw() {
+		return excl_ptr<S, deallocation_policy>(this->release());
 	}
 
 	// safe type-casting
 	template <class S>
-	operator excl_ptr_ref<S>() throw() {
-		return excl_ptr_ref<S>(this->release());
+	operator excl_ptr_ref<S, deallocation_policy>() throw() {
+		return excl_ptr_ref<S, deallocation_policy>(this->release());
 	}
 
 #if 0
@@ -384,7 +371,7 @@ public:
 		Ownership transferring dynamic cast.  
 	 */
 	template <class S>
-	excl_ptr<S>		// transfer_cast_type
+	excl_ptr<S, deallocation_policy>		// transfer_cast_type
 	is_a_xfer(void);
 
 	/** static cast */
@@ -394,7 +381,7 @@ public:
 
 	/** static cast with xfer */
 	template <class S>
-	excl_ptr<S>		// transfer_cast_type
+	excl_ptr<S, deallocation_policy>		// transfer_cast_type
 	as_a_xfer(void);
 
 	/**
@@ -438,15 +425,17 @@ public:
 	as a run-time error when you try to use a pointer copy
 	that don't expect to be NULL.  
  */
-template <class T>
+template <class T, class Dealloc>
 class sticky_ptr {
 friend class pointer_manipulator;
 template <class, class> friend class excl_ptr;
-template <class> friend class some_ptr;
+template <class, class> friend class some_ptr;
 template <class> friend class never_ptr;
-
+	typedef	sticky_ptr<T,Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
+	typedef	Dealloc			deallocation_policy;
 	typedef	T&			reference;
 	typedef	T*			pointer;
 	typedef	exclusive_owner_pointer_tag	pointer_category;
@@ -480,7 +469,7 @@ private:
 			INVARIANT(this->ptr != p);
 			// violation of exclusion!
 			// delete this->ptr;
-			DELETE_POLICY(this->ptr);
+			deallocation_policy()(this->ptr);
 		}
 		this->ptr = p;
 	}
@@ -500,18 +489,19 @@ public:
 		Copy constructor never transfers ownership.  
 	 */
 	template <class S>
-	sticky_ptr(const sticky_ptr<S>& p) : ptr(NULL) { }
+	sticky_ptr(const sticky_ptr<S, deallocation_policy>& p) : ptr(NULL) { }
 
+#if 0
 	/**
 		Will acquire ownership from non-const excl_ptr.  
 	 */
-#if 0
 	template <class S>
 	sticky_ptr(excl_ptr<S>& p) : ptr(p.release()) { }
 #endif
 
 	template <class S>
-	sticky_ptr(excl_ptr<S>& p) : ptr(p.release()) { INVARIANT(!p); }
+	sticky_ptr(excl_ptr<S, deallocation_policy>& p) :
+		ptr(p.release()) { INVARIANT(!p); }
 
 	~sticky_ptr() { this->reset(); }
 
@@ -526,13 +516,13 @@ public:
 	 */
 	template <class S>
 	sticky_ptr&
-	operator = (const sticky_ptr<S>& p) {
+	operator = (const sticky_ptr<S, deallocation_policy>& p) {
 		return *this;
 	}
 
 	template <class S>
 	sticky_ptr&
-	operator = (excl_ptr<S>& p) {
+	operator = (excl_ptr<S, deallocation_policy>& p) {
 		this->reset(p.release());
 		INVARIANT(!p);
 		return *this;
@@ -555,22 +545,12 @@ public:
 	// TODO: finish me...
 
 // friends for special cases
-template <class _T1, class _T2>
+template <class _T1, class _T2, class _DA >
 friend
 void
-std::_Construct(sticky_ptr<_T1>*, const sticky_ptr<_T2>& );
+std::_Construct(sticky_ptr<_T1, _DA>*, const sticky_ptr<_T2, _DA>& );
 
 };	// end class sticky_ptr
-
-//=============================================================================
-/**
-	No copy of this pointer shall exist anywhere.  
- */
-template <class T>
-class unique_ptr {
-friend class pointer_manipulator;
-	// TODO: finish me!!!
-};	// end class unique_ptr
 
 //=============================================================================
 /**
@@ -582,10 +562,11 @@ template <class T>
 class never_ptr {
 friend class pointer_manipulator;
 template <class, class> friend class excl_ptr;
-template <class> friend class some_ptr;
+template <class, class> friend class some_ptr;
 template <class> friend class never_ptr;
-
+	typedef	never_ptr<T>		this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
 	typedef	T&			reference;
 	typedef	T*			pointer;
@@ -653,18 +634,21 @@ public:
 	It is an error on the user's part to hold onto a never_ptr
 	that refers to expired memory!  
  */
-	never_ptr(const excl_ptr<T>& p) throw() : ptr(p.ptr) { }
+	template <class Dealloc>
+	never_ptr(const excl_ptr<T,Dealloc>& p) throw() : ptr(p.ptr) { }
 
-	template <class S>
-	never_ptr(const excl_ptr<S>& p) throw() : ptr(p.ptr) { }
+	template <class S, class Dealloc>
+	never_ptr(const excl_ptr<S,Dealloc>& p) throw() : ptr(p.ptr) { }
 
 	// defined below
-	never_ptr(const some_ptr<T>& p) throw();
+	template <class Dealloc>
+	never_ptr(const some_ptr<T, Dealloc>& p) throw();
 
-	template <class S>
-	never_ptr(const some_ptr<S>& p) throw();
+	template <class S, class Dealloc>
+	never_ptr(const some_ptr<S, Dealloc>& p) throw();
 
-	never_ptr(const never_ptr<T>& p) throw() : ptr(p.ptr) { }
+	// copy-ctor
+	never_ptr(const this_type& p) throw() : ptr(p.ptr) { }
 
 	template <class S>
 	never_ptr(const never_ptr<S>& p) throw() : ptr(p.ptr) { }
@@ -711,11 +695,13 @@ template <class S>
 	}
 #endif
 
-	never_ptr(excl_ptr_ref<T> r) throw() : ptr(r.ptr) { }
+	template <class Dealloc>
+	never_ptr(excl_ptr_ref<T,Dealloc> r) throw() : ptr(r.ptr) { }
 
 	// is this obsolete?
-	never_ptr<T>&
-	operator = (excl_ptr_ref<T> r) throw() {
+	template <class Dealloc>
+	this_type&
+	operator = (excl_ptr_ref<T, Dealloc> r) throw() {
 		this->ptr = r.ptr;
 		return *this;
 	}
@@ -724,7 +710,7 @@ template <class S>
 	// replicating for every pointer class
 	// somehow leverage traits
 	template <class S>
-	never_ptr<T>&
+	this_type&
 	operator = (const never_ptr<S>& p) {
 		ptr = p.ptr;
 		return *this;
@@ -790,15 +776,17 @@ WRONG! cannot create an excl_ptr from a never_ptr!!!
 	Simply uses an extra bool to keep track.  
 	Consider trick, use LSB of address and alignment?
  */
-template <class T>
+template <class T, class Dealloc>
 class some_ptr {
 friend class pointer_manipulator;
 template <class, class> friend class excl_ptr;
-template <class> friend class some_ptr;
+template <class, class> friend class some_ptr;
 template <class> friend class never_ptr;
-
+	typedef	some_ptr<T,Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef	T			element_type;
+	typedef	Dealloc			deallocation_policy;
 	typedef	T&			reference;
 	typedef	T*			pointer;
 	typedef	sometimes_owner_pointer_tag	pointer_category;
@@ -811,7 +799,8 @@ public:
 	static const bool		never_owns = false;
 	// really wish for template typedefs!!!
 	typedef	never_ptr<T>		nontransfer_cast_type;
-	typedef	excl_ptr<T>		transfer_cast_type;
+	typedef	excl_ptr<T,deallocation_policy>
+					transfer_cast_type;
 private:
 	pointer				ptr;
 	bool				own;
@@ -845,7 +834,7 @@ private:
 	reset(const bool b, T* p = NULL) {
 		if (this->own && this->ptr) {
 			// delete this->ptr;
-			DELETE_POLICY(this->ptr);
+			deallocation_policy()(this->ptr);
 		}
 		this->ptr = p;
 		this->own = b && p != NULL;
@@ -869,10 +858,11 @@ public:
 		TODO: own should come from pointer_traits
 	 */
 	some_ptr(const never_ptr<T>& p) : ptr(p.ptr), own(false) { }
-	some_ptr(const some_ptr<T>& p) : ptr(p.ptr), own(false) { }
+	some_ptr(const this_type& p) : ptr(p.ptr), own(false) { }
 
 	template <class S>
-	some_ptr(const some_ptr<S>& p) : ptr(p.ptr), own(false) { }
+	some_ptr(const some_ptr<S, deallocation_policy>& p) :
+		ptr(p.ptr), own(false) { }
 	// need some constructor where this owns the pointer...
 
 	/**
@@ -880,13 +870,15 @@ public:
 		Of course, we only own it if it's not NULL.  
 	 */
 	explicit
-	some_ptr(excl_ptr<T>& p) : ptr(p.release()), own(this->ptr != NULL) {
+	some_ptr(excl_ptr<T, deallocation_policy>& p) :
+		ptr(p.release()), own(this->ptr != NULL) {
 		INVARIANT(!p);		// just to make sure
 	}
 
 	template <class S>
 	explicit
-	some_ptr(excl_ptr<S>& p) : ptr(p.release()), own(this->ptr != NULL) {
+	some_ptr(excl_ptr<S, deallocation_policy>& p) :
+		ptr(p.release()), own(this->ptr != NULL) {
 		INVARIANT(!p);		// just to make sure
 	}
 
@@ -898,7 +890,7 @@ public:
 	~some_ptr(void) {
 		// same as reset(), but shorter
 		if (this->ptr && this->own) {
-			DELETE_POLICY(this->ptr);
+			deallocation_policy()(this->ptr);
 			// delete this->ptr;
 		}
 	}
@@ -927,30 +919,32 @@ public:
 	some_ptr(base_some_ptr_ref<T> r) throw() : ptr(r.ptr), own(r.own) { }
 #endif
 
-	some_ptr<T>&
+	this_type&
 	operator = (const never_ptr<T>& p) throw() {
 		this->reset(false, p.ptr);
 		return *this;
 	}
 
 	template <class S>
-	some_ptr<T>&
+	this_type&
 	operator = (const never_ptr<S>& p) throw() {
 		this->reset(false, p.ptr);
 		return *this;
 	}
 
-	some_ptr<T>&
-	operator = (const some_ptr<T>& p) throw() {
+	// copy-ctor
+	this_type&
+	operator = (const this_type& p) throw() {
 		this->reset(false, p.ptr);
 		return *this;
 	}
 
 	/**
+		Use assignment operator to transfer.  
 		Transfers ownership.  
 	 */
-	some_ptr<T>&
-	operator = (some_ptr<T>& p) throw() {
+	this_type&
+	operator = (this_type& p) throw() {
 		this->reset(p.own, p.release());
 		return *this;
 	}
@@ -969,8 +963,8 @@ public:
 	/**
 		Transfers ownership.
 	 */
-	some_ptr<T>&
-	operator = (excl_ptr<T>& p) throw() {
+	this_type&
+	operator = (excl_ptr<T, deallocation_policy>& p) throw() {
 		this->reset(p.ptr != NULL, p.release());
 		INVARIANT(!p);
 		return *this;
@@ -980,8 +974,8 @@ public:
 		Transfers ownership.
 	 */
 	template <class S>
-	some_ptr<T>&
-	operator = (excl_ptr<S>& p) throw() {
+	some_ptr<T, deallocation_policy>&
+	operator = (excl_ptr<S, deallocation_policy>& p) throw() {
 		this->reset(p.ptr != NULL, p.release());
 		INVARIANT(!p);
 		return *this;
@@ -1051,19 +1045,20 @@ public:
 //=============================================================================
 EXCL_PTR_TEMPLATE_SIGNATURE
 // inline
-EXCL_PTR_TEMPLATE_CLASS::excl_ptr(some_ptr<T>& s) throw() : ptr(s.ptr) {
+EXCL_PTR_TEMPLATE_CLASS::excl_ptr(some_ptr<T,Dealloc>& s) throw() : ptr(s.ptr) {
 	INVARIANT(s.own);		// else it didn't own it before!
 	s.own = false;
 }
 
 template <class T>
+template <class Dealloc>
 // inline
-never_ptr<T>::never_ptr(const some_ptr<T>& p) throw() : ptr(p.ptr) { }
+never_ptr<T>::never_ptr(const some_ptr<T,Dealloc>& p) throw() : ptr(p.ptr) { }
 
 template <class T>
-template <class S>
+template <class S, class Dealloc>
 // inline
-never_ptr<T>::never_ptr(const some_ptr<S>& p) throw() : ptr(p.ptr) { }
+never_ptr<T>::never_ptr(const some_ptr<S,Dealloc>& p) throw() : ptr(p.ptr) { }
 
 //-----------------------------------------------------------------------------
 EXCL_PTR_TEMPLATE_SIGNATURE
@@ -1078,12 +1073,12 @@ EXCL_PTR_TEMPLATE_CLASS::is_a(void) const {
 EXCL_PTR_TEMPLATE_SIGNATURE
 template <class S>
 inline
-excl_ptr<S>
+excl_ptr<S,Dealloc>
 EXCL_PTR_TEMPLATE_CLASS::is_a_xfer(void) {
 	S* s = dynamic_cast<S*>(this->ptr);
 	// momentary violation of exclusion
 	if (s) release();
-	return excl_ptr<S>(s);
+	return excl_ptr<S,Dealloc>(s);
 	// uses cross-type pointer constructor with dynamic cast
 }
 
@@ -1098,9 +1093,9 @@ EXCL_PTR_TEMPLATE_CLASS::as_a(void) const {
 EXCL_PTR_TEMPLATE_SIGNATURE
 template <class S>
 inline
-excl_ptr<S>
+excl_ptr<S, Dealloc>
 EXCL_PTR_TEMPLATE_CLASS::as_a_xfer(void) {
-	return excl_ptr<S>(static_cast<S*>(this->release()));
+	return excl_ptr<S, Dealloc>(static_cast<S*>(this->release()));
 }
 
 template <class T>
@@ -1112,11 +1107,11 @@ never_ptr<T>::is_a(void) const {
 	// uses cross-type pointer constructor with dynamic cast
 }
 
-template <class T>
+template <class T, class Dealloc>
 template <class S>
 inline
 never_ptr<S>
-some_ptr<T>::is_a(void) const {
+some_ptr<T,Dealloc>::is_a(void) const {
 	return never_ptr<S>(dynamic_cast<S*>(this->ptr));
 	// uses cross-type pointer constructor with dynamic cast
 }
@@ -1146,10 +1141,10 @@ operator == (const P1<T1>& p1, const P2<T2>& p2) {
 //=============================================================================
 // pointer traits specializations
 
-SPECIALIZE_ALL_POINTER_TRAITS(excl_ptr)
-SPECIALIZE_ALL_POINTER_TRAITS(some_ptr)
+SPECIALIZE_ALL_POINTER_TRAITS_2(excl_ptr)
+SPECIALIZE_ALL_POINTER_TRAITS_2(some_ptr)
 SPECIALIZE_ALL_POINTER_TRAITS(never_ptr)
-SPECIALIZE_ALL_POINTER_TRAITS(sticky_ptr)
+SPECIALIZE_ALL_POINTER_TRAITS_2(sticky_ptr)
 
 //=============================================================================
 }	// end namespace memory
@@ -1164,20 +1159,25 @@ using util::memory::sticky_ptr;
 	behavior when placement-constructing sticky pointers.  
 	This gives standard containers destructive copy semantics.  
  */
-template <class _T1, class _T2>
-inline
+// don't allow conversions by default, this also also causes
+// amibugity w.r.t. the next specialization...
+template <class _T1, class _T2, class Dealloc>
+// inline
 void
-_Construct(sticky_ptr<_T1>* __p, const sticky_ptr<_T2>& __value) {
-	typedef	sticky_ptr<_T1>		ptr1_type;
-	typedef	sticky_ptr<_T2>		ptr2_type;
+_Construct(sticky_ptr<_T1,Dealloc>* __p,
+		const sticky_ptr<_T2,Dealloc>& __value) {
+	typedef	sticky_ptr<_T1,Dealloc>		ptr1_type;
+	typedef	sticky_ptr<_T2,Dealloc>		ptr2_type;
 	new (static_cast<void*>(__p))
 		ptr1_type(const_cast<ptr2_type&>(__value).release());
 }
 
+#define	INSTANTIATE_STD_CONSTRUCT_STICKY_PTR_2(T1, T2, D)		\
+template void _Construct(sticky_ptr<T1,D>*, const sticky_ptr<T2,D>&);
+
 //=============================================================================
 }	// end namespace std
 
-#undef	DELETE_POLICY
 #undef	EXCL_PTR_TEMPLATE_SIGNATURE
 #undef	EXCL_PTR_TEMPLATE_CLASS
 

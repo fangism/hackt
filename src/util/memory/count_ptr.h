@@ -3,20 +3,11 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.8 2005/12/10 03:56:58 fang Exp $
+	$Id: count_ptr.h,v 1.9 2006/01/22 06:53:41 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_H__
-/**
-	Pre-define to indicate that this header is being used as a template
-	and not the original contents.  
-	DELETE_POLICY is otherwise not used in this file, 
-	but it WILL be undefined at the end, to prevent it from affecting
-	other files, which means you may have to redefine it.  
- */
-#ifndef	DELETE_POLICY
 #define	__UTIL_MEMORY_COUNT_PTR_H__
-#endif
 
 #include "util/macros.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -73,7 +64,11 @@
 	#define	COUNT_PTR_FAST_INVARIANT(x)
 #endif
 
-//=============================================================================
+#define	COUNT_PTR_TEMPLATE_SIGNATURE	template <class T, class Dealloc>
+#define	COUNT_PTR_CLASS			count_ptr<T,Dealloc>
+
+#define	RAW_COUNT_PTR_TEMPLATE_SIGNATURE	COUNT_PTR_TEMPLATE_SIGNATURE
+#define	RAW_COUNT_PTR_CLASS		raw_count_ptr<T,Dealloc>
 
 namespace util {
 namespace memory {
@@ -93,8 +88,9 @@ namespace memory {
 
 	Note this never deletes anything.  
  */
-template <class T>
+RAW_COUNT_PTR_TEMPLATE_SIGNATURE
 struct raw_count_ptr {
+	typedef	Dealloc			deallocation_policy;
 	typedef T			element_type;
 	typedef T&			reference;
 	typedef T*			pointer;
@@ -118,7 +114,7 @@ struct raw_count_ptr {
 	}
 
 	template <class S>
-	raw_count_ptr(const raw_count_ptr<S>& r) :
+	raw_count_ptr(const raw_count_ptr<S, deallocation_policy>& r) :
 			ptr(r.ptr), ref_count(r.ref_count) {
 	}
 
@@ -179,13 +175,15 @@ namespace memory {
 	Reference counted pointer, non-const flavor.  
 	How to use...
  */
-template <class T>
+COUNT_PTR_TEMPLATE_SIGNATURE
 class count_ptr {
 friend class pointer_manipulator;
-template <class> friend class count_ptr;
-
+template <class, class> friend class count_ptr;
+	typedef	count_ptr<T,Dealloc>	this_type;
 public:
+	typedef	this_type		type;
 	typedef T			element_type;
+	typedef	Dealloc			deallocation_policy;
 	typedef T&			reference;
 	typedef T*			pointer;
 	typedef	shared_owner_pointer_tag	pointer_category;
@@ -196,8 +194,8 @@ public:
 	static const bool		always_owns = false;
 	static const bool		sometimes_owns = true;
 	static const bool		never_owns = false;
-	typedef	count_ptr<T>		nontransfer_cast_type;
-	typedef	count_ptr<T>		transfer_cast_type;
+	typedef	this_type		nontransfer_cast_type;
+	typedef	this_type		transfer_cast_type;
 
 protected:
 	/**
@@ -219,17 +217,17 @@ public:
 	count_ptr(T* p = NULL);
 
 	explicit
-	count_ptr(const raw_count_ptr<T>& r);
+	count_ptr(const raw_count_ptr<T, deallocation_policy>& r);
 
 	template <class S>
 	explicit
-	count_ptr(const raw_count_ptr<S>& r);
+	count_ptr(const raw_count_ptr<S, deallocation_policy>& r);
 
 	/**
 		Copy constructor.  
 		No argument pointer should ever be NULL?
 	 */
-	count_ptr(const count_ptr<T>& c) :
+	count_ptr(const this_type& c) :
 			ptr(c.ptr), ref_count(c.ref_count) {
 		if (this->ref_count) {
 			(*this->ref_count)++;
@@ -245,7 +243,7 @@ public:
 		Still maintains reference count.  
 	 */
 	template <class S>
-	count_ptr(const count_ptr<S>& c) :
+	count_ptr(const count_ptr<S, deallocation_policy>& c) :
 			ptr(c.ptr), ref_count(c.ref_count) {
 		if (this->ref_count) {
 			(*this->ref_count)++;
@@ -327,8 +325,8 @@ public:
 		Assignment operator.  
 		Need to be careful if assigning to self!
 	 */
-	count_ptr<T>&
-	operator = (const count_ptr<T>& c) {
+	this_type&
+	operator = (const count_ptr<T, deallocation_policy>& c) {
 		reset(c.ptr, c.ref_count);
 		return *this;
 	}
@@ -341,32 +339,21 @@ public:
 		Static cast.  
 	 */
 	template <class S>
-	count_ptr<S>
+	count_ptr<S, deallocation_policy>
 	as_a(void) const {
-#if 0
-		count_ptr<S> ret;
-		ret.reset(static_cast<S*>(this->ptr), this->ref_count);
-		return ret;
-#else
-		return count_ptr<S>(static_cast<S*>(this->ptr), 
-			this->ref_count);
-#endif
+		return count_ptr<S, deallocation_policy>(
+			static_cast<S*>(this->ptr), this->ref_count);
 	}
 
 	/**
 		Dynamic cast.  
 	 */
 	template <class S>
-	count_ptr<S>
+	count_ptr<S, deallocation_policy>
 	is_a(void) const {
-#if 0
-		count_ptr<S> ret;
-		ret.reset(dynamic_cast<S*>(this->ptr), this->ref_count);
-		return ret;
-#else
-		return count_ptr<S>(dynamic_cast<S*>(this->ptr), 
+		return count_ptr<S, deallocation_policy>(
+			dynamic_cast<S*>(this->ptr), 
 			this->ref_count);
-#endif
 	}
 
 	/**
@@ -395,7 +382,7 @@ public:
 //=============================================================================
 // pointer_traits specializations
 
-SPECIALIZE_ALL_POINTER_TRAITS(count_ptr)
+SPECIALIZE_ALL_POINTER_TRAITS_2(count_ptr)
 
 //=============================================================================
 }	// end namespace memory
@@ -406,8 +393,6 @@ SPECIALIZE_ALL_POINTER_TRAITS(count_ptr)
 #endif
 
 //=============================================================================
-
-#undef	DELETE_POLICY
 
 #endif	//	__UTIL_MEMORY_COUNT_PTR_H__
 

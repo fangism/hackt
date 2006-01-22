@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.8 2005/12/13 04:15:33 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.9 2006/01/22 06:53:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -57,6 +57,12 @@ substructure_alias::allocate_state(footprint&) const {
 subinstance_manager::value_type
 substructure_alias::lookup_port_instance(const port_type& inst) const {
 	return subinstances.lookup_port_instance(inst);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+subinstance_manager::value_type
+substructure_alias::lookup_member_instance(const port_type& inst) const {
+	return subinstances.lookup_member_instance(inst);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

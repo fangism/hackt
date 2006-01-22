@@ -1,5 +1,196 @@
 # "src/util/ChangeLog"
 
+2006-01-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-73-merged-prsim-00-34:
+	  Branch merge.  Includes revisions from -prsim-00 and 
+		-PRS-03 branches.
+	  Includes the fixes and clean-ups listed below.
+	  Much improved configurability.  
+
+
+2006-01-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-PRS-03-02:
+	  Added some handy persistent template functions in
+		"util/persistent_functor.{h,tcc}", some in the style
+		of util/IO_utils {read,write}_sequence_* functions.  
+		These versions also propagate a persistent_object_manager
+		reference (bound to functor), and cell the canonical 
+		persistence member functions: collect_transient_info, 
+		write_object, load_object.  
+	  Minor enhancement to persistent_object_manager::read_pointer_list<>
+		by using smart call to util::reserve().  
+	  In util/IO_utils: read_sequence_realloc, for safety, inserted
+		a call to the dtor of the argument valarray prior to 
+		placement construction.  
+
+
+2005-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-25:
+	  Configuration and portability update only.  
+
+
+2005-01-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-24:
+	  MAJOR round of clean-up.
+	  pointer_classes: owning, sharing and deleting pointer classes
+		now use a deallocation_policy template argument, 
+		that defaults to delete_tag (single-alloc deletion).
+		Variants are defined in terms of the other 
+		deallocation_policy tags.
+		This results in FAR cleaner code in "excl_*_ptr.h"
+		eliminating the old preprocessor name hacks. 
+		The non-default variants however are defined as 
+		nested typedefs, such as excl_malloc_ptr<T>::type.  
+		These may be less convenient, however, the non-default
+		uses are discouraged in-place of more conventional methods, 
+		such as using a vector instead of managing new [].  
+		Essentially the non-default uses should be infrequent.  
+	  util/STL/{list,map}.{h,tcc} are now obsolete, just use <list>
+		and <map>.  For now they remain in the repository but
+		are not distributed.  Attempts to include them will #error.  
+	  util/STL/*_fwd.h: all define a default_* struct with a
+		::type member typedefed to the default arguments.
+		e.g. template <class T> std::default_vector {
+			typedef	vector<T, allocator<T> >	type;
+		};
+		Now you can use non-macro'd forward declarations when 
+		the definition for a type is not required.  
+	  util/stacktrace.h: deleted USING_STACKTRACE macro.
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-23:
+	  Added (not used yet) deallocation policy classes to util/memory.
+	  It's about time we do this because of the need to handle 
+		other types of deallocation-like activity using 
+		pointer-classes.  
+	  Forthcoming in next revision.  
+
+
+2005-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-19:
+	  Fixed stupid typo in util/readline_wrap.h" in conditionally
+		defining USE_READLINE... arg!
+	  Added small readline_toy program in util/progs for 
+		interpreter debugging, no need to compile rest of project.  
+	  Added more stdio function checks in "util/libc.h"
+
+
+2005-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-18:
+	  Re-instated some name substitutions in the lexyacc-prefix-generator.
+		Needed to disambiguate some flex symbols.  
+
+
+2005-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-17-merged-temp-04:
+	  Branch merge.
+
+
+2005-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-04:
+	  util/readline_wrap.cc: added gets() method with custom prompt arg.
+
+
+2005-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-03:
+	  Moved <ctype> -related configure stuff to "util/ctype.h"
+		and added a handful of conditional library checks.  
+	  util/readline_wrap.cc: corrected EOF behavior for
+		the case of the BSD editline library.  
+	  Added util/template.h (empty) for compiler characteristic
+		checks related to templates in C++.  
+
+
+2005-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16:
+	  Added util/Makefile.inc: this is where this subdirectory's
+		makefile management should go, it is included by
+		the parent Makefile.am.  
+	  Added util/lang subdirectory for language-specific
+		general tools.  
+
+
+2005-01-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-15:
+	  Added "util/NULL.h" finally.
+		No longer need "util/macros.h" for just the NULL definition.  
+	  Added "util/FILE_fwd.h" for configuration-dependent
+		forward declaration of FILE, so you won't have to include
+		<stdio.h> for name-uses of FILE* anymore.  Hallelujah!
+		(Falls back to including stdio if all else fails)
+	  Updated many util library header files to reflect these
+		updates in headers.  
+
+
+2005-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-14:
+	  util/memory/excl_malloc_ptr.h: const_cast away pointer type
+		as it is passed to free(void*).
+	  util/libc.h: configure-checked some more (unimplemented)
+		standard functions.
+	  util/readline_wrap.{h,cc}: folded whitespace-eating into gets(),
+		factored history-adding into seperate member function.
+	  Added util/tokenize.{h,cc}: default method of tokenizing
+		whitespace-delimiter std::string into list<string>.  
+		TODO (much later): more sophisticated command-line parsing.  
+
+
+2005-01-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-09:
+	  Untested draft of unique_ptr in "util/memory/unique_ptr.h".
+	  Added another class to util/static_trace.{h,cc} for debugging
+		in the middle of a module's static initialization/destruction.  
+
+
+2005-12-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-05:
+	  Added visitee class template.  
+	  Added offset_array array wrapper template. 
+
+
+2005-12-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-04:
+	  Added "using clear" to util::memory::index_pool for 
+		en masse deallocation.  
+
+
+2005-12-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-03:
+	  Created util/memory/index_pool.h which is an adapter to turn
+		any vector-like container into an index-based allocator.  
+	  Wrote util/memory/free_list adapter helper function to
+		use any of several standard containers as free-list, 
+		primarily use for memory-management.  
+
+
+2005-12-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-02:
+	  Added "util/string.h" to configure-wrap around string.h, strings.h
+		and cstring, and provide some handy inline functions
+		in the util::string namespace.  
+	  util/readline_wrap.cc: configure dependencies on some readline
+		prototypes' (const-incorrect) argument types.  
+	  util/readline.h: configure-wrapped inclusion of the proper
+		readline header.  
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

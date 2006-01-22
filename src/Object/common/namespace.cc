@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.8 2005/12/13 04:15:18 fang Exp $
+ 	$Id: namespace.cc,v 1.9 2006/01/22 06:52:57 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_NAMESPACE_CC__
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <numeric>
 #include <string>
+#include <list>
 
 #include "util/ptrs_functional.h"
 // #include "util/ptrs_functional_proposed.h"	// experimental, now works
@@ -37,7 +38,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/hash_specializations.h"		// substitute for the following
 #include "util/hash_qmap.tcc"
 #include "util/qmap.tcc"
-#include "util/STL/list.tcc"
 
 #include "AST/token_string.h"
 #include "AST/identifier.h"
@@ -82,7 +82,6 @@ USING_UTIL_COMPOSE
 using util::indent;
 using util::auto_indent;
 using util::disable_indent;
-USING_STACKTRACE
 using util::write_value;
 using util::read_value;
 using util::write_string;
@@ -110,6 +109,7 @@ scopespace::~scopespace() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Generic object lookup for unqualified identifier.  
+	This is overrideable.  
 	Doesn't care what sub-type the object actually is.  
 	This variation only searches the current namespace, and 
 	never searches the parents' scopes.  
@@ -120,7 +120,16 @@ scopespace::~scopespace() {
 	\return an object with the same name, if found.  
  */
 never_ptr<const object>
-scopespace::lookup_object_here(const string& id) const {
+scopespace::lookup_member(const string& id) const {
+	return static_cast<const used_id_map_type&>(used_id_map)[id];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Non-overrideable lookup_member.  
+ */
+never_ptr<const object>
+scopespace::__lookup_member(const string& id) const {
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
 }
 
@@ -130,7 +139,7 @@ scopespace::lookup_object_here(const string& id) const {
 	pointer.  
  */
 never_ptr<object>
-scopespace::lookup_object_here_with_modify(const string& id) const {
+scopespace::lookup_member_with_modify(const string& id) const {
 	return static_cast<const used_id_map_type&>(used_id_map)[id];
 }
 
@@ -146,7 +155,7 @@ scopespace::lookup_object_here_with_modify(const string& id) const {
  */
 never_ptr<const object>
 scopespace::lookup_object(const string& id) const {
-	never_ptr<const object> o = lookup_object_here(id);
+	never_ptr<const object> o = lookup_member(id);
 	never_ptr<const scopespace> parent(get_parent());
 	if (o) return o;
 	else if (parent) return parent->lookup_object(id);
@@ -310,7 +319,7 @@ scopespace::add_instance(
 	// inst_stmt won't have a name yet!
 	// const string id(inst_stmt->get_name());
 	const size_t dim = inst_stmt->dimensions();
-	const never_ptr<object> probe(lookup_object_here_with_modify(id));
+	const never_ptr<object> probe(lookup_member_with_modify(id));
 if (probe) {
 	const never_ptr<instance_collection_base>
 		probe_inst(probe.is_a<instance_collection_base>());
@@ -465,7 +474,7 @@ scopespace::add_instance(excl_ptr<instance_collection_base>& i) {
 good_bool
 scopespace::add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a) {
-	const never_ptr<const object> probe(lookup_object_here(a));
+	const never_ptr<const object> probe(lookup_member(a));
 	if (probe) {
 		cerr << "Identifier \"" << a << "\" already taken by a ";
 		probe->what(cerr) << " in ";
@@ -1002,7 +1011,7 @@ name_space::add_open_namespace(const string& n) {
 	cerr << "In name_space::add_open_namespace(\"" << n << "\"): " << endl;
 #endif
 	never_ptr<name_space> ret;
-	const never_ptr<const object> probe = lookup_object_here(n);
+	const never_ptr<const object> probe = lookup_member(n);
 	if (probe) {
 		const never_ptr<const name_space>
 			probe_ns(probe.is_a<const name_space>());
@@ -1023,9 +1032,9 @@ name_space::add_open_namespace(const string& n) {
 			cerr << n << " is already exists as subspace, "
 					"re-opening";
 #endif
-			ret = lookup_object_here_with_modify(n)
+			ret = lookup_member_with_modify(n)
 				.is_a<name_space>();
-//			INVARIANT(lookup_object_here(n).is_a<name_space>());
+//			INVARIANT(lookup_member(n).is_a<name_space>());
 			INVARIANT(probe_ns->key == ret->key);
 		}
 		INVARIANT(ret);
@@ -1189,7 +1198,7 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	// because this method is non-const.  
 	// else it will modify the used_id_map!
 	// perhaps wrap with a probe() const method...
-	probe = lookup_object_here(a);
+	probe = lookup_member(a);
 	if (probe) {
 		probe = never_ptr<const object>(&probe->self());
 		// resolve handles
@@ -1313,7 +1322,7 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
 			const never_ptr<const name_space>
-				next = ns->lookup_object_here(tid2).is_a<const name_space>();
+				next = ns->lookup_member(tid2).is_a<const name_space>();
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
 			ns = (next) ? next : ns->lookup_open_alias(tid2);
@@ -1361,10 +1370,10 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	never_ptr<const name_space> ns;
 	if (id.is_absolute()) {
 		ns = get_global_namespace()->
-			lookup_object_here(tid).is_a<const name_space>();
+			lookup_member(tid).is_a<const name_space>();
 	} else {
 		// force use of const probe
-		const never_ptr<const object> probe(lookup_object_here(tid));
+		const never_ptr<const object> probe(lookup_member(tid));
 		ns = probe.is_a<const name_space>();
 	}
 
@@ -1375,7 +1384,7 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		NEVER_NULL(*i);
 		const token_identifier& tid2(**i);
 		const never_ptr<const name_space>
-			next = ns->lookup_object_here(tid2).is_a<const name_space>();
+			next = ns->lookup_member(tid2).is_a<const name_space>();
 		// if not found in subspaces, check aliases list
 		ns = (next) ? next : ns->lookup_open_alias(tid2);
 	}
@@ -1486,7 +1495,7 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 	typedef	never_ptr<definition_base>	return_type;
 	NEVER_NULL(db);
 	const string k = db->get_name();
-	const never_ptr<const object> probe(lookup_object_here(k));
+	const never_ptr<const object> probe(lookup_member(k));
 	if (probe) {
 		const never_ptr<const definition_base>
 			probe_def(probe.is_a<const definition_base>());

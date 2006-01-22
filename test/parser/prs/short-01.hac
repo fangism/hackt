@@ -1,0 +1,13 @@
+// "short-01.hac"
+// testing OR-combination of production rules
+// should pass all phases before running prsim
+
+import "inv-02.hac";
+
+bool z;
+
+inv	A( , z),
+	B( , z);
+
+// two inverters driving same output (expected to short/interfere)
+

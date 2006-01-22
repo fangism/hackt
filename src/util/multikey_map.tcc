@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.7 2005/06/21 21:26:37 fang Exp $
+	$Id: multikey_map.tcc,v 1.8 2006/01/22 06:53:34 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -32,7 +32,7 @@ namespace util {
 using std::istream;
 using std::pair;
 using std::numeric_limits;
-USING_LIST
+using std::list;
 using util::write_value;
 using util::read_value;
 using util::write_map;
@@ -51,8 +51,9 @@ multikey_map<D,K,T,M>::~multikey_map() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
+template <class Alloc>
 T&
-multikey_map<D,K,T,M>::operator [] (const list<K>& k) {
+multikey_map<D,K,T,M>::operator [] (const list<K,Alloc>& k) {
 	INVARIANT(k.size() == D);
 	multikey<D,K> dk(k);
 	return map_type::operator[](dk);
@@ -60,8 +61,9 @@ multikey_map<D,K,T,M>::operator [] (const list<K>& k) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
+template <class Alloc>
 T
-multikey_map<D,K,T,M>::operator [] (const list<K>& k) const {
+multikey_map<D,K,T,M>::operator [] (const list<K,Alloc>& k) const {
 	INVARIANT(k.size() == D);
 	key_type dk(k);
 	return map_type::operator[](dk);

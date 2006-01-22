@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_pbool.cc"
 		in a previous life.  
- 	$Id: pbool_value_collection.cc,v 1.3 2005/12/13 04:15:31 fang Exp $
+ 	$Id: pbool_value_collection.cc,v 1.4 2006/01/22 06:53:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
@@ -105,7 +105,6 @@ namespace entity {
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
-USING_STACKTRACE
 using util::write_value;
 using util::read_value;
 using util::indent;

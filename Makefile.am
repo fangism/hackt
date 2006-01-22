@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.25 2005/12/13 04:14:36 fang Exp $
+#	$Id: Makefile.am,v 1.26 2006/01/22 06:52:45 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -41,6 +41,7 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	$(DOXYGEN_CONFIG).in \
 	config/macro-value.h.in \
 	config/config_subst.awk \
+	config/ylwrap \
 	DevelopmentPlan.dot
 
 
@@ -82,8 +83,23 @@ dist-hook:
 .NOTPARALLEL: pdf ps
 
 .NOTPARALLEL: commit
+if HAVE_CVS
 commit: cvsdiffs distcheck
 	$(CVS) commit
+else
+commit:
+	@$(ECHO) "Sorry, no 'cvs' found in path."
+endif
+
+help-local:
+	@$(ECHO) "Local make targets:" ; \
+	$(ECHO) "    distcheck: checks self-containedness of source tree (important)" ; \
+	$(ECHO) "    distcheck.log: logs distcheck" ; \
+	$(ECHO) "    install: installs built targets (recursive)" ; \
+	$(ECHO) "    distclean: removes configure targets and cleans (recursive)" ; \
+	$(ECHO) "    maintainer-clean: removes bootstrap targets and distcleans" ; \
+	$(ECHO) "    DevelopmentPlan.ps: visualize development plan using dot" ; \
+	$(ECHO) "    docs: builds Doxygen source documentation (SLOW)"
 
 include $(top_srcdir)/Make.global
 

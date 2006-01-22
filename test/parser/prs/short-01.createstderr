@@ -1,0 +1,97 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	241
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	15	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	35	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    inv = process-definition (defined) inv(
+        bool<> a
+        bool<> b
+      )
+      In definition "inv", we have: {
+      Instances:
+        a = bool<> a
+        b = bool<> b
+      prs:
+        a -> b-
+        ~a -> b+
+      footprint: {
+        bool^0 a (instantiated) = ::inv::a (1) 
+        bool^0 b (instantiated) = ::inv::b (2) 
+        bool instance pool:
+        1	::inv::a
+        2	::inv::b
+        resolved prs:
+        a -> b-
+        ~a -> b+
+      }
+      }
+
+  Instances:
+    A = process inv<>^0 A (instantiated) = ::A (1) (
+      bool^0 a (instantiated) = ::A.a (1) 
+      bool^0 b (instantiated) = ::z (2) 
+    )
+    B = process inv<>^0 B (instantiated) = ::B (2) (
+      bool^0 a (instantiated) = ::B.a (3) 
+      bool^0 b (instantiated) = ::A.b (2) 
+    )
+    z = bool^0 z (instantiated) = ::B.b (2) 
+}
+
+Created state:
+process instance pool:
+1	::A
+2	::B
+bool instance pool:
+1	::A.a
+2	::z
+3	::B.a
+

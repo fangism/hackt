@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.2 2005/12/13 04:15:09 fang Exp $
+	$Id: instance.cc,v 1.3 2006/01/22 06:52:54 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -86,7 +86,6 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::type_completion_connection_statement,
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using util::dereference;
 using std::transform;
 using std::mem_fun_ref;

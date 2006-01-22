@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.7 2005/12/13 04:15:30 fang Exp $
+	$Id: instance_collection_base.h,v 1.8 2006/01/22 06:53:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -11,7 +11,7 @@
 
 #include <string>
 #include <deque>
-#include "util/STL/list.h"
+// #include <list>
 
 #include "util/macros.h"
 #include "util/boolean_types.h"
@@ -39,7 +39,7 @@ class param_expr;
 class const_param_expr_list;
 class physical_instance_collection;
 class unroll_context;
-USING_LIST
+using std::list;
 using std::istream;
 using std::string;
 using util::bad_bool;
@@ -300,6 +300,9 @@ public:
 
 	size_t
 	is_port_formal(void) const;
+
+	size_t
+	is_member_instance(void) const;
 
 	bool
 	is_local_to_definition(void) const;

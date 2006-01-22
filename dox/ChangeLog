@@ -1,5 +1,12 @@
 "dox/ChageLog"
 
+2006-01-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-73-merged-prsim-00-34:
+	  Merge.  Includes -PRS-03 and -prsim-00 branches.
+	  A little documentation was added to the lang directory.  
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-71-merged-rename-00-06:

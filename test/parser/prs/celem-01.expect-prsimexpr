@@ -1,0 +1,22 @@
+Nodes: 
+node[1]: "c.a" up: -, dn: - fanout: 2, 5, 
+node[2]: "c.b" up: -, dn: - fanout: 3, 7, 
+node[3]: "c._o" up: 4, dn: 1 fanout: 
+Expressions: 
+expr[1]: type: and<2> (pull-dn: 3)
+	children: 2, 3, offset: -
+expr[2]: type: or<1> (parent: 1)
+	children: #1, offset: 0
+expr[3]: type: or<1> (parent: 1)
+	children: #2, offset: 1
+expr[4]: type: and<2> (pull-up: 3)
+	children: 6, 8, offset: -
+expr[5]: type: or<1> (parent: 6)
+	children: #1, offset: 0
+expr[6]: type: nand<1> (parent: 4)
+	children: 5, offset: 0
+expr[7]: type: or<1> (parent: 8)
+	children: #2, offset: 0
+expr[8]: type: nand<1> (parent: 4)
+	children: 7, offset: 1
+

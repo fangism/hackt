@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.8 2005/12/13 04:15:29 fang Exp $
+	$Id: instance_collection.h,v 1.9 2006/01/22 06:53:00 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -16,6 +16,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
+#include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"
@@ -24,7 +25,8 @@
 
 namespace HAC {
 namespace entity {
-USING_LIST
+using std::list;
+using std::default_list;
 using std::istream;
 using std::ostream;
 using std::set;
@@ -215,7 +217,8 @@ virtual instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& i) const = 0;
 
 virtual	bool
-	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
+	lookup_instance_collection(
+		typename default_list<instance_alias_base_ptr_type>::type& l, 
 		const const_range_list& r) const = 0;
 
 virtual	const_index_list
@@ -366,7 +369,8 @@ public:
 
 	// is this used? or can it be replaced by unroll_aliases?
 	bool
-	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
+	lookup_instance_collection(
+		typename default_list<instance_alias_base_ptr_type>::type& l, 
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;
@@ -471,7 +475,8 @@ public:
 	lookup_instance(const multikey_index_type& l) const;
 
 	bool
-	lookup_instance_collection(list<instance_alias_base_ptr_type>& l, 
+	lookup_instance_collection(
+		typename default_list<instance_alias_base_ptr_type>::type& l, 
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;

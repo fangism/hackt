@@ -2,13 +2,14 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.5 2005/12/13 04:15:35 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.6 2006/01/22 06:53:06 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
 #define	__OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
 
-#include "Object/ref/meta_instance_reference_base.h"
+// #include "Object/ref/meta_instance_reference_base.h"
+#include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/traits/class_traits_fwd.h"
 
 namespace HAC {
@@ -49,6 +50,8 @@ public:
 						alias_collection_type;
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
+	typedef	typename parent_type::instance_alias_base_ptr_type
+						instance_alias_base_ptr_type;
 	/// the containing type, whose member is referenced
 	typedef	meta_instance_reference_base		base_inst_type;
 	// should be kept consistent with
@@ -79,9 +82,21 @@ public:
 	bad_bool
 	unroll_references(const unroll_context&, alias_collection_type&) const;
 
-	UNROLL_GENERIC_SCALAR_REFERENCE_PROTO;
+	// overrides simple_meta...
+	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
+
+	// overrides simple_meta...
+	instance_alias_base_ptr_type
+	unroll_generic_scalar_reference(const unroll_context&) const;
 
 	using parent_type::connect_port;
+
+	// overrides simple_meta...
+	LOOKUP_FOOTPRINT_FRAME_PROTO;
+
+	// overrides simple_meta...
+	size_t
+	lookup_globally_allocated_index(const state_manager&) const;
 private:
 	count_ptr<instance_collection_generic_type>
 	resolve_parent_member_helper(const unroll_context&) const;

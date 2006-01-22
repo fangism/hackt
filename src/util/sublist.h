@@ -1,13 +1,14 @@
 /**
 	\file "util/sublist.h"
 	Wrapper class interface for list slices, that behave like lists.  
-	$Id: sublist.h,v 1.7 2005/05/10 04:51:30 fang Exp $
+	$Id: sublist.h,v 1.8 2006/01/22 06:53:37 fang Exp $
  */
 
 #ifndef	__UTIL_SUBLIST_H__
 #define	__UTIL_SUBLIST_H__
 
-#include "util/STL/list.h"
+#include <list>
+#include "util/STL/list_fwd.h"
 
 #define SUBLIST_TEMPLATE_SIGNATURE		template <class T>
 
@@ -29,7 +30,8 @@ SUBLIST_TEMPLATE_SIGNATURE
 class sublist {
 	typedef	sublist<T>				this_type;
 public:
-	typedef	LIST_NAMESPACE::list<T>			list_type;
+	typedef	typename std::default_list<T>::type	list_type;
+	typedef	typename list_type::size_type		size_type;
 	typedef	typename list_type::iterator		iterator;
 	typedef	typename list_type::const_iterator	const_iterator;
 #if SUBLIST_INCLUDE_REVERSE_ITERATORS
@@ -63,7 +65,7 @@ public:
 	bool
 	empty() const { return (head == tail); }
 
-	size_t
+	size_type
 	size(void) const { return distance(head, tail); }
 
 	const_iterator

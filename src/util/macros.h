@@ -6,19 +6,16 @@
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.9 2005/12/08 22:01:13 fang Exp $
+	$Id: macros.h,v 1.10 2006/01/22 06:53:34 fang Exp $
  */
 
 #ifndef	__UTIL_MACROS_H__
 #define	__UTIL_MACROS_H__
 
 #include "config.h"
+#include "util/NULL.h"
 
-#ifndef	NULL
-#define	NULL			0
-#endif
-
-#if defined(HAVE_CASSERT) && HAVE_CASSERT
+#if defined(__cplusplus) && defined(HAVE_CASSERT) && HAVE_CASSERT
 // C++ wrapped header
 #include <cassert>
 #else

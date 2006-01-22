@@ -1,12 +1,14 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.3 2005/12/13 04:15:09 fang Exp $
+	$Id: import_root.cc,v 1.4 2006/01/22 06:52:53 fang Exp $
  */
 
 #include <iostream>
 #include "AST/import_root.h"
 #include "AST/node_list.tcc"
 #include "AST/parse_context.h"
+#include "AST/token.h"
+#include "AST/token_string.h"
 #include "util/memory/count_ptr.tcc"
 #include "Object/common/namespace.h"
 #include "common/TODO.h"
@@ -23,9 +25,17 @@ namespace parser {
 //=============================================================================
 // class imported_root method definitions
 
-imported_root::imported_root(excl_ptr<root_body>& r, const string& n,
+imported_root::imported_root(excl_ptr<root_body>& r,
+		excl_ptr<const keyword_position>& k,
+		excl_ptr<const token_quoted_string>& f, 
+		const string& n,
 		const bool s) :
-		root(r), name(n), seen(s) { }
+		root(r),
+		import(k), rel_file(f),
+		name(n), seen(s) {
+	NEVER_NULL(import);
+	NEVER_NULL(rel_file);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 imported_root::~imported_root() { }
@@ -38,6 +48,18 @@ int
 imported_root::string_compare(const char*) const {
 	FINISH_ME_EXIT(Fang);
 	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+imported_root::leftmost(void) const {
+	return import->leftmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+imported_root::rightmost(void) const {
+	return rel_file->rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

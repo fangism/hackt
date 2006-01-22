@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.6 2005/12/13 04:15:42 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.7 2006/01/22 06:53:08 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -44,7 +44,6 @@
 namespace HAC {
 namespace entity {
 class const_param_expr_list;
-USING_STACKTRACE
 #include "util/using_ostream.h"
 using util::persistent_traits;
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE

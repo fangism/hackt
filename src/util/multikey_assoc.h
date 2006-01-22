@@ -2,7 +2,7 @@
 	\file "util/multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.3 2005/05/10 04:51:26 fang Exp $
+	$Id: multikey_assoc.h,v 1.4 2006/01/22 06:53:34 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
@@ -16,7 +16,8 @@
 
 namespace util {
 using std::pair;
-USING_LIST
+using std::list;
+using std::default_list;
 
 //=============================================================================
 /**
@@ -66,7 +67,7 @@ public:
 
 	// this only works for maps... set::key_type == set::value_type :S
 	typedef	typename key_type::value_type		index_type;
-	typedef	list<index_type>			key_list_type;
+	typedef	typename default_list<index_type>::type	key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 
@@ -271,7 +272,7 @@ public:
 	// only works for map's type:
 	typedef	key_type				index_type;
 //	typedef	typename key_type::simple_type		index_type;
-	typedef	list<index_type>			key_list_type;
+	typedef	typename default_list<index_type>::type	key_list_type;
 	typedef	pair<key_list_type, key_list_type >	key_list_pair_type;
 	typedef	pair<key_type, key_type>		key_pair_type;
 

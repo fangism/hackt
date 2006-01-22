@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_sparse_set_fwd.h"
 	Forward declarations for a fixed depth/dimension tree-set.
-	$Id: multidimensional_sparse_set_fwd.h,v 1.9 2005/05/22 06:24:20 fang Exp $
+	$Id: multidimensional_sparse_set_fwd.h,v 1.10 2006/01/22 06:53:34 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -22,7 +22,7 @@ template <class T, class R, template <class> class L>
 namespace util {
 //=============================================================================
 using std::pair;
-USING_LIST
+using std::list;
 
 //=============================================================================
 // forward declarations

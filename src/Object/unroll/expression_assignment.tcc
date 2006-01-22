@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.5 2005/12/13 04:15:42 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.6 2006/01/22 06:53:08 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -18,7 +18,6 @@
 
 #include "Object/unroll/expression_assignment.h"
 
-#include "util/STL/list.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"

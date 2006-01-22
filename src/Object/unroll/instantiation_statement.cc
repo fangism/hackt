@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.7 2005/12/13 04:15:42 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.8 2006/01/22 06:53:08 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -95,7 +95,6 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 //=============================================================================
 namespace HAC {
 namespace entity {
-USING_STACKTRACE
 using util::persistent_traits;
 #include "util/using_ostream.h"
 #if DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE

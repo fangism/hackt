@@ -1,0 +1,1620 @@
+/**
+	\file "util/lang/CX/cx-parse.yy.in"
+	Preprocess-less parser for C++ subset.  
+	TODO: (.m4.in)
+	Use m4 to conditionally turn on/off parts of grammar.  
+	Consider using bison-GLR generator.  
+	$Id: cx-parse.yy.in,v 1.2 2006/01/22 06:53:40 fang Exp $
+ */
+
+%{
+
+/* #include "util/lang/CX/AST/AST.h" */
+
+%}
+
+%union {
+	void*		_void;
+}
+
+/**
+	The first token number, to avoid guessing.
+ */
+%token	MINIMUM_BOGOSITY
+
+/* terminal token symbols and their types */
+
+%type	<_void>	'{' '}' '[' ']' '(' ')'
+%type	<_void>	'<' '>'
+%type	<_void>	',' '.' ';'
+%type	<_void>	':' '='
+%type	<_void>	'+' '-' '*' '/' '%'
+%type	<_void>	'~' '&' '|' '^'
+%type	<_void>	'!' '?'
+/* %type	<_void>	'#' 	*/	/* no pre-processing */
+
+/*
+        the following tokens are defined below because they consist of
+        2 or more characters
+*/
+
+%token	<_void>	ID
+%token	<_void>	FLOAT_LITERAL
+%token	<_void>	INT_LITERAL
+%token	<_void>	CHAR_LITERAL
+%token	<_void>	STRING_LITERAL		/* quoted string */
+%token	<_void>	BOOL_TRUE BOOL_FALSE
+
+%token	<_void>	SCOPE
+%token	<_void>	LE GE EQUAL NOTEQUAL
+%token	<_void>	RARROW
+%token	<_void>	LOGICAL_AND LOGICAL_OR
+%token	<_void>	INSERT EXTRACT
+%token	<_void>	INCREMENT DECREMENT
+%token	<_void>	PLUS_ASSIGN MINUS_ASSIGN MULT_ASSIGN DIV_ASSIGN MOD_ASSIGN
+%token	<_void>	XOR_ASSIGN AND_ASSIGN OR_ASSIGN
+%token	<_void>	INSERT_ASSIGN EXTRACT_ASSIGN
+%token	<_void>	ELLIPSES
+
+/* %token	<_void>	AND AND_EQ OR OR_EQ XOR XOR_EQ */
+/* %token	<_void>	BITAND BITOR */
+/* %token	<_void>	COMPL NOT NOT_EQ */
+%token	<_void>	ASM
+
+%token	<_void>	NAMESPACE USING
+%token	<_void>	TYPEDEF TYPEID
+%token	<_void>	TEMPLATE TYPENAME
+%token	<_void>	FRIEND
+%token	<_void>	ENUM UNION
+%token	<_void>	OPERATOR
+
+%token	<_void>	EXPLICIT
+%token	<_void>	VIRTUAL
+%token	<_void>	RETURN
+%token	<_void>	EXTERN STATIC AUTO EXPORT INLINE REGISTER
+%token	<_void>	IF ELSE BREAK CASE CONTINUE DEFAULT DO WHILE FOR GOTO SWITCH
+%token	<_void>	TRY CATCH THROW
+%token	<_void>	NEW DELETE THIS
+%token	<_void>	PRIVATE PROTECTED PUBLIC
+
+%token	<_void>	CONST VOLATILE MUTABLE
+%token	<_void>	CONST_CAST DYNAMIC_CAST REINTERPRET_CAST STATIC_CAST
+%token	<_void>	TYPEOF SIZEOF
+
+%token	<_void>	VOID
+%token	<_void>	CHAR
+%token	<_void>	WCHAR
+%token	<_void>	SHORT
+%token	<_void>	INT
+%token	<_void>	LONG
+%token	<_void>	BOOL
+%token	<_void>	FLOAT
+%token	<_void>	DOUBLE
+%token	<_void>	SIGNED UNSIGNED
+%token	<_void>	CLASS STRUCT
+
+/* temporary symbols for grammar debugging */
+%token	<_void>	DECLARATOR
+%token	<_void>	EXPRESSION
+%token	<_void>	NESTED_NAME_SPECIFIER
+%token	<_void>	UNQUALIFIED_ID
+%token	<_void>	STATEMENT
+%token	<_void>	TEMPLATE_DECLARATION
+%token	<_void>	TEMPLATE_ID
+// %token	<_void>	DECLARATOR_ID
+%token	<_void>	MEMBER_DECLARATION
+
+%token	MAXIMUM_BOGOSITY
+
+/* non-terminal symbols and their types */
+
+%start	translation_unit
+%pure_parser
+
+%%
+
+/* grammar goes here, taken straight from Stroustrup's TC++PL */
+/* rule-of-thumb no _opt (optional) non-terminals on the left-most symbol
+	of a production rule -- they should be manually expanded.
+*/
+
+/**************************** identifiers (ID) *******************************/
+
+/*** redundant
+typedef_name : ID ;
+***/
+
+namespace_name
+	: non_template_id
+/*** redundant
+	: original_namespace_name
+	| namespace_alias
+***/
+	;
+
+/*** redundant
+original_namespace_name : ID ;
+
+namespace_alias : ID ;
+***/
+
+type_name		/* same as class_name */
+	: non_template_id
+	| template_id
+	;
+
+non_template_id
+	: ID
+	;
+
+enum_name : ID ;
+
+// template_name : ID ;
+
+class_or_namespace_name
+	: type_name
+/*** redundant
+	| namespace_name
+***/
+	;
+
+/****************************** expressions **********************************/
+
+// temporary
+/***
+expression_opt
+	: expression
+	|
+	;
+***/
+
+expression
+	: EXPRESSION
+	;
+
+assignment_expression_opt
+	: assignment_expression
+	;
+
+assignment_expression
+	: EXPRESSION
+	;
+
+expression_list_opt
+	: expression_list
+	|
+	;
+
+expression_list
+	: expression_list ',' expression
+	| expression
+	;
+
+constant_expression_opt
+	: constant_expression
+	|
+	;
+
+constant_expression
+	: EXPRESSION
+	;
+
+/***
+nested_name_specifier_opt
+	: nested_name_specifier
+	|
+	;
+***/
+
+nested_name_specifier
+	: NESTED_NAME_SPECIFIER
+	;
+
+id_expression
+	: EXPRESSION
+	;
+
+unqualified_id
+	: UNQUALIFIED_ID
+	;
+
+/***
+primary_expression
+	: literal
+	| THIS
+	| SCOPE ID
+	| SCOPE operator_function_id
+	| SCOPE qualified_id
+	| '(' expression ')'
+	| id_expression
+	;
+
+literal
+	: INT_LITERAL
+	| CHAR_LITERAL
+	| FLOAT_LITERAL
+	| STRING_LITERAL
+	| boolean_literal
+	;
+
+boolean_literal
+	: BOOL_TRUE
+	| BOOL_FALSE
+	;
+
+id_expression
+	: unqualified_id
+	| qualified_id
+	;
+
+unqualified_id
+	: ID
+	| operator_function_id
+	| conversion_function_id
+	| '~' type_name
+	| template_id
+	;
+
+qualified_id
+	: nested_name_specifier TEMPLATE_opt unqualified_id
+	;
+
+nested_name_specifier_opt
+	: nested_name_specifier
+	|
+	;
+
+nested_name_specifier
+	: class_or_namespace_name SCOPE nested_name_specifier_opt	// ?
+	| class_or_namespace_name SCOPE TEMPLATE nested_name_specifier
+	;
+
+postfix_expression
+	: primary_expression
+	| postfix_expression '[' expression ']'
+	| postfix_expression expression_list_opt_in_parens
+	| simple_type_specifier expression_list_opt_in_parens
+	| TYPENAME SCOPE_opt nested_name_specifier ID
+		expression_list_opt_in_parens
+	| TYPENAME SCOPE_opt nested_name_specifier TEMPLATE_opt template_id
+		expression_list_opt_in_parens
+	| postfix_expression '.' TEMPLATE_opt SCOPE_opt id_expression
+	| postfix_expression RARROW TEMPLATE_opt SCOPE_opt id_expression
+	| postfix_expression '.' pseudo_dtor_name
+	| postfix_expression RARROW pseudo_dtor_name
+	| postfix_expression INCREMENT
+	| postfix_expression DECREMENT
+	| built_in_cast '<' type_id '>' '(' expression ')'
+	| TYPEID '(' expression ')'
+	| TYPEID '(' type_id ')'
+	;
+
+built_in_cast
+	: DYNAMIC_CAST
+	| CONST_CAST
+	| STATIC_CAST
+	| REINTERPRET_CAST
+	;
+
+pseudo_dtor_name
+// TODO: expand LHS
+	: SCOPE_opt nested_name_specifier_opt type_name SCOPE '~' type_name
+	| SCOPE_opt nested_name_specifier TEMPLATE template_id
+		SCOPE '~' type_name
+	| SCOPE_opt nested_name_specifier_opt '~' type_name
+	;
+
+expression_list_opt_in_parens
+	: '(' expression_list_opt ')'
+	;
+
+expression_list_opt
+	: expression_list
+	|
+	;
+
+expression_list
+	: expression_list ',' assignment_expression
+	| assignment_expression
+	;
+
+unary_expression
+	: postfix_expression
+	| INCREMENT cast_expression
+	| DECREMENT cast_expression
+	| unary_operator cast_expression
+	| SIZEOF unary_expression
+	| SIZEOF '(' type_id ')'
+	| new_expression
+	| delete_expression
+	;
+
+new_expression
+	: SCOPE_opt NEW new_placement_opt new_type_id new_initializer_opt
+	| SCOPE_opt NEW new_placement_opt '(' type_id ')' new_initializer_opt
+	;
+
+new_placement_opt
+	: new_placement
+	|
+	;
+
+new_placement
+	: '(' expression_list ')'		// list???
+//	: '(' expression ')'
+	;
+
+new_type_id
+	: type_specifier_list new_declarator_opt
+	;
+
+new_declarator_opt
+	: new_declarator
+	|
+	;
+
+new_declarator
+	: ptr_operator new_declarator_opt
+	| direct_new_declarator
+	;
+
+direct_new_declarator
+	: '[' expression ']'
+	| direct_new_declarator '[' constant_expression ']'
+	;
+
+new_initializer_opt
+	: new_initializer
+	|
+	;
+
+new_initializer
+	: expression_list_opt_in_parens
+	;
+
+delete_expression
+	: SCOPE_opt DELETE cast_expression
+	| SCOPE_opt DELETE '[' ']' cast_expression
+	;
+
+cast_expression
+	: unary_expression
+	| '(' type_id ')' cast_expression	// C-style-cast
+	;
+
+pointer_member_expression
+	: cast_expression
+	| pointer_member_expression '.' '*' cast_expression
+	| pointer_member_expression RARROW '*' cast_expression
+	;
+
+multiplicative_expression
+	: pointer_member_expression
+	| multiplicative_expression '*' pointer_member_expression
+	| multiplicative_expression '/' pointer_member_expression
+	| multiplicative_expression '%' pointer_member_expression
+	;
+
+additive_expression
+	: multiplicative_expression
+	| additive_expression '+' multiplicative_expression
+	| additive_expression '-' multiplicative_expression
+	;
+
+shift_expression
+	: additive_expression
+	| shift_expression INSERT additive_expression
+	| shift_expression EXTRACT additive_expression
+	;
+
+relational_expression
+	: shift_expression
+	| relational_expression '<' shift_expression
+	| relational_expression '>' shift_expression
+	| relational_expression LE shift_expression
+	| relational_expression GE shift_expression
+	;
+
+// is left (self) associative? rather not...
+equality_expression
+	: relational_expression
+	| equality_expression EQUAL relational_expression
+	| equality_expression NOTEQUAL relational_expression
+	;
+
+and_expression
+	: equality_expression
+	| and_expression '&' equality_expression
+	;
+
+exclusive_or_expression
+	: and_expression
+	| exclusive_or_expression '^' and_expression
+	;
+
+inclusive_or_expression
+	: exclusive_or_expression
+	| inclusive_or_expression '|' exclusive_or_expression
+	;
+
+logical_and_expression
+	: inclusive_or_expression
+	| logical_and_expression LOGICAL_AND inclusive_or_expression
+	;
+
+logical_or_expression
+	: logical_and_expression
+	| logical_or_expression LOGICAL_OR logical_and_expression
+	;
+
+conditional_expression
+	: logical_or_expression
+	| logical_or_expression '?' expression ':' assignment_expression
+		// ???
+	;
+
+assignment_expression_opt
+	: assignment_expression
+	|
+	;
+
+assignment_expression
+	: conditional_expression
+	| logical_or_expression assignment_operator assignment_expression
+	| throw_expression
+	;
+
+// this looks a whole lot like expression_list
+expression_opt
+	: expression
+	|
+	;
+
+expression
+	: expression ',' assignment_expression
+	| assignment_expression
+	;
+
+constant_expression_opt
+	: constant_expression
+	|
+	;
+
+constant_expression
+	: conditional_expression
+	;
+***/
+
+/* statements */
+
+statement
+	: STATEMENT
+/***
+	: labeled_statement
+	| expression_statement
+	| compound_statement
+	| selection_statement
+	| iteration_statement
+	| jump_statement
+	| declaration_statement
+	| try_block
+	| null_statement
+***/
+	;
+
+/***
+null_statement
+	: ';'
+	;
+
+labeled_statement
+	: ID ':' statement
+	| CASE constant_expression ':' statement
+	| DEFAULT ':' statement
+	;
+
+expression_statement
+	: expression ';'
+	;
+***/
+
+compound_statement
+	: '{' statement_list_opt '}'
+	;
+
+statement_list_opt
+	: statement_list
+	|
+	;
+
+statement_list
+	: statement_list statement
+	| statement
+	;
+
+/***
+selection_statement
+	: matched_if_statement
+	| SWITCH '(' condition ')' statement
+	;
+
+unmatched_if_statement
+	: IF '(' condition ')' statement
+	;
+
+matched_if_statement
+	: unmatched_if_statement ELSE statement
+	: unmatched_if_statement
+	;
+
+condition_opt
+	: condition
+	|
+	;
+
+condition
+	: expression
+	| type_specifier_list declarator '=' assignment_expression
+	;
+
+iteration_statement
+	: WHILE '(' condition ')' statement
+	| DO statement WHILE '(' condition ')' ';'
+	| FOR '(' for_init_statement condition_opt ';' expression_opt ')'
+		statement
+	;
+
+for_init_statement
+	: expression_statement
+//	| simple_declaration 		// no for-scope
+	;
+
+jump_statement
+	: BREAK ';'
+	| CONTINUE ';'
+	| RETURN expression_opt ';'
+	| GOTO ID ';'
+	;
+
+declaration_statement
+	: block_declaration
+	;
+***/
+
+/* declarations */
+
+translation_unit : declaration_list_opt ;
+
+declaration_list_opt
+	: declaration_list
+	|
+	;
+
+declaration_list
+	: declaration_list declaration
+	| declaration
+	;
+
+declaration
+	: block_declaration
+	| function_definition
+	| template_declaration
+	| explicit_instantiation
+	| explicit_specialization
+	| linkage_specification
+	| namespace_definition
+	;
+
+block_declaration
+	: simple_declaration
+/*	| asm_definition	*/
+	| namespace_alias_definition
+	| using_declaration
+	| using_directive
+	;
+
+simple_declaration
+/***
+	: decl_specifier_list_opt init_declarator_list_opt ';'
+***/
+	: decl_specifier_list init_declarator_list_opt ';'
+	| init_declarator_list_opt ';'
+	;
+
+/***
+decl_specifier_list_opt
+	: decl_specifier_list
+	|
+	;
+***/
+
+decl_specifier_list
+	: decl_specifier_list decl_specifier
+	| decl_specifier
+	;
+
+decl_specifier
+	: storage_class_specifier
+	| type_specifier
+	| function_specifier
+	| FRIEND
+	| TYPEDEF
+	;
+
+storage_class_specifier
+	: AUTO
+	| REGISTER
+	| STATIC
+	| EXTERN
+	| MUTABLE
+	;
+
+function_specifier
+	: INLINE
+	| VIRTUAL
+	| EXPLICIT
+	;
+
+type_specifier
+	: simple_type_specifier
+	| class_specifier
+	| enum_specifier
+	| elaborated_type_specifier
+	| cv_qualifier
+	;
+
+simple_type_specifier
+/***
+	partially expanded from:
+	note: type_name includes template_id!
+	TODO: eliminate overlap
+	: SCOPE_opt nested_name_specifier_opt type_name
+	| SCOPE_opt nested_name_specifier TEMPLATE_opt template_id
+***/
+	/* : SCOPE nested_name_specifier type_name */
+	: SCOPE type_name
+//	| nested_name_specifier type_name
+	| nested_name_specifier non_template_id
+	| type_name
+	| SCOPE nested_name_specifier TEMPLATE_opt template_id
+	| nested_name_specifier TEMPLATE_opt template_id
+	| CHAR
+	| WCHAR
+	| BOOL
+	| SHORT
+	| INT
+	| LONG
+	| SIGNED
+	| UNSIGNED
+	| FLOAT
+	| DOUBLE
+	| VOID
+	;
+
+/*** redundant
+type_name
+	: class_name
+	| enum_name
+	| typedef_name
+	;
+***/
+
+// ID = non_template_id
+elaborated_type_specifier
+/***
+	: class_key SCOPE_opt nested_name_specifier_opt ID
+	| ENUM SCOPE_opt nested_name_specifier_opt ID
+	| TYPENAME SCOPE_opt nested_name_specifier ID
+	| TYPENAME SCOPE_opt nested_name_specifier TEMPLATE_opt template_id
+***/
+	: class_key SCOPE nested_name_specifier ID
+	| class_key SCOPE ID
+	| class_key nested_name_specifier ID
+	| class_key ID
+	| ENUM SCOPE nested_name_specifier ID
+	| ENUM SCOPE ID
+	| ENUM nested_name_specifier ID
+	| ENUM ID
+	| TYPENAME SCOPE nested_name_specifier ID
+	| TYPENAME nested_name_specifier ID
+	| TYPENAME SCOPE nested_name_specifier TEMPLATE_opt template_id
+	| TYPENAME nested_name_specifier TEMPLATE_opt template_id
+	;
+
+enum_specifier
+// expanded:
+//	: ENUM ID_opt '{' enumerator_list '}'
+	: ENUM ID '{' enumerator_list '}'
+	| ENUM '{' enumerator_list '}'
+	;
+
+enumerator_list
+	: enumerator_list ',' enumerator_definition
+	| enumerator_definition
+	;
+
+enumerator_definition
+	: enumerator '=' constant_expression
+	| enumerator
+	;
+
+enumerator : enum_name ;
+
+namespace_definition
+	: named_namespace_definition
+	| unnamed_namespace_definition
+	;
+
+named_namespace_definition
+	: original_namespace_definition
+/*	| extension_namespace_definition	*/
+	;
+
+original_namespace_definition
+	/* : NAMESPACE original_namespace_name '{' namespace_body '}' */
+	: NAMESPACE namespace_name '{' namespace_body '}'
+	;
+
+/***
+	Indistinguishable from original_namespace_definition!
+extension_namespace_definition
+	: NAMESPACE namespace_name '{' namespace_body '}'
+	;
+***/
+
+unnamed_namespace_definition
+	: NAMESPACE '{' namespace_body '}'
+	;
+
+namespace_body
+	: declaration_list_opt
+	;
+
+namespace_alias_definition
+	: NAMESPACE namespace_name '=' qualified_namespace_specifier ';'
+	;
+
+qualified_namespace_specifier
+//	expanded from:
+/***
+	: SCOPE_opt nested_name_specifier_opt namespace_name
+***/
+	: SCOPE nested_name_specifier namespace_name
+	| SCOPE namespace_name
+	| nested_name_specifier namespace_name
+	| namespace_name
+	;
+
+using_declaration
+/***
+	: USING TYPENAME_opt SCOPE_opt nested_name_specifier unqualified_id ';'
+***/
+	: USING TYPENAME_opt SCOPE nested_name_specifier unqualified_id ';'
+	| USING TYPENAME_opt nested_name_specifier unqualified_id ';'
+	;
+
+using_directive
+/***
+	: USING NAMESPACE SCOPE_opt nested_name_specifier_opt namespace_name ';'
+***/
+	: USING NAMESPACE SCOPE nested_name_specifier namespace_name ';'
+	| USING NAMESPACE SCOPE namespace_name ';'
+	| USING NAMESPACE nested_name_specifier namespace_name ';'
+	| USING NAMESPACE namespace_name ';'
+	;
+
+/* asm_definition: */
+
+linkage_specification
+	: EXTERN STRING_LITERAL '{' declaration_list_opt '}'
+	| EXTERN STRING_LITERAL declaration
+	;
+
+/****************************** declarators **********************************/
+
+init_declarator_list_opt
+	: init_declarator_list
+	|
+	;
+
+init_declarator_list
+	: init_declarator_list ',' init_declarator
+	| init_declarator
+	;
+
+// S/R conflict: '('
+// TODO: elaborate restrictions on declarator and initializers
+// e.g. functional/array_declarator cannot be initialized with (...)
+init_declarator
+// expanded and trimmed:
+//	: declarator initializer_opt
+	: simple_declarator initializer_opt
+	| direct_function_or_array_declarator assign_initializer_opt
+	;
+
+simple_declarator
+	: ptr_operator_chain_opt declarator_id
+//	| ptr_operator_chain_opt '(' declarator ')'
+	;
+
+direct_function_or_array_declarator
+	: simple_declarator function_or_array_declarator_suffix
+	| direct_function_or_array_declarator
+		function_or_array_declarator_suffix
+	;
+
+/***
+function_or_array_declarator_suffix_chain_opt
+	: function_or_array_declarator_suffix_chain
+	|
+	;
+
+// no declarator_id
+function_or_array_declarator_suffix_chain
+	: function_or_array_declarator_suffix_chain 
+		function_or_array_declarator_suffix
+	| function_or_array_declarator_suffix
+	;
+***/
+
+function_or_array_declarator_suffix
+	: function_declarator_suffix
+	| array_declarator_suffix
+	;
+
+function_declarator_suffix
+	: '(' parameter_declaration_clause ')'
+		cv_qualifier_list_opt exception_specification_opt
+	;
+
+array_declarator_suffix_chain
+	: array_declarator_suffix_chain array_declarator_suffix
+	| array_declarator_suffix
+	;
+
+array_declarator_suffix
+	: '[' constant_expression_opt ']'
+	;
+
+// right-recursion! transformed away
+declarator
+/***
+//	: direct_declarator
+//	| ptr_operator declarator
+	: ptr_operator_chain_opt direct_declarator
+	;
+***/
+	: simple_declarator
+	| direct_function_or_array_declarator
+	;
+
+/***
+direct_declarator
+	: declarator_id
+	| direct_function_declarator
+	| direct_array_declarator
+// ambiguous with function-style cast (maybe enable...)
+//	| '(' declarator ')'
+	;
+***/
+
+// added to resolve conflicts
+simple_function_declarator
+	: declarator_id function_declarator_suffix
+	;
+
+simple_array_declarator
+//	: direct_declarator array_declarator_suffix
+	: declarator_id array_declarator_suffix_chain
+	;
+
+/***
+direct_function_declarator
+	: direct_declarator function_declarator_suffix
+	;
+
+direct_array_declarator
+	: direct_declarator array_declarator_suffix
+	;
+***/
+
+/***
+// the right-half of a declarator
+idless_declarator
+	: idless_function_declarator
+	| idless_array_declarator
+// ambiguous with function-style cast
+	| '(' declarator ')'
+	| declarator_id
+	;
+
+idless_function_declarator
+	: idless_declarator function_declarator_suffix
+	;
+
+idless_array_declarator
+	: idless_declarator array_declarator_suffix
+	;
+***/
+
+ptr_operator_chain_opt
+	: ptr_operator_chain
+	|
+	;
+
+ptr_operator_chain
+	: ptr_operator_chain ptr_operator
+	| ptr_operator
+	;
+
+ptr_operator
+	: '*' cv_qualifier_list_opt		/* pointer-to */
+	| '&'					/* reference-to */
+/***
+	| SCOPE_opt nested_name_specifier '*' cv_qualifier_list_opt
+***/
+	| SCOPE nested_name_specifier '*' cv_qualifier_list_opt
+	| nested_name_specifier '*' cv_qualifier_list_opt
+	;
+
+cv_qualifier_list_opt
+	: cv_qualifier_list
+	|
+	;
+
+cv_qualifier_list
+	: cv_qualifier_list cv_qualifier
+	| cv_qualifier
+	;
+
+cv_qualifier
+	: CONST
+	| VOLATILE
+	;
+
+// source of R/R conflicts
+// TODO:
+// need to explicitly maximally-munch specifiers (e.g. ::foo)
+// because they can be mistaken for declarator_id's
+// this will result in expading some more states, oh well...
+declarator_id
+	: DECLARATOR_ID
+/***
+//	: SCOPE_opt id_expression
+//	| SCOPE_opt nested_name_specifier_opt type_name
+	: SCOPE id_expression
+	| id_expression
+	| SCOPE nested_name_specifier type_name
+	| SCOPE type_name
+	| nested_name_specifier type_name
+	| type_name
+//	| '(' limited_declarator ')'
+// where limited_declarator cannot be a simple declarator_id
+// b/c functions cannot be returned, but pointers/reference thereto can.
+***/
+	;
+
+type_id
+/***
+	: type_specifier_list abstract_declarator_opt
+***/
+	: type_specifier_list abstract_declarator
+	| type_specifier_list
+	;
+
+type_specifier_list
+	: type_specifier_list type_specifier
+	| type_specifier
+	;
+
+/***
+abstract_declarator_opt
+	: abstract_declarator
+	|
+	;
+***/
+
+/** right-recursion! transformed away **/
+// no initializer ambiguities like init_declarator
+abstract_declarator
+/***
+	: ptr_operator abstract_declarator_opt
+	| direct_abstract_declarator
+***/
+	: ptr_operator_chain_opt direct_abstract_declarator
+	;
+
+/***
+direct_abstract_declarator_opt
+	: direct_abstract_declarator
+	|
+	;
+***/
+
+direct_abstract_declarator
+	: direct_abstract_function_declarator
+	| direct_abstract_array_declarator
+/* ambiguous with function-style cast */
+/*	| '(' abstract_declarator ')'	*/
+	;
+
+direct_abstract_function_declarator
+/***
+	: direct_abstract_declarator_opt '(' parameter_declaration_clause ')'
+		cv_qualifier_list_opt exception_specification_opt
+***/
+	: direct_abstract_declarator '(' parameter_declaration_clause ')'
+		cv_qualifier_list_opt exception_specification_opt
+	| '(' parameter_declaration_clause ')'
+		cv_qualifier_list_opt exception_specification_opt
+	;
+
+direct_abstract_array_declarator
+/***
+	: direct_abstract_declarator_opt '[' constant_expression_opt ']'
+***/
+	: direct_abstract_declarator '[' constant_expression_opt ']'
+	| '[' constant_expression_opt ']'
+	;
+
+parameter_declaration_clause
+/***
+	: parameter_declaration_list_opt ELLIPSES_opt
+***/
+	: parameter_declaration_list ELLIPSES
+	| parameter_declaration_list
+	| ELLIPSES
+	| 
+	| parameter_declaration_list ',' ELLIPSES
+	;
+
+/***
+parameter_declaration_list_opt
+	: parameter_declaration_list
+	|
+	;
+***/
+
+parameter_declaration_list
+	: parameter_declaration_list ',' parameter_declaration
+	| parameter_declaration
+	;
+
+parameter_declaration
+	: decl_specifier_list declarator
+	| decl_specifier_list declarator '=' assignment_expression
+/***
+	| decl_specifier_list abstract_declarator_opt
+	| decl_specifier_list abstract_declarator_opt '=' assignment_expression
+***/
+	| decl_specifier_list abstract_declarator
+	| decl_specifier_list
+	| decl_specifier_list abstract_declarator '=' assignment_expression
+	| decl_specifier_list '=' assignment_expression
+	;
+
+function_definition
+/***
+	: decl_specifier_list_opt declarator ctor_initializer_opt function_body
+	| decl_specifier_list_opt declarator function_try_block
+***/
+	: decl_specifier_list declarator ctor_initializer_opt function_body
+	| declarator ctor_initializer_opt function_body
+	| decl_specifier_list declarator function_try_block
+	| declarator function_try_block
+	;
+
+// already has decl_specifier_list preceeding it
+// must not be able to reduce ptr_operator_chain_opt, else will conflict
+member_function_definition
+	: simple_function_declarator ctor_initializer_opt function_body
+	| simple_function_declarator function_try_block
+	;
+
+function_body
+	: compound_statement
+	;
+
+initializer_opt
+	: initializer
+	|
+	;
+
+initializer
+	: assign_initializer
+	| construct_initializer
+	;
+
+assign_initializer_opt
+	: assign_initializer
+	|
+	;
+
+assign_initializer
+	: '=' initializer_clause
+	;
+
+construct_initializer
+	: '(' expression_list ')'
+	;
+
+initializer_clause
+	: assignment_expression
+	| '{' initializer_list COMMA_opt '}'
+	| '{' '}'
+	;
+
+initializer_list
+	: initializer_list ',' initializer_clause
+	| initializer_clause
+	;
+
+/******************************* classes *************************************/
+
+class_specifier
+	: class_head '{' member_specification_opt '}' ';'
+	;
+
+class_key
+	: CLASS
+	| STRUCT
+	| UNION
+	;
+
+// this causes 1 S/R, 1 R/R conflict
+class_head
+//	: class_key ID_opt base_clause_opt	// no anonymous classes
+// but what about anonymous structs?
+	: class_key ID base_clause_opt
+	| class_key base_clause_opt
+	| class_key nested_name_specifier ID base_clause_opt
+// erratum from 13th printing: 
+//	| class_key nested_name_specifier TEMPLATE template_id base_clause_opt
+// is wrong, should be:
+//	| class_key nested_name_specifier_opt template_id base_clause_opt
+// which is expanded to:
+	| class_key nested_name_specifier template_id base_clause_opt
+	| class_key template_id base_clause_opt
+	;
+
+member_specification_opt
+	: member_specification
+	|
+	;
+
+member_specification
+	: member_specification member_specification_item
+	| member_specification_item
+	;
+
+member_specification_item
+	: member_declaration
+	| access_specifier ':'
+	;
+
+/***
+member_declaration
+	: MEMBER_DECLARATION
+	;
+***/
+// source of S/R conflicts on declarator_id
+// need greedy approach: if can be decl_specifier, it must be
+// or be able to exclude decl_specifiers from member_declarators
+member_declaration
+//	: decl_specifier_list_opt member_declarator_list_opt ';'
+// expands into:
+	: decl_specifier_list member_declarator_list ';'
+	// the above, alone, S/R conflicts on declarator_id
+	// decl_specifier_list should NOT end with declarator_id
+	| decl_specifier_list ';'
+	| member_declarator_list ';'	// source of one conflict
+// function_definition resembles a function_declarator
+//	| function_definition		// conflict!
+// thus, we must expand its rule and exclude what is already covered
+	| decl_specifier_list member_function_definition
+//	| SCOPE_opt nested_name_specifier TEMPLATE_opt unqualified_id ';'
+	| SCOPE nested_name_specifier TEMPLATE_opt unqualified_id ';'
+	| nested_name_specifier TEMPLATE_opt unqualified_id ';'
+	| using_declaration
+	| template_declaration
+	;
+
+// member_declarator_list_opt
+// 	: member_declarator_list
+// 	|
+// 	;
+
+member_declarator_list
+	: member_declarator_list ',' member_declarator
+	| member_declarator
+	;
+
+// member declarators should already be stripped of decl_specifiers in front
+// shouldn't have ptr_operator_chain_opt leading either
+member_declarator
+//	| declarator
+//	: direct_function_declarator pure_specifier_opt
+//	| direct_array_declarator constant_initializer_opt
+	: simple_function_declarator pure_specifier_opt
+	| simple_array_declarator constant_initializer_opt
+// simple_declarator doesn't seem right, can end with declarator_id
+//	| simple_declarator
+	| declarator_id
+// conflict: '(' can shift to direct_function_declarator
+// or reduce member_declarator and then shift
+//	| ID_opt ':' constant_expression
+	| ID ':' constant_expression	// no unnamed bitfields
+//	| ':' constant_expression
+	;
+
+pure_specifier_opt
+	: pure_specifier
+	|
+	;
+
+// literal should be 0
+pure_specifier
+	: '=' INT_LITERAL
+	;
+
+constant_initializer_opt
+	: constant_initializer
+	|
+	;
+
+constant_initializer
+	: '=' constant_expression
+	;
+
+base_clause_opt
+	: base_clause
+	|
+	;
+
+base_clause
+	: ':' base_specifier_list
+	;
+
+base_specifier_list
+	: base_specifier_list ',' base_specifier
+	|  base_specifier
+	;
+
+base_specifier
+	: access_virtual_specifier_opt base_specifier_base
+	;
+
+base_specifier_base
+//	: SCOPE_opt nested_name_specifier_opt type_name
+	: SCOPE nested_name_specifier type_name
+	| SCOPE type_name
+	| nested_name_specifier type_name
+	| type_name
+	;
+
+access_virtual_specifier_opt
+	: VIRTUAL access_specifier_opt
+	| access_specifier VIRTUAL_opt
+	|
+	;
+
+access_specifier_opt
+	: access_specifier
+	|
+	;
+
+access_specifier
+	: PUBLIC
+	| PROTECTED
+	| PRIVATE
+	;
+
+// special member functions
+/***
+conversion_function_id
+	: OPERATOR conversion_type_id
+	;
+
+conversion_type_id
+	: type_specifier_list conversion_declarator_opt
+	;
+
+conversion_declarator_opt
+	: conversion_declarator
+	|
+	;
+
+conversion_declarator
+	: ptr_operator conversion_declarator_opt
+	;
+***/
+
+ctor_initializer_opt
+	: ctor_initializer
+	|
+	;
+
+ctor_initializer
+	: ':' member_initializer_list
+	;
+
+member_initializer_list
+	: member_initializer_list ',' member_initializer
+	| member_initializer
+	;
+
+member_initializer
+	: member_initializer_id '(' expression_list_opt ')'
+	;
+
+// conflict?
+member_initializer_id
+//	expanded from:
+//	: SCOPE_opt nested_name_specifier_opt type_name
+//	| ID
+	: SCOPE nested_name_specifier type_name
+	| SCOPE type_name
+	| nested_name_specifier type_name
+	| type_name
+	;
+
+/* operator overloading */
+
+/* should be used in direct_declarator and abstract_direct_declarator? */
+/***
+operator_function_id
+	: OPERATOR operator
+	;
+***/
+
+/**************************** templates **************************************/
+template_declaration
+	: TEMPLATE_DECLARATION
+	;
+
+template_id
+	: TEMPLATE_ID
+	;
+
+/***
+template_declaration
+	: EXPORT TEMPLATE '<' template_parameter_list '>' declaration
+	| TEMPLATE '<' template_parameter_list '>' declaration
+	;
+
+template_parameter_list
+	: template_parameter_list ',' template_parameter
+	| template_parameter
+	;
+
+template_parameter
+	: type_parameter
+	| parameter_declaration
+	;
+
+type_parameter
+	: CLASS ID_opt default_type_id_opt
+	| TYPENAME ID_opt default_type_id_opt
+	| TEMPLATE '<' template_parameter_list '>'
+		CLASS ID_opt default_template_name_opt
+	;
+
+default_type_id_opt
+	: '=' type_id
+	|
+	;
+
+default_template_name_opt
+/ erratum from 14th printing:
+//	: '=' non_template_id
+	: '=' id_expression
+	|
+	;
+
+template_id
+	: non_template_id '<' template_argument_list_opt '>'
+	;
+
+template_argument_list_opt
+	: template_argument_list
+	|
+	;
+
+template_argument_list
+	: template_argument_list ',' template_argument
+	| template_argument
+	;
+
+template_argument
+	: assignment_expression
+//	: shift_expression
+	| type_id
+	| non_template_id
+// erratum from 14th printing:
+//	| template_name
+// should be
+//	| id_expression
+	;
+***/
+
+explicit_instantiation
+	: TEMPLATE declaration
+	;
+
+explicit_specialization
+	: TEMPLATE '<' '>' declaration
+	;
+
+/* exception handling */
+
+try_block
+	: TRY compound_statement handler_list
+	;
+
+function_try_block
+	: TRY ctor_initializer_opt function_body handler_list
+	;
+
+handler_list
+	: handler_list handler
+	| handler
+	;
+
+handler
+	: CATCH '(' exception_declaration ')' compound_statement
+	;
+
+exception_declaration
+	: type_specifier_list declarator
+	| type_specifier_list abstract_declarator
+	| type_specifier_list
+	| ELLIPSES
+	;
+
+throw_expression
+	: THROW assignment_expression_opt
+	;
+
+exception_specification_opt
+	: exception_specification
+	|
+	;
+
+exception_specification
+	: THROW '(' type_id_list_opt ')'
+	;
+
+type_id_list_opt
+	: type_id_list
+	|
+	;
+
+type_id_list
+	: type_id_list ',' type_id
+	| type_id
+	;
+
+/* miscellaneous */
+
+/***
+operator
+	: NEW
+	| DELETE
+	| NEW '[' ']'
+	| DELETE '[' ']'
+	| '+'
+	| '-'
+	| '*'
+	| '/'
+	| '%'
+	| '^'
+	| '&'
+	| '|'
+	| '~'
+	| '!'
+	| '='
+	| '<'
+	| '>'
+	| LE
+	| GE
+	| EQUAL
+	| NOTEQUAL
+	| RARROW
+	| RARROW '*'
+	| LOGICAL_AND
+	| LOGICAL_OR
+	| INSERT
+	| EXTRACT
+	| INCREMENT
+	| DECREMENT
+	| PLUS_ASSIGN
+	| MINUS_ASSIGN
+	| MULT_ASSIGN
+	| DIV_ASSIGN
+	| MOD_ASSIGN
+	| XOR_ASSIGN
+	| AND_ASSIGN
+	| OR_ASSIGN
+	| INSERT_ASSIGN
+	| EXTRACT_ASSIGN
+	| '(' ')'
+	| '[' ']'
+	;
+***/
+
+/***
+unary_operator
+	: '+'
+	| '-'
+	| '*'
+	| '&'
+	| '!'
+	| '~'
+	;
+
+assignment_operator
+	: '='
+	| PLUS_ASSIGN
+	| MINUS_ASSIGN
+	| MULT_ASSIGN
+	| DIV_ASSIGN
+	| MOD_ASSIGN
+	| INSERT_ASSIGN
+	| EXTRACT_ASSIGN
+	| AND_ASSIGN
+	| OR_ASSIGN
+	| XOR_ASSIGN
+	;
+***/
+
+/***
+EXPORT_opt
+	: EXPORT
+	|
+	;
+***/
+
+VIRTUAL_opt
+	: VIRTUAL
+	|
+	;
+
+COMMA_opt
+	: ','
+	|
+	;
+
+/***
+ELLIPSES_opt
+	: ELLIPSES
+	|
+	;
+***/
+
+/***
+ID_opt
+	: ID
+	|
+	;
+***/
+
+/***
+SCOPE_opt
+	: SCOPE
+	|
+	;
+***/
+
+TEMPLATE_opt
+	: TEMPLATE
+	|
+	;
+
+TYPENAME_opt
+	: TYPENAME
+	|
+	;
+
+%%
+/* more useful code and definitions go here */
+

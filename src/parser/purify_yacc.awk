@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "purify_yacc.awk"
-#	$Id: purify_yacc.awk,v 1.3 2005/11/12 22:30:27 fang Exp $
+#	$Id: purify_yacc.awk,v 1.4 2006/01/22 06:53:25 fang Exp $
 # helper script to transform yacc's generated parser into a pure-parser.
 # one that is re-entrant.  
 
@@ -19,7 +19,8 @@
 BEGIN {
 	this_script = "\"parser/purify_yacc.awk\"";
 	# associaltive array with (optional) initial values
-	delete declarations;
+	# delete declarations;	# this is not POSIX
+	for (d in declarations) delete declarations[d];	# this IS
 }
 
 function comment_out(str) {

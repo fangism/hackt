@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.2 2005/12/13 04:14:47 fang Exp $
+	$Id: PRS.cc,v 1.3 2006/01/22 06:52:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -12,9 +12,11 @@
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <iterator>
 
 #include "AST/PRS.h"
 #include "AST/expr.h"		// for id_expr
+#include "AST/expr_list.h"	// for attributes
 #include "AST/range.h"
 #include "AST/token.h"
 #include "AST/token_char.h"
@@ -25,6 +27,7 @@
 #include "Object/def/process_definition.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/param_expr.h"
+#include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/data_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/lang/PRS.h"
@@ -50,6 +53,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::op_loop, "(prs-op-loop)")
 namespace HAC {
 namespace parser {
 namespace PRS {
+using std::back_inserter;
 #include "util/using_ostream.h"
 using entity::definition_base;
 using entity::process_definition;
@@ -66,10 +70,14 @@ body_item::~body_item() { }
 //=============================================================================
 // class rule method definitions
 
+/**
+	\param atts the attribute list is optional.  
+ */
 CONSTRUCTOR_INLINE
-rule::rule(const expr* g, const char_punctuation_type* a,
+rule::rule(const attribute_list* atts, const expr* g, 
+		const char_punctuation_type* a,
 		const inst_ref_expr* rhs, const char_punctuation_type* d) :
-		body_item(), guard(g), arrow(a),
+		body_item(), attribs(atts), guard(g), arrow(a),
 		r(rhs), dir(d) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(r); NEVER_NULL(dir);
 }
@@ -82,7 +90,9 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(rule)
 
 line_position
 rule::leftmost(void) const {
-	return guard->leftmost();
+	if (attribs)
+		return attribs->leftmost();
+	else	return guard->leftmost();
 }
 
 line_position
@@ -95,6 +105,7 @@ rule::rightmost(void) const {
 	Type-checks and constructs a production rule.  
 	\return a newly constructed, type-checked production rule, 
 		to be added to a definition.  
+	TODO: better error handling, instead of throwing exception...
  */
 body_item::return_type
 rule::check_rule(context& c) const {
@@ -112,13 +123,24 @@ rule::check_rule(context& c) const {
 			where(*r) << "." << endl;
 		THROW_EXIT;
 	}
-	// temporary support for normal arrow only!
 	const bool arrow_type = (arrow->text[0] == '=');
-	return body_item::return_type((dir->text[0] == '+') ?
-		static_cast<entity::PRS::rule*>(
-			new entity::PRS::pull_up(g, *o, arrow_type)) :
-		static_cast<entity::PRS::rule*>(
-			new entity::PRS::pull_dn(g, *o, arrow_type)));
+	const count_ptr<entity::PRS::pull_base>
+		ret((dir->text[0] == '+') ?
+			AS_A(entity::PRS::pull_base*,
+				new entity::PRS::pull_up(g, *o, arrow_type)) :
+			AS_A(entity::PRS::pull_base*,
+				new entity::PRS::pull_dn(g, *o, arrow_type)));
+	NEVER_NULL(ret);
+	if (attribs) {
+		entity::PRS::attribute_list_type&
+			atts(ret->get_attribute_list());
+		attribs->check_list(atts, &attribute::check, c);
+		if (find(atts.begin(), atts.end(), false) != atts.end()) {
+			cerr << "ERROR in attributes list before rule." << endl;
+			THROW_EXIT;
+		}
+	}
+	return ret;
 }
 
 //=============================================================================
@@ -314,7 +336,7 @@ op_loop::rightmost(void) const {
 	Is this even needed outside of the PRS context?
  */
 expr::meta_return_type
-op_loop::check_meta_expr(context& c) const {
+op_loop::check_meta_expr(const context& c) const {
 	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }
@@ -325,7 +347,7 @@ op_loop::check_meta_expr(context& c) const {
 	Is this even needed outside of the PRS context?
  */
 nonmeta_expr_return_type
-op_loop::check_nonmeta_expr(context& c) const {
+op_loop::check_nonmeta_expr(const context& c) const {
 	FINISH_ME(Fang);
 	return nonmeta_expr_return_type(NULL);
 }
@@ -372,6 +394,96 @@ op_loop::check_prs_expr(context& c) const {
 }
 
 //=============================================================================
+// class macro method definitions
+
+macro::macro(const token_identifier* i, const inst_ref_expr_list* r) :
+		name(i), args(r) {
+	NEVER_NULL(name); NEVER_NULL(args);
+}
+
+macro::~macro() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(macro)
+
+line_position
+macro::leftmost(void) const {
+	return name->leftmost();
+}
+
+line_position
+macro::rightmost(void) const {
+	return args->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+body_item::return_type
+macro::check_rule(context& c) const {
+	typedef	inst_ref_expr_list::checked_bool_refs_type
+							checked_bools_type;
+	typedef checked_bools_type::const_iterator	const_iterator;
+	typedef checked_bools_type::value_type		value_type;
+	checked_bools_type temp;
+	INVARIANT(args->size());
+	args->postorder_check_bool_refs(temp, c);
+	const const_iterator i(temp.begin());
+	const const_iterator e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking macro arguments in " << where(*args)
+			<< endl;
+		return return_type(NULL);
+	}
+	INVARIANT(temp.size());
+	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(*ret));
+	return ret;
+}
+
+//=============================================================================
+// class attribute method definitions
+
+attribute::attribute(const token_identifier* i, const expr_list* e)
+		: key(i), values(e) {
+	NEVER_NULL(key); NEVER_NULL(values);
+}
+
+attribute::~attribute() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(attribute)
+
+line_position
+attribute::leftmost(void) const {
+	return key->leftmost();
+}
+
+line_position
+attribute::rightmost(void) const {
+	return values->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+attribute::return_type
+attribute::check(context& c) const {
+	typedef	expr_list::checked_meta_exprs_type vals_type;
+	typedef	vals_type::const_iterator	const_iterator;
+	typedef	vals_type::value_type		val_type;
+	vals_type vals;
+	values->postorder_check_meta_exprs(vals, c);
+	const const_iterator i(vals.begin());
+	const const_iterator e(vals.end());
+	if (find(i, e, val_type(NULL)) != e) {
+		// one of the param expressions failed checking
+		// blank will signal error
+		cerr << "Error in checking attribute value expressions in "
+			<< where(*values) << endl;
+		return return_type();
+	}
+	return_type ret(*key);
+	copy(i, e, back_inserter(ret));
+	return ret;
+}
+
+//=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
 // template class node_list<const body_item>;		// PRS::rule_list
@@ -388,6 +500,24 @@ node_list<const body_item>::what(ostream&) const;
 template
 line_position
 node_list<const body_item>::leftmost(void) const;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// template class node_list<const attribute>;
+
+template
+node_list<const attribute>::node_list(const PRS::attribute*);
+
+template
+ostream&
+node_list<const attribute>::what(ostream&) const;
+
+template
+line_position
+node_list<const attribute>::leftmost(void) const;
+
+template
+line_position
+node_list<const attribute>::rightmost(void) const;
 #endif
 
 //=============================================================================

@@ -1,5 +1,22 @@
 # "test/ChangeLog"
 
+2006-01-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-13:
+	  Added suffix rules for standard HACKT object files
+		and various other test output files.
+	  Now can build dot/ps visualizations of prsim expressions
+		with Makefile rules!
+
+
+2006-01-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-11:
+	  Added test support for prsim expression allocation dumps.  
+	  TODO: decide what to do about an expression optimization pass...
+		Add a command-line flag to enable/disable it.  
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

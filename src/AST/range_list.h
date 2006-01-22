@@ -1,9 +1,9 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range_list.h,v 1.2 2005/12/13 04:15:12 fang Exp $
+	$Id: range_list.h,v 1.3 2006/01/22 06:52:54 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range_list.h,v 1.2 2005/12/13 04:15:12 fang Exp $
+	$Id: range_list.h,v 1.3 2006/01/22 06:52:54 fang Exp $
  */
 
 #ifndef __HAC_AST_RANGE_LIST_H__
@@ -23,6 +23,7 @@ namespace entity {
 }	// end namespace entity
 namespace parser {
 using util::good_bool;
+using std::default_vector;
 
 //=============================================================================
 /// base class for range_list
@@ -53,33 +54,34 @@ public:
 	~range_list();
 
 	checked_meta_indices_type
-	check_meta_indices(context& c) const;
+	check_meta_indices(const context& c) const;
 
 	checked_meta_ranges_type
-	check_meta_ranges(context& c) const;
+	check_meta_ranges(const context& c) const;
 
 	checked_nonmeta_indices_type
-	check_nonmeta_indices(context& c) const;
+	check_nonmeta_indices(const context& c) const;
 
 	checked_nonmeta_ranges_type
-	check_nonmeta_ranges(context& c) const;
+	check_nonmeta_ranges(const context& c) const;
 
 private:
-	typedef	DEFAULT_VECTOR(range::meta_return_type)	meta_check_type;
-	typedef	DEFAULT_VECTOR(range::nonmeta_return_type)
+	typedef	default_vector<range::meta_return_type>::type
+							meta_check_type;
+	typedef	default_vector<range::nonmeta_return_type>::type
 							nonmeta_check_type;
 
 	/**
 		Intermediate check.  
 	 */
 	good_bool
-	postorder_check_meta(meta_check_type&, context&) const;
+	postorder_check_meta(meta_check_type&, const context&) const;
 
 	/**
 		Intermediate check.  
 	 */
 	good_bool
-	postorder_check_nonmeta(nonmeta_check_type&, context&) const;
+	postorder_check_nonmeta(nonmeta_check_type&, const context&) const;
 };	// end class range_list
 
 //-----------------------------------------------------------------------------
@@ -105,18 +107,19 @@ public:
 	~dense_range_list();
 
 	meta_return_type
-	check_formal_dense_ranges(context& c) const;
+	check_formal_dense_ranges(const context& c) const;
 
 private:
-	typedef	DEFAULT_VECTOR(expr::meta_return_type)	meta_check_type;
-	typedef	DEFAULT_VECTOR(expr::nonmeta_return_type)
-							nonmeta_check_type;
+	typedef	default_vector<expr::meta_return_type>::type
+						meta_check_type;
+	typedef	default_vector<expr::nonmeta_return_type>::type
+						nonmeta_check_type;
 	
 	/**
 		Intermediate check.  
 	 */
 	good_bool
-	postorder_check_meta(meta_check_type&, context&) const;
+	postorder_check_meta(meta_check_type&, const context&) const;
 };	// end class range_list
 
 //=============================================================================

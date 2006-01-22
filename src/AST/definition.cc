@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.2 2005/12/13 04:15:06 fang Exp $
+	$Id: definition.cc,v 1.3 2006/01/22 06:52:53 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -78,7 +78,6 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::typedef_alias,
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using entity::enum_datatype_def;
 using entity::user_def_chan;
 using entity::user_def_datatype;

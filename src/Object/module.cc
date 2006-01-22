@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.8 2005/12/13 04:15:16 fang Exp $
+ 	$Id: module.cc,v 1.9 2006/01/22 06:52:56 fang Exp $
  */
 
 #ifndef	__OBJECT_MODULE_CC__
@@ -19,6 +19,7 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
+#include "Object/lang/cflat_printer.h"
 #include "main/cflat_options.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -36,8 +37,45 @@ using util::write_value;
 using util::read_value;
 using util::write_string;
 using util::read_string;
-USING_STACKTRACE
 using util::persistent_traits;
+
+//=============================================================================
+// class module::top_level_footprint_importer definition
+
+class module::top_level_footprint_importer {
+private:
+	footprint&			fp;
+public:
+	/**
+		Temporarily expands the footprint collection map
+		by visiting all namespaces and collecting their
+		top-level instance collections.  
+	 */
+	explicit
+	top_level_footprint_importer(const module& m) :
+			fp(const_cast<footprint&>(m._footprint)) {
+		namespace_collection_type nsl;
+		m.collect_namespaces(nsl);
+		namespace_collection_type::const_iterator i(nsl.begin());
+		const namespace_collection_type::const_iterator e(nsl.end());
+		for ( ; i!=e; i++) {
+			fp.import_hierarchical_scopespace(**i);
+		}
+	}
+
+	/**
+		Restores the previous state of the footprint's instance
+		collection map.  
+		Is necessary for the top-level footprint because
+		it temporarily violates an invariant with 
+		object ownership.  
+		See comment where this class is used.  
+	 */
+	~top_level_footprint_importer() {
+		fp.clear_instance_collection_map();
+	}
+
+} __ATTRIBUTE_UNUSED__;	// end class module::top_level_footprint_importer
 
 //=============================================================================
 // class module method definitions
@@ -235,17 +273,9 @@ module::create_unique(void) {
 		// footprint::import_hierarchical_scopespace.
 		// Plan B: destroy after evaluating aliases!
 		// we call clear_instance_collection_map after we're done.
-		{
-		namespace_collection_type nsl;
-		collect_namespaces(nsl);
-		namespace_collection_type::const_iterator i(nsl.begin());
-		const namespace_collection_type::const_iterator e(nsl.end());
-		for ( ; i!=e; i++) {
-			_footprint.import_hierarchical_scopespace(**i);
-		}
-		}
+		// This is now taken care of by the helper class:
+		const top_level_footprint_importer foo(*this);
 		_footprint.evaluate_scope_aliases();
-		_footprint.clear_instance_collection_map();
 		_footprint.mark_created();
 	}
 	return good_bool(true);
@@ -270,8 +300,6 @@ module::allocate_unique(void) {
 #if 0
 		// only for debugging
 		global_state.cache_process_parent_refs();
-#endif
-#if 0
 		global_state.dump(cerr, _footprint) << endl;
 #endif
 		allocated = true;
@@ -280,37 +308,71 @@ module::allocate_unique(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The actual cflat procedure.  
+	Always prints all rules before aliases.  
+ */
 good_bool
-module::cflat(ostream& o, const cflat_options& cf) const {
-	STACKTRACE_VERBOSE;
-if (is_allocated()) {
+module::__cflat(ostream& o, const cflat_options& cf) const {
+	// print the production rules first, using canonical names
+#if 0
 	if (!global_state.cflat_prs(o, _footprint, cf).good) {
 		cerr << "Unexpected error during cflat." << endl;
 		return good_bool(false);
 	}
+#else
+{
+	// our priting visitor functor
+	PRS::cflat_prs_printer cfp(o, cf);
+	const cflat_context::module_setter tmp(cfp, *this);
+	if (cf.dsim_prs)	o << "dsim {" << endl;
+	global_state.accept(cfp);	// print!
+	if (cf.dsim_prs)	o << "}" << endl;
+}
+#endif
+	// print the name aliases in the manner requested in cflat_options
 	if (cf.connect_style) {
 		STACKTRACE("cflatting aliases.");
 		// top-level footprint is actually empty
 		// so we need to load it first...
 		// we promise to clean it up after we're done.
+		// This is now handled by the helper class:
+		const top_level_footprint_importer foo(*this);
 		footprint& _fp(const_cast<footprint&>(_footprint));
-		{
-		namespace_collection_type nsl;
-		collect_namespaces(nsl);
-		namespace_collection_type::const_iterator i(nsl.begin());
-		const namespace_collection_type::const_iterator e(nsl.end());
-		for ( ; i!=e; i++) {
-			_fp.import_hierarchical_scopespace(**i);
-		}
-		}
 		_fp.cflat_aliases(o, global_state, cf);
-		// remember to unload, else there'll be hell to pay!
-		_fp.clear_instance_collection_map();
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Since this variant is const, this expects the module to be
+	already allocated, and will not perform any modifications.  
+ */
+good_bool
+module::cflat(ostream& o, const cflat_options& cf) const {
+	STACKTRACE_VERBOSE;
+if (is_allocated()) {
+	return __cflat(o, cf);
 } else {
 	cerr << "ERROR: Module is not globally allocated, "
 		"as required by cflat." << endl;
+	return good_bool(false);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant will automatically globally allocate unique 
+	instances before cflat-ting, if needed.  
+ */
+good_bool
+module::cflat(ostream& o, const cflat_options& cf) {
+	STACKTRACE_VERBOSE;
+if (allocate_unique().good) {
+	return __cflat(o, cf);
+} else {
+	cerr << "ERROR: during global allocated of module" << endl;
 	return good_bool(false);
 }
 }

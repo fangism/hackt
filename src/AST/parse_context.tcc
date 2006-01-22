@@ -3,7 +3,7 @@
 	Template methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.tcc" in a previous life.
- 	$Id: parse_context.tcc,v 1.4 2005/12/13 04:15:11 fang Exp $
+ 	$Id: parse_context.tcc,v 1.5 2006/01/22 06:52:54 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_TCC__
@@ -41,7 +41,7 @@ context::open_definition(const token_identifier& pname) {
 	// concept check code
 	INVARIANT(!static_cast<const definition_base*>(NULL));
 	const never_ptr<D>
-		def(current_namespace->lookup_object_here_with_modify(pname)
+		def(current_namespace->lookup_member_with_modify(pname)
 				.template is_a<D>());
 	if (def) {
 		if (def->is_defined()) {

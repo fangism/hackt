@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.5 2005/12/13 04:15:16 fang Exp $
+	$Id: global_entry.h,v 1.6 2006/01/22 06:52:56 fang Exp $
  */
 
 #ifndef	__OBJECT_GLOBAL_ENTRY_H__
@@ -21,6 +21,10 @@ namespace entity {
 using std::ostream;
 using std::istream;
 using util::persistent_object_manager;
+
+namespace PRS {
+	class cflat_visitor;
+}
 
 struct bool_tag;
 struct dump_flags;
@@ -269,9 +273,11 @@ struct global_entry_common {
 	Need to keep hierarchical substructure to propagate up.  
 	TODO: for simulation state allocation, allocate expression
 		tree structures with back-links for up propagation.  
+		To this with another visitor.  
  */
 class production_rule_substructure {
 public:
+#if 0
 	// need a pool for rules
 	// and a pool for sub-expressions, just like PRS::footprint
 	template <class Tag>
@@ -279,6 +285,12 @@ public:
 	void
 	cflat_prs(ostream&, const global_entry<Tag>&, const footprint&,
 		const cflat_options&, const state_manager&);
+#endif
+
+	template <class Tag>
+	static
+	void
+	accept(const global_entry<Tag>&, PRS::cflat_visitor&);
 
 };	// end class production_rule_substructure
 

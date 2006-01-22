@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.5 2005/12/13 04:15:40 fang Exp $
+ 	$Id: type_reference.cc,v 1.6 2006/01/22 06:53:07 fang Exp $
  */
 
 #ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -91,7 +91,6 @@ using std::ostringstream;
 using std::transform;
 using std::back_inserter;
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using util::indent;
 using util::auto_indent;
 using util::persistent_traits;

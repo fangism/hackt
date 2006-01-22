@@ -2,10 +2,10 @@ At: "-stdin-":12:
 parse error: syntax error
 parser stacks:
 state	value
-#STATE#	(imported-root-list) [6:1]
+#STATE#	(imported-root-list) [8:1..18]
 #STATE#	list<(root_item)>: (instance-decl) ... [10:1..6]
 #STATE#	(null) 
-#STATE#	(imported-root) [7:1]
+#STATE#	(imported-root) [12:1..18]
 in state #STATE#, possible rules are:
 	type_alias: optional_template_specification . TYPEDEF physical_type_ref ID ';'  (#RULE#)
 	declare_proc_proto: optional_template_specification . def_or_proc ID optional_port_formal_decl_list_in_parens ';'  (#RULE#)

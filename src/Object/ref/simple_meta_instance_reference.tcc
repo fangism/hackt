@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.7 2005/12/13 04:15:36 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.8 2006/01/22 06:53:06 fang Exp $
  */
 
 #ifndef	__OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -83,6 +83,55 @@ ostream&
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
 		const expr_dump_context& c) const {
 	return simple_meta_instance_reference_base::dump(o, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If this is called, we're at the top-level of the instance hierarchy.
+	This should work regardless of whether this type has substructure.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+size_t
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
+		const state_manager& sm) const {
+	typedef	simple_meta_instance_reference_implementation<
+			class_traits<Tag>::has_substructure>
+				substructure_implementation_policy;
+	STACKTRACE_VERBOSE;
+	const unroll_context uc;
+	const instance_alias_base_ptr_type
+		alias(__unroll_generic_scalar_reference(
+			*this->inst_collection_ref, this->array_indices, uc));
+	if (!alias) {
+		cerr << "Error resolving a single instance alias." << endl;
+		return 0;
+	}
+	const size_t ret = alias->instance_index;
+	INVARIANT(ret);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Since this is a simple_meta_instance_reference, we're 
+	at the top of the reference hierarchy.  
+	We can just lookup the state_manager with the 
+	base instance's index.  
+	Implementation depends on whether or not this type
+	can have subinstances, so we use a policy class.  
+	\pre This should never be called for substructureless types.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+const footprint_frame*
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
+		const state_manager& sm) const {
+	typedef	simple_meta_instance_reference_implementation<
+			class_traits<Tag>::has_substructure>
+				substructure_implementation_policy;
+	STACKTRACE_VERBOSE;
+	return substructure_implementation_policy::
+		template lookup_footprint_frame<Tag>(
+			*this->inst_collection_ref, this->array_indices, sm);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -185,21 +234,66 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This does the real work.
+	(Many other calls are forwarded to this.)
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
+		const instance_collection_generic_type& inst, 
+		const never_ptr<const index_list_type> ind, 
+		const unroll_context& c) {
+	typedef instance_alias_base_ptr_type 	return_type;
+	STACKTRACE_VERBOSE;
+	alias_collection_type aliases;
+	const bad_bool
+		bad(unroll_references_helper(c, inst, ind, aliases));
+	if (bad.bad) {
+		return return_type(NULL);
+	} else if (aliases.dimensions()) {
+		cerr << "ERROR: got a " << aliases.dimensions() <<
+			"-dimension collection where a scalar was required."
+			<< endl;
+		return return_type(NULL);
+	} else {
+		// util::wtf_is(aliases.front());
+		return aliases.front();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Called by member_instance_reference::unroll_references.
 	This implementation should be policy-determined.  
-	\return a single instance alias.
+	\return a single instance alias to a substructure_alias.
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
+		const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
+	return __unroll_generic_scalar_reference(
+			*this->inst_collection_ref,
+			this->array_indices, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by member_instance_reference::unroll_references.
+	This implementation should be policy-determined.  
+	\return a single instance alias to a substructure_alias.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& c) const {
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
-		template unroll_generic_scalar_reference<Tag>(
-			*this->inst_collection_ref, this->array_indices, c);
+		template unroll_generic_scalar_substructure_reference<Tag>(
+			*this, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

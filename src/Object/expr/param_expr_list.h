@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.7 2005/12/13 04:15:26 fang Exp $
+	$Id: param_expr_list.h,v 1.8 2006/01/22 06:53:00 fang Exp $
  */
 
 #ifndef __OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -28,6 +28,7 @@ struct expr_dump_context;
 using util::good_bool;
 using util::bad_bool;
 using std::vector;
+using std::default_vector;
 using std::ostream;
 using util::memory::count_ptr;
 using util::memory::excl_ptr;
@@ -93,7 +94,7 @@ virtual	unroll_resolve_return_type
 
 // coordinate with template_formals_manager::template_formals_list_type
 protected:
-	typedef	DEFAULT_VECTOR(never_ptr<const param_value_collection>)
+	typedef	default_vector<never_ptr<const param_value_collection> >::type
 					template_formals_list_type;
 
 public:

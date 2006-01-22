@@ -2,7 +2,7 @@
 	\file "Object/def/enum_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: enum_datatype_def.h,v 1.5 2005/12/13 04:15:20 fang Exp $
+	$Id: enum_datatype_def.h,v 1.6 2006/01/22 06:52:58 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_ENUM_DATATYPE_DEF_H__
@@ -76,6 +76,9 @@ public:
 
 	never_ptr<const scopespace>
 	get_parent(void) const;
+
+	never_ptr<const scopespace>
+	get_scopespace(void) const;
 
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;

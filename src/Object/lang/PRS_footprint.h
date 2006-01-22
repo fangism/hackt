@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.3 2005/12/13 04:15:34 fang Exp $
+	$Id: PRS_footprint.h,v 1.4 2006/01/22 06:53:03 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -10,8 +10,12 @@
 #include <valarray>
 #include <vector>
 #include "Object/inst/instance_pool_fwd.h"
+#include "Object/lang/PRS_footprint_expr.h"
+#include "Object/lang/PRS_footprint_rule.h"
+#include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 #include "util/macros.h"
 #include "util/list_vector.h"
+#include "util/offset_array.h"
 
 namespace HAC {
 struct cflat_options;
@@ -44,115 +48,24 @@ using std::istream;
 	As this is constructed, each 'node' could conceivably keep track
 	of its "local" fanin and fanout, to avoid recomputing it.  
  */
-class footprint {
+class footprint : public cflat_visitee {
+	friend class cflat_visitor;
 public:
-	/**
-		A top-down only structure for maintaining unrolled PRS
-		in the process footprint.  
-	 */
-	struct expr_node {
-		typedef	std::valarray<int>	node_array_type;
-		/**
-			Whether or not this is AND or OR, NOT, literal....  
-			This uses the enumerations according to
-			PRS::{literal,not_expr,and_expr,or_expr}::print_stamp
-			in "Object/lang/PRS.h".
-		 */
-		char				type;
-	private:
-		/**
-			If it is a literal, then nodes[0] is the bool index.
-			Otherwise, index is used for other expr_nodes.  
-			NOTE: valarray just contains size_t and pointer.  
-			Values are 1-indexed.  
-		 */
-		node_array_type			nodes;
-
-	public:
-		expr_node() { }
-
-		explicit
-		expr_node(const char t) : type(t), nodes() { }
-
-		expr_node(const char t, const size_t s) : type(t), nodes(s) { }
-
-		size_t
-		size(void) const { return nodes.size(); }
-
-		/**
-			Subtract one because indicies are intentionally 
-			off by one.  
-		 */
-		int&
-		operator [] (const size_t i) {
-			INVARIANT(i-1 < nodes.size());
-			return nodes[i-1];
-		}
-
-		/**
-			Subtract one because indicies are intentionally 
-			off by one.  
-		 */
-		const int&
-		operator [] (const size_t i) const {
-			INVARIANT(i-1 < nodes.size());
-			return nodes[i-1];
-		}
-
-		void
-		resize(const size_t s) { nodes.resize(s); }
-
-		/// returns the 1-indexed position of first error, else 0
-		size_t
-		first_error(void) const;
-
-		void
-		write_object_base(ostream&) const;
-
-		void
-		load_object_base(istream&);
-	};
-
-	/**
-		Compact and resolved representation of production rule.  
-	 */
-	struct rule {
-		/**
-			index to root expression for this node.
-			1-indexed.
-		 */
-		int				expr_index;
-		/**
-			index to output node (local to this definition).
-			1-indexed.  
-		 */
-		int				output_index;
-		/**
-			Whether or not is pull-up or down.
-			Could use the sign of output index...
-		 */
-		bool				dir;
-
-		rule() { }
-
-		rule(const int e, const int o, const bool d) :
-			expr_index(e), output_index(o), dir(d) { }
-
-		void
-		write_object_base(ostream&) const;
-
-		void
-		load_object_base(istream&);
-	};
+	typedef	footprint_expr_node		expr_node;
+	typedef	footprint_rule			rule;
 
 	// typedef	std::vector<>
-
 private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
 	typedef	util::list_vector<rule>		rule_pool_type;
-	typedef	util::list_vector<expr_node>	expr_pool_type;
+#if 0
+	typedef	util::offset_array<util::list_vector<expr_node>, 1>
+						expr_pool_type;
+#else
+	typedef	PRS_footprint_expr_pool_type	expr_pool_type;
+#endif
 
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;
@@ -163,6 +76,9 @@ public:
 
 	ostream&
 	dump(ostream&, const entity::footprint&) const;
+
+	const expr_pool_type&
+	get_expr_pool(void) const { return expr_pool; }
 
 private:
 	static
@@ -196,6 +112,8 @@ public:
 	rule&
 	push_back_rule(const int, const int, const bool);
 
+	
+
 	size_t
 	current_expr_index(void) const {
 		return expr_pool.size();
@@ -214,6 +132,9 @@ public:
 	// requires no persistent object manager
 	void
 	load_object_base(istream&);
+
+	void
+	accept(cflat_visitor&) const;
 
 };	// end class footprint
 

@@ -3,11 +3,13 @@
 	Queryable map with non-modifying (const) lookup method.  
 	Non-modifying lookup guarantees that no extraneous empty
 	elements are added by lookup.  
-	$Id: map.h,v 1.2 2005/05/10 04:51:32 fang Exp $
+	$Id: map.h,v 1.3 2006/01/22 06:53:39 fang Exp $
  */
 
 #ifndef	__UTIL_STL_MAP_H__
 #define	__UTIL_STL_MAP_H__
+
+#error	"This file is now obsolete, please use <map> instead."
 
 #include "util/STL/map_fwd.h"
 

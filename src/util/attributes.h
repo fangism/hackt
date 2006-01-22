@@ -2,7 +2,9 @@
 	\file "util/attributes.h"
 	Configure-dependent use of compiler attributes.  
 	This file is highly dependent on compiler characteristics.  
-	$Id: attributes.h,v 1.3 2005/09/05 05:04:51 fang Exp $
+	TODO: define these conditionally depending on configure.
+	Hint: use AC_COMPILE_IFELSE in configure.ac
+	$Id: attributes.h,v 1.4 2006/01/22 06:53:32 fang Exp $
  */
 
 #ifndef	__UTIL_ATTRIBUTES_H__
@@ -21,6 +23,19 @@
 	Goal: re-enable -Wunused in warning flags.  
  */
 #define	__ATTRIBUTE_UNUSED__		__attribute__ ((unused))
+
+//=============================================================================
+// visibility attributes (support added in gcc-4.0)
+
+/**
+	Public symbol visibility.  
+ */
+#define	__VISIBILITY_DEFAULT__	__attribute__ ((visibility("default")))
+
+/**
+	Hidden symbol visibility.  
+ */
+#define	__VISIBILITY_HIDDEN__	__attribute__ ((visibility("hidden")))
 
 //=============================================================================
 // type and variable attributes

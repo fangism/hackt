@@ -1,0 +1,7 @@
+# "util/lang/README"
+
+This directory subtree is for general-purpose language-specific tools.  
+
+TODO: bootstrap the cx-wrangler upon itself
+	converting C-style lexer/parser to C++-style.
+

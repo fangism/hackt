@@ -1,0 +1,9 @@
+// "short-03.hac"
+// connecting nand gates to same output
+
+import "nand.hac";
+
+bool z;
+nand<2> a( ,z);
+nand<4> b( ,z);
+

@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.5 2005/12/13 04:15:46 fang Exp $
+	$Id: cflat.h,v 1.6 2006/01/22 06:53:10 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_H__
@@ -9,8 +9,7 @@
 
 #include <iosfwd>
 #include "main/hackt_fwd.h"
-#include "util/string_fwd.h"
-#include "util/qmap_fwd.h"
+#include "main/options_modifier.h"
 
 namespace HAC {
 class cflat_options;
@@ -22,20 +21,14 @@ using std::ostream;
 	Yes, most everything is private, not supposed to use this directly, 
 	but rather, through program registration.  
  */
-class cflat {
+class cflat : protected options_modifier_policy<cflat_options> {
+	typedef	options_modifier_policy<cflat_options>
+						options_modifier_policy_type;
 public:
 	/// defined in "main/cflat_options.h"
 	typedef	cflat_options			options;
-	typedef	void (*options_modifier)(options&);
 private:
-	struct options_modifier_info;
-	/**
-		Use string instead of char* for alphabetization.  
-	 */
-	typedef	util::qmap<std::string, options_modifier_info>
-						options_modifier_map_type;
-	static const options_modifier_map_type	options_modifier_map;
-public:
+	// derive from options_modifier_policy::register_options_modifier_base
 	class register_options_modifier;
 public:
 	static const char		name[];

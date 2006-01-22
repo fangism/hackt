@@ -1,7 +1,7 @@
 /**
 	\file "lexer/flex_lexer_state.h"
 	Structure holding all of the flex scanner's stateful information.  
-	$Id: flex_lexer_state.h,v 1.2 2005/11/12 08:45:34 fang Exp $
+	$Id: flex_lexer_state.h,v 1.3 2006/01/22 06:53:09 fang Exp $
  */
 
 #ifndef	__LEXER_FLEX_LEXER_STATE_H__
@@ -15,8 +15,8 @@
  */
 #if	defined(FLEX_SCANNER) || defined(YYBISON) || defined(YYBYACC)
 
-#include <cstdio>
-#include "util/macros.h"
+#include "util/FILE_fwd.h"
+#include "util/NULL.h"
 
 
 #if	!defined(FLEX_SCANNER)

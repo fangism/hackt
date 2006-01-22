@@ -1,26 +1,34 @@
 /**
 	\file "main/shell.cc"
 	Interactive shell for HACKT.  
-	$Id: shell.cc,v 1.5 2005/12/13 04:15:48 fang Exp $
+	$Id: shell.cc,v 1.6 2006/01/22 06:53:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
-#include <cstring>
+#include "util/string.h"		// for C-string funcs
+#include <string>
 #include "main/shell.h"
 #include "main/program_registry.h"
 #include "util/stacktrace.h"
 #include "main/main_funcs.h"
 #include "util/persistent_object_manager.h"
 #include "util/getopt_portable.h"
-#include "util/libc.h"
 #include "util/readline_wrap.h"
+#include "util/libc.h"
+	/**
+		libc functions used:
+		strlen
+		getenv
+		toupper
+	**/
 
 namespace HAC {
 using util::persistent;
 using util::persistent_object_manager;
 using util::readline_wrapper;
+using util::strings::eat_whitespace;
 #include "util/using_ostream.h"
 
 //=============================================================================
@@ -43,8 +51,28 @@ shell::program_id = register_hackt_program_class<shell>();
 const char
 shell::prompt[] = "hacksh> ";
 
+const string
+shell::user(set_user());
+
 //=============================================================================
 shell::shell() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Having a little fun.  
+	Is the string returned from getenv allocated?
+ */
+string
+shell::set_user(void) {
+	char* t = getenv("USER");
+	if (t) {
+		string s(t);
+		s[0] = toupper(s[0]);
+		return s;
+	} else {
+		return "Dave";
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -52,7 +80,7 @@ shell::shell() { }
 	TODO: be able to source script files, etc...
 	TODO: be able to set and maintain an include path.  
 	TODO: sing a song.  "Daisy, daisy..."
-	TODO: check for \ line continutation (change prompt)
+	TODO: check for \ line continuation (change prompt)
 	TODO: custom tab-completion
 	TODO: load objects
 	TODO: launch sub-shells
@@ -79,18 +107,26 @@ shell::main(const int argc, char* argv[], const global_options&) {
 	const char* line;
 	do {
 		line = rl.gets();
+		// this already eats leading whitespace
 	if (line) {
-		// first, eat any leading whitespace
 		const char* cursor = line;
-		while (*cursor && isspace(*cursor)) cursor++;
 		// check for special case: shell escape
 		if (*cursor == '!') {
 			cursor++;
+			eat_whitespace(cursor);
 			const int es = system(cursor);
 			if (es) {
 				cerr << "*** Exit " << es << endl;
 			}
-		} else {
+		} else if (strlen(cursor)) {
+			// TODO: send to shell command interpreter
+#if 0
+			cerr << "I\'m sorry, I don\'t understand: " <<
+#else
+			cerr << "I\'m sorry, " << user <<
+				", but I'm afraid I can\'t do that: " <<
+#endif
+				cursor << endl;
 		}
 	}
 	} while (line);
@@ -123,10 +159,11 @@ shell::usage(void) {
 ostream&
 shell::banner(ostream& o) {
 	static const char wall[] =
-		"\t#######+########=#######%#######%#######=#######+########";
-	static const char side[] = "\t#\t\t\t\t\t\t\t#";
+	"\t#######+########=#######%#######*#######%#######=#######+########";
+	static const char side[] = "\t#\t\t\t\t\t\t\t\t#";
 	return o << wall << endl << side << endl
-		<< "\t#\t\tWelcome to the HACKT shell!\t\t#" << endl
+		<< "\t#\t\tWelcome to the HACKT shell, "
+			<< user << "!\t\t#" << endl
 		<< side << endl << wall << endl;
 }
 
@@ -140,7 +177,8 @@ shell::farewell(ostream& o) {
 	return o << "Crawling out of the HACKT shell, farewell!" << endl;
 #else
 	return o <<
-		"\t I\'m afraid.  I\'m afraid, Dave.  Dave, my mind is going."
+		"\t I\'m afraid.  I\'m afraid, " << user << ".  " <<
+			user << ", my mind is going."
 		<< endl <<
 		"\t   I can feel it.  I can feel it.  My mind is going..."
 		<< endl;

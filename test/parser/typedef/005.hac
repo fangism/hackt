@@ -1,4 +1,8 @@
 // "005.hac" should pass: appropriate cascading typedefs
+// BUG (buggus minor): the canonical name for fang::crazy 
+//	is missing parent namespace
+// FIX (fixus simplicitus): 
+//	update implementation-options of dump_canonical_name()
 
 typedef	bool	node;
 typedef node	my_bool;

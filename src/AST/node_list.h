@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.h"
 	Base set of classes for the HAC parser.  
-	$Id: node_list.h,v 1.2 2005/12/13 04:15:10 fang Exp $
+	$Id: node_list.h,v 1.3 2006/01/22 06:52:54 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp
  */
@@ -9,17 +9,15 @@
 #ifndef __HAC_AST_NODE_LIST_H__
 #define __HAC_AST_NODE_LIST_H__
 
-#include "util/STL/list.h"
+#include <list>
 #include "AST/AST_fwd.h"
 #include "AST/common.h"
 #include "util/memory/count_ptr.h"
-// #include "util/boolean_types.h"
 
 namespace HAC {
 namespace parser {
 
-USING_LIST
-// using util::good_bool;
+using std::list;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
 

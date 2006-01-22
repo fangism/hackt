@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.7 2005/12/13 04:15:11 fang Exp $
+ 	$Id: parse_context.cc,v 1.8 2006/01/22 06:52:54 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -44,7 +44,6 @@
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using entity::object_handle;
 using entity::enum_datatype_def;
 using entity::instantiation_statement_base;
@@ -62,6 +61,7 @@ using entity::pint_scalar;
 /**
 	Default context constructor.  Should really only be invoked
 	once (per source file or module).  
+	This constructor is used when constructing a module during compilation.
 	Creates the global namespace and initializes it with
 	built-in types.  
 	\param g pointer to global namespace.
@@ -77,7 +77,8 @@ context::context(module& m) :
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		strict_template_mode(true), 
-		in_conditional_scope(false)
+		in_conditional_scope(false), 
+		view_all_publicly(false)
 		{
 
 	// perhaps verify that g is indeed global?  can't be any namespace
@@ -97,6 +98,36 @@ context::context(module& m) :
 	// A: built-ins have been re-implemented in "art_built_ins.*"
 
 }	// end of context constructor
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A read-only-module constructor for checking without modifying.
+	This is used for tools that only need to read the module.  
+	\param m the precompiled module to attach.  
+		NOTE: really, only the namespace is required from the module.  
+	\param _pub pass true to be able to view all members publicly, 
+		lifting port-visibility restriction.  
+ */
+context::context(const module& m, const bool _pub) :
+		indent(0),		// reset formatting indentation
+		type_error_count(0), 	// type-check error count
+		namespace_stack(), 
+		current_open_definition(NULL), 
+		current_prototype(NULL), 
+		current_fundamental_type(NULL), 
+		sequential_scope_stack(), 
+		loop_var_stack(), 
+		global_namespace(m.get_global_namespace()), 
+		strict_template_mode(true), 
+		in_conditional_scope(false), 
+		view_all_publicly(_pub)
+		{
+	namespace_stack.push(global_namespace);
+	// NOTE: we don't bother loading the module's sequential scope
+	// because it should not be used in a read-only context.  
+	NEVER_NULL(current_namespace);	// make sure allocated properly
+	NEVER_NULL(global_namespace);	// same pointer
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -257,7 +288,7 @@ context::add_declaration(excl_ptr<definition_base>& d) {
 void
 context::open_enum_definition(const token_identifier& ename) {
 	const never_ptr<enum_datatype_def>
-		ed(current_namespace->lookup_object_here_with_modify(ename)
+		ed(current_namespace->lookup_member_with_modify(ename)
 				.is_a<enum_datatype_def>());
 	if (ed) {
 		if (ed->is_defined()) {

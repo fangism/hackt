@@ -4,13 +4,14 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.5 2005/12/13 04:15:18 fang Exp $
+	$Id: extern_templates.cc,v 1.6 2006/01/22 06:52:57 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 #define	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 
 #include "util/STL/list_fwd.h"
+#include <list>
 #include "Object/expr/types.h"
 #include "util/multikey.tcc"
 #include "util/packed_array.tcc"

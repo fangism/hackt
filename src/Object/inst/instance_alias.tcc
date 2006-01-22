@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.7 2005/12/13 04:15:29 fang Exp $
+	$Id: instance_alias.tcc,v 1.8 2006/01/22 06:53:00 fang Exp $
 	TODO: trim includes
  */
 
@@ -80,7 +80,6 @@ using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
-USING_STACKTRACE
 using util::multikey;
 using util::value_writer;
 using util::value_reader;
@@ -851,6 +850,7 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 	Rather than take a footprint argument, passed by the collection, 
 	we get the footprint each time because collections with
 	relaxed types may have different types per element.  
+	This executes in a top-down traversal of the hierarchy.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.11 2005/12/13 04:15:29 fang Exp $
+	$Id: instance_collection.tcc,v 1.12 2006/01/22 06:53:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -94,7 +94,6 @@ USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
 using std::bind2nd_argval;
-USING_STACKTRACE
 using util::multikey;
 using util::value_writer;
 using util::value_reader;
@@ -669,7 +668,7 @@ INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ARRAY_CLASS::lookup_instance_collection(
-		list<instance_alias_base_ptr_type>& l,
+		typename default_list<instance_alias_base_ptr_type>::type& l,
 		const const_range_list& r) const {
 	INVARIANT(!r.empty());
 	key_generator_type key_gen;
@@ -1316,7 +1315,7 @@ INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 bool
 INSTANCE_SCALAR_CLASS::lookup_instance_collection(
-		list<instance_alias_base_ptr_type>& l,
+		typename default_list<instance_alias_base_ptr_type>::type& l,
 		const const_range_list& r) const {
 	cerr << "WARNING: instance_array<Tag,0>::lookup_instance_collection(...) "
 		"should never be called." << endl;

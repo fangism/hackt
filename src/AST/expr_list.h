@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.2 2005/12/13 04:15:08 fang Exp $
+	$Id: expr_list.h,v 1.3 2006/01/22 06:52:53 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -19,6 +19,7 @@ class template_actuals;
 }
 namespace parser {
 using std::vector;
+using std::default_vector;
 //=============================================================================
 /**
 	List of expressions.  
@@ -44,13 +45,13 @@ protected:
 	typedef	expr_list_base			parent_type;
 public:
 	typedef	parent_type::const_iterator	const_iterator;
-	typedef	DEFAULT_VECTOR(expr::generic_meta_return_type)
+	typedef	default_vector<expr::generic_meta_return_type>::type
 						checked_meta_generic_type;
-	typedef	DEFAULT_VECTOR(expr::meta_return_type)
+	typedef	default_vector<expr::meta_return_type>::type
 						checked_meta_exprs_type;
-	typedef	DEFAULT_VECTOR(expr::nonmeta_return_type)
+	typedef	default_vector<expr::nonmeta_return_type>::type
 						checked_nonmeta_exprs_type;
-	typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
+	typedef	default_vector<inst_ref_meta_return_type>::type
 						checked_meta_refs_type;
 public:
 	expr_list();
@@ -65,14 +66,15 @@ virtual	~expr_list();
 
 	void
 	postorder_check_meta_generic(checked_meta_generic_type&, 
-		context&) const;
+		const context&) const;
 
 	void
-	postorder_check_meta_exprs(checked_meta_exprs_type&, context&) const;
+	postorder_check_meta_exprs(checked_meta_exprs_type&,
+		const context&) const;
 
 	void
 	postorder_check_nonmeta_exprs(checked_nonmeta_exprs_type&, 
-		context&) const;
+		const context&) const;
 
 	static
 	void
@@ -94,11 +96,13 @@ class inst_ref_expr_list : public inst_ref_expr_list_base {
 protected:
 	typedef	inst_ref_expr_list_base		parent_type;
 public:
-	typedef	DEFAULT_VECTOR(inst_ref_meta_return_type)
+	typedef	default_vector<prs_literal_ptr_type>::type
+						checked_bool_refs_type;
+	typedef	default_vector<inst_ref_meta_return_type>::type
 						checked_meta_refs_type;
-	typedef	DEFAULT_VECTOR(inst_ref_nonmeta_return_type)
+	typedef	default_vector<inst_ref_nonmeta_return_type>::type
 						checked_nonmeta_refs_type;
-	typedef	DEFAULT_VECTOR(data_ref_nonmeta_return_type)
+	typedef	default_vector<data_ref_nonmeta_return_type>::type
 						checked_nonmeta_data_refs_type;
 public:
 	explicit
@@ -110,16 +114,23 @@ public:
 	using parent_type::rightmost;
 
 	// generic refs (UNUSED)
+//	check_meta_references...
+	void
+	postorder_check_bool_refs(checked_bool_refs_type&, 
+		context&) const;
+
+	void
+	postorder_check_meta_refs(checked_meta_refs_type&, 
+		context&) const;
+
+//	check_nonmeta_references...
 	void
 	postorder_check_nonmeta_refs(checked_nonmeta_refs_type&, 
-		context&) const;
+		const context&) const;
 
 	void
 	postorder_check_nonmeta_data_refs(checked_nonmeta_data_refs_type&, 
-		context&) const;
-
-//	check_meta_references...
-//	check_nonmeta_references...
+		const context&) const;
 
 };	// end class inst_ref_expr_list
 
@@ -151,7 +162,7 @@ public:
 	rightmost(void) const;
 
 	return_type
-	check_template_args(context& c) const;
+	check_template_args(const context& c) const;
 
 };	// end class template_argument_list_pair
 

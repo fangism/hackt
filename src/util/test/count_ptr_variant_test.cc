@@ -1,6 +1,6 @@
 /**
 	\file "count_ptr_variant_test.cc"
-	$Id: count_ptr_variant_test.cc,v 1.1 2005/12/10 03:57:00 fang Exp $
+	$Id: count_ptr_variant_test.cc,v 1.2 2006/01/22 06:53:45 fang Exp $
  */
 // #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/count_ptr.tcc"
@@ -26,25 +26,25 @@ main(int, char*[]) {
 	const count_ptr<int> i(new int);
 
 	// this will be deleted [] upon destruction
-	const count_array_ptr<int> ii(new int[100]);
+	const count_array_ptr<int>::type ii(new int[100]);
 
 	// this will be freed upon destruction
-	const count_malloc_ptr<int>
+	const count_malloc_ptr<int>::type
 		im(static_cast<int*>(malloc(sizeof(int)*256)));
 }
 {
-	const count_array_ptr<int> im(new int[666]);
-	const count_array_ptr<int> jm(im);
-	const count_array_ptr<int> km = im;
+	const count_array_ptr<int>::type im(new int[666]);
+	const count_array_ptr<int>::type jm(im);
+	const count_array_ptr<int>::type km = im;
 	INVARIANT(jm);
 	INVARIANT(km);
 }
 {
-	const count_malloc_ptr<int>
+	const count_malloc_ptr<int>::type
 		im(static_cast<int*>(malloc(sizeof(int)*256)));
 	// will steal ownership
-	count_malloc_ptr<int> jm(im);
-	count_malloc_ptr<int> km = jm;
+	count_malloc_ptr<int>::type jm(im);
+	count_malloc_ptr<int>::type km = jm;
 	INVARIANT(jm);
 	INVARIANT(km);
 }

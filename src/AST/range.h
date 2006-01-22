@@ -1,7 +1,7 @@
 /**
 	\file "AST/range.h"
 	Expression-related parser classes for HAC.
-	$Id: range.h,v 1.2 2005/12/13 04:15:12 fang Exp $
+	$Id: range.h,v 1.3 2006/01/22 06:52:54 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_range.h,v 1.6.42.1 2005/12/11 00:45:10 fang Exp
  */
@@ -54,10 +54,10 @@ public:
 	rightmost(void) const;
 
 	range::meta_return_type
-	check_meta_index(context& c) const;
+	check_meta_index(const context& c) const;
 
 	range::nonmeta_return_type
-	check_nonmeta_index(context& c) const;
+	check_nonmeta_index(const context& c) const;
 };	// end class range
 
 //=============================================================================

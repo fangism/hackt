@@ -1,7 +1,7 @@
 /**
 	\file "pool_module_a.cc"
 	One module of a multimodule memory pool test.
-	$Id: pool_module_a.cc,v 1.4 2005/09/04 21:15:13 fang Exp $
+	$Id: pool_module_a.cc,v 1.5 2006/01/22 06:53:46 fang Exp $
  */
 
 #define	DEBUG_LIST_VECTOR_POOL				1
@@ -19,7 +19,6 @@
 #include "util/memory/list_vector_pool.tcc"
 #include "util/static_trace.h"
 
-USING_STACKTRACE
 using util::memory::count_ptr;
 using util::memory::excl_ptr;
 

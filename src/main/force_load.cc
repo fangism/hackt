@@ -3,9 +3,10 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.6 2005/12/13 04:15:46 fang Exp $
+	$Id: force_load.cc,v 1.7 2006/01/22 06:53:10 fang Exp $
  */
 
+#include "config.h"
 #include "main/force_load.h"
 #include "Object/module.h"
 #include "main/compile.h"
@@ -15,10 +16,15 @@
 #include "main/objdump.h"
 #include "main/alloc.h"
 #include "main/cflat.h"
+#include "main/prsim.h"
 #include "main/prsobjdemo.h"
 #include "main/dump_persistent_table.h"
 #include "main/shell.h"
 #include "main/version.h"
+
+#if	WANT_TO_HAVE_FUN
+#include "misc/sudoku-solver.h"
+#endif
 
 namespace HAC {
 
@@ -53,10 +59,14 @@ force_load(void) {
 	const alloc allocator;
 	const cflat cflattener;
 	const objdump objdumper;
+	const prsim prsimmer;
 	const prsobjdemo prsobjdemoer;
 	const dump_persistent_table persistent_dumper;
 	const version versionator;
 	const shell shell_shocker;
+#if WANT_TO_HAVE_FUN
+	const sudoku::solver ss;
+#endif
 }
 
 }	// end namespace HAC

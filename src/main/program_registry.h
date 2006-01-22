@@ -1,7 +1,7 @@
 /**
 	\file "main/program_registry.h"
 	Header for the interface to the main program.  
-	$Id: program_registry.h,v 1.3 2005/12/13 04:15:48 fang Exp $
+	$Id: program_registry.h,v 1.4 2006/01/22 06:53:11 fang Exp $
  */
 
 #ifndef	__MAIN_PROGRAM_REGISTRY_H__
@@ -13,6 +13,17 @@
 #include "util/macros.h"
 #include "util/qmap.h"
 #include "util/memory/count_ptr.h"
+
+/**
+	Useful macro for providing a bogus symbol for standalone
+	versions of the modules that don't require registration.  
+ */
+#define	FAKE_REGISTER_HACKT_PROGRAM					\
+namespace HAC {								\
+size_t									\
+register_hackt_program(const char*, program_entry::main_type* const, 	\
+		const char*) { return 0; }				\
+}
 
 namespace HAC {
 using std::string;

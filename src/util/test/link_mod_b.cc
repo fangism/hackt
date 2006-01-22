@@ -1,7 +1,7 @@
 /**
 	\file "link_mod_b.cc"
 	Testing ld linker characteristics.  
-	$Id: link_mod_b.cc,v 1.3 2005/09/04 21:15:11 fang Exp $
+	$Id: link_mod_b.cc,v 1.4 2006/01/22 06:53:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE				1
@@ -19,8 +19,6 @@
 #include "util/stacktrace.h"
 #endif
 #include "util/static_trace.h"
-
-USING_STACKTRACE
 
 //-----------------------------------------------------------------------------
 // specializations

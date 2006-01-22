@@ -17,12 +17,12 @@ Persistent Object Manager text dump:
 	13	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
 	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	15	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	17
+	16	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	17	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	17
+	21	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30

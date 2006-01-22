@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.4 2005/12/13 04:15:20 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.5 2006/01/22 06:52:59 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -41,7 +41,6 @@ using std::_Select2nd;
 #include "util/using_ostream.h"
 using util::indent;
 using util::auto_indent;
-USING_STACKTRACE
 using util::write_value;
 using util::read_value;
 using util::write_string;

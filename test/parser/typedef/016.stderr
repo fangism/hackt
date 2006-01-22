@@ -1,0 +1,1 @@
+ERROR: pure definition alias cannot have a template signature.  [8:10--9:15]

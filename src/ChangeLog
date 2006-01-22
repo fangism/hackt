@@ -3,6 +3,462 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-73-merged-prsim-00-34:
+	  Branch merge.
+	  Initial prsim code: expression allocation and command interface.
+	  Initial support for PRS macros and attributes. 
+	  This branch also includes important library fixes and improvements.  
+	  Significant configurability improvement for portability.  
+
+
+2006-01-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-34:
+	  Just portability and compatibility checks.
+	  Ready to merge to main.
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-33-merged-PRS-03-02:
+	  Merged in sibling branch: -PRS-03-02.
+		This early merge was deemed necessary because many essential
+		fixes and improvements were only on the prsim branch.
+		Most importantly the rewrite of cflat visitation
+		is needed to support PRS.  
+	  TODO: support Clint's requests for PRS extensions.  
+	  Status: prsim incomplete:
+		expression allocation complete, but not optimized.
+		a good start of the command-line interface.
+		PRS extensions:
+			Initial syntax and object support for macros
+				and attributes only.
+			need to support primary tool mode, 
+			possibly added to cflat_options.  
+			Add macro support in the cflat_visitor hierarchy.
+	  PRS activity is planned for after the merge to main trunk, 
+		then splitting off to -PRS-04.
+
+
+
+2006-01-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-32:
+	  Finished and (basic) tested member_meta_instance_reference::
+		lookup_globally_allocated_index().  Was easy, the footprint*
+		was available from the footprint frame!
+	  Reverted -00-28's revisions to unroll_context (cleaned).
+	  TODO: write some prsim script tests...
+	  Status: need to merge in sibling branch -PRS-03 revisions, 
+		this branch now in semi-stable state to do so.  
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-31:
+	  Clean-up only, from -00-28 revisions on.
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-30:
+	  Another minor lexer fix: regarding line-numbers of import
+		directives in the parse-tree.  A few test-cases updated.  
+	  TODO: clean-up #if code in AST/import_root.* and lexer/hackt-lex.ll.
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-29:
+	  Quick emergency bug-fix (reported by Clint Kelly):
+		Lexer was dying on assertion failure with w.r.t.
+		registry sizes and stack sizes.  (They need not be correlated.)
+		file_position struct was given a string name (path to file)
+		field for convenience.  Much cleaner now.  
+	  Some minor POSIX-related fixes, and yacc-related (libbogus) fixes.  
+	  TODO: line numbers reported are incorrect, fix using new
+		test case example.  
+	  TODO: back to TODO list from -prsim-00-28.  
+
+
+2006-01-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-28:
+	  Currently, prsim instance member lookup is in transition.
+	  AST::id_expr::check_meta_reference() calls 
+		the base-definition's lookup_nonparameter_member()
+		to lookup private subinstances of any type.  
+	  entity::definitions: added get_scopespace(), 
+		all typedefs forward the request to the scopespace to 
+		the canonical type's definition, 
+		implemented lookup_nonparameter_member(). 
+	  Added scopespace::__lookup_member(): non-virtual lookup of id_map.
+	  Tons of restructuring in {simple,member}_meta_instance_reference
+		and simple_meta_instance_reference_implementation<> policy:
+		factored out common code, added new useful method functions
+		for performing lookups of globally allocated information.  
+		Renamed old unroll_generic_scalar_reference to
+			unroll_scalar_substructure_reference, and
+			redefined unroll_generic_scalar_reference
+			to return a pointer to the alias' base type.  
+	  instance_alias_info<Tag>: instance_index member pushed to
+		substructure_parent_type.
+	  sim/prsim/Reference.cc: Switched to new incomplete code
+		over old incorrect code (that's progress).  
+	  TODO: finish writing member_meta_instance_reference::
+		lookup_globally_allocated_index, using type footprint.  
+	  TODO: clean up Object/ref/*.{h,tcc} files, after we re-wrote
+		a bunch of stuff and left obsolete code commented out.  
+	  TODO: clean up instance_index switches in instance_alias_info...
+	  TODO: no longer need unroll_context::lookup_private_members, 
+		revert those revisions.  
+	  TODO: merge in -PRS-03 sibling branch, then merge to trunk.  
+
+
+2006-01-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-PRS-03-02:
+	  Factored out repetitive code in lang/PRS::pull_* into common base
+		class (pull_base) for maintainability.  
+	  Added object structure for attributes in pull-up/dn production rules.
+		This resulted in larger rule binary objects (4+ B).
+		Tests cases' outputs have been updated accordingly.  
+	  Implemented most of type-checking of macros and attributes
+		expressions and instance-references.  
+		Had to add some new check functions to a few AST classes.  
+	  Some minor enhancements to util library (util/ChangeLog).
+
+
+	* HACKT-00-01-04-main-00-72-PRS-03-01:
+	  Spawned this concurrent branch for Clint, who's requested some
+		extensions to the PRS language.  
+	  AST/PRS.{h,cc}: added macro and attribute classes.  
+		Check methods are not written yet.  
+		Added optional attribute_list to PRS::rule.  
+		Added macro class as an alternative PRS::body_item.
+	  Grammar updated to add macros and attributes to PRS.
+		macro : ID '(' inst-refs... ')'
+		attribute : ID '=' expr_list
+		attribute_list : '[' attribute ';' ... ']'
+	  prs_expr : are now limited to relative (local) instance references
+		only, so no ::-prefixed absolute_id's.  
+	  TODO: write some check functionality.  
+
+
+2006-01-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-27:
+	  Documentation, clarification, and renaming, clean-up, 
+		and planning revision only.  
+	  Cleaned up #if 0 code from previous revision.  
+	  Wrote issues section in template chapter of language spec.  
+		Discusses a proposal for how member lookup should work
+		w.r.t. template parameters.  
+	  renamed member functions "lookup_object_here" to "lookup_member",
+		to make it clear what we're intending to do.  
+	  TODO: rewrite definition hierarchy's lookup_member function:
+		defer real work to scopespace's lookup_member
+		by virtualizing a new get_scopespace() mem-fun.
+		Typedefs will implement this by forwarding to canonical defs.  
+		Remember to omit template_formals.  
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-26:
+	  Can now "get node" in prsim.  
+	  parser::context: added is_publicly_viewable to enable looking
+		up of private members, useful for tools that are
+		read-only w.r.t. precompiled module.  
+		Also added a ctor with const module&, no more need to 
+			const_cast<> for read-only modules.  
+	  Refactored definition_base::lookup_port_formal_*(...):
+		just use one virtual function to get a port_formal_manager*
+		if definition-type has one, else default to NULL.
+		Results in less repetitive code (do this more often).  
+	  This also fixed a bug where template typedefs wouldn't forward
+		lookups to their canonical definition scopes.
+		Added new test-cases in parser/typedef/.  (018 demos this)
+	  Used excl_ptr<FILE, FILE_tag> for the first time in prsim/Reference.cc
+	  TODO: known deficiency only looking up public ports
+		in prsim:get, will be quick to fix.  
+	  TODO: implement definition_base::lookup_instance_member.
+	  TODO: clean up little #if 0 mess in Object/def/definition*.{h,cc}.
+	  Updated TODO list file.  
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-25:
+	  Minor patches to make sure package distchecks and everything builds 
+		on the other tested platforms
+		(actively using ppc-apple-darwin): i386-freebsd-g++-3.4.0, 
+		and i686-linux-gnu-g++-3.4.3.
+
+
+2006-01-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-24:
+	  No signficant source changes other than accommodating
+		MAJOR util library cleanups.
+	  See util/ChangeLog for details.
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-23:
+	  Wrote most of sim/prsim/Reference.cc, including parsing
+		and type-checking, just need the final lookup...
+	  ... after this brief interruption to dizzy-up the 
+		util/memory pointer classes with deallocation policies.  
+
+
+2006-01-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-22:
+	  Maintainence revision only, been lacking some distcheck 
+		discipline as of last few revisions.  Now distcheck clean.  
+	  This revision also features configure-checked compiler flags.
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-21:
+	  Most of AST/exprs' type-checking member functions have been updated
+		to take a *const* parse_context& argument instead of
+		a non-const reference.  This move helps guarantee that 
+		when we check an instance reference from another module
+		using the context, that we don't modify the module.
+		To make it easy to identify this patch, these
+		trivial modifications are the only ones in this revision.  
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-20:
+	  Instance-reference parser working, after a Makefile.am fix
+		and renaming old lexers' at_eof() to PREFIX_at_eof().  
+	  instref_parse: remembered to set reference argument yylval
+		before returning an accepted input.  
+	  Instated yyerror magic for instref_parse.
+		Really need to factor out this boilerplate code in future.
+	  TODO: sim/prsim/Reference.cc needs to call AST function
+		but after constructing a proper lookup context, 
+		from the host module.  
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-19:
+	  util library readline fix  and configuration enhancements only.  
+
+
+2006-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-18:
+	  Added bunch more core commands to prsim, and placeholders for more.
+	  Tore my own hair out trying to get multiple-lexers to compile
+		and link into libbogus without symbol collision but gave up.  
+		Issue: flex-generated source doesn't include user header
+		files early enough to be able to #define-rename all 
+		relevant yy-symbols.  (generated parsers were OK)
+	  Consequence: each lexer-parser pair is now compiled into
+		its own convenience library.  
+	  NOTE: lexer/instref-lex-options.h looks much different
+		from its original hackt counterpart...
+	  TODO: much later, resolve this lexer/parser fiasco
+		once-and-for-all with REAL tools.  
+	  Hacked by good enough for now, not going to waste more time.
+
+
+2006-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-17-merged-temp-04:
+	  Branch merge.
+	  Summary: instref parser added, parser-generation updates
+		to facilitate multiple-parsers, new and improved
+		prsim command registration interface.  
+		Also some util library enhancements and configuration checks.  
+
+
+2006-01-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-04:
+	  Implemented AST-generation for the instref parser.
+	  Re-implemented command infrastructure for prsim.  
+		Commands are now registered through categories
+		and using class-registration interface.  
+
+
+2006-01-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-03:
+	  Makefile.am: pulled libhacktparsers.la out from libhackt.la, 
+		now linked in separately, to avoid unnecessary duplication.  
+		Duplicated rules for the instref-parse parser, 
+		using hackt-parse as a template.  
+	  Now compiles the instance-reference parser (instref).
+		Needed work to avoid symbol collisions between 
+		different parsers.
+	  Silly modifications to hackt shell.  
+	  parser/*-parse-options.h:
+		conditionally define YYPARSE_PARAM when NOT in libbogus.
+	  parser/*-union.h:
+		macros to rename the union lookup functions
+		to avoid symbol collisions.  
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-02:
+	  This branch was created in honor of the frequent power outages
+		in our office building.  Committed a bunch of local files.
+	  Cross checked sources against g++4.  
+	  Intend to get command-line parser up.  
+
+
+2006-01-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16:
+	  Makefile.am reorganization: split-off everything pertaining to
+		the util/ directory into util/Makefile.inc (new).  
+	  lexer/parser-generation: replaced the lexyacc-prefix.awk
+		pipe with a generated #define substitution file
+		parser/hackt-prefix.h, created from 
+		util/lang/lexyacc/lexyacc-prefix-generator.awk.
+		This the first step in simplifying the parser generator
+		and mangler toolchain.  
+
+
+2006-01-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-15:
+	  configurability maintainence only.
+	  Added more configuration checks to util library, with help of 
+		autoconf checks.  
+	  Preparing for command-line parser additions, but may require
+		another overhaul of lexer/parser build system.  
+
+
+2006-01-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-14:
+	  Added basic command-line interpreter support for prsim, 
+		only basic commands so far, core functionality yet to come.  
+	  New files: sim/prsim/Command.{h,cc}
+	  Also util library additions in this revision.  
+
+
+2006-01-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-13:
+	  Added dot visualization mode for prsim, will be useful for debugging
+		and checking optimizations.  Just add -fdump-dot-struct
+		to hackt prsim to produce dot-format (stdout).
+	  Beautiful!
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-12:
+	  More prsim expr-allocation testing:
+		Added structural integrity check (State::check_structure).
+		Replaced some magic numbers (valid/invalid indices)
+			with meaningful enumerations.  See "sim/common.h".
+	  Fixed parenthesization bug in ExprAlloc::link_node_to_root_expr.  
+	  Added five test cases dumping expression allocation
+		in test/parser/prs.
+	  TODO: dump graphical (dot) representation of expressions.  
+
+
+2006-01-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-11:
+	  Updated output formatting for prsim expression allocation dump.
+	  Added test support for expr-allocation dump comparison.  
+
+
+2006-01-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-10:
+	  I was bored, so I had a little fun with autoconf.
+	  Added misc/ directory for fun.  
+
+
+2006-01-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-09:
+	  PRSIM expression allocation partially debugged for a few simple
+		test cases.  Debugging code retained.  
+	  Fixed convenience library link-ordering.
+	  Added prsim module.
+	  SIM::PRSIM::Expr,Node have to use vectors of children/fanout
+		instead of valarray, because valarray's realloc doesn't
+		copy old values.  :(  Consider new library template class?
+	  Added main/options_modifier.{h,tcc} -- reusable simple
+		getopt options registry, inheritable by modules.  
+		(Factored out of cflat module)
+	  Added main/simple_options.{h,tcc} -- simple commonly used
+		options parsing for simple commands.  
+	  TODO: test suite and test cases for expression allocation.  
+
+
+2006-01-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-08:
+	  Initial draft of Expr-allocation code, in sim/prsim/ExprAlloc.{h,cc}.
+		Code is untested, need to test, of course!
+	  Removed some deprecated ctors in cflat_context and derived classes.  
+	  Moved entity::PRS enumerations into "Object/lang/PRS_enum.h".
+
+
+2005-12-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-07:
+	  Deprecated (and commented-out) the old cflat_prs methods
+		and conforming to using a cflat_visitor.  
+	  TODO: do the same with cflat_alias instance hierarchy
+	  TODO: use cflat_visitor to allocate simulation expression structs.  
+
+
+2005-12-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-06:
+	  Completed transforming cflat routines into cflat_prs_printer
+		visitor methods.  (Testing passed.)
+	  Can now build upon this to perform other traversals.  
+	  TODO: phase out unused code for cflat_prs.  
+
+
+2005-12-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-05:
+	  Re-organized some Object/lang/PRS* code a little in preparation
+		for adding functionality via a visitor for performing
+		tree traversal operations.  
+	  Moved some utility classes into their own header files.  
+	  Added some utility classes in util library (headers).  
+	  TODO: factor out bunch of arguments into cflat/print context
+		and re-implement cflat with visitor as a demonstration.  
+
+
+2005-12-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-04:
+	  More prsim state and structure implementation Expr, Node, 
+		State, etc... a lot of comments on things.  
+	  TODO: write walkers for all our useful structures, starting with
+		PRS rules and expressions.  
+
+
+2005-12-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-03:
+	  More sim/prsim classes added.  
+	  Factored out some repetitive code using list_vector's as 
+		indexable pools into index_pool<vector< > >.
+	  Some memory-management classes added to util library.  
+
+
+2005-12-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-02:
+	  Drafted sim/prsim/{Node,Expr}.{h,cc} structs based on the old ones.  
+	  Makefile.am: added installcheck-local target.
+
+
+	* HACKT-00-01-04-main-00-72-prsim-00-01:
+	  This branch is for the development of the old prsim, 
+		with no new fancy features.  Its purpose is to provide
+		an example of how to use the general simulation framework.  
+	  Updated module class, providing a temporary footprint
+		importer class that undoes import upon destruction.  
+	  Added a few short READMEs.  
+	  Also added help to Makefile.am.  
+	  TODO: interface module to simulation framework for 
+		allocating prs nodes and expressions.  
+	  TODO: define simulation *state* for each simulator (checkpointable).  
+	  TODO: flesh out more details of TODO.
+
+
 2005-12-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

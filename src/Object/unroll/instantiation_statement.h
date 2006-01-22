@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.6 2005/12/13 04:15:42 fang Exp $
+	$Id: instantiation_statement.h,v 1.7 2006/01/22 06:53:08 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -17,7 +17,7 @@
 namespace HAC {
 namespace entity {
 //=============================================================================
-USING_LIST
+using std::list;
 USING_CONSTRUCT
 struct pint_tag;
 struct pbool_tag;

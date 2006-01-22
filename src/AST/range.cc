@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.2 2005/12/13 04:15:11 fang Exp $
+	$Id: range.cc,v 1.3 2006/01/22 06:52:54 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.2 2005/12/13 04:15:11 fang Exp $
+	$Id: range.cc,v 1.3 2006/01/22 06:52:54 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -98,7 +98,7 @@ range::rightmost(void) const {
 	\return pointer to checked entity::index_expr.
  */
 range::meta_return_type
-range::check_meta_index(context& c) const {
+range::check_meta_index(const context& c) const {
 	typedef	meta_return_type	return_type;
 	const expr::meta_return_type l(lower->check_meta_expr(c));
 	const count_ptr<pint_expr> lp(l.is_a<pint_expr>());
@@ -175,7 +175,7 @@ range::check_meta_index(context& c) const {
 	\return pointer to checked entity::index_expr.
  */
 range::nonmeta_return_type
-range::check_nonmeta_index(context& c) const {
+range::check_nonmeta_index(const context& c) const {
 	typedef	nonmeta_return_type	return_type;
 	const expr::nonmeta_return_type l(lower->check_nonmeta_expr(c));
 	const count_ptr<int_expr> lp(l.is_a<int_expr>());
@@ -240,7 +240,8 @@ range_list::~range_list() { }
 	\return success of type-check of all elements.  
  */
 good_bool
-range_list::postorder_check_meta(meta_check_type& temp, context& c) const {
+range_list::postorder_check_meta(meta_check_type& temp,
+		const context& c) const {
 	STACKTRACE_VERBOSE;
 	const_iterator i(begin());
 	const const_iterator e(end());
@@ -277,7 +278,7 @@ range_list::postorder_check_meta(meta_check_type& temp, context& c) const {
  */
 good_bool
 range_list::postorder_check_nonmeta(nonmeta_check_type& temp, 
-		context& c) const {
+		const context& c) const {
 	const_iterator i(begin());
 	const const_iterator e(end());
 	size_t j = 1;
@@ -305,7 +306,7 @@ range_list::postorder_check_nonmeta(nonmeta_check_type& temp,
 	\return index_expr_list.
  */
 range_list::checked_meta_indices_type
-range_list::check_meta_indices(context& c) const {
+range_list::check_meta_indices(const context& c) const {
 	typedef	checked_meta_indices_type	return_type;
 	typedef	meta_check_type			check_type;
 	STACKTRACE_VERBOSE;
@@ -354,7 +355,7 @@ range_list::check_meta_indices(context& c) const {
 	\return nonmeta_index_list.
  */
 range_list::checked_nonmeta_indices_type
-range_list::check_nonmeta_indices(context& c) const {
+range_list::check_nonmeta_indices(const context& c) const {
 	typedef	checked_nonmeta_indices_type	return_type;
 	typedef	nonmeta_check_type		check_type;
 	check_type temp;
@@ -389,7 +390,7 @@ range_list::check_nonmeta_indices(context& c) const {
 	\return newly allocated meta_range_list.
  */
 range_list::checked_meta_ranges_type
-range_list::check_meta_ranges(context& c) const {
+range_list::check_meta_ranges(const context& c) const {
 	typedef	checked_meta_ranges_type	return_type;
 	typedef	meta_check_type			check_type;
 	check_type temp;
@@ -567,7 +568,7 @@ dense_range_list::~dense_range_list() {
  */
 good_bool
 dense_range_list::postorder_check_meta(meta_check_type& temp, 
-		context& c) const {
+		const context& c) const {
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
 	const const_iterator e(end());
@@ -615,7 +616,7 @@ dense_range_list::postorder_check_meta(meta_check_type& temp,
 	\return pointer to newly allocated range expression list.  
  */
 dense_range_list::meta_return_type
-dense_range_list::check_formal_dense_ranges(context& c) const {
+dense_range_list::check_formal_dense_ranges(const context& c) const {
 	typedef	meta_return_type	return_type;
 	typedef	meta_check_type		check_type;
 	STACKTRACE("dense_range_list::check_formal_dense_ranges()");

@@ -3,20 +3,33 @@
 	List that tracks uniqueness.
 	Order-preserving set.  
 
-	$Id: unique_list.h,v 1.6 2005/11/10 02:13:11 fang Exp $
+	$Id: unique_list.h,v 1.7 2006/01/22 06:53:38 fang Exp $
  */
 
 #ifndef __UTIL_UNIQUE_LIST__
 #define __UTIL_UNIQUE_LIST__
 
 #include "util/macros.h"
-#include "util/STL/list.h"
-// #include <list>
+#include "util/STL/list_fwd.h"
+#include "util/STL/set_fwd.h"
+#include <list>
 #include <set>
 #include <algorithm>		// for find
 
 namespace util {
 using std::find;
+
+#define	UNIQUE_LIST_TEMPLATE_SIGNATURE					\
+template <class T, class List, class Set>
+#define	UNIQUE_LIST_CLASS			unique_list<T, List, Set>
+
+template <class T, class List, class Set>
+class unique_list;
+
+template <class T, class List = typename std::default_list<T>::type,
+		class Set = typename std::default_set<T>::type >
+class unique_list;
+
 //=============================================================================
 /**
         Uses a set to track uniqueness.  
@@ -24,7 +37,7 @@ using std::find;
 	Can also use slist for list for forward-only iteration.
 	__gnu_cxx::hash_set provides constant time hashing.  
  */
-template <class T, class List = std::list<T>, class Set = std::set<T> >
+UNIQUE_LIST_TEMPLATE_SIGNATURE
 class unique_list {
 public:
 	typedef	T				value_type;

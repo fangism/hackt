@@ -2,7 +2,7 @@
 	\file "Object/common/util_types.h"
 	Collective typedefs for utility types.  
 	This file was "Object/common/util_types.h" in a former life.  
-	$Id: util_types.h,v 1.4 2005/12/13 04:15:18 fang Exp $
+	$Id: util_types.h,v 1.5 2006/01/22 06:52:57 fang Exp $
  */
 
 #ifndef	__OBJECT_COMMON_UTIL_TYPES_H__
@@ -20,20 +20,24 @@ namespace entity {
 	class meta_instance_reference_base;
 	class meta_range_list;
 	class instantiation_statement_base;
-	USING_DEQUE
-	USING_LIST
+	using std::deque;
+	using std::default_deque;
+	using std::default_vector;
+	using std::list;
+	using std::default_list;
 	using util::memory::never_ptr;
 	using util::memory::count_ptr;
 
-	typedef	list<never_ptr<name_space> >	namespace_collection_type;
-	typedef	list<never_ptr<const name_space> >
-						const_namespace_collection_type;
+	typedef	default_list<never_ptr<name_space> >::type
+						namespace_collection_type;
+	typedef	default_list<never_ptr<const name_space> >::type
+					const_namespace_collection_type;
 
 	/**
 		Should be synchronized with
 		parser::expr_list::checked_refs_type.
 	 */
-	typedef DEFAULT_VECTOR(count_ptr<meta_instance_reference_base>)
+	typedef default_vector<count_ptr<meta_instance_reference_base> >::type
 						checked_refs_type;
 
 
@@ -62,7 +66,7 @@ namespace entity {
 		TODO: subtype into specific instantiation statement types.  
 	 */
 //	typedef DEFAULT_DEQUE(never_ptr<const instantiation_statement_base>)
-	typedef DEFAULT_DEQUE(predicated_inst_stmt_ptr)
+	typedef default_deque<predicated_inst_stmt_ptr>::type
 			index_collection_type;
 
 	/**

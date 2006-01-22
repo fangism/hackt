@@ -1,5 +1,55 @@
 "ChangeLog"
 
+2006-01-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-73-merged-prsim-00-34:
+	  Branch merge.  see src/ChangeLog for details.
+	  Initial prsim and PRS language extensions.  
+	  Improved configurability and portability.  
+
+
+2006-01-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-25:
+	  Configurability and portability update only, 
+		after a major libary clean-up from -prsim-00-24.
+
+
+2006-01-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-22:
+	  Most compiler warning flags are now checked during configure
+		and passed to automake's AM_CFLAGS and AM_CXXFLAGS.
+
+
+2006-01-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-17-merged-temp-04:
+	  Branch merge.  
+
+
+2006-01-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-16-temp-03:
+	  More libc function config tests, pertaining to <ctype.h>.
+	  Contemplating support for fat binaries in the future.  
+
+
+2006-01-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-15:
+	  Many new configuration checks for libstdc functions were
+		added to configure.ac, and used in "src/util/libc.h".
+
+
+2005-12-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-72-prsim-00-01:
+	  Added "make help" target to all generated Makefiles.  
+		Gives brief description of global and local make targets
+		per directory.  Never be lost again!
+
+
 2005-12-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-merged-rename-00-06:

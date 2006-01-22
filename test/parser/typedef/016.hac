@@ -1,0 +1,18 @@
+// "016.hac"
+// copy-modified from "015.in"
+// should fail
+
+defproc baz(bool x, y, z) { }
+
+// this is rejected because an alias-style typedef cannot be templated
+template <pint Z>
+typedef	baz	zab;
+
+/**
+baz	P;
+zab	Q;
+
+P.z = Q.y;
+**/
+
+

@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.2 2005/12/13 04:15:13 fang Exp $
+	$Id: token.cc,v 1.3 2006/01/22 06:52:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -76,7 +76,6 @@ namespace memory {
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using entity::pint_const;
 using entity::pbool_const;
 
@@ -192,7 +191,7 @@ token_int::rightmost(void) const {
 	\return newly created constant integer value.  
  */
 expr::meta_return_type
-token_int::check_meta_expr(context& c) const {
+token_int::check_meta_expr(const context& c) const {
 	return expr::meta_return_type(new pint_const(val));
 }
 
@@ -233,7 +232,7 @@ token_float::rightmost(void) const {
 	Need built-in float type first.  
  */
 expr::meta_return_type
-token_float::check_meta_expr(context& c) const {
+token_float::check_meta_expr(const context& c) const {
 	cerr << "token_float::check_meta_expr(): not quite done yet!" << endl;
 	return expr::meta_return_type(NULL);
 }
@@ -308,7 +307,7 @@ token_identifier::rightmost(void) const {
 	\return pointer to the instance named if found, else NULL.  
  */
 inst_ref_expr::meta_return_type
-token_identifier::check_meta_reference(context& c) const {
+token_identifier::check_meta_reference(const context& c) const {
 	typedef	inst_ref_expr::meta_return_type		return_type;
 	STACKTRACE("token_identifier::check_meta_expr()");
 
@@ -336,7 +335,7 @@ token_identifier::check_meta_reference(context& c) const {
 	\return pointer to the instance named if found, else NULL.  
  */
 inst_ref_expr::nonmeta_return_type
-token_identifier::check_nonmeta_reference(context& c) const {
+token_identifier::check_nonmeta_reference(const context& c) const {
 	typedef	inst_ref_expr::nonmeta_return_type	return_type;
 	STACKTRACE("token_identifier::check_nonmeta_expr()");
 
@@ -404,7 +403,7 @@ token_bool::rightmost(void) const {
 }
 
 expr::meta_return_type
-token_bool::check_meta_expr(context& c) const {
+token_bool::check_meta_expr(const context& c) const {
 	return expr::meta_return_type(new pbool_const(strcmp(c_str(),"true") == 0));
 }
 
@@ -447,7 +446,7 @@ token_else::check_build(context& c) const {
 }
 
 expr::meta_return_type
-token_else::check_meta_expr(context& c) const {
+token_else::check_meta_expr(const context& c) const {
 	cerr << "token_else::check_build(): Don't call me!";
 	return expr::meta_return_type(NULL);
 }
@@ -496,7 +495,7 @@ token_quoted_string::check_build(context& c) const {
 }
 
 expr::meta_return_type
-token_quoted_string::check_meta_expr(context& c) const {
+token_quoted_string::check_meta_expr(const context& c) const {
 	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }

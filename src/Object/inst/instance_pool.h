@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.5 2005/12/13 04:15:30 fang Exp $
+	$Id: instance_pool.h,v 1.6 2006/01/22 06:53:01 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_INSTANCE_POOL_H__
@@ -12,6 +12,7 @@
 #include "util/list_vector.h"
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
+#include "util/memory/index_pool.h"
 
 namespace HAC {
 namespace entity {
@@ -20,6 +21,8 @@ using std::istream;
 using std::ostream;
 using util::good_bool;
 using util::persistent_object_manager;
+using util::memory::index_pool;
+
 //=============================================================================
 /**
 	Wrapped interface to list_vector being used as an indexable pool, 
@@ -27,8 +30,8 @@ using util::persistent_object_manager;
 	Consider adding this as an index_vector_pool to the util library.  
  */
 template <class T>
-class instance_pool : private util::list_vector<T> {
-	typedef	util::list_vector<T>		parent_type;
+class instance_pool : private index_pool<util::list_vector<T> > {
+	typedef	index_pool<util::list_vector<T> >	parent_type;
 	typedef	instance_pool<T>		this_type;
 	typedef	typename T::tag_type		tag_type;
 public:
@@ -55,12 +58,7 @@ public:
 	using parent_type::begin;
 	using parent_type::end;
 	using parent_type::operator[];
-
-	size_t
-	allocate(void);
-
-	size_t
-	allocate(const T&);
+	using parent_type::allocate;
 
 	// there is no deallocate
 

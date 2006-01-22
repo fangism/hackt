@@ -1,8 +1,8 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.7 2005/12/13 04:15:51 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.8 2006/01/22 06:53:48 fang Exp $
 
-# NOTE: tepomrarily just uses stdout dump during execution
+# NOTE: temporarily just uses stdout dump during execution
 # will updated later...
 
 # $1 is the executable for the creator (hackt alloc), expecting 2 arguments

@@ -1,0 +1,31 @@
+This directory is a generalization of sudoku-like puzzle solvers
+using a brute force algorithm.  
+
+This is a learning mini-project for developing a general, reusable
+brute-force problem-solving framework, with heavy use of templates.  
+
+The objective is for a programmer to be able to write a minimal
+number of classes describing the problem with its constraints
+and use the same template code to do the work.  
+
+Minor goal is to decompose a general class of problems into 
+a set of orthogonal components that can be supplied by the programmer.  
+This requires documenting a well-defined interface of class requirements
+for the programmer to follow.  
+
+For starters, examine the pattern code in "misc/sudoku/tableau.tcc".  
+
+To instantiate a specific problem-solver, follow the examples in
+"misc/sudoku/libsudoku.cc".
+
+Phase one of this toy project allows a programmer to specify
+the topology of the board, and the set of constraints only at compile-time.
+The primary advantage of compile-time programming approach is efficiency
+via specialization and replication (by template instantiation).  
+No virtual functions are involved in this approach.  
+
+Phase two will allow users to specify the board and constraints
+at run-time.  This will grant the end user the flexibility of creating
+run-time variations of the solver.  (Of course this introduces
+run-time overheads associated with dynamic dispatching of virtual functions.)
+

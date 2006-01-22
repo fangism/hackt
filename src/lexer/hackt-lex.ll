@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.5 2005/12/13 04:15:45 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.6 2006/01/22 06:53:09 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -50,22 +50,34 @@
 
 		Use fast token allocation from util library.  
 
+	KNOWN ISSUE: the headers in this source file do NOT appear
+		first in the generated lexer source code, which 
+		presents a problem in the renaming scheme that uses
+		an include with preprocessor defines.  
+
 ******************************************************************************/
 /****** DEFINITIONS **********************************************************/
 
 %{
 /* scanner-specific header */
 
+#define	ENABLE_STACKTRACE		0
+
 #include <iostream>
 #include <cstdlib>
 
+#ifdef	LIBBOGUS
+// HACK: prevent the inclusion of "parser/hackt-prefix.h"
+#define	__LEXYACC_HACKT__PREFIX_H__
+#endif
+
 #include "util/macros.h"
 #include "util/using_ostream.h"
+#include "parser/hackt-prefix.h"
 #include "AST/AST.h"		/* everything needed for "y.tab.h" */
 #include "lexer/input_manager.h"
 #include "lexer/file_manager.h"
 using namespace HAC::parser;
-
 
 // DIRTY MAKE HACK ALERT
 #if	defined(NO_FANCY_YYERROR)
@@ -78,6 +90,7 @@ using namespace HAC::parser;
 #include "lexer/hac_lex.h"
 #include "lexer/hackt-lex-options.h"
 #include "lexer/flex_lexer_state.h"
+#include "util/stacktrace.h"
 using flex::lexer_state;
 
 /**
@@ -144,17 +157,19 @@ static const int comment_feedback = 0;		/* reporting of comment state */
 	This will generate excessive feedback for every detailed
 	action of the lexer, even in the middle of tokenizing.  
  */
-#define	DEFAULT_TOKEN_FEEDBACK						\
-	if (token_feedback) {						\
-		cerr << "token = " << yytext <<				\
-			" " LINE_COL(CURRENT) << endl;			\
+static inline void
+DEFAULT_TOKEN_FEEDBACK(const lexer_state& foo) {
+	if (token_feedback) {
+		cerr << "token = " << yytext <<
+			" " LINE_COL(CURRENT) << endl;
 	}
+}
 
 /* macros for tracking single line tokens (no new line) */
 
 static inline void
 TOKEN_UPDATE(const lexer_state& foo) {
-	DEFAULT_TOKEN_FEEDBACK
+	DEFAULT_TOKEN_FEEDBACK(foo);
 	CURRENT.col += yyleng;
 }
 
@@ -226,6 +241,12 @@ STRING_UPDATE(const lexer_state& foo) {
 	assert(string_buf_ptr -string_buf < STRING_MAX_LEN);
 }
 
+static inline void
+STRING_FINISH(YYSTYPE& hackt_lval, lexer_state& foo) {
+	STRING_UPDATE(foo);
+	hackt_lval._token_quoted_string = new token_quoted_string(string_buf);
+}
+
 /* macros for tracking long, multiline tokens */
 /* pass into p either source_pos or comment_pos */
 static inline void
@@ -255,7 +276,7 @@ MULTILINE_NEWLINE(token_position& p, const lexer_state& foo) {
 }
 
 /* checking whether or not we are at end of file, defined below */
-int at_eof(void);
+int hackt_at_eof(void);
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
@@ -412,22 +433,30 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 {POSITIONTOKEN} { NODE_POSITION_UPDATE(*hackt_lval, foo); return yytext[0]; }
 
 {IMPORT} {
+	STACKTRACE("lexing import");
 /***
 	That's right, manually opening the file in the lexer.  
 	Can't necessarily count on the [LA]LR parser to do this properly.  
 ***/
 	/* need some string-hacking to extract file name */
-	TOKEN_UPDATE(foo);
-	YYSTYPE temp;
+	KEYWORD_UPDATE(*hackt_lval, foo);
+	excl_ptr<const keyword_position>
+		kw_import(hackt_lval->_keyword_position);
+	NEVER_NULL(kw_import);
+	// meh, just re-use the passed in lval, rather than local temporary
+	YYSTYPE& temp(*hackt_lval);
 	/* OK to reuse this lexer state in recursive lex */
 	const int expect_string = __hackt_lex(&temp, foo);
 	if (expect_string != STRING) {
 		cerr << "Expecting \"file\" after import." << endl;
 		THROW_EXIT;
 	}
-	/* excl_ptr will delete token */
-	const excl_ptr<const token_quoted_string>
+	STRING_FINISH(temp, foo);
+	/* excl_ptr will delete token if unused */
+	excl_ptr<const token_quoted_string>
 		fsp(temp._token_quoted_string);
+	NEVER_NULL(fsp);
+	
 	const string& fstr(*fsp);
 	/* claim the semicolon first before opening file */
 	const int expect_semi = __hackt_lex(&temp, foo);
@@ -435,19 +464,12 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		cerr << "Expecting ';' after import \"...\"." << endl;
 		THROW_EXIT;
 	}
-	/* excl_ptr will delete token */
+	/* NODE_POSITION_UPDATE(*hackt_lval, foo); */
+	/* excl_ptr will delete token if unused */
 	const excl_ptr<const node_position>
 		ssp(temp._node_position);
 	// cerr << fstr << endl;
 	// cerr << "current FILE* (before) = " << yyin << endl;
-#if 0
-	const file_status::status err =
-		input_manager::enter_file(yyin, hackt_parse_file_manager, 
-			fstr.c_str());	// append &cerr for debugging
-	// cerr << "current FILE* (after) = " << yyin << endl;
-	switch (err) {
-	case file_status::NEW_FILE: {
-		// cerr << "opened it." << endl;
 /***
 	From: http://developer.apple.com/documentation/DeveloperTools/flex/flex_9.html
 
@@ -466,25 +488,6 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	does not reset the start condition to INITIAL (see Start Conditions, 
 	below).
 ***/
-		yyrestart(yyin);
-		break;
-	}
-	case file_status::SEEN_FILE:
-		break;
-	case file_status::CYCLE:
-		hackt_parse_file_manager.dump_file_stack(cerr);
-		cerr << "Detected cyclic file dependency: " << fstr << endl;
-		THROW_EXIT;
-		break;
-	case file_status::NOT_FOUND:
-		hackt_parse_file_manager.dump_file_stack(cerr);
-		cerr << "Unable to open file: " << fstr << endl;
-		THROW_EXIT;
-		break;
-	default:
-		abort();
-	}       // end switch
-#else
 	// TODO: better error reporting and handling, when I have time...
 	// try to open the file, using search paths (true)
 	const input_manager ym(hackt_parse_file_manager, fstr.c_str(), true);
@@ -492,6 +495,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	const file_status::status stat = ym.get_status();
 	switch(stat) {
 	case file_status::NEW_FILE: {
+		STACKTRACE("import new file");
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
 		excl_ptr<root_body> _root = HAC::parse_to_AST(ym.get_file());
 		if (!_root) {
@@ -500,30 +504,40 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 			THROW_EXIT;
 		}
 		// false: this is first time seeing this file
+		// NOTE: creating the imported root here will use
+		// the wrong token_position because file stack already-adjusted
 		hackt_lval->_imported_root =
-			new imported_root(_root, pstr, false);
+			new imported_root(_root, kw_import, fsp, pstr, false);
+		MUST_BE_NULL(kw_import);
+		MUST_BE_NULL(fsp);
 		MUST_BE_NULL(_root);	// transferred ownership
 		return IMPORT;
 	}
 	case file_status::SEEN_FILE: {
+		STACKTRACE("old file");
 		// true: already seen file, this will be a placeholder
 		excl_ptr<root_body> null;
 		hackt_lval->_imported_root =
-			new imported_root(null, string(), true);
+			new imported_root(null, kw_import, fsp, string(), true);
+		MUST_BE_NULL(kw_import);
+		MUST_BE_NULL(fsp);
 		return IMPORT;
 	}
-	case file_status::CYCLE:
+	case file_status::CYCLE: {
+		STACKTRACE("cyclic file!");
 		hackt_parse_file_manager.dump_file_stack(cerr);
 		cerr << "Detected cyclic file dependency: " << fstr << endl;
 		THROW_EXIT;
-	case file_status::NOT_FOUND:
+	}
+	case file_status::NOT_FOUND: {
+		STACKTRACE("file not found");
 		hackt_parse_file_manager.dump_file_stack(cerr);
 		cerr << "Unable to open file: " << fstr << endl;
 		THROW_EXIT;
+	}
 	default:
 		abort();
 	}
-#endif
 }
 
 {NAMESPACE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return NAMESPACE; }
@@ -737,9 +751,13 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		cerr << "end of quoted-string: \"" << string_buf << "\" " <<
 			LINE_COL(CURRENT) << endl;
 	}
+#if 0
 	STRING_UPDATE(foo);
-	BEGIN(INITIAL);
 	hackt_lval->_token_quoted_string = new token_quoted_string(string_buf);
+#else
+	STRING_FINISH(*hackt_lval, foo);
+#endif
+	BEGIN(INITIAL);
 	return STRING;
 }
 
@@ -823,7 +841,7 @@ namespace lexer {
 	to a statically linked variable, (which makes it invisible 
 	to the outside world).  
  */
-int at_eof(const flex::lexer_state& foo) {
+int hackt_at_eof(const flex::lexer_state& foo) {
 	assert(YY_CURRENT_BUFFER);
 	return YY_CURRENT_BUFFER->yy_n_chars == 0;
 }

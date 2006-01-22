@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.21 2005/12/13 04:15:50 fang Exp $
+	$Id: persistent_object_manager.h,v 1.22 2006/01/22 06:53:35 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -9,6 +9,8 @@
 
 #include <iosfwd>			// include stringstream
 #include "util/list_vector.h"
+#include <list>
+#include <map>
 #include "util/persistent.h"
 
 #include "util/hash_qmap.h"

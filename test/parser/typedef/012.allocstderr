@@ -1,0 +1,5 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	the_matrix	array2d<3, 3>
+2	(top)	-	2	the_row	array2d<1, 12>
+3	(top)	-	3	the_col	array2d<10, 1>

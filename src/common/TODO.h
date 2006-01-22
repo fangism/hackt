@@ -1,7 +1,7 @@
 /**
 	\file "common/TODO.h"
 	Macros for maintainer's notes in code.  
-	$Id: TODO.h,v 1.3 2005/09/14 15:30:35 fang Exp $
+	$Id: TODO.h,v 1.4 2006/01/22 06:53:09 fang Exp $
  */
 
 #ifndef	__COMMON_TODO_H__
@@ -21,7 +21,7 @@
  */
 #define	FINISH_ME_EXIT(who)						\
 	FINISH_ME(who);							\
-	THROW_EXIT;
+	THROW_EXIT
 
 extern
 void

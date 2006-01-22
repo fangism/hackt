@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: hackt-parse-options.h,v 1.5 2005/11/12 22:30:26 fang Exp $
+	$Id: hackt-parse-options.h,v 1.6 2006/01/22 06:53:24 fang Exp $
 	This file was formerly known as:
 	Id: art++-parse-options.h,v 1.2 2005/06/19 01:58:50 fang Exp
  */
@@ -46,8 +46,10 @@
 #define	YYLSP_NEEDED			0
 #endif
 
-#if USING_BISON
-#define	YYPARSE_PARAM			null, YYSTYPE& hackt_lval, FILE* infile
+// in the original source, a local variable yylval shares the same name
+// as the parameter we wish to pass by reference.  
+#if USING_BISON && !defined(LIBBOGUS)
+#define	YYPARSE_PARAM		null, YYSTYPE& hackt_lval, FILE* infile
 #endif
 
 #if USING_YACC

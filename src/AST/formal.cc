@@ -1,7 +1,7 @@
 /**
 	\file "AST/formal.cc"
 	Class method definitions for HAC::parser for formal-related classes.
-	$Id: formal.cc,v 1.2 2005/12/13 04:15:08 fang Exp $
+	$Id: formal.cc,v 1.3 2006/01/22 06:52:53 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_formal.cc,v 1.27.10.1 2005/12/11 00:45:06 fang Exp
  */
@@ -61,7 +61,6 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::template_formal_decl_list_pair, "(template-for
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
-USING_STACKTRACE
 using entity::user_def_chan;
 using entity::dynamic_param_expr_list;
 

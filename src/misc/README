@@ -1,0 +1,8 @@
+Thie directory (src/misc) contains useless toys, enabled by
+the configure option --enable-fun.
+Hey, development can get boring, even seasoned developers 
+need to unwind with fun coding.  
+
+The sources in here are used to compile a convenience library
+and also stand-alone executables.  
+

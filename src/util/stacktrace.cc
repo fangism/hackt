@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.11 2005/09/04 21:15:08 fang Exp $
+	$Id: stacktrace.cc,v 1.12 2006/01/22 06:53:36 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -9,7 +9,7 @@
 // #define	ENABLE_STATIC_TRACE	1
 
 #include "util/static_trace.h"
-STATIC_TRACE_BEGIN("stacktrace")
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include "config.h"
 
@@ -18,15 +18,15 @@ STATIC_TRACE_BEGIN("stacktrace")
 #include <iterator>
 #include <string>
 #include <stack>
+#include <list>
 
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 #include "util/likely.h"
-#include "util/STL/list.tcc"
 #include "util/qmap.tcc"
 
 namespace util {
-USING_LIST
+using std::list;
 using std::ostream;
 using util::qmap;
 using std::stack;
@@ -315,5 +315,5 @@ stacktrace::redirect::~redirect() {
 //=============================================================================
 }	// end namespace util
 
-STATIC_TRACE_END("stacktrace")
+DEFAULT_STATIC_TRACE_END
 

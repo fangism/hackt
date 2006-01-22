@@ -1,0 +1,12 @@
+// "short-03.hac"
+// connecting nor gates to same output
+
+import "nor.hac";
+
+bool z;
+nor<2> a( ,z);
+nor<4> b( ,z);
+
+// note: opportunity to fuse pull-downs into a 6-way OR missed.
+// that's ok, optimization is for later...
+

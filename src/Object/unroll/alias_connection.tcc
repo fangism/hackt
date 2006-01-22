@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.6 2005/12/13 04:15:41 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.7 2006/01/22 06:53:08 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -46,7 +46,6 @@ using std::find_if;
 using util::dereference;
 using util::memory::never_ptr;
 USING_UTIL_COMPOSE
-USING_STACKTRACE
 
 //=============================================================================
 // class alias_connection method definitions

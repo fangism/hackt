@@ -2,7 +2,7 @@
 	\file "util/static_trace.cc"
 	Implementation (simple) of static initialization tracing utility
 	class. 
-	$Id: static_trace.cc,v 1.4 2005/05/19 18:43:36 fang Exp $
+	$Id: static_trace.cc,v 1.5 2006/01/22 06:53:37 fang Exp $
  */
 
 // force proper preprocessing of its own header file
@@ -14,7 +14,7 @@
 
 namespace util {
 #include "util/using_ostream.h"
-
+//=============================================================================
 static_begin::static_begin(const string& s) : msg(s) {
 	INVARIANT(cerr);
 	cerr << "START-initialization: " << msg << endl;
@@ -25,8 +25,19 @@ static_begin::~static_begin() {
 	cerr << "END---destruction: " << msg << endl;
 }
 
+//=============================================================================
 
+static_here::static_here(const string& s) : msg(s) {
+	INVARIANT(cerr);
+	cerr << "creating marker: " << msg << endl;
+}
 
+static_here::~static_here() {
+	INVARIANT(cerr);
+	cerr << "destroying marker: " << msg << endl;
+}
+
+//=============================================================================
 static_end::static_end(const string& s) : msg(s) {
 	INVARIANT(cerr);
 	cerr << "END---initialization: " << msg << endl;
@@ -37,5 +48,6 @@ static_end::~static_end() {
 	cerr << "START-destruction: " << msg << endl;
 }
 
+//=============================================================================
 }	// end namespace util
 

@@ -1,0 +1,5 @@
+"src/AST/README"
+
+This directory contains classes pertaining to the syntax tree
+produced by the HACKT parsers.  
+

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.5 2005/12/13 04:15:44 fang Exp $
+	$Id: unroll_context.h,v 1.6 2006/01/22 06:53:08 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -82,7 +82,7 @@ private:
 	 */
 	footprint*					target_footprint;
 public:
-	// parameterless types and entity::modul need this
+	// parameterless types and entity::module need this
 	unroll_context();
 
 	explicit

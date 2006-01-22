@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.7 2005/12/13 04:15:42 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.8 2006/01/22 06:53:08 fang Exp $
  */
 
 #ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -18,13 +18,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <algorithm>
+#include <list>
 
 #include "util/ptrs_functional.h"
 #include "util/dereference.h"
 #include "util/compose.h"
 #include "util/binders.h"
 
-#include "util/STL/list.tcc"
 #include "Object/unroll/instance_management_base.h"
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent_object_manager.tcc"
@@ -40,7 +40,6 @@ using util::auto_indent;
 using std::istream;
 #include "util/using_ostream.h"
 USING_UTIL_COMPOSE
-USING_STACKTRACE
 
 //=============================================================================
 // class instance_management_base method definitions

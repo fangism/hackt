@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.5 2005/12/13 04:15:21 fang Exp $
+	$Id: user_def_chan.h,v 1.6 2006/01/22 06:52:59 fang Exp $
  */
 
 #ifndef	__OBJECT_DEF_USER_DEF_CHAN_H__
@@ -58,8 +58,11 @@ public:
 	never_ptr<const scopespace>
 	get_parent(void) const;
 
+	never_ptr<const scopespace>
+	get_scopespace(void) const;
+
 	never_ptr<const object>
-	lookup_object_here(const string& id) const;
+	lookup_member(const string& id) const;
 
 	ostream&
 	what(ostream& o) const;
@@ -88,11 +91,8 @@ public:
 	// from class definition_base
 	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
-	never_ptr<const instance_collection_base>
-	lookup_port_formal(const string&) const;
-
-	size_t
-	lookup_port_formal_position(const instance_collection_base&) const;
+	never_ptr<const port_formals_manager>
+	get_port_formals_manager(void) const;
 
 	good_bool
 	certify_port_actuals(const checked_refs_type&) const;

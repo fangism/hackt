@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.6 2005/12/13 04:15:33 fang Exp $
+	$Id: value_collection.h,v 1.7 2006/01/22 06:53:02 fang Exp $
  */
 
 #ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
@@ -37,7 +37,7 @@ class const_range_list;
 class const_index_list;
 class scopespace;
 class unroll_context;
-USING_LIST
+using std::list;
 using std::istream;
 using std::ostream;
 using std::string;
