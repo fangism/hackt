@@ -2,9 +2,9 @@ At: "-stdin-":12:
 parse error: syntax error
 parser stacks:
 state	value
-#STATE#	(imported-root-list) [6:1]
+#STATE#	(imported-root-list) [8:1..18]
 #STATE#	list<(root_item)>: (instance-decl) ... [10:1..6]
-#STATE#	(imported-root) [7:1]
+#STATE#	(imported-root) [12:1..18]
 in state #STATE#, possible rules are:
 	top_root : body .  (#RULE#)
 	body : body . body_item  (#RULE#)

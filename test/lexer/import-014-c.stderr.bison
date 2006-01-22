@@ -2,7 +2,7 @@ At: "-stdin-":17:
 parse error: syntax error
 parser stacks:
 state	value
-#STATE#	(imported-root-list) [24:1--18:1]
+#STATE#	(imported-root-list) [7:1--8:27]
 #STATE#	(null) 
 #STATE#	keyword: defproc [10:1..7]
 #STATE#	identifier: problem [10:9..15]

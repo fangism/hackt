@@ -2,7 +2,7 @@ At: "-stdin-":6:
 parse error: syntax error
 parser stacks:
 state	value
-#STATE#	(imported-root-list) [6:1]
+#STATE#	(imported-root-list) [4:1..18]
 #STATE#	(type-ref) [6:1..4]
 #STATE#	datatype: bool [6:6..9]
 in state #STATE#, possible rules are:

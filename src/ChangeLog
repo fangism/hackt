@@ -5,6 +5,12 @@
 
 2006-01-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-72-prsim-00-30:
+	  Another minor lexer fix: regarding line-numbers of import
+		directives in the parse-tree.  A few test-cases updated.  
+	  TODO: clean-up #if code in AST/import_root.* and lexer/hackt-lex.ll.
+
+
 	* HACKT-00-01-04-main-00-72-prsim-00-29:
 	  Quick emergency bug-fix (reported by Clint Kelly):
 		Lexer was dying on assertion failure with w.r.t.

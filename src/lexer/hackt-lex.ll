@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.5.2.3 2006/01/21 21:56:22 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.5.2.4 2006/01/22 00:39:58 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -49,6 +49,11 @@
 		of flattened, preprocessed files.  
 
 		Use fast token allocation from util library.  
+
+	KNOWN ISSUE: the headers in this source file do NOT appear
+		first in the generated lexer source code, which 
+		presents a problem in the renaming scheme that uses
+		an include with preprocessor defines.  
 
 ******************************************************************************/
 /****** DEFINITIONS **********************************************************/
@@ -234,6 +239,12 @@ static inline void
 STRING_UPDATE(const lexer_state& foo) {
 	TOKEN_UPDATE(foo);
 	assert(string_buf_ptr -string_buf < STRING_MAX_LEN);
+}
+
+static inline void
+STRING_FINISH(YYSTYPE& hackt_lval, lexer_state& foo) {
+	STRING_UPDATE(foo);
+	hackt_lval._token_quoted_string = new token_quoted_string(string_buf);
 }
 
 /* macros for tracking long, multiline tokens */
@@ -422,22 +433,34 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 {POSITIONTOKEN} { NODE_POSITION_UPDATE(*hackt_lval, foo); return yytext[0]; }
 
 {IMPORT} {
+	STACKTRACE("lexing import");
 /***
 	That's right, manually opening the file in the lexer.  
 	Can't necessarily count on the [LA]LR parser to do this properly.  
 ***/
 	/* need some string-hacking to extract file name */
+#if NONTERMINAL_IMPORT
+	KEYWORD_UPDATE(*hackt_lval, foo);
+	excl_ptr<const keyword_position>
+		kw_import(hackt_lval->_keyword_position);
+	NEVER_NULL(kw_import);
+#else
 	TOKEN_UPDATE(foo);
-	YYSTYPE temp;
+#endif
+	// meh, just re-use the passed in lval, rather than local temporary
+	YYSTYPE& temp(*hackt_lval);
 	/* OK to reuse this lexer state in recursive lex */
 	const int expect_string = __hackt_lex(&temp, foo);
 	if (expect_string != STRING) {
 		cerr << "Expecting \"file\" after import." << endl;
 		THROW_EXIT;
 	}
-	/* excl_ptr will delete token */
-	const excl_ptr<const token_quoted_string>
+	STRING_FINISH(temp, foo);
+	/* excl_ptr will delete token if unused */
+	excl_ptr<const token_quoted_string>
 		fsp(temp._token_quoted_string);
+	NEVER_NULL(fsp);
+	
 	const string& fstr(*fsp);
 	/* claim the semicolon first before opening file */
 	const int expect_semi = __hackt_lex(&temp, foo);
@@ -445,19 +468,12 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		cerr << "Expecting ';' after import \"...\"." << endl;
 		THROW_EXIT;
 	}
-	/* excl_ptr will delete token */
+	/* NODE_POSITION_UPDATE(*hackt_lval, foo); */
+	/* excl_ptr will delete token if unused */
 	const excl_ptr<const node_position>
 		ssp(temp._node_position);
 	// cerr << fstr << endl;
 	// cerr << "current FILE* (before) = " << yyin << endl;
-#if 0
-	const file_status::status err =
-		input_manager::enter_file(yyin, hackt_parse_file_manager, 
-			fstr.c_str());	// append &cerr for debugging
-	// cerr << "current FILE* (after) = " << yyin << endl;
-	switch (err) {
-	case file_status::NEW_FILE: {
-		// cerr << "opened it." << endl;
 /***
 	From: http://developer.apple.com/documentation/DeveloperTools/flex/flex_9.html
 
@@ -476,25 +492,6 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	does not reset the start condition to INITIAL (see Start Conditions, 
 	below).
 ***/
-		yyrestart(yyin);
-		break;
-	}
-	case file_status::SEEN_FILE:
-		break;
-	case file_status::CYCLE:
-		hackt_parse_file_manager.dump_file_stack(cerr);
-		cerr << "Detected cyclic file dependency: " << fstr << endl;
-		THROW_EXIT;
-		break;
-	case file_status::NOT_FOUND:
-		hackt_parse_file_manager.dump_file_stack(cerr);
-		cerr << "Unable to open file: " << fstr << endl;
-		THROW_EXIT;
-		break;
-	default:
-		abort();
-	}       // end switch
-#else
 	// TODO: better error reporting and handling, when I have time...
 	// try to open the file, using search paths (true)
 	const input_manager ym(hackt_parse_file_manager, fstr.c_str(), true);
@@ -511,8 +508,17 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 			THROW_EXIT;
 		}
 		// false: this is first time seeing this file
+		// NOTE: creating the imported root here will use
+		// the wrong token_position because file stack already-adjusted
+#if NONTERMINAL_IMPORT
+		hackt_lval->_imported_root =
+			new imported_root(_root, kw_import, fsp, pstr, false);
+		MUST_BE_NULL(kw_import);
+		MUST_BE_NULL(fsp);
+#else
 		hackt_lval->_imported_root =
 			new imported_root(_root, pstr, false);
+#endif
 		MUST_BE_NULL(_root);	// transferred ownership
 		return IMPORT;
 	}
@@ -520,8 +526,15 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		STACKTRACE("old file");
 		// true: already seen file, this will be a placeholder
 		excl_ptr<root_body> null;
+#if NONTERMINAL_IMPORT
+		hackt_lval->_imported_root =
+			new imported_root(null, kw_import, fsp, string(), true);
+		MUST_BE_NULL(kw_import);
+		MUST_BE_NULL(fsp);
+#else
 		hackt_lval->_imported_root =
 			new imported_root(null, string(), true);
+#endif
 		return IMPORT;
 	}
 	case file_status::CYCLE: {
@@ -539,7 +552,6 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	default:
 		abort();
 	}
-#endif
 }
 
 {NAMESPACE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return NAMESPACE; }
@@ -753,9 +765,13 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		cerr << "end of quoted-string: \"" << string_buf << "\" " <<
 			LINE_COL(CURRENT) << endl;
 	}
+#if 0
 	STRING_UPDATE(foo);
-	BEGIN(INITIAL);
 	hackt_lval->_token_quoted_string = new token_quoted_string(string_buf);
+#else
+	STRING_FINISH(*hackt_lval, foo);
+#endif
+	BEGIN(INITIAL);
 	return STRING;
 }
 
