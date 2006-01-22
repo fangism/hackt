@@ -1,6 +1,6 @@
 /**
 	\file "util/persistent_functor.h"
-	$Id: persistent_functor.h,v 1.1.4.2 2006/01/22 05:12:50 fang Exp $
+	$Id: persistent_functor.h,v 1.1.4.3 2006/01/22 05:22:38 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_H__
@@ -83,6 +83,7 @@ struct persistent_writer_ref : public persistent_const_visitor_base {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Not really needed since persistent_object_manager already
 	has write_pointer_list template member function.  
@@ -100,6 +101,7 @@ struct persistent_writer_ptr : public persistent_const_visitor_base {
 		pom.write_pointer(os, t);
 	}
 };
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
@@ -117,6 +119,7 @@ struct persistent_loader_ref : public persistent_const_visitor_base {
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Not really needed since persistent_object_manager already
 	has read_pointer_list template member function.  
@@ -134,6 +137,7 @@ struct persistent_loader_ptr : public persistent_const_visitor_base {
 		pom.read_pointer(is, t);
 	}
 };
+#endif
 
 //=============================================================================
 /**
