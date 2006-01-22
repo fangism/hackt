@@ -3,11 +3,11 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.5 2005/12/13 04:15:22 fang Exp $
+	$Id: const_range.h,v 1.6 2006/01/22 18:19:43 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_CONST_RANGE_H__
-#define __OBJECT_EXPR_CONST_RANGE_H__
+#ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__
+#define __HAC_OBJECT_EXPR_CONST_RANGE_H__
 
 #include "util/macros.h"
 #include <utility>
@@ -194,5 +194,5 @@ public:
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_CONST_RANGE_H__
+#endif	// __HAC_OBJECT_EXPR_CONST_RANGE_H__
 

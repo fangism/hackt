@@ -1,11 +1,11 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.4 2005/12/13 04:15:39 fang Exp $
+	$Id: canonical_type.tcc,v 1.5 2006/01/22 18:20:42 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
-#define	__OBJECT_TYPE_CANONICAL_TYPE_TCC__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
+#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
 
 #include <iostream>
 #include "Object/type/canonical_type.h"
@@ -357,5 +357,5 @@ CANONICAL_TYPE_CLASS::load_object_base(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_CANONICAL_TYPE_TCC__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
 

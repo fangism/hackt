@@ -6,12 +6,12 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.8 2006/01/22 06:53:00 fang Exp $
+	$Id: instance_alias.tcc,v 1.9 2006/01/22 18:20:05 fang Exp $
 	TODO: trim includes
  */
 
-#ifndef	__OBJECT_INST_INSTANCE_ALIAS_TCC__
-#define	__OBJECT_INST_INSTANCE_ALIAS_TCC__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_TCC__
+#define	__HAC_OBJECT_INST_INSTANCE_ALIAS_TCC__
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // overridable debug switches
@@ -1463,5 +1463,5 @@ operator << (ostream& o, const instance_alias<Tag,D>& b) {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INSTANCE_ALIAS_TCC__
+#endif	// __HAC_OBJECT_INST_INSTANCE_ALIAS_TCC__
 

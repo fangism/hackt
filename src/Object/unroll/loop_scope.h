@@ -2,11 +2,11 @@
 	\file "Object/unroll/loop_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the HAC language.  
-	$Id: loop_scope.h,v 1.4 2005/12/13 04:15:43 fang Exp $
+	$Id: loop_scope.h,v 1.5 2006/01/22 18:20:58 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_LOOP_SCOPE_H__
-#define	__OBJECT_UNROLL_LOOP_SCOPE_H__
+#ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_H__
+#define	__HAC_OBJECT_UNROLL_LOOP_SCOPE_H__
 
 #include "Object/unroll/instance_management_base.h"
 #include "Object/unroll/sequential_scope.h"
@@ -87,5 +87,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	//	__OBJECT_UNROLL_LOOP_SCOPE_H__
+#endif	//	__HAC_OBJECT_UNROLL_LOOP_SCOPE_H__
 

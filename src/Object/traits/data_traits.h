@@ -2,11 +2,11 @@
 	\file "Object/traits/data_traits.h"
 	Traits and policies for generic data types.  
 	This file used to be "Object/art_object_data_traits.h".
-	$Id: data_traits.h,v 1.4 2005/12/13 04:15:38 fang Exp $
+	$Id: data_traits.h,v 1.5 2006/01/22 18:20:35 fang Exp $
  */
 
-#ifndef	__OBJECT_TRAITS_DATA_TRAITS_H__
-#define	__OBJECT_TRAITS_DATA_TRAITS_H__
+#ifndef	__HAC_OBJECT_TRAITS_DATA_TRAITS_H__
+#define	__HAC_OBJECT_TRAITS_DATA_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
 
@@ -46,5 +46,5 @@ struct class_traits<datatype_tag> {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TRAITS_DATA_TRAITS_H__
+#endif	// __HAC_OBJECT_TRAITS_DATA_TRAITS_H__
 

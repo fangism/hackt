@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.7 2006/01/22 06:53:03 fang Exp $
+	$Id: PRS.h,v 1.8 2006/01/22 18:20:17 fang Exp $
  */
 
-#ifndef	__OBJECT_LANG_PRS_H__
-#define	__OBJECT_LANG_PRS_H__
+#ifndef	__HAC_OBJECT_LANG_PRS_H__
+#define	__HAC_OBJECT_LANG_PRS_H__
 
 #include "Object/object_fwd.h"
 #include "Object/lang/PRS_base.h"
@@ -627,5 +627,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_LANG_PRS_H__
+#endif	// __HAC_OBJECT_LANG_PRS_H__
 

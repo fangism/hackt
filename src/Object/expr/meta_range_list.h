@@ -3,11 +3,11 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_list.h,v 1.5 2005/12/13 04:15:25 fang Exp $
+	$Id: meta_range_list.h,v 1.6 2006/01/22 18:19:51 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_META_RANGE_LIST_H__
-#define __OBJECT_EXPR_META_RANGE_LIST_H__
+#ifndef __HAC_OBJECT_EXPR_META_RANGE_LIST_H__
+#define __HAC_OBJECT_EXPR_META_RANGE_LIST_H__
 
 #include "util/persistent.h"
 #include "util/boolean_types.h"
@@ -76,5 +76,5 @@ virtual	bool
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_META_RANGE_LIST_H__
+#endif	// __HAC_OBJECT_EXPR_META_RANGE_LIST_H__
 

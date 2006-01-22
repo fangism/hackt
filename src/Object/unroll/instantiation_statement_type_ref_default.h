@@ -3,11 +3,11 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.5 2005/12/13 04:15:42 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.6 2006/01/22 18:20:58 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
-#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
+#ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
+#define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
 
 #include <iostream>
 #include "Object/traits/class_traits.h"
@@ -198,5 +198,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
+#endif	// __HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
 

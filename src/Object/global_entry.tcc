@@ -1,10 +1,10 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.7 2006/01/22 06:52:56 fang Exp $
+	$Id: global_entry.tcc,v 1.8 2006/01/22 18:19:11 fang Exp $
  */
 
-#ifndef	__OBJECT_GLOBAL_ENTRY_TCC__
-#define	__OBJECT_GLOBAL_ENTRY_TCC__
+#ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
+#define	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
 
 #ifndef	ENABLE_STACKTRACE
 #define	ENABLE_STACKTRACE		0
@@ -410,5 +410,5 @@ global_entry<Tag>::load_object_base(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_GLOBAL_ENTRY_TCC__
+#endif	// __HAC_OBJECT_GLOBAL_ENTRY_TCC__
 

@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/enum_instance.h"
 	Enumeration instance state.  
-	$Id: enum_instance.h,v 1.3 2005/12/13 04:15:28 fang Exp $
+	$Id: enum_instance.h,v 1.4 2006/01/22 18:20:02 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_ENUM_INSTANCE_H__
-#define	__OBJECT_INST_ENUM_INSTANCE_H__
+#ifndef	__HAC_OBJECT_INST_ENUM_INSTANCE_H__
+#define	__HAC_OBJECT_INST_ENUM_INSTANCE_H__
 
 #include "Object/traits/enum_traits.h"
 #include "Object/inst/state_instance.h"
@@ -26,5 +26,5 @@ class class_traits<enum_tag>::state_instance_base {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_ENUM_INSTANCE_H__
+#endif	// __HAC_OBJECT_INST_ENUM_INSTANCE_H__
 

@@ -2,11 +2,11 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.6 2006/01/22 06:52:59 fang Exp $
+	$Id: user_def_datatype.h,v 1.7 2006/01/22 18:19:38 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_USER_DEF_DATATYPE_H__
-#define	__OBJECT_DEF_USER_DEF_DATATYPE_H__
+#ifndef	__HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
+#define	__HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
 
 #include "Object/def/datatype_definition_base.h"
 #include "Object/unroll/sequential_scope.h"
@@ -118,5 +118,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_USER_DEF_DATATYPE_H__
+#endif	// __HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
 

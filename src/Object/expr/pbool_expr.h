@@ -3,11 +3,11 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.5 2005/12/13 04:15:26 fang Exp $
+	$Id: pbool_expr.h,v 1.6 2006/01/22 18:19:54 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_PBOOL_EXPR_H__
-#define __OBJECT_EXPR_PBOOL_EXPR_H__
+#ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
+#define __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
 
 #include "Object/expr/param_expr.h"
 #include "Object/expr/bool_expr.h"
@@ -107,5 +107,5 @@ protected:
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_PBOOL_EXPR_H__
+#endif	// __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
 

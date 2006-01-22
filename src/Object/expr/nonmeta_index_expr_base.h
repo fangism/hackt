@@ -6,11 +6,11 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: nonmeta_index_expr_base.h,v 1.4 2005/12/13 04:15:25 fang Exp $
+	$Id: nonmeta_index_expr_base.h,v 1.5 2006/01/22 18:19:52 fang Exp $
  */
 
-#ifndef	__OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
-#define	__OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
+#ifndef	__HAC_OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
+#define	__HAC_OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
 
 #include "util/persistent.h"
 
@@ -40,5 +40,5 @@ virtual	ostream&
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
+#endif	// __HAC_OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
 

@@ -1,11 +1,11 @@
 /**
 	\file "Object/type/canonical_type_fwd.h"
 	Forward declarations of canonical_type type references.  
-	$Id: canonical_type_fwd.h,v 1.4 2005/12/13 04:15:40 fang Exp $
+	$Id: canonical_type_fwd.h,v 1.5 2006/01/22 18:20:43 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
-#define	__OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
+#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
 
 namespace HAC {
 namespace entity {
@@ -69,5 +69,5 @@ struct check_footprint_policy<process_definition>;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
 

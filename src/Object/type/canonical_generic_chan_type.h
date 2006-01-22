@@ -1,10 +1,10 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.4 2005/12/13 04:15:39 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.5 2006/01/22 18:20:40 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
-#define	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
+#define	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
 
 #include "Object/type/canonical_type_fwd.h"
 #include <vector>
@@ -165,5 +165,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
 

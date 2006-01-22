@@ -4,11 +4,11 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.6 2005/12/13 04:15:28 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.7 2006/01/22 18:19:59 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
-#define	__OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
+#ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
+#define	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 
 #include <exception>
 #include <iostream>
@@ -69,5 +69,5 @@ template class instance_array<channel_tag, 4>;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
+#endif	// __HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
 

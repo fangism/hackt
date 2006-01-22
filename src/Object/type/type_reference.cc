@@ -3,11 +3,11 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.6 2006/01/22 06:53:07 fang Exp $
+ 	$Id: type_reference.cc,v 1.7 2006/01/22 18:20:45 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_TYPE_REFERENCE_CC__
-#define	__OBJECT_TYPE_TYPE_REFERENCE_CC__
+#ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
+#define	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -1820,5 +1820,5 @@ PERSISTENT_METHODS_DUMMY_IMPLEMENTATION(param_type_reference)
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_TYPE_REFERENCE_CC__
+#endif	// __HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
 

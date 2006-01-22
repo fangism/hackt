@@ -2,11 +2,11 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.8 2006/01/22 06:53:08 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.9 2006/01/22 18:20:56 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
-#define	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
+#ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
+#define	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
@@ -293,5 +293,5 @@ instance_management_base::dumper::operator () (
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
+#endif	// __HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
 

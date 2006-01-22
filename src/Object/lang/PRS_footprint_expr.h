@@ -1,10 +1,10 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_expr.h,v 1.2 2006/01/22 06:53:03 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.3 2006/01/22 18:20:18 fang Exp $
  */
 
-#ifndef	__OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
-#define	__OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
+#ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
+#define	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
 
 #include <iosfwd>
 #include <valarray>
@@ -106,4 +106,4 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
+#endif	// __HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__

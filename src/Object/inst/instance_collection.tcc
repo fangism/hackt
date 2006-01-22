@@ -5,12 +5,12 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.12 2006/01/22 06:53:01 fang Exp $
+	$Id: instance_collection.tcc,v 1.13 2006/01/22 18:20:05 fang Exp $
 	TODO: trim includes
  */
 
-#ifndef	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
-#define	__OBJECT_INST_INSTANCE_COLLECTION_TCC__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_TCC__
+#define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_TCC__
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // overridable debug switches
@@ -1526,5 +1526,5 @@ INSTANCE_SCALAR_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INSTANCE_COLLECTION_TCC__
+#endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_TCC__
 

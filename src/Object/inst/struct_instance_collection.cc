@@ -4,11 +4,11 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.6 2005/12/13 04:15:32 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.7 2006/01/22 18:20:12 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
-#define	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
+#ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
+#define	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
 
 #include <exception>
 #include <iostream>
@@ -70,5 +70,5 @@ template class instance_array<datastruct_tag, 4>;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
+#endif	// __HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
 

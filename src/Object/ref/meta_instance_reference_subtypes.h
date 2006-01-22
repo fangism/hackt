@@ -2,11 +2,11 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.3 2005/12/13 04:15:36 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.4 2006/01/22 18:20:24 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
-#define	__OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
+#ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
+#define	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
 
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -38,5 +38,5 @@ virtual	~meta_instance_reference() { }
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
+#endif	// __HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
 

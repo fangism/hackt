@@ -3,11 +3,11 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.4 2005/12/13 04:15:37 fang Exp $
+	$Id: class_traits.h,v 1.5 2006/01/22 18:20:33 fang Exp $
  */
 
-#ifndef	__OBJECT_TRAITS_CLASS_TRAITS_H__
-#define	__OBJECT_TRAITS_CLASS_TRAITS_H__
+#ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
+#define	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
 
 #include <iosfwd>
 #include "Object/object_fwd.h"
@@ -223,5 +223,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TRAITS_CLASS_TRAITS_H__
+#endif	// __HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
 

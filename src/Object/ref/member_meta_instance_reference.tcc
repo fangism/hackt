@@ -2,11 +2,11 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.8 2006/01/22 06:53:06 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.9 2006/01/22 18:20:23 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
-#define	__OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
+#ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
+#define	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
 #include "util/what.h"
@@ -347,5 +347,5 @@ MEMBER_INSTANCE_REFERENCE_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
+#endif	// __HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
 

@@ -3,11 +3,11 @@
 	Class definitions for arithmetic int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_arith_expr.h,v 1.4 2005/12/13 04:15:23 fang Exp $
+	$Id: int_arith_expr.h,v 1.5 2006/01/22 18:19:48 fang Exp $
  */
 
-#ifndef	__OBJECT_EXPR_INT_ARITH_EXPR_H__
-#define	__OBJECT_EXPR_INT_ARITH_EXPR_H__
+#ifndef	__HAC_OBJECT_EXPR_INT_ARITH_EXPR_H__
+#define	__HAC_OBJECT_EXPR_INT_ARITH_EXPR_H__
 
 #include "Object/expr/int_expr.h"
 #include "Object/expr/types.h"
@@ -85,5 +85,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_EXPR_INT_ARITH_EXPR_H__
+#endif	// __HAC_OBJECT_EXPR_INT_ARITH_EXPR_H__
 

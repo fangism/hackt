@@ -2,11 +2,11 @@
 	\file "Object/def/process_definition_base.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_base.h,v 1.4 2005/12/13 04:15:21 fang Exp $
+	$Id: process_definition_base.h,v 1.5 2006/01/22 18:19:37 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
-#define	__OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
+#ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
+#define	__HAC_OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
 
 #include "Object/def/definition_base.h"
 #include "Object/type/canonical_type_fwd.h"
@@ -59,5 +59,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
+#endif	// __HAC_OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
 

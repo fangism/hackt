@@ -3,11 +3,11 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.5 2006/01/22 06:52:59 fang Exp $
+	$Id: port_formals_manager.h,v 1.6 2006/01/22 18:19:35 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_PORT_FORMALS_MANAGER_H__
-#define	__OBJECT_DEF_PORT_FORMALS_MANAGER_H__
+#ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
+#define	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
 
 #include <iosfwd>
 #include <vector>
@@ -134,5 +134,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_PORT_FORMALS_MANAGER_H__
+#endif	// __HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
 

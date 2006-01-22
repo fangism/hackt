@@ -1,10 +1,10 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.10 2006/01/22 06:53:02 fang Exp $
+	$Id: substructure_alias_base.h,v 1.11 2006/01/22 18:20:13 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
-#define	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
+#ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
+#define	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
 
 #include <iosfwd>
 #include "Object/inst/substructure_alias_fwd.h"
@@ -272,5 +272,5 @@ protected:
 }	// end namespace HAC
 
 
-#endif	// __OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
+#endif	// __HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
 

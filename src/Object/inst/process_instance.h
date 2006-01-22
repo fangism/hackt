@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/process_instance.h"
 	Definition of process instance base class.  
-	$Id: process_instance.h,v 1.3 2005/12/13 04:15:32 fang Exp $
+	$Id: process_instance.h,v 1.4 2006/01/22 18:20:10 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_PROCESS_INSTANCE_H__
-#define	__OBJECT_INST_PROCESS_INSTANCE_H__
+#ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_H__
+#define	__HAC_OBJECT_INST_PROCESS_INSTANCE_H__
 
 #include "Object/traits/proc_traits.h"
 #include "Object/inst/state_instance.h"
@@ -26,5 +26,5 @@ class class_traits<process_tag>::state_instance_base {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_PROCESS_INSTANCE_H__
+#endif	// __HAC_OBJECT_INST_PROCESS_INSTANCE_H__
 

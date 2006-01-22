@@ -2,11 +2,11 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.4 2005/12/13 04:15:40 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.5 2006/01/22 18:20:45 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
-#define	__OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
+#ifndef	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
+#define	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
 
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -196,5 +196,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
+#endif	// __HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
 

@@ -3,11 +3,11 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.7 2005/12/13 04:15:25 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.8 2006/01/22 18:19:51 fang Exp $
  */
 
-#ifndef	__OBJECT_EXPR_META_RANGE_LIST_CC__
-#define	__OBJECT_EXPR_META_RANGE_LIST_CC__
+#ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
+#define	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -776,5 +776,5 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
 
-#endif	// __OBJECT_AEXPR_META_RANGE_LIST_CC__
+#endif	// __HAC_OBJECT_AEXPR_META_RANGE_LIST_CC__
 

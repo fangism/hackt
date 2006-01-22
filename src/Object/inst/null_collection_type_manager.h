@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.4 2005/12/13 04:15:31 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.5 2006/01/22 18:20:08 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
-#define	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
+#ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
+#define	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
 
 #include <iosfwd>
 #include "Object/type/canonical_type_fwd.h"	// just for conditional
@@ -99,5 +99,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
+#endif	// __HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
 

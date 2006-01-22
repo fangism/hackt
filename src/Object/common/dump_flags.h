@@ -1,11 +1,11 @@
 /**
 	\file "Object/common/dump_flags.h"
 	Dump attributes class.  
-	$Id: dump_flags.h,v 1.4 2005/12/13 04:15:17 fang Exp $
+	$Id: dump_flags.h,v 1.5 2006/01/22 18:19:17 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_DUMP_FLAGS_H__
-#define	__OBJECT_COMMON_DUMP_FLAGS_H__
+#ifndef	__HAC_OBJECT_COMMON_DUMP_FLAGS_H__
+#define	__HAC_OBJECT_COMMON_DUMP_FLAGS_H__
 
 namespace HAC {
 namespace entity {
@@ -45,5 +45,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_COMMON_DUMP_FLAGS_H__
+#endif	// __HAC_OBJECT_COMMON_DUMP_FLAGS_H__
 

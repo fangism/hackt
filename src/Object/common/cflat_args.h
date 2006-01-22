@@ -1,11 +1,11 @@
 /**
 	"Object/common/cflat_args.h"
 	Common aggregate argument types for various cflat methods.  
-	$Id: cflat_args.h,v 1.5 2006/01/22 06:52:57 fang Exp $
+	$Id: cflat_args.h,v 1.6 2006/01/22 18:19:16 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_CFLAT_ARGS_H__
-#define	__OBJECT_COMMON_CFLAT_ARGS_H__
+#ifndef	__HAC_OBJECT_COMMON_CFLAT_ARGS_H__
+#define	__HAC_OBJECT_COMMON_CFLAT_ARGS_H__
 
 #include <iosfwd>
 #include <string>
@@ -97,5 +97,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_COMMON_CFLAT_ARGS_H__
+#endif	// __HAC_OBJECT_COMMON_CFLAT_ARGS_H__
 

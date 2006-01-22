@@ -2,11 +2,11 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.4 2005/12/13 04:15:35 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.5 2006/01/22 18:20:21 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
-#define	__OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
+#ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
+#define	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
 
 #define	ENABLE_STACKTRACE			0
 
@@ -209,5 +209,5 @@ template class member_meta_instance_reference<datastruct_tag>;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
+#endif	// __HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
 

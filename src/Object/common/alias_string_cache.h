@@ -1,11 +1,11 @@
 /**
 	\file "Object/common/alias_string_cache.h"
 	Alias string cache structure.  
-	$Id: alias_string_cache.h,v 1.4 2005/12/13 04:15:17 fang Exp $
+	$Id: alias_string_cache.h,v 1.5 2006/01/22 18:19:15 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_ALIAS_STRING_CACHE_H__
-#define	__OBJECT_COMMON_ALIAS_STRING_CACHE_H__
+#ifndef	__HAC_OBJECT_COMMON_ALIAS_STRING_CACHE_H__
+#define	__HAC_OBJECT_COMMON_ALIAS_STRING_CACHE_H__
 
 #include <vector>
 #include <string>
@@ -72,5 +72,5 @@ struct wire_alias_set : public vector<alias_string_cache> {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_COMMON_ALIAS_STRING_CACHE_H__
+#endif	// __HAC_OBJECT_COMMON_ALIAS_STRING_CACHE_H__
 

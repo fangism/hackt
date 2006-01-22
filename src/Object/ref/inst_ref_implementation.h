@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.6 2006/01/22 06:53:05 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.7 2006/01/22 18:20:19 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_INST_REF_IMPLEMENTATION_H__
-#define	__OBJECT_REF_INST_REF_IMPLEMENTATION_H__
+#ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
+#define	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 
 #include <iostream>
 #include "Object/inst/substructure_alias_base.h"
@@ -216,5 +216,5 @@ member_lookup_footprint_frame(
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_INST_REF_IMPLEMENTATION_H__
+#endif	// __HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 

@@ -2,11 +2,11 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.6 2006/01/22 06:52:58 fang Exp $
+	$Id: definition_base.h,v 1.7 2006/01/22 18:19:31 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_DEFINITION_BASE_H__
-#define	__OBJECT_DEF_DEFINITION_BASE_H__
+#ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
+#define	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
 
 #include "util/string_fwd.h"
 #include "util/macros.h"
@@ -285,5 +285,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_DEFINITION_BASE_H__
+#endif	// __HAC_OBJECT_DEF_DEFINITION_BASE_H__
 

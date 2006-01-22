@@ -1,10 +1,10 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_rule.h,v 1.2 2006/01/22 06:53:04 fang Exp $
+	$Id: PRS_footprint_rule.h,v 1.3 2006/01/22 18:20:18 fang Exp $
  */
 
-#ifndef	__OBJECT_LANG_PRS_FOOTPRINT_RULE_H__
-#define	__OBJECT_LANG_PRS_FOOTPRINT_RULE_H__
+#ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_RULE_H__
+#define	__HAC_OBJECT_LANG_PRS_FOOTPRINT_RULE_H__
 
 #include <iosfwd>
 #include "util/macros.h"
@@ -57,4 +57,4 @@ struct footprint_rule : public cflat_visitee {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_LANG_PRS_FOOTPRINT_RULE_H__
+#endif	// __HAC_OBJECT_LANG_PRS_FOOTPRINT_RULE_H__

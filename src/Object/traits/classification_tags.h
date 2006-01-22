@@ -4,11 +4,11 @@
 	These type tags may be used for specialization of many
 	features of the language.  
 	This file used to be "Object/art_object_classification_tags.h".
-	$Id: classification_tags.h,v 1.4 2005/12/13 04:15:38 fang Exp $
+	$Id: classification_tags.h,v 1.5 2006/01/22 18:20:35 fang Exp $
  */
 
-#ifndef	__OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
-#define	__OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
+#ifndef	__HAC_OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
+#define	__HAC_OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
 
 namespace HAC {
 namespace entity {
@@ -131,5 +131,5 @@ struct builtin_channel_tag : public channel_tag {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
+#endif	// __HAC_OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
 

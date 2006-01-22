@@ -3,11 +3,11 @@
 	Class family for instance references in HAC.  
 	This file used to be "Object/art_object_nonmeta_inst_ref_subtypes.h"
 		in a previous life.  
-	$Id: nonmeta_instance_reference_subtypes.h,v 1.3 2005/12/13 04:15:36 fang Exp $
+	$Id: nonmeta_instance_reference_subtypes.h,v 1.4 2006/01/22 18:20:27 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
-#define	__OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
+#ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
+#define	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 
 #include "Object/ref/nonmeta_instance_reference_base.h"
 
@@ -120,5 +120,5 @@ virtual	~pbool_instance_reference_base() { }
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
+#endif	// __HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 

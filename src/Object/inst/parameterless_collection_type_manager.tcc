@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.5 2005/12/13 04:15:31 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.6 2006/01/22 18:20:09 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
-#define	__OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
+#ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
+#define	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
 
 #include "Object/inst/parameterless_collection_type_manager.h"
 #include "Object/type/data_type_reference.h"
@@ -143,5 +143,5 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 #undef PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 #undef PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS
 
-#endif	// __OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
+#endif	// __HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
 

@@ -1,11 +1,11 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.4 2005/12/13 04:15:42 fang Exp $
+ 	$Id: loop_scope.cc,v 1.5 2006/01/22 18:20:58 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_LOOP_SCOPE_CC__
-#define	__OBJECT_UNROLL_LOOP_SCOPE_CC__
+#ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
+#define	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
 
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/unroll_context.h"
@@ -181,5 +181,5 @@ loop_scope::load_object(const persistent_object_manager& m, istream& i) {
 } 	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_LOOP_SCOPE_CC__
+#endif	// __HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
 

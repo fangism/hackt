@@ -1,10 +1,10 @@
 /**
 	\file "Object/port_context.h"
-	$Id: port_context.h,v 1.3 2005/12/13 04:15:17 fang Exp $
+	$Id: port_context.h,v 1.4 2006/01/22 18:19:13 fang Exp $
  */
 
-#ifndef	__OBJECT_PORT_CONTEXT_H__
-#define	__OBJECT_PORT_CONTEXT_H__
+#ifndef	__HAC_OBJECT_PORT_CONTEXT_H__
+#define	__HAC_OBJECT_PORT_CONTEXT_H__
 
 #include <iosfwd>
 // #include <valarray>
@@ -85,5 +85,5 @@ struct port_collection_context {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_PORT_CONTEXT_H__
+#endif	// __HAC_OBJECT_PORT_CONTEXT_H__
 

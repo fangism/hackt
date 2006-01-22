@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.6 2005/12/13 04:15:32 fang Exp $
+	$Id: state_instance.h,v 1.7 2006/01/22 18:20:12 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_STATE_INSTANCE_H__
-#define	__OBJECT_INST_STATE_INSTANCE_H__
+#ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
+#define	__HAC_OBJECT_INST_STATE_INSTANCE_H__
 
 #include <iosfwd>
 #include "Object/traits/class_traits.h"
@@ -83,5 +83,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_STATE_INSTANCE_H__
+#endif	// __HAC_OBJECT_INST_STATE_INSTANCE_H__
 

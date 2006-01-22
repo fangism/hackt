@@ -3,11 +3,11 @@
 	Template method definitions for class name_space.  
 	This file was "Object/common/namespace.tcc"
 		in a previous life.  
-	$Id: namespace.tcc,v 1.4 2005/12/13 04:15:18 fang Exp $
+	$Id: namespace.tcc,v 1.5 2006/01/22 18:19:22 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_NAMESPACE_TCC__
-#define	__OBJECT_COMMON_NAMESPACE_TCC__
+#ifndef	__HAC_OBJECT_COMMON_NAMESPACE_TCC__
+#define	__HAC_OBJECT_COMMON_NAMESPACE_TCC__
 
 #include "util/hash_specializations.h"	// needs to be first
 #include "Object/common/namespace.h"
@@ -49,5 +49,5 @@ name_space::collect(L& l) const {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_COMMON_NAMESPACE_TCC__
+#endif	// __HAC_OBJECT_COMMON_NAMESPACE_TCC__
 

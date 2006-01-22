@@ -2,11 +2,11 @@
 	\file "Object/type/type_reference_base.h"
 	Base classes for type objects.  
 	This file came from "Object/art_object_type_ref_base.h".
-	$Id: type_reference_base.h,v 1.3 2005/12/13 04:15:41 fang Exp $
+	$Id: type_reference_base.h,v 1.4 2006/01/22 18:20:46 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_TYPE_REFERENCE_BASE_H__
-#define	__OBJECT_TYPE_TYPE_REFERENCE_BASE_H__
+#ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_BASE_H__
+#define	__HAC_OBJECT_TYPE_TYPE_REFERENCE_BASE_H__
 
 #include "util/persistent.h"		// for persistent object interface
 
@@ -33,5 +33,5 @@ virtual	~type_reference_base() { }
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_TYPE_REFERENCE_BASE_H__
+#endif	// __HAC_OBJECT_TYPE_TYPE_REFERENCE_BASE_H__
 

@@ -4,11 +4,11 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.8 2006/01/22 06:53:00 fang Exp $
+	$Id: param_expr_list.h,v 1.9 2006/01/22 18:19:53 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_PARAM_EXPR_LIST_H__
-#define __OBJECT_EXPR_PARAM_EXPR_LIST_H__
+#ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
+#define __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
 
 #include "util/persistent.h"
 #include "util/STL/vector_fwd.h"
@@ -111,5 +111,5 @@ virtual	good_bool
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_PARAM_EXPR_LIST_H__
+#endif	// __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
 

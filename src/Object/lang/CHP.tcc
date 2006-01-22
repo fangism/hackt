@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.4 2005/12/13 04:15:34 fang Exp $
+	$Id: CHP.tcc,v 1.5 2006/01/22 18:20:14 fang Exp $
  */
 
-#ifndef	__OBJECT_LANG_CHP_TCC__
-#define	__OBJECT_LANG_CHP_TCC__
+#ifndef	__HAC_OBJECT_LANG_CHP_TCC__
+#define	__HAC_OBJECT_LANG_CHP_TCC__
 
 #include <iostream>
 #include <iterator>
@@ -191,5 +191,5 @@ channel_receive::add_references(const L& l) {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_LANG_CHP_TCC__
+#endif	// __HAC_OBJECT_LANG_CHP_TCC__
 

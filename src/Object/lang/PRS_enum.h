@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/PRS.h"
 	Enumerations for production rules.
-	$Id: PRS_enum.h,v 1.2 2006/01/22 06:53:03 fang Exp $
+	$Id: PRS_enum.h,v 1.3 2006/01/22 18:20:17 fang Exp $
  */
 
-#ifndef	__OBJECT_LANG_PRS_ENUM_H__
-#define	__OBJECT_LANG_PRS_ENUM_H__
+#ifndef	__HAC_OBJECT_LANG_PRS_ENUM_H__
+#define	__HAC_OBJECT_LANG_PRS_ENUM_H__
 
 namespace HAC {
 namespace entity {
@@ -24,5 +24,5 @@ enum {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_LANG_PRS_ENUM_H__
+#endif	// __HAC_OBJECT_LANG_PRS_ENUM_H__
 

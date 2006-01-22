@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.4 2005/12/13 04:15:34 fang Exp $
+	$Id: CHP.h,v 1.5 2006/01/22 18:20:13 fang Exp $
  */
 
-#ifndef	__OBJECT_LANG_CHP_H__
-#define	__OBJECT_LANG_CHP_H__
+#ifndef	__HAC_OBJECT_LANG_CHP_H__
+#define	__HAC_OBJECT_LANG_CHP_H__
 
 #include <list>
 #include <vector>
@@ -386,5 +386,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_LANG_CHP_H__
+#endif	// __HAC_OBJECT_LANG_CHP_H__
 

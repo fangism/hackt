@@ -4,11 +4,11 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_struct.h"
 		in a previous life.  
-	$Id: struct_instance_collection.h,v 1.5 2005/12/13 04:15:32 fang Exp $
+	$Id: struct_instance_collection.h,v 1.6 2006/01/22 18:20:12 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
-#define	__OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
+#define	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/struct_instance.h"
@@ -30,5 +30,5 @@ typedef	instance_array<datastruct_tag, 4>	struct_array_4D;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_H__
 

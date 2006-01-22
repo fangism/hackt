@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/state_instance.tcc"
 	Class implementation for instance state.  
-	$Id: state_instance.tcc,v 1.5 2005/12/13 04:15:32 fang Exp $
+	$Id: state_instance.tcc,v 1.6 2006/01/22 18:20:12 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_STATE_INSTANCE_TCC__
-#define	__OBJECT_INST_STATE_INSTANCE_TCC__
+#ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
+#define	__HAC_OBJECT_INST_STATE_INSTANCE_TCC__
 
 #include <iostream>
 #include "Object/inst/state_instance.h"
@@ -87,5 +87,5 @@ STATE_INSTANCE_CLASS::load_object_base(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_STATE_INSTANCE_TCC__
+#endif	// __HAC_OBJECT_INST_STATE_INSTANCE_TCC__
 

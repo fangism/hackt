@@ -1,10 +1,10 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.4 2005/12/13 04:15:39 fang Exp $
+	$Id: canonical_type.h,v 1.5 2006/01/22 18:20:41 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_CANONICAL_TYPE_H__
-#define	__OBJECT_TYPE_CANONICAL_TYPE_H__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
+#define	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
 
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/type/canonical_type_base.h"
@@ -235,5 +235,5 @@ struct check_footprint_policy<process_definition> {
 }	// end namespace HAC
 
 
-#endif	// __OBJECT_TYPE_CANONICAL_TYPE_H__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
 

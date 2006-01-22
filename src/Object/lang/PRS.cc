@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.7 2006/01/22 06:53:02 fang Exp $
+	$Id: PRS.cc,v 1.8 2006/01/22 18:20:16 fang Exp $
  */
 
-#ifndef	__OBJECT_LANG_PRS_CC__
-#define	__OBJECT_LANG_PRS_CC__
+#ifndef	__HAC_OBJECT_LANG_PRS_CC__
+#define	__HAC_OBJECT_LANG_PRS_CC__
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -1689,5 +1689,5 @@ macro::load_object(const persistent_object_manager& m, istream& i) {
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_LANG_PRS_CC__
+#endif	// __HAC_OBJECT_LANG_PRS_CC__
 

@@ -2,11 +2,11 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.9 2006/01/22 06:52:56 fang Exp $
+ 	$Id: module.cc,v 1.10 2006/01/22 18:19:12 fang Exp $
  */
 
-#ifndef	__OBJECT_MODULE_CC__
-#define	__OBJECT_MODULE_CC__
+#ifndef	__HAC_OBJECT_MODULE_CC__
+#define	__HAC_OBJECT_MODULE_CC__
 
 // code debugging switches
 #define	ENABLE_STACKTRACE		0
@@ -431,5 +431,5 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 #undef	STACKTRACE_PERSISTENTS
 #undef	STACKTRACE_PERSISTENT
 
-#endif	// __OBJECT_MODULE_CC__
+#endif	// __HAC_OBJECT_MODULE_CC__
 

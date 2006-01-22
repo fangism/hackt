@@ -1,11 +1,11 @@
 /**
 	\file "Object/expr/expr_dump_context.h"
 	Flags and modifiers for manipulating expression dumps.  
-	$Id: expr_dump_context.h,v 1.3 2005/12/13 04:15:23 fang Exp $
+	$Id: expr_dump_context.h,v 1.4 2006/01/22 18:19:48 fang Exp $
  */
 
-#ifndef	__OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
-#define	__OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
+#ifndef	__HAC_OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
+#define	__HAC_OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
 
 #include "util/memory/excl_ptr.h"
 #include "util/attributes.h"
@@ -100,5 +100,5 @@ struct expr_dump_context {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
+#endif	// __HAC_OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
 

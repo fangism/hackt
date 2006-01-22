@@ -2,11 +2,11 @@
 	\file "Object/def/datatype_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_alias.h,v 1.5 2006/01/22 06:52:58 fang Exp $
+	$Id: datatype_definition_alias.h,v 1.6 2006/01/22 18:19:30 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
-#define	__OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
+#ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
+#define	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
 
 #include "Object/def/datatype_definition_base.h"
 #include "Object/def/typedef_base.h"
@@ -90,5 +90,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
+#endif	// __HAC_OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
 

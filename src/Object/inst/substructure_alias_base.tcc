@@ -1,10 +1,10 @@
 /**
 	\file "Object/inst/substructure_alias_base.tcc"
-	$Id: substructure_alias_base.tcc,v 1.4 2005/12/13 04:15:33 fang Exp $
+	$Id: substructure_alias_base.tcc,v 1.5 2006/01/22 18:20:13 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
-#define	__OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
+#ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
+#define	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
 
 #include <iostream>
 #include "Object/inst/substructure_alias_base.h"
@@ -74,5 +74,5 @@ if (!c.cf.check_prs) {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
+#endif	// __HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
 

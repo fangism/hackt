@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/int_instance.h"
 	Integer state information.  
-	$Id: int_instance.h,v 1.3 2005/12/13 04:15:30 fang Exp $
+	$Id: int_instance.h,v 1.4 2006/01/22 18:20:06 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INT_INSTANCE_H__
-#define	__OBJECT_INST_INT_INSTANCE_H__
+#ifndef	__HAC_OBJECT_INST_INT_INSTANCE_H__
+#define	__HAC_OBJECT_INST_INT_INSTANCE_H__
 
 #include "Object/traits/int_traits.h"
 #include "Object/inst/state_instance.h"
@@ -24,5 +24,5 @@ class class_traits<int_tag>::state_instance_base {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INT_INSTANCE_H__
+#endif	// __HAC_OBJECT_INST_INT_INSTANCE_H__
 

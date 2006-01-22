@@ -3,11 +3,11 @@
 	Class for template arguments, a.k.a. actuals.  
 	This file came from "Object/type/template_actuals.h"
 		in a previous life.  
-	$Id: template_actuals.h,v 1.4 2005/12/13 04:15:40 fang Exp $
+	$Id: template_actuals.h,v 1.5 2006/01/22 18:20:45 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_TEMPLATE_ACTUALS_H__
-#define	__OBJECT_TYPE_TEMPLATE_ACTUALS_H__
+#ifndef	__HAC_OBJECT_TYPE_TEMPLATE_ACTUALS_H__
+#define	__HAC_OBJECT_TYPE_TEMPLATE_ACTUALS_H__
 
 #include <iosfwd>
 #include "util/string_fwd.h"
@@ -160,5 +160,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_TEMPLATE_ACTUALS_H__
+#endif	// __HAC_OBJECT_TYPE_TEMPLATE_ACTUALS_H__
 

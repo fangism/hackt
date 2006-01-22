@@ -1,10 +1,10 @@
 /**
 	\file "Object/unroll/meta_loop_base.h"
-	$Id: meta_loop_base.h,v 1.3 2005/12/13 04:15:43 fang Exp $
+	$Id: meta_loop_base.h,v 1.4 2006/01/22 18:20:59 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_META_LOOP_BASE_H__
-#define	__OBJECT_UNROLL_META_LOOP_BASE_H__
+#ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_H__
+#define	__HAC_OBJECT_UNROLL_META_LOOP_BASE_H__
 
 #include <iosfwd>
 #include "util/persistent_fwd.h"
@@ -52,5 +52,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_META_LOOP_BASE_H__
+#endif	// __HAC_OBJECT_UNROLL_META_LOOP_BASE_H__
 

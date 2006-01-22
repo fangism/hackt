@@ -3,11 +3,11 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.7 2006/01/22 06:53:08 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.8 2006/01/22 18:20:58 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
-#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
+#ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
+#define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // overrideable debug switches
@@ -426,5 +426,5 @@ INSTANTIATION_STATEMENT_CLASS::load_object(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
+#endif	// __HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
 

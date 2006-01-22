@@ -3,11 +3,11 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/namespace.h"
 		in its previous life.  
-	$Id: namespace.h,v 1.4 2005/12/13 04:15:18 fang Exp $
+	$Id: namespace.h,v 1.5 2006/01/22 18:19:22 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_NAMESPACE_H__
-#define	__OBJECT_COMMON_NAMESPACE_H__
+#ifndef	__HAC_OBJECT_COMMON_NAMESPACE_H__
+#define	__HAC_OBJECT_COMMON_NAMESPACE_H__
 
 #include "Object/common/scopespace.h"
 #include "Object/common/object_base.h"
@@ -236,5 +236,5 @@ namespace util {
 #endif
 
 //=============================================================================
-#endif	// __OBJECT_COMMON_NAMESPACE_H__
+#endif	// __HAC_OBJECT_COMMON_NAMESPACE_H__
 

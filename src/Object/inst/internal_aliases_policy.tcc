@@ -1,10 +1,10 @@
 /**
 	\file "Object/inst/internal_alaises_policy.tcc"
-	$Id: internal_aliases_policy.tcc,v 1.3 2005/12/13 04:15:30 fang Exp $
+	$Id: internal_aliases_policy.tcc,v 1.4 2006/01/22 18:20:07 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
-#define	__OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
+#ifndef	__HAC_OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
+#define	__HAC_OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
 
 #include "Object/inst/internal_aliases_policy.h"
 #include "Object/inst/substructure_alias_base.h"
@@ -69,5 +69,5 @@ internal_aliases_policy<true>::connect(AliasType& _alias,
 }	// end namespace enity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
+#endif	// __HAC_OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
 

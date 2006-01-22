@@ -3,11 +3,11 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.5 2005/12/13 04:15:43 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.6 2006/01/22 18:21:00 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
-#define	__OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
+#ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
+#define	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
 
 #include "Object/unroll/param_instantiation_statement_base.h"
 #include "Object/inst/param_value_collection.h"
@@ -235,5 +235,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
+#endif	// __HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
 

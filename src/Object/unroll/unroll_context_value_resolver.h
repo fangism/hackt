@@ -2,11 +2,11 @@
 	\file "Object/unroll/unroll_context_value_resolver.h"
 	Specialized operator definitions for value collection
 	resolution.  
-	$Id: unroll_context_value_resolver.h,v 1.3 2005/12/13 04:15:44 fang Exp $
+	$Id: unroll_context_value_resolver.h,v 1.4 2006/01/22 18:21:01 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
-#define	__OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
+#ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
+#define	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
 
 #include <utility>		// for std::pair
 #include "Object/unroll/unroll_context.h"
@@ -123,5 +123,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
+#endif	// __HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
 

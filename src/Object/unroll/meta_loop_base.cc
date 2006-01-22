@@ -1,10 +1,10 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.3 2005/12/13 04:15:43 fang Exp $
+	$Id: meta_loop_base.cc,v 1.4 2006/01/22 18:20:59 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_META_LOOP_BASE_CC__
-#define	__OBJECT_UNROLL_META_LOOP_BASE_CC__
+#ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
+#define	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -68,5 +68,5 @@ meta_loop_base::load_object_base(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_META_LOOP_BASE_CC__
+#endif	// __HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
 

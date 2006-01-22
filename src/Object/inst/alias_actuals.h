@@ -3,11 +3,11 @@
 	Implementation of alias info that has actual parameters.  
 	This file originated from "Object/art_object_instance_alias_actuals.h"
 		in a previous life.  
-	$Id: alias_actuals.h,v 1.5 2005/12/13 04:15:27 fang Exp $
+	$Id: alias_actuals.h,v 1.6 2006/01/22 18:19:56 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_ALIAS_ACTUALS_H__
-#define	__OBJECT_INST_ALIAS_ACTUALS_H__
+#ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
+#define	__HAC_OBJECT_INST_ALIAS_ACTUALS_H__
 
 #define	DEBUG_ALIAS_ACTUALS		1
 
@@ -148,5 +148,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_ALIAS_ACTUALS_H__
+#endif	// __HAC_OBJECT_INST_ALIAS_ACTUALS_H__
 

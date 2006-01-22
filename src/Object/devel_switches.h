@@ -10,11 +10,11 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.6 2005/11/02 22:53:43 fang Exp $
+	$Id: devel_switches.h,v 1.7 2006/01/22 18:19:08 fang Exp $
  */
 
-#ifndef	__OBJECT_DEVEL_SWITCHES_H__
-#define	__OBJECT_DEVEL_SWITCHES_H__
+#ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
+#define	__HAC_OBJECT_DEVEL_SWITCHES_H__
 
 // if we want project-wide switches
 #if 0
@@ -32,5 +32,5 @@
 
 //=============================================================================
 
-#endif	// __OBJECT_DEVEL_SWITCHES_H__
+#endif	// __HAC_OBJECT_DEVEL_SWITCHES_H__
 

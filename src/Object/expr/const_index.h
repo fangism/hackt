@@ -3,11 +3,11 @@
 	Classes related to constant index expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index.h,v 1.3 2005/12/13 04:15:22 fang Exp $
+	$Id: const_index.h,v 1.4 2006/01/22 18:19:40 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_CONST_INDEX_H__
-#define __OBJECT_EXPR_CONST_INDEX_H__
+#ifndef __HAC_OBJECT_EXPR_CONST_INDEX_H__
+#define __HAC_OBJECT_EXPR_CONST_INDEX_H__
 
 #include "Object/expr/meta_index_expr.h"
 #include "Object/expr/types.h"
@@ -53,5 +53,5 @@ virtual	bool
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_CONST_INDEX_H__
+#endif	// __HAC_OBJECT_EXPR_CONST_INDEX_H__
 

@@ -2,11 +2,11 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.7 2005/12/13 04:15:32 fang Exp $
+	$Id: physical_instance_collection.h,v 1.8 2006/01/22 18:20:10 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
-#define	__OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
+#define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
 
@@ -138,5 +138,5 @@ protected:	// propagate to children
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 

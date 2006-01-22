@@ -5,6 +5,14 @@
 
 2006-01-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-74:
+	  Makefile.am: split up libhackt.la, factored out AST objects
+		into libhacktast.la.
+	  Object/*.{h,tcc}: include protection macro #ifndef ...
+		for all headers now prefixed with __HAC for consistency, 
+		convention, and to minimize collision.
+
+
 	* HACKT-00-01-04-main-00-73-merged-prsim-00-34:
 	  Branch merge.
 	  Initial prsim code: expression allocation and command interface.

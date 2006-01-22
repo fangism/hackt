@@ -2,11 +2,11 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.6 2006/01/22 06:53:06 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.7 2006/01/22 18:20:30 fang Exp $
  */
 
-#ifndef __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
-#define __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
+#ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
+#define __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/common/multikey_index.h"
@@ -187,5 +187,5 @@ public:
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
+#endif	// __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 

@@ -2,6 +2,10 @@
 
 2006-01-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-74:
+	  Minor prototype fix for setvbuf in util/libc.h.
+
+
 	* HACKT-00-01-04-main-00-73-merged-prsim-00-34:
 	  Branch merge.  Includes revisions from -prsim-00 and 
 		-PRS-03 branches.

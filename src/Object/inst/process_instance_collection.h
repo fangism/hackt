@@ -3,11 +3,11 @@
 	Class declarations for process instance and collections.  
 	This file originated from "Object/art_object_instance_proc.h"
 		in a previous life.
-	$Id: process_instance_collection.h,v 1.5 2005/12/13 04:15:32 fang Exp $
+	$Id: process_instance_collection.h,v 1.6 2006/01/22 18:20:11 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
-#define	__OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
+#define	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/process_instance.h"
@@ -29,5 +29,5 @@ typedef	instance_array<process_tag, 4>	process_array_4D;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_H__
 

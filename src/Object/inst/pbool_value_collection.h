@@ -3,11 +3,11 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: pbool_value_collection.h,v 1.4 2005/12/13 04:15:31 fang Exp $
+	$Id: pbool_value_collection.h,v 1.5 2006/01/22 18:20:09 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
-#define	__OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
+#define	__HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
 
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
@@ -90,5 +90,5 @@ typedef	value_array<pbool_tag,4>	pbool_array_4D;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_H__
 

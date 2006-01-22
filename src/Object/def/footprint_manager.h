@@ -1,11 +1,11 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.3 2005/12/13 04:15:20 fang Exp $
+	$Id: footprint_manager.h,v 1.4 2006/01/22 18:19:33 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_FOOTPRINT_MANAGER_H__
-#define	__OBJECT_DEF_FOOTPRINT_MANAGER_H__
+#ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
+#define	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
 
 #include <iosfwd>
 #include <map>
@@ -89,5 +89,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_FOOTPRINT_MANAGER_H__
+#endif	// __HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
 

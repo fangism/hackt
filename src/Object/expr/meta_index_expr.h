@@ -3,11 +3,11 @@
 	Base class related to lists of meta index expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_expr.h,v 1.5 2005/12/13 04:15:24 fang Exp $
+	$Id: meta_index_expr.h,v 1.6 2006/01/22 18:19:50 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_META_INDEX_EXPR_H__
-#define __OBJECT_EXPR_META_INDEX_EXPR_H__
+#ifndef __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
+#define __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
 
 #include "Object/expr/nonmeta_index_expr_base.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -84,5 +84,5 @@ virtual	bool
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_META_INDEX_EXPR_H__
+#endif	// __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
 

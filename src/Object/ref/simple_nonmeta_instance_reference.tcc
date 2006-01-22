@@ -2,11 +2,11 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.3 2005/12/13 04:15:37 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.4 2006/01/22 18:20:30 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
-#define	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
+#ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
+#define	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
 #include "Object/ref/simple_nonmeta_instance_reference.h"
@@ -95,5 +95,5 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::load_object(
 }	// end namespace entity
 }	// end namepace HAC
 
-#endif	// __OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
+#endif	// __HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
 

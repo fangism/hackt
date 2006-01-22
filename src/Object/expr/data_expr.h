@@ -6,11 +6,11 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.4 2005/12/13 04:15:23 fang Exp $
+	$Id: data_expr.h,v 1.5 2006/01/22 18:19:46 fang Exp $
  */
 
-#ifndef	__OBJECT_EXPR_DATA_EXPR_H__
-#define	__OBJECT_EXPR_DATA_EXPR_H__
+#ifndef	__HAC_OBJECT_EXPR_DATA_EXPR_H__
+#define	__HAC_OBJECT_EXPR_DATA_EXPR_H__
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -67,5 +67,5 @@ virtual	DATA_EXPR_MAY_EQUIVALENCE_PROTO = 0;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_EXPR_DATA_EXPR_H__
+#endif	// __HAC_OBJECT_EXPR_DATA_EXPR_H__
 

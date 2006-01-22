@@ -3,11 +3,11 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.9 2006/01/22 06:52:57 fang Exp $
+ 	$Id: namespace.cc,v 1.10 2006/01/22 18:19:20 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_NAMESPACE_CC__
-#define	__OBJECT_COMMON_NAMESPACE_CC__
+#ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
+#define	__HAC_OBJECT_COMMON_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -1682,5 +1682,5 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_COMMON_NAMESPACE_CC__
+#endif	// __HAC_OBJECT_COMMON_NAMESPACE_CC__
 

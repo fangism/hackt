@@ -3,11 +3,11 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.3 2005/12/13 04:15:36 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.4 2006/01/22 18:20:30 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
-#define	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
+#ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
+#define	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
 
 #include "Object/ref/simple_nonmeta_instance_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
@@ -99,5 +99,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
+#endif	// __HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
 

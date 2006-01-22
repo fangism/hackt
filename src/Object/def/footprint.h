@@ -1,11 +1,11 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.7 2006/01/22 06:52:58 fang Exp $
+	$Id: footprint.h,v 1.8 2006/01/22 18:19:32 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_FOOTPRINT_H__
-#define	__OBJECT_DEF_FOOTPRINT_H__
+#ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
+#define	__HAC_OBJECT_DEF_FOOTPRINT_H__
 
 #include <iosfwd>
 #include "Object/inst/instance_pool.h"
@@ -291,5 +291,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_FOOTPRINT_H__
+#endif	// __HAC_OBJECT_DEF_FOOTPRINT_H__
 

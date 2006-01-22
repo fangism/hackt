@@ -1,11 +1,11 @@
 /**
 	\file "Object/expr/operator_info.h"
 	Some expression specific implementation details.  
-	$Id: operator_info.h,v 1.3 2005/12/13 04:15:26 fang Exp $
+	$Id: operator_info.h,v 1.4 2006/01/22 18:19:52 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_OPERATOR_INFO_H__
-#define __OBJECT_EXPR_OPERATOR_INFO_H__
+#ifndef __HAC_OBJECT_EXPR_OPERATOR_INFO_H__
+#define __HAC_OBJECT_EXPR_OPERATOR_INFO_H__
 
 namespace HAC {
 namespace entity {
@@ -31,5 +31,5 @@ struct op_info {
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_OPERATOR_INFO_H__
+#endif	// __HAC_OBJECT_EXPR_OPERATOR_INFO_H__
 

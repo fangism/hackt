@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.2 2006/01/22 06:53:33 fang Exp $
+	$Id: libc.h,v 1.3 2006/01/22 18:21:02 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -125,7 +125,7 @@ extern int	setlinebuf(FILE*);
 
 #if	defined(HAVE_SETVBUF) && HAVE_SETVBUF
 #else
-extern int	setvbuf(FILE*, char&, int, size_t);
+extern int	setvbuf(FILE*, char*, int, size_t);
 #endif
 
 #if	defined(HAVE_TMPFILE) && HAVE_TMPFILE

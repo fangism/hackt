@@ -3,11 +3,11 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.7 2006/01/22 06:53:02 fang Exp $
+ 	$Id: value_collection.tcc,v 1.8 2006/01/22 18:20:13 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_VALUE_COLLECTION_TCC__
-#define	__OBJECT_INST_VALUE_COLLECTION_TCC__
+#ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
+#define	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
 
 #ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -920,5 +920,5 @@ VALUE_SCALAR_CLASS::load_object(const persistent_object_manager& m, istream& f) 
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_VALUE_COLLECTION_TCC__
+#endif	// __HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
 

@@ -2,11 +2,11 @@
 	\file "Object/common/object_base.h"
 	Base classes for semantic objects.  
 	This file was reincarnated from "Object/common/object_base.h".
-	$Id: object_base.h,v 1.4 2006/01/22 06:52:57 fang Exp $
+	$Id: object_base.h,v 1.5 2006/01/22 18:19:23 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_OBJECT_BASE_H__
-#define	__OBJECT_COMMON_OBJECT_BASE_H__
+#ifndef	__HAC_OBJECT_COMMON_OBJECT_BASE_H__
+#define	__HAC_OBJECT_COMMON_OBJECT_BASE_H__
 
 #include <iosfwd>
 #include "util/macros.h"
@@ -133,5 +133,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_COMMON_OBJECT_BASE_H__
+#endif	// __HAC_OBJECT_COMMON_OBJECT_BASE_H__
 

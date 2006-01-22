@@ -4,11 +4,11 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.9 2006/01/22 06:53:00 fang Exp $
+	$Id: instance_alias_info.h,v 1.10 2006/01/22 18:20:05 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
-#define	__OBJECT_INST_INSTANCE_ALIAS_INFO_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
+#define	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -391,5 +391,5 @@ operator << (ostream&,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INSTANCE_ALIAS_INFO_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 

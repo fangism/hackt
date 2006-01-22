@@ -2,11 +2,11 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.7 2005/12/13 04:15:38 fang Exp $
+	$Id: proc_traits.h,v 1.8 2006/01/22 18:20:37 fang Exp $
  */
 
-#ifndef	__OBJECT_TRAITS_PROC_TRAITS_H__
-#define	__OBJECT_TRAITS_PROC_TRAITS_H__
+#ifndef	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
+#define	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
@@ -86,5 +86,5 @@ struct class_traits<process_tag> {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TRAITS_PROC_TRAITS_H__
+#endif	// __HAC_OBJECT_TRAITS_PROC_TRAITS_H__
 

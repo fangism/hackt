@@ -4,11 +4,11 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.6 2006/01/22 06:52:57 fang Exp $
+	$Id: extern_templates.cc,v 1.7 2006/01/22 18:19:18 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
-#define	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
+#ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
+#define	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 
 #include "util/STL/list_fwd.h"
 #include <list>
@@ -50,5 +50,5 @@ template class packed_array_generic<pint_value_type, pbool_value_type>;
 
 }	// end namespace util
 
-#endif	// __OBJECT_COMMON_EXTERN_TEMPLATES_CC__
+#endif	// __HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 

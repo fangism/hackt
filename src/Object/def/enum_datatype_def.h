@@ -2,11 +2,11 @@
 	\file "Object/def/enum_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: enum_datatype_def.h,v 1.6 2006/01/22 06:52:58 fang Exp $
+	$Id: enum_datatype_def.h,v 1.7 2006/01/22 18:19:31 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_ENUM_DATATYPE_DEF_H__
-#define	__OBJECT_DEF_ENUM_DATATYPE_DEF_H__
+#ifndef	__HAC_OBJECT_DEF_ENUM_DATATYPE_DEF_H__
+#define	__HAC_OBJECT_DEF_ENUM_DATATYPE_DEF_H__
 
 #include "Object/def/datatype_definition_base.h"
 #include "Object/common/scopespace.h"
@@ -113,5 +113,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_ENUM_DATATYPE_DEF_H__
+#endif	// __HAC_OBJECT_DEF_ENUM_DATATYPE_DEF_H__
 

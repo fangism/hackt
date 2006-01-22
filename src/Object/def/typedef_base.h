@@ -2,11 +2,11 @@
 	\file "Object/def/typedef_base.h"
 	Definition-related HAC object classes.  
 	This file originated from "Object/art_object_definition.h",  
-	$Id: typedef_base.h,v 1.5 2006/01/22 06:52:59 fang Exp $
+	$Id: typedef_base.h,v 1.6 2006/01/22 18:19:38 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_TYPEDEF_BASE_H__
-#define	__OBJECT_DEF_TYPEDEF_BASE_H__
+#ifndef	__HAC_OBJECT_DEF_TYPEDEF_BASE_H__
+#define	__HAC_OBJECT_DEF_TYPEDEF_BASE_H__
 
 #include "Object/def/definition_base.h"
 #include "Object/common/scopespace.h"
@@ -114,5 +114,5 @@ virtual	void
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_TYPEDEF_BASE_H__
+#endif	// __HAC_OBJECT_DEF_TYPEDEF_BASE_H__
 

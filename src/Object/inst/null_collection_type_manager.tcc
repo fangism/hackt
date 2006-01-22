@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/null_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.tcc,v 1.3 2005/12/13 04:15:31 fang Exp $
+	$Id: null_collection_type_manager.tcc,v 1.4 2006/01/22 18:20:09 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
-#define	__OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
+#ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
+#define	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
 
 #include "Object/inst/null_collection_type_manager.h"
 #include <iostream>
@@ -54,5 +54,5 @@ NULL_COLLECTION_TYPE_MANAGER_CLASS::get_type(void) const {
 #undef NULL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 #undef NULL_COLLECTION_TYPE_MANAGER_CLASS
 
-#endif	// __OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
+#endif	// __HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
 

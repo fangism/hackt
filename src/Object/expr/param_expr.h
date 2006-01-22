@@ -4,11 +4,11 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.6 2005/12/13 04:15:26 fang Exp $
+	$Id: param_expr.h,v 1.7 2006/01/22 18:19:53 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_PARAM_EXPR_H__
-#define __OBJECT_EXPR_PARAM_EXPR_H__
+#ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
+#define __HAC_OBJECT_EXPR_PARAM_EXPR_H__
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
@@ -109,5 +109,5 @@ virtual	excl_ptr<param_expression_assignment>
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_PARAM_EXPR_H__
+#endif	// __HAC_OBJECT_EXPR_PARAM_EXPR_H__
 

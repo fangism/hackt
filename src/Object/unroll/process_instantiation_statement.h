@@ -3,11 +3,11 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_proc.h"
 		in a previous life.  
-	$Id: process_instantiation_statement.h,v 1.3 2005/12/13 04:15:43 fang Exp $
+	$Id: process_instantiation_statement.h,v 1.4 2006/01/22 18:21:00 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_PROCESS_INSTANTIATION_STATEMENT_H__
-#define	__OBJECT_UNROLL_PROCESS_INSTANTIATION_STATEMENT_H__
+#ifndef	__HAC_OBJECT_UNROLL_PROCESS_INSTANTIATION_STATEMENT_H__
+#define	__HAC_OBJECT_UNROLL_PROCESS_INSTANTIATION_STATEMENT_H__
 
 #include "Object/traits/proc_traits.h"
 #include "Object/inst/process_instance_collection.h"
@@ -23,5 +23,5 @@ namespace entity {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_PROCESS_INSTANTIATION_STATEMENT_H__
+#endif	// __HAC_OBJECT_UNROLL_PROCESS_INSTANTIATION_STATEMENT_H__
 

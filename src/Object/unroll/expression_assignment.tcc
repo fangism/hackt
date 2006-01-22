@@ -3,11 +3,11 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.6 2006/01/22 06:53:08 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.7 2006/01/22 18:20:54 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
-#define	__OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
+#ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
+#define	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
 
 #ifndef	DEBUG_LIST_VECTOR_POOL
 #define	DEBUG_LIST_VECTOR_POOL		0
@@ -318,5 +318,5 @@ EXPRESSION_ASSIGNMENT_CLASS::load_object(
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
+#endif	// __HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
 

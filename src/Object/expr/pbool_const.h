@@ -3,11 +3,11 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.5 2005/12/13 04:15:26 fang Exp $
+	$Id: pbool_const.h,v 1.6 2006/01/22 18:19:53 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_PBOOL_CONST_H__
-#define __OBJECT_EXPR_PBOOL_CONST_H__
+#ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
+#define __HAC_OBJECT_EXPR_PBOOL_CONST_H__
 
 #include "Object/expr/pbool_expr.h"
 #include "Object/expr/const_param.h"
@@ -127,5 +127,5 @@ public:
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_PBOOL_CONST_H__
+#endif	// __HAC_OBJECT_EXPR_PBOOL_CONST_H__
 

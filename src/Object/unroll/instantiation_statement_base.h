@@ -3,11 +3,11 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.5 2005/12/13 04:15:42 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.6 2006/01/22 18:20:58 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
-#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
+#ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
+#define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 
 #include "util/string_fwd.h"
 #include "Object/unroll/instance_management_base.h"
@@ -130,5 +130,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
+#endif	// __HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 

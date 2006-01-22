@@ -3,11 +3,11 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.7 2006/01/22 06:52:57 fang Exp $
+	$Id: scopespace.h,v 1.8 2006/01/22 18:19:25 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_SCOPESPACE_H__
-#define	__OBJECT_COMMON_SCOPESPACE_H__
+#ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
+#define	__HAC_OBJECT_COMMON_SCOPESPACE_H__
 
 #include <list>
 #include "Object/common/util_types.h"
@@ -307,5 +307,5 @@ virtual	void
 }	// end namespace HAC
 
 //=============================================================================
-#endif	// __OBJECT_COMMON_SCOPESPACE_H__
+#endif	// __HAC_OBJECT_COMMON_SCOPESPACE_H__
 

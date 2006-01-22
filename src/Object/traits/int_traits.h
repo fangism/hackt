@@ -2,11 +2,11 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.7 2005/12/13 04:15:38 fang Exp $
+	$Id: int_traits.h,v 1.8 2006/01/22 18:20:36 fang Exp $
  */
 
-#ifndef	__OBJECT_TRAITS_INT_TRAITS_H__
-#define	__OBJECT_TRAITS_INT_TRAITS_H__
+#ifndef	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
+#define	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
 
@@ -97,5 +97,5 @@ struct class_traits<int_tag> {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TRAITS_INT_TRAITS_H__
+#endif	// __HAC_OBJECT_TRAITS_INT_TRAITS_H__
 

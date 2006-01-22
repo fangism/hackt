@@ -2,11 +2,11 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.8 2006/01/22 06:53:08 fang Exp $
+	$Id: unroll_context.cc,v 1.9 2006/01/22 18:21:01 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
-#define	__OBJECT_UNROLL_UNROLL_CONTEXT_CC__
+#ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
+#define	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -313,5 +313,5 @@ unroll_context::chain_context(const this_type& c) {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_UNROLL_CONTEXT_CC__
+#endif	// __HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 

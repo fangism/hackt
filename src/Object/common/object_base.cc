@@ -3,11 +3,11 @@
 	Method definitions for base classes for semantic objects.  
 	This file used to be "Object/common/object_base.cc"
 		in a previous life.  
- 	$Id: object_base.cc,v 1.3 2005/12/13 04:15:18 fang Exp $
+ 	$Id: object_base.cc,v 1.4 2006/01/22 18:19:22 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_OBJECT_BASE_CC__
-#define	__OBJECT_COMMON_OBJECT_BASE_CC__
+#ifndef	__HAC_OBJECT_COMMON_OBJECT_BASE_CC__
+#define	__HAC_OBJECT_COMMON_OBJECT_BASE_CC__
 
 #include <iostream>
 #include "Object/common/object_base.h"
@@ -52,5 +52,5 @@ object_handle::dump(ostream& o) const {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_COMMON_OBJECT_BASE_CC__
+#endif	// __HAC_OBJECT_COMMON_OBJECT_BASE_CC__
 

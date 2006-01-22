@@ -1,11 +1,11 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.7 2006/01/22 06:52:56 fang Exp $
+	$Id: state_manager.h,v 1.8 2006/01/22 18:19:14 fang Exp $
  */
 
-#ifndef	__OBJECT_STATE_MANAGER_H__
-#define	__OBJECT_STATE_MANAGER_H__
+#ifndef	__HAC_OBJECT_STATE_MANAGER_H__
+#define	__HAC_OBJECT_STATE_MANAGER_H__
 
 #include <iosfwd>
 #include "util/persistent_fwd.h"
@@ -172,5 +172,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_STATE_MANAGER_H__
+#endif	// __HAC_OBJECT_STATE_MANAGER_H__
 

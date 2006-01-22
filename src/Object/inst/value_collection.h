@@ -3,11 +3,11 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.7 2006/01/22 06:53:02 fang Exp $
+	$Id: value_collection.h,v 1.8 2006/01/22 18:20:13 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_VALUE_COLLECTION_H__
-#define	__OBJECT_INST_VALUE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
+#define	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
 
 #include <iosfwd>
 #include "util/string_fwd.h"
@@ -367,5 +367,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_VALUE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_VALUE_COLLECTION_H__
 

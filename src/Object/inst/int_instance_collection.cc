@@ -4,11 +4,11 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.6 2005/12/13 04:15:30 fang Exp $
+	$Id: int_instance_collection.cc,v 1.7 2006/01/22 18:20:06 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
-#define	__OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
+#ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
+#define	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 #define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
@@ -92,5 +92,5 @@ template class instance_array<int_tag, 4>;
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
+#endif	// __HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
 

@@ -2,11 +2,11 @@
 	\file "Object/traits/pint_traits.h"
 	Traits and policies for parameter integers.  
 	This file used to be "Object/art_object_pint_traits.h".
-	$Id: pint_traits.h,v 1.5 2005/12/13 04:15:38 fang Exp $
+	$Id: pint_traits.h,v 1.6 2006/01/22 18:20:36 fang Exp $
  */
 
-#ifndef	__OBJECT_TRAITS_PINT_TRAITS_H__
-#define	__OBJECT_TRAITS_PINT_TRAITS_H__
+#ifndef	__HAC_OBJECT_TRAITS_PINT_TRAITS_H__
+#define	__HAC_OBJECT_TRAITS_PINT_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
 
@@ -85,5 +85,5 @@ private:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TRAITS_PINT_TRAITS_H__
+#endif	// __HAC_OBJECT_TRAITS_PINT_TRAITS_H__
 

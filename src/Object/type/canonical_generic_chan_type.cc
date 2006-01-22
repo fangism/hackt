@@ -1,11 +1,11 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.3 2005/12/13 04:15:39 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.4 2006/01/22 18:20:40 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
-#define	__OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
+#ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
+#define	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
 
 #define	ENABLE_STACKTRACE			0
 
@@ -432,5 +432,5 @@ canonical_generic_chan_type::load_object_base(const persistent_object_manager& m
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
+#endif	// __HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
 

@@ -3,11 +3,11 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: simple_nonmeta_instance_reference_base.h,v 1.4 2005/12/13 04:15:37 fang Exp $
+	$Id: simple_nonmeta_instance_reference_base.h,v 1.5 2006/01/22 18:20:30 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
-#define	__OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
+#ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
+#define	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
 
 #include "Object/ref/nonmeta_instance_reference_base.h"
 #include "util/memory/excl_ptr.h"
@@ -75,5 +75,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
+#endif	// __HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
 

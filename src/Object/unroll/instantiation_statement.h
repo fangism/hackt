@@ -3,11 +3,11 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.7 2006/01/22 06:53:08 fang Exp $
+	$Id: instantiation_statement.h,v 1.8 2006/01/22 18:20:57 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
-#define	__OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
+#ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
+#define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
 
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/traits/class_traits.h"
@@ -171,5 +171,5 @@ class excl_ptr<instantiation_statement<pbool_tag> >;
 }	// end namespace memory
 }	// end namespace util
 
-#endif	// __OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
+#endif	// __HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
 

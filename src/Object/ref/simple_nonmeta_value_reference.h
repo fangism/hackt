@@ -3,11 +3,11 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.4 2005/12/13 04:15:37 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.5 2006/01/22 18:20:31 fang Exp $
  */
 
-#ifndef __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
-#define __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
+#ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
+#define __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
 
 #include "util/boolean_types.h"
 #include "Object/common/multikey_index.h"
@@ -128,5 +128,5 @@ public:
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
+#endif	// __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
 

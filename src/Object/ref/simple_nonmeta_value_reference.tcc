@@ -3,11 +3,11 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.6 2006/01/22 06:53:07 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.7 2006/01/22 18:20:31 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
-#define	__OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
+#ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
+#define	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #ifndef	ENABLE_STACKTRACE
@@ -220,5 +220,5 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manage
 }	// end namepace entity
 }	// end namepace HAC
 
-#endif	// __OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
+#endif	// __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
 

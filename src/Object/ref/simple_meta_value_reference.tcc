@@ -2,11 +2,11 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.7 2006/01/22 06:53:06 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.8 2006/01/22 18:20:30 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
-#define	__OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
+#ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
+#define	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
 #ifndef	ENABLE_STACKTRACE
@@ -807,5 +807,5 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 }	// end namepace entity
 }	// end namepace HAC
 
-#endif	// __OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
+#endif	// __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
 

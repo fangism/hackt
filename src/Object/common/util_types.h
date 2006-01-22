@@ -2,11 +2,11 @@
 	\file "Object/common/util_types.h"
 	Collective typedefs for utility types.  
 	This file was "Object/common/util_types.h" in a former life.  
-	$Id: util_types.h,v 1.5 2006/01/22 06:52:57 fang Exp $
+	$Id: util_types.h,v 1.6 2006/01/22 18:19:26 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_UTIL_TYPES_H__
-#define	__OBJECT_COMMON_UTIL_TYPES_H__
+#ifndef	__HAC_OBJECT_COMMON_UTIL_TYPES_H__
+#define	__HAC_OBJECT_COMMON_UTIL_TYPES_H__
 
 #include "util/STL/vector_fwd.h"
 #include "util/STL/deque_fwd.h"
@@ -81,5 +81,5 @@ namespace entity {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_COMMON_UTIL_TYPES_H__
+#endif	// __HAC_OBJECT_COMMON_UTIL_TYPES_H__
 

@@ -3,11 +3,11 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.8 2006/01/22 06:53:01 fang Exp $
+	$Id: instance_collection_base.h,v 1.9 2006/01/22 18:20:06 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
-#define	__OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
+#define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 
 #include <string>
 #include <deque>
@@ -357,5 +357,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 

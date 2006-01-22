@@ -3,11 +3,11 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.5 2005/12/13 04:15:26 fang Exp $
+	$Id: pint_arith_expr.h,v 1.6 2006/01/22 18:19:54 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_PINT_ARITH_EXPR_H__
-#define __OBJECT_EXPR_PINT_ARITH_EXPR_H__
+#ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
+#define __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
 
 #include "Object/expr/pint_expr.h"
 #include "Object/expr/operator_info.h"
@@ -133,5 +133,5 @@ public:
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_PINT_ARITH_EXPR_H__
+#endif	// __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
 

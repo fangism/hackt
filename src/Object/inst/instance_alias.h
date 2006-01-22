@@ -4,11 +4,11 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.6 2005/12/13 04:15:29 fang Exp $
+	$Id: instance_alias.h,v 1.7 2006/01/22 18:20:05 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INSTANCE_ALIAS_H__
-#define	__OBJECT_INST_INSTANCE_ALIAS_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
+#define	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
 
 #include "Object/inst/instance_alias_info.h"
 #include "Object/expr/types.h"		// for pint_value_type
@@ -219,5 +219,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INSTANCE_ALIAS_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_ALIAS_H__
 

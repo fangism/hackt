@@ -2,11 +2,11 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.5 2005/12/13 04:15:28 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.6 2006/01/22 18:20:01 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
-#define	__OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
+#define	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
 
 #include "Object/type/canonical_type_fwd.h"		// for conditional
 #include "Object/inst/physical_instance_collection.h"
@@ -95,5 +95,5 @@ protected:	// propagate to children
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
 

@@ -3,11 +3,11 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: instance_management_base.h,v 1.5 2005/12/13 04:15:42 fang Exp $
+	$Id: instance_management_base.h,v 1.6 2006/01/22 18:20:56 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
-#define	__OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
+#ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
+#define	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
 
 #include "util/persistent.h"
 #include "util/boolean_types.h"
@@ -87,5 +87,5 @@ virtual	CREATE_UNIQUE_PROTO;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
+#endif	// __HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
 

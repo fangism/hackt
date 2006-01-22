@@ -6,14 +6,14 @@
 	explicitly or implicitly.  
 	This file used to be "Object/common/extern_templates.h"
 		in its previous life.  
-	$Id: extern_templates.h,v 1.3 2005/12/13 04:15:18 fang Exp $
+	$Id: extern_templates.h,v 1.4 2006/01/22 18:19:19 fang Exp $
  */
 
-#ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_H__
-#define	__OBJECT_COMMON_EXTERN_TEMPLATES_H__
+#ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_H__
+#define	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_H__
 
 // never include this in the .cc file
-#ifndef	__OBJECT_COMMON_EXTERN_TEMPLATES_CC__
+#ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 
 #include "Object/expr/types.h"
 #include "util/multikey_fwd.h"
@@ -78,6 +78,6 @@ class multikey_generator_generic<pint_value_type>;
 
 }	// end namespace util
 
-#endif	// __OBJECT_COMMON_EXTERN_TEMPLATES_CC__
-#endif	// __OBJECT_COMMON_EXTERN_TEMPLATES_H__
+#endif	// __HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
+#endif	// __HAC_OBJECT_COMMON_EXTERN_TEMPLATES_H__
 

@@ -3,11 +3,11 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.4 2005/12/13 04:15:21 fang Exp $
+	$Id: template_formals_manager.h,v 1.5 2006/01/22 18:19:37 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
-#define	__OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
+#ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
+#define	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
 
 #include <iosfwd>
 #include <vector>
@@ -202,5 +202,5 @@ vector<HAC::entity::template_formals_manager::template_formals_value_type>;
 }	// end namespace std
 #endif
 
-#endif	// __OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
+#endif	// __HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
 

@@ -3,11 +3,11 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.6 2006/01/22 06:53:06 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.7 2006/01/22 18:20:24 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
-#define	__OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
+#ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
+#define	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
 
 #include "Object/ref/nonmeta_instance_reference_base.h"
 #include "util/memory/excl_ptr.h"
@@ -176,5 +176,5 @@ virtual	string
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
+#endif	// __HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
 

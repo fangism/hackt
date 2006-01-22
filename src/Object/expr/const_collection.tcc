@@ -2,11 +2,11 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.7 2006/01/22 06:53:00 fang Exp $
+ 	$Id: const_collection.tcc,v 1.8 2006/01/22 18:19:40 fang Exp $
  */
 
-#ifndef	__OBJECT_EXPR_CONST_COLLECTION_TCC__
-#define	__OBJECT_EXPR_CONST_COLLECTION_TCC__
+#ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
+#define	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
 
 // flags for controlling conditional compilation, mostly for debugging
 
@@ -458,5 +458,5 @@ CONST_COLLECTION_CLASS::load_object(const persistent_object_manager& m,
 }	// end namepace entity
 }	// end namepace HAC
 
-#endif	// __OBJECT_EXPR_CONST_COLLECTION_TCC__
+#endif	// __HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
 

@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.5 2005/12/13 04:15:33 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.6 2006/01/22 18:20:13 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
-#define	__OBJECT_INST_SUBINTANCE_MANAGER_TCC__
+#ifndef	__HAC_OBJECT_INST_SUBINTANCE_MANAGER_TCC__
+#define	__HAC_OBJECT_INST_SUBINTANCE_MANAGER_TCC__
 
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
@@ -68,5 +68,5 @@ subinstance_manager::unroll_port_instances(
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_SUBINTANCE_MANAGER_TCC__
+#endif	// __HAC_OBJECT_INST_SUBINTANCE_MANAGER_TCC__
 

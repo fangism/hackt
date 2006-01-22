@@ -1,10 +1,10 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.6 2006/01/22 06:52:56 fang Exp $
+	$Id: global_entry.h,v 1.7 2006/01/22 18:19:09 fang Exp $
  */
 
-#ifndef	__OBJECT_GLOBAL_ENTRY_H__
-#define	__OBJECT_GLOBAL_ENTRY_H__
+#ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
+#define	__HAC_OBJECT_GLOBAL_ENTRY_H__
 
 #include <iosfwd>
 #include <vector>
@@ -370,5 +370,5 @@ extract_parent_formal_instance_alias(const state_manager&,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_GLOBAL_ENTRY_H__
+#endif	// __HAC_OBJECT_GLOBAL_ENTRY_H__
 

@@ -3,11 +3,11 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.5 2005/12/13 04:15:27 fang Exp $
+	$Id: pint_const.h,v 1.6 2006/01/22 18:19:55 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_PINT_CONST_H__
-#define __OBJECT_EXPR_PINT_CONST_H__
+#ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
+#define __HAC_OBJECT_EXPR_PINT_CONST_H__
 
 #include "Object/expr/pint_expr.h"
 #include "Object/expr/const_index.h"
@@ -153,5 +153,5 @@ public:
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_PINT_CONST_H__
+#endif	// __HAC_OBJECT_EXPR_PINT_CONST_H__
 

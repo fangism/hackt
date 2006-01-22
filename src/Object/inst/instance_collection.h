@@ -3,11 +3,11 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.9 2006/01/22 06:53:00 fang Exp $
+	$Id: instance_collection.h,v 1.10 2006/01/22 18:20:05 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INSTANCE_COLLECTION_H__
-#define	__OBJECT_INST_INSTANCE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
+#define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
 
 #include <iosfwd>
 #include <set>
@@ -516,5 +516,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INSTANCE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
 

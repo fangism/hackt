@@ -3,11 +3,11 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.7 2006/01/22 06:53:01 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.8 2006/01/22 18:20:09 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
-#define	__OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
+#ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
+#define	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
 
@@ -359,5 +359,5 @@ param_value_collection::make_member_meta_instance_reference(
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
+#endif	// __HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
 

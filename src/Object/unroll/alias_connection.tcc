@@ -2,11 +2,11 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.7 2006/01/22 06:53:08 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.8 2006/01/22 18:20:47 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
-#define	__OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
+#ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
+#define	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
 
 // compilation switches for debugging
 #ifndef	ENABLE_STACKTRACE
@@ -365,5 +365,5 @@ ALIAS_CONNECTION_CLASS::load_object(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
+#endif	// __HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
 

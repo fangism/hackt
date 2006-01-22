@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.6 2006/01/22 06:53:01 fang Exp $
+	$Id: instance_pool.tcc,v 1.7 2006/01/22 18:20:06 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INSTANCE_POOL_TCC__
-#define	__OBJECT_INST_INSTANCE_POOL_TCC__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
+#define	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
 
 #include <iostream>
 #include "Object/inst/instance_pool.h"
@@ -165,4 +165,4 @@ instance_pool<T>::load_object_base(const persistent_object_manager& m,
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INSTANCE_POOL_TCC__
+#endif	// __HAC_OBJECT_INST_INSTANCE_POOL_TCC__

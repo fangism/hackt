@@ -3,11 +3,11 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.5 2005/12/13 04:15:28 fang Exp $
+	$Id: alias_empty.h,v 1.6 2006/01/22 18:19:58 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_ALIAS_EMPTY_H__
-#define	__OBJECT_INST_ALIAS_EMPTY_H__
+#ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
+#define	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
 
 #define	DEBUG_ALIAS_EMPTY		1
 
@@ -157,5 +157,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_ALIAS_EMPTY_H__
+#endif	// __HAC_OBJECT_INST_ALIAS_EMPTY_H__
 

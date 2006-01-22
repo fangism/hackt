@@ -4,11 +4,11 @@
 	and instance collections.  
 	This file was "Object/art_object_instance_enum.h"
 		in a previous life.  
-	$Id: enum_instance_collection.h,v 1.5 2005/12/13 04:15:28 fang Exp $
+	$Id: enum_instance_collection.h,v 1.6 2006/01/22 18:20:04 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
-#define	__OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
+#define	__HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/enum_instance.h"
@@ -31,5 +31,5 @@ typedef	instance_array<enum_tag, 4>	enum_array_4D;
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_H__
 

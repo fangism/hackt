@@ -5,11 +5,11 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: struct_expr.h,v 1.3 2005/12/13 04:15:27 fang Exp $
+	$Id: struct_expr.h,v 1.4 2006/01/22 18:19:55 fang Exp $
  */
 
-#ifndef	__OBJECT_EXPR_STRUCT_EXPR_H__
-#define	__OBJECT_EXPR_STRUCT_EXPR_H__
+#ifndef	__HAC_OBJECT_EXPR_STRUCT_EXPR_H__
+#define	__HAC_OBJECT_EXPR_STRUCT_EXPR_H__
 
 #include "Object/expr/data_expr.h"
 
@@ -33,5 +33,5 @@ virtual	~struct_expr() { }
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_EXPR_STRUCT_EXPR_H__
+#endif	// __HAC_OBJECT_EXPR_STRUCT_EXPR_H__
 

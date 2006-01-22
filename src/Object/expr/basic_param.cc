@@ -3,11 +3,11 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.8 2005/12/13 04:15:21 fang Exp $
+ 	$Id: basic_param.cc,v 1.9 2006/01/22 18:19:38 fang Exp $
  */
 
-#ifndef	__OBJECT_EXPR_BASIC_PARAM_CC_
-#define	__OBJECT_EXPR_BASIC_PARAM_CC_
+#ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
+#define	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	DEBUG_LIST_VECTOR_POOL				0
@@ -639,5 +639,5 @@ DEFAULT_STATIC_TRACE_END
 #undef	STACKTRACE_DESTRUCTORS
 #undef	STACKTRACE_DTOR
 
-#endif	// __OBJECT_EXPR_BASIC_PARAM_CC_
+#endif	// __HAC_OBJECT_EXPR_BASIC_PARAM_CC_
 

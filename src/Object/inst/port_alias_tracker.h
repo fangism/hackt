@@ -2,11 +2,11 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.6 2005/12/13 04:15:32 fang Exp $
+	$Id: port_alias_tracker.h,v 1.7 2006/01/22 18:20:10 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
-#define	__OBJECT_INST_PORT_ALIAS_TRACKER_H__
+#ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
+#define	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
 
 #include <iosfwd>
 #include <map>
@@ -238,5 +238,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_PORT_ALIAS_TRACKER_H__
+#endif	// __HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
 

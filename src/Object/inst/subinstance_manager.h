@@ -1,10 +1,10 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.8 2006/01/22 06:53:02 fang Exp $
+	$Id: subinstance_manager.h,v 1.9 2006/01/22 18:20:12 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
-#define	__OBJECT_INST_SUBINSTANCE_MANAGER_H__
+#ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
+#define	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
 
 #include <vector>
 #include "util/memory/count_ptr.h"
@@ -157,5 +157,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_SUBINSTANCE_MANAGER_H__
+#endif	// __HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
 

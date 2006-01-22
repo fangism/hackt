@@ -3,11 +3,11 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.5 2006/01/22 06:53:07 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.6 2006/01/22 18:20:35 fang Exp $
  */
 
-#ifndef	__OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
-#define	__OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
+#ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
+#define	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
 
 #define	DEBUG_TRAITS_CLASS_TRAITS_TYPES			0
 
@@ -196,5 +196,5 @@ int_traits::int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
 
 DEFAULT_STATIC_TRACE_END
 
-#endif	// __OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
+#endif	// __HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
 

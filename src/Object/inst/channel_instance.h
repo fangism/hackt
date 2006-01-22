@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/channel_instance.h"
 	Definition of channel instance state.  
-	$Id: channel_instance.h,v 1.3 2005/12/13 04:15:28 fang Exp $
+	$Id: channel_instance.h,v 1.4 2006/01/22 18:19:58 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_CHANNEL_INSTANCE_H__
-#define	__OBJECT_INST_CHANNEL_INSTANCE_H__
+#ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_H__
+#define	__HAC_OBJECT_INST_CHANNEL_INSTANCE_H__
 
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/state_instance.h"
@@ -26,5 +26,5 @@ class class_traits<channel_tag>::state_instance_base {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_CHANNEL_INSTANCE_H__
+#endif	// __HAC_OBJECT_INST_CHANNEL_INSTANCE_H__
 

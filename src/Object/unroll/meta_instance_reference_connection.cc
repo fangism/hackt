@@ -2,11 +2,11 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.7 2006/01/22 06:53:08 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.8 2006/01/22 18:20:59 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
-#define	__OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
+#ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
+#define	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
@@ -276,5 +276,5 @@ dynamic_connection_assignment::dynamic_connection_assignment(
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
+#endif	// __HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
 

@@ -4,11 +4,11 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.4 2005/12/13 04:15:40 fang Exp $
+ 	$Id: process_type_reference.h,v 1.5 2006/01/22 18:20:45 fang Exp $
  */
 
-#ifndef	__OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
-#define	__OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
+#ifndef	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
+#define	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
 
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type_fwd.h"
@@ -101,5 +101,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
+#endif	// __HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
 

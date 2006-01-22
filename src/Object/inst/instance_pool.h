@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.6 2006/01/22 06:53:01 fang Exp $
+	$Id: instance_pool.h,v 1.7 2006/01/22 18:20:06 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_INSTANCE_POOL_H__
-#define	__OBJECT_INST_INSTANCE_POOL_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
+#define	__HAC_OBJECT_INST_INSTANCE_POOL_H__
 
 #include <iosfwd>
 #include "Object/inst/instance_pool_fwd.h"
@@ -79,5 +79,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_INSTANCE_POOL_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_POOL_H__
 

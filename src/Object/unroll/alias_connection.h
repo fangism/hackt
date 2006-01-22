@@ -2,11 +2,11 @@
 	\file "Object/unroll/alias_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: alias_connection.h,v 1.4 2005/12/13 04:15:41 fang Exp $
+	$Id: alias_connection.h,v 1.5 2006/01/22 18:20:46 fang Exp $
  */
 
-#ifndef	__OBJECT_UNROLL_ALIAS_CONNECTION_H__
-#define	__OBJECT_UNROLL_ALIAS_CONNECTION_H__
+#ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_H__
+#define	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_H__
 
 #include <vector>
 #include "Object/unroll/aliases_connection_base.h"
@@ -97,5 +97,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_UNROLL_ALIAS_CONNECTION_H__
+#endif	// __HAC_OBJECT_UNROLL_ALIAS_CONNECTION_H__
 

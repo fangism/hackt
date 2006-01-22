@@ -2,11 +2,11 @@
 	\file "Object/ref/simple_datatype_meta_instance_reference_base.h"
 	Classes for datatype instance references (built-in and user-defined).
 	This file was reincarnated from "Object/art_object_inst_ref_data.h".
-	$Id: simple_datatype_meta_instance_reference_base.h,v 1.3 2005/12/13 04:15:36 fang Exp $
+	$Id: simple_datatype_meta_instance_reference_base.h,v 1.4 2006/01/22 18:20:28 fang Exp $
  */
 
-#ifndef	__OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
-#define	__OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
+#ifndef	__HAC_OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
+#define	__HAC_OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
 
 #include "Object/ref/simple_meta_instance_reference_base.h"
 
@@ -56,5 +56,5 @@ protected:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
+#endif	// __HAC_OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
 

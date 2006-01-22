@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.92 2006/01/22 06:52:51 fang Exp $
+#	$Id: Makefile.am,v 1.93 2006/01/22 18:19:08 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -52,7 +52,7 @@ noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
 noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
-noinst_LTLIBRARIES = libhackt.la libhacktparsers.la \
+noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libhacktast.la \
 	$(UTILLIBS) libhacktexec.la libhacktsim.la $(FUNLIBS) \
 	libbogus.la libbogus2.la
 
@@ -66,7 +66,7 @@ LIBBOGUS2_LA = libbogus2_la
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
-	libhackt.la $(LIBFANGUTIL)
+	libhacktast.la libhackt.la $(LIBFANGUTIL)
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -522,11 +522,12 @@ COMMON_FILES = \
 
 # the generated lexer and parser sources aren't supposed to be distributed!
 libhackt_la_SOURCES = \
-	$(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES) \
 	$(OBJECT_CC_FILES) $(OBJECT_TCC_FILES) $(OBJECT_H_FILES) \
 	$(OBJECT_CC_NO_H_FILES) \
 	$(COMMON_FILES) \
 	config.h
+
+libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES)
 
 libhacktexec_la_SOURCES = \
 	$(MAIN_EXEC_CC_FILES) \

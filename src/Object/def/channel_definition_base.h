@@ -2,11 +2,11 @@
 	\file "Object/def/channel_definition_base.h"
 	Channel definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h".
-	$Id: channel_definition_base.h,v 1.4 2005/12/13 04:15:19 fang Exp $
+	$Id: channel_definition_base.h,v 1.5 2006/01/22 18:19:30 fang Exp $
  */
 
-#ifndef	__OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
-#define	__OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
+#ifndef	__HAC_OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
+#define	__HAC_OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
 
 #include "Object/def/definition_base.h"
 #include "Object/type/canonical_type_fwd.h"
@@ -84,5 +84,5 @@ public:
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
+#endif	// __HAC_OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__
 

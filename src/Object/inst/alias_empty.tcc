@@ -1,10 +1,10 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.4 2005/12/13 04:15:28 fang Exp $
+	$Id: alias_empty.tcc,v 1.5 2006/01/22 18:19:58 fang Exp $
  */
 
-#ifndef	__OBJECT_INST_ALIAS_EMPTY_TCC__
-#define	__OBJECT_INST_ALIAS_EMPTY_TCC__
+#ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
+#define	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
 
 #include <iostream>
 #include "Object/inst/alias_empty.h"
@@ -67,5 +67,5 @@ instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __OBJECT_INST_ALIAS_EMPTY_TCC__
+#endif	// __HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
 

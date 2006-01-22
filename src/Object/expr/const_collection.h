@@ -3,11 +3,11 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.5 2005/12/13 04:15:22 fang Exp $
+	$Id: const_collection.h,v 1.6 2006/01/22 18:19:39 fang Exp $
  */
 
-#ifndef __OBJECT_EXPR_CONST_COLLECTION_H__
-#define __OBJECT_EXPR_CONST_COLLECTION_H__
+#ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
+#define __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
 
 #include <iosfwd>
 #include "Object/expr/types.h"
@@ -183,5 +183,5 @@ public:
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __OBJECT_EXPR_CONST_COLLECTION_H__
+#endif	// __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
 
