@@ -21,5 +21,5 @@ acceptable tokens are:
 	DEFCHAN (shift)
 	DEFTYPE (shift)
 	TYPEDEF (shift)
-From: "017.hac"
+From: "017.hac":4:
 Caught exception from lexer, aborting parsing.

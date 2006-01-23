@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.6 2006/01/22 06:53:09 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.7 2006/01/23 20:03:39 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -61,7 +61,7 @@
 %{
 /* scanner-specific header */
 
-#define	ENABLE_STACKTRACE		0
+#define	ENABLE_STACKTRACE		0 && !defined(LIBBOGUS)
 
 #include <iostream>
 #include <cstdlib>
@@ -434,6 +434,14 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 
 {IMPORT} {
 	STACKTRACE("lexing import");
+#if ENABLE_STACKTRACE
+#define	DUMP_FILE_NAME_STACK(ostr)					\
+	hackt_parse_file_manager.dump_file_names(ostr) << endl
+#else
+#define	DUMP_FILE_NAME_STACK(ostr)
+#endif
+
+	DUMP_FILE_NAME_STACK(cerr);
 /***
 	That's right, manually opening the file in the lexer.  
 	Can't necessarily count on the [LA]LR parser to do this properly.  
@@ -496,11 +504,13 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	switch(stat) {
 	case file_status::NEW_FILE: {
 		STACKTRACE("import new file");
+		DUMP_FILE_NAME_STACK(cerr);
 		const string& pstr(hackt_parse_file_manager.top_FILE_name());
 		excl_ptr<root_body> _root = HAC::parse_to_AST(ym.get_file());
 		if (!_root) {
 			// presumably already have error message from callee
-			cerr << "From: \"" << pstr << '\"' << endl;
+			cerr << "From: \"" << pstr << "\":" <<
+				kw_import->leftmost().line << ':' << endl;
 			THROW_EXIT;
 		}
 		// false: this is first time seeing this file
@@ -515,6 +525,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	}
 	case file_status::SEEN_FILE: {
 		STACKTRACE("old file");
+		DUMP_FILE_NAME_STACK(cerr);
 		// true: already seen file, this will be a placeholder
 		excl_ptr<root_body> null;
 		hackt_lval->_imported_root =

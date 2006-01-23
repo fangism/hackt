@@ -1,5 +1,5 @@
 From: "comment-000.hac":8:
 unterminated comment, starting on line 4, got <<EOF>>
 Caught exception from lexer, aborting parsing.
-From: "comment-000.hac"
+From: "comment-000.hac":4:
 Caught exception from lexer, aborting parsing.

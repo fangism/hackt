@@ -1,6 +1,6 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.4 2006/01/22 06:53:09 fang Exp $
+	$Id: file_manager.cc,v 1.5 2006/01/23 20:03:39 fang Exp $
  */
 
 #include <iostream>
@@ -179,6 +179,7 @@ file_manager::open_FILE(const char* fs) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: this file names stack business should be much cleaner.  
 	This this variant, the caller has already opened FILE* f.  
 	\param f already opened file pointer.  
 	\param fs is a full path to file, including the search path
@@ -203,6 +204,10 @@ file_manager::open_FILE(const char* fs, FILE* f) {
 		// check to see whether or not it is new or visited
 		s = _fstack.push(file_position(f, fs)) ?
 			file_status::SEEN_FILE : file_status::NEW_FILE;
+		if (s == file_status::SEEN_FILE) {
+			// then we're not going to open the FILE
+			_names.pop_back();
+		}
 	} else {
 		// stdin: can only be opened once, so safe to assert it is new
 		_fstack.push(file_position(f, _stdin_));
@@ -247,13 +252,14 @@ file_manager::reset(void) {
 ostream&
 file_manager::dump_file_stack(ostream& o) const {
 	STACKTRACE_VERBOSE;
+	typedef	file_position_stack::const_iterator	const_iterator;
 #if 0
 	cerr << _fstack.size() << endl;
 	cerr << _names.size() << endl;
 	// INVARIANT(_fstack.size() == _names.size() +1);	// not true
 #endif
-	file_position_stack::const_iterator pi(++_fstack.begin());
-	const file_position_stack::const_iterator pe(_fstack.end());
+	const_iterator pi(++_fstack.begin());
+	const const_iterator pe(_fstack.end());
 	// file_names_type::const_iterator ni(_names.begin());
 	// const file_names_type::const_iterator ne(_names.end());
 	for ( ; pi != pe; pi++) {
@@ -280,11 +286,36 @@ file_manager::dump_file_stack_top(ostream& o) const {
 	o << "From: \"" << pi->name << "\":" << t.line << ':' << endl;
 	return o;
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 file_manager::reset_and_dump_file_stack(ostream& o) {
 	dump_file_stack(o);
 	reset();
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps out contents of _names.  
+ */
+ostream&
+file_manager::dump_file_names(ostream& o) const {
+	typedef	file_names_type::const_iterator	const_iterator;
+	const_iterator i(_names.begin());
+	const const_iterator e(_names.end());
+	for ( ; i!=e; ++i) {
+		o << *i << ", ";
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+file_manager::dump(ostream& o) const {
+	// dump include paths
+	dump_file_stack(o) << endl;
+	dump_file_names(o) << endl;
 	return o;
 }
 

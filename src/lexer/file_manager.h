@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.5 2006/01/22 06:53:09 fang Exp $
+	$Id: file_manager.h,v 1.6 2006/01/23 20:03:39 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -239,6 +239,9 @@ public:
 	reset(void);
 
 	ostream&
+	dump_file_names(ostream&) const;
+
+	ostream&
 	dump_file_stack(ostream&) const;
 
 	ostream&
@@ -246,6 +249,10 @@ public:
 
 	ostream&
 	reset_and_dump_file_stack(ostream&);
+
+	/// dump everything, for debugging
+	ostream&
+	dump(ostream&) const;
 
 };	// end class file_manager
 

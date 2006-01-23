@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2006/01/22 06:53:49 fang Exp $
+#	$Id: Makefile.am,v 1.8 2006/01/23 20:03:41 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -13,7 +13,7 @@ HACKT_PARSE_TEST_FAILURES = \
 
 HACKT_PARSE_TEST_PASSES = \
 	comment-003 comment-004 \
-	import-004 import-012 import-013
+	import-004 import-012 import-013 import-015-t
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -26,7 +26,9 @@ HACKT_PARSE_TEST_SUBJECTS = \
 # HACKT_UNROLL_TEST_SUBJECTS = $(HACKT_OBJ_TEST_SUBJECTS)
 
 EXTRA_DIST += empty.hac \
-	import-014-a.hac import-014-b.hac
+	import-014-a.hac import-014-b.hac \
+	import-015-b.hac import-015-c.hac import-015-e.hac \
+	import-015-g.hac import-015-p.hac
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += string-002 string-003 \

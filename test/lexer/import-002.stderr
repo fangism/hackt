@@ -2,5 +2,5 @@ At: "-stdin-":4:
 At: "string-001.hac":4:
 unterminated quoted-string on line 4, got \n
 Caught exception from lexer, aborting parsing.
-From: "string-001.hac"
+From: "string-001.hac":4:
 Caught exception from lexer, aborting parsing.
