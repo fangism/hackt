@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.3 2006/01/22 06:52:53 fang Exp $
+	$Id: expr.cc,v 1.4 2006/01/23 18:52:04 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1603,7 +1603,11 @@ logical_expr::check_meta_expr(const context& c) const {
 	const string op_str(op->text);
 	entity::pbool_logical_expr::op_type const* const
 		o(entity::pbool_logical_expr::op_map[op_str]);
-	INVARIANT(o);
+	if (!o) {
+		cerr << "ERROR: \"" << op_str << "\" is not a valid "
+			"boolean logical operator, at " << where(*op) << endl;
+		return return_type(NULL);
+	}
 	if (lb->is_static_constant() && rb->is_static_constant()) {
 		const bool lc = lb->static_constant_value();
 		const bool rc = rb->static_constant_value();
@@ -1646,7 +1650,11 @@ logical_expr::check_nonmeta_expr(const context& c) const {
 	const string op_str(op->text);
 	entity::bool_logical_expr::op_type const* const
 		o(entity::bool_logical_expr::op_map[op_str]);
-	INVARIANT(o);
+	if (!o) {
+		cerr << "ERROR: \"" << op_str << "\" is not a valid "
+			"boolean logical operator, at " << where(*op) << endl;
+		return return_type(NULL);
+	}
 	return return_type(new entity::bool_logical_expr(lb, o, rb));
 }
 
