@@ -1,1 +1,1 @@
-concrete_type_ref: bad definition reference!  ERROR! [4:21..24]
+concrete_type_ref: bad definition reference "node"!  ERROR! [4:21..24]

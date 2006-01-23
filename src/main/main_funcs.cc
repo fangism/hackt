@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.6 2005/12/13 04:15:47 fang Exp $
+	$Id: main_funcs.cc,v 1.7 2006/01/23 22:14:40 fang Exp $
  */
 
 #include <iostream>
@@ -30,6 +30,7 @@ using util::memory::excl_ptr;
 
 #include "lexer/file_manager.h"
 #include "lexer/yyin_manager.h"
+#include "util/libc.h"			// for remove
 #if 0
 /**
 	This is the file pointer used by hackt_parse().  
@@ -106,6 +107,8 @@ check_object_loadable(const char* fname) {
 //=============================================================================
 /**
 	Checks whether or not named file is writeable.  
+	Also removes the file just created, so it doesn't leave an 
+	empty touched file.
 	\return good if file is writable.  
  */
 good_bool
@@ -117,6 +120,10 @@ check_file_writeable(const char* fname) {
 		cerr << "Error opening file \"" << fname
 			<< "\" for writing." << endl;
 		return good_bool(false);
+	} else {
+		// OK to remove file before closing stream?
+		const int err = remove(fname);		// <stdio.h>
+		assert(!err);
 	}
 	outf.close();
 	return good_bool(true);

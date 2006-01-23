@@ -1,9 +1,9 @@
 /**
 	\file "AST/type.h"
 	Base set of classes for the HAC parser.  
-	$Id: type.h,v 1.2 2005/12/13 04:15:14 fang Exp $
+	$Id: type.h,v 1.3 2006/01/23 22:14:40 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: type.h,v 1.2 2005/12/13 04:15:14 fang Exp $
+	$Id: type.h,v 1.3 2006/01/23 22:14:40 fang Exp $
  */
 
 #ifndef __HAC_AST_TYPE_H__
@@ -32,6 +32,7 @@ class template_argument_list_pair;
 	Template parameters are separate.  
 	Just wraps around id_expr;
 	Can refer to a any user-defined data, channel, or process type.  
+	NOTE: nothing derives from this, no need for virtual funcs.
  */
 class type_id : public type_base {
 protected:
@@ -40,18 +41,21 @@ public:
 	explicit
 	type_id(const qualified_id* b);
 
-virtual	~type_id();
+	~type_id();
 
-virtual	ostream&
+	ostream&
 	what(ostream& o) const;
 
-virtual	line_position
+	ostream&
+	dump(ostream&) const;
+
+	line_position
 	leftmost(void) const;
 
-virtual	line_position
+	line_position
 	rightmost(void) const;
 
-virtual	TYPE_BASE_CHECK_PROTO;
+	TYPE_BASE_CHECK_PROTO;
 
 	friend
 	ostream&

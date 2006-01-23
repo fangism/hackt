@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.3 2006/01/22 06:52:55 fang Exp $
+	$Id: type.cc,v 1.4 2006/01/23 22:14:39 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -85,6 +85,11 @@ type_id::~type_id() {
 ostream&
 type_id::what(ostream& o) const {
 	return base->what(o << util::what<type_id>::name() << ": ");
+}
+
+ostream&
+type_id::dump(ostream& o) const {
+	return o << *base;
 }
 
 line_position
@@ -253,8 +258,8 @@ generic_type_ref::check_type(context& c) const {
 	// and should return reference to definition
 	if (!d) {
 		// didn't update the string out of laziness...
-		cerr << "concrete_type_ref: bad definition reference!  "
-			"ERROR! " << where(*base) << endl;
+		cerr << "concrete_type_ref: bad definition reference \"";
+		base->dump(cerr) << "\"!  ERROR! " << where(*base) << endl;
 		THROW_EXIT;		// temporary
 		return return_type(NULL);
 	}

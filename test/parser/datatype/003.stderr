@@ -1,1 +1,1 @@
-concrete_type_ref: bad definition reference!  ERROR! [3:1..14]
+concrete_type_ref: bad definition reference "undefined_type"!  ERROR! [3:1..14]

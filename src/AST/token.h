@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.h"
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.3 2006/01/22 06:52:55 fang Exp $
+	$Id: token.h,v 1.4 2006/01/23 22:14:39 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */
@@ -199,6 +199,9 @@ virtual	~token_datatype();
 
 	ostream&
 	what(ostream& o) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	line_position
 	leftmost(void) const { return token_type::leftmost(); }

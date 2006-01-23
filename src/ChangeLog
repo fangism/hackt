@@ -5,6 +5,16 @@
 
 2006-01-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-74.5:
+	  Improved error message on bad definition reference.
+		A few tests updated.
+
+
+	* HACKT-00-01-04-main-00-74.4:
+	  Compilation failures should not result in empty object file, 
+		fixed in main/main_funcs.cc: check_file_writeable().
+
+
 	* HACKT-00-01-04-main-00-74.3:
 	  Line-number was off by 1, after multiline C-comment because 
 		OPENCOMMENT ate the newline, discovered by Clint Kelly.  Fixed.

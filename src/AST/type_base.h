@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.h"
 	Base set of classes for the HAC parser.  
-	$Id: type_base.h,v 1.2 2005/12/13 04:15:14 fang Exp $
+	$Id: type_base.h,v 1.3 2006/01/23 22:14:40 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_type_base.h,v 1.6.34.1 2005/12/11 00:45:12 fang Exp
  */
@@ -37,6 +37,9 @@ virtual	~type_base() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;
+
+virtual	ostream&
+	dump(ostream& o) const = 0;
 
 virtual	line_position
 	leftmost(void) const = 0;

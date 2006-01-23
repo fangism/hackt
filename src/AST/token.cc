@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.3 2006/01/22 06:52:55 fang Exp $
+	$Id: token.cc,v 1.4 2006/01/23 22:14:39 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -528,6 +528,11 @@ token_datatype::token_datatype(const char* dt) :
 
 DESTRUCTOR_INLINE
 token_datatype::~token_datatype() { }
+
+ostream&
+token_datatype::dump(ostream& o) const {
+	return o << AS_A(const string&, *this);
+}
 
 ostream&
 token_datatype::what(ostream& o) const {
