@@ -2,7 +2,7 @@
 # "hackt-obj-diff.sh.in"
 
 # compares textual object dumps
-#	$Id: hackt-obj-diff.sh.in,v 1.2 2005/12/13 04:15:52 fang Exp $
+#	$Id: hackt-obj-diff.sh.in,v 1.2.8.1 2006/01/23 06:18:00 fang Exp $
 # This file used to be:
 #	Id: artobj-diff.sh.in,v 1.6.2.1 2005/12/12 19:35:52 fang Exp
 # This file came from "artobj-diff.sh" in revision prehistory.  
@@ -22,7 +22,7 @@
 
 # if the .test file exists, then program didn't crash, we can proceed.
 
-cmd="$1 -d -I $3"
+cmd="$1 -d -fdump-object-header -I $3"
 # -d for dump flag
 # -I srcdir for VPATH builds
 dump=$2

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.5 2006/01/22 18:20:17 fang Exp $
+	$Id: PRS_footprint.h,v 1.5.2.1 2006/01/23 06:17:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -12,6 +12,7 @@
 #include "Object/inst/instance_pool_fwd.h"
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_footprint_rule.h"
+#include "Object/lang/PRS_footprint_macro.h"
 #include "Object/lang/PRS_footprint_expr_pool_fwd.h"
 #include "util/macros.h"
 #include "util/list_vector.h"
@@ -53,6 +54,7 @@ class footprint : public cflat_visitee {
 public:
 	typedef	footprint_expr_node		expr_node;
 	typedef	footprint_rule			rule;
+	typedef	footprint_macro			macro;
 
 	// typedef	std::vector<>
 private:
@@ -60,15 +62,12 @@ private:
 	typedef	instance_pool<bool_instance_type>
 						node_pool_type;
 	typedef	util::list_vector<rule>		rule_pool_type;
-#if 0
-	typedef	util::offset_array<util::list_vector<expr_node>, 1>
-						expr_pool_type;
-#else
 	typedef	PRS_footprint_expr_pool_type	expr_pool_type;
-#endif
+	typedef	util::list_vector<macro>	macro_pool_type;
 
 	rule_pool_type				rule_pool;
 	expr_pool_type				expr_pool;
+	macro_pool_type				macro_pool;
 
 public:
 	footprint();
@@ -92,6 +91,11 @@ private:
 		const expr_pool_type&);
 
 	static
+	ostream&
+	dump_macro(const macro&, ostream&, const node_pool_type&);
+
+#if 0
+	static
 	void
 	cflat_expr(const expr_node&, ostream&,
 		const footprint_frame_map<bool_tag>&, 
@@ -103,6 +107,7 @@ private:
 	cflat_rule(const rule&, ostream&, const footprint_frame_map<bool_tag>&, 
 		const entity::footprint&, const cflat_options&, 
 		const state_manager&, const expr_pool_type&);
+#endif
 
 public:
 	// returns reference to new expression node
@@ -112,18 +117,20 @@ public:
 	rule&
 	push_back_rule(const int, const int, const bool);
 
-	
+	macro&
+	push_back_macro(const string&);
 
 	size_t
 	current_expr_index(void) const {
 		return expr_pool.size();
 	}
 
+#if 0
 	void
 	cflat_prs(ostream&, const footprint_frame_map<bool_tag>&, 
 		const entity::footprint&, const cflat_options&, 
 		const state_manager&) const;
-
+#endif
 public:
 	// requires no persistent object manager
 	void

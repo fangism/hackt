@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.8 2006/01/22 18:20:16 fang Exp $
+	$Id: PRS.cc,v 1.8.2.1 2006/01/23 06:17:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -14,6 +14,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/lang/PRS_macro_registry.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -81,6 +82,8 @@ namespace HAC {
 namespace entity {
 namespace PRS {
 using std::copy;
+using std::transform;
+using std::back_inserter;
 using util::persistent_traits;
 using util::auto_indent;
 #include "util/using_ostream.h"
@@ -176,6 +179,27 @@ struct prs_expr::unroller {
 	operator () (const prs_expr_ptr_type& e) const {
 		NEVER_NULL(e);
 		return e->unroll(_context, _node_pool, _fpf);
+	}
+
+};	// end struct unroller
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor: Resolves local node index.  
+	Binds the unroll_context argument.  
+ */
+struct literal::unroller {
+	const unroll_context& _context;
+
+	explicit
+	unroller(const unroll_context& c) : _context(c) { }
+
+	// make sure argument pointer type matches
+	// macro::const_reference
+	size_t
+	operator () (const count_ptr<const literal>& l) const {
+		NEVER_NULL(l);
+		return l->unroll_node(_context);
 	}
 
 };	// end struct unroller
@@ -1529,12 +1553,40 @@ literal::negation_normalize(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return index of the node referenced, local to this definition only, 
+		NOT the globally allocated one.  
+ */
+size_t
+literal::unroll_node(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
+	typedef literal_base_ptr_type::element_type::alias_collection_type
+			bool_instance_alias_collection_type;
+	STACKTRACE_VERBOSE;
+	bool_instance_alias_collection_type bc;
+	if (var->unroll_references(c, bc).bad) {
+		var->dump(cerr << "Error resolving production rule literal: ", 
+			entity::expr_dump_context::default_value)
+			<< endl;
+		return 0;
+	}
+	INVARIANT(!bc.dimensions());	// must be scalar, checked earlier
+	const instance_alias_info<bool_tag>& bi(*bc.front());
+	const size_t node_index = bi.instance_index;
+	INVARIANT(node_index);
+	return node_index;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	TODO: factor out common code.
 	Has code in common with pull_up/pull_dn...
+	\return the index of the new expression represented by this
+		literal reference.  
  */
 size_t
 literal::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
+#if 0
 	typedef literal_base_ptr_type::element_type::alias_collection_type
 			bool_instance_alias_collection_type;
 	STACKTRACE_VERBOSE;
@@ -1549,6 +1601,13 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 	const instance_alias_info<bool_tag>& bi(*bc.front());
 	const size_t node_index = bi.instance_index;
 	INVARIANT(node_index);
+#else
+	const size_t node_index = unroll_node(c);
+	if (!node_index) {
+		// already have error message
+		return 0;
+	}
+#endif
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
 	new_expr[1] = node_index;
@@ -1611,7 +1670,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(macro)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 macro::dump(ostream& o, const rule_dump_context& c) const {
-	o << name << '(';
+	o << auto_indent << name << '(';
 	typedef	nodes_type::const_iterator	const_iterator;
 	INVARIANT(nodes.size());
 	const_iterator i(nodes.begin());
@@ -1636,6 +1695,7 @@ macro::expand_complement(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Unrolling produces an instance of the macro with the resolved nodes.  
 	The behavior of the macro is defined by the programmer.  
 	The behavior is customized!
 	The name is used to lookup a function.  
@@ -1645,18 +1705,43 @@ macro::expand_complement(void) {
 good_bool
 macro::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
-	FINISH_ME(Fang);
+	STACKTRACE_VERBOSE;
 	// at least check the instance references first...
-	return good_bool(false);
+	PRS::footprint::macro& new_macro_call(pfp.push_back_macro(name));
+	transform(nodes.begin(), nodes.end(), back_inserter(new_macro_call), 
+		literal::unroller(c));
+	const size_t err = new_macro_call.first_error();
+	if (err) {
+		cerr << "Error resolving literal node at position " << err
+			<< " of macro call \'" << name << "\'." << endl;
+		// dump the literal?
+		return good_bool(false);
+	} else	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This checking function is also user defined.  
+	Make sure entry exists for this macro.  
+	NOTE: no use in checking now before unroll, too limited.  
+	TODO: better error handling than throw().
  */
 void
 macro::check(void) const {
-	FINISH_ME(Fang);
+	assert(name.length());
+	assert(nodes.size());
+	// probe existence of macro
+	const macro_definition_entry m(macro_registry[name]);
+	if (!m) {
+		cerr << "Error: unknown PRS macro \'" << name << "\'." << endl;
+		THROW_EXIT;
+	}
+	if (!m.check_num_args(nodes.size()).good) {
+		// make sure passed in correct number of arguments
+		// custom-defined, may be variable
+		// already have error message
+		THROW_EXIT;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

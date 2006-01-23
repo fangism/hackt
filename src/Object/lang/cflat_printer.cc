@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.2 2006/01/22 06:53:04 fang Exp $
+	$Id: cflat_printer.cc,v 1.2.2.1 2006/01/23 06:17:57 fang Exp $
  */
 
 #include <iostream>
@@ -13,6 +13,7 @@
 #include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
 #include "common/ICE.h"
+#include "common/TODO.h"
 #include "util/offset_array.h"
 
 namespace HAC {
@@ -119,6 +120,17 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			)
 	}	//end switch
 }	// end method cflat_prs_printer::visit(const footprint_expr_node&)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Here's the magic!
+	This is where it looks up and calls a custom-defined 
+	macro function.  
+ */
+void
+cflat_prs_printer::visit(const footprint_macro& m) {
+	FINISH_ME(Fang);
+}
 
 //=============================================================================
 }	// end namespace PRS

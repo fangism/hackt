@@ -2,6 +2,6 @@ ERROR: attempted to connect instances with conflicting relaxed parameters!
 	got: 2
 	and: 1
 	from: ::ick
-	and : ::bar
+	and :::bar
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.10 2006/01/22 18:19:12 fang Exp $
+ 	$Id: module.cc,v 1.10.2.1 2006/01/23 06:17:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -311,6 +311,8 @@ module::allocate_unique(void) {
 /**
 	The actual cflat procedure.  
 	Always prints all rules before aliases.  
+	TODO: if necessary, make the order an option
+	TODO: implement instance visitor pattern, including the footprint.  
  */
 good_bool
 module::__cflat(ostream& o, const cflat_options& cf) const {
@@ -331,6 +333,7 @@ module::__cflat(ostream& o, const cflat_options& cf) const {
 }
 #endif
 	// print the name aliases in the manner requested in cflat_options
+	// TODO: instance_visitor
 	if (cf.connect_style) {
 		STACKTRACE("cflatting aliases.");
 		// top-level footprint is actually empty

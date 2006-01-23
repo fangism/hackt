@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.5 2006/01/22 06:53:03 fang Exp $
+	$Id: PRS_footprint.cc,v 1.5.2.1 2006/01/23 06:17:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -38,9 +38,10 @@ using util::read_sequence_prealloc;
 //=============================================================================
 // class footprint method definitions
 
-footprint::footprint() : rule_pool(), expr_pool() {
+footprint::footprint() : rule_pool(), expr_pool(), macro_pool() {
 	rule_pool.set_chunk_size(8);
 	expr_pool.set_chunk_size(16);
+	macro_pool.set_chunk_size(8);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -137,6 +138,26 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Macro must have at least one argument.  
+ */
+ostream&
+footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
+	o << m.name << '(';
+	typedef	macro::const_iterator const_iterator;
+	const_iterator i(m.begin());
+	const const_iterator e(m.end());
+	INVARIANT(i!=e);
+	np[*i].get_back_ref()->dump_hierarchical_name(o, dump_flags::no_owner);
+	for (++i; i!=e; ++i) {
+		np[*i].get_back_ref()->dump_hierarchical_name(
+			o << ',', dump_flags::no_owner);
+	}
+	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
 	Prints production rule expression suitable for a cflat tool.  
 	TODO: convert method to take template functor argument.  
  */
@@ -229,6 +250,7 @@ if (!cf.check_prs) {
 	o << (r.dir ? '+' : '-') << endl;
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -236,15 +258,24 @@ if (!cf.check_prs) {
  */
 ostream&
 footprint::dump(ostream& o, const entity::footprint& f) const {
+	const state_instance<bool_tag>::pool_type&
+		bpool(f.get_pool<bool_tag>());
 if (rule_pool.size()) {
 	o << auto_indent << "resolved prs:" << endl;
 	typedef	rule_pool_type::const_iterator	const_rule_iterator;
-	const state_instance<bool_tag>::pool_type&
-		bpool(f.get_pool<bool_tag>());
 	const_rule_iterator i(rule_pool.begin());
 	const const_rule_iterator e(rule_pool.end());
 	for ( ; i!=e; i++) {
 		dump_rule(*i, o << auto_indent, bpool, expr_pool) << endl;
+	}
+}
+if (macro_pool.size()) {
+	o << auto_indent << "resolved macros:" << endl;
+	typedef	macro_pool_type::const_iterator	const_macro_iterator;
+	const_macro_iterator i(macro_pool.begin());
+	const const_macro_iterator e(macro_pool.end());
+	for ( ; i!=e; i++) {
+		dump_macro(*i, o << auto_indent, bpool) << endl;
 	}
 }
 	return o;
@@ -277,6 +308,14 @@ footprint::push_back_rule(const int e, const int o, const bool d) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint::macro&
+footprint::push_back_macro(const string& s) {
+	macro_pool.push_back(macro(s));
+	return macro_pool.back();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Iterates over each local production rule, and replaces
 	local literals with globally allocated node IDs.  
@@ -292,10 +331,13 @@ footprint::cflat_prs(ostream& o, const footprint_frame_map<bool_tag>& bfm,
 		cflat_rule(*i, o, bfm, topfp, cf, sm, expr_pool);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Saves unrolled expressions and production rules to binary stream.  
+	TODO: consider using value_writer and value_reader template classes
+	and util::write_sequence and util::read_sequence...
  */
 void
 footprint::write_object_base(ostream& o) const {
@@ -309,11 +351,20 @@ footprint::write_object_base(ostream& o) const {
 		i->write_object_base(o);
 	}
 }{
-	typedef	expr_pool_type::const_iterator	const_pool_iterator;
+	typedef	expr_pool_type::const_iterator	const_expr_iterator;
 	const size_t s = expr_pool.size();
 	write_value(o, s);
 	size_t j = 0;
-	const_pool_iterator i(expr_pool.begin());
+	const_expr_iterator i(expr_pool.begin());
+	for ( ; j<s; i++, j++) {
+		i->write_object_base(o);
+	}
+}{
+	typedef	macro_pool_type::const_iterator	const_macro_iterator;
+	const size_t s = macro_pool.size();
+	write_value(o, s);
+	size_t j = 0;
+	const_macro_iterator i(macro_pool.begin());
 	for ( ; j<s; i++, j++) {
 		i->write_object_base(o);
 	}
@@ -323,12 +374,14 @@ footprint::write_object_base(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Restores unrolled expressions and production rules from binary stream.  
+	Each subobject is loaded in place.  
  */
 void
 footprint::load_object_base(istream& i) {
 {
 	size_t s;
 	read_value(i, s);
+	// opportunity to resize (chunk) list_vector_pool
 	size_t j = 0;
 	for ( ; j<s; j++) {
 		rule_pool.push_back(rule());
@@ -337,10 +390,20 @@ footprint::load_object_base(istream& i) {
 }{
 	size_t s;
 	read_value(i, s);
+	// opportunity to resize (chunk) list_vector_pool
 	size_t j = 0;
 	for ( ; j<s; j++) {
 		expr_pool.push_back(expr_node());
 		expr_pool.back().load_object_base(i);
+	}
+}{
+	size_t s;
+	read_value(i, s);
+	// opportunity to resize (chunk) list_vector_pool
+	size_t j = 0;
+	for ( ; j<s; j++) {
+		macro_pool.push_back(macro());
+		macro_pool.back().load_object_base(i);
 	}
 }
 }
@@ -427,6 +490,48 @@ footprint_rule::accept(cflat_visitor& v) const {
 }
 
 //=============================================================================
+// struct footprint_macro method definitions
+
+/**
+	\return 1-indexed offset of earliest error, or 0 if none found.  
+ */
+size_t
+footprint_macro::first_error(void) const {
+	const size_t s = node_args.size();
+	if (s) {
+		size_t i = 0;
+		for ( ; i<s; i++) {
+			if (!node_args[i]) {
+				cerr << "Error resolving literal " << i <<
+					"." << endl;
+				return i+1;
+			}
+		}
+	}
+	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_macro::write_object_base(ostream& o) const {
+	write_value(o, name);
+	util::write_sequence(o, node_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_macro::load_object_base(istream& i) {
+	read_value(i, name);
+	util::read_sequence_resize(i, node_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_macro::accept(cflat_visitor& v) const {
+	v.visit(*this);
+}
+
+//=============================================================================
 // explicit template instantiations
 // really, only need to instantiate copy-constructures, nothing else referenced
 
@@ -434,13 +539,11 @@ footprint_rule::accept(cflat_visitor& v) const {
 #if 0 
 template class footprint::rule_pool_type;
 template class footprint::expr_pool_type;
-#else
-#if 0
-template class util::offset_array<util::list_vector<footprint::expr_node> >;
+template class footprint::macro_pool_type;
 #else
 template class util::list_vector<footprint::expr_node>;
-#endif
 template class util::list_vector<footprint::rule>;
+template class util::list_vector<footprint::macro>;
 #endif
 
 //=============================================================================

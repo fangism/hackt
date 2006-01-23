@@ -1,7 +1,7 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.3 2005/12/13 04:15:46 fang Exp $
+	$Id: compile_options.h,v 1.3.8.1 2006/01/23 06:17:58 fang Exp $
  */
 
 #include <list>
@@ -23,8 +23,12 @@ class file_manager;
 class compile_options {
 public:
 	typedef	list<string>			include_paths_type;
+	/// whether or not to dump the module after it is built and saved
 	bool					dump_module;
+	/// debugging switch to show include paths
 	bool					dump_include_paths;
+	/// whether or not the persistent object header is dumped
+	bool					dump_object_header;
 	/**
 		Q: should include paths be a part of global options?
 	 */
@@ -32,6 +36,7 @@ public:
 
 	compile_options() : dump_module(false),
 		dump_include_paths(false), 
+		dump_object_header(false),
 		include_paths()
 		{ }
 

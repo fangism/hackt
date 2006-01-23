@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	9	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30

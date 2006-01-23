@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.6 2005/12/13 04:15:47 fang Exp $
+	$Id: main_funcs.cc,v 1.6.8.1 2006/01/23 06:17:58 fang Exp $
  */
 
 #include <iostream>
@@ -270,15 +270,21 @@ save_module(const module& m, const char* name) {
 //=============================================================================
 /**
 	Saves module to object file.  
-	Side-effect: sets debugging flags (sticky) for persistent
-	and persistent_object_manager classes.  
+	Always warns about unimplemented persistent objects.  
+	Temporarily modifies persistent object manager flags.
+	\param d whether or not to dump the reconstruction header. 
  */
 void
-save_module_debug(const module& m, const char* name) {
+save_module_debug(const module& m, const char* name, const bool d) {
 	STACKTRACE_VERBOSE;
+	const bool _d = persistent_object_manager::dump_reconstruction_table;
+	const bool _u = persistent::warn_unimplemented;
 	persistent::warn_unimplemented = true;
-	persistent_object_manager::dump_reconstruction_table = true;
+	persistent_object_manager::dump_reconstruction_table = d;
 	save_module(m, name);
+	// these will not be restored if there is an exception
+	persistent_object_manager::dump_reconstruction_table = _d;
+	persistent::warn_unimplemented = _u;
 }
 
 //=============================================================================

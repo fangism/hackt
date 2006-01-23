@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.8 2006/01/22 06:53:48 fang Exp $
+#	$Id: Make.test-head,v 1.8.2.1 2006/01/23 06:17:59 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -8,8 +8,13 @@ include $(top_srcdir)/Make.stddef
 # automake will convert these into .SUFFIXES:
 SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest \
-	.haco .haco-u .haco-c .haco-a .prs .prsimexpr .prsimexpr-dot \
-	.prsimexpr-ps
+	.haco .haco-u .haco-c .haco-a .prs \
+	.prsimexpr .prsimexpr-dot .prsimexpr-ps \
+	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \
+	.outdump .indump .unrolldump .createdump .allocdump
+
+# the {in,out,unroll,create,alloc}dump suffixes are just 
+# for testing convenience.   They follow the procedures in the test scripts.  
 
 
 # names of test cases (without extension) whose compile error output

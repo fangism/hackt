@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.8 2005/12/13 04:15:46 fang Exp $
+	$Id: compile.cc,v 1.8.8.1 2006/01/23 06:17:58 fang Exp $
  */
 
 #include <iostream>
@@ -107,7 +107,46 @@ __compile_dump_include_paths(compile::options& o) {
 static const compile::register_options_modifier
 __compile_om_dump_include_paths("dump-include-paths",
 	&__compile_dump_include_paths,
-	"dumps paths as they are added to -I include path");
+	"dumps -I include paths as they are processed");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
+__compile_no_dump_include_paths(compile::options& o) {
+	o.dump_include_paths = false;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_no_dump_include_paths("no-dump-include-paths",
+	&__compile_no_dump_include_paths,
+	"suppress feedback of -I include paths");
+
+//-----------------------------------------------------------------------------
+static
+good_bool
+__compile_dump_object_header(compile::options& o) {
+	o.dump_object_header = true;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_dump_object_header("dump-object-header",
+	&__compile_dump_object_header,
+	"dumps persistent object header before saving");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
+__compile_no_dump_object_header(compile::options& o) {
+	o.dump_object_header = false;
+	return good_bool(true);
+}
+
+static const compile::register_options_modifier
+__compile_om_no_dump_object_header("no-dump-object-header",
+	&__compile_no_dump_object_header,
+	"suppress persistent object header dump");
 
 //=============================================================================
 // class compile method definitions
@@ -152,7 +191,8 @@ compile::main(const int argc, char* argv[], const global_options&) {
 	if (!mod)	return 1;
 	if (argc -optind >= 2) {
 		// save_module(*mod, argv[1]);
-		save_module_debug(*mod, argv[1]);
+		// save_module_debug(*mod, argv[1]);
+		save_module_debug(*mod, argv[1], opt.dump_object_header);
 	}
 	if (opt.dump_module)
 		mod->dump(cerr);
@@ -217,11 +257,17 @@ compile::usage(void) {
 		<< endl;
 	cerr << "options:" << endl;
 	cerr << "\t-d: produces text dump of compiled module" << endl <<
-		"\t-f <opt> : general compile flags (repeatable)" << endl <<
-	/***
-		TODO: list -f options.
-	***/
-		"\t-h: gives this usage messsage" << endl <<
+		"\t-f <opt> : general compile flags (repeatable)" << endl;
+{
+	typedef	options_modifier_map_type::const_iterator	const_iterator;
+	const_iterator i(options_modifier_map.begin());
+	const const_iterator e(options_modifier_map.end());
+	for ( ; i!=e; ++i) {
+		cerr << "\t    " << i->first << ": " <<
+			i->second.brief << endl;
+	}
+}
+	cerr << "\t-h: gives this usage messsage" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl;
 	cerr << "\tIf no output object file is given, compiled module will not be saved."
 		<< endl;
