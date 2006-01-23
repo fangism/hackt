@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.3 2006/01/22 18:21:02 fang Exp $
+	$Id: libc.h,v 1.4 2006/01/23 21:19:29 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -182,6 +182,16 @@ extern int	fsetpos(FILE*, fpos_t*);
 #if	defined(HAVE_FGETPOS) && HAVE_FGETPOS
 #else
 extern int	fgetpos(FILE*, const fpos_t*);
+#endif
+
+#if	defined(HAVE_REMOVE) && HAVE_REMOVE
+#else
+extern int	remove(const char*);
+#endif
+
+#if	defined(HAVE_RENAME) && HAVE_RENAME
+#else
+extern int	rename(const char*, const char*);
 #endif
 
 END_C_DECLS

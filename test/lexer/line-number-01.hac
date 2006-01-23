@@ -1,0 +1,25 @@
+/**
+	"line-number-01.hac"
+	old bug: multi-line C-comments caused line-number count
+	to be off-by one for each block.
+*/
+
+/** single-line block comments however did not have this problem **/
+
+defproc e1of1 (bool e, d) { }
+
+defproc test (bool _sR, _pR) {
+
+e1of1 l, x, r;
+bool _l, _x, _r;
+bool xv, rv;
+
+prs {
+	l.e => _l-
+	_l => l.d-
+
+	x.e & l -> _x-		// error is here, line 21
+}
+}
+
+

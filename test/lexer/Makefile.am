@@ -1,5 +1,5 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2006/01/23 20:03:41 fang Exp $
+#	$Id: Makefile.am,v 1.9 2006/01/23 21:19:30 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -9,7 +9,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	string-001 string-002 string-003 \
 	import-000 import-001 import-002 import-003 import-005 \
 	import-006 import-007 import-008 import-009 \
-	import-010 import-011 import-014-c
+	import-010 import-011 import-014-c \
+	line-number-01 line-number-02 line-number-03
 
 HACKT_PARSE_TEST_PASSES = \
 	comment-003 comment-004 \

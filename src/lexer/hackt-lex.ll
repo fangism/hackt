@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.7 2006/01/23 20:03:39 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.8 2006/01/23 21:19:29 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -339,7 +339,7 @@ RANGE		".."
 
 ENDLINECOMMENT	"//"(.*)$
 NULLCOMMENT	"/*"("*"+)"/"
-OPENCOMMENT	"/"("*"+)[^/]
+OPENCOMMENT	"/"("*"+)[^/\n]
 CLOSECOMMENT	"*"+"/"
 
 OPENSTRING	"\""
@@ -700,7 +700,14 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	}
 }
 
-{NEWLINE}	{ MULTILINE_NEWLINE(comment_pos, foo); yymore(); }
+{NEWLINE}	{
+	if (comment_feedback > 1) {
+		cerr << "new-line in comment at end of line "
+			<< CURRENT.line << endl;
+	}
+	MULTILINE_NEWLINE(comment_pos, foo);
+	yymore();
+}
 
 [^*/\n]*	|
 "*"+[^/\n]	|
@@ -721,7 +728,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	if (!comment_level) {
 		BEGIN(INITIAL); 
 	} else {
-		yymore();
+		yymore();		// doesn't seem to make a difference
 	}
 }
 <<EOF>>	{

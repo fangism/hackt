@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.26 2006/01/22 18:19:06 fang Exp $
+#	$Id: configure.ac,v 1.27 2006/01/23 21:19:26 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -339,6 +339,7 @@ AC_CHECK_FUNCS([fgets fputs fputc fgetc fopen fclose fflush])
 AC_CHECK_FUNCS([ferror feof clearerr])
 AC_CHECK_FUNCS([fseek ftell rewind fgetpos fsetpos])
 AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
+AC_CHECK_FUNCS([remove rename])
 AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
 AC_FUNC_SETVBUF_REVERSED
 dnl <ctype.h>

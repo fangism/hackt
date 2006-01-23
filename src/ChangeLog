@@ -5,6 +5,11 @@
 
 2006-01-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-74.3:
+	  Line-number was off by 1, after multiline C-comment because 
+		OPENCOMMENT ate the newline, discovered by Clint Kelly.  Fixed.
+
+
 	* HACKT-00-01-04-main-00-74.2:
 	  Fixed file_manager's cyclic file inclusion false-positive bug, 
 		tripped by Clint Kelly, case: lexer/import-015-*.hac
