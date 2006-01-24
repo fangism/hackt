@@ -5,6 +5,10 @@
 
 2006-01-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-75:
+	  Cumulative minor bug fixes from -00-74.x.
+
+
 	* HACKT-00-01-04-main-00-74.6:
 	  Fixed comment-lexing bug, stupid typo... 
 		chalk up another bug found for Clint Kelly.
