@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.2.2.1 2006/01/23 06:17:57 fang Exp $
+	$Id: cflat_printer.h,v 1.2.2.2 2006/01/24 06:08:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -29,6 +29,9 @@ public:
 	cflat_prs_print_context(ostream& _os, const cflat_options& _cfo) :
 			cflat_context(), os(_os), cfopts(_cfo) { }
 
+	ostream&
+	get_ostream(void) const { return os; }
+
 };	// end struct cflat_prs_print_context
 
 //=============================================================================
@@ -51,6 +54,12 @@ public:
 			cflat_prs_print_context(_os, _cfo) { }
 
 	using cflat_visitor::visit;
+
+	size_t
+	__lookup_global_bool_id(const size_t) const;
+
+	void
+	__dump_canonical_literal(const size_t) const;
 
 	void
 	visit(const footprint_rule&);

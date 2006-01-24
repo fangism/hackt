@@ -1,10 +1,11 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2006/01/22 06:53:54 fang Exp $
+#	$Id: Makefile.am,v 1.9.2.1 2006/01/24 06:08:18 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = inv-01 inv-04 inv-05 inv-10 inv-11 \
-	celem-07 celem-08
+	celem-07 celem-08 \
+	echo-02 echo-03 echo-04
 
 HACKT_PARSE_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
@@ -15,7 +16,8 @@ HACKT_PARSE_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 \
-	short-01 short-02 short-03 short-04 short-05
+	short-01 short-02 short-03 short-04 short-05 \
+	echo-01
 
 HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
 
@@ -30,7 +32,8 @@ HACKT_CREATE_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 \
-	short-01 short-02 short-03 short-04 short-05
+	short-01 short-02 short-03 short-04 short-05 \
+	echo-01
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...
@@ -45,7 +48,8 @@ HACKT_ALLOC_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 \
-	short-01 short-02 short-03 short-04 short-05
+	short-01 short-02 short-03 short-04 short-05 \
+	echo-01
 
 HACKT_CFLAT_TEST_SUBJECTS = $(HACKT_ALLOC_TEST_SUBJECTS)
 
@@ -58,7 +62,8 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 EMPTY_CFLAT_PRS_TESTS += null-00 loop-00
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS += inv-01 inv-11
+BISON_OUTPUTS += inv-01 inv-11 \
+	echo-02
 
 # includes other sources files used by test-cases (but aren't cases themselves)
 EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac

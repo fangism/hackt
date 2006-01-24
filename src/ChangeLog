@@ -5,6 +5,15 @@
 
 2006-01-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-74-PRS-04-02:
+	  PRS macros' arguments may not be empty, fixed in grammar.
+	  PRS unrecognized macro error message issued.  
+	  PRS::macro_definition_entry main prototype updated to take
+		vector<local node IDs>.
+	  We have our first working macro, "echo"!
+	  Added initial test-cases in prs/echo-*.hac.
+
+
 	* HACKT-00-01-04-main-00-74-PRS-04-01:
 	  Significant progress towards implementing user-defined PRS macros.  
 	  Wrote PRS::macro (pre-unroll) and 

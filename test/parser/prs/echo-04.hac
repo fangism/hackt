@@ -1,0 +1,16 @@
+// "echo-04.hac"
+// copy-modified from "echo-03.hac"
+// testing the 'echo' PRS macro
+// should die on unknown macro.  
+
+defproc echo(bool p, q, r, s, z) {
+prs {
+	bogus_macro(r, s)	// should die during unrolling
+	(p & q) | (r & s)	-> z-
+	~((p & q) | (r & s))	-> z+
+}
+}
+
+echo	E;
+// E.p = E.r;
+

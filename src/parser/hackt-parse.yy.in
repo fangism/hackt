@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.5 2006/01/22 06:53:24 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.5.2.1 2006/01/24 06:08:16 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -639,6 +639,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id
 %type	<_inst_ref_expr_list>	member_index_expr_list member_index_expr_list_in_parens
+%type	<_inst_ref_expr_list>	mandatory_member_index_expr_list
+%type	<_inst_ref_expr_list>	mandatory_member_index_expr_list_in_parens
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
 %type	<_expr_list>	shift_expr_list shift_expr_list_in_angles
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
@@ -1781,7 +1783,7 @@ prs_body_item
 /* macros arguments are restricted to instance references for now */
 /* the argument list must also be non-empty */
 prs_macro
-	: ID member_index_expr_list_in_parens
+	: ID mandatory_member_index_expr_list_in_parens
 		{ $$ = new PRS::macro($1, $2); }
 	;
 
@@ -1949,6 +1951,17 @@ qualified_id
 	| ID SCOPE ID
 		{ $$ = new qualified_id($1);
 		  APPEND_LIST($$, $2, $3); }
+	;
+
+mandatory_member_index_expr_list_in_parens
+	: '(' mandatory_member_index_expr_list ')'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
+mandatory_member_index_expr_list
+	: mandatory_member_index_expr_list ',' member_index_expr
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| member_index_expr { $$ = new inst_ref_expr_list($1); }
 	;
 
 /** was mandatory, but is now optional, blank items are allowed! */

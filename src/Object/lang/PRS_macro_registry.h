@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_macro_registry.h"
-	$Id: PRS_macro_registry.h,v 1.1.2.1 2006/01/23 06:17:56 fang Exp $
+	$Id: PRS_macro_registry.h,v 1.1.2.2 2006/01/24 06:08:15 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_MACRO_REGISTRY_H__
@@ -10,11 +10,13 @@
 #include "util/NULL.h"
 #include "util/qmap.h"
 #include "util/boolean_types.h"
+#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
 class state_manager;
 namespace PRS {
+class cflat_prs_printer;
 using std::string;
 using util::good_bool;
 //=============================================================================
@@ -23,12 +25,13 @@ using util::good_bool;
  */
 class macro_definition_entry {
 public:
+	typedef	std::default_vector<size_t>::type	node_args_type;
 	/**
 		The primary execution function should take a sequence
 		of node_id's and a global state_manager as arguments.  
 		This is what is executed during cflat.  
 	 */
-	typedef	void (main_type)(const state_manager&);
+	typedef	void (main_type)(cflat_prs_printer&, const node_args_type&);
 	typedef	main_type*			main_ptr_type;
 #if 0
 	/**
@@ -67,6 +70,9 @@ public:
 	// default destructor
 
 	operator bool () const { return _main; }
+
+	void
+	main(cflat_prs_printer&, const node_args_type&) const;
 
 	good_bool
 	check_num_args(const size_t) const;

@@ -1,0 +1,20 @@
+At: "-stdin-":7:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	(null) 
+#STATE#	keyword: defproc [5:1..7]
+#STATE#	identifier: echo [5:9..12]
+#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [5:13..32]
+#STATE#	{ [5:34]
+#STATE#	keyword: prs [6:1..3]
+#STATE#	{ [6:5]
+#STATE#	identifier: echo [7:2..5]
+#STATE#	( [7:6]
+#STATE#	) [7:7]
+in state #STATE#, possible rules are:
+	mandatory_member_index_expr_list_in_parens: '(' . mandatory_member_index_expr_list ')'  (#RULE#)
+acceptable tokens are: 
+	ID (shift)
+	SCOPE (shift)

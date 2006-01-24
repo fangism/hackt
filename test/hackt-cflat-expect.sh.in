@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.8 2006/01/22 06:53:48 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.8.2.1 2006/01/24 06:08:17 fang Exp $
 
 # NOTE: temporarily just uses stdout dump during execution
 # will updated later...
@@ -67,12 +67,20 @@ then
 		fi
 	fi
 	exit 1
+# we've added some test macros that will break prsim
+# so we make exceptions for those tests
 @HAVE_PRSIM_TRUE@else
+@HAVE_PRSIM_TRUE@case $bldroot in
+@HAVE_PRSIM_TRUE@echo* )
+@HAVE_PRSIM_TRUE@;;
+@HAVE_PRSIM_TRUE@* )
 @HAVE_PRSIM_TRUE@	@PRSIM@ $bldroot.prs < /dev/null > /dev/null 2>&1
 @HAVE_PRSIM_TRUE@	if test $? -ne 0
 @HAVE_PRSIM_TRUE@	then
 @HAVE_PRSIM_TRUE@		@ECHO@ "Error: @PRSIM@ rejected $bldroot.prs."
 @HAVE_PRSIM_TRUE@		exit 1
 @HAVE_PRSIM_TRUE@	fi
+@HAVE_PRSIM_TRUE@;;
+@HAVE_PRSIM_TRUE@esac
 fi
 

@@ -1,11 +1,13 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.1.2.1 2006/01/23 06:17:56 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.1.2.2 2006/01/24 06:08:15 fang Exp $
  */
 
 #include <iostream>
+#include <vector>
 #include "Object/lang/PRS_macro_registry.h"
+#include "Object/lang/cflat_printer.h"
 #include "util/qmap.tcc"
 
 namespace HAC {
@@ -45,6 +47,14 @@ __macro_registry(const_cast<macro_registry_type&>(macro_registry));
 //=============================================================================
 // class macro_definition_entry method definitions
 
+void
+macro_definition_entry::main(cflat_prs_printer& c,
+		const node_args_type& n) const {
+	NEVER_NULL(_main);
+	(*_main)(c, n);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 macro_definition_entry::check_num_args(const size_t i) const {
 	if (_check_num_args) {
@@ -89,9 +99,10 @@ namespace __macros__ {
  */
 #define	DECLARE_PRS_MACRO_CLASS(class_name, macro_name)			\
 struct class_name {							\
+	typedef	macro_definition_entry::node_args_type	node_args_type;	\
 public:									\
 	static const char			name[];			\
-	static void main(const state_manager&);				\
+	static void main(cflat_prs_printer&, const node_args_type&);	\
 	static good_bool check_num_args(const size_t);			\
 private:								\
 	static const size_t			id;			\
@@ -126,11 +137,25 @@ class_name::check_num_args(const size_t) {				\
 DECLARE_PRS_MACRO_CLASS(Echo, "echo")
 
 /**
+	Pretty much a diagnostic tool only.
+	For all tool modes, prints out "echo(...)" with canonical
+	hierarchical names substituted for the local literals.  
 	TODO: print out each canonical node name.  
  */
 void
-Echo::main(const state_manager&) {
-	cout << "Hello, world!" << endl;
+Echo::main(cflat_prs_printer& p, const node_args_type& nodes) {
+	typedef	node_args_type::const_iterator	const_iterator;
+	ostream& o(p.get_ostream());
+	o << "echo(";
+	const_iterator i(nodes.begin());
+	const const_iterator e(nodes.end());
+	INVARIANT(i!=e);
+	p.__dump_canonical_literal(*i);
+	for (++i; i!=e; ++i) {
+		o << ", ";
+		p.__dump_canonical_literal(*i);
+	}
+	o << ')' << endl;
 }
 
 /// any number of arguments
