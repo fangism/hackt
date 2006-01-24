@@ -1,0 +1,8 @@
+// "loop-alias-03.hac"
+// contributed by Clint Kelly
+
+bool a[4], b[4];
+
+(;i:4:
+	a[i] = b[i];
+)

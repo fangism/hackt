@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.11 2006/01/22 18:20:05 fang Exp $
+ 	$Id: instance_collection.cc,v 1.12 2006/01/24 22:00:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -45,6 +45,7 @@
 #include "Object/inst/int_instance_collection.h"
 #include "Object/inst/enum_instance_collection.h"
 #include "Object/inst/struct_instance_collection.h"
+#include "Object/inst/param_value_collection.h"	// for dynamic_cast
 #include "Object/common/dump_flags.h"
 
 #include "util/memory/count_ptr.tcc"
@@ -114,9 +115,22 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
 	} else {
-		// this dump is appropriate for pre-unrolled, unresolved dumping
-		// get_type_ref just grabs the type of the first statement
-		get_type_ref()->dump(o);
+		const param_value_collection*
+			p(IS_A(const param_value_collection*, this));
+		if (p && p->is_loop_variable()) {
+			// loop induction variables don't have unroll statements
+			o << "(loop induction pint)";
+		} else {
+			// this dump is appropriate for pre-unrolled, 
+			// unresolved dumping
+			// get_type_ref just grabs the type of the 
+			// first statement
+			if (!index_collection.empty()) {
+				get_type_ref()->dump(o);
+			} else {
+				o << "(not unrolled yet)";
+			}
+		}
 	}
 	return o << ' ' << key;
 }
@@ -269,7 +283,9 @@ instance_collection_base::get_type_ref(void) const {
 	// no longer true with conditional declarations!
 	// but first declaration is needed for type, even if it is conditional!
 	// thus we need conditionally predicated index_collections?
+	// ALSO not true for loop induction variables
 	INVARIANT(!index_collection.empty());
+	// INVARIANT(!index_collection.empty() || is_loop_variable());
 #endif
 	return (*index_collection.begin())->get_type_ref();
 }

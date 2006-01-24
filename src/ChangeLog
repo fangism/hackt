@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-75.1:
+	  Fixes bug with member instance-reference lookup. 
+		Unroll code was inadvertently looking up an already 
+		lookup member reference with the base class's static
+		helper function.  Refactoring the common code fixed 
+		the problem.
+	  Lots of debug code sprinkled about.
+	  New test cases added (parser/flow) that now work, but didn't before.  
+
+
 2006-01-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-75:

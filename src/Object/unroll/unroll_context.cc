@@ -2,17 +2,19 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.9 2006/01/22 18:21:01 fang Exp $
+	$Id: unroll_context.cc,v 1.10 2006/01/24 22:01:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 #define	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DUMP			0 && ENABLE_STACKTRACE
 
 #include <iostream>
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/const_param.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/def/definition_base.h"
 #include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
@@ -101,6 +103,9 @@ unroll_context::empty(void) const {
  */
 ostream&
 unroll_context::dump(ostream& o) const {
+#if STACKTRACE_DUMP
+	STACKTRACE_VERBOSE;
+#endif
 	o << "formals: ";
 	if (template_formals)
 		template_formals->dump(o);
@@ -110,6 +115,13 @@ unroll_context::dump(ostream& o) const {
 	if (target_footprint)
 		target_footprint->dump_with_collections(
 			cerr << endl << "footprint: ");
+#if 1
+	// chain dump:
+	if (next) {
+		o << endl << "next parent context: " << endl;
+		next->dump(o);
+	}
+#endif
 	return o;
 }
 
@@ -118,18 +130,37 @@ unroll_context::dump(ostream& o) const {
 	20051011: Fixed bug where loop context would fail to 
 		translate instance reference correctly because
 		target_footprint of innermost context was NULL.  
+	\return (read-only) pointer to footprint.
+		What does it mean if footprint returned is NULL?
+		It means we're accessing a top-level instance 
+		of the module, as opposed to an instance local to 
+		a particular definition's footprint.  
  */
 const footprint*
 unroll_context::get_target_footprint(void) const {
-	if (!target_footprint && next)
+	STACKTRACE_VERBOSE;
+#if 0
+	if (!target_footprint && next) {
 		return next->get_target_footprint();
-	else	return target_footprint;
+	} else {
+		// may be NULL
+		return target_footprint;
+	}
+#else
+	if (target_footprint) {
+		return target_footprint;
+	} else if (next) {
+		return next->get_target_footprint();
+	} else {
+		return NULL;
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return a copy of the context with footprint pointer nullified.  
-	Calledn by member_instance_reference::unroll_reference.
+	Called by member_instance_reference::unroll_reference.
  */
 unroll_context
 unroll_context::make_member_context(void) const {
@@ -175,7 +206,7 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 /**
 	NOTE: this method is SO CRITICAL...
 	FYI: this is called by simple_meta_value_reference::unroll_resolve().
-	\param p reference to the formal instance, cannont be non-formal!
+	\param p reference to the formal instance, cannot be non-formal!
 	\return actual value, a bunch of constants.  
 		NOT the same as lookup_const_collection (below)
 	\pre the context has formal and actual parameters.  
@@ -240,8 +271,11 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 			return const_ret;
 		} else {
 #if ENABLE_STACKTRACE
+			{
+			const expr_dump_context edc;
 			ret->what(STACKTRACE_INDENT << "expr (");
-			ret->dump(STACKTRACE_STREAM << ") = ") << endl;
+			ret->dump(STACKTRACE_STREAM << ") = ", edc) << endl;
+			}
 #endif
 			const count_ptr<const simple_param_meta_value_reference>
 				self(ret.is_a<const simple_param_meta_value_reference>());

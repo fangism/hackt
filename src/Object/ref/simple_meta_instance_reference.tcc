@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.9 2006/01/22 18:20:29 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.10 2006/01/24 22:00:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -136,29 +136,22 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Re-usable helper function (also used by member_instance_reference).  
-	TODO: what about global instance references?
-	\param _inst a resolved actual instance (not formal).  
+	Static function.  
+	All this does is take an unrolled instance (collection) belonging
+	to a top-level or of footprint and lookups up the member
+	addressed by the indices.  
+	No additional lookup is done on the instance argument, so it
+	must already be translated to a top-level or footprint level, 
+	as opposed to a definition-local placeholder.  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper_no_lookup(
 		const unroll_context& c,
-		const instance_collection_generic_type& _inst, 
+		const instance_collection_generic_type& inst, 
 		const never_ptr<const index_list_type> ind, 
 		alias_collection_type& a) {
-	// possibly factor this part out into simple_meta_instance_reference_base?
 	STACKTRACE_VERBOSE;
-	const footprint* const f(c.get_target_footprint());
-#if 0
-	if (f) {
-		INVARIANT((*f)[_inst.get_name()]);
-	}
-#endif
-	const instance_collection_generic_type&
-		inst(f ? IS_A(const instance_collection_generic_type&, 
-				*(*f)[_inst.get_name()])
-			: _inst);
 if (inst.get_dimensions()) {
 	STACKTRACE("is array");
 	const_index_list cil;
@@ -213,6 +206,47 @@ if (inst.get_dimensions()) {
 	}
 	return bad_bool(false);
 }
+}	// end method unroll_references_helper_no_lookup
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Re-usable helper function, but do NOT call from 
+		member_meta_instance_reference.
+	TODO: what about global instance references?
+	\param _inst a resolved actual instance (not formal).  
+	Called by simple_meta_instance_reference unroll_references.
+	This uses the footprint of the context to perform a lookup
+	translation of the definition instance to the footprint instance.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
+		const unroll_context& c,
+		const instance_collection_generic_type& _inst, 
+		const never_ptr<const index_list_type> ind, 
+		alias_collection_type& a) {
+	// possibly factor this part out into simple_meta_instance_reference_base?
+	STACKTRACE_VERBOSE;
+	const footprint* const f(c.get_target_footprint());
+	const string& inst_name(_inst.get_name());
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "looking up instance name: " << inst_name << endl;
+	cerr << "unroll_context c:" << endl;
+	c.dump(cerr) << endl;
+	if (f) {
+		cerr << "target footprint *f looks like:" << endl;
+		f->dump_with_collections(cerr) << endl;
+	}
+#endif
+#if 1
+	if (f) {
+		INVARIANT((*f)[_inst.get_name()]);
+	}
+#endif
+	const instance_collection_generic_type&
+		inst(f ? IS_A(const instance_collection_generic_type&, 
+			*(*f)[inst_name]) : _inst);
+	return unroll_references_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_helper
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

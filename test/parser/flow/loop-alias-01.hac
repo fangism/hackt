@@ -1,0 +1,18 @@
+
+pint N = 2;
+
+defproc pb (bool t) { } 
+
+defproc lt () {
+bool x;
+pb p[N];
+(;i:N:
+	// SEG FAULT CAUSED HERE IN LOOP
+	p[i].t = x;
+)
+}	// end lt
+
+lt l;	// by THIS INSTANTIATION
+
+
+

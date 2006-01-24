@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.9 2006/01/24 03:01:16 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.10 2006/01/24 22:01:00 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -745,15 +745,6 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	cerr << "unterminated comment, starting on line "
 		<< comment_pos.line << ", got <<EOF>>" << endl;
 	THROW_EXIT;
-}
-
-.	{
-	if (comment_feedback > 2) {
-		cerr << "default, ";
-		cerr << "eaten up more comment " << LINE_COL(CURRENT) << endl;
-	}
-	MULTILINE_MORE(comment_pos, foo);
-	yymore();
 }
 
 }

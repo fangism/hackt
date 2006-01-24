@@ -1,15 +1,18 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.5 2006/01/22 18:20:58 fang Exp $
+ 	$Id: loop_scope.cc,v 1.6 2006/01/24 22:01:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
 #define	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
 
+#define	ENABLE_STACKTRACE		0
+
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/template_formals_manager.h"
+#include "Object/def/footprint.h"		// for debug dump footprint
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_range.h"
@@ -19,6 +22,7 @@
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
+#include "util/stacktrace.h"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::loop_scope, "loop-scope")
@@ -71,9 +75,15 @@ loop_scope::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: source copied mostly from PRS::rule_loop::unroll().
+	We fake an unroll context by emulating a definition scope, 
+		treating a loop induction variable as a template formal
+		parameter and its value as the actual.  
+	TODO: warn about variable shadowing.  
+	NOTE: keep this consistent with ::create_unique definition below
  */
 good_bool
 loop_scope::unroll(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
 		cerr << "Error resolving range expression: ";
@@ -93,11 +103,23 @@ loop_scope::unroll(const unroll_context& c) const {
 	const count_ptr<pint_const> ind(new pint_const(min));
 	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
 	NEVER_NULL(al);
+	NEVER_NULL(ind);
 	al->push_back(ind);
 	const template_actuals::const_arg_list_ptr_type sl(NULL);
 	const template_actuals ta(al, sl);
-	unroll_context cc(ta, tfm);
-	cc.chain_context(c);
+	const unroll_context cc(ta, tfm, c);
+	// cc.chain_context(c);	// same effect
+#if 0 && ENABLE_STACKTRACE
+	cerr << "parent context, c: " << endl;
+	c.dump(cerr) << endl;
+	cerr << "cc @ " << &cc << endl;
+	cc.dump(cerr) << endl;
+	const footprint* const f = cc.get_target_footprint();
+	if (f) {
+		cerr << "cc\'s target footprint: " << endl;
+		f->dump_with_collections(cerr) << endl;
+	}
+#endif
 	pint_value_type ind_val = min;
 	for ( ; ind_val <= max; ind_val++) {
 		*ind = ind_val;
@@ -117,6 +139,7 @@ loop_scope::unroll(const unroll_context& c) const {
  */
 good_bool
 loop_scope::create_unique(const unroll_context& c, footprint& f) const {
+	STACKTRACE_VERBOSE;
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
 		cerr << "Error resolving range expression: ";

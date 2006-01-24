@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.5 2006/01/22 06:52:59 fang Exp $
+	$Id: template_formals_manager.cc,v 1.6 2006/01/24 22:00:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -62,7 +62,10 @@ template_formals_manager::dump_formals_list(ostream& o,
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
 		// sanity check
-		INVARIANT((*i)->is_template_formal());
+		// not true any more: may be loop induction variable
+		// INVARIANT((*i)->is_template_formal());
+		INVARIANT((*i)->is_template_formal() ||
+			(*i)->is_loop_variable());
 		(*i)->dump(o << auto_indent) << endl;
 	}
 	return o << auto_indent << '>';

@@ -1,0 +1,18 @@
+// "loop-alias-02.hac"
+// copy-reduced from "loop-alias-01.hac"
+// should pass everything
+
+pint N = 2;
+
+defproc lt () {
+bool x;
+bool p[N];
+(;i:N:
+	p[i] = x;
+)
+}
+
+lt l;
+
+
+
