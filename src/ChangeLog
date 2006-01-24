@@ -5,6 +5,11 @@
 
 2006-01-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-74.6:
+	  Fixed comment-lexing bug, stupid typo... 
+		chalk up another bug found for Clint Kelly.
+
+
 	* HACKT-00-01-04-main-00-74.5:
 	  Improved error message on bad definition reference.
 		A few tests updated.

@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.8 2006/01/23 21:19:29 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.9 2006/01/24 03:01:16 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -338,9 +338,10 @@ DEFINEOP	"<:"
 RANGE		".."
 
 ENDLINECOMMENT	"//"(.*)$
-NULLCOMMENT	"/*"("*"+)"/"
-OPENCOMMENT	"/"("*"+)[^/\n]
-CLOSECOMMENT	"*"+"/"
+NULLCOMMENT	"/*"[^\n]*"*/"
+OPENCOMMENT	"/*"
+CLOSECOMMENT	[*]+"/"
+CLOSEINCOMMENT	"*/"
 
 OPENSTRING	"\""
 MORESTRING	[^\\\"\n]+
@@ -429,8 +430,6 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 {SCOPE}		{ NODE_POSITION_UPDATE(*hackt_lval, foo); return SCOPE; }
 {RANGE}		{ NODE_POSITION_UPDATE(*hackt_lval, foo); return RANGE; }
 {DEFINEOP}	{ NODE_POSITION_UPDATE(*hackt_lval, foo); return DEFINEOP; }
-
-{POSITIONTOKEN} { NODE_POSITION_UPDATE(*hackt_lval, foo); return yytext[0]; }
 
 {IMPORT} {
 	STACKTRACE("lexing import");
@@ -549,6 +548,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	default:
 		abort();
 	}
+#undef	DUMP_FILE_NAME_STACK
 }
 
 {NAMESPACE}	{ KEYWORD_UPDATE(*hackt_lval, foo); return NAMESPACE; }
@@ -625,6 +625,14 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	return ID;
 }
 
+{CLOSECOMMENT} {
+	hackt_parse_file_manager.dump_file_stack(cerr);
+	cerr << "*/ (close-comment) found outside of <comment> " <<
+		LINE_COL(CURRENT) << endl;
+	TOKEN_UPDATE(foo);
+	THROW_EXIT;
+}
+
 {OPENCOMMENT} {
 	/* crazy... allowing nested comments */
 	comment_level++;
@@ -647,14 +655,6 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	BEGIN(instring); 
 }
 
-{CLOSECOMMENT} {
-	hackt_parse_file_manager.dump_file_stack(cerr);
-	cerr << "*/ (close-comment) found outside of <comment> " <<
-		LINE_COL(CURRENT) << endl;
-	TOKEN_UPDATE(foo);
-	THROW_EXIT;
-}
-
 {BADID}	{ 
 	hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "bad identifier: \"" << yytext << "\" " <<
@@ -663,6 +663,8 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	hackt_lval->_token_identifier = NULL;
 	THROW_EXIT;
 }
+
+{POSITIONTOKEN} { NODE_POSITION_UPDATE(*hackt_lval, foo); return yytext[0]; }
 
 .	{
 	hackt_parse_file_manager.dump_file_stack(cerr);
@@ -675,14 +677,38 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 }
 
 <incomment>{
-{NULLCOMMENT}	{ /********/ /*** does nothing ***/ /********/	
-	if (comment_feedback > 1) {
-		cerr << "null-comment within comment ignored " << 
-			LINE_COL(CURRENT) << endl;
+
+[^*/\n]*	|
+[/][^*\n]*	{
+	if (comment_feedback > 2) {
+		cerr << "eaten up more comment " << LINE_COL(CURRENT) << endl;
 	}
 	MULTILINE_MORE(comment_pos, foo);
 	yymore();
 }
+
+[^/\n]*{CLOSEINCOMMENT} {
+	MULTILINE_MORE(comment_pos, foo);
+	if (comment_feedback) {
+		cerr << "end of comment-level " << comment_level << " " <<
+			LINE_COL(CURRENT) << endl;
+	}
+	comment_level--;
+	if (!comment_level) {
+		BEGIN(INITIAL); 
+	} else {
+		yymore();		// doesn't seem to make a difference
+	}
+}
+
+[*]+[^/\n]*	{
+	if (comment_feedback > 2) {
+		cerr << "eaten up more comment " << LINE_COL(CURRENT) << endl;
+	}
+	MULTILINE_MORE(comment_pos, foo);
+	yymore();
+}
+
 {OPENCOMMENT} {
 	if (allow_nested_comments) {
 		comment_level++;
@@ -709,28 +735,6 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	yymore();
 }
 
-[^*/\n]*	|
-"*"+[^/\n]	|
-"/"+[^*\n]	{
-	if (comment_feedback > 2) {
-		cerr << "eaten up more comment " << LINE_COL(CURRENT) << endl;
-	}
-	MULTILINE_MORE(comment_pos, foo);
-	yymore();
-}
-{CLOSECOMMENT} {
-	MULTILINE_MORE(comment_pos, foo);
-	if (comment_feedback) {
-		cerr << "end of comment-level " << comment_level << " " <<
-			LINE_COL(CURRENT) << endl;
-	}
-	comment_level--;
-	if (!comment_level) {
-		BEGIN(INITIAL); 
-	} else {
-		yymore();		// doesn't seem to make a difference
-	}
-}
 <<EOF>>	{
 	// cerr << "in-comment-EOF!" << endl;
 	// in this case, yywrap() is already called too early, and we don't get
@@ -742,6 +746,16 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 		<< comment_pos.line << ", got <<EOF>>" << endl;
 	THROW_EXIT;
 }
+
+.	{
+	if (comment_feedback > 2) {
+		cerr << "default, ";
+		cerr << "eaten up more comment " << LINE_COL(CURRENT) << endl;
+	}
+	MULTILINE_MORE(comment_pos, foo);
+	yymore();
+}
+
 }
 
 <instring>{
