@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.9.2.2 2006/01/25 19:05:57 fang Exp $
+#	$Id: Makefile.am,v 1.9.2.3 2006/01/25 19:12:53 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -73,7 +73,7 @@ BISON_OUTPUTS += inv-01 inv-11 \
 EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac
 
 # TODO: haven't gotten around to these yet...
-EXTRA_DIST += loop-04 loop-05 cond-01
+EXTRA_DIST += loop-04.hac loop-05.hac cond-01.hac
 
 include $(top_srcdir)/test/Make.test-tail
 
