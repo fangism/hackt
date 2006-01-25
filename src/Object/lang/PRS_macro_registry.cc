@@ -1,13 +1,14 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.1.2.2 2006/01/24 06:08:15 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.1.2.3 2006/01/25 19:05:55 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/lang/cflat_printer.h"
+#include "main/cflat_options.h"
 #include "util/qmap.tcc"
 
 namespace HAC {
@@ -134,6 +135,32 @@ class_name::check_num_args(const size_t) {				\
 ***/
 
 //-----------------------------------------------------------------------------
+typedef	macro_definition_entry::node_args_type	node_args_type;
+
+/**
+	Prints canonical names list of nodes, delimited by whatever.  
+	Useful utility for many PRS macros.  
+	TODO: write a variation that takes an iterator pair.  
+ */
+static
+ostream&
+print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes, 
+		const char* delim) {
+	typedef	node_args_type::const_iterator		const_iterator;
+	NEVER_NULL(delim);
+	ostream& o(p.os);
+	const_iterator i(nodes.begin());
+	const const_iterator e(nodes.end());
+	INVARIANT(i!=e);
+	p.__dump_canonical_literal(*i);
+	for (++i; i!=e; ++i) {
+		o << delim;
+		p.__dump_canonical_literal(*i);
+	}
+	return o;
+}
+
+//-----------------------------------------------------------------------------
 DECLARE_PRS_MACRO_CLASS(Echo, "echo")
 
 /**
@@ -145,16 +172,9 @@ DECLARE_PRS_MACRO_CLASS(Echo, "echo")
 void
 Echo::main(cflat_prs_printer& p, const node_args_type& nodes) {
 	typedef	node_args_type::const_iterator	const_iterator;
-	ostream& o(p.get_ostream());
+	ostream& o(p.os);
 	o << "echo(";
-	const_iterator i(nodes.begin());
-	const const_iterator e(nodes.end());
-	INVARIANT(i!=e);
-	p.__dump_canonical_literal(*i);
-	for (++i; i!=e; ++i) {
-		o << ", ";
-		p.__dump_canonical_literal(*i);
-	}
+	print_node_args_list(p, nodes, ", ");
 	o << ')' << endl;
 }
 
@@ -162,6 +182,97 @@ Echo::main(cflat_prs_printer& p, const node_args_type& nodes) {
 good_bool
 Echo::check_num_args(const size_t) {
 	return good_bool(true);
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_PRS_MACRO_CLASS(PassN, "passn")
+DECLARE_PRS_MACRO_CLASS(PassP, "passp")
+
+/**
+	cflat modes: lvs and prsim
+
+	Clint:
+	Basically within prs { } blocks we just need the following:
+		passn(g,s,d)
+		passp(g,s,d)
+	If you do -lvs, these just get replicated in the prs file as
+		passn(g,s,d)
+		passp(g,s,d)
+	and if you do -prsim, they get turned into:
+		after 0 g & ~s -> d-
+		after 0 ~g & s -> d+
+ */
+void
+PassN::main(cflat_prs_printer& p, const node_args_type& nodes) {
+	ostream& o(p.os);
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_PRSIM:
+		o << "after 0\t";
+		p.__dump_canonical_literal(nodes[0]);
+		o << " & ~";
+		p.__dump_canonical_literal(nodes[1]);
+		o << " -> ";
+		p.__dump_canonical_literal(nodes[2]);
+		o << '-' << endl;
+		break;
+	case cflat_options::TOOL_LVS:
+		o << "passn(";
+		print_node_args_list(p, nodes, ", ");
+		o << ')' << endl;
+		break;
+	default:
+		// nothing
+		break;
+	}
+}
+
+void
+PassP::main(cflat_prs_printer& p, const node_args_type& nodes) {
+	ostream& o(p.os);
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_PRSIM:
+		o << "after 0\t~";
+		p.__dump_canonical_literal(nodes[0]);
+		o << " & ";
+		p.__dump_canonical_literal(nodes[1]);
+		o << " -> ";
+		p.__dump_canonical_literal(nodes[2]);
+		o << '+' << endl;
+		break;
+	case cflat_options::TOOL_LVS:
+		o << "passp(";
+		print_node_args_list(p, nodes, ", ");
+		o << ')' << endl;
+		break;
+	default:
+		// nothing
+		break;
+	}
+}
+
+/**
+	Exactly 3 arguments: gate, source, drain.
+ */
+good_bool
+PassN::check_num_args(const size_t n) {
+	const bool good = n == 3;
+	if (!good) {
+		cerr << name <<
+			"() requires exactly 3 arguments: gate, source, drain."
+			<< endl;
+	}
+	return good_bool(good);
+}
+
+good_bool
+PassP::check_num_args(const size_t n) {
+	const bool good = n == 3;
+	if (!good) {
+		cerr << name <<
+			"() requires exactly 3 arguments: gate, source, drain."
+			<< endl;
+	}
+	return good_bool(good);
 }
 
 //-----------------------------------------------------------------------------

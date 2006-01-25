@@ -1,0 +1,120 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	131
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	33
+	22	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	procdefn	0	#HEAD#	#TAIL#	98
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	33
+	40	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	50	##ADDR##	portconn	0	#HEAD#	#TAIL#	28
+	51	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	portconn	0	#HEAD#	#TAIL#	28
+	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    passn = process-definition (defined) passn(
+        bool<> g
+        bool<> s
+        bool<> d
+      )
+      In definition "passn", we have: {
+      Instances:
+        d = bool<> d
+        g = bool<> g
+        s = bool<> s
+      prs:
+        passn(g,s,d)
+      }
+
+    passnp = process-definition (defined) passnp(
+        bool<> g
+        bool<> _g
+        bool<> s
+        bool<> d
+      )
+      In definition "passnp", we have: {
+      Instances:
+        _g = bool<> _g
+        d = bool<> d
+        g = bool<> g
+        n = passn<> n
+        p = passp<> p
+        s = bool<> s
+      }
+
+    passp = process-definition (defined) passp(
+        bool<> g
+        bool<> s
+        bool<> d
+      )
+      In definition "passp", we have: {
+      Instances:
+        d = bool<> d
+        g = bool<> g
+        s = bool<> s
+      prs:
+        passp(g,s,d)
+      }
+
+}
+
+Created state:
+

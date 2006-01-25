@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-74-PRS-04-03:
+	  Added support for passn and passp macros.  
+	  Added minimal test cases.  
+	  Branch is ready to merge for prime time. 
+
+
 2006-01-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-74-PRS-04-02:

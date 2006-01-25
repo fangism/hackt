@@ -1,0 +1,10 @@
+// "macro-pass-02.hac"
+// instantiating macros
+
+import "macro-pass-01.hac";
+
+passn _n_;
+passp _p_;
+passnp _np_;
+
+

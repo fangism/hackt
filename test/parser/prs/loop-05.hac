@@ -1,0 +1,16 @@
+// "loop-05.hac"
+// copy-modified from "loop-04.hac" (transposed loop/prs)
+// should pass, and produce an inverter
+
+template <pint N>
+defproc null() {
+bool x, y;
+(;i:N:
+prs {
+	x	=> y-
+}
+)
+}
+
+null<1> foo;
+
