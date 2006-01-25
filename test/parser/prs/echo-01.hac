@@ -1,0 +1,16 @@
+// "echo-01.hac"
+// testing the 'echo' PRS macro
+// cflat this
+
+defproc echo(bool p, q, r, s, z) {
+prs {
+	echo(p, q)
+	echo(r, s)
+	(p & q) | (r & s)	-> z-
+	~((p & q) | (r & s))	-> z+
+}
+}
+
+echo	E;
+// E.p = E.r;
+

@@ -1,5 +1,13 @@
 # "test/ChangeLog"
 
+2006-01-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-74-PRS-04-01:
+	  Added even more suffix rules for testing convenience.  
+		Just run 'make'!
+	  Added more echo- targets to make test updating (en masse) easy.
+
+
 2006-01-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-72-prsim-00-13:

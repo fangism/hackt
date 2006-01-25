@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.2 2006/01/22 06:53:05 fang Exp $
+	$Id: cflat_visitor.cc,v 1.3 2006/01/25 20:26:04 fang Exp $
  */
 
 #include "Object/lang/cflat_visitor.h"
@@ -33,17 +33,28 @@ public:
 //=============================================================================
 /**
 	Default traversal for cflat_visitor over the PRS::footprint.  
+	PRS::footprint has rules and macros as immediate subobjects.  
  */
 void
 cflat_visitor::visit(const footprint& f) {
+	const expr_pool_setter temp(*this, f);	// will expire end of scope
+{
 	typedef	footprint::rule_pool_type::const_iterator
 						const_rule_iterator;
-	const expr_pool_setter temp(*this, f);	// will expire end of scope
 	const_rule_iterator i(f.rule_pool.begin());
 	const const_rule_iterator e(f.rule_pool.end());
 	for ( ; i!=e; i++) {
 		i->accept(*this);
 	}
+}{
+	typedef	footprint::macro_pool_type::const_iterator
+						const_macro_iterator;
+	const_macro_iterator i(f.macro_pool.begin());
+	const const_macro_iterator e(f.macro_pool.end());
+	for ( ; i!=e; i++) {
+		i->accept(*this);
+	}
+}
 }
 
 //=============================================================================

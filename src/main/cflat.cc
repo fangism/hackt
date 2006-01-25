@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.7 2006/01/22 06:53:10 fang Exp $
+	$Id: cflat.cc,v 1.8 2006/01/25 20:26:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -75,6 +75,11 @@ public:
 //=============================================================================
 // cflat::options_modifier declarations and definitions
 
+/***
+	Only the primary modes set the primary_tool field, 
+	all other mode modifiers leave it untouched.  
+***/
+
 /// Does absolutely nothing.  
 static
 void
@@ -85,6 +90,7 @@ __cflat_default(cflat::options&) { }
 static
 void
 __cflat_prsim(cflat::options& cf) {
+	cf.primary_tool = cflat::options::TOOL_PRSIM;
 	cf.connect_style = cflat::options::CONNECT_STYLE_EQUAL;
 	cf.include_prs = true;
 	cf.dump_self_connect = false;
@@ -101,6 +107,7 @@ __cflat_prsim(cflat::options& cf) {
 static
 void
 __cflat_prlint(cflat::options& cf) {
+	cf.primary_tool = cflat::options::TOOL_PRLINT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_NONE;
 	cf.include_prs = true;
 	cf.dump_self_connect = false;
@@ -117,6 +124,7 @@ __cflat_prlint(cflat::options& cf) {
 static
 void
 __cflat_connect(cflat::options& cf) {
+	// cf.primary_tool = ?
 	cf.connect_style = cflat::options::CONNECT_STYLE_CONNECT;
 	cf.include_prs = false;
 	cf.dump_self_connect = false;
@@ -140,6 +148,7 @@ __cflat_connect(cflat::options& cf) {
 static
 void
 __cflat_lvs(cflat::options& cf) {
+	cf.primary_tool = cflat::options::TOOL_LVS;
 	cf.connect_style = cflat::options::CONNECT_STYLE_CONNECT;
 	cf.include_prs = true;
 	cf.dump_self_connect = false;
@@ -159,6 +168,7 @@ __cflat_lvs(cflat::options& cf) {
 static
 void
 __cflat_wire(cflat::options& cf) {
+	// cf.primary_tool = ?
 	cf.connect_style = cflat::options::CONNECT_STYLE_WIRE;
 	cf.include_prs = false;
 	cf.dump_self_connect = false;
@@ -175,6 +185,7 @@ __cflat_wire(cflat::options& cf) {
 static
 void
 __cflat_ADspice(cflat::options& cf) {
+	// cf.primary_tool = ?
 	cf.connect_style = cflat::options::CONNECT_STYLE_WIRE;
 	cf.include_prs = true;
 	cf.dump_self_connect = false;
@@ -194,6 +205,7 @@ __cflat_ADspice(cflat::options& cf) {
 static
 void
 __cflat_check(cflat::options& cf) {
+	// cf.primary_tool = ?
 	cf.connect_style = cflat::options::CONNECT_STYLE_NONE;
 	cf.include_prs = true;
 	cf.check_prs = true;
@@ -202,7 +214,8 @@ __cflat_check(cflat::options& cf) {
 	cf.dsim_prs = false;
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// end of primary modes
+//=============================================================================
 STATIC_TRACE_HERE("before cflat option modifiers")
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const cflat::register_options_modifier

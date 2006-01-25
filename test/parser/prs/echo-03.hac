@@ -1,0 +1,17 @@
+// "echo-03.hac"
+// copy-modified from "echo-01.hac"
+// testing the 'echo' PRS macro
+// should die on reference to unknown node.  
+
+defproc echo(bool p, q, r, s, z) {
+prs {
+	echo(r, s)
+	echo(p, buh)		// death
+	(p & q) | (r & s)	-> z-
+	~((p & q) | (r & s))	-> z+
+}
+}
+
+echo	E;
+// E.p = E.r;
+

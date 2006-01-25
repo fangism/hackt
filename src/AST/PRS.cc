@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.3 2006/01/22 06:52:52 fang Exp $
+	$Id: PRS.cc,v 1.4 2006/01/25 20:26:01 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -31,6 +31,7 @@
 #include "Object/expr/data_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/lang/PRS.h"
+#include "Object/lang/PRS_macro_registry.h"
 #include "Object/inst/pint_value_collection.h"
 
 #include "common/TODO.h"
@@ -422,6 +423,11 @@ macro::check_rule(context& c) const {
 							checked_bools_type;
 	typedef checked_bools_type::const_iterator	const_iterator;
 	typedef checked_bools_type::value_type		value_type;
+	if (!entity::PRS::macro_registry[*name]) {
+		cerr << "Error: unrecognized PRS macro \"" << *name << "\" at "
+			<< where(*name) << endl;
+		return return_type(NULL);
+	}
 	checked_bools_type temp;
 	INVARIANT(args->size());
 	args->postorder_check_bool_refs(temp, c);

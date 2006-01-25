@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.8 2006/01/22 18:20:17 fang Exp $
+	$Id: PRS.h,v 1.9 2006/01/25 20:26:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -38,6 +38,8 @@ typedef	count_ptr<simple_bool_meta_instance_reference>	literal_base_ptr_type;
  */
 class literal : public prs_expr {
 	typedef	literal				this_type;
+public:
+	struct	unroller;
 private:
 	literal_base_ptr_type			var;
 private:
@@ -74,6 +76,11 @@ public:
 	negation_normalize(void);
 
 	PRS_UNROLL_EXPR_PROTO;
+
+protected:
+	size_t
+	unroll_node(const unroll_context&) const;
+public:
 
 	// fanout.. not until actually instantiated, unrolled, created...
 	PERSISTENT_METHODS_DECLARATIONS

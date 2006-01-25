@@ -1,0 +1,22 @@
+// "macro-pass-01.hac"
+// should pass, definitions only
+
+// definition may even bear the same name, because macro is not a keyword.
+defproc passn(bool g, s, d) {
+prs {
+	passn(g, s, d)
+}
+}
+
+defproc passp(bool g, s, d) {
+prs {
+	passp(g, s, d)
+}
+}
+
+defproc passnp(bool g, _g, s, d) {
+	passn n(g, s, d);
+	passp p(_g, s, d);
+}
+
+

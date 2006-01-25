@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
 	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62

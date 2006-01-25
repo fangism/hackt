@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-01-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-merged-PRS-04-03:
+	  Series of bug fixes on mainline, followed by merge of 
+		-PRS-04 branch.
+
+
 2006-01-22	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-73-merged-prsim-00-34:

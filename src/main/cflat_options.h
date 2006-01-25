@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.5 2005/12/13 04:15:46 fang Exp $
+	$Id: cflat_options.h,v 1.6 2006/01/25 20:26:04 fang Exp $
  */
 
 #ifndef	__MAIN_CFLAT_OPTIONS_H__
@@ -14,12 +14,31 @@ namespace HAC {
  */
 class cflat_options {
 public:
+	/**
+		The preset modes will set the primary_tool
+		to one of these values.  
+		These values will be used to determine
+		the output behavior w.r.t. macros and attributes.  
+	 */
+	typedef	enum {
+		TOOL_NONE = 0,
+		TOOL_PRSIM,
+		TOOL_PRLINT,
+		TOOL_LVS
+		// add more tools as they are needed
+	}				primary_tool_enum;
+	/**
+		These enumerations dictate the connection-style
+		to print.  
+	 */
 	typedef	enum {
 		CONNECT_STYLE_NONE = 0,
-		CONNECT_STYLE_CONNECT = 1,
-		CONNECT_STYLE_EQUAL = 2,
-		CONNECT_STYLE_WIRE = 3
+		CONNECT_STYLE_CONNECT,
+		CONNECT_STYLE_EQUAL,
+		CONNECT_STYLE_WIRE
 	}				connect_style_enum;
+public:
+	unsigned char			primary_tool;
 	/**
 		-connect style: connect "a" "b"
 		-prsim style: = "a" "b"
@@ -52,9 +71,9 @@ public:
 			Means: print namespaces normally, using :: delimiter.  
 		 */
 		NAMESPACE_POLICY_NONE = 0, 
-		NAMESPACE_POLICY_TRUNCATE = 1, 
-		NAMESPACE_POLICY_MANGLE = 2,
-		NAMESPACE_POLICY_OTHER = 3
+		NAMESPACE_POLICY_TRUNCATE,
+		NAMESPACE_POLICY_MANGLE,
+		NAMESPACE_POLICY_OTHER
 	}				namespace_policy_enum;
 	/**
 		How to deal with namespaces.  
@@ -88,7 +107,8 @@ public:
 	/**
 		Default values in constructor.  
 	 */
-	cflat_options() : connect_style(CONNECT_STYLE_EQUAL), 
+	cflat_options() : primary_tool(TOOL_NONE), 
+		connect_style(CONNECT_STYLE_EQUAL), 
 		include_prs(true), dump_self_connect(false), 
 		enquote_names(true), dump_non_bools(false), 
 		namespace_policy(NAMESPACE_POLICY_NONE), 

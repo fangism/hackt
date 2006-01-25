@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2006/01/25 05:35:41 fang Exp $
+#	$Id: Makefile.am,v 1.8 2006/01/25 20:26:23 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -50,6 +50,9 @@ EMPTY_CFLAT_PRS_TESTS += \
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS +=
+
+# TODO:
+EXTRA_DIST += loop-instantiation-01.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

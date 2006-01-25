@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.2 2006/01/22 06:53:29 fang Exp $
+	$Id: ExprAlloc.h,v 1.3 2006/01/25 20:26:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -21,6 +21,7 @@ class ExprGraphNode;
 using entity::PRS::cflat_visitor;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_expr_node;
+using entity::PRS::footprint_macro;
 using entity::cflat_context;
 //=============================================================================
 
@@ -46,6 +47,9 @@ public:
 
 	void
 	visit(const footprint_expr_node&);
+
+	void
+	visit(const footprint_macro&);
 
 protected:
 	void

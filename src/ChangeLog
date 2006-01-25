@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-merged-PRS-04-03:
+	  Merge of -PRS-04 branch, which adds cflat support for PRS macros.  
+
+
+2006-01-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-74-PRS-04-03:
+	  Added support for passn and passp macros.  
+	  Added minimal test cases.  
+	  Branch is ready to merge for prime time. 
+
+
 2006-01-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-75.3:
@@ -67,6 +81,34 @@
 	  Useful error message on bad operator in AST's, 
 		logical_expr::check_meta_expr().
 		Bug tripped by Cilnt Kelly, case: parser/basic/oper-01.hac
+
+
+2006-01-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-74-PRS-04-02:
+	  PRS macros' arguments may not be empty, fixed in grammar.
+	  PRS unrecognized macro error message issued.  
+	  PRS::macro_definition_entry main prototype updated to take
+		vector<local node IDs>.
+	  We have our first working macro, "echo"!
+	  Added initial test-cases in prs/echo-*.hac.
+
+
+	* HACKT-00-01-04-main-00-74-PRS-04-01:
+	  Significant progress towards implementing user-defined PRS macros.  
+	  Wrote PRS::macro (pre-unroll) and 
+		PRS::footprint_macro (unroll-resolved) classes.  
+		Implemented macro::unroll(), seems to work.  
+	  Added macro_pool to PRS::footprint, resulting in larger 
+		binaries for process_definitions and definition footprints.  
+		(Tests updated accordingly)
+	  Preliminary draft: PRS::macro_registry for macro class definitions.  
+	  Extended cflat_visitor to cover PRS::footprint_macro.
+	  Added primary tool enumeration to cflat_options.  
+		This enumeration will be used to determine the
+		major mode of operation in cflat.  
+	  main/compile module: added more -f flags.  
+	  main/main_funcs: added debug flag to save_module_debug.  
 
 
 2006-01-22	David Fang		<fangism@users.sourceforge.net>

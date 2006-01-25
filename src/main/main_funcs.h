@@ -1,8 +1,11 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.3 2005/12/13 04:15:47 fang Exp $
+	$Id: main_funcs.h,v 1.4 2006/01/25 20:26:04 fang Exp $
  */
+
+#ifndef	__HAC_MAIN_MAIN_FUNCS_H__
+#define	__HAC_MAIN_MAIN_FUNCS_H__
 
 #include "util/boolean_types.h"
 #include "Object/module.h"
@@ -40,7 +43,7 @@ save_module(const module&, const char*);
 
 extern
 void
-save_module_debug(const module&, const char*);
+save_module_debug(const module&, const char*, const bool = false);
 
 extern
 excl_ptr<module>
@@ -56,4 +59,6 @@ unknown_option(const int);
 
 //=============================================================================
 }	// end namespace HAC
+
+#endif	// __HAC_MAIN_MAIN_FUNCS_H__
 

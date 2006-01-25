@@ -14,7 +14,7 @@ state	value
 #STATE#	identifier: foo [17:3..5]
 #STATE#	+ [17:6]
 in state #STATE#, possible rules are:
-	prs_macro : ID . member_index_expr_list_in_parens  (#RULE#)
+	prs_macro : ID . mandatory_member_index_expr_list_in_parens  (#RULE#)
 	relative_id : ID .  (#RULE#)
 	qualified_id : ID . SCOPE ID  (#RULE#)
 acceptable tokens are: 

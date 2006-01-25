@@ -1,0 +1,17 @@
+// "loop-instantiation-01.hac"
+// addressing assertion failure during unroll
+// contributed by Clint Kelly
+
+defproc c2(bool a, b, z) {
+prs {
+a & b -> z+
+~a & ~b -> z-
+}
+}
+
+(;b:4:
+c2 celm[b];	// dies here (author meant celm[b..b])
+	// should give error on re-instantiation
+)
+
+

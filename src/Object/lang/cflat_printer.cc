@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.2 2006/01/22 06:53:04 fang Exp $
+	$Id: cflat_printer.cc,v 1.3 2006/01/25 20:26:03 fang Exp $
  */
 
 #include <iostream>
@@ -8,11 +8,14 @@
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_footprint_rule.h"
+#include "Object/lang/PRS_footprint_macro.h"
+#include "Object/lang/PRS_macro_registry.h"
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
 #include "Object/traits/bool_traits.h"
 #include "main/cflat_options.h"
 #include "common/ICE.h"
+#include "common/TODO.h"
 #include "util/offset_array.h"
 
 namespace HAC {
@@ -70,6 +73,32 @@ if (!cfopts.check_prs) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param lni is the *local* node index referenced by this
+		literal reference in this process.
+	\return The local node index is translated into a globally 
+		allocated (bool) node index, using the 
+		footprint_frame_map.  
+ */
+size_t
+cflat_prs_printer::__lookup_global_bool_id(const size_t lni) const {
+	INVARIANT(lni);
+	return fpf->get_frame_map<bool_tag>()[lni-1];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates local node reference to its canonical name.
+ */
+void
+cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
+	if (cfopts.enquote_names) { os << '\"'; }
+	sm->get_pool<bool_tag>()[__lookup_global_bool_id(lni)]
+		.dump_canonical_name(os, *fp, *sm);
+	if (cfopts.enquote_names) { os << '\"'; }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints out the expression. 
 	Adapted from footprint::cflat_expr().  
  */
@@ -82,11 +111,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM:
 			INVARIANT(sz == 1);
-			if (cfopts.enquote_names) os << '\"';
-			sm->get_pool<bool_tag>()[
-				fpf->get_frame_map<bool_tag>()[e.only()-1]]
-				.dump_canonical_name(os, *fp, *sm);
-			if (cfopts.enquote_names) os << '\"';
+			__dump_canonical_literal(e.only());
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			INVARIANT(sz == 1);
@@ -119,6 +144,19 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			)
 	}	//end switch
 }	// end method cflat_prs_printer::visit(const footprint_expr_node&)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Here's the magic!
+	This is where it looks up and calls a custom-defined 
+	macro function.  
+ */
+void
+cflat_prs_printer::visit(const footprint_macro& m) {
+	const macro_definition_entry& d(macro_registry[m.name]);
+	INVARIANT(d);		// was already checked during unroll
+	d.main(*this, m.node_args);
+}
 
 //=============================================================================
 }	// end namespace PRS

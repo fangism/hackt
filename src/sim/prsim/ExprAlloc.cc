@@ -1,6 +1,6 @@
 /**
-	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.cc,v 1.2 2006/01/22 06:53:28 fang Exp $
+	\file "sim/prsim/ExprAlloc.cc"
+	$Id: ExprAlloc.cc,v 1.3 2006/01/25 20:26:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@
 #include "Object/global_entry.h"
 #include "util/offset_array.h"
 #include "util/stacktrace.h"
+#include "common/TODO.h"
 
 #if	ENABLE_STACKTRACE
 #include <iostream>
@@ -177,6 +178,12 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 	state.dump_struct(cerr) << endl;
 #endif
 }	// end method visit(const footprint_expr_node&)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::visit(const footprint_macro&) {
+	FINISH_ME(Fang);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

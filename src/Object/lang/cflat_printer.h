@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.2 2006/01/22 06:53:04 fang Exp $
+	$Id: cflat_printer.h,v 1.3 2006/01/25 20:26:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -22,7 +22,7 @@ namespace PRS {
 	Full print context struct. 
  */
 class cflat_prs_print_context : public cflat_context {
-protected:
+public:
 	ostream&				os;
 	const cflat_options&			cfopts;
 public:
@@ -52,11 +52,20 @@ public:
 
 	using cflat_visitor::visit;
 
+	size_t
+	__lookup_global_bool_id(const size_t) const;
+
+	void
+	__dump_canonical_literal(const size_t) const;
+
 	void
 	visit(const footprint_rule&);
 
 	void
 	visit(const footprint_expr_node&);
+
+	void
+	visit(const footprint_macro&);
 
 };	// end struct cflat_prs_printer
 

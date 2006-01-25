@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.2 2006/01/22 06:53:05 fang Exp $
+	$Id: cflat_visitor.h,v 1.3 2006/01/25 20:26:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -17,6 +17,7 @@ namespace PRS {
 class footprint;
 class footprint_expr_node;
 class footprint_rule;
+class footprint_macro;
 
 //=============================================================================
 /**
@@ -48,6 +49,8 @@ virtual	void
 	visit(const footprint_rule&) = 0;
 virtual	void
 	visit(const footprint_expr_node&) = 0;
+virtual	void
+	visit(const footprint_macro&) = 0;
 
 };	// end struct cflat_visitor
 
