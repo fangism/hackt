@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.10 2006/01/24 22:00:59 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.11 2006/01/25 02:23:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -101,7 +101,8 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	const unroll_context uc;
 	const instance_alias_base_ptr_type
 		alias(__unroll_generic_scalar_reference(
-			*this->inst_collection_ref, this->array_indices, uc));
+			*this->inst_collection_ref, this->array_indices,
+			uc, true));
 	if (!alias) {
 		cerr << "Error resolving a single instance alias." << endl;
 		return 0;
@@ -130,7 +131,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
-		template lookup_footprint_frame<Tag>(
+		template simple_lookup_footprint_frame<Tag>(
 			*this->inst_collection_ref, this->array_indices, sm);
 }
 
@@ -243,6 +244,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 		INVARIANT((*f)[_inst.get_name()]);
 	}
 #endif
+	// assert not-NULL and dynamic_cast!
 	const instance_collection_generic_type&
 		inst(f ? IS_A(const instance_collection_generic_type&, 
 			*(*f)[inst_name]) : _inst);
@@ -270,18 +272,23 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 /**
 	This does the real work.
 	(Many other calls are forwarded to this.)
+	\param lookup whether or not need to translate reference to
+		local instance collection to actual footprint
+		instance collection.  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 		const instance_collection_generic_type& inst, 
 		const never_ptr<const index_list_type> ind, 
-		const unroll_context& c) {
+		const unroll_context& c, 
+		const bool lookup) {
 	typedef instance_alias_base_ptr_type 	return_type;
 	STACKTRACE_VERBOSE;
 	alias_collection_type aliases;
-	const bad_bool
-		bad(unroll_references_helper(c, inst, ind, aliases));
+	const bad_bool bad(lookup ? 
+		unroll_references_helper(c, inst, ind, aliases) :
+		unroll_references_helper_no_lookup(c, inst, ind, aliases));
 	if (bad.bad) {
 		return return_type(NULL);
 	} else if (aliases.dimensions()) {
@@ -308,7 +315,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	STACKTRACE_VERBOSE;
 	return __unroll_generic_scalar_reference(
 			*this->inst_collection_ref,
-			this->array_indices, c);
+			this->array_indices, c, true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -326,7 +333,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
-		template unroll_generic_scalar_substructure_reference<Tag>(
+		template simple_unroll_generic_scalar_substructure_reference<Tag>(
 			*this, c);
 }
 

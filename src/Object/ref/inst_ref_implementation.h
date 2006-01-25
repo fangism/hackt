@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.7 2006/01/22 18:20:19 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.8 2006/01/25 02:23:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -52,6 +52,8 @@ struct simple_meta_instance_reference_implementation<true> {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Called by member_instance_reference.
+	\param lookup whether this performs a lookup translation of the 
+		instance collection passed.  
  */
 template <class Tag>
 static
@@ -60,9 +62,10 @@ unroll_generic_scalar_substructure_reference(
 		const typename
 			instance_collection_generic_type<Tag>::type& inst, 
 		const index_list_ptr_type ind,
-		const unroll_context& c) {
+		const unroll_context& c, 
+		const bool lookup) {
 	return simple_meta_instance_reference<Tag>::
-		__unroll_generic_scalar_reference(inst, ind, c);
+		__unroll_generic_scalar_reference(inst, ind, c, lookup);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -73,7 +76,7 @@ unroll_generic_scalar_substructure_reference(
 template <class Tag>
 static
 never_ptr<substructure_alias>
-unroll_generic_scalar_substructure_reference(
+simple_unroll_generic_scalar_substructure_reference(
 		const simple_meta_instance_reference<Tag>& _this, 
 		const unroll_context& c) {
 	return _this.unroll_generic_scalar_reference(c);
@@ -91,7 +94,7 @@ unroll_generic_scalar_substructure_reference(
 template <class Tag>
 static
 const footprint_frame*
-lookup_footprint_frame(
+simple_lookup_footprint_frame(
 		const typename
 			instance_collection_generic_type<Tag>::type& inst, 
 		const index_list_ptr_type ind,
@@ -100,7 +103,7 @@ lookup_footprint_frame(
 	const unroll_context uc;
 	const never_ptr<substructure_alias>
 		alias(unroll_generic_scalar_substructure_reference<Tag>(
-			inst, ind, uc));
+			inst, ind, uc, true));
 	if (!alias) {
 		cerr << "Error resolving a single instance alias." << endl;
 		return NULL;
@@ -160,7 +163,8 @@ unroll_generic_scalar_substructure_reference(
 		const typename
 			instance_collection_generic_type<Tag>::type& inst, 
 		const index_list_ptr_type ind,
-		const unroll_context& c) {
+		const unroll_context&, 
+		const bool) {
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
 }
@@ -172,9 +176,9 @@ unroll_generic_scalar_substructure_reference(
 template <class Tag>
 static
 never_ptr<substructure_alias>
-unroll_generic_scalar_substructure_reference(
+simple_unroll_generic_scalar_substructure_reference(
 		const simple_meta_instance_reference<Tag>&,
-		const unroll_context& c) {
+		const unroll_context&) {
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
 }
@@ -187,7 +191,7 @@ unroll_generic_scalar_substructure_reference(
 template <class Tag>
 static
 const footprint_frame*
-lookup_footprint_frame(
+simple_lookup_footprint_frame(
 		const typename instance_collection_generic_type<Tag>::type&, 
 		const index_list_ptr_type,
 		const state_manager&) {

@@ -5,6 +5,14 @@
 
 2006-01-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-75.2:
+	  *Really* fixes bug with member-reference lookup.
+		Modified meta_instance_reference functions to conditionally
+		perform lookup to translate local to actual instance 
+		collection.  Member references don't need the additional
+		lookup, already done by helper function.  
+
+
 	* HACKT-00-01-04-main-00-75.1:
 	  Fixes bug with member instance-reference lookup. 
 		Unroll code was inadvertently looking up an already 

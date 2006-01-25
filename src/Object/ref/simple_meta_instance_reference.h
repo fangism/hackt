@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.8 2006/01/24 22:00:59 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.9 2006/01/25 02:23:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -137,7 +137,7 @@ protected:
 	__unroll_generic_scalar_reference(
 		const instance_collection_generic_type&, 
 		const never_ptr<const index_list_type>,
-		const unroll_context&);
+		const unroll_context&, const bool);
 
 	void
 	collect_transient_info_base(persistent_object_manager& ) const;

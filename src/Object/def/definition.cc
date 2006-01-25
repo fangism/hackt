@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.11 2006/01/24 22:00:58 fang Exp $
+ 	$Id: definition.cc,v 1.12 2006/01/25 02:23:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2814,7 +2814,7 @@ if (defined) {
 			cpt(make_canonical_type(canonical_actuals));
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
-#if ENABLE_STACKTRACE
+#if 0 && ENABLE_STACKTRACE
 		STACKTRACE_INDENT << "new context c @ " << &c << endl;
 		c.dump(cerr) << endl;
 #endif

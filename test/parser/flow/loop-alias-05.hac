@@ -1,0 +1,18 @@
+// "loop-alias-05.hac"
+// reduced by Fang from a test-case contributed by Clint Kelly
+// should pass
+
+defproc pbit (bool t) { }
+
+defproc pbitint (pbit pb) { }
+
+defproc lut (pbitint pbint) {
+pbit p;
+(;i:1:
+        p.t = pbint.pb.t;			// DEATH
+)
+        // p.t = pbint.pb.t;			// is fine
+}
+
+lut l;
+
