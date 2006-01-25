@@ -1,0 +1,34 @@
+// "loop-ports-06.hac"
+// contributed by Clint Kelly, reduced by Fang
+// should pass
+
+template <pint N>
+defproc ch1of (bool d[N]) { }
+
+template <pint N>
+defproc ch_1of (bool d[N]) { }
+
+defproc dcelm(bool a, b, _out, out)
+{
+	prs {
+		a & b -> _out-
+		~a & ~b -> _out+
+		_out => out-
+	}
+}
+
+
+defproc lut () {
+ch_1of<4> _ad[2];
+ch1of<4> ad[2];
+ch1of<16> d;
+ch_1of<16> _d;
+
+(;b:16:
+	dcelm ce[b..b];
+	ce[b](ad[1].d[b/4], ad[0].d[b%4], _d.d[b], d.d[b]);	// here
+)
+}
+
+lut l;
+

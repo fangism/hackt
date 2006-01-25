@@ -1,0 +1,21 @@
+// "loop-ports-01.hac"
+// contributed by Clint Kelly, reduced by Fang
+// should pass
+
+defproc ch1of1(bool d) { }
+
+defproc dcelm(bool a) { }
+
+defproc lut () {
+ch1of1 ad;
+
+dcelm ce;
+
+(;b:1:
+	ce(ad.d);		// used to die, now works
+)
+	// ce(ad.d);		// OK
+}
+
+lut l;
+

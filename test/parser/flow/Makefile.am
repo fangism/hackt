@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2006/01/25 02:23:44 fang Exp $
+#	$Id: Makefile.am,v 1.7 2006/01/25 05:35:41 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -11,7 +11,10 @@ HACKT_PARSE_TEST_PASSES = \
 	010 011 012 013 014 015 016 017 018 019 \
 	020 021 023 024 025 026 027 \
 	030 031 \
-	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05
+	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05 \
+	loop-alias-06 loop-alias-07 \
+	loop-ports-01 loop-ports-02 loop-ports-03 loop-ports-04 loop-ports-05 \
+	loop-ports-06
 
 # TODO: more meta-programming library test cases
 
@@ -26,7 +29,10 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	010 011 012 013 014 015 016 017 018 019 \
 	020 021 023 024 025 026 \
 	030 031 \
-	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05
+	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05 \
+	loop-alias-06 loop-alias-07 \
+	loop-ports-01 loop-ports-02 loop-ports-03 loop-ports-04 loop-ports-05 \
+	loop-ports-06
 
 HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 
@@ -37,7 +43,10 @@ EMPTY_CFLAT_PRS_TESTS += \
 	010 011 012 \
 	020 021 023 024 025 \
 	030 \
-	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05
+	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05 \
+	loop-alias-06 loop-alias-07 \
+	loop-ports-01 loop-ports-02 loop-ports-03 loop-ports-04 loop-ports-05 \
+	loop-ports-06
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS +=

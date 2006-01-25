@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.11 2006/01/25 02:23:44 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.12 2006/01/25 05:35:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -234,10 +234,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 	STACKTRACE_INDENT << "looking up instance name: " << inst_name << endl;
 	cerr << "unroll_context c:" << endl;
 	c.dump(cerr) << endl;
-	if (f) {
-		cerr << "target footprint *f looks like:" << endl;
-		f->dump_with_collections(cerr) << endl;
-	}
 #endif
 #if 1
 	if (f) {
@@ -347,6 +343,10 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		the desired result.  
 	\param cl is a port member, a reference to a collection.
 		Since c is a port, it must be densely packed if it's an array.
+		NOTE: this is already resolved because it was passed in
+		from subinstance_manager::connect_ports(), 
+		which iterates over the direct ports lists.
+		No lookup should be necssary.  
 	\param c the unroll context.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
@@ -370,25 +370,13 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		this->dump(cerr, expr_dump_context::default_value) << endl;
 		return bad_bool(true);
 	}
-	// alternative, create a local temporary instance reference to coll?
+
 	alias_collection_type port_aliases;
-#if 0
-	// parser interprets this as a function prototype! shown by util::wtf.
-	// is this a parser bug?
-	const this_type temp_ref(instance_collection_ptr_type(&coll));
-#else
-	const instance_collection_ptr_type temp_ptr(&coll);
-	const this_type temp_ref(temp_ptr);
-#endif
-	// just like member_instance_reference::unroll
-	// we suppress the footprint of the unroll context
-	// when looking up ports.
-	const unroll_context cc(c.make_member_context());
-	// reference the whole port if it is collective (array)
-	// by not attaching indices
-	const bad_bool port_err(temp_ref.unroll_references(cc, port_aliases));
-		// will automatically size the array
-	if (unroll_err.bad) {
+	// bug fixed here: 20060124 (fangism)
+	// see comment: we can just use simplified helper function
+	const bad_bool port_err(unroll_references_helper_no_lookup(
+		c, coll, never_ptr<const index_list_type>(NULL), port_aliases));
+	if (port_err.bad) {
 		cerr << "ERROR unrolling member instance reference "
 			"during port connection: ";
 		coll.dump(cerr) << endl;

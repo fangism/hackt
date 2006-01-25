@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.9 2006/01/24 22:01:00 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.10 2006/01/25 05:35:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -20,6 +20,7 @@
 #include "Object/unroll/alias_connection.tcc"
 #include "Object/unroll/data_alias_connection_base.h"
 #include "Object/unroll/port_connection.h"
+#include "Object/unroll/unroll_context.h"	// for debugging
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/inst/alias_empty.h"
@@ -204,6 +205,10 @@ port_connection::unroll(const unroll_context& c) const {
 good_bool
 port_connection::unroll_meta_connect(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "context c @ " << &c << endl;
+	c.dump(cerr) << endl;
+#endif
 	NEVER_NULL(ported_inst);
 	const never_ptr<substructure_alias>
 		parent_instance(

@@ -1,0 +1,343 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	222
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	1028
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	258
+	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	24	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	32	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	36	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	proccoll	1	#HEAD#	#TAIL#	39
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	46	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
+	48	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	portconn	0	#HEAD#	#TAIL#	28
+	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	56	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	62	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	98
+	68	##ADDR##	proccoll	1	#HEAD#	#TAIL#	562
+	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	71	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	75	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	77	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	79	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	82	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	84	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	85	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	86	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	89	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	91	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	94	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	95	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	96	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	97	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	98	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	99	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	100	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	101	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	102	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	103	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
+	104	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	105	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	106	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	107	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	108	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	109	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	110	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	111	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	112	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	113	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	114	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	115	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	116	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	117	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	118	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    ch1of = process-definition (defined) ch1of<
+      pint<> N
+      >(
+        bool<> d with indices: {
+          [0..::ch1of::N-1]
+        }
+
+      )
+      In definition "ch1of", we have: {
+      Parameters:
+        N = pint<> N
+      Instances:
+        d = bool<> d with indices: {
+          [0..::ch1of::N-1]
+        }
+
+      footprint collection: {
+        <4> {
+          pint^0 N value: ?
+          bool^1 d with indices: {
+          }
+            unrolled indices: {
+              0 = ::ch1of::d[0] (1) 
+              1 = ::ch1of::d[1] (2) 
+              2 = ::ch1of::d[2] (3) 
+              3 = ::ch1of::d[3] (4) 
+            }
+          bool instance pool:
+          1	::ch1of::d[0]
+          2	::ch1of::d[1]
+          3	::ch1of::d[2]
+          4	::ch1of::d[3]
+        }
+      }
+      }
+
+    dcelm = process-definition (defined) dcelm(
+        bool<> a
+        bool<> b
+        bool<> c
+      )
+      In definition "dcelm", we have: {
+      Instances:
+        a = bool<> a
+        b = bool<> b
+        c = bool<> c
+      footprint: {
+        bool^0 a (instantiated) = ::dcelm::a (1) 
+        bool^0 b (instantiated) = ::dcelm::b (2) 
+        bool^0 c (instantiated) = ::dcelm::c (3) 
+        bool instance pool:
+        1	::dcelm::a
+        2	::dcelm::b
+        3	::dcelm::c
+      }
+      }
+
+    lut = process-definition (defined) lut(
+      )
+      In definition "lut", we have: {
+      Instances:
+        ad = ch1of<4> ad
+        ce = dcelm<> ce with indices: {
+          [::lut::b..::lut::b]
+        }
+
+      footprint: {
+        process ch1of<4>^0 ad (instantiated) = ::lut::ad (1) (
+          bool^1 d with indices: {
+            [0..::ch1of::N-1]
+          }
+            unrolled indices: {
+              0 = ::lut::ce[12].b (1) 
+              1 = ::lut::ce[13].b (2) 
+              2 = ::lut::ce[14].b (3) 
+              3 = ::lut::ce[15].b (4) 
+            }
+        )
+        process dcelm<>^1 ce with indices: {
+        }
+          unrolled indices: {
+            0 = ::lut::ce[0] (2) (
+              bool^0 a (instantiated) = ::lut::ad.d[0] (1) 
+              bool^0 b (instantiated) = ::lut::ce[0].a (1) 
+              bool^0 c (instantiated) = ::lut::ce[0].c (5) 
+            )
+            1 = ::lut::ce[1] (3) (
+              bool^0 a (instantiated) = ::lut::ce[0].b (1) 
+              bool^0 b (instantiated) = ::lut::ad.d[1] (2) 
+              bool^0 c (instantiated) = ::lut::ce[1].c (6) 
+            )
+            2 = ::lut::ce[2] (4) (
+              bool^0 a (instantiated) = ::lut::ce[1].a (1) 
+              bool^0 b (instantiated) = ::lut::ad.d[2] (3) 
+              bool^0 c (instantiated) = ::lut::ce[2].c (7) 
+            )
+            3 = ::lut::ce[3] (5) (
+              bool^0 a (instantiated) = ::lut::ce[2].a (1) 
+              bool^0 b (instantiated) = ::lut::ad.d[3] (4) 
+              bool^0 c (instantiated) = ::lut::ce[3].c (8) 
+            )
+            4 = ::lut::ce[4] (6) (
+              bool^0 a (instantiated) = ::lut::ce[1].b (2) 
+              bool^0 b (instantiated) = ::lut::ce[3].a (1) 
+              bool^0 c (instantiated) = ::lut::ce[4].c (9) 
+            )
+            5 = ::lut::ce[5] (7) (
+              bool^0 a (instantiated) = ::lut::ce[4].a (2) 
+              bool^0 b (instantiated) = ::lut::ce[5].a (2) 
+              bool^0 c (instantiated) = ::lut::ce[5].c (10) 
+            )
+            6 = ::lut::ce[6] (8) (
+              bool^0 a (instantiated) = ::lut::ce[5].b (2) 
+              bool^0 b (instantiated) = ::lut::ce[2].b (3) 
+              bool^0 c (instantiated) = ::lut::ce[6].c (11) 
+            )
+            7 = ::lut::ce[7] (9) (
+              bool^0 a (instantiated) = ::lut::ce[6].a (2) 
+              bool^0 b (instantiated) = ::lut::ce[3].b (4) 
+              bool^0 c (instantiated) = ::lut::ce[7].c (12) 
+            )
+            8 = ::lut::ce[8] (10) (
+              bool^0 a (instantiated) = ::lut::ce[6].b (3) 
+              bool^0 b (instantiated) = ::lut::ce[4].b (1) 
+              bool^0 c (instantiated) = ::lut::ce[8].c (13) 
+            )
+            9 = ::lut::ce[9] (11) (
+              bool^0 a (instantiated) = ::lut::ce[8].a (3) 
+              bool^0 b (instantiated) = ::lut::ce[7].a (2) 
+              bool^0 c (instantiated) = ::lut::ce[9].c (14) 
+            )
+            10 = ::lut::ce[10] (12) (
+              bool^0 a (instantiated) = ::lut::ce[9].a (3) 
+              bool^0 b (instantiated) = ::lut::ce[10].a (3) 
+              bool^0 c (instantiated) = ::lut::ce[10].c (15) 
+            )
+            11 = ::lut::ce[11] (13) (
+              bool^0 a (instantiated) = ::lut::ce[10].b (3) 
+              bool^0 b (instantiated) = ::lut::ce[7].b (4) 
+              bool^0 c (instantiated) = ::lut::ce[11].c (16) 
+            )
+            12 = ::lut::ce[12] (14) (
+              bool^0 a (instantiated) = ::lut::ce[11].b (4) 
+              bool^0 b (instantiated) = ::lut::ce[8].b (1) 
+              bool^0 c (instantiated) = ::lut::ce[12].c (17) 
+            )
+            13 = ::lut::ce[13] (15) (
+              bool^0 a (instantiated) = ::lut::ce[12].a (4) 
+              bool^0 b (instantiated) = ::lut::ce[9].b (2) 
+              bool^0 c (instantiated) = ::lut::ce[13].c (18) 
+            )
+            14 = ::lut::ce[14] (16) (
+              bool^0 a (instantiated) = ::lut::ce[13].a (4) 
+              bool^0 b (instantiated) = ::lut::ce[11].a (3) 
+              bool^0 c (instantiated) = ::lut::ce[14].c (19) 
+            )
+            15 = ::lut::ce[15] (17) (
+              bool^0 a (instantiated) = ::lut::ce[14].a (4) 
+              bool^0 b (instantiated) = ::lut::ce[15].a (4) 
+              bool^0 c (instantiated) = ::lut::ce[15].c (20) 
+            )
+          }
+        process instance pool:
+        1	::lut::ad
+        2	::lut::ce[0]
+        3	::lut::ce[1]
+        4	::lut::ce[2]
+        5	::lut::ce[3]
+        6	::lut::ce[4]
+        7	::lut::ce[5]
+        8	::lut::ce[6]
+        9	::lut::ce[7]
+        10	::lut::ce[8]
+        11	::lut::ce[9]
+        12	::lut::ce[10]
+        13	::lut::ce[11]
+        14	::lut::ce[12]
+        15	::lut::ce[13]
+        16	::lut::ce[14]
+        17	::lut::ce[15]
+        bool instance pool:
+        1	::lut::ad.d[0]
+        2	::lut::ad.d[1]
+        3	::lut::ad.d[2]
+        4	::lut::ad.d[3]
+        5	::lut::ce[0].c
+        6	::lut::ce[1].c
+        7	::lut::ce[2].c
+        8	::lut::ce[3].c
+        9	::lut::ce[4].c
+        10	::lut::ce[5].c
+        11	::lut::ce[6].c
+        12	::lut::ce[7].c
+        13	::lut::ce[8].c
+        14	::lut::ce[9].c
+        15	::lut::ce[10].c
+        16	::lut::ce[11].c
+        17	::lut::ce[12].c
+        18	::lut::ce[13].c
+        19	::lut::ce[14].c
+        20	::lut::ce[15].c
+      }
+      }
+
+  Instances:
+    l = process lut<>^0 l (instantiated) = ::l (1) 
+}
+
+Created state:
+process instance pool:
+1	::l
+

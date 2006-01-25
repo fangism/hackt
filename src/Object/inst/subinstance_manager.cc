@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.10 2006/01/22 06:53:01 fang Exp $
+	$Id: subinstance_manager.cc,v 1.11 2006/01/25 05:35:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -89,6 +89,7 @@ subinstance_manager::reserve(const size_t s) {
 subinstance_manager::value_type
 subinstance_manager::lookup_port_instance(
 		const instance_collection_type& i) const {
+	STACKTRACE_VERBOSE;
 	const size_t index = i.is_port_formal();
 	if (index > subinstance_array.size()) {
 	ICE(cerr, 
@@ -118,6 +119,7 @@ subinstance_manager::lookup_port_instance(
 subinstance_manager::value_type
 subinstance_manager::lookup_member_instance(
 		const instance_collection_type& i) const {
+	STACKTRACE_VERBOSE;
 	const size_t index = i.is_member_instance();
 	if (index > subinstance_array.size()) {
 	ICE(cerr, 
@@ -138,6 +140,7 @@ subinstance_manager::lookup_member_instance(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 subinstance_manager::collect_port_aliases(port_alias_tracker& t) const {
+	STACKTRACE_VERBOSE;
 	const_iterator pi(subinstance_array.begin());
 	const const_iterator pe(subinstance_array.end());
 	for ( ; pi!=pe; pi++) {
@@ -158,6 +161,7 @@ good_bool
 subinstance_manager::connect_ports(
 		const connection_references_type& cr, 
 		const unroll_context& c) {
+	STACKTRACE_VERBOSE;
 	typedef	connection_references_type::const_iterator
 						const_ref_iterator;
 	INVARIANT(subinstance_array.size() == cr.size());
@@ -199,6 +203,7 @@ subinstance_manager::replay_internal_aliases(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
+	STACKTRACE_VERBOSE;
 	typedef	connection_references_type::const_iterator
 						const_ref_iterator;
 	array_type& la(l.subinstance_array);
@@ -229,6 +234,7 @@ subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
 void
 subinstance_manager::relink_super_instance_alias(
 		const substructure_alias& p) {
+	STACKTRACE_VERBOSE;
 	iterator i(subinstance_array.begin());
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {

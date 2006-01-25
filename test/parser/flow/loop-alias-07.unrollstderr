@@ -1,0 +1,160 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
+	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	165
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	20	##ADDR##	proccoll	1	#HEAD#	#TAIL#	42
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proccoll	1	#HEAD#	#TAIL#	38
+	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	30	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	64
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	44	##ADDR##	proccoll	1	#HEAD#	#TAIL#	91
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	64
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	proccoll	1	#HEAD#	#TAIL#	92
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    lut = process-definition (defined) lut(
+        pbitint<> pbint with indices: {
+          [0..1]
+        }
+
+      )
+      In definition "lut", we have: {
+      Instances:
+        p = pbit<> p with indices: {
+          [0..1]
+        }
+
+        pbint = pbitint<> pbint with indices: {
+          [0..1]
+        }
+
+      footprint: {
+        process pbitint<>^1 pbint with indices: {
+        }
+          unrolled indices: {
+            0 = ::lut::pbint[0] (
+              process pbit<>^0 pb (instantiated) = ::lut::p[0] (
+                bool^0 t (instantiated) = ::lut::pbint[0].pb.t 
+              )
+            )
+            1 = ::lut::pbint[1] (
+              process pbit<>^0 pb (instantiated) = ::lut::p[1] (
+                bool^0 t (instantiated) = ::lut::pbint[1].pb.t 
+              )
+            )
+          }
+        process pbit<>^1 p with indices: {
+        }
+          unrolled indices: {
+            0 = ::lut::pbint[0].pb (
+              bool^0 t (instantiated) = ::lut::p[0].t 
+            )
+            1 = ::lut::pbint[1].pb (
+              bool^0 t (instantiated) = ::lut::p[1].t 
+            )
+          }
+      }
+      }
+
+    pbit = process-definition (defined) pbit(
+        bool<> t
+      )
+      In definition "pbit", we have: {
+      Instances:
+        t = bool<> t
+      footprint: {
+        bool^0 t (instantiated) = ::pbit::t 
+      }
+      }
+
+    pbitint = process-definition (defined) pbitint(
+        pbit<> pb
+      )
+      In definition "pbitint", we have: {
+      Instances:
+        pb = pbit<> pb
+      footprint: {
+        process pbit<>^0 pb (instantiated) = ::pbitint::pb (
+          bool^0 t (instantiated) = ::pbitint::pb.t 
+        )
+      }
+      }
+
+  Instances:
+    l = process lut<>^0 l (instantiated) = ::l (
+      process pbitint<>^1 pbint with indices: {
+        [0..1]
+      }
+        unrolled indices: {
+          0 = ::l.pbint[0] (
+            process pbit<>^0 pb (instantiated) = ::l.pbint[0].pb (
+              bool^0 t (instantiated) = ::l.pbint[0].pb.t 
+            )
+          )
+          1 = ::l.pbint[1] (
+            process pbit<>^0 pb (instantiated) = ::l.pbint[1].pb (
+              bool^0 t (instantiated) = ::l.pbint[1].pb.t 
+            )
+          )
+        }
+    )
+}
+

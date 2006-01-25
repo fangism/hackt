@@ -9,7 +9,7 @@ defproc pbitint (pbit pb) { }
 defproc lut (pbitint pbint) {
 pbit p;
 (;i:1:
-        p.t = pbint.pb.t;			// DEATH
+        p.t = pbint.pb.t;			// used to die
 )
         // p.t = pbint.pb.t;			// is fine
 }

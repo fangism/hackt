@@ -1,0 +1,146 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	166
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	53
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	procdefn	0	#HEAD#	#TAIL#	186
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	30	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	proccoll	1	#HEAD#	#TAIL#	39
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	39	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	47	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	86
+	53	##ADDR##	proccoll	1	#HEAD#	#TAIL#	59
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  3 definitions
+  0 typedefs
+  Definitions:
+    ch1of = process-definition (defined) ch1of<
+      pint<> N
+      >(
+        bool<> d with indices: {
+          [0..::ch1of::N-1]
+        }
+
+      )
+      In definition "ch1of", we have: {
+      Parameters:
+        N = pint<> N
+      Instances:
+        d = bool<> d with indices: {
+          [0..::ch1of::N-1]
+        }
+
+      footprint collection: {
+        <4> {
+          pint^0 N value: ?
+          bool^1 d with indices: {
+          }
+            unrolled indices: {
+              0 = ::ch1of::d[0] 
+              1 = ::ch1of::d[1] 
+              2 = ::ch1of::d[2] 
+              3 = ::ch1of::d[3] 
+            }
+        }
+      }
+      }
+
+    dcelm = process-definition (defined) dcelm(
+        bool<> a
+      )
+      In definition "dcelm", we have: {
+      Instances:
+        a = bool<> a
+      footprint: {
+        bool^0 a (instantiated) = ::dcelm::a 
+      }
+      }
+
+    lut = process-definition (defined) lut(
+      )
+      In definition "lut", we have: {
+      Instances:
+        ad = ch1of<4> ad
+        ce = dcelm<> ce with indices: {
+          [0..0]
+        }
+
+      footprint: {
+        process ch1of<4>^0 ad (instantiated) = ::lut::ad (
+          bool^1 d with indices: {
+            [0..::ch1of::N-1]
+          }
+            unrolled indices: {
+              0 = ::lut::ce[0].a 
+              1 = ::lut::ad.d[1] 
+              2 = ::lut::ad.d[2] 
+              3 = ::lut::ad.d[3] 
+            }
+        )
+        process dcelm<>^1 ce with indices: {
+        }
+          unrolled indices: {
+            0 = ::lut::ce[0] (
+              bool^0 a (instantiated) = ::lut::ad.d[0] 
+            )
+          }
+      }
+      }
+
+  Instances:
+    l = process lut<>^0 l (instantiated) = ::l 
+}
+

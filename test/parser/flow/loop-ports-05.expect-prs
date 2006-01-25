@@ -1,0 +1,96 @@
+"l.ad[1].d[0]" & "l.ad[0].d[0]" -> "l.ce[0]._out"-
+~"l.ad[1].d[0]" & ~"l.ad[0].d[0]" -> "l.ce[0]._out"+
+"l.ce[0]._out" -> "l.ce[0].out"-
+~"l.ce[0]._out" -> "l.ce[0].out"+
+"l.ad[1].d[0]" & "l.ad[0].d[1]" -> "l.ce[1]._out"-
+~"l.ad[1].d[0]" & ~"l.ad[0].d[1]" -> "l.ce[1]._out"+
+"l.ce[1]._out" -> "l.ce[1].out"-
+~"l.ce[1]._out" -> "l.ce[1].out"+
+"l.ad[1].d[0]" & "l.ad[0].d[2]" -> "l.ce[2]._out"-
+~"l.ad[1].d[0]" & ~"l.ad[0].d[2]" -> "l.ce[2]._out"+
+"l.ce[2]._out" -> "l.ce[2].out"-
+~"l.ce[2]._out" -> "l.ce[2].out"+
+"l.ad[1].d[0]" & "l.ad[0].d[3]" -> "l.ce[3]._out"-
+~"l.ad[1].d[0]" & ~"l.ad[0].d[3]" -> "l.ce[3]._out"+
+"l.ce[3]._out" -> "l.ce[3].out"-
+~"l.ce[3]._out" -> "l.ce[3].out"+
+"l.ad[1].d[1]" & "l.ad[0].d[0]" -> "l.ce[4]._out"-
+~"l.ad[1].d[1]" & ~"l.ad[0].d[0]" -> "l.ce[4]._out"+
+"l.ce[4]._out" -> "l.ce[4].out"-
+~"l.ce[4]._out" -> "l.ce[4].out"+
+"l.ad[1].d[1]" & "l.ad[0].d[1]" -> "l.ce[5]._out"-
+~"l.ad[1].d[1]" & ~"l.ad[0].d[1]" -> "l.ce[5]._out"+
+"l.ce[5]._out" -> "l.ce[5].out"-
+~"l.ce[5]._out" -> "l.ce[5].out"+
+"l.ad[1].d[1]" & "l.ad[0].d[2]" -> "l.ce[6]._out"-
+~"l.ad[1].d[1]" & ~"l.ad[0].d[2]" -> "l.ce[6]._out"+
+"l.ce[6]._out" -> "l.ce[6].out"-
+~"l.ce[6]._out" -> "l.ce[6].out"+
+"l.ad[1].d[1]" & "l.ad[0].d[3]" -> "l.ce[7]._out"-
+~"l.ad[1].d[1]" & ~"l.ad[0].d[3]" -> "l.ce[7]._out"+
+"l.ce[7]._out" -> "l.ce[7].out"-
+~"l.ce[7]._out" -> "l.ce[7].out"+
+"l.ad[1].d[2]" & "l.ad[0].d[0]" -> "l.ce[8]._out"-
+~"l.ad[1].d[2]" & ~"l.ad[0].d[0]" -> "l.ce[8]._out"+
+"l.ce[8]._out" -> "l.ce[8].out"-
+~"l.ce[8]._out" -> "l.ce[8].out"+
+"l.ad[1].d[2]" & "l.ad[0].d[1]" -> "l.ce[9]._out"-
+~"l.ad[1].d[2]" & ~"l.ad[0].d[1]" -> "l.ce[9]._out"+
+"l.ce[9]._out" -> "l.ce[9].out"-
+~"l.ce[9]._out" -> "l.ce[9].out"+
+"l.ad[1].d[2]" & "l.ad[0].d[2]" -> "l.ce[10]._out"-
+~"l.ad[1].d[2]" & ~"l.ad[0].d[2]" -> "l.ce[10]._out"+
+"l.ce[10]._out" -> "l.ce[10].out"-
+~"l.ce[10]._out" -> "l.ce[10].out"+
+"l.ad[1].d[2]" & "l.ad[0].d[3]" -> "l.ce[11]._out"-
+~"l.ad[1].d[2]" & ~"l.ad[0].d[3]" -> "l.ce[11]._out"+
+"l.ce[11]._out" -> "l.ce[11].out"-
+~"l.ce[11]._out" -> "l.ce[11].out"+
+"l.ad[1].d[3]" & "l.ad[0].d[0]" -> "l.ce[12]._out"-
+~"l.ad[1].d[3]" & ~"l.ad[0].d[0]" -> "l.ce[12]._out"+
+"l.ce[12]._out" -> "l.ce[12].out"-
+~"l.ce[12]._out" -> "l.ce[12].out"+
+"l.ad[1].d[3]" & "l.ad[0].d[1]" -> "l.ce[13]._out"-
+~"l.ad[1].d[3]" & ~"l.ad[0].d[1]" -> "l.ce[13]._out"+
+"l.ce[13]._out" -> "l.ce[13].out"-
+~"l.ce[13]._out" -> "l.ce[13].out"+
+"l.ad[1].d[3]" & "l.ad[0].d[2]" -> "l.ce[14]._out"-
+~"l.ad[1].d[3]" & ~"l.ad[0].d[2]" -> "l.ce[14]._out"+
+"l.ce[14]._out" -> "l.ce[14].out"-
+~"l.ce[14]._out" -> "l.ce[14].out"+
+"l.ad[1].d[3]" & "l.ad[0].d[3]" -> "l.ce[15]._out"-
+~"l.ad[1].d[3]" & ~"l.ad[0].d[3]" -> "l.ce[15]._out"+
+"l.ce[15]._out" -> "l.ce[15].out"-
+~"l.ce[15]._out" -> "l.ce[15].out"+
+= "l.ad[1].d[0]" "l.ce[0].a"
+= "l.ad[0].d[0]" "l.ce[0].b"
+= "l.ad[1].d[0]" "l.ce[1].a"
+= "l.ad[0].d[1]" "l.ce[1].b"
+= "l.ad[1].d[0]" "l.ce[2].a"
+= "l.ad[0].d[2]" "l.ce[2].b"
+= "l.ad[1].d[0]" "l.ce[3].a"
+= "l.ad[0].d[3]" "l.ce[3].b"
+= "l.ad[1].d[1]" "l.ce[4].a"
+= "l.ad[0].d[0]" "l.ce[4].b"
+= "l.ad[1].d[1]" "l.ce[5].a"
+= "l.ad[0].d[1]" "l.ce[5].b"
+= "l.ad[1].d[1]" "l.ce[6].a"
+= "l.ad[0].d[2]" "l.ce[6].b"
+= "l.ad[1].d[1]" "l.ce[7].a"
+= "l.ad[0].d[3]" "l.ce[7].b"
+= "l.ad[1].d[2]" "l.ce[8].a"
+= "l.ad[0].d[0]" "l.ce[8].b"
+= "l.ad[1].d[2]" "l.ce[9].a"
+= "l.ad[0].d[1]" "l.ce[9].b"
+= "l.ad[1].d[2]" "l.ce[10].a"
+= "l.ad[0].d[2]" "l.ce[10].b"
+= "l.ad[1].d[2]" "l.ce[11].a"
+= "l.ad[0].d[3]" "l.ce[11].b"
+= "l.ad[1].d[3]" "l.ce[12].a"
+= "l.ad[0].d[0]" "l.ce[12].b"
+= "l.ad[1].d[3]" "l.ce[13].a"
+= "l.ad[0].d[1]" "l.ce[13].b"
+= "l.ad[1].d[3]" "l.ce[14].a"
+= "l.ad[0].d[2]" "l.ce[14].b"
+= "l.ad[1].d[3]" "l.ce[15].a"
+= "l.ad[0].d[3]" "l.ce[15].b"

@@ -1,0 +1,21 @@
+// "loop-ports-02.hac"
+// copy-modified from "loop-ports-01.hac"
+// should pass
+
+defproc ch1of1(bool d) { }
+
+defproc dcelm(bool a) { }
+
+defproc lut () {
+ch1of1 ad;
+
+dcelm ce[1];
+
+(;b:1:
+	ce[b](ad.d);
+)
+}
+
+lut l;
+
+

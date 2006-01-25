@@ -5,6 +5,13 @@
 
 2006-01-24	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-75.3:
+	  Port-style connections fixed (in loop context), by calling
+		simpler helper function instead of constructing an
+		auxiliary reference.  Bug fixed by removing offending code.  
+	  Added new test cases to verify this: parser/flow/loop-ports-*.hac.
+
+
 	* HACKT-00-01-04-main-00-75.2:
 	  *Really* fixes bug with member-reference lookup.
 		Modified meta_instance_reference functions to conditionally

@@ -1,0 +1,20 @@
+// "loop-ports-03.hac"
+// copy-modified from "loop-ports-02.hac"
+// should pass
+
+template <pint N>
+defproc ch1of (bool d[N]) { }
+
+defproc dcelm(bool a) { }
+
+defproc lut () {
+ch1of<4> ad;
+dcelm ce[1];
+(;b:1:
+	ce[b](ad.d[b/4]);
+)
+}
+
+lut l;
+
+
