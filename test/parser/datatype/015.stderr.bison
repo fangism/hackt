@@ -9,6 +9,6 @@ state	value
 #STATE#	; [3:20]
 in state #STATE#, possible rules are:
 	declare_datatype_proto: optional_template_specification DEFTYPE ID . DEFINEOP data_type_ref data_param_decl_list_in_parens ';'  (#RULE#)
-	defdatatype: optional_template_specification DEFTYPE ID . DEFINEOP data_type_ref data_param_decl_list_in_parens '{' set_body get_body '}'  (#RULE#)
+	defdatatype: optional_template_specification DEFTYPE ID . DEFINEOP data_type_ref data_param_decl_list_in_parens '{' optional_definition_body set_body get_body '}'  (#RULE#)
 acceptable tokens are: 
 	DEFINEOP (shift)

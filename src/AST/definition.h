@@ -1,7 +1,7 @@
 /**
 	\file "AST/definition.h"
 	Definition-related parser classes for HAC.  
-	$Id: definition.h,v 1.2 2005/12/13 04:15:06 fang Exp $
+	$Id: definition.h,v 1.3 2006/01/26 19:23:06 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.h,v 1.17.40.1 2005/12/11 00:45:04 fang Exp
  */
@@ -214,6 +214,7 @@ protected:
 //	const excl_ptr<const concrete_type_ref>	bdt;	// inherited
 //	const excl_ptr<const data_param_decl_list>	params;	// inherited
 	const excl_ptr<const brace_type>	lb;	///< left brace
+	const excl_ptr<const definition_body>	body;
 	const excl_ptr<const CHP::body>	setb;	///< set body
 	const excl_ptr<const CHP::body>	getb;	///< get body
 	const excl_ptr<const brace_type>	rb;	///< right brace
@@ -222,7 +223,9 @@ public:
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, 
-		const brace_type* l, const CHP::body* s,
+		const brace_type* l,
+		const definition_body*, 
+		const CHP::body* s,
 		const CHP::body* g, const brace_type* r);
 
 	~user_data_type_def();
@@ -391,6 +394,7 @@ protected:
 //	const excl_ptr<const chan_type>		bct;	// inherited
 //	const excl_ptr<const data_param_decl_list>	params;	// inherited
 	const excl_ptr<const char_punctuation_type>	lb;	///< left brace
+	const excl_ptr<const definition_body>	body;
 	const excl_ptr<const CHP::body>		sendb;	///< set body
 	const excl_ptr<const CHP::body>		recvb;	///< get body
 	const excl_ptr<const char_punctuation_type>	rb;	///< right brace
@@ -399,7 +403,9 @@ public:
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, 
-		const char_punctuation_type* l, const CHP::body* s, 
+		const char_punctuation_type* l,
+		const definition_body*, 
+		const CHP::body* s, 
 		const CHP::body* g, const char_punctuation_type* r);
 
 	~user_chan_type_def();

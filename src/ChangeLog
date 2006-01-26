@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76.1:
+	  Grammar addition to allow definition bodies inside datatype
+		and channel definitions.  Type restrictions not in place yet.
+
+
 2006-01-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-merged-PRS-04-03:

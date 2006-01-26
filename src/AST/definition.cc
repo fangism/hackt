@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.3 2006/01/22 06:52:53 fang Exp $
+	$Id: definition.cc,v 1.4 2006/01/26 19:23:05 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -238,11 +238,12 @@ user_data_type_def::user_data_type_def(
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const concrete_type_ref* b, 
 		const data_param_decl_list* p, const brace_type* l, 
+		const definition_body* _body, 
 		const CHP::body* s, const CHP::body* g,
 		const brace_type* r) :
 		definition(), 
 		user_data_type_signature(tf, df, n, dp, b, p), 
-		lb(l), setb(s), getb(g), rb(r) {
+		lb(l), body(_body), setb(s), getb(g), rb(r) {
 	NEVER_NULL(lb); NEVER_NULL(setb); NEVER_NULL(getb); NEVER_NULL(rb);
 }
 
@@ -275,8 +276,12 @@ user_data_type_def::check_build(context& c) const {
 			where(*this) << endl;
 		THROW_EXIT;
 	}
-	// check if already defined?
 	const context::definition_frame<user_def_datatype> _cdf(c, *id);
+	// check if already defined?
+	if (body) {
+		body->check_build(c);
+		// useless return value, would've exited upon error already
+	}
 	if (!setb->check_datatype_CHP(c, true).good) {
 		THROW_EXIT;
 	}
@@ -543,11 +548,12 @@ user_chan_type_def::user_chan_type_def(
 		const generic_keyword_type* df, const token_identifier* n, 
 		const string_punctuation_type* dp, const chan_type* b, 
 		const data_param_decl_list* p, const char_punctuation_type* l, 
+		const definition_body* _body, 
 		const CHP::body* s, const CHP::body* g, 
 		const char_punctuation_type* r) :
 		definition(), 
 		user_chan_type_signature(tf, df, n, dp, b, p), 
-		lb(l), sendb(s), recvb(g), rb(r) {
+		lb(l), body(_body), sendb(s), recvb(g), rb(r) {
 	NEVER_NULL(lb); NEVER_NULL(sendb); NEVER_NULL(recvb); NEVER_NULL(rb);
 }
 
@@ -580,9 +586,13 @@ user_chan_type_def::check_build(context& c) const {
 			"previous declaration!  " << where(*this) << endl;
 		THROW_EXIT;
 	}
+	const context::definition_frame<user_def_chan> _cdf(c, *id);
 	// only problem from here is if channel type was already defined.  
 	// in which case, open_channel_definition will THROW_EXIT;
-	const context::definition_frame<user_def_chan> _cdf(c, *id);
+	if (body) {
+		body->check_build(c);
+		// useless return value, would've exited upon error
+	}
 	if (!sendb->check_channel_CHP(c, true).good) {
 		THROW_EXIT;
 	}
