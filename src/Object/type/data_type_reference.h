@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.5 2006/01/22 18:20:44 fang Exp $
+ 	$Id: data_type_reference.h,v 1.6 2006/01/26 21:33:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -66,6 +66,12 @@ public:
 
 	good_bool
 	must_be_valid(void) const;
+
+	bool
+	is_accepted_in_datatype(void) const;
+
+	bool
+	is_accepted_in_channel(void) const;
 
 	bool
 	is_canonical(void) const;

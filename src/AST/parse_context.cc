@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.8 2006/01/22 06:52:54 fang Exp $
+ 	$Id: parse_context.cc,v 1.9 2006/01/26 21:33:25 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -667,6 +667,25 @@ context::add_instance(const token_identifier& id,
 	const never_ptr<scopespace>
 		current_named_scope(get_current_named_scope());
 	NEVER_NULL(current_named_scope);
+	// additional constraints:
+	if (current_named_scope.is_a<const user_def_datatype>() &&
+		!current_fundamental_type->is_accepted_in_datatype()) {
+		// datatypes may contain only other datatypes
+		cerr << "User-defined datatypes may only contain "
+			"other data types and parameter values."
+			<< endl;
+		current_fundamental_type->dump(cerr << "\tgot: ") << endl;
+		return return_type(NULL);
+	}
+	else if (current_named_scope.is_a<const user_def_chan>() &&
+		// channels may contain channels and datatypes
+		!current_fundamental_type->is_accepted_in_channel()) {
+		cerr << "User-defined channel types may only contain "
+			"other channels and data types." << endl;
+		current_fundamental_type->dump(cerr << "\tgot: ") << endl;
+		return return_type(NULL);
+	}
+	// processes may contain anything
 
 	excl_ptr<instantiation_statement_base> inst_stmt =
 		fundamental_type_reference::make_instantiation_statement(

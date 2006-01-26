@@ -7,7 +7,11 @@
 
 	* HACKT-00-01-04-main-00-76.1:
 	  Grammar addition to allow definition bodies inside datatype
-		and channel definitions.  Type restrictions not in place yet.
+		and channel definitions.  
+	  Also added type-restrictions in parser_context::add_instance()
+		and some query methods to fundamental_type_reference's
+		clss hieararchy.  
+	  TODO: test-cases.
 
 
 2006-01-25	David Fang		<fangism@users.sourceforge.net>

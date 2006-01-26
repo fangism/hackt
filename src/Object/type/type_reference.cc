@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.7 2006/01/22 18:20:45 fang Exp $
+ 	$Id: type_reference.cc,v 1.8 2006/01/26 21:33:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -328,6 +328,18 @@ data_type_reference::get_base_datatype_def(void) const {
 bool
 data_type_reference::is_canonical(void) const {
 	return !base_type_def.is_a<const datatype_definition_alias>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+data_type_reference::is_accepted_in_datatype(void) const {
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+data_type_reference::is_accepted_in_channel(void) const {
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -664,6 +676,18 @@ channel_type_reference_base::dump_direction(ostream& o, const char d) {
 		o << d;
 	// else no direction
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_type_reference_base::is_accepted_in_datatype(void) const {
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+channel_type_reference_base::is_accepted_in_channel(void) const {
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1415,6 +1439,18 @@ process_type_reference::is_canonical(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+process_type_reference::is_accepted_in_datatype(void) const {
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+process_type_reference::is_accepted_in_channel(void) const {
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The final blessing from the compiler that the template actuals
 	meet the requirements specified by the base definition's 
@@ -1700,6 +1736,18 @@ param_type_reference::get_base_def(void) const {
  */
 bool
 param_type_reference::is_canonical(void) const {
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+param_type_reference::is_accepted_in_datatype(void) const {
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+param_type_reference::is_accepted_in_channel(void) const {
 	return true;
 }
 

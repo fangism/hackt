@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.5 2006/01/22 18:20:45 fang Exp $
+ 	$Id: process_type_reference.h,v 1.6 2006/01/26 21:33:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
@@ -59,6 +59,12 @@ public:
 
 	bool
 	is_canonical(void) const;
+
+	bool
+	is_accepted_in_datatype(void) const;
+
+	bool
+	is_accepted_in_channel(void) const;
 
 	// just resolves template actuals to constants
 	count_ptr<const this_type>

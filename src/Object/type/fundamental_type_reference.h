@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.5 2006/01/22 18:20:45 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.6 2006/01/26 21:33:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -113,6 +113,12 @@ virtual	bool
 	// whether or not actuals are constants
 	bool
 	is_resolved(void) const;
+
+virtual	bool
+	is_accepted_in_datatype(void) const = 0;
+
+virtual bool
+	is_accepted_in_channel(void) const = 0;
 
 #define	MERGE_RELAXED_ACTUALS_PROTO					\
 	count_ptr<const this_type>					\

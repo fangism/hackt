@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference_base.h,v 1.5 2006/01/22 18:20:44 fang Exp $
+ 	$Id: channel_type_reference_base.h,v 1.6 2006/01/26 21:33:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
@@ -63,6 +63,12 @@ virtual	ostream&
 	static
 	ostream&
 	dump_direction(ostream&, const char);
+
+	bool
+	is_accepted_in_datatype(void) const;
+
+	bool
+	is_accepted_in_channel(void) const;
 
 virtual	count_ptr<const this_type>
 	unroll_resolve(const unroll_context&) const = 0;
