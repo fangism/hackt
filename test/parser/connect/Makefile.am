@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2005/12/13 04:18:45 fang Exp $
+#	$Id: Makefile.am,v 1.15.12.1 2006/01/27 23:48:01 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -97,6 +97,9 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 032 076 077
+
+# pending test cases
+EXTRA_DIST += 128.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

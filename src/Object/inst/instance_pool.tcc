@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.7 2006/01/22 18:20:06 fang Exp $
+	$Id: instance_pool.tcc,v 1.7.6.1 2006/01/27 23:48:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -32,7 +32,7 @@ using util::auto_indent;
 	so the first index returned by allocator is nonzero.  
  */
 template <class T>
-instance_pool<T>::instance_pool(const size_t s) : parent_type() {
+instance_pool<T>::instance_pool(const size_type s) : parent_type() {
 	STACKTRACE_CTOR_VERBOSE;
 #if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT << "at: " << this << endl;

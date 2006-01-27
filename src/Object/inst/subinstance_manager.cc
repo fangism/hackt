@@ -1,10 +1,10 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.11 2006/01/25 05:35:40 fang Exp $
+	$Id: subinstance_manager.cc,v 1.11.4.1 2006/01/27 23:48:00 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		0
+#define	ENABLE_STACKTRACE		1
 
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"

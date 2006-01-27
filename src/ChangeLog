@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-unique-03-01:
+	  This branch is for fixing a serious unique creation bug exhibited
+		by the reduced testcase in test/parser/connect/128.hac.
+	  This initial revision turned on debugging facilities (and should
+		not be user directly for checking).  
+	  Currently weighing options for fixing the bug, ranging from 
+		varies degrees of hacktitude.  
+
+
 2006-01-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76.2:

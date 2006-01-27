@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.9 2006/01/22 18:20:05 fang Exp $
+	$Id: instance_alias.tcc,v 1.9.6.1 2006/01/27 23:47:58 fang Exp $
 	TODO: trim includes
  */
 
@@ -443,7 +443,8 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	typename instance_type::pool_type& the_pool(f.template get_pool<Tag>());
 	_this.instance_index = the_pool.allocate(instance_type(*this));
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "assigned id: " << this << " = "
+	this->dump_hierarchical_name(STACKTRACE_INDENT)
+		<< " assigned id: " << this << " = "
 		<< this->instance_index << endl;
 #endif
 	INVARIANT(this->instance_index);
@@ -482,7 +483,8 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 		INVARIANT(!i->instance_index);
 #endif
 #if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "assigned id: " << &*i << " = "
+		i->dump_hierarchical_name(STACKTRACE_INDENT)
+			<< " assigned id: " << &*i << " = "
 			<< this->instance_index << endl;
 #endif
 		i->instance_index = this->instance_index;
@@ -625,7 +627,8 @@ INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t,
 	for ( ; i!=e; i++) {
 		INVARIANT(!i->instance_index);
 #if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "assigned id: " << &*i << " = "
+		i->dump_hierarchical_name(STACKTRACE_INDENT)
+			<< " assigned id: " << &*i << " = "
 			<< t.instance_index << endl;
 #endif
 		i->instance_index = t.instance_index;

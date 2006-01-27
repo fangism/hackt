@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.8 2006/01/27 08:07:18 fang Exp $
+	$Id: alias_actuals.tcc,v 1.8.4.1 2006/01/27 23:47:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -40,6 +40,7 @@ template <class AliasType>
 good_bool
 instance_alias_info_actuals::__compare_and_propagate_actuals(
 		const alias_actuals_type& a, AliasType& alias) {
+	STACKTRACE_VERBOSE;
 if (!a) {
 	return good_bool(true);
 } else if (actuals) {
@@ -85,6 +86,7 @@ template <class AliasType>
 good_bool
 instance_alias_info_actuals::__symmetric_synchronize(
 		AliasType& l, AliasType& r) {
+	STACKTRACE_VERBOSE;
 if (l.actuals) {
 	if (r.actuals) {
 		// might as well check pointers first
@@ -137,6 +139,7 @@ template <class InstColl>
 typename InstColl::instance_collection_parameter_type
 instance_alias_info_actuals::complete_type_actuals(
 		const InstColl& _inst) const {
+	STACKTRACE_VERBOSE;
 	typedef	typename InstColl::instance_collection_parameter_type
 						canonical_type_type;
 	canonical_type_type _type(_inst.get_canonical_type());

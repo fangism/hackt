@@ -2,13 +2,13 @@
 	\file "util/memory/index_pool.h"
 	An adapter class to turn a vector-like class into 
 	an index-based allocator.  
-	$Id: index_pool.h,v 1.2 2006/01/22 06:53:43 fang Exp $
+	$Id: index_pool.h,v 1.2.6.1 2006/01/27 23:48:00 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_INDEX_POOL_H__
 #define	__UTIL_MEMORY_INDEX_POOL_H__
 
-#include "util/size_t.h"
+// #include "util/size_t.h"
 
 namespace util {
 namespace memory {
@@ -40,6 +40,7 @@ public:
 	typedef	typename array_type::value_type		value_type;
 	typedef	typename array_type::iterator		iterator;
 	typedef	typename array_type::const_iterator	const_iterator;
+	typedef	typename array_type::size_type		size_type;
 #if 0
 protected:
 	array_type					pool;
@@ -54,10 +55,10 @@ public:
 	using array_type::end;
 	using array_type::clear;
 
-	size_t
+	size_type
 	allocate(void);
 
-	size_t
+	size_type
 	allocate(const value_type&);
 
 };	// end class index_pool
