@@ -3,7 +3,7 @@
 	Forces linker to load modules.  
 	Only needed for compilers that use lazy-linkage, 
 		e.g. darwin-gcc.  
-	$Id: force_load.cc,v 1.7 2006/01/22 06:53:10 fang Exp $
+	$Id: force_load.cc,v 1.8 2006/01/27 08:07:21 fang Exp $
  */
 
 #include "config.h"
@@ -21,6 +21,7 @@
 #include "main/dump_persistent_table.h"
 #include "main/shell.h"
 #include "main/version.h"
+#include "main/chpsim.h"
 
 #if	WANT_TO_HAVE_FUN
 #include "misc/sudoku-solver.h"
@@ -64,6 +65,7 @@ force_load(void) {
 	const dump_persistent_table persistent_dumper;
 	const version versionator;
 	const shell shell_shocker;
+	const chpsim chpsimulator;
 #if WANT_TO_HAVE_FUN
 	const sudoku::solver ss;
 #endif

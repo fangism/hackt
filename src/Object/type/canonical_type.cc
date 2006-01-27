@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.4 2005/12/13 04:15:39 fang Exp $
+	$Id: canonical_type.cc,v 1.5 2006/01/27 08:07:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,10 +24,15 @@ namespace entity {
 //=============================================================================
 // specialized definitions
 
+/**
+	This specialization should be enough to cover all datatypes, 
+	built-in or user-defined.  
+ */
 void
 canonical_definition_load_policy<datatype_definition_base>::operator () (
 		const persistent_object_manager& m,
 		never_ptr<const definition_type>& d) const {
+	STACKTRACE_VERBOSE;
 	data_type_reference::intercept_builtin_definition_hack(m, d);
 	const never_ptr<const user_def_datatype>
 		uddef(d.is_a<const user_def_datatype>());
@@ -47,7 +52,7 @@ struct unroll_port_instances_policy<datatype_definition_base> {
 		// temporary
 		// eventually will need template arguments
 		data_type_reference::unroll_port_instances(
-			d.get_base_def(), c, sub);
+			d.get_base_def(), d.get_template_params(), c, sub);
 	}
 };	// end struct unroll_port_instances_policy
 
@@ -59,7 +64,9 @@ struct unroll_port_instances_policy<user_def_datatype> {
 			const unroll_context& c,
 			subinstance_manager& sub) const {
 		// temporary
-		FINISH_ME(Fang);
+		data_type_reference::unroll_port_instances(
+			d.get_base_def(), d.get_template_params(), c, sub);
+		// FINISH_ME(Fang);
 	}
 };	// end struct unroll_port_instances_policy
 
@@ -137,6 +144,62 @@ canonical_type_footprint_frame_policy<process_definition>::
 void
 check_footprint_policy<process_definition>::operator () (
 		const canonical_process_type& cpt,
+		const footprint* const f) const {
+	const footprint&
+		_f(cpt.get_base_def()->get_footprint(
+			cpt.get_raw_template_params()));
+	INVARIANT(f == &_f);
+}
+
+//=============================================================================
+/**
+	Copy-modified from process_definition's specialization above.  
+	First, this recursively assigns the subinstances inherited from
+	the external context through public ports.  
+	Then, it allocates the remaining (unaassigned) private subinstances.  
+	\param ind the globally assigned index of this instance.  
+	\pre ff is not yet initialized or assigned.  
+ */
+good_bool
+canonical_type_footprint_frame_policy<user_def_datatype>::
+		initialize_and_assign(const canonical_user_def_data_type& cpt,
+		footprint_frame& ff, state_manager& sm, 
+		const port_member_context& pmc, const size_t ind) {
+	STACKTRACE_VERBOSE;
+	const footprint&
+		f(cpt.get_base_def()->get_footprint(
+			cpt.get_raw_template_params()));
+	new (&ff) footprint_frame(f);	// placement construct
+	f.assign_footprint_frame(ff, pmc);
+	// allocate the rest with the state_manager
+	ff.allocate_remaining_subinstances(f, sm,
+		parent_tag_enum(
+			class_traits<datastruct_tag>::type_tag_enum_value),
+		ind);
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+canonical_type_footprint_frame_policy<user_def_datatype>::
+		initialize_frame_pointer_only(
+		const canonical_user_def_data_type& cpt, const footprint*& f) {
+	const footprint&
+		_f(cpt.get_base_def()->get_footprint(
+			cpt.get_raw_template_params()));
+	f = &_f;
+}
+
+//=============================================================================
+/**
+	\param cpt the canonical_process_type whose footprint is checked.  
+	\param f the footprint pointer to be checked against. 
+	\pre the footprint argument pointer should point to the
+		looked-up footprint, according to the complete type.  
+ */
+void
+check_footprint_policy<user_def_datatype>::operator () (
+		const canonical_user_def_data_type& cpt,
 		const footprint* const f) const {
 	const footprint&
 		_f(cpt.get_base_def()->get_footprint(

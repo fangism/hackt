@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2006-01-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76.2:
+	  Temporary char buffer array now uses excl_array_ptr, 
+		in persistent_object_manager.cc.
+	  Improved interface to util::wtf.
+
+
 2006-01-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-74:

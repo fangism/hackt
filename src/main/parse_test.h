@@ -1,11 +1,11 @@
 /**
 	\file "main/parse_test.h"
 	Interface header for parse_test module.  
-	$Id: parse_test.h,v 1.4 2005/12/13 04:15:47 fang Exp $
+	$Id: parse_test.h,v 1.5 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_PARSE_TEST_H__
-#define	__MAIN_PARSE_TEST_H__
+#ifndef	__HAC_MAIN_PARSE_TEST_H__
+#define	__HAC_MAIN_PARSE_TEST_H__
 
 #include "main/hackt_fwd.h"
 
@@ -48,5 +48,5 @@ private:
 //=============================================================================
 }	// end namespace HAC
 
-#endif	// __MAIN_PARSE_TEST_H__
+#endif	// __HAC_MAIN_PARSE_TEST_H__
 

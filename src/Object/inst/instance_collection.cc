@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.12 2006/01/24 22:00:59 fang Exp $
+ 	$Id: instance_collection.cc,v 1.13 2006/01/27 08:07:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -19,8 +19,10 @@
 
 #include "Object/def/definition_base.h"
 #include "Object/def/footprint.h"
+#include "Object/def/user_def_datatype.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/inst/datatype_instance_collection.h"
+#include "Object/inst/general_collection_type_manager.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/expr/const_range.h"
@@ -56,6 +58,7 @@
 #include "util/dereference.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
+#include "util/wtf.h"
 
 
 //=============================================================================
@@ -827,9 +830,18 @@ datatype_instance_collection::establish_collection_type(
 		e->establish_collection_type(d);
 		return;
 	}
-}
+}{
 	// TODO: user-def-structs
-	FINISH_ME(Fang);
+	struct_instance_collection* const
+		e(IS_A(struct_instance_collection*, this));
+	if (e) {
+		e->establish_collection_type(p);
+		return;
+	}
+}
+	ICE(cerr,
+		cerr << "Unhandled case in this function." << endl;
+	)
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -864,9 +876,16 @@ datatype_instance_collection::check_established_type(
 			d = p.get_base_def().is_a<const enum_datatype_def>();
 		return e->check_established_type(d);
 	}
+}{
+	const struct_instance_collection* const
+		e(IS_A(const struct_instance_collection*, this));
+	if (e) {
+		return e->check_established_type(p);
+	}
 }
-	// TODO: user-def-structs
-	FINISH_ME(Fang);
+	ICE(cerr,
+		cerr << "Unhandled case in this function." << endl;
+	)
 	return bad_bool(true);
 }
 

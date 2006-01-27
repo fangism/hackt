@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.5 2006/01/22 18:20:42 fang Exp $
+	$Id: canonical_type.tcc,v 1.6 2006/01/27 08:07:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -107,7 +107,7 @@ CANONICAL_TYPE_CLASS::what(ostream& o) const {
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 ostream&
 CANONICAL_TYPE_CLASS::dump(ostream& o) const {
-	STACKTRACE_VERBOSE;
+	// STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	o << canonical_definition_ptr->get_key();	// get_name()
 	return base_type::dump_template_args(o,

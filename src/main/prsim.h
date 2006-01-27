@@ -1,11 +1,11 @@
 /**
 	\file "main/prsim.h"
 	Interface header for prsim module.  
-	$Id: prsim.h,v 1.2 2006/01/22 06:53:11 fang Exp $
+	$Id: prsim.h,v 1.3 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_PRSIM_H__
-#define	__MAIN_PRSIM_H__
+#ifndef	__HAC_MAIN_PRSIM_H__
+#define	__HAC_MAIN_PRSIM_H__
 
 #include "main/hackt_fwd.h"
 #include "main/options_modifier.h"
@@ -59,5 +59,5 @@ private:
 
 }	// end namespace HAC
 
-#endif	// __MAIN_PRSIM_H__
+#endif	// __HAC_MAIN_PRSIM_H__
 

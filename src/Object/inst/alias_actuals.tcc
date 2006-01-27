@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.7 2006/01/22 18:19:58 fang Exp $
+	$Id: alias_actuals.tcc,v 1.8 2006/01/27 08:07:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -265,6 +265,10 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 		to restore the footprint pointers.  
 		This is preferable because it eliminates having to save
 		away redundant canonical type information.  
+	20060126:
+		NOTE: This may prove infeasible for relaxed template types?
+		No, problems arise only when relaxed types are passed
+		(completed) as port connections.  
  */
 template <class AliasType>
 void
@@ -283,6 +287,10 @@ instance_alias_info_actuals::save_canonical_footprint(const AliasType& _alias,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: see comments for save_canonical_footprint, above.
+	We REALLY need to do away with this hackery...
+ */
 template <class AliasType>
 void
 instance_alias_info_actuals::restore_canonical_footprint(
@@ -296,7 +304,7 @@ instance_alias_info_actuals::restore_canonical_footprint(
 	complete_type_type _type;
 	_type.load_object_base(m, i);
 	// temporary ugly hack
-	footprint_frame _frame;
+	// footprint_frame _frame;	// unused.
 	canonical_type_footprint_frame_policy<canonical_definition_type>
 		::initialize_frame_pointer_only(_type, _f);
 }

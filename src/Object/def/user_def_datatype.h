@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.7 2006/01/22 18:19:38 fang Exp $
+	$Id: user_def_datatype.h,v 1.8 2006/01/27 08:07:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -13,6 +13,7 @@
 #include "Object/common/scopespace.h"
 #include "Object/def/port_formals_manager.h"
 #include "Object/lang/CHP.h"
+#include "Object/def/footprint_manager.h"
 
 namespace HAC {
 namespace entity {
@@ -32,9 +33,7 @@ protected:
 	port_formals_manager			port_formals;
 	CHP::action_sequence			set_chp;
 	CHP::action_sequence			get_chp;
-#if 0
-	footprint_manager? or can this no have internal aliases?
-#endif
+	mutable footprint_manager		footprint_map;
 private:
 	user_def_datatype();
 public:
@@ -56,6 +55,9 @@ public:
 
 	never_ptr<const scopespace>
 	get_scopespace(void) const;
+
+	const port_formals_manager&
+	get_port_formals(void) const { return port_formals; }
 
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;
@@ -96,6 +98,9 @@ public:
 	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
 
 	MAKE_CANONICAL_DATA_TYPE_PROTO;
+
+	const footprint&
+	get_footprint(const count_ptr<const const_param_expr_list>&) const;
 
 #if 0
 	good_bool

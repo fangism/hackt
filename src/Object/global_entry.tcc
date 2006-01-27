@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.8 2006/01/22 18:19:11 fang Exp $
+	$Id: global_entry.tcc,v 1.9 2006/01/27 08:07:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -43,6 +43,7 @@
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
 #include "common/TODO.h"
+#include "common/ICE.h"
 
 namespace HAC {
 namespace entity {
@@ -117,10 +118,17 @@ footprint_frame::dump_footprint(ostream& o, const size_t ind,
 		INVARIANT(ent.parent_tag_value);
 		INVARIANT(ent.parent_id);
 		switch (ent.parent_tag_value) {
-		case PROCESS: {
+		case TYPE_PROCESS: {
 			instance_alias_info<process_tag>::dump_complete_type(
 				extract_parent_formal_instance_alias<
 					process_tag>(sm, ent),
+				o, _footprint);
+			break;
+		}
+		case TYPE_STRUCT: {
+			instance_alias_info<datastruct_tag>::dump_complete_type(
+				extract_parent_formal_instance_alias<
+					datastruct_tag>(sm, ent),
 				o, _footprint);
 			break;
 		}
@@ -177,11 +185,19 @@ global_entry_base<true>::write_object_base(const persistent_object_manager& m,
 		INVARIANT(ent.parent_tag_value);
 		INVARIANT(ent.parent_id);
 		switch (ent.parent_tag_value) {
-		case PROCESS: {
+		case TYPE_PROCESS: {
 			instance_alias_info<process_tag>::
 				save_canonical_footprint(
 				extract_parent_formal_instance_alias<
 					process_tag>(sm, ent),
+				m, o, _frame._footprint);
+			break;
+		}
+		case TYPE_STRUCT: {
+			instance_alias_info<datastruct_tag>::
+				save_canonical_footprint(
+				extract_parent_formal_instance_alias<
+					datastruct_tag>(sm, ent),
 				m, o, _frame._footprint);
 			break;
 		}
@@ -224,11 +240,19 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 		INVARIANT(ent.parent_tag_value);
 		INVARIANT(ent.parent_id);
 		switch (ent.parent_tag_value) {
-		case PROCESS: {
+		case TYPE_PROCESS: {
 			instance_alias_info<process_tag>::
 				restore_canonical_footprint(
 				extract_parent_formal_instance_alias<
 					process_tag>(sm, ent),
+				m, i, _frame._footprint);
+			break;
+		}
+		case TYPE_STRUCT: {
+			instance_alias_info<datastruct_tag>::
+				restore_canonical_footprint(
+				extract_parent_formal_instance_alias<
+					datastruct_tag>(sm, ent),
 				m, i, _frame._footprint);
 			break;
 		}
@@ -314,8 +338,11 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 	const pool_type& _pool(topfp.template get_pool<Tag>());
 	// dump canonical name
 	const state_instance<Tag>* _inst;
-	if (parent_tag_value) {
-		INVARIANT(parent_tag_value == PROCESS);
+	switch (parent_tag_value) {
+	case TYPE_NONE:
+		_inst = &_pool[local_offset];
+		break;
+	case TYPE_PROCESS: {
 		const global_entry<process_tag>&
 			p_ent(extract_parent_entry<process_tag>(sm, *this));
 		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
@@ -324,8 +351,35 @@ global_entry<Tag>::__dump_canonical_name(ostream& o, const dump_flags& df,
 			_lpool(p_ent._frame._footprint
 				->template get_pool<Tag>());
 		_inst = &_lpool[local_offset];
-	} else {
-		_inst = &_pool[local_offset];
+		break;
+	}
+	case TYPE_CHANNEL: {
+		const global_entry<channel_tag>&
+			p_ent(extract_parent_entry<channel_tag>(sm, *this));
+		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
+		// partial, omit formal type parent
+		const pool_type&
+			_lpool(p_ent._frame._footprint
+				->template get_pool<Tag>());
+		_inst = &_lpool[local_offset];
+		break;
+	}
+	case TYPE_STRUCT: {
+		const global_entry<datastruct_tag>&
+			p_ent(extract_parent_entry<datastruct_tag>(sm, *this));
+		p_ent.__dump_canonical_name(o, df, topfp, sm) << '.';
+		// partial, omit formal type parent
+		const pool_type&
+			_lpool(p_ent._frame._footprint
+				->template get_pool<Tag>());
+		_inst = &_lpool[local_offset];
+		break;
+	}
+	default:
+		ICE(cerr, 
+			cerr << "Unknown parent tag enumeration: " <<
+				parent_tag_value << endl;
+		)
 	}
 	const instance_alias_info<Tag>& _alias(*_inst->get_back_ref());
 	return _alias.dump_hierarchical_name(o, df);
@@ -354,16 +408,16 @@ global_entry<Tag>::dump(ostream& o, const size_t ind,
 		const footprint& topfp, const state_manager& sm) const {
 	o << ind << '\t';
 	switch(parent_tag_value) {
-	case NONE:
+	case TYPE_NONE:
 		o << "(top)\t-\t";
 		break;
-	case PROCESS:
+	case TYPE_PROCESS:
 		o << "process\t" << parent_id << '\t';
 		break;
-	case CHANNEL:
+	case TYPE_CHANNEL:
 		o << "channel\t" << parent_id << '\t';
 		break;
-	case STRUCT:
+	case TYPE_STRUCT:
 		o << "struct\t" << parent_id << '\t';
 		break;
 	default:

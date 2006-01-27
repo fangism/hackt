@@ -1,11 +1,11 @@
 /**
 	\file "main/program_registry.h"
 	Header for the interface to the main program.  
-	$Id: program_registry.h,v 1.4 2006/01/22 06:53:11 fang Exp $
+	$Id: program_registry.h,v 1.5 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_PROGRAM_REGISTRY_H__
-#define	__MAIN_PROGRAM_REGISTRY_H__
+#ifndef	__HAC_MAIN_PROGRAM_REGISTRY_H__
+#define	__HAC_MAIN_PROGRAM_REGISTRY_H__
 
 #include <iosfwd>
 #include "main/hackt_fwd.h"
@@ -153,5 +153,5 @@ register_hackt_program_class(void) {
 //=============================================================================
 }	// end namespace HAC
 
-#endif	// __MAIN_PROGRAM_REGISTRY_H__
+#endif	// __HAC_MAIN_PROGRAM_REGISTRY_H__
 

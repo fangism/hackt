@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.5 2006/01/22 18:20:41 fang Exp $
+	$Id: canonical_type.h,v 1.6 2006/01/27 08:07:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -207,6 +207,21 @@ struct canonical_type_footprint_frame_policy<process_definition> {
 		state_manager&, const port_member_context&, const size_t);
 };      // end struct initialize_footprint_frame_policy
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct canonical_type_footprint_frame_policy<user_def_datatype> {
+	static
+	void
+	initialize_frame_pointer_only(const canonical_user_def_data_type&,
+		const footprint*&);
+
+	static
+	good_bool
+	initialize_and_assign(const canonical_user_def_data_type&,
+		footprint_frame&, state_manager&,
+		const port_member_context&, const size_t);
+};      // end struct initialize_footprint_frame_policy
+
 //-----------------------------------------------------------------------------
 template <class DefType>
 struct check_footprint_policy {
@@ -222,6 +237,14 @@ template <>
 struct check_footprint_policy<process_definition> {
 	void
 	operator () (const canonical_process_type&,
+		const footprint* const) const;
+};	// end struct check_footprint_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct check_footprint_policy<user_def_datatype> {
+	void
+	operator () (const canonical_user_def_data_type&,
 		const footprint* const) const;
 };	// end struct check_footprint_policy
 

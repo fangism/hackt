@@ -1,11 +1,11 @@
 /**
 	\file "main/alloc.h"
 	Interface header for alloc module.  
-	$Id: alloc.h,v 1.3 2005/12/13 04:15:46 fang Exp $
+	$Id: alloc.h,v 1.4 2006/01/27 08:07:20 fang Exp $
  */
 
-#ifndef	__MAIN_ALLOC_H__
-#define	__MAIN_ALLOC_H__
+#ifndef	__HAC_MAIN_ALLOC_H__
+#define	__HAC_MAIN_ALLOC_H__
 
 #include "main/hackt_fwd.h"
 
@@ -48,5 +48,5 @@ private:
 
 }	// end namespace HAC
 
-#endif	// __MAIN_ALLOC_H__
+#endif	// __HAC_MAIN_ALLOC_H__
 

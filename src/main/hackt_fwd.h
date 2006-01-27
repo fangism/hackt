@@ -1,11 +1,11 @@
 /**
 	\file "main/hackt_fwd.h"
 	Forward declarations for hackt program interface.  
-	$Id: hackt_fwd.h,v 1.3 2005/12/13 04:15:47 fang Exp $
+	$Id: hackt_fwd.h,v 1.4 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_HACKT_FWD_H__
-#define	__MAIN_HACKT_FWD_H__
+#ifndef	__HAC_MAIN_HACKT_FWD_H__
+#define	__HAC_MAIN_HACKT_FWD_H__
 
 #include "util/size_t.h"
 
@@ -26,5 +26,5 @@ typedef	main_program_type*	main_program_ptr_type;
 
 }	// end namespace HAC
 
-#endif	// __MAIN_HACKT_FWD_H__
+#endif	// __HAC_MAIN_HACKT_FWD_H__
 

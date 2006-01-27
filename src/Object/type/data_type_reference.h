@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.6 2006/01/26 21:33:26 fang Exp $
+ 	$Id: data_type_reference.h,v 1.7 2006/01/27 08:07:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -111,6 +111,7 @@ public:
 	static
 	void
 	unroll_port_instances(const never_ptr<const definition_type>, 
+		const template_actuals&, 
 		const unroll_context&, subinstance_manager&);
 
 	UNROLL_PORT_INSTANCES_PROTO;

@@ -1,11 +1,11 @@
 /**
 	\file "main/dump_persistent_table.h"
 	Interface header for dump_persistent_table module.  
-	$Id: dump_persistent_table.h,v 1.3 2005/12/13 04:15:46 fang Exp $
+	$Id: dump_persistent_table.h,v 1.4 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_DUMP_PERSISTENT_TABLE_H__
-#define	__MAIN_DUMP_PERSISTENT_TABLE_H__
+#ifndef	__HAC_MAIN_DUMP_PERSISTENT_TABLE_H__
+#define	__HAC_MAIN_DUMP_PERSISTENT_TABLE_H__
 
 #include "main/hackt_fwd.h"
 
@@ -50,5 +50,5 @@ private:
 
 }	// end namespace HAC
 
-#endif	// __MAIN_DUMP_PERSISTENT_TABLE_H__
+#endif	// __HAC_MAIN_DUMP_PERSISTENT_TABLE_H__
 

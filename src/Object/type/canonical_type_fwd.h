@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type_fwd.h"
 	Forward declarations of canonical_type type references.  
-	$Id: canonical_type_fwd.h,v 1.5 2006/01/22 18:20:43 fang Exp $
+	$Id: canonical_type_fwd.h,v 1.6 2006/01/27 08:07:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_FWD_H__
@@ -57,6 +57,10 @@ struct canonical_type_footprint_frame_policy;
 
 template <>
 struct canonical_type_footprint_frame_policy<process_definition>;
+template <>
+struct canonical_type_footprint_frame_policy<user_def_datatype>;
+// template <>
+// struct canonical_type_footprint_frame_policy<channel_definition_base>;
 
 //-----------------------------------------------------------------------------
 template <class>
@@ -64,6 +68,10 @@ struct check_footprint_policy;
 
 template <>
 struct check_footprint_policy<process_definition>;
+template <>
+struct check_footprint_policy<user_def_datatype>;
+// template <>
+// struct check_footprint_policy<channel_definition_base>;
 
 //=============================================================================
 }	// end namespace entity

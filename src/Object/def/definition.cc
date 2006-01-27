@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.12 2006/01/25 02:23:43 fang Exp $
+ 	$Id: definition.cc,v 1.13 2006/01/27 08:07:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -1445,6 +1445,8 @@ built_in_datatype_def::collect_transient_info(
 	This object will not live long.  
 	We assume that no user-defined datatype can have the same
 	name as the built-in types because they are reserved keywords.  
+
+	We REALLY need to overhaul the definition/type system...
  */
 void
 built_in_datatype_def::write_object(
@@ -1452,6 +1454,7 @@ built_in_datatype_def::write_object(
 	STACKTRACE_PERSISTENT("built_in_data::write_object()");
 	static const port_formals_manager port_formals;
 	static const CHP::action_sequence fake_chp;
+	static const footprint_manager fake_footprint_map;
 	write_string(f, key);
 	// use bogus parent pointer
 	m.write_pointer(f, never_ptr<const name_space>(NULL));
@@ -1465,6 +1468,7 @@ built_in_datatype_def::write_object(
 	// fake definition body
 	fake_chp.write_object_base(m, f);
 	fake_chp.write_object_base(m, f);
+	fake_footprint_map.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1933,6 +1937,9 @@ user_def_datatype::dump(ostream& o) const {
 			INDENT_SECTION(o);
 			get_chp.dump(o << auto_indent) << endl;
 		}
+		if (footprint_map.size()) {
+			footprint_map.dump(o << auto_indent) << endl;
+		}
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
 }
@@ -2077,26 +2084,153 @@ user_def_datatype::make_canonical_fundamental_type_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Has a footprint now!
+	definition copied verbatim from process_definition::get_footprint
+ */
+const footprint&
+user_def_datatype::get_footprint(
+		const count_ptr<const const_param_expr_list>& p) const {
+	STACKTRACE_VERBOSE;
+	if (p) {
+		if (p->size() != footprint_map.arity()) {
+			ICE(cerr, 
+				cerr << "p->size() == " << p->size() <<
+					", while footprint_map._arity == " <<
+					footprint_map.arity() << endl;
+			);
+		}
+		return footprint_map[*p];
+	} else {
+		return footprint_map.only();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	definition copied verbatim from process_definition::register_complete_type
+ */
 void
 user_def_datatype::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
-	// doesnt't have a gootprint manager .. yet
+	STACKTRACE_VERBOSE;
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		footprint& f = footprint_map[*p];
+		f.import_scopespace(*this);
+	} else {
+		INVARIANT(!footprint_map.arity());
+		// register the only map only if it doesn't exist yet
+		// otherwise will force a comparison of null pointers
+		if (!footprint_map.size()) {
+			// create the one-and-only entry
+			footprint& f = footprint_map.only();
+			f.import_scopespace(*this);
+		}
+		// else it was already registered
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	definition copied verbatim from process_definition::unroll_complete_type
+ */
 good_bool
 user_def_datatype::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
-	// doesnt't have a gootprint manager .. yet
+	STACKTRACE_VERBOSE;
+if (defined) {
+	footprint* f;
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		f = &footprint_map[*p];
+	} else {
+		INVARIANT(!footprint_map.arity());
+		f = &footprint_map.only();
+	}
+	if (!f->is_unrolled()) {
+		const canonical_type_base canonical_params(p);
+		const template_actuals
+			canonical_actuals(canonical_params.get_template_params(
+				template_formals.num_strict_formals()));
+		const canonical_user_def_data_type
+			cpt(make_canonical_type(canonical_actuals));
+		const unroll_context
+			c(canonical_actuals, template_formals, f);
+#if 0 && ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "new context c @ " << &c << endl;
+		c.dump(cerr) << endl;
+#endif
+		if (sequential_scope::unroll(c).good) {
+			f->mark_unrolled();
+		} else {
+			// already have partial error message
+			// cpt.dump(cerr << "Instantiated from ") << endl;
+			return good_bool(false);
+		}
+	}
 	return good_bool(true);
+} else {
+	cerr << "ERROR: cannot unroll incomplete data type " <<
+			get_qualified_name() << endl;
+	// parent should print: "instantiated from here"
+	return good_bool(false);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	definition copied verbatim from process_definition::create_complete_type
+ */
 good_bool
 user_def_datatype::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
-	// doesnt't have a gootprint manager .. yet
+	STACKTRACE_VERBOSE;
+if (defined) {
+	footprint* f;
+	if (p) {
+		INVARIANT(p->size() == footprint_map.arity());
+		f = &footprint_map[*p];
+	} else {
+		INVARIANT(!footprint_map.arity());
+		f = &footprint_map.only();
+	}
+	// will automatically unroll first if not already unrolled
+	if (!f->is_unrolled() && !unroll_complete_type(p).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	if (!f->is_created()) {
+		const canonical_type_base canonical_params(p);
+		const template_actuals
+			canonical_actuals(canonical_params.get_template_params(
+				template_formals.num_strict_formals()));
+		const canonical_user_def_data_type
+			cpt(make_canonical_type(canonical_actuals));
+		const unroll_context
+			c(canonical_actuals, template_formals, f);
+		// this replays internal aliases of all instances in this scope
+		if (!f->create_dependent_types().good) {
+			// error message
+			return good_bool(false);
+		}
+		if (sequential_scope::create_unique(c, *f).good) {
+			f->evaluate_scope_aliases();
+			// has no PRS
+			f->mark_created();
+		} else {
+			// already have partial error message
+			// cpt.dump(cerr << "Instantiated from ") << endl;
+			return good_bool(false);
+		}
+	}
 	return good_bool(true);
+} else {
+	cerr << "ERROR: cannot create incomplete data type " <<
+			get_qualified_name() << endl;
+	// parent should print: "instantiated from here"
+	return good_bool(false);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2119,14 +2253,16 @@ if (!m.register_transient_object(this,
 	// already covered by scopespace::collect...
 	set_chp.collect_transient_info_base(m);
 	get_chp.collect_transient_info_base(m);
+	footprint_map.collect_transient_info_base(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Not recursive, manager will call this once.  
-	Note: this must be kept consistent with 
-	built_in_datatype_def::write_object.  
+	NOTE: this must be kept consistent with 
+	built_in_datatype_def::write_object, 
+	for the sake of faking and intercepting built-in definitions.
  */
 void
 user_def_datatype::write_object(
@@ -2135,7 +2271,6 @@ user_def_datatype::write_object(
 	write_string(f, key);
 	m.write_pointer(f, parent);
 	definition_base::write_object_base(m, f);
-//	write_object_port_formals(m);
 	scopespace::write_object_base(m, f);
 	m.write_pointer(f, base_type);
 	port_formals.write_object_base(m, f);
@@ -2144,6 +2279,7 @@ user_def_datatype::write_object(
 	// body
 	set_chp.write_object_base(m, f);
 	get_chp.write_object_base(m, f);
+	footprint_map.write_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2154,7 +2290,6 @@ user_def_datatype::load_object(
 	read_string(f, const_cast<string&>(key));
 	m.read_pointer(f, parent);
 	definition_base::load_object_base(m, f);
-//	load_object_port_formals(m);
 	scopespace::load_object_base(m, f);
 	m.read_pointer(f, base_type);
 	port_formals.load_object_base(m, f);
@@ -2163,6 +2298,7 @@ user_def_datatype::load_object(
 	// body
 	set_chp.load_object_base(m, f);
 	get_chp.load_object_base(m, f);
+	footprint_map.load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2744,7 +2880,6 @@ process_definition::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 	if (p) {
-#if 1
 		if (p->size() != footprint_map.arity()) {
 			ICE(cerr, 
 				cerr << "p->size() == " << p->size() <<
@@ -2752,9 +2887,6 @@ process_definition::get_footprint(
 					footprint_map.arity() << endl;
 			);
 		}
-#else
-		INVARIANT(p->size() == footprint_map.arity());
-#endif
 		return footprint_map[*p];
 	} else {
 		return footprint_map.only();

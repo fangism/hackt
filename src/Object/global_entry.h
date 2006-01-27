@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.7 2006/01/22 18:19:09 fang Exp $
+	$Id: global_entry.h,v 1.8 2006/01/27 08:07:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -263,7 +263,7 @@ struct global_entry_common {
 	 */
 	size_t		local_offset;
 
-	global_entry_common() : parent_tag_value(0), parent_id(0),
+	global_entry_common() : parent_tag_value(TYPE_NONE), parent_id(0),
 			local_offset(0) { }
 };	// end struct global_entry_common
 
@@ -277,15 +277,6 @@ struct global_entry_common {
  */
 class production_rule_substructure {
 public:
-#if 0
-	// need a pool for rules
-	// and a pool for sub-expressions, just like PRS::footprint
-	template <class Tag>
-	static
-	void
-	cflat_prs(ostream&, const global_entry<Tag>&, const footprint&,
-		const cflat_options&, const state_manager&);
-#endif
 
 	template <class Tag>
 	static

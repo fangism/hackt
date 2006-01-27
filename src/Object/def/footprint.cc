@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.7 2005/12/13 04:15:20 fang Exp $
+	$Id: footprint.cc,v 1.8 2006/01/27 08:07:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -65,9 +65,10 @@ footprint_base<Tag>::__allocate_global_state(state_manager& sm) const {
 	for ( ; i!=e; i++) {
 		const size_t j = sm.template allocate<Tag>();
 		global_entry<Tag>& g(sm.template get_pool<Tag>()[j]);
-		g.parent_tag_value = 0;
+		g.parent_tag_value = TYPE_NONE;
 		/***
-			The parent_tag_value is
+			The parent_tag_value is one of the enumerations
+			in "Object/traits/type_tag_enum.h"
 		***/
 		g.parent_id = 0;
 		g.local_offset = j;

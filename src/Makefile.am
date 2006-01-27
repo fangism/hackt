@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.94 2006/01/25 20:26:01 fang Exp $
+#	$Id: Makefile.am,v 1.95 2006/01/27 08:07:13 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -498,7 +498,8 @@ MAIN_EXEC_CC_FILES = \
 	main/dump_persistent_table.cc \
 	main/objdump.cc \
 	main/shell.cc \
-	main/version.cc
+	main/version.cc \
+	main/chpsim.cc
 
 MAIN_EXEC_TCC_FILES = \
 	main/options_modifier.tcc \

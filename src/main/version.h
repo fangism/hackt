@@ -1,11 +1,11 @@
 /**
 	\file "main/version.h"
 	Interface header for version module.  
-	$Id: version.h,v 1.4 2005/12/13 04:15:48 fang Exp $
+	$Id: version.h,v 1.5 2006/01/27 08:07:22 fang Exp $
  */
 
-#ifndef	__MAIN_VERSION_H__
-#define	__MAIN_VERSION_H__
+#ifndef	__HAC_MAIN_VERSION_H__
+#define	__HAC_MAIN_VERSION_H__
 
 #include <iosfwd>
 #include "main/hackt_fwd.h"
@@ -84,5 +84,5 @@ public:
 //=============================================================================
 }	// end namespace HAC
 
-#endif	// __MAIN_VERSION_H__
+#endif	// __HAC_MAIN_VERSION_H__
 

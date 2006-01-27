@@ -5,6 +5,23 @@
 
 2006-01-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76.2:
+	  By popular demand, support for user-defined datatype instances
+		has been enabled.  Code additions in canonical_types
+		(specializations), state_manager, user_def_datatype.
+		This has NOT been thoroughly tested yet.  
+		NOTE: this resulted in enlargine the binary size for
+		data_definition classes by 8B, because of the
+		footprint_manager's minimum size.  
+		Tons of unroll/create tests have been updated accordingly.  
+	  Added skeleton main/chpsim.{h,cc} for getting started.  
+	  main/*.h headers inclusion protection macros prepended with __HAC
+	  Enumerations in Object/traits/type_tag_enum.h were prefixed
+		with TYPE_.  (still may not be clear where they come from.
+	  TOOO: test-cases for user-defined datatypes.  
+	  TODO: channel instance support.
+
+
 	* HACKT-00-01-04-main-00-76.1:
 	  Grammar addition to allow definition bodies inside datatype
 		and channel definitions.  

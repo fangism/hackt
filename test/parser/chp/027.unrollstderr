@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	52
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	11	##ADDR##	chancoll	0	#HEAD#	#TAIL#	56

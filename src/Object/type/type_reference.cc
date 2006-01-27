@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.8 2006/01/26 21:33:26 fang Exp $
+ 	$Id: type_reference.cc,v 1.9 2006/01/27 08:07:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -539,9 +539,13 @@ data_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Static helper function.
+ */
 void
 data_type_reference::unroll_port_instances(
 		const never_ptr<const definition_type> def, 
+		const template_actuals& ta, 
 		const unroll_context& c, subinstance_manager& sub) {
 	if (def == &bool_traits::built_in_definition) {
 		// do nothing!
@@ -551,7 +555,24 @@ data_type_reference::unroll_port_instances(
 	} else if (def.is_a<const enum_datatype_def>()) {
 		// do nothing
 	} else {
-		FINISH_ME(Fang);
+	// copied from process_type_reference::unroll_port_instances
+	// didn't scrutinze or check...
+	STACKTRACE_VERBOSE;
+	const never_ptr<const user_def_datatype>
+		data_def(def.is_a<const user_def_datatype>());
+	NEVER_NULL(data_def);
+	const port_formals_manager& port_formals(data_def->get_port_formals());
+	{
+		STACKTRACE("local context");
+		const template_actuals
+			resolved_template_args(ta.unroll_resolve(c));
+		const unroll_context
+			cc(resolved_template_args, 
+				data_def->get_template_formals_manager());
+		// should the contexts be chained?
+		// or can the actuals always be resolved one scope at a time?
+		port_formals.unroll_ports(cc, sub);
+	}
 	}
 }
 
@@ -563,7 +584,9 @@ data_type_reference::unroll_port_instances(
 void
 data_type_reference::unroll_port_instances(const unroll_context& c,
 		subinstance_manager& sub) const {
-	unroll_port_instances(base_type_def, c, sub);
+	INVARIANT(is_resolved());
+	INVARIANT(is_canonical());
+	unroll_port_instances(base_type_def, template_args, c, sub);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -640,11 +663,21 @@ data_type_reference::load_object(const persistent_object_manager& m,
 void
 data_type_reference::intercept_builtin_definition_hack(
 		const persistent_object_manager& m, definition_ptr_type& d) {
-	// MINOR HACK: shallow recursion and intercept built-in types
+	STACKTRACE_VERBOSE;
+	// MAJOR HACK: shallow recursion and intercept built-in types
 	// TODO: ALERT!!! case where base_type_def is a typedef alias?
 	NEVER_NULL(d);
-	m.load_object_once(
-		const_cast<datatype_definition_base*>(&*d));
+#if 0
+	const never_ptr<const user_def_datatype>
+		udd(d.is_a<const user_def_datatype>());
+	if (udd) {
+		m.load_object_once(const_cast<user_def_datatype*>(&*udd));
+	} else {
+		m.load_object_once(const_cast<datatype_definition_base*>(&*d));
+	}
+#else
+	m.load_object_once(const_cast<datatype_definition_base*>(&*d));
+#endif
 	if (d->get_key() == "bool") {
 		m.please_delete(&*d);			// HACKERY
 		d = never_ptr<const datatype_definition_base>(

@@ -1,11 +1,11 @@
 /**
 	\file "main/hackt.h"
 	Header for the interface to the main program.  
-	$Id: hackt.h,v 1.2 2005/12/13 04:15:47 fang Exp $
+	$Id: hackt.h,v 1.3 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_HACKT_H__
-#define	__MAIN_HACKT_H__
+#ifndef	__HAC_MAIN_HACKT_H__
+#define	__HAC_MAIN_HACKT_H__
 
 #include <iosfwd>
 #include "main/hackt_fwd.h"
@@ -66,6 +66,6 @@ private:
 //=============================================================================
 }	// end namespace HAC
 
-#endif	// __MAIN_HACKT_H__
+#endif	// __HAC_MAIN_HACKT_H__
 
 

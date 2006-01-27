@@ -1,11 +1,11 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.6 2006/01/22 06:53:10 fang Exp $
+	$Id: cflat.h,v 1.7 2006/01/27 08:07:20 fang Exp $
  */
 
-#ifndef	__MAIN_CFLAT_H__
-#define	__MAIN_CFLAT_H__
+#ifndef	__HAC_MAIN_CFLAT_H__
+#define	__HAC_MAIN_CFLAT_H__
 
 #include <iosfwd>
 #include "main/hackt_fwd.h"
@@ -81,5 +81,5 @@ private:
 //=============================================================================
 }	// end namespace HAC
 
-#endif	// __MAIN_CFLAT_H__
+#endif	// __HAC_MAIN_CFLAT_H__
 

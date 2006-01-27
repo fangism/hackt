@@ -1,11 +1,11 @@
 /**
 	\file "main/compile.h"
 	Interface header for compile module.  
-	$Id: compile.h,v 1.4 2005/12/13 04:15:46 fang Exp $
+	$Id: compile.h,v 1.5 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_COMPILE_H__
-#define	__MAIN_COMPILE_H__
+#ifndef	__HAC_MAIN_COMPILE_H__
+#define	__HAC_MAIN_COMPILE_H__
 
 #include "main/hackt_fwd.h"
 #include "util/boolean_types.h"
@@ -59,5 +59,5 @@ private:
 //=============================================================================
 }	// end namespace HAC
 
-#endif	// __MAIN_COMPILE_H__
+#endif	// __HAC_MAIN_COMPILE_H__
 

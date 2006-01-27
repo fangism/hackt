@@ -1,11 +1,11 @@
 /**
 	\file "main/prsobjdemo.h"
 	Interface header for prsobjdemo module.  
-	$Id: prsobjdemo.h,v 1.3 2005/12/13 04:15:48 fang Exp $
+	$Id: prsobjdemo.h,v 1.4 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_PRSOBJDEMO_H__
-#define	__MAIN_PRSOBJDEMO_H__
+#ifndef	__HAC_MAIN_PRSOBJDEMO_H__
+#define	__HAC_MAIN_PRSOBJDEMO_H__
 
 #include "main/hackt_fwd.h"
 
@@ -48,5 +48,5 @@ private:
 
 }	// end namespace HAC
 
-#endif	// __MAIN_PRSOBJDEMO_H__
+#endif	// __HAC_MAIN_PRSOBJDEMO_H__
 

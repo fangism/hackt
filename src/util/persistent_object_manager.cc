@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.26 2006/01/22 06:53:35 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.27 2006/01/27 08:07:22 fang Exp $
  */
 
 // flags and switches
@@ -18,6 +18,7 @@
 #include "util/persistent_object_manager.tcc"	// for read_pointer
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
+#include "util/memory/excl_array_ptr.h"
 #include "util/macros.h"
 #include "util/IO_utils.tcc"
 #include "util/sstream.h"
@@ -118,6 +119,7 @@ using std::stringstream;
 using std::stringbuf;
 using std::streamsize;
 using std::ostringstream;
+using util::memory::excl_array_ptr;
 
 //=============================================================================
 /**
@@ -963,6 +965,9 @@ persistent_object_manager::finish_write(ofstream& f) {
 		NEVER_NULL(sb);
 		const int size = sb->in_avail();	// characters available
 		INVARIANT(size == e.tail_pos() -e.head_pos());
+#if 0
+		cerr << "entry " << i << " wrote " << size << " bytes." << endl;
+#endif
 		const string str(sb->str());
 		f.write(str.c_str(), size);
 	}
@@ -1041,11 +1046,13 @@ persistent_object_manager::finish_load(ifstream& f) {
 		} else {
 			// larger streams will require more temporary space
 			// consider alloca
-			char* cbuf = new char [size];
+			// or valarray<char>
+			const excl_array_ptr<char>::type
+				cbuf(new char [size]);
 			INVARIANT(cbuf);
-			f.read(cbuf, size);
-			o.write(cbuf, size);
-			delete [] cbuf;
+			f.read(&*cbuf, size);
+			o.write(&*cbuf, size);
+			// will automatically delete []
 		}
 #else
 		// or block-copy in chunks...

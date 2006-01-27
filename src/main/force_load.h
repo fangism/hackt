@@ -1,11 +1,11 @@
 /**
 	\file "main/force_load.h"
 	Interface for forcing loading of modules at load time.  
-	$Id: force_load.h,v 1.2 2005/12/13 04:15:47 fang Exp $
+	$Id: force_load.h,v 1.3 2006/01/27 08:07:21 fang Exp $
  */
 
-#ifndef	__MAIN_FORCE_LOAD_H__
-#define	__MAIN_FORCE_LOAD_H__
+#ifndef	__HAC_MAIN_FORCE_LOAD_H__
+#define	__HAC_MAIN_FORCE_LOAD_H__
 
 namespace HAC {
 
@@ -15,5 +15,5 @@ force_load(void);
 
 }	// end namespace HAC
 
-#endif	// __MAIN_FORCE_LOAD_H__
+#endif	// __HAC_MAIN_FORCE_LOAD_H__
 

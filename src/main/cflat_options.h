@@ -1,10 +1,10 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.6 2006/01/25 20:26:04 fang Exp $
+	$Id: cflat_options.h,v 1.7 2006/01/27 08:07:20 fang Exp $
  */
 
-#ifndef	__MAIN_CFLAT_OPTIONS_H__
-#define	__MAIN_CFLAT_OPTIONS_H__
+#ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
+#define	__HAC_MAIN_CFLAT_OPTIONS_H__
 
 namespace HAC {
 
@@ -123,5 +123,5 @@ public:
 
 }	// end namespace HAC
 
-#endif	// __MAIN_CFLAT_OPTIONS_H__
+#endif	// __HAC_MAIN_CFLAT_OPTIONS_H__
 
