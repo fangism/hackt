@@ -27,7 +27,7 @@
 		and channel definitions.  
 	  Also added type-restrictions in parser_context::add_instance()
 		and some query methods to fundamental_type_reference's
-		clss hieararchy.  
+		class hieararchy.  
 	  TODO: test-cases.
 
 
