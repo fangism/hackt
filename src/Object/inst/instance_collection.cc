@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.13 2006/01/27 08:07:18 fang Exp $
+ 	$Id: instance_collection.cc,v 1.13.2.1 2006/01/27 23:04:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -225,12 +225,31 @@ instance_collection_base::dump_qualified_name(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: reincarnate the whole dumping system.  
+	I'm sick of these dirty little patches...
+ */
 ostream&
 instance_collection_base::dump_qualified_name(ostream& o, 
 		const dump_flags& df) const {
-	if (owner && df.show_owner)
+	if (owner && df.show_definition_owner) {
+#if 1
 		return owner->dump_qualified_name(o, df) << "::" << key;
-	else	return o << key;
+
+#else
+#if 0
+		if (df.show_leading_scope || !owner->is_global_namespace()) {
+			return owner->dump_qualified_name(o, df) << "::" << key;
+		} else {
+			// owner is global namespace
+			// what if owner is a template definition
+			// the complete type of a footprint?
+			// return o << owner->get_key() << "::" << key;
+			return o << key;
+		}
+#endif
+#endif
+	} else	return o << key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

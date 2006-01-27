@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.9 2006/01/22 18:20:05 fang Exp $
+	$Id: instance_alias.tcc,v 1.9.4.1 2006/01/27 23:04:25 fang Exp $
 	TODO: trim includes
  */
 
@@ -859,7 +859,7 @@ INSTANCE_ALIAS_INFO_CLASS::cflat_aliases(
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->valid());
 	ostringstream os;
-	dump_hierarchical_name(os, dump_flags::no_owner);
+	dump_hierarchical_name(os, dump_flags::no_definition_owner);
 	const string& local_name(os.str());
 	// construct new prefix from os
 	cflat_aliases_arg_type sc(c);

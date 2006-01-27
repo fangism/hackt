@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.6 2006/01/25 20:26:02 fang Exp $
+	$Id: PRS_footprint.cc,v 1.6.2.1 2006/01/27 23:04:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -81,7 +81,7 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			INVARIANT(one == 1);
 			np[e.only()].get_back_ref()
 				->dump_hierarchical_name(o,
-					dump_flags::no_owner);
+					dump_flags::no_definition_owner);
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
 #if STACKTRACE_DUMPS
@@ -132,7 +132,7 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 	dump_expr(ep[r.expr_index],
 		o, np, ep, PRS_LITERAL_TYPE_ENUM) << " -> ";
 	np[r.output_index].get_back_ref()
-		->dump_hierarchical_name(o, dump_flags::no_owner);
+		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
 	return o << (r.dir ? '+' : '-');
 }
 
@@ -147,10 +147,11 @@ footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
 	const_iterator i(m.begin());
 	const const_iterator e(m.end());
 	INVARIANT(i!=e);
-	np[*i].get_back_ref()->dump_hierarchical_name(o, dump_flags::no_owner);
+	np[*i].get_back_ref()->dump_hierarchical_name(o,
+		dump_flags::no_definition_owner);
 	for (++i; i!=e; ++i) {
 		np[*i].get_back_ref()->dump_hierarchical_name(
-			o << ',', dump_flags::no_owner);
+			o << ',', dump_flags::no_definition_owner);
 	}
 	return o << ')';
 }

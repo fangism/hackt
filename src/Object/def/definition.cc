@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.13 2006/01/27 08:07:17 fang Exp $
+ 	$Id: definition.cc,v 1.13.2.1 2006/01/27 23:04:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -355,7 +355,7 @@ definition_base::get_qualified_name(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 definition_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
 	if (parent)
@@ -841,7 +841,7 @@ user_def_chan::get_qualified_name(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_chan::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	if (parent)
 		parent->dump_qualified_name(o, df);
 	return o << scope << key;
@@ -1644,7 +1644,7 @@ enum_datatype_def::get_qualified_name(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	if (parent)
 		parent->dump_qualified_name(o, df);
 	return o << scope << key;
@@ -1961,7 +1961,7 @@ user_def_datatype::get_qualified_name(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	if (parent)
 		parent->dump_qualified_name(o, df);
 	return o << scope << key;
@@ -2666,7 +2666,7 @@ process_definition::get_qualified_name(void) const {
 ostream&
 process_definition::dump_qualified_name(ostream& o,
 		const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	return parent->dump_qualified_name(o, df) << scope << key;
 } else	return o;
 }

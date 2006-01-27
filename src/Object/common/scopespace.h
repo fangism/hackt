@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.8 2006/01/22 18:19:25 fang Exp $
+	$Id: scopespace.h,v 1.8.4.1 2006/01/27 23:04:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -214,6 +214,10 @@ virtual	ostream&
 
 virtual never_ptr<const scopespace>
 	get_parent(void) const = 0;
+
+// horrible temporary hack:
+virtual	bool
+	is_global_namespace(void) const;
 
 	const_map_iterator
 	id_map_begin(void) const { return used_id_map.begin(); }

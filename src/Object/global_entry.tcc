@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.9 2006/01/27 08:07:17 fang Exp $
+	$Id: global_entry.tcc,v 1.9.2.1 2006/01/27 23:04:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -394,8 +394,13 @@ template <class Tag>
 ostream&
 global_entry<Tag>::dump_canonical_name(ostream& o,
 		const footprint& topfp, const state_manager& sm) const {
-	return __dump_canonical_name(o, dump_flags::no_owner,
+#if 0
+	return __dump_canonical_name(o, dump_flags::no_definition_owner,
 		topfp, sm);
+#else
+	return __dump_canonical_name(o, dump_flags::no_leading_scope,
+		topfp, sm);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

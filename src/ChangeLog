@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-01:
+	  This branch was initiated for the sole purpose of cleaning up 
+		the dump routines in the defininition/namespace/instance
+		hierarchy once and for all (at least until another major
+		rewrite).  Most revisions will revolve around the
+		use of the entity::dump_flags structure.  
+	  This first revision didn't change any behavior, but added some
+		fields to dump_flags in preparation for changes.  
+
+
 2006-01-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76.2:
