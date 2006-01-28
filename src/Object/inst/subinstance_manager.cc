@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.11 2006/01/25 05:35:40 fang Exp $
+	$Id: subinstance_manager.cc,v 1.12 2006/01/28 18:21:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0

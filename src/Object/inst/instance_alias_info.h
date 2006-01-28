@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.10 2006/01/22 18:20:05 fang Exp $
+	$Id: instance_alias_info.h,v 1.11 2006/01/28 18:21:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -192,6 +192,9 @@ public:
 	// really shouldn't be const...
 	size_t
 	allocate_state(footprint&) const;
+
+	void
+	force_update_index(const size_t);
 
 private:
 	// want to allow instance_collection<> to call this directly

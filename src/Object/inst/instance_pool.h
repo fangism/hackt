@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.7 2006/01/22 18:20:06 fang Exp $
+	$Id: instance_pool.h,v 1.8 2006/01/28 18:21:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -13,6 +13,17 @@
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/index_pool.h"
+
+/**
+	Whether or not to apply the quick and dirty hack to
+	fix a critical bug.  
+ */
+#define	INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST	1
+
+
+#if	INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+#include <queue>	// for std::priority_queue
+#endif
 
 namespace HAC {
 namespace entity {
@@ -28,6 +39,13 @@ using util::memory::index_pool;
 	Wrapped interface to list_vector being used as an indexable pool, 
 	intended for use of pseudo-allocating instances.  
 	Consider adding this as an index_vector_pool to the util library.  
+
+	(20060126: fangism)
+		Due to a critical ICE in the create_unique index allocation, 
+	we need to support deallocation for back-patching a botched
+	algorithm.  (This is NOT the way I prefer to handle it, but
+	delivery time is critical.)
+	TODO: Go back and revisit the algorithm.  
  */
 template <class T>
 class instance_pool : private index_pool<util::list_vector<T> > {
@@ -36,7 +54,14 @@ class instance_pool : private index_pool<util::list_vector<T> > {
 	typedef	typename T::tag_type		tag_type;
 public:
 	typedef	typename parent_type::const_iterator	const_iterator;
-//	typedef	typename parent_type::iterator		iterator;
+	typedef	typename parent_type::size_type		size_type;
+	typedef	typename parent_type::value_type	value_type;
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	typedef	typename parent_type::iterator		iterator;
+private:
+	typedef	std::priority_queue<size_type>		free_list_type;
+	free_list_type					free_list;
+#endif
 private:
 	/**
 		Default chunk size when not specified.  
@@ -47,7 +72,7 @@ public:
 	instance_pool();
 
 	explicit
-	instance_pool(const size_t);
+	instance_pool(const size_type);
 
 	// copy-construction policy
 	instance_pool(const this_type&);
@@ -58,7 +83,29 @@ public:
 	using parent_type::begin;
 	using parent_type::end;
 	using parent_type::operator[];
+
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	size_type
+	allocate(void);
+
+	size_type
+	allocate(const value_type&);
+
+	void
+	deallocate(const size_type);
+
+	// dirty, dirty hack :( called by definition::create_complete...
+	void
+	compact(void);
+
+private:
+	// as long as underlying type support this operation
+	using parent_type::array_type::pop_back;
+
+public:
+#else
 	using parent_type::allocate;
+#endif
 
 	// there is no deallocate
 

@@ -1,16 +1,24 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.5 2006/01/22 18:20:04 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.6 2006/01/28 18:21:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
 #define	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
 
+#ifndef	ENABLE_STACKTRACE
+#define	ENABLE_STACKTRACE		0
+#endif
+
 #include <iosfwd>
 #include "Object/type/canonical_type.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
+
+#if	ENABLE_STACKTRACE
+#include "util/stacktrace.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -70,7 +78,16 @@ protected:
 
 public:
 	const instance_collection_parameter_type&
-	get_canonical_type(void) const { return this->type_parameter; }
+	get_canonical_type(void) const {
+#if ENABLE_STACKTRACE
+		const instance_collection_parameter_type&
+			ret(this->type_parameter);
+		ret.dump(STACKTRACE_INDENT << "canonical type: ") << endl;
+		return ret;
+#else
+		return this->type_parameter;
+#endif
+	}
 
 	bool
 	is_relaxed_type(void) const;

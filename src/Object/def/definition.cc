@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.13 2006/01/27 08:07:17 fang Exp $
+ 	$Id: definition.cc,v 1.14 2006/01/28 18:21:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2969,7 +2969,7 @@ if (defined) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Create the definition footprint fr a complete process_type.  
+	Create the definition footprint for a complete process_type.  
  */
 good_bool
 process_definition::create_complete_type(

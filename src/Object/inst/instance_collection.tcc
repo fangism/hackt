@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.13 2006/01/22 18:20:05 fang Exp $
+	$Id: instance_collection.tcc,v 1.14 2006/01/28 18:21:20 fang Exp $
 	TODO: trim includes
  */
 
@@ -58,6 +58,7 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
 #include "util/what.h"
+#include "util/wtf.h"
 #include "util/stacktrace.h"
 #include "util/static_trace.h"
 #include "util/ptrs_functional.h"
@@ -878,7 +879,7 @@ if (this->has_relaxed_type()) {
 	}
 } else {
 	// type of container is already strict, 
-	// evalueate it once and re-use it when replaying internal aliases
+	// evaluate it once and re-use it when replaying internal aliases
 	const typename parent_type::instance_collection_parameter_type
 		t(collection_type_manager_parent_type::get_canonical_type());
 	if (!create_definition_footprint(t).good)

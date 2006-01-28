@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.8 2006/01/22 18:19:32 fang Exp $
+	$Id: footprint.h,v 1.9 2006/01/28 18:21:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -69,6 +69,9 @@ protected:
 	good_bool
 	__expand_production_rules(const footprint_frame&, 
 		state_manager&) const;
+
+	void
+	__compact(void);
 
 };	// end class footprint_base
 
@@ -263,6 +266,12 @@ public:
 
 	void
 	cflat_aliases(const cflat_aliases_arg_type&) const;
+
+private:
+	// hack to backpatch instance_pool's and condense them
+	// if something went wrong during creation.  
+	void
+	compact(void);
 
 public:
 // persistent information management

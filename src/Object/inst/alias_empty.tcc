@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.5 2006/01/22 18:19:58 fang Exp $
+	$Id: alias_empty.tcc,v 1.6 2006/01/28 18:21:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -9,6 +9,7 @@
 #include <iostream>
 #include "Object/inst/alias_empty.h"
 #include "Object/common/dump_flags.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
@@ -45,6 +46,7 @@ instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef typename container_type::instance_collection_parameter_type
 				complete_type_type;
+	STACKTRACE_VERBOSE;
 	const complete_type_type
 		_type(_alias.container->get_canonical_type());
 	if (!_type) {

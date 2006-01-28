@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.8 2006/01/27 08:07:17 fang Exp $
+	$Id: footprint.cc,v 1.9 2006/01/28 18:21:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -143,6 +143,16 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	}
 	return good_bool(true);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+template <class Tag>
+void
+footprint_base<Tag>::__compact(void) {
+	STACKTRACE_VERBOSE;
+	_pool.compact();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -378,6 +388,9 @@ footprint::create_dependent_types(void) const {
 void
 footprint::evaluate_scope_aliases(void) {
 	STACKTRACE_VERBOSE;
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	compact();
+#endif
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "got " << instance_collection_map.size()
 		<< " entries." << endl;
@@ -503,6 +516,22 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 		// else is a param_value_collection, skip
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+/**
+	Re-compaction hack.  
+ */
+void
+footprint::compact(void) {
+	footprint_base<process_tag>::__compact();
+	footprint_base<channel_tag>::__compact();
+	footprint_base<datastruct_tag>::__compact();
+	footprint_base<enum_tag>::__compact();
+	footprint_base<int_tag>::__compact();
+	footprint_base<bool_tag>::__compact();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

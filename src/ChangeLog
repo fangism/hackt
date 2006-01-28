@@ -3,6 +3,36 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-3-merged-unique-03-02:
+	  Merged bug fix from -unique-03 branch (now closed).
+
+
+2006-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-unique-03-02:
+	  I seem to have fixed the unique ID allocation bug with a blatantly
+		hacked backpatch.  I'm very ashamed of this hack.
+		I can only live with this, knowing that in a future
+		rewrite, it (along with the entire unroll/create procedure)
+		will be replaced with a method described in TODO.
+		Bug case connect/128.hac defeated.  
+	  Hack code is wrapped in #if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+		from "Object/inst/instance_pool.h".
+
+
+2006-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-unique-03-01:
+	  This branch is for fixing a serious unique creation bug exhibited
+		by the reduced testcase in test/parser/connect/128.hac.
+	  This initial revision turned on debugging facilities (and should
+		not be user directly for checking).  
+	  Currently weighing options for fixing the bug, ranging from 
+		varies degrees of hacktitude.  
+
+
 2006-01-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76.2:

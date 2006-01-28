@@ -1,0 +1,33 @@
+// "128.hac"
+// contributed by Clint Kelly, reduced by Fang
+// defeated by HACKT-00-01-04-main-00-76-2-unique-03-02
+
+defproc e1of2 (bool d) { }
+defproc globals () { }
+defproc pupcopy (e1of2 r, rp) {
+	r.d = rp.d;	// THIS CAUSED ICE
+}
+defproc pand (globals g; e1of2 a) { }
+
+defproc funit() {
+globals g;
+e1of2 aa;
+e1of2 pa0;
+pupcopy a0copy(aa, pa0);
+pand lt(g, aa);	
+pand pnd(g, pa0);
+}
+
+funit X;
+
+/****
+> hackt create 128.haco-u 128-haco-c
+Internal compiler error: in util::good_bool HAC::entity::instance_alias_info<<anonymous template type parameter> >::merge_allocate_state(HAC::entity::instance_alias_info<<anonymous template type parameter> >&, HAC::entity::footprint&) [with Tag = HAC::entity::bool_tag] at Object/inst/instance_alias.tcc:555: 
+connecting two instances already assigned to different IDs: got 2 and 1
+        ::funit::pa0.d
+        ::funit::aa.d
+*** Please submit a bug report including version (hackt 0.1.4-devel-20060125),
+*** test case with steps to reproduce, and configuration, if appropriate,
+*** to <fangism@users.sourceforge.net>.  Thank you, and have a nice day.
+****/
+
