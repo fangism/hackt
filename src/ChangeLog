@@ -5,6 +5,19 @@
 
 2006-01-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-2-unique-03-02:
+	  I seem to have fixed the unique ID allocation bug with a blatantly
+		hacked backpatch.  I'm very ashamed of this hack.
+		I can only live with this, knowing that in a future
+		rewrite, it (along with the entire unroll/create procedure)
+		will be replaced with a method described in TODO.
+		Bug case connect/128.hac defeated.  
+	  Hack code is wrapped in #if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+		from "Object/inst/instance_pool.h".
+
+
+2006-01-27	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-76-2-unique-03-01:
 	  This branch is for fixing a serious unique creation bug exhibited
 		by the reduced testcase in test/parser/connect/128.hac.

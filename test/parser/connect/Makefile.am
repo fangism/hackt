@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.15.12.1 2006/01/27 23:48:01 fang Exp $
+#	$Id: Makefile.am,v 1.15.12.2 2006/01/28 09:04:18 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -28,7 +28,7 @@ HACKT_PARSE_TEST_PASSES = \
 	091 092 093 094 095 096 097 098 099 \
 	100 101 102 103 103a 104 105 106 107 108 109 \
 	110 111 112 113 114 114a 115 116 117 118 119 \
-	120 121 122 123 124 125 126 127
+	120 121 122 123 124 125 126 127 128
 
 HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
 
@@ -56,7 +56,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	092 093 094 095 099 \
 	100 102 103 104 106 107 109 \
 	111 112 113 114 114a 118 119 \
-	122 123 124 125 126 127
+	122 123 124 125 126 127 128
 
 # KNOWN BUG: 116 117: doesn't handle creation of bar
 #	because no relaxed actual is passed in as a formal parameter.
@@ -74,7 +74,7 @@ HACKT_ALLOC_TEST_SUBJECTS = \
 	078 \
 	083 084 085 \
 	111 112 113 118 119 \
-	122 123 124 125 126 127
+	122 123 124 125 126 127 128
 
 # add 031a,b later... too tired to hand-verify
 # add most CREATE tests to ALLOC tests later...
@@ -93,13 +93,13 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	078 \
 	083 084 085 \
 	111 112 113 118 119 \
-	122 123 124 125 126 127
+	122 123 124 125 126 127 128
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 032 076 077
 
 # pending test cases
-EXTRA_DIST += 128.hac
+EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

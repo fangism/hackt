@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.7.6.1 2006/01/27 23:48:00 fang Exp $
+	$Id: instance_pool.tcc,v 1.7.6.2 2006/01/28 09:04:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -17,6 +17,7 @@
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/memory/index_pool.tcc"
+#include "util/type_traits.h"
 
 namespace HAC {
 namespace entity {
@@ -32,7 +33,11 @@ using util::auto_indent;
 	so the first index returned by allocator is nonzero.  
  */
 template <class T>
-instance_pool<T>::instance_pool(const size_type s) : parent_type() {
+instance_pool<T>::instance_pool(const size_type s) : parent_type()
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	, free_list()
+#endif
+	{
 	STACKTRACE_CTOR_VERBOSE;
 #if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT << "at: " << this << endl;
@@ -47,7 +52,11 @@ instance_pool<T>::instance_pool(const size_type s) : parent_type() {
 	Default constructor, when we don't care about chunk size.  
  */
 template <class T>
-instance_pool<T>::instance_pool() : parent_type() {
+instance_pool<T>::instance_pool() : parent_type()
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	, free_list()
+#endif
+	{
 	STACKTRACE_CTOR_VERBOSE;
 #if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT << "at: " << this << endl;
@@ -59,7 +68,11 @@ instance_pool<T>::instance_pool() : parent_type() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
-instance_pool<T>::instance_pool(const this_type& t) : parent_type(t) {
+instance_pool<T>::instance_pool(const this_type& t) : parent_type(t)
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	, free_list()
+#endif
+	{
 	STACKTRACE_CTOR_VERBOSE;
 #if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT << "at: " << this << endl;
@@ -100,6 +113,112 @@ if (this->size() > 1) {
 	// else pool is empty
 	return o;
 }
+
+//-----------------------------------------------------------------------------
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+template <class T>
+typename instance_pool<T>::size_type
+instance_pool<T>::allocate(void) {
+	if (free_list.empty()) {
+		return parent_type::allocate();
+	} else {
+		const size_type ret = free_list.top();
+		free_list.pop();
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+typename instance_pool<T>::size_type
+instance_pool<T>::allocate(const value_type& v) {
+	if (free_list.empty()) {
+		return parent_type::allocate(v);
+	} else {
+		const size_type ret = free_list.top();
+		free_list.pop();
+		(*this)[ret] = v;
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre free_list does NOT already contain i.  
+ */
+template <class T>
+void
+instance_pool<T>::deallocate(const size_type i) {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "released pool index " << i << endl;
+#endif
+	free_list.push(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	20060127:
+	Hack to go through freelist and plug holes by moving
+	the tail end instances to fill them in.  
+	This operation can be potentially expensive in the worst case, 
+	but it should be rather infrequent.  
+	\post the instance_indices of the back-references of the
+		state_instances' aliases should be updated to the 
+		new index, obtained from the free list.  
+		What about canonical?
+	TODO: for efficiency, since we're using tail recursion, the
+		priority queue should be reversed.  
+		Otherwise may resort in non-minimal number of moves.  
+		Could use a std::set for this.
+ */
+template <class T>
+void
+instance_pool<T>::compact(void) {
+	STACKTRACE_VERBOSE;
+while (!free_list.empty()) {
+	const size_type free = free_list.top();
+	free_list.pop();
+//	this->compact();	// recursive solution to reverse ordering
+	const size_type _size = this->size();
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "pool size remaining = " << _size << endl;
+	STACKTRACE_INDENT << "considering free entry = " << free << endl;
+#endif
+	if (free+1 < _size) {	// +1 because is 1-indexed, 0th entry reserved
+		// the tail entry needs to be copied and updated
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "hole in instance pool as position "
+			<< free << endl;
+#endif
+		// state-instances are copy-able, 
+		// they just contain an alias pointer
+		(*this)[free] = this->back();	// copy-move
+		typedef	typename value_type::back_ref_type	alias_ptr_type;
+		const alias_ptr_type a((*this)[free].get_back_ref());
+		NEVER_NULL(a);
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "old index of alias ring is "
+			<< a->instance_index << " being replaced with "
+			<< free << endl;
+#endif
+		// will need const_cast
+		typedef	typename alias_ptr_type::element_type	alias_type;
+		typedef	typename util::remove_const<alias_type>::type	mod_type;
+		const_cast<mod_type&>(*a).force_update_index(free);
+		// will cover aliases in the ring too
+	}
+#if ENABLE_STACKTRACE
+	else {
+		STACKTRACE_INDENT << "discarding back()" << endl;
+	}
+#endif
+	// we're done using the tail entry, either copied or discarding
+	// for each free_list entry removed, we shrink-compact the array
+	this->pop_back();
+}	// else free_list is empty, nothing to be checked
+}
+#endif	// INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 
 //-----------------------------------------------------------------------------
 /**

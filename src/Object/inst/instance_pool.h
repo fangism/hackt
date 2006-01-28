@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.7.6.1 2006/01/27 23:47:59 fang Exp $
+	$Id: instance_pool.h,v 1.7.6.2 2006/01/28 09:04:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -18,7 +18,7 @@
 	Whether or not to apply the quick and dirty hack to
 	fix a critical bug.  
  */
-#define	INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST	0
+#define	INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST	1
 
 
 #if	INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
@@ -55,10 +55,12 @@ class instance_pool : private index_pool<util::list_vector<T> > {
 public:
 	typedef	typename parent_type::const_iterator	const_iterator;
 	typedef	typename parent_type::size_type		size_type;
+	typedef	typename parent_type::value_type	value_type;
 #if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 	typedef	typename parent_type::iterator		iterator;
-	typedef	std::priority_queue<size_type>		free_list_type;
 private:
+	typedef	std::priority_queue<size_type>		free_list_type;
+	free_list_type					free_list;
 #endif
 private:
 	/**
@@ -86,12 +88,21 @@ public:
 	size_type
 	allocate(void);
 
+	size_type
+	allocate(const value_type&);
+
 	void
 	deallocate(const size_type);
 
-	// dirty, dirty hack :(
+	// dirty, dirty hack :( called by definition::create_complete...
 	void
 	compact(void);
+
+private:
+	// as long as underlying type support this operation
+	using parent_type::array_type::pop_back;
+
+public:
 #else
 	using parent_type::allocate;
 #endif

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.11 2006/01/22 06:52:52 fang Exp $
+#	$Id: TODO,v 1.11.6.1 2006/01/28 09:04:11 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -22,6 +22,20 @@ Simulation:
 		may use it's own and temporarily save away the previous
 		counter.  
 	
+
+===============================================================================
+complete type creation: (20060128)
+	The algorithm for hierarhical ID allocation is horked.
+	The business with ring_nodes is not bullet proof and 
+		prone to mistakes, as it is difficult to reason about
+		correctness and completeness.
+	Proposal: COMPLETE rewite unroll and create to use a union-find
+		path compression approach to allocating unique IDs.
+		The style makes it easy and efficient to combine alias sets, 
+		is on the average less expensive than ring maintainence, 
+		although, it will no longer be easy to iterate
+		over rings of aliases.  
+	Consider doing this at the time of major rewrite...
 
 ===============================================================================
 loop development:

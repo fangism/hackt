@@ -1,10 +1,11 @@
 // "128.hac"
 // contributed by Clint Kelly, reduced by Fang
+// defeated by HACKT-00-01-04-main-00-76-2-unique-03-02
 
 defproc e1of2 (bool d) { }
 defproc globals () { }
 defproc pupcopy (e1of2 r, rp) {
-	r.d = rp.d;	// THIS CAUSES ICE
+	r.d = rp.d;	// THIS CAUSED ICE
 }
 defproc pand (globals g; e1of2 a) { }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.7 2006/01/22 18:20:12 fang Exp $
+	$Id: state_instance.h,v 1.7.6.1 2006/01/28 09:04:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -43,8 +43,8 @@ class state_instance {
 	typedef	STATE_INSTANCE_CLASS		this_type;
 	typedef	typename class_traits<Tag>::instance_alias_info_type
 						alias_info_type;
-	typedef	never_ptr<const alias_info_type>	back_ref_type;
 public:
+	typedef	never_ptr<const alias_info_type>	back_ref_type;
 	typedef	Tag				tag_type;
 private:
 	back_ref_type				back_ref;

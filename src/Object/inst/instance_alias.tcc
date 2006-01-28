@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.9.6.1 2006/01/27 23:47:58 fang Exp $
+	$Id: instance_alias.tcc,v 1.9.6.2 2006/01/28 09:04:15 fang Exp $
 	TODO: trim includes
  */
 
@@ -543,6 +543,7 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 #if 1
 			if (ind != tind) {
 			typedef	typename instance_type::pool_type pool_type;
+#if !INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 			const pool_type& the_pool(f.template get_pool<Tag>());
 			ICE(cerr, 
 				cerr << "connecting two instances already "
@@ -555,8 +556,35 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 					->dump_hierarchical_name(cerr << '\t')
 					<< endl;
 			)
-			}
 #else
+			// HACK: back patching... I'm sorry...
+			pool_type& the_pool(f.template get_pool<Tag>());
+#if ENABLE_STACKTRACE
+			cerr << "WARNING: Fang used a dirty hack to back-patch "
+				"the indices of already-assigned aliases."
+				<< endl;
+			the_pool[ind].get_back_ref()
+				->dump_hierarchical_name(cerr << '\t') << endl;
+			the_pool[tind].get_back_ref()
+				->dump_hierarchical_name(cerr << '\t') << endl;
+#endif
+			if (ind < tind) {
+				const_cast<this_type&>(
+					*the_pool[tind].get_back_ref())
+					.force_update_index(ind);
+				t.force_update_index(ind);
+				the_pool.deallocate(tind);
+			} else {
+				const_cast<this_type&>(
+					*the_pool[ind].get_back_ref())
+					.force_update_index(tind);
+				this->force_update_index(tind);
+				the_pool.deallocate(ind);
+			}
+			// need to recurse through subinstances?
+#endif	// INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+			}
+#else	// just assert
 			INVARIANT(ind == tind);
 #endif
 		} else {
@@ -943,6 +971,29 @@ INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
 	}
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+/**
+	20060127:
+	Dirty hack to update the instance_index.
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::force_update_index(const size_t ind) {
+	STACKTRACE_VERBOSE;
+	iterator i(this->begin());
+	const iterator e(this->end());
+	for (; i!=e; ++i) {
+#if ENABLE_STACKTRACE
+		i->dump_hierarchical_name(STACKTRACE_INDENT) <<
+			" force change from " << i->instance_index
+			<< " to " << ind << endl;
+#endif
+		i->instance_index = ind;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
