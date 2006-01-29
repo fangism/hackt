@@ -102,8 +102,8 @@ In namespace "", we have: {
 
         out = bool<> out
       prs:
-        (&:i:[0..N-1]: in[i]) -> out-
-        (&:i:[0..N-1]: ~in[i]) -> out+
+        (&:i:[0..N-1]: in[$i]) -> out-
+        (&:i:[0..N-1]: ~in[$i]) -> out+
       footprint collection: {
         <2> {
           bool^0 out (instantiated) = ::celem::out 

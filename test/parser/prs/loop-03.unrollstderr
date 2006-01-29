@@ -129,8 +129,8 @@ In namespace "", we have: {
 
       prs:
         (:i:[0..N-1]:
-          (|:j:[0..i-1]: (&:k:[0..j-1]: in[i][j][k])) -> _out-
-          (&:j:[0..i-1]: (|:k:[0..j-1]: ~in[N-i][N-j][N-k])) -> _out+
+          (|:j:[0..$i-1]: (&:k:[0..$j-1]: in[$i][$j][$k])) -> _out-
+          (&:j:[0..$i-1]: (|:k:[0..$j-1]: ~in[N-$i][N-$j][N-$k])) -> _out+
         )
       footprint collection: {
         <3> {

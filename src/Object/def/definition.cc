@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.13.2.2 2006/01/29 04:42:29 fang Exp $
+ 	$Id: definition.cc,v 1.13.2.3 2006/01/29 21:47:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -816,6 +816,7 @@ user_def_chan::dump(ostream& o) const {
 	{
 		scopespace::dump_for_definitions(o);
 		// CHP
+		// TODO: sequential scope dump
 		if (!send_chp.empty()) {
 			o << auto_indent << "send-CHP:" << endl;
 			INDENT_SECTION(o);
@@ -1932,6 +1933,7 @@ user_def_datatype::dump(ostream& o) const {
 		"In datatype definition \"" << key << "\", we have: {" << endl;
 	{
 		scopespace::dump_for_definitions(o);
+		// TODO: sequential_scope dump
 		// CHP
 		if (!set_chp.empty()) {
 			o << auto_indent << "set-CHP:" << endl;
@@ -2635,6 +2637,7 @@ process_definition::dump(ostream& o) const {
 	{	// begin indent level
 		scopespace::dump_for_definitions(o);
 		if (defined) {
+			// TODO sequential_scope dump
 			// PRS
 			if (!prs.empty()) {
 				o << auto_indent << "prs:" << endl;

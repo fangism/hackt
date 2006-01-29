@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-03:
+	  Minor change to printing references to induction variables, 
+		dumps now show them with '$' instead of scope names, 
+		which is more meaningful and readable.  
+	  Bunch of tests dumps updated accordingly.  
+	  TODO: definition-local sequential instance management dumps.  
+
+
 2006-01-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-2-fixdump-02:

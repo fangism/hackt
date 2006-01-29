@@ -433,7 +433,7 @@ In namespace "", we have: {
         }
 
         ce = dcelm<> ce with indices: {
-          [::lut::b..::lut::b]
+          [$b..$b]
         }
 
         d = ch1of<16> d

@@ -87,9 +87,9 @@ In namespace "", we have: {
         }
 
       prs:
-        (&:i:[0..N-1]: in[i]) -> _out-
+        (&:i:[0..N-1]: in[$i]) -> _out-
         (:i:[0..N-1]:
-          ~in[i] -> _out+
+          ~in[$i] -> _out+
         )
       footprint collection: {
         <4> {

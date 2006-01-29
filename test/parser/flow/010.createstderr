@@ -48,7 +48,7 @@ In namespace "", we have: {
     N = pint^0 N (init = 3) value: 3
   Instances:
     x = bool^3 x with indices: {
-      [::i..::i][::j..::j][::k..::k]
+      [$i..$i][$j..$j][$k..$k]
     }
       unrolled indices: {
         [0][0][0] = ::x[0][0][0] (1) 

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.9.4.1 2006/01/27 23:04:27 fang Exp $
+ 	$Id: instance_reference.cc,v 1.9.4.2 2006/01/29 21:47:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -663,6 +663,7 @@ simple_meta_instance_reference_base::dump(ostream& o,
 	// depend on c.enclosing_scope?
 	const never_ptr<const instance_collection_base>
 		ib(get_inst_base());
+	NEVER_NULL(ib);
 	if (c.enclosing_scope) {
 		ib->dump_hierarchical_name(o, dump_flags::no_definition_owner);
 	} else {

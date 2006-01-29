@@ -183,7 +183,7 @@ In namespace "", we have: {
       Instances:
         ad = ch1of<4> ad
         ce = dcelm<> ce with indices: {
-          [::lut::b..::lut::b]
+          [$b..$b]
         }
 
       footprint: {

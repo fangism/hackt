@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.13.2.2 2006/01/29 04:42:32 fang Exp $
+ 	$Id: instance_collection.cc,v 1.13.2.3 2006/01/29 21:47:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -237,20 +237,9 @@ instance_collection_base::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// not needed
-ostream&
-instance_collection_base::dump_qualified_name(ostream& o) const {
-	if (owner) {
-		owner->dump_qualified_name(o, 
-			dump_flags::default_value) << "::";
-	}
-	return o << key;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: reincarnate the whole dumping system.  
-	I'm sick of these dirty little patches...
+	We catch a special case: when we refer to induction variables, 
+	we drop any qualifiers.  
  */
 ostream&
 instance_collection_base::dump_qualified_name(ostream& o, 
@@ -261,7 +250,13 @@ instance_collection_base::dump_qualified_name(ostream& o,
 		(df.show_leading_scope ? "(::)]" : "]");
 #endif
 if (owner) {
-	if (owner.is_a<const definition_base>() &&
+	const param_value_collection* const
+		p(IS_A(const param_value_collection*, this));
+	if (p && p->is_loop_variable()) {
+		// nothing, just print the plain key
+		// maybe '$' to indicate variable?
+		o << '$';
+	} else if (owner.is_a<const definition_base>() &&
 			df.show_definition_owner) {
 		owner->dump_qualified_name(o, df) << "::";
 	} else if (owner.is_a<const name_space>() &&
