@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.13 2006/01/22 18:20:05 fang Exp $
+	$Id: instance_collection.tcc,v 1.13.4.1 2006/01/29 04:42:33 fang Exp $
 	TODO: trim includes
  */
 
@@ -192,11 +192,12 @@ public:
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 struct INSTANCE_ARRAY_CLASS::key_dumper {
 	ostream& os;
+	const dump_flags& df;
 
-	key_dumper(ostream& o) : os(o) { }
+	key_dumper(ostream& o, const dump_flags& _df) : os(o), df(_df) { }
 
 	ostream&
-	operator () (const value_type& );
+	operator () (const value_type&);
 };      // end struct key_dumper
 
 //=============================================================================
@@ -446,9 +447,15 @@ INSTANCE_ARRAY_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 ostream&
-INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o) const {
+INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
+		const dump_flags& df) const {
+#if 0
+	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
+		(df.show_namespace_owner ? "(ns) " : " ") <<
+		(df.show_leading_scope ? "(::)]" : "]");
+#endif
 	for_each(this->collection.begin(), this->collection.end(),
-		key_dumper(o));
+		key_dumper(o, df));
 	return o;
 }
 
@@ -462,10 +469,10 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 		p.dump_actuals(os);
 	os << " = ";
 	NEVER_NULL(p.get_next());
-	p.get_next()->dump_hierarchical_name(os);
+	p.get_next()->dump_hierarchical_name(os, df);
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
-	p.dump_ports(os << ' ');
+	p.dump_ports(os << ' ', df);
 	return os << endl;
 }
 
@@ -1197,16 +1204,22 @@ INSTANCE_SCALAR_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 ostream&
-INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o) const {
+INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o,
+		const dump_flags& df) const {
 	// no auto-indent, continued on same line
 	// see physical_instance_collection::dump for reason why
 	if (this->the_instance.container->has_relaxed_type()) {
 		this->the_instance.dump_actuals(o);
 	}
-	this->the_instance.get_next()->dump_hierarchical_name(o << " = ");
+#if 0
+	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
+		(df.show_namespace_owner ? "(ns) " : " ") <<
+		(df.show_leading_scope ? "(::)]" : "]");
+#endif
+	this->the_instance.get_next()->dump_hierarchical_name(o << " = ", df);
 	if (this->the_instance.instance_index)
 		o << " (" << this->the_instance.instance_index << ')';
-	this->the_instance.dump_ports(o << ' ');
+	this->the_instance.dump_ports(o << ' ', df);
 	return o;
 }
 

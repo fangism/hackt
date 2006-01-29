@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.12 2006/01/25 05:35:40 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.12.2.1 2006/01/29 04:42:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -14,6 +14,7 @@
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/common/dump_flags.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
 #include "util/what.h"
@@ -379,7 +380,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 	if (port_err.bad) {
 		cerr << "ERROR unrolling member instance reference "
 			"during port connection: ";
-		coll.dump(cerr) << endl;
+		coll.dump(cerr, dump_flags::verbose) << endl;
 		return bad_bool(true);
 	}
 	typedef typename alias_collection_type::key_type	key_type;

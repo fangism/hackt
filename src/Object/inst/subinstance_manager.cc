@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.11 2006/01/25 05:35:40 fang Exp $
+	$Id: subinstance_manager.cc,v 1.11.2.1 2006/01/29 04:42:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,6 +13,7 @@
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/port_context.h"
+#include "Object/common/dump_flags.h"
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -47,7 +48,7 @@ subinstance_manager::~subinstance_manager() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-subinstance_manager::dump(ostream& o) const {
+subinstance_manager::dump(ostream& o, const dump_flags& df) const {
 if (subinstance_array.empty()) {
 	return o;
 } else {
@@ -58,7 +59,7 @@ if (subinstance_array.empty()) {
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-		(*i)->dump(o << auto_indent) << endl;
+		(*i)->dump(o << auto_indent, df) << endl;
 	}
 	}
 	return o << auto_indent << ')';
@@ -96,7 +97,8 @@ subinstance_manager::lookup_port_instance(
 		cerr << "got port index of " << index
 			<< " when limit is " << subinstance_array.size()
 			<< endl;
-		i.dump(cerr << "\twhile looking up: ") << endl;
+		i.dump(cerr << "\twhile looking up: ", 
+			dump_flags::verbose) << endl;
 //		cerr << "Here\'s the complete dump of this subinstance set: "
 //			"at " << this << endl;
 //		dump(cerr) << endl;
@@ -126,7 +128,8 @@ subinstance_manager::lookup_member_instance(
 		cerr << "got member index of " << index
 			<< " when limit is " << subinstance_array.size()
 			<< endl;
-		i.dump(cerr << "\twhile looking up: ") << endl;
+		i.dump(cerr << "\twhile looking up: ", 
+			dump_flags::verbose) << endl;
 //		cerr << "Here\'s the complete dump of this subinstance set: "
 //			"at " << this << endl;
 //		dump(cerr) << endl;

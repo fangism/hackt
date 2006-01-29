@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.13.2.1 2006/01/27 23:04:24 fang Exp $
+ 	$Id: definition.cc,v 1.13.2.2 2006/01/29 04:42:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -353,13 +353,19 @@ definition_base::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parent may be a definition_base in the case of a typedef.
+	In the future, there will be support for nested typedefs.  
+	(Probably not nested definitions.)
+ */
 ostream&
 definition_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
 if (df.show_definition_owner) {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
-	if (parent)
+	if (parent) {
 		parent->dump_qualified_name(o, df) << scope;
+	}
 	return o << key;
 } else	return o;
 }

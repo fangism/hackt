@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.10 2006/01/22 18:20:05 fang Exp $
+	$Id: instance_collection.h,v 1.10.4.1 2006/01/29 04:42:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -339,7 +339,7 @@ public:
 	is_partially_unrolled(void) const;
 
 	ostream&
-	dump_unrolled_instances(ostream& o) const;
+	dump_unrolled_instances(ostream&, const dump_flags&) const;
 
 	INSTANTIATE_INDICES_PROTO;
 
@@ -452,7 +452,7 @@ public:
 	is_partially_unrolled(void) const;
 
 	ostream&
-	dump_unrolled_instances(ostream& o) const;
+	dump_unrolled_instances(ostream&, const dump_flags&) const;
 
 	INSTANTIATE_INDICES_PROTO;
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.8 2006/01/27 08:07:17 fang Exp $
+	$Id: footprint.cc,v 1.8.2.1 2006/01/29 04:42:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -21,6 +21,7 @@
 #include "Object/port_context.h"
 #include "Object/common/cflat_args.h"
 #include "Object/common/alias_string_cache.h"
+#include "Object/common/dump_flags.h"
 #include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -218,7 +219,7 @@ footprint::dump(ostream& o) const {
 	TODO: sort map entries or use qmap.
  */
 ostream&
-footprint::dump_with_collections(ostream& o) const {
+footprint::dump_with_collections(ostream& o, const dump_flags& df) const {
 	if (!instance_collection_map.empty()) {
 		// NOTE: hash_map is NOT sorted
 		const_instance_map_iterator
@@ -226,7 +227,7 @@ footprint::dump_with_collections(ostream& o) const {
 		const const_instance_map_iterator
 			e(instance_collection_map.end());
 		for ( ; i!=e; i++) {
-			i->second->dump(o << auto_indent) << endl;
+			i->second->dump(o << auto_indent, df) << endl;
 		}
 		dump(o);
 		port_aliases.dump(o);

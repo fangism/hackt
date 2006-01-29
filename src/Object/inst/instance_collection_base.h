@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.9 2006/01/22 18:20:06 fang Exp $
+	$Id: instance_collection_base.h,v 1.9.4.1 2006/01/29 04:42:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -213,11 +213,23 @@ virtual	bool
 virtual	ostream&
 	what(ostream&) const = 0;
 
-// bas eimplementation built-upon
-virtual	ostream&
-	dump(ostream&) const;	// temporary
+// base implementation built-upon
+protected:
+	ostream&
+	dump_base(ostream&) const;
 
-private:
+	ostream&
+	dump_base(ostream&, const dump_flags&) const;
+
+public:
+virtual	ostream&
+	dump(ostream&, const dump_flags&) const = 0;	// temporary
+
+protected:
+	// just to satisfy object_base forwards to public dump()
+	ostream&
+	dump(ostream&) const;
+
 	ostream&
 	dump_collection_only(ostream&) const;
 
@@ -231,6 +243,10 @@ virtual	ostream&
 
 	ostream&
 	pair_dump(ostream& o) const;
+
+	// provides a fixed dump_flags
+	ostream&
+	pair_dump_top_level(ostream& o) const;
 
 	const string&
 	get_name(void) const { return key; }

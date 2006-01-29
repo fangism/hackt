@@ -1,7 +1,7 @@
 /**
 	\file "Object/common/dump_flags.h"
 	Dump attributes class.  
-	$Id: dump_flags.h,v 1.5.4.1 2006/01/27 23:04:23 fang Exp $
+	$Id: dump_flags.h,v 1.5.4.2 2006/01/29 04:42:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_DUMP_FLAGS_H__
@@ -29,8 +29,9 @@ struct dump_flags {
 	 */
 	bool	show_namespace_owner;
 	/**
-		Whether or not the global namespace should print 
-		its leading "::".  
+		Whether or not the a scoped identifier should print 
+		its leading "::" from the global namespace.  
+		This is typically off for cflat/PRS outputs.  
 	 */
 	bool	show_leading_scope;
 
@@ -51,12 +52,25 @@ public:
 	static const dump_flags			default_value;
 	/**
 		Another common value for printing.  
+		Useful for context which can only refer to local names.  
 	 */
 	static const dump_flags			no_definition_owner;
 	/**
-		Show owner is true, but show_leading_scope is false.
+		When show_namespace_owner or show_definition_owner is true, 
+		this disables show_leading_scope false, 
+		appropriate for PRS names.
 	 */
 	static const dump_flags			no_leading_scope;
+
+	/**
+		Neither definition nor namespace owners.  
+	 */
+	static const dump_flags			no_owners;
+
+	/**
+		Show everything verbosely.  
+	 */
+	static const dump_flags			verbose;
 };	// end class dump_flags
 
 }	// end namespace entity

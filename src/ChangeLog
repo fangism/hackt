@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-02:
+	  Reworked dump method to be more customizable in class hierarchies, 
+		particularly in instance collections and namespaces.
+	  Fixed longstanding bug with failing to print namespaces of 
+		canonical names, in particular for the alloc-dump tests.  
+	  Renamed Object/cflat_context to Object/global_entry_context, 
+		but also provided alias typedef header.  
+	  TODO: for pre-unrolled definitions, add sequential scope dumps.  
+	  TODO: enable datatype create/alloc tests, and write more.
+	  Then one more revision to go clean-up.  
+
+
 2006-01-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-2-fixdump-01:

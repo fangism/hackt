@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.10.4.1 2006/01/27 23:04:23 fang Exp $
+ 	$Id: namespace.cc,v 1.10.4.2 2006/01/29 04:42:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -875,7 +875,8 @@ name_space::get_qualified_name(void) const {
 ostream&
 name_space::dump_qualified_name(ostream& o, const dump_flags& df) const {
 	if (parent) {
-#if 1
+		INVARIANT(parent.is_a<const name_space>());
+#if 0
 		return parent->dump_qualified_name(o, df) << scope << key;
 #else
 		if (df.show_leading_scope || !parent->is_global_namespace()) {
@@ -995,14 +996,15 @@ name_space::dump(ostream& o) const {
 		)
 		);
 	}
-	
+	// would like to show instance names prefixed with "::"
+	// to clarify the absolute name of top-level instances
 	if (!bins.inst_bin.empty()) {
 		o << auto_indent << "Instances:" << endl;
 		INDENT_SECTION(o);
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
-				mem_fun(&instance_collection_base::pair_dump,
+				mem_fun(&instance_collection_base::pair_dump_top_level,
 					instance_collection_base::null),
 				o), 
 			_Select2nd<const_bin_sort::inst_bin_type::value_type>()

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.8 2006/01/22 18:19:51 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.8.4.1 2006/01/29 04:42:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_param.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/inst/param_value_collection.h"
+#include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
 #include "common/ICE.h"
 
@@ -524,7 +525,8 @@ if (a_size != f_size) {
 				"template formal and actual." << endl;
 			pex->dump(cerr << "\tgot: ", 
 				expr_dump_context::default_value) << endl;
-			pinst->dump(cerr << "\texpected: ") << endl;
+			pinst->dump(cerr << "\texpected: ", 
+				dump_flags::verbose) << endl;
 			return good_bool(false);
 		}
 		// else continue checking successive arguments

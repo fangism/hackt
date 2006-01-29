@@ -1,7 +1,7 @@
 /**
 	\file "Object/common/dump_flags.cc"
 	Global static initializer for default.  
-	$Id: dump_flags.cc,v 1.4.10.1 2006/01/27 23:04:23 fang Exp $
+	$Id: dump_flags.cc,v 1.4.10.2 2006/01/29 04:42:28 fang Exp $
  */
 
 #include "Object/common/dump_flags.h"
@@ -17,11 +17,20 @@ dump_flags::default_value = dump_flags();
 const dump_flags
 dump_flags::no_definition_owner = dump_flags(false, true, true);
 
+const dump_flags
+dump_flags::no_owners = dump_flags(false, false, false);
+
 /**
 	This is appropriate for cflat use.  
  */
 const dump_flags
-dump_flags::no_leading_scope = dump_flags(false, true, false);
+dump_flags::no_leading_scope = dump_flags(false, false, false);
+
+/**
+	Verbose dumping flags for diagnostics.  
+ */
+const dump_flags
+dump_flags::verbose = dump_flags(true, true, true);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dump_flags::dump_flags() :

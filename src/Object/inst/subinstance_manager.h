@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.9 2006/01/22 18:20:12 fang Exp $
+	$Id: subinstance_manager.h,v 1.9.4.1 2006/01/29 04:42:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -26,6 +26,7 @@ class state_manager;
 class footprint_frame;
 template <class> class instance_collection;
 struct cflat_aliases_arg_type;
+struct dump_flags;
 using std::ostream;
 using std::istream;
 using std::string;
@@ -88,7 +89,7 @@ public:
 	push_back(const entry_value_type&);
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const dump_flags&) const;
 
 	// TODO: assertion check that arg is a port member of this type?
 	value_type

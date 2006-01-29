@@ -33,10 +33,10 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    M = pint^0 M (init = N) value: 5
+    M = pint^0 M (init = ::N) value: 5
     N = pint^0 N (init = 5) value: 5
     a = pbool^0 a (init = true) value: 1
-    b = pbool^0 b (init = a) value: 1
+    b = pbool^0 b (init = ::a) value: 1
 }
 
 Created state:

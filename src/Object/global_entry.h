@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.8 2006/01/27 08:07:16 fang Exp $
+	$Id: global_entry.h,v 1.8.2.1 2006/01/29 04:42:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -28,6 +28,7 @@ namespace PRS {
 
 struct bool_tag;
 struct dump_flags;
+struct global_entry_dumper;
 class alias_string_set;
 class footprint;
 class state_manager;
@@ -141,10 +142,16 @@ struct footprint_frame :
 	ostream&
 	dump_frame(ostream&) const;
 
+#if 0
 	template <class Tag>
 	ostream&
 	dump_footprint(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
+#else
+	template <class Tag>
+	ostream&
+	dump_footprint(global_entry_dumper&) const;
+#endif
 
 	void
 	allocate_remaining_subinstances(const footprint&, state_manager&, 
@@ -181,18 +188,28 @@ private:
 };	// end struct footprint_frame
 
 //=============================================================================
+template <bool B>
+struct global_entry_base { };
+
+//=============================================================================
 /**
 	For meta types without substructure.
 	Intentionally empty.  
 	\param B whether or not the meta type has substructure.  
  */
-template <bool B>
-struct global_entry_base {
+template <>
+struct global_entry_base<false> {
 
+#if 0
 	template <class Tag>
 	ostream&
 	dump(ostream& o, const size_t, const footprint&, 
 		const state_manager&) const { return o; }
+#else
+	template <class Tag>
+	ostream&
+	dump(global_entry_dumper&) const;
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const { }
@@ -217,15 +234,22 @@ template <>
 struct global_entry_base<true> {
 	footprint_frame			_frame;
 
+#if 0
 	template <class Tag>
 	ostream&
 	dump(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
+#else
+	template <class Tag>
+	ostream&
+	dump(global_entry_dumper&) const;
+#endif
 
 	// unused, thus far
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 
+// dumper could be reused for write_object_base!
 	template <class Tag>
 	void
 	write_object_base(const persistent_object_manager&, ostream&, 
@@ -321,9 +345,14 @@ public:
 	global_entry();
 	~global_entry();
 
+#if 0
 	ostream&
 	dump(ostream&, const size_t, const footprint&, 
 		const state_manager&) const;
+#else
+	ostream&
+	dump(global_entry_dumper&) const;
+#endif
 
 	ostream&
 	dump_canonical_name(ostream&,

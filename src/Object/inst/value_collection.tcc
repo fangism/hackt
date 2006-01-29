@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.8 2006/01/22 18:20:13 fang Exp $
+ 	$Id: value_collection.tcc,v 1.8.4.1 2006/01/29 04:42:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -34,6 +34,7 @@
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/common/dump_flags.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
@@ -820,7 +821,9 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 			if (_val.the_instance.valid) {
 				v = _val.the_instance.value;
 			} else {
-				this->dump(cerr << "ERROR: use of uninitialized ") << endl;
+				this->dump(cerr <<
+					"ERROR: use of uninitialized ", 
+					dump_flags::default_value) << endl;
 			}
 			return good_bool(_val.the_instance.valid);
 		}
@@ -849,7 +852,8 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 	if (the_instance.valid) {
 		v = the_instance.value;
 	} else {
-		this->dump(cerr << "ERROR: use of uninitialized ") << endl;
+		this->dump(cerr << "ERROR: use of uninitialized ", 
+			dump_flags::default_value) << endl;
 	}
 	return good_bool(the_instance.valid);
 }

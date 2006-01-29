@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.8 2006/01/22 18:20:30 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.8.4.1 2006/01/29 04:42:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -27,6 +27,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
 #include "Object/common/multikey_index.h"
+#include "Object/common/dump_flags.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_range.h"
@@ -513,7 +514,7 @@ if (value_collection_ref->is_template_formal()) {
 		if (rdim.empty()) {
 			cerr << "ERROR: failed to resolve dimensions of "
 				"collection referenced: ";
-			vcref.dump(cerr) << endl;
+			vcref.dump(cerr, dump_flags::verbose) << endl;
 			return return_type(NULL);
 		}
 		// else we have fully specified dimensions

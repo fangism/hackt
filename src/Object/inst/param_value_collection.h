@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.6 2006/01/22 18:20:09 fang Exp $
+	$Id: param_value_collection.h,v 1.6.4.1 2006/01/29 04:42:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -55,10 +55,14 @@ public:
 virtual	~param_value_collection();
 
 virtual	ostream&
-	what(ostream& o) const = 0;
+	what(ostream&) const = 0;
 
+private:
+	using parent_type::dump;	// don't intend to use directly
+
+public:
 	ostream&
-	dump(ostream& o) const;
+	dump(ostream&, const dump_flags&) const;
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;
