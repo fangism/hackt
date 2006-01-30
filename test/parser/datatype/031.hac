@@ -1,0 +1,9 @@
+// "031.hac"
+// copy-modified from "030.hac"
+// testing declarations in datatypes
+
+deftype my_data <: int<4> (int<8> x; bool y) {
+	set { }
+	get { }
+}
+

@@ -42,6 +42,9 @@ In namespace "", we have: {
       Instances:
         S = chan(bool<>) S
         b = bool<> b
+      unroll sequence: 
+        chan(bool<>) S
+        bool<> b
       chp:
         concurrent: {
           *[
@@ -56,6 +59,8 @@ In namespace "", we have: {
       In definition "source", we have: {
       Instances:
         S = chan(bool<>) S
+      unroll sequence: 
+        chan(bool<>) S
       chp:
         concurrent: {
           *[

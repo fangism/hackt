@@ -50,9 +50,12 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        bool<> z[0..1]
+        bool<> o
       prs:
-        (&:i:[0..-1]: z[i]) -> o-
-        (|:i:[0..-1]: ~z[i]) -> o+
+        (&:i:[0..-1]: z[$i]) -> o-
+        (|:i:[0..-1]: ~z[$i]) -> o+
       footprint: {
         bool^0 o (instantiated) = ::null::o 
         bool^1 z with indices: {

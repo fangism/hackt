@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.5 2005/12/13 04:15:20 fang Exp $
+	$Id: footprint_manager.cc,v 1.6 2006/01/30 07:42:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -11,6 +11,7 @@
 #include "util/macros.h"
 #include "Object/def/footprint_manager.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/common/dump_flags.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
@@ -50,6 +51,12 @@ footprint_manager::set_arity(const size_t a) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 footprint_manager::dump(ostream& o) const {
+	return dump(o, dump_flags::default_value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+footprint_manager::dump(ostream& o, const dump_flags& df) const {
 if (_arity) {
 	o << "footprint collection: {" << endl;
 	{	// indentation scope
@@ -62,7 +69,7 @@ if (_arity) {
 				<< "> {" << endl;
 			{
 				INDENT_SECTION(o);
-				i->second.dump_with_collections(o);
+				i->second.dump_with_collections(o, df);
 			}
 			o << auto_indent << '}' << endl;
 		}
@@ -73,7 +80,7 @@ if (_arity) {
 	o << "footprint: {" << endl;
 	{
 		INDENT_SECTION(o);
-		only().dump_with_collections(o);
+		only().dump_with_collections(o, df);
 	}
 	return o << auto_indent << '}';
 } else {

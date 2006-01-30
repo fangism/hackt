@@ -89,6 +89,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
       footprint: {
         bool^0 a (instantiated) = ::wrap::a (1) 
         bool^0 b (instantiated) = ::wrap::b (2) 

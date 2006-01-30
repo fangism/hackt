@@ -1,18 +1,13 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2006/01/22 06:53:48 fang Exp $
+#	$Id: Makefile.am,v 1.20 2006/01/30 07:42:07 fang Exp $
 
 include $(srcdir)/Make.test-head
 
 # this directory first, to clean the test-report
 SUBDIRS = . lexer parser benchmarks
 
-clean-test:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "$(RM) $(TEST_REPORT)" >> $@
-	@$(CHMOD) +x $@
-
 # bogus test
-TESTS += clean-test
+TESTS +=
 
 # configure-input scripts
 PRECONFIGURED_TESTSCRIPTS = \
@@ -49,10 +44,12 @@ EXTRA_DIST += ChangeLog README TODO \
 	analyze-dump-diff.awk \
 	spacestonewline.awk test.cvsignore
 
+all-local: $(POSTCONFIGURE_TESTSCRIPTS)
+
 # remove extraneous auto-generated files
-dist-hook:
-	-$(RM) -r `find $(distdir) -name subdir.not_a_test`
-	-$(RM) -r `find $(distdir) -name clean-test`
+# dist-hook:
+#	-$(RM) -r `find $(distdir) -name subdir.not_a_test`
+#	-$(RM) -r `find $(distdir) -name clean-test`
 
 # template test Makefile
 include $(top_srcdir)/test/Make.test-tail

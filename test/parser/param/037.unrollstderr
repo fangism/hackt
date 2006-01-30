@@ -50,6 +50,15 @@ In namespace "", we have: {
         N = pint<> N (init = 5)
         a = pbool<> a (init = true)
         b = pbool<> b (init = a)
+      unroll sequence: 
+        pint<> N
+        N = 5;
+        pint<> M
+        M = N;
+        pbool<> a
+        a = true;
+        pbool<> b
+        b = a;
       footprint: {
         pint^0 M value: 5
         pint^0 N value: 5

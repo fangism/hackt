@@ -51,6 +51,9 @@ In namespace "", we have: {
       Parameters:
         X = pint<> X
         Y = pint<> Y (default = X+1)
+      unroll sequence: 
+        pint<> X
+        pint<> Y
       footprint collection: {
         <12, 13> {
           pint^0 X value: ?

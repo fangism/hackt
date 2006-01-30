@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.h"
 	Map of template parameters to definition footprints.  
-	$Id: footprint_manager.h,v 1.4 2006/01/22 18:19:33 fang Exp $
+	$Id: footprint_manager.h,v 1.5 2006/01/30 07:42:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_MANAGER_H__
@@ -15,9 +15,11 @@
 
 namespace HAC {
 namespace entity {
+struct dump_flags;
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
+
 //=============================================================================
 /**
 	The manager for a collection of definition footprints.  
@@ -56,6 +58,9 @@ public:
 
 	void
 	set_arity(const size_t);
+
+	ostream&
+	dump(ostream&, const dump_flags&) const;
 
 	ostream&
 	dump(ostream&) const;

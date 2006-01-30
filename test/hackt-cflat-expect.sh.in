@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.9 2006/01/25 20:26:06 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.10 2006/01/30 07:42:07 fang Exp $
 
 # NOTE: temporarily just uses stdout dump during execution
 # will updated later...
@@ -9,15 +9,13 @@
 # $2 is the path to the source directory, which is not necessarily ./
 #	during distcheck uses _build
 # $3 is the input file name WITHOUT the .in extension
-# $4 is the test report log file, summarizing results
 # other subsequent arguments are ignored
 
-# if test $# -lt 5 ; then exit 1 ; fi
+# if test $# -lt 3 ; then exit 1 ; fi
 
 cflat=$1
 srcroot=$2/$3
 bldroot=$3
-logfile=$4
 
 # a pre-created (already created) object file must already exist
 if test ! -s $bldroot.haco-a
@@ -52,8 +50,7 @@ fi
 
 if test -s $bldroot.prsdiff
 then
-	@ECHO@ "$bldroot.prsdiff is non-empty!  See $logfile."
-	@ECHO@ `pwd`/"$bldroot.prsdiff" >> $logfile
+	@ECHO@ "$bldroot.prsdiff is non-empty!"
 	# additional analysis to see if is just re-ordering difference
 	if test -s $srcroot.expect-prs && test -s $bldroot.prs
 	then

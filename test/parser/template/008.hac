@@ -5,6 +5,3 @@ defproc foo() { }
 
 foo<13> bar;
 
-// for type-checking ok if foo undefined
-// however will die at unroll time
-

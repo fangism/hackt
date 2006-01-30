@@ -39,6 +39,7 @@ In namespace "", we have: {
     barf = process-definition (defined) barf(
       )
       In definition "barf", we have: {
+      unroll sequence: 
       footprint: {
       }
       }

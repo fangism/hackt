@@ -79,6 +79,15 @@ In namespace "", we have: {
         b = bool<> b
         x = foo<> x
         y = foo<> y
+      unroll sequence: 
+        foo<> x
+        foo<> y
+        x = y;
+        bool<> a
+        bool<> b
+        x.a = a;
+        b = y.b;
+        a = b;
       footprint: {
         bool^0 a (instantiated) = ::bar::x.a 
         bool^0 b (instantiated) = ::bar::y.b 
@@ -101,6 +110,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
       footprint: {
         bool^0 a (instantiated) = ::foo::a 
         bool^0 b (instantiated) = ::foo::b 

@@ -50,7 +50,7 @@ In namespace "", we have: {
     N = pint^0 N (init = 3) value: 3
   Instances:
     b = bool^1 b with indices: {
-      [::i..::i] (predicated)
+      [$i..$i] (predicated)
     }
       unrolled indices: {
         0 = ::b[0] 

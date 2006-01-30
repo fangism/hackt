@@ -31,14 +31,17 @@ In namespace "", we have: {
     default_width = pint^0 default_width (init = 16) value: 16
   Definitions:
     something_wide = process-definition (defined) something_wide<
-      pint<> W (default = default_width)
+      pint<> W (default = ::default_width)
       >(
       )
       In definition "something_wide", we have: {
       Parameters:
-        W = pint<> W (default = default_width)
+        W = pint<> W (default = ::default_width)
       Instances:
         wide_int = int<::something_wide::W> wide_int
+      unroll sequence: 
+        pint<> W
+        int<::something_wide::W> wide_int
       }
 
 }

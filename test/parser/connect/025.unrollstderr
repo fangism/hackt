@@ -50,6 +50,9 @@ In namespace "", we have: {
       Instances:
         a = int<32> a
         b = int<32> b
+      unroll sequence: 
+        int<32> a
+        int<32> b
       footprint: {
         int<32>^0 a (instantiated) = ::bar::a 
         int<32>^0 b (instantiated) = ::bar::b 

@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.6 2006/01/22 18:20:58 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.7 2006/01/30 07:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -58,7 +58,7 @@ public:
 virtual	~instantiation_statement_base();
 
 	ostream&
-	dump(ostream& o) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 virtual	void
 	attach_collection(const never_ptr<instance_collection_base> i) = 0;

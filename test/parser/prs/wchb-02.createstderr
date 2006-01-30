@@ -226,6 +226,9 @@ In namespace "", we have: {
         }
 
         e = bool<> e
+      unroll sequence: 
+        bool<> d[0..1]
+        bool<> e
       footprint: {
         bool^1 d with indices: {
         }
@@ -249,6 +252,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
       prs:
         a -> b-
         ~a -> b+
@@ -280,6 +286,17 @@ In namespace "", we have: {
         r1 = inv<> r1
         re = inv<> re
         rv = bool<> rv
+      unroll sequence: 
+        e1of2<> L
+        e1of2<> R
+        bool<> _r[0..1]
+        bool<> rv
+        inv<> r0
+        r0 (_r[0], R.d[0]);
+        inv<> r1
+        r1 (_r[1], R.d[1]);
+        inv<> re
+        re (rv, L.e);
       prs:
         L.d[0] & R.e -> _r[0]-
         L.d[1] & R.e -> _r[1]-

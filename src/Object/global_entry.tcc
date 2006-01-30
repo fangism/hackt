@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.9 2006/01/27 08:07:17 fang Exp $
+	$Id: global_entry.tcc,v 1.10 2006/01/30 07:41:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -32,6 +32,7 @@
 #include "Object/traits/type_tag_enum.h"
 #include "Object/common/dump_flags.h"
 #include "Object/cflat_context.h"
+#include "Object/global_entry_context.h"
 #include "Object/lang/cflat_visitor.h"
 // #include "Object/lang/cflat_printer.h"
 #include "Object/inst/datatype_instance_collection.h"
@@ -104,11 +105,14 @@ extract_parent_formal_instance_alias(const state_manager& sm,
  */
 template <class Tag>
 ostream&
-footprint_frame::dump_footprint(ostream& o, const size_t ind, 
-		const footprint& topfp, const state_manager& sm) const {
+footprint_frame::dump_footprint(global_entry_dumper& gec) const {
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	instance_alias_info<Tag>	alias_type;
 	INVARIANT(_footprint);
+	ostream& o(gec.os);
+	const size_t ind(gec.index);
+	const footprint& topfp(*gec.fp);
+	const state_manager& sm(*gec.sm);
 	const pool_type& _pool(topfp.template get_pool<Tag>());
 	if (ind >= _pool.size()) {
 		// then this isn't top-level
@@ -149,10 +153,18 @@ footprint_frame::dump_footprint(ostream& o, const size_t ind,
 //=============================================================================
 // class global_entry_base method definitions
 
+template <class Tag>
+ostream&
+global_entry_base<false>::dump(global_entry_dumper& ged) const {
+	return ged.os;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prints the type with which the footprint is associated, 
 	and the brief contents of the footprint frame.  
  */
+#if 0
 template <class Tag>
 ostream&
 global_entry_base<true>::dump(ostream& o, const size_t ind, 
@@ -160,9 +172,18 @@ global_entry_base<true>::dump(ostream& o, const size_t ind,
 	this->_frame.template dump_footprint<Tag>(o, ind, topfp, sm);
 	return this->_frame.dump_frame(o);
 }
+#else
+template <class Tag>
+ostream&
+global_entry_base<true>::dump(global_entry_dumper& ged) const {
+	this->_frame.template dump_footprint<Tag>(ged);
+	return this->_frame.dump_frame(ged.os);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: use global_entry_dumper!
 	TODO: comment: pay attention to ordering, 
 		is crucial for reconstruction.
 	Q: Is persistent object manager really needed?
@@ -394,8 +415,13 @@ template <class Tag>
 ostream&
 global_entry<Tag>::dump_canonical_name(ostream& o,
 		const footprint& topfp, const state_manager& sm) const {
-	return __dump_canonical_name(o, dump_flags::no_owner,
+#if 0
+	return __dump_canonical_name(o, dump_flags::no_definition_owner,
 		topfp, sm);
+#else
+	return __dump_canonical_name(o, dump_flags::no_leading_scope,
+		topfp, sm);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -404,9 +430,9 @@ global_entry<Tag>::dump_canonical_name(ostream& o,
  */
 template <class Tag>
 ostream&
-global_entry<Tag>::dump(ostream& o, const size_t ind,
-		const footprint& topfp, const state_manager& sm) const {
-	o << ind << '\t';
+global_entry<Tag>::dump(global_entry_dumper& ged) const {
+	ostream& o(ged.os);
+	o << ged.index << '\t';
 	switch(parent_tag_value) {
 	case TYPE_NONE:
 		o << "(top)\t-\t";
@@ -424,12 +450,15 @@ global_entry<Tag>::dump(ostream& o, const size_t ind,
 		THROW_EXIT;
 	}
 	o << local_offset << '\t';
-	dump_canonical_name(o, topfp, sm) << '\t';
-	parent_type::template dump<Tag>(o, ind, topfp, sm);
+	dump_canonical_name(o, *ged.fp, *ged.sm) << '\t';
+	parent_type::template dump<Tag>(ged);
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: use global_entry_dumper
+ */
 template <class Tag>
 void
 global_entry<Tag>::write_object_base(const persistent_object_manager& m, 

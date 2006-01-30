@@ -297,6 +297,10 @@ In namespace "", we have: {
         _o = bool<> _o
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        bool<> _o
       prs:
         a & b -> _o-
         ~a & ~b -> _o+
@@ -328,6 +332,9 @@ In namespace "", we have: {
         }
 
         e = bool<> e
+      unroll sequence: 
+        bool<> d[0..1]
+        bool<> e
       footprint: {
         bool^1 d with indices: {
         }
@@ -351,6 +358,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
       prs:
         a -> b-
         ~a -> b+
@@ -376,6 +386,10 @@ In namespace "", we have: {
         _o = bool<> _o
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        bool<> _o
       prs:
         a & b -> _o-
         ~a | ~b -> _o+
@@ -415,6 +429,29 @@ In namespace "", we have: {
         r1 = inv<> r1
         re = inv<> re
         rv = bool<> rv
+      unroll sequence: 
+        e1of2<> L
+        e1of2<> R
+        bool<> _r[0..1]
+        bool<> rv
+        inv<> r0
+        r0 (_r[0], R.d[0]);
+        inv<> r1
+        r1 (_r[1], R.d[1]);
+        inv<> re
+        re (rv, L.e);
+        celem2inv<> l0
+        l0 (L.d[0], R.e, _r[0]);
+        celem2inv<> l1
+        l1 (L.d[1], R.e, _r[1]);
+        nand2<> la
+        la (_r[0], _r[1], rv);
+        inv<> __r0__
+        __r0__ = r0;
+        celem2inv<> __l1__
+        __l1__ = l1;
+        nand2<> __la__
+        __la__ = la;
       footprint: {
         process celem2inv<>^0 l0 (instantiated) = ::wchb_e1of2::l0 (4) (
           bool^0 a (instantiated) = ::wchb_e1of2::L.d[0] (1) 

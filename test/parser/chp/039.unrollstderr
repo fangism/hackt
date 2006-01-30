@@ -75,6 +75,14 @@ In namespace "", we have: {
         w = int<32> w
         x = int<32> x
         z = int<32> z
+      unroll sequence: 
+        chan?(int<32>) L1
+        chan?(int<32>) L2
+        chan!(int<32>) R
+        int<32> x
+        int<32> z
+        int<32> w
+        chan(int<32>) M
       chp:
         concurrent: {
           sequential: {

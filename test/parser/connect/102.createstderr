@@ -70,6 +70,11 @@ In namespace "", we have: {
       Instances:
         a = int<::bar::X> a
         b = int<::bar::Y> b
+      unroll sequence: 
+        pint<> X
+        pint<> Y
+        int<::bar::X> a
+        int<::bar::Y> b
       footprint collection: {
         <2, 3> {
           pint^0 X value: ?

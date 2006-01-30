@@ -65,6 +65,8 @@ In namespace "", we have: {
           [0..2]
         }
 
+      unroll sequence: 
+        bool<> a[0..2]
       footprint: {
         bool^1 a with indices: {
         }

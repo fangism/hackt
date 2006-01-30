@@ -46,6 +46,10 @@ In namespace "", we have: {
         i = int<32> i
         j = int<32> j
         k = int<16> k
+      unroll sequence: 
+        int<32> i
+        int<32> j
+        int<16> k
       }
 
 }

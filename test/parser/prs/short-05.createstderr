@@ -221,9 +221,13 @@ In namespace "", we have: {
         }
 
         out = bool<> out
+      unroll sequence: 
+        pint<> N
+        bool<> in[0..N-1]
+        bool<> out
       prs:
-        (&:i:[0..N-1]: in[i]) -> out-
-        (&:i:[0..N-1]: ~in[i]) -> out+
+        (&:i:[0..N-1]: in[$i]) -> out-
+        (&:i:[0..N-1]: ~in[$i]) -> out+
       footprint collection: {
         <2> {
           bool^0 out (instantiated) = ::celem::out (3) 
@@ -253,6 +257,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
       prs:
         a -> b-
         ~a -> b+
@@ -276,9 +283,13 @@ In namespace "", we have: {
         }
 
         out = bool<> out
+      unroll sequence: 
+        pint<> N
+        bool<> in[0..N-1]
+        bool<> out
       prs:
-        (&:i:[0..N-1]: in[i]) -> out-
-        (|:i:[0..N-1]: ~in[i]) -> out+
+        (&:i:[0..N-1]: in[$i]) -> out-
+        (|:i:[0..N-1]: ~in[$i]) -> out+
       footprint collection: {
         <4> {
           bool^0 out (instantiated) = ::nand::out (5) 
@@ -322,9 +333,13 @@ In namespace "", we have: {
         }
 
         out = bool<> out
+      unroll sequence: 
+        pint<> N
+        bool<> in[0..N-1]
+        bool<> out
       prs:
-        (|:i:[0..N-1]: in[i]) -> out-
-        (&:i:[0..N-1]: ~in[i]) -> out+
+        (|:i:[0..N-1]: in[$i]) -> out-
+        (&:i:[0..N-1]: ~in[$i]) -> out+
       footprint collection: {
         <4> {
           bool^0 out (instantiated) = ::nor::out (5) 

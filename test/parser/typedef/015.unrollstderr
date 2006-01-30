@@ -54,6 +54,10 @@ In namespace "", we have: {
         x = bool<> x
         y = bool<> y
         z = bool<> z
+      unroll sequence: 
+        bool<> x
+        bool<> y
+        bool<> z
       footprint: {
         bool^0 x (instantiated) = ::baz::x 
         bool^0 y (instantiated) = ::baz::y 

@@ -130,6 +130,8 @@ In namespace "", we have: {
       In definition "bar", we have: {
       Instances:
         a = mybool<> a
+      unroll sequence: 
+        mybool<> a
       footprint: {
         process mybool<>^0 a (instantiated) = ::bar::a 
       }
@@ -141,6 +143,8 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Instances:
         b = bar<> b
+      unroll sequence: 
+        bar<> b
       footprint: {
         process bar<>^0 b (instantiated) = ::foo::b (
           process mybool<>^0 a (instantiated) = ::foo::b.a 
@@ -154,6 +158,8 @@ In namespace "", we have: {
       In definition "ick", we have: {
       Instances:
         x = foo<> x
+      unroll sequence: 
+        foo<> x
       footprint: {
         process foo<>^0 x (instantiated) = ::ick::x (
           process bar<>^0 b (instantiated) = ::ick::x.b (
@@ -171,6 +177,8 @@ In namespace "", we have: {
       In definition "mybool", we have: {
       Parameters:
         B = pbool<> B
+      unroll sequence: 
+        pbool<> B
       }
 
   Instances:

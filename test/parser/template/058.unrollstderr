@@ -38,6 +38,11 @@ In namespace "", we have: {
         Z = pint<> Z (init = W)
       Instances:
         my_int = int<::foo::Z> my_int
+      unroll sequence: 
+        pint<> W
+        pint<> Z
+        Z = W;
+        int<::foo::Z> my_int
       }
 
 }

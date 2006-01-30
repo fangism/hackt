@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.29 2006/01/25 20:25:58 fang Exp $
+#	$Id: configure.ac,v 1.30 2006/01/30 07:41:54 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060125, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060129, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -385,7 +385,7 @@ AC_ARG_VAR(YACC, [parser generator, requires LALR(1), such as yacc/bison])
 AC_PROG_LN_S
 
 # not so funny...
-AC_MSG_CHECKING([for fang's sanity])
+AC_MSG_CHECKING([whether fang is sane])
 # sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "." sleep 1; 
 $SLEEP 3
 AC_MSG_RESULT([no]);
@@ -398,6 +398,7 @@ AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
 AM_CONDITIONAL(HAVE_BYACC, echo "$YACC" | grep -q byacc)
 AM_CONDITIONAL(HAVE_YACC, echo "$YACC" | grep -v byacc | grep -q yacc)
 
+dnl TODO: check whether or not bison/yacc works on a basic file
 dnl this must be consistent with the above
 dnl there might be a better way to do this...
 case $YACC in
@@ -409,6 +410,22 @@ case $YACC in
 		dnl Now would be a good place to check for version
 		dnl since bison is known to have significant variations.  
 		YACC_VERSION=`$YACC --version 2>&1 | head -n 1`
+		[BISON_VERSION=`echo x$YACC_VERSION | sed 's/[^.0-9]//g'`]
+		AC_MSG_NOTICE([found bison version $BISON_VERSION.])
+		dnl known version checks
+dnl the below code doesn't work...
+dnl	if { awk 'END{ if($BISON_VERSION +0.0<=1.35) exit 1;}' </dev/null;}
+dnl	then 
+dnl dnl		if { awk 'END{if($BISON_VERSION +0.0<=1.28) exit 1;}' </dev/null;}
+dnl dnl		then AC_MSG_ERROR([
+dnl dnl	Your bison (<= 1.28) is known to fail with this project.
+dnl dnl	Please upgrade to 1.875 or higher, or use traditional yacc.])
+dnl dnl		else
+dnl			AC_MSG_WARN([
+dnl	Your bison (<= 1.35) is not officially supported by this project.  
+dnl	Consider upgrading to 1.875 or higher, or use traditional yacc.])
+dnl dnl		fi
+dnl	fi
 		;;
 	*byacc* )
 		dnl echo "GOT byacc"

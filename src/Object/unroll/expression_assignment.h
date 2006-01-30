@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: expression_assignment.h,v 1.6 2006/01/22 18:20:54 fang Exp $
+	$Id: expression_assignment.h,v 1.7 2006/01/30 07:42:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
@@ -65,7 +65,7 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	size_t
 	size(void) const;

@@ -44,6 +44,9 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        bool<> a[0..1]
+        a[0] = a[1];
       footprint: {
         bool^1 a with indices: {
         }

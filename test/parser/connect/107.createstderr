@@ -99,6 +99,11 @@ In namespace "", we have: {
       Instances:
         a = foo<::bar::X> a
         b = foo<::bar::Y> b
+      unroll sequence: 
+        pint<> X
+        pint<> Y
+        foo<::bar::X> a
+        foo<::bar::Y> b
       footprint collection: {
         <2, 3> {
           pint^0 X value: ?
@@ -128,6 +133,8 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Parameters:
         A = pint<> A
+      unroll sequence: 
+        pint<> A
       footprint collection: {
         <2> {
           pint^0 A value: ?

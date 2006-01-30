@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-01-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-4-merged-fixdump-06:
+	  Bumped snapshot date upon branch merge.  
+	  TODO: configure.ac to check for bison versions. 
+
+
 2006-01-25	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-merged-PRS-04-03:

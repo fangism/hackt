@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: instance_management_base.h,v 1.6 2006/01/22 18:20:56 fang Exp $
+	$Id: instance_management_base.h,v 1.7 2006/01/30 07:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
@@ -19,6 +19,7 @@ using util::persistent;
 using util::good_bool;
 class unroll_context;
 class footprint;
+struct expr_dump_context;
 
 //=============================================================================
 /**
@@ -36,10 +37,10 @@ public:
 	 */
 	class dumper {
 	private:
-		ostream& os;
+		ostream&			os;
+		const expr_dump_context&	edc;
 	public:
-		explicit
-		dumper(ostream& o);
+		dumper(ostream&, const expr_dump_context&);
 
 		template <template <class> class P>
 		ostream&
@@ -48,7 +49,7 @@ public:
 
 public:
 virtual ostream&
-	dump(ostream& o) const = 0;
+	dump(ostream&, const expr_dump_context&) const = 0;
 
 #define	UNROLL_META_EVALUATE_PROTO					\
 	good_bool							\

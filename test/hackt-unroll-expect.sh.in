@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-unroll-expect.sh.in"
-#	$Id: hackt-unroll-expect.sh.in,v 1.2 2005/12/13 04:15:52 fang Exp $
+#	$Id: hackt-unroll-expect.sh.in,v 1.3 2006/01/30 07:42:08 fang Exp $
 # This file used to be:
 #	Id: artobjunroll-expect.sh.in,v 1.5 2005/12/08 22:01:15 fang Exp
 # This file came from "artobjunroll-expect.sh" in revision prehistory.
@@ -14,23 +14,21 @@
 # $4 is the input file name WITHOUT the .in extension
 # $5 is the filter for ignoring certain difference in output
 #	(for no filter, pass "cat")
-# $6 is the test report log file, summarizing results
-# $7 is a difference analysis script to run on the objdump differences
+# $6 is a difference analysis script to run on the objdump differences
 #	AFTER the header filter has been run
-# $8 is an additional index filter to be run on the objdump differences, 
+# $7 is an additional index filter to be run on the objdump differences, 
 ##	but only after the primary header filter ($5) is run
 # other subsequent arguments are ignored
 
-# if test $# -lt 8 ; then exit 1 ; fi
+# if test $# -lt 7 ; then exit 1 ; fi
 
 unroll=$1
 dump=$2
 srcroot=$3/$4
 bldroot=$4
 filter=$5
-logfile=$6
-analdiff=$7
-indfilter=$8
+analdiff=$6
+indfilter=$7
 
 # an pre-unrolled object file must already exist
 if test ! -s $bldroot.haco
@@ -39,6 +37,7 @@ then
 	exit 1
 fi
 
+# redirection will catch any error messages
 $unroll $bldroot.haco $bldroot.haco-u > $bldroot.unrolldump 2>&1
 
 # depending on exit status, take action
@@ -65,8 +64,7 @@ fi
 
 if test -s $bldroot.unrolldiff
 then
-	@ECHO@ "$bldroot.unrolldiff is non-empty!  See $logfile."
-	@ECHO@ `pwd`/"$bldroot.unrolldiff" >> $logfile
+	@ECHO@ "$bldroot.unrolldiff is non-empty!"
 	$analdiff -v quiet=2 $bldroot.unrolldiff > $bldroot.unrollanal
 	if @GREP@ "OK" $bldroot.unrollanal
 	then

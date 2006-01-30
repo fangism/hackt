@@ -38,6 +38,10 @@ In namespace "", we have: {
         e = bool<> e
         f = bool<> f
         t = bool<> t
+      unroll sequence: 
+        bool<> t
+        bool<> f
+        bool<> e
       }
 
 }

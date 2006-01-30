@@ -1,20 +1,18 @@
 #!@SH_PATH@
 # "hackt-prsim-expr-alloc-expect.sh.in"
-#	$Id: hackt-prsim-expr-alloc-expect.sh.in,v 1.2 2006/01/22 06:53:48 fang Exp $
+#	$Id: hackt-prsim-expr-alloc-expect.sh.in,v 1.3 2006/01/30 07:42:08 fang Exp $
 
 # $1 is the executable for the creator (hackt alloc), expecting 2 arguments
 # $2 is the path to the source directory, which is not necessarily ./
 #	during distcheck uses _build
 # $3 is the input file name WITHOUT the .in extension
-# $4 is the test report log file, summarizing results
 # other subsequent arguments are ignored
 
-# if test $# -lt 5 ; then exit 1 ; fi
+# if test $# -lt 3 ; then exit 1 ; fi
 
 prsim=$1
 srcroot=$2/$3
 bldroot=$3
-logfile=$4
 
 # a pre-created (already created) object file must already exist
 if test ! -s $bldroot.haco-a
@@ -24,6 +22,7 @@ then
 fi
 
 # see if it crashes first
+# redirection will catch any error messages
 $prsim -fno-run -fdump-expr-alloc -fcheck-structure $bldroot.haco-a \
 	> $bldroot.prsimexpr 2>&1
 
@@ -49,8 +48,7 @@ fi > $bldroot.prsimexprdiff
 
 if test -s $bldroot.prsimexprdiff
 then
-	@ECHO@ "$bldroot.prsimexprdiff is non-empty!  See $logfile."
-	@ECHO@ `pwd`/"$bldroot.prsimexprdiff" >> $logfile
+	@ECHO@ "$bldroot.prsimexprdiff is non-empty!"
 	exit 1
 fi
 

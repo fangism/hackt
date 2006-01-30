@@ -68,6 +68,11 @@ In namespace "", we have: {
         R = chan!(int<32>) R
         x = int<32> x
         z = int<32> z
+      unroll sequence: 
+        chan?(int<32>) L
+        chan!(int<32>) R
+        int<32> x
+        int<32> z
       chp:
         concurrent: {
           sequential: {

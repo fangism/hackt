@@ -38,6 +38,8 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Parameters:
         N = pint<> N
+      unroll sequence: 
+        pint<> N
       footprint collection: {
         <42> {
           pint^0 N value: ?

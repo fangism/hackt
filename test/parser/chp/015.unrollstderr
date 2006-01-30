@@ -44,6 +44,10 @@ In namespace "", we have: {
           [0..3]
         }
 
+      unroll sequence: 
+        chan?(bool<>) L
+        chan!(bool<>) R
+        bool<> b[0..3]
       chp:
         concurrent: {
           R!(b[0])

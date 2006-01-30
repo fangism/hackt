@@ -120,6 +120,8 @@ In namespace "", we have: {
       In definition "e1of2", we have: {
       Instances:
         d = bool<> d
+      unroll sequence: 
+        bool<> d
       footprint: {
         bool^0 d (instantiated) = ::e1of2::d 
       }
@@ -135,6 +137,16 @@ In namespace "", we have: {
         lt = pand<> lt
         pa0 = e1of2<> pa0
         pnd = pand<> pnd
+      unroll sequence: 
+        globals<> g
+        e1of2<> aa
+        e1of2<> pa0
+        pupcopy<> a0copy
+        a0copy (aa, pa0);
+        pand<> lt
+        lt (g, aa);
+        pand<> pnd
+        pnd (g, pa0);
       footprint: {
         process e1of2<>^0 aa (instantiated) = ::funit::a0copy.r (
           bool^0 d (instantiated) = ::funit::aa.d 
@@ -169,6 +181,7 @@ In namespace "", we have: {
     globals = process-definition (defined) globals(
       )
       In definition "globals", we have: {
+      unroll sequence: 
       footprint: {
       }
       }
@@ -181,6 +194,9 @@ In namespace "", we have: {
       Instances:
         a = e1of2<> a
         g = globals<> g
+      unroll sequence: 
+        globals<> g
+        e1of2<> a
       footprint: {
         process e1of2<>^0 a (instantiated) = ::pand::a (
           bool^0 d (instantiated) = ::pand::a.d 
@@ -197,6 +213,10 @@ In namespace "", we have: {
       Instances:
         r = e1of2<> r
         rp = e1of2<> rp
+      unroll sequence: 
+        e1of2<> r
+        e1of2<> rp
+        r.d = rp.d;
       footprint: {
         process e1of2<>^0 rp (instantiated) = ::pupcopy::rp (
           bool^0 d (instantiated) = ::pupcopy::r.d 

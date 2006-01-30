@@ -2,7 +2,7 @@
 	\file "Object/unroll/loop_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the HAC language.  
-	$Id: loop_scope.h,v 1.5 2006/01/22 18:20:58 fang Exp $
+	$Id: loop_scope.h,v 1.6 2006/01/30 07:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_H__
@@ -56,7 +56,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 private:
 	/**

@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.9 2006/01/22 06:52:56 fang Exp $
+	$Id: state_manager.cc,v 1.10 2006/01/30 07:41:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -52,12 +52,13 @@ ostream&
 global_entry_pool<Tag>::dump(ostream& o, const footprint& topfp) const {
 if (this->size() > 1) {
 	const state_manager& sm(AS_A(const state_manager&, *this));
+	global_entry_dumper ged(o, sm, topfp);
 	o << "[global " << class_traits<Tag>::tag_name << " entries]" << endl;
-	size_t j = 1;
+	ged.index = 1;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
-	for ( ; i!=e; i++, j++) {
-		i->dump(o, j, topfp, sm) << endl;
+	for ( ; i!=e; i++, ++ged.index) {
+		i->dump(ged) << endl;
 	}
 }
 	return o;

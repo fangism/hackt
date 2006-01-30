@@ -1,0 +1,13 @@
+// "035.hac"
+// copy-modified from "033.hac"
+// should reject process inside datatype
+
+defproc myproc () { }
+
+deftype my_data <: int<4> (int<8> x; bool y) {
+	bool fum;
+	myproc REJECT;
+	set { }
+	get { }
+}
+

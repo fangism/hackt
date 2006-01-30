@@ -47,6 +47,11 @@ In namespace "", we have: {
           [0..::foo::Z-1]
         }
 
+      unroll sequence: 
+        pint<> W
+        pint<> Z
+        Z = W;
+        int<32> my_int[0..Z-1]
       }
 
 }

@@ -3,6 +3,61 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-4-merged-fixdump-06:
+	  Merge of -fixdump branch fixes.  
+		Summary: better control over dump formatting through
+		object class hierarchies, definition sequential scope dumps, 
+		minor formatting updates.  Tons of test suite updates.  
+	  TODO: list of critical bug fixes.  
+
+
+2006-01-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-06:
+	  No source change.  Test suite clean-up only.  
+	  End of branch.  Merge to trunk.  
+
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-05:
+	  No source change.
+	  Enabled a handful of alloc tests in test suite.  
+	  Added a few basic datatype tests.  
+	  Discovered persistence BUG in parser/template/059,063.hac!
+	  TODO: simplify suffix rules for dump files, eliminate redundant.
+
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-04:
+	  Now propagating expr_dump_context argument through all
+		instance_management_base::dump, for better control over dump.
+	  Enabled sequential scope dumping for all user-defined definitions.
+		Tons of test outputs updated accordingly.  
+	  TODO: now can enable create test-cases in remaining test dirs.  
+
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-03:
+	  Minor change to printing references to induction variables, 
+		dumps now show them with '$' instead of scope names, 
+		which is more meaningful and readable.  
+	  Bunch of tests dumps updated accordingly.  
+	  TODO: definition-local sequential instance management dumps.  
+
+
+2006-01-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-02:
+	  Reworked dump method to be more customizable in class hierarchies, 
+		particularly in instance collections and namespaces.
+	  Fixed longstanding bug with failing to print namespaces of 
+		canonical names, in particular for the alloc-dump tests.  
+	  Renamed Object/cflat_context to Object/global_entry_context, 
+		but also provided alias typedef header.  
+	  TODO: for pre-unrolled definitions, add sequential scope dumps.  
+	  TODO: enable datatype create/alloc tests, and write more.
+	  Then one more revision to go clean-up.  
+
+
 2006-01-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-3-merged-unique-03-02:
@@ -31,6 +86,18 @@
 		not be user directly for checking).  
 	  Currently weighing options for fixing the bug, ranging from 
 		varies degrees of hacktitude.  
+
+
+2006-01-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-01:
+	  This branch was initiated for the sole purpose of cleaning up 
+		the dump routines in the defininition/namespace/instance
+		hierarchy once and for all (at least until another major
+		rewrite).  Most revisions will revolve around the
+		use of the entity::dump_flags structure.  
+	  This first revision didn't change any behavior, but added some
+		fields to dump_flags in preparation for changes.  
 
 
 2006-01-26	David Fang		<fangism@users.sourceforge.net>

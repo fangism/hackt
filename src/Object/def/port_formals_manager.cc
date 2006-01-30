@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.6 2006/01/22 18:19:35 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.7 2006/01/30 07:42:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/subinstance_manager.h"
 #include "Object/ref/meta_instance_reference_base.h"
+#include "Object/common/dump_flags.h"
 
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
@@ -83,7 +84,8 @@ port_formals_manager::dump(ostream& o) const {
 		const port_formals_list_type::const_iterator
 			e(port_formals_list.end());
 		for ( ; i!=e; i++) {
-			(*i)->dump(o << auto_indent) << endl;
+			(*i)->dump(o << auto_indent, 
+				dump_flags::no_definition_owner) << endl;
 		}
 	}
 	return o << auto_indent << ')';

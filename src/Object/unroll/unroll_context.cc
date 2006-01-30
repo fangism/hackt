@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.10 2006/01/24 22:01:00 fang Exp $
+	$Id: unroll_context.cc,v 1.11 2006/01/30 07:42:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -18,6 +18,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
+#include "Object/common/dump_flags.h"
 // #include "Object/inst/param_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
@@ -114,7 +115,8 @@ unroll_context::dump(ostream& o) const {
 	template_args.dump(o);
 	if (target_footprint)
 		target_footprint->dump_with_collections(
-			cerr << endl << "footprint: ");
+			cerr << endl << "footprint: ",
+			dump_flags::default_value);
 #if 1
 	// chain dump:
 	if (next) {
@@ -193,7 +195,7 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 #if 1
 		ICE(cerr, 
 			cerr << "expected to resolve ";
-			ps.dump(cerr) <<
+			ps.dump(cerr, dump_flags::verbose) <<
 				" loop variable, but failed!" << endl;
 		)
 #else
@@ -315,11 +317,12 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 	} else {
 	ICE(cerr, 
 		cerr << "expected to resolve ";
-		p.dump(cerr) << " to constant value(s), but failed!" << endl;
+		p.dump(cerr, dump_flags::verbose)
+			<< " to constant value(s), but failed!" << endl;
 	)
 		return return_type(NULL);
 	}
-}
+}	// end method lookup_actual
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

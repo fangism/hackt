@@ -43,6 +43,10 @@ In namespace "", we have: {
         S = chan?(foo<>) S
         T = chan!(foo<>) T
         b = foo<> b
+      unroll sequence: 
+        chan?(foo<>) S
+        chan!(foo<>) T
+        foo<> b
       chp:
         concurrent: {
           *[

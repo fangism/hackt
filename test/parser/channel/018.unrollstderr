@@ -37,6 +37,8 @@ In namespace "", we have: {
       In channel definition "mychan", we have: {
       Instances:
         i = int<32> i
+      unroll sequence: 
+        int<32> i
       }
 
   Instances:

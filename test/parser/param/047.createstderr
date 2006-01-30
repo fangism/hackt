@@ -82,6 +82,13 @@ In namespace "", we have: {
           [0..::bogus::M[0]-1]
         }
 
+      unroll sequence: 
+        pint<> E
+        pint<> M[0..E-1]
+        M[0] = 3;
+        M[E-1] = 5;
+        pint<> N[0..M[0]-1]
+        N[M[0]-1] = E*2;
       footprint collection: {
         <2> {
           pint^0 E value: ?

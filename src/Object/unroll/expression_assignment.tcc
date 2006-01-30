@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.7 2006/01/22 18:20:54 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.8 2006/01/30 07:42:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -128,13 +128,13 @@ EXPRESSION_ASSIGNMENT_CLASS::what(ostream& o) const {
  */
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 ostream&
-EXPRESSION_ASSIGNMENT_CLASS::dump(ostream& o) const {
+EXPRESSION_ASSIGNMENT_CLASS::dump(ostream& o,
+		const expr_dump_context& dc) const {
 	NEVER_NULL(this->src);
 	INVARIANT(!dests.empty());
-	dumper dumpit(o, expr_dump_context::default_value);
+	dumper dumpit(o, dc);
 	for_each(this->dests.begin(), this->dests.end(), dumpit);
-	return this->src->dump(o << " = ", 
-		expr_dump_context::default_value) << ';';
+	return this->src->dump(o << " = ", dc) << ';';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

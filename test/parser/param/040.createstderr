@@ -42,6 +42,11 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        pint<> M
+        M = 2;
+        pint<> foo[0..1]
+        foo[0] = M;
       footprint: {
         pint^0 M value: 2
         pint^1 foo with indices: {

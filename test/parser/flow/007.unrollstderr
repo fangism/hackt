@@ -45,7 +45,7 @@ In namespace "", we have: {
   0 typedefs
   Parameters:
     j = pint^1 j with indices: {
-      [::i..::i]
+      [$i..$i]
     }
       unrolled index-value pairs: {
         0 = 1
@@ -54,7 +54,7 @@ In namespace "", we have: {
   Instances:
     x = bool^1 x with indices: {
       [0..0]
-      [::j[::i]..::j[::i]]
+      [::j[$i]..::j[$i]]
     }
       unrolled indices: {
         0 = ::x[0] 

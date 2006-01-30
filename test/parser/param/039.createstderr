@@ -37,6 +37,10 @@ In namespace "", we have: {
         }
 
         foo = pint<> foo (init = 3)
+      unroll sequence: 
+        pint<> foo
+        foo = 3;
+        pint<> bar[0..2]
       footprint: {
         pint^0 foo value: 3
         pint^1 bar with indices: {

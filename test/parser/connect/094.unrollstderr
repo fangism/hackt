@@ -58,6 +58,9 @@ In namespace "", we have: {
       Parameters:
         A = pint<> A
         B = pint<> B
+      unroll sequence: 
+        pint<> A
+        pint<> B
       }
 
   Instances:

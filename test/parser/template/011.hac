@@ -5,5 +5,3 @@ defproc foo() { }
 
 foo<13> bar;
 
-// for type-checking ok if foo undefined
-

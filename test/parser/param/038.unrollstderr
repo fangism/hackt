@@ -36,6 +36,11 @@ In namespace "", we have: {
       Parameters:
         M = pint<> M (init = N)
         N = pint<> N (init = 2)
+      unroll sequence: 
+        pint<> N
+        N = 2;
+        pint<> M
+        M = N;
       footprint: {
         pint^0 M value: 2
         pint^0 N value: 2

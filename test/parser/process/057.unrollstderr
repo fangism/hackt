@@ -48,6 +48,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        foo<> x[0..1]
       footprint: {
         process foo<>^1 x with indices: {
         }
@@ -68,6 +70,8 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Instances:
         a = bool<> a
+      unroll sequence: 
+        bool<> a
       footprint: {
         bool^0 a (instantiated) = ::foo::a 
       }

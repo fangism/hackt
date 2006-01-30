@@ -39,6 +39,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        foo<> x[0..1]
       footprint: {
         process foo<>^1 x with indices: {
         }
@@ -52,6 +54,7 @@ In namespace "", we have: {
     foo = process-definition (defined) foo(
       )
       In definition "foo", we have: {
+      unroll sequence: 
       footprint: {
       }
       }

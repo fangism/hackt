@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.9 2006/01/24 22:00:59 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.10 2006/01/30 07:42:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -72,15 +72,15 @@ ALIAS_CONNECTION_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 ostream&
-ALIAS_CONNECTION_CLASS::dump(ostream& o) const {
+ALIAS_CONNECTION_CLASS::dump(ostream& o, const expr_dump_context& dc) const {
 	INVARIANT(inst_list.size() > 1);
 	const_iterator iter(inst_list.begin());
 	const const_iterator end(inst_list.end());
 	NEVER_NULL(*iter);
-	(*iter)->dump(o, expr_dump_context::default_value);
+	(*iter)->dump(o, dc);
 	for (iter++; iter!=end; iter++) {
 		NEVER_NULL(*iter);
-		(*iter)->dump(o << " = ", expr_dump_context::default_value);
+		(*iter)->dump(o << " = ", dc);
 	}
 	return o << ';';
 }

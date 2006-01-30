@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.7 2006/01/22 18:21:01 fang Exp $
+	$Id: sequential_scope.h,v 1.8 2006/01/30 07:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -67,7 +67,7 @@ private:
 
 public:
 	ostream&
-	dump(ostream& o) const;
+	dump(ostream& o, const expr_dump_context&) const;
 
 	void
 	append_instance_management(

@@ -31,6 +31,8 @@ In namespace "", we have: {
       In datatype definition "my_data", we have: {
       Instances:
         x = int<28> x
+      unroll sequence: 
+        int<28> x
       }
 
 }

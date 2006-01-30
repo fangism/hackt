@@ -32,12 +32,14 @@ In namespace "", we have: {
     D = pint^0 D (init = 13) value: 13
   Definitions:
     foo = process-definition (defined) foo<
-      pint<> Q (default = D)
+      pint<> Q (default = ::D)
       >(
       )
       In definition "foo", we have: {
       Parameters:
-        Q = pint<> Q (default = D)
+        Q = pint<> Q (default = ::D)
+      unroll sequence: 
+        pint<> Q
       footprint collection: {
         <13> {
           pint^0 Q value: ?

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/conditional_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: conditional_scope.cc,v 1.5 2006/01/22 18:20:49 fang Exp $
+ 	$Id: conditional_scope.cc,v 1.6 2006/01/30 07:42:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
@@ -55,13 +55,12 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(conditional_scope)
 	TODO: add context to instance_management dumps.
  */
 ostream&
-conditional_scope::dump(ostream& o) const {
+conditional_scope::dump(ostream& o, const expr_dump_context& dc) const {
 	NEVER_NULL(guard);
-	guard->dump(o << "[ ", expr_dump_context::default_value)
-		<< " ->" << endl;
+	guard->dump(o << "[ ", dc) << " ->" << endl;
 	{
 		INDENT_SECTION(o);
-		parent_type::dump(o);
+		parent_type::dump(o, dc);
 	}
 	return o << auto_indent << ']';
 }

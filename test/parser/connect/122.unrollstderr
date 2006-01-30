@@ -38,6 +38,10 @@ In namespace "", we have: {
       Instances:
         composite = bool<> composite
         x = bool<> x
+      unroll sequence: 
+        bool<> x
+        bool<> composite
+        x = composite;
       footprint: {
         bool^0 composite (instantiated) = ::array::x 
         bool^0 x (instantiated) = ::array::composite 

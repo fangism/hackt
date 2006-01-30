@@ -1,0 +1,3 @@
+User-defined datatypes may only contain other data types and parameter values.
+	got: myproc<>
+ERROR with REJECT at [9:9..14]

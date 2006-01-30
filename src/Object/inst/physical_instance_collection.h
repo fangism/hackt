@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.8 2006/01/22 18:20:10 fang Exp $
+	$Id: physical_instance_collection.h,v 1.9 2006/01/30 07:42:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -18,6 +18,7 @@ class state_manager;
 class footprint_frame;
 class port_collection_context;
 struct cflat_aliases_arg_type;
+struct dump_flags;
 
 //=============================================================================
 // class instance_collection_base defined in "Object/inst/instance_collection_base.h"
@@ -52,8 +53,12 @@ virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 public:
 virtual	~physical_instance_collection();
 
+private:
+	using parent_type::dump;	// don't intend to use directly
+
+public:
 	ostream&
-	dump(ostream& o) const;
+	dump(ostream&, const dump_flags&) const;
 
 #if 0
 	/** returns the type of the first instantiation statement */
@@ -82,7 +87,7 @@ virtual bool
 	is_partially_unrolled(void) const = 0;
 
 virtual ostream&
-	dump_unrolled_instances(ostream& o) const = 0;
+	dump_unrolled_instances(ostream&, const dump_flags&) const = 0;
 
 virtual	good_bool
 	allocate_state(footprint&) = 0;

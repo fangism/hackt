@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.11 2006/01/22 18:20:13 fang Exp $
+	$Id: substructure_alias_base.h,v 1.12 2006/01/30 07:42:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -117,7 +117,9 @@ virtual	size_t
 	allocate_state(footprint&) const;
 
 	ostream&
-	dump_ports(ostream& o) const { return subinstances.dump(o); }
+	dump_ports(ostream& o, const dump_flags& df) const {
+		return subinstances.dump(o, df);
+	}
 
 	// simply forwarded call
 	good_bool
@@ -221,7 +223,7 @@ protected:
 
 public:
 	ostream&
-	dump_ports(ostream& o) const { return o; }
+	dump_ports(ostream& o, const dump_flags&) const { return o; }
 
 	void
 	collect_port_aliases(const port_alias_tracker&) const { }

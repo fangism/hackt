@@ -1,18 +1,24 @@
 /**
 	\file "Object/cflat_context.h"
+	This file just provides typedefs.  
 	Structure containing all the minimal information
 	needed for a cflat traversal over instances.  
-	$Id: cflat_context.h,v 1.2 2006/01/22 06:52:55 fang Exp $
+	$Id: cflat_context.h,v 1.3 2006/01/30 07:41:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_CFLAT_CONTEXT_H__
 #define	__HAC_OBJECT_CFLAT_CONTEXT_H__
 
+#if 0
 #include <iosfwd>
 #include "util/NULL.h"
+#else
+#include "Object/global_entry_context.h"
+#endif
 
 namespace HAC {
 namespace entity {
+#if 0
 class module;
 class footprint;
 class footprint_frame;
@@ -78,6 +84,10 @@ public:
 	get_frame_map(void) const { return fpf; }
 
 };	// end struct cflat_context
+#else
+typedef	global_entry_context_base		cflat_context_base;
+typedef	global_entry_context			cflat_context;
+#endif
 
 //=============================================================================
 }	// end namespace entity

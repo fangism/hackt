@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-alloc-expect.sh.in"
-#	$Id: hackt-alloc-expect.sh.in,v 1.5 2005/12/13 04:15:51 fang Exp $
+#	$Id: hackt-alloc-expect.sh.in,v 1.6 2006/01/30 07:42:07 fang Exp $
 
 # NOTE: tepomrarily just uses stdout dump during execution
 # will updated later...
@@ -14,23 +14,21 @@
 # $4 is the input file name WITHOUT the .in extension
 # $5 is the filter for ignoring certain difference in output
 #	(for no filter, pass "cat") (currently unused)
-# $6 is the test report log file, summarizing results
-# $7 is a difference analysis script to run on the objdump differences
+# $6 is a difference analysis script to run on the objdump differences
 #	AFTER the header filter has been run (currently unused)
-# $8 is an additional index filter to be run on the objdump differences,
+# $7 is an additional index filter to be run on the objdump differences,
 #	but only after the primary header filter ($5) is run (currently unused)
 # other subsequent arguments are ignored
 
-# if test $# -lt 8 ; then exit 1 ; fi
+# if test $# -lt 7 ; then exit 1 ; fi
 
 alloc=$1
 dump=$2
 srcroot=$3/$4
 bldroot=$4
 filter=$5
-logfile=$6
-analdiff=$7
-indfilter=$8
+analdiff=$6
+indfilter=$7
 
 # a pre-created (already created) object file must already exist
 if test ! -s $bldroot.haco-c
@@ -39,6 +37,7 @@ then
 	exit 1
 fi
 
+# redirection will catch any error messages
 $alloc $bldroot.haco-c $bldroot.haco-a > $bldroot.allocdump 2>&1
 
 case $? in
@@ -64,8 +63,7 @@ fi
 
 if test -s $bldroot.allocdiff
 then
-	@ECHO@ "$bldroot.allocdiff is non-empty!  See $logfile."
-	@ECHO@ `pwd`/"$bldroot.allocdiff" >> $logfile
+	@ECHO@ "$bldroot.allocdiff is non-empty!"
 #	$analdiff -v quiet=2 $bldroot.allocdiff > $bldroot.createanal
 #
 #	# see if is candidate for further difference analysis

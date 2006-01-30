@@ -102,6 +102,11 @@ In namespace "", we have: {
           [0..::foo::N/2-1]
         }
 
+      unroll sequence: 
+        pint<> N
+        bool<> a[0..N-1]
+        bool<> q[0..N/2-1]
+        q[0] = a[0] = a[N/2];
       footprint collection: {
         <3> {
           pint^0 N value: ?

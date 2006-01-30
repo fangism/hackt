@@ -58,6 +58,10 @@ In namespace "", we have: {
         _o = bool<> _o
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        bool<> _o
       prs:
         a & b -> _o-
         ~a & ~b -> _o+

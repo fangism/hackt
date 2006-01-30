@@ -1,9 +1,10 @@
 /**
 	\file "Object/expr/exp_dump_context.cc"
-	$Id: expr_dump_context.cc,v 1.3 2005/12/13 04:15:23 fang Exp $
+	$Id: expr_dump_context.cc,v 1.4 2006/01/30 07:42:01 fang Exp $
  */
 
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/operator_precedence.h"
 #include "Object/lang/PRS_base.h"	// for PRS::expr_dump_context
 
 namespace HAC {
@@ -14,23 +15,31 @@ const expr_dump_context
 expr_dump_context::default_value;
 
 const expr_dump_context
-expr_dump_context::error_mode(0, NULL, true);
+expr_dump_context::error_mode(OP_PREC_DEFAULT, NULL, true);
 
 //-----------------------------------------------------------------------------
-expr_dump_context::expr_dump_context() : caller_stamp(0), enclosing_scope(), 
-	include_type_info(false), parent_associativity(false) {
+expr_dump_context::expr_dump_context() : caller_stamp(OP_PREC_DEFAULT),
+		enclosing_scope(), include_type_info(false),
+		parent_associativity(false) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr_dump_context::expr_dump_context(const scopespace* s) :
+		caller_stamp(OP_PREC_DEFAULT),
+		enclosing_scope(s), include_type_info(false),
+		parent_associativity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr_dump_context::expr_dump_context(const char cs,
 		const scopespace* s, const bool t) :
-		caller_stamp(0), enclosing_scope(s), 
+		caller_stamp(cs), enclosing_scope(s), 
 		include_type_info(t), parent_associativity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr_dump_context::expr_dump_context(const PRS::expr_dump_context& c) :
-		caller_stamp(0), enclosing_scope(c.parent_scope), 
+		caller_stamp(OP_PREC_DEFAULT), enclosing_scope(c.parent_scope), 
 		include_type_info(false), parent_associativity(false) {
 }
 

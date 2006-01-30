@@ -34,6 +34,9 @@ In namespace "", we have: {
       Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
+      unroll sequence: 
+        chan?(bool<>) L
+        chan!(bool<>) R
       chp:
         concurrent: {
           R!(false)

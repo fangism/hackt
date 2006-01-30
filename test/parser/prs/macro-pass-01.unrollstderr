@@ -80,6 +80,10 @@ In namespace "", we have: {
         d = bool<> d
         g = bool<> g
         s = bool<> s
+      unroll sequence: 
+        bool<> g
+        bool<> s
+        bool<> d
       prs:
         passn(g,s,d)
       }
@@ -98,6 +102,15 @@ In namespace "", we have: {
         n = passn<> n
         p = passp<> p
         s = bool<> s
+      unroll sequence: 
+        bool<> g
+        bool<> _g
+        bool<> s
+        bool<> d
+        passn<> n
+        n (g, s, d);
+        passp<> p
+        p (_g, s, d);
       }
 
     passp = process-definition (defined) passp(
@@ -110,6 +123,10 @@ In namespace "", we have: {
         d = bool<> d
         g = bool<> g
         s = bool<> s
+      unroll sequence: 
+        bool<> g
+        bool<> s
+        bool<> d
       prs:
         passp(g,s,d)
       }

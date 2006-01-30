@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.8 2006/01/22 18:20:09 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.9 2006/01/30 07:42:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -58,8 +58,8 @@ param_value_collection::~param_value_collection() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-param_value_collection::dump(ostream& o) const {
-	parent_type::dump(o);
+param_value_collection::dump(ostream& o, const dump_flags& df) const {
+	parent_type::dump_base(o, df);
 	const count_ptr<const param_expr>
 		init_def(default_value());
 	if (init_def) {

@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: param_expression_assignment.h,v 1.4 2006/01/22 18:21:00 fang Exp $
+	$Id: param_expression_assignment.h,v 1.5 2006/01/30 07:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_EXPRESSION_ASSIGNMENT_H__
@@ -51,7 +51,7 @@ virtual	ostream&
 	what(ostream& o) const = 0;
 
 virtual	ostream&
-	dump(ostream& o) const = 0;
+	dump(ostream&, const expr_dump_context&) const = 0;
 
 virtual	size_t
 	size(void) const = 0;

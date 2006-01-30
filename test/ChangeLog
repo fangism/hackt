@@ -1,5 +1,18 @@
 # "test/ChangeLog"
 
+2006-01-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-2-fixdump-06:
+	  Removed archaic clean-test and subdir.not_a_test bogus targets
+		and no longer using test_report.txt.  Good riddance. 
+	  TODO: eliminate redundant make suffix rules to produces
+		various dumps -- just use one suffix rule.
+	  TODO: add test rule for generating intermediate objects in
+		different manners, skipping and fusing compile phases.  
+		This is badly needed to detect and correct a critical
+		inconsistency bug!
+
+
 2006-01-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-74-PRS-04-01:

@@ -40,6 +40,10 @@ In namespace "", we have: {
       Parameters:
         J = pint<> J (init = K)
         K = pint<> K
+      unroll sequence: 
+        pint<> K
+        pint<> J
+        J = K;
       }
 
     foo = process-definition (defined) foo<
@@ -53,6 +57,11 @@ In namespace "", we have: {
         A = pbool<> A
         J = pint<> J (init = K)
         K = pint<> K
+      unroll sequence: 
+        pbool<> A
+        pint<> K
+        pint<> J
+        J = K;
       }
 
 }

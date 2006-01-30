@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.13 2006/01/27 08:07:18 fang Exp $
+ 	$Id: instance_collection.cc,v 1.14 2006/01/30 07:42:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -140,10 +140,25 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Overridden by param_value_collection.  
+	Forwarded call to dump.  
  */
 ostream&
 instance_collection_base::dump(ostream& o) const {
+	return dump(o, dump_flags::default_value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::dump_base(ostream& o) const {
+	return dump_base(o, dump_flags::default_value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overridden by param_value_collection.  
+ */
+ostream&
+instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 #if 0
 	// but we need a version for unrolled and resolved parameters.  
 	if (is_partially_unrolled()) {
@@ -202,35 +217,55 @@ instance_collection_base::dump(ostream& o) const {
 ostream&
 instance_collection_base::pair_dump(ostream& o) const {
 	o << auto_indent << get_name() << " = ";
-	return dump(o) << endl;
+	return dump(o, dump_flags::no_owners) << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_collection_base::pair_dump_top_level(ostream& o) const {
+	o << auto_indent << get_name() << " = ";
+	return dump(o, dump_flags::verbose) << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 instance_collection_base::get_qualified_name(void) const {
 	if (owner)
-		return owner->get_qualified_name() +"::" +key;
+		return owner->get_qualified_name() + "::" +key;
 		// "::" should be the same as HAC::parser::scope
 	else return key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// not needed
-ostream&
-instance_collection_base::dump_qualified_name(ostream& o) const {
-	if (owner)
-		return owner->dump_qualified_name(o, 
-			dump_flags::default_value) << "::" << key;
-	else	return o << key;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We catch a special case: when we refer to induction variables, 
+	we drop any qualifiers.  
+ */
 ostream&
 instance_collection_base::dump_qualified_name(ostream& o, 
 		const dump_flags& df) const {
-	if (owner && df.show_owner)
-		return owner->dump_qualified_name(o, df) << "::" << key;
-	else	return o << key;
+#if 0
+	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
+		(df.show_namespace_owner ? "(ns) " : " ") <<
+		(df.show_leading_scope ? "(::)]" : "]");
+#endif
+if (owner) {
+	const param_value_collection* const
+		p(IS_A(const param_value_collection*, this));
+	if (p && p->is_loop_variable()) {
+		// nothing, just print the plain key
+		// maybe '$' to indicate variable?
+		o << '$';
+	} else if (owner.is_a<const definition_base>() &&
+			df.show_definition_owner) {
+		owner->dump_qualified_name(o, df) << "::";
+	} else if (owner.is_a<const name_space>() &&
+			(df.show_namespace_owner ||
+			!owner->is_global_namespace())) {
+		owner->dump_qualified_name(o, df) << "::";
+	}
+}
+	return o << key;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -732,8 +767,13 @@ physical_instance_collection::~physical_instance_collection() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-physical_instance_collection::dump(ostream& o) const {
-	parent_type::dump(o);
+physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
+#if 0
+	o << "dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
+		(df.show_namespace_owner ? "(ns) " : " ") <<
+		(df.show_leading_scope ? "(::) " : " ") << endl << auto_indent;
+#endif
+	parent_type::dump_base(o, df);
 	if (is_partially_unrolled()) {
 		if (dimensions) {
 			INDENT_SECTION(o);
@@ -741,12 +781,12 @@ physical_instance_collection::dump(ostream& o) const {
 			{
 				// INDENT_SECTION macro not making unique IDs
 				INDENT_SECTION(o);
-				dump_unrolled_instances(o);
+				dump_unrolled_instances(o, df);
 			}
 			o << auto_indent << "}";        // << endl;
 		} else {
 			// else nothing to say, just one scalar instance
-			dump_unrolled_instances(o << " (instantiated)");
+			dump_unrolled_instances(o << " (instantiated)", df);
 		}
 	}
 	return o;

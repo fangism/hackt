@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.6 2006/01/24 22:00:58 fang Exp $
+	$Id: template_formals_manager.cc,v 1.7 2006/01/30 07:42:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,6 +18,7 @@
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/type/template_actuals.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/common/dump_flags.h"
 
 #include "util/hash_qmap.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -66,7 +67,8 @@ template_formals_manager::dump_formals_list(ostream& o,
 		// INVARIANT((*i)->is_template_formal());
 		INVARIANT((*i)->is_template_formal() ||
 			(*i)->is_loop_variable());
-		(*i)->dump(o << auto_indent) << endl;
+		(*i)->dump(o << auto_indent,
+			dump_flags::no_definition_owner) << endl;
 	}
 	return o << auto_indent << '>';
 }

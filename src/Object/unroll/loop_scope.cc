@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.6 2006/01/24 22:01:00 fang Exp $
+ 	$Id: loop_scope.cc,v 1.7 2006/01/30 07:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -60,14 +60,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(loop_scope)
 	TODO: add context to instance_management dumps.
  */
 ostream&
-loop_scope::dump(ostream& o) const {
+loop_scope::dump(ostream& o, const expr_dump_context& dc) const {
 	NEVER_NULL(ind_var);
 	NEVER_NULL(range);
 	o << "(;" << ind_var->get_name() << ':';
-	range->dump(o, expr_dump_context::default_value) << ':' << endl;
+	range->dump(o, dc) << ':' << endl;
 	{
 		INDENT_SECTION(o);
-		parent_type::dump(o);
+		parent_type::dump(o, dc);
 	}
 	return o << auto_indent << ')';
 }

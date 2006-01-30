@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.9 2006/01/22 18:20:56 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.10 2006/01/30 07:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -100,10 +100,10 @@ sequential_scope::~sequential_scope() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-sequential_scope::dump(ostream& o) const {
+sequential_scope::dump(ostream& o, const expr_dump_context& dc) const {
 	for_each(instance_management_list.begin(), 
 		instance_management_list.end(), 
-		instance_management_base::dumper(o)
+		instance_management_base::dumper(o, dc)
 	);
 	return o;
 }
@@ -265,7 +265,8 @@ sequential_scope::load_object_base(
 //=============================================================================
 // class instance_management_base::dumper method definitions
 
-instance_management_base::dumper::dumper(ostream& o) : os(o) {
+instance_management_base::dumper::dumper(ostream& o, 
+		const expr_dump_context& dc) : os(o), edc(dc) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -277,7 +278,7 @@ template <template <class> class P>
 ostream&
 instance_management_base::dumper::operator () (
 		const P<const instance_management_base>& i) const {
-	return i->dump(os << auto_indent) << endl;
+	return i->dump(os << auto_indent, edc) << endl;
 }
 
 //=============================================================================

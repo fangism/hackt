@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.14 2006/01/28 18:21:19 fang Exp $
+ 	$Id: definition.cc,v 1.15 2006/01/30 07:42:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -47,6 +47,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
@@ -353,13 +354,19 @@ definition_base::get_qualified_name(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parent may be a definition_base in the case of a typedef.
+	In the future, there will be support for nested typedefs.  
+	(Probably not nested definitions.)
+ */
 ostream&
 definition_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
-	if (parent)
+	if (parent) {
 		parent->dump_qualified_name(o, df) << scope;
+	}
 	return o << key;
 } else	return o;
 }
@@ -809,6 +816,11 @@ user_def_chan::dump(ostream& o) const {
 		"In channel definition \"" << key << "\", we have: {" << endl;
 	{
 		scopespace::dump_for_definitions(o);
+		o << auto_indent << "unroll sequence: " << endl;
+		{	INDENT_SECTION(o);
+			const expr_dump_context dc(this);
+			sequential_scope::dump(o, dc);
+		}
 		// CHP
 		if (!send_chp.empty()) {
 			o << auto_indent << "send-CHP:" << endl;
@@ -841,7 +853,7 @@ user_def_chan::get_qualified_name(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_chan::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	if (parent)
 		parent->dump_qualified_name(o, df);
 	return o << scope << key;
@@ -1644,7 +1656,7 @@ enum_datatype_def::get_qualified_name(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	if (parent)
 		parent->dump_qualified_name(o, df);
 	return o << scope << key;
@@ -1926,6 +1938,11 @@ user_def_datatype::dump(ostream& o) const {
 		"In datatype definition \"" << key << "\", we have: {" << endl;
 	{
 		scopespace::dump_for_definitions(o);
+		o << auto_indent << "unroll sequence: " << endl;
+		{	INDENT_SECTION(o);
+			const expr_dump_context dc(this);
+			sequential_scope::dump(o, dc);
+		}
 		// CHP
 		if (!set_chp.empty()) {
 			o << auto_indent << "set-CHP:" << endl;
@@ -1961,7 +1978,7 @@ user_def_datatype::get_qualified_name(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	if (parent)
 		parent->dump_qualified_name(o, df);
 	return o << scope << key;
@@ -2629,6 +2646,11 @@ process_definition::dump(ostream& o) const {
 	{	// begin indent level
 		scopespace::dump_for_definitions(o);
 		if (defined) {
+			o << auto_indent << "unroll sequence: " << endl;
+			{	INDENT_SECTION(o);
+				const expr_dump_context dc(this);
+				sequential_scope::dump(o, dc);
+			}
 			// PRS
 			if (!prs.empty()) {
 				o << auto_indent << "prs:" << endl;
@@ -2666,7 +2688,7 @@ process_definition::get_qualified_name(void) const {
 ostream&
 process_definition::dump_qualified_name(ostream& o,
 		const dump_flags& df) const {
-if (df.show_owner) {
+if (df.show_definition_owner) {
 	return parent->dump_qualified_name(o, df) << scope << key;
 } else	return o;
 }
