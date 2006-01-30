@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "parse-test-expect.sh.in"
-#	$Id: parse-test-expect.sh.in,v 1.2 2005/12/13 04:15:52 fang Exp $
+#	$Id: parse-test-expect.sh.in,v 1.2.10.1 2006/01/30 06:37:58 fang Exp $
 # This file used to be:
 #	Id: artc-expect.sh.in,v 1.7.2.1 2005/12/12 19:35:52 fang Exp
 # This file came from "artc-expect.sh" in revision pre-history.
@@ -11,23 +11,20 @@
 # $3 is the input file name WITHOUT the .in extension
 # $4 is the filter for ignoring certain difference in output
 #	(for no filter, pass "cat")
-# $5 is the test report log file, summarizing results
 # other subsequent arguments are ignored
 
-# if test $# -lt 6 ; then exit 1 ; fi
+# if test $# -lt 4 ; then exit 1 ; fi
 
 # need to search source directory for VPATH builds
 cmd="$1 -I $2"
 srcroot=$2/$3
 bldroot=$3
 filter="$4"
-logfile=$5
 
 # echo $cmd
 # echo $srcroot
 # echo $bldroot
 # echo $filter
-# echo $logfile
 
 # intentionally using stdin to avoid file name differences in output diff-ing
 $cmd < $srcroot.hac > $bldroot.test 2>&1
@@ -68,8 +65,7 @@ fi
 @HAVE_BISON_TRUE@fi
 
 if test -s $bldroot.diff ; then
-	@ECHO@ "$bldroot.diff is non-empty!  See $logfile."
-	@ECHO@ `pwd`/"$bldroot.diff" >> $logfile
+	@ECHO@ "$bldroot.diff is non-empty!"
 	exit 1
 fi
 

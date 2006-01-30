@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.14 2006/01/25 20:26:06 fang Exp $
+#	$Id: Make.test-tail,v 1.14.2.1 2006/01/30 06:37:56 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -39,21 +39,12 @@ ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
 
 DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
 
-# TODO: phase out TEST_REPORT, we already have check.log
-# also get rid of subdir.not_a_test
-TEST_REPORT = $(TEST_BUILDDIR)/test-report.txt
-
 # These needs to be specified in Makefile.am to take effect
 # SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest
 #	.hacktcreatetest .hacktalloctest .hacktcflattest
 
 .hac.stderr:
 	@$(TOUCH) $@
-
-subdir.not_a_test:
-	@$(ECHO) "#!$(SHELL)" > $@
-	@$(ECHO) "echo \"In $(subdir):\" >> $(TEST_REPORT)" >> $@
-	@$(CHMOD) +x $@
 
 .hac.haco:
 	$(HACKT_COMPILE_EXE) -I$(srcdir) $< $@
@@ -72,7 +63,7 @@ subdir.not_a_test:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_PARSE_TEST_SH) "\"$(PARSE_TEST_EXE)\"" $(srcdir) $* \
-		"\"$(HACKT_COMPILE_ERROR_FILTER)\"" $(TEST_REPORT) >> $@
+		"\"$(HACKT_COMPILE_ERROR_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
 .hac.hacktobjtest:
@@ -80,7 +71,7 @@ subdir.not_a_test:
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_OBJ_TEST_SH) "\"$(HACKT_COMPILE_EXE)\"" \
 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" $(TEST_REPORT) >> $@
+		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
 .haco.haco-u:
@@ -97,7 +88,7 @@ subdir.not_a_test:
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_UNROLL_TEST_SH) "\"$(HACKT_UNROLL_EXE)\"" \
 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" $(TEST_REPORT) \
+		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" \
 		"\"$(ANALYZE_DIFF_AWK)\"" \
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
@@ -116,7 +107,7 @@ subdir.not_a_test:
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_CREATE_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" $(TEST_REPORT) \
+		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" \
 		"\"$(ANALYZE_DIFF_AWK)\"" \
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
@@ -135,7 +126,7 @@ subdir.not_a_test:
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_ALLOC_TEST_SH) "\"$(HACKT_ALLOC_EXE)\"" \
 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
-		$* "\"$(ALLOC_FILTER)\"" $(TEST_REPORT) \
+		$* "\"$(ALLOC_FILTER)\"" \
 		"\"$(ANALYZE_DIFF_AWK)\"" \
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
@@ -147,7 +138,7 @@ subdir.not_a_test:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_EXE)\"" \
-		$(srcdir) $* $(TEST_REPORT) >> $@
+		$(srcdir) $* >> $@
 	@$(CHMOD) +x $@
 
 .haco-a.prsimexpr:
@@ -165,7 +156,7 @@ endif
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_PRSIMEXPR_TEST_SH) "\"$(HACKT_PRSIM_EXE)\"" \
-		$(srcdir) $* $(TEST_REPORT) >> $@
+		$(srcdir) $* >> $@
 	@$(CHMOD) +x $@
 
 
@@ -316,9 +307,9 @@ CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexprdiff)
 
 
-DISTCLEANFILES += local.cvsignore subdir.not_a_test
+DISTCLEANFILES += local.cvsignore
 
-all-local: .cvsignore subdir.not_a_test \
+all-local: .cvsignore \
 	$(HACKT_PARSE_TEST_PASSES:=.stderr) $(TESTS) \
 	$(EMPTY_CFLAT_PRS)
 
@@ -394,11 +385,6 @@ cleaner-recursive:
 
 .PHONY: cleaner cleaner-local cleaner-recursive \
 	clean-tests clean-tests-recursive help-test
-
-# some stderr files don't exist, because empty output files are optional
-# this shouldn't really be necessary...
-# dist-hook-extra:
-#	$(RM) $(distdir)/subdir.not_a_test
 
 # this cheat is only needed to create auto-generated (empty) distribution files
 # dist-hook-missing: $(EXTRA_DIST)

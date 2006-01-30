@@ -5,6 +5,11 @@
 
 2006-01-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-2-fixdump-06:
+	  No source change.  Test suite clean-up only.  
+	  End of branch.  Merge to trunk.  
+
+
 	* HACKT-00-01-04-main-00-76-2-fixdump-05:
 	  No source change.
 	  Enabled a handful of alloc tests in test suite.  

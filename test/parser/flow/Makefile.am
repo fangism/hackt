@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2006/01/25 20:26:23 fang Exp $
+#	$Id: Makefile.am,v 1.8.2.1 2006/01/30 06:37:58 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -42,11 +42,7 @@ EMPTY_CFLAT_PRS_TESTS += \
 	000 001 007 008 009 \
 	010 011 012 \
 	020 021 023 024 025 \
-	030 \
-	loop-alias-01 loop-alias-02 loop-alias-03 loop-alias-04 loop-alias-05 \
-	loop-alias-06 loop-alias-07 \
-	loop-ports-01 loop-ports-02 loop-ports-03 loop-ports-04 loop-ports-05 \
-	loop-ports-06
+	030
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS +=

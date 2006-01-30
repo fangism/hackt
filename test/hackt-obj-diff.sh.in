@@ -2,7 +2,7 @@
 # "hackt-obj-diff.sh.in"
 
 # compares textual object dumps
-#	$Id: hackt-obj-diff.sh.in,v 1.3 2006/01/25 20:26:06 fang Exp $
+#	$Id: hackt-obj-diff.sh.in,v 1.3.2.1 2006/01/30 06:37:57 fang Exp $
 # This file used to be:
 #	Id: artobj-diff.sh.in,v 1.6.2.1 2005/12/12 19:35:52 fang Exp
 # This file came from "artobj-diff.sh" in revision prehistory.  
@@ -17,7 +17,6 @@
 #	prerequisite: the input file must pass type-checking
 # $5 is the filter command for ignoring difference in output
 #	(for no filter, pass "cat")
-# $6 is the test report log file, summarizing results
 # additional arguments are ignored.  
 
 # if the .test file exists, then program didn't crash, we can proceed.
@@ -29,10 +28,10 @@ dump=$2
 srcroot=$3/$4
 bldroot=$4
 filter=$5
-logfile=$6
 
 if test ! -f $bldroot.test ; then exit 1 ; fi
 
+# redirection will catch any error messages
 $cmd $srcroot.hac $bldroot.haco > $bldroot.outdump 2>&1
 if test $? -ne 0 ; then exit 1; fi
 
@@ -45,8 +44,7 @@ if test $? -ne 0 ; then exit 1; fi
 	@CAT@ > $bldroot.objdiff
 
 if test -s $bldroot.objdiff ; then
-	@ECHO@ "$bldroot.objdiff is non-empty!  See $logfile."
-	@ECHO@ `pwd`/"$bldroot.objdiff" >> $logfile
+	@ECHO@ "$bldroot.objdiff is non-empty!"
 	exit 1
 fi
 
