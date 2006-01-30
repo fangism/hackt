@@ -1,0 +1,8 @@
+// "036.hac"
+// instantiates "033.hac"
+
+import "033.hac";
+
+my_data Z[2];
+
+

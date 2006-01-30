@@ -1,0 +1,7 @@
+// "032.hac"
+// instantiation of "031.hac"
+
+import "031.hac";
+
+my_data  Q;
+

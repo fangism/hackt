@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2005/12/13 04:16:30 fang Exp $
+#	$Id: Makefile.am,v 1.9.10.1 2006/01/30 05:27:02 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -17,7 +17,9 @@ HACKT_PARSE_TEST_PASSES = \
 	040 041
 
 # unfortunately is out of order... to bad $(sort ...) is non-posix
-HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_PASSES) $(HACKT_PARSE_TEST_FAILURES)
+HACKT_PARSE_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_PASSES) \
+	$(HACKT_PARSE_TEST_FAILURES)
 
 HACKT_OBJ_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_PASSES)
@@ -33,6 +35,10 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	029 \
 	037 038 039 \
 	040
+
+HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
+
+# nothing worth cflat-ing
 
 include $(top_srcdir)/test/Make.test-tail
 

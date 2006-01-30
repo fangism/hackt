@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2005/12/13 04:22:22 fang Exp $
+#	$Id: Makefile.am,v 1.12.10.1 2006/01/30 05:27:15 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -27,7 +27,9 @@ HACKT_PARSE_TEST_PASSES = \
 
 BISON_OUTPUTS += 027 028 042 047 048 050
 
-HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
+HACKT_PARSE_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_FAILURES) \
+	$(HACKT_PARSE_TEST_PASSES)
 
 HACKT_OBJ_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_PASSES)
@@ -45,6 +47,21 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	059 \
 	061 062 063 064 068 \
 	070 073
+
+HACKT_ALLOC_TEST_SUBJECTS = \
+	008 009 \
+	011 012 \
+	029 \
+	038 \
+	049 \
+	068 \
+	070 073
+
+# expected to fail create (OK):
+# 045 046 061 062 064
+
+# CRASH BUGS:
+# alloc: 059 063 persistence! (discovered 20060129)
 
 include $(top_srcdir)/test/Make.test-tail
 

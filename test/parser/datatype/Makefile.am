@@ -1,18 +1,19 @@
 # "test/parser/datatype/Makefile.am"
-#	$Id: Makefile.am,v 1.11.10.1 2006/01/27 23:04:27 fang Exp $
+#	$Id: Makefile.am,v 1.11.10.2 2006/01/30 05:27:12 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	    003 004 005 009 \
 	010 011 012 014 015 017 018 019 \
-	020 024 025
+	020 024 025 \
+	034 035
 
 HACKT_PARSE_TEST_PASSES = \
 	001 002 006 007 008 \
 	013 016 \
 	021 022 023 026 027 028 029 \
-	030
+	030 031 032 033 036
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -27,9 +28,10 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 # omitted tests are uninteresting
 HACKT_CREATE_TEST_SUBJECTS = \
 	001 002 006 007 008 \
-	023 026
+	023 026 029 \
+	030 031 032 033 036
 
-# HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
+HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 015 017 018 019 020

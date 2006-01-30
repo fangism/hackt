@@ -1,0 +1,16 @@
+// "034.hac"
+// copy-modified from "033.hac"
+// should reject channel type inside data
+
+defchan e1of2 <: chan(bool) (bool t, f, e) {
+	send { }
+	recv { }
+}
+
+deftype my_data <: int<4> (int<8> x; bool y) {
+	bool foo;
+	e1of2 BAD;
+	set { }
+	get { }
+}
+

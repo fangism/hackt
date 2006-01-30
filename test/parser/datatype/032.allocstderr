@@ -1,0 +1,9 @@
+globID	super		localID	canonical	footprint-frame
+[global struct entries]
+1	(top)	-	1	Q	my_data<>
+	int: 1
+	bool: 1
+[global int entries]
+1	(top)	-	1	Q.x	
+[global bool entries]
+1	(top)	-	1	Q.y	

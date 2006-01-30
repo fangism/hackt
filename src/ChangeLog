@@ -5,6 +5,14 @@
 
 2006-01-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-2-fixdump-05:
+	  No source change.
+	  Enabled a handful of alloc tests in test suite.  
+	  Added a few basic datatype tests.  
+	  Discovered persistence BUG in parser/template/059,063.hac!
+	  TODO: simplify suffix rules for dump files, eliminate redundant.
+
+
 	* HACKT-00-01-04-main-00-76-2-fixdump-04:
 	  Now propagating expr_dump_context argument through all
 		instance_management_base::dump, for better control over dump.
