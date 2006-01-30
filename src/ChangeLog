@@ -5,6 +5,13 @@
 
 2006-01-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-5:
+	  Check for range validity before instantiating indices
+		inside a instance array (collection).  
+		This fixes an assertion failure on invalid code, 
+		case: parser/flow/loop-instantiation-01.hac.
+
+
 	* HACKT-00-01-04-main-00-76-4-merged-fixdump-06:
 	  Merge of -fixdump branch fixes.  
 		Summary: better control over dump formatting through

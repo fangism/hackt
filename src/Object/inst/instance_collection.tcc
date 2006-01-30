@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.15 2006/01/30 07:42:02 fang Exp $
+	$Id: instance_collection.tcc,v 1.16 2006/01/30 20:57:20 fang Exp $
 	TODO: trim includes
  */
 
@@ -480,7 +480,8 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Instantiates integer parameters at the specified indices.
-	TODO: change argument to take a const_range_list.  
+	\param actuals the (optional) relaxed template arguments, 
+		which is only applicable to processes.  
 	\param i fully-specified range of indices to instantiate.
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -489,10 +490,19 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		const instance_relaxed_actuals_type& actuals, 
 		const unroll_context& c) {
 	STACKTRACE("instance_array<Tag,D>::instantiate_indices()");
+	if (!ranges.is_valid()) {
+		ranges.dump(cerr << "ERROR: invalid instantiation range list: ",
+			expr_dump_context::default_value) << endl;
+		return good_bool(false);
+	}
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
 	multikey_generator<D, pint_value_type> key_gen;
+#if ENABLE_STACKTRACE
+	ranges.dump(STACKTRACE_INDENT,
+		expr_dump_context::default_value) << endl;
+#endif
 	ranges.make_multikey_generator(key_gen);
 	key_gen.initialize();
 	bool err = false;

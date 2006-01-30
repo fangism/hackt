@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range_list.h,v 1.7 2006/01/22 18:19:45 fang Exp $
+	$Id: const_range_list.h,v 1.8 2006/01/30 20:57:19 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_LIST_H__
@@ -69,6 +69,9 @@ public:
 
 	size_t
 	size(void) const;
+
+	bool
+	is_valid(void) const;
 
 	bool
 	is_static_constant(void) const { return true; }

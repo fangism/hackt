@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.8 2006/01/22 18:19:51 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.9 2006/01/30 20:57:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -152,6 +152,21 @@ const_range_list::size(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return true if all ranges in list are valid.  
+ */
+bool
+const_range_list::is_valid(void) const {
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		if (!i->is_sane())
+			return false;
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Checks for overlap between two static multidimensional index ranges.  
 	If argument is actually dynamic, can only conservatively return false.  
 	\return a const_range_list which is either false if there's no overlap, 
@@ -174,8 +189,8 @@ const_range_list::static_overlap(const meta_range_list& r) const {
 		const_iterator j(s->begin());
 		for ( ; i!=end(); i++, j++) {
 			// check for index overlap in ALL dimensions
-			const const_range& ir = *i;
-			const const_range& jr = *j;
+			const const_range& ir(*i);
+			const const_range& jr(*j);
 			const_range o(ir.static_overlap(jr));
 			ret.push_back(o);
 			if (!o.empty())

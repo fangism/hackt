@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.11 2006/01/30 07:42:02 fang Exp $
+	$Id: instance_alias.tcc,v 1.12 2006/01/30 20:57:20 fang Exp $
 	TODO: trim includes
  */
 
@@ -257,7 +257,8 @@ INSTANCE_ALIAS_INFO_CLASS::trace_collection(
 		physical_instance_collection&
 			ret(*sup.lookup_port_instance(*this->container));
 #if ENABLE_STACKTRACE
-		ret.dump(STACKTRACE_INDENT << "ret: ") << endl;
+		ret.dump(STACKTRACE_INDENT << "ret: ",
+			dump_flags::default_value) << endl;
 #endif
 		return ret;
 	}
@@ -1242,7 +1243,8 @@ INSTANCE_ALIAS_CLASS::trace_alias(const substructure_alias& a) const {
 #endif
 	physical_instance_collection& pp(this->trace_collection(a));
 #if ENABLE_STACKTRACE
-	pp.dump(STACKTRACE_INDENT << "got: ") << endl;
+	pp.dump(STACKTRACE_INDENT << "got: ",
+		dump_flags::default_value) << endl;
 	STACKTRACE_INDENT << "key: " << this->key << endl;
 #endif
 	// this seems wasteful but is required for correctness, 
@@ -1393,7 +1395,8 @@ KEYLESS_INSTANCE_ALIAS_CLASS::trace_alias(const substructure_alias& p) const {
 #endif
 	physical_instance_collection& pp(this->trace_collection(p));
 #if ENABLE_STACKTRACE
-	pp.dump(STACKTRACE_INDENT << "got: ") << endl;
+	pp.dump(STACKTRACE_INDENT << "got: ",
+		dump_flags::default_value) << endl;
 #endif
 	container_type& c(IS_A(container_type&, pp));
 	return c.get_the_instance();

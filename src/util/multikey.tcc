@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.10 2005/09/04 21:15:07 fang Exp $
+	$Id: multikey.tcc,v 1.11 2006/01/30 20:57:21 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -479,6 +479,11 @@ MULTIKEY_GENERATOR_CLASS::multikey_generator(const LP& l) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This checks to make sure that for every dimension, 
+	the coordinate of the lower corner is <= that of the upper corner.  
+	Will die on assertion failure.  
+ */
 MULTIKEY_GENERATOR_TEMPLATE_SIGNATURE
 void
 MULTIKEY_GENERATOR_CLASS::validate(void) const {
@@ -591,6 +596,11 @@ MULTIKEY_GENERATOR_GENERIC_CLASS::multikey_generator_generic(const LP& l) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This checks to make sure that for every dimension, 
+	the coordinate of the lower corner is <= that of the upper corner.  
+	Will die on assertion failure.  
+ */
 MULTIKEY_GENERATOR_GENERIC_TEMPLATE_SIGNATURE
 void
 MULTIKEY_GENERATOR_GENERIC_CLASS::validate(void) const {
