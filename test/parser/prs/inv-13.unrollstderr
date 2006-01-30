@@ -35,6 +35,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
       prs:
         a -> b-
         ~a -> b+

@@ -32,6 +32,8 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Parameters:
         N = pint<> N (default = 7)
+      unroll sequence: 
+        pint<> N
       footprint collection: {
         <13> {
           pint^0 N value: ?

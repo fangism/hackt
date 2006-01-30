@@ -70,6 +70,8 @@ In namespace "", we have: {
       In definition "basket", we have: {
       Instances:
         egg_array = egg<> egg_array
+      unroll sequence: 
+        egg<> egg_array
       footprint: {
         process egg<>^0 egg_array (instantiated) = ::basket::egg_array (
           int<32>^0 yolk (instantiated) = ::basket::egg_array.yolk 
@@ -83,6 +85,8 @@ In namespace "", we have: {
       In definition "bundle", we have: {
       Instances:
         c = basket<> c
+      unroll sequence: 
+        basket<> c
       footprint: {
         process basket<>^0 c (instantiated) = ::bundle::c (
           process egg<>^0 egg_array (instantiated) = ::bundle::c.egg_array (
@@ -98,6 +102,8 @@ In namespace "", we have: {
       In definition "egg", we have: {
       Instances:
         yolk = int<32> yolk
+      unroll sequence: 
+        int<32> yolk
       footprint: {
         int<32>^0 yolk (instantiated) = ::egg::yolk 
       }

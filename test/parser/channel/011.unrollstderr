@@ -44,6 +44,10 @@ In namespace "", we have: {
         K = pint<> K
       Instances:
         i = int<::mychan::K> i
+      unroll sequence: 
+        pint<> J
+        pint<> K
+        int<::mychan::K> i
       }
 
 }

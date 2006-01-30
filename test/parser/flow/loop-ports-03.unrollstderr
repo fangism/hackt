@@ -83,6 +83,9 @@ In namespace "", we have: {
           [0..::ch1of::N-1]
         }
 
+      unroll sequence: 
+        pint<> N
+        bool<> d[0..N-1]
       footprint collection: {
         <4> {
           pint^0 N value: ?
@@ -104,6 +107,8 @@ In namespace "", we have: {
       In definition "dcelm", we have: {
       Instances:
         a = bool<> a
+      unroll sequence: 
+        bool<> a
       footprint: {
         bool^0 a (instantiated) = ::dcelm::a 
       }
@@ -118,6 +123,12 @@ In namespace "", we have: {
           [0..0]
         }
 
+      unroll sequence: 
+        ch1of<4> ad
+        dcelm<> ce[0..0]
+        (;b:[0..0]:
+          ce[$b] (ad.d[$b/4]);
+        )
       footprint: {
         process ch1of<4>^0 ad (instantiated) = ::lut::ad (
           bool^1 d with indices: {

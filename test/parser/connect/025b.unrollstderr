@@ -47,6 +47,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
       footprint: {
         bool^0 a (instantiated) = ::bar::a 
         bool^0 b (instantiated) = ::bar::b 

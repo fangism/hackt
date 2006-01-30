@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.9 2006/01/22 18:20:57 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.9.4.1 2006/01/30 02:42:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -131,7 +131,8 @@ instantiation_statement_base::~instantiation_statement_base() {
 	TODO: auto_indent.
  */
 ostream&
-instantiation_statement_base::dump(ostream& o) const {
+instantiation_statement_base::dump(ostream& o,
+		const expr_dump_context& dc) const {
 //	STACKTRACE("instantation_statement::dump()");
 	const count_ptr<const fundamental_type_reference>
 		type_base(get_type_ref());
@@ -140,7 +141,7 @@ instantiation_statement_base::dump(ostream& o) const {
 	// is this ok: reference to automatic object?
 	const const_relaxed_args_type& ra(get_relaxed_actuals());
 	if (ra) {
-		ra->dump(o << '<', expr_dump_context::default_value) << '>';
+		ra->dump(o << '<', dc) << '>';
 	}
 	o << " ";
 	never_ptr<const instance_collection_base>
@@ -151,7 +152,7 @@ instantiation_statement_base::dump(ostream& o) const {
 		o << "<unknown>";
 	}
 	if (indices)
-		indices->dump(o, expr_dump_context::default_value);
+		indices->dump(o, dc);
 	return o;
 }
 

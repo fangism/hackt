@@ -38,6 +38,10 @@ In namespace "", we have: {
           [0..3]
         }
 
+      unroll sequence: 
+        pint<> milk
+        pint<> tea
+        pbool<> water[0..3]
       }
 
 }

@@ -71,6 +71,9 @@ In namespace "", we have: {
           [0..1][0..1]
         }
 
+      unroll sequence: 
+        foo<> x[0..1][0..1]
+        x[0][1] = x[1][0];
       footprint: {
         process foo<>^2 x with indices: {
         }
@@ -157,6 +160,9 @@ In namespace "", we have: {
           [0..1][0..1]
         }
 
+      unroll sequence: 
+        bool<> a[0..1][0..1]
+        a[0][0] = a[1][1];
       footprint: {
         bool^2 a with indices: {
         }

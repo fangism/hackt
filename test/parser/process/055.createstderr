@@ -50,6 +50,9 @@ In namespace "", we have: {
       Instances:
         x = foo<> x
         y = foo<> y
+      unroll sequence: 
+        foo<> x
+        foo<> y
       footprint: {
         process foo<>^0 x (instantiated) = ::bar::x (1) (
           bool^1 a with indices: {
@@ -92,6 +95,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        bool<> a[0..1]
       footprint: {
         bool^1 a with indices: {
         }

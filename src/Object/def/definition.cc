@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.13.2.3 2006/01/29 21:47:30 fang Exp $
+ 	$Id: definition.cc,v 1.13.2.4 2006/01/30 02:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -47,6 +47,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
@@ -815,8 +816,12 @@ user_def_chan::dump(ostream& o) const {
 		"In channel definition \"" << key << "\", we have: {" << endl;
 	{
 		scopespace::dump_for_definitions(o);
+		o << auto_indent << "unroll sequence: " << endl;
+		{	INDENT_SECTION(o);
+			const expr_dump_context dc(this);
+			sequential_scope::dump(o, dc);
+		}
 		// CHP
-		// TODO: sequential scope dump
 		if (!send_chp.empty()) {
 			o << auto_indent << "send-CHP:" << endl;
 			INDENT_SECTION(o);
@@ -1933,7 +1938,11 @@ user_def_datatype::dump(ostream& o) const {
 		"In datatype definition \"" << key << "\", we have: {" << endl;
 	{
 		scopespace::dump_for_definitions(o);
-		// TODO: sequential_scope dump
+		o << auto_indent << "unroll sequence: " << endl;
+		{	INDENT_SECTION(o);
+			const expr_dump_context dc(this);
+			sequential_scope::dump(o, dc);
+		}
 		// CHP
 		if (!set_chp.empty()) {
 			o << auto_indent << "set-CHP:" << endl;
@@ -2637,7 +2646,11 @@ process_definition::dump(ostream& o) const {
 	{	// begin indent level
 		scopespace::dump_for_definitions(o);
 		if (defined) {
-			// TODO sequential_scope dump
+			o << auto_indent << "unroll sequence: " << endl;
+			{	INDENT_SECTION(o);
+				const expr_dump_context dc(this);
+				sequential_scope::dump(o, dc);
+			}
 			// PRS
 			if (!prs.empty()) {
 				o << auto_indent << "prs:" << endl;

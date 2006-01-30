@@ -55,6 +55,10 @@ In namespace "", we have: {
         N = pint<> N
       Instances:
         first = int<::the_matrix::M[0][0]> first
+      unroll sequence: 
+        pint<> N
+        pint<> M[0..N-1][0..N-1]
+        int<::the_matrix::M[0][0]> first
       }
 
 }

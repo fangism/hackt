@@ -55,6 +55,10 @@ In namespace "", we have: {
       Instances:
         x = foo<> x
         y = bool<> y
+      unroll sequence: 
+        foo<> x
+        bool<> y
+        x.a = y;
       footprint: {
         process foo<>^0 x (instantiated) = ::bar::x (1) (
           bool^0 a (instantiated) = ::bar::y (1) 
@@ -79,6 +83,9 @@ In namespace "", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
       footprint: {
         bool^0 a (instantiated) = ::foo::a (1) 
         bool^0 b (instantiated) = ::foo::b (2) 

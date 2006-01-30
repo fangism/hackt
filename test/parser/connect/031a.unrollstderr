@@ -93,6 +93,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        egg<> egg_array[0..1]
       footprint: {
         process egg<>^1 egg_array with indices: {
         }
@@ -119,6 +121,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        basket<> c[0..1]
       footprint: {
         process basket<>^1 c with indices: {
         }
@@ -159,6 +163,8 @@ In namespace "", we have: {
       In definition "egg", we have: {
       Instances:
         yolk = int<32> yolk
+      unroll sequence: 
+        int<32> yolk
       footprint: {
         int<32>^0 yolk (instantiated) = ::egg::yolk 
       }

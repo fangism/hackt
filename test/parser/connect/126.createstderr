@@ -64,6 +64,10 @@ In namespace "", we have: {
       Instances:
         y = bool<> y
         z = bool<> z
+      unroll sequence: 
+        bool<> y
+        bool<> z
+        y = z;
       footprint: {
         bool^0 y (instantiated) = ::ar::z (1) 
         bool^0 z (instantiated) = ::ar::y (1) 
@@ -79,6 +83,10 @@ In namespace "", we have: {
       Instances:
         composite = bool<> composite
         x = bool<> x
+      unroll sequence: 
+        bool<> x
+        bool<> composite
+        x = composite;
       footprint: {
         bool^0 composite (instantiated) = ::array::x (1) 
         bool^0 x (instantiated) = ::array::composite (1) 

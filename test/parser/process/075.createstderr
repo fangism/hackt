@@ -70,6 +70,11 @@ In namespace "", we have: {
           [0..::bar::N-1]
         }
 
+      unroll sequence: 
+        pint<> M
+        pint<> N
+        int<::bar::M> x[0..N-1]
+        x[0] = x[N-1];
       footprint collection: {
         <3, 2> {
           pint^0 M value: ?

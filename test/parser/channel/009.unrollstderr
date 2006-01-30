@@ -43,6 +43,11 @@ In namespace "", we have: {
         b = bool<> b
         c = bool<> c
         d = bool<> d
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        bool<> c
+        bool<> d
       }
 
     myenum = enum-datatype-def: myenum

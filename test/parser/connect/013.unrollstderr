@@ -32,6 +32,7 @@ In namespace "", we have: {
     foo = process-definition (defined) foo(
       )
       In definition "foo", we have: {
+      unroll sequence: 
       footprint: {
       }
       }

@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.11 2006/01/25 20:26:02 fang Exp $
+ 	$Id: module.cc,v 1.11.2.1 2006/01/30 02:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -20,6 +20,7 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/lang/cflat_printer.h"
+#include "Object/expr/expr_dump_context.h"
 #include "main/cflat_options.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -155,7 +156,8 @@ module::dump(ostream& o) const {
 
 	if (!is_unrolled()) {
 		o << "Sequential instance management (to unroll): " << endl;
-		return sequential_scope::dump(o);
+		return sequential_scope::dump(o,
+			expr_dump_context::default_value);
 	}
 	if (is_created()) {
 		o << "Created state:" << endl;

@@ -80,6 +80,9 @@ In namespace "", we have: {
       Instances:
         a = foo<1> a
         b = foo<2> b
+      unroll sequence: 
+        foo<1> a
+        foo<2> b
       footprint: {
         process foo<1>^0 a (instantiated) = ::bar::a 
         process foo<2>^0 b (instantiated) = ::bar::b 
@@ -93,6 +96,8 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Parameters:
         A = pint<> A
+      unroll sequence: 
+        pint<> A
       footprint collection: {
         <1> {
           pint^0 A value: ?

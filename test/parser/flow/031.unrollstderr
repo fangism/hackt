@@ -99,6 +99,20 @@ In namespace "", we have: {
           [0..::prime_array::P+1-1]
         }
 
+      unroll sequence: 
+        pint<> P
+        bool<> x[0..P+1-1]
+        bool<> composite
+        x[0] = x[1] = composite;
+        (;i:[0..P-1]:
+          [ $i*$i<=P ->
+            (;j:[2..$i]:
+              (;k:[2..P/$j]:
+                x[$j*$k] = composite;
+              )
+            )
+          ]
+        )
       footprint collection: {
         <100> {
           pint^0 P value: ?

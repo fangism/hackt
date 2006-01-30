@@ -53,6 +53,8 @@ In namespace "", we have: {
       In definition "bar", we have: {
       Instances:
         x = foo<> x
+      unroll sequence: 
+        foo<> x
       footprint: {
         process foo<>^0 x (instantiated) = ::bar::x (1) (
           process ick<>^0 a (instantiated) = ::bar::x.b (2) 
@@ -74,6 +76,10 @@ In namespace "", we have: {
       Instances:
         a = ick<> a
         b = ick<> b
+      unroll sequence: 
+        ick<> a
+        ick<> b
+        a = b;
       footprint: {
         process ick<>^0 a (instantiated) = ::foo::b (1) 
         process ick<>^0 b (instantiated) = ::foo::a (1) 
@@ -87,6 +93,7 @@ In namespace "", we have: {
     ick = process-definition (defined) ick(
       )
       In definition "ick", we have: {
+      unroll sequence: 
       footprint: {
       }
       }

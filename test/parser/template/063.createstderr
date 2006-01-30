@@ -62,6 +62,9 @@ In namespace "", we have: {
       Parameters:
         Q = pint<> Q
         R = pint<> R
+      unroll sequence: 
+        pint<> Q
+        pint<> R
       footprint collection: {
         <5, 3> {
           pint^0 Q value: ?

@@ -248,6 +248,9 @@ In namespace "", we have: {
           [0..::ch1of::N-1]
         }
 
+      unroll sequence: 
+        pint<> N
+        bool<> d[0..N-1]
       footprint collection: {
         <4> {
           pint^0 N value: ?
@@ -324,6 +327,9 @@ In namespace "", we have: {
           [0..::ch_1of::N-1]
         }
 
+      unroll sequence: 
+        pint<> N
+        bool<> d[0..N-1]
       footprint collection: {
         <4> {
           pint^0 N value: ?
@@ -396,6 +402,11 @@ In namespace "", we have: {
         a = bool<> a
         b = bool<> b
         out = bool<> out
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        bool<> _out
+        bool<> out
       prs:
         a & b -> _out-
         ~a & ~b -> _out+
@@ -437,6 +448,15 @@ In namespace "", we have: {
         }
 
         d = ch1of<16> d
+      unroll sequence: 
+        ch_1of<4> _ad[0..1]
+        ch1of<4> ad[0..1]
+        ch1of<16> d
+        ch_1of<16> _d
+        (;b:[0..15]:
+          dcelm<> ce[$b..$b]
+          ce[$b] (ad[1].d[$b/4], ad[0].d[$b%4], _d.d[$b], d.d[$b]);
+        )
       footprint: {
         process ch1of<4>^1 ad with indices: {
         }

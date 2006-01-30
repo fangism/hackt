@@ -623,6 +623,8 @@ In namespace "", we have: {
           [0..11]
         }
 
+      unroll sequence: 
+        egg<> egg_array[0..11]
       footprint: {
         process egg<>^1 egg_array with indices: {
         }
@@ -695,6 +697,10 @@ In namespace "", we have: {
           [0..5]
         }
 
+      unroll sequence: 
+        basket<> a
+        basket<> b
+        basket<> c[0..5]
       footprint: {
         process basket<>^0 a (instantiated) = ::bundle::a (
           process egg<>^1 egg_array with indices: {
@@ -1151,6 +1157,9 @@ In namespace "", we have: {
       Instances:
         white = bool<> white
         yolk = int<32> yolk
+      unroll sequence: 
+        bool<> white
+        int<32> yolk
       footprint: {
         int<32>^0 yolk (instantiated) = ::egg::yolk 
         bool^0 white (instantiated) = ::egg::white 

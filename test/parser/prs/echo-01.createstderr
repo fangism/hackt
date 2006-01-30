@@ -91,6 +91,12 @@ In namespace "", we have: {
         r = bool<> r
         s = bool<> s
         z = bool<> z
+      unroll sequence: 
+        bool<> p
+        bool<> q
+        bool<> r
+        bool<> s
+        bool<> z
       prs:
         echo(p,q)
         echo(r,s)

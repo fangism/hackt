@@ -60,6 +60,10 @@ In namespace "", we have: {
         K = pint<> K
       Instances:
         i = int<::mychan::J[1]> i
+      unroll sequence: 
+        pint<> K
+        pint<> J[0..K-1]
+        int<::mychan::J[1]> i
       }
 
 }

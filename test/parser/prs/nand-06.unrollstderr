@@ -75,6 +75,10 @@ In namespace "", we have: {
           [0..::nandN::N-1]
         }
 
+      unroll sequence: 
+        pint<> N
+        bool<> in[0..N-1]
+        bool<> _out
       prs:
         (|:i:[0..N-1]: ~in[$i]) -> _out+
         (&:i:[0..N-1]: in[$i]) -> _out-

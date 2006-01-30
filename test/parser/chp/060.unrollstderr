@@ -79,6 +79,14 @@ In namespace "", we have: {
         a = bool<> a
         b = bool<> b
         g = bool<> g
+      unroll sequence: 
+        chan?(bool<>) A
+        chan?(bool<>) B
+        chan?(bool<>) G
+        chan!(bool<>) Z
+        bool<> a
+        bool<> b
+        bool<> g
       chp:
         concurrent: {
           *[

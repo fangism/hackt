@@ -88,6 +88,12 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        pbitint<> pbint[0..1]
+        pbit<> p[0..1]
+        (;i:[0..1]:
+          p[$i].t = pbint[$i].pb.t;
+        )
       footprint: {
         process pbitint<>^1 pbint with indices: {
         }
@@ -122,6 +128,8 @@ In namespace "", we have: {
       In definition "pbit", we have: {
       Instances:
         t = bool<> t
+      unroll sequence: 
+        bool<> t
       footprint: {
         bool^0 t (instantiated) = ::pbit::t 
       }
@@ -133,6 +141,8 @@ In namespace "", we have: {
       In definition "pbitint", we have: {
       Instances:
         pb = pbit<> pb
+      unroll sequence: 
+        pbit<> pb
       footprint: {
         process pbit<>^0 pb (instantiated) = ::pbitint::pb (
           bool^0 t (instantiated) = ::pbitint::pb.t 

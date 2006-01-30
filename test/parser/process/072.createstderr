@@ -63,6 +63,11 @@ In namespace "", we have: {
       Instances:
         a = int<::foo::N> a
         b = int<::foo::N> b
+      unroll sequence: 
+        pint<> N
+        int<::foo::N> a
+        int<::foo::N> b
+        a = b;
       footprint collection: {
         <8> {
           pint^0 N value: ?

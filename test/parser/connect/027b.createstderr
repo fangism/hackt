@@ -56,6 +56,9 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        bool<> a
+        bool<> b[0..1]
       footprint: {
         bool^0 a (instantiated) = ::bar::a (1) 
         bool^1 b with indices: {

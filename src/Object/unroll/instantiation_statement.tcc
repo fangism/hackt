@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.8 2006/01/22 18:20:58 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.8.4.1 2006/01/30 02:42:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -105,8 +105,9 @@ INSTANTIATION_STATEMENT_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 ostream&
-INSTANTIATION_STATEMENT_CLASS::dump(ostream& o) const {
-	return parent_type::dump(o);
+INSTANTIATION_STATEMENT_CLASS::dump(ostream& o,
+		const expr_dump_context& dc) const {
+	return parent_type::dump(o, dc);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

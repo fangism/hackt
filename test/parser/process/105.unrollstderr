@@ -69,6 +69,11 @@ In namespace "", we have: {
           [0..2]
         }
 
+      unroll sequence: 
+        pint<> N
+        int<::foo::N> a
+        int<::foo::N> blah[0..2]
+        blah[1] = a;
       footprint collection: {
         <8> {
           pint^0 N value: ?

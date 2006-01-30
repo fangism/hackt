@@ -43,6 +43,7 @@ In namespace "", we have: {
     fang = process-definition (defined) fang(
       )
       In definition "fang", we have: {
+      unroll sequence: 
       footprint: {
       }
       }

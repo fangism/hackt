@@ -39,6 +39,9 @@ In namespace "", we have: {
         W = pint<> W (default = ::default_width)
       Instances:
         wide_int = int<::something_wide::W> wide_int
+      unroll sequence: 
+        pint<> W
+        int<::something_wide::W> wide_int
       }
 
 }

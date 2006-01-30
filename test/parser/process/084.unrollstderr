@@ -50,6 +50,10 @@ In namespace "", we have: {
 
         x = int<32> x
         y = bool<> y
+      unroll sequence: 
+        bool<> r[0..1]
+        int<32> x
+        bool<> y
       footprint: {
         bool^1 r with indices: {
         }

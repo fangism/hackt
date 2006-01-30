@@ -81,6 +81,12 @@ In namespace "", we have: {
         R = chan!(bool<>) R
         x = int<13> x
         z = int<::one_shot::X> z
+      unroll sequence: 
+        pint<> X
+        chan?(bool<>) L
+        chan!(bool<>) R
+        int<::one_shot::X> z
+        int<13> x
       chp:
         concurrent: {
           sequential: {

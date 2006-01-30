@@ -44,6 +44,9 @@ In namespace "", we have: {
           [0..::bogus::E-1]
         }
 
+      unroll sequence: 
+        pint<> E
+        pint<> M[0..E-1]
       footprint collection: {
         <2> {
           pint^0 E value: ?

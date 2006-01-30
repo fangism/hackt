@@ -57,6 +57,8 @@ In namespace "", we have: {
       In definition "ch1of1", we have: {
       Instances:
         d = bool<> d
+      unroll sequence: 
+        bool<> d
       footprint: {
         bool^0 d (instantiated) = ::ch1of1::d 
       }
@@ -68,6 +70,8 @@ In namespace "", we have: {
       In definition "dcelm", we have: {
       Instances:
         a = bool<> a
+      unroll sequence: 
+        bool<> a
       footprint: {
         bool^0 a (instantiated) = ::dcelm::a 
       }
@@ -82,6 +86,12 @@ In namespace "", we have: {
           [0..0]
         }
 
+      unroll sequence: 
+        ch1of1<> ad
+        dcelm<> ce[0..0]
+        (;b:[0..0]:
+          ce[$b] (ad.d);
+        )
       footprint: {
         process ch1of1<>^0 ad (instantiated) = ::lut::ad (
           bool^0 d (instantiated) = ::lut::ce[0].a 

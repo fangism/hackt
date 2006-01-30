@@ -51,6 +51,11 @@ In namespace "", we have: {
         }
 
         x = int<32> x
+      unroll sequence: 
+        chan?(bool<>) L
+        chan!(bool<>) R
+        int<32> x
+        bool<> b[0..3]
       chp:
         concurrent: {
           R!(b[x])

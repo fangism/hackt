@@ -45,6 +45,10 @@ In namespace "", we have: {
         S = chan?(bool<>) S
         T = chan!(bool<>) T
         b = bool<> b
+      unroll sequence: 
+        chan?(bool<>) S
+        chan!(bool<>) T
+        bool<> b
       chp:
         concurrent: {
           *[

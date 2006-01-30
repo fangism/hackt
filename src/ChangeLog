@@ -5,6 +5,14 @@
 
 2006-01-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-2-fixdump-04:
+	  Now propagating expr_dump_context argument through all
+		instance_management_base::dump, for better control over dump.
+	  Enabled sequential scope dumping for all user-defined definitions.
+		Tons of test outputs updated accordingly.  
+	  TODO: now can enable create test-cases in remaining test dirs.  
+
+
 	* HACKT-00-01-04-main-00-76-2-fixdump-03:
 	  Minor change to printing references to induction variables, 
 		dumps now show them with '$' instead of scope names, 

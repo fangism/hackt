@@ -67,6 +67,11 @@ In namespace "", we have: {
           [0..::crazy_inv::N-1]
         }
 
+      unroll sequence: 
+        pint<> N
+        pint<> I
+        pint<> J
+        bool<> a[0..N-1]
       prs:
         a[I] -> a[J]-
         ~a[I] -> a[J]+

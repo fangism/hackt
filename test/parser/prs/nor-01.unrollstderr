@@ -88,6 +88,10 @@ In namespace "", we have: {
         a = bool<> a
         b = bool<> b
         c = bool<> c
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        bool<> c
       prs:
         a | b -> c-
         ~a & ~b -> c+
@@ -103,6 +107,10 @@ In namespace "", we have: {
         a = bool<> a
         b = bool<> b
         c = bool<> c
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        bool<> c
       prs:
         a | b -> c-
         ~a & ~b -> c+
@@ -118,6 +126,10 @@ In namespace "", we have: {
         a = bool<> a
         b = bool<> b
         c = bool<> c
+      unroll sequence: 
+        bool<> a
+        bool<> b
+        bool<> c
       prs:
         ~a & ~b -> c+
         a | b -> c-

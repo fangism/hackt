@@ -2,7 +2,7 @@
 	\file "Object/unroll/aliases_connection_base.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: aliases_connection_base.h,v 1.4 2006/01/22 18:20:47 fang Exp $
+	$Id: aliases_connection_base.h,v 1.4.4.1 2006/01/30 02:42:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIASES_CONNECTION_BASE_H__
@@ -35,7 +35,7 @@ virtual	ostream&
 	what(ostream& ) const = 0;
 
 virtual	ostream&
-	dump(ostream& ) const = 0;
+	dump(ostream&, const expr_dump_context&) const = 0;
 
 virtual	void
 	reserve(const size_t) = 0;

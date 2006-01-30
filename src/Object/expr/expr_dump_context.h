@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/expr_dump_context.h"
 	Flags and modifiers for manipulating expression dumps.  
-	$Id: expr_dump_context.h,v 1.4 2006/01/22 18:19:48 fang Exp $
+	$Id: expr_dump_context.h,v 1.4.4.1 2006/01/30 02:42:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_EXPR_DUMP_CONTEXT_H__
@@ -60,6 +60,9 @@ struct expr_dump_context {
 
 	// implicit
 	expr_dump_context(const PRS::expr_dump_context&);
+
+	explicit
+	expr_dump_context(const scopespace*);
 
 	expr_dump_context(const char, const scopespace*, 
 		const bool);

@@ -66,6 +66,12 @@ In namespace "", we have: {
       Instances:
         p = pbit<> p
         pbint = pbitint<> pbint
+      unroll sequence: 
+        pbitint<> pbint
+        pbit<> p
+        (;i:[0..0]:
+          p.t = pbint.pb.t;
+        )
       footprint: {
         process pbitint<>^0 pbint (instantiated) = ::lut::pbint (1) (
           process pbit<>^0 pb (instantiated) = ::lut::pbint.pb (2) (
@@ -90,6 +96,8 @@ In namespace "", we have: {
       In definition "pbit", we have: {
       Instances:
         t = bool<> t
+      unroll sequence: 
+        bool<> t
       footprint: {
         bool^0 t (instantiated) = ::pbit::t (1) 
         bool instance pool:
@@ -103,6 +111,8 @@ In namespace "", we have: {
       In definition "pbitint", we have: {
       Instances:
         pb = pbit<> pb
+      unroll sequence: 
+        pbit<> pb
       footprint: {
         process pbit<>^0 pb (instantiated) = ::pbitint::pb (1) (
           bool^0 t (instantiated) = ::pbitint::pb.t (1) 

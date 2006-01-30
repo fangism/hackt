@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.8 2006/01/22 18:20:57 fang Exp $
+	$Id: instantiation_statement.h,v 1.8.4.1 2006/01/30 02:42:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -99,7 +99,7 @@ public:
 	what(ostream& o) const;
 
 	ostream&
-	dump(ostream& o) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	void
 	attach_collection(const never_ptr<instance_collection_base> i);

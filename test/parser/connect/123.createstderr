@@ -44,6 +44,10 @@ In namespace "", we have: {
       Instances:
         composite = bool<> composite
         x = bool<> x
+      unroll sequence: 
+        bool<> x
+        bool<> composite
+        x = composite;
       footprint: {
         bool^0 composite (instantiated) = ::array::x (1) 
         bool^0 x (instantiated) = ::array::composite (1) 
@@ -57,6 +61,8 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Instances:
         p = array<> p
+      unroll sequence: 
+        array<> p
       footprint: {
         process array<>^0 p (instantiated) = ::foo::p (1) (
           bool^0 x (instantiated) = ::foo::p.x (1) 

@@ -41,6 +41,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        int<16> i[0..1]
       }
 
 }

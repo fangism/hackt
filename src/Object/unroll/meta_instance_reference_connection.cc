@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.10 2006/01/25 05:35:40 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.10.2.1 2006/01/30 02:42:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -153,20 +153,19 @@ port_connection::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-port_connection::dump(ostream& o) const {
+port_connection::dump(ostream& o, const expr_dump_context& dc) const {
 	NEVER_NULL(ported_inst);
-	const expr_dump_context& c(expr_dump_context::default_value);
-	ported_inst->dump(o, c) << " (";
+	ported_inst->dump(o, dc) << " (";
 	if (!inst_list.empty()) {
 		inst_list_type::const_iterator iter(inst_list.begin());
 		const inst_list_type::const_iterator end(inst_list.end());
 		if (*iter)
-			(*iter)->dump(o, c);
+			(*iter)->dump(o, dc);
 		else o << " ";
 		for (iter++ ; iter!=end; iter++) {
 			o << ", ";
 			if (*iter)
-				(*iter)->dump(o, c);
+				(*iter)->dump(o, dc);
 		}
 	}
 	return o << ");";

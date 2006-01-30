@@ -59,6 +59,9 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        int<32> a
+        int<32> b[0..1]
       footprint: {
         int<32>^0 a (instantiated) = ::bar::a (1) 
         int<32>^1 b with indices: {

@@ -76,6 +76,10 @@ In namespace "", we have: {
         X = pint<> X
         Y = pint<> Y (default = X+1)
         Z = pint<> Z (default = Y*2)
+      unroll sequence: 
+        pint<> X
+        pint<> Y
+        pint<> Z
       footprint collection: {
         <12, 13, 26> {
           pint^0 X value: ?

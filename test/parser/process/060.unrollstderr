@@ -42,6 +42,9 @@ In namespace "", we have: {
         N = pint<> N
       Instances:
         a = int<::foo::N> a
+      unroll sequence: 
+        pint<> N
+        int<::foo::N> a
       footprint collection: {
         <8> {
           pint^0 N value: ?

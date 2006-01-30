@@ -46,6 +46,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        foo<> x[0..1]
       footprint: {
         process foo<>^1 x with indices: {
         }
@@ -67,6 +69,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        bool<> a[0..1]
       footprint: {
         bool^1 a with indices: {
         }
@@ -88,6 +92,8 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        bar<> p[0..1]
       footprint: {
         process bar<>^1 p with indices: {
         }

@@ -68,6 +68,9 @@ In namespace "", we have: {
           [0..1]
         }
 
+      unroll sequence: 
+        bool<> a[0..1]
+        bool<> _o
       prs:
         a[0] & a[1] -> _o-
         ~a[0] & ~a[1] -> _o+

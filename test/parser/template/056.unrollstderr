@@ -50,6 +50,9 @@ In namespace "", we have: {
         W = pint<> W
       Instances:
         my_bar = bar<6><::foo::W> my_bar
+      unroll sequence: 
+        pint<> W
+        bar<6><::foo::W> my_bar
       }
 
 }
