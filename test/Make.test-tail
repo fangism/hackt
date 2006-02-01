@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.15 2006/01/30 07:42:07 fang Exp $
+#	$Id: Make.test-tail,v 1.16 2006/02/01 20:57:43 sandra Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -358,7 +358,7 @@ cleaner: clean cleaner-recursive cleaner-local
 cleaner-local:
 	-$(RM) *.filter *.diff *.sort *.noindex
 	-$(RM) *.hacktcmpltest *.hacktobjtest *.hacktunrolltest
-	-$(RM) *.hacktcreatetest *.hacktalloctest
+	-$(RM) *.hacktcreatetest *.hacktalloctest *.hacktcflattest
 	-$(RM) *.hacktprsimexprtest
 	-$(RM) *.indump *.outdump *.objdiff
 	-$(RM) *.haco *.haco-dump
