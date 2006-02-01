@@ -1,0 +1,12 @@
+"lib/README"
+
+This is the home directory of general library files.  
+All files are architecture-independent.  
+
+I'll write an install Makefile for this eventually.  
+
+Contents of subdirectories:
+
+<write stuff here>
+
+
