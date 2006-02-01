@@ -5,6 +5,17 @@
 
 2006-01-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-6:
+	  Critical bug fixed: parser/flow/loop-ports-07.hac
+		Algorithm for determing packedness of implicit subarrays
+		was buggy in library util/multikey_assoc.tcc, 
+		but now corrected, and replaced with a more efficient, 
+		less recursive algorithm.
+	  Added a bunch of similar positive and negative test cases.  
+
+
+2006-01-30	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-76-5:
 	  Check for range validity before instantiating indices
 		inside a instance array (collection).  

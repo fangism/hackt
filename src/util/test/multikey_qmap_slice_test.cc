@@ -1,17 +1,23 @@
 /**
 	\file "multikey_qmap_slice_test.cc"
 	Testing the ability to detect dense sub-arrays.
-	$Id: multikey_qmap_slice_test.cc,v 1.4 2005/09/04 21:15:12 fang Exp $
+	$Id: multikey_qmap_slice_test.cc,v 1.5 2006/02/01 06:11:47 fang Exp $
  */
 
 #include "util/qmap.tcc"
 #include "cube_slice.h"
+#include "plane_slice.h"
 
 using namespace std;
 using namespace testing;
 
 int
 main(int, char*[]) {
+	// 4x4 plane missing the 2 opposite corners
+	plane_slice test0(0,4, 3,7, 5,9);
+	test0.slice_test_1d();
+	test0.slice_test_2d();
+
 	// truncate upper corner
 	cube_slice test1(10,20,30, 14,24,34, 60,68);
 	test1.slice_test_1d();

@@ -1,0 +1,13 @@
+// "loop-ports-10.hac"
+// copy-modified from "loop-ports-07.hac"
+// should pass, legitimate dense subarray slices in port connections
+
+bool x[4][3][2];
+
+defproc ass(bool q[3][2]) { }
+
+ass myass[4];
+(;i:4:
+	myass[i](x[i]);
+)
+

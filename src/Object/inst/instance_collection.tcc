@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.16 2006/01/30 20:57:20 fang Exp $
+	$Id: instance_collection.tcc,v 1.17 2006/02/01 06:11:45 fang Exp $
 	TODO: trim includes
  */
 
@@ -65,6 +65,10 @@
 #include "util/compose.h"
 #include "util/binders.h"
 #include "util/dereference.h"
+
+#if ENABLE_STACKTRACE
+#include <iterator>
+#endif
 
 //=============================================================================
 // module-local specializations
@@ -599,6 +603,7 @@ INSTANCE_ARRAY_CLASS::allocate_state(footprint& f) {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 const_index_list
 INSTANCE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
+	STACKTRACE_VERBOSE;
 	const size_t l_size = l.size();
 	if (D == l_size) {
 		// already fully specified

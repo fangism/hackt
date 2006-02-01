@@ -2,7 +2,7 @@
 	\file "util/multikey_assoc.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_assoc.h,v 1.4 2006/01/22 06:53:34 fang Exp $
+	$Id: multikey_assoc.h,v 1.5 2006/02/01 06:11:46 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_H__
@@ -216,15 +216,6 @@ public:
 	is_compact_slice(const key_list_type& l, const key_list_type& u) const;
 
 	/**
-		This version queries one set of indices only.  
-		Is self-recursive.  
-		\return pair of index lists representing explicit
-			indices of a dense slice, or empty if failure.  
-	 */
-	key_list_pair_type
-	is_compact_slice(const key_list_type& l) const;
-
-	/**
 		"Is the entire set compact?"
 		\return explicit indices covering the entire set if it
 			is indeed compact, otherwise empty.  
@@ -238,6 +229,10 @@ public:
 	 */
 	key_list_pair_type
 	index_extremities(void) const;
+
+private:
+	key_list_pair_type
+	__is_dense_subslice(const key_list_type&) const;
 
 };	// end class multikey_assoc
 

@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.7 2006/01/22 06:53:34 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.8 2006/02/01 06:11:46 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -19,6 +19,13 @@
 #include <iterator>
 
 #define	DEBUG_SLICE		0
+
+#if DEBUG_SLICE
+#include "util/stacktrace.h"
+#define	STACKTRACE_MULTIKEY_ASSOC		STACKTRACE_VERBOSE
+#else
+#define	STACKTRACE_MULTIKEY_ASSOC
+#endif
 
 namespace util {
 #include "util/using_ostream.h"
@@ -170,13 +177,97 @@ multikey_assoc<D,C>::erase(const index_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper function for establishing dense subranges.  
+	\pre l and u must have matching prefixes.  
+	\return empty key list pair if not dense.
+ */
+MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
+typename multikey_assoc<D,C>::key_list_pair_type
+multikey_assoc<D,C>::__is_dense_subslice(const key_list_type& l) const {
+	typedef key_list_pair_type		return_type;
+	typedef	typename key_type::value_type	key_value_type;
+	STACKTRACE_MULTIKEY_ASSOC;
+	const size_t l_size = l.size();
+	INVARIANT(l_size);
+	INVARIANT(l_size <= D);
+	key_list_type u(l);
+	++u.back();
+#if DEBUG_SLICE
+	{
+	cerr << "In multikey_assoc::__is_dense_subslice(l,u): ";
+	ostream_iterator<index_type> osi(cerr, ",");
+	cerr << "l = {";
+	copy(l.begin(), l.end(), osi);
+	cerr << "}, u = {";
+	copy(u.begin(), u.end(), osi);
+	cerr << "}" << endl;
+	}
+#endif
+	// find the range bound by this key prefix
+	// try to find one range that covers the interval densely
+	key_type lk(l), uk(u);
+	const_iterator lb(lower_bound(lk)), ub(lower_bound(uk));
+#if DEBUG_SLICE
+	cerr << "distance (lb,ub) = " << distance(lb, ub) << endl;
+#endif
+	const key_value_type next_min = _Select1st<value_type>()(*lb)[l_size];
+	key_value_type next_max = next_min;
+	// check for contiguity
+	for ( ; lb != ub; ++lb) {
+		const key_value_type n = _Select1st<value_type>()(*lb)[l_size];
+		INVARIANT(n >= 0);	// monotonicity
+		if (n - next_max > 1) {
+			// then we have a break in the sequence
+			return return_type();
+		} else {
+			next_max = n;
+		}
+	}
+	// if we've made it here, we have a contiguous range, 
+	// bound by [next_min, next_max]
+	key_list_type next_l(l);
+	key_list_type next_u(l);
+	next_l.push_back(next_min);
+	next_u.push_back(next_max);
+#if DEBUG_SLICE
+	{
+	cerr << "next_min/max = " << next_min << ", " << next_max << endl;
+	ostream_iterator<index_type> osi(cerr, ",");
+	cerr << "next_l = {";
+	copy(next_l.begin(), next_l.end(), osi);
+	cerr << "}, next_u = {";
+	copy(next_u.begin(), next_u.end(), osi);
+	cerr << "}" << endl;
+	}
+#endif
+	return return_type(next_l, next_u);
+}	// end method __is_dense_subslice
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Algorithm: (TODO)
+		Given range prefix L, find the range that expresses the next 
+		compact dimension, if it is indeed compact.  
+		For all prefixes in this prefix range, determine:
+		* if the subslice is spanned by a single range (integer pair).  
+		* whether all ranges over all prefixes are equal
+		* terminate as soon as one of these does not hold.
+		Recurse until dimensions exhausted.  
+	\param l the lower bound of prefix, at least 1 dimension.
+	\param u the upper bound of prefix, same dimensions as l.
+ */
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 typename multikey_assoc<D,C>::key_list_pair_type
 multikey_assoc<D,C>::is_compact_slice(
 		const key_list_type& l, const key_list_type& u) const {
+	STACKTRACE_MULTIKEY_ASSOC;
 	typedef key_list_pair_type	return_type;
+	typedef	typename key_type::value_type	key_value_type;
 	typedef typename key_type::generic_generator_type	generator_type;
 	const size_t l_size = l.size();
+	INVARIANT(l_size);
+	INVARIANT(l_size <= D);
 	{       // check for consistency
 		typedef typename key_list_type::const_iterator	list_iterator;
 		INVARIANT(l_size == u.size());
@@ -202,65 +293,52 @@ multikey_assoc<D,C>::is_compact_slice(
 	copy(l.begin(), l.end(), key_gen.get_lower_corner().begin());
 	copy(u.begin(), u.end(), key_gen.get_upper_corner().begin());
 	key_gen.initialize();
-	key_list_type list_key(key_gen.begin(), key_gen.end());
-
-	const return_type s(is_compact_slice(list_key));
-	if (s.first.empty()) {
-		INVARIANT(s.second.empty());
-#if DEBUG_SLICE
-		cerr << "foo1: s is empty." << endl;
-#endif
-		return s;
+	if (l_size == D) {
+		const const_iterator e(this->end());
+		// already filled dimensions,
+		// just verify existence of each element indexed
+		do {
+			if (find(key_type(key_gen)) == e)
+				{ return return_type(); }
+			key_gen++;
+		} while (key_gen != key_gen.get_lower_corner());
+		return return_type(l, u);
 	}
-	typename key_list_type::const_iterator
-		s_first_start(s.first.begin()),
-		s_second_start(s.second.begin());
-	{
-		size_t s_skip = 0;
-		for ( ; s_skip < l_size; s_skip++,
-			s_first_start++, s_second_start++
-		);
-	}
+	// else check for compact subdimensions
 
+	const_iterator lb(lower_bound(key_gen));
+	key_list_type lower_list_key(key_gen.begin(), key_gen.end());
 	key_gen++;
-	for ( ; key_gen != key_gen.get_lower_corner(); key_gen++) {
-		const key_list_type
-			for_list_key(key_gen.begin(), key_gen.end());
-		const return_type t(is_compact_slice(for_list_key));
-		if (t.first.empty()) {
-			INVARIANT(t.second.empty());
-			return return_type();
-		} else {
-			// compare suffixes
-			typename key_list_type::const_iterator
-				t_first_start(t.first.begin()),
-				t_second_start(t.second.begin());
-			{
-				size_t t_skip = 0;
-				for ( ; t_skip < l_size; t_skip++,
-					t_first_start++,
-					t_second_start++
-				);
-			}
-			if (!equal(t_first_start, t.first.end(),
-					s_first_start) ||
-				!equal(t_second_start, t.second.end(),
-					s_second_start)) {
-				return return_type();
-			}
-			// else continue checking
-		}
+	const return_type ret(__is_dense_subslice(lower_list_key));
+if (key_gen != key_gen.get_lower_corner()) {
+	if (ret.first.empty()) {
+		return ret;
 	}
-	// if this is reached, then all subdimensions matched
-	const key_list_type
-		ret_l(key_gen.get_lower_corner().begin(),
-			key_gen.get_lower_corner().end());
-	const key_list_type
-		ret_u(key_gen.get_upper_corner().begin(),
-			key_gen.get_upper_corner().end());
-	return_type ret(ret_l, ret_u);
-	copy(s_first_start, s.first.end(), back_inserter(ret.first));
-	copy(s_second_start, s.second.end(), back_inserter(ret.second));
+	const key_value_type next_min = ret.first.back();
+	const key_value_type next_max = ret.second.back();
+	for ( ; key_gen != key_gen.get_lower_corner(); key_gen++) {
+		lower_list_key = key_list_type(key_gen.begin(), key_gen.end());
+		const return_type __ret(__is_dense_subslice(lower_list_key));
+		if (__ret.first.empty()) {
+			return ret;
+		} else if (__ret.first.back() != next_min) {
+			return return_type();
+		} else if (__ret.second.back() != next_max) {
+			return return_type();
+		}
+		// else continue searching next key
+	}
+	// if this point is reached then recurse
+	key_list_type next_l(l), next_u(u);
+	next_l.push_back(next_min);
+	next_u.push_back(next_max);
+	return is_compact_slice(next_l, next_u);
+} else {
+	// only have one entry
+	if (!ret.first.empty())
+		return is_compact_slice(ret.first, ret.second);
+	else	return ret;
+}
 
 #if DEBUG_SLICE
 	{
@@ -279,96 +357,7 @@ multikey_assoc<D,C>::is_compact_slice(
 	}
 #endif
 	return ret;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
-typename multikey_assoc<D,C>::key_list_pair_type
-multikey_assoc<D,C>::is_compact_slice(const key_list_type& l) const {
-	typedef key_list_pair_type	return_type;
-#if DEBUG_SLICE
-	{
-	cerr << "In multikey_assoc::is_compact_slice(l): ";
-	ostream_iterator<index_type> osi(cerr, ",");
-	cerr << "l = {";
-	copy(l.begin(), l.end(), osi);
-	cerr << "}" << endl;
-	}
-#endif
-	const size_t l_size = l.size();
-	INVARIANT(l_size);
-	INVARIANT(l_size <= D);
-	// special case for ==?
-	if (l_size == D) {
-		// if value is default, consider it empty
-		// should use find() instead of [] operator
-		const const_iterator i(find(key_type(l)));
-		return (i != this->end() && *i != value_type()) ?
-			return_type(l,l) : return_type();
-	}
-
-	// else is under-specified
-	key_list_type lower(l);
-	key_list_type last(l);
-	last.back()++;
-#if DEBUG_SLICE && 0
-	{
-	ostream_iterator<index_type> osi(cerr, ",");
-	cerr << "lower = ";
-	copy(lower.begin(), lower.end(), osi);
-	cerr << " last = ";
-	copy(last.begin(), last.end(), osi);
-	cerr << endl;
-	}
-#endif
-	const const_iterator lower_iter(lower_bound(key_type(lower)));
-	if (lower_iter == this->end()) {
-		// then sub-range is empty
-		return return_type();
-	}
-	const const_iterator last_iter(--upper_bound(key_type(last)));
-	if (lower_iter == last_iter) {
-		// then sub-range has one element, therefore is dense
-		return_type ret;
-		copy(_Select1st<value_type>()(*lower_iter).begin(), 
-			_Select1st<value_type>()(*lower_iter).end(),
-			back_inserter(ret.first));
-		copy(_Select1st<value_type>()(*lower_iter).begin(),
-			_Select1st<value_type>()(*lower_iter).end(),
-			back_inserter(ret.second));
-		return ret;
-	}
-#if DEBUG_SLICE && 0
-	{
-	ostream_iterator<index_type> osi(cerr, ",");
-	cerr << "lower_iter->first = ";
-	copy(lower_iter->first.begin(), lower_iter->first.end(), osi);
-	cerr << " last_iter->first = ";
-	copy(last_iter->first.begin(), last_iter->first.end(), osi);
-	cerr << endl;
-	}
-#endif
-
-	// get range of next dimension to check
-	const index_type
-		start_index =_Select1st<value_type>()(*lower_iter)[l_size];
-	const index_type
-		end_index = _Select1st<value_type>()(*last_iter)[l_size];
-	key_list_type upper(lower);
-	lower.push_back(start_index);
-	upper.push_back(end_index);
-#if DEBUG_SLICE && 0
-	{
-	ostream_iterator<index_type> osi(cerr, ",");
-	cerr << "lower = ";
-	copy(lower.begin(), lower.end(), osi);
-	cerr << " upper = ";
-	copy(upper.begin(), upper.end(), osi);
-	cerr << endl;
-	}
-#endif
-	return is_compact_slice(lower, upper);
-}
+}	// end method is_compact_slice
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -381,6 +370,7 @@ MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 typename multikey_assoc<D,C>::key_list_pair_type
 multikey_assoc<D,C>::is_compact(void) const {
 	typedef key_list_pair_type	return_type;
+	STACKTRACE_MULTIKEY_ASSOC;
 	if (this->empty()) 
 		return return_type();
 #if 0
@@ -394,10 +384,15 @@ multikey_assoc<D,C>::is_compact(void) const {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return a pair of keys whose indices are the minimum
+		and maximum values seen in each dimension.  
+ */
 MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 typename multikey_assoc<D,C>::key_list_pair_type
 multikey_assoc<D,C>::index_extremities(void) const {
 	typedef key_list_pair_type	return_type;
+	STACKTRACE_MULTIKEY_ASSOC;
 	if (this->empty())
 		return return_type();
 	const const_iterator iter(this->begin());
@@ -430,6 +425,7 @@ typename multikey_assoc<1,C>::key_list_pair_type
 multikey_assoc<1,C>::is_compact_slice(
 		const key_list_type& l, const key_list_type& u) const {
 	typedef key_list_pair_type      return_type;
+	STACKTRACE_MULTIKEY_ASSOC;
 	INVARIANT(l.size() == 1);
 	INVARIANT(u.size() == 1);
 	index_type k = l.front();
@@ -454,6 +450,7 @@ SPECIALIZED_MULTIKEY_ASSOC_TEMPLATE_SIGNATURE
 typename multikey_assoc<1,C>::key_list_pair_type
 multikey_assoc<1,C>::is_compact(void) const {
 	typedef key_list_pair_type      return_type;
+	STACKTRACE_MULTIKEY_ASSOC;
 	if (this->empty()) {
 		return return_type();
 	}

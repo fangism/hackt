@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.7 2006/01/30 07:42:06 fang Exp $
+ 	$Id: loop_scope.cc,v 1.8 2006/02/01 06:11:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -17,6 +17,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_range.h"
 #include "Object/inst/pint_value_collection.h"
+#include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
 #include "common/TODO.h"
 #include "common/ICE.h"
@@ -124,8 +125,10 @@ loop_scope::unroll(const unroll_context& c) const {
 	for ( ; ind_val <= max; ind_val++) {
 		*ind = ind_val;
 		if (!parent_type::unroll(cc).good) {
-			cerr << "Error resolving loop-body:"
-				<< endl;
+			cerr << "Error resolving loop-body during iteration: ";
+			ind_var->dump_hierarchical_name(cerr,
+				dump_flags::verbose)
+				<< " = " << ind_val << endl;
 			return good_bool(false);
 		}
 	}

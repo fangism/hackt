@@ -1,0 +1,13 @@
+// "loop-ports-08.hac"
+// copy-modified from "loop-ports-07.hac"
+// should be rejected, mismatch in size
+
+bool x[4][2];
+
+defproc ass(bool q[3]) { }
+
+ass myass[4];
+
+(;i:4:
+	myass[i](x[i]);
+)

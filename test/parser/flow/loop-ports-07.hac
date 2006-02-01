@@ -1,0 +1,14 @@
+// "loop-ports-07.hac"
+// contributed by Clint Kelly
+// should pass
+// BUG: rejects-valid (FIXED)
+
+bool x[4][2];
+
+defproc ass(bool q[2]) { }
+
+ass myass[4];
+
+(;i:4:
+	myass[i](x[i]);
+)

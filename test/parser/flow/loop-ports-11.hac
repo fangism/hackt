@@ -1,0 +1,13 @@
+// "loop-ports-11.hac"
+// copy-modified from "loop-ports-10.hac"
+// should be rejected, because collection is not dense
+
+bool x[4][3][2];
+bool x[3..3][2..2][2..2];	// extra one to screw up the last iteration
+
+defproc ass(bool q[3][2]) { }
+
+ass myass[4];
+(;i:4:
+	myass[i](x[i]);		// implicit 2D subarray
+)

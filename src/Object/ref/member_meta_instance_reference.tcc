@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.11 2006/01/25 02:23:43 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.12 2006/02/01 06:11:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -94,7 +94,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	this->dump(STACKTRACE_INDENT << "ref: ",
 		expr_dump_context::default_value) << endl;
 	STACKTRACE_INDENT << "c\'s target footprint:" << endl;
-	c.get_target_footprint()->dump_with_collections(cerr) << endl;
+	c.get_target_footprint()->dump_with_collections(cerr, 
+		dump_flags::default_value) << endl;
 #endif
 	// this also include member_meta_instance_references
 	const base_inst_type& _parent_inst_ref(
@@ -134,7 +135,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	// expecting the right type!
 	INVARIANT(inst_base);
 #if ENABLE_STACKTRACE
-	inst_base->dump(STACKTRACE_INDENT << "inst_base: ") << endl;
+	inst_base->dump(STACKTRACE_INDENT << "inst_base: ", 
+		dump_flags::default_value) << endl;
 #endif
 	return inst_base;
 }	// end method resolve_parent_member_helper
@@ -224,7 +226,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
 		expr_dump_context::default_value) << endl;
 	STACKTRACE_INDENT << "&c = " << &c << endl;
 	STACKTRACE_INDENT << "c\'s target footprint:" << endl;
-	c.get_target_footprint()->dump_with_collections(cerr) << endl;
+	c.get_target_footprint()->dump_with_collections(cerr, 
+		dump_flags::default_value) << endl;
 #endif
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));

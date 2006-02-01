@@ -1,0 +1,17 @@
+// "loop-ports-09.hac"
+// copy-modified from "loop-ports-07.hac"
+// should be rejected, mismatch in size
+
+bool x[3][2];
+bool x[3..3][0..0];
+// intentionally omitting sparse index [3][1];
+
+defproc ass(bool q[2]) { }
+
+ass myass[4];
+
+(;i:4:
+	myass[i](x[i]);
+)
+// should fail on last iteration on size mismatch
+

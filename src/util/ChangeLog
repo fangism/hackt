@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2006-01-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-6:
+	  Fixed critical bug in multikey_assoc::is_compact_slice, 
+		and simplified it to be less recursive.
+	  Also updated util test suite with smaller example.  
+
+
 2006-01-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76.2:

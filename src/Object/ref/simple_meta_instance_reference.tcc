@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.13 2006/01/30 07:42:04 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.14 2006/02/01 06:11:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -25,6 +25,7 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "util/stacktrace.h"
+#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {
@@ -165,21 +166,40 @@ if (inst.get_dimensions()) {
 			return bad_bool(true);
 		}
 	}
+#if ENABLE_STACKTRACE
+	cil.dump(STACKTRACE_INDENT << "given indices: ", 
+		expr_dump_context::default_value) << endl;
+#endif
 	// else empty, implicitly refer to whole collection if it is dense
 	// we have resolve constant indices
 	const const_index_list
 		full_indices(inst.resolve_indices(cil));
 	if (full_indices.empty()) {
 		// might fail because implicit slice reference is not packed
-		// more descriptive error message later...
-		cerr << "ERROR: failed to resolve indices." << endl;
+		cerr << "ERROR: failed to resolve implicit indices from "
+			"a collection whose subarray is not dense."  << endl;
+		cil.dump(inst.dump_hierarchical_name(
+				cerr << "\tindices referenced: ", 
+				dump_flags::verbose),
+			expr_dump_context::default_value) << endl;
+		inst.dump(cerr << "\tcollection state: ", dump_flags::verbose)
+			<< endl;
+		// inst.dump_unrolled_instances(cerr, dump_flags::verbose);
 		return bad_bool(true);
 	}
+#if ENABLE_STACKTRACE
+	full_indices.dump(STACKTRACE_INDENT << "expanded: ", 
+		expr_dump_context::default_value) << endl;
+#endif
 	// resize the array according to the collapsed dimensions, 
 	// before passing it to unroll_aliases.
 	{
 	const const_range_list
 		crl(full_indices.collapsed_dimension_ranges());
+#if ENABLE_STACKTRACE
+	crl.dump(STACKTRACE_INDENT << "range: ", 
+		expr_dump_context::default_value) << endl;
+#endif
 	const multikey_index_type
 		array_sizes(crl.resolve_sizes());
 	a.resize(array_sizes);
@@ -261,6 +281,9 @@ bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 		const unroll_context& c, alias_collection_type& a) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_INDENT, expr_dump_context::default_value) << endl;
+#endif
 	return unroll_references_helper(c, *this->inst_collection_ref,
 		this->array_indices, a);
 }
@@ -390,6 +413,22 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 		cerr << "ERROR sizes mismatch in port connection: " << endl;
 		cerr << "\texpected: " << p_size << endl;
 		cerr << "\tgot: " << t_size << endl;
+		typedef	typename alias_collection_type::const_iterator
+								const_iterator;
+		cerr << "\texternal references: ";
+		const_iterator ti(this_aliases.begin());
+		const const_iterator te(this_aliases.end());
+		for ( ; ti!=te; ++ti) {
+			(*ti)->dump_hierarchical_name(cerr) << ", ";
+		}
+		cerr << endl;
+		cerr << "\tlocal port references: ";
+		const_iterator pi(port_aliases.begin());
+		const const_iterator pe(port_aliases.end());
+		for ( ; pi!=pe; ++pi) {
+			(*pi)->dump_hierarchical_name(cerr) << ", ";
+		}
+		cerr << endl;
 		return bad_bool(true);
 	}
 	// else attempt to make connections, type-checking along the way

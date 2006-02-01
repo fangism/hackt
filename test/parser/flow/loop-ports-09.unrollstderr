@@ -1,0 +1,8 @@
+ERROR sizes mismatch in port connection: 
+	expected: [2]
+	got: [1]
+	external references: ::x[3][0], 
+	local port references: ::myass[3].q[0], ::myass[3].q[1], 
+Error resolving loop-body during iteration: $i = 3
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.
