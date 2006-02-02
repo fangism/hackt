@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-7-spec-01-01:
+	  Branch for adding spec { } language support.  
+	  Initial revision added front-end support for spec.  
+
+
 2006-02-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-7-merged-PRS-05-01:

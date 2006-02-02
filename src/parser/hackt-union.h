@@ -2,7 +2,7 @@
 	\file "parser/hackt-union.h"
 	Forawrd declarations needed to parse the YYSTYPE union
 	defined in "parser/hackt-parse.h"
-	$Id: hackt-union.h,v 1.4 2006/01/22 06:53:24 fang Exp $
+	$Id: hackt-union.h,v 1.4.10.1 2006/02/02 22:44:55 fang Exp $
 	This file was formerly known as:
 	Id: art++-union.h,v 1.1 2005/05/22 20:07:22 fang Exp
  */
@@ -14,6 +14,7 @@
 #include "AST/PRS_fwd.h"
 #include "AST/HSE_fwd.h"
 #include "AST/CHP_fwd.h"
+#include "AST/SPEC_fwd.h"
 
 using namespace HAC::parser;
 
