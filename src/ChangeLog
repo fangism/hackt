@@ -3,7 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
-2006-01-30	David Fang		<fangism@users.sourceforge.net>
+2006-02-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-7-merged-PRS-05-01:
+	  Merged -PRS-05-01 branch revision.  Implemented rule attributes.
+
+
+	* HACKT-00-01-04-main-00-76-6-PRS-05-01:
+	  Added back-end support for PRS rule attributes.
+		First example: after <delay>.
+		Due to additional information stored, PRS footprint
+		binaries increased in size -- tests updated accordingly.  
+	  Added some basic test cases.  
+
+
+2006-01-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-6:
 	  Critical bug fixed: parser/flow/loop-ports-07.hac

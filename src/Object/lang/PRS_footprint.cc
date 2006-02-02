@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.7 2006/01/30 07:42:04 fang Exp $
+	$Id: PRS_footprint.cc,v 1.8 2006/02/02 06:30:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -16,13 +16,17 @@
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
 #include "Object/common/dump_flags.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/lang/cflat_visitor.h"
 #include "main/cflat_options.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/list_vector.tcc"
 #include "util/persistent_object_manager.tcc"
+#include "util/persistent_functor.tcc"
 #include "util/stacktrace.h"
+// #include "util/memory/count_ptr.tcc"
 #include "common/ICE.h"
 
 namespace HAC {
@@ -34,6 +38,44 @@ using util::write_value;
 using util::write_array;
 using util::read_value;
 using util::read_sequence_prealloc;
+
+//=============================================================================
+// class footprint_rule_attribute method definitions
+
+footprint_rule_attribute::footprint_rule_attribute() : key(), values(NULL) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint_rule_attribute::footprint_rule_attribute(const string& k, 
+		const values_type& v) : key(k), values(v) {
+	NEVER_NULL(values);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint_rule_attribute::~footprint_rule_attribute() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_rule_attribute::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	NEVER_NULL(values);
+	values->collect_transient_info(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_rule_attribute::write_object(const persistent_object_manager& m, 
+		ostream& o) const {
+	write_value(o, key);
+	m.write_pointer(o, values);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_rule_attribute::load_object(const persistent_object_manager& m, 
+		istream& i) {
+	read_value(i, key);
+	m.read_pointer(i, values);
+}
 
 //=============================================================================
 // class footprint method definitions
@@ -123,6 +165,9 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: attributes
+ */
 ostream&
 footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np, 
 		const expr_pool_type& ep) {
@@ -133,7 +178,21 @@ footprint::dump_rule(const rule& r, ostream& o, const node_pool_type& np,
 		o, np, ep, PRS_LITERAL_TYPE_ENUM) << " -> ";
 	np[r.output_index].get_back_ref()
 		->dump_hierarchical_name(o, dump_flags::no_definition_owner);
-	return o << (r.dir ? '+' : '-');
+	o << (r.dir ? '+' : '-');
+if (r.attributes.size()) {
+	o << " [";
+	typedef	rule::attributes_list_type::const_iterator	const_iterator;
+	const_iterator i(r.attributes.begin());
+	const const_iterator e(r.attributes.end());
+	for ( ; i!=e; ++i) {
+		o << i->key << '=';
+		NEVER_NULL(i->values);
+		i->values->dump(o, entity::expr_dump_context::default_value);
+		o << "; ";
+	}
+	o << ']';
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -155,103 +214,6 @@ footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
 	}
 	return o << ')';
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Prints production rule expression suitable for a cflat tool.  
-	TODO: convert method to take template functor argument.  
- */
-void
-footprint::cflat_expr(const expr_node& e, ostream& o, 
-		const footprint_frame_map<bool_tag>& bfm,
-		const entity::footprint& topfp, const cflat_options& cf, 
-		const state_manager& sm, 
-		const expr_pool_type& ep, const char ps) {
-#if STACKTRACE_DUMPS
-	STACKTRACE("PRS::footprint::cflat_expr()");
-	STACKTRACE_INDENT << " at " << &e << ":" << endl;
-#endif
-	const size_t one = e.size();
-	const char type = e.get_type();
-	switch (type) {
-		case PRS_LITERAL_TYPE_ENUM:
-			INVARIANT(one == 1);
-			if (!cf.check_prs) {
-				if (cf.enquote_names) o << '\"';
-				sm.get_pool<bool_tag>()[bfm[e.only()-1]]
-					.dump_canonical_name(o, topfp, sm);
-				if (cf.enquote_names) o << '\"';
-			}
-			break;
-		case PRS_NOT_EXPR_TYPE_ENUM:
-			INVARIANT(one == 1);
-			if (!cf.check_prs)
-				o << '~';
-			cflat_expr(ep[e.only()], o, bfm, topfp, cf, 
-				sm, ep, type);
-			break;
-		case PRS_AND_EXPR_TYPE_ENUM:
-			// yes, fall-through
-		case PRS_OR_EXPR_TYPE_ENUM: {
-			const bool paren = ps && (type != ps);
-			if (!cf.check_prs && paren) o << '(';
-			if (e.size()) {
-				cflat_expr(ep[e.only()], o, bfm, 
-					topfp, cf, sm, ep, type);
-				const char* const op = 
-					(type == PRS_AND_EXPR_TYPE_ENUM) ?
-						" & " : " | ";
-				int i = 2;
-				const int s = e.size();
-				for ( ; i<=s; i++) {
-					if (!cf.check_prs)
-						o << op;
-					cflat_expr(ep[e[i]],
-						o, bfm, topfp, cf, 
-						sm, ep, type);
-				}
-			}
-			if (!cf.check_prs && paren) o << ')';
-			break;
-		}
-		default:
-			ICE(cerr, 
-			cerr << "Invalid PRS expr type enumeration: "
-				<< type << endl;
-			)
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Prints production rule suitable for a cflat tool.  
- */
-void
-footprint::cflat_rule(const rule& r, ostream& o, 
-		const footprint_frame_map<bool_tag>& bfm,
-		const entity::footprint& topfp, const cflat_options& cf, 
-		const state_manager& sm, const expr_pool_type& ep) {
-#if STACKTRACE_DUMPS
-	STACKTRACE("PRS::footprint::cflat_rule()");
-	STACKTRACE_INDENT << " at " << &e << ":" << endl;
-#endif
-	cflat_expr(ep[r.expr_index],
-		o, bfm, topfp, cf, sm, ep, PRS_LITERAL_TYPE_ENUM);
-if (!cf.check_prs) {
-	o << " -> ";
-	// r.output_index gives the local unique ID, 
-	// which needs to be translated to global ID.  
-	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
-	// const size_t j = bfm[r.output_index-1];
-	if (cf.enquote_names) o << '\"';
-	sm.get_pool<bool_tag>()[bfm[r.output_index-1]]
-		.dump_canonical_name(o, topfp, sm);
-	if (cf.enquote_names) o << '\"';
-	o << (r.dir ? '+' : '-') << endl;
-}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -316,23 +278,19 @@ footprint::push_back_macro(const string& s) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Iterates over each local production rule, and replaces
-	local literals with globally allocated node IDs.  
- */
 void
-footprint::cflat_prs(ostream& o, const footprint_frame_map<bool_tag>& bfm, 
-		const entity::footprint& topfp, const cflat_options& cf, 
-		const state_manager& sm) const {
+footprint::collect_transient_info_base(persistent_object_manager& m) const {
+{
 	typedef	rule_pool_type::const_iterator	const_rule_iterator;
+	const size_t s = rule_pool.size();
+	size_t j = 0;
 	const_rule_iterator i(rule_pool.begin());
-	const const_rule_iterator e(rule_pool.end());
-	for ( ; i!=e; i++) {
-		cflat_rule(*i, o, bfm, topfp, cf, sm, expr_pool);
+	for ( ; j<s; i++, j++) {
+		i->collect_transient_info_base(m);
 	}
 }
-#endif
+	// the expr_pool and macro_pool don't need persistence management yet
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -341,7 +299,8 @@ footprint::cflat_prs(ostream& o, const footprint_frame_map<bool_tag>& bfm,
 	and util::write_sequence and util::read_sequence...
  */
 void
-footprint::write_object_base(ostream& o) const {
+footprint::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
 {
 	typedef	rule_pool_type::const_iterator	const_rule_iterator;
 	const size_t s = rule_pool.size();
@@ -349,7 +308,7 @@ footprint::write_object_base(ostream& o) const {
 	size_t j = 0;
 	const_rule_iterator i(rule_pool.begin());
 	for ( ; j<s; i++, j++) {
-		i->write_object_base(o);
+		i->write_object_base(m, o);
 	}
 }{
 	typedef	expr_pool_type::const_iterator	const_expr_iterator;
@@ -378,7 +337,7 @@ footprint::write_object_base(ostream& o) const {
 	Each subobject is loaded in place.  
  */
 void
-footprint::load_object_base(istream& i) {
+footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 {
 	size_t s;
 	read_value(i, s);
@@ -386,7 +345,7 @@ footprint::load_object_base(istream& i) {
 	size_t j = 0;
 	for ( ; j<s; j++) {
 		rule_pool.push_back(rule());
-		rule_pool.back().load_object_base(i);
+		rule_pool.back().load_object_base(m, i);
 	}
 }{
 	size_t s;
@@ -468,20 +427,39 @@ footprint_expr_node::accept(cflat_visitor& v) const {
 // class footprint_rule method defintions
 
 void
-footprint_rule::write_object_base(ostream& o) const {
-	STACKTRACE_PERSISTENT("rule::write_object_base()");
-	write_value(o, expr_index);
-	write_value(o, output_index);
-	write_value(o, dir);
+footprint_rule::push_back(const footprint_rule_attribute& a) {
+	attributes.push_back(a);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint_rule::load_object_base(istream& i) {
+footprint_rule::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	for_each(attributes.begin(), attributes.end(), 
+		util::persistent_collector_ref<footprint_rule_attribute>(m)
+	);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_rule::write_object_base(const persistent_object_manager& m, 
+		ostream& o) const {
+	STACKTRACE_PERSISTENT("rule::write_object_base()");
+	write_value(o, expr_index);
+	write_value(o, output_index);
+	write_value(o, dir);
+	util::write_persistent_sequence(m, o, attributes);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_rule::load_object_base(const persistent_object_manager& m, 
+		istream& i) {
 	STACKTRACE_PERSISTENT("rule::load_object_base()");
 	read_value(i, expr_index);
 	read_value(i, output_index);
 	read_value(i, dir);
+	util::read_persistent_sequence_resize(m, i, attributes);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

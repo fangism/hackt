@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.9 2006/01/25 20:26:02 fang Exp $
+	$Id: PRS.h,v 1.10 2006/02/02 06:30:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -21,6 +21,7 @@ class meta_range_expr;
 class param_expr;
 class param_expr_list;
 class dynamic_param_expr_list;
+class const_param_expr_list;
 struct pint_tag;
 template <class, size_t> class value_array;
 
@@ -117,10 +118,16 @@ public:
 
 	// arg is equiv to const_reference
 	void
-	push_back(const count_ptr<const param_expr>&);
+	push_back(const value_type&);
+
+	const string&
+	get_key(void) const { return key; }
 
 	ostream&
 	dump(ostream&, const rule_dump_context& c) const;
+
+	count_ptr<const const_param_expr_list>
+	unroll_values(const unroll_context&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -164,7 +171,11 @@ protected:
 	attribute_list_type		attributes;
 
 	pull_base();
+
 	pull_base(const prs_expr_ptr_type&, const literal&, const bool);
+
+	pull_base(const prs_expr_ptr_type&, const literal&, 
+		const attribute_list_type&);
 
 public:
 	// because we go through an intermediate count_ptr, dtor needs to 
@@ -210,7 +221,12 @@ class pull_up : public pull_base {
 	typedef	pull_up			this_type;
 public:
 	pull_up();
+
 	pull_up(const prs_expr_ptr_type&, const literal&, const bool);
+
+	pull_up(const prs_expr_ptr_type&, const literal&, 
+		const attribute_list_type&);
+
 	~pull_up();
 
 	ostream&
@@ -241,7 +257,12 @@ class pull_dn : public pull_base {
 	typedef	pull_dn			this_type;
 public:
 	pull_dn();
+
 	pull_dn(const prs_expr_ptr_type&, const literal&, const bool);
+
+	pull_dn(const prs_expr_ptr_type&, const literal&, 
+		const attribute_list_type&);
+
 	~pull_dn();
 
 	ostream&

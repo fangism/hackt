@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.6 2006/01/25 20:26:03 fang Exp $
+	$Id: PRS_footprint.h,v 1.7 2006/02/02 06:30:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -17,6 +17,7 @@
 #include "util/macros.h"
 #include "util/list_vector.h"
 #include "util/offset_array.h"
+#include "util/persistent_fwd.h"
 
 namespace HAC {
 struct cflat_options;
@@ -35,7 +36,7 @@ class footprint_frame_map;
 namespace PRS {
 using std::ostream;
 using std::istream;
-// using util::persistent_object_manager;
+using util::persistent_object_manager;
 
 //=============================================================================
 /**
@@ -132,13 +133,14 @@ public:
 		const state_manager&) const;
 #endif
 public:
-	// requires no persistent object manager
 	void
-	write_object_base(ostream&) const;
+	collect_transient_info_base(persistent_object_manager&) const;
 
-	// requires no persistent object manager
 	void
-	load_object_base(istream&);
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 	void
 	accept(cflat_visitor&) const;

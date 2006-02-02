@@ -1,0 +1,12 @@
+// "after-01.hac"
+// should fail, old syntax rejected
+
+defproc aftershave() {
+bool a, b;
+prs {
+after 12	a => b-
+}
+}
+
+
+

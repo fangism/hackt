@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_functor.tcc"
 	This is a terrible name for a file...
-	$Id: persistent_functor.tcc,v 1.2 2006/01/22 06:53:35 fang Exp $
+	$Id: persistent_functor.tcc,v 1.3 2006/02/02 06:30:05 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_TCC__
@@ -123,8 +123,8 @@ read_persistent_sequence_back_insert(const persistent_object_manager& m,
 	size_t k = 0;
 	for ( ; k < s; ++k) {
 		value_type v;
-		persistent_loader_ref<value_type>(m, i)(v);
 		t.push_back(v);
+		persistent_loader_ref<value_type>(m, i)(t.back());
 	}
 }
 

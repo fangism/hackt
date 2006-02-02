@@ -4,28 +4,32 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	251
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	278
 	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	34
 	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	15	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	34
+	17	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -35,9 +39,9 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Definitions:
-    silly_inv = process-definition (defined) silly_inv(
+    aftershave = process-definition (defined) aftershave(
       )
-      In definition "silly_inv", we have: {
+      In definition "aftershave", we have: {
       Instances:
         a = bool<> a
         b = bool<> b
@@ -45,25 +49,25 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       prs:
-        a -> b-
-        ~a -> b+
+        a -> b- [after=12; ]
+        ~a -> b+ [after=12; ]
       footprint: {
-        bool^0 a (instantiated) = ::silly_inv::a (1) 
-        bool^0 b (instantiated) = ::silly_inv::b (2) 
+        bool^0 a (instantiated) = ::aftershave::a (1) 
+        bool^0 b (instantiated) = ::aftershave::b (2) 
         bool instance pool:
-        1	::silly_inv::a
-        2	::silly_inv::b
+        1	::aftershave::a
+        2	::aftershave::b
         resolved prs:
-        a -> b-
-        ~a -> b+
+        a -> b- [after=12; ]
+        ~a -> b+ [after=12; ]
       }
       }
 
   Instances:
-    __inv__ = process silly_inv<>^0 __inv__ (instantiated) = ::__inv__ (1) 
+    xyz = process aftershave<>^0 xyz (instantiated) = ::xyz (1) 
 }
 
 Created state:
 process instance pool:
-1	::__inv__
+1	::xyz
 

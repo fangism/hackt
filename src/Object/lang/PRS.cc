@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.9 2006/01/25 20:26:02 fang Exp $
+	$Id: PRS.cc,v 1.10 2006/02/02 06:30:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -14,6 +14,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/lang/PRS.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
@@ -300,7 +301,7 @@ attribute::operator bool () const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-attribute::push_back(const count_ptr<const param_expr>& e) {
+attribute::push_back(const value_type& e) {
 	if (!values) {
 		values = count_ptr<values_type>(new values_type);
 		NEVER_NULL(values);
@@ -314,6 +315,18 @@ attribute::dump(ostream& o, const rule_dump_context& c) const {
 	o << key << '=';
 	NEVER_NULL(values);
 	return values->dump(o, entity::expr_dump_context(c));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const const_param_expr_list>
+attribute::unroll_values(const unroll_context& c) const {
+	NEVER_NULL(values);
+	const count_ptr<const const_param_expr_list>
+		ret(values->unroll_resolve(c));
+	if (!ret) {
+		cerr << "Error resolving attribute values!" << endl;
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -352,6 +365,13 @@ pull_base::pull_base() : rule(), guard(), output(), cmpl(false),
 pull_base::pull_base(const prs_expr_ptr_type& g, 
 		const literal& o, const bool c) :
 		rule(), guard(g), output(o), cmpl(c), attributes() {
+	NEVER_NULL(guard);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pull_base::pull_base(const prs_expr_ptr_type& g, 
+		const literal& o, const attribute_list_type& l) :
+		rule(), guard(g), output(o), cmpl(false), attributes(l) {
 	NEVER_NULL(guard);
 }
 
@@ -398,7 +418,7 @@ pull_base::check(void) const {
 	\param pfp the production rule footprint in which to add
 		newly resolved production rules.  
 	\param dir is the direction, true for up, false for down.
-	TODO: check for complement bit
+	TODO: process attributes
  */
 good_bool
 pull_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
@@ -425,8 +445,35 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	const instance_alias_info<bool_tag>& bi(*bc.front());
 	const size_t output_node_index = bi.instance_index;
 	INVARIANT(output_node_index);
-	pfp.push_back_rule(guard_expr_index, output_node_index, dir);
-	// check auto-complement, and unroll it
+	// check for auto-complement, and unroll it?
+	footprint_rule&
+		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
+{
+	typedef	attribute_list_type::const_iterator	const_iterator;
+	const_iterator i(attributes.begin());
+	const const_iterator e(attributes.end());
+	for ( ; i!=e; ++i) {
+		const string& key(i->get_key());
+		// check whether or not named attribute is registered
+		const attribute_definition_entry att(attribute_registry[key]);
+		if (!att) {
+			cerr << "Error: unrecognized attribute \'" << key <<
+				"\'." << endl;
+			return good_bool(false);
+		}
+		const count_ptr<const const_param_expr_list>
+			att_vals(i->unroll_values(c));
+		if (!att_vals) {
+			// already have minimal error message
+			return good_bool(false);
+		}
+		if (!att.check_values(*att_vals).good) {
+			// already have error message
+			return good_bool(false);
+		}
+		r.push_back(footprint_rule_attribute(key, att_vals));
+	}
+}
 	return good_bool(true);
 }
 
@@ -470,6 +517,12 @@ pull_up::pull_up(const prs_expr_ptr_type& g, const literal& o, const bool c) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pull_up::pull_up(const prs_expr_ptr_type& g, const literal& o,
+		const attribute_list_type& l) :
+		pull_base(g, o, l) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_up::~pull_up() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -495,7 +548,7 @@ pull_up::expand_complement(void) {
 	if (cmpl) {
 		cmpl = false;
 		return excl_ptr<rule>(
-			new pull_dn(guard->negate(), output, false));
+			new pull_dn(guard->negate(), output, attributes));
 	} else	return excl_ptr<rule>(NULL);
 }
 
@@ -547,6 +600,12 @@ pull_dn::pull_dn(const prs_expr_ptr_type& g, const literal& o, const bool c) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pull_dn::pull_dn(const prs_expr_ptr_type& g, const literal& o,
+		const attribute_list_type& l) :
+		pull_base(g, o, l) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_dn::~pull_dn() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -567,7 +626,7 @@ pull_dn::expand_complement(void) {
 	if (cmpl) {
 		cmpl = false;
 		return excl_ptr<rule>(
-			new pull_up(guard->negate(), output, false));
+			new pull_up(guard->negate(), output, attributes));
 	} else	return excl_ptr<rule>(NULL);
 }
 

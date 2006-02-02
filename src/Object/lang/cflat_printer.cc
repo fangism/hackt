@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.3 2006/01/25 20:26:03 fang Exp $
+	$Id: cflat_printer.cc,v 1.4 2006/02/02 06:30:05 fang Exp $
  */
 
 #include <iostream>
@@ -9,6 +9,7 @@
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/lang/PRS_footprint_macro.h"
+#include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
@@ -51,12 +52,22 @@ public:
 	Adapted from footprint::cflat_rule().  
 	Q1: why is the expression outside of the conditional?
 	Q2: why is the conditional checked here? (more efficient in parent)
+	TODO: support attributes (or use a visitor?)
  */
 void
 cflat_prs_printer::visit(const footprint_rule& r) {
 	const expr_type_setter tmp(*this, PRS_LITERAL_TYPE_ENUM);
-	(*expr_pool)[r.expr_index].accept(*this);
 if (!cfopts.check_prs) {
+	if (r.attributes.size()) {
+		typedef	footprint_rule::attributes_list_type::const_iterator
+						const_iterator;
+		const_iterator i(r.attributes.begin());
+		const const_iterator e(r.attributes.end());
+		for ( ; i!=e; ++i) {
+			attribute_registry[i->key].main(*this, *i->values);
+		}
+	}
+	(*expr_pool)[r.expr_index].accept(*this);
 	os << " -> ";
 	// r.output_index gives the local unique ID,
 	// which needs to be translated to global ID.

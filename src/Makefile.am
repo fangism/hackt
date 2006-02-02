@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.96 2006/01/30 07:41:56 fang Exp $
+#	$Id: Makefile.am,v 1.97 2006/02/02 06:30:02 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -231,6 +231,7 @@ OBJECT_CC_FILES = \
 	Object/lang/cflat_printer.cc \
 	Object/lang/PRS.cc \
 	Object/lang/PRS_footprint.cc \
+	Object/lang/PRS_attribute_registry.cc \
 	Object/lang/PRS_macro_registry.cc \
 	Object/lang/CHP.cc
 
