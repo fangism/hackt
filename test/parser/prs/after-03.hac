@@ -1,0 +1,15 @@
+// "after-03.hac"
+// copy-modified from "after-02.hac"
+// should pass
+
+template <pint D>
+defproc afterburn(bool a, b) {
+prs {
+[after=D]	a => b-
+}
+}
+
+afterburn<31> xyz;
+
+
+

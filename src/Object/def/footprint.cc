@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.10 2006/01/30 07:42:00 fang Exp $
+	$Id: footprint.cc,v 1.10.2.1 2006/02/02 05:26:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -616,6 +616,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<enum_tag>::_pool.collect_transient_info_base(m);
 	footprint_base<int_tag>::_pool.collect_transient_info_base(m);
 	footprint_base<bool_tag>::_pool.collect_transient_info_base(m);
+	prs_footprint.collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -645,7 +646,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	footprint_base<bool_tag>::_pool.write_object_base(m, o);
 	port_aliases.write_object_base(m, o);
 	scope_aliases.write_object_base(m, o);
-	prs_footprint.write_object_base(o);
+	prs_footprint.write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -676,7 +677,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	footprint_base<bool_tag>::_pool.load_object_base(m, i);
 	port_aliases.load_object_base(m, i);
 	scope_aliases.load_object_base(m, i);
-	prs_footprint.load_object_base(i);
+	prs_footprint.load_object_base(m, i);
 }
 
 //=============================================================================

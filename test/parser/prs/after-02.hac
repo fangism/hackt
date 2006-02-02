@@ -1,0 +1,14 @@
+// "after-02.hac"
+// should pass
+
+defproc aftershave() {
+bool a, b;
+prs {
+[after=12]	a => b-
+}
+}
+
+aftershave xyz;
+
+
+
