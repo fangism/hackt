@@ -5,6 +5,16 @@
 
 2006-02-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-7-spec-01-02:
+	  Initial middle-end support for spec language.  
+	  TODO: write spec directive registry.  
+	  TODO: add spec body support to (definition) footprints.  
+	  TODO: persistence and unrolling.  
+	  TODO: basic test-cases.  
+
+
+2006-02-02	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-76-7-spec-01-01:
 	  Branch for adding spec { } language support.  
 	  Initial revision added front-end support for spec.  

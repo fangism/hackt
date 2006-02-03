@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.h"
-	$Id: SPEC.h,v 1.1.2.1 2006/02/02 22:44:53 fang Exp $
+	$Id: SPEC.h,v 1.1.2.2 2006/02/03 05:42:01 fang Exp $
  */
 
 #ifndef	__HAC_AST_SPEC_H__
@@ -14,6 +14,8 @@
 namespace HAC {
 namespace entity {
 namespace SPEC {
+	class directive;
+	class directives_set;
 }	// end namespace SPEC
 }	// end namespace entity
 
@@ -25,7 +27,7 @@ namespace SPEC {
  */
 class directive {
 public:
-	// typedef				checked_directive_type;
+	typedef	count_ptr<const entity::SPEC::directive>	return_type;
 private:
 	const excl_ptr<const token_identifier>		name;
 	const excl_ptr<const inst_ref_expr_list>	args;
@@ -42,7 +44,8 @@ public:
 	line_position
 	rightmost(void) const;
 
-	// check proto
+	return_type
+	check_spec(context&) const;
 
 };	// end class directive
 

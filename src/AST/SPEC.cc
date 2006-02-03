@@ -1,21 +1,37 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.1.2.1 2006/02/02 22:44:53 fang Exp $
+	$Id: SPEC.cc,v 1.1.2.2 2006/02/03 05:42:01 fang Exp $
  */
 
 #include <iostream>
+#include <algorithm>
 #include <vector>
+#include <iterator>
 #include "AST/SPEC.h"
 #include "AST/node_list.tcc"
 #include "AST/token_string.h"
 #include "AST/expr_list.h"
+#include "AST/parse_context.h"
+#include "Object/def/process_definition.h"
+#include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/lang/SPEC.h"
+#include "Object/lang/PRS.h"	// for PRS::literal
 #include "common/TODO.h"
+#include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 
 namespace HAC {
 namespace parser {
 namespace SPEC {
 #include "util/using_ostream.h"
+using std::find;
+using std::copy;
+using std::back_inserter;
+using entity::definition_base;
+using entity::process_definition;
+
 //=============================================================================
 // class directive method definitions
 
@@ -39,7 +55,33 @@ line_position
 directive::rightmost(void) const { return args->rightmost(); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// check definition
+/**
+	Mostly ripped off of PRS::macro::check_rule.
+	Consider factoring out into common code for maintainability.  
+ */
+directive::return_type
+directive::check_spec(context& c) const {
+	typedef	inst_ref_expr_list::checked_bool_refs_type
+						checked_bools_type;
+	typedef	checked_bools_type::const_iterator	const_iterator;
+	typedef	checked_bools_type::value_type		value_type;
+	// TODO: check spec_registry for definitions
+	checked_bools_type temp;
+	args->postorder_check_bool_refs(temp, c);
+	const const_iterator i(temp.begin());
+	const const_iterator e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking spec arguments in " << where(*args)
+			<< endl;
+		return return_type(NULL);
+	}
+	INVARIANT(temp.size());
+	const count_ptr<entity::SPEC::directive>
+		ret(new entity::SPEC::directive(*name));
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(*ret));
+	return ret;
+}
 
 //=============================================================================
 // class body method definitions
@@ -63,11 +105,28 @@ body::leftmost(void) const { return language_body::leftmost(); }
 line_position
 body::rightmost(void) const { return directives->rightmost(); }
 
-//=============================================================================
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
-	FINISH_ME(Fang);
+	const never_ptr<definition_base> d(c.get_current_open_definition());
+	const never_ptr<process_definition> pd(d.is_a<process_definition>());
+	NEVER_NULL(pd);
+	typedef	std::vector<directive::return_type>	checked_directives_type;
+	checked_directives_type checked_directives;
+	directives->check_list(checked_directives, &directive::check_spec, c);
+	checked_directives_type::const_iterator i(checked_directives.begin());
+	checked_directives_type::const_iterator e(checked_directives.end());
+	const checked_directives_type::const_iterator
+		null_iter(find(i, e, directive::return_type()));
+	if (null_iter == e) {
+		for ( ; i!=e; ++i) {
+			// transfer over to process_definition
+		}
+	} else {
+		cerr << "ERROR: at least one error in spec body." << endl;
+		THROW_EXIT;
+	}
 	return never_ptr<const object>(NULL);
 }
 
