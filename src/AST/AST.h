@@ -2,7 +2,7 @@
 	\file "AST/AST.h"
 	Includes all parser-related header files.  
 	Using this without thinking may slow down compilations unnecessarily.  
-	$Id: AST.h,v 1.2 2005/12/13 04:14:45 fang Exp $
+	$Id: AST.h,v 1.3 2006/02/04 06:43:15 fang Exp $
 	This file lived under the following name prior to renaming.  
 	Id: art_parser.h,v 1.8.2.1 2005/12/11 00:45:02 fang Exp
  */
@@ -26,6 +26,7 @@
 #include "AST/PRS.h"
 #include "AST/CHP.h"
 #include "AST/HSE.h"
+#include "AST/SPEC.h"
 
 #endif	// __HAC_AST_AST_H__
 

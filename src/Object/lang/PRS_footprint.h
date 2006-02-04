@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.7 2006/02/02 06:30:05 fang Exp $
+	$Id: PRS_footprint.h,v 1.8 2006/02/04 06:43:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
@@ -57,7 +57,6 @@ public:
 	typedef	footprint_rule			rule;
 	typedef	footprint_macro			macro;
 
-	// typedef	std::vector<>
 private:
 	typedef	state_instance<bool_tag>	bool_instance_type;
 	typedef	instance_pool<bool_instance_type>
@@ -95,21 +94,6 @@ private:
 	ostream&
 	dump_macro(const macro&, ostream&, const node_pool_type&);
 
-#if 0
-	static
-	void
-	cflat_expr(const expr_node&, ostream&,
-		const footprint_frame_map<bool_tag>&, 
-		const entity::footprint&, const cflat_options&,
-		const state_manager&, const expr_pool_type&, const char);
-
-	static
-	void
-	cflat_rule(const rule&, ostream&, const footprint_frame_map<bool_tag>&, 
-		const entity::footprint&, const cflat_options&, 
-		const state_manager&, const expr_pool_type&);
-#endif
-
 public:
 	// returns reference to new expression node
 	expr_node&
@@ -126,12 +110,6 @@ public:
 		return expr_pool.size();
 	}
 
-#if 0
-	void
-	cflat_prs(ostream&, const footprint_frame_map<bool_tag>&, 
-		const entity::footprint&, const cflat_options&, 
-		const state_manager&) const;
-#endif
 public:
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

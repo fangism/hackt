@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.15 2006/01/30 07:42:00 fang Exp $
+ 	$Id: definition.cc,v 1.16 2006/02/04 06:43:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2664,6 +2664,13 @@ process_definition::dump(ostream& o) const {
 				INDENT_SECTION(o);
 				chp.dump(o << auto_indent) << endl;
 			}
+			// SPEC
+			if (!spec.empty()) {
+				o << auto_indent << "spec:" << endl;
+				INDENT_SECTION(o);
+				const PRS::rule_dump_context rdc(*this);
+				spec.dump(o, rdc);	// << endl;
+			}
 			if (footprint_map.size()) {
 				footprint_map.dump(o << auto_indent) << endl;
 			}
@@ -2968,11 +2975,10 @@ if (defined) {
 			cpt(make_canonical_type(canonical_actuals));
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
-#if 0 && ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "new context c @ " << &c << endl;
-		c.dump(cerr) << endl;
-#endif
 		if (sequential_scope::unroll(c).good) {
+			// NOTE: nothing can be done with production rules
+			// until nodes have been assigned local ID numbers
+			// in the create phase, in create_complete_type, below.
 			f->mark_unrolled();
 		} else {
 			// already have partial error message
@@ -3033,6 +3039,11 @@ if (defined) {
 				// already have error message
 				return good_bool(false);
 			}
+			if (!spec.unroll(c, f->get_pool<bool_tag>(), 
+					f->get_spec_footprint()).good) {
+				// already have error message
+				return good_bool(false);
+			}
 			f->mark_created();
 		} else {
 			// already have partial error message
@@ -3070,6 +3081,7 @@ if (!m.register_transient_object(this,
 	// PRS
 	prs.collect_transient_info_base(m);
 	chp.collect_transient_info_base(m);
+	spec.collect_transient_info_base(m);
 	footprint_map.collect_transient_info_base(m);
 }
 }
@@ -3092,6 +3104,7 @@ process_definition::write_object(
 	// PRS
 	prs.write_object_base(m, f);
 	chp.write_object_base(m, f);
+	spec.write_object_base(m, f);
 	footprint_map.write_object_base(m, f);
 }
 
@@ -3110,6 +3123,7 @@ process_definition::load_object(
 	// PRS
 	prs.load_object_base(m, f);
 	chp.load_object_base(m, f);
+	spec.load_object_base(m, f);
 	footprint_map.load_object_base(m, f);
 }
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.10 2006/01/30 07:41:58 fang Exp $
+	$Id: global_entry.tcc,v 1.11 2006/02/04 06:43:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -328,11 +328,16 @@ template <class Tag>
 void
 production_rule_substructure::accept(const global_entry<Tag>& _this, 
 		PRS::cflat_visitor& v) {
+	const footprint* const f(_this._frame._footprint);
+	NEVER_NULL(f);
 	const PRS::footprint&
-		pfp(_this._frame._footprint->get_prs_footprint());
+		pfp(f->get_prs_footprint());
 	const cflat_context::footprint_frame_setter
 		tmp(IS_A(cflat_context&, v), _this._frame);
 	pfp.accept(v);
+	const SPEC::footprint&
+		sfp(f->get_spec_footprint());
+	sfp.accept(v);
 }
 
 //=============================================================================

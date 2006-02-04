@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.7 2006/01/26 19:23:06 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.8 2006/02/04 06:43:21 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -373,6 +373,10 @@ extern const char* const yyrule[];
 	PRS::macro*		_prs_macro;
 	PRS::attribute*		_prs_attribute;
 	PRS::attribute_list*	_prs_attribute_list;
+
+	SPEC::body*		_spec_body;
+	SPEC::directive*	_spec_directive;
+	SPEC::directive_list*	_spec_directive_list;
 }
 
 %{
@@ -484,7 +488,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* _token_keyword: covert most of these to _keyword_position */
 %token	<_keyword_position>	NAMESPACE
 %token	<_keyword_position>	OPEN AS
-%token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG
+%token	<_keyword_position>	CHP_LANG HSE_LANG PRS_LANG SPEC_LANG
 %token	<_keyword_position>	SKIP LOG
 %token	<_keyword_position>	DEFINE DEFPROC DEFCHAN DEFTYPE
 %token	<_keyword_position>	TYPEDEF
@@ -633,6 +637,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr> prs_and_loop prs_or_loop
 %type	<_node_position>	prs_arrow
 %type	<_node_position>	dir
+%type	<_spec_directive_list>	spec_body
+%type	<_spec_directive>	spec_item spec_directive
 %type	<_expr>	paren_expr expr
 /* %type	<n>	primary_expr */
 %type	<_expr>	literal
@@ -1397,6 +1403,8 @@ language_body
 		{ WRAP_LIST($2, $3, $4); $$ = new HSE::body($1, $3); }
 	| PRS_LANG '{' prs_body '}'
 		{ WRAP_LIST($2, $3, $4); $$ = new PRS::body($1, $3); }
+	| SPEC_LANG '{' spec_body '}'
+		{ WRAP_LIST($2, $3, $4); $$ = new SPEC::body($1, $3); }
 	;
 
 /* --- Language: CHP --- */
@@ -1894,6 +1902,24 @@ prs_or_loop
 	;
 
 /* end of PRS language */
+
+spec_body
+	: spec_body spec_item
+		{ $$ = $1; $$->push_back($2); }
+	| spec_item
+		{ $$ = new SPEC::directive_list($1); }
+	;
+
+spec_item
+	: spec_directive { $$ = $1; }
+	;
+
+/* identical to prs_macro, but we call it a directive */
+/* TODO: support parameters <...> */
+spec_directive
+	: ID mandatory_member_index_expr_list_in_parens
+		{ $$ = new SPEC::directive($1, $2); }
+	;
 
 /******************************************************************************
 // Expressions, expressions, expressions

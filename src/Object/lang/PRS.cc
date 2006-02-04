@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.10 2006/02/02 06:30:03 fang Exp $
+	$Id: PRS.cc,v 1.11 2006/02/04 06:43:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -16,12 +16,15 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
+#include "Object/lang/PRS_literal_unroller.h"
+
 #include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/inst/alias_empty.h"
-#include "Object/inst/instance_alias_info.h"
 #include "Object/traits/bool_traits.h"
+// #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
+// #include "Object/inst/alias_empty.h"
+// #include "Object/inst/instance_alias_info.h"
+
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/const_range.h"
@@ -118,7 +121,7 @@ struct rule::dumper {
 	void
 	operator () (const P& r) {
 		NEVER_NULL(r);
-		r->dump(os, rdc) << endl;
+		r->dump(os << auto_indent, rdc) << endl;
 	}
 };      // end struct rule::dumper
 
@@ -180,27 +183,6 @@ struct prs_expr::unroller {
 	operator () (const prs_expr_ptr_type& e) const {
 		NEVER_NULL(e);
 		return e->unroll(_context, _node_pool, _fpf);
-	}
-
-};	// end struct unroller
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Functor: Resolves local node index.  
-	Binds the unroll_context argument.  
- */
-struct literal::unroller {
-	const unroll_context& _context;
-
-	explicit
-	unroller(const unroll_context& c) : _context(c) { }
-
-	// make sure argument pointer type matches
-	// macro::const_reference
-	size_t
-	operator () (const count_ptr<const literal>& l) const {
-		NEVER_NULL(l);
-		return l->unroll_node(_context);
 	}
 
 };	// end struct unroller
@@ -385,7 +367,7 @@ pull_base::dump_base(ostream& o, const rule_dump_context& c,
 	static const char* const norm_arrow = " -> ";
 	static const char* const comp_arrow = " => ";
 	output.dump(
-		guard->dump(o << auto_indent, c) <<
+		guard->dump(o, c) <<
 			((cmpl) ? comp_arrow : norm_arrow), c) << dir;
 	if (!attributes.empty()) {
 		o << " [";
@@ -431,20 +413,14 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 		// dump context too?
 		return good_bool(false);
 	}
-	typedef literal_base_ptr_type::element_type::alias_collection_type
-			bool_instance_alias_collection_type;
-	bool_instance_alias_collection_type bc;
-	if (output.get_bool_var()->unroll_references(c, bc).bad) {
+	const size_t output_node_index = output.unroll_base(c);
+	if (!output_node_index) {
 		output.dump(cerr <<
 			"Error resolving output node of production rule: ", 
 			rule_dump_context())
 			<< endl;
 		return good_bool(false);
 	}
-	INVARIANT(!bc.dimensions());		// must be scalar
-	const instance_alias_info<bool_tag>& bi(*bc.front());
-	const size_t output_node_index = bi.instance_index;
-	INVARIANT(output_node_index);
 	// check for auto-complement, and unroll it?
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
@@ -483,7 +459,7 @@ pull_base::collect_transient_info_base(persistent_object_manager& m) const {
 	guard->collect_transient_info(m);
 	output.collect_transient_info_base(m);
 	for_each(attributes.begin(), attributes.end(),
-		util::persistent_collector_ref<attribute>(m)
+		util::persistent_collector_ref(m)
 	);
 }
 
@@ -754,7 +730,7 @@ ostream&
 rule_loop::dump(ostream& o, const rule_dump_context& c) const {
 	NEVER_NULL(ind_var);
 	NEVER_NULL(range);
-	o << auto_indent << "(:" << ind_var->get_name() << ':';
+	o << "(:" << ind_var->get_name() << ':';
 	range->dump(o, entity::expr_dump_context(c)) << ':' << endl;
 	{
 		INDENT_SECTION(o);
@@ -1554,12 +1530,10 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class literal method definitions
 
-literal::literal() : prs_expr(), var() { }
+literal::literal() : prs_expr(), base_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-literal::literal(const literal_base_ptr_type& l) : prs_expr(), var(l) {
-	NEVER_NULL(var);
-}
+literal::literal(const literal_base_ptr_type& l) : prs_expr(), base_type(l) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::~literal() { }
@@ -1578,7 +1552,8 @@ ostream&
 literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
 	// NEVER_NULL(c.parent_scope);
-	return var->dump(o, entity::expr_dump_context(c));
+	// return var->dump(o, entity::expr_dump_context(c));
+	return base_type::dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1612,15 +1587,16 @@ literal::negation_normalize(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Wrapper around unroll_base that provide error message.  
 	\return index of the node referenced, local to this definition only, 
 		NOT the globally allocated one.  
  */
 size_t
 literal::unroll_node(const unroll_context& c) const {
+#if 0
 	STACKTRACE_VERBOSE;
 	typedef literal_base_ptr_type::element_type::alias_collection_type
 			bool_instance_alias_collection_type;
-	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
 	if (var->unroll_references(c, bc).bad) {
 		var->dump(cerr << "Error resolving production rule literal: ", 
@@ -1633,6 +1609,16 @@ literal::unroll_node(const unroll_context& c) const {
 	const size_t node_index = bi.instance_index;
 	INVARIANT(node_index);
 	return node_index;
+#else
+	const size_t ret = unroll_base(c);
+	if (!ret) {
+		base_type::dump(
+			cerr << "Error resolving production rule literal: ", 
+			entity::expr_dump_context::default_value)
+			<< endl;
+	}
+	return ret;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1674,13 +1660,15 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Doesn't register itself as a dynamically allocated object.  
  */
 void
 literal::collect_transient_info_base(persistent_object_manager& m) const {
-	var->collect_transient_info(m);
+	base_type::collect_transient_info_base
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1697,13 +1685,15 @@ if (!m.register_transient_object(this,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 literal::write_object(const persistent_object_manager& m, ostream& o) const {
-	m.write_pointer(o, var);
+//	m.write_pointer(o, var);
+	write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 literal::load_object(const persistent_object_manager& m, istream& i) {
-	m.read_pointer(i, var);
+//	m.read_pointer(i, var);
+	load_object_base(m, i);
 }
 
 //=============================================================================
@@ -1729,7 +1719,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(macro)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 macro::dump(ostream& o, const rule_dump_context& c) const {
-	o << auto_indent << name << '(';
+	o << name << '(';
 	typedef	nodes_type::const_iterator	const_iterator;
 	INVARIANT(nodes.size());
 	const_iterator i(nodes.begin());

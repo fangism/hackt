@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_macro_registry.h"
-	$Id: PRS_macro_registry.h,v 1.2 2006/01/25 20:26:03 fang Exp $
+	$Id: PRS_macro_registry.h,v 1.3 2006/02/04 06:43:18 fang Exp $
  */
 
 #ifndef	__OBJECT_LANG_PRS_MACRO_REGISTRY_H__
@@ -8,6 +8,7 @@
 
 #include <string>
 #include "util/NULL.h"
+#include "util/size_t.h"
 #include "util/qmap.h"
 #include "util/boolean_types.h"
 #include "util/STL/vector_fwd.h"
@@ -33,14 +34,6 @@ public:
 	 */
 	typedef	void (main_type)(cflat_prs_printer&, const node_args_type&);
 	typedef	main_type*			main_ptr_type;
-#if 0
-	/**
-		The check function should take a vector of 
-		This is optional.  
-	 */
-	typedef	void (check_type)(void);
-	typedef	check_type*			check_ptr_type;
-#endif
 	/**
 		Function type for verifying number of macro arguments.  
 	 */
@@ -51,19 +44,14 @@ private:
 	/// the name of the macro
 	string					_key;
 	main_ptr_type				_main;
-	// check_ptr_type			_check;
 	check_num_args_ptr_type			_check_num_args;
 public:
 	macro_definition_entry() : _key(), _main(NULL),
-		// _check(NULL)
 		_check_num_args(NULL) { }
 
 	macro_definition_entry(const string& k, const main_ptr_type m, 
-		// const check_ptr_type c = NULL
-		const check_num_args_ptr_type c = NULL
-		) :
+		const check_num_args_ptr_type c = NULL) :
 		_key(k), _main(m),
-		// _check(c)
 		_check_num_args(c)
 		{ }
 
@@ -88,28 +76,9 @@ struct macro_interface {
 };	// end struct macro_interface
 
 //=============================================================================
-#if 0
-/**
-	Purely static class, responsible for maintaining map
-	to all registered macro definitions.  
- */
-class macro_registry {
-private:
-	typedef	util::qmap<string, macro_definition_entry>
-						macro_map_type;
-public:
-	typedef	macro_definition_entry::main_ptr_type	main_ptr_type;
-	typedef	macro_definition_entry::check_ptr_type	check_ptr_type;
-private:
-	static	macro_map_type			macro_map;
-public:
-
-};	// end class macro_registry
-#else
 typedef	util::qmap<string, macro_definition_entry>	macro_registry_type;
 
 extern const macro_registry_type			macro_registry;
-#endif
 
 //=============================================================================
 }	// end namespace PRS

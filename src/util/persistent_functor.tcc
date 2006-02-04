@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_functor.tcc"
 	This is a terrible name for a file...
-	$Id: persistent_functor.tcc,v 1.3 2006/02/02 06:30:05 fang Exp $
+	$Id: persistent_functor.tcc,v 1.4 2006/02/04 06:43:23 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_TCC__
@@ -28,9 +28,7 @@ write_persistent_sequence(const persistent_object_manager& m,
 	typedef	typename T::value_type		value_type;
 	const size_t s = t.size();
 	write_value(o, s);
-	for_each(t.begin(), t.end(), 
-		persistent_writer_ref<value_type>(m, o)
-	);
+	for_each(t.begin(), t.end(), persistent_writer_ref(m, o));
 }
 
 //-----------------------------------------------------------------------------
@@ -42,7 +40,7 @@ write_persistent_array(const persistent_object_manager& m,
 	const size_t s = t.size();
 	size_t i = 0;
 	for ( ; i<s; ++i) {
-		persistent_writer_ref<value_type>(m, o)(t[i]);
+		persistent_writer_ref(m, o)(t[i]);
 	}
 }
 
@@ -64,7 +62,7 @@ read_persistent_sequence_in_place(const persistent_object_manager& m,
 	iterator j(t.begin());
 	size_t k = 0;
 	for ( ; k < s; ++k, ++j) {
-		persistent_loader_ref<value_type>(m, i)(*j);
+		persistent_loader_ref(m, i)(*j);
 	}
 }
 
@@ -86,7 +84,7 @@ read_persistent_sequence_prealloc(const persistent_object_manager& m,
 	iterator j(&t[0]);
 	size_t k = 0;
 	for ( ; k < s; ++k, ++j) {
-		persistent_loader_ref<value_type>(m, i)(*j);
+		persistent_loader_ref(m, i)(*j);
 	}
 }
 #endif
@@ -108,7 +106,7 @@ read_persistent_sequence_resize(const persistent_object_manager& m,
 	t.resize(s);
 	size_t k = 0;
 	for ( ; k < s; ++k) {
-		persistent_loader_ref<value_type>(m, i)(t[k]);
+		persistent_loader_ref(m, i)(t[k]);
 	}
 }
 
@@ -124,7 +122,7 @@ read_persistent_sequence_back_insert(const persistent_object_manager& m,
 	for ( ; k < s; ++k) {
 		value_type v;
 		t.push_back(v);
-		persistent_loader_ref<value_type>(m, i)(t.back());
+		persistent_loader_ref(m, i)(t.back());
 	}
 }
 

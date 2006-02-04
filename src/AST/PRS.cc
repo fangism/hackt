@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.4 2006/01/25 20:26:01 fang Exp $
+	$Id: PRS.cc,v 1.5 2006/02/04 06:43:15 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -31,6 +31,7 @@
 #include "Object/expr/data_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/lang/PRS.h"
+#include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/inst/pint_value_collection.h"
 
@@ -263,6 +264,7 @@ body::rightmost(void) const {
 /**
 	NOTE: remember to update return type with ROOT_CHECK_PROTO.
 	Currently, exits upon error.  
+	TODO: possibly support top-level PRS.  
  */
 never_ptr<const object>
 body::check_build(context& c) const {
@@ -473,6 +475,11 @@ attribute::check(context& c) const {
 	typedef	expr_list::checked_meta_exprs_type vals_type;
 	typedef	vals_type::const_iterator	const_iterator;
 	typedef	vals_type::value_type		val_type;
+	if (!entity::PRS::attribute_registry[*key]) {
+		cerr << "Error: unrecognized PRS rule attribute \"" << *key <<
+			"\" at " << where(*key) << endl;
+		return return_type();
+	}
 	vals_type vals;
 	values->postorder_check_meta_exprs(vals, c);
 	const const_iterator i(vals.begin());

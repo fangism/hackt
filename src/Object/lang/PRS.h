@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.10 2006/02/02 06:30:04 fang Exp $
+	$Id: PRS.h,v 1.11 2006/02/04 06:43:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -10,6 +10,7 @@
 #include "Object/object_fwd.h"
 #include "Object/lang/PRS_base.h"
 #include "Object/lang/PRS_enum.h"
+#include "Object/lang/bool_literal.h"
 #include "Object/unroll/meta_loop_base.h"
 #include <string>
 #include <vector>
@@ -31,18 +32,21 @@ using std::string;
 //=============================================================================
 // forward declarations
 
-typedef	count_ptr<simple_bool_meta_instance_reference>	literal_base_ptr_type;
+/**
+	Because PRS only ever deal with bools (nodes).  
+ */
+typedef	bool_literal_base_ptr_type		literal_base_ptr_type;
+// typedef	count_ptr<simple_bool_meta_instance_reference>	literal_base_ptr_type;
 
 //=============================================================================
 /**
 	Literal expression.  
  */
-class literal : public prs_expr {
+class literal : public prs_expr, public bool_literal {
 	typedef	literal				this_type;
+	typedef	bool_literal			base_type;
 public:
 	struct	unroller;
-private:
-	literal_base_ptr_type			var;
 private:
 	enum { print_stamp = PRS_LITERAL_TYPE_ENUM };
 public:
@@ -86,8 +90,10 @@ public:
 	// fanout.. not until actually instantiated, unrolled, created...
 	PERSISTENT_METHODS_DECLARATIONS
 
+#if 0
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
+#endif
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class literal
@@ -607,6 +613,7 @@ public:
 	A user-defined expansion which could result in a rule
 	or some other construct, annotation, attribute, ...
 	(not to be confused with AST::parser::PRS::macro)
+	TODO: support parameter values.  
  */
 class macro : public rule {
 	typedef	macro				this_type;

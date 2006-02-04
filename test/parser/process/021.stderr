@@ -26,6 +26,7 @@ acceptable tokens are:
 	CHP_LANG (shift)
 	HSE_LANG (shift)
 	PRS_LANG (shift)
+	SPEC_LANG (shift)
 	TYPEDEF (reduce)
 	CHANNEL (shift)
 	TEMPLATE (shift)

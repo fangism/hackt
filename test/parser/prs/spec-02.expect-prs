@@ -1,0 +1,2 @@
+exclhi("tester.p", "tester.q", "tester.r")
+exclhi("tester.r", "tester.s")

@@ -1,4 +1,10 @@
 "src/Object/lang/README"
+	$Id: README,v 1.3 2006/02/04 06:43:18 fang Exp $
 
 This directory is for maintaining sub-languages of HACKT.  
+
+Currently, the languages featured are:
+	PRS --- production rule sets
+	CHP --- communicating hardware processes
+	SPEC --- specification directives
 

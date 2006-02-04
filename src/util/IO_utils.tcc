@@ -2,7 +2,7 @@
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
 	Consider renaming this file to value_read/writer...
-	$Id: IO_utils.tcc,v 1.13 2006/01/22 06:53:32 fang Exp $
+	$Id: IO_utils.tcc,v 1.14 2006/02/04 06:43:22 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -114,8 +114,10 @@ write_sequence(ostream& f, const S& l) {
 	// explicit for-loop
 	const_iterator i(l.begin());
 	const const_iterator e(l.end());
+	value_writer<value_type> w(f);
 	for ( ; i!=e; i++)
-		write_value<value_type>(f, *i);
+		w(*i);
+		// write_value<value_type>(f, *i);
 #endif
 }
 
@@ -138,8 +140,10 @@ write_array(ostream& f, const S& s) {
 	typedef	typename array_type::value_type	value_type;
 	write_value(f, s.size());
 	size_t i = 0;
+	value_writer<value_type> w(f);
 	for ( ; i < s.size(); i++) {
-		write_value<value_type>(f, s[i]);
+		w(s[i]);
+		// write_value<value_type>(f, s[i]);
 	}
 }
 
@@ -171,8 +175,10 @@ read_sequence_in_place(istream& f, S& l) {
 	// alternative, explicit for-loop
 	size_t j = 0;
 	iterator i(l.begin());
+	value_reader<value_type> r(f);
 	for ( ; j < size; j++, i++)
-		read_value<value_type>(f, *i);
+		r(*i);
+		// read_value<value_type>(f, *i);
 	// if sizes were asserted equal
 	INVARIANT(i == l.end());
 #endif
@@ -205,8 +211,10 @@ read_sequence_prealloc(istream& f, S& l) {
 	new (&l) sequence_type(size);
 	size_t j = 0;
 	iterator i(&l[0]);
+	value_reader<value_type> r(f);
 	for ( ; j < size; j++, i++)
-		read_value<value_type>(f, *i);
+		r(*i);
+		// read_value<value_type>(f, *i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -219,6 +227,7 @@ read_sequence_prealloc(istream& f, S& l) {
 	\param S a sequence that has concepts: size, forward iterator.
 	\param f the input stream.
 	\param l the sequence of data values to which to load values in-place.
+	TODO: specialize for bools!
  */
 template <class S>
 void
@@ -229,6 +238,7 @@ read_sequence_resize(istream& f, S& l) {
 	read_value(f, size);
 	l.resize(size);
 	size_t j = 0;
+	value_reader<value_type> r(f);
 	for ( ; j < size; j++) {
 #if 0
 		// doesn't work with vector<bool> because of specialized
@@ -236,7 +246,8 @@ read_sequence_resize(istream& f, S& l) {
 		read_value<value_type>(f, l[j]);
 #else
 		value_type temp;
-		read_value<value_type>(f, temp);
+		r(temp);
+		// read_value<value_type>(f, temp);
 		l[j] = temp;
 #endif
 	}
@@ -261,9 +272,11 @@ read_sequence_back_insert(istream& f, S& l) {
 	size_t size;
 	read_value(f, size);
 	size_t i = 0;
+	value_reader<value_type> r(f);
 	for ( ; i < size; i++) {
 		value_type t;
-		read_value(f, t);
+		r(t);
+		// read_value(f, t);
 		l.push_back(t);
 	}
 	// any way to std::copy directly?

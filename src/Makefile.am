@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.97 2006/02/02 06:30:02 fang Exp $
+#	$Id: Makefile.am,v 1.98 2006/02/04 06:43:14 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -155,6 +155,7 @@ AST_CC_FILES = \
 	AST/CHP.cc \
 	AST/HSE.cc \
 	AST/PRS.cc \
+	AST/SPEC.cc \
 	AST/type.cc \
 	AST/namespace.cc \
 	AST/statement.cc \
@@ -171,6 +172,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/CHP_fwd.h \
 	AST/HSE_fwd.h \
 	AST/PRS_fwd.h \
+	AST/SPEC_fwd.h \
 	AST/AST.h \
 	AST/common.h \
 	AST/expr_base.h \
@@ -229,11 +231,15 @@ OBJECT_CC_FILES = \
 	Object/def/footprint_manager.cc \
 	Object/lang/cflat_visitor.cc \
 	Object/lang/cflat_printer.cc \
+	Object/lang/bool_literal.cc \
 	Object/lang/PRS.cc \
 	Object/lang/PRS_footprint.cc \
 	Object/lang/PRS_attribute_registry.cc \
 	Object/lang/PRS_macro_registry.cc \
-	Object/lang/CHP.cc
+	Object/lang/CHP.cc \
+	Object/lang/SPEC.cc \
+	Object/lang/SPEC_footprint.cc \
+	Object/lang/SPEC_registry.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
@@ -438,7 +444,9 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/sequential_scope.h \
 	Object/unroll/unroll_context_value_resolver.h \
 	Object/lang/PRS_base.h \
-	Object/lang/CHP_base.h
+	Object/lang/PRS_literal_unroller.h \
+	Object/lang/CHP_base.h \
+	Object/lang/SPEC_fwd.h
 
 PARSER_H_FILES = \
 	parser/$(HACKT_PARSE_ROOT)-real.h \

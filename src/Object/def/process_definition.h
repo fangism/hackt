@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.7 2006/01/22 18:19:36 fang Exp $
+	$Id: process_definition.h,v 1.8 2006/02/04 06:43:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -12,6 +12,7 @@
 #include "Object/common/scopespace.h"
 #include "Object/unroll/sequential_scope.h"
 #include "Object/lang/PRS_base.h"
+#include "Object/lang/SPEC.h"
 #include "Object/def/port_formals_manager.h"
 #include "Object/def/footprint_manager.h"
 #include "Object/lang/CHP.h"
@@ -42,6 +43,7 @@ protected:
 	// list language bodies
 	PRS::rule_set				prs;
 	CHP::concurrent_actions			chp;
+	SPEC::directives_set			spec;
 	mutable footprint_manager		footprint_map;
 private:
 	process_definition();
@@ -109,6 +111,9 @@ public:
 
 	void
 	add_concurrent_chp_body(const count_ptr<CHP::action>&);
+
+	SPEC::directives_set&
+	get_spec_directives_set(void) { return spec; }
 
 	const footprint&
 	get_footprint(const count_ptr<const const_param_expr_list>&) const;

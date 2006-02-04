@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.11 2006/02/02 06:30:03 fang Exp $
+	$Id: footprint.cc,v 1.12 2006/02/04 06:43:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -201,7 +201,8 @@ footprint::footprint() :
 	// maybe even quarter-size...
 	scope_aliases(), 
 	port_aliases(),
-	prs_footprint() {
+	prs_footprint(), 
+	spec_footprint() {
 	STACKTRACE_CTOR_VERBOSE;
 }
 
@@ -246,6 +247,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df) const {
 		scope_aliases.dump(o);
 #endif
 		prs_footprint.dump(o, *this);
+		spec_footprint.dump(o, *this);
 	}
 	return o;
 }
@@ -362,6 +364,8 @@ footprint::clear_instance_collection_map(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For all instance collections, expand their canonical types.  
+	This does not unroll/create PRS footprints, that's done separately.  
+	(called by process_definition::create)
  */
 good_bool
 footprint::create_dependent_types(void) const {
@@ -375,8 +379,8 @@ footprint::create_dependent_types(void) const {
 			return good_bool(false);
 	}
 #if ENABLE_STACKTRACE
-	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl)
-		<< endl;
+	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl, 
+		dump_flags::default_value) << endl;
 #endif
 	return good_bool(true);
 }
@@ -403,7 +407,8 @@ footprint::evaluate_scope_aliases(void) {
 			pic(i->second.is_a<const physical_instance_collection>());
 		if (pic) {
 #if ENABLE_STACKTRACE
-			pic->dump(STACKTRACE_INDENT << "collecting: ") << endl;
+			pic->dump(STACKTRACE_INDENT << "collecting: ", 
+				dump_flags::default_value) << endl;
 #endif
 			// method is called collect_port,
 			// but it collects everything in scope
@@ -617,6 +622,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<int_tag>::_pool.collect_transient_info_base(m);
 	footprint_base<bool_tag>::_pool.collect_transient_info_base(m);
 	prs_footprint.collect_transient_info_base(m);
+	spec_footprint.collect_transient_info_base(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -647,6 +653,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	port_aliases.write_object_base(m, o);
 	scope_aliases.write_object_base(m, o);
 	prs_footprint.write_object_base(m, o);
+	spec_footprint.write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -678,6 +685,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	port_aliases.load_object_base(m, i);
 	scope_aliases.load_object_base(m, i);
 	prs_footprint.load_object_base(m, i);
+	spec_footprint.load_object_base(m, i);
 }
 
 //=============================================================================
