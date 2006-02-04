@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.27 2006/01/27 08:07:22 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.27.8.1 2006/02/04 05:45:53 fang Exp $
  */
 
 // flags and switches
@@ -1113,8 +1113,7 @@ persistent_object_manager::load_objects(void) {
 	size_t i = 1;
 	for ( ; i<max; i++) {
 #if 0
-		cerr << "Loading object number " << i << "!!!!!!!!!!!!!!!!!"
-			<< endl;
+		cerr << "Loading object number " << i << "!!!" << endl;
 #endif
 #if 0
 		ostringstream oss;

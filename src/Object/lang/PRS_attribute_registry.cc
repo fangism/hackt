@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
-	$Id: PRS_attribute_registry.cc,v 1.2 2006/02/02 06:30:04 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.2.2.1 2006/02/04 05:45:48 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,7 @@
 #include "Object/expr/pint_const.h"
 // #include "Object/expr/pbool_const.h"
 #include "Object/expr/expr_dump_context.h"
+#include "main/cflat_options.h"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 
@@ -109,10 +110,12 @@ DECLARE_PRS_ATTRIBUTE_CLASS(After, "after")
  */
 void
 After::main(cflat_prs_printer& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 	ostream& o(p.os);
 	o << "after ";
 	v.at(0).is_a<const pint_const>()->dump(o,
 		entity::expr_dump_context::default_value) << '\t';
+}
 }
 
 good_bool

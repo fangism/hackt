@@ -5,6 +5,19 @@
 
 2006-02-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-7-spec-01-04:
+	  Completed implementation of spec directives, 
+		cflat now uses them to emit textual directives, like macros.  
+	  Added first batch of spec directives:
+		lvs_exclhi/lo, sim_force_exclhi/lo, sim_assert_exclhi/lo.
+	  PRS::macro : after is now only enabled for prsim tool.  
+	  Added a few test cases to make sure it basically works.  
+		Not extensively tested.  
+	  Branch is ready to merge.  
+
+
+2006-02-03	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-76-7-spec-01-03:
 	  Initial implementation of SPEC::footprint and members for the
 		middle-end.  Also implemented SPEC::spec_registry, 

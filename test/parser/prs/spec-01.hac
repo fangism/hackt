@@ -1,0 +1,12 @@
+// "spec-01.hac"
+// should fail -- unrecognized spec directive
+
+defproc testing () {
+bool p, q, r;
+
+spec {
+	bogus_directive(p, q, r)
+}
+
+}
+

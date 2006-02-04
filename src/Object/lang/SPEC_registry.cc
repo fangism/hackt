@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.1.2.1 2006/02/04 01:33:12 fang Exp $
+	$Id: SPEC_registry.cc,v 1.1.2.2 2006/02/04 05:45:49 fang Exp $
  */
 
 #include <iostream>
@@ -120,22 +120,192 @@ class_name::check_num_args(const size_t) {				\
 }
 
 //-----------------------------------------------------------------------------
-DECLARE_SPEC_DIRECTIVE_CLASS(ExclHi, "exclhi")
-// DECLARE_SPEC_DIRECTIVE_CLASS(ExclLo, "excllo")
+typedef	spec_definition_entry::node_args_type		node_args_type;
 
-void
-ExclHi::main(cflat_prs_printer& p, const node_args_type& a) {
-	FINISH_ME(Fang);
+/**
+	Blatantly copied from PRS_macro_registry.cc.
+ */
+static
+ostream&
+print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
+		const char* delim) {
+	typedef	node_args_type::const_iterator		const_iterator;
+	NEVER_NULL(delim);
+	ostream& o(p.os);
+	const_iterator i(nodes.begin());
+	const const_iterator e(nodes.end());
+	INVARIANT(i!=e);
+	p.__dump_canonical_literal(*i);
+	for (++i; i!=e; ++i) {
+		o << delim;
+		p.__dump_canonical_literal(*i);
+	}
+	return o;
 }
 
 good_bool
-ExclHi::check_num_args(const size_t s) {
-	if (s < 2) {
+min_args(const string& name, const size_t min, const size_t args) {
+	if (args < min) {
 		cerr << "The " << name << " directive requires at least "
 			"two arguments." << endl;
 		return good_bool(false);
 	} else	return good_bool(true);
 }
+
+//-----------------------------------------------------------------------------
+DECLARE_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "lvs_exclhi")
+DECLARE_SPEC_DIRECTIVE_CLASS(LVS_excllo, "lvs_excllo")
+
+/**
+	lvs_exclhi -- for LVS only, asserts that a set of nodes may only
+		contain one logic high value.  
+ */
+void
+LVS_exclhi::main(cflat_prs_printer& p, const node_args_type& a) {
+	ostream& o(p.os);
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_LVS:
+		o << "exclhi(";
+		print_node_args_list(p, a, ", ");
+		o << ')' << endl;
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+LVS_exclhi::check_num_args(const size_t s) {
+	return min_args(name, 2, s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	lvs_excllo -- for LVS only, asserts that a set of nodes may only
+		contain one logic low value.  
+ */
+void
+LVS_excllo::main(cflat_prs_printer& p, const node_args_type& a) {
+	ostream& o(p.os);
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_LVS:
+		o << "excllo(";
+		print_node_args_list(p, a, ", ");
+		o << ')' << endl;
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+LVS_excllo::check_num_args(const size_t s) {
+	return min_args(name, 2, s);
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "sim_force_exclhi")
+DECLARE_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "sim_force_excllo")
+
+/**
+	sim_force_exclhi -- for simulations only, 
+		coerces exclusive high among nodes.  
+ */
+void
+SIM_force_exclhi::main(cflat_prs_printer& p, const node_args_type& a) {
+	ostream& o(p.os);
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_PRSIM:
+		// or other simulator tool
+		o << "exclhi(";
+		print_node_args_list(p, a, ", ");
+		o << ')' << endl;
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+SIM_force_exclhi::check_num_args(const size_t s) {
+	return min_args(name, 2, s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	sim_force_excllo -- for simulations only, 
+		coerces exclusive high among nodes.  
+ */
+void
+SIM_force_excllo::main(cflat_prs_printer& p, const node_args_type& a) {
+	ostream& o(p.os);
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_PRSIM:
+		// or other simulator tool
+		o << "excllo(";
+		print_node_args_list(p, a, ", ");
+		o << ')' << endl;
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+SIM_force_excllo::check_num_args(const size_t s) {
+	return min_args(name, 2, s);
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_SPEC_DIRECTIVE_CLASS(SIM_assert_exclhi, "sim_assert_exclhi")
+DECLARE_SPEC_DIRECTIVE_CLASS(SIM_assert_excllo, "sim_assert_excllo")
+
+/**
+	sim_assert_exclhi -- for simulations only, checks exclusivity.  
+	TODO: fill in the blanks.
+ */
+void
+SIM_assert_exclhi::main(cflat_prs_printer& p, const node_args_type& a) {
+	// ostream& o(p.os);
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_PRSIM:
+		// or other simulator tool
+		// emit check prs?
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+SIM_assert_exclhi::check_num_args(const size_t s) {
+	return min_args(name, 2, s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	sim_assert_excllo -- for simulations only, checks exclusivity.
+	TODO: fill in the blanks.
+ */
+void
+SIM_assert_excllo::main(cflat_prs_printer& p, const node_args_type& a) {
+	// ostream& o(p.os);
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_PRSIM:
+		// or other simulator tool
+		// emit check prs?
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+SIM_assert_excllo::check_num_args(const size_t s) {
+	return min_args(name, 2, s);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //-----------------------------------------------------------------------------
 #undef	DECLARE_SPEC_DIRECTIVE_CLASS

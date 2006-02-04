@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.1.2.2 2006/02/04 01:33:11 fang Exp $
+	$Id: SPEC.h,v 1.1.2.3 2006/02/04 05:45:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -84,6 +84,7 @@ public:
 	~directives_set();
 
 	using parent_type::push_back;
+	using parent_type::empty;
 
 	ostream&
 	dump(ostream&, const PRS::rule_dump_context&) const;

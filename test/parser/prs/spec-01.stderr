@@ -1,0 +1,2 @@
+Error: unrecognized spec directive "bogus_directive" at [8:2..16]
+ERROR: at least one error in spec body.

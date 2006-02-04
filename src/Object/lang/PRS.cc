@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.10.2.2 2006/02/04 01:33:09 fang Exp $
+	$Id: PRS.cc,v 1.10.2.3 2006/02/04 05:45:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -459,7 +459,7 @@ pull_base::collect_transient_info_base(persistent_object_manager& m) const {
 	guard->collect_transient_info(m);
 	output.collect_transient_info_base(m);
 	for_each(attributes.begin(), attributes.end(),
-		util::persistent_collector_ref<attribute>(m)
+		util::persistent_collector_ref(m)
 	);
 }
 

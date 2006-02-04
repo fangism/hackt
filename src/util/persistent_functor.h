@@ -1,6 +1,6 @@
 /**
 	\file "util/persistent_functor.h"
-	$Id: persistent_functor.h,v 1.2 2006/01/22 06:53:35 fang Exp $
+	$Id: persistent_functor.h,v 1.2.10.1 2006/02/04 05:45:53 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_H__
@@ -36,12 +36,12 @@ struct persistent_const_visitor_base {
 		collect_transient_info_base()
 	TODO: default to member-function, allow overrideable.  
  */
-template <class T>
 struct persistent_collector_ref : public persistent_visitor_base {
 	explicit
 	persistent_collector_ref(persistent_object_manager& m)
 		: persistent_visitor_base(m) { }
 
+	template <class T>
 	void
 	operator () (const T& t) {
 		t.collect_transient_info_base(pom);
@@ -55,12 +55,12 @@ struct persistent_collector_ref : public persistent_visitor_base {
 		and is derived from util::persistent.  
 	TODO: default to member-function, allow overrideable.  
  */
-template <class T>
 struct persistent_collector_ptr : public persistent_visitor_base {
 	explicit
 	persistent_collector_ptr(persistent_object_manager& m)
 		: persistent_visitor_base(m) { }
 
+	template <class T>
 	void
 	operator () (const T& t) {
 		if (t) t->collect_transient_info(pom);
@@ -68,7 +68,6 @@ struct persistent_collector_ptr : public persistent_visitor_base {
 };
 
 //=============================================================================
-template <class T>
 struct persistent_writer_ref : public persistent_const_visitor_base {
 	std::ostream&			os;
 
@@ -76,6 +75,7 @@ struct persistent_writer_ref : public persistent_const_visitor_base {
 		std::ostream& o)
 		: persistent_const_visitor_base(m), os(o) { }
 
+	template <class T>
 	void
 	operator () (const T& t) {
 		t.write_object(pom, os);
@@ -104,7 +104,6 @@ struct persistent_writer_ptr : public persistent_const_visitor_base {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class T>
 struct persistent_loader_ref : public persistent_const_visitor_base {
 	std::istream&			is;
 
@@ -112,6 +111,7 @@ struct persistent_loader_ref : public persistent_const_visitor_base {
 		std::istream& i)
 		: persistent_const_visitor_base(m), is(i) { }
 
+	template <class T>
 	void
 	operator () (T& t) {
 		t.load_object(pom, is);

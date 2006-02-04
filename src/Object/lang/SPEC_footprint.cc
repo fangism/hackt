@@ -1,7 +1,9 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.1.2.1 2006/02/04 01:33:11 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.1.2.2 2006/02/04 05:45:48 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include "Object/def/footprint.h"
@@ -15,6 +17,7 @@
 #include "util/IO_utils.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
+#include "util/stacktrace.h"
 
 namespace util {
 using HAC::entity::SPEC::footprint_directive;
@@ -82,15 +85,17 @@ footprint_directive::first_error(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_directive::write_object(ostream& o) const {
+	INVARIANT(key.length());
 	write_value(o, key);
 	util::write_sequence(o, args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint_directive::load_object(istream& o) {
-	read_value(o, key);
-	util::read_sequence_resize(o, args);
+footprint_directive::load_object(istream& i) {
+	read_value(i, key);
+	INVARIANT(key.length());
+	util::read_sequence_resize(i, args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,9 +172,11 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 /**
 	NOTE: persistent object manager not really needed.  
 	But following convention is easy.  
+	This implementation requires that value_writer and value_reader
+		are specialized for footprint_directive.
  */
 void
-footprint::write_object_base(const persistent_object_manager& m,
+footprint::write_object_base(const persistent_object_manager&,
 		ostream& o) const {
 	util::write_sequence(o, AS_A(const footprint_base_type&, *this));
 }
@@ -178,11 +185,19 @@ footprint::write_object_base(const persistent_object_manager& m,
 /**
 	NOTE: persistent object manager not really needed.  
 	But following convention is easy.  
+	This implementation requires that value_writer and value_reader
+		are specialized for footprint_directive.
  */
 void
-footprint::load_object_base(const persistent_object_manager& m,
+footprint::load_object_base(const persistent_object_manager&,
 		istream& i) {
 	util::read_sequence_resize(i, AS_A(footprint_base_type&, *this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint::accept(cflat_visitor& v) const {
+	v.visit(*this);
 }
 
 //=============================================================================

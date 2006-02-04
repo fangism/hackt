@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.15.4.1 2006/02/04 01:33:08 fang Exp $
+ 	$Id: definition.cc,v 1.15.4.2 2006/02/04 05:45:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2663,6 +2663,13 @@ process_definition::dump(ostream& o) const {
 				o << auto_indent << "chp:" << endl;
 				INDENT_SECTION(o);
 				chp.dump(o << auto_indent) << endl;
+			}
+			// SPEC
+			if (!spec.empty()) {
+				o << auto_indent << "spec:" << endl;
+				INDENT_SECTION(o);
+				const PRS::rule_dump_context rdc(*this);
+				spec.dump(o, rdc);	// << endl;
 			}
 			if (footprint_map.size()) {
 				footprint_map.dump(o << auto_indent) << endl;

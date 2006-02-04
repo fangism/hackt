@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.1.2.2 2006/02/04 01:33:11 fang Exp $
+	$Id: SPEC.cc,v 1.1.2.3 2006/02/04 05:45:48 fang Exp $
  */
 
 #include <iostream>
@@ -12,9 +12,11 @@
 #include "Object/persistent_type_hash.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
+#include "util/persistent_functor.tcc"
 #include "util/indent.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
+#include "util/IO_utils.h"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directive, "SPEC::directive")
@@ -31,6 +33,8 @@ using std::transform;
 using util::auto_indent;
 #include "util/using_ostream.h"
 using PRS::rule_dump_context;
+using util::read_value;
+using util::write_value;
 
 //=============================================================================
 // helper class definitions
@@ -119,18 +123,24 @@ directive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		util::persistent_traits<this_type>::type_key)) {
 	m.collect_pointer_list(nodes);
+#if 0
+	for_each(nodes.begin(), nodes.end(),
+		util::persistent_collector_ptr(m));
+#endif
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directive::write_object(const persistent_object_manager& m, ostream& o) const {
+	write_value(o, name);
 	m.write_pointer_list(o, nodes);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directive::load_object(const persistent_object_manager& m, istream& i) {
+	read_value(i, name);
 	m.read_pointer_list(i, nodes);
 }
 

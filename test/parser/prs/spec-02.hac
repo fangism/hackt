@@ -1,0 +1,18 @@
+// "spec-02.hac"
+// should pass
+
+defproc testing () {
+bool p, q, r, s;
+
+spec {
+	sim_force_exclhi(p, q, r)
+}
+
+spec {
+	sim_force_exclhi(r, s)
+}
+
+}
+
+testing tester;
+

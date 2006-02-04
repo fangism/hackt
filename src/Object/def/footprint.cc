@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.11.2.1 2006/02/04 01:33:08 fang Exp $
+	$Id: footprint.cc,v 1.11.2.2 2006/02/04 05:45:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -364,6 +364,8 @@ footprint::clear_instance_collection_map(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For all instance collections, expand their canonical types.  
+	This does not unroll/create PRS footprints, that's done separately.  
+	(called by process_definition::create)
  */
 good_bool
 footprint::create_dependent_types(void) const {
@@ -377,8 +379,8 @@ footprint::create_dependent_types(void) const {
 			return good_bool(false);
 	}
 #if ENABLE_STACKTRACE
-	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl)
-		<< endl;
+	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl, 
+		dump_flags::default_value) << endl;
 #endif
 	return good_bool(true);
 }
@@ -405,7 +407,8 @@ footprint::evaluate_scope_aliases(void) {
 			pic(i->second.is_a<const physical_instance_collection>());
 		if (pic) {
 #if ENABLE_STACKTRACE
-			pic->dump(STACKTRACE_INDENT << "collecting: ") << endl;
+			pic->dump(STACKTRACE_INDENT << "collecting: ", 
+				dump_flags::default_value) << endl;
 #endif
 			// method is called collect_port,
 			// but it collects everything in scope

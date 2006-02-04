@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.h"
-	$Id: SPEC_footprint.h,v 1.1.2.1 2006/02/04 01:33:12 fang Exp $
+	$Id: SPEC_footprint.h,v 1.1.2.2 2006/02/04 05:45:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FOOTPRINT_H__
@@ -82,7 +82,7 @@ typedef	std::vector<footprint_directive>	footprint_base_type;
 	This spec footprint is a signature of a complete type
 	whose references are resolved.  
  */
-class footprint : private footprint_base_type {
+class footprint : private footprint_base_type, public PRS::cflat_visitee {
 public:
 	footprint();
 	~footprint();

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.8.2.1 2006/02/04 01:33:10 fang Exp $
+	$Id: PRS_footprint.cc,v 1.8.2.2 2006/02/04 05:45:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -435,7 +435,7 @@ void
 footprint_rule::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	for_each(attributes.begin(), attributes.end(), 
-		util::persistent_collector_ref<footprint_rule_attribute>(m)
+		util::persistent_collector_ref(m)
 	);
 }
 
