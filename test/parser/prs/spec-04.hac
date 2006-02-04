@@ -1,4 +1,5 @@
-// "spec-02.hac"
+// "spec-04.hac"
+// copy-modified from "spec-02.hac"
 // should pass
 
 defproc testing () {
@@ -6,10 +7,11 @@ bool p, q, r, s;
 
 spec {
 	mk_exclhi(p, q, r)
+	mk_exclhi(r, s)
 }
 
-spec {
-	mk_exclhi(r, s)
+prs {
+	p & q => s-
 }
 
 }

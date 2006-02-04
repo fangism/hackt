@@ -5,7 +5,7 @@ defproc testing () {
 bool p, q, r;
 
 spec {
-	sim_force_exclhi(p, q, s)
+	mk_exclhi(p, q, s)
 }
 
 }

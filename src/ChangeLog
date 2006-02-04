@@ -5,6 +5,11 @@
 
 2006-02-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-76-9:
+	  Fixed and added spec directives as discussed.
+	  TODO: document that sh--! "dox/lang/chapters/SPEC.tex"
+
+
 	* HACKT-00-01-04-main-00-76-8-merged-spec-01-04:
 	  Merged -spec-01-04 branch revisions.  
 		Initial support for spec language directives.  

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.2 2006/02/04 06:43:19 fang Exp $
+	$Id: SPEC_registry.cc,v 1.3 2006/02/04 19:55:58 fang Exp $
  */
 
 #include <iostream>
@@ -99,6 +99,7 @@ namespace __specs__ {
  */
 #define	DECLARE_SPEC_DIRECTIVE_CLASS(class_name, spec_name)		\
 struct class_name {							\
+	typedef	class_name				this_type;	\
 	typedef	spec_definition_entry::node_args_type	node_args_type;	\
 public:									\
 	static const char			name[];			\
@@ -143,31 +144,86 @@ print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reusable function for specifying the minimum number of arguments.  
+ */
 good_bool
 min_args(const string& name, const size_t min, const size_t args) {
 	if (args < min) {
-		cerr << "The " << name << " directive requires at least "
-			"two arguments." << endl;
+		cerr << "The " << name << " directive requires at least " <<
+			min << " arguments." << endl;
 		return good_bool(false);
 	} else	return good_bool(true);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reusable function for specifying the exact number of arguments.  
+ */
+good_bool
+exact_args(const string& name, const size_t req, const size_t args) {
+	if (args != req) {
+		cerr << "The " << name << " directive requires exactly " <<
+			req << " arguments." << endl;
+		return good_bool(false);
+	} else	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is the default thing to do, much too common and reusable.  
+ */
+template <class T>
+ostream&
+default_spec_output(cflat_prs_printer& p, const node_args_type& a) {
+	ostream& o(p.os);
+	o << T::name << '(';
+	print_node_args_list(p, a, ", ");
+	o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expand grouped attribute directives to one-per-node.  
+	Automatically separates with newlines.  
+ */
+template <class T>
+ostream&
+default_expand_into_singles_output(cflat_prs_printer& p, 
+		const node_args_type& a) {
+	typedef	node_args_type::const_iterator		const_iterator;
+	ostream& o(p.os);
+	const_iterator i(a.begin());
+	const const_iterator e(a.end());
+	for ( ; i!=e; ++i) {
+		o << T::name << '(';
+		p.__dump_canonical_literal(*i);
+		o << ')' << endl;
+	}
+	return o;
+}
+
 //-----------------------------------------------------------------------------
-DECLARE_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "lvs_exclhi")
-DECLARE_SPEC_DIRECTIVE_CLASS(LVS_excllo, "lvs_excllo")
+//
+//	Define spec directives HERE.  
+//
+//-----------------------------------------------------------------------------
+
+DECLARE_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
+DECLARE_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 
 /**
-	lvs_exclhi -- for LVS only, asserts that a set of nodes may only
+	exclhi -- for LVS: asserts that a set of nodes may only
 		contain one logic high value.  
+		Useful for charge-sharing and sneak-path analysis.  
  */
 void
 LVS_exclhi::main(cflat_prs_printer& p, const node_args_type& a) {
-	ostream& o(p.os);
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
-		o << "exclhi(";
-		print_node_args_list(p, a, ", ");
-		o << ')' << endl;
+		// or other tools
+		default_spec_output<this_type>(p, a) << endl;
 		break;
 	default:
 		break;
@@ -181,17 +237,15 @@ LVS_exclhi::check_num_args(const size_t s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	lvs_excllo -- for LVS only, asserts that a set of nodes may only
+	excllo -- for LVS: asserts that a set of nodes may only
 		contain one logic low value.  
  */
 void
 LVS_excllo::main(cflat_prs_printer& p, const node_args_type& a) {
-	ostream& o(p.os);
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
-		o << "excllo(";
-		print_node_args_list(p, a, ", ");
-		o << ')' << endl;
+		// or other tools
+		default_spec_output<this_type>(p, a) << endl;
 		break;
 	default:
 		break;
@@ -204,22 +258,70 @@ LVS_excllo::check_num_args(const size_t s) {
 }
 
 //-----------------------------------------------------------------------------
-DECLARE_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "sim_force_exclhi")
-DECLARE_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "sim_force_excllo")
+DECLARE_SPEC_DIRECTIVE_CLASS(LVS_BDD_order, "order")
 
 /**
-	sim_force_exclhi -- for simulations only, 
+	order -- for LVS: binary decision diagram ordering for 
+		accelerating checking.  
+ */
+void
+LVS_BDD_order::main(cflat_prs_printer& p, const node_args_type& a) {
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_LVS:
+		// or other tools
+		default_spec_output<this_type>(p, a) << endl;
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+LVS_BDD_order::check_num_args(const size_t s) {
+	return min_args(name, 2, s);
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_SPEC_DIRECTIVE_CLASS(LVS_unstaticized, "unstaticized")
+
+/**
+	unstaticized -- for LVS: asserts that a set of nodes may only
+		contain one logic high value.  
+		Useful for charge-sharing and sneak-path analysis.  
+	This automatically expands multiple arguments into 
+		outputs on separate lines.  
+ */
+void
+LVS_unstaticized::main(cflat_prs_printer& p, const node_args_type& a) {
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_LVS:
+		// or other tools
+		default_expand_into_singles_output<this_type>(p, a);
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+LVS_unstaticized::check_num_args(const size_t s) {
+	return min_args(name, 1, s);
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
+DECLARE_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
+
+/**
+	mk_exclhi -- for simulations only, 
 		coerces exclusive high among nodes.  
  */
 void
 SIM_force_exclhi::main(cflat_prs_printer& p, const node_args_type& a) {
-	ostream& o(p.os);
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		// or other simulator tool
-		o << "exclhi(";
-		print_node_args_list(p, a, ", ");
-		o << ')' << endl;
+		default_spec_output<this_type>(p, a) << endl;
 		break;
 	default:
 		break;
@@ -233,18 +335,15 @@ SIM_force_exclhi::check_num_args(const size_t s) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	sim_force_excllo -- for simulations only, 
+	mk_excllo -- for simulations only, 
 		coerces exclusive high among nodes.  
  */
 void
 SIM_force_excllo::main(cflat_prs_printer& p, const node_args_type& a) {
-	ostream& o(p.os);
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		// or other simulator tool
-		o << "excllo(";
-		print_node_args_list(p, a, ", ");
-		o << ')' << endl;
+		default_spec_output<this_type>(p, a) << endl;
 		break;
 	default:
 		break;
@@ -257,6 +356,8 @@ SIM_force_excllo::check_num_args(const size_t s) {
 }
 
 //-----------------------------------------------------------------------------
+#if 0
+/// probably not needed anymore
 DECLARE_SPEC_DIRECTIVE_CLASS(SIM_assert_exclhi, "sim_assert_exclhi")
 DECLARE_SPEC_DIRECTIVE_CLASS(SIM_assert_excllo, "sim_assert_excllo")
 
@@ -304,8 +405,8 @@ good_bool
 SIM_assert_excllo::check_num_args(const size_t s) {
 	return min_args(name, 2, s);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 #undef	DECLARE_SPEC_DIRECTIVE_CLASS

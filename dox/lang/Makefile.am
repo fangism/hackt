@@ -1,5 +1,5 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2005/12/13 04:14:40 fang Exp $
+#	$Id: Makefile.am,v 1.17 2006/02/04 19:55:55 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -31,6 +31,7 @@ EXTRA_DIST += \
 	chapters/linkage.tex \
 	chapters/CHP.tex \
 	chapters/PRS.tex \
+	chapters/SPEC.tex \
 	TODO ChangeLog
 
 # need GNU make for the following:
