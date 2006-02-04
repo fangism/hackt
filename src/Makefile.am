@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.97.2.2 2006/02/03 05:41:58 fang Exp $
+#	$Id: Makefile.am,v 1.97.2.3 2006/02/04 01:33:04 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -237,7 +237,9 @@ OBJECT_CC_FILES = \
 	Object/lang/PRS_attribute_registry.cc \
 	Object/lang/PRS_macro_registry.cc \
 	Object/lang/CHP.cc \
-	Object/lang/SPEC.cc
+	Object/lang/SPEC.cc \
+	Object/lang/SPEC_footprint.cc \
+	Object/lang/SPEC_registry.cc
 
 # these source files have no .h file (use other name)
 OBJECT_CC_NO_H_FILES = \
@@ -442,7 +444,9 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/sequential_scope.h \
 	Object/unroll/unroll_context_value_resolver.h \
 	Object/lang/PRS_base.h \
-	Object/lang/CHP_base.h
+	Object/lang/PRS_literal_unroller.h \
+	Object/lang/CHP_base.h \
+	Object/lang/SPEC_fwd.h
 
 PARSER_H_FILES = \
 	parser/$(HACKT_PARSE_ROOT)-real.h \

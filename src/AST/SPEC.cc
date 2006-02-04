@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.1.2.2 2006/02/03 05:42:01 fang Exp $
+	$Id: SPEC.cc,v 1.1.2.3 2006/02/04 01:33:07 fang Exp $
  */
 
 #include <iostream>
@@ -17,6 +17,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/lang/SPEC.h"
+#include "Object/lang/SPEC_registry.h"
 #include "Object/lang/PRS.h"	// for PRS::literal
 #include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
@@ -65,7 +66,11 @@ directive::check_spec(context& c) const {
 						checked_bools_type;
 	typedef	checked_bools_type::const_iterator	const_iterator;
 	typedef	checked_bools_type::value_type		value_type;
-	// TODO: check spec_registry for definitions
+	if (!entity::SPEC::spec_registry[*name]) {
+		cerr << "Error: unrecognized spec directive \"" << *name <<
+			"\" at " << where(*name) << endl;
+		return return_type(NULL);
+	}
 	checked_bools_type temp;
 	args->postorder_check_bool_refs(temp, c);
 	const const_iterator i(temp.begin());
@@ -106,6 +111,10 @@ line_position
 body::rightmost(void) const { return directives->rightmost(); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return NULL always, a useless value.
+	\throw std::exception on error, bare-bones error handling.  
+ */
 never_ptr<const object>
 body::check_build(context& c) const {
 	STACKTRACE_VERBOSE;
@@ -120,9 +129,8 @@ body::check_build(context& c) const {
 	const checked_directives_type::const_iterator
 		null_iter(find(i, e, directive::return_type()));
 	if (null_iter == e) {
-		for ( ; i!=e; ++i) {
-			// transfer over to process_definition
-		}
+		// transfer over to process_definition's spec set
+		copy(i, e, back_inserter(pd->get_spec_directives_set()));
 	} else {
 		cerr << "ERROR: at least one error in spec body." << endl;
 		THROW_EXIT;

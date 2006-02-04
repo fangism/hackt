@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.3 2006/01/25 20:26:04 fang Exp $
+	$Id: cflat_visitor.h,v 1.3.8.1 2006/02/04 01:33:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -12,6 +12,10 @@
 namespace HAC {
 namespace entity {
 class state_manager;
+namespace SPEC {
+	class footprint;
+	class footprint_directive;
+}
 namespace PRS {
 // forward declarations of all the visitable types in this hierarchy
 class footprint;
@@ -51,6 +55,10 @@ virtual	void
 	visit(const footprint_expr_node&) = 0;
 virtual	void
 	visit(const footprint_macro&) = 0;
+virtual	void
+	visit(const SPEC::footprint&);
+virtual	void
+	visit(const SPEC::footprint_directive&) = 0;
 
 };	// end struct cflat_visitor
 

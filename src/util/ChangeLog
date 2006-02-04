@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2006-02-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-7-spec-01-03:
+	  Added "util/visitor_functor.h" to provide convenient bound
+		functors for easy visiting over iterated structures.  
+
+
 2006-01-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-6:

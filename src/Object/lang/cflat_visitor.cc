@@ -1,14 +1,19 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.3 2006/01/25 20:26:04 fang Exp $
+	$Id: cflat_visitor.cc,v 1.3.8.1 2006/02/04 01:33:13 fang Exp $
  */
 
+#include <algorithm>
+#include "util/visitor_functor.h"
 #include "Object/lang/cflat_visitor.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
+using util::visitor_ref;
+using std::for_each;
 //=============================================================================
 // struct cflat_visitor class definition
 
@@ -38,6 +43,7 @@ public:
 void
 cflat_visitor::visit(const footprint& f) {
 	const expr_pool_setter temp(*this, f);	// will expire end of scope
+#if 0
 {
 	typedef	footprint::rule_pool_type::const_iterator
 						const_rule_iterator;
@@ -55,6 +61,16 @@ cflat_visitor::visit(const footprint& f) {
 		i->accept(*this);
 	}
 }
+#else
+	for_each(f.rule_pool.begin(), f.rule_pool.end(), visitor_ref(*this));
+	for_each(f.macro_pool.begin(), f.macro_pool.end(), visitor_ref(*this));
+#endif
+}
+
+//=============================================================================
+void
+cflat_visitor::visit(const SPEC::footprint& f) {
+	for_each(f.begin(), f.end(), visitor_ref(*this));
 }
 
 //=============================================================================

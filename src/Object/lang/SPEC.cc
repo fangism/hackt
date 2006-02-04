@@ -1,17 +1,20 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.1.2.1 2006/02/03 05:42:03 fang Exp $
+	$Id: SPEC.cc,v 1.1.2.2 2006/02/04 01:33:11 fang Exp $
  */
 
 #include <iostream>
 #include <algorithm>
+#include <iterator>
 #include "Object/lang/SPEC.h"
-#include "Object/lang/PRS.h"	// for PRS::literal
+#include "Object/lang/SPEC_footprint.h"
+#include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
 #include "Object/persistent_type_hash.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
 #include "util/what.h"
+#include "util/stacktrace.h"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::SPEC::directive, "SPEC::directive")
@@ -23,9 +26,31 @@ namespace HAC {
 namespace entity {
 namespace SPEC {
 using std::for_each;
+using std::back_inserter;
+using std::transform;
 using util::auto_indent;
 #include "util/using_ostream.h"
 using PRS::rule_dump_context;
+
+//=============================================================================
+// helper class definitions
+
+/**
+	ostream binding functor.  
+ */
+struct directive::dumper {
+	ostream&				os;
+	const rule_dump_context&		rdc;
+
+	dumper(ostream& o, const rule_dump_context& r) : os(o), rdc(r) { }
+
+	template <class P>
+	void
+	operator () (const P& p) {
+		NEVER_NULL(p);
+		p->dump(os << auto_indent, rdc) << endl;
+	}
+};	// end struct directive::dumper
 
 //=============================================================================
 // class directive method definitions
@@ -68,6 +93,27 @@ directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation ripped off of PRS::macro::unroll().
+ */
+good_bool
+directive::unroll(const unroll_context& c, const node_pool_type& np, 
+		footprint& sfp) const {
+	STACKTRACE_VERBOSE;
+	// at least check the instance references first...
+	footprint_directive& new_directive(sfp.push_back_directive(name));
+	transform(nodes.begin(), nodes.end(), back_inserter(new_directive),
+		PRS::literal::unroller(c));
+	const size_t err = new_directive.first_error();
+	if (err) {
+		cerr << "Error resolving node at position " << err
+			<< " of spec directive \'" << name << "\'." << endl;
+		// dump the literal?
+		return good_bool(false);
+	} else  return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -89,26 +135,6 @@ directive::load_object(const persistent_object_manager& m, istream& i) {
 }
 
 //=============================================================================
-// helper class definitions
-
-/**
-	ostream binding functor.  
- */
-struct directive::dumper {
-	ostream&				os;
-	const rule_dump_context&		rdc;
-
-	dumper(ostream& o, const rule_dump_context& r) : os(o), rdc(r) { }
-
-	template <class P>
-	void
-	operator () (const P& p) {
-		NEVER_NULL(p);
-		p->dump(os << auto_indent, rdc) << endl;
-	}
-};	// end struct directive::dumper
-
-//=============================================================================
 // class directives_set method definitions
 
 directives_set::directives_set() : directives_set_base() { }
@@ -121,6 +147,24 @@ ostream&
 directives_set::dump(ostream& o, const rule_dump_context& rdc) const {
 	for_each(begin(), end(), directive::dumper(o, rdc));
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resolves directives, binding node arguments to local IDs, 
+	suitable for complete types.  
+ */
+good_bool
+directives_set::unroll(const unroll_context& c, const node_pool_type& np, 
+		footprint& sfp) const {
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		if (!(*i)->unroll(c, np, sfp).good)
+			return good_bool(false);
+			// will already have error message
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

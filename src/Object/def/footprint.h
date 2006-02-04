@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.10 2006/01/30 07:42:00 fang Exp $
+	$Id: footprint.h,v 1.10.4.1 2006/02/04 01:33:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -19,6 +19,8 @@
 #include "Object/inst/bool_instance.h"
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/lang/PRS_footprint.h"
+#include "Object/lang/SPEC_footprint.h"
+// #include "Object/lang/CHP_footprint.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -183,8 +185,14 @@ private:
 
 	/**
 		The set of unrolled production rules, local to this scope.  
+		This is populated during the create phase.  
 	 */
 	PRS::footprint				prs_footprint;
+	/**
+		Unrolled specifications, local to this scope.  
+		This is populated during the create phase.  
+	 */
+	SPEC::footprint				spec_footprint;
 
 public:
 	footprint();
@@ -253,6 +261,12 @@ public:
 
 	const PRS::footprint&
 	get_prs_footprint(void) const { return prs_footprint; }
+
+	SPEC::footprint&
+	get_spec_footprint(void) { return spec_footprint; }
+
+	const SPEC::footprint&
+	get_spec_footprint(void) const { return spec_footprint; }
 
 	good_bool
 	expand_unique_subinstances(state_manager&) const;

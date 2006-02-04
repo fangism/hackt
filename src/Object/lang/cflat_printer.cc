@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.4 2006/02/02 06:30:05 fang Exp $
+	$Id: cflat_printer.cc,v 1.4.2.1 2006/02/04 01:33:13 fang Exp $
  */
 
 #include <iostream>
@@ -11,6 +11,8 @@
 #include "Object/lang/PRS_footprint_macro.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
+#include "Object/lang/SPEC_footprint.h"
+#include "Object/lang/SPEC_registry.h"
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
 #include "Object/traits/bool_traits.h"
@@ -153,7 +155,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 			cerr << "Invalid PRS expr type enumeration: "
 				<< type << endl;
 			)
-	}	//end switch
+	}	// end switch
 }	// end method cflat_prs_printer::visit(const footprint_expr_node&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,6 +169,14 @@ cflat_prs_printer::visit(const footprint_macro& m) {
 	const macro_definition_entry& d(macro_registry[m.name]);
 	INVARIANT(d);		// was already checked during unroll
 	d.main(*this, m.node_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
+	const SPEC::spec_definition_entry& s(SPEC::spec_registry[d.key]);
+	INVARIANT(s);		// was already checked during unroll
+	s.main(*this, d.args);
 }
 
 //=============================================================================

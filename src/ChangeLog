@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-76-7-spec-01-03:
+	  Initial implementation of SPEC::footprint and members for the
+		middle-end.  Also implemented SPEC::spec_registry, 
+		based on PRS::macro_registry.  
+	  Some functional-style code improvements and miscellaneous clean-ups.  
+		Introduced visitor_functor in Object/lang/cflat_visitor.cc.
+	  PRS::cflat_visitor now visits (unrolled) spec_directives.  
+	  Some code refactoring for better re-use, less duplication.  
+	  Added spec body (pre-unroll) to process_definition.  
+		Object binary grows as a result.  
+	  Added spec_footprint to entity::footprint (binary grows).  
+	  Unroll and create test outputs have been updated.  
+
+
 2006-02-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-7-spec-01-02:

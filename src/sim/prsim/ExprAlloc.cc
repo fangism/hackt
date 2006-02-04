@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.3 2006/01/25 20:26:05 fang Exp $
+	$Id: ExprAlloc.cc,v 1.3.8.1 2006/02/04 01:33:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -182,6 +182,12 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ExprAlloc::visit(const footprint_macro&) {
+	FINISH_ME(Fang);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprAlloc::visit(const footprint_directive&) {
 	FINISH_ME(Fang);
 }
 

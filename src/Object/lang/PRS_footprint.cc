@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.8 2006/02/02 06:30:04 fang Exp $
+	$Id: PRS_footprint.cc,v 1.8.2.1 2006/02/04 01:33:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -282,10 +282,9 @@ void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 {
 	typedef	rule_pool_type::const_iterator	const_rule_iterator;
-	const size_t s = rule_pool.size();
-	size_t j = 0;
 	const_rule_iterator i(rule_pool.begin());
-	for ( ; j<s; i++, j++) {
+	const const_rule_iterator e(rule_pool.end());
+	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
 }
@@ -305,27 +304,27 @@ footprint::write_object_base(const persistent_object_manager& m,
 	typedef	rule_pool_type::const_iterator	const_rule_iterator;
 	const size_t s = rule_pool.size();
 	write_value(o, s);
-	size_t j = 0;
 	const_rule_iterator i(rule_pool.begin());
-	for ( ; j<s; i++, j++) {
+	const const_rule_iterator e(rule_pool.end());
+	for ( ; i!=e; i++) {
 		i->write_object_base(m, o);
 	}
 }{
 	typedef	expr_pool_type::const_iterator	const_expr_iterator;
 	const size_t s = expr_pool.size();
 	write_value(o, s);
-	size_t j = 0;
 	const_expr_iterator i(expr_pool.begin());
-	for ( ; j<s; i++, j++) {
+	const const_expr_iterator e(expr_pool.end());
+	for ( ; i!=e; i++) {
 		i->write_object_base(o);
 	}
 }{
 	typedef	macro_pool_type::const_iterator	const_macro_iterator;
 	const size_t s = macro_pool.size();
 	write_value(o, s);
-	size_t j = 0;
 	const_macro_iterator i(macro_pool.begin());
-	for ( ; j<s; i++, j++) {
+	const const_macro_iterator e(macro_pool.end());
+	for ( ; i!=e; i++) {
 		i->write_object_base(o);
 	}
 }

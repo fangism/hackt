@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.3 2006/01/25 20:26:04 fang Exp $
+	$Id: cflat_printer.h,v 1.3.8.1 2006/02/04 01:33:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -66,6 +66,9 @@ public:
 
 	void
 	visit(const footprint_macro&);
+
+	void
+	visit(const SPEC::footprint_directive&);
 
 };	// end struct cflat_prs_printer
 

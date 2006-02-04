@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.6 2006/01/22 18:20:17 fang Exp $
+	$Id: PRS_base.h,v 1.6.10.1 2006/02/04 01:33:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -114,9 +114,15 @@ public:
 	void
 	compact_references(void);
 
-	good_bool
-	unroll(const unroll_context&, const node_pool_type&,
-		PRS::footprint&) const;
+/**
+	Prototype for unroll visiting.  
+ */
+#define	PRS_UNROLL_RULE_PROTO						\
+	good_bool							\
+	unroll(const unroll_context&, const node_pool_type&, 		\
+		PRS::footprint&) const
+
+	PRS_UNROLL_RULE_PROTO;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -143,11 +149,6 @@ virtual	ostream&
 
 virtual	excl_ptr<rule>
 	expand_complement(void) = 0;
-
-#define	PRS_UNROLL_RULE_PROTO						\
-	good_bool							\
-	unroll(const unroll_context&, const node_pool_type&, 		\
-		PRS::footprint&) const
 
 virtual	PRS_UNROLL_RULE_PROTO = 0;
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.10.2.1 2006/02/03 05:42:02 fang Exp $
+	$Id: PRS.cc,v 1.10.2.2 2006/02/04 01:33:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -16,6 +16,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
+#include "Object/lang/PRS_literal_unroller.h"
 
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -182,27 +183,6 @@ struct prs_expr::unroller {
 	operator () (const prs_expr_ptr_type& e) const {
 		NEVER_NULL(e);
 		return e->unroll(_context, _node_pool, _fpf);
-	}
-
-};	// end struct unroller
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Functor: Resolves local node index.  
-	Binds the unroll_context argument.  
- */
-struct literal::unroller {
-	const unroll_context& _context;
-
-	explicit
-	unroller(const unroll_context& c) : _context(c) { }
-
-	// make sure argument pointer type matches
-	// macro::const_reference
-	size_t
-	operator () (const count_ptr<const literal>& l) const {
-		NEVER_NULL(l);
-		return l->unroll_node(_context);
 	}
 
 };	// end struct unroller
@@ -433,22 +413,6 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 		// dump context too?
 		return good_bool(false);
 	}
-#if 0
-	typedef literal_base_ptr_type::element_type::alias_collection_type
-			bool_instance_alias_collection_type;
-	bool_instance_alias_collection_type bc;
-	if (output.get_bool_var()->unroll_references(c, bc).bad) {
-		output.dump(cerr <<
-			"Error resolving output node of production rule: ", 
-			rule_dump_context())
-			<< endl;
-		return good_bool(false);
-	}
-	INVARIANT(!bc.dimensions());		// must be scalar
-	const instance_alias_info<bool_tag>& bi(*bc.front());
-	const size_t output_node_index = bi.instance_index;
-	INVARIANT(output_node_index);
-#else
 	const size_t output_node_index = output.unroll_base(c);
 	if (!output_node_index) {
 		output.dump(cerr <<
@@ -457,7 +421,6 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 			<< endl;
 		return good_bool(false);
 	}
-#endif
 	// check for auto-complement, and unroll it?
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
