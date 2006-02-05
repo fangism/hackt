@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.32 2006/02/04 06:43:11 fang Exp $
+#	$Id: configure.ac,v 1.33 2006/02/05 03:26:04 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -642,6 +642,7 @@ AC_CONFIG_FILES([
 	dox/objfmt/Makefile
 	dox/man/Makefile
 	dox/tutorial/Makefile
+	lib/Makefile
 	hackt.doxygen.config
 ])
 AC_CONFIG_FILES([scripts/replace_if_changed.sh],

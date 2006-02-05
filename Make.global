@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.12 2006/01/22 06:52:45 fang Exp $
+#	$Id: Make.global,v 1.13 2006/02/05 03:26:04 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -115,13 +115,18 @@ help-local:
 # brief description of targets
 help-global:
 	@$(ECHO) "Global make targets:"
+	@$(ECHO) "    help: lists some useful make targets"
 	@$(ECHO) "    all: builds everything (recursive)"
 	@$(ECHO) "    clean: removes make targets (recursive)"
 	@$(ECHO) "    cvsdiffs: creates difference patch from CVS"
 	@$(ECHO) "    cvsignore: generates .cvsignore (recursive)"
 	@$(ECHO) "    clean-cvsignore: cleans .cvsignore (recursive)"
 	@$(ECHO) "    check: runs tests (recursive)"
-	@$(ECHO) "    check.log: logs make check"
+	@$(ECHO) "    check.log: logs make check -k"
+	@$(ECHO) "    pdf: builds PDFs (recursive)"
+	@$(ECHO) "    ps: builds PostScripts (recursive)"
+	@$(ECHO) "    info: builds texinfo files (recursive)"
+	@$(ECHO) "    html: builds HTML files (recursive)"
 	@$(ECHO) "    echo-*:"
 	@$(ECHO) "	cleanfiles: list of cleaned files"
 	@$(ECHO) "	distcleanfiles: list of distcleaned files"

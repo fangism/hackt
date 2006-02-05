@@ -1,54 +1,18 @@
 to do list:
 
-#	$Id: TODO,v 1.21 2005/01/17 06:28:06 fang Exp $
+#	$Id: TODO,v 1.22 2006/02/05 03:26:04 fang Exp $
 
 this TODO list is way outdated... clean TODO list.
+Pay more attention to the src/ChangeLog.  
+The majority of the tail portion of this file is really not necessary, 
+as it is all described in the ChangeLogs.  
 
 REVISION TARGETS:
 
-Current series: 0.1.3 -- main trunk of development line, now closed.  
-
 0.1.4 series goals for 0.1.5:
-	Organize development lines into branches in CVS.  
-
-	Language update, lexer/parser... documentation/specification.
-		Redo parser to eliminate insignificant terminals, 
-		pool_allocate tokens, etc...
-	Update language to support strict and relaxed template parameters, 
-		see dox/lang/artxx.ps for documentation.  
-
-	unrolling parameter expression assignments
-		(started, intend to complete)
-
-	Make instance_collection final classes dimension-specific
-		with template <size_t D>, re-using as much code 
-		as humanly possible.  (done with params)
-	Same with expression assignments?  not for now...
-	What about expression: instance_references?  not for now...
-		bearing in mind, they may be underspecified.  
-
-	Upgrade testing suite to include unrolling tests.  
-		* dump unrolled instances and collections and compare
-
-	Need to make const_param_collection (pint, pbool) expressions
-		(started, not applied to final type parameters yet)
-
-	User-defined datatype (struct) layout per instantiated type, 
-		keep around a dictionary of template types (per definition).  
-
-	for unrolled parameter resolution.  
-		Is const_param_expr_list obsolete?
-		May be, once we introduce complex_aggregates... ooooh!
-
-	Decide whether to support loops and conditional scopes 
-		in this series.
-
+	(all old goals have been completed long ago)
 
 0.1.6 Goals:
-	General language support for PRS needs to catch up.  
-	Introduce PRS object classes, based on old prsim.
-	Unrolling production rules
-	Target: VTPRSIM.
 
 At any point, preferably ASAP:
 *	In object file format, identify which VERSION/REVISION of the ART
@@ -64,10 +28,6 @@ At any point, preferably ASAP:
 		will still be useful for scope stacks and the likes.  
 	User should not have to create a context, that should be
 		hidden in a top-level check_build function call.
-
-and beyond...
-	cflat -prsim backwards compatibility mode
-		(and other tools)
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 for lack of organization:

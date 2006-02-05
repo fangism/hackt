@@ -2,6 +2,14 @@
 
 2006-02-04	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77:
+	  Organization changes, basic Makefile maintainence, 
+		addition of lib/ directory for development of standard
+		libraries.  Starting to look into installation organization.  
+	  Documentation build system now supports VPATH building.  
+		pdfs and ps's are installed targets now.  
+
+
 	* HACKT-00-01-04-main-00-76-8-merged-spec-01-04:
 	  Merged in spec directive branch.  
 

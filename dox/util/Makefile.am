@@ -1,5 +1,5 @@
 # "dox/util/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2005/07/23 06:51:15 fang Exp $
+#	$Id: Makefile.am,v 1.4 2006/02/05 03:26:08 fang Exp $
 
 include $(top_srcdir)/dox/Make.dox-head
 
@@ -11,6 +11,8 @@ PSS = $(PDFS:.pdf=.ps)
 pdf-local: $(PDFS)
 
 ps-local: $(PSS)
+
+doc_DATA = $(PDFS) $(PSS)
 
 # have to add these by hand? :S
 EXTRA_DIST += fangutil.tex fangutil.bib \

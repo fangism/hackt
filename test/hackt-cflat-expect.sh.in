@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.10 2006/01/30 07:42:07 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.11 2006/02/05 03:26:11 fang Exp $
 
 # NOTE: temporarily just uses stdout dump during execution
 # will updated later...
@@ -70,6 +70,7 @@ then
 @HAVE_PRSIM_TRUE@case $bldroot in
 @HAVE_PRSIM_TRUE@echo* ) ;;
 @HAVE_PRSIM_TRUE@macro* ) ;;
+@HAVE_PRSIM_TRUE@spec* ) ;;
 @HAVE_PRSIM_TRUE@* )
 @HAVE_PRSIM_TRUE@	@PRSIM@ $bldroot.prs < /dev/null > /dev/null 2>&1
 @HAVE_PRSIM_TRUE@	if test $? -ne 0

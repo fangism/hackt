@@ -2,14 +2,19 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.26 2006/01/22 06:52:45 fang Exp $
+#	$Id: Makefile.am,v 1.27 2006/02/05 03:26:04 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 AUTOMAKE_OPTIONS += subdir-objects dist-bzip2
 # may work with older versions of automake, but not guaranteed
 
-SUBDIRS = scripts src test . dox
+SUBDIRS = scripts src lib test . dox
+# temporary, for debugging make distcheck in dox, 
+# so we don't have to wait for the entire src tree to build first
+# SUBDIRS = scripts dox src lib test .
+
+docdir = $(pkgdatadir)/doc
 
 DOXYGEN_CONFIG = hackt.doxygen.config
 
@@ -33,6 +38,8 @@ AUTO_IGNORE += aclocal.m4 libtool \
 	$(CONFIG_CLEAN_FILES) \
 	$(CONFIG_HEADER) \
 	distcheck.log distcheck.log.tmp
+
+doc_DATA = AUTHORS BOUNTY COPYING NEWS README TODO
 
 # Many of these are already in DIST_COMMON
 EXTRA_DIST += Make.stddef Make.global local.cvsignore \
@@ -96,9 +103,13 @@ help-local:
 	$(ECHO) "    distcheck: checks self-containedness of source tree (important)" ; \
 	$(ECHO) "    distcheck.log: logs distcheck" ; \
 	$(ECHO) "    install: installs built targets (recursive)" ; \
+	$(ECHO) "    install-check: checks install (recursive)" ; \
+	$(ECHO) "    uninstall: uninstalls this package (recursive)" ; \
 	$(ECHO) "    distclean: removes configure targets and cleans (recursive)" ; \
 	$(ECHO) "    maintainer-clean: removes bootstrap targets and distcleans" ; \
+	$(ECHO) "    libtool: regenerates the configured libtool script" ; \
 	$(ECHO) "    DevelopmentPlan.ps: visualize development plan using dot" ; \
+	$(ECHO) "    commit: distcheck followed by CVS commit" ; \
 	$(ECHO) "    docs: builds Doxygen source documentation (SLOW)"
 
 include $(top_srcdir)/Make.global

@@ -5,6 +5,10 @@
 
 2006-02-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77:
+	  Maintainence revision only, no source change.  
+
+
 	* HACKT-00-01-04-main-00-76-9:
 	  Fixed and added spec directives as discussed.
 	  TODO: document that sh--! "dox/lang/chapters/SPEC.tex"

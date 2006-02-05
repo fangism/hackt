@@ -17,3 +17,6 @@ MAKETEXDEPEND = $(AWK) -f $(top_srcdir)/dox/mk/maketexdepend.awk \
 
 SUFFIXES = .ps .dvi .tex .pdf .depend .ind .idx .bbl .aux
 
+# where various documents (pdf, ps) should be installed
+docdir = $(pkgdatadir)/doc
+

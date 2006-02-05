@@ -1,5 +1,13 @@
 "dox/ChageLog"
 
+2006-02-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77:
+	  Makefile improvements: latex documents are now VPATH buildable
+		after some reworking of mk/Make.latex.  Hallelujah!
+	  Built documents have been added to the installation DATA targets.  
+
+
 2006-01-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-73-merged-prsim-00-34:

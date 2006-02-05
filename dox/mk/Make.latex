@@ -1,8 +1,15 @@
 # "dox/mk/Make.latex"
 # Include this file *LAST* in latex Makefiles.  
 # This file uses macros defined in "dox/Make.dox-head"
+#	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.6 2006/01/22 06:52:50 fang Exp $
+#	$Id: Make.latex,v 1.7 2006/02/05 03:26:06 fang Exp $
+
+# useful macros
+get_bldroot=`echo "$@" | sed -e 's|^.*/||g' -e 's|\..*$$||g'`
+COMMONINPUTS = ".$(PATH_SEPARATOR)$(srcdir)$(PATH_SEPARATOR)"
+AUTOTEXINPUTS = "$(COMMONINPUTS)$$TEXINPUTS$(PATH_SEPARATOR)"
+AUTOBIBINPUTS = "$(COMMONINPUTS)$$BIBINPUTS$(PATH_SEPARATOR)"
 
 # dependence generation
 .tex.depend:
@@ -30,66 +37,78 @@ endif
 # bibtex
 .aux.bbl:
 if HAVE_BIBTEX
-	@if $(GREP) -q "\\citation" $< ; then $(BIBTEX) $* ; fi
+	@bldroot=$(get_bldroot) ; \
+	if $(GREP) -q "\\citation" $< ; then \
+		BIBINPUTS=$(AUTOBIBINPUTS) $(BIBTEX) $$bldroot ; \
+	fi
 endif
 	@$(TOUCH) $@
 
-if HAVE_LATEX
+
 .tex.dvi:
-	@$(ECHO) "Generating $@..."
-	@if test -f $*.stamp ; then \
-		if $(GREP) -q $(PDFLATEX) $*.stamp ; then \
+if HAVE_LATEX
+	@bldroot=$(get_bldroot) ; \
+	$(ECHO) "Generating $$bldroot.dvi..." ; \
+	if test -f $$bldroot.stamp ; then \
+		if $(GREP) -q $(PDFLATEX) $$bldroot.stamp ; then \
 			$(MAKE) clean-temps ; fi \
-	fi
-	@$(LATEX) $< > /dev/null < /dev/null
-	@$(ECHO) $(LATEX) > $*.stamp
-	@if $(GREP) "TeX capacity" $*.log; \
+	fi ; \
+	TEXINPUTS=$(AUTOTEXINPUTS) $(LATEX) $< > /dev/null < /dev/null ; \
+	$(ECHO) $(LATEX) > $$bldroot.stamp ; \
+	if $(GREP) "TeX capacity" $$bldroot.log; \
 		then $(ECHO) SHIT ; \
-	fi
-	@$(MAKE) $*.bbl
-	@$(MAKE) $*.ind
-	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
+	fi ; \
+	$(MAKE) $$bldroot.bbl ; \
+	$(MAKE) $$bldroot.ind ; \
+	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
 		$(LATEX) $< > /dev/null < /dev/null; \
-		$(MAKE) $*.ind ; \
-		if $(GREP) "TeX capacity" $*.log; \
+		$(MAKE) $$bldroot.ind ; \
+		if $(GREP) "TeX capacity" $$bldroot.log; \
 			then $(ECHO) SHIT; \
-		elif $(GREP) 'LaTeX Warning: Citation' $*.log; then \
+		elif $(GREP) 'LaTeX Warning: Citation' $$bldroot.log; then \
 			$(ECHO); $(ECHO) "Citation warnings, third LaTeX pass..."; \
-			$(LATEX) $< > /dev/null < /dev/null; \
+			TEXINPUTS=$(AUTOTEXINPUTS) $(LATEX) $< > /dev/null < /dev/null; \
 		fi; \
-		($(GREP) 'LaTeX Warn' $*.log || ($(ECHO) > /dev/null)); \
+		($(GREP) 'LaTeX Warn' $$bldroot.log || ($(ECHO) > /dev/null)); \
 	fi
 	@$(ECHO) "$@ completed."
+else
+	@$(ECHO) "Sorry, no latex found in path during configuration." ; \
+	exit 1
 endif
 
-if HAVE_PDFLATEX
 .tex.pdf:
-	@$(ECHO) "Generating $@..."
-	@if test -f $*.stamp ; then \
-		if $(GREP) -q $(PDFLATEX) $*.stamp ; then \
+if HAVE_PDFLATEX
+	@bldroot=$(get_bldroot) ; \
+	$(ECHO) "Generating $$bldroot.pdf..." ; \
+	if test -f $$bldroot.stamp ; then \
+		if $(GREP) -q $(PDFLATEX) $$bldroot.stamp ; then \
 			$(ECHO) -n ; else $(MAKE) clean-temps ; fi \
-	fi
-	@$(PDFLATEX) $< > /dev/null < /dev/null
-	@$(ECHO) $(PDFLATEX) > $*.stamp
-	@if $(GREP) "TeX capacity" $*.log; \
+	fi ; \
+	TEXINPUTS=$(AUTOTEXINPUTS) $(PDFLATEX) $< > /dev/null < /dev/null ; \
+	$(ECHO) $(PDFLATEX) > $$bldroot.stamp ; \
+	if $(GREP) "TeX capacity" $$bldroot.log; \
 		then $(ECHO) SHIT ; \
-	fi
-	@$(MAKE) $*.bbl
-	@$(MAKE) $*.ind
-	@if ($(GREP) 'LaTeX Warning:' $*.log | $(GREP) -v floats); then \
+	fi ; \
+	$(MAKE) $$bldroot.bbl ; \
+	$(MAKE) $$bldroot.ind ; \
+	if ($(GREP) 'LaTeX Warning:' $$bldroot.log | $(GREP) -v floats); then \
 		$(ECHO); $(ECHO) "Detected warnings, doing second LaTeX pass..." ; \
-		$(PDFLATEX) $< > /dev/null < /dev/null; \
-		$(MAKE) $*.ind ; \
-		if $(GREP) "TeX capacity" $*.log; \
+		TEXINPUTS=$(AUTOTEXINPUTS) $(PDFLATEX) $< > /dev/null < /dev/null ; \
+		$(MAKE) $$bldroot.ind ; \
+		if $(GREP) "TeX capacity" $$bldroot.log; \
 			then $(ECHO) SHIT; \
-		elif $(GREP) 'LaTeX Warning: Citation' $*.log; then \
+		elif $(GREP) 'LaTeX Warning: Citation' $$bldroot.log; then \
 			$(ECHO); $(ECHO) "Citation warnings, third LaTeX pass..."; \
-			$(PDFLATEX) $< > /dev/null < /dev/null; \
+			TEXINPUTS=$(AUTOTEXINPUTS) $(PDFLATEX) $< > /dev/null < /dev/null; \
 		fi; \
-		($(GREP) 'LaTeX Warn' $*.log || ($(ECHO) > /dev/null)); \
+		($(GREP) 'LaTeX Warn' $$bldroot.log || ($(ECHO) > /dev/null)); \
 	fi
 	@$(ECHO) "$@ completed."
+else
+	@$(ECHO) "Sorry, no pdflatex found in path during configuration." ; \
+	exit 1
 endif
 
 if HAVE_DVIPS

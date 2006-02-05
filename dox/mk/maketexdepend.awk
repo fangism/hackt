@@ -2,7 +2,7 @@
 
 # "maketexdepend.awk"
 # by Fang <fangism@users.sourceforge.net>
-#	$Id: maketexdepend.awk,v 1.4 2005/12/10 03:56:27 fang Exp $
+#	$Id: maketexdepend.awk,v 1.5 2006/02/05 03:26:07 fang Exp $
 #
 # auto-generate LaTeX dependencies
 # usage: awk -f <this script> [variables] <top-level tex file>
@@ -237,10 +237,13 @@ if (!flat_mode) {
 	for (e in extarray) delete extarray[e];
 	num_ext = split(extensions, extarray);
 	print "";
+	fname = FILENAME;
+	# need to strip prefix paths from target filename, in case of VPATH
+	gsub("^.*\\/", "", fname);
 	for (i=1; i<=num_ext; i++) {
-		fname = FILENAME;
-		gsub("\\.tex$", "." extarray[i], fname);
-		printf("%s ", fname);
+		tname = fname;
+		gsub("\\.tex$", "." extarray[i], tname);
+		printf("%s ", tname);
 	}
 	printf(":");
 #	printf("\n%s:", FILENAME);

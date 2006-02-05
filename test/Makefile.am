@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2006/01/30 07:42:07 fang Exp $
+#	$Id: Makefile.am,v 1.21 2006/02/05 03:26:11 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -44,7 +44,7 @@ EXTRA_DIST += ChangeLog README TODO \
 	analyze-dump-diff.awk \
 	spacestonewline.awk test.cvsignore
 
-all-local: $(POSTCONFIGURE_TESTSCRIPTS)
+all-local: $(POSTCONFIGURED_TESTSCRIPTS)
 
 # remove extraneous auto-generated files
 # dist-hook:
