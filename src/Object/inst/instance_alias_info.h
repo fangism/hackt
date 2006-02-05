@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.11 2006/01/28 18:21:20 fang Exp $
+	$Id: instance_alias_info.h,v 1.12 2006/02/05 19:45:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -314,6 +314,11 @@ virtual	ostream&
 	using substructure_parent_type::connect_ports;
 	// using substructure_parent_type::lookup_port_instance;
 	using substructure_parent_type::replay_substructure_aliases;
+
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	void
+	hack_remap_indices(footprint&);
+#endif
 
 	/// called by top-level
 	good_bool

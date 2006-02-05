@@ -2,13 +2,14 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.9 2006/01/30 07:42:03 fang Exp $
+	$Id: physical_instance_collection.h,v 1.10 2006/02/05 19:45:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -132,6 +133,15 @@ virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 	cflat_aliases(const cflat_aliases_arg_type&) const
 
 virtual	CFLAT_ALIASES_PROTO = 0;
+
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+#define	HACK_REMAP_INDICES_PROTO					\
+	void								\
+	hack_remap_indices(footprint&)
+
+virtual	HACK_REMAP_INDICES_PROTO = 0;
+
+#endif
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

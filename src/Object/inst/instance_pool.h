@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.8 2006/01/28 18:21:21 fang Exp $
+	$Id: instance_pool.h,v 1.9 2006/02/05 19:45:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -13,16 +13,13 @@
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/index_pool.h"
-
-/**
-	Whether or not to apply the quick and dirty hack to
-	fix a critical bug.  
- */
-#define	INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST	1
+#include "Object/devel_switches.h"
 
 
 #if	INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 #include <queue>	// for std::priority_queue
+#include "util/STL/queue_fwd.h"
+#include <map>
 #endif
 
 namespace HAC {
@@ -30,6 +27,7 @@ namespace entity {
 class footprint;
 using std::istream;
 using std::ostream;
+using std::vector;
 using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::index_pool;
@@ -59,8 +57,16 @@ public:
 #if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 	typedef	typename parent_type::iterator		iterator;
 private:
-	typedef	std::priority_queue<size_type>		free_list_type;
+	/**
+		Reverse sorting: lower numbers have higher priority.  
+	 */
+	typedef	typename std::default_priority_queue<size_type>::reverse_type
+							free_list_type;
+//	typedef	std::priority_queue<size_type>		free_list_type;
 	free_list_type					free_list;
+
+	typedef	std::map<size_type, size_type>		index_remap_type;
+	index_remap_type				remap;
 #endif
 private:
 	/**
@@ -98,6 +104,12 @@ public:
 	void
 	compact(void);
 
+	// dirty hack accomplice
+	void
+	truncate(void);
+
+	size_t
+	translate_remap(const size_t) const;
 private:
 	// as long as underlying type support this operation
 	using parent_type::array_type::pop_back;

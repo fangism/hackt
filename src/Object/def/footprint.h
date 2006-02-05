@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.11 2006/02/04 06:43:16 fang Exp $
+	$Id: footprint.h,v 1.12 2006/02/05 19:45:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -21,6 +21,7 @@
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 // #include "Object/lang/CHP_footprint.h"
+#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -58,6 +59,14 @@ private:
 	typedef	typename pool_type::const_iterator	const_iterator;
 protected:
 	pool_type					_pool;
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	typedef	std::map<size_t, size_t>		index_remap_type;
+	/**
+		The lifetime of this hack is only temporary
+		and need not be kept persistent between invocation.  
+	 */
+	index_remap_type				_remap;
+#endif
 
 	footprint_base();
 	~footprint_base();
@@ -73,9 +82,14 @@ protected:
 	__expand_production_rules(const footprint_frame&, 
 		state_manager&) const;
 
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	// collects remap indices
 	void
 	__compact(void);
 
+	void
+	__truncate(void);
+#endif
 };	// end class footprint_base
 
 //=============================================================================
@@ -124,6 +138,8 @@ private:
 					instance_collection_map_type;
 	typedef	instance_collection_map_type::const_iterator
 					const_instance_map_iterator;
+	typedef	instance_collection_map_type::iterator
+					instance_map_iterator;
 	typedef	footprint_base<process_tag>::pool_type	process_pool_type;
 	typedef	footprint_base<channel_tag>::pool_type	channel_pool_type;
 	typedef	footprint_base<datastruct_tag>::pool_type
@@ -282,11 +298,16 @@ public:
 	void
 	cflat_aliases(const cflat_aliases_arg_type&) const;
 
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 private:
 	// hack to backpatch instance_pool's and condense them
 	// if something went wrong during creation.  
 	void
 	compact(void);
+
+	void
+	truncate(void);
+#endif
 
 public:
 // persistent information management

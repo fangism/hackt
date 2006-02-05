@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.12 2006/01/30 07:42:03 fang Exp $
+	$Id: substructure_alias_base.h,v 1.13 2006/02/05 19:45:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,6 +11,7 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -149,6 +150,11 @@ protected:
 	__cflat_aliases(cflat_aliases_arg_type&,
 		const global_entry<Tag>&, const size_t) const;
 
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	void
+	__hack_remap_indices(footprint&);
+#endif
+
 protected:
 	// call forwarding
 	void
@@ -228,6 +234,7 @@ public:
 	void
 	collect_port_aliases(const port_alias_tracker&) const { }
 
+
 	void
 	connect_ports(void) const { }
 
@@ -237,7 +244,6 @@ protected:
 			const state_manager&) const {
 		return good_bool(true);
 	}
-
 
 	void
 	__assign_footprint_frame(const footprint_frame&,
@@ -254,6 +260,11 @@ protected:
 	void
 	__cflat_aliases(cflat_aliases_arg_type&, 
 		const global_entry<Tag>&, const size_t) const;
+
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	void
+	__hack_remap_indices(footprint&) const { }
+#endif
 
 protected:
 	void

@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-1:
+	  Hack patch to fix bug: parser/connect/129.hac.
+		Summary: comprehensive backpatch pass to sweep and overwrite
+		instance IDs before collecting scope and port aliases,
+		initiated in entity::footprint::evaluate_scope_aliases.  
+	  TODO (massive): rewrite connection analysis using union-find
+		instead of ring-nodes.  
+
+
 2006-02-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77:

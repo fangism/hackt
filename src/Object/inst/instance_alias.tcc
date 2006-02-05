@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.12 2006/01/30 20:57:20 fang Exp $
+	$Id: instance_alias.tcc,v 1.13 2006/02/05 19:45:06 fang Exp $
 	TODO: trim includes
  */
 
@@ -917,6 +917,19 @@ if (c.fpf) {
 	__cflat_aliases(sc, e, gindex);
 	// recursion or termination
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::hack_remap_indices(footprint& f) {
+	typedef typename state_instance<Tag>::pool_type pool_type;
+	const pool_type& p(f.template get_pool<Tag>());
+	this->instance_index = p.translate_remap(this->instance_index);
+	// policy-determined recursion
+	__hack_remap_indices(f);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE

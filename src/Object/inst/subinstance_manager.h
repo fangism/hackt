@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.10 2006/01/30 07:42:03 fang Exp $
+	$Id: subinstance_manager.h,v 1.11 2006/02/05 19:45:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -10,6 +10,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -138,6 +139,11 @@ public:
 
 	void
 	cflat_aliases(const cflat_aliases_arg_type&) const;
+
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+	void
+	hack_remap_indices(footprint&);
+#endif
 
 	// for each entry, re-link
 	void

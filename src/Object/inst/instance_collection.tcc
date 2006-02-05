@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.17 2006/02/01 06:11:45 fang Exp $
+	$Id: instance_collection.tcc,v 1.18 2006/02/05 19:45:07 fang Exp $
 	TODO: trim includes
  */
 
@@ -925,6 +925,7 @@ if (this->has_relaxed_type()) {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
+	STACKTRACE_VERBOSE;
 	const_iterator i(this->collection.begin());
 	const const_iterator e(this->collection.end());
 	for ( ; i!=e; i++) {
@@ -936,6 +937,24 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 		ii.collect_port_aliases(t);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+/**
+	Temporary hack.  :(
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+void
+INSTANCE_ARRAY_CLASS::hack_remap_indices(footprint& f) {
+	STACKTRACE_VERBOSE;
+	iterator i(this->collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; i++) {
+		element_type& ii(const_cast<element_type&>(*i));
+		ii.hack_remap_indices(f);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1472,6 +1491,15 @@ INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 		.push_back(never_ptr<const instance_type>(&this->the_instance));
 	this->the_instance.collect_port_aliases(t);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+void
+INSTANCE_SCALAR_CLASS::hack_remap_indices(footprint& f) {
+	this->the_instance.hack_remap_indices(f);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

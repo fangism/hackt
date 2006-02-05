@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.8 2006/01/28 18:21:21 fang Exp $
+	$Id: instance_pool.tcc,v 1.9 2006/02/05 19:45:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -18,6 +18,11 @@
 #include "util/indent.h"
 #include "util/memory/index_pool.tcc"
 #include "util/type_traits.h"
+
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
+// this is needed to fix a horrible hack, see comments in ::compact.
+#define	DEFER_COMPACTION_REASSIGNMENT		1
+#endif
 
 namespace HAC {
 namespace entity {
@@ -167,24 +172,41 @@ instance_pool<T>::deallocate(const size_type i) {
 		state_instances' aliases should be updated to the 
 		new index, obtained from the free list.  
 		What about canonical?
-	TODO: for efficiency, since we're using tail recursion, the
-		priority queue should be reversed.  
-		Otherwise may resort in non-minimal number of moves.  
-		Could use a std::set for this.
+	Backpatching remap is kept in the 'remap' member.
  */
 template <class T>
 void
 instance_pool<T>::compact(void) {
 	STACKTRACE_VERBOSE;
+	size_type move_index = this->size() -1;
 while (!free_list.empty()) {
 	const size_type free = free_list.top();
 	free_list.pop();
 //	this->compact();	// recursive solution to reverse ordering
-	const size_type _size = this->size();
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "pool size remaining = " << _size << endl;
+//	const size_type _size = this->size();
+//	STACKTRACE_INDENT << "pool size remaining = " << _size << endl;
 	STACKTRACE_INDENT << "considering free entry = " << free << endl;
 #endif
+#if DEFER_COMPACTION_REASSIGNMENT
+	// ******** IMPORTANT COMMENT (aren't they all?) ************
+	// HOWEVER this alone does NOT guarantee coverage of ALL
+	// aliases because ring connections are not pushed down
+	// recursively!  This may leave nodes stranded!
+	// Sadly, we must defer the backpatching to the caller, 
+	// footprint::compact().  
+	// This hack is SO bad... there is no word appropriate
+	// for this.  
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "remapping index " << move_index <<
+		" to " << free << endl;
+#endif
+	remap[move_index] = free;
+	--move_index;
+	// This just transfers the free-list to the caller.  
+	// do NOT push back, defer that to the caller too.  
+#else
+#if 0
 	if (free+1 < _size) {	// +1 because is 1-indexed, 0th entry reserved
 		// the tail entry needs to be copied and updated
 #if ENABLE_STACKTRACE
@@ -206,7 +228,7 @@ while (!free_list.empty()) {
 		typedef	typename alias_ptr_type::element_type	alias_type;
 		typedef	typename util::remove_const<alias_type>::type	mod_type;
 		const_cast<mod_type&>(*a).force_update_index(free);
-		// will cover aliases in the ring too
+		// will cover aliases in the ring too...
 	}
 #if ENABLE_STACKTRACE
 	else {
@@ -216,8 +238,47 @@ while (!free_list.empty()) {
 	// we're done using the tail entry, either copied or discarding
 	// for each free_list entry removed, we shrink-compact the array
 	this->pop_back();
+#endif
+#endif	// DEFER_COMPACTION_REASSIGNMENT
 }	// else free_list is empty, nothing to be checked
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Remaps 'deallocated' index to new index.  
+	Effectively compacts the indices.  
+	Pardon the hack.  
+	This is used in a separate remapping pass.  
+ */             
+template <class Tag>
+size_t
+instance_pool<Tag>::translate_remap(const size_t i) const {
+	if (!remap.empty()) {
+		typedef typename index_remap_type::const_iterator
+							remap_iter;
+		const remap_iter f(remap.find(i));
+		if (f == remap.end())  // entry not found
+			return i;
+		else    return f->second;
+	} else  return i;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Deletes the last few (unused) entries of the pool.  
+ */
+template <class T>
+void
+instance_pool<T>::truncate(void) {
+	const size_t n = remap.size();
+	size_t i = 0;
+	while (i<n) {
+		this->pop_back();
+		i++;
+	}
+	remap.clear();
+}
+
 #endif	// INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 
 //-----------------------------------------------------------------------------
