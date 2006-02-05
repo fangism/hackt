@@ -1,7 +1,7 @@
 /**
 	\file "util/union_find.h"
 	Classic union-find data structure.
-	$Id: union_find.h,v 1.1 2006/02/05 19:45:09 fang Exp $
+	$Id: union_find.h,v 1.2 2006/02/05 19:46:15 fang Exp $
  */
 
 #ifndef	__UTIL_UNION_FIND_H__
@@ -45,7 +45,7 @@ protected:
 
 	void
 	__union(union_find_base& r) {
-		__find()->next = r.find();
+		__find()->next = r.__find();
 	}
 
 private:
