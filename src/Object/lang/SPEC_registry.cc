@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.3 2006/02/04 19:55:58 fang Exp $
+	$Id: SPEC_registry.cc,v 1.4 2006/02/05 16:50:52 fang Exp $
  */
 
 #include <iostream>
@@ -180,7 +180,7 @@ default_spec_output(cflat_prs_printer& p, const node_args_type& a) {
 	ostream& o(p.os);
 	o << T::name << '(';
 	print_node_args_list(p, a, ", ");
-	o << ')';
+	return o << ')';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
