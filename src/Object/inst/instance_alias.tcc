@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.13 2006/02/05 19:45:06 fang Exp $
+	$Id: instance_alias.tcc,v 1.14 2006/02/05 20:14:08 fang Exp $
 	TODO: trim includes
  */
 
@@ -927,7 +927,7 @@ INSTANCE_ALIAS_INFO_CLASS::hack_remap_indices(footprint& f) {
 	const pool_type& p(f.template get_pool<Tag>());
 	this->instance_index = p.translate_remap(this->instance_index);
 	// policy-determined recursion
-	__hack_remap_indices(f);
+	this->__hack_remap_indices(f);
 }
 #endif
 
