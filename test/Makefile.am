@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2006/02/05 03:26:11 fang Exp $
+#	$Id: Makefile.am,v 1.22 2006/02/06 03:20:12 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -15,6 +15,7 @@ PRECONFIGURED_TESTSCRIPTS = \
 	hackt-obj-diff.sh.in \
 	hackt-unroll-expect.sh.in \
 	hackt-create-expect.sh.in \
+	check-create-consistency.sh.in \
 	hackt-alloc-expect.sh.in \
 	hackt-cflat-expect.sh.in \
 	hackt-prsim-expr-alloc-expect.sh.in \

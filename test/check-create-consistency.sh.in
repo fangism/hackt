@@ -1,0 +1,86 @@
+#!@SH_PATH@
+# "check-create-consistency"
+#	$Id: check-create-consistency.sh.in,v 1.1 2006/02/06 03:20:12 fang Exp $
+# run this test AFTER the corresponding create-test has been run
+
+# $1 is the executable for the creator (hackt create), expecting 2 arguments
+# $2 is the executable for reading in the object file, (probably hackt objdump)
+#	and producing a textual dump to stderr.
+
+# $3 is the path to the source directory, which is not necessarily ./
+#	during distcheck uses _build
+# $4 is the input file name WITHOUT the .in extension
+# $5 is the filter for ignoring certain difference in output
+#	(for no filter, pass "cat")
+## $6 is a difference analysis script to run on the objdump differences
+##	AFTER the header filter has been run
+## $7 is an additional index filter to be run on the objdump differences,
+##	but only after the primary header filter ($5) is run
+# other subsequent arguments are ignored
+
+# if test $# -lt 5 ; then exit 1 ; fi
+
+create=$1
+dump=$2
+srcroot=$3/$4
+bldroot=$4
+filter=$5
+# analdiff=$6
+# indfilter=$7
+
+if test ! -s $bldroot.haco
+then
+	@ECHO@ "$bldroot.haco doesn't exist or is empty."
+	exit 1
+fi
+if test ! -s $bldroot.haco-u
+then
+	@ECHO@ "$bldroot.haco-u doesn't exist or is empty."
+	exit 1
+fi
+if test ! -s $bldroot.createdump.filter
+then
+	@ECHO@ "$bldroot.createdump.filter doesn't exist or is empty."
+	exit 1
+fi
+
+# see if it crashes first
+# redirection will catch any error messages
+$create $bldroot.haco $bldroot.haco-c-from-haco > \
+	$bldroot.create-from-haco-dump 2>&1
+case $? in
+	0) $dump $bldroot.haco-c-from-haco > \
+		$bldroot.create-from-haco-dump 2>&1
+		break ;;
+	1) break ;;
+	*) exit 1 ;;
+esac
+
+@CAT@ $bldroot.create-from-haco-dump | \
+	$filter > $bldroot.create-from-haco-dump.filter
+
+
+# ignore whitespace differences
+@DIFF@ -buw $srcroot.createdump.filter $bldroot.create-from-haco-dump.filter \
+	> $bldroot.create-from-haco-diff 2>&1
+
+if test -s $bldroot.create-from-haco-diff
+then
+	@ECHO@ "$bldroot.create-from-haco-diff is non-empty!"
+#	$analdiff -v quiet=2 $bldroot.creatediff > $bldroot.createanal
+#	# see if is candidate for further difference analysis
+#	if @GREP@ "OK" $bldroot.createanal
+#	then
+#		@CAT@ $srcroot.createstderr | \
+#			$indfilter > $bldroot.createstderr.noindex
+#		@CAT@ $bldroot.createdump.filter | \
+#			$indfilter > $bldroot.createdump.noindex
+#		@DIFF@ -buw $bldroot.createstderr.noindex \
+#			$bldroot.createdump.noindex 2>&1 | \
+#			@CAT@ > $bldroot.creatediff.noindex
+#		$analdiff -v quiet=0 $bldroot.creatediff.noindex
+#	fi
+#	rm -f $bldroot.createanal
+	exit 1
+fi
+

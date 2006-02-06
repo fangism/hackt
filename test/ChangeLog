@@ -1,5 +1,16 @@
 # "test/ChangeLog"
 
+2006-02-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-4:
+	  Attempted to try consistency checking between create phase, 
+		using .haco (instead of .haco-u) as input, but resulted
+		in many differences, due to instability of reconstructing
+		alias rings (equivalent, but unordered).  
+	  TODO: decide when to overhaul connection structures, 
+		replace with union-find.  
+
+
 2006-01-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-2-fixdump-06:
