@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.13 2006/02/05 19:45:05 fang Exp $
+ 	$Id: module.cc,v 1.14 2006/02/06 01:30:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -400,7 +400,7 @@ if (!m.register_transient_object(this,
 	// the list itself is a statically allocated member
 	sequential_scope::collect_transient_info_base(m);
 	_footprint.collect_transient_info_base(m);
-	global_state.collect_transient_info_base(m);
+	global_state.collect_transient_info_base(m, _footprint);
 }
 // else already visited
 }

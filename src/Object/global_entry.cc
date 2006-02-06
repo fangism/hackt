@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.5 2005/12/13 04:15:16 fang Exp $
+	$Id: global_entry.cc,v 1.6 2006/02/06 01:30:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -346,6 +346,15 @@ footprint_frame::get_frame_map_test(void) const {
 void
 global_entry_base<true>::cache_process_parent_refs(
 		const state_manager& sm) const {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+void
+global_entry_base<true>::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	_frame.collect_transient_info_base(m);
 }
 #endif
 

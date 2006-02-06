@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.9 2006/01/30 07:41:58 fang Exp $
+	$Id: global_entry.h,v 1.10 2006/02/06 01:30:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -142,16 +142,9 @@ struct footprint_frame :
 	ostream&
 	dump_frame(ostream&) const;
 
-#if 0
-	template <class Tag>
-	ostream&
-	dump_footprint(ostream&, const size_t, const footprint&, 
-		const state_manager&) const;
-#else
 	template <class Tag>
 	ostream&
 	dump_footprint(global_entry_dumper&) const;
-#endif
 
 	void
 	allocate_remaining_subinstances(const footprint&, state_manager&, 
@@ -200,28 +193,23 @@ struct global_entry_base { };
 template <>
 struct global_entry_base<false> {
 
-#if 0
-	template <class Tag>
-	ostream&
-	dump(ostream& o, const size_t, const footprint&, 
-		const state_manager&) const { return o; }
-#else
 	template <class Tag>
 	ostream&
 	dump(global_entry_dumper&) const;
-#endif
-
-	void
-	collect_transient_info_base(persistent_object_manager&) const { }
 
 	template <class Tag>
 	void
-	write_object_base(const persistent_object_manager&, ostream&, 
+	collect_transient_info_base(const persistent_object_manager&, 
 		const size_t, const footprint&, const state_manager&) const { }
 
 	template <class Tag>
 	void
-	load_object_base(const persistent_object_manager&, istream&,
+	write_object_base(const persistent_object_manager&, const ostream&, 
+		const size_t, const footprint&, const state_manager&) const { }
+
+	template <class Tag>
+	void
+	load_object_base(const persistent_object_manager&, const istream&,
 		const size_t, const footprint&, const state_manager&) { }
 
 };	// end struct global_entry_base
@@ -234,22 +222,17 @@ template <>
 struct global_entry_base<true> {
 	footprint_frame			_frame;
 
-#if 0
-	template <class Tag>
-	ostream&
-	dump(ostream&, const size_t, const footprint&, 
-		const state_manager&) const;
-#else
 	template <class Tag>
 	ostream&
 	dump(global_entry_dumper&) const;
-#endif
 
-	// unused, thus far
+	// some footprint (in frame) may contain relaxed template arguments.  
+	template <class Tag>
 	void
-	collect_transient_info_base(persistent_object_manager&) const;
+	collect_transient_info_base(persistent_object_manager&, 
+		const size_t, const footprint&, const state_manager&) const;
 
-// dumper could be reused for write_object_base!
+	// dumper could be reused for write_object_base!
 	template <class Tag>
 	void
 	write_object_base(const persistent_object_manager&, ostream&, 
@@ -345,14 +328,8 @@ public:
 	global_entry();
 	~global_entry();
 
-#if 0
-	ostream&
-	dump(ostream&, const size_t, const footprint&, 
-		const state_manager&) const;
-#else
 	ostream&
 	dump(global_entry_dumper&) const;
-#endif
 
 	ostream&
 	dump_canonical_name(ostream&,

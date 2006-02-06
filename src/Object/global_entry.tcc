@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.11 2006/02/04 06:43:15 fang Exp $
+	$Id: global_entry.tcc,v 1.12 2006/02/06 01:30:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -183,10 +183,62 @@ global_entry_base<true>::dump(global_entry_dumper& ged) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Collects pointers needed for save/restoration of footprint pointers.  
+ */
+template <class Tag>
+void
+global_entry_base<true>::collect_transient_info_base(
+		persistent_object_manager& m, 
+		const size_t ind, const footprint& topfp, 
+		const state_manager& sm) const {
+	typedef	typename state_instance<Tag>::pool_type	pool_type;
+	typedef	instance_alias_info<Tag>	alias_type;
+	STACKTRACE_PERSISTENT_VERBOSE;
+	INVARIANT(_frame._footprint);
+	const pool_type& _pool(topfp.template get_pool<Tag>());
+	if (ind >= _pool.size()) {
+		const global_entry_pool<Tag>&
+			gpool(sm.template get_pool<Tag>());
+		const global_entry<Tag>& ent(gpool[ind]);
+		INVARIANT(ent.parent_tag_value);
+		INVARIANT(ent.parent_id);
+		switch (ent.parent_tag_value) {
+		case TYPE_PROCESS: {
+			instance_alias_info<process_tag>::
+				collect_canonical_footprint(
+				extract_parent_formal_instance_alias<
+					process_tag>(sm, ent),
+				m);
+			break;
+		}
+		case TYPE_STRUCT: {
+			// Q: can datatypes have relaxed parameters?
+			instance_alias_info<datastruct_tag>::
+				collect_canonical_footprint(
+				extract_parent_formal_instance_alias<
+					datastruct_tag>(sm, ent),
+				m);
+			break;
+		}
+		default:
+			// append cases later...
+			FINISH_ME_EXIT(Fang);
+		}
+	} else {
+		const state_instance<Tag>& _inst(_pool[ind]);
+		alias_type::collect_canonical_footprint(*_inst.get_back_ref(),
+			m);
+	}
+	_frame.collect_transient_info_base(m);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	TODO: use global_entry_dumper!
 	TODO: comment: pay attention to ordering, 
 		is crucial for reconstruction.
 	Q: Is persistent object manager really needed?
+	A: yes, some canonical_types contain relaxed template params.
  */
 template <class Tag>
 void
@@ -194,7 +246,7 @@ global_entry_base<true>::write_object_base(const persistent_object_manager& m,
 		ostream& o, const size_t ind, const footprint& topfp,
 		const state_manager& sm) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	// save away _footprint pointer some how
+	// save away _footprint pointer somehow
 	typedef	typename state_instance<Tag>::pool_type	pool_type;
 	typedef	instance_alias_info<Tag>	alias_type;
 	INVARIANT(_frame._footprint);
@@ -293,30 +345,6 @@ global_entry_base<true>::load_object_base(const persistent_object_manager& m,
 
 //=============================================================================
 // class production_rule_substructure method definitions
-
-#if 0
-/**
-	Only ever instantiated for processes.  
-	might need state_manager...
- */
-template <class Tag>
-void
-production_rule_substructure::cflat_prs(ostream& o,
-		const global_entry<Tag>& _this, const footprint& topfp,
-		const cflat_options& cf, const state_manager& sm) {
-	// the footprint_frame will translate from local
-	// to global
-	const PRS::footprint&
-		pfp(_this._frame._footprint->get_prs_footprint());
-#if 0
-	const footprint_frame_map<bool_tag>& bfm(_this._frame);
-	pfp.cflat_prs(o, bfm, topfp, cf, sm);
-#else
-	PRS::cflat_prs_printer visitor(o, cf, sm, topfp, _this._frame);
-	pfp.accept(visitor);
-#endif
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

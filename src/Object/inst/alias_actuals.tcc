@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.9 2006/01/28 18:21:20 fang Exp $
+	$Id: alias_actuals.tcc,v 1.10 2006/02/06 01:30:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -259,6 +259,26 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This simply does not work because we're collecting a 
+	pointer of a temporarily created complete canonical type.  
+ */
+template <class AliasType>
+void
+instance_alias_info_actuals::collect_canonical_footprint(
+		const AliasType& _alias, persistent_object_manager& m) {
+	typedef	typename AliasType::container_type	container_type;
+	typedef	typename container_type::instance_collection_parameter_type
+				complete_type_type;
+	STACKTRACE_VERBOSE;
+#if 0
+	const complete_type_type
+		_type(_alias.complete_type_actuals(*_alias.container));
+	_type.collect_transient_info_base(m);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	TODO: is there a way to save/restore the footprint without
 		writing the canonical type, but rather inferring
 		it from the hierarchical position?  Probably.  
@@ -272,6 +292,11 @@ instance_alias_info_actuals::__initialize_assign_footprint_frame(
 		NOTE: This may prove infeasible for relaxed template types?
 		No, problems arise only when relaxed types are passed
 		(completed) as port connections.  
+	20060205: HACK: need to make sure the pointers used by the
+		temporarily created canonical type are registered
+		with the persistent object manager.  
+		We forcibly collect the pointers now... :(
+		Should be OK, because objects are written to local buffers.
  */
 template <class AliasType>
 void
@@ -283,9 +308,15 @@ instance_alias_info_actuals::save_canonical_footprint(const AliasType& _alias,
 				complete_type_type;
 	typedef	typename complete_type_type::canonical_definition_type
 				canonical_definition_type;
+	STACKTRACE_VERBOSE;
 	const complete_type_type
 		_type(_alias.complete_type_actuals(*_alias.container));
 	check_footprint_policy<canonical_definition_type>()(_type, _f);
+#if 0
+	// pushed to callee
+	_type.collect_transient_info_base(
+		const_cast<persistent_object_manager&>(m));
+#endif
 	_type.write_object_base(m, o);
 }
 
@@ -304,6 +335,7 @@ instance_alias_info_actuals::restore_canonical_footprint(
 				complete_type_type;
 	typedef	typename complete_type_type::canonical_definition_type
 				canonical_definition_type;
+	STACKTRACE_VERBOSE;
 	complete_type_type _type;
 	_type.load_object_base(m, i);
 	// temporary ugly hack

@@ -5,6 +5,18 @@
 
 2006-02-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-3:
+	  Failed attempt to fix non-critical bugs parser/template/059,063.
+		Symptom: failure to register relaxed-template arguments
+		to the persistent object manager.  
+		Attempt to fix failed because the relaxed template arguments
+		are constructed from a temporary canonical_type during
+		write_objects.  Registering it on-demand met with disaster.  
+	  Some useful modification to global_entries and their
+		persistence management for future fixes.  
+	  Other than that, this revision accomplished nothing.  
+
+
 	* HACKT-00-01-04-main-00-77-1:
 	  Hack patch to fix bug: parser/connect/129.hac.
 		Summary: comprehensive backpatch pass to sweep and overwrite

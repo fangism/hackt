@@ -3,10 +3,11 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.5 2006/01/27 08:07:19 fang Exp $
+	$Id: canonical_type.cc,v 1.6 2006/02/06 01:30:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
 
 #include "Object/type/canonical_type.tcc"
 #include "Object/def/user_def_datatype.h"

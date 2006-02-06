@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.10 2006/01/30 07:41:58 fang Exp $
+	$Id: state_manager.cc,v 1.11 2006/02/06 01:30:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -68,13 +68,15 @@ if (this->size() > 1) {
 template <class Tag>
 void
 global_entry_pool<Tag>::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	// nothing yet
+		persistent_object_manager& m, 
+		const footprint& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
-	for ( ; i!=e; i++) {
-		i->collect_transient_info_base(m);
+	size_t j = 1;
+	for ( ; i!=e; ++i, ++j) {
+		i->template collect_transient_info_base<Tag>(m, j, f, 
+			AS_A(const state_manager&, *this));
 	}
 }
 
@@ -228,16 +230,17 @@ state_manager::allocate_test(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-state_manager::collect_transient_info_base(persistent_object_manager& m) const {
+state_manager::collect_transient_info_base(persistent_object_manager& m, 
+		const footprint& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	// for now, pools contain no pointers.  
+	global_entry_pool<process_tag>::collect_transient_info_base(m, f);
+	global_entry_pool<datastruct_tag>::collect_transient_info_base(m, f);
+	global_entry_pool<channel_tag>::collect_transient_info_base(m, f);
 #if 0
-	global_entry_pool<process_tag>::collect_transient_info_base(m);
-	global_entry_pool<datastruct_tag>::collect_transient_info_base(m);
-	global_entry_pool<channel_tag>::collect_transient_info_base(m);
-	global_entry_pool<enum_tag>::collect_transient_info_base(m);
-	global_entry_pool<int_tag>::collect_transient_info_base(m);
-	global_entry_pool<bool_tag>::collect_transient_info_base(m);
+	// these cannot contain pointers... yet
+	global_entry_pool<enum_tag>::collect_transient_info_base(m, f);
+	global_entry_pool<int_tag>::collect_transient_info_base(m, f);
+	global_entry_pool<bool_tag>::collect_transient_info_base(m, f);
 #endif
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.8 2006/01/22 18:19:14 fang Exp $
+	$Id: state_manager.h,v 1.9 2006/02/06 01:30:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -70,7 +70,8 @@ protected:
 	dump(ostream&, const footprint&) const;
 
 	void
-	collect_transient_info_base(persistent_object_manager&) const;
+	collect_transient_info_base(persistent_object_manager&, 
+		const footprint&) const;
 
 	void
 	write_object_base(const persistent_object_manager&, ostream&, 
@@ -140,7 +141,8 @@ public:
 #endif
 
 	void
-	collect_transient_info_base(persistent_object_manager&) const;
+	collect_transient_info_base(persistent_object_manager&, 
+		const footprint&) const;
 
 	void
 	write_object_base(const persistent_object_manager&, ostream&, 

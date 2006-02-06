@@ -7,3 +7,5 @@ defproc foo() { }
 foo<5> bar<4>;
 foo<5><4> car;	// should have the same effect for scalars
 
+// BUG to fix: relaxed template parameters are not registered persistently
+

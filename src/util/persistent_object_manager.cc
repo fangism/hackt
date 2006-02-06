@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.28 2006/02/04 06:43:23 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.29 2006/02/06 01:30:53 fang Exp $
  */
 
 // flags and switches
@@ -987,11 +987,11 @@ persistent_object_manager::collect_objects(void) {
 	size_t i = 1;			// don't initialize the 0th one!
 //	dump_text(cerr);		// DEBUG
 	for ( ; i<max; i++) {
-		reconstruction_table_entry& e = reconstruction_table[i];
-		const persistent* o = e.addr();
+		reconstruction_table_entry& e(reconstruction_table[i]);
+		const persistent* const o(e.addr());
 		NEVER_NULL(o);
 		{
-			ostream& f = lookup_write_buffer(o);
+			ostream& f(lookup_write_buffer(o));
 			INVARIANT(f.good());
 			WRITE_POINTER_INDEX(f, o);	// sanity check
 			o->write_object(*this, f);	// pure virtual
@@ -999,11 +999,37 @@ persistent_object_manager::collect_objects(void) {
 		}
 		e.initialize_offsets();
 	}
+#if 0
+	// (abandoned attempt)
+	// 20060205 hack: in an extremely rare case, we might have had to add
+	// an object to the reconstruction table *during* write_object, 
+	// in which case, we need to extend the collection :(
+	const size_t new_max = reconstruction_table.size();
+	INVARIANT(i == max);
+	dump_text(cerr << endl) << endl;
+	for ( ; i<new_max; ++i) {
+		reconstruction_table_entry& e(reconstruction_table[i]);
+		const persistent* const o(e.addr());
+		NEVER_NULL(o);
+		{
+			ostream& f(lookup_write_buffer(o));
+			INVARIANT(f.good());
+			WRITE_POINTER_INDEX(f, o);	// sanity check
+			o->write_object(*this, f);	// pure virtual
+			WRITE_OBJECT_FOOTER(f);		// alignment
+		}
+		e.initialize_offsets();
+	}
+	// we damn well better not have hacked it again...
+	INVARIANT(new_max == reconstruction_table.size());
+#else
+	const size_t new_max = max;
+#endif
 	// next pass: translate offsets into absolute positions.  
 	i = 0;				// or start at 1, no difference
 	streampos tail = 0;
-	for ( ; i<max; i++) {
-		reconstruction_table_entry& e = reconstruction_table[i];
+	for ( ; i<new_max; ++i) {
+		reconstruction_table_entry& e(reconstruction_table[i]);
 		streampos len = e.tail_pos();
 		e.adjust_offsets(tail);
 		tail += len;
@@ -1028,7 +1054,7 @@ persistent_object_manager::finish_load(ifstream& f) {
 	// skip the 0th object, it's reserved NULL
 	size_t i = 1;
 	for ( ; i<max; i++) {
-		reconstruction_table_entry& e = reconstruction_table[i];
+		reconstruction_table_entry& e(reconstruction_table[i]);
 		const int size = e.tail_pos() -e.head_pos();
 		f.seekg(e.head_pos() +start_of_objects);
 		ostream& o = e.get_buffer();
