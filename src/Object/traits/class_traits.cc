@@ -2,7 +2,7 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.5 2006/01/22 18:20:32 fang Exp $
+	$Id: class_traits.cc,v 1.5.12.1 2006/02/06 21:50:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
@@ -14,6 +14,7 @@
 #include "Object/traits/param_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/pint_traits.h"
+#include "Object/traits/preal_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/enum_traits.h"
@@ -53,16 +54,16 @@ class_traits<pbool_tag>::tag_name[] = "pbool";
 const char
 class_traits<pbool_tag>::value_type_name[] = "boolean";
 
-#if 0
 const char
-class_traits<pfloat_tag>::tag_name[] = "pfloat";
+class_traits<preal_tag>::tag_name[] = "preal";
 
 const char
-class_traits<pfloat_tag>::value_type_name[] = "floating-point";
-#endif
+class_traits<preal_tag>::value_type_name[] = "real-value";
 
 //=============================================================================
-
+/**
+	What's this doing here?
+ */
 unroll_context
 null_parameter_type::make_unroll_context(void) const {
 	return unroll_context();

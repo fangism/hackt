@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.8 2006/02/04 06:43:21 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.8.2.1 2006/02/06 21:50:26 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -240,6 +240,7 @@ extern const char* const yyrule[];
 	token_paramtype*	_token_paramtype;
 	token_pbool_type*	_token_pbool_type;
 	token_pint_type*	_token_pint_type;
+	token_preal_type*	_token_preal_type;
 	token_else*		_token_else;
 
 	root_body*		_root_body;
@@ -510,6 +511,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_bool_type>	BOOL_TYPE
 %token	<_token_pint_type>	PINT_TYPE
 %token	<_token_pbool_type>	PBOOL_TYPE
+%token	<_token_preal_type>	PREAL_TYPE
 
 /*
 	Special yacc/bison-independent hack to get the maximum token enum
@@ -1067,6 +1069,8 @@ base_param_type
 	: PINT_TYPE 		/* integer parameter */
 		{ $$ = $1; }
 	| PBOOL_TYPE		/* boolean parameter */
+		{ $$ = $1; }
+	| PREAL_TYPE		/* real-valued parameter */
 		{ $$ = $1; }
 	;
 

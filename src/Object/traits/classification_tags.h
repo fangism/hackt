@@ -4,7 +4,7 @@
 	These type tags may be used for specialization of many
 	features of the language.  
 	This file used to be "Object/art_object_classification_tags.h".
-	$Id: classification_tags.h,v 1.5 2006/01/22 18:20:35 fang Exp $
+	$Id: classification_tags.h,v 1.5.12.1 2006/02/06 21:50:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
@@ -82,9 +82,9 @@ struct pint_tag : public parameter_value_tag {
 /**
 	Floating-point compiler parameters.  
  */
-struct pfloat_tag : public parameter_value_tag {
+struct preal_tag : public parameter_value_tag {
 	typedef	parameter_value_tag	parent_tag;
-};	// end struct pfloat_tag
+};	// end struct preal_tag
 
 /**
 	Basic building block unit of data: a single node.  
@@ -99,6 +99,15 @@ struct bool_tag : public datatype_tag {
 struct int_tag : public datatype_tag {
 	typedef	datatype_tag		parent_tag;
 };	// end struct int_tag
+
+#if 0
+/**
+	Real-valued interpreted data.  
+ */
+struct real_tag : public datatype_tag {
+	typedef	datatype_tag		parent_tag;
+};	// end struct real_tag
+#endif
 
 /**
 	Enumerated data type.  

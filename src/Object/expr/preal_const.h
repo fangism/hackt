@@ -1,15 +1,15 @@
 /**
-	\file "Object/expr/pbool_const.h"
+	\file "Object/expr/preal_const.h"
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.6.12.1 2006/02/06 21:50:19 fang Exp $
+	$Id: preal_const.h,v 1.1.2.1 2006/02/06 21:50:20 fang Exp $
  */
 
-#ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
-#define __HAC_OBJECT_EXPR_PBOOL_CONST_H__
+#ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
+#define __HAC_OBJECT_EXPR_PREAL_CONST_H__
 
-#include "Object/expr/pbool_expr.h"
+#include "Object/expr/preal_expr.h"
 #include "Object/expr/const_param.h"
 #include "util/memory/list_vector_pool_fwd.h"
 
@@ -23,24 +23,25 @@ USING_CONSTRUCT
 /**
 	Constant boolean parameters, true or false.  
  */
-class pbool_const : public pbool_expr, public const_param {
+class preal_const : public preal_expr, public const_param {
 private:
-	typedef	pbool_const		this_type;
+	typedef	preal_const		this_type;
 public:
-	typedef	pbool_value_type	value_type;
-	static const value_type		default_value = false;
+	typedef	preal_value_type	value_type;
+	/// cannont initialize non-integer static consts in-class
+	static const value_type		default_value;
 protected:
 	// removed const-ness for assignability
 	value_type		val;
 private:
-	pbool_const();
+	preal_const();
 
 public:
 	explicit
-	pbool_const(const value_type v) :
-		pbool_expr(), const_param(), val(v) { }
+	preal_const(const value_type v) :
+		preal_expr(), const_param(), val(v) { }
 
-	~pbool_const() { }
+	~preal_const() { }
 
 	ostream&
 	what(ostream& o) const;
@@ -66,11 +67,11 @@ public:
 #if 0
 	bool
 	may_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::may_be_equivalent_generic(e); }
+		{ return preal_expr::may_be_equivalent_generic(e); }
 
 	bool
 	must_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::must_be_equivalent_generic(e); }
+		{ return preal_expr::must_be_equivalent_generic(e); }
 #endif
 
 	bool
@@ -89,7 +90,7 @@ public:
 	static_constant_value(void) const { return val; }
 
 	bool
-	must_be_equivalent(const pbool_expr& ) const;
+	must_be_equivalent(const preal_expr& ) const;
 
 	bool
 	is_loop_independent(void) const { return true; }
@@ -121,11 +122,11 @@ public:
 
 	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
 	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
-};	// end class pbool_const
+};	// end class preal_const
 
 //=============================================================================
 }	// end namespace HAC
 }	// end namespace entity
 
-#endif	// __HAC_OBJECT_EXPR_PBOOL_CONST_H__
+#endif	// __HAC_OBJECT_EXPR_PREAL_CONST_H__
 

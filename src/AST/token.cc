@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.4 2006/01/23 22:14:39 fang Exp $
+	$Id: token.cc,v 1.4.10.1 2006/02/06 21:50:18 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -29,9 +29,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/traits/preal_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 
@@ -78,10 +80,12 @@ namespace parser {
 #include "util/using_ostream.h"
 using entity::pint_const;
 using entity::pbool_const;
+using entity::preal_const;
 
 // these are built-in instance references, not types.  
 using entity::pbool_traits;
 using entity::pint_traits;
+using entity::preal_traits;
 using entity::bool_traits;
 using entity::int_traits;
 
@@ -630,6 +634,26 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
 concrete_type_ref::return_type
 token_pint_type::check_type(context&) const {
 	return pint_traits::built_in_type_ptr;
+}
+
+//=============================================================================
+// class token_preal_type method definitions
+
+CONSTRUCTOR_INLINE
+token_preal_type::token_preal_type(const char* dt) : token_paramtype(dt) { }
+
+DESTRUCTOR_INLINE
+token_preal_type::~token_preal_type() { }
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_preal_type)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Return built-in parameter integer type reference.
+ */
+concrete_type_ref::return_type
+token_preal_type::check_type(context&) const {
+	return preal_traits::built_in_type_ptr;
 }
 
 //=============================================================================

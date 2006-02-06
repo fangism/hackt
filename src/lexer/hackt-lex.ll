@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.11 2006/02/04 06:43:21 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.11.2.1 2006/02/06 21:50:24 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -189,37 +189,50 @@ KEYWORD_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 
 static inline void
 LINKAGE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_keyword = new token_keyword(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_keyword = new token_keyword(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 ELSE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_else = new token_else(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_else = new token_else(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 BOOL_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_bool = new token_bool(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_bool = new token_bool(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 INT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_int_type = new token_int_type(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_int_type = new token_int_type(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 BOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_bool_type = new token_bool_type(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_bool_type = new token_bool_type(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 PINT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_pint_type = new token_pint_type(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_pint_type = new token_pint_type(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 PBOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_pbool_type = new token_pbool_type(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_pbool_type = new token_pbool_type(yytext);
+	TOKEN_UPDATE(foo);
+}
+
+static inline void
+PREAL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+	hackt_lval._token_preal_type = new token_preal_type(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 /***
@@ -378,6 +391,7 @@ INT_TYPE	"int"
 BOOL_TYPE	"bool"
 PINT_TYPE	"pint"
 PBOOL_TYPE	"pbool"
+PREAL_TYPE	"preal"
 CHANNEL		"chan"
 TRUE		"true"
 FALSE		"false"
@@ -578,6 +592,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 {BOOL_TYPE}	{ BOOL_TYPE_UPDATE(*hackt_lval, foo); return BOOL_TYPE; }
 {PINT_TYPE}	{ PINT_TYPE_UPDATE(*hackt_lval, foo); return PINT_TYPE; }
 {PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(*hackt_lval, foo); return PBOOL_TYPE; }
+{PREAL_TYPE}	{ PREAL_TYPE_UPDATE(*hackt_lval, foo); return PREAL_TYPE; }
 {TRUE}		{ BOOL_UPDATE(*hackt_lval, foo); return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE(*hackt_lval, foo); return BOOL_FALSE; }
 {EXTERN}	{ LINKAGE_UPDATE(*hackt_lval, foo); return EXTERN; }

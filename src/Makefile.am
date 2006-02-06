@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.98 2006/02/04 06:43:14 fang Exp $
+#	$Id: Makefile.am,v 1.98.2.1 2006/02/06 21:50:13 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -311,6 +311,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/param_traits.h \
 	Object/traits/pint_traits.h \
 	Object/traits/pbool_traits.h \
+	Object/traits/preal_traits.h \
 	Object/traits/int_traits.h \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
@@ -372,6 +373,11 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/pint_range.h \
 	Object/expr/pint_relational_expr.h \
 	Object/expr/pint_unary_expr.h \
+	Object/expr/preal_const.h \
+	Object/expr/preal_expr.h \
+	Object/expr/preal_arith_expr.h \
+	Object/expr/preal_relational_expr.h \
+	Object/expr/preal_unary_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
 	Object/inst/substructure_alias_fwd.h \

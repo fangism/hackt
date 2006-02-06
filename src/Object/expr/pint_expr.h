@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.6 2006/01/22 18:19:55 fang Exp $
+	$Id: pint_expr.h,v 1.6.12.1 2006/02/06 21:50:19 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -34,7 +34,7 @@ class pint_expr : virtual public param_expr, virtual public meta_index_expr,
 		public int_expr {
 public:
 	/**
-		The internal storage type, set in "expr/types.h".
+		The internal storage type, set in "Object/expr/types.h".
 		We bother with this typedef for the future potential of 
 		using templates to extend to other parameter types.  
 	 */
