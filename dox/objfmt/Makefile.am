@@ -1,18 +1,10 @@
 # "dox/objfmt/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2006/02/05 03:26:07 fang Exp $
-
-include $(top_srcdir)/dox/Make.dox-head
+#	$Id: Makefile.am,v 1.7 2006/02/06 00:04:32 fang Exp $
 
 PDFS = objfmt.pdf
 PSS = $(PDFS:.pdf=.ps)
 
-# all-local: pdf-local ps-local
-
-pdf-local: $(PDFS)
-
-ps-local: $(PSS)
-
-doc_DATA = $(PDFS) $(PSS)
+include $(top_srcdir)/dox/Make.dox-head
 
 # have to add these by hand? :S
 EXTRA_DIST += objfmt.tex \

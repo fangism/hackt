@@ -1,4 +1,12 @@
 "dox/ChageLog"
+	$Id: ChangeLog,v 1.5 2006/02/06 00:04:31 fang Exp $
+
+2006-02-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-2:
+	  */Makefile.am: now configurable with --disable docs to suppress
+		default building of documents.  
+
 
 2006-02-04	David Fang		<fangism@users.sourceforge.net>
 

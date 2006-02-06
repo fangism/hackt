@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.33 2006/02/05 03:26:04 fang Exp $
+#	$Id: configure.ac,v 1.34 2006/02/06 00:04:30 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060204, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060205, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -93,6 +93,36 @@ AC_MSG_RESULT([maybe])
 AC_CHECK_PROG([INDENT], indent, indent)
 AC_CHECK_PROGS([M4], gm4 m4, m4)
 
+# AC_PROG_PERL
+AC_CHECK_PROG([PERL], perl, perl)
+AC_PATH_PROG([PERL_PATH], perl)
+
+# documentation support
+AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)
+AM_CONDITIONAL(HAVE_DOXYGEN, test -n "$DOXYGEN")
+
+AC_CHECK_PROG([DOT], dot, dot)
+AM_CONDITIONAL(HAVE_DOT, test -n "$DOT" )
+
+AC_CHECK_PROG([LATEX], latex, latex)
+AM_CONDITIONAL(HAVE_LATEX, test -n "$LATEX" )
+
+AC_CHECK_PROG([PDFLATEX], pdflatex, pdflatex)
+AM_CONDITIONAL(HAVE_PDFLATEX, test -n "$PDFLATEX" )
+
+AC_CHECK_PROG([DVIPS], dvips, dvips)
+AM_CONDITIONAL(HAVE_DVIPS, test -n "$DVIPS" )
+
+AC_CHECK_PROG([BIBTEX], bibtex, bibtex)
+AM_CONDITIONAL(HAVE_BIBTEX, test -n "$BIBTEX" )
+
+AC_CHECK_PROG([MAKEINDEX], makeindex, makeindex)
+AM_CONDITIONAL(HAVE_MAKEINDEX, test -n "$MAKEINDEX" )
+
+AC_CHECK_PROG([PS2PDF], ps2pdf, ps2pdf)
+AM_CONDITIONAL(HAVE_PS2PDF, test -n "$PS2PDF" )
+
+
 # comment out until time for release
 # this causes too many rebuilds during development
 # AC_DEFINE_UNQUOTED(HACKT_BUILD_DATE, "`$DATE`", [Define the build date.])
@@ -157,6 +187,37 @@ AC_ARG_ENABLE(fat_binary,
 	],
 	[AC_MSG_RESULT([no])]
 )
+
+
+dnl whether ot not to enable build ps and pdf targets by default
+AC_MSG_CHECKING([whether to build documents by default (all)])
+AC_ARG_ENABLE(enable_docs, 
+	AC_HELP_STRING([--disable-docs],
+		[Suppress default building of PS and PDF documents.]),
+	dnl if given
+	[AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
+	if test "$enable_docs" = "yes"
+	then	AC_MSG_RESULT([yes])
+	else	AC_MSG_RESULT([no])
+	fi
+	],
+	dnl if not give
+	[AM_CONDITIONAL(ENABLE_DOCS, test "yes")
+	AC_MSG_RESULT([yes (default)])]
+)
+if test "$enable_docs" != "no"
+then
+	if test -z "$LATEX"
+	then	AC_MSG_WARN([
+		Want to build PS documents, but latex not found.
+		Configure with --disable-docs to suppress PS builds.])
+	fi
+	if test -z "$PDFLATEX"
+	then	AC_MSG_WARN([
+		Want to build PDF documents, but pdflatex not found.
+		Configure with --disable-docs to suppress PDF builds.])
+	fi
+fi
 
 dnl enable or disable fun modules
 AC_MSG_CHECKING([how bored we are])
@@ -460,35 +521,6 @@ case $LEX in
 esac
 LEX_VERSION=`$LEX --version | head -n 1`
 AC_SUBST(LEX_VERSION)
-
-# AC_PROG_PERL
-AC_CHECK_PROG([PERL], perl, perl)
-AC_PATH_PROG([PERL_PATH], perl)
-
-# documentation support
-AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)
-AM_CONDITIONAL(HAVE_DOXYGEN, test -n "$DOXYGEN")
-
-AC_CHECK_PROG([DOT], dot, dot)
-AM_CONDITIONAL(HAVE_DOT, test -n "$DOT" )
-
-AC_CHECK_PROG([LATEX], latex, latex)
-AM_CONDITIONAL(HAVE_LATEX, test -n "$LATEX" )
-
-AC_CHECK_PROG([PDFLATEX], pdflatex, pdflatex)
-AM_CONDITIONAL(HAVE_PDFLATEX, test -n "$PDFLATEX" )
-
-AC_CHECK_PROG([DVIPS], dvips, dvips)
-AM_CONDITIONAL(HAVE_DVIPS, test -n "$DVIPS" )
-
-AC_CHECK_PROG([BIBTEX], bibtex, bibtex)
-AM_CONDITIONAL(HAVE_BIBTEX, test -n "$BIBTEX" )
-
-AC_CHECK_PROG([MAKEINDEX], makeindex, makeindex)
-AM_CONDITIONAL(HAVE_MAKEINDEX, test -n "$MAKEINDEX" )
-
-AC_CHECK_PROG([PS2PDF], ps2pdf, ps2pdf)
-AM_CONDITIONAL(HAVE_PS2PDF, test -n "$PS2PDF" )
 
 # some substitution variables for the doxygen configuration
 if test -n "$DOT"

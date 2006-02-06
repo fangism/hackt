@@ -1,18 +1,10 @@
 # "dox/lang/Makefile.am"
-#	$Id: Makefile.am,v 1.18 2006/02/05 03:26:06 fang Exp $
-
-include $(top_srcdir)/dox/Make.dox-head
+#	$Id: Makefile.am,v 1.19 2006/02/06 00:04:32 fang Exp $
 
 PDFS = hac.pdf
 PSS = $(PDFS:.pdf=.ps)
 
-# all-local: pdf-local ps-local
-
-pdf-local: $(PDFS)
-
-ps-local: $(PSS)
-
-doc_DATA = $(PDFS) $(PSS)
+include $(top_srcdir)/dox/Make.dox-head
 
 # have to add these by hand? :S
 EXTRA_DIST += \

@@ -1,6 +1,11 @@
 # "dox/Make.dox-head"
+#	$Id: Make.dox-head,v 1.4 2006/02/06 00:04:32 fang Exp $
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
+
+# Define the following before including this file:
+# PDFS = <list of pdf's>
+# PSS = <list of ps's>
 
 include $(top_srcdir)/Make.stddef
 
@@ -19,4 +24,25 @@ SUFFIXES = .ps .dvi .tex .pdf .depend .ind .idx .bbl .aux
 
 # where various documents (pdf, ps) should be installed
 docdir = $(pkgdatadir)/doc
+
+# not necessary
+# all-local: pdf-local ps-local
+
+AUTOPDFS = 
+AUTOPSS = 
+
+if ENABLE_DOCS
+if HAVE_LATEX
+AUTOPSS += $(PSS)
+endif
+
+if HAVE_PDFLATEX
+AUTOPDFS += $(PDFS)
+endif
+endif
+
+pdf-local: $(AUTOPDFS)
+ps-local: $(AUTOPSS)
+
+doc_DATA = $(AUTOPDFS) $(AUTOPSS)
 

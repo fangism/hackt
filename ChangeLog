@@ -2,6 +2,14 @@
 
 2006-02-04	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-2:
+	  configure.ac: Added option to disable default building of ps and pdf
+		documents in the dox tree.  Useful for checking on systems
+		missing these.  
+
+
+2006-02-04	David Fang	<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-77:
 	  Organization changes, basic Makefile maintainence, 
 		addition of lib/ directory for development of standard
