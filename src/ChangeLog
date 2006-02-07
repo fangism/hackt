@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-4-PRS-06-01:
+	  This branch created for sake of closing off some open issues
+		with PRS.  Do we allow top-level prs?
+	  TODO: some unfinished bug-business in a few test cases in
+		test/parser/prs, regarding mixing of loops/conditionals
+		with PRS.  Pending resolution of some language details.
+	  Will probably have to extend the intermediate presentation
+		in Object/lang/PRS*.h to support conditionals.  
+	  This initial revision just added some test cases
+		and comments in sources.  
+
+
 2006-02-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-3:

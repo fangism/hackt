@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.3 2006/01/22 06:52:54 fang Exp $
+	$Id: instance.cc,v 1.3.14.1 2006/02/07 21:28:55 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -937,6 +937,8 @@ loop_instantiation::rightmost(void) const {
 /**
 	TODO: make sure loop bounds do not depend on relaxed formals, 
 		if in definition context.
+	TODO: open up PRS loop scope? in case one opens up a PRS body?
+	TODO: drop empty bodies?
  */
 never_ptr<const object>
 loop_instantiation::check_build(context& c) const {
