@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context_value_resolver.h"
 	Specialized operator definitions for value collection
 	resolution.  
-	$Id: unroll_context_value_resolver.h,v 1.4 2006/01/22 18:21:01 fang Exp $
+	$Id: unroll_context_value_resolver.h,v 1.4.12.1 2006/02/07 02:57:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
@@ -13,6 +13,7 @@
 #include "Object/expr/pint_const.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/traits/preal_traits.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
 #include "Object/inst/pint_value_collection.h"
@@ -90,14 +91,53 @@ public:
 						const_return_type;
 
 	/**
+		No need to check if variable is for flow control, 
+			because those are not declared and referenced.  
 		\param i is never used.  
 	 */
 	const_return_type
 	operator () (const unroll_context& c, const value_collection_type& v,
 			value_type& i) const {
-#if 0
-		// check for flow control variables?  probably not necessary.
-#endif
+		const footprint* const f(c.get_target_footprint());
+		const value_collection_type&
+			_vals(f ? IS_A(const value_collection_type&,
+					*(*f)[v.get_name()])
+				: v);
+		return const_return_type(false, &_vals);
+	}
+
+	value_collection_type&
+	operator () (const unroll_context& c, value_collection_type& v) const {
+		// no specialization, can't assign to loop vars.  
+		const footprint* const f(c.get_target_footprint());
+		value_collection_type&
+			_vals(f ? IS_A(value_collection_type&,
+					*(*f)[v.get_name()])
+				: v);
+		return _vals;
+	}
+
+};	// end class value_resolver
+
+//-----------------------------------------------------------------------------
+template <>
+class unroll_context_value_resolver<preal_tag> {
+public:
+	typedef	class_traits<preal_tag>::value_collection_generic_type
+						value_collection_type;
+	typedef	class_traits<preal_tag>::value_type
+						value_type;
+	typedef	pair<bool, const value_collection_type*>
+						const_return_type;
+
+	/**
+		No need to check if variable is for flow control, 
+			because those are not declared and referenced.  
+		\param i is never used.  
+	 */
+	const_return_type
+	operator () (const unroll_context& c, const value_collection_type& v,
+			value_type& i) const {
 		const footprint* const f(c.get_target_footprint());
 		const value_collection_type&
 			_vals(f ? IS_A(const value_collection_type&,

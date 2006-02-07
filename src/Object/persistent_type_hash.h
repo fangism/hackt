@@ -18,11 +18,11 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.6 2006/02/04 06:43:16 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.6.2.1 2006/02/07 02:57:54 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_TYPE_HASH_H__
-#define	__HAC_OBJECT_TYPE_HASH_H__
+#ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
+#define	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
 //=============================================================================
 
 // macro name							hash string
@@ -61,6 +61,7 @@
 #define	DINT_INSTANCE_COLLECTION_TYPE_KEY			"dintcoll"
 #define	PBOOL_INSTANCE_COLLECTION_TYPE_KEY			"pboolcol"
 #define	PINT_INSTANCE_COLLECTION_TYPE_KEY			"pintcoll"
+#define	PREAL_INSTANCE_COLLECTION_TYPE_KEY			"prealcol"
 
 // Unique instances, post-unrolling:
 #define	UNIQUE_PROCESS_INSTANCE_TYPE_KEY			"procunis"
@@ -75,6 +76,7 @@
 #define	SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdsmref"
 #define	SIMPLE_PBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"spbmref"
 #define	SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY		"spimref"
+#define	SIMPLE_PREAL_META_INSTANCE_REFERENCE_TYPE_KEY		"sprmref"
 
 	// simple non-meta instance references
 #define	SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprcnref"
@@ -85,8 +87,7 @@
 #define	SIMPLE_STRUCT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sdsnref"
 #define	SIMPLE_PBOOL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"spbnref"
 #define	SIMPLE_PINT_NONMETA_INSTANCE_REFERENCE_TYPE_KEY		"spinref"
-
-
+#define	SIMPLE_PREAL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprnref"
 
 	// aggregates are complex compositions / concatenations of arrays
 #define	AGGREGATE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"aprocref"
@@ -95,6 +96,7 @@
 #define	AGGREGATE_DINT_INSTANCE_REFERENCE_TYPE_KEY		"adiref"
 #define	AGGREGATE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY		"apbref"
 #define	AGGREGATE_PINT_INSTANCE_REFERENCE_TYPE_KEY		"apiref"
+#define	AGGREGATE_PREAL_INSTANCE_REFERENCE_TYPE_KEY		"aprref"
 
 	// member references of the form x.y, (x may be indexed / member ref.)
 #define	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"mprocref"
@@ -103,7 +105,7 @@
 #define	MEMBER_DINT_INSTANCE_REFERENCE_TYPE_KEY			"mdintref"
 #define	MEMBER_ENUM_INSTANCE_REFERENCE_TYPE_KEY			"menumref"
 #define	MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY		"mstrtref"
-	// no such thing as param member instance reference
+	// no such thing as param member instance reference... yet
 
 // Expressions:
 	// Note that the above pbool/pint instance references are 
@@ -113,10 +115,14 @@
 	//	dynamic -- everything else
 	// When in doubt, it is safe to use the dynamic flavor.  
 
+// value scalars
 #define	CONST_PBOOL_TYPE_KEY					"cnstpb"
 #define	CONST_PINT_TYPE_KEY					"cnstpi"
+#define	CONST_PREAL_TYPE_KEY					"cnstpr"
+// value collections
 #define	CONST_PBOOL_COLLECTION_TYPE_KEY				"cnstpbc"
 #define	CONST_PINT_COLLECTION_TYPE_KEY				"cnstpic"
+#define	CONST_PREAL_COLLECTION_TYPE_KEY				"cnstprc"
 
 #define	CONST_RANGE_TYPE_KEY					"cnstrng"
 #define	DYNAMIC_RANGE_TYPE_KEY					"dynrng"
@@ -133,6 +139,7 @@
 	// symbolic expressions
 #define	PINT_UNARY_EXPR_TYPE_KEY				"intunary"
 #define	PBOOL_UNARY_EXPR_TYPE_KEY				"boolunry"
+#define	PREAL_UNARY_EXPR_TYPE_KEY				"realunry"
 #define	META_ARITH_EXPR_TYPE_KEY				"arithexp"
 #define	META_RELATIONAL_EXPR_TYPE_KEY				"relatexp"
 #define	META_LOGICAL_EXPR_TYPE_KEY				"logicexp"
@@ -157,9 +164,11 @@
 #define	DINT_INSTANTIATION_STATEMENT_TYPE_KEY			"dintinst"
 #define	PBOOL_INSTANTIATION_STATEMENT_TYPE_KEY			"pboolins"
 #define	PINT_INSTANTIATION_STATEMENT_TYPE_KEY			"pintinst"
+#define	PREAL_INSTANTIATION_STATEMENT_TYPE_KEY			"prealins"
 
 #define	PBOOL_EXPR_ASSIGNMENT_TYPE_KEY				"pbassign"
 #define	PINT_EXPR_ASSIGNMENT_TYPE_KEY				"piassign"
+#define	PREAL_EXPR_ASSIGNMENT_TYPE_KEY				"prassign"
 
 // will be obsolete if it is subclassed into the following
 #define	ALIAS_CONNECTION_TYPE_KEY				"aliascon"
@@ -204,5 +213,5 @@
 	// more class constants here...
 
 //=============================================================================
-#endif	// __HAC_OBJECT_TYPE_HASH_H__
+#endif	// __HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
 

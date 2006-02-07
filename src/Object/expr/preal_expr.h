@@ -3,14 +3,14 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: preal_expr.h,v 1.1.2.1 2006/02/06 21:50:20 fang Exp $
+	$Id: preal_expr.h,v 1.1.2.2 2006/02/07 02:57:56 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_EXPR_H__
 #define __HAC_OBJECT_EXPR_PREAL_EXPR_H__
 
 #include "Object/expr/param_expr.h"
-// #include "Object/expr/real_expr.h"
+#include "Object/expr/real_expr.h"
 #include "Object/expr/types.h"
 #include "util/boolean_types.h"
 
@@ -30,12 +30,7 @@ using util::memory::never_ptr;
 /**
 	Abstract expression checked to be a single boolean.  
  */
-class preal_expr : virtual public param_expr
-#if 0
-	// not yet
-	, public bool_expr
-#endif
-{
+class preal_expr : virtual public param_expr, public real_expr {
 public:
 	/**
 		The global boolean value type, set in "Object/expr/types.h".
@@ -44,7 +39,7 @@ public:
 	 */
 	typedef	preal_value_type		value_type;
 public:
-	preal_expr() : param_expr() { }
+	preal_expr() : param_expr(), real_expr() { }
 
 	// temporary de-inline for debugging
 virtual	~preal_expr() { }
@@ -58,9 +53,7 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
-#if 0
 	GET_DATA_TYPE_REF_PROTO;
-#endif
 
 virtual	bool
 	has_static_constant_dimensions(void) const = 0;

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.4 2006/01/22 18:20:10 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.4.12.1 2006/02/07 02:57:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
@@ -60,6 +60,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_array_3D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_array_4D, PINT_INSTANCE_COLLECTION_TYPE_KEY, 4)
+
+// TODO: specialize value_reader and value_writer
 
 namespace memory {
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pint_scalar)

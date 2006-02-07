@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.5 2006/01/22 18:20:31 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.5.12.1 2006/02/07 02:57:58 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -58,7 +58,7 @@ simple_nonmeta_value_reference<Tag>
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_value_reference :
 	public simple_datatype_nonmeta_value_reference, 
-	public class_traits<Tag>::nonmeta_instance_reference_parent_type, 
+	public class_traits<Tag>::nonmeta_instance_reference_base_type, 
 	// will be something like int_expr or bool_expr
 	public class_traits<Tag>::data_expr_base_type {
 friend struct data_type_resolver<Tag>;
@@ -67,7 +67,7 @@ public:
 							data_value_type;
 private:
 	typedef	SIMPLE_NONMETA_VALUE_REFERENCE_CLASS	this_type;
-	typedef	typename class_traits<Tag>::nonmeta_instance_reference_parent_type
+	typedef	typename class_traits<Tag>::nonmeta_instance_reference_base_type
 							parent_type;
 	typedef	typename class_traits<Tag>::data_expr_base_type
 							data_expr_base_type;

@@ -5,6 +5,21 @@
 
 2006-02-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-4-preal-01-02:
+	  "Enabled" preal expressions by instantiating their template classes
+		all over the place, akin to pint/pbool.  
+	  lexer/hackt-lex.ll: replaced calls to atoi and atof with
+		std::istringstream, for safety and portability.  
+	  AST/token.cc: removed format string psrintfs in favor of
+		more portable stringstream operations in *::string_compare().  
+	  TODO: AST type-checking and arithmetic/relational expression
+		classes on preal's.
+	  TODO: go back and write value_reader/writer functor specializations 
+		for p{{bool,int,real}_instance in 
+		Object/inst/*_value_collection.cc.
+	  TODO: test-cases.  
+
+
 	* HACKT-00-01-04-main-00-77-4-preal-01-01:
 	  Branch for adding support for real-valued parameters.  
 	  Initial revision updated the lexer/parser, added the necessary

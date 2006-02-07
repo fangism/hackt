@@ -3,7 +3,7 @@
 	Class family for instance references in HAC.  
 	This file used to be "Object/art_object_nonmeta_inst_ref_subtypes.h"
 		in a previous life.  
-	$Id: nonmeta_instance_reference_subtypes.h,v 1.4 2006/01/22 18:20:27 fang Exp $
+	$Id: nonmeta_instance_reference_subtypes.h,v 1.4.12.1 2006/02/07 02:57:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -115,6 +115,16 @@ protected:
 public:
 virtual	~pbool_instance_reference_base() { }
 };	// end class pbool_instance_reference_base
+
+//-----------------------------------------------------------------------------
+class preal_instance_reference_base :
+		virtual public param_instance_reference_base {
+	typedef	param_instance_reference_base		parent_type;
+protected:
+	preal_instance_reference_base() : parent_type() { }
+public:
+virtual	~preal_instance_reference_base() { }
+};	// end class preal_instance_reference_base
 
 //=============================================================================
 }	// end namespace entity

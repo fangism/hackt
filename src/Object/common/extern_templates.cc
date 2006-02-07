@@ -4,13 +4,12 @@
 	by the object-related library.  
 	This file was "Object/common/extern_templates.cc"
 		in its previous life.  
-	$Id: extern_templates.cc,v 1.8 2006/02/01 06:11:44 fang Exp $
+	$Id: extern_templates.cc,v 1.8.6.1 2006/02/07 02:57:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 #define	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_CC__
 
-#include "util/STL/list_fwd.h"
 #include <list>
 #include "Object/expr/types.h"
 #include "util/multikey.tcc"
@@ -20,6 +19,7 @@
 namespace util {
 using HAC::entity::pint_value_type;
 using HAC::entity::pbool_value_type;
+using HAC::entity::preal_value_type;
 using std::list;
 
 // template class multikey_base<pint_value_type>;
@@ -54,6 +54,7 @@ template multikey<4, pint_value_type>::multikey(
 
 template class packed_array_generic<pint_value_type, pint_value_type>;
 template class packed_array_generic<pint_value_type, pbool_value_type>;
+template class packed_array_generic<pint_value_type, preal_value_type>;
 
 }	// end namespace util
 

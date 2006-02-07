@@ -6,7 +6,7 @@
 	explicitly or implicitly.  
 	This file used to be "Object/common/extern_templates.h"
 		in its previous life.  
-	$Id: extern_templates.h,v 1.4 2006/01/22 18:19:19 fang Exp $
+	$Id: extern_templates.h,v 1.4.12.1 2006/02/07 02:57:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_EXTERN_TEMPLATES_H__
@@ -25,6 +25,7 @@
 namespace util {
 using HAC::entity::pint_value_type;
 using HAC::entity::pbool_value_type;
+using HAC::entity::preal_value_type;
 
 // NOTE: -pedantic forbids extern template, not ISO C++ :(
 // see alternative in #else case below

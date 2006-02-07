@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.2.18.1 2006/02/06 21:50:19 fang Exp $
+	$Id: object_fwd.h,v 1.2.18.2 2006/02/07 02:57:53 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -130,8 +130,9 @@ namespace entity {
 		simple_pbool_nonmeta_instance_reference;
 	typedef	simple_nonmeta_value_reference<pint_tag>
 		simple_pint_nonmeta_instance_reference;
-//	typedef	simple_nonmeta_value_reference<preal_tag>
-//		simple_preal_nonmeta_instance_reference;
+	// not supported officially:
+	typedef	simple_nonmeta_value_reference<preal_tag>
+		simple_preal_nonmeta_instance_reference;
 
 	template <class>
 	class instance_collection;
@@ -301,6 +302,7 @@ namespace entity {
 	class data_expr;
 	class bool_expr;
 	class int_expr;
+	class real_expr;	// not officially supported
 	class enum_expr;
 	class struct_expr;
 	class int_arith_expr;

@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.9 2006/01/22 18:19:38 fang Exp $
+ 	$Id: basic_param.cc,v 1.9.12.1 2006/02/07 02:57:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -23,6 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
@@ -34,9 +35,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/int_traits.h"
 #include "Object/traits/pint_traits.h"	// needed for assign
 #include "Object/traits/pbool_traits.h"	// needed for assign
+#include "Object/traits/preal_traits.h"	// needed for assign
 #include "Object/type/data_type_reference.h"
 #include "Object/unroll/expression_assignment.h"
 #include "Object/persistent_type_hash.h"
+
+#include "common/TODO.h"
 
 #include "util/what.tcc"
 #include "util/stacktrace.h"
@@ -48,16 +52,20 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::pint_const, "pint-const")
 SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_const, "pbool-const")
+SPECIALIZE_UTIL_WHAT(HAC::entity::preal_const, "preal-const")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_const, CONST_PINT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pbool_const, CONST_PBOOL_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::preal_const, CONST_PREAL_TYPE_KEY, 0)
 
 namespace memory {
 	// pool-allocator managed types that are safe to destroy lazily
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pbool_const)
 	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::pint_const)
+	LIST_VECTOR_POOL_LAZY_DESTRUCTION(HAC::entity::preal_const)
 }	// end namespace memory
 }	// end namespace util
 
@@ -76,14 +84,6 @@ REQUIRES_STACKTRACE_STATIC_INIT
 
 //=============================================================================
 // class param_expr method_definitions
-
-/**
-	When pint is interpreted as an int, in non-meta language...
- */
-count_ptr<const data_type_reference>
-pint_expr::get_data_type_ref(void) const {
-	return int_traits::int32_type_ptr;
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -191,6 +191,15 @@ pint_expr::~pint_expr() {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	When pint is interpreted as an int, in non-meta language...
+ */
+count_ptr<const data_type_reference>
+pint_expr::get_data_type_ref(void) const {
+	return int_traits::int32_type_ptr;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_expr::may_be_equivalent_generic(const param_expr& p) const {
 	STACKTRACE("pint_expr::may_be_equivalent_generic()");
@@ -282,6 +291,69 @@ pint_expr::must_be_equivalent_index(const meta_index_expr& i) const {
 	} else {
 		return false;
 	}
+}
+
+//-----------------------------------------------------------------------------
+// class preal_expr method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	When pint is interpreted as an int, in non-meta language...
+ */
+count_ptr<const data_type_reference>
+preal_expr::get_data_type_ref(void) const {
+#if 1
+	FINISH_ME_EXIT(Fang);
+	return count_ptr<const data_type_reference>(NULL);
+#else
+	return bool_traits::built_in_type_ptr;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+preal_expr::may_be_equivalent_generic(const param_expr& p) const {
+	STACKTRACE("preal_expr::may_be_equivalent_generic()");
+	const preal_expr* b = IS_A(const preal_expr*, &p);
+	if (b) {
+		if (is_static_constant() && b->is_static_constant())
+			return static_constant_value() ==
+				b->static_constant_value();
+		else	return true;
+	}
+	else	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+preal_expr::must_be_equivalent_generic(const param_expr& p) const {
+	STACKTRACE("preal_expr::must_be_equivalent_generic()");
+	const preal_expr* b = IS_A(const preal_expr*, &p);
+	if (b) {
+		return must_be_equivalent(*b);
+	}
+	else	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre must satisfy is_static_constant.  
+	For use with const_param_expr_list.  
+ */
+count_ptr<const const_param>
+preal_expr::static_constant_param(void) const {
+	return count_ptr<const const_param>(
+		new preal_const(static_constant_value()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<param_expression_assignment>
+preal_expr::make_param_expression_assignment_private(
+		const count_ptr<const param_expr>& p) const {
+	typedef	excl_ptr<param_expression_assignment>	return_type;
+	INVARIANT(p == this);
+	return return_type(
+		new preal_expression_assignment(p.is_a<const preal_expr>()));
 }
 
 //=============================================================================
@@ -586,8 +658,8 @@ pbool_const::must_be_equivalent(const pbool_expr& b) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param p const parameter integer.
-	\pre p must be pint_const or pint_const_collection.
+	\param p const parameter boolean.
+	\pre p must be pbool_const or pbool_const_collection.
  */
 bool
 pbool_const::operator < (const const_param& p) const {
@@ -619,6 +691,133 @@ pbool_const::write_object(const persistent_object_manager& m,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_const::load_object(const persistent_object_manager& m, istream& f) {
+	read_value(f, val);
+}
+
+//=============================================================================
+// class preal_const method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(preal_const, 256)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(preal_const)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const preal_const::value_type
+preal_const::default_value = 0.0;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private inline empty constructor, uninitialized.
+ */
+inline
+preal_const::preal_const() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The expr_dump_context parameter is unused.  
+ */
+ostream&
+preal_const::dump(ostream& o, const expr_dump_context&) const {
+	return o << val;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Precondition: must satisfy is_static_constant.  
+	For use with const_param_expr_list.  
+	Just copy-constructs.  
+ */
+count_ptr<const const_param>
+preal_const::static_constant_param(void) const {
+	return count_ptr<const const_param>(
+		new preal_const(val));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A preal const is scalar, thus dimension list is empty.
+ */
+const_range_list
+preal_const::static_constant_dimensions(void) const {
+	return const_range_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<param_expression_assignment>
+preal_const::make_param_expression_assignment_private(
+		const count_ptr<const param_expr>& p) const {
+	return preal_expr::make_param_expression_assignment_private(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const_index_list
+preal_const::resolve_dimensions(void) const {
+	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+preal_const::resolve_value(value_type& i) const {
+	i = val;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+preal_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
+	i = val;
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const_param>
+preal_const::unroll_resolve(const unroll_context& c) const {
+	return count_ptr<const_param>(new preal_const(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+preal_const::must_be_equivalent(const preal_expr& b) const {
+	return b.is_static_constant() && (val == b.static_constant_value());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param p const parameter real.
+	\pre p must be preal_const or preal_const_collection.
+ */
+bool
+preal_const::operator < (const const_param& p) const {
+	const preal_const* pp(IS_A(const preal_const*, &p));
+	if (pp) {
+		return val < pp->val;
+	} else {
+		const preal_const_collection&
+			pc(IS_A(const preal_const_collection&, p));
+		INVARIANT(!pc.dimensions());	// must be scalar
+		return val < pc.front();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+preal_const::collect_transient_info(persistent_object_manager& m) const {
+	m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+preal_const::write_object(const persistent_object_manager& m, 
+		ostream& f) const {
+	write_value(f, val);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+preal_const::load_object(const persistent_object_manager& m, istream& f) {
 	read_value(f, val);
 }
 

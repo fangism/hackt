@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.11.2.1 2006/02/06 21:50:24 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.11.2.2 2006/02/07 02:57:59 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -91,6 +91,7 @@ using namespace HAC::parser;
 #include "lexer/hackt-lex-options.h"
 #include "lexer/flex_lexer_state.h"
 #include "util/stacktrace.h"
+#include "util/sstream.h"
 using flex::lexer_state;
 
 /**
@@ -607,6 +608,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	}
 	TOKEN_UPDATE(foo);
 }
+
 {ENDLINECOMMENT} { 
 	if (comment_feedback > 1) {
 		cerr << "end-of-line comment ignored " <<
@@ -614,11 +616,19 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	}
 	TOKEN_UPDATE(foo);
 }
+
 {FLOAT} {
 	if (token_feedback) {
 		cerr << "float = " << yytext << " " LINE_COL(CURRENT) << endl;
 	}
-	hackt_lval->_token_float = new token_float(atof(yytext));
+	/* TODO: error handling of value-ranges */
+	/* consider using stream conversions to avoid precision errors */
+	HAC::entity::preal_value_type v;
+	std::istringstream iss(yytext);	/* slower, but safer */
+	iss >> v;
+	/* could try to use faster, but unsafe istrstream (deprecated) */
+	hackt_lval->_token_float = new token_float(v);
+	/* hackt_lval->_token_float = new token_float(atof(yytext)); */
 	TOKEN_UPDATE(foo);
 	return FLOAT;
 }
@@ -627,7 +637,15 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	if (token_feedback) {
 		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
 	}
-	hackt_lval->_token_int = new token_int(atoi(yytext));
+	/* TODO: error handling of value-ranges */
+	/* consider using stream conversions to avoid precision errors */
+	/* what if we need atol? */
+	HAC::entity::pint_value_type v;
+	std::istringstream iss(yytext);	/* slower, but safer */
+	iss >> v;
+	/* could try to use faster, but unsafe istrstream (deprecated) */
+	hackt_lval->_token_int = new token_int(v);
+	/* hackt_lval->_token_int = new token_int(atoi(yytext)); */
 	TOKEN_UPDATE(foo);
 	return INT;
 }

@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.4 2006/01/22 18:20:53 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.4.12.1 2006/02/07 02:57:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -18,13 +18,14 @@
 #include "Object/unroll/expression_assignment.tcc"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_collection.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
-#include "Object/traits/int_traits.h"
+#include "Object/traits/preal_traits.h"
 #include "Object/persistent_type_hash.h"
 
 //=============================================================================
@@ -33,6 +34,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::pint_expression_assignment,
 		"pint-expression-assignment")
 SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_expression_assignment, 
 		"pbool-expression-assignment")
+SPECIALIZE_UTIL_WHAT(HAC::entity::preal_expression_assignment, 
+		"preal-expression-assignment")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pbool_expression_assignment,
@@ -40,6 +43,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_expression_assignment,
 		PINT_EXPR_ASSIGNMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::preal_expression_assignment,
+		PREAL_EXPR_ASSIGNMENT_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -122,6 +128,7 @@ param_expression_assignment::validate_reference_is_uninitialized(
 
 template class expression_assignment<pbool_tag>;
 template class expression_assignment<pint_tag>;
+template class expression_assignment<preal_tag>;
 
 //=============================================================================
 }	// end namespace entity

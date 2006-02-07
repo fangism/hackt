@@ -4,7 +4,7 @@
 	This is the ONE file that needs to be touched to change the 
 	precisions of meta-parameter (and simulation) values globally.  
 	NOTE: this file was moved from "Object/art_object_expr_types.h"
-	$Id: types.h,v 1.4.12.1 2006/02/06 21:50:20 fang Exp $
+	$Id: types.h,v 1.4.12.2 2006/02/07 02:57:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_TYPES_H__
@@ -44,13 +44,11 @@ namespace entity {
 	 */
 	typedef	bool		bool_value_type;
 
-#if 0
 	/**
 		Don't know how this is going to work.
 		PUNT!
 	 */
 	typedef	float		real_value_type;
-#endif
 
 	/**
 		For now, limiting to 256 enumerations.  

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.98.2.1 2006/02/06 21:50:13 fang Exp $
+#	$Id: Makefile.am,v 1.98.2.2 2006/02/07 02:57:50 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -201,6 +201,7 @@ OBJECT_CC_FILES = \
 	Object/inst/param_value_collection.cc \
 	Object/inst/pbool_value_collection.cc \
 	Object/inst/pint_value_collection.cc \
+	Object/inst/preal_value_collection.cc \
 	Object/inst/bool_instance_collection.cc \
 	Object/inst/int_instance_collection.cc \
 	Object/inst/enum_instance_collection.cc \
@@ -352,6 +353,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/int_range_expr.h \
 	Object/expr/int_range_list.h \
 	Object/expr/int_relational_expr.h \
+	Object/expr/real_expr.h \
 	Object/expr/meta_index_expr.h \
 	Object/expr/meta_index_list.h \
 	Object/expr/meta_range_expr.h \
