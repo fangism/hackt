@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.6.2.1 2006/02/07 02:57:54 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.6.2.2 2006/02/08 00:20:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -136,13 +136,15 @@
 #define	CONST_RANGE_LIST_TYPE_KEY				"crnglst"
 #define	DYNAMIC_RANGE_LIST_TYPE_KEY				"drnglst"
 
-	// symbolic expressions
-#define	PINT_UNARY_EXPR_TYPE_KEY				"intunary"
-#define	PBOOL_UNARY_EXPR_TYPE_KEY				"boolunry"
-#define	PREAL_UNARY_EXPR_TYPE_KEY				"realunry"
-#define	META_ARITH_EXPR_TYPE_KEY				"arithexp"
-#define	META_RELATIONAL_EXPR_TYPE_KEY				"relatexp"
-#define	META_LOGICAL_EXPR_TYPE_KEY				"logicexp"
+	// symbolic expressions on meta-values
+#define	PINT_UNARY_EXPR_TYPE_KEY				"pintunry"
+#define	PBOOL_UNARY_EXPR_TYPE_KEY				"pbolunry"
+#define	PREAL_UNARY_EXPR_TYPE_KEY				"prelunry"
+#define	PINT_ARITH_EXPR_TYPE_KEY				"piarthex"
+#define	PINT_RELATIONAL_EXPR_TYPE_KEY				"pireltex"
+#define	PREAL_ARITH_EXPR_TYPE_KEY				"prarthex"
+#define	PREAL_RELATIONAL_EXPR_TYPE_KEY				"prreltex"
+#define	PBOOL_LOGICAL_EXPR_TYPE_KEY				"pblgcexp"
 
 // nonmeta expressions
 #define	NONMETA_INT_ARITH_EXPR_TYPE_KEY				"narithex"

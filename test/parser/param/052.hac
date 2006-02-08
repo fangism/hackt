@@ -1,0 +1,6 @@
+// "052.hac"
+// testing basic preal facilities
+// should fail, no implicit rounding or truncating conversion
+
+pint thirteen = 13.13;
+

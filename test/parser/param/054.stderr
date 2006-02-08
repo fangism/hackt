@@ -1,0 +1,3 @@
+ERROR: Cannot initialize a preal with a pint-inst-ref expression!
+Error initializing item 1 of assign-list.  
+HALT: at least one error in the assignment list.  [7:15..19]

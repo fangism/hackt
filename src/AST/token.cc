@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.4.10.2 2006/02/07 02:57:53 fang Exp $
+	$Id: token.cc,v 1.4.10.3 2006/02/08 00:20:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -173,15 +173,9 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int)
  */
 int
 token_int::string_compare(const char* d) const {
-#if 0
-	char n[64];
-	sprintf(n, "%ld", val);
-	return strcmp(n,d);
-#else
 	ostringstream s;
 	s << val;
 	return strcmp(s.str().c_str(), d);
-#endif
 }
 
 ostream&
@@ -221,15 +215,9 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_float)
  */
 int
 token_float::string_compare(const char* d) const {
-#if 0
-	char n[64];
-	sprintf(n, "%f", val);
-	return strcmp(n,d);
-#else
 	ostringstream s;
 	s << val;
 	return strcmp(s.str().c_str(), d);
-#endif
 }
 
 ostream&
@@ -252,12 +240,7 @@ token_float::rightmost(void) const {
  */
 expr::meta_return_type
 token_float::check_meta_expr(const context& c) const {
-#if 0
 	return expr::meta_return_type(new preal_const(val));
-#else
-	cerr << "token_float::check_meta_expr(): not quite done yet!" << endl;
-	return expr::meta_return_type(NULL);
-#endif
 }
 
 //=============================================================================

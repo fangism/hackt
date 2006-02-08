@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	9	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	10	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	40
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16

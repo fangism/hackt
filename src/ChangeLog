@@ -5,6 +5,14 @@
 
 2006-02-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-4-preal-01-03:
+	  Implemented type-checking and construction of preal expressions.  
+		Tons of copy-pasting in Object/expr/operators.cc :S
+	  Changed some persistent type hash code to be less (?) confusing
+		and more intuitive, which resulted in test outputs changing.  
+	  Added some basic test cases.  
+
+
 	* HACKT-00-01-04-main-00-77-4-preal-01-02:
 	  "Enabled" preal expressions by instantiating their template classes
 		all over the place, akin to pint/pbool.  

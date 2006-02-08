@@ -1,0 +1,8 @@
+// "053.hac"
+// copy-modified from "051.hac"
+// should fail, mismatch in parameter type
+
+pint foo;
+foo = 4;
+preal thirteen = foo;
+
