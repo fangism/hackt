@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.h"
-	$Id: SPEC.h,v 1.2 2006/02/04 06:43:15 fang Exp $
+	$Id: SPEC.h,v 1.2.2.1 2006/02/09 00:35:16 fang Exp $
  */
 
 #ifndef	__HAC_AST_SPEC_H__
@@ -30,9 +30,11 @@ public:
 	typedef	count_ptr<const entity::SPEC::directive>	return_type;
 private:
 	const excl_ptr<const token_identifier>		name;
+	const excl_ptr<const expr_list>			params;
 	const excl_ptr<const inst_ref_expr_list>	args;
 public:
-	directive(const token_identifier*, const inst_ref_expr_list*);
+	directive(const token_identifier*, const expr_list*,
+		const inst_ref_expr_list*);
 	~directive();
 
 	ostream&

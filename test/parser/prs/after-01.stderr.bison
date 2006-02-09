@@ -11,10 +11,10 @@ state	value
 #STATE#	list<(def-body-item)>: (instance-decl) ... [5:1..9]
 #STATE#	keyword: prs [6:1..3]
 #STATE#	{ [6:5]
-#STATE#	(id-expr): after [7:1..5]
+#STATE#	(prs-literal) [7:1..5]
 #STATE#	int: 12 [7:7]
 in state #STATE#, possible rules are:
-	single_prs: prs_expr . prs_arrow member_index_expr dir  (#RULE#)
+	single_prs: prs_expr . prs_arrow relative_member_index_expr dir  (#RULE#)
 acceptable tokens are: 
 	IMPLIES (shift)
 	RARROW (shift)

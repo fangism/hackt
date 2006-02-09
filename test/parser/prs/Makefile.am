@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2006/02/04 19:55:59 fang Exp $
+#	$Id: Makefile.am,v 1.13.2.1 2006/02/09 00:35:20 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -7,7 +7,8 @@ HACKT_PARSE_TEST_FAILURES = inv-01 inv-04 inv-05 inv-10 inv-11 \
 	celem-07 celem-08 \
 	echo-02 echo-03 echo-04 \
 	after-01 \
-	spec-01 spec-03
+	spec-01 spec-03 \
+	macro-param-01 macro-param-02 macro-param-03
 
 HACKT_PARSE_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
@@ -81,7 +82,8 @@ BISON_OUTPUTS += inv-01 inv-11 \
 EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac
 
 # TODO: haven't gotten around to these yet...
-EXTRA_DIST += loop-04.hac loop-05.hac cond-01.hac
+EXTRA_DIST += loop-04.hac loop-05.hac cond-01.hac \
+	size-01.hac size-02.hac size-03.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

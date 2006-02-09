@@ -1,0 +1,11 @@
+// "size-01.hac"
+// testing sizes in prs literals
+
+defproc size_test (bool a, b) {
+prs {
+	a<10> => b-
+}
+}
+
+size_test x;
+

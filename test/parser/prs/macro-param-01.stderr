@@ -1,0 +1,2 @@
+Error: unrecognized PRS macro "bogus_macro" at [7:2..12]
+ERROR: at least one error in PRS body.

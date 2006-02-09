@@ -18,4 +18,3 @@ acceptable tokens are:
 	'[' (shift)
 	'~' (shift)
 	ID (shift)
-	SCOPE (shift)

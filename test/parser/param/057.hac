@@ -1,0 +1,9 @@
+// "057.hac"
+// testing mixing of pint and preal expressions
+// should fail (not yet supported)
+
+preal x = 2.0;
+pint y = 3;
+preal z = x+y;
+
+

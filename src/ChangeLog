@@ -3,7 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
-2006-02-06	David Fang		<fangism@users.sourceforge.net>
+2006-02-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-4-preal-01-04:
+	  Minor error-reporting fix in AST/instance.cc.
+	  Added parser support for parameterized PRS-literals, 
+		PRS macros, and spec directives.  
+	  TODO: middle-end support for parameters in literals, 
+		spec directives and macros.  
+
+
+2006-02-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-4-preal-01-03:
 	  Implemented type-checking and construction of preal expressions.  
@@ -12,6 +22,8 @@
 		and more intuitive, which resulted in test outputs changing.  
 	  Added some basic test cases.  
 
+
+2006-02-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-4-preal-01-02:
 	  "Enabled" preal expressions by instantiating their template classes

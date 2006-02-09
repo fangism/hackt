@@ -17,4 +17,3 @@ in state #STATE#, possible rules are:
 acceptable tokens are: 
 	'(' (shift)
 	ID (shift)
-	SCOPE (shift)

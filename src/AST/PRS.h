@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.3 2006/01/22 06:52:52 fang Exp $
+	$Id: PRS.h,v 1.3.12.1 2006/02/09 00:35:16 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -66,6 +66,55 @@ virtual	line_position
 
 virtual	PRS_ITEM_CHECK_PROTO = 0;
 };	// end class body_item
+
+//=============================================================================
+/**
+	Pairs a literal instance reference with an optional list of parameters.
+	May need to extract single unqualified ID for PRS macro.  
+	Need to derive the interface from inst_ref_expr to be able to
+	use as parts of expression trees.  
+ */
+class literal : public inst_ref_expr {
+	/// not const, b/c we may wish to transfer it to macro
+	excl_ptr<inst_ref_expr>				ref;
+	/// not const, b/c we may wish to transfer it to macro
+	excl_ptr<const expr_list>			params;
+public:
+	literal(inst_ref_expr*, const expr_list*);
+	~literal();
+
+	excl_ptr<const token_identifier>
+	extract_identifier(void);
+
+	excl_ptr<const expr_list>
+	extract_parameters(void);
+
+	ostream&
+	what(ostream&) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	/// This wraps a call to ref's check, and also attaches/checks params
+	CHECK_META_REFERENCE_PROTO;
+	/// this is not actually used
+	CHECK_NONMETA_REFERENCE_PROTO;
+
+	// overrides base
+	prs_literal_ptr_type
+	check_prs_literal(const context&) const;
+
+	// no need to override the following, because they all defer to
+	// the above two (pure virtual) methods.  
+	// CHECK_META_EXPR_PROTO
+	// CHECK_NONMETA_EXPR_PROTO
+	// CHECK_GENERIC_PROTO
+	// CHECK_PRS_EXPR_PROTO
+
+};	// end class literal
 
 //=============================================================================
 /**
@@ -136,10 +185,15 @@ public:
 	The programmer can design these to do whatever.  
  */
 class macro : public body_item {
-	const excl_ptr<const token_identifier>		name;
+	excl_ptr<const token_identifier>		name;
+	excl_ptr<const expr_list>			params;
 	const excl_ptr<const inst_ref_expr_list>	args;
 public:
+#if 0
 	macro(const token_identifier*, const inst_ref_expr_list*);
+	macro(excl_ptr<const token_identifier>&, const inst_ref_expr_list*);
+#endif
+	macro(literal*, const inst_ref_expr_list*);
 	~macro();
 
 	ostream&

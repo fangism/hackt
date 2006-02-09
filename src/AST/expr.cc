@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.4.10.1 2006/02/08 00:20:47 fang Exp $
+	$Id: expr.cc,v 1.4.10.2 2006/02/09 00:35:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -254,6 +254,7 @@ inst_ref_expr::check_prs_literal(const context& c) const {
  */
 prs_expr_return_type
 inst_ref_expr::check_prs_expr(context& c) const {
+	// now virtual
 	return check_prs_literal(c);
 }
 

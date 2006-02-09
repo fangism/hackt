@@ -1,0 +1,10 @@
+// "macro-param-01.hac"
+// should fail on unknown macro
+
+defproc bad_macro () {
+bool p, q;
+prs {
+	bogus_macro<1, 2, 3.0>(p, q)
+}
+}
+

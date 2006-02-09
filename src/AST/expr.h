@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.3 2006/01/22 06:52:53 fang Exp $
+	$Id: expr.h,v 1.3.12.1 2006/02/09 00:35:17 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -35,9 +35,8 @@ protected:
 	typedef	inst_ref_expr		parent_type;
 	/**
 		Wraps around a qualified_id.  
-		Is owned and non-transferrable.  
 	 */
-	const excl_ptr<qualified_id>	qid;
+	excl_ptr<qualified_id>	qid;
 public:
 	explicit
 	id_expr(qualified_id* i);
@@ -62,6 +61,9 @@ public:
 	get_id(void) const { return qid; }
 //		{ return never_ptr<const qualified_id>(qid); }
 		// gcc-2.95.3 dies on this.
+
+	excl_ptr<qualified_id>
+	release_qualified_id(void) { return qid; }
 
 /// Tags this id_expr as absolute, to be resolved from the global scope.  
 	qualified_id*

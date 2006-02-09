@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.2 2006/02/04 06:43:15 fang Exp $
+	$Id: SPEC.cc,v 1.2.2.1 2006/02/09 00:35:16 fang Exp $
  */
 
 #include <iostream>
@@ -36,8 +36,9 @@ using entity::process_definition;
 //=============================================================================
 // class directive method definitions
 
-directive::directive(const token_identifier* n, const inst_ref_expr_list* a) :
-		name(n), args(a) {
+directive::directive(const token_identifier* n, const expr_list* l, 
+		const inst_ref_expr_list* a) :
+		name(n), params(l), args(a) {
 	NEVER_NULL(name); NEVER_NULL(args);
 }
 
@@ -59,6 +60,7 @@ directive::rightmost(void) const { return args->rightmost(); }
 /**
 	Mostly ripped off of PRS::macro::check_rule.
 	Consider factoring out into common code for maintainability.  
+	TODO: check expr_list params.
  */
 directive::return_type
 directive::check_spec(context& c) const {
