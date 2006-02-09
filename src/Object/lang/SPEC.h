@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.2 2006/02/04 06:43:18 fang Exp $
+	$Id: SPEC.h,v 1.2.2.1 2006/02/09 03:46:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -27,20 +27,19 @@ using util::memory::count_ptr;
 using util::persistent_object_manager;
 
 //=============================================================================
+typedef	std::vector<bool_literal>			directive_nodes_type;
+
 /**
 	Directive placeholder.  
 	TODO: support parameters later. 
  */
-class directive : public util::persistent {
+class directive : public util::persistent, public directive_nodes_type {
 	typedef	directive				this_type;
 public:
-	typedef	std::vector<literal_ptr_type>		args_type;
-	typedef	args_type::const_reference		const_reference;
 	struct dumper;
 	struct unroller;
 private:
 	string						name;
-	args_type					nodes;
 public:
 	directive();
 
@@ -56,9 +55,6 @@ public:
 
 	SPEC_UNROLL_DIRECTIVE_PROTO;
 
-	void
-	push_back(const_reference);
-
 	ostream&
 	what(ostream&) const;
 
@@ -66,11 +62,12 @@ public:
 	dump(ostream&, const PRS::rule_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
-	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class directive
 
 //=============================================================================
 typedef	std::vector<count_ptr<const directive> >	directives_set_base;
+
 /**
 	A set of spec directives.  
 	Analogous to PRS::rule_set.  

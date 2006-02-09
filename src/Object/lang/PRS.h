@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.11.2.1 2006/02/09 02:54:11 fang Exp $
+	$Id: PRS.h,v 1.11.2.2 2006/02/09 03:46:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -36,7 +36,6 @@ using std::string;
 	Because PRS only ever deal with bools (nodes).  
  */
 typedef	bool_literal_base_ptr_type		literal_base_ptr_type;
-// typedef	count_ptr<simple_bool_meta_instance_reference>	literal_base_ptr_type;
 
 //=============================================================================
 /**
@@ -599,11 +598,7 @@ public:
 };	// end class not_expr
 
 //=============================================================================
-#if 0
-typedef	vector<count_ptr<literal> >		macro_nodes_type;
-#else
 typedef	vector<bool_literal>		macro_nodes_type;
-#endif
 
 /**
 	A user-defined expansion which could result in a rule
@@ -614,10 +609,6 @@ typedef	vector<bool_literal>		macro_nodes_type;
 class macro : public rule, public macro_nodes_type {
 	typedef	macro				this_type;
 public:
-#if 0
-	typedef	vector<count_ptr<literal> >	nodes_type;
-	typedef	nodes_type::const_reference	const_reference;
-#endif
 	/**
 		Consider using a count_ptr instead and manage some sort
 		of replication check, since most of these are
@@ -625,7 +616,6 @@ public:
 	 */
 private:
 	string					name;
-//	nodes_type				nodes;
 public:
 	macro();
 
@@ -633,13 +623,6 @@ public:
 	macro(const string&);
 
 	~macro();
-
-#if 0
-	void
-	push_back(const_reference);
-#else
-#endif
-	using macro_nodes_type::push_back;
 
 	ostream&
 	what(ostream&) const;

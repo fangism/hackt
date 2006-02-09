@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.2.2.1 2006/02/09 00:35:16 fang Exp $
+	$Id: SPEC.cc,v 1.2.2.2 2006/02/09 03:46:40 fang Exp $
  */
 
 #include <iostream>
@@ -73,20 +73,26 @@ directive::check_spec(context& c) const {
 			"\" at " << where(*name) << endl;
 		return return_type(NULL);
 	}
+	const count_ptr<entity::SPEC::directive>
+		ret(new entity::SPEC::directive(*name));
+#if 1 && 0
+if (params) {
+	...
+}
+#endif
+{
 	checked_bools_type temp;
 	args->postorder_check_bool_refs(temp, c);
-	const const_iterator i(temp.begin());
-	const const_iterator e(temp.end());
+	const const_iterator i(temp.begin()), e(temp.end());
 	if (find(i, e, value_type(NULL)) != e) {
 		cerr << "Error checking spec arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);
 	}
 	INVARIANT(temp.size());
-	const count_ptr<entity::SPEC::directive>
-		ret(new entity::SPEC::directive(*name));
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(*ret));
+}
 	return ret;
 }
 

@@ -5,6 +5,10 @@
 
 2006-02-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-4-preal-01-06:
+	  SPEC::directive is now vector<bool_literal> analogous to PRS::macro.
+
+
 	* HACKT-00-01-04-main-00-77-4-preal-01-05:
 	  Reworked entity::PRS::macro to use a vector<bool_literal>
 		instead of containing pointers to PRS::literal, for reasons
