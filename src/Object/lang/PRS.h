@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.11.2.2 2006/02/09 03:46:41 fang Exp $
+	$Id: PRS.h,v 1.11.2.3 2006/02/09 07:06:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -27,7 +27,6 @@ struct pint_tag;
 template <class, size_t> class value_array;
 
 namespace PRS {
-using std::vector;
 using std::string;
 //=============================================================================
 // forward declarations
@@ -142,7 +141,7 @@ public:
 };	// end class attribute
 
 //-----------------------------------------------------------------------------
-typedef	vector<attribute>		attribute_list_type;
+typedef	std::vector<attribute>		attribute_list_type;
 
 //=============================================================================
 class pull_base : public rule {
@@ -598,7 +597,14 @@ public:
 };	// end class not_expr
 
 //=============================================================================
-typedef	vector<bool_literal>		macro_nodes_type;
+typedef	std::vector<bool_literal>			macro_nodes_type;
+#if 1
+/**
+	Did consider deriving straight from dynamic_param_expr_list...
+	Why not contain one?
+ */
+typedef	std::vector<count_ptr<const param_expr> >	macro_params_type;
+#endif
 
 /**
 	A user-defined expansion which could result in a rule
@@ -606,8 +612,10 @@ typedef	vector<bool_literal>		macro_nodes_type;
 	(not to be confused with AST::parser::PRS::macro)
 	TODO: support parameter values.  
  */
-class macro : public rule, public macro_nodes_type {
+class macro : public rule {
 	typedef	macro				this_type;
+	typedef	macro_nodes_type		nodes_type;
+	typedef	macro_params_type		params_type;
 public:
 	/**
 		Consider using a count_ptr instead and manage some sort
@@ -616,6 +624,8 @@ public:
 	 */
 private:
 	string					name;
+	params_type				params;
+	nodes_type				nodes;
 public:
 	macro();
 
@@ -629,6 +639,18 @@ public:
 
 	ostream&
 	dump(ostream&, const rule_dump_context&) const;
+
+	params_type&
+	get_params(void) { return params; }
+
+	const params_type&
+	get_params(void) const { return params; }
+
+	nodes_type&
+	get_nodes(void) { return nodes; }
+
+	const nodes_type&
+	get_nodes(void) const { return nodes; }
 
 	excl_ptr<rule>
 	expand_complement(void);

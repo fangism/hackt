@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-4-preal-01-07:
+	  Cleaned up code for PRS::footprint_macro, 
+		and SPEC::footprint_directive, factoring out common (identical)
+		code into Object/lang/directive_base.{h,cc}.
+	  Added params to footprint_macro and footprint_directive, 
+		now persistently stored.  Binary objects grew slightly, 
+		only a few test cases adjusted.  
+	  TODO: unroll them!
+	  TODO: add check_params functionality to the corresponding
+		macro/spec registries and definitions.  
+	  TODO: add parameters to PRS::literal
+	  TODO: more test cases using parameters!
+
+
 2006-02-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-4-preal-01-06:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.2.2.1 2006/02/09 03:46:41 fang Exp $
+	$Id: SPEC.h,v 1.2.2.2 2006/02/09 07:06:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -35,11 +35,13 @@ typedef	std::vector<bool_literal>			directive_nodes_type;
  */
 class directive : public util::persistent, public directive_nodes_type {
 	typedef	directive				this_type;
+	typedef	directive_nodes_type			nodes_type;
 public:
 	struct dumper;
 	struct unroller;
 private:
 	string						name;
+	nodes_type					nodes;
 public:
 	directive();
 
@@ -47,6 +49,12 @@ public:
 	directive(const string&);
 
 	~directive();
+
+	nodes_type&
+	get_nodes(void) { return nodes; }
+
+	const nodes_type&
+	get_nodes(void) const { return nodes; }
 
 #define	SPEC_UNROLL_DIRECTIVE_PROTO					\
 	good_bool							\

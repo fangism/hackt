@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.2.2.1 2006/02/09 03:46:41 fang Exp $
+	$Id: SPEC.cc,v 1.2.2.2 2006/02/09 07:06:52 fang Exp $
  */
 
 #include <iostream>
@@ -63,10 +63,10 @@ struct directive::dumper {
 //=============================================================================
 // class directive method definitions
 
-directive::directive() : directive_nodes_type(), name() { }
+directive::directive() : name(), nodes() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-directive::directive(const string& n) : directive_nodes_type(), name(n) { }
+directive::directive(const string& n) : name(n), nodes() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 directive::~directive() { }
@@ -85,9 +85,9 @@ ostream&
 directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
 	o << name << '(';
 	typedef directive_nodes_type::const_iterator      _const_iterator;
-	INVARIANT(directive_nodes_type::size());
-	_const_iterator i(directive_nodes_type::begin());
-	const _const_iterator e(directive_nodes_type::end());
+	INVARIANT(nodes.size());
+	_const_iterator i(nodes.begin());
+	const _const_iterator e(nodes.end());
 	i->dump(o, c);
 	for (++i; i!=e; ++i) {
 		i->dump(o << ',', c);
@@ -105,9 +105,9 @@ directive::unroll(const unroll_context& c, const node_pool_type& np,
 	STACKTRACE_VERBOSE;
 	// at least check the instance references first...
 	footprint_directive& new_directive(sfp.push_back_directive(name));
-	transform(directive_nodes_type::begin(), directive_nodes_type::end(),
-		back_inserter(new_directive), bool_literal::unroller(c));
-	const size_t err = new_directive.first_error();
+	transform(nodes.begin(), nodes.end(),
+		back_inserter(new_directive.nodes), bool_literal::unroller(c));
+	const size_t err = new_directive.first_node_error();
 	if (err) {
 		cerr << "Error resolving node at position " << err
 			<< " of spec directive \'" << name << "\'." << endl;
@@ -121,7 +121,7 @@ void
 directive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		util::persistent_traits<this_type>::type_key)) {
-	for_each(directive_nodes_type::begin(), directive_nodes_type::end(),
+	for_each(nodes.begin(), nodes.end(),
 		util::persistent_collector_ref(m)
 	);
 }
@@ -131,16 +131,14 @@ if (!m.register_transient_object(this,
 void
 directive::write_object(const persistent_object_manager& m, ostream& o) const {
 	write_value(o, name);
-	util::write_persistent_sequence(m, o, 
-		AS_A(const directive_nodes_type&, *this));
+	util::write_persistent_sequence(m, o, nodes);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directive::load_object(const persistent_object_manager& m, istream& i) {
 	read_value(i, name);
-	util::read_persistent_sequence_resize(m, i, 
-		AS_A(directive_nodes_type&, *this));
+	util::read_persistent_sequence_resize(m, i, nodes);
 }
 
 //=============================================================================

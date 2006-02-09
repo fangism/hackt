@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.11.2.2 2006/02/09 03:46:40 fang Exp $
+	$Id: PRS.cc,v 1.11.2.3 2006/02/09 07:06:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -26,6 +26,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 // #include "Object/inst/instance_alias_info.h"
 
 #include "Object/expr/bool_expr.h"
+#include "Object/expr/const_param.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -1653,10 +1654,10 @@ literal::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class macro method definitions
 
-macro::macro() : macro_nodes_type(), name() { }
+macro::macro() : name(), nodes() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-macro::macro(const string& n) : macro_nodes_type(), name(n) { }
+macro::macro(const string& n) : name(n), nodes() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 macro::~macro() { }
@@ -1667,13 +1668,28 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(macro)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 macro::dump(ostream& o, const rule_dump_context& c) const {
-	o << name << '(';
-	INVARIANT(macro_nodes_type::size());
-	macro_nodes_type::const_iterator i(macro_nodes_type::begin());
-	const macro_nodes_type::const_iterator e(macro_nodes_type::end());
-	i->dump(o, c);
-	for (++i; i!=e; ++i) {
-		i->dump(o << ',', c);
+	o << name;
+	if (!params.empty()) {
+		const entity::expr_dump_context edc(c);
+		o << '<';
+		params_type::const_iterator i(params.begin());
+		const params_type::const_iterator e(params.end());
+		// NEVER_NULL(*i), else would've failed earlier.
+		(*i)->dump(o, edc);
+		for (++i; i!=e; ++i) {
+			(*i)->dump(o << ',', edc);
+		}
+		o << '>';
+	}
+	o << '(';
+	{
+		INVARIANT(nodes.size());
+		nodes_type::const_iterator i(nodes.begin());
+		const nodes_type::const_iterator e(nodes.end());
+		i->dump(o, c);
+		for (++i; i!=e; ++i) {
+			i->dump(o << ',', c);
+		}
 	}
 	return o << ')';
 }
@@ -1702,9 +1718,20 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 	STACKTRACE_VERBOSE;
 	// at least check the instance references first...
 	PRS::footprint::macro& new_macro_call(pfp.push_back_macro(name));
-	transform(macro_nodes_type::begin(), macro_nodes_type::end(),
-		back_inserter(new_macro_call), bool_literal::unroller(c));
-	const size_t err = new_macro_call.first_error();
+#if 0
+	transform(params.begin(), params.end(),
+		back_inserter(new_macro_call.params), param_expr::unroller(c));
+	const size_t err = new_macro_call.first_param_error();
+	if (err) {
+		cerr << "Error resolving expression at position " << err
+			<< " of macro call \'" << name << "\'." << endl;
+		// dump the literal?
+		return good_bool(false);
+	}
+#endif
+	transform(nodes.begin(), nodes.end(),
+		back_inserter(new_macro_call.nodes), bool_literal::unroller(c));
+	const size_t err = new_macro_call.first_node_error();
 	if (err) {
 		cerr << "Error resolving literal node at position " << err
 			<< " of macro call \'" << name << "\'." << endl;
@@ -1723,14 +1750,14 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 void
 macro::check(void) const {
 	assert(name.length());
-	assert(macro_nodes_type::size());
+	assert(nodes.size());
 	// probe existence of macro
 	const macro_definition_entry m(macro_registry[name]);
 	if (!m) {
 		cerr << "Error: unknown PRS macro \'" << name << "\'." << endl;
 		THROW_EXIT;
 	}
-	if (!m.check_num_args(macro_nodes_type::size()).good) {
+	if (!m.check_num_args(nodes.size()).good) {
 		// make sure passed in correct number of arguments
 		// custom-defined, may be variable
 		// already have error message
@@ -1743,7 +1770,7 @@ void
 macro::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	for_each(macro_nodes_type::begin(), macro_nodes_type::end(),
+	for_each(nodes.begin(), nodes.end(),
 		util::persistent_collector_ref(m)
 	);
 }
@@ -1753,16 +1780,14 @@ if (!m.register_transient_object(this,
 void
 macro::write_object(const persistent_object_manager& m, ostream& o) const {
 	write_value(o, name);
-	util::write_persistent_sequence(m, o,
-		AS_A(const macro_nodes_type&, *this));
+	util::write_persistent_sequence(m, o, nodes);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 macro::load_object(const persistent_object_manager& m, istream& i) {
 	read_value(i, name);
-	util::read_persistent_sequence_resize(m, i,
-		AS_A(macro_nodes_type&, *this));
+	util::read_persistent_sequence_resize(m, i, nodes);
 }
 
 //=============================================================================

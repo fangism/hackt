@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.5.2.3 2006/02/09 03:46:40 fang Exp $
+	$Id: PRS.cc,v 1.5.2.4 2006/02/09 07:06:50 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -588,7 +588,7 @@ if (params) {
 	}
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
-	copy(i, e, back_inserter(AS_A(entity::PRS::macro_nodes_type&, *ret)));
+	copy(i, e, back_inserter(ret->get_nodes()));
 }
 	return ret;
 }

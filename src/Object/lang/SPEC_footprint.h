@@ -1,73 +1,35 @@
 /**
 	\file "Object/lang/SPEC_footprint.h"
-	$Id: SPEC_footprint.h,v 1.2 2006/02/04 06:43:19 fang Exp $
+	$Id: SPEC_footprint.h,v 1.2.2.1 2006/02/09 07:06:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FOOTPRINT_H__
 #define	__HAC_OBJECT_LANG_SPEC_FOOTPRINT_H__
 
-#include <iosfwd>
-#include <string>
-#include <vector>
+#include "Object/lang/directive_base.h"
 #include "Object/lang/SPEC_fwd.h"
 #include "Object/lang/cflat_visitee.h"
-#include "util/size_t.h"
 #include "util/persistent_fwd.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
 class footprint;
 namespace SPEC {
-using std::ostream;
-using std::istream;
-using std::string;
-using util::persistent_object_manager;
 
 //=============================================================================
 /**
 	A create-time resolved spec directive.  
 	Modeled after PRS::footprint_macro.
  */
-class footprint_directive : public PRS::cflat_visitee {
+class footprint_directive : public PRS::cflat_visitee, public directive_base {
 public:
-	/**
-		The arguments of the spec directive are represented as
-		a sequence of node IDs, corresponding to the IDs 
-		locally assigned during the create-phase of the 
-		complete type.  
-	 */
-	typedef	std::vector<size_t>		args_type;
-	typedef	args_type::const_reference	const_reference;
-	typedef	args_type::const_iterator	const_iterator;
-public:
-	/// the name of the spec directive.
-	string					key;
-	args_type				args;
-public:
-	footprint_directive() : key(), args() { }
+	footprint_directive() : directive_base() { }
 
 	explicit
-	footprint_directive(const string& k) : key(k), args() { }
+	footprint_directive(const string& k) : directive_base(k) { }
 
-	~footprint_directive() { }
-
-	size_t
-	first_error(void) const;
-
-	const_iterator
-	begin(void) const { return args.begin(); }
-
-	const_iterator
-	end(void) const { return args.end(); }
-
-	void
-	push_back(const_reference n) { args.push_back(n); }
-
-	void
-	write_object(ostream&) const;
-
-	void
-	load_object(istream&);
+	// everything else inherited from directive_base
 
 	void
 	accept(PRS::cflat_visitor&) const;

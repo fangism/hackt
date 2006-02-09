@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.9 2006/02/04 06:43:17 fang Exp $
+	$Id: PRS_footprint.cc,v 1.9.2.1 2006/02/09 07:06:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -202,9 +202,9 @@ if (r.attributes.size()) {
 ostream&
 footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
 	o << m.name << '(';
-	typedef	macro::const_iterator const_iterator;
-	const_iterator i(m.begin());
-	const const_iterator e(m.end());
+	typedef	macro::nodes_type::const_iterator const_iterator;
+	const_iterator i(m.nodes.begin());
+	const const_iterator e(m.nodes.end());
 	INVARIANT(i!=e);
 	np[*i].get_back_ref()->dump_hierarchical_name(o,
 		dump_flags::no_definition_owner);
@@ -287,8 +287,15 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
+}{
+	typedef	macro_pool_type::const_iterator	const_macro_iterator;
+	const_macro_iterator i(macro_pool.begin());
+	const const_macro_iterator e(macro_pool.end());
+	for ( ; i!=e; ++i) {
+		i->collect_transient_info_base(m);
+	}
 }
-	// the expr_pool and macro_pool don't need persistence management yet
+	// the expr_pool doesn't need persistence management yet
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -325,7 +332,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	const_macro_iterator i(macro_pool.begin());
 	const const_macro_iterator e(macro_pool.end());
 	for ( ; i!=e; i++) {
-		i->write_object_base(o);
+		i->write_object_base(m, o);
 	}
 }
 }
@@ -362,7 +369,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	size_t j = 0;
 	for ( ; j<s; j++) {
 		macro_pool.push_back(macro());
-		macro_pool.back().load_object_base(i);
+		macro_pool.back().load_object_base(m, i);
 	}
 }
 }
@@ -470,40 +477,6 @@ footprint_rule::accept(cflat_visitor& v) const {
 //=============================================================================
 // struct footprint_macro method definitions
 
-/**
-	\return 1-indexed offset of earliest error, or 0 if none found.  
- */
-size_t
-footprint_macro::first_error(void) const {
-	const size_t s = node_args.size();
-	if (s) {
-		size_t i = 0;
-		for ( ; i<s; i++) {
-			if (!node_args[i]) {
-				cerr << "Error resolving literal " << i <<
-					"." << endl;
-				return i+1;
-			}
-		}
-	}
-	return 0;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_macro::write_object_base(ostream& o) const {
-	write_value(o, name);
-	util::write_sequence(o, node_args);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_macro::load_object_base(istream& i) {
-	read_value(i, name);
-	util::read_sequence_resize(i, node_args);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_macro::accept(cflat_visitor& v) const {
 	v.visit(*this);

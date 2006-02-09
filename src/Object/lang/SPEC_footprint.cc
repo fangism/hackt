@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.2 2006/02/04 06:43:19 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.2.2.1 2006/02/09 07:06:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -23,6 +23,7 @@ namespace util {
 using HAC::entity::SPEC::footprint_directive;
 //=============================================================================
 // value_writer and value_reader specializations for footprint_directive
+#if 0
 template <>
 struct value_writer<footprint_directive> {
 	ostream& os;
@@ -30,7 +31,7 @@ struct value_writer<footprint_directive> {
 
 	void
 	operator () (const footprint_directive& d) const {
-		d.write_object(os);
+		d.write_object_base(os);
 	}
 };	// end struct value_writer
 
@@ -42,10 +43,11 @@ struct value_reader<footprint_directive> {
 
 	void
 	operator () (footprint_directive& d) const {
-		d.load_object(is);
+		d.load_object_base(is);
 	}
 
 };	// end struct value_reader
+#endif
 
 //=============================================================================
 }	// end namespace util
@@ -54,51 +56,16 @@ namespace HAC {
 namespace entity {
 namespace SPEC {
 #include "util/using_ostream.h"
+#if 0
 using util::write_value;
 using util::read_value;
+#endif
 using util::auto_indent;
 using PRS::cflat_visitor;
 
 //=============================================================================
 // class SPEC::footprint_directive method definitions
 
-/**
-	\return 1-indexed offset of first error if found, else 0.  
- */
-size_t
-footprint_directive::first_error(void) const {
-	// TODO: use std::find! and std::distance.
-	const size_t s = args.size();
-	if (s) {
-		size_t i = 0;
-		for ( ; i<s; i++) {
-			if (!args[i]) {
-				cerr << "Error resolving literal " << i <<
-					"." << endl;
-				return i+1;
-			}
-		}
-	}
-	return 0;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_directive::write_object(ostream& o) const {
-	INVARIANT(key.length());
-	write_value(o, key);
-	util::write_sequence(o, args);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_directive::load_object(istream& i) {
-	read_value(i, key);
-	INVARIANT(key.length());
-	util::read_sequence_resize(i, args);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_directive::accept(cflat_visitor& v) const {
 	v.visit(*this);
@@ -116,10 +83,10 @@ footprint::~footprint() { }
 ostream&
 footprint::dump_directive(const footprint_directive& d, ostream& o, 
 		const node_pool_type& np) {
-	o << d.key << '(';
-	typedef	footprint_directive::const_iterator	const_iterator;
-	const_iterator i(d.begin());
-	const const_iterator e(d.end());
+	o << d.name << '(';
+	typedef	footprint_directive::nodes_type::const_iterator	const_iterator;
+	const_iterator i(d.nodes.begin());
+	const const_iterator e(d.nodes.end());
 	INVARIANT(i!=e);
 	np[*i].get_back_ref()->dump_hierarchical_name(o, 
 		dump_flags::no_definition_owner);
@@ -166,6 +133,7 @@ footprint::push_back_directive(const string& k) {
  */
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
+	for_each(begin(), end(), util::persistent_collector_ref(m));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -176,9 +144,10 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 		are specialized for footprint_directive.
  */
 void
-footprint::write_object_base(const persistent_object_manager&,
+footprint::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
-	util::write_sequence(o, AS_A(const footprint_base_type&, *this));
+	util::write_persistent_sequence(m, o,
+		AS_A(const footprint_base_type&, *this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -189,9 +158,10 @@ footprint::write_object_base(const persistent_object_manager&,
 		are specialized for footprint_directive.
  */
 void
-footprint::load_object_base(const persistent_object_manager&,
+footprint::load_object_base(const persistent_object_manager& m,
 		istream& i) {
-	util::read_sequence_resize(i, AS_A(footprint_base_type&, *this));
+	util::read_persistent_sequence_resize(m, i,
+		AS_A(footprint_base_type&, *this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

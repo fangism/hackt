@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.2.2.2 2006/02/09 03:46:40 fang Exp $
+	$Id: SPEC.cc,v 1.2.2.3 2006/02/09 07:06:50 fang Exp $
  */
 
 #include <iostream>
@@ -91,7 +91,7 @@ if (params) {
 	}
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
-	copy(i, e, back_inserter(*ret));
+	copy(i, e, back_inserter(ret->get_nodes()));
 }
 	return ret;
 }

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.5 2006/02/04 06:43:21 fang Exp $
+	$Id: cflat_printer.cc,v 1.5.2.1 2006/02/09 07:06:52 fang Exp $
  */
 
 #include <iostream>
@@ -168,15 +168,15 @@ void
 cflat_prs_printer::visit(const footprint_macro& m) {
 	const macro_definition_entry& d(macro_registry[m.name]);
 	INVARIANT(d);		// was already checked during unroll
-	d.main(*this, m.node_args);
+	d.main(*this, m.nodes);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
-	const SPEC::spec_definition_entry& s(SPEC::spec_registry[d.key]);
+	const SPEC::spec_definition_entry& s(SPEC::spec_registry[d.name]);
 	INVARIANT(s);		// was already checked during unroll
-	s.main(*this, d.args);
+	s.main(*this, d.nodes);
 }
 
 //=============================================================================
