@@ -5,6 +5,14 @@
 
 2006-02-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-4-preal-01-05:
+	  Reworked entity::PRS::macro to use a vector<bool_literal>
+		instead of containing pointers to PRS::literal, for reasons
+		of efficiency and simplicity.
+		Should to the same with spec directives.  
+	  Then add parameters to the IR structures for unrolling.  
+
+
 	* HACKT-00-01-04-main-00-77-4-preal-01-04:
 	  Minor error-reporting fix in AST/instance.cc.
 	  Added parser support for parameterized PRS-literals, 

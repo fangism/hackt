@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.5.2.1 2006/02/09 00:35:16 fang Exp $
+	$Id: PRS.cc,v 1.5.2.2 2006/02/09 02:54:10 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -35,6 +35,8 @@
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/ref/meta_instance_reference_base.h"
+#include "Object/ref/meta_instance_reference_subtypes.h" // for conversion
+#include "Object/ref/simple_meta_instance_reference.h"	// for conversion
 
 #include "common/TODO.h"
 
@@ -88,6 +90,8 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(literal)
 /**
 	Destructively releases and exposes underlying identifier
 	if it is a simple id_expr, else returns NULL (no error message).
+	\return token_identifier if instance_reference is a 
+		single unqualified ID.  
  */
 excl_ptr<const token_identifier>
 literal::extract_identifier(void) {
@@ -101,7 +105,6 @@ literal::extract_identifier(void) {
 		return return_type(NULL);
 	if (qid->size() > 1)
 		return return_type(NULL);
-	// count_ptr<const token_identifier>& id(qid->front());
 	qualified_id_base::reference id(qid->front());
 	return_type ret(id.exclusive_release());	// transfer ownership
 	NEVER_NULL(ret);
@@ -134,7 +137,9 @@ literal::rightmost(void) const {
 prs_literal_ptr_type
 literal::check_prs_literal(const context& c) const {
 	const prs_literal_ptr_type ret(ref->check_prs_literal(c));
+if (ret) {
 	// TODO: check and attach parameters.  
+}
 	return ret;
 }
 
@@ -537,8 +542,6 @@ body_item::return_type
 macro::check_rule(context& c) const {
 	typedef	inst_ref_expr_list::checked_bool_refs_type
 							checked_bools_type;
-	typedef checked_bools_type::const_iterator	const_iterator;
-	typedef checked_bools_type::value_type		value_type;
 	if (!name) {
 		cerr << "Error parsing macro name before " << where(*args)
 			<< endl;
@@ -551,23 +554,43 @@ macro::check_rule(context& c) const {
 		return return_type(NULL);
 	}
 
+	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
+#if 1 && 0
+if (params) {
 	// check params!
-
+	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
+	typedef checked_exprs_type::const_iterator	const_iterator;
+	typedef checked_exprs_type::value_type		value_type;
+	checked_exprs_type temp;
+	params->postrder_check_meta_exprs(temp, c);
+	const const_iterator i(temp.begin()), e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking macro parameters in " << where(*args)
+			<< endl;
+		return return_type(NULL);
+	}
+	INVARIANT(temp.size());
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(AS_A(entity::PRS::macro_params_type&, *ret)));
+}
+#endif
+{
+	typedef checked_bools_type::const_iterator	const_iterator;
+	typedef checked_bools_type::value_type		value_type;
 	checked_bools_type temp;
 	INVARIANT(args->size());
 	args->postorder_check_bool_refs(temp, c);
-	const const_iterator i(temp.begin());
-	const const_iterator e(temp.end());
+	const const_iterator i(temp.begin()), e(temp.end());
 	if (find(i, e, value_type(NULL)) != e) {
 		cerr << "Error checking macro arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);
 	}
 	INVARIANT(temp.size());
-
-	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
 	NEVER_NULL(ret);
-	copy(i, e, back_inserter(*ret));
+//	copy(i, e, back_inserter(*ret));
+	copy(i, e, back_inserter(AS_A(entity::PRS::macro_nodes_type&, *ret)));
+}
 	return ret;
 }
 
@@ -606,8 +629,7 @@ attribute::check(context& c) const {
 	}
 	vals_type vals;
 	values->postorder_check_meta_exprs(vals, c);
-	const const_iterator i(vals.begin());
-	const const_iterator e(vals.end());
+	const const_iterator i(vals.begin()), e(vals.end());
 	if (find(i, e, val_type(NULL)) != e) {
 		// one of the param expressions failed checking
 		// blank will signal error

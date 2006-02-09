@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.11 2006/02/04 06:43:17 fang Exp $
+	$Id: PRS.h,v 1.11.2.1 2006/02/09 02:54:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -47,6 +47,7 @@ class literal : public prs_expr, public bool_literal {
 	typedef	bool_literal			base_type;
 public:
 	struct	unroller;
+
 private:
 	enum { print_stamp = PRS_LITERAL_TYPE_ENUM };
 public:
@@ -89,11 +90,6 @@ public:
 
 	// fanout.. not until actually instantiated, unrolled, created...
 	PERSISTENT_METHODS_DECLARATIONS
-
-#if 0
-	void
-	collect_transient_info_base(persistent_object_manager& m) const;
-#endif
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class literal
@@ -144,12 +140,6 @@ public:
 	void
 	load_object(const persistent_object_manager&, istream&);
 
-#if 0
-	// functors
-	struct collector;
-	struct writer;
-	struct loader;
-#endif
 };	// end class attribute
 
 //-----------------------------------------------------------------------------
@@ -609,17 +599,25 @@ public:
 };	// end class not_expr
 
 //=============================================================================
+#if 0
+typedef	vector<count_ptr<literal> >		macro_nodes_type;
+#else
+typedef	vector<bool_literal>		macro_nodes_type;
+#endif
+
 /**
 	A user-defined expansion which could result in a rule
 	or some other construct, annotation, attribute, ...
 	(not to be confused with AST::parser::PRS::macro)
 	TODO: support parameter values.  
  */
-class macro : public rule {
+class macro : public rule, public macro_nodes_type {
 	typedef	macro				this_type;
 public:
+#if 0
 	typedef	vector<count_ptr<literal> >	nodes_type;
 	typedef	nodes_type::const_reference	const_reference;
+#endif
 	/**
 		Consider using a count_ptr instead and manage some sort
 		of replication check, since most of these are
@@ -627,7 +625,7 @@ public:
 	 */
 private:
 	string					name;
-	nodes_type				nodes;
+//	nodes_type				nodes;
 public:
 	macro();
 
@@ -636,8 +634,12 @@ public:
 
 	~macro();
 
+#if 0
 	void
 	push_back(const_reference);
+#else
+#endif
+	using macro_nodes_type::push_back;
 
 	ostream&
 	what(ostream&) const;
