@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.5.2.4 2006/02/09 07:06:50 fang Exp $
+	$Id: PRS.cc,v 1.5.2.5 2006/02/09 23:32:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -137,8 +137,21 @@ literal::rightmost(void) const {
 prs_literal_ptr_type
 literal::check_prs_literal(const context& c) const {
 	const prs_literal_ptr_type ret(ref->check_prs_literal(c));
-if (ret) {
-	// TODO: check and attach parameters.  
+if (ret && params) {
+	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
+	typedef checked_exprs_type::const_iterator	const_iterator;
+	typedef checked_exprs_type::value_type		value_type;
+	checked_exprs_type temp;
+	params->postorder_check_meta_exprs(temp, c);
+	const const_iterator i(temp.begin()), e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking literal parameters in "
+			<< where(*params) << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+	INVARIANT(temp.size());
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(ret->get_params()));
 }
 	return ret;
 }
@@ -555,14 +568,12 @@ macro::check_rule(context& c) const {
 	}
 
 	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
-#if 1 && 0
 if (params) {
-	// check params!
 	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
 	typedef checked_exprs_type::const_iterator	const_iterator;
 	typedef checked_exprs_type::value_type		value_type;
 	checked_exprs_type temp;
-	params->postrder_check_meta_exprs(temp, c);
+	params->postorder_check_meta_exprs(temp, c);
 	const const_iterator i(temp.begin()), e(temp.end());
 	if (find(i, e, value_type(NULL)) != e) {
 		cerr << "Error checking macro parameters in " << where(*args)
@@ -571,9 +582,8 @@ if (params) {
 	}
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
-	copy(i, e, back_inserter(AS_A(entity::PRS::macro_params_type&, *ret)));
+	copy(i, e, back_inserter(ret->get_params()));
 }
-#endif
 {
 	typedef checked_bools_type::const_iterator	const_iterator;
 	typedef checked_bools_type::value_type		value_type;

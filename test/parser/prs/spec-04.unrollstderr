@@ -31,11 +31,11 @@ Persistent Object Manager text dump:
 	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
+	30	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	41
 	31	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	33
+	34	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
 	35	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30

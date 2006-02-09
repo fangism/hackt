@@ -5,6 +5,17 @@
 
 2006-02-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-4-preal-01-08:
+	  Factored out common code between PRS::macro and SPEC::directive
+		into entity::directive_source, in Object/lang/directive_source.
+		Common forward declarations now in Object/lang/SPEC_fwd.h
+	  Added type-check generation of checked macro/spec parameters.  
+	  Added params array to PRS::literal, but not used yet.  
+	  TODO: resolved parameter support in PRS::footprint_expr_node.
+		Consider using a union bewteen node_array and params.
+	  TODO: update macro/spec check interface.
+
+
 	* HACKT-00-01-04-main-00-77-4-preal-01-07:
 	  Cleaned up code for PRS::footprint_macro, 
 		and SPEC::footprint_directive, factoring out common (identical)

@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.2.2.3 2006/02/09 07:06:50 fang Exp $
+	$Id: SPEC.cc,v 1.2.2.4 2006/02/09 23:32:45 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/expr/param_expr.h"
 #include "Object/lang/SPEC.h"
 #include "Object/lang/SPEC_registry.h"
 #include "Object/lang/PRS.h"	// for PRS::literal
@@ -75,11 +76,22 @@ directive::check_spec(context& c) const {
 	}
 	const count_ptr<entity::SPEC::directive>
 		ret(new entity::SPEC::directive(*name));
-#if 1 && 0
 if (params) {
-	...
+	typedef	expr_list::checked_meta_exprs_type	checked_exprs_type;
+	typedef	checked_exprs_type::const_iterator	const_iterator;
+	typedef	checked_exprs_type::value_type		value_type;
+	checked_exprs_type temp;
+	params->postorder_check_meta_exprs(temp, c);
+	const const_iterator i(temp.begin()), e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking spec parameters in "
+			<< where(*params) << endl;
+		return return_type(NULL);
+	}
+	INVARIANT(temp.size());
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(ret->get_params()));
 }
-#endif
 {
 	checked_bools_type temp;
 	args->postorder_check_bool_refs(temp, c);

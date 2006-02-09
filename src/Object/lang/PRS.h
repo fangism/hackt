@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.11.2.3 2006/02/09 07:06:51 fang Exp $
+	$Id: PRS.h,v 1.11.2.4 2006/02/09 23:32:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -11,6 +11,7 @@
 #include "Object/lang/PRS_base.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/bool_literal.h"
+#include "Object/lang/directive_source.h"
 #include "Object/unroll/meta_loop_base.h"
 #include <string>
 #include <vector>
@@ -35,6 +36,7 @@ using std::string;
 	Because PRS only ever deal with bools (nodes).  
  */
 typedef	bool_literal_base_ptr_type		literal_base_ptr_type;
+typedef	directive_source_params_type		literal_params_type;
 
 //=============================================================================
 /**
@@ -45,9 +47,10 @@ class literal : public prs_expr, public bool_literal {
 	typedef	bool_literal			base_type;
 public:
 	struct	unroller;
-
+	typedef	literal_params_type		params_type;
 private:
 	enum { print_stamp = PRS_LITERAL_TYPE_ENUM };
+	params_type				params;
 public:
 	literal();
 
@@ -67,8 +70,11 @@ public:
 	ostream&
 	dump(ostream& o) const { return dump(o, expr_dump_context()); }
 
-	const literal_base_ptr_type&
-	get_bool_var(void) const { return var; }
+	params_type&
+	get_params(void) { return params; }
+
+	const params_type&
+	get_params(void) const { return params; }
 
 	void
 	check(void) const;
@@ -597,35 +603,14 @@ public:
 };	// end class not_expr
 
 //=============================================================================
-typedef	std::vector<bool_literal>			macro_nodes_type;
-#if 1
-/**
-	Did consider deriving straight from dynamic_param_expr_list...
-	Why not contain one?
- */
-typedef	std::vector<count_ptr<const param_expr> >	macro_params_type;
-#endif
-
 /**
 	A user-defined expansion which could result in a rule
 	or some other construct, annotation, attribute, ...
 	(not to be confused with AST::parser::PRS::macro)
 	TODO: support parameter values.  
  */
-class macro : public rule {
+class macro : public rule, public directive_source {
 	typedef	macro				this_type;
-	typedef	macro_nodes_type		nodes_type;
-	typedef	macro_params_type		params_type;
-public:
-	/**
-		Consider using a count_ptr instead and manage some sort
-		of replication check, since most of these are
-		expected to be some defined identifier.  
-	 */
-private:
-	string					name;
-	params_type				params;
-	nodes_type				nodes;
 public:
 	macro();
 
@@ -639,18 +624,6 @@ public:
 
 	ostream&
 	dump(ostream&, const rule_dump_context&) const;
-
-	params_type&
-	get_params(void) { return params; }
-
-	const params_type&
-	get_params(void) const { return params; }
-
-	nodes_type&
-	get_nodes(void) { return nodes; }
-
-	const nodes_type&
-	get_nodes(void) const { return nodes; }
 
 	excl_ptr<rule>
 	expand_complement(void);

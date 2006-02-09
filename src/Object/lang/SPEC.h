@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.2.2.2 2006/02/09 07:06:52 fang Exp $
+	$Id: SPEC.h,v 1.2.2.3 2006/02/09 23:32:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -9,7 +9,7 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include "Object/lang/SPEC_fwd.h"
+#include "Object/lang/directive_source.h"
 #include "Object/object_fwd.h"
 #include "Object/lang/bool_literal.h"
 #include "util/memory/count_ptr.h"
@@ -19,29 +19,16 @@
 namespace HAC {
 namespace entity {
 namespace SPEC {
-using std::ostream;
-using std::istream;
-using std::string;
-using util::good_bool;
-using util::memory::count_ptr;
-using util::persistent_object_manager;
 
 //=============================================================================
-typedef	std::vector<bool_literal>			directive_nodes_type;
-
 /**
 	Directive placeholder.  
-	TODO: support parameters later. 
  */
-class directive : public util::persistent, public directive_nodes_type {
+class directive : public util::persistent, public directive_source {
 	typedef	directive				this_type;
-	typedef	directive_nodes_type			nodes_type;
 public:
 	struct dumper;
 	struct unroller;
-private:
-	string						name;
-	nodes_type					nodes;
 public:
 	directive();
 
@@ -50,12 +37,9 @@ public:
 
 	~directive();
 
-	nodes_type&
-	get_nodes(void) { return nodes; }
-
-	const nodes_type&
-	get_nodes(void) const { return nodes; }
-
+/**
+	Defined as a macro just in case we need to re-use it...
+ */
 #define	SPEC_UNROLL_DIRECTIVE_PROTO					\
 	good_bool							\
 	unroll(const unroll_context&, const node_pool_type&, 		\

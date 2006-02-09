@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.9 2006/01/30 07:42:01 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.9.6.1 2006/02/09 23:32:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -904,7 +904,6 @@ if (cpl) {
 /**
 	\return constant-resolved parameter list, 
 		else NULL if resolution failed.
-	TODO: add context argument for resolution.  
  */
 param_expr_list::unroll_resolve_return_type
 dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
