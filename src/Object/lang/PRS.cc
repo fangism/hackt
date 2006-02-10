@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.11.2.4 2006/02/09 23:32:46 fang Exp $
+	$Id: PRS.cc,v 1.11.2.5 2006/02/10 08:09:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -346,14 +346,14 @@ pull_base::pull_base() : rule(), guard(), output(), cmpl(false),
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::pull_base(const prs_expr_ptr_type& g, 
-		const literal& o, const bool c) :
+		const bool_literal& o, const bool c) :
 		rule(), guard(g), output(o), cmpl(c), attributes() {
 	NEVER_NULL(guard);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::pull_base(const prs_expr_ptr_type& g, 
-		const literal& o, const attribute_list_type& l) :
+		const bool_literal& o, const attribute_list_type& l) :
 		rule(), guard(g), output(o), cmpl(false), attributes(l) {
 	NEVER_NULL(guard);
 }
@@ -389,7 +389,7 @@ pull_base::check(void) const {
 	STACKTRACE("pull_base::check()");
 	// check attributes?
 	assert(guard);
-	output.check();
+//	output.check();
 	guard->check();
 }
 
@@ -469,7 +469,7 @@ void
 pull_base::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	m.write_pointer(o, guard);
-	output.write_object(m, o);
+	output.write_object_base(m, o);
 	write_value(o, cmpl);
 	util::write_persistent_sequence(m, o, attributes);
 }
@@ -478,7 +478,7 @@ pull_base::write_object_base(const persistent_object_manager& m,
 void
 pull_base::load_object_base(const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, guard);
-	output.load_object(m, i);
+	output.load_object_base(m, i);
 	read_value(i, cmpl);
 	util::read_persistent_sequence_resize(m, i, attributes);
 }
@@ -489,12 +489,13 @@ pull_base::load_object_base(const persistent_object_manager& m, istream& i) {
 pull_up::pull_up() : pull_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(const prs_expr_ptr_type& g, const literal& o, const bool c) :
+pull_up::pull_up(const prs_expr_ptr_type& g, 
+		const bool_literal& o, const bool c) :
 		pull_base(g, o, c) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(const prs_expr_ptr_type& g, const literal& o,
+pull_up::pull_up(const prs_expr_ptr_type& g, const bool_literal& o,
 		const attribute_list_type& l) :
 		pull_base(g, o, l) {
 }
@@ -572,12 +573,13 @@ pull_up::load_object(const persistent_object_manager& m, istream& i) {
 pull_dn::pull_dn() : pull_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(const prs_expr_ptr_type& g, const literal& o, const bool c) :
+pull_dn::pull_dn(const prs_expr_ptr_type& g, 
+		const bool_literal& o, const bool c) :
 		pull_base(g, o, c) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(const prs_expr_ptr_type& g, const literal& o,
+pull_dn::pull_dn(const prs_expr_ptr_type& g, const bool_literal& o,
 		const attribute_list_type& l) :
 		pull_base(g, o, l) {
 }
@@ -939,8 +941,8 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(type_enum, expr_indices.size()));
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error
-	const size_t err = new_expr.first_error();
+	// find index of first error (1-indexed)
+	const size_t err = new_expr.first_node_error();
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
@@ -1055,8 +1057,8 @@ and_expr::unroll(const unroll_context& c, const node_pool_type& np,
 		new_expr(pfp.push_back_expr(
 			PRS_AND_EXPR_TYPE_ENUM, expr_indices.size()));
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error
-	const size_t err = new_expr.first_error();
+	// find index of first error (1-indexed)
+	const size_t err = new_expr.first_node_error();
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
@@ -1278,8 +1280,8 @@ or_expr::unroll(const unroll_context& c, const node_pool_type& np,
 		new_expr(pfp.push_back_expr(
 			PRS_OR_EXPR_TYPE_ENUM, expr_indices.size()));
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error
-	const size_t err = new_expr.first_error();
+	// find index of first error (1-indexed)
+	const size_t err = new_expr.first_node_error();
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
@@ -1553,9 +1555,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
 ostream&
 literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
-	// NEVER_NULL(c.parent_scope);
-	// return var->dump(o, entity::expr_dump_context(c));
-	return base_type::dump(o, c);
+	base_type::dump(o, c);
+	directive_source::dump_params(params, o, c);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1574,7 +1576,7 @@ prs_expr_ptr_type
 literal::negate(void) const {
 	STACKTRACE("literal::negate()");
 	return prs_expr_ptr_type(new not_expr(
-		prs_expr_ptr_type(new literal(var))));
+		prs_expr_ptr_type(new literal(*this))));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1607,10 +1609,10 @@ literal::unroll_node(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: factor out common code.
+	TODO: check parameters!
 	Has code in common with pull_up/pull_dn...
 	\return the index of the new expression represented by this
-		literal reference.  
+		literal reference, else 0 if error occurs.  
  */
 size_t
 literal::unroll(const unroll_context& c, const node_pool_type& np, 
@@ -1623,6 +1625,14 @@ literal::unroll(const unroll_context& c, const node_pool_type& np,
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
 	new_expr[1] = node_index;
+	const size_t perr = directive_source::unroll_params(params, c,
+			new_expr.get_params());
+	if (perr) {
+		cerr << "Error resolving rule literal parameter " << perr
+			<< " in rule." << endl;
+		return 0;
+	}
+	INVARIANT(new_expr.get_params().size() <= 2);
 	return pfp.current_expr_index();
 }
 
@@ -1635,6 +1645,7 @@ literal::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
+	m.collect_pointer_list(params);
 }
 }
 
@@ -1643,6 +1654,7 @@ void
 literal::write_object(const persistent_object_manager& m, ostream& o) const {
 //	m.write_pointer(o, var);
 	write_object_base(m, o);
+	m.write_pointer_list(o, params);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1650,6 +1662,7 @@ void
 literal::load_object(const persistent_object_manager& m, istream& i) {
 //	m.read_pointer(i, var);
 	load_object_base(m, i);
+	m.read_pointer_list(i, params);
 }
 
 //=============================================================================
@@ -1720,6 +1733,7 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 	Make sure entry exists for this macro.  
 	NOTE: no use in checking now before unroll, too limited.  
 	TODO: better error handling than throw().
+	NOTE: size checking can be done in parser too
  */
 void
 macro::check(void) const {
@@ -1727,12 +1741,18 @@ macro::check(void) const {
 	assert(nodes.size());
 	// probe existence of macro
 	const macro_definition_entry m(macro_registry[name]);
+	// should've already been checked in the parser
 	if (!m) {
 		cerr << "Error: unknown PRS macro \'" << name << "\'." << endl;
 		THROW_EXIT;
 	}
-	// TODO: check num params and type of params
-	if (!m.check_num_args(nodes.size()).good) {
+	if (!m.check_num_params(params.size()).good) {
+		// make sure passed in correct number of arguments
+		// custom-defined, may be variable
+		// already have error message
+		THROW_EXIT;
+	}
+	if (!m.check_num_nodes(nodes.size()).good) {
 		// make sure passed in correct number of arguments
 		// custom-defined, may be variable
 		// already have error message

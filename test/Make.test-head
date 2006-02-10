@@ -1,13 +1,13 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.10.2.1 2006/02/09 23:32:48 fang Exp $
+#	$Id: Make.test-head,v 1.10.2.2 2006/02/10 08:09:54 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:
 SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
-	.hacktcreatetest .hacktalloctest .hacktcflattest \
+	.hacktcreatetest .hacktalloctest .hacktcflattest .hacktsprstest \
 	.haco .haco-u .haco-c .haco-a .prs .sprs \
 	.prsimexpr .prsimexpr-dot .prsimexpr-ps \
 	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \

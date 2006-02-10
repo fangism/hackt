@@ -1,15 +1,17 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.1.2.1 2006/02/09 07:06:52 fang Exp $
+	$Id: directive_base.cc,v 1.1.2.2 2006/02/10 08:09:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
+#include <iostream>
 #include "Object/lang/directive_base.h"
 #include "Object/expr/const_param.h"
 #include "util/IO_utils.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
@@ -69,6 +71,31 @@ directive_base::first_node_error(void) const {
 		}
 	}
 	return 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+directive_base::dump_params(const params_type& p, ostream& o) {
+if (p.size()) {
+	typedef	params_type::const_iterator	const_iterator;
+	const_iterator i(p.begin());
+	const const_iterator e(p.end());
+	o << '<';
+	NEVER_NULL(*i);
+	(*i)->dump(o);
+	for (++i; i!=e; ++i) {
+		NEVER_NULL(*i);
+		(*i)->dump(o << ',');
+	}
+	o << '>';
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+directive_base::dump_params(ostream& o) const {
+	return dump_params(params, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC.h"
 	Common base class for spec-like directives, including PRS macros.  
-	$Id: directive_source.h,v 1.1.2.1 2006/02/09 23:32:48 fang Exp $
+	$Id: directive_source.h,v 1.1.2.2 2006/02/10 08:09:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_SOURCE_H__
@@ -19,6 +19,7 @@
 namespace HAC {
 namespace entity {
 class param_expr;
+class expr_dump_context;
 using std::ostream;
 using std::istream;
 using std::string;
@@ -77,6 +78,10 @@ public:
 
 	size_t
 	unroll_nodes(const unroll_context&, unrolled_nodes_type&) const;
+
+	static
+	ostream&
+	dump_params(const params_type&, ostream&, const expr_dump_context&);
 
 	ostream&
 	dump(ostream&, const PRS::rule_dump_context&) const;

@@ -11,5 +11,5 @@ prs {
 }
 }
 
-size_test x;
+size_test<8> x;
 

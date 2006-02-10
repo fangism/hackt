@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.8 2006/01/25 20:26:04 fang Exp $
+	$Id: cflat.cc,v 1.8.10.1 2006/02/10 08:09:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -101,6 +101,7 @@ __cflat_prsim(cflat::options& cf) {
 	cf.wire_mode = false;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
+	cf.size_prs = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -118,6 +119,7 @@ __cflat_prlint(cflat::options& cf) {
 	cf.wire_mode = false;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
+	cf.size_prs = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -137,6 +139,7 @@ __cflat_connect(cflat::options& cf) {
 	cf.wire_mode = false;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
+	cf.size_prs = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -159,6 +162,7 @@ __cflat_lvs(cflat::options& cf) {
 	cf.wire_mode = false;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
+	cf.size_prs = false;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -179,6 +183,7 @@ __cflat_wire(cflat::options& cf) {
 	cf.wire_mode = true;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
+	cf.size_prs = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -196,6 +201,7 @@ __cflat_ADspice(cflat::options& cf) {
 	cf.wire_mode = true;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = true;
+	cf.size_prs = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -212,6 +218,7 @@ __cflat_check(cflat::options& cf) {
 	cf.wire_mode = false;
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
+	cf.size_prs = false;
 }
 
 // end of primary modes
@@ -262,7 +269,7 @@ const cflat::register_options_modifier
 const cflat::register_options_modifier
 	cflat::_default("default", &__cflat_default);
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//-----------------------------------------------------------------------------
 // for setting/unsetting individual flags
 
 static
@@ -303,6 +310,7 @@ const cflat::register_options_modifier
 	cflat::_connect_wire("connect-wire", &__cflat_connect_wire,
 		"alias-style: wire x y");
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 void
 __cflat_include_prs(cflat::options& cf) {
@@ -325,6 +333,7 @@ const cflat::register_options_modifier
 	cflat::_no_include_prs("no-include-prs", &__cflat_exclude_prs, 
 		"(exclude-prs)");
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 void
 __cflat_self_aliases(cflat::options& cf) {
@@ -343,6 +352,7 @@ const cflat::register_options_modifier
 	cflat::_no_self_aliases("no-self-aliases", &__cflat_no_self_aliases,
 		"excludes aliases x = x");
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 void
 __cflat_quote_names(cflat::options& cf) {
@@ -361,9 +371,11 @@ const cflat::register_options_modifier
 	cflat::_no_quote_names("no-quote-names", &__cflat_no_quote_names, 
 		"no quote around node names");
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	cf.dump_non_bools = false;
 //	cf.namespace_policy = cflat::options::NAMESPACE_POLICY_NONE;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 void
 __cflat_check_mode(cflat::options& cf) {
@@ -382,6 +394,7 @@ const cflat::register_options_modifier
 	cflat::_no_check_mode("no-check-mode", &__cflat_no_check_mode, 
 		"cflat output enabled");
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 void
 __cflat_wire_mode(cflat::options& cf) {
@@ -400,6 +413,7 @@ const cflat::register_options_modifier
 	cflat::_no_wire_mode("no-wire-mode", &__cflat_no_wire_mode, 
 		"use one of the connect-* modes of printing aliases");
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 void
 __cflat_dsim_prs(cflat::options& cf) {
@@ -418,6 +432,26 @@ const cflat::register_options_modifier
 	cflat::_no_dsim_prs("no-dsim-prs", &__cflat_no_dsim_prs, 
 		"not (dsim-prs)");
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+void
+__cflat_size_prs(cflat::options& cf) {
+	cf.size_prs = true;
+}
+const cflat::register_options_modifier
+	cflat::_size_prs("sizes", &__cflat_size_prs, 
+		"prints rule literals with <size> specifications");
+
+static
+void
+__cflat_no_size_prs(cflat::options& cf) {
+	cf.size_prs = false;
+}
+const cflat::register_options_modifier
+	cflat::_no_size_prs("no-sizes", &__cflat_no_size_prs, 
+		"not (size-prs)");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	cf.csim_style_prs = false;
 
 //=============================================================================

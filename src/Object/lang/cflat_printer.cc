@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.5.2.1 2006/02/09 07:06:52 fang Exp $
+	$Id: cflat_printer.cc,v 1.5.2.2 2006/02/10 08:09:51 fang Exp $
  */
 
 #include <iostream>
@@ -125,6 +125,9 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 		case PRS_LITERAL_TYPE_ENUM:
 			INVARIANT(sz == 1);
 			__dump_canonical_literal(e.only());
+			if (cfopts.size_prs) {
+				directive_base::dump_params(e.get_params(), os);
+			}
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			INVARIANT(sz == 1);
@@ -168,7 +171,7 @@ void
 cflat_prs_printer::visit(const footprint_macro& m) {
 	const macro_definition_entry& d(macro_registry[m.name]);
 	INVARIANT(d);		// was already checked during unroll
-	d.main(*this, m.nodes);
+	d.main(*this, m.params, m.nodes);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -176,7 +179,7 @@ void
 cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
 	const SPEC::spec_definition_entry& s(SPEC::spec_registry[d.name]);
 	INVARIANT(s);		// was already checked during unroll
-	s.main(*this, d.nodes);
+	s.main(*this, d.params, d.nodes);
 }
 
 //=============================================================================

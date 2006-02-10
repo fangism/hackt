@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.11.2.4 2006/02/09 23:32:47 fang Exp $
+	$Id: PRS.h,v 1.11.2.5 2006/02/10 08:09:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -159,7 +159,7 @@ protected:
 	/**
 		Output node.  
 	 */
-	literal				output;
+	bool_literal			output;
 	/**
 		Whether or not complement is implicit.
 	 */
@@ -172,9 +172,9 @@ protected:
 
 	pull_base();
 
-	pull_base(const prs_expr_ptr_type&, const literal&, const bool);
+	pull_base(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
-	pull_base(const prs_expr_ptr_type&, const literal&, 
+	pull_base(const prs_expr_ptr_type&, const bool_literal&, 
 		const attribute_list_type&);
 
 public:
@@ -222,9 +222,9 @@ class pull_up : public pull_base {
 public:
 	pull_up();
 
-	pull_up(const prs_expr_ptr_type&, const literal&, const bool);
+	pull_up(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
-	pull_up(const prs_expr_ptr_type&, const literal&, 
+	pull_up(const prs_expr_ptr_type&, const bool_literal&, 
 		const attribute_list_type&);
 
 	~pull_up();
@@ -258,9 +258,9 @@ class pull_dn : public pull_base {
 public:
 	pull_dn();
 
-	pull_dn(const prs_expr_ptr_type&, const literal&, const bool);
+	pull_dn(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
-	pull_dn(const prs_expr_ptr_type&, const literal&, 
+	pull_dn(const prs_expr_ptr_type&, const bool_literal&, 
 		const attribute_list_type&);
 
 	~pull_dn();

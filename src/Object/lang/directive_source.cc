@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.1.2.1 2006/02/09 23:32:48 fang Exp $
+	$Id: directive_source.cc,v 1.1.2.2 2006/02/10 08:09:52 fang Exp $
  */
 
 #include <iostream>
@@ -68,16 +68,11 @@ directive_source::directive_source(const string& n) :
 directive_source::~directive_source() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Ripped off PRS::macro::dump().
-	TODO: params
- */
 ostream&
-directive_source::dump(ostream& o, const PRS::rule_dump_context& c) const {
-	o << name;
+directive_source::dump_params(const params_type& params, ostream& o, 
+		const expr_dump_context& edc) {
 if (!params.empty()) {
 	typedef params_type::const_iterator	const_iterator;
-	const entity::expr_dump_context edc(c);
 	o << '<';
 	INVARIANT(params.size());
 	const_iterator i(params.begin());
@@ -88,7 +83,22 @@ if (!params.empty()) {
 	}
 	o << '>';
 }
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ripped off PRS::macro::dump().
+	TODO: params
+ */
+ostream&
+directive_source::dump(ostream& o, const PRS::rule_dump_context& c) const {
+	o << name;
 	o << '(';
+{
+	const entity::expr_dump_context edc(c);
+	dump_params(params, o, edc);
+}
 {
 	typedef nodes_type::const_iterator	const_iterator;
 	INVARIANT(nodes.size());

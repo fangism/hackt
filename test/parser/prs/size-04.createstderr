@@ -1,0 +1,117 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	453
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    sized_prs = process-definition (defined) sized_prs(
+        bool<> a
+        bool<> b
+      )
+      In definition "sized_prs", we have: {
+      Instances:
+        a = bool<> a
+        b = bool<> b
+      unroll sequence: 
+        bool<> a
+        bool<> b
+      prs:
+        a<10> -> b-
+        ~a<15> -> b+
+        a<20,2> -> b-
+        ~a<20,2> -> b+
+        a<30,3> -> b-
+        ~a<30,3> -> b+
+      footprint: {
+        bool^0 a (instantiated) = ::sized_prs::a (1) 
+        bool^0 b (instantiated) = ::sized_prs::b (2) 
+        bool instance pool:
+        1	::sized_prs::a
+        2	::sized_prs::b
+        resolved prs:
+        a<10> -> b-
+        ~a<15> -> b+
+        a<20,2> -> b-
+        ~a<20,2> -> b+
+        a<30,3> -> b-
+        ~a<30,3> -> b+
+      }
+      }
+
+  Instances:
+    z = process sized_prs<>^0 z (instantiated) = ::z (1) (
+      bool^0 a (instantiated) = ::z.a (1) 
+      bool^0 b (instantiated) = ::z.b (2) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::z
+bool instance pool:
+1	::z.a
+2	::z.b
+

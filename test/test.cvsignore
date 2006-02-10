@@ -3,6 +3,7 @@
 *.core
 core.*
 *.test
+*.hackt*test
 *.diff
 *.filter
 *.artctest
@@ -32,6 +33,7 @@ core.*
 *.prsimexprdiff
 *.sort
 *.sprs
+*.sprsdiff
 *-dump
 *-diff
 ignore

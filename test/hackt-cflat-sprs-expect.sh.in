@@ -1,0 +1,69 @@
+#!@SH_PATH@
+# "hackt-cflat-sprs-expect.sh.in"
+# copy-modified from "hackt-cflat-expect.sh.in"
+#	$Id: hackt-cflat-sprs-expect.sh.in,v 1.1.2.1 2006/02/10 08:09:55 fang Exp $
+
+# NOTE: temporarily just uses stdout dump during execution
+# will updated later...
+
+# $1 is the executable for the creator (hackt alloc), expecting 2 arguments
+# $2 is the path to the source directory, which is not necessarily ./
+#	during distcheck uses _build
+# $3 is the input file name WITHOUT the .in extension
+# other subsequent arguments are ignored
+
+# if test $# -lt 3 ; then exit 1 ; fi
+
+cflat=$1
+srcroot=$2/$3
+bldroot=$3
+
+# a pre-created (already created) object file must already exist
+if test ! -s $bldroot.haco-a
+then
+	@ECHO@ "$bldroot.haco-a doesn't exist or is empty."
+	exit 1
+fi
+
+# see if it crashes first
+$cflat $bldroot.haco-a > $bldroot.sprs
+
+# depending on exit status, take action
+case $? in
+	0) break ;;
+	*) exit 1 ;;
+esac
+
+# .allocstderr comparison file must exist
+if test ! -f $srcroot.expect-sprs && test ! -f $bldroot.expect-sprs
+then
+	@ECHO@ "Missing $srcroot.expect-sprs"
+	exit 1
+fi
+
+# some PRS may be empty
+if test -s $srcroot.expect-sprs
+then
+	@DIFF@ -u $srcroot.expect-sprs $bldroot.sprs > $bldroot.sprsdiff
+else
+	@DIFF@ -u $bldroot.expect-sprs $bldroot.sprs > $bldroot.sprsdiff
+fi
+
+if test -s $bldroot.sprsdiff
+then
+	@ECHO@ "$bldroot.sprsdiff is non-empty!"
+	# additional analysis to see if is just re-ordering difference
+	if test -s $srcroot.expect-sprs && test -s $bldroot.sprs
+	then
+		@SORT@ $srcroot.expect-sprs > $bldroot.expect-sprs.sort
+		@SORT@ $bldroot.sprs > $bldroot.sprs.sort
+		@DIFF@ -u $bldroot.expect-sprs.sort $bldroot.sprs.sort \
+			> $bldroot.sprsdiff.sort
+		if test ! -s $bldroot.sprsdiff.sort
+		then
+			@ECHO@ "Only re-ordering differencies found.  (OK)"
+		fi
+	fi
+	exit 1
+fi
+

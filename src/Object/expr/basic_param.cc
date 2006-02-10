@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.9.12.1 2006/02/07 02:57:54 fang Exp $
+ 	$Id: basic_param.cc,v 1.9.12.2 2006/02/10 08:09:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -108,6 +108,11 @@ param_expr::make_param_expression_assignment(
 
 //-----------------------------------------------------------------------------
 // class const_param method definitions
+
+ostream&
+const_param::dump(ostream& o) const {
+	return dump(o, expr_dump_context());
+}
 
 //-----------------------------------------------------------------------------
 // class pbool_expr method definitions

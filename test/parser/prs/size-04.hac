@@ -1,0 +1,14 @@
+// "size-04.hac"
+// should pass
+
+defproc sized_prs (bool a, b) {
+prs {
+	a<10>		-> b-
+	~a<15>		-> b+
+	a<20,2>		=> b-		// accepts width,length
+	a<30.0,3.0>	=> b-		// also accepts preals
+}
+}
+
+sized_prs z;
+

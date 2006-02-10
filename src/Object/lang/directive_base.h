@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.h"
-	$Id: directive_base.h,v 1.1.2.1 2006/02/09 07:06:53 fang Exp $
+	$Id: directive_base.h,v 1.1.2.2 2006/02/10 08:09:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_BASE_H__
@@ -9,7 +9,7 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include "util/size_t.h"
+#include "Object/lang/SPEC_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
 
@@ -31,8 +31,8 @@ public:
 	/**
 		Valid entries are non-zero.
 	 */
-	typedef	std::vector<size_t>				nodes_type;
-	typedef	std::vector<count_ptr<const const_param> >	params_type;
+	typedef	directive_base_nodes_type		nodes_type;
+	typedef	directive_base_params_type		params_type;
 
 // too lazy to privatize for now...
 public:
@@ -54,6 +54,13 @@ public:
 	/// \return 1-indexed offset of the first error (if any), else 0
 	size_t
 	first_node_error(void) const;
+
+	static
+	ostream&
+	dump_params(const params_type&, ostream&);
+
+	ostream&
+	dump_params(ostream&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

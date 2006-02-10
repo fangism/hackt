@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.2.2.1 2006/02/09 07:06:52 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.2.2.2 2006/02/10 08:09:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -83,7 +83,9 @@ footprint::~footprint() { }
 ostream&
 footprint::dump_directive(const footprint_directive& d, ostream& o, 
 		const node_pool_type& np) {
-	o << d.name << '(';
+	o << d.name;
+	directive_base::dump_params(d.params, o);
+	o << '(';
 	typedef	footprint_directive::nodes_type::const_iterator	const_iterator;
 	const_iterator i(d.nodes.begin());
 	const const_iterator e(d.nodes.end());

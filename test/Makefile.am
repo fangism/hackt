@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.22 2006/02/06 03:20:12 fang Exp $
+#	$Id: Makefile.am,v 1.22.2.1 2006/02/10 08:09:54 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -18,6 +18,7 @@ PRECONFIGURED_TESTSCRIPTS = \
 	check-create-consistency.sh.in \
 	hackt-alloc-expect.sh.in \
 	hackt-cflat-expect.sh.in \
+	hackt-cflat-sprs-expect.sh.in \
 	hackt-prsim-expr-alloc-expect.sh.in \
 	test-series.sh.in
 
@@ -40,6 +41,7 @@ EXTRA_DIST += ChangeLog README TODO \
 	update-allocstderr.sh \
 	update-expectprs.sh \
 	update-expectprsimexpr.sh \
+	update-expectsprs.sh \
 	vpath_file_filter.awk \
 	hackt-parse-expect-filter.awk \
 	analyze-dump-diff.awk \

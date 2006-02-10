@@ -5,6 +5,22 @@
 
 2006-02-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-4-preal-01-09:
+	  PRS::pull_base now uses bool_literal (was literal) as output node.  
+	  Parameters in literals, macros, and spec directives have been 
+		implemented all the way through alloc and cflat back-ends.  
+	  Common code betweem PRS::macro_definition_entry and 
+		SPEC::spec_directive_entry factored out into 
+		Object/lang/directive_definition.{h,cc} (in HAC::entity::)
+		Added new interface functions for checking both number
+		of parameter and node arguments, and user-definable constraints
+		on parameters and nodes.  
+	  Added size prs support in cflat module and cflat_options.  
+	  Added some preliminary test-cases demonstrating use of 
+		parameterized macros, and generating sized PRS.  
+	  TODO: actually call the registered check functions.  
+
+
 	* HACKT-00-01-04-main-00-77-4-preal-01-08:
 	  Factored out common code between PRS::macro and SPEC::directive
 		into entity::directive_source, in Object/lang/directive_source.
