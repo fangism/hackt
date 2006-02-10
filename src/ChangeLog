@@ -5,6 +5,12 @@
 
 2006-02-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-6-merged-PRS-06-01:
+	  Minor merge of comments and test cases from -PRS-06-01.
+		Branch was halted due to lack of response on core issues.
+		Finalization of PRS language facilities is punted.  
+
+
 	* HACKT-00-01-04-main-00-77-5-merged-preal-01-10:
 	  Branch merge.  Summary:
 		Added preal support to language, complete from front-
@@ -97,6 +103,20 @@
 	  Changed some persistent type hash code to be less (?) confusing
 		and more intuitive, which resulted in test outputs changing.  
 	  Added some basic test cases.  
+
+
+2006-02-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-4-PRS-06-01:
+	  This branch created for sake of closing off some open issues
+		with PRS.  Do we allow top-level prs?
+	  TODO: some unfinished bug-business in a few test cases in
+		test/parser/prs, regarding mixing of loops/conditionals
+		with PRS.  Pending resolution of some language details.
+	  Will probably have to extend the intermediate presentation
+		in Object/lang/PRS*.h to support conditionals.  
+	  This initial revision just added some test cases
+		and comments in sources.  
 
 
 2006-02-06	David Fang		<fangism@users.sourceforge.net>

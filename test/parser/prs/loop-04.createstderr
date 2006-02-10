@@ -1,0 +1,90 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	278
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
+	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	17	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    null = process-definition (defined) null<
+      pint<> N
+      >(
+      )
+      In definition "null", we have: {
+      Parameters:
+        N = pint<> N
+      Instances:
+        x = bool<> x
+        y = bool<> y
+      unroll sequence: 
+        pint<> N
+        bool<> x
+        bool<> y
+      prs:
+        (:i:[0..N-1]:
+          ~x -> y+
+          x -> y-
+        )
+      footprint collection: {
+        <1> {
+          pint^0 N value: ?
+          bool^0 x (instantiated) = ::null::x (1) 
+          bool^0 y (instantiated) = ::null::y (2) 
+          bool instance pool:
+          1	::null::x
+          2	::null::y
+          resolved prs:
+          ~x -> y+
+          x -> y-
+        }
+      }
+      }
+
+  Instances:
+    foo = process null<1>^0 foo (instantiated) = ::foo (1) 
+}
+
+Created state:
+process instance pool:
+1	::foo
+

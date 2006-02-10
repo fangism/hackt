@@ -1,0 +1,19 @@
+// "loop-08.hac"
+// copy-modified from "loop-06.hac"
+// should pass, and produce inverters
+// ENHANCEMENT: could potentially detect identical prs and eliminate them
+//	but could just sort-unique the output.  This could get complicated
+//	with reducent production rules with different attributes.
+
+template <pint N>
+defproc null() {
+bool x, y;
+prs {
+(:i:N:
+[after=10+3*i]	x	=> y-
+)
+}
+}
+
+null<3> foo;	// should produce redundant prs with different delays
+

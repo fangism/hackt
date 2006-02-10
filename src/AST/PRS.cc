@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.6 2006/02/10 21:50:34 fang Exp $
+	$Id: PRS.cc,v 1.7 2006/02/10 22:50:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -380,6 +380,9 @@ body::rightmost(void) const {
 	NOTE: remember to update return type with ROOT_CHECK_PROTO.
 	Currently, exits upon error.  
 	TODO: possibly support top-level PRS.  
+	TODO: check if this body is wrapped inside a loop/conditional scope!
+		If so, then we need to wrap all the contents inside.  
+		Consider doing this in the loop_construct instead.  
  */
 never_ptr<const object>
 body::check_build(context& c) const {
