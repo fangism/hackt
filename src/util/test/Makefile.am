@@ -11,7 +11,7 @@ TEST_EXPECT_SH = test-expect.sh
 .cc.test:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(TEST_EXPECT_SH) ./$* $(srcdir) >> $@
+	@$(ECHO) ./$(TEST_EXPECT_SH) ./$* $(srcdir) >> $@
 	@$(CHMOD) +x $@
 
 noinst_PROGRAMS = \
