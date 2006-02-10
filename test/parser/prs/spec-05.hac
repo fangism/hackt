@@ -1,0 +1,14 @@
+// "spec-05.hac"
+// should fail: mk_exclhi takes no parameters.  
+
+defproc testing () {
+bool p, q, r, s;
+
+spec {
+	mk_exclhi<25>(p, q, r)
+}
+
+}
+
+// testing tester;
+

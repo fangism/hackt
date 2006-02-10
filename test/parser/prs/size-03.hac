@@ -1,0 +1,15 @@
+// "size-03.hac"
+// testing sizes in prs literals
+// should pass
+// TODO: decide if relaxed parameters should be allowed?
+
+template <pint P>
+defproc size_test (bool a, b) {
+prs {
+	a<P>	-> b-
+	~a<2*P>	-> b+
+}
+}
+
+size_test<8> x;
+

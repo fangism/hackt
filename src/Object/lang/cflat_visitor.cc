@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.4 2006/02/04 06:43:21 fang Exp $
+	$Id: cflat_visitor.cc,v 1.5 2006/02/10 21:50:40 fang Exp $
  */
 
 #include <algorithm>
@@ -43,28 +43,8 @@ public:
 void
 cflat_visitor::visit(const footprint& f) {
 	const expr_pool_setter temp(*this, f);	// will expire end of scope
-#if 0
-{
-	typedef	footprint::rule_pool_type::const_iterator
-						const_rule_iterator;
-	const_rule_iterator i(f.rule_pool.begin());
-	const const_rule_iterator e(f.rule_pool.end());
-	for ( ; i!=e; i++) {
-		i->accept(*this);
-	}
-}{
-	typedef	footprint::macro_pool_type::const_iterator
-						const_macro_iterator;
-	const_macro_iterator i(f.macro_pool.begin());
-	const const_macro_iterator e(f.macro_pool.end());
-	for ( ; i!=e; i++) {
-		i->accept(*this);
-	}
-}
-#else
 	for_each(f.rule_pool.begin(), f.rule_pool.end(), visitor_ref(*this));
 	for_each(f.macro_pool.begin(), f.macro_pool.end(), visitor_ref(*this));
-#endif
 }
 
 //=============================================================================

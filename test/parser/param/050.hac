@@ -1,0 +1,7 @@
+// "050.hac"
+// testing basic preal facilities
+// should pass
+
+preal uninit;
+preal thirteen = 13.13;
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.5 2006/02/04 06:43:21 fang Exp $
+	$Id: cflat_printer.cc,v 1.6 2006/02/10 21:50:40 fang Exp $
  */
 
 #include <iostream>
@@ -125,6 +125,9 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 		case PRS_LITERAL_TYPE_ENUM:
 			INVARIANT(sz == 1);
 			__dump_canonical_literal(e.only());
+			if (cfopts.size_prs) {
+				directive_base::dump_params(e.get_params(), os);
+			}
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
 			INVARIANT(sz == 1);
@@ -163,20 +166,37 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
 	Here's the magic!
 	This is where it looks up and calls a custom-defined 
 	macro function.  
+	Consider folding the checking functionality into main
+		instead of calling separately.  (Especially, if they are
+		all happening at the same call site, seems rather redundant.)
  */
 void
 cflat_prs_printer::visit(const footprint_macro& m) {
 	const macro_definition_entry& d(macro_registry[m.name]);
 	INVARIANT(d);		// was already checked during unroll
-	d.main(*this, m.node_args);
+	if (!d.check_param_args(m.params).good
+			|| !d.check_node_args(m.nodes).good) {
+		cerr << "Error with PRS macro." << endl;
+		// m.dump(cerr) << endl;	// unimplemented
+		THROW_EXIT;
+	} else {
+		d.main(*this, m.params, m.nodes);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
-	const SPEC::spec_definition_entry& s(SPEC::spec_registry[d.key]);
+	const SPEC::spec_definition_entry& s(SPEC::spec_registry[d.name]);
 	INVARIANT(s);		// was already checked during unroll
-	s.main(*this, d.args);
+	if (!s.check_param_args(d.params).good
+			|| !s.check_node_args(d.nodes).good) {
+		cerr << "Error with spec directive." << endl;
+		// s.dump(cerr) << endl;	// unimplemented
+		THROW_EXIT;
+	} else {
+		s.main(*this, d.params, d.nodes);
+	}
 }
 
 //=============================================================================

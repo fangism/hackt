@@ -12,3 +12,4 @@ in state #STATE#, possible rules are:
 acceptable tokens are: 
 	PINT_TYPE (shift)
 	PBOOL_TYPE (shift)
+	PREAL_TYPE (shift)

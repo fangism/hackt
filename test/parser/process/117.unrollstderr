@@ -14,7 +14,7 @@ Persistent Object Manager text dump:
 	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	13	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -33,7 +33,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	28
@@ -48,12 +48,12 @@ Persistent Object Manager text dump:
 	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	47	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	48	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	51	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	52	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	53	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
@@ -61,12 +61,12 @@ Persistent Object Manager text dump:
 	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	58	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	59	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	60	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	61	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	64	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	65	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	66	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12

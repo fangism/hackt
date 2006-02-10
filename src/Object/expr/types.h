@@ -1,8 +1,10 @@
 /**
 	\file "Object/expr/types.h"
 	Forward declarations for all HAC::entity classes and typedefs.
+	This is the ONE file that needs to be touched to change the 
+	precisions of meta-parameter (and simulation) values globally.  
 	NOTE: this file was moved from "Object/art_object_expr_types.h"
-	$Id: types.h,v 1.4 2006/01/22 18:19:55 fang Exp $
+	$Id: types.h,v 1.5 2006/02/10 21:50:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_TYPES_H__
@@ -10,6 +12,7 @@
 
 namespace HAC {
 namespace entity {
+// meta-parameter value types
 	/**
 		The global integer-type for parameter integers.  
 		This may have to be changed to int32 in the future, 
@@ -23,6 +26,12 @@ namespace entity {
 	typedef	bool		pbool_value_type;
 
 	/**
+		Real-value parameters, default to single-precision.  
+	 */
+	typedef	float		preal_value_type;
+
+// non-parameter value types
+	/**
 		Type used to represent built in int<W> types.  
 		For arbitrary precision integers, will want to use
 		mpz_class from GMP, or cl_z from CLN.  
@@ -34,6 +43,12 @@ namespace entity {
 		Intuitive choice.  
 	 */
 	typedef	bool		bool_value_type;
+
+	/**
+		Don't know how this is going to work.
+		PUNT!
+	 */
+	typedef	float		real_value_type;
 
 	/**
 		For now, limiting to 256 enumerations.  

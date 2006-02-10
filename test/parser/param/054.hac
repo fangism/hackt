@@ -1,0 +1,8 @@
+// "054.hac"
+// copy-modified from "052.hac"
+// should fail, mispatch in parameter type
+
+preal bar;
+bar = 4.2;
+pint thirteen = bar;
+

@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.9 2006/01/27 08:07:20 fang Exp $
+ 	$Id: type_reference.cc,v 1.10 2006/02/10 21:50:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -1798,6 +1798,8 @@ param_type_reference::make_instantiation_statement_private(
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&
 		pint_type_ptr(pint_traits::built_in_type_ptr);
+	static const pint_traits::type_ref_ptr_type&
+		preal_type_ptr(preal_traits::built_in_type_ptr);
 	INVARIANT(t == this);
 	INVARIANT(!a);
 	if (must_be_type_equivalent(*pbool_type_ptr)) {
@@ -1806,11 +1808,16 @@ param_type_reference::make_instantiation_statement_private(
 	} else if (must_be_type_equivalent(*pint_type_ptr)) {
 		return return_type(new pint_instantiation_statement(
 			pint_type_ptr, d));
+	} else if (must_be_type_equivalent(*preal_type_ptr)) {
+		return return_type(new preal_instantiation_statement(
+			preal_type_ptr, d));
 	} else {
+	ICE(cerr, 
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
-		dump(cerr) << " at " << this << endl;
-		DIE;		// WTF?
+		preal_type_ptr->dump(cerr) << " at " << &*preal_type_ptr << endl;
+		dump(cerr << "this: ") << " at " << this << endl;
+	);
 		return return_type(NULL);
 	}
 }
@@ -1832,17 +1839,24 @@ param_type_reference::make_instance_collection(
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&
 		pint_type_ptr(pint_traits::built_in_type_ptr);
+	static const preal_traits::type_ref_ptr_type&
+		preal_type_ptr(preal_traits::built_in_type_ptr);
 	if (must_be_type_equivalent(*pbool_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pbool_instance_collection::make_array(*s, id, d));
 	else if (must_be_type_equivalent(*pint_type_ptr))
 		return excl_ptr<instance_collection_base>(
 			pint_instance_collection::make_array(*s, id, d));
+	else if (must_be_type_equivalent(*preal_type_ptr))
+		return excl_ptr<instance_collection_base>(
+			preal_instance_collection::make_array(*s, id, d));
 	else {
+	ICE(cerr, 
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
 		pint_type_ptr->dump(cerr) << " at " << &*pint_type_ptr << endl;
-		dump(cerr) << " at " << this << endl;
-		DIE;		// WTF?
+		preal_type_ptr->dump(cerr) << " at " << &*preal_type_ptr << endl;
+		dump(cerr << "this: ") << " at " << this << endl;
+	);
 		return excl_ptr<instance_collection_base>(NULL);
 	}
 }

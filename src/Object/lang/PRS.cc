@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.11 2006/02/04 06:43:17 fang Exp $
+	$Id: PRS.cc,v 1.12 2006/02/10 21:50:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -26,6 +26,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 // #include "Object/inst/instance_alias_info.h"
 
 #include "Object/expr/bool_expr.h"
+#include "Object/expr/const_param.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -345,14 +346,14 @@ pull_base::pull_base() : rule(), guard(), output(), cmpl(false),
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::pull_base(const prs_expr_ptr_type& g, 
-		const literal& o, const bool c) :
+		const bool_literal& o, const bool c) :
 		rule(), guard(g), output(o), cmpl(c), attributes() {
 	NEVER_NULL(guard);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::pull_base(const prs_expr_ptr_type& g, 
-		const literal& o, const attribute_list_type& l) :
+		const bool_literal& o, const attribute_list_type& l) :
 		rule(), guard(g), output(o), cmpl(false), attributes(l) {
 	NEVER_NULL(guard);
 }
@@ -388,7 +389,7 @@ pull_base::check(void) const {
 	STACKTRACE("pull_base::check()");
 	// check attributes?
 	assert(guard);
-	output.check();
+//	output.check();
 	guard->check();
 }
 
@@ -468,7 +469,7 @@ void
 pull_base::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	m.write_pointer(o, guard);
-	output.write_object(m, o);
+	output.write_object_base(m, o);
 	write_value(o, cmpl);
 	util::write_persistent_sequence(m, o, attributes);
 }
@@ -477,7 +478,7 @@ pull_base::write_object_base(const persistent_object_manager& m,
 void
 pull_base::load_object_base(const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, guard);
-	output.load_object(m, i);
+	output.load_object_base(m, i);
 	read_value(i, cmpl);
 	util::read_persistent_sequence_resize(m, i, attributes);
 }
@@ -488,12 +489,13 @@ pull_base::load_object_base(const persistent_object_manager& m, istream& i) {
 pull_up::pull_up() : pull_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(const prs_expr_ptr_type& g, const literal& o, const bool c) :
+pull_up::pull_up(const prs_expr_ptr_type& g, 
+		const bool_literal& o, const bool c) :
 		pull_base(g, o, c) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_up::pull_up(const prs_expr_ptr_type& g, const literal& o,
+pull_up::pull_up(const prs_expr_ptr_type& g, const bool_literal& o,
 		const attribute_list_type& l) :
 		pull_base(g, o, l) {
 }
@@ -571,12 +573,13 @@ pull_up::load_object(const persistent_object_manager& m, istream& i) {
 pull_dn::pull_dn() : pull_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(const prs_expr_ptr_type& g, const literal& o, const bool c) :
+pull_dn::pull_dn(const prs_expr_ptr_type& g, 
+		const bool_literal& o, const bool c) :
 		pull_base(g, o, c) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-pull_dn::pull_dn(const prs_expr_ptr_type& g, const literal& o,
+pull_dn::pull_dn(const prs_expr_ptr_type& g, const bool_literal& o,
 		const attribute_list_type& l) :
 		pull_base(g, o, l) {
 }
@@ -938,8 +941,8 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(type_enum, expr_indices.size()));
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error
-	const size_t err = new_expr.first_error();
+	// find index of first error (1-indexed)
+	const size_t err = new_expr.first_node_error();
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
@@ -1054,8 +1057,8 @@ and_expr::unroll(const unroll_context& c, const node_pool_type& np,
 		new_expr(pfp.push_back_expr(
 			PRS_AND_EXPR_TYPE_ENUM, expr_indices.size()));
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error
-	const size_t err = new_expr.first_error();
+	// find index of first error (1-indexed)
+	const size_t err = new_expr.first_node_error();
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
@@ -1277,8 +1280,8 @@ or_expr::unroll(const unroll_context& c, const node_pool_type& np,
 		new_expr(pfp.push_back_expr(
 			PRS_OR_EXPR_TYPE_ENUM, expr_indices.size()));
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
-	// find index of first error
-	const size_t err = new_expr.first_error();
+	// find index of first error (1-indexed)
+	const size_t err = new_expr.first_node_error();
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
@@ -1530,10 +1533,11 @@ not_expr::load_object(const persistent_object_manager& m, istream& i) {
 //=============================================================================
 // class literal method definitions
 
-literal::literal() : prs_expr(), base_type() { }
+literal::literal() : prs_expr(), base_type(), params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-literal::literal(const literal_base_ptr_type& l) : prs_expr(), base_type(l) { }
+literal::literal(const literal_base_ptr_type& l) :
+		prs_expr(), base_type(l), params() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 literal::~literal() { }
@@ -1551,9 +1555,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(literal)
 ostream&
 literal::dump(ostream& o, const expr_dump_context& c) const {
 	// never needs parentheses
-	// NEVER_NULL(c.parent_scope);
-	// return var->dump(o, entity::expr_dump_context(c));
-	return base_type::dump(o, c);
+	base_type::dump(o, c);
+	directive_source::dump_params(params, o, c);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1572,7 +1576,7 @@ prs_expr_ptr_type
 literal::negate(void) const {
 	STACKTRACE("literal::negate()");
 	return prs_expr_ptr_type(new not_expr(
-		prs_expr_ptr_type(new literal(var))));
+		prs_expr_ptr_type(new literal(*this))));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1593,23 +1597,6 @@ literal::negation_normalize(void) {
  */
 size_t
 literal::unroll_node(const unroll_context& c) const {
-#if 0
-	STACKTRACE_VERBOSE;
-	typedef literal_base_ptr_type::element_type::alias_collection_type
-			bool_instance_alias_collection_type;
-	bool_instance_alias_collection_type bc;
-	if (var->unroll_references(c, bc).bad) {
-		var->dump(cerr << "Error resolving production rule literal: ", 
-			entity::expr_dump_context::default_value)
-			<< endl;
-		return 0;
-	}
-	INVARIANT(!bc.dimensions());	// must be scalar, checked earlier
-	const instance_alias_info<bool_tag>& bi(*bc.front());
-	const size_t node_index = bi.instance_index;
-	INVARIANT(node_index);
-	return node_index;
-#else
 	const size_t ret = unroll_base(c);
 	if (!ret) {
 		base_type::dump(
@@ -1618,57 +1605,36 @@ literal::unroll_node(const unroll_context& c) const {
 			<< endl;
 	}
 	return ret;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: factor out common code.
+	TODO: check parameters!
 	Has code in common with pull_up/pull_dn...
 	\return the index of the new expression represented by this
-		literal reference.  
+		literal reference, else 0 if error occurs.  
  */
 size_t
 literal::unroll(const unroll_context& c, const node_pool_type& np, 
 		PRS::footprint& pfp) const {
-#if 0
-	typedef literal_base_ptr_type::element_type::alias_collection_type
-			bool_instance_alias_collection_type;
-	STACKTRACE_VERBOSE;
-	bool_instance_alias_collection_type bc;
-	if (var->unroll_references(c, bc).bad) {
-		var->dump(cerr << "Error resolving production rule literal: ", 
-			entity::expr_dump_context::default_value)
-			<< endl;
-		return 0;
-	}
-	INVARIANT(!bc.dimensions());		// must be scalar
-	const instance_alias_info<bool_tag>& bi(*bc.front());
-	const size_t node_index = bi.instance_index;
-	INVARIANT(node_index);
-#else
 	const size_t node_index = unroll_node(c);
 	if (!node_index) {
 		// already have error message
 		return 0;
 	}
-#endif
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(PRS_LITERAL_TYPE_ENUM, 1));
 	new_expr[1] = node_index;
+	const size_t perr = directive_source::unroll_params(params, c,
+			new_expr.get_params());
+	if (perr) {
+		cerr << "Error resolving rule literal parameter " << perr
+			<< " in rule." << endl;
+		return 0;
+	}
+	INVARIANT(new_expr.get_params().size() <= 2);
 	return pfp.current_expr_index();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Doesn't register itself as a dynamically allocated object.  
- */
-void
-literal::collect_transient_info_base(persistent_object_manager& m) const {
-	base_type::collect_transient_info_base
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1679,6 +1645,7 @@ literal::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
 	collect_transient_info_base(m);
+	m.collect_pointer_list(params);
 }
 }
 
@@ -1687,6 +1654,7 @@ void
 literal::write_object(const persistent_object_manager& m, ostream& o) const {
 //	m.write_pointer(o, var);
 	write_object_base(m, o);
+	m.write_pointer_list(o, params);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1694,24 +1662,19 @@ void
 literal::load_object(const persistent_object_manager& m, istream& i) {
 //	m.read_pointer(i, var);
 	load_object_base(m, i);
+	m.read_pointer_list(i, params);
 }
 
 //=============================================================================
 // class macro method definitions
 
-macro::macro() : name(), nodes() { }
+macro::macro() : rule(), directive_source() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-macro::macro(const string& n) : name(n), nodes() { }
+macro::macro(const string& n) : rule(), directive_source(n) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 macro::~macro() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-macro::push_back(const_reference l) {
-	nodes.push_back(l);
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(macro)
@@ -1719,18 +1682,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(macro)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 macro::dump(ostream& o, const rule_dump_context& c) const {
-	o << name << '(';
-	typedef	nodes_type::const_iterator	const_iterator;
-	INVARIANT(nodes.size());
-	const_iterator i(nodes.begin());
-	const const_iterator e(nodes.end());
-	NEVER_NULL(*i);
-	(*i)->dump(o, c);
-	for (++i; i!=e; ++i) {
-		NEVER_NULL(*i);
-		(*i)->dump(o << ',', c);
-	}
-	return o << ')';
+	return directive_source::dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1750,6 +1702,7 @@ macro::expand_complement(void) {
 	The name is used to lookup a function.  
 	Future: may need an additional context/options argument.  
 	TODO: can insert diagnostic macros too!  meta-programmable.
+	NOTE: don't need node_pool_type.
  */
 good_bool
 macro::unroll(const unroll_context& c, const node_pool_type& np, 
@@ -1757,15 +1710,21 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 	STACKTRACE_VERBOSE;
 	// at least check the instance references first...
 	PRS::footprint::macro& new_macro_call(pfp.push_back_macro(name));
-	transform(nodes.begin(), nodes.end(), back_inserter(new_macro_call), 
-		literal::unroller(c));
-	const size_t err = new_macro_call.first_error();
-	if (err) {
-		cerr << "Error resolving literal node at position " << err
+	const size_t perr = unroll_params(c, new_macro_call.params);
+	if (perr) {
+		cerr << "Error resolving expression at position " << perr
 			<< " of macro call \'" << name << "\'." << endl;
 		// dump the literal?
 		return good_bool(false);
-	} else	return good_bool(true);
+	}
+	const size_t nerr = unroll_nodes(c, new_macro_call.nodes);
+	if (nerr) {
+		cerr << "Error resolving literal node at position " << nerr
+			<< " of macro call \'" << name << "\'." << endl;
+		// dump the literal?
+		return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1774,6 +1733,7 @@ macro::unroll(const unroll_context& c, const node_pool_type& np,
 	Make sure entry exists for this macro.  
 	NOTE: no use in checking now before unroll, too limited.  
 	TODO: better error handling than throw().
+	NOTE: size checking can be done in parser too
  */
 void
 macro::check(void) const {
@@ -1781,11 +1741,18 @@ macro::check(void) const {
 	assert(nodes.size());
 	// probe existence of macro
 	const macro_definition_entry m(macro_registry[name]);
+	// should've already been checked in the parser
 	if (!m) {
 		cerr << "Error: unknown PRS macro \'" << name << "\'." << endl;
 		THROW_EXIT;
 	}
-	if (!m.check_num_args(nodes.size()).good) {
+	if (!m.check_num_params(params.size()).good) {
+		// make sure passed in correct number of arguments
+		// custom-defined, may be variable
+		// already have error message
+		THROW_EXIT;
+	}
+	if (!m.check_num_nodes(nodes.size()).good) {
 		// make sure passed in correct number of arguments
 		// custom-defined, may be variable
 		// already have error message
@@ -1798,22 +1765,20 @@ void
 macro::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(nodes);
+	collect_transient_info_base(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 macro::write_object(const persistent_object_manager& m, ostream& o) const {
-	write_value(o, name);
-	m.write_pointer_list(o, nodes);
+	write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 macro::load_object(const persistent_object_manager& m, istream& i) {
-	read_value(i, name);
-	m.read_pointer_list(i, nodes);
+	load_object_base(m, i);
 }
 
 //=============================================================================

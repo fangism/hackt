@@ -2,6 +2,12 @@
 
 2006-02-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-4-preal-01-09:
+	  Added support for sprs (sized PRS) generation and testing.  
+
+
+2006-02-05	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-77-4:
 	  Attempted to try consistency checking between create phase, 
 		using .haco (instead of .haco-u) as input, but resulted

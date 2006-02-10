@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.h"
 	Base set of classes for the HAC parser.  
-	$Id: node_list.h,v 1.3 2006/01/22 06:52:54 fang Exp $
+	$Id: node_list.h,v 1.4 2006/02/10 21:50:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.h,v 1.10.12.1 2005/12/11 00:45:08 fang Exp
  */
@@ -57,6 +57,8 @@ protected:
 	typedef	list<count_ptr<T> >			list_type;
 public:
 	typedef	typename list_type::value_type		value_type;
+	typedef	typename list_type::reference		reference;
+	typedef	typename list_type::const_reference	const_reference;
 	typedef	typename list_type::iterator		iterator;
 	typedef	typename list_type::const_iterator	const_iterator;
 	typedef	typename list_type::reverse_iterator	reverse_iterator;
@@ -100,6 +102,19 @@ public:
 	this_type*
 	append(const T*);		// basically push_back
 #endif
+
+	reference
+	front(void) { return nodes.front(); }
+
+	const_reference
+	front(void) const { return nodes.front(); }
+
+	reference
+	back(void) { return nodes.back(); }
+
+	const_reference
+	back(void) const { return nodes.back(); }
+
 	void
 	push_back(const T* p) { nodes.push_back(value_type(p)); }
 
@@ -111,12 +126,6 @@ public:
 
 	void
 	pop_front(void) { nodes.pop_front(); }
-
-	const value_type&
-	front(void) const { return nodes.front(); }
-
-	const value_type&
-	back(void) const { return nodes.back(); }
 
 	void
 	wrap(const node_position* o, const node_position* c) {

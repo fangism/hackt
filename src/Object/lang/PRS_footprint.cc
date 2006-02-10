@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.9 2006/02/04 06:43:17 fang Exp $
+	$Id: PRS_footprint.cc,v 1.10 2006/02/10 21:50:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -18,6 +18,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/const_param.h"
 #include "Object/lang/cflat_visitor.h"
 #include "main/cflat_options.h"
 #include "util/IO_utils.h"
@@ -26,7 +27,7 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
 #include "util/stacktrace.h"
-// #include "util/memory/count_ptr.tcc"
+#include "util/memory/count_ptr.tcc"
 #include "common/ICE.h"
 
 namespace HAC {
@@ -124,6 +125,7 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			np[e.only()].get_back_ref()
 				->dump_hierarchical_name(o,
 					dump_flags::no_definition_owner);
+			directive_base::dump_params(e.get_params(), o);
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
 #if STACKTRACE_DUMPS
@@ -201,10 +203,12 @@ if (r.attributes.size()) {
  */
 ostream&
 footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
-	o << m.name << '(';
-	typedef	macro::const_iterator const_iterator;
-	const_iterator i(m.begin());
-	const const_iterator e(m.end());
+	o << m.name;
+	directive_base::dump_params(m.params, o);
+	o << '(';
+	typedef	macro::nodes_type::const_iterator const_iterator;
+	const_iterator i(m.nodes.begin());
+	const const_iterator e(m.nodes.end());
 	INVARIANT(i!=e);
 	np[*i].get_back_ref()->dump_hierarchical_name(o,
 		dump_flags::no_definition_owner);
@@ -281,14 +285,28 @@ footprint::push_back_macro(const string& s) {
 void
 footprint::collect_transient_info_base(persistent_object_manager& m) const {
 {
-	typedef	rule_pool_type::const_iterator	const_rule_iterator;
-	const_rule_iterator i(rule_pool.begin());
-	const const_rule_iterator e(rule_pool.end());
+	typedef	rule_pool_type::const_iterator	const_iterator;
+	const_iterator i(rule_pool.begin());
+	const const_iterator e(rule_pool.end());
+	for ( ; i!=e; ++i) {
+		i->collect_transient_info_base(m);
+	}
+}{
+	typedef	expr_pool_type::const_iterator	const_iterator;
+	const_iterator i(expr_pool.begin());
+	const const_iterator e(expr_pool.end());
+	for ( ; i!=e; ++i) {
+		i->collect_transient_info_base(m);
+	}
+}{
+	typedef	macro_pool_type::const_iterator	const_iterator;
+	const_iterator i(macro_pool.begin());
+	const const_iterator e(macro_pool.end());
 	for ( ; i!=e; ++i) {
 		i->collect_transient_info_base(m);
 	}
 }
-	// the expr_pool and macro_pool don't need persistence management yet
+	// the expr_pool doesn't need persistence management yet
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -301,31 +319,31 @@ void
 footprint::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 {
-	typedef	rule_pool_type::const_iterator	const_rule_iterator;
+	typedef	rule_pool_type::const_iterator	const_iterator;
 	const size_t s = rule_pool.size();
 	write_value(o, s);
-	const_rule_iterator i(rule_pool.begin());
-	const const_rule_iterator e(rule_pool.end());
+	const_iterator i(rule_pool.begin());
+	const const_iterator e(rule_pool.end());
 	for ( ; i!=e; i++) {
 		i->write_object_base(m, o);
 	}
 }{
-	typedef	expr_pool_type::const_iterator	const_expr_iterator;
+	typedef	expr_pool_type::const_iterator	const_iterator;
 	const size_t s = expr_pool.size();
 	write_value(o, s);
-	const_expr_iterator i(expr_pool.begin());
-	const const_expr_iterator e(expr_pool.end());
+	const_iterator i(expr_pool.begin());
+	const const_iterator e(expr_pool.end());
 	for ( ; i!=e; i++) {
-		i->write_object_base(o);
+		i->write_object_base(m, o);
 	}
 }{
-	typedef	macro_pool_type::const_iterator	const_macro_iterator;
+	typedef	macro_pool_type::const_iterator	const_iterator;
 	const size_t s = macro_pool.size();
 	write_value(o, s);
-	const_macro_iterator i(macro_pool.begin());
-	const const_macro_iterator e(macro_pool.end());
+	const_iterator i(macro_pool.begin());
+	const const_iterator e(macro_pool.end());
 	for ( ; i!=e; i++) {
-		i->write_object_base(o);
+		i->write_object_base(m, o);
 	}
 }
 }
@@ -353,7 +371,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	size_t j = 0;
 	for ( ; j<s; j++) {
 		expr_pool.push_back(expr_node());
-		expr_pool.back().load_object_base(i);
+		expr_pool.back().load_object_base(m, i);
 	}
 }{
 	size_t s;
@@ -362,7 +380,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	size_t j = 0;
 	for ( ; j<s; j++) {
 		macro_pool.push_back(macro());
-		macro_pool.back().load_object_base(i);
+		macro_pool.back().load_object_base(m, i);
 	}
 }
 }
@@ -376,12 +394,23 @@ footprint::accept(cflat_visitor& v) const {
 //=============================================================================
 // class footprint_expr_node method defintions
 
+footprint_expr_node::footprint_expr_node() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint_expr_node::footprint_expr_node(const char t) :
+		type(t), nodes(), params() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint_expr_node::footprint_expr_node(const char t, const size_t s) :
+		type(t), nodes(s), params() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return the index of the first zero entry, if any, 
 		indicating where an error occurred.  
  */
 size_t
-footprint_expr_node::first_error(void) const {
+footprint_expr_node::first_node_error(void) const {
 	const size_t s = nodes.size();
 	if (s) {
 		size_t i = 0;
@@ -398,15 +427,29 @@ footprint_expr_node::first_error(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint_expr_node::write_object_base(ostream& o) const {
-	STACKTRACE_PERSISTENT("expr_node::write_object_base()");
-	write_value(o, type);
-	write_array(o, nodes);
+footprint_expr_node::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	if (type == PRS_LITERAL_TYPE_ENUM) {
+		m.collect_pointer_list(params);
+	} else	INVARIANT(params.empty());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-footprint_expr_node::load_object_base(istream& i) {
+footprint_expr_node::write_object_base(const persistent_object_manager& m,
+		ostream& o) const {
+	STACKTRACE_PERSISTENT("expr_node::write_object_base()");
+	write_value(o, type);
+	write_array(o, nodes);
+	if (type == PRS_LITERAL_TYPE_ENUM) {
+		m.write_pointer_list(o, params);
+	} else	INVARIANT(params.empty());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+footprint_expr_node::load_object_base(const persistent_object_manager& m,
+		istream& i) {
 	STACKTRACE_PERSISTENT("expr_node::load_object_base()");
 	read_value(i, type);
 	read_sequence_prealloc(i, nodes);
@@ -414,6 +457,9 @@ footprint_expr_node::load_object_base(istream& i) {
 	STACKTRACE_INDENT << "at " << this << ":" << endl;
 	STACKTRACE_INDENT << "nodes size = " << nodes.size() << endl;
 #endif
+	if (type == PRS_LITERAL_TYPE_ENUM) {
+		m.read_pointer_list(i, params);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -470,40 +516,6 @@ footprint_rule::accept(cflat_visitor& v) const {
 //=============================================================================
 // struct footprint_macro method definitions
 
-/**
-	\return 1-indexed offset of earliest error, or 0 if none found.  
- */
-size_t
-footprint_macro::first_error(void) const {
-	const size_t s = node_args.size();
-	if (s) {
-		size_t i = 0;
-		for ( ; i<s; i++) {
-			if (!node_args[i]) {
-				cerr << "Error resolving literal " << i <<
-					"." << endl;
-				return i+1;
-			}
-		}
-	}
-	return 0;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_macro::write_object_base(ostream& o) const {
-	write_value(o, name);
-	util::write_sequence(o, node_args);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-footprint_macro::load_object_base(istream& i) {
-	read_value(i, name);
-	util::read_sequence_resize(i, node_args);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_macro::accept(cflat_visitor& v) const {
 	v.visit(*this);

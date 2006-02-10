@@ -2,7 +2,7 @@
 	\file "Object/traits/pbool_traits.h"
 	Traits and policies for parameter booleans.  
 	This file used to be "Object/art_object_pbool_traits.h".
-	$Id: pbool_traits.h,v 1.6 2006/01/22 18:20:36 fang Exp $
+	$Id: pbool_traits.h,v 1.7 2006/02/10 21:50:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PBOOL_TRAITS_H__
@@ -50,8 +50,6 @@ struct class_traits<pbool_tag> {
 					nonmeta_instance_reference_base_type;
 	typedef	pbool_meta_instance_reference_base
 				meta_instance_reference_parent_type;
-	typedef	pbool_instance_reference_base
-				nonmeta_instance_reference_parent_type;
 	typedef	bool_expr			data_expr_base_type;
 	typedef	pbool_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
@@ -74,7 +72,7 @@ struct class_traits<pbool_tag> {
 
 	/**
 		Replacement for built-in type pointer.  
-		Initialized in "Object/art_built_ins.cc"
+		Initialized in "Object/traits/class_traits_types.cc"
 	 */
 	static const type_ref_ptr_type		built_in_type_ptr;
 private:

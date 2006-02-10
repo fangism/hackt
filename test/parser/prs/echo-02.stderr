@@ -10,7 +10,7 @@ state	value
 #STATE#	{ [5:34]
 #STATE#	keyword: prs [6:1..3]
 #STATE#	{ [6:5]
-#STATE#	identifier: echo [7:2..5]
+#STATE#	(prs-literal) [7:2..5]
 #STATE#	( [7:6]
 #STATE#	) [7:7]
 in state #STATE#, possible rules are:

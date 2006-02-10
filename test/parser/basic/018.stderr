@@ -36,3 +36,4 @@ acceptable tokens are:
 	BOOL_TYPE (shift)
 	PINT_TYPE (shift)
 	PBOOL_TYPE (shift)
+	PREAL_TYPE (shift)

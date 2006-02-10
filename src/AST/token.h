@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.h"
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.4 2006/01/23 22:14:39 fang Exp $
+	$Id: token.h,v 1.5 2006/02/10 21:50:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */
@@ -11,10 +11,15 @@
 
 #include "AST/token_string.h"
 #include "AST/type_base.h"
+#include "Object/expr/types.h"		// for typedefs
 #include "util/memory/chunk_map_pool_fwd.h"
 
 namespace HAC {
 namespace parser {
+using entity::pint_value_type;
+using entity::pbool_value_type;
+using entity::preal_value_type;
+
 //=============================================================================
 // forward declarations in this namespace appear in "AST/AST_fwd.h"
 
@@ -28,11 +33,11 @@ namespace parser {
 class token_int : public terminal, public expr {
 	typedef	token_int		this_type;
 protected:
-	long val;			///< the value
+	pint_value_type			val;	///< the value
 public:
 /// standard constructor
 	explicit
-	token_int(const long v) : terminal(), expr(), val(v) { }
+	token_int(const pint_value_type v) : terminal(), expr(), val(v) { }
 
 /// standard destructor
 	~token_int() { }
@@ -59,11 +64,11 @@ public:
 class token_float : public terminal, public expr {
 	typedef	token_float		this_type;
 protected:
-	double val;			///< the value
+	preal_value_type		val;	///< the value
 public:
 /// standard constructor
 	explicit
-	token_float(const double v) : terminal(), expr(), val(v) { }
+	token_float(const preal_value_type v) : terminal(), expr(), val(v) { }
 
 /// standard destructor
 	~token_float() { }
@@ -248,7 +253,7 @@ public:
 
 //-----------------------------------------------------------------------------
 /**
-	Class for built-in "pint" and "pbool" parameter types.
+	Class for built-in "pint" and "pbool" and "preal" parameter types.
  */
 class token_paramtype : public token_type, public concrete_type_ref {
 public:
@@ -266,9 +271,6 @@ virtual	~token_paramtype();
 	line_position
 	rightmost(void) const { return token_type::rightmost(); }
 
-#if 0
-virtual	TYPE_BASE_CHECK_PROTO = 0;
-#endif
 };	// end class token_paramtype
 
 //-----------------------------------------------------------------------------
@@ -283,12 +285,8 @@ public:
 
 	~token_pbool_type();
 
-#if 0
-	TYPE_BASE_CHECK_PROTO;
-#else
 	return_type
 	check_type(context&) const;
-#endif
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_pbool_type
@@ -305,15 +303,29 @@ public:
 
 	~token_pint_type();
 
-#if 0
-	TYPE_BASE_CHECK_PROTO;
-#else
 	return_type
 	check_type(context&) const;
-#endif
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_pint_type
+
+//-----------------------------------------------------------------------------
+/**
+	Class for built-in "preal" parameter type.
+ */
+class token_preal_type : public token_paramtype {
+	typedef	token_preal_type		this_type;
+public:
+	explicit
+	token_preal_type(const char* dt);
+
+	~token_preal_type();
+
+	return_type
+	check_type(context&) const;
+
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+};	// end class token_preal_type
 
 //=============================================================================
 

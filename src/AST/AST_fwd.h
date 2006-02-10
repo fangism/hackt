@@ -1,7 +1,7 @@
 /**
 	\file "AST/AST_fwd.h"
 	Forward declarations for classes in HAC::parser.
-	$Id: AST_fwd.h,v 1.2 2005/12/13 04:14:46 fang Exp $
+	$Id: AST_fwd.h,v 1.3 2006/02/10 21:50:34 fang Exp $
  */
 
 #ifndef	__HAC_AST_AST_FWD_H__
@@ -151,6 +151,7 @@ class token_bool_type;
 class token_paramtype;
 class token_pbool_type;
 class token_pint_type;
+class token_preal_type;
 
 //-----------------------------------------------------------------------------
 typedef	node_position		char_punctuation_type;

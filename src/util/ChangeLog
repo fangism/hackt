@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
 
+2006-02-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-4-preal-01-03:
+	  util/operators.h: added functor specializations for 
+		the modulus<float> and modulus<double>.  
+	  parser::arith_expr::check_meta_expr(), added check for
+		operating on pair of real-valued operands.  
+
+
 2006-02-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-8-merged-spec-01-04:

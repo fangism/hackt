@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.2 2006/02/04 06:43:20 fang Exp $
+	$Id: bool_literal.h,v 1.3 2006/02/10 21:50:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
@@ -25,6 +25,7 @@ struct expr_dump_context;
 namespace PRS {
 	// apologies for confusion...
 	struct expr_dump_context;
+	class literal;
 }
 
 // const?
@@ -41,6 +42,10 @@ protected:
 
 public:
 	bool_literal();
+
+	// implicit
+	bool_literal(const count_ptr<const PRS::literal>&);
+	bool_literal(const count_ptr<PRS::literal>&);
 
 	explicit
 	bool_literal(const bool_literal_base_ptr_type&);
@@ -67,6 +72,33 @@ public:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+	/// alias wrapper
+	void
+	write_object(const persistent_object_manager& m, ostream& o) const {
+		write_object_base(m, o);
+	}
+
+	/// alias wrapper
+	void
+	load_object(const persistent_object_manager& m, istream& i) {
+		load_object_base(m, i);
+	}
+
+	/**
+		Bound helper functor.  
+	 */
+	struct unroller {
+		const unroll_context&		_context;
+
+		explicit
+		unroller(const unroll_context& c) : _context(c) { }
+
+		size_t
+		operator () (const bool_literal& b) const {
+			return b.unroll_base(_context);
+		}
+	};	// end struct unroller
 
 };	// end struct bool_literal
 

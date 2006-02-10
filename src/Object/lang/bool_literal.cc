@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.2 2006/02/04 06:43:20 fang Exp $
+	$Id: bool_literal.cc,v 1.3 2006/02/10 21:50:40 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -10,7 +10,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/lang/PRS_base.h"	// for PRS::expr_dump_context
+#include "Object/lang/PRS.h"	// for PRS::literal, PRS::expr_dump_context
 #include "Object/expr/expr_dump_context.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -27,6 +27,16 @@ bool_literal::bool_literal() : var(NULL) { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool_literal::bool_literal(const bool_literal_base_ptr_type& l) : var(l) {
 	NEVER_NULL(var);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool_literal::bool_literal(const count_ptr<const PRS::literal>& l) :
+		var(l->get_bool_var()) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool_literal::bool_literal(const count_ptr<PRS::literal>& l) :
+		var(l->get_bool_var()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.6 2006/01/22 18:19:53 fang Exp $
+	$Id: pbool_const.h,v 1.7 2006/02/10 21:50:37 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
@@ -85,7 +85,7 @@ public:
 	count_ptr<const const_param>
 	static_constant_param(void) const;
 
-	bool
+	value_type
 	static_constant_value(void) const { return val; }
 
 	bool

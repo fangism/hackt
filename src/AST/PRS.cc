@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.5 2006/02/04 06:43:15 fang Exp $
+	$Id: PRS.cc,v 1.6 2006/02/10 21:50:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -34,6 +34,9 @@
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/inst/pint_value_collection.h"
+#include "Object/ref/meta_instance_reference_base.h"
+#include "Object/ref/meta_instance_reference_subtypes.h" // for conversion
+#include "Object/ref/simple_meta_instance_reference.h"	// for conversion
 
 #include "common/TODO.h"
 
@@ -47,6 +50,7 @@
 // for specializing util::what
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::rule, "(prs-rule)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::literal, "(prs-literal)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::loop, "(prs-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::body, "(prs-body)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::op_loop, "(prs-op-loop)")
@@ -68,6 +72,117 @@ using entity::meta_range_expr;
 body_item::body_item() { }
 
 body_item::~body_item() { }
+
+//=============================================================================
+// class literal method definitions
+
+literal::literal(inst_ref_expr* r, const expr_list* p) :
+		ref(r), params(p) {
+	NEVER_NULL(ref);
+	// params are optional
+}
+
+literal::~literal() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(literal)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Destructively releases and exposes underlying identifier
+	if it is a simple id_expr, else returns NULL (no error message).
+	\return token_identifier if instance_reference is a 
+		single unqualified ID.  
+ */
+excl_ptr<const token_identifier>
+literal::extract_identifier(void) {
+	typedef	excl_ptr<const token_identifier>	return_type;
+	excl_ptr<id_expr> idex = ref.is_a_xfer<id_expr>();
+	if (!idex)
+		return return_type(NULL);
+	excl_ptr<qualified_id> qid = idex->release_qualified_id();
+	NEVER_NULL(qid);
+	if (qid->is_absolute())
+		return return_type(NULL);
+	if (qid->size() > 1)
+		return return_type(NULL);
+	qualified_id_base::reference id(qid->front());
+	return_type ret(id.exclusive_release());	// transfer ownership
+	NEVER_NULL(ret);
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Releases the parameters list to the caller.  
+ */
+excl_ptr<const expr_list>
+literal::extract_parameters(void) {
+	return params;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+line_position
+literal::leftmost(void) const {
+	return ref->leftmost();
+}
+
+line_position
+literal::rightmost(void) const {
+	if (params)
+		return params->rightmost();
+	else	return ref->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+prs_literal_ptr_type
+literal::check_prs_literal(const context& c) const {
+	const prs_literal_ptr_type ret(ref->check_prs_literal(c));
+if (ret && params) {
+	if (params->size() > 2) {
+		cerr << "Error: rule literals can take a maximum of 2 "
+			"(width, length) parameters.  " << where(*params)
+			<< endl;
+		return prs_literal_ptr_type(NULL);
+	}
+	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
+	typedef checked_exprs_type::const_iterator	const_iterator;
+	typedef checked_exprs_type::value_type		value_type;
+	checked_exprs_type temp;
+	params->postorder_check_meta_exprs(temp, c);
+	const const_iterator i(temp.begin()), e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking literal parameters in "
+			<< where(*params) << endl;
+		return prs_literal_ptr_type(NULL);
+	}
+	INVARIANT(temp.size());
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(ret->get_params()));
+}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This really should never be called.  
+	Meta-parameter references should never be adorned with other parameters!
+ */
+inst_ref_expr::meta_return_type
+literal::check_meta_reference(const context& c) const {
+	// return ref->check_meta_reference(c);
+	return meta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This really should never be called.  
+	Postpone parameter checks until later.  
+ */
+inst_ref_expr::nonmeta_return_type
+literal::check_nonmeta_reference(const context& c) const {
+	// return ref->check_nonmeta_reference(c);
+	return nonmeta_return_type(NULL);
+}
 
 //=============================================================================
 // class rule method definitions
@@ -399,9 +514,24 @@ op_loop::check_prs_expr(context& c) const {
 //=============================================================================
 // class macro method definitions
 
+#if 0
 macro::macro(const token_identifier* i, const inst_ref_expr_list* r) :
 		name(i), args(r) {
 	NEVER_NULL(name); NEVER_NULL(args);
+}
+
+macro::macro(excl_ptr<const token_identifier>& i, const inst_ref_expr_list* r) :
+		name(i), args(r) {
+	NEVER_NULL(name); NEVER_NULL(args);
+}
+#endif
+
+macro::macro(literal* l, const inst_ref_expr_list* r) :
+		name(), params(), args(r) {
+	const excl_ptr<literal> lit(l);	// will self-destruct at end of ctor
+	name = lit->extract_identifier();
+	params = lit->extract_parameters();
+	// punt checking until later
 }
 
 macro::~macro() { }
@@ -410,7 +540,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(macro)
 
 line_position
 macro::leftmost(void) const {
-	return name->leftmost();
+	// there could be an error extracting the name
+	if (name)
+		return name->leftmost();
+	else if (params)
+		return params->leftmost();
+	else	return args->leftmost();
 }
 
 line_position
@@ -419,31 +554,71 @@ macro::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: process params.
+ */
 body_item::return_type
 macro::check_rule(context& c) const {
 	typedef	inst_ref_expr_list::checked_bool_refs_type
 							checked_bools_type;
-	typedef checked_bools_type::const_iterator	const_iterator;
-	typedef checked_bools_type::value_type		value_type;
-	if (!entity::PRS::macro_registry[*name]) {
+	if (!name) {
+		cerr << "Error parsing macro name before " << where(*args)
+			<< endl;
+		cerr << "Expected: prs_macro : ID . [ \'<\' shift_exprs \'>\' ] \'(\' inst_ref_exprs \')\'" << endl;
+		return return_type(NULL);
+	}
+	const entity::PRS::macro_definition_entry
+		mde(entity::PRS::macro_registry[*name]);
+	if (!mde) {
 		cerr << "Error: unrecognized PRS macro \"" << *name << "\" at "
 			<< where(*name) << endl;
 		return return_type(NULL);
 	}
+
+	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
+if (params) {
+	if (!mde.check_num_params(params->size()).good) {
+		// already have error message
+		cerr << "\tat " << where(*params) << endl;
+		return return_type(NULL);
+	}
+	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
+	typedef checked_exprs_type::const_iterator	const_iterator;
+	typedef checked_exprs_type::value_type		value_type;
+	checked_exprs_type temp;
+	params->postorder_check_meta_exprs(temp, c);
+	const const_iterator i(temp.begin()), e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking macro parameters in " << where(*args)
+			<< endl;
+		return return_type(NULL);
+	}
+	INVARIANT(temp.size());
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(ret->get_params()));
+}
+{
+	NEVER_NULL(args);
+	if (!mde.check_num_nodes(args->size()).good) {
+		// already have error message
+		cerr << "\tat " << where(*args) << endl;
+		return return_type(NULL);
+	}
+	typedef checked_bools_type::const_iterator	const_iterator;
+	typedef checked_bools_type::value_type		value_type;
 	checked_bools_type temp;
 	INVARIANT(args->size());
 	args->postorder_check_bool_refs(temp, c);
-	const const_iterator i(temp.begin());
-	const const_iterator e(temp.end());
+	const const_iterator i(temp.begin()), e(temp.end());
 	if (find(i, e, value_type(NULL)) != e) {
 		cerr << "Error checking macro arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);
 	}
 	INVARIANT(temp.size());
-	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
 	NEVER_NULL(ret);
-	copy(i, e, back_inserter(*ret));
+	copy(i, e, back_inserter(ret->get_nodes()));
+}
 	return ret;
 }
 
@@ -482,8 +657,7 @@ attribute::check(context& c) const {
 	}
 	vals_type vals;
 	values->postorder_check_meta_exprs(vals, c);
-	const const_iterator i(vals.begin());
-	const const_iterator e(vals.end());
+	const const_iterator i(vals.begin()), e(vals.end());
 	if (find(i, e, val_type(NULL)) != e) {
 		// one of the param expressions failed checking
 		// blank will signal error

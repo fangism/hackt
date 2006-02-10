@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.4 2006/01/23 22:14:39 fang Exp $
+	$Id: token.cc,v 1.5 2006/02/10 21:50:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -29,14 +29,18 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/traits/preal_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 
 #include "common/TODO.h"
 #include "util/what.h"
+#include "util/libc.h"
+#include "util/sstream.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/chunk_map_pool.tcc"
@@ -76,12 +80,15 @@ namespace memory {
 namespace HAC {
 namespace parser {
 #include "util/using_ostream.h"
+using std::ostringstream;
 using entity::pint_const;
 using entity::pbool_const;
+using entity::preal_const;
 
 // these are built-in instance references, not types.  
 using entity::pbool_traits;
 using entity::pint_traits;
+using entity::preal_traits;
 using entity::bool_traits;
 using entity::int_traits;
 
@@ -166,9 +173,9 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int)
  */
 int
 token_int::string_compare(const char* d) const {
-	char n[64];
-	sprintf(n, "%ld", val);
-	return strcmp(n,d);
+	ostringstream s;
+	s << val;
+	return strcmp(s.str().c_str(), d);
 }
 
 ostream&
@@ -208,9 +215,9 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_float)
  */
 int
 token_float::string_compare(const char* d) const {
-	char n[64];
-	sprintf(n, "%f", val);
-	return strcmp(n,d);
+	ostringstream s;
+	s << val;
+	return strcmp(s.str().c_str(), d);
 }
 
 ostream&
@@ -233,8 +240,7 @@ token_float::rightmost(void) const {
  */
 expr::meta_return_type
 token_float::check_meta_expr(const context& c) const {
-	cerr << "token_float::check_meta_expr(): not quite done yet!" << endl;
-	return expr::meta_return_type(NULL);
+	return expr::meta_return_type(new preal_const(val));
 }
 
 //=============================================================================
@@ -630,6 +636,26 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
 concrete_type_ref::return_type
 token_pint_type::check_type(context&) const {
 	return pint_traits::built_in_type_ptr;
+}
+
+//=============================================================================
+// class token_preal_type method definitions
+
+CONSTRUCTOR_INLINE
+token_preal_type::token_preal_type(const char* dt) : token_paramtype(dt) { }
+
+DESTRUCTOR_INLINE
+token_preal_type::~token_preal_type() { }
+
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_preal_type)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Return built-in parameter integer type reference.
+ */
+concrete_type_ref::return_type
+token_preal_type::check_type(context&) const {
+	return preal_traits::built_in_type_ptr;
 }
 
 //=============================================================================

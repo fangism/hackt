@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.98 2006/02/04 06:43:14 fang Exp $
+#	$Id: Makefile.am,v 1.99 2006/02/10 21:50:33 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -201,6 +201,7 @@ OBJECT_CC_FILES = \
 	Object/inst/param_value_collection.cc \
 	Object/inst/pbool_value_collection.cc \
 	Object/inst/pint_value_collection.cc \
+	Object/inst/preal_value_collection.cc \
 	Object/inst/bool_instance_collection.cc \
 	Object/inst/int_instance_collection.cc \
 	Object/inst/enum_instance_collection.cc \
@@ -232,6 +233,9 @@ OBJECT_CC_FILES = \
 	Object/lang/cflat_visitor.cc \
 	Object/lang/cflat_printer.cc \
 	Object/lang/bool_literal.cc \
+	Object/lang/directive_base.cc \
+	Object/lang/directive_definition.cc \
+	Object/lang/directive_source.cc \
 	Object/lang/PRS.cc \
 	Object/lang/PRS_footprint.cc \
 	Object/lang/PRS_attribute_registry.cc \
@@ -311,6 +315,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/param_traits.h \
 	Object/traits/pint_traits.h \
 	Object/traits/pbool_traits.h \
+	Object/traits/preal_traits.h \
 	Object/traits/int_traits.h \
 	Object/traits/bool_traits.h \
 	Object/traits/enum_traits.h \
@@ -351,6 +356,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/int_range_expr.h \
 	Object/expr/int_range_list.h \
 	Object/expr/int_relational_expr.h \
+	Object/expr/real_expr.h \
 	Object/expr/meta_index_expr.h \
 	Object/expr/meta_index_list.h \
 	Object/expr/meta_range_expr.h \
@@ -372,6 +378,11 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/pint_range.h \
 	Object/expr/pint_relational_expr.h \
 	Object/expr/pint_unary_expr.h \
+	Object/expr/preal_const.h \
+	Object/expr/preal_expr.h \
+	Object/expr/preal_arith_expr.h \
+	Object/expr/preal_relational_expr.h \
+	Object/expr/preal_unary_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
 	Object/inst/substructure_alias_fwd.h \

@@ -1,7 +1,7 @@
 /**
  *	\file "lexer/hackt-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.11 2006/02/04 06:43:21 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.12 2006/02/10 21:50:44 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -91,6 +91,7 @@ using namespace HAC::parser;
 #include "lexer/hackt-lex-options.h"
 #include "lexer/flex_lexer_state.h"
 #include "util/stacktrace.h"
+#include "util/sstream.h"
 using flex::lexer_state;
 
 /**
@@ -189,37 +190,50 @@ KEYWORD_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
 
 static inline void
 LINKAGE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_keyword = new token_keyword(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_keyword = new token_keyword(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 ELSE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_else = new token_else(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_else = new token_else(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 BOOL_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_bool = new token_bool(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_bool = new token_bool(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 INT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_int_type = new token_int_type(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_int_type = new token_int_type(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 BOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_bool_type = new token_bool_type(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_bool_type = new token_bool_type(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 PINT_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_pint_type = new token_pint_type(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_pint_type = new token_pint_type(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 static inline void
 PBOOL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
-	hackt_lval._token_pbool_type = new token_pbool_type(yytext); TOKEN_UPDATE(foo);
+	hackt_lval._token_pbool_type = new token_pbool_type(yytext);
+	TOKEN_UPDATE(foo);
+}
+
+static inline void
+PREAL_TYPE_UPDATE(YYSTYPE& hackt_lval, const lexer_state& foo) {
+	hackt_lval._token_preal_type = new token_preal_type(yytext);
+	TOKEN_UPDATE(foo);
 }
 
 /***
@@ -378,6 +392,7 @@ INT_TYPE	"int"
 BOOL_TYPE	"bool"
 PINT_TYPE	"pint"
 PBOOL_TYPE	"pbool"
+PREAL_TYPE	"preal"
 CHANNEL		"chan"
 TRUE		"true"
 FALSE		"false"
@@ -578,6 +593,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 {BOOL_TYPE}	{ BOOL_TYPE_UPDATE(*hackt_lval, foo); return BOOL_TYPE; }
 {PINT_TYPE}	{ PINT_TYPE_UPDATE(*hackt_lval, foo); return PINT_TYPE; }
 {PBOOL_TYPE}	{ PBOOL_TYPE_UPDATE(*hackt_lval, foo); return PBOOL_TYPE; }
+{PREAL_TYPE}	{ PREAL_TYPE_UPDATE(*hackt_lval, foo); return PREAL_TYPE; }
 {TRUE}		{ BOOL_UPDATE(*hackt_lval, foo); return BOOL_TRUE; }
 {FALSE}		{ BOOL_UPDATE(*hackt_lval, foo); return BOOL_FALSE; }
 {EXTERN}	{ LINKAGE_UPDATE(*hackt_lval, foo); return EXTERN; }
@@ -592,6 +608,7 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	}
 	TOKEN_UPDATE(foo);
 }
+
 {ENDLINECOMMENT} { 
 	if (comment_feedback > 1) {
 		cerr << "end-of-line comment ignored " <<
@@ -599,11 +616,19 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	}
 	TOKEN_UPDATE(foo);
 }
+
 {FLOAT} {
 	if (token_feedback) {
 		cerr << "float = " << yytext << " " LINE_COL(CURRENT) << endl;
 	}
-	hackt_lval->_token_float = new token_float(atof(yytext));
+	/* TODO: error handling of value-ranges */
+	/* consider using stream conversions to avoid precision errors */
+	HAC::entity::preal_value_type v;
+	std::istringstream iss(yytext);	/* slower, but safer */
+	iss >> v;
+	/* could try to use faster, but unsafe istrstream (deprecated) */
+	hackt_lval->_token_float = new token_float(v);
+	/* hackt_lval->_token_float = new token_float(atof(yytext)); */
 	TOKEN_UPDATE(foo);
 	return FLOAT;
 }
@@ -612,7 +637,15 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	if (token_feedback) {
 		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
 	}
-	hackt_lval->_token_int = new token_int(atoi(yytext));
+	/* TODO: error handling of value-ranges */
+	/* consider using stream conversions to avoid precision errors */
+	/* what if we need atol? */
+	HAC::entity::pint_value_type v;
+	std::istringstream iss(yytext);	/* slower, but safer */
+	iss >> v;
+	/* could try to use faster, but unsafe istrstream (deprecated) */
+	hackt_lval->_token_int = new token_int(v);
+	/* hackt_lval->_token_int = new token_int(atoi(yytext)); */
 	TOKEN_UPDATE(foo);
 	return INT;
 }

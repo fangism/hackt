@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.10 2006/01/30 07:42:06 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.11 2006/02/10 21:50:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -62,6 +62,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace util {
 using HAC::entity::pbool_tag;
 using HAC::entity::pint_tag;
+using HAC::entity::preal_tag;
 
 SPECIALIZE_UTIL_WHAT(HAC::entity::data_instantiation_statement,
 	"data_instantiation_statement")
@@ -69,6 +70,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::pint_instantiation_statement,
 	"pint_instantiation_statement")
 SPECIALIZE_UTIL_WHAT(HAC::entity::pbool_instantiation_statement,
 	"pbool_instantiation_statement")
+SPECIALIZE_UTIL_WHAT(HAC::entity::preal_instantiation_statement,
+	"preal_instantiation_statement")
 SPECIALIZE_UTIL_WHAT(HAC::entity::process_instantiation_statement,
 	"process_instantiation_statement")
 SPECIALIZE_UTIL_WHAT(HAC::entity::channel_instantiation_statement,
@@ -80,6 +83,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_instantiation_statement, 
 		PINT_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::preal_instantiation_statement, 
+		PREAL_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_instantiation_statement, 
 		PROCESS_INSTANTIATION_STATEMENT_TYPE_KEY, 0)
@@ -275,37 +281,17 @@ instantiation_statement_base::load_object_base(
 //=============================================================================
 // class param_instantiation_statement_base method definitions
 
-#if 0
-/**
-	Private empty constructor.
- */
-param_instantiation_statement_base::param_instantiation_statement_base() :
-		parent_type() {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_instantiation_statement_base::param_instantiation_statement_base(
 		const index_collection_item_ptr_type& i) :
 		parent_type(i) {
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-param_instantiation_statement_base::~param_instantiation_statement_base() {
-}
-#endif
-
 //=============================================================================
 // explicit template class instantiations
 
-#if 0
-template class instantiation_statement<pbool_tag>;
-template class instantiation_statement<pint_tag>;
-#else
 template class param_instantiation_statement<pbool_tag>;
 template class param_instantiation_statement<pint_tag>;
-#endif
+template class param_instantiation_statement<preal_tag>;
 template class instantiation_statement<datatype_tag>;
 template class instantiation_statement<channel_tag>;
 template class instantiation_statement<process_tag>;

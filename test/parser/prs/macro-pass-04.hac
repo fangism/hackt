@@ -1,0 +1,9 @@
+// "macro-pass-04.hac"
+// should fail: pass gates require 3 nodes
+
+defproc passn(bool g, s, d) {
+prs {
+	passn(g, s)
+}
+}
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_expr.h,v 1.3 2006/01/22 18:20:18 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.4 2006/02/10 21:50:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -8,15 +8,18 @@
 
 #include <iosfwd>
 #include <valarray>
+#include <vector>
 #include "util/macros.h"
+#include "Object/lang/SPEC_fwd.h"
 #include "Object/lang/cflat_visitee.h"
+#include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
-using std::ostream;
 using std::istream;
-// using util::persistent_object_manager;
+using std::ostream;
+using util::persistent_object_manager;
 
 //=============================================================================
 /**
@@ -25,13 +28,18 @@ using std::istream;
 	Implementation is defined in "Object/lang/PRS_footprint.cc".
  */
 class footprint_expr_node : public cflat_visitee {
-	typedef	std::valarray<int>	node_array_type;
+	/**
+		Why int and not size_t?
+	 */
+	typedef	int				node_value_type;
+	typedef	std::valarray<node_value_type>	node_array_type;
+	typedef	directive_base_params_type	params_type;
 private:
 	/**
 		Whether or not this is AND or OR, NOT, literal....  
 		This uses the enumerations according to
 		PRS::{literal,not_expr,and_expr,or_expr}::print_stamp
-		in "Object/lang/PRS.h".
+		in "Object/lang/PRS_enum.h".
 	 */
 	char				type;
 	/**
@@ -41,21 +49,35 @@ private:
 		Values are 1-indexed.  
 	 */
 	node_array_type			nodes;
+	/**
+		This field is only applicable to PRS_LITERALs.
+		Technically, non-leaf expression nodes never 
+		have literal parameters, but we can't turn this 
+		into a union either because vectors have
+		non-trivial dtors.  
+		We need to pay the extra storage cost here.  :(
+	 */
+	params_type			params;
 
 public:
-	footprint_expr_node() { }
+	footprint_expr_node();
 
 	explicit
-	footprint_expr_node(const char t) : type(t), nodes() { }
+	footprint_expr_node(const char);
 
-	footprint_expr_node(const char t, const size_t s) :
-		type(t), nodes(s) { }
+	footprint_expr_node(const char t, const size_t s);
 
 	char
 	get_type(void) const { return type; }
 
 	void
 	set_type(const char t) { type = t; }
+
+	params_type&
+	get_params(void) { return params; }
+
+	const params_type&
+	get_params(void) const { return params; }
 
 	size_t
 	size(void) const { return nodes.size(); }
@@ -64,7 +86,7 @@ public:
 		Subtract one because indicies are intentionally 
 		off by one.  
 	 */
-	int&
+	node_value_type&
 	operator [] (const size_t i) {
 		INVARIANT(i-1 < nodes.size());
 		return nodes[i-1];
@@ -74,13 +96,13 @@ public:
 		Subtract one because indicies are intentionally 
 		off by one.  
 	 */
-	const int&
+	const node_value_type&
 	operator [] (const size_t i) const {
 		INVARIANT(i-1 < nodes.size());
 		return nodes[i-1];
 	}
 
-	const int&
+	const node_value_type&
 	only(void) const {
 		return nodes[0];
 	}
@@ -90,13 +112,19 @@ public:
 
 	/// returns the 1-indexed position of first error, else 0
 	size_t
-	first_error(void) const;
+	first_node_error(void) const;
+
+	size_t
+	first_param_error(void) const;
 
 	void
-	write_object_base(ostream&) const;
+	collect_transient_info_base(persistent_object_manager&) const;
 
 	void
-	load_object_base(istream&);
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 	void
 	accept(cflat_visitor&) const;

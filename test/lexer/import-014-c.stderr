@@ -11,18 +11,16 @@ state	value
 #STATE#	list<(def-body-item)>: (instance-decl) ... [12:2--13:15]
 #STATE#	keyword: prs [16:2..4]
 #STATE#	{ [16:6]
-#STATE#	identifier: foo [17:3..5]
+#STATE#	(id-expr): foo [17:3..5]
 #STATE#	+ [17:6]
 in state #STATE#, possible rules are:
-	prs_macro : ID . mandatory_member_index_expr_list_in_parens  (#RULE#)
-	relative_id : ID .  (#RULE#)
-	qualified_id : ID . SCOPE ID  (#RULE#)
+	prs_literal : relative_member_index_expr . shift_expr_list_in_angles_optional  (#RULE#)
+	shift_expr_list_in_angles_optional : .  (#RULE#)
 acceptable tokens are: 
 	'&' (reduce)
-	'(' (shift)
-	'.' (reduce)
-	'[' (reduce)
+	'(' (reduce)
+	')' (reduce)
+	'<' (shift)
 	'|' (reduce)
-	SCOPE (shift)
 	IMPLIES (reduce)
 	RARROW (reduce)

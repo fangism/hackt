@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.cc"
-	$Id: SPEC.cc,v 1.2 2006/02/04 06:43:18 fang Exp $
+	$Id: SPEC.cc,v 1.3 2006/02/10 21:50:40 fang Exp $
  */
 
 #include <iostream>
@@ -9,10 +9,16 @@
 #include "Object/lang/SPEC.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
+#include "Object/expr/param_expr.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"
+#include "Object/traits/bool_traits.h"
+#include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/persistent_functor.tcc"
+#include "util/memory/chunk_map_pool.tcc"	// for memory pool
 #include "util/indent.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -59,22 +65,19 @@ struct directive::dumper {
 //=============================================================================
 // class directive method definitions
 
-directive::directive() : name(), nodes() { }
+directive::directive() : persistent(), directive_source() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-directive::directive(const string& n) : name(n), nodes() { }
+directive::directive(const string& n) : persistent(), directive_source(n) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 directive::~directive() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-directive::push_back(const_reference r) {
-	nodes.push_back(r);
-}
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directive)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directive)
+CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(directive)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -82,18 +85,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(directive)
  */
 ostream&
 directive::dump(ostream& o, const PRS::rule_dump_context& c) const {
-	o << name << '(';
-	typedef args_type::const_iterator      const_iterator;
-	INVARIANT(nodes.size());
-	const_iterator i(nodes.begin());
-	const const_iterator e(nodes.end());
-	NEVER_NULL(*i);
-	(*i)->dump(o, c);
-	for (++i; i!=e; ++i) {
-		NEVER_NULL(*i);
-		(*i)->dump(o << ',', c);
-	}
-	return o << ')';
+	return directive_source::dump(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -106,42 +98,45 @@ directive::unroll(const unroll_context& c, const node_pool_type& np,
 	STACKTRACE_VERBOSE;
 	// at least check the instance references first...
 	footprint_directive& new_directive(sfp.push_back_directive(name));
-	transform(nodes.begin(), nodes.end(), back_inserter(new_directive),
-		PRS::literal::unroller(c));
-	const size_t err = new_directive.first_error();
-	if (err) {
-		cerr << "Error resolving node at position " << err
+	const size_t perr = unroll_params(c, new_directive.params);
+	if (perr) {
+		cerr << "Error resolving expression at position " << perr
 			<< " of spec directive \'" << name << "\'." << endl;
 		// dump the literal?
 		return good_bool(false);
-	} else  return good_bool(true);
+	}
+	const size_t nerr = unroll_nodes(c, new_directive.nodes);
+	if (nerr) {
+		cerr << "Error resolving literal node at position " << nerr
+			<< " of spec directive \'" << name << "\'." << endl;
+		// dump the literal?
+		return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: params
+ */
 void
 directive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		util::persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(nodes);
-#if 0
-	for_each(nodes.begin(), nodes.end(),
-		util::persistent_collector_ptr(m));
-#endif
+	collect_transient_info_base(m);
 }
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directive::write_object(const persistent_object_manager& m, ostream& o) const {
-	write_value(o, name);
-	m.write_pointer_list(o, nodes);
+	write_object_base(m, o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 directive::load_object(const persistent_object_manager& m, istream& i) {
-	read_value(i, name);
-	m.read_pointer_list(i, nodes);
+	load_object_base(m, i);
 }
 
 //=============================================================================

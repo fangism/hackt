@@ -32,13 +32,13 @@ Persistent Object Manager text dump:
 	28	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
-	32	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	31	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
-	37	##ADDR##	arithexp	0	#HEAD#	#TAIL#	17
+	36	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	37	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	38	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	40	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20

@@ -3,7 +3,7 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.7 2006/01/22 18:19:51 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.8 2006/02/10 21:50:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
@@ -23,14 +23,17 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/simple_meta_value_reference.tcc"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/traits/preal_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/expr/const_collection.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/inst/pbool_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
+#include "Object/inst/preal_value_collection.h"
 #include "Object/unroll/aliases_connection_base.h"
 #include "Object/persistent_type_hash.h"
 
@@ -43,6 +46,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pbool_meta_instance_reference,
 		"pbool-inst-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pint_meta_instance_reference,
 		"pint-inst-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_preal_meta_instance_reference,
+		"preal-inst-ref")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_pbool_meta_instance_reference, 
@@ -50,6 +55,9 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_pint_meta_instance_reference, 
 		SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::simple_preal_meta_instance_reference, 
+		SIMPLE_PREAL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -60,6 +68,7 @@ namespace entity {
 
 template class simple_meta_value_reference<pint_tag>;
 template class simple_meta_value_reference<pbool_tag>;
+template class simple_meta_value_reference<preal_tag>;
 
 //=============================================================================
 }	// end namepace entity

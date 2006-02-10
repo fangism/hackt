@@ -1,0 +1,9 @@
+// "size-02.hac"
+// should fail parsing
+
+defproc size_test (bool a, b) {
+prs {
+	a => b<10>-		// should parse-fail
+}
+}
+

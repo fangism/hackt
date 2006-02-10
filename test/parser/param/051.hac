@@ -1,0 +1,6 @@
+// "051.hac"
+// testing basic preal facilities
+// should fail
+
+preal thirteen = 13;	// is lex'd as an integer, without implicit conversion
+

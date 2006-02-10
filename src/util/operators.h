@@ -1,13 +1,14 @@
 /**
-	\file "util/operators.h'
+	\file "util/operators.h"
 	Functors but with virtual resolution.
-	$Id: operators.h,v 1.6 2005/10/25 20:51:59 fang Exp $
+	$Id: operators.h,v 1.7 2006/02/10 21:50:46 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__
 #define __UTIL_OPERATORS_H__
 
 #include <functional>
+#include <cmath>
 
 #define	USING_UTIL_OPERATIONS						\
 	using util::binary_arithmetic_operation;			\
@@ -27,6 +28,37 @@
 	using util::less_equal;						\
 	using util::shift_left;						\
 	using util::shift_right;
+
+//=============================================================================
+namespace std {
+/**
+	modulus specialization for type float.
+	This complete specialization allows us to perform floating point
+	modulus operations, by forwarding to the standard library fmodf.  
+ */
+template <>
+struct modulus<float> : public binary_function<float,float,float> {
+	float
+	operator () (const float& x, const float& y) const {
+		return fmodf(x, y);
+	}
+};	// end struct modulus
+
+/**
+	modulus specialization for type double.
+	This complete specialization allows us to perform floating point
+	modulus operations, by forwarding to the standard library fmod.  
+ */
+template <>
+struct modulus<double> : public binary_function<double,double,double> {
+	double
+	operator () (const double& x, const double& y) const {
+		return fmod(x, y);
+	}
+};	// end struct modulus
+
+}	// end namespace std
+//=============================================================================
 
 namespace util {
 // using namespace std;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.11 2006/02/04 06:43:17 fang Exp $
+	$Id: PRS.h,v 1.12 2006/02/10 21:50:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -11,6 +11,7 @@
 #include "Object/lang/PRS_base.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/bool_literal.h"
+#include "Object/lang/directive_source.h"
 #include "Object/unroll/meta_loop_base.h"
 #include <string>
 #include <vector>
@@ -27,7 +28,6 @@ struct pint_tag;
 template <class, size_t> class value_array;
 
 namespace PRS {
-using std::vector;
 using std::string;
 //=============================================================================
 // forward declarations
@@ -36,7 +36,7 @@ using std::string;
 	Because PRS only ever deal with bools (nodes).  
  */
 typedef	bool_literal_base_ptr_type		literal_base_ptr_type;
-// typedef	count_ptr<simple_bool_meta_instance_reference>	literal_base_ptr_type;
+typedef	directive_source_params_type		literal_params_type;
 
 //=============================================================================
 /**
@@ -47,8 +47,10 @@ class literal : public prs_expr, public bool_literal {
 	typedef	bool_literal			base_type;
 public:
 	struct	unroller;
+	typedef	literal_params_type		params_type;
 private:
 	enum { print_stamp = PRS_LITERAL_TYPE_ENUM };
+	params_type				params;
 public:
 	literal();
 
@@ -68,8 +70,11 @@ public:
 	ostream&
 	dump(ostream& o) const { return dump(o, expr_dump_context()); }
 
-	const literal_base_ptr_type&
-	get_bool_var(void) const { return var; }
+	params_type&
+	get_params(void) { return params; }
+
+	const params_type&
+	get_params(void) const { return params; }
 
 	void
 	check(void) const;
@@ -89,11 +94,6 @@ public:
 
 	// fanout.. not until actually instantiated, unrolled, created...
 	PERSISTENT_METHODS_DECLARATIONS
-
-#if 0
-	void
-	collect_transient_info_base(persistent_object_manager& m) const;
-#endif
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class literal
@@ -144,16 +144,10 @@ public:
 	void
 	load_object(const persistent_object_manager&, istream&);
 
-#if 0
-	// functors
-	struct collector;
-	struct writer;
-	struct loader;
-#endif
 };	// end class attribute
 
 //-----------------------------------------------------------------------------
-typedef	vector<attribute>		attribute_list_type;
+typedef	std::vector<attribute>		attribute_list_type;
 
 //=============================================================================
 class pull_base : public rule {
@@ -165,7 +159,7 @@ protected:
 	/**
 		Output node.  
 	 */
-	literal				output;
+	bool_literal			output;
 	/**
 		Whether or not complement is implicit.
 	 */
@@ -178,9 +172,9 @@ protected:
 
 	pull_base();
 
-	pull_base(const prs_expr_ptr_type&, const literal&, const bool);
+	pull_base(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
-	pull_base(const prs_expr_ptr_type&, const literal&, 
+	pull_base(const prs_expr_ptr_type&, const bool_literal&, 
 		const attribute_list_type&);
 
 public:
@@ -228,9 +222,9 @@ class pull_up : public pull_base {
 public:
 	pull_up();
 
-	pull_up(const prs_expr_ptr_type&, const literal&, const bool);
+	pull_up(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
-	pull_up(const prs_expr_ptr_type&, const literal&, 
+	pull_up(const prs_expr_ptr_type&, const bool_literal&, 
 		const attribute_list_type&);
 
 	~pull_up();
@@ -264,9 +258,9 @@ class pull_dn : public pull_base {
 public:
 	pull_dn();
 
-	pull_dn(const prs_expr_ptr_type&, const literal&, const bool);
+	pull_dn(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
-	pull_dn(const prs_expr_ptr_type&, const literal&, 
+	pull_dn(const prs_expr_ptr_type&, const bool_literal&, 
 		const attribute_list_type&);
 
 	~pull_dn();
@@ -615,19 +609,8 @@ public:
 	(not to be confused with AST::parser::PRS::macro)
 	TODO: support parameter values.  
  */
-class macro : public rule {
+class macro : public rule, public directive_source {
 	typedef	macro				this_type;
-public:
-	typedef	vector<count_ptr<literal> >	nodes_type;
-	typedef	nodes_type::const_reference	const_reference;
-	/**
-		Consider using a count_ptr instead and manage some sort
-		of replication check, since most of these are
-		expected to be some defined identifier.  
-	 */
-private:
-	string					name;
-	nodes_type				nodes;
 public:
 	macro();
 
@@ -635,9 +618,6 @@ public:
 	macro(const string&);
 
 	~macro();
-
-	void
-	push_back(const_reference);
 
 	ostream&
 	what(ostream&) const;

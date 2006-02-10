@@ -1,0 +1,18 @@
+// "size-05.hac"
+// copy-modified from "size-04.hac"
+// should pass
+
+defproc sized_prs (bool a, b) {
+pint ten = 10;
+preal tenf = 10.0;
+preal threef = 3.0;
+prs {
+	a<ten>		-> b-
+	~a<ten*3/2>	-> b+
+	a<ten*2,2>	=> b-			// accepts width,length
+	a<tenf*threef, threef>	=> b-		// also accepts preals
+}
+}
+
+sized_prs z;
+

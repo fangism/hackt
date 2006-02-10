@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.3 2006/01/22 06:52:53 fang Exp $
+	$Id: expr_base.h,v 1.4 2006/02/10 21:50:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -170,7 +170,8 @@ virtual CHECK_NONMETA_REFERENCE_PROTO = 0;
 	// NOTE: this is non-virtual
 	CHECK_GENERIC_PROTO;
 
-	prs_literal_ptr_type
+	// overridden only by PRS::literal
+virtual	prs_literal_ptr_type
 	check_prs_literal(const context&) const;
 
 	CHECK_PRS_EXPR_PROTO;

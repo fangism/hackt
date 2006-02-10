@@ -1,0 +1,7 @@
+// "056.hac"
+// should fail, attempting to use preal as index
+
+preal four = 4.1;
+
+bool my_array[four];
+

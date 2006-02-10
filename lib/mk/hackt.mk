@@ -7,7 +7,7 @@ srcdir = .
 # automake will convert these into .SUFFIXES:
 .SUFFIXES: .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest \
-	.haco .haco-u .haco-c .haco-a .prs .prsimexpr .prsimexpr-dot \
+	.haco .haco-u .haco-c .haco-a .prs .sprs .prsimexpr .prsimexpr-dot \
 	.prsimexpr-ps
 
 HACKT_EXE = $(top_builddir)/src/hackt
@@ -35,6 +35,9 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 .haco-a.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
+
+.haco-a.sprs:
+	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
 
 .haco-a.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@

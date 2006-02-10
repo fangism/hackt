@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.35 2006/02/06 03:20:10 fang Exp $
+#	$Id: configure.ac,v 1.36 2006/02/10 21:50:30 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060205, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060210, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -256,6 +256,7 @@ else AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS])
 fi
 
 dnl test what flags to set in AM_CFLAGS and AM_CXXFLAGS
+dnl no need for -Wsequence-point, already covered by -Wall
 TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
 TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual -Wcast-align"
 TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wconversion -Werror"
@@ -697,6 +698,8 @@ AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
 	[chmod +x test/hackt-alloc-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
 	[chmod +x test/hackt-cflat-expect.sh])
+AC_CONFIG_FILES([test/hackt-cflat-sprs-expect.sh],
+	[chmod +x test/hackt-cflat-sprs-expect.sh])
 AC_CONFIG_FILES([test/hackt-prsim-expr-alloc-expect.sh],
 	[chmod +x test/hackt-prsim-expr-alloc-expect.sh])
 AC_CONFIG_FILES([test/test-series.sh],

@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.2 2005/12/13 04:15:16 fang Exp $
+	$Id: object_fwd.h,v 1.3 2006/02/10 21:50:35 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -26,6 +26,7 @@ namespace entity {
 	typedef	class_traits<channel_tag>	channel_traits;
 	typedef	class_traits<pbool_tag>		pbool_traits;
 	typedef	class_traits<pint_tag>		pint_traits;
+	typedef	class_traits<preal_tag>		preal_traits;
 
 	class module;
 	class object;
@@ -74,6 +75,7 @@ namespace entity {
 	class struct_instance_reference_base;
 	class pint_instance_reference_base;
 	class pbool_instance_reference_base;
+	class preal_instance_reference_base;
 
 	template <class>
 	class meta_instance_reference;
@@ -93,8 +95,10 @@ namespace entity {
 	// base classes for meta_value_references
 	typedef	meta_instance_reference<pbool_tag>
 		pbool_meta_instance_reference_base;
-	typedef	meta_instance_reference<int_tag>
+	typedef	meta_instance_reference<pint_tag>
 		pint_meta_instance_reference_base;
+	typedef	meta_instance_reference<preal_tag>
+		preal_meta_instance_reference_base;
 
 	template <class>
 	class simple_meta_instance_reference;
@@ -126,6 +130,9 @@ namespace entity {
 		simple_pbool_nonmeta_instance_reference;
 	typedef	simple_nonmeta_value_reference<pint_tag>
 		simple_pint_nonmeta_instance_reference;
+	// not supported officially:
+	typedef	simple_nonmeta_value_reference<preal_tag>
+		simple_preal_nonmeta_instance_reference;
 
 	template <class>
 	class instance_collection;
@@ -181,6 +188,7 @@ namespace entity {
 	class param_type_reference;
 	class pbool_type_reference;
 	class pint_type_reference;
+	class preal_type_reference;
 
 	template <class>
 	class value_collection;
@@ -189,12 +197,15 @@ namespace entity {
 		pint_instance_collection;
 	typedef	value_collection<pbool_tag>
 		pbool_instance_collection;
+	typedef	value_collection<preal_tag>
+		preal_instance_collection;
 
 	template <class>
 	class state_instance;
 
 	class pint_instance;	// should be value
 	class pbool_instance;	// should be value
+	class preal_instance;	// should be value
 #if 0
 	class int_instance;
 	class bool_instance;
@@ -222,6 +233,8 @@ namespace entity {
 		pbool_expression_assignment;
 	typedef	expression_assignment<pint_tag>
 		pint_expression_assignment;
+	typedef	expression_assignment<preal_tag>
+		preal_expression_assignment;
 
 	// defined in "Object/unroll/*connection*.h"
 	class meta_instance_reference_connection;
@@ -254,6 +267,8 @@ namespace entity {
 		pbool_instantiation_statement;
 	typedef	param_instantiation_statement<pint_tag>
 		pint_instantiation_statement;
+	typedef	param_instantiation_statement<preal_tag>
+		preal_instantiation_statement;
 	typedef	instantiation_statement<datatype_tag>
 		data_instantiation_statement;
 	typedef	instantiation_statement<channel_tag>
@@ -269,6 +284,8 @@ namespace entity {
 		simple_pint_meta_instance_reference;
 	typedef	simple_meta_value_reference<pbool_tag>
 		simple_pbool_meta_instance_reference;
+	typedef	simple_meta_value_reference<preal_tag>
+		simple_preal_meta_instance_reference;
 
 	template <class>
 	class simple_nonmeta_value_reference;
@@ -285,6 +302,7 @@ namespace entity {
 	class data_expr;
 	class bool_expr;
 	class int_expr;
+	class real_expr;	// not officially supported
 	class enum_expr;
 	class struct_expr;
 	class int_arith_expr;
@@ -303,14 +321,19 @@ namespace entity {
 	class const_index;
 	class pbool_expr;
 	class pint_expr;
+	class preal_expr;
 	class pint_const;
 	class pbool_const;
+	class preal_const;
 	class param_unary_expr;
 	class pint_unary_expr;
 	class pbool_unary_expr;
+	class preal_unary_expr;
 	class param_binary_expr;
 	class pint_arith_expr;
 	class pint_relational_expr;
+	class preal_arith_expr;
+	class preal_relational_expr;
 	class pbool_logical_expr;
 	class meta_range_expr;
 	class pint_range;
@@ -331,6 +354,8 @@ namespace entity {
 		pint_const_collection;
 	typedef	const_collection<pbool_tag>
 		pbool_const_collection;
+	typedef	const_collection<preal_tag>
+		preal_const_collection;
 
 	class instance_collection_stack_item;
 

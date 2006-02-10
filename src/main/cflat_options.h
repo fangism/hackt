@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.7 2006/01/27 08:07:20 fang Exp $
+	$Id: cflat_options.h,v 1.8 2006/02/10 21:50:45 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -99,6 +99,10 @@ public:
 		Whether or not prs should be wrapped in dsim { }
 	 */
 	bool				dsim_prs;
+	/**
+		Whether or not PRS literal sizes are included in output.
+	 */
+	bool				size_prs;
 
 	// ignore policies...
 	// warning flags...
@@ -113,7 +117,8 @@ public:
 		enquote_names(true), dump_non_bools(false), 
 		namespace_policy(NAMESPACE_POLICY_NONE), 
 		check_prs(false), wire_mode(false), 
-		csim_style_prs(false), dsim_prs(false) {
+		csim_style_prs(false), dsim_prs(false), 
+		size_prs(false) {
 	}
 
 	~cflat_options() { }

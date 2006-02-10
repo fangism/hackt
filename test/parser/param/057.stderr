@@ -1,0 +1,5 @@
+ERROR: arith_expr expects two pints or two preals, but got:
+	preal-inst-ref at [7:11]
+	pint-inst-ref at [7:13]
+Error in source expression.
+HALT: at least one error in the assignment list.  [7:9..13]

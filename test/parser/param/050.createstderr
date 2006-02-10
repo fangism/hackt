@@ -1,0 +1,28 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	prealcol	0	#HEAD#	#TAIL#	40
+	4	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	prealcol	0	#HEAD#	#TAIL#	42
+	6	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
+	8	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	sprmref_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  2 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    thirteen = preal^0 thirteen (init = 13.13) value: 13.13
+    uninit = preal^0 uninit value: ?
+}
+
+Created state:
+

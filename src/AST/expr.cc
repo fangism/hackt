@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.4 2006/01/23 18:52:04 fang Exp $
+	$Id: expr.cc,v 1.5 2006/02/10 21:50:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -9,12 +9,12 @@
 #ifndef	__HAC_AST_EXPR_CC__
 #define	__HAC_AST_EXPR_CC__
 
+#define	ENABLE_STACKTRACE		0
+
 #include <exception>
 #include <iostream>
 #include <algorithm>
-
-#define	ENABLE_STACKTRACE		0
-
+#include <limits>				// for numeric_limits
 #include <iterator>
 
 #include "AST/token.h"
@@ -35,6 +35,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/meta_index_list.h"
 #include "Object/expr/nonmeta_index_list.h"
@@ -42,6 +43,9 @@
 #include "Object/expr/pint_unary_expr.h"
 #include "Object/expr/pint_arith_expr.h"
 #include "Object/expr/pint_relational_expr.h"
+#include "Object/expr/preal_unary_expr.h"
+#include "Object/expr/preal_arith_expr.h"
+#include "Object/expr/preal_relational_expr.h"
 #include "Object/expr/pbool_logical_expr.h"
 #include "Object/expr/bool_negation_expr.h"
 #include "Object/expr/int_negation_expr.h"
@@ -57,6 +61,7 @@
 #include "common/TODO.h"
 
 #include "util/what.h"
+#include "util/operators.h"
 #include "util/stacktrace.h"
 #include "util/iterator_more.h"
 #include "util/memory/count_ptr.tcc"
@@ -177,9 +182,6 @@ inst_ref_expr::check_meta_generic(const context& c) const {
 expr::meta_return_type
 inst_ref_expr::check_meta_expr(const context& c) const {
 	STACKTRACE("inst_ref_expr::check_meta_expr() (should not be called)");
-#if 0
-	return check_meta_reference(c).is_a<expr::meta_return_type::element_type>();
-#else
 	typedef	expr::meta_return_type::element_type	param_type;
 	const inst_ref_expr::meta_return_type inst_ref(check_meta_reference(c));
 	const expr::meta_return_type param_ref(inst_ref.is_a<param_type>());
@@ -192,7 +194,6 @@ inst_ref_expr::check_meta_expr(const context& c) const {
 		THROW_EXIT;
 		return expr::meta_return_type(NULL);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -253,6 +254,7 @@ inst_ref_expr::check_prs_literal(const context& c) const {
  */
 prs_expr_return_type
 inst_ref_expr::check_prs_expr(context& c) const {
+	// now virtual
 	return check_prs_literal(c);
 }
 
@@ -843,23 +845,34 @@ prefix_expr::check_meta_expr(const context& c) const {
 	// we have a valid param_expr
 	const count_ptr<pint_expr> ie(pe.is_a<pint_expr>());
 	const count_ptr<pbool_expr> be(pe.is_a<pbool_expr>());
+	const count_ptr<preal_expr> re(pe.is_a<preal_expr>());
 
 	const int ch = op->text[0];
 	switch(ch) {
 		case '-':
 			// integer negation
-			if (!ie) {
-				cerr << "Unary \'-\' operator requires a "
-					"pint argument, but got a ";
-				pe->what(cerr) << ".  ERROR!  "
-					<< where(*e) << endl;
-				return return_type(NULL);
-			} else if (ie->is_static_constant()) {
+			if (ie) {
+			if (ie->is_static_constant()) {
 				// constant simplification
 				return return_type(new pint_const(
 					- ie->static_constant_value()));
 			} else {
-				return return_type(new pint_unary_expr(ch, ie));
+				return return_type(new pint_unary_expr(ch,ie));
+			}
+			} else if (re) {
+			if (re->is_static_constant()) {
+				// constant simplification
+				return return_type(new preal_const(
+					- re->static_constant_value()));
+			} else {
+				return return_type(new preal_unary_expr(ch,re));
+			}
+			} else {
+				cerr << "Unary \'-\' operator requires a "
+					"pint or preal argument, but got a ";
+				pe->what(cerr) << ".  ERROR!  "
+					<< where(*e) << endl;
+				return return_type(NULL);
 			}
 		case '!':
 			// integer logical negation
@@ -1379,24 +1392,14 @@ arith_expr::check_meta_expr(const context& c) const {
 	}
 	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
 	const count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
-	if (!li || !ri) {
-		static const char err_str[] =
-			"ERROR arith_expr expected a pint, but got a ";
-		if (!li) {
-			cerr << err_str << lo->what(cerr) <<
-				" at " << where(*l) << endl;
-		}
-		if (!ri) {
-			cerr << err_str << ro->what(cerr) <<
-				" at " << where(*r) << endl;
-		}
-		return return_type(NULL);
-	}
+	const count_ptr<preal_expr> lr(lo.is_a<preal_expr>());
+	const count_ptr<preal_expr> rr(ro.is_a<preal_expr>());
+if (li && ri) {
 	// else is safe to make arith_expr object
 	const char ch = op->text[0];
 	if (li->is_static_constant() && ri->is_static_constant()) {
-		const int lc = li->static_constant_value();
-		const int rc = ri->static_constant_value();
+		const pint_value_type lc = li->static_constant_value();
+		const pint_value_type rc = ri->static_constant_value();
 		switch(ch) {
 			case '+': return return_type(new pint_const(lc +rc));
 			case '-': return return_type(new pint_const(lc -rc));
@@ -1424,9 +1427,57 @@ arith_expr::check_meta_expr(const context& c) const {
 	} else {
 		return return_type(new entity::pint_arith_expr(li, ch, ri));
 	}
+} else if (lr && rr) {
+	// else is safe to make arith_expr object
+	const char ch = op->text[0];
+	if (lr->is_static_constant() && rr->is_static_constant()) {
+		const preal_value_type lc = lr->static_constant_value();
+		const preal_value_type rc = rr->static_constant_value();
+		typedef	std::numeric_limits<preal_value_type>	limit_type;
+		switch(ch) {
+			case '+': return return_type(new preal_const(lc +rc));
+			case '-': return return_type(new preal_const(lc -rc));
+			case '*': return return_type(new preal_const(lc *rc));
+			case '/':
+				// technically checking for divide by zero falls
+				// under -Wfloat-equal.
+				if (rc < limit_type::min()) {
+					cerr << "Detected divide by 0.0 at " <<
+						where(*this) << endl;
+					THROW_EXIT;
+				}
+				return return_type(new preal_const(lc /rc));
+			case '%':
+				if (rc < limit_type::min()) {
+					cerr << "Detected divide by 0.0 at " <<
+						where(*this) << endl;
+					THROW_EXIT;
+				}
+				return return_type(new preal_const(
+					std::modulus<double>()(lc, rc)));
+			default:
+				cerr << "Bad operator char \'" << ch << "\' in "
+					"arith_expr::check_build()!" << endl;
+				DIE;
+		}
+		return return_type(NULL);	// never reached
+	} else {
+		return return_type(new entity::preal_arith_expr(lr, ch, rr));
+	}
+} else {
+	static const char err_str[] =
+		"ERROR: arith_expr expects two pints or two preals, but got:";
+	cerr << err_str << endl;
+	lo->what(cerr << '\t') << " at " << where(*l) << endl;
+	ro->what(cerr << '\t') << " at " << where(*r) << endl;
+	return return_type(NULL);
 }
+}	// end method arith_expr::check_meta_expr
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: support reals eventually.  
+ */
 nonmeta_expr_return_type
 arith_expr::check_nonmeta_expr(const context& c) const {
 	typedef	nonmeta_expr_return_type	return_type;
@@ -1477,6 +1528,11 @@ relational_expr::~relational_expr() { }
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(relational_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs a relation expression object, depending on whether
+	operands are both integer or both real.  
+	TODO: issue warning about floating-point equality comparisons.  
+ */
 expr::meta_return_type
 relational_expr::check_meta_expr(const context& c) const {
 	typedef	expr::meta_return_type	return_type;
@@ -1492,34 +1548,45 @@ relational_expr::check_meta_expr(const context& c) const {
 	}
 	const count_ptr<pint_expr> li(lo.is_a<pint_expr>());
 	const count_ptr<pint_expr> ri(ro.is_a<pint_expr>());
-	if (!li || !ri) {
-		static const char err_str[] =
-			"ERROR relational_expr expected a pint, but got a ";
-		if (!li) {
-			cerr << err_str << lo->what(cerr) <<
-				" at " << where(*l) << endl;
-		}
-		if (!ri) {
-			cerr << err_str << ro->what(cerr) <<
-				" at " << where(*r) << endl;
-		}
-		return return_type(NULL);
-	}
-	// else is safe to make entity::relational_expr object
+	const count_ptr<preal_expr> lr(lo.is_a<preal_expr>());
+	const count_ptr<preal_expr> rr(ro.is_a<preal_expr>());
+if (li && ri) {
 	const string op_str(op->text);
 	const entity::pint_relational_expr::op_type*
 		o(entity::pint_relational_expr::op_map[op_str]);
 	INVARIANT(o);
 	if (li->is_static_constant() && ri->is_static_constant()) {
-		const int lc = li->static_constant_value();
-		const int rc = ri->static_constant_value();
+		const pint_value_type lc = li->static_constant_value();
+		const pint_value_type rc = ri->static_constant_value();
 		return return_type(new pbool_const((*o)(lc,rc)));
 	} else {
 		return return_type(new entity::pint_relational_expr(li, o, ri));
 	}
+} else if (lr && rr) {
+	const string op_str(op->text);
+	const entity::preal_relational_expr::op_type*
+		o(entity::preal_relational_expr::op_map[op_str]);
+	INVARIANT(o);
+	if (lr->is_static_constant() && rr->is_static_constant()) {
+		const real_value_type lc = lr->static_constant_value();
+		const real_value_type rc = rr->static_constant_value();
+		return return_type(new pbool_const((*o)(lc,rc)));
+	} else {
+		return return_type(new entity::preal_relational_expr(lr,o,rr));
+	}
+} else {
+	cerr << "ERROR: relational_expr expects two pints or two preals, "
+		"but got:" << endl;
+	lo->what(cerr << '\t') << " at " << where(*l) << endl;
+	ro->what(cerr << '\t') << " at " << where(*r) << endl;
+	return return_type(NULL);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: add support for reals if it ever comes about.
+ */
 nonmeta_expr_return_type
 relational_expr::check_nonmeta_expr(const context& c) const {
 	typedef	nonmeta_expr_return_type	return_type;

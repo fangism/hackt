@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.6 2006/01/22 18:19:54 fang Exp $
+	$Id: pbool_expr.h,v 1.7 2006/02/10 21:50:37 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -33,7 +33,7 @@ using util::memory::never_ptr;
 class pbool_expr : virtual public param_expr, public bool_expr {
 public:
 	/**
-		The global boolean value type, set in "expr/types.h".
+		The global boolean value type, set in "Object/expr/types.h".
 		We bother with this typedef for the future potential of 
 		using templates to extend to other parameter types.  
 	 */

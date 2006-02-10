@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.8 2006/02/04 06:43:21 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.9 2006/02/10 21:50:45 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -240,6 +240,7 @@ extern const char* const yyrule[];
 	token_paramtype*	_token_paramtype;
 	token_pbool_type*	_token_pbool_type;
 	token_pint_type*	_token_pint_type;
+	token_preal_type*	_token_preal_type;
 	token_else*		_token_else;
 
 	root_body*		_root_body;
@@ -369,6 +370,7 @@ extern const char* const yyrule[];
 	PRS::body_item*		_prs_body_item;
 	PRS::rule_list*		_prs_rule_list;
 	PRS::rule*		_prs_rule;
+	PRS::literal*		_prs_literal;
 	PRS::loop*		_prs_loop;
 	PRS::macro*		_prs_macro;
 	PRS::attribute*		_prs_attribute;
@@ -510,6 +512,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	<_token_bool_type>	BOOL_TYPE
 %token	<_token_pint_type>	PINT_TYPE
 %token	<_token_pbool_type>	PBOOL_TYPE
+%token	<_token_preal_type>	PREAL_TYPE
 
 /*
 	Special yacc/bison-independent hack to get the maximum token enum
@@ -649,12 +652,14 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_inst_ref_expr_list>	mandatory_member_index_expr_list_in_parens
 %type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
 %type	<_expr_list>	shift_expr_list shift_expr_list_in_angles
+%type	<_expr_list>	shift_expr_list_in_angles_optional
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_inst_ref_expr>	relative_member_index_expr
+%type	<_prs_literal>	prs_literal
 %type	<_expr> simple_expr
 %type	<_expr>	unary_expr
-%type	<_member_expr>	member_expr
-%type	<_index_expr>	index_expr
+%type	<_member_expr>	member_expr local_member_expr
+%type	<_index_expr>	index_expr local_index_expr
 %type	<_expr>	multiplicative_expr additive_expr
 %type	<_expr> shift_expr optional_shift_expr
 %type	<_expr>	relational_equality_expr and_expr
@@ -1067,6 +1072,8 @@ base_param_type
 	: PINT_TYPE 		/* integer parameter */
 		{ $$ = $1; }
 	| PBOOL_TYPE		/* boolean parameter */
+		{ $$ = $1; }
+	| PREAL_TYPE		/* real-valued parameter */
 		{ $$ = $1; }
 	;
 
@@ -1791,8 +1798,38 @@ prs_body_item
 /* macros arguments are restricted to instance references for now */
 /* the argument list must also be non-empty */
 prs_macro
-	: ID mandatory_member_index_expr_list_in_parens
-		{ $$ = new PRS::macro($1, $2); }
+	/* : ID shift_expr_list_in_angles_optional
+		mandatory_member_index_expr_list_in_parens
+		{ $$ = new PRS::macro($1, $3); DELETE_TOKEN($2); }
+	*/
+	/* hack: to suppress a conflict on ID . '<' between macro and sized
+		literal, we relax the rule for the macro name by reusing
+		the sized (generalized) prs_literal, but then check that
+		the literal is a simple ID instance_reference by extraction.  
+	*/
+	: prs_literal mandatory_member_index_expr_list_in_parens
+		{
+		/*
+		 * can't figure out how to gracefully yyerror out safely
+		 * has to do with the current parser state skipping a 
+		 * reduction step.  
+		 */
+#if 0
+			excl_ptr<const token_identifier>
+				id = $1->extract_identifier();
+			if (!id) {
+				DELETE_TOKEN($1);
+				DELETE_TOKEN($2);
+				$$ = NULL;
+				yyerror("prs_macro : ID mandatory_member_index_expr_list_in_parens");
+			} else {
+				$$ = new PRS::macro(id, $2);
+			}
+#else
+			/* do parse-checking during next pass */
+			$$ = new PRS::macro($1, $2);
+#endif
+		}
 	;
 
 prs_loop
@@ -1805,9 +1842,9 @@ single_prs
 	/* note: type-check prs_expr as boolean return type */
 	/* conflict: expr can end ID, and prs_expr can start ID, S/R on :: */
 	: prs_rule_attribute_list_in_brackets
-		prs_expr prs_arrow member_index_expr dir
+		prs_expr prs_arrow relative_member_index_expr dir
 		{ $$ = new PRS::rule($1, $2, $3, $4, $5); }
-	| prs_expr prs_arrow member_index_expr dir
+	| prs_expr prs_arrow relative_member_index_expr dir
 		{ $$ = new PRS::rule(NULL, $1, $2, $3, $4); }
 	;
 
@@ -1863,8 +1900,14 @@ prs_paren_expr
 		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
 
+prs_literal
+	: relative_member_index_expr shift_expr_list_in_angles_optional
+		{ $$ = new PRS::literal($1, $2); }
+	;
+
 prs_unary_expr
-	: relative_member_index_expr { $$ = $1; }
+	/* TODO: process optional size arguments */
+	: prs_literal { $$ = $1; }
 	| prs_paren_expr { $$ = $1; }
 	| prs_and_loop { $$ = $1; }
 	| prs_or_loop { $$ = $1; }
@@ -1917,8 +1960,9 @@ spec_item
 /* identical to prs_macro, but we call it a directive */
 /* TODO: support parameters <...> */
 spec_directive
-	: ID mandatory_member_index_expr_list_in_parens
-		{ $$ = new SPEC::directive($1, $2); }
+	: ID shift_expr_list_in_angles_optional
+		mandatory_member_index_expr_list_in_parens
+		{ $$ = new SPEC::directive($1, $2, $3); }
 	;
 
 /******************************************************************************
@@ -2016,9 +2060,26 @@ member_index_expr
 /* same as member_index_expr, but disallowing absolute_id's, 
 	thus restricting to local lookups, useful for grammar diambiguation */
 relative_member_index_expr
-	: relative_id { $$ = new id_expr($1); }
-	| index_expr { $$ = $1; }
-	| member_expr { $$ = $1; }
+/*	: relative_id { $$ = new id_expr($1); }	*/
+	: ID { $$ = new id_expr(new qualified_id($1)); }
+	| local_index_expr { $$ = $1; }
+	| local_member_expr { $$ = $1; }
+	;
+
+local_index_expr
+	: local_member_expr sparse_range_list
+		{ $$ = new index_expr($1, $2); }
+	| ID sparse_range_list
+		{ $$ = new index_expr($1, $2); }
+	;
+
+local_member_expr
+	: local_index_expr '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
+	| local_member_expr '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
+	| ID '.' ID
+		{ $$ = new member_expr($1, $3); DELETE_TOKEN($2); }
 	;
 
 /** This removes S/R conflict between (a[i])[j] and (a[i][j]) */
@@ -2218,6 +2279,12 @@ optional_template_arguments_in_angles
 	relaxed template formals are forbidden from having default values.  
 */
 		{ $$ = $1; }
+	| { $$ = NULL; }
+	;
+
+/* used for paramterized macros and PRS literals */
+shift_expr_list_in_angles_optional
+	: shift_expr_list_in_angles { $$ = $1; }
 	| { $$ = NULL; }
 	;
 

@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.2 2006/02/04 06:43:15 fang Exp $
+	$Id: SPEC.cc,v 1.3 2006/02/10 21:50:34 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/expr/param_expr.h"
 #include "Object/lang/SPEC.h"
 #include "Object/lang/SPEC_registry.h"
 #include "Object/lang/PRS.h"	// for PRS::literal
@@ -36,8 +37,9 @@ using entity::process_definition;
 //=============================================================================
 // class directive method definitions
 
-directive::directive(const token_identifier* n, const inst_ref_expr_list* a) :
-		name(n), args(a) {
+directive::directive(const token_identifier* n, const expr_list* l, 
+		const inst_ref_expr_list* a) :
+		name(n), params(l), args(a) {
 	NEVER_NULL(name); NEVER_NULL(args);
 }
 
@@ -59,6 +61,7 @@ directive::rightmost(void) const { return args->rightmost(); }
 /**
 	Mostly ripped off of PRS::macro::check_rule.
 	Consider factoring out into common code for maintainability.  
+	TODO: check expr_list params.
  */
 directive::return_type
 directive::check_spec(context& c) const {
@@ -66,25 +69,55 @@ directive::check_spec(context& c) const {
 						checked_bools_type;
 	typedef	checked_bools_type::const_iterator	const_iterator;
 	typedef	checked_bools_type::value_type		value_type;
-	if (!entity::SPEC::spec_registry[*name]) {
+	const entity::SPEC::spec_definition_entry
+		sde(entity::SPEC::spec_registry[*name]);
+	if (!sde) {
 		cerr << "Error: unrecognized spec directive \"" << *name <<
 			"\" at " << where(*name) << endl;
 		return return_type(NULL);
 	}
+	const count_ptr<entity::SPEC::directive>
+		ret(new entity::SPEC::directive(*name));
+if (params) {
+	if (!sde.check_num_params(params->size()).good) {
+		// already have error message
+		cerr << "\tat " << where(*params) << endl;
+		return return_type(NULL);
+	}
+	typedef	expr_list::checked_meta_exprs_type	checked_exprs_type;
+	typedef	checked_exprs_type::const_iterator	const_iterator;
+	typedef	checked_exprs_type::value_type		value_type;
+	checked_exprs_type temp;
+	params->postorder_check_meta_exprs(temp, c);
+	const const_iterator i(temp.begin()), e(temp.end());
+	if (find(i, e, value_type(NULL)) != e) {
+		cerr << "Error checking spec parameters in "
+			<< where(*params) << endl;
+		return return_type(NULL);
+	}
+	INVARIANT(temp.size());
+	NEVER_NULL(ret);
+	copy(i, e, back_inserter(ret->get_params()));
+}
+{
+	NEVER_NULL(args);
+	if (!sde.check_num_nodes(args->size()).good) {
+		// already have error message
+		cerr << "\tat " << where(*args) << endl;
+		return return_type(NULL);
+	}
 	checked_bools_type temp;
 	args->postorder_check_bool_refs(temp, c);
-	const const_iterator i(temp.begin());
-	const const_iterator e(temp.end());
+	const const_iterator i(temp.begin()), e(temp.end());
 	if (find(i, e, value_type(NULL)) != e) {
 		cerr << "Error checking spec arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);
 	}
 	INVARIANT(temp.size());
-	const count_ptr<entity::SPEC::directive>
-		ret(new entity::SPEC::directive(*name));
 	NEVER_NULL(ret);
-	copy(i, e, back_inserter(*ret));
+	copy(i, e, back_inserter(ret->get_nodes()));
+}
 	return ret;
 }
 

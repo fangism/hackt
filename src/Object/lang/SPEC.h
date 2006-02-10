@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.2 2006/02/04 06:43:18 fang Exp $
+	$Id: SPEC.h,v 1.3 2006/02/10 21:50:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -9,7 +9,7 @@
 #include <iosfwd>
 #include <string>
 #include <vector>
-#include "Object/lang/SPEC_fwd.h"
+#include "Object/lang/directive_source.h"
 #include "Object/object_fwd.h"
 #include "Object/lang/bool_literal.h"
 #include "util/memory/count_ptr.h"
@@ -19,28 +19,16 @@
 namespace HAC {
 namespace entity {
 namespace SPEC {
-using std::ostream;
-using std::istream;
-using std::string;
-using util::good_bool;
-using util::memory::count_ptr;
-using util::persistent_object_manager;
 
 //=============================================================================
 /**
 	Directive placeholder.  
-	TODO: support parameters later. 
  */
-class directive : public util::persistent {
+class directive : public util::persistent, public directive_source {
 	typedef	directive				this_type;
 public:
-	typedef	std::vector<literal_ptr_type>		args_type;
-	typedef	args_type::const_reference		const_reference;
 	struct dumper;
 	struct unroller;
-private:
-	string						name;
-	args_type					nodes;
 public:
 	directive();
 
@@ -49,15 +37,15 @@ public:
 
 	~directive();
 
+/**
+	Defined as a macro just in case we need to re-use it...
+ */
 #define	SPEC_UNROLL_DIRECTIVE_PROTO					\
 	good_bool							\
 	unroll(const unroll_context&, const node_pool_type&, 		\
 		SPEC::footprint&) const
 
 	SPEC_UNROLL_DIRECTIVE_PROTO;
-
-	void
-	push_back(const_reference);
 
 	ostream&
 	what(ostream&) const;
@@ -66,11 +54,12 @@ public:
 	dump(ostream&, const PRS::rule_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
-	// CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
+	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class directive
 
 //=============================================================================
 typedef	std::vector<count_ptr<const directive> >	directives_set_base;
+
 /**
 	A set of spec directives.  
 	Analogous to PRS::rule_set.  

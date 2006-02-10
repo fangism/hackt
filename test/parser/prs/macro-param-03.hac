@@ -1,0 +1,11 @@
+// "macro-param-03.hac"
+// copy-modified from "macro-param-02.hac"
+// should fail parsing macro
+
+defproc bad_macro () {
+bool p, q;
+prs {
+	bogus[macro]<1, 2, 3.0>(p, q)
+}
+}
+
