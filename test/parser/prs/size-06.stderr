@@ -1,0 +1,2 @@
+Error: rule literals can take a maximum of 2 (width, length) parameters.  [6:3..9]
+ERROR in production rule guard at [6:2..9].

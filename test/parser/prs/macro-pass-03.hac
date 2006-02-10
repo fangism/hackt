@@ -1,0 +1,10 @@
+// "macro-pass-03.hac"
+// should fail: pass gates don't take parameters
+
+// definition may even bear the same name, because macro is not a keyword.
+defproc passn(bool g, s, d) {
+prs {
+	passn<44>(g, s, d)
+}
+}
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_macro_registry.h"
-	$Id: PRS_macro_registry.h,v 1.3.2.1 2006/02/10 08:09:51 fang Exp $
+	$Id: PRS_macro_registry.h,v 1.3.2.2 2006/02/10 21:11:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_H__
@@ -31,16 +31,6 @@ public:
 	// everything else inherited from directive_definition
 
 };	// end class macro_definition_entry
-
-//=============================================================================
-#if 0
-/**
-	This is the interface for a macro_definition_entry.
-	Classes whose members will be registered should look like this.  
- */
-struct macro_interface {
-};	// end struct macro_interface
-#endif
 
 //=============================================================================
 typedef	util::qmap<string, macro_definition_entry>	macro_registry_type;

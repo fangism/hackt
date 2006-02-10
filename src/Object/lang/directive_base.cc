@@ -1,11 +1,12 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.1.2.2 2006/02/10 08:09:52 fang Exp $
+	$Id: directive_base.cc,v 1.1.2.3 2006/02/10 21:11:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <algorithm>
 #include "Object/lang/directive_base.h"
 #include "Object/expr/const_param.h"
 #include "util/IO_utils.h"
@@ -18,6 +19,8 @@ namespace entity {
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+using std::find;
+using std::distance;
 
 //=============================================================================
 // class SPEC::directive_base method definitions
@@ -37,16 +40,17 @@ directive_base::~directive_base() { }
  */
 size_t
 directive_base::first_param_error(void) const {
-	// TODO: use std::find! and std::distance.
 	const size_t s = params.size();
 	if (s) {
-		size_t i = 0;
-		for ( ; i<s; i++) {
-			if (!params[i]) {
-				cerr << "Error resolving expression " << i <<
-					"." << endl;
-				return i+1;
-			}
+		typedef	params_type::const_iterator	const_iterator;
+		typedef	params_type::value_type		value_type;
+		const const_iterator i(params.begin()), e(params.end());
+		const const_iterator z(find(i, e, value_type(0)));
+		if (z != e) {
+			const size_t d = distance(i, z) +1;
+			cerr << "Error resolving expression " << d <<
+				"." << endl;
+			return d;
 		}
 	}
 	return 0;
@@ -58,16 +62,17 @@ directive_base::first_param_error(void) const {
  */
 size_t
 directive_base::first_node_error(void) const {
-	// TODO: use std::find! and std::distance.
 	const size_t s = nodes.size();
 	if (s) {
-		size_t i = 0;
-		for ( ; i<s; i++) {
-			if (!nodes[i]) {
-				cerr << "Error resolving literal " << i <<
-					"." << endl;
-				return i+1;
-			}
+		typedef	nodes_type::const_iterator	const_iterator;
+		typedef	nodes_type::value_type		value_type;
+		const const_iterator i(nodes.begin()), e(nodes.end());
+		const const_iterator z(find(i, e, value_type(NULL)));
+		if (z != e) {
+			const size_t d = distance(i, z) +1;
+			cerr << "Error resolving literal " << d <<
+				"." << endl;
+			return d;
 		}
 	}
 	return 0;

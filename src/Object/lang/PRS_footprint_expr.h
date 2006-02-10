@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint_expr.h,v 1.3.12.1 2006/02/10 08:09:51 fang Exp $
+	$Id: PRS_footprint_expr.h,v 1.3.12.2 2006/02/10 21:11:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_EXPR_H__
@@ -28,7 +28,11 @@ using util::persistent_object_manager;
 	Implementation is defined in "Object/lang/PRS_footprint.cc".
  */
 class footprint_expr_node : public cflat_visitee {
-	typedef	std::valarray<int>		node_array_type;
+	/**
+		Why int and not size_t?
+	 */
+	typedef	int				node_value_type;
+	typedef	std::valarray<node_value_type>	node_array_type;
 	typedef	directive_base_params_type	params_type;
 private:
 	/**
@@ -82,7 +86,7 @@ public:
 		Subtract one because indicies are intentionally 
 		off by one.  
 	 */
-	int&
+	node_value_type&
 	operator [] (const size_t i) {
 		INVARIANT(i-1 < nodes.size());
 		return nodes[i-1];
@@ -92,13 +96,13 @@ public:
 		Subtract one because indicies are intentionally 
 		off by one.  
 	 */
-	const int&
+	const node_value_type&
 	operator [] (const size_t i) const {
 		INVARIANT(i-1 < nodes.size());
 		return nodes[i-1];
 	}
 
-	const int&
+	const node_value_type&
 	only(void) const {
 		return nodes[0];
 	}

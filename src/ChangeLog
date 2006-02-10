@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-4-preal-01-10:
+	  Improved macro/directive error handling and reporting in parser
+		and middle-end.  Added test cases to show.  
+	  Branch is ready for merge to trunk.  
+
+
 2006-02-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-4-preal-01-09:

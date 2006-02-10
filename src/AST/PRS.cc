@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.5.2.5 2006/02/09 23:32:45 fang Exp $
+	$Id: PRS.cc,v 1.5.2.6 2006/02/10 21:11:04 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -138,6 +138,12 @@ prs_literal_ptr_type
 literal::check_prs_literal(const context& c) const {
 	const prs_literal_ptr_type ret(ref->check_prs_literal(c));
 if (ret && params) {
+	if (params->size() > 2) {
+		cerr << "Error: rule literals can take a maximum of 2 "
+			"(width, length) parameters.  " << where(*params)
+			<< endl;
+		return prs_literal_ptr_type(NULL);
+	}
 	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
 	typedef checked_exprs_type::const_iterator	const_iterator;
 	typedef checked_exprs_type::value_type		value_type;
@@ -561,7 +567,9 @@ macro::check_rule(context& c) const {
 		cerr << "Expected: prs_macro : ID . [ \'<\' shift_exprs \'>\' ] \'(\' inst_ref_exprs \')\'" << endl;
 		return return_type(NULL);
 	}
-	if (!entity::PRS::macro_registry[*name]) {
+	const entity::PRS::macro_definition_entry
+		mde(entity::PRS::macro_registry[*name]);
+	if (!mde) {
 		cerr << "Error: unrecognized PRS macro \"" << *name << "\" at "
 			<< where(*name) << endl;
 		return return_type(NULL);
@@ -569,6 +577,11 @@ macro::check_rule(context& c) const {
 
 	const count_ptr<entity::PRS::macro> ret(new entity::PRS::macro(*name));
 if (params) {
+	if (!mde.check_num_params(params->size()).good) {
+		// already have error message
+		cerr << "\tat " << where(*params) << endl;
+		return return_type(NULL);
+	}
 	typedef expr_list::checked_meta_exprs_type	checked_exprs_type;
 	typedef checked_exprs_type::const_iterator	const_iterator;
 	typedef checked_exprs_type::value_type		value_type;
@@ -585,6 +598,12 @@ if (params) {
 	copy(i, e, back_inserter(ret->get_params()));
 }
 {
+	NEVER_NULL(args);
+	if (!mde.check_num_nodes(args->size()).good) {
+		// already have error message
+		cerr << "\tat " << where(*args) << endl;
+		return return_type(NULL);
+	}
 	typedef checked_bools_type::const_iterator	const_iterator;
 	typedef checked_bools_type::value_type		value_type;
 	checked_bools_type temp;

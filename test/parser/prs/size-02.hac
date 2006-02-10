@@ -1,4 +1,4 @@
-// "size-01.hac"
+// "size-02.hac"
 // should fail parsing
 
 defproc size_test (bool a, b) {

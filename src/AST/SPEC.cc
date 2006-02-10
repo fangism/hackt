@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.2.2.4 2006/02/09 23:32:45 fang Exp $
+	$Id: SPEC.cc,v 1.2.2.5 2006/02/10 21:11:05 fang Exp $
  */
 
 #include <iostream>
@@ -69,7 +69,9 @@ directive::check_spec(context& c) const {
 						checked_bools_type;
 	typedef	checked_bools_type::const_iterator	const_iterator;
 	typedef	checked_bools_type::value_type		value_type;
-	if (!entity::SPEC::spec_registry[*name]) {
+	const entity::SPEC::spec_definition_entry
+		sde(entity::SPEC::spec_registry[*name]);
+	if (!sde) {
 		cerr << "Error: unrecognized spec directive \"" << *name <<
 			"\" at " << where(*name) << endl;
 		return return_type(NULL);
@@ -77,6 +79,11 @@ directive::check_spec(context& c) const {
 	const count_ptr<entity::SPEC::directive>
 		ret(new entity::SPEC::directive(*name));
 if (params) {
+	if (!sde.check_num_params(params->size()).good) {
+		// already have error message
+		cerr << "\tat " << where(*params) << endl;
+		return return_type(NULL);
+	}
 	typedef	expr_list::checked_meta_exprs_type	checked_exprs_type;
 	typedef	checked_exprs_type::const_iterator	const_iterator;
 	typedef	checked_exprs_type::value_type		value_type;
@@ -93,6 +100,12 @@ if (params) {
 	copy(i, e, back_inserter(ret->get_params()));
 }
 {
+	NEVER_NULL(args);
+	if (!sde.check_num_nodes(args->size()).good) {
+		// already have error message
+		cerr << "\tat " << where(*args) << endl;
+		return return_type(NULL);
+	}
 	checked_bools_type temp;
 	args->postorder_check_bool_refs(temp, c);
 	const const_iterator i(temp.begin()), e(temp.end());
