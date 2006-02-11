@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.99 2006/02/10 21:50:33 fang Exp $
+#	$Id: Makefile.am,v 1.100 2006/02/11 04:32:41 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -367,6 +367,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/operator_info.h \
 	Object/expr/operator_precedence.h \
 	Object/expr/param_expr.h \
+	Object/expr/param_expr_functor.h \
 	Object/expr/param_expr_list.h \
 	Object/expr/pbool_const.h \
 	Object/expr/pbool_expr.h \

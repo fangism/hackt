@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.2 2006/02/10 21:50:41 fang Exp $
+	$Id: directive_source.cc,v 1.3 2006/02/11 04:32:43 fang Exp $
  */
 
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <iterator>
 #include "Object/lang/directive_source.h"
 #include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
-#include "Object/expr/param_expr.h"
+#include "Object/expr/param_expr_functor.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"

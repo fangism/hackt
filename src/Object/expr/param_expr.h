@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.8 2006/02/10 21:50:37 fang Exp $
+	$Id: param_expr.h,v 1.9 2006/02/11 04:32:41 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -99,20 +99,8 @@ virtual bool
 virtual	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const = 0;
 
-	struct unroller {
-		typedef	count_ptr<const_param>		return_type;
-		const unroll_context&	_context;
-
-		explicit
-		unroller(const unroll_context& c) : _context(c) { }
-
-		template <class P>
-		return_type
-		operator () (const P& p) const {
-			return (p ? p->unroll_resolve(_context) : 
-				return_type(NULL));
-		}
-	};	// end struct unroller
+	// helper functor, defined in "Object/expr/param_expr_functor.h"
+	struct unroller;
 
 private:
 virtual	excl_ptr<param_expression_assignment>
