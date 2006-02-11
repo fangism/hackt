@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.8 2006/01/22 18:20:13 fang Exp $
+	$Id: value_collection.h,v 1.9 2006/02/11 03:56:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -149,10 +149,11 @@ virtual	ostream&
 	initial_value(void) const;
 
 	good_bool
-	may_type_check_actual_param_expr(const param_expr& pe) const;
+	may_type_check_actual_param_expr(const param_expr&) const;
 
 	good_bool
-	must_type_check_actual_param_expr(const const_param& pe) const;
+	must_type_check_actual_param_expr(const const_param&,
+		const unroll_context&) const;
 
 virtual	good_bool
 	instantiate_indices(const const_range_list& i) = 0;

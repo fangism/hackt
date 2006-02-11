@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.10 2006/01/30 07:42:03 fang Exp $
+	$Id: instance_collection_base.h,v 1.11 2006/02/11 03:56:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -35,6 +35,7 @@ class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
 class const_range_list;
+class const_index_list;
 class param_expr;
 class const_param_expr_list;
 class physical_instance_collection;
@@ -335,7 +336,11 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 
 // return type may become generic...
 virtual	member_inst_ref_ptr_type
-	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const = 0;
+	make_member_meta_instance_reference(
+		const inst_ref_ptr_type& b) const = 0;
+
+virtual	const_index_list
+	resolve_indices(const const_index_list&) const = 0;
 
 private:
 	// utility functions for handling index collection (inlined)

@@ -3,15 +3,15 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.5 2006/02/10 21:50:38 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.6 2006/02/11 03:56:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
 #define	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
 
+#define ENABLE_STACKTRACE				0
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
-#define ENABLE_STACKTRACE				0
 
 //=============================================================================
 // start of static initializations

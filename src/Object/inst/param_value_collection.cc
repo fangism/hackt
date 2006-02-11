@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.9 2006/01/30 07:42:03 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.10 2006/02/11 03:56:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -20,9 +20,11 @@
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_range.h"
+#include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
 
+#include "common/ICE.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
@@ -190,6 +192,7 @@ param_value_collection::template_formal_equivalent(const this_type& b) const {
 good_bool
 param_value_collection::may_check_expression_dimensions(
 		const param_expr& pe) const {
+	STACKTRACE_VERBOSE;
 	// MUST_BE_A(const param_value_collection*, this);
 	// else is not an expression class!
 
@@ -249,13 +252,20 @@ param_value_collection::may_check_expression_dimensions(
 	Checks for dimension and size equality between expression and 
 	instantiation.  
 	So far, only used by param_value_collection derivatives, 
-		in the context of checking template formals.  
+		in the context of checking template formals against actuals
+		when unrolling instantiations.  
 	May be useful else where for connections.  
+	This should really onle be called suring the unroll phase, 
+		when instance collections are 'certain'.  
+	NOTE: instantiation indices may depend on template parameters
+		so they need to be unroll resolved!
+	TODO: what if template formal size depends on template parameter!
 	\return true if dimensions *may* match.  
  */
 good_bool
 param_value_collection::must_check_expression_dimensions(
-		const const_param& pe) const {
+		const const_param& pe, const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	// MUST_BE_A(const param_value_collection*, this);
 	// else is not an expression class!
 
@@ -279,32 +289,65 @@ param_value_collection::must_check_expression_dimensions(
 	}
 	// dimensions match
 	if (dimensions != 0) {
-		INVARIANT(index_collection.size() == 1);	// huh? true?
+#if 1
+		INVARIANT(index_collection.size() == 1);
+		// true for formal parameters
+		// number of dimensions doesn't even match!
 		// this is true only if parameters that check this
 		// are template formals.  
 		// not sure if this will be called by non-formals, will see...
 
+		INVARIANT(pe.has_static_constant_dimensions());
+		const const_range_list d(pe.static_constant_dimensions());
+
 		// make sure sizes in each dimension
-		index_collection_type::const_iterator
+		const index_collection_type::const_iterator
 			i(index_collection.begin());
+		const count_ptr<const meta_range_list>
+			mrl((*i)->get_indices());
+		NEVER_NULL(mrl);
 		const count_ptr<const const_range_list>
-			crl((*i)->get_indices().is_a<const const_range_list>());
+			crl(mrl.is_a<const const_range_list>());
 		if (crl) {
-			INVARIANT(pe.has_static_constant_dimensions());
-			const const_range_list
-				d(pe.static_constant_dimensions());
-			return good_bool(*crl == d);
+			// return good_bool(*crl == d);
+			return good_bool(crl->is_size_equivalent(d));
 		} else {
 			// is dynamic, conservatively return false
+			// we're in trouble for template-dependent expressions
+			// need unroll parameters!
+			const_range_list _r;
+			if (!mrl->unroll_resolve(_r, c).good) {
+				// there was error resolving parameters!
+				// should this ever happen???
+			ICE(cerr, 
+				cerr << "Error resolving instantiation range "
+					"for checking expression dimensions!"
+					<< endl;
+			)
+				return good_bool(false);
+			}
+			return good_bool(_r.is_size_equivalent(d));
+		}
+#else
+		const const_index_list dummy;
+		const const_index_list cil(resolve_indices(dummy)); // virtual
+		if (cil.empty()) {
+			cerr << "Error resolving indices of value collection."
+				<< endl;
+			// already have error message?
+			// was unable to resolve dense collection
 			return good_bool(false);
 		}
+		const const_range_list crl(cil.collapsed_dimension_ranges());
+		return good_bool(crl.is_size_equivalent(d));
+#endif
 	} else {
 		// dimensions == 0 means instantiation is a single instance.  
 		// size may be zero b/c first statement hasn't been added yet
 		INVARIANT(index_collection.size() <= 1);
 		return good_bool(pe.dimensions() == 0);
 	}
-}
+}	// end method param_value_collection::must_check_expression_dimensions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

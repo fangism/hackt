@@ -1,0 +1,30 @@
+// "074.hac."
+// contributed by Clint Kelly
+// should pass
+// fixed reject-valid bug, comment at the end
+
+template <pint N, d[N]>
+defproc ass(bool x, y, z) { }
+
+bool a, b, c;
+pint p[3];
+p[0] = 1;
+p[1] = 0;
+p[2] = 1;
+
+ass<3, p> myass(a, b, c);
+
+/**
+hackt unroll 074.haco 074.haco-u
+ERROR: type/size mismatch between template formal and actual.
+got: {1,0,1}
+expected: pint<> d with indices: {
+[0..::ass::N-1]
+}
+
+ERROR: actual parameter types do not completely match up against formals.
+ERROR: unable to resolve process-type-reference during unroll.
+Error encountered during module::unroll.
+ERROR in unrolling. Aborting.
+**/
+

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.10 2006/02/10 21:50:36 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.11 2006/02/11 03:56:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -497,10 +497,19 @@ if (a_size != f_size) {
 /**
 	Unlike certify_template_arguments, this only checks
 	and doesn't fill in default arguments, hance const.  
+	NOTE: in the context of type-checking template formals against
+		actuals, some of the formal parameters may depend on
+		the earlier actual parameters! 
+		Thus we need contextual information to correctly
+		handle such cases (common).
+		The context needs to be passed to 
+		value_collection::must_type_check_actual_param_expr().
  */
 good_bool
 const_param_expr_list::must_validate_template_arguments(
-		const template_formals_list_type& tfl) const {
+		const template_formals_list_type& tfl, 
+		const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	const size_t a_size = size();
 	const size_t f_size = tfl.size();
 	template_formals_list_type::const_iterator f_iter(tfl.begin());
@@ -520,7 +529,7 @@ if (a_size != f_size) {
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);
 		// type-check assignment, conservative w.r.t. arrays
-		if (!pinst->must_type_check_actual_param_expr(*pex).good) {
+		if (!pinst->must_type_check_actual_param_expr(*pex, c).good) {
 			cerr << "ERROR: type/size mismatch between "
 				"template formal and actual." << endl;
 			pex->dump(cerr << "\tgot: ", 

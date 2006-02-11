@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.7 2006/01/30 07:42:03 fang Exp $
+	$Id: param_value_collection.h,v 1.8 2006/02/11 03:56:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -19,8 +19,6 @@ namespace entity {
 class const_param;
 class param_type_reference;
 using util::memory::count_ptr;
-// using util::qmap;
-// using util::multikey_map;
 using util::bad_bool;
 using util::good_bool;
 
@@ -117,18 +115,20 @@ virtual	good_bool
 
 // used by param_expr_list::certify_template_arguments
 virtual	good_bool
-	may_type_check_actual_param_expr(const param_expr& pe) const = 0;
+	may_type_check_actual_param_expr(const param_expr&) const = 0;
 
 virtual	good_bool
-	must_type_check_actual_param_expr(const const_param& pe) const = 0;
+	must_type_check_actual_param_expr(const const_param&, 
+		const unroll_context&) const = 0;
 
 // down-copied from instance_collection_base
 protected:
 	good_bool
-	may_check_expression_dimensions(const param_expr& pr) const;
+	may_check_expression_dimensions(const param_expr&) const;
 
 	good_bool
-	must_check_expression_dimensions(const const_param& pr) const;
+	must_check_expression_dimensions(const const_param&, 
+		const unroll_context&) const;
 
 public:
 /**
@@ -137,6 +137,9 @@ public:
  */
 	bool
 	is_static_constant(void) const;
+
+virtual	const_index_list
+	resolve_indices(const const_index_list&) const = 0;
 
 #if 0
 NOTE: these functions should only be applicable to simple_param_meta_value_references.  

@@ -1,3 +1,4 @@
+Size of dimension 1 does not match!  got: 2 and 1.
 ERROR: type/size mismatch between template formal and actual.
 	got: {1}
 	expected: pint<> N with indices: {

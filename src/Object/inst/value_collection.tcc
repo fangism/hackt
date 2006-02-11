@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.9 2006/01/30 07:42:04 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10 2006/02/11 03:56:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -320,13 +320,14 @@ VALUE_COLLECTION_CLASS::may_type_check_actual_param_expr(
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 good_bool
 VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
-		const const_param& pe) const {
+		const const_param& pe, const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	// only for formal parameters is this assertion valid.  
 	// this says that the only instantiation statement for this parameter
 	// in the original declaration, which in this case was in the ports.  
 	INVARIANT(this->index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
-	return this->must_check_expression_dimensions(pe);
+	return this->must_check_expression_dimensions(pe, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

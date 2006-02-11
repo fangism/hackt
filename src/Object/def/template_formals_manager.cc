@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.7 2006/01/30 07:42:01 fang Exp $
+	$Id: template_formals_manager.cc,v 1.8 2006/02/11 03:56:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -356,13 +356,19 @@ template_formals_manager::certify_template_arguments(
 good_bool
 template_formals_manager::must_validate_actuals(
 		const template_actuals& t) const {
+	STACKTRACE_VERBOSE;
+	/***
+		Need to construct a temporary context for situations where
+		the formal parameters themselves depend on earlier actuals.  
+	***/
+	const unroll_context c(t, *this);
 	const count_ptr<const param_expr_list> spl(t.get_strict_args());
 	const count_ptr<const const_param_expr_list>
 		cspl(spl.is_a<const const_param_expr_list>());
 	if (spl) NEVER_NULL(cspl);
 	const good_bool sg(cspl ?
 		cspl->must_validate_template_arguments(
-			strict_template_formals_list) :
+			strict_template_formals_list, c) :
 		partial_check_null_template_argument(
 			strict_template_formals_list));
 	const count_ptr<const param_expr_list> rpl(t.get_relaxed_args());
@@ -372,7 +378,7 @@ template_formals_manager::must_validate_actuals(
 	// if relaxed actuals are NULL, don't check them for defaults
 	const good_bool rg(crpl ?
 		crpl->must_validate_template_arguments(
-			relaxed_template_formals_list) : good_bool(true));
+			relaxed_template_formals_list, c) : good_bool(true));
 #if 0
 		partial_check_null_template_argument(
 			relaxed_template_formals_list);

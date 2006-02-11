@@ -5,6 +5,13 @@
 
 2006-02-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-7:
+	  Bug fixed: case test/parser/template/074.hac.
+		Was rejecting-valid templated type because failed to 
+		pass the context including actuals which were needed
+		to resolve other formal paramters.  
+
+
 	* HACKT-00-01-04-main-00-77-6-merged-PRS-06-01:
 	  Minor merge of comments and test cases from -PRS-06-01.
 		Branch was halted due to lack of response on core issues.

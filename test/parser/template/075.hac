@@ -1,0 +1,22 @@
+// "075.hac"
+// copy-modified from "074.hac"
+// should pass
+
+template <pint N, d[N][N]>
+defproc ass(bool x, y, z) { }
+
+bool a, b, c;
+pint p[2][3];
+p[0][0] = 1;
+p[0][1] = 0;
+p[0][2] = 1;
+p[1][0] = 0;
+p[1][1] = 1;
+p[1][2] = 0;
+pint p[2..2][3];
+p[2][0] = 1;
+p[2][1] = 0;
+p[2][2] = 1;
+
+ass<3, p> myass(a, b, c);
+
