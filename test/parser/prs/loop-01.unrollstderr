@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -26,19 +26,19 @@ Persistent Object Manager text dump:
 	22	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	25	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
 	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	34	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	37	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	40	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
@@ -46,13 +46,13 @@ Persistent Object Manager text dump:
 	42	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	45	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	47	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	48	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	54	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78

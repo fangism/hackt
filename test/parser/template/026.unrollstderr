@@ -9,19 +9,19 @@ Persistent Object Manager text dump:
 	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
 	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

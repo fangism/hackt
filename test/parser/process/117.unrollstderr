@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	13	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -29,12 +29,12 @@ Persistent Object Manager text dump:
 	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	28
 	36	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
@@ -49,12 +49,12 @@ Persistent Object Manager text dump:
 	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	48	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	51	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	53	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	56	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -62,12 +62,12 @@ Persistent Object Manager text dump:
 	58	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	59	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	61	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	64	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	66	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12

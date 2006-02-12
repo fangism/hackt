@@ -12,7 +12,7 @@ Persistent Object Manager text dump:
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	35
 	13	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	67
 	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51

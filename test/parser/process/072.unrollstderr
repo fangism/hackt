@@ -12,12 +12,12 @@ Persistent Object Manager text dump:
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20

@@ -36,12 +36,12 @@ Persistent Object Manager text dump:
 	32	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	37	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56

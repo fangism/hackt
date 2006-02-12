@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.3 2006/02/10 21:50:35 fang Exp $
+	$Id: object_fwd.h,v 1.3.2.1 2006/02/12 06:15:31 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -64,15 +64,17 @@ namespace entity {
 	// from "Object/ref/*nonmeta_instance_reference*.h"
 	// note there are generic (non-meta) abstract base classes from which
 	// the meta-versions are derived.
+	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
 	class nonmeta_instance_reference_base;
 	class channel_instance_reference_base;
 	class process_instance_reference_base;
 	class datatype_instance_reference_base;
-	class param_instance_reference_base;
 	class int_instance_reference_base;
 	class bool_instance_reference_base;
 	class enum_instance_reference_base;
 	class struct_instance_reference_base;
+	// rename to value_reference_base? not yet
+	class param_instance_reference_base;
 	class pint_instance_reference_base;
 	class pbool_instance_reference_base;
 	class preal_instance_reference_base;
@@ -94,11 +96,11 @@ namespace entity {
 		struct_meta_instance_reference_base;
 	// base classes for meta_value_references
 	typedef	meta_instance_reference<pbool_tag>
-		pbool_meta_instance_reference_base;
+		pbool_meta_value_reference_base;
 	typedef	meta_instance_reference<pint_tag>
-		pint_meta_instance_reference_base;
+		pint_meta_value_reference_base;
 	typedef	meta_instance_reference<preal_tag>
-		preal_meta_instance_reference_base;
+		preal_meta_value_reference_base;
 
 	template <class>
 	class simple_meta_instance_reference;
@@ -281,11 +283,11 @@ namespace entity {
 	template <class>
 	class simple_meta_value_reference;
 	typedef	simple_meta_value_reference<pint_tag>
-		simple_pint_meta_instance_reference;
+		simple_pint_meta_value_reference;
 	typedef	simple_meta_value_reference<pbool_tag>
-		simple_pbool_meta_instance_reference;
+		simple_pbool_meta_value_reference;
 	typedef	simple_meta_value_reference<preal_tag>
-		simple_preal_meta_instance_reference;
+		simple_preal_meta_value_reference;
 
 	template <class>
 	class simple_nonmeta_value_reference;

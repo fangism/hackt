@@ -8,15 +8,15 @@ Persistent Object Manager text dump:
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	9	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	58
 	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -26,32 +26,32 @@ Persistent Object Manager text dump:
 	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	loopscop	0	#HEAD#	#TAIL#	40
 	32	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	35	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	44	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	48	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

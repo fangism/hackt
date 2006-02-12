@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.7 2006/01/22 18:20:30 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.7.16.1 2006/02/12 06:15:34 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -38,13 +38,13 @@ simple_meta_value_reference<Tag>
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_value_reference :
 	public simple_param_meta_value_reference, 
-	public class_traits<Tag>::meta_instance_reference_parent_type, 
+	public class_traits<Tag>::meta_value_reference_parent_type, 
 	public class_traits<Tag>::expr_base_type {
 public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
 private:
 	typedef	SIMPLE_META_VALUE_REFERENCE_CLASS	this_type;
-	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
+	typedef	typename class_traits<Tag>::meta_value_reference_parent_type
 							parent_type;
 	typedef	typename class_traits<Tag>::expr_base_type
 							expr_base_type;

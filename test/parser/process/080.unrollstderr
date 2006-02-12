@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	9	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -20,19 +20,19 @@ Persistent Object Manager text dump:
 	16	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	19	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	25	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	30	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -47,12 +47,12 @@ Persistent Object Manager text dump:
 	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	51	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12

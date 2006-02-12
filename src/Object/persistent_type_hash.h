@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.7 2006/02/10 21:50:35 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.7.2.1 2006/02/12 06:15:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -70,13 +70,13 @@
 	// simple instance reference may contain multidimensional indices
 #define	SIMPLE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY		"sprcmref"
 #define	SIMPLE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY		"schnmref"
-#define	SIMPLE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"sdbmref"
-#define	SIMPLE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdimref"
-#define	SIMPLE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY		"sdemref"
-#define	SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdsmref"
-#define	SIMPLE_PBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"spbmref"
-#define	SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY		"spimref"
-#define	SIMPLE_PREAL_META_INSTANCE_REFERENCE_TYPE_KEY		"sprmref"
+#define	SIMPLE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"sdbmiref"
+#define	SIMPLE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdimiref"
+#define	SIMPLE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY		"sdemiref"
+#define	SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdsmiref"
+#define	SIMPLE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY		"spbmvref"
+#define	SIMPLE_PINT_META_VALUE_REFERENCE_TYPE_KEY		"spimvref"
+#define	SIMPLE_PREAL_META_VALUE_REFERENCE_TYPE_KEY		"sprmvref"
 
 	// simple non-meta instance references
 #define	SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprcnref"

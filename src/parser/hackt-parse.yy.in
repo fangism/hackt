@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.9 2006/02/10 21:50:45 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.9.2.1 2006/02/12 06:15:35 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -685,10 +685,12 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>		complex_aggregate_reference
 %type	<_expr>		optional_complex_aggregate_reference
 %type	<_expr>		complex_expr_term
+/* %type	<_expr_list>	complex_expr_term_list */
 %type	<_array_concatenation>		array_concatenation
-%type	<_loop_concatenation>		loop_concatenation
+/* %type	<_loop_concatenation>		loop_concatenation	*/
 %type	<_array_construction>		array_construction
 %type	<_expr_list>	complex_aggregate_reference_list
+%type	<_expr_list>	mandatory_complex_aggregate_reference_list
 
 %start	module
 %pure_parser
@@ -1377,6 +1379,7 @@ alias_list
 	;
 /* used to be member_index_expr */
 
+/* allowed to be missing actuals */
 connection_actuals_list
 	/* down-cast to more specific type?  internal to consumer */
 /*	: member_index_expr_list_in_parens	*/
@@ -2397,21 +2400,24 @@ array_concatenation
 
 complex_expr_term
 	: array_construction { $$ = $1; }
-	| loop_concatenation { $$ = $1; }
+/*	| loop_concatenation { $$ = $1; }	*/
 	| simple_expr { $$ = $1; }
 	;
 
 /* building up to higher-dimensions */
 array_construction
+	: '{' mandatory_complex_aggregate_reference_list '}'
+		{ $$ = new array_construction($1, $2, $3); }
+/**
 	: '{' array_concatenation '}'
 		{ $$ = new array_construction($1, $2, $3); }
+**/
 	;
 
 /**
 	Later, introduces loop concatenations?
 	Don't always know number of terms statically...
 	For now, add to grammar, but don't implement for a while.  
-**/
 loop_concatenation
 	: '(' '#' ':' ID ':' range ':' complex_expr_term ')'
 		{ $$ = new loop_concatenation($1, $4, $6, $8, $9);
@@ -2419,11 +2425,21 @@ loop_concatenation
 		  DELETE_TOKEN($5); DELETE_TOKEN($7);
 		}
 	;
+**/
 
 optional_complex_aggregate_reference
 	: complex_aggregate_reference { $$ = $1; }
 	| { $$ = NULL; }
 	;
+
+mandatory_complex_aggregate_reference_list
+	: complex_aggregate_reference_list ',' complex_aggregate_reference
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| complex_aggregate_reference
+		{ $$ = new expr_list($1); }
+	;
+
+/* ---- end complex expressions ------------------------------------------- */
 
 /** items are optional! */
 complex_aggregate_reference_list

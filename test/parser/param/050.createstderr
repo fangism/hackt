@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
 	8	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	sprmref_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

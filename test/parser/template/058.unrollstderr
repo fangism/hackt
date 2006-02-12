@@ -10,14 +10,14 @@ Persistent Object Manager text dump:
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

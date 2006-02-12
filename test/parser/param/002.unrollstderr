@@ -17,13 +17,13 @@ Persistent Object Manager text dump:
 	13	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	spbmref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	spbmref_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

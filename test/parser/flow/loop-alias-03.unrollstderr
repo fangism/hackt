@@ -18,10 +18,10 @@ Persistent Object Manager text dump:
 	14	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

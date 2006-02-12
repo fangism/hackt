@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.4 2006/02/10 21:50:34 fang Exp $
+	$Id: expr.h,v 1.4.2.1 2006/02/12 06:15:31 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -365,11 +365,12 @@ class array_construction : public expr {
 protected:
 	const excl_ptr<const char_punctuation_type>	lb;
 	/** either simple expression or concatenation */
-	const excl_ptr<const expr>		ex;
+//	const excl_ptr<const expr>		ex;
+	const excl_ptr<const expr_list>		ex;
 	const excl_ptr<const char_punctuation_type>	rb;
 public:
 	array_construction(const char_punctuation_type* l, 
-		const expr* e, const char_punctuation_type* r);
+		const expr_list* e, const char_punctuation_type* r);
 
 	~array_construction();
 

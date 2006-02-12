@@ -14,11 +14,11 @@ Persistent Object Manager text dump:
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
 	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	50
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	46
@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

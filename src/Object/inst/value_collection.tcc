@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.10 2006/02/11 03:56:50 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10.2.1 2006/02/12 06:15:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -269,7 +269,7 @@ VALUE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 
 	// problem: needs to be modifiable for later initialization
 	return count_ptr<simple_param_meta_value_reference>(
-		new simple_meta_instance_reference_type(
+		new simple_meta_value_reference_type(
 			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
 }

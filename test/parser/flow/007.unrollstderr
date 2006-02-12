@@ -8,9 +8,9 @@ Persistent Object Manager text dump:
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	9	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	74
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -20,21 +20,21 @@ Persistent Object Manager text dump:
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	loopscop	0	#HEAD#	#TAIL#	32
 	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	29	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

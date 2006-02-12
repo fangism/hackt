@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.5 2006/02/10 21:50:34 fang Exp $
+	$Id: expr.cc,v 1.5.2.1 2006/02/12 06:15:30 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1933,7 +1933,7 @@ loop_concatenation::check_meta_generic(const context& c) const {
 // class array_construction method definitions
 
 array_construction::array_construction(const char_punctuation_type* l,
-		const expr* e, const char_punctuation_type* r) : 
+		const expr_list* e, const char_punctuation_type* r) : 
 		expr(), lb(l), ex(e), rb(r) {
 	NEVER_NULL(ex);
 }

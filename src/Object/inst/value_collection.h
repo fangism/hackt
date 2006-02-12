@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.9 2006/02/11 03:56:50 fang Exp $
+	$Id: value_collection.h,v 1.9.2.1 2006/02/12 06:15:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -26,7 +26,9 @@
 namespace HAC {
 namespace entity {
 template <class>
-class simple_meta_instance_reference;
+class simple_meta_value_reference;
+// template <class>
+// class simple_meta_instance_reference;
 class meta_instance_reference_base;
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
@@ -63,15 +65,16 @@ value_collection<Tag>
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 class value_collection :
 	public class_traits<Tag>::value_collection_parent_type {
-friend class simple_meta_instance_reference<Tag>;
+// friend class simple_meta_instance_reference<Tag>;
+friend class simple_meta_value_reference<Tag>;
 private:
 	typedef	VALUE_COLLECTION_CLASS		this_type;
 	typedef	typename class_traits<Tag>::value_collection_parent_type
 						parent_type;
 public:
 	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
-					simple_meta_instance_reference_type;
+	typedef	typename class_traits<Tag>::simple_meta_value_reference_type
+					simple_meta_value_reference_type;
 	typedef	typename class_traits<Tag>::simple_nonmeta_instance_reference_type
 					simple_nonmeta_instance_reference_type;
 	typedef	typename class_traits<Tag>::expr_base_type

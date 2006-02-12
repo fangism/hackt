@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	13	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
@@ -24,7 +24,7 @@ Persistent Object Manager text dump:
 	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	23	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	26	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
