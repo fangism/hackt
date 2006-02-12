@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.9 2006/01/30 07:42:05 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10 2006/02/12 03:09:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -18,7 +18,7 @@
 #endif
 
 #include <iostream>
-#include <exception>
+#include <stdexcept>
 #include <algorithm>
 
 #include "Object/ref/simple_meta_value_reference.h"
@@ -289,12 +289,12 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 	const pair<bool, const value_collection_type*>
 		_v(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref, i));
+		// stupid gcc-3.3 needs .operator()...
 	if (_v.first) {
 		// then our work is done, 
 		// i has already been set as a loop variable
 		return good_bool(true);
 	}
-	// stupid gcc-3.3 needs .operator()...
 	const value_collection_type& _vals(*_v.second);
 
 	if (this->array_indices) {
@@ -403,44 +403,36 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
 	Resolves a list of indices during the unroll phase.  
 
 	Source: copied from above ::resolve_dimensions (2005-07-02) and 
-		substituted the call to resolve_index_list().
+		substituted the call to resolve_index_list(), 
+		passing in the unroll_context.
+	TODO: write helper functions to factor out blatantly copied code.
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 const_index_list
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 		const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	// criterion 1: indices (if any) must be resolved to constant values.  
+	const_index_list c_i;
 	if (this->array_indices) {
-		const const_index_list
-			c_i(this->array_indices->unroll_resolve(c));
+		c_i = this->array_indices->unroll_resolve(c);
 		if (c_i.empty()) {
-			cerr << "ERROR: failed to unroll-resolve index list." << endl;
+			cerr << "ERROR: failed to unroll-resolve index list."
+				<< endl;
 			return c_i;
 		}
-		// else let c_i remain empty, underspecified
-		// check for implicit indices, that sub-arrays are
-		// densely packed with the same dimensions.  
-		const const_index_list
-			r_i(value_collection_ref->resolve_indices(c_i));
-		if (r_i.empty()) {
-			cerr << "ERROR: implicitly unroll-resolving index list."
-				<< endl;
-		}
-		return r_i;
-		// Elsewhere (during assign) check for initialization.
-	} else {
-		// TODO: factor out common code above
-		// should try to form dense index list 
-		// for entire collection
-		const const_index_list
-			r_i(value_collection_ref->resolve_indices(
-				const_index_list()));
-		if (r_i.empty()) {
-			cerr << "ERROR: implicitly unroll-resolving index list."
-				<< endl;
-		}
-		return r_i;
 	}
+	// else let c_i remain empty, underspecified
+	// check for implicit indices, that sub-arrays are
+	// densely packed with the same dimensions.  
+	// try to form dense index list for entire collection
+	const const_index_list
+		r_i(value_collection_ref->resolve_indices(c_i));
+	if (r_i.empty()) {
+		cerr << "ERROR: implicitly unroll-resolving index list."
+			<< endl;
+	}
+	return r_i;
 	// Elsewhere (during assign) check for initialization.  
 }
 
@@ -456,7 +448,11 @@ count_ptr<const_param>
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
 		const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
-	STACKTRACE("simple_meta_value_reference<>::unroll_resolve()");
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_INDENT << "this reference = ", 
+		expr_dump_context::default_value) << endl;
+#endif
 	// this replaces template formal references with template
 	// actuals from the context where necessary (2005-06-30)
 if (value_collection_ref->is_template_formal()) {
@@ -467,21 +463,49 @@ if (value_collection_ref->is_template_formal()) {
 		cerr << "Error unroll-resolving parameter values." << endl;
 		return return_type(NULL);
 	} else if (value_collection_ref->get_dimensions()) {
+		// since this is a template formal, we can be sure that the
+		// collection of constants is complete, and that if 
+		// !array_indices, it refers to the entire collection.
+		// the actual parameter value collection cannot be augmented
+		// by sparse declarations, as dictated by the language.
 		const const_collection_type&
 			ce(IS_A(const const_collection_type&, *cpptr));
 		// NOTE: not reached yet by any test cases
-		const const_index_list rdim(unroll_resolve_dimensions(c));
-		if (rdim.empty()) {		// error, failed to resolve
-			cerr << "Error: failed to resolve dimensions of "
-				"collection referenced: ";
-			this->dump(cerr, expr_dump_context::default_value)
-				<< endl;
-			return return_type(NULL);
+		// ... until NOW! (20060211)
+		if (this->array_indices) {
+			// no need to use the collection's resolving
+			// because we already know the dimensions of the 
+			// collection, so we only need to resolve
+			// parameter references in the indices.
+			const const_index_list
+				cil(this->array_indices->unroll_resolve(c));
+			// damn it, array_indices is an excl_ptr :S
+			// can't use static meta_index_list::unroll_resolve
+			if (cil.empty()) {
+				cerr << "Error resolving indices of " <<
+					util::what<this_type>::name() << endl;
+				return return_type(NULL);
+			}
+			// NOTE: still need to handle implicit indices
+			// but is efficient, because no searching required.  
+			try {
+				return return_type(new const_collection_type(
+					ce.make_value_slice(cil)));
+			} catch (const std::out_of_range& r) {
+				// cerr << r.what() << endl;
+				cerr << "Error: indices out of range of " <<
+					util::what<this_type>::name() << 
+					".  got: ";
+				cil.dump(cerr) << endl;
+				return return_type(NULL);
+			} catch (...) {
+				// have no idea! re-throw
+				throw;
+			}
+		} else {
+			// just return deep copy of the whole const_collection
+			return return_type(new const_collection_type(ce));
 		}
-		return return_type(
-			new const_collection_type(ce.make_value_slice(rdim)));
-		// TODO: error handling necessary
-		// hope the above elides constructor
 	} else {
 		// is scalar
 		const const_expr_type&
@@ -490,12 +514,7 @@ if (value_collection_ref->is_template_formal()) {
 	}
 } else {
 	// non template formal, normal param collection referenced
-	// catches case of loop variable resolution
-#if 0
-	// TODO: NOTE!!! could be definition-scope local variable!
-	// could also be loop variable
-	const value_collection_type& vcref(*value_collection_ref);
-#else
+	// catches case of loop variable resolution (hackish)
 	value_type cv = 0;
 	const pair<bool, const value_collection_type*>
 		_r(unroll_context_value_resolver<Tag>().operator()
@@ -505,7 +524,6 @@ if (value_collection_ref->is_template_formal()) {
 		return count_ptr<const_expr_type>(new const_expr_type(cv));
 	}
 	const value_collection_type& vcref(*_r.second);
-#endif
 	if (vcref.get_dimensions()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
@@ -536,7 +554,6 @@ if (value_collection_ref->is_template_formal()) {
 		// is a multikey_generic<size_t>
 		// NOTE: possible to have a bad dynamic range (e.g. backwards)
 		// thus we need to catch it
-#if 1
 		multikey_index_type collection_dimensions;
 		try {
 			collection_dimensions = crl.resolve_sizes();
@@ -552,10 +569,6 @@ if (value_collection_ref->is_template_formal()) {
 		}
 		const count_ptr<const_collection_type>
 			ret(new const_collection_type(collection_dimensions));
-#else
-		const count_ptr<const_collection_type>
-			ret(new const_collection_type(crl.resolve_sizes()));
-#endif
 			// no index offset
 		NEVER_NULL(ret);
 
@@ -564,16 +577,10 @@ if (value_collection_ref->is_template_formal()) {
 		key_gen.get_lower_corner() = rdim.lower_multikey();
 		key_gen.get_upper_corner() = rdim.upper_multikey();
 		key_gen.initialize();
-#if 0
-		ret->dump(cerr << "ret = ") << endl;
-#endif
 		bad_bool lookup_err(false);
 		typename const_collection_type::iterator
 			coll_iter(ret->begin());
 		do {
-#if 0
-			cerr << "key_gen = " << key_gen << endl;
-#endif
 			// populate the collection with values
 			// lookup_value returns true on success, false on error
 			// using local value is necessary because bool's 
@@ -609,11 +616,7 @@ if (value_collection_ref->is_template_formal()) {
 		// is 0-dimensional, scalar
 		value_type _val;
 		const never_ptr<const value_scalar_type>
-#if 0
-			ps(value_collection_ref.template is_a<value_scalar_type>());
-#else
 			ps(IS_A(const value_scalar_type*, &vcref));
-#endif
 		INVARIANT(ps);
 		const bad_bool valid(ps->lookup_value(_val, c));
 		if (valid.bad) {

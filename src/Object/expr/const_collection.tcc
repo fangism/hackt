@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.8 2006/01/22 18:19:40 fang Exp $
+ 	$Id: const_collection.tcc,v 1.9 2006/02/12 03:09:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -133,17 +133,28 @@ CONST_COLLECTION_CLASS::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	The expr_dump_context parameter is currrently unused.  
-	Possible uses might include reformatting arrays?
+	Prints out values in structured format.  
  */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
-CONST_COLLECTION_CLASS::dump(ostream& o, const expr_dump_context&) const {
+CONST_COLLECTION_CLASS::dump(ostream& o) const {
 #if 0
 	return values.dump(o);	// too verbose
 #else
 	return values.dump_values(o);
 #endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The expr_dump_context parameter is currrently unused.  
+	Possible uses might include reformatting arrays?
+	For now, just wraps around the default.  
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+ostream&
+CONST_COLLECTION_CLASS::dump(ostream& o, const expr_dump_context&) const {
+	return dump(o);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -346,6 +357,7 @@ CONST_COLLECTION_CLASS::static_constant_value(void) const {
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 const_index_list
 CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
+	STACKTRACE_VERBOSE;
 	const_index_list ret;
 	const key_type first(values.first_key());
 	const key_type last(values.last_key());
@@ -372,8 +384,12 @@ CONST_COLLECTION_CLASS::unroll_resolve(const unroll_context& c) const {
 	Constructs and returns a value slice specfied by the index list
 	and returns the same type (possibly of lesser dimensions)
 	with copied/extracted values.  
+	NOTE: only called from simple_meta_value_reference::unroll_resolve
+		thus far.  
 	\param il the list of indices to visit.  
-	TODO: error handling?
+	\throw std::out_of_range exception if indices are out of range.  
+	\return a compact constant collection with the 
+		selected subset of values.
  */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 CONST_COLLECTION_CLASS
@@ -382,18 +398,34 @@ if (il.empty()) {
 	// won't happen, as called from meta_value_reference<>::unroll_resolve.
 	return *this;
 } else {
+	STACKTRACE_VERBOSE;
 	const const_range_list crl(il.collapsed_dimension_ranges());
+#if ENABLE_STACKTRACE
+	il.dump(STACKTRACE_INDENT << "il = ") << endl;
+	crl.dump(STACKTRACE_INDENT << "crl = ") << endl;
+#endif
 	this_type ret(crl.resolve_sizes());
 	generic_index_generator_type key_gen(il.size());
-	key_gen.get_lower_corner() = il.lower_multikey();
-	key_gen.get_upper_corner() = il.upper_multikey();
+	const key_type l(il.lower_multikey());
+	const key_type u(il.upper_multikey());
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "l = " << l << endl;
+	STACKTRACE_INDENT << "u = " << u << endl;
+#endif
+	if (!this->values.range_check(l) || !this->values.range_check(u)) {
+		// can't return it, drat...
+		std::__throw_out_of_range(
+			"packed_array_generic index is out of range.");
+	}
+	key_gen.get_lower_corner() = l;
+	key_gen.get_upper_corner() = u;
 	key_gen.initialize();
 	typename array_type::iterator coll_iter(ret.values.begin());
 	do {
-		*coll_iter = ret.values[key_gen];
+		*coll_iter = this->values[key_gen];
 		coll_iter++;
 		key_gen++;
-	} while (key_gen != key_gen.get_upper_corner());
+	} while (key_gen != key_gen.get_lower_corner());
 	INVARIANT(coll_iter == ret.values.end());
 	return ret;
 }

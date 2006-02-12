@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8:
+	  Fixed bug where reference to formal parameter array was failing
+		to unroll-resolve: test case parser/template/076.hac.
+	  Fixed loop-termination typo bug in const_collection::make_value_slice,
+		also fixed value-copying bug, range-checking bug, 
+		all in one fell swoop.  (I must've been drugged when writing
+		that routine for the first time.)
+
+
 2006-02-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-7:

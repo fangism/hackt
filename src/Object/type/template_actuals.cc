@@ -2,10 +2,12 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.5 2005/12/13 04:15:40 fang Exp $
+	$Id: template_actuals.cc,v 1.6 2006/02/12 03:09:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_CONSTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
 
 #include <algorithm>
 #include <iterator>
@@ -45,7 +47,7 @@ using std::back_inserter;
 
 template_actuals::template_actuals() :
 		strict_template_args(), relaxed_template_args() {
-#if ENABLE_STACKTRACE
+#if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT << "ctor ";
 	CHECK_ARG_ADDRESSES
 #endif
@@ -60,7 +62,7 @@ template_actuals::template_actuals() :
 template_actuals::template_actuals(const arg_list_ptr_type& s, 
 		const const_arg_list_ptr_type& r) :
 		strict_template_args(s), relaxed_template_args(r) {
-#if ENABLE_STACKTRACE
+#if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT << "ctor ";
 	CHECK_ARG_ADDRESSES
 #endif
@@ -81,7 +83,7 @@ template_actuals::template_actuals(const template_actuals& t,
 		relaxed_template_args(a) {
 	NEVER_NULL(a);
 	INVARIANT(!t.relaxed_template_args);
-#if ENABLE_STACKTRACE
+#if STACKTRACE_CONSTRUCTORS
 	STACKTRACE_INDENT << "ctor ";
 	CHECK_ARG_ADDRESSES
 #endif
@@ -89,7 +91,7 @@ template_actuals::template_actuals(const template_actuals& t,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_actuals::~template_actuals() {
-#if ENABLE_STACKTRACE
+#if STACKTRACE_DESTRUCTORS
 	STACKTRACE_INDENT << "dtor ";
 	CHECK_ARG_ADDRESSES
 #endif
@@ -163,7 +165,7 @@ count_ptr<const param_expr>
 template_actuals::operator [] (const size_t i) const {
 	STACKTRACE_VERBOSE;
 	if (strict_template_args) {
-#if 1
+#if ENABLE_STACKTRACE
 		CHECK_ARG_ADDRESSES
 //		strict_template_args->what(cerr) << endl;
 #endif
@@ -224,6 +226,7 @@ template_actuals::get_relaxed_args(void) const {
  */
 template_actuals
 template_actuals::unroll_resolve(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	bool err = false;
 	arg_list_ptr_type sr, rr;
 	if (strict_template_args) {

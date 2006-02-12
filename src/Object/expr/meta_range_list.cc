@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.9 2006/01/30 20:57:20 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.10 2006/02/12 03:09:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/pint_range.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_index_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/reserve.h"
@@ -125,6 +126,12 @@ const_range_list::~const_range_list() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_range_list)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+const_range_list::dump(ostream& o) const {
+	return dump(o, expr_dump_context::default_value);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

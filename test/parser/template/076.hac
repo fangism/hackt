@@ -1,0 +1,21 @@
+// "076.hac"
+// contributed by Clint Kelly
+// should pass
+// addresses a reject-valid bug fixed, where reference to 
+// template formal parameter was not correctly resolved at unroll-time.  
+
+template <pint N, M, d[N]>
+defproc foo(bool r, s) { }
+
+template <pint N, d[N]>
+defproc ass(bool x, y, z) {
+	foo<N, 3, d> myfoo(x,y);
+}
+
+bool a, b, c;
+pint p[3];
+p[0] = 1;
+p[1] = 0;
+p[2] = 1;
+ass<3, p> myass(a, b, c);
+

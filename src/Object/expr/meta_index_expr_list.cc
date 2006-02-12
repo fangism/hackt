@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.8 2006/01/22 18:19:50 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.9 2006/02/12 03:09:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -28,6 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/const_range.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/const_range_list.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/persistent_type_hash.h"
 
 #include "util/stacktrace.h"
@@ -153,6 +154,12 @@ const_index_list::~const_index_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_index_list)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+const_index_list::dump(ostream& o) const {
+	return dump(o, expr_dump_context::default_value);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&

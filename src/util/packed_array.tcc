@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.13 2005/07/20 21:01:01 fang Exp $
+	$Id: packed_array.tcc,v 1.14 2006/02/12 03:09:46 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -413,15 +413,17 @@ PACKED_ARRAY_GENERIC_CLASS::reset_coeffs(void) {
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 bool
 PACKED_ARRAY_GENERIC_CLASS::range_check(const key_type& k) const {
+//	cerr << "packed_array_generic::range_check" << endl;
 	index_type i = 0;
 	for ( ; i < index_type(dim); i++) {
 		const index_type k_diff = k[i] -offset[i];
-		if (k_diff >= sizes[i]) {
 #if 0
-			cerr << "i=" << i << ", " <<
-				"diff = " << k_diff <<
-				", offset = " << offset[i] << endl;
+		// debugging
+		cerr << "\ti=" << i << ", " << "diff = " << k_diff <<
+			", offset[i] = " << offset[i] <<
+			", size[i] = " << sizes[i] << endl;
 #endif
+		if (k_diff >= sizes[i]) {
 			return false;
 		}
 	}

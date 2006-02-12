@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.6 2006/01/22 18:19:39 fang Exp $
+	$Id: const_collection.h,v 1.7 2006/02/12 03:09:43 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -96,10 +96,13 @@ public:
 	end(void) const { return values.end(); }
 
 	ostream&
-	what(ostream& o) const;
+	what(ostream&) const;
 
 	ostream&
-	dump(ostream& o, const expr_dump_context&) const;
+	dump(ostream&, const expr_dump_context&) const;
+
+	ostream&
+	dump(ostream&) const;
 
 	size_t
 	dimensions(void) const;
