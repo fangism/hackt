@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10 2006/02/12 03:09:45 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.11 2006/02/12 20:48:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -528,7 +528,19 @@ if (value_collection_ref->is_template_formal()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
 		// from compile phase.
-		const const_index_list rdim(unroll_resolve_dimensions(c));
+		// Also, this is not a template-formal parameter
+		// so its collection may be augmented at any time.  
+		const_index_list cil;		// initialize empty
+		if (this->array_indices) {
+			cil = this->array_indices->unroll_resolve(c);
+			if (cil.empty()) {
+				cerr << "Error resolving indices of " <<
+					util::what<this_type>::name() << endl;
+				return return_type(NULL);
+			}
+		}
+		// now check the state of the collection
+		const const_index_list rdim(vcref.resolve_indices(cil));
 		if (rdim.empty()) {
 			cerr << "ERROR: failed to resolve dimensions of "
 				"collection referenced: ";

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-9:
+	  Fixed bug in referencing definition-local parameters, in
+		simple_meta_value_reference::unroll_resolve.
+	  Added test case: parser/template/079.hac
+
+
 2006-02-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-8:

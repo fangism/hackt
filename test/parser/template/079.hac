@@ -1,0 +1,49 @@
+// "079.hac"
+// contributed by Clint Kelly, reduced by Fang
+// should pass
+// fixed bug where definition-local parameter collections were not 
+// correctly looking up collection dimensions.  (20060212)
+
+defproc globals (bool Vdd, GND, vdd, gnd, _pReset, _sReset) {
+	vdd=Vdd;
+	GND=gnd;
+	prs {
+		~_pReset -> vdd+
+		vdd -> gnd-
+	}
+}
+
+template <pint N>
+defproc ch1of (bool d[N]) { }
+
+template <pint N>
+defproc e1of (bool d[N], e) { }
+
+defproc e1of2 (bool d[2]; bool t,f,e) {
+	d[0]=f;
+	d[1]=t;
+}
+
+template <pint N, M, d[N]>
+define source_e(globals g; e1of<M> rr) { }
+
+defproc pseudo_rsource_e1of2a(globals g; e1of2 l) {
+	pint v[5];
+	v[0] = 0;
+	v[1] = 1;
+	v[2] = 1;
+	v[3] = 0;
+	v[4] = 1;
+	e1of<2> s;
+	s.d = l.d;
+	s.e = l.e;
+	source_e<5,2,v> src(g, s);
+}
+
+e1of2 x;
+globals g;
+bool _pReset = g._pReset;
+bool _sReset = g._sReset;
+
+pseudo_rsource_e1of2a src(g, x);
+
