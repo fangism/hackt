@@ -107,10 +107,10 @@ Persistent Object Manager text dump:
 	103	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	104	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
 	105	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	106	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	107	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	108	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	109	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	106	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	107	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	108	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
+	109	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 	110	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
 	111	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	112	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20

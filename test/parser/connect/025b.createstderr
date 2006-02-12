@@ -25,9 +25,9 @@ Persistent Object Manager text dump:
 	21	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 

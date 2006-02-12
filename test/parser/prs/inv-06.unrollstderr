@@ -12,19 +12,19 @@ Persistent Object Manager text dump:
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	10	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	18	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 

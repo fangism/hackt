@@ -24,39 +24,39 @@ Persistent Object Manager text dump:
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	36
 	26	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	43	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	53	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30

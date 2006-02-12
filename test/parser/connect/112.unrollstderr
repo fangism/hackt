@@ -48,12 +48,12 @@ Persistent Object Manager text dump:
 	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	49	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	52	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	53	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
@@ -62,16 +62,16 @@ Persistent Object Manager text dump:
 	58	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	59	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	66	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	68	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	70	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

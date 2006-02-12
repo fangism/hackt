@@ -581,22 +581,22 @@ Persistent Object Manager text dump:
 	577	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	578	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	579	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	580	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	580	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 	581	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
 	582	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	583	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	584	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	584	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	585	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	586	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	587	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	588	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	588	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 	589	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
 	590	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
 	591	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	592	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	593	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	594	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	595	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	595	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	596	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	597	##ADDR##	mprocref	0	#HEAD#	#TAIL#	24
 	598	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16

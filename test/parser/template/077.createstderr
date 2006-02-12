@@ -64,8 +64,8 @@ Persistent Object Manager text dump:
 	60	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	61	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	62	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	66	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
 	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
@@ -114,9 +114,9 @@ Persistent Object Manager text dump:
 	110	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	111	##ADDR##	portconn	0	#HEAD#	#TAIL#	28
 	112	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	113	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	114	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	115	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	115	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

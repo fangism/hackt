@@ -69,7 +69,7 @@ Persistent Object Manager text dump:
 	65	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	66	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	68	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 	69	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
 	70	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 

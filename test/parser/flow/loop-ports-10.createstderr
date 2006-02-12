@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 

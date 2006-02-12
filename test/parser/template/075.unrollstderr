@@ -113,9 +113,9 @@ Persistent Object Manager text dump:
 	109	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	110	##ADDR##	portconn	0	#HEAD#	#TAIL#	28
 	111	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	112	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	113	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	114	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	112	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	113	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

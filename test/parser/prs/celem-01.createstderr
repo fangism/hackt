@@ -19,19 +19,19 @@ Persistent Object Manager text dump:
 	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	16	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	23	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30

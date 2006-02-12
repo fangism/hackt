@@ -58,10 +58,10 @@ Persistent Object Manager text dump:
 	54	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	55	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
 	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	57	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	58	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 	61	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
 	62	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 

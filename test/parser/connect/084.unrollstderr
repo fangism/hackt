@@ -99,10 +99,10 @@ Persistent Object Manager text dump:
 	95	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	96	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
 	97	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	98	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	99	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	100	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	101	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	98	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	99	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	100	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 	102	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
 	103	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	104	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20

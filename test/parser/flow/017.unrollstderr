@@ -26,11 +26,11 @@ Persistent Object Manager text dump:
 	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	23	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17

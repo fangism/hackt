@@ -30,14 +30,14 @@ Persistent Object Manager text dump:
 	26	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	24
 	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
 	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34

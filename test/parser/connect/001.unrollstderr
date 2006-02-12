@@ -12,8 +12,8 @@ Persistent Object Manager text dump:
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

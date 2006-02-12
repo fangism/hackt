@@ -30,11 +30,11 @@ Persistent Object Manager text dump:
 	26	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
 

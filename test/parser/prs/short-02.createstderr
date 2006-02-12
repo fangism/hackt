@@ -29,10 +29,10 @@ Persistent Object Manager text dump:
 	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	33	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -43,10 +43,10 @@ Persistent Object Manager text dump:
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	40	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	43	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	32
 	48	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	52
@@ -70,10 +70,10 @@ Persistent Object Manager text dump:
 	66	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	57
 	67	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	68	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	69	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	70	##ADDR##	portconn	0	#HEAD#	#TAIL#	24
 	71	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	72	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

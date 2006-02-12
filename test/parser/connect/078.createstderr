@@ -65,10 +65,10 @@ Persistent Object Manager text dump:
 	61	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	62	##ADDR##	portconn	0	#HEAD#	#TAIL#	32
 	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	64	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	66	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

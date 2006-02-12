@@ -15,15 +15,15 @@ Persistent Object Manager text dump:
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

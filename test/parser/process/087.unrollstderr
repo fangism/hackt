@@ -17,14 +17,14 @@ Persistent Object Manager text dump:
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
