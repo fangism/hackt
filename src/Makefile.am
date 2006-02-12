@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.100 2006/02/11 04:32:41 fang Exp $
+#	$Id: Makefile.am,v 1.101 2006/02/12 06:09:00 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -280,6 +280,8 @@ OBJECT_TCC_FILES = \
 	Object/inst/value_collection.tcc \
 	Object/inst/instance_pool.tcc \
 	Object/inst/state_instance.tcc \
+	Object/ref/aggregate_meta_instance_reference.tcc \
+	Object/ref/aggregate_meta_value_reference.tcc \
 	Object/ref/simple_meta_instance_reference.tcc \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \

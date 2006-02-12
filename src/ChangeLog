@@ -5,6 +5,23 @@
 
 2006-02-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-01:
+	  This branch is for implementing the long-awaited aggregate
+		references in the HAC language, such as {x, y, z}.
+	  Initial revision:
+		renamed some persistent type keys for clarity, 
+			test outputs of objdumps were updated.  
+		renamed some instance_reference classes to value_reference
+			for consistency.  
+		skeleton files for aggregate reference class templates
+		grammar adjusted to accommodate aggregate references, 
+			almost no change because difference is semantic.
+	  TODO: next, start with parser front-end, and construct
+		aggregate instance/value references.  
+
+
+2006-02-11	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-77-8:
 	  Fixed bug where reference to formal parameter array was failing
 		to unroll-resolve: test case parser/template/076.hac.
