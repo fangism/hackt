@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.3 2006/02/13 02:48:06 fang Exp $
+	$Id: State.cc,v 1.4 2006/02/13 05:35:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -187,14 +187,14 @@ State::check_node(const node_index_type i) const {
 	// check pull-up/dn if applicable
 	const expr_index_type upi = n.pull_up_index;
 	if (is_valid_expr_index(upi)) {
-		const expr_type& e(expr_pool[upi]) __ATTRIBUTE_UNUSED__;
+		const expr_type& e __ATTRIBUTE_UNUSED_CTOR__((expr_pool[upi]));
 		assert(e.is_root());
 		assert(e.direction());
 		assert(e.parent == i);
 	}
 	const expr_index_type dni = n.pull_dn_index;
 	if (is_valid_expr_index(dni)) {
-		const expr_type& e(expr_pool[dni]) __ATTRIBUTE_UNUSED__;
+		const expr_type& e __ATTRIBUTE_UNUSED_CTOR__((expr_pool[dni]));
 		assert(e.is_root());
 		assert(!e.direction());
 		assert(e.parent == i);
@@ -219,13 +219,14 @@ State::check_expr(const expr_index_type i) const {
 	const graph_node_type& g(expr_graph_node_pool[i]);
 	// check parent
 	if (e.is_root()) {
-		const node_type& n(node_pool[e.parent]) __ATTRIBUTE_UNUSED__;
+		const node_type& n
+			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
 		assert(n.get_pull_expr(e.direction()) == i);
 	} else {
 		// const Expr& pe(expr_pool[e.parent]);
 		const graph_node_type& pg(expr_graph_node_pool[e.parent]);
 		const graph_node_type::child_entry_type&
-			pc(pg.children[g.offset]) __ATTRIBUTE_UNUSED__;
+			pc __ATTRIBUTE_UNUSED_CTOR__((pg.children[g.offset]));
 		assert(!pc.first);	// this is an expression, not node
 		assert(pc.second == i);
 	}

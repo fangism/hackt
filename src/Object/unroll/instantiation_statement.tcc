@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.10 2006/02/13 02:48:05 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.11 2006/02/13 05:35:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -307,8 +307,8 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	type_ref_parent_type::commit_type_first_time(coll, ft);
 	// no need to re-evaluate type, since get_resolved_type is
 	// (for now) the same as unroll_type_reference.
-	const bool good(type_ref_parent_type::commit_type_check(coll, ft).good)
-		__ATTRIBUTE_UNUSED__;
+	const bool good __ATTRIBUTE_UNUSED_CTOR__((
+		type_ref_parent_type::commit_type_check(coll, ft).good));
 	INVARIANT(good);
 	// everything below is copied from unroll(), above
 	// TODO: factor out common code.  

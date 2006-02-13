@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.37 2006/02/13 02:48:00 fang Exp $
+#	$Id: configure.ac,v 1.38 2006/02/13 05:35:21 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060210, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060212, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -342,6 +342,10 @@ AM_PROG_CC_C_O
 AC_ISC_POSIX
 
 dnl more compiler characteristic checks
+dnl these require the anal compile flags
+SAVE_CXXFLAGS=$CXXFLAGS
+CXXFLAGS="$SAVE_CXXFLAGS $ANAL_FLAGS"
+
 AC_MSG_CHECKING([whether compiler accepts __attribute__((unused))])
 AC_COMPILE_IFELSE(
 AC_LANG_PROGRAM([],[
@@ -355,6 +359,33 @@ dnl action on failure
 [AC_MSG_RESULT([no])
 AC_DEFINE(HAVE_ATTRIBUTE_UNUSED, 0,
 	[True if compiler supports __attribute__((unused)) ])
+])
+
+dnl only need the next two tests if __attribute__((unused)) is accepted
+AC_MSG_CHECKING([if __attribute__((unused)) comes before construction])
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM([class foo { public: foo(const int); };],[
+const foo bar __attribute__ ((unused)) (13);]
+),
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR, 1,
+	[True if __attribute__((unused)) is accepted before construction])],
+[AC_MSG_RESULT([no])
+AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR, 0,
+	[True if __attribute__((unused)) is accepted before construction])
+])
+
+AC_MSG_CHECKING([if __attribute__((unused)) comes after construction])
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM([class foo { public: foo(const int); };],[
+const foo bar (13) __attribute__ ((unused));]
+),
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR, 1,
+	[True if __attribute__((unused)) is accepted after construction])],
+[AC_MSG_RESULT([no])
+AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR, 0,
+	[True if __attribute__((unused)) is accepted after construction])
 ])
 
 AC_MSG_CHECKING([whether compiler accepts __attribute__((const))])
@@ -394,7 +425,7 @@ AC_MSG_CHECKING(
 [whether compiler accepts __attribute__((visibility("hidden")))])
 AC_COMPILE_IFELSE(
 AC_LANG_PROGRAM(
-[class foo __attribute__((visibility("hidden"))) { foo() { } ~foo() { } }; ],
+[struct __attribute__((visibility("hidden"))) foo { foo() { } ~foo() { } }; ],
 [foo bar;]
 ),
 [AC_MSG_RESULT([yes])
@@ -409,7 +440,7 @@ AC_MSG_CHECKING(
 [whether compiler accepts __attribute__((visibility("default")))])
 AC_COMPILE_IFELSE(
 AC_LANG_PROGRAM(
-[class foo __attribute__((visibility("default"))) { foo() { } ~foo() { } }; ],
+[struct __attribute__((visibility("default"))) foo { foo() { } ~foo() { } }; ],
 [foo bar;]
 ),
 [AC_MSG_RESULT([yes])
@@ -420,6 +451,8 @@ AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 0,
 	[True if compiler supports __attribute__((visibility("default"))) ])
 ])
 
+dnl restore normal compile flags
+CXXFLAGS=$SAVE_CXXFLAGS
 
 # additional header checks
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])

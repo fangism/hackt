@@ -4,7 +4,7 @@
 	This file is highly dependent on compiler characteristics.  
 	TODO: define these conditionally depending on configure.
 	Hint: use AC_COMPILE_IFELSE in configure.ac
-	$Id: attributes.h,v 1.5 2006/02/13 02:48:06 fang Exp $
+	$Id: attributes.h,v 1.6 2006/02/13 05:35:25 fang Exp $
  */
 
 #ifndef	__UTIL_ATTRIBUTES_H__
@@ -27,6 +27,30 @@
 #define	__ATTRIBUTE_UNUSED__		__attribute__ ((unused))
 #else
 #define	__ATTRIBUTE_UNUSED__
+#endif
+
+/**
+	In constructor syntax, some compilers like the attribute before the
+	constructor arguments, some after.  YMMV.
+	e.g.	foo bar __attribute__((unused)) (x, y, z);
+	e.g.	foo bar (x, y, z) __attribute__((unused));
+	To handle these cases automatically, wrap around the
+	constructor arguments like so (yes, double parens are needed):
+	foo bar __ATTRIBUTE_UNUSED_CTOR__((x, y, z));
+ */
+#if HAVE_ATTRIBUTE_UNUSED
+#if HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR
+	/* known: g++-4.0 */
+#define	__ATTRIBUTE_UNUSED_CTOR__(args)		__ATTRIBUTE_UNUSED__ args
+#elif HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR
+	/* known: g++-3.3 */
+#define	__ATTRIBUTE_UNUSED_CTOR__(args)		args __ATTRIBUTE_UNUSED__
+#else
+/* #error I don't know where __attribute__((unused)) belongs! */
+#define	__ATTRIBUTE_UNUSED_CTOR__(args)		args
+#endif
+#else
+#define	__ATTRIBUTE_UNUSED_CTOR__(args)		args
 #endif
 
 //=============================================================================

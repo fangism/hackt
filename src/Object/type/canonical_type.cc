@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.7 2006/02/13 02:48:05 fang Exp $
+	$Id: canonical_type.cc,v 1.8 2006/02/13 05:35:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -146,9 +146,9 @@ void
 check_footprint_policy<process_definition>::operator () (
 		const canonical_process_type& cpt,
 		const footprint* const f) const {
-	const footprint&
-		_f(cpt.get_base_def()->get_footprint(
-			cpt.get_raw_template_params())) __ATTRIBUTE_UNUSED__;
+	const footprint& _f
+		__ATTRIBUTE_UNUSED_CTOR__((cpt.get_base_def()->get_footprint(
+			cpt.get_raw_template_params()))) ;
 	INVARIANT(f == &_f);
 }
 
@@ -202,9 +202,9 @@ void
 check_footprint_policy<user_def_datatype>::operator () (
 		const canonical_user_def_data_type& cpt,
 		const footprint* const f) const {
-	const footprint&
-		_f(cpt.get_base_def()->get_footprint(
-			cpt.get_raw_template_params())) __ATTRIBUTE_UNUSED__;
+	const footprint& _f
+		__ATTRIBUTE_UNUSED_CTOR__((cpt.get_base_def()->get_footprint(
+			cpt.get_raw_template_params())));
 	INVARIANT(f == &_f);
 }
 
