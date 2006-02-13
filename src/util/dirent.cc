@@ -1,7 +1,7 @@
 /**
 	\file "util/dirent.cc"
 	Wrapped functions related to directories.  
-	$Id: dirent.cc,v 1.2 2005/11/10 02:13:10 fang Exp $
+	$Id: dirent.cc,v 1.3 2006/02/13 02:48:06 fang Exp $
  */
 
 #include <cassert>
@@ -18,7 +18,8 @@ dir_exists(const char* d) {
 	const bool ret = dir;		// true if valid
 	if (dir) {
 		const int e = closedir(dir);
-		assert(!e);		// exist status OK
+		assert(!e);		// exit status OK
+		return !e;
 	}
 	return ret;
 }

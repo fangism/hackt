@@ -5,6 +5,13 @@
 
 2006-02-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-10:
+	  Tweaked sources in a few places so that it could build and
+		run correctly when passed CPPFLAGS=-DNDEBUG.
+		Removed unused variable warnings, with __ATTRIBUTE_UNUSED__.
+	  configure.ac: added checks for compiler __attributes__.
+
+
 	* HACKT-00-01-04-main-00-77-9:
 	  Fixed bug in referencing definition-local parameters, in
 		simple_meta_value_reference::unroll_resolve.

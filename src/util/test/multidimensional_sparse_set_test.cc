@@ -1,8 +1,13 @@
 /**
 	\file "multidimensional_sparse_set_test.cc"
 	Test for multidimensional sparse set.
-	$Id: multidimensional_sparse_set_test.cc,v 1.7 2006/01/22 06:53:46 fang Exp $
+	$Id: multidimensional_sparse_set_test.cc,v 1.8 2006/02/13 02:48:08 fang Exp $
  */
+
+// always enable assertions
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include "util/qmap.tcc"

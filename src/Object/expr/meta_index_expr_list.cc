@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.9 2006/02/12 03:09:44 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.10 2006/02/13 02:48:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -126,7 +126,7 @@ const_index_list::const_index_list(const const_index_list& l,
 	} else {
 		INVARIANT(!f.second.empty());
 		const size_t f_size = f.first.size();
-		const size_t s_size = f.second.size();
+		const size_t s_size __ATTRIBUTE_UNUSED__ = f.second.size();
 		INVARIANT(f_size == s_size);
 		const size_t skip = size();
 		INVARIANT(skip <= f_size);

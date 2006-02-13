@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.5 2006/02/10 21:50:40 fang Exp $
+	$Id: SPEC_registry.cc,v 1.6 2006/02/13 02:48:04 fang Exp $
  */
 
 #include <iostream>
@@ -69,7 +69,7 @@ register_spec_class(void) {
 		&T::check_num_params, &T::check_num_nodes,
 		&T::check_param_args, &T::check_node_args);
 	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n = spec_registry[k];
+	const mapped_type& n __ATTRIBUTE_UNUSED__ = spec_registry[k];
 	INVARIANT(n);
 	return spec_registry.size();
 }

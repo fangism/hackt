@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.36 2006/02/10 21:50:30 fang Exp $
+#	$Id: configure.ac,v 1.37 2006/02/13 02:48:00 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -328,6 +328,7 @@ AC_SUBST(FANG_DIALECT_FLAGS)
 CXX_VERSION=`$CXX --version | head -n 1`
 AC_SUBST(CXX_VERSION)
 
+
 dnl need to set LANG to C++ to check for C++ headers
 
 dnl which set of pre-determined compiler flags to apply?
@@ -339,6 +340,86 @@ AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AM_PROG_CC_C_O
 AC_ISC_POSIX
+
+dnl more compiler characteristic checks
+AC_MSG_CHECKING([whether compiler accepts __attribute__((unused))])
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM([],[
+const int foo __attribute__ ((unused)) = 0;]
+),
+dnl action on success
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_ATTRIBUTE_UNUSED, 1,
+	[True if compiler supports __attribute__((unused)) ])],
+dnl action on failure
+[AC_MSG_RESULT([no])
+AC_DEFINE(HAVE_ATTRIBUTE_UNUSED, 0,
+	[True if compiler supports __attribute__((unused)) ])
+])
+
+AC_MSG_CHECKING([whether compiler accepts __attribute__((const))])
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM(
+[#include <cstdlib>
+void pure_func (void) __attribute__ ((const));
+void pure_func (void) { exit (1); }
+],[pure_func();]
+),
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_ATTRIBUTE_CONST, 1,
+	[True if compiler supports __attribute__((const)) ])],
+[AC_MSG_RESULT([no])
+AC_DEFINE(HAVE_ATTRIBUTE_CONST, 0,
+	[True if compiler supports __attribute__((const)) ])
+])
+
+AC_MSG_CHECKING([whether compiler accepts __attribute__((noreturn))])
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM(
+[#include <cstdlib>
+void die (int) __attribute__ ((noreturn));
+void die (int k) { exit (k); }
+],[die(1);]
+),
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_ATTRIBUTE_NORETURN, 1,
+	[True if compiler supports __attribute__((noreturn)) ])],
+[AC_MSG_RESULT([no])
+AC_DEFINE(HAVE_ATTRIBUTE_NORETURN, 0,
+	[True if compiler supports __attribute__((noreturn)) ])
+])
+
+
+AC_MSG_CHECKING(
+[whether compiler accepts __attribute__((visibility("hidden")))])
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM(
+[class foo __attribute__((visibility("hidden"))) { foo() { } ~foo() { } }; ],
+[foo bar;]
+),
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_HIDDEN, 1,
+	[True if compiler supports __attribute__((visibility("hidden"))) ])],
+[AC_MSG_RESULT([no])
+AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_HIDDEN, 0,
+	[True if compiler supports __attribute__((visibility("hidden"))) ])
+])
+
+AC_MSG_CHECKING(
+[whether compiler accepts __attribute__((visibility("default")))])
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM(
+[class foo __attribute__((visibility("default"))) { foo() { } ~foo() { } }; ],
+[foo bar;]
+),
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 1,
+	[True if compiler supports __attribute__((visibility("default"))) ])],
+[AC_MSG_RESULT([no])
+AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 0,
+	[True if compiler supports __attribute__((visibility("default"))) ])
+])
+
 
 # additional header checks
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])

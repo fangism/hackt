@@ -1,7 +1,7 @@
 /**
 	\file "util/discrete_interval_set.tcc"
 	Template class method definitions for discrete_interval_set.
-	$Id: discrete_interval_set.tcc,v 1.5 2005/06/21 21:26:36 fang Exp $
+	$Id: discrete_interval_set.tcc,v 1.6 2006/02/13 02:48:06 fang Exp $
  */
 
 #ifndef	__UTIL_DISCRETE_INTERVAL_SET_TCC__
@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include "util/macros.h"
+#include "util/attributes.h"
 
 namespace util {
 using std::ostream;
@@ -27,7 +28,10 @@ discrete_interval_set<T>::discrete_interval_set() : parent() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 discrete_interval_set<T>::discrete_interval_set(const T a, const T b) :
-		parent() { INVARIANT(!add_range(a, b)); }
+		parent() {
+	const bool overlap __ATTRIBUTE_UNUSED__ = add_range(a, b);
+	INVARIANT(!overlap);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
@@ -236,7 +240,8 @@ discrete_interval_set<T>::subtract(const discrete_interval_set<T>& b) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	later re-write walking iterators from left to right.  
-**/
+	\return true if added range overlapped with existing ranges.  
+ */
 DISCRETE_INTERVAL_SET_TEMPLATE_SIGNATURE
 bool
 discrete_interval_set<T>::add_range(const T min, const T max) {

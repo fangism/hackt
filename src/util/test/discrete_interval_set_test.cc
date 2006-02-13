@@ -1,8 +1,13 @@
 /**
 	\file "discrete_interval_set_test.cc"
 	Testing discrete_interval_set data structure.  
-	$Id: discrete_interval_set_test.cc,v 1.5 2005/09/04 21:15:10 fang Exp $
+	$Id: discrete_interval_set_test.cc,v 1.6 2006/02/13 02:48:08 fang Exp $
  */
+
+// always enable assertions
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include "util/discrete_interval_set.tcc"

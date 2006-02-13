@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
 
+2006-02-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-10:
+	  Made libraries usable with -DNDEBUG with appropriate use
+		of __ATTRIBUTE_UNUSED__ around unused assertion variables.  
+	  util/attributes.h: now uses config.h to conditionally define
+		some attribute macros.  
+	  Test cases in util/test, however, force-undefine NDEBUG.
+
+
 2006-02-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-4-preal-01-03:

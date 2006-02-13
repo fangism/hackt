@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.14 2006/02/05 20:14:08 fang Exp $
+	$Id: instance_alias.tcc,v 1.15 2006/02/13 02:48:03 fang Exp $
 	TODO: trim includes
  */
 
@@ -692,7 +692,7 @@ INSTANCE_ALIAS_INFO_CLASS::propagate_actuals(const relaxed_actuals_type& a) {
 	iterator i(this->begin());
 	const iterator e(this->end());
 	for ( ; i!=e; i++) {
-		const bool b = i->attach_actuals(a);
+		const bool b __ATTRIBUTE_UNUSED__ = i->attach_actuals(a);
 		INVARIANT(b);
 	}
 #endif

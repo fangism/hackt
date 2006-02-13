@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.12 2006/01/22 06:53:36 fang Exp $
+	$Id: stacktrace.cc,v 1.13 2006/02/13 02:48:07 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -121,7 +121,8 @@ raw_count_ptr<stacktrace::stack_echo_type>
 stacktrace::manager::get_stack_echo(void) {
 	typedef	raw_count_ptr<stacktrace::stack_echo_type>	return_type;
 	static stack_echo_type* stack_echo = new stack_echo_type;
-	static const int init_once = (stack_echo->push(1), 1);
+	static const int init_once __ATTRIBUTE_UNUSED__
+		= (stack_echo->push(1), 1);
 	STATIC_RC_POOL_REF_INIT;
 	static size_t* const count = NEW_SIZE_T;
 	static const size_t zero __ATTRIBUTE_UNUSED__ = (*count = 0);
@@ -138,7 +139,8 @@ raw_count_ptr<stacktrace::stack_streams_type>
 stacktrace::manager::get_stack_streams(void) {
 	typedef	raw_count_ptr<stacktrace::stack_streams_type>	return_type;
 	static stack_streams_type* stack_streams = new stack_streams_type;
-	static const int init_once = (stack_streams->push(&cerr), 1);
+	static const int init_once __ATTRIBUTE_UNUSED__
+		= (stack_streams->push(&cerr), 1);
 	STATIC_RC_POOL_REF_INIT;
 	static size_t* const count = NEW_SIZE_T;
 	static const size_t zero __ATTRIBUTE_UNUSED__ = (*count = 0);

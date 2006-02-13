@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.8 2005/08/08 16:51:15 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.9 2006/02/13 02:48:07 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -17,6 +17,7 @@
 #include "util/numeric/integer_traits.h"
 #include "util/static_assert.h"
 #include "util/bitset.tcc"
+#include "util/attributes.h"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MEMORY_CHUNK_MAP_POOL
 #define	EXTERN_TEMPLATE_UTIL_MEMORY_DESTRUCTION_POLICY
@@ -71,7 +72,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::__allocate(void) {
 #if 0
 	INVARIANT(alloc_bit);	// throw bad_alloc()
 #else
-	const bool v = any_bits<bit_map_type>()(alloc_bit);
+	const bool v __ATTRIBUTE_UNUSED__ = any_bits<bit_map_type>()(alloc_bit);
 	INVARIANT(v);
 #endif
 	register const size_t alloc_position =

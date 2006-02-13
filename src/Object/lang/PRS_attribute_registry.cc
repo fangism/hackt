@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
-	$Id: PRS_attribute_registry.cc,v 1.3 2006/02/04 06:43:17 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.4 2006/02/13 02:48:04 fang Exp $
  */
 
 #include <iostream>
@@ -73,7 +73,7 @@ register_attribute_class(void) {
 	}
 	m = attribute_definition_entry(k, &T::main, &T::check_vals);
 	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n = attribute_registry[k];
+	const mapped_type& n __ATTRIBUTE_UNUSED__ = attribute_registry[k];
 	INVARIANT(n);
 	return attribute_registry.size();
 }

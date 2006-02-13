@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.10 2006/02/10 21:50:39 fang Exp $
+	$Id: PRS_footprint.cc,v 1.11 2006/02/13 02:48:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -109,7 +109,7 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 	STACKTRACE("PRS::footprint::dump_expr()");
 	STACKTRACE_INDENT << " at " << &e << ":" << endl;
 #endif
-	const size_t one = e.size();
+	const size_t one __ATTRIBUTE_UNUSED__ = e.size();
 	const char type = e.get_type();
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM:

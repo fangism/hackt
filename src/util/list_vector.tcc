@@ -2,7 +2,7 @@
 	\file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.13 2006/01/22 06:53:33 fang Exp $
+	$Id: list_vector.tcc,v 1.14 2006/02/13 02:48:06 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__
@@ -22,6 +22,7 @@
 #define	EXTERN_TEMPLATE_UTIL_QMAP
 #endif
 
+#include "util/attributes.h"
 #include "util/qmap.tcc"
 
 namespace util {
@@ -111,9 +112,16 @@ void
 LIST_VECTOR_CLASS::check_invariants(void) const {
 	const size_type this_size = this->size();
 	assert(vec_list.size() >= 2);
-	const size_type vdiff = vec_list.size() -vec_map.size() -2;
-	const difference_type dist = distance(this->begin(), this->end());
-	const difference_type rdist = distance(this->rbegin(), this->rend());
+	/***
+		These local variables are unused when NDEBUG is predefined, 
+		because they are used only for debugging.  
+	***/
+	const size_type vdiff __ATTRIBUTE_UNUSED__
+		= vec_list.size() -vec_map.size() -2;
+	const difference_type dist __ATTRIBUTE_UNUSED__
+		= distance(this->begin(), this->end());
+	const difference_type rdist __ATTRIBUTE_UNUSED__
+		= distance(this->rbegin(), this->rend());
 	assert(dist == rdist);
 #if 0
 	if (dist != difference_type(this_size)) {

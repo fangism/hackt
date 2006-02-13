@@ -1,8 +1,13 @@
 /**
 	\file "multikey_set_derived_test.cc"
 	Test for multikey_set template class, using derived elements.  
-	$Id: multikey_set_derived_test.cc,v 1.3 2005/09/04 21:15:12 fang Exp $
+	$Id: multikey_set_derived_test.cc,v 1.4 2006/02/13 02:48:08 fang Exp $
  */
+
+// always enable assertions for these tests
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <string>
 #include <iostream>

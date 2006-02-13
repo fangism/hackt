@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.2 2006/01/22 06:53:26 fang Exp $
+	$Id: Command.cc,v 1.3 2006/02/13 02:48:05 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -438,8 +438,7 @@ DECLARE_COMMAND_CLASS(Help, "help", builtin,
  */
 int
 Help::main(State&, const string_list& args) {
-	const size_t s = args.size();
-	INVARIANT(s);
+	INVARIANT(args.size());
 	const string_list::const_iterator argi(++args.begin());
 	// skip first, which is 'help'
 	if (argi != args.end()) {

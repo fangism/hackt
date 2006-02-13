@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.29 2006/02/06 01:30:53 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.30 2006/02/13 02:48:06 fang Exp $
  */
 
 // flags and switches
@@ -23,6 +23,7 @@
 #include "util/IO_utils.tcc"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
+#include "util/attributes.h"
 
 //=============================================================================
 // macros for use in write_object and load_object
@@ -525,7 +526,7 @@ persistent_object_manager::register_transient_object(
 		assert(t != persistent::hash_key::null);
 	if (probe < reconstruction_table.size()) {
 		// sanity check
-		const reconstruction_table_entry& e = 
+		const reconstruction_table_entry& e __ATTRIBUTE_UNUSED__ = 
 			reconstruction_table[probe];
 		assert(e.type() == t);
 		assert(e.addr() == ptr);
@@ -559,8 +560,7 @@ persistent_object_manager::register_transient_object(
 void
 persistent_object_manager::initialize_null(void) {
 	STACKTRACE("pom::initialize_null()");
-	const size_t s = reconstruction_table.size();
-	assert(!s);
+	assert(!reconstruction_table.size());
 	register_transient_object(NULL, persistent::hash_key::null);
 }
 

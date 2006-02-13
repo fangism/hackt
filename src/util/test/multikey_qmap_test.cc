@@ -2,8 +2,13 @@
 	\file "multikey_qmap_test.cc"
 	Test for multidimensional, queryable map with multidimensional keys.  
 	Copied from "multidimensional_qmap_test.cc" with a few lines changes
-	$Id: multikey_qmap_test.cc,v 1.9 2006/01/22 06:53:46 fang Exp $
+	$Id: multikey_qmap_test.cc,v 1.10 2006/02/13 02:48:08 fang Exp $
  */
+
+// always debug, these are critical tests
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include <string>

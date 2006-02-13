@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.4 2006/02/13 02:48:04 fang Exp $
  */
 
 #include <iostream>
@@ -67,7 +67,7 @@ register_macro_class(void) {
 		&T::check_num_params, &T::check_num_nodes, 
 		&T::check_param_args, &T::check_node_args);
 	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n = macro_registry[k];
+	const mapped_type& n __ATTRIBUTE_UNUSED__ = macro_registry[k];
 	INVARIANT(n);
 	return macro_registry.size();
 }

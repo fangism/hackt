@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.10 2006/01/30 07:42:04 fang Exp $
+ 	$Id: instance_reference.cc,v 1.11 2006/02/13 02:48:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -951,7 +951,8 @@ simple_meta_instance_reference_base::unroll_static_instances(
 			// dimension-trimming
 			while(crl.size() > dim)
 				crl.pop_back();
-			const bool overlap = cov->add_ranges(crl);
+			const bool overlap __ATTRIBUTE_UNUSED__
+				= cov->add_ranges(crl);
 			INVARIANT(!overlap);		// sanity check!
 		}
 	}

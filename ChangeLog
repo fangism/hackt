@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-02-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-10:
+	  configure.ac: checks for compiler __attribute__ characteristics.  
+
+
 2006-02-04	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-2:
