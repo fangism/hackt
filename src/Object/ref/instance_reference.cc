@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.10 2006/01/30 07:42:04 fang Exp $
+ 	$Id: instance_reference.cc,v 1.10.10.1 2006/02/13 21:05:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -25,6 +25,7 @@
 #include "Object/ref/simple_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
+#include "Object/ref/aggregate_meta_instance_reference_base.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/dynamic_meta_range_list.h"
@@ -43,6 +44,8 @@
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
 #include "Object/type/canonical_generic_chan_type.h"
+
+#include "common/TODO.h"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/multidimensional_sparse_set.tcc"
@@ -102,11 +105,24 @@ using util::persistent_traits;
  */
 excl_ptr<aliases_connection_base>
 meta_instance_reference_base::make_aliases_connection(
-		const count_ptr<const meta_instance_reference_base>& i) {
+		const count_ptr<const this_type>& i) {
 	NEVER_NULL(i);
 	return i->make_aliases_connection_private();
 	// have the option of adding first instance here...
 	// ret->append_meta_instance_reference(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<aggregate_meta_instance_reference_base>
+meta_instance_reference_base::make_aggregate_meta_instance_reference(
+		const count_ptr<const this_type>& i) {
+	NEVER_NULL(i);
+#if 0
+	return i->make_aggregate_meta_instance_reference_private();
+#else
+	FINISH_ME(Fang);
+	return count_ptr<aggregate_meta_instance_reference_base>(NULL);
+#endif
 }
 
 //=============================================================================

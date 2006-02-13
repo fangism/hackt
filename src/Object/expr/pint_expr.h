@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.7 2006/02/10 21:50:37 fang Exp $
+	$Id: pint_expr.h,v 1.7.2.1 2006/02/13 21:05:11 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -18,6 +18,7 @@
 //=============================================================================
 namespace HAC {
 namespace entity {
+struct pint_tag;
 class const_param;
 class const_index_list;
 class unroll_context;
@@ -32,7 +33,9 @@ using util::memory::never_ptr;
  */
 class pint_expr : virtual public param_expr, virtual public meta_index_expr, 
 		public int_expr {
+	typedef	pint_expr			this_type;
 public:
+	typedef	pint_tag			tag_type;
 	/**
 		The internal storage type, set in "Object/expr/types.h".
 		We bother with this typedef for the future potential of 
@@ -120,7 +123,12 @@ virtual	const_index_list
 protected:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_ptr<const param_expr>& p) const;
+		const count_ptr<const param_expr>&) const;
+
+	count_ptr<aggregate_meta_value_reference_base>
+	make_aggregate_meta_value_reference_private(
+		const count_ptr<const param_expr>&) const;
+
 };	// end class pint_expr
 
 //=============================================================================

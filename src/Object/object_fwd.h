@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.3.2.1 2006/02/12 06:15:31 fang Exp $
+	$Id: object_fwd.h,v 1.3.2.2 2006/02/13 21:05:10 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -39,6 +39,8 @@ namespace entity {
 	class fundamental_type_reference;
 	class simple_meta_instance_reference_base;
 	class simple_nonmeta_instance_reference_base;
+	class aggregate_meta_value_reference_base;
+	class aggregate_meta_instance_reference_base;
 	class instance_collection_base;
 	class physical_instance_collection;
 	class meta_instance_reference_base;
@@ -105,6 +107,10 @@ namespace entity {
 	template <class>
 	class simple_meta_instance_reference;
 	template <class>
+	class aggregate_meta_instance_reference;
+	template <class>
+	class aggregate_meta_value_reference;
+	template <class>
 	class simple_nonmeta_instance_reference;
 	template <class>
 	class simple_nonmeta_value_reference;
@@ -170,6 +176,20 @@ namespace entity {
 		simple_enum_meta_instance_reference;
 	typedef	simple_meta_instance_reference<datastruct_tag>
 		simple_datastruct_meta_instance_reference;
+
+
+	typedef	aggregate_meta_instance_reference<channel_tag>
+		aggregate_channel_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<process_tag>
+		aggregate_process_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<bool_tag>
+		aggregate_bool_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<int_tag>
+		aggregate_int_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<enum_tag>
+		aggregate_enum_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<datastruct_tag>
+		aggregate_datastruct_meta_instance_reference;
 
 	template <class>
 	class member_meta_instance_reference;
@@ -288,6 +308,13 @@ namespace entity {
 		simple_pbool_meta_value_reference;
 	typedef	simple_meta_value_reference<preal_tag>
 		simple_preal_meta_value_reference;
+
+	typedef	aggregate_meta_value_reference<pint_tag>
+		aggregate_pint_meta_value_reference;
+	typedef	aggregate_meta_value_reference<pbool_tag>
+		aggregate_pbool_meta_value_reference;
+	typedef	aggregate_meta_value_reference<preal_tag>
+		aggregate_preal_meta_value_reference;
 
 	template <class>
 	class simple_nonmeta_value_reference;

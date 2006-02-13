@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.14 2006/02/01 06:11:45 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.1 2006/02/13 21:05:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -17,11 +17,14 @@
 #include "Object/common/dump_flags.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
+#include "common/TODO.h"
+#include "common/ICE.h"
 #include "util/what.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 	// will explicitly instantiate
 #include "util/persistent_object_manager.tcc"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "util/stacktrace.h"
@@ -455,8 +458,23 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 excl_ptr<aliases_connection_base>
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(
+		void) const {
 	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates an aggregate instance reference of the appropriate type.
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<aggregate_meta_instance_reference_base>
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::
+		make_aggregate_meta_instance_reference_private(void) const {
+	typedef	count_ptr<aggregate_meta_instance_reference_base>
+							return_type;
+	FINISH_ME(Fang);
+	return return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

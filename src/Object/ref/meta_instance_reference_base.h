@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.7 2006/01/22 18:20:24 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.7.16.1 2006/02/13 21:05:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -26,6 +26,7 @@ class instance_collection_base;
 class aliases_connection_base;
 class const_range_list;
 class unroll_context;
+class aggregate_meta_instance_reference_base;
 using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
@@ -45,6 +46,7 @@ using util::memory::count_ptr;
 class meta_instance_reference_base : 
 		virtual public nonmeta_instance_reference_base {
 	typedef	nonmeta_instance_reference_base		parent_type;
+	typedef	meta_instance_reference_base		this_type;
 public:
 	meta_instance_reference_base() : parent_type() { }
 
@@ -88,13 +90,11 @@ virtual	const_range_list
 
 // what kind of type equivalence?
 virtual	bool
-	may_be_type_equivalent(
-		const meta_instance_reference_base& i) const = 0;
+	may_be_type_equivalent(const this_type&) const = 0;
 
 // what kind of type equivalence?
 virtual	bool
-	must_be_type_equivalent(
-		const meta_instance_reference_base& i) const = 0;
+	must_be_type_equivalent(const this_type&) const = 0;
 
 	/**
 		Start an aliases connection list based on the referenced type.  
@@ -104,7 +104,12 @@ virtual	bool
 	static
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection(
-		const count_ptr<const meta_instance_reference_base>&);
+		const count_ptr<const this_type>&);
+
+	static
+	count_ptr<aggregate_meta_instance_reference_base>
+	make_aggregate_meta_instance_reference(
+		const count_ptr<const this_type>&);
 
 /**
 	The implementation of this will be policy-determined, 
@@ -133,44 +138,11 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 private:
 virtual	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const = 0;
+
+virtual	count_ptr<aggregate_meta_instance_reference_base>
+	make_aggregate_meta_instance_reference_private(void) const = 0;
+
 };	// end class meta_instance_reference_base
-
-//=============================================================================
-#if 0
-PHASE OUT, or needs a facelift
-	EVOLVE INTO: complex_aggregate_meta_instance_reference, muhahahaha!
-/// in favor of using generic (simple/complex_aggregate) instance references
-//	all have potential indices, forget hierarchy
-// scheme has much changed since this idea was proposed...
-/**
-	Reference to an array (one-level) of instances.  
-	Self-reference is acceptable and intended for multidimensional
-	array element references.  
- */
-class collective_meta_instance_reference : public meta_instance_reference_base {
-protected:
-	// owned? no belongs to cache, even if multidimensional
-	// may also be collective
-	never_ptr<const meta_instance_reference_base>	base_array;
-	never_ptr<const param_expr>			lower_index;
-	never_ptr<const param_expr>			upper_index;
-public:
-	collective_meta_instance_reference(
-		never_ptr<const meta_instance_reference_base> b, 
-		const param_expr* l = NULL, const param_expr* r = NULL);
-
-virtual	~collective_meta_instance_reference();
-
-virtual	ostream&
-	what(ostream& o) const;
-
-virtual	ostream&
-	dump(ostream& o) const;
-
-virtual	string
-	hash_string(void) const;
-};	// end class collective_meta_instance_reference
-#endif
 
 //=============================================================================
 }	// end namespace entity

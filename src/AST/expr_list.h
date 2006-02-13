@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.3 2006/01/22 06:52:53 fang Exp $
+	$Id: expr_list.h,v 1.3.16.1 2006/02/13 21:05:09 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -85,6 +85,12 @@ virtual	~expr_list();
 	void
 	select_checked_meta_refs(const checked_meta_generic_type&, 
 		checked_meta_refs_type&);
+
+	static
+	meta_expr_return_type
+	make_aggregate_value_reference(const checked_meta_exprs_type&, 
+		const bool cat);
+
 };	// end class expr_list
 
 //=============================================================================
@@ -131,6 +137,11 @@ public:
 	void
 	postorder_check_nonmeta_data_refs(checked_nonmeta_data_refs_type&, 
 		const context&) const;
+
+	static
+	inst_ref_meta_return_type
+	make_aggregate_instance_reference(const checked_meta_refs_type&, 
+		const bool cat);
 
 };	// end class inst_ref_expr_list
 

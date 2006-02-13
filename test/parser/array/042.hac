@@ -1,0 +1,8 @@
+// "042.hac"
+// should fail, bad aggregate reference syntax
+
+bool x, y, z;
+
+bool w[2];
+w = {x, };	// references are not optional inside aggregates
+

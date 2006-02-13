@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: preal_expr.h,v 1.2 2006/02/10 21:50:37 fang Exp $
+	$Id: preal_expr.h,v 1.2.2.1 2006/02/13 21:05:12 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_EXPR_H__
@@ -17,6 +17,7 @@
 //=============================================================================
 namespace HAC {
 namespace entity {
+struct preal_tag;
 class const_param;
 class const_index_list;
 class unroll_context;
@@ -31,7 +32,9 @@ using util::memory::never_ptr;
 	Abstract expression checked to be a single boolean.  
  */
 class preal_expr : virtual public param_expr, public real_expr {
+	typedef	preal_expr			this_type;
 public:
+	typedef	preal_tag			tag_type;
 	/**
 		The global boolean value type, set in "Object/expr/types.h".
 		We bother with this typedef for the future potential of 
@@ -100,7 +103,12 @@ virtual	const_index_list
 protected:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_ptr<const param_expr>& p) const;
+		const count_ptr<const param_expr>&) const;
+
+	count_ptr<aggregate_meta_value_reference_base>
+	make_aggregate_meta_value_reference_private(
+		const count_ptr<const param_expr>&) const;
+
 };	// end class preal_expr
 
 //=============================================================================

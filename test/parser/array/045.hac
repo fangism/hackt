@@ -1,0 +1,11 @@
+// "045.hac"
+// copy-modified from "043.hac"
+// should fail, type-mismatch in aggregate reference
+
+bool x;
+pbool y;
+y = true;
+
+bool w[2];
+w = {x, y};
+

@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.9 2006/02/11 04:32:41 fang Exp $
+	$Id: param_expr.h,v 1.9.2.1 2006/02/13 21:05:11 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -18,6 +18,7 @@
 namespace HAC {
 namespace entity {
 class param_expression_assignment;
+class aggregate_meta_value_reference_base;
 class const_param;
 class const_range_list;
 class unroll_context;
@@ -37,6 +38,7 @@ using util::memory::excl_ptr;
 	Should statically sub-type into pints and pbools and pranges...
  */
 class param_expr : virtual public persistent {
+	typedef	param_expr			this_type;
 public:
 	param_expr() : persistent() { }
 
@@ -66,10 +68,10 @@ virtual bool
 	must_be_initialized(void) const = 0;
 
 virtual bool
-	may_be_equivalent_generic(const param_expr& p) const = 0;
+	may_be_equivalent_generic(const this_type&) const = 0;
 
 virtual bool
-	must_be_equivalent_generic(const param_expr& p) const = 0;
+	must_be_equivalent_generic(const this_type&) const = 0;
 
 /** can be resolved to static constant value */
 virtual bool
@@ -94,7 +96,11 @@ virtual bool
 
 	static
 	excl_ptr<param_expression_assignment>
-	make_param_expression_assignment(const count_ptr<const param_expr>& p);
+	make_param_expression_assignment(const count_ptr<const this_type>&);
+
+	static
+	count_ptr<aggregate_meta_value_reference_base>
+	make_aggregate_meta_value_reference(const count_ptr<const this_type>&);
 
 virtual	count_ptr<const_param>
 	unroll_resolve(const unroll_context&) const = 0;
@@ -105,7 +111,11 @@ virtual	count_ptr<const_param>
 private:
 virtual	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_ptr<const param_expr>& p) const = 0;
+		const count_ptr<const this_type>&) const = 0;
+
+virtual	count_ptr<aggregate_meta_value_reference_base>
+	make_aggregate_meta_value_reference_private(
+		const count_ptr<const this_type>&) const = 0;
 };	// end class param_expr
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.5 2006/02/10 22:50:48 fang Exp $
+	$Id: instance.cc,v 1.5.2.1 2006/02/13 21:05:10 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -42,6 +42,7 @@
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
 
+#include "common/ICE.h"
 #include "common/TODO.h"
 
 #include "util/what.h"
@@ -247,7 +248,11 @@ alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
 	int j = 2;
 	for (i++; i!=temp.end(); i++, j++) {
 		const count_ptr<const meta_instance_reference_base> ir(*i);
-		INVARIANT(ir);
+		if (!ir) {
+			cerr << "ERROR: invalid instance reference at position "
+				<< j << " of alias list." << endl;
+			return const_return_type(NULL);
+		}
 		if (!fir->may_be_type_equivalent(*ir)) {
 			cerr << "ERROR: type/size of instance reference "
 				<< j << " of alias list doesn't match the "
@@ -287,10 +292,9 @@ if (size() > 0) {		// non-empty
 	// can we just re-use parent's check_build()?
 	// yes, because we don't need place-holder on stack.
 	checked_meta_generic_type temp;
-//	check_list(temp, &expr::check_generic, c);
 	postorder_check_meta_generic(temp, c);
-	const checked_meta_generic_type::const_iterator first_obj(temp.begin());
-	const checked_meta_generic_type::const_iterator end_obj(temp.end());
+	const checked_meta_generic_type::const_iterator
+		first_obj(temp.begin()), end_obj(temp.end());
 	if (!first_obj->first && !first_obj->second) {
 		cerr << endl << "ERROR in the first item in alias-list."
 			<< endl;
@@ -322,7 +326,8 @@ if (size() > 0) {		// non-empty
 			// and transfer ownership
 			INVARIANT(!exass.owned());
 		}
-	} else if (first_obj->second) {
+	} else {
+		INVARIANT(first_obj->second);
 		checked_meta_refs_type checked_refs;
 		expr_list::select_checked_meta_refs(temp, checked_refs);
 
@@ -340,16 +345,12 @@ if (size() > 0) {		// non-empty
 			INVARIANT(!ircp);
 			INVARIANT(!connection.owned());
 		}
-	} else {
-		// ERROR
-		cerr << "WTF? first element of alias_list is not "
-			"an instance reference!"
-			<< endl;
-		THROW_EXIT;
 	}
 } else {
 	// will this ever be empty?  will be caught as error for now.
-	DIE;
+	ICE(cerr, 
+		cerr << "Unexpected empty alias_list in AST." << endl;
+	);
 }
 	// useless return value
 	return never_ptr<const object>(NULL);

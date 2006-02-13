@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_param_meta_value_reference.h,v 1.5 2006/01/22 18:20:31 fang Exp $
+	$Id: simple_param_meta_value_reference.h,v 1.5.16.1 2006/02/13 21:05:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_PARAM_META_VALUE_REFERENCE_H__
@@ -20,6 +20,7 @@ class param_value_collection;
 /**
 	A reference to a simple instance of parameter.  
 	Abstract base class.  
+	TODO: liberate this from instance_reference?
  */
 class simple_param_meta_value_reference :
 		public simple_meta_instance_reference_base {

@@ -1,0 +1,9 @@
+// "044.hac"
+// copy-modified from "043.hac"
+// should pass, legitimate aggregate value reference
+
+pbool x, y, z;
+
+pbool w[2];
+w = {x, y};
+

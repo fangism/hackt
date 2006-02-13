@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.7.2.1 2006/02/12 06:15:31 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.7.2.2 2006/02/13 21:05:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -90,13 +90,13 @@
 #define	SIMPLE_PREAL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprnref"
 
 	// aggregates are complex compositions / concatenations of arrays
-#define	AGGREGATE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"aprocref"
-#define	AGGREGATE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"achanref"
-#define	AGGREGATE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"adbref"
-#define	AGGREGATE_DINT_INSTANCE_REFERENCE_TYPE_KEY		"adiref"
-#define	AGGREGATE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY		"apbref"
-#define	AGGREGATE_PINT_INSTANCE_REFERENCE_TYPE_KEY		"apiref"
-#define	AGGREGATE_PREAL_INSTANCE_REFERENCE_TYPE_KEY		"aprref"
+#define	AGGREGATE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY	"aprcmref"
+#define	AGGREGATE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY	"achnmref"
+#define	AGGREGATE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY	"adbmiref"
+#define	AGGREGATE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"adimiref"
+#define	AGGREGATE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY		"apbmvref"
+#define	AGGREGATE_PINT_META_VALUE_REFERENCE_TYPE_KEY		"apimvref"
+#define	AGGREGATE_PREAL_META_VALUE_REFERENCE_TYPE_KEY		"aprmvref"
 
 	// member references of the form x.y, (x may be indexed / member ref.)
 #define	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"mprocref"

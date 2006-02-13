@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.7.16.1 2006/02/12 06:15:34 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.7.16.2 2006/02/13 21:05:14 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -169,6 +169,9 @@ public:
 private:
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
+
+	count_ptr<aggregate_meta_instance_reference_base>
+	make_aggregate_meta_instance_reference_private(void) const;
 
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 

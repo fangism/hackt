@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.1.2.1 2006/02/12 06:15:33 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.1.2.2 2006/02/13 21:05:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -12,6 +12,8 @@
 // #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/ref/meta_instance_reference_base.h"
+#include "Object/ref/aggregate_meta_value_reference_base.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
@@ -41,6 +43,7 @@ aggregate_meta_value_reference<Tag>
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class aggregate_meta_value_reference :
+	public aggregate_meta_value_reference_base, 
 	public class_traits<Tag>::meta_value_reference_parent_type,
 	public class_traits<Tag>::expr_base_type {
 	typedef	AGGREGATE_META_VALUE_REFERENCE_CLASS		this_type;
@@ -57,7 +60,7 @@ public:
 	// typedef	count_ptr<const interface_type>		init_arg_type;
 	typedef	typename traits_type::value_collection_parent_type
 						value_collection_parent_type;
-	typedef	count_ptr<const parent_type>	subreference_ptr_type;
+	typedef	count_ptr<const expr_base_type>	subreference_ptr_type;
 	typedef	std::vector<subreference_ptr_type>
 						subreferences_array_type;
 private:
@@ -71,6 +74,8 @@ private:
 						const_expr_type;
 	typedef	never_ptr<value_collection_type>
 						value_collection_ptr_type;
+private:
+	subreferences_array_type		subreferences;
 public:
 	aggregate_meta_value_reference();
 
@@ -83,7 +88,16 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	what(ostream&, const expr_dump_context&) const;
+	dump(ostream&, const expr_dump_context&) const;
+
+	ostream&
+	dump_type_size(ostream&) const;
+
+	never_ptr<const definition_base>
+	get_base_def(void) const;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
 
 	size_t
 	dimensions(void) const;
@@ -128,12 +142,30 @@ public:
 	bool
 	must_be_equivalent(const interface_type&) const;
 
+	bool
+	must_be_equivalent(const parent_type&) const;
+
+	bool
+	may_be_densely_packed(void) const;
+
+	bool
+	must_be_densely_packed(void) const;
+
+	bool
+	may_be_type_equivalent(const meta_instance_reference_base&) const;
+
+	bool
+	must_be_type_equivalent(const meta_instance_reference_base&) const;
+
 	/// should never be called
 	good_bool
 	resolve_value(value_type&) const;
 
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type&) const;
+
+	count_ptr<const_param>
+	unroll_resolve(const unroll_context&) const;
 
 	/// should this be called? actually, yeah, possibly early check
 	const_index_list
@@ -149,19 +181,30 @@ public:
 	assign_value_collection(const const_collection_type&, 
 		const unroll_context&) const;
 
-#if 0
+	good_bool
+	append_meta_value_reference(const count_ptr<const param_expr>&);
+
+	void
+	append_meta_value_reference(const count_ptr<const expr_base_type>&);
+
 private:
 	// these should never be called, they are for the sake of 
 	// completing an instance_reference interface, which
 	// really should've been factored into a physical_instance_reference
 	// class hierarchy
-	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const;
 
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
 	CONNECT_PORT_PROTO;
-#endif
+
+	LOOKUP_FOOTPRINT_FRAME_PROTO;
+
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
+	count_ptr<aggregate_meta_instance_reference_base>
+	make_aggregate_meta_instance_reference_private(void) const;
+
 public:
 	PERSISTENT_METHODS_DECLARATIONS
 

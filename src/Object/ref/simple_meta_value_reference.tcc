@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10 2006/02/12 03:09:45 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1 2006/02/13 21:05:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -23,6 +23,7 @@
 
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/aggregate_meta_instance_reference_base.h"
 #include "Object/traits/class_traits.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
@@ -636,9 +637,22 @@ if (value_collection_ref->is_template_formal()) {
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 excl_ptr<aliases_connection_base>
-SIMPLE_META_VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
+SIMPLE_META_VALUE_REFERENCE_CLASS::make_aliases_connection_private(
+		void) const {
 	ICE_NEVER_CALL(cerr);
 	return excl_ptr<aliases_connection_base>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parameters have value semantics, not alias semantics!
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<aggregate_meta_instance_reference_base>
+SIMPLE_META_VALUE_REFERENCE_CLASS::
+		make_aggregate_meta_instance_reference_private(void) const {
+	ICE_NEVER_CALL(cerr);
+	return count_ptr<aggregate_meta_instance_reference_base>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

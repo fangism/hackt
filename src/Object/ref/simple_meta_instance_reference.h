@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.9 2006/01/25 02:23:44 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.9.14.1 2006/02/13 21:05:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -127,8 +127,13 @@ virtual	size_t
 	lookup_globally_allocated_index(const state_manager&) const;
 
 private:
+	// need not be virtual, covers member_meta_instance_reference
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const;
+
+	// need not be virtual, covers member_meta_instance_reference
+	count_ptr<aggregate_meta_instance_reference_base>
+	make_aggregate_meta_instance_reference_private(void) const;
 
 protected:
 	// helper function, also used by member

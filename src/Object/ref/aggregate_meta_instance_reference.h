@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.1.2.1 2006/02/12 06:15:33 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.1.2.2 2006/02/13 21:05:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include <vector>
 #include "util/memory/count_ptr.h"
+#include "Object/ref/aggregate_meta_instance_reference_base.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 
 namespace HAC {
@@ -33,6 +34,7 @@ aggregate_meta_instance_reference<Tag>
  */
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class aggregate_meta_instance_reference : 
+	public aggregate_meta_instance_reference_base, 
 	public meta_instance_reference<Tag> {
 	typedef	AGGREGATE_META_INSTANCE_REFERENCE_CLASS		this_type;
 	typedef	meta_instance_reference<Tag>			parent_type;
@@ -42,14 +44,6 @@ public:
 						subreference_array_type;
 private:
 	subreference_array_type			subreferences;
-	/**
-		Aggregation mode:
-		if true, then is a concatenation of arrays producing
-		an array of the same number of dimensions, 
-		else is a *construction* of a higher dimension array
-		from subinstances.  
-	 */
-	bool					is_concatenation;
 public:
 	aggregate_meta_instance_reference();
 
@@ -96,6 +90,14 @@ public:
 	CONNECT_PORT_PROTO;
 
 	LOOKUP_FOOTPRINT_FRAME_PROTO;
+
+	good_bool
+	append_meta_instance_reference(
+		const count_ptr<const meta_instance_reference_base>&);
+
+	void
+	append_meta_instance_reference(
+		const count_ptr<const parent_type>&);
 
 private:
 	excl_ptr<aliases_connection_base>
