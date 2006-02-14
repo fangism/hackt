@@ -184,20 +184,6 @@ and the prime before that is 2
 last prime is 11
 12 is composite
 
-Testing traits of integer 13:
-... is not a perfect square.
-nearest square-root is 3
-... is not a power of 2.
-power_of_2 category is power_of_2_tag<false>
-13! (factorial) = 1932053504
-Fibonacci[13] = 377
-next greater odd number is 15
-next odd after sqrt_floor is 5
-first prime before that is 3
-and the prime before that is 2
-last prime is 13
-13 is prime
-
 14 is composite
 15 is composite
 16 is composite

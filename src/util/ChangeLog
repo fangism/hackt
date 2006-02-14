@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
 
+2006-02-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-10:
+	  Disabled integer_traits_test #13 because 13! overflows 32b, DUH!
+
+
 2006-02-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-10:

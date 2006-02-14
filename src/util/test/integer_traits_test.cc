@@ -1,7 +1,7 @@
 /**
 	\file "integer_traits_test.cc"
 	Testing compile-time integer traits facilities.
-	$Id: integer_traits_test.cc,v 1.4 2005/09/04 21:15:11 fang Exp $
+	$Id: integer_traits_test.cc,v 1.5 2006/02/14 18:18:21 fang Exp $
  */
 
 #include <string>
@@ -125,7 +125,7 @@ main(int, char*[]) {
 	test_value<10>();
 	test_value<11>();
 	test_value<12>();
-	test_value<13>();
+	// test_value<13>();	// overflows 32b
 #if 1
 	// factorial overflows beyond N = 13
 	test_prime<14>();
