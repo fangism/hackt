@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.38 2006/02/13 05:35:21 fang Exp $
+#	$Id: configure.ac,v 1.39 2006/02/16 02:59:43 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -335,6 +335,12 @@ dnl which set of pre-determined compiler flags to apply?
 AM_CONDITIONAL(HAVE_GXX, test "$ac_cv_cxx_compiler_gnu" = "yes")
 dnl TODO: add other conditionals for other common compilers
 dnl XLC++, ICC, HPCC, etc...
+if ( echo "$CXX_VERSION" | grep -i prerelease )
+then
+	AC_MSG_WARN([
+	Detected prelease version of compiler.  No PRERELEASE compilers 
+	are officially supported.  Use at your own risk.])
+fi
 
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS

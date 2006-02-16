@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-02-15	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-11:
+	  configure.ac: check for prerelease version of compilers
+		and issue warning at configure time.  
+
+
 2006-02-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-10:
