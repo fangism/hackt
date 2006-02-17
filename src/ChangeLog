@@ -5,7 +5,7 @@
 
 2006-02-16	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-77-8-aggregate-01-03:
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-01:
 	  MASSIVE code transplant.  
 		Thousands of LoC marked for substitution and deletion.  
 		Introduced a handful of switches to mark cuts in
