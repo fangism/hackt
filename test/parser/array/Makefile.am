@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.10.10.1 2006/02/13 21:05:17 fang Exp $
+#	$Id: Makefile.am,v 1.10.10.1.2.1 2006/02/17 20:19:41 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -12,11 +12,14 @@ HACKT_PARSE_TEST_FAILURES = \
 
 BISON_OUTPUTS += 042
 
+# The following tests used to fail at compile-time when we were statically
+# checking for ovelapping indices: 017-028, 030, 031, 033-036
+
 HACKT_PARSE_TEST_PASSES = \
 	001 002 007 \
-	010 013 015 016 \
-	029 \
-	037 038 039 \
+	010 013 015 016 017 018 019 \
+	020 021 022 023 024 025 026 027 028 029 \
+	030 031 033 034 035 036 037 038 039 \
 	040 041
 
 # unfortunately is out of order... to bad $(sort ...) is non-posix

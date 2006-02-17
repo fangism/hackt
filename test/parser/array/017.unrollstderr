@@ -1,0 +1,7 @@
+ERROR: Index [0] of int_array_1D ::blah already instantiated!
+ERROR: Index [1] of int_array_1D ::blah already instantiated!
+ERROR: Index [2] of int_array_1D ::blah already instantiated!
+ERROR: Index [3] of int_array_1D ::blah already instantiated!
+ERROR: Index [4] of int_array_1D ::blah already instantiated!
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

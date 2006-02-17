@@ -4,30 +4,30 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	222
+	3	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	197
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	26	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	222
+	10	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	197
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -58,11 +58,6 @@ In namespace "", we have: {
   0 typedefs
   Instances:
     y = int<32>^3 y with indices: {
-      [1..1][1..1][1..1]
-      [0..0][0..0][0..0]
-      [0..1][0..0][1..1]
-      [1..1][0..1][0..0]
-      [0..0][1..1][0..1]
     }
       unrolled indices: {
         [0][0][0] = ::y[0][0][0] (10) 
@@ -75,11 +70,6 @@ In namespace "", we have: {
         [1][1][1] = ::y[1][1][1] (9) 
       }
     z = int<32>^3 z with indices: {
-      [0..0][1..1][0..1]
-      [1..1][0..1][0..0]
-      [0..1][0..0][1..1]
-      [0..0][0..0][0..0]
-      [1..1][1..1][1..1]
     }
       unrolled indices: {
         [0][0][0] = ::z[0][0][0] (7) 

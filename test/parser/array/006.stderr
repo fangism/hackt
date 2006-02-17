@@ -1,4 +1,3 @@
 pint<> y with indices: {
-  [0..1][0..2]
 }
  was originally declared as a 2-D array, so the new declaration cannot add a 0-D array, ERROR!  [4:6]
