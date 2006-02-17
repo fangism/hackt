@@ -4,26 +4,26 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	128
-	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
-	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	137
-	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	123
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
+	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	122
+	10	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 
@@ -45,9 +45,6 @@ In namespace "", we have: {
 
   Instances:
     bar = process foo<>^1 bar with indices: {
-      [0..0]
-      [1..1]
-      [2..2]
     }
       unrolled indices: {
         0 = ::blah[0] 
@@ -55,7 +52,6 @@ In namespace "", we have: {
         2 = ::blah[2] 
       }
     blah = process foo<>^1 blah with indices: {
-      [0..2]
     }
       unrolled indices: {
         0 = ::bar[0] 

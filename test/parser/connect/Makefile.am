@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2006/02/05 19:45:11 fang Exp $
+#	$Id: Makefile.am,v 1.17.8.1 2006/02/17 22:28:07 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -14,6 +14,10 @@ HACKT_PARSE_TEST_FAILURES = \
 	070 071 072 073 074 075 076 077 079 \
 	080 081 082 \
 	090
+
+# The following tests now pass parsing since we've disabled static 
+# compile-time checks:
+# 020 023 024 034 037 038 052 053 059 060 066 068 071 074 075
 
 HACKT_PARSE_TEST_PASSES = \
 	001 006 006b 007 \
@@ -30,7 +34,9 @@ HACKT_PARSE_TEST_PASSES = \
 	110 111 112 113 114 114a 115 116 117 118 119 \
 	120 121 122 123 124 125 126 127 128 129
 
-HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
+HACKT_PARSE_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_FAILURES) \
+	$(HACKT_PARSE_TEST_PASSES)
 
 HACKT_OBJ_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_PASSES)
