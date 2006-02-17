@@ -5,11 +5,11 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	209
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	31
+	8	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	26
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
@@ -21,11 +21,11 @@ Persistent Object Manager text dump:
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	18	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	26	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -35,19 +35,19 @@ Persistent Object Manager text dump:
 	31	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 	40	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	298
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
-	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	303
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	298
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -59,7 +59,6 @@ In namespace "", we have: {
   Definitions:
     matrix_array = process-definition (defined) matrix_array(
         bool<> in with indices: {
-          [0..3][0..3]
         }
 
         bool<> _o
@@ -68,7 +67,6 @@ In namespace "", we have: {
       Instances:
         _o = bool<> _o
         in = bool<> in with indices: {
-          [0..3][0..3]
         }
 
       unroll sequence: 
@@ -105,7 +103,6 @@ In namespace "", we have: {
   Instances:
     foo = process matrix_array<>^0 foo (instantiated) = ::foo (
       bool^2 in with indices: {
-        [0..3][0..3]
       }
         unrolled indices: {
           [0][0] = ::foo.in[0][0] 

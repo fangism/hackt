@@ -4,47 +4,47 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
-	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	206
-	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	16	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	27	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	40	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	56
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	206
+	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	9	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	14	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
+	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -56,7 +56,6 @@ In namespace "", we have: {
   Definitions:
     celem2inv = process-definition (defined) celem2inv(
         bool<> a with indices: {
-          [0..1]
         }
 
         bool<> _o
@@ -65,7 +64,6 @@ In namespace "", we have: {
       Instances:
         _o = bool<> _o
         a = bool<> a with indices: {
-          [0..1]
         }
 
       unroll sequence: 
@@ -88,7 +86,6 @@ In namespace "", we have: {
   Instances:
     c = process celem2inv<>^0 c (instantiated) = ::c (
       bool^1 a with indices: {
-        [0..1]
       }
         unrolled indices: {
           0 = ::c.a[0] 
