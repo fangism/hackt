@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.10.12.1 2006/02/17 05:07:49 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.10.12.2 2006/02/17 23:23:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -186,8 +186,14 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			what(cerr << "ERROR: unrolling packed instance "
 				"aliases in ") << ':'  << endl <<
 				"\tsize of reference " <<
-				j << " = " << cref_size << endl <<
-				"\tsize of reference 1 = " << head_size << endl;
+				j << " (";
+			inst_list[j-1]->dump(cerr,
+				expr_dump_context::brief) <<
+				") = " << cref_size <<
+				endl << "\tsize of reference 1 (";
+			inst_list.front()->dump(cerr, 
+				expr_dump_context::brief) <<
+				") = " << head_size << endl;
 			err = true;
 		}
 	}

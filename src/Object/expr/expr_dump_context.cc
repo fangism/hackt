@@ -1,6 +1,6 @@
 /**
 	\file "Object/expr/exp_dump_context.cc"
-	$Id: expr_dump_context.cc,v 1.4 2006/01/30 07:42:01 fang Exp $
+	$Id: expr_dump_context.cc,v 1.4.12.1 2006/02/17 23:23:46 fang Exp $
  */
 
 #include "Object/expr/expr_dump_context.h"
@@ -13,6 +13,9 @@ namespace entity {
 
 const expr_dump_context
 expr_dump_context::default_value;
+
+const expr_dump_context
+expr_dump_context::brief(OP_PREC_DEFAULT, NULL, false);
 
 const expr_dump_context
 expr_dump_context::error_mode(OP_PREC_DEFAULT, NULL, true);
