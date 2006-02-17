@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.10 2006/02/11 03:56:50 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.10.4.1 2006/02/17 05:07:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -187,6 +187,7 @@ param_value_collection::template_formal_equivalent(const this_type& b) const {
 	So far, only used by param_value_collection derivatives, 
 		in the context of checking template formals.  
 	May be useful else where for connections.  
+	NOTE: this is conservative and need not be precise.  
 	\return true if dimensions *may* match.  
  */
 good_bool
@@ -216,11 +217,11 @@ param_value_collection::may_check_expression_dimensions(
 	}
 	// dimensions match
 	if (dimensions != 0) {
+#if ENABLE_STATIC_COMPILE_CHECKS
 		INVARIANT(index_collection.size() == 1);	// huh? true?
 		// this is true only if parameters that check this
 		// are template formals.  
 		// not sure if this will be called by non-formals, will see...
-
 		// make sure sizes in each dimension
 		index_collection_type::const_iterator
 			i(index_collection.begin());
@@ -239,10 +240,16 @@ param_value_collection::may_check_expression_dimensions(
 			// is dynamic, conservatively return true
 			return good_bool(true);
 		}
+#else
+		// be conservative
+		return good_bool(true);
+#endif
 	} else {
 		// dimensions == 0 means instantiation is a single instance.  
 		// size may be zero b/c first statement hasn't been added yet
+#if ENABLE_STATIC_COMPILE_CHECKS
 		INVARIANT(index_collection.size() <= 1);
+#endif
 		return good_bool(pe.dimensions() == 0);
 	}
 }
@@ -290,7 +297,9 @@ param_value_collection::must_check_expression_dimensions(
 	// dimensions match
 	if (dimensions != 0) {
 #if 1
+#if ENABLE_STATIC_COMPILE_CHECKS
 		INVARIANT(index_collection.size() == 1);
+#endif
 		// true for formal parameters
 		// number of dimensions doesn't even match!
 		// this is true only if parameters that check this
@@ -301,10 +310,15 @@ param_value_collection::must_check_expression_dimensions(
 		const const_range_list d(pe.static_constant_dimensions());
 
 		// make sure sizes in each dimension
+#if ENABLE_STATIC_COMPILE_CHECKS
 		const index_collection_type::const_iterator
 			i(index_collection.begin());
 		const count_ptr<const meta_range_list>
 			mrl((*i)->get_indices());
+#else
+		const index_collection_item_ptr_type
+			mrl(this->get_initial_instantiation_indices());
+#endif
 		NEVER_NULL(mrl);
 		const count_ptr<const const_range_list>
 			crl(mrl.is_a<const const_range_list>());
@@ -342,9 +356,11 @@ param_value_collection::must_check_expression_dimensions(
 		return good_bool(crl.is_size_equivalent(d));
 #endif
 	} else {
+#if ENABLE_STATIC_COMPILE_CHECKS
 		// dimensions == 0 means instantiation is a single instance.  
 		// size may be zero b/c first statement hasn't been added yet
 		INVARIANT(index_collection.size() <= 1);
+#endif
 		return good_bool(pe.dimensions() == 0);
 	}
 }	// end method param_value_collection::must_check_expression_dimensions

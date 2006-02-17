@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.6 2006/01/22 18:20:06 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.6.18.1 2006/02/17 05:07:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -75,9 +75,14 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::get_type(
 		// first instantiation statement.
 		// extract as in pulling teeth...
 		// TODO: subtype versions of the following calls
+#if ENABLE_STATIC_COMPILE_CHECKS
 		const never_ptr<const data_instantiation_statement>
 			first(i.index_collection.front()
 			.template is_a<const data_instantiation_statement>());
+#else
+		const never_ptr<const data_instantiation_statement>
+			first(i.get_initial_instantiation_statement());
+#endif
 		return first->get_type_ref()
 			.template is_a<const data_type_reference>();
 	}
@@ -112,12 +117,14 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::check_type(
 /**
 	\param t type must be resolved constant.
 	\pre first time called for the collection.  
+	NOTE: when the deep copy of the instance collection is made, 
+		the collection parameter type could've been copied over.  
  */
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 void
 INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 		const instance_collection_parameter_type& tp) {
-	INVARIANT(!this->type_parameter);
+	// INVARIANT(!this->type_parameter);
 	this->type_parameter = tp;
 }
 

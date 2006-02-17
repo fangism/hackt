@@ -1,7 +1,7 @@
 /**
 	\file "common/ICE.cc"
 	String and common symbols defined for internal compiler errors.
-	$Id: ICE.cc,v 1.4 2005/12/13 04:15:44 fang Exp $
+	$Id: ICE.cc,v 1.4.24.1 2006/02/17 05:07:53 fang Exp $
  */
 
 #include <ostream>
@@ -34,6 +34,7 @@ __ICE_where(ostream& o, const char* fn, const char* file, const size_t line) {
 void
 __ICE_exit(ostream& o) {
 	o << ICE_footer << endl;
+	// abort();		// for debugging a backtrace
 	THROW_EXIT;
 }
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.11 2006/01/30 07:42:07 fang Exp $
+	$Id: unroll_context.cc,v 1.11.12.1 2006/02/17 05:07:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -25,6 +25,9 @@
 #include "Object/type/template_actuals.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/expr/param_expr_list.h"
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#include "Object/ref/meta_value_reference_base.h"
+#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
@@ -279,11 +282,21 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 			ret->dump(STACKTRACE_STREAM << ") = ", edc) << endl;
 			}
 #endif
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+			const count_ptr<const meta_value_reference_base>
+				self(ret.is_a<const meta_value_reference_base>());
+#else
 			const count_ptr<const simple_param_meta_value_reference>
 				self(ret.is_a<const simple_param_meta_value_reference>());
+#endif
 			if (self) {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+				const never_ptr<const param_value_collection>
+					pbase(self->get_coll_base());
+#else
 				const never_ptr<const instance_collection_base>
 					pbase(self->get_inst_base());
+#endif
 				if (pbase == &p) {
 				// need to safeguard against self-lookup
 				// may happen with value_reference

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.7 2006/02/10 21:50:44 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.7.4.1 2006/02/17 05:07:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -46,6 +46,25 @@ protected:
 	 */
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
+
+#if !WANT_PARAM_INSTANTIATION_STATEMENT_BASE
+	// just ignore the parameters
+	instantiation_statement_type_ref_base(const type_ref_ptr_type&, 
+		const const_relaxed_args_type&) { }
+#endif
+
+	~instantiation_statement_type_ref_base() { }
+
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	template <class InstStmtType>
+	static
+	void
+	attach_initial_instantiation_statement(
+			value_collection_generic_type& v,
+			const never_ptr<const InstStmtType> i) {
+		v.attach_initial_instantiation_statement(i);
+	}
+#endif
 
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
@@ -134,6 +153,24 @@ protected:
 	 */
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
+#if !WANT_PARAM_INSTANTIATION_STATEMENT_BASE
+	// just ignore the parameters
+	instantiation_statement_type_ref_base(const type_ref_ptr_type&, 
+		const const_relaxed_args_type&) { }
+#endif
+
+	~instantiation_statement_type_ref_base() { }
+
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	template <class InstStmtType>
+	static
+	void
+	attach_initial_instantiation_statement(
+		value_collection_generic_type& v,
+		const never_ptr<const InstStmtType> i) {
+		v.attach_initial_instantiation_statement(i);
+	}
+#endif
 
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
@@ -222,6 +259,25 @@ protected:
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
 
+#if !WANT_PARAM_INSTANTIATION_STATEMENT_BASE
+	// just ignore the parameters
+	instantiation_statement_type_ref_base(const type_ref_ptr_type&, 
+		const const_relaxed_args_type&) { }
+#endif
+
+	~instantiation_statement_type_ref_base() { }
+
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	template <class InstStmtType>
+	static
+	void
+	attach_initial_instantiation_statement(
+		value_collection_generic_type& v,
+		const never_ptr<const InstStmtType> i) {
+		v.attach_initial_instantiation_statement(i);
+	}
+#endif
+
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
@@ -284,6 +340,8 @@ protected:
 };      // end class instantiation_statement_type_ref_base
 
 //=============================================================================
+#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
+
 #define	PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE		\
 template <class Tag>
 
@@ -294,6 +352,7 @@ param_instantiation_statement<Tag>
 	Instantiation statement refinement for parameter value instantiations.  
 	Inherits everything from regular instantiation_statement template, 
 	but implements unroll_meta_evaluate, of instance_management_base.
+	TODO: possible isolate value class hierarchy from instances.  
  */
 PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 class param_instantiation_statement :
@@ -310,8 +369,10 @@ public:
 
 	~param_instantiation_statement();
 
+#if !UNIFY_UNROLL_PASS
 	UNROLL_META_EVALUATE_PROTO;
 	UNROLL_META_INSTANTIATE_PROTO;	// no-op
+#endif
 
 	FRIEND_PERSISTENT_TRAITS
 
@@ -319,6 +380,8 @@ public:
 	using parent_type::write_object;
 	using parent_type::load_object;
 };	// end class param_instantiation_statement
+
+#endif	// WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 
 //=============================================================================
 }	// end namespace entity

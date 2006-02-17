@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.9 2006/02/12 03:09:44 fang Exp $
+ 	$Id: const_collection.tcc,v 1.9.4.1 2006/02/17 05:07:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -195,10 +195,9 @@ CONST_COLLECTION_TEMPLATE_SIGNATURE
 const_range_list
 CONST_COLLECTION_CLASS::static_constant_dimensions(void) const {
 	const_range_list ret;
-	const key_type first(values.first_key());
-	const key_type last(values.last_key());
-	typename key_type::const_iterator f_iter = first.begin();
-	typename key_type::const_iterator l_iter = last.begin();
+	const key_type first(values.first_key()), last(values.last_key());
+	typename key_type::const_iterator
+		f_iter(first.begin()), l_iter(last.begin());
 	for ( ; f_iter != first.end(); f_iter++, l_iter++) {
 		ret.push_back(const_range(*f_iter, *l_iter));
 	}

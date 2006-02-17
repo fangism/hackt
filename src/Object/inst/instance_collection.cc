@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.14 2006/01/30 07:42:02 fang Exp $
+ 	$Id: instance_collection.cc,v 1.14.12.1 2006/02/17 05:07:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -24,6 +24,9 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/ref/simple_meta_instance_reference.h"
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#include "Object/ref/nonmeta_instance_reference_base.h"
+#endif
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
@@ -99,7 +102,11 @@ instance_collection_base::null(NULL);
 instance_collection_base::instance_collection_base(const scopespace& o, 
 		const string& n, const size_t d) : 
 		object(), owner(owner_ptr_type(&o)),
-		key(n), index_collection(), dimensions(d), 
+		key(n), 
+#if ENABLE_STATIC_COMPILE_CHECKS
+		index_collection(), 
+#endif
+		dimensions(d), 
 		super_instance() {
 }
 
@@ -124,6 +131,7 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 			// loop induction variables don't have unroll statements
 			o << "(loop induction pint)";
 		} else {
+#if ENABLE_STATIC_COMPILE_CHECKS
 			// this dump is appropriate for pre-unrolled, 
 			// unresolved dumping
 			// get_type_ref just grabs the type of the 
@@ -133,6 +141,12 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 			} else {
 				o << "(not unrolled yet)";
 			}
+#else
+			const count_ptr<const fundamental_type_reference>
+				t(get_type_ref());
+			if (t)	t->dump(o);
+			else	o << "(not unrolled yet)";
+#endif
 		}
 	}
 	return o << ' ' << key;
@@ -172,7 +186,6 @@ instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 #else
 	dump_collection_only(o);
 #endif
-
 	if (dimensions) {
 #if 0
 		// invariant not true for instance_collections that belong
@@ -180,6 +193,7 @@ instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 		INVARIANT(!index_collection.empty());
 #endif
 		o << " with indices: {" << endl;
+#if ENABLE_STATIC_COMPILE_CHECKS
 	{	// indentation scope
 		INDENT_SECTION(o);
 		index_collection_type::const_iterator
@@ -201,6 +215,7 @@ instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 			o << endl;
 		}
 	}	// end indentation scope
+#endif
 		o << auto_indent << '}' << endl;
 	} else {
 #if 0
@@ -309,10 +324,14 @@ instance_collection_base::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_COMPILE_CHECKS
 /**
 	NOTE: can't call this on formal template parameter collections, 
 	because they don't have an index collection.
-	TODO: subtype index collections.  
+	TODO: subtype index collections.  (NO)
+	CAVEAT: the type returned by this is NOT always accurate because
+	the first instantiation statement may be predicated, inside
+	a loop or conditional scope!
  */
 count_ptr<const fundamental_type_reference>
 instance_collection_base::get_type_ref(void) const {
@@ -327,8 +346,10 @@ instance_collection_base::get_type_ref(void) const {
 #endif
 	return (*index_collection.begin())->get_type_ref();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_COMPILE_CHECKS
 /**
 	Grabs the current top of the deque of the index collection, 
 	so the encapsulating instance reference know what
@@ -431,6 +452,7 @@ instance_collection_base::add_instantiation_statement(
 	index_collection.push_back(r);
 	return overlap;
 }
+#endif	// ENABLE_STATIC_COMPILE_CHECKS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -555,6 +577,8 @@ instance_collection_base::port_formal_equivalent(const this_type& b) const {
 	parameter sizes (dimension) is dynamic.  
 	\param b the other template formal instantiation to compare against.  
 	\return true if dimensionality and sizes are equal.  
+	TODO: need to account for relaxed parameters of physical
+		instance collections?
  */
 bool
 instance_collection_base::formal_size_equivalent(const this_type& b) const {
@@ -562,6 +586,7 @@ instance_collection_base::formal_size_equivalent(const this_type& b) const {
 		// useful error message here: dimensions don't match
 		return false;
 	}
+#if ENABLE_STATIC_COMPILE_CHECKS
 	// formal instances can only be declared once, i.e. 
 	// can't add instances to their collection.
 	// and they must be dense arrays.  
@@ -599,9 +624,19 @@ instance_collection_base::formal_size_equivalent(const this_type& b) const {
 		// both are scalar, single instances
 		return true;
 	}
+#else
+	const index_collection_item_ptr_type
+		ii(this->get_initial_instantiation_indices()),
+		ji(b.get_initial_instantiation_indices());
+	if (ii && ji) {
+		return ii->must_be_formal_size_equivalent(*ji);
+	} else 	return (!ii && !ji);
+	// both NULL is ok too
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 /**
 	\return true if any of the instantiation statements
 		contain parameters that are dependent on 
@@ -621,6 +656,7 @@ instance_collection_base::is_template_dependent(void) const {
 	}
 	return false;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -638,6 +674,7 @@ instance_collection_base::create_super_instance(footprint& f) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_COMPILE_CHECKS
 /**
 	Utility function for walking index collection list
 	and collecting pointers.  
@@ -669,16 +706,20 @@ instance_collection_base::collect_index_collection_pointers(
 	);
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_collection_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
 //	STACKTRACE_PERSISTENT("instance_collection_base::collect_transient_info_base()");
+#if ENABLE_STATIC_COMPILE_CHECKS
 	collect_index_collection_pointers(m);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_COMPILE_CHECKS
 /**
 	Write out serial list of pointers to index collection items, 
 	with pointers translated into indicies.  
@@ -706,6 +747,7 @@ instance_collection_base::write_index_collection_pointers(
 }
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -713,10 +755,13 @@ instance_collection_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, owner);
 	write_string(o, key);
+#if ENABLE_STATIC_COMPILE_CHECKS
 	write_index_collection_pointers(m, o);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_COMPILE_CHECKS
 /**
 	Loads serial list of pointers into index collection items, 
 	with indices translated into pointers.  
@@ -743,6 +788,7 @@ instance_collection_base::load_index_collection_pointers(
 	}
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -750,7 +796,9 @@ instance_collection_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, owner);
 	read_string(i, const_cast<string&>(key));
+#if ENABLE_STATIC_COMPILE_CHECKS
 	load_index_collection_pointers(m, i);
+#endif
 }
 
 //=============================================================================
@@ -791,6 +839,27 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 	}
 	return o;
 }
+
+//=============================================================================
+// class param_value_collection method definitions
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#if 0
+count_ptr<meta_instance_reference_base>
+param_value_collection::make_meta_instance_reference(void) const {
+	ICE_NEVER_CALL(cerr);
+	return count_ptr<meta_instance_reference_base>(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+count_ptr<nonmeta_instance_reference_base>
+param_value_collection::make_nonmeta_instance_reference(void) const {
+	ICE_NEVER_CALL(cerr);
+	return count_ptr<nonmeta_instance_reference_base>(NULL);
+}
+
+#endif
 
 //=============================================================================
 // class datatype_instance_collection method definitions

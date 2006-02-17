@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.6 2006/01/22 18:20:51 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.6.18.1 2006/02/17 05:07:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -64,6 +64,18 @@ protected:
 	instantiation_statement_type_ref_base(
 		const type_ref_ptr_type& t, const const_relaxed_args_type& a) :
 			type(t), relaxed_args(a) { }
+
+	~instantiation_statement_type_ref_base() { }
+
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	static
+	void
+	attach_initial_instantiation_statement(
+			instance_collection_generic_type& i, 
+			const never_ptr<const data_instantiation_statement> d) {
+		i.attach_initial_instantiation_statement(d);
+	}
+#endif
 
 	type_ref_ptr_type
 	get_type(void) const { return type; }

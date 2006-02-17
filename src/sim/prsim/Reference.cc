@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.2 2006/01/22 06:53:30 fang Exp $
+	$Id: Reference.cc,v 1.2.18.1 2006/02/17 05:07:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,6 +20,9 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#include "Object/ref/meta_reference_union.h"
+#endif
 #include "util/stacktrace.h"
 #include "util/libc.h"			// for tmpfile, rewind,...
 #include "util/memory/excl_ptr.h"
@@ -133,7 +136,11 @@ parse_node_to_index(const string& n, const module& m) {
 		typedef	simple_bool_meta_instance_reference
 					bool_ref_type;
 		const count_ptr<const bool_ref_type>
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+			b(r.inst_ref().is_a<const bool_ref_type>());
+#else
 			b(r.is_a<const bool_ref_type>());
+#endif
 		if (!b) {
 			// later: write another procedure
 			// to print *collections* of bools

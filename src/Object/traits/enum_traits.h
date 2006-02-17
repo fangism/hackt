@@ -2,7 +2,7 @@
 	\file "Object/traits/enum_traits.h"
 	Traits and policies for enum data types.  
 	This file used to be "Object/art_object_enum_traits.h".
-	$Id: enum_traits.h,v 1.8 2006/01/22 18:20:35 fang Exp $
+	$Id: enum_traits.h,v 1.8.18.1 2006/02/17 05:07:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_ENUM_TRAITS_H__
@@ -50,7 +50,8 @@ struct class_traits<enum_tag> {
 	typedef	enum_expr			data_expr_base_type;
 	typedef	enum_value_type			data_value_type;
 
-	// later add instantiation_statement support...
+	typedef	instantiation_statement_base	instantiation_statement_parent_type;
+	typedef	data_instantiation_statement	instantiation_statement_type;
 
 	typedef	simple_enum_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;

@@ -3,6 +3,37 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-03:
+	  MASSIVE code transplant.  
+		Thousands of LoC marked for substitution and deletion.  
+		Introduced a handful of switches to mark cuts in
+			"Object/devel_switches.h"
+		DECOUPLE_INSTANCE_REFERENCE_HIERARCHY -> 1
+			pry apart instance/value reference hierarchy.
+		SUBTYPE_PORT_CONNECTION -> 1
+		WANT_IS_TEMPLATE_DEPENDENT -> 0
+			compile-time checking facilities.  
+		UNIFY_UNROLL_PASS -> 1 (clean-up)
+	  Agenda:
+		Strip out much code related to static (compile-time)
+			checking of instantiation and initializations.  
+			ENABLE_STATIC_COMPILE_CHECKS -> 0
+			ENABLE_STATIC_DIMENSION_ANALYSIS -> 0
+		For instance, instance/value collections no longer contain
+			a sequence of pointers to instantiation statements.  
+			They now only contain the first instantiation stmt, 
+			for the sake of basic type checking.  
+	  Test suite introduced many differences.  
+		Before this branch is over, ALL 2500+ tests must 
+		be resolved and updated to satisfaction.  
+		Tests were NOT updated in this revision.
+		That will happen gradually over next revisions.  
+	  After all this is done, completing aggregate references should
+		be easier and cleaner than was formerly possible.  
+
+
 2006-02-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-02:

@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.10 2006/02/10 21:50:36 fang Exp $
+ 	$Id: operators.cc,v 1.10.4.1 2006/02/17 05:07:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -135,10 +135,12 @@ pint_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 const_range_list
 pint_unary_expr::static_constant_dimensions(void) const {
 	return const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -153,6 +155,7 @@ pint_unary_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 pint_unary_expr::is_template_dependent(void) const {
 	return ex->is_template_dependent();
@@ -169,6 +172,7 @@ bool
 pint_unary_expr::is_unconditional(void) const {
 	return ex->is_unconditional();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::value_type
@@ -323,10 +327,12 @@ preal_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 const_range_list
 preal_unary_expr::static_constant_dimensions(void) const {
 	return const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -341,6 +347,7 @@ preal_unary_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 preal_unary_expr::is_template_dependent(void) const {
 	return ex->is_template_dependent();
@@ -357,6 +364,7 @@ bool
 preal_unary_expr::is_unconditional(void) const {
 	return ex->is_unconditional();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_unary_expr::value_type
@@ -502,10 +510,12 @@ pbool_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 const_range_list
 pbool_unary_expr::static_constant_dimensions(void) const {
 	return const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -520,6 +530,7 @@ pbool_unary_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 pbool_unary_expr::is_template_dependent(void) const {
 	return ex->is_template_dependent();
@@ -536,6 +547,7 @@ bool
 pbool_unary_expr::is_unconditional(void) const {
 	return ex->is_unconditional();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -739,10 +751,12 @@ pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 const_range_list
 pint_arith_expr::static_constant_dimensions(void) const {
 	return const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -758,6 +772,7 @@ pint_arith_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 pint_arith_expr::is_template_dependent(void) const {
 	return lx->is_template_dependent() ||
@@ -775,6 +790,7 @@ bool
 pint_arith_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_arith_expr::value_type
@@ -1054,10 +1070,12 @@ pint_relational_expr::must_be_initialized(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 const_range_list
 pint_relational_expr::static_constant_dimensions(void) const {
 	return const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1073,6 +1091,7 @@ pint_relational_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 pint_relational_expr::is_template_dependent(void) const {
 	return lx->is_template_dependent() ||
@@ -1090,6 +1109,7 @@ bool
 pint_relational_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1328,10 +1348,12 @@ preal_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 const_range_list
 preal_arith_expr::static_constant_dimensions(void) const {
 	return const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1347,6 +1369,7 @@ preal_arith_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 preal_arith_expr::is_template_dependent(void) const {
 	return lx->is_template_dependent() ||
@@ -1364,6 +1387,7 @@ bool
 preal_arith_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_arith_expr::value_type
@@ -1635,10 +1659,12 @@ preal_relational_expr::must_be_initialized(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 const_range_list
 preal_relational_expr::static_constant_dimensions(void) const {
 	return const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1654,6 +1680,7 @@ preal_relational_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 preal_relational_expr::is_template_dependent(void) const {
 	return lx->is_template_dependent() ||
@@ -1671,6 +1698,7 @@ bool
 preal_relational_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1900,10 +1928,12 @@ pbool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 const_range_list
 pbool_logical_expr::static_constant_dimensions(void) const {
 	return const_range_list();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1919,6 +1949,7 @@ pbool_logical_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 pbool_logical_expr::is_template_dependent(void) const {
 	return lx->is_template_dependent() ||
@@ -1936,6 +1967,7 @@ bool
 pbool_logical_expr::is_unconditional(void) const {
 	return lx->is_unconditional() && rx->is_unconditional();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

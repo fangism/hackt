@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.7 2006/01/22 18:20:03 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.7.18.1 2006/02/17 05:07:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -30,6 +30,10 @@
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/parameterless_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
+
+#if !ENABLE_STATIC_COMPILE_CHECKS
+#include "Object/unroll/datatype_instantiation_statement.h"
+#endif 
 
 namespace util {
 

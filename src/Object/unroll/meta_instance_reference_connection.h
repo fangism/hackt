@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: meta_instance_reference_connection.h,v 1.4 2006/01/22 18:20:59 fang Exp $
+	$Id: meta_instance_reference_connection.h,v 1.4.18.1 2006/02/17 05:07:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_H__
@@ -38,7 +38,9 @@ virtual	~meta_instance_reference_connection();
 virtual	void
 	append_meta_instance_reference(const generic_inst_ptr_type& i) = 0;
 
+#if !UNIFY_UNROLL_PASS
 virtual	UNROLL_META_CONNECT_PROTO = 0;
+#endif
 };	// end class meta_instance_reference_connection
 
 //-----------------------------------------------------------------------------

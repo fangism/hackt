@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.9.2.1 2006/02/13 21:05:11 fang Exp $
+	$Id: param_expr.h,v 1.9.2.1.2.1 2006/02/17 05:07:35 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -13,6 +13,7 @@
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/excl_ptr.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -53,12 +54,14 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 virtual	bool
 	has_static_constant_dimensions(void) const = 0;
 
 // only call this if dimensions are non-zero and sizes are static constant.  
 virtual	const_range_list
 	static_constant_dimensions(void) const = 0;
+#endif
 
 /** is initialized if is resolved to constant or some other formal */
 virtual bool
@@ -80,11 +83,12 @@ virtual bool
 virtual bool
 	is_relaxed_formal_dependent(void) const = 0;
 
-virtual bool
-	is_template_dependent(void) const = 0;
-
 virtual	count_ptr<const const_param>
 	static_constant_param(void) const = 0;
+
+#if WANT_IS_TEMPLATE_DEPENDENT
+virtual bool
+	is_template_dependent(void) const = 0;
 
 /** doesn't depend on loop variables */
 virtual bool
@@ -93,6 +97,7 @@ virtual bool
 /** doesn't depend on conditional variables */
 virtual bool
 	is_unconditional(void) const = 0;
+#endif
 
 	static
 	excl_ptr<param_expression_assignment>

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.10.10.1 2006/02/13 21:05:13 fang Exp $
+ 	$Id: instance_reference.cc,v 1.10.10.1.2.1 2006/02/17 05:07:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -38,6 +38,13 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#include "Object/ref/meta_instance_reference_subtypes.tcc"
+#endif
+
+#if SUBTYPE_PORT_CONNECTION
+#include "Object/unroll/port_connection_base.h"
+#endif
 
 // introduced by using canonical_types
 #include "Object/def/user_def_datatype.h"
@@ -125,9 +132,119 @@ meta_instance_reference_base::make_aggregate_meta_instance_reference(
 #endif
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBTYPE_PORT_CONNECTION
+excl_ptr<port_connection_base>
+meta_instance_reference_base::make_port_connection(
+		const count_ptr<const meta_instance_reference_base>& r) {
+	return r->make_port_connection_private(r);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0 && DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+bool
+meta_instance_reference_base::__may_be_type_equivalent(
+		const this_type& l, const this_type& r) {
+	const never_ptr<const instance_collection_base>
+		lib(get_inst_base());
+	const this_type* const smir = IS_A(const this_type*, &i);
+	if (!smir) {
+		cerr << "Unhandled case in simple_meta_instance_reference_base"
+			"::may_be_type_equivalent(): "
+			"comparing to non-simple_meta_instance_reference_base, "
+			"probably intended for complex-aggregate instance "
+			"references *grin*... returning false." << endl;
+		return false;
+	}
+	const never_ptr<const instance_collection_base>
+		rib(smir->get_inst_base());
+	const count_ptr<const fundamental_type_reference>
+		ltr(lib->get_type_ref());
+	const count_ptr<const fundamental_type_reference>
+		rtr(rib->get_type_ref());
+	const bool type_eq = ltr->may_be_connectibly_type_equivalent(*rtr);
+	// if base types differ, then cannot be equivalent
+	if (!type_eq) {
+		ltr->dump(cerr << "Types do not match! got: ") << " and: ";
+		rtr->dump(cerr) << "." << endl;
+		return false;
+	}
+	// else they match, continue to check dimensionality and size.  
+
+	// TO DO: factor this section code out to a method for re-use.  
+	// note: is dimensions of the *reference* not the instantiation!
+	const size_t lid = dimensions();
+	const size_t rid = i.dimensions();
+	if (lid != rid) {
+		cerr << "Dimensions do not match! got: " << dimensions()
+			<< " and: " << i.dimensions() << "." << endl;
+		return false;
+	}
+	// catch cases where one of them is scalar (zero-dimensional)
+	if (!lid) {
+		INVARIANT(!rid);
+		return true;
+	}
+	// else fall-through handle multidimensional case
+	return true;		// conservatively
+#if 0
+	// check for packed-ness of instance reference?
+	// if indices only partially specify dimensions.  
+	const bool l_may_pack = may_be_densely_packed();
+	const bool r_may_pack = i.may_be_densely_packed();
+	if (!l_may_pack || !r_may_pack) {
+		// we know statically that one of them is not packed, 
+		// which immediately disqualifies them from equivalence.  
+		if (!l_may_pack)
+			cerr << "Left instance reference not packed!" << endl;
+		if (!r_may_pack)
+			cerr << "Right instance reference not packed!" << endl;
+		return false;
+	}
+
+	// We already know that both references *may* be packed.  
+	// We can only do precise analysis if we know that
+	// both instance references *must* be packed.
+	const bool l_must_pack = must_be_densely_packed();
+	const bool r_must_pack = i.must_be_densely_packed();
+	// Otherwise, we can only conservatively return true.  
+	if (!l_must_pack || !r_must_pack)
+		return true;
+
+	// Here, we know we can obtain the implicit packed indices, 
+	// and then compare them.  
+
+	const simple_meta_instance_reference_base* const
+		sir = IS_A(const simple_meta_instance_reference_base*, &i);
+	if (!sir) {
+		// then is not a simple_meta_instance_reference_base, 
+		// is complex-aggregate, which is not handled yet
+		// eventually get around to this
+		return true;
+	}
+	const const_index_list lindex(implicit_static_constant_indices());
+	const const_index_list rindex(sir->implicit_static_constant_indices());
+
+	// or just collapse these to ranges directly?
+	const const_range_list ldim(lindex.collapsed_dimension_ranges());
+	const const_range_list rdim(rindex.collapsed_dimension_ranges());
+
+	const bool ret = ldim.is_size_equivalent(rdim);
+	if (!ret) {
+		ldim.dump(cerr << "got: ", 
+			expr_dump_context::default_value) << " and: ";
+		rdim.dump(cerr, expr_dump_context::default_value) << endl;
+	}
+	return ret;
+#endif
+}
+#endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+
 //=============================================================================
 // class simple_meta_instance_reference_base::mset_base definition
 
+#if ENABLE_STATIC_COMPILE_CHECKS
 class simple_meta_instance_reference_base::mset_base {
 public:
 	typedef	multidimensional_sparse_set_traits<
@@ -260,6 +377,7 @@ simple_meta_instance_reference_base::mset_base::make_multidimensional_sparse_set
 		default: return NULL;
 	}
 }
+#endif	// ENABLE_STATIC_COMPILE_CHECKS
 
 //=============================================================================
 // class simple_meta_instance_reference_base method definitions
@@ -268,37 +386,29 @@ simple_meta_instance_reference_base::mset_base::make_multidimensional_sparse_set
 	Private empty constructor.
  */
 simple_meta_instance_reference_base::simple_meta_instance_reference_base() :
-		array_indices(NULL), inst_state() {
+#if ENABLE_STATIC_COMPILE_CHECKS
+		array_indices(NULL), inst_state()
+#else
+		array_indices(NULL)
+#endif
+		{
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_COMPILE_CHECKS
 simple_meta_instance_reference_base::simple_meta_instance_reference_base(
 		const instantiation_state& st) :
 		array_indices(NULL), 
 		inst_state(st) {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	May be obsolete...
- */
-simple_meta_instance_reference_base::simple_meta_instance_reference_base(
-		excl_ptr<index_list_type>& i, 
-		const instantiation_state& st) :
-		array_indices(i), 
-		inst_state(st) {
-	// in sub-type constructors, 
-	// INVARIANT(array_indices->size < get_inst_base->dimensions());
-}
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_meta_instance_reference_base::~simple_meta_instance_reference_base() {
-}
+simple_meta_instance_reference_base::~simple_meta_instance_reference_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 /**
 	Dimensionality of an indexed references depends on
 	which indexed dimensions are collapsed x[i], and which
@@ -665,7 +775,24 @@ simple_meta_instance_reference_base::implicit_static_constant_indices(void) cons
 		return ret;
 	}
 }
+#endif	// !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+/**
+	Just print the index portion of the reference.  
+ */
+ostream&
+simple_meta_instance_reference_base::dump_indices(ostream& o, 
+		const expr_dump_context& c) const {
+	if (array_indices) {
+		expr_dump_context dc(c);
+		dc.include_type_info = false;
+		array_indices->dump(o, dc);
+	}
+	return o;
+}
+#else
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	New dump, uses context options.  
@@ -706,8 +833,9 @@ simple_meta_instance_reference_base::dump_type_size(ostream& o) const {
 		const const_index_list
 			cil(implicit_static_constant_indices());
 		// consider making this into a method:
-		const_index_list::const_iterator i = cil.begin();
-		for ( ; i!=cil.end(); i++) {
+		const_index_list::const_iterator i(cil.begin());
+		const const_index_list::const_iterator e(cil.end());
+		for ( ; i!=e; i++) {
 			const count_ptr<const const_index> ind(*i);
 			const count_ptr<const const_range>
 				cr(ind.is_a<const const_range>());
@@ -723,6 +851,7 @@ simple_meta_instance_reference_base::dump_type_size(ostream& o) const {
 	}
 	return o;
 }
+#endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -744,6 +873,7 @@ simple_meta_instance_reference_base::attach_indices(
 	// make sure not already indexed
 	// side note: if indexing were truly recursive and not list-based, 
 	//	we'd be able to append indices one-by-one.  
+#if ENABLE_STATIC_COMPILE_CHECKS
 	INVARIANT(!array_indices);
 	NEVER_NULL(i);
 	// dimension-check:
@@ -814,11 +944,13 @@ simple_meta_instance_reference_base::attach_indices(
 		// fancy: list indices not instantiated?
 		return good_bool(false);
 	}
+#endif	// ENABLE_STATIC_COMPILE_CHECKS
 	array_indices = i;
 	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 /**
 	Checks "may" type-equivalence of two instance references.  
 	Is conservative.  
@@ -920,8 +1052,10 @@ simple_meta_instance_reference_base::may_be_type_equivalent(
 	}
 	return ret;
 }
+#endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 /**
 	"must" type-equivalence.  
  */
@@ -931,8 +1065,10 @@ simple_meta_instance_reference_base::must_be_type_equivalent(
 	// fix me...
 	return false;
 }
+#endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_COMPILE_CHECKS
 /**
 	For collection with only static constant additions, 
 	this returns the unrolled multidimensional set of instantiated
@@ -973,6 +1109,7 @@ simple_meta_instance_reference_base::unroll_static_instances(
 	}
 	return cov;
 }
+#endif	// ENABLE_STATIC_COMPILE_CHECKS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -994,7 +1131,9 @@ simple_meta_instance_reference_base::collect_transient_info_base(
 void
 simple_meta_instance_reference_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+#if ENABLE_STATIC_COMPILE_CHECKS
 	write_instance_collection_state(o);
+#endif
 	m.write_pointer(o, array_indices);
 }
 
@@ -1010,7 +1149,9 @@ simple_meta_instance_reference_base::write_object_base(
 void
 simple_meta_instance_reference_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
+#if ENABLE_STATIC_COMPILE_CHECKS
 	load_instance_collection_state(i);
+#endif
 	m.read_pointer(i, array_indices);
 	// must load the 
 	if (array_indices)
@@ -1018,6 +1159,7 @@ simple_meta_instance_reference_base::load_object_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_COMPILE_CHECKS
 /**
 	The instantiation state can be store as an index into
 	an instantiation's index collection.  
@@ -1048,6 +1190,7 @@ simple_meta_instance_reference_base::load_instance_collection_state(istream& f) 
 		iter--;
 	const_cast<instantiation_state&>(inst_state) = iter;
 }
+#endif
 
 //=============================================================================
 // class simple_nonmeta_instance_reference_base method definitions
@@ -1215,6 +1358,7 @@ collective_meta_instance_reference::hash_string(void) const {
 #endif
 
 //=============================================================================
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 // class simple_param_meta_value_reference method definitions
 
 /**
@@ -1366,6 +1510,7 @@ simple_param_meta_value_reference::lookup_footprint_frame(
 		const state_manager&) const {
 	return NULL;
 }
+#endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 //=============================================================================
 // class process_meta_instance_reference method definitions
@@ -1377,16 +1522,20 @@ simple_param_meta_value_reference::lookup_footprint_frame(
 /**
 	Private empty constructor.  
  */
-simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base() :
+simple_datatype_meta_instance_reference_base::
+	simple_datatype_meta_instance_reference_base() :
 		simple_meta_instance_reference_base() {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base(
+#if ENABLE_STATIC_COMPILE_CHECKS
+simple_datatype_meta_instance_reference_base::
+	simple_datatype_meta_instance_reference_base(
 		const instantiation_state& s) :
 		simple_meta_instance_reference_base(s) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1397,7 +1546,8 @@ simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_refe
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_datatype_meta_instance_reference_base::~simple_datatype_meta_instance_reference_base() {
+simple_datatype_meta_instance_reference_base::
+		~simple_datatype_meta_instance_reference_base() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1426,6 +1576,10 @@ simple_datatype_meta_instance_reference_base::dump(ostream& o) const {
 //=============================================================================
 // explicit template instantiations
 
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+template class meta_instance_reference<channel_tag>;
+template class meta_instance_reference<process_tag>;
+#endif
 template class simple_meta_instance_reference<channel_tag>;
 template class simple_meta_instance_reference<process_tag>;
 template class simple_nonmeta_instance_reference<channel_tag>;

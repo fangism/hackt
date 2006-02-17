@@ -3,19 +3,24 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: param_expression_assignment.h,v 1.5 2006/01/30 07:42:06 fang Exp $
+	$Id: param_expression_assignment.h,v 1.5.12.1 2006/02/17 05:07:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_EXPRESSION_ASSIGNMENT_H__
 #define	__HAC_OBJECT_UNROLL_PARAM_EXPRESSION_ASSIGNMENT_H__
 
+#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "Object/unroll/instance_management_base.h"
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+class meta_value_reference_base;
+#else
 class simple_param_meta_value_reference;
+#endif
 using util::bad_bool;
 using util::good_bool;
 using util::memory::count_ptr;
@@ -33,11 +38,17 @@ class param_expr;
  */
 class param_expression_assignment : public instance_management_base {
 public:
-	typedef	count_ptr<param_expr>				src_ptr_type;
-	typedef	count_ptr<const param_expr>			src_const_ptr_type;
+	typedef	count_ptr<param_expr>			src_ptr_type;
+	typedef	count_ptr<const param_expr>		src_const_ptr_type;
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	typedef	count_ptr<meta_value_reference_base>		dest_ptr_type;
+	typedef	count_ptr<const meta_value_reference_base>
+							dest_const_ptr_type;
+#else
 	typedef	count_ptr<simple_param_meta_value_reference>	dest_ptr_type;
 	typedef	count_ptr<const simple_param_meta_value_reference>
 							dest_const_ptr_type;
+#endif
 
 // protected:
 //	/** cached value for dimensions, computed on construction */
@@ -56,10 +67,13 @@ virtual	ostream&
 virtual	size_t
 	size(void) const = 0;
 
+	// TODO: rename me! append_meta_value_reference
 virtual	bad_bool
 	append_simple_param_meta_value_reference(const dest_ptr_type& e) = 0;
 
+#if !UNIFY_UNROLL_PASS
 virtual	UNROLL_META_EVALUATE_PROTO = 0;
+#endif
 
 	/**
 		Helper class for appending instance references to

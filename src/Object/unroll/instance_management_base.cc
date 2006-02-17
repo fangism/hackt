@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.10 2006/01/30 07:42:06 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.10.12.1 2006/02/17 05:07:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -44,6 +44,7 @@ USING_UTIL_COMPOSE
 //=============================================================================
 // class instance_management_base method definitions
 
+#if !UNIFY_UNROLL_PASS
 /**
 	Overriding implementations reserved for param_instantiation_statements
 	and param_expression_assignments.  (also flow control scopes)
@@ -75,6 +76,7 @@ good_bool
 instance_management_base::unroll_meta_connect(const unroll_context&) const {
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -167,6 +169,7 @@ sequential_scope::unroll(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !UNIFY_UNROLL_PASS
 good_bool
 sequential_scope::unroll_meta_evaluate(const unroll_context& c) const {
 	STACKTRACE("sequential_scope::unroll_meta_evaluate()");
@@ -207,6 +210,7 @@ sequential_scope::unroll_meta_connect(const unroll_context& c) const {
 	}
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.3.2.2 2006/02/13 21:05:10 fang Exp $
+	$Id: object_fwd.h,v 1.3.2.2.2.1 2006/02/17 05:07:26 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -14,6 +14,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/expr/types.h"
 #include "Object/type/canonical_type_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -97,12 +98,23 @@ namespace entity {
 	typedef	meta_instance_reference<datastruct_tag>
 		struct_meta_instance_reference_base;
 	// base classes for meta_value_references
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	class meta_value_reference_base;
+	template <class> class meta_value_reference;
+	typedef	meta_value_reference<pbool_tag>
+		pbool_meta_value_reference_base;
+	typedef	meta_value_reference<pint_tag>
+		pint_meta_value_reference_base;
+	typedef	meta_value_reference<preal_tag>
+		preal_meta_value_reference_base;
+#else
 	typedef	meta_instance_reference<pbool_tag>
 		pbool_meta_value_reference_base;
 	typedef	meta_instance_reference<pint_tag>
 		pint_meta_value_reference_base;
 	typedef	meta_instance_reference<preal_tag>
 		preal_meta_value_reference_base;
+#endif
 
 	template <class>
 	class simple_meta_instance_reference;
@@ -260,7 +272,15 @@ namespace entity {
 
 	// defined in "Object/unroll/*connection*.h"
 	class meta_instance_reference_connection;
+#if SUBTYPE_PORT_CONNECTION
+	class port_connection_base;
+	template <class>	class port_connection;
+	typedef	port_connection<process_tag>	process_port_connection;
+	typedef	port_connection<channel_tag>	channel_port_connection;
+	typedef	port_connection<datastruct_tag>	struct_port_connection;
+#else
 	class port_connection;
+#endif
 	class aliases_connection_base;
 	class data_alias_connection_base;
 	template <class>	class alias_connection;
@@ -277,12 +297,13 @@ namespace entity {
 	typedef alias_connection<process_tag>
 		process_alias_connection;
 
+	class instantiation_statement_base;
 	template <class>
 	class instantiation_statement;
+#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 	template <class>
 	class param_instantiation_statement;
 
-	class instantiation_statement_base;
 	class param_instantiation_statement_base;
 
 	typedef	param_instantiation_statement<pbool_tag>
@@ -291,6 +312,14 @@ namespace entity {
 		pint_instantiation_statement;
 	typedef	param_instantiation_statement<preal_tag>
 		preal_instantiation_statement;
+#else
+	typedef	instantiation_statement<pbool_tag>
+		pbool_instantiation_statement;
+	typedef	instantiation_statement<pint_tag>
+		pint_instantiation_statement;
+	typedef	instantiation_statement<preal_tag>
+		preal_instantiation_statement;
+#endif
 	typedef	instantiation_statement<datatype_tag>
 		data_instantiation_statement;
 	typedef	instantiation_statement<channel_tag>

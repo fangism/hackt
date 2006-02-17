@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.2 2006/02/13 21:05:12 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.2.2.1 2006/02/17 05:07:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -43,7 +43,11 @@ using util::persistent_traits;
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 AGGREGATE_META_VALUE_REFERENCE_CLASS::aggregate_meta_value_reference() :
 		aggregate_meta_value_reference_base(), 
-		parent_type(), expr_base_type(), subreferences() {
+		parent_type(), 
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+		expr_base_type(), 
+#endif
+		subreferences() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -97,6 +101,19 @@ count_ptr<const fundamental_type_reference>
 AGGREGATE_META_VALUE_REFERENCE_CLASS::get_type_ref(void) const {
 	return traits_type::built_in_type_ptr;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+/**
+	Aggregates have more than one base collection!
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<const param_value_collection>
+AGGREGATE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
+	ICE_NEVER_CALL(cerr);
+	return never_ptr<const param_value_collection>(NULL);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

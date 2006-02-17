@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.6 2006/01/22 18:19:55 fang Exp $
+	$Id: pint_const.h,v 1.6.18.1 2006/02/17 05:07:36 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -83,8 +83,16 @@ public:
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
 
+#if WANT_IS_TEMPLATE_DEPENDENT
 	bool
 	is_template_dependent(void) const { return false; }
+
+	bool
+	is_loop_independent(void) const { return true; }
+
+	bool
+	is_unconditional(void) const { return true; }
+#endif
 
 	count_ptr<const const_param>
 	static_constant_param(void) const;
@@ -95,12 +103,6 @@ public:
 
 	bool
 	must_be_equivalent(const pint_expr& ) const;
-
-	bool
-	is_loop_independent(void) const { return true; }
-
-	bool
-	is_unconditional(void) const { return true; }
 
 	bool
 	operator == (const const_range& c) const;

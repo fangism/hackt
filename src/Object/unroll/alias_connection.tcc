@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.10 2006/01/30 07:42:05 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.10.12.1 2006/02/17 05:07:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -314,11 +314,13 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 }	// end alias_connection::unroll()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !UNIFY_UNROLL_PASS
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE
 good_bool
 ALIAS_CONNECTION_CLASS::unroll_meta_connect(const unroll_context& c) const {
 	return this->unroll(c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ALIAS_CONNECTION_TEMPLATE_SIGNATURE

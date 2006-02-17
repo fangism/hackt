@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.7 2006/02/12 03:09:43 fang Exp $
+	$Id: const_collection.h,v 1.7.4.1 2006/02/17 05:07:29 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include "Object/expr/types.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/STL/construct_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
@@ -113,8 +114,16 @@ public:
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
 
+#if WANT_IS_TEMPLATE_DEPENDENT
 	bool
 	is_template_dependent(void) const { return false; }
+
+	bool
+	is_loop_independent(void) const { return true; }
+
+	bool
+	is_unconditional(void) const { return true; }
+#endif
 
 	count_ptr<const parent_const_type>
 	static_constant_param(void) const;
@@ -147,12 +156,6 @@ public:
 	// required by pint_expr or pbool_expr
 	bool
 	must_be_equivalent(const expr_base_type& ) const;
-
-	bool
-	is_loop_independent(void) const { return true; }
-
-	bool
-	is_unconditional(void) const { return true; }
 
 	// only makes sense for scalars
 	value_type

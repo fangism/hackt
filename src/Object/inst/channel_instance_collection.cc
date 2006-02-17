@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.7 2006/01/22 18:19:59 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.7.18.1 2006/02/17 05:07:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -27,6 +27,9 @@
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
 #include "Object/def/datatype_definition_base.h"
+#if !ENABLE_STATIC_COMPILE_CHECKS
+#include "Object/unroll/instantiation_statement_type_ref_default.h"
+#endif
 
 namespace util {
 

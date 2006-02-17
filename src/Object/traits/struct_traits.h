@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.9 2006/01/27 08:07:19 fang Exp $
+	$Id: struct_traits.h,v 1.9.16.1 2006/02/17 05:07:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -53,6 +53,7 @@ struct class_traits<datastruct_tag> {
 	typedef	struct_value_type		data_value_type;
 
 	// later add instantiation_statement support...
+	typedef	data_instantiation_statement	instantiation_statement_type;
 
 	typedef	simple_datastruct_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;

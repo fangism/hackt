@@ -2,16 +2,21 @@
 	\file "Object/ref/simple_datatype_meta_instance_reference_base.h"
 	Classes for datatype instance references (built-in and user-defined).
 	This file was reincarnated from "Object/art_object_inst_ref_data.h".
-	$Id: simple_datatype_meta_instance_reference_base.h,v 1.4 2006/01/22 18:20:28 fang Exp $
+	$Id: simple_datatype_meta_instance_reference_base.h,v 1.4.18.1 2006/02/17 05:07:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_DATATYPE_META_INSTANCE_REFERENCE_BASE_H__
 
+#include "Object/devel_switches.h"
 #include "Object/ref/simple_meta_instance_reference_base.h"
 
 namespace HAC {
 namespace entity {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+class instance_collection_base;
+class aliases_connection_base;
+#endif
 //=============================================================================
 /**
 	A reference to a simple instance of datatype.  
@@ -28,8 +33,11 @@ protected:
 protected:
 	simple_datatype_meta_instance_reference_base();
 
+#if ENABLE_STATIC_COMPILE_CHECKS
 	explicit
-	simple_datatype_meta_instance_reference_base(const instantiation_state& s);
+	simple_datatype_meta_instance_reference_base(
+		const instantiation_state& s);
+#endif
 
 public:
 virtual ~simple_datatype_meta_instance_reference_base();

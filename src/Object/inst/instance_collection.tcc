@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.18 2006/02/05 19:45:07 fang Exp $
+	$Id: instance_collection.tcc,v 1.18.8.1 2006/02/17 05:07:39 fang Exp $
 	TODO: trim includes
  */
 
@@ -48,6 +48,9 @@
 #include "Object/def/footprint.h"
 #include "Object/global_entry.h"
 #include "Object/port_context.h"
+#if !ENABLE_STATIC_COMPILE_CHECKS
+#include "Object/unroll/instantiation_statement.h"
+#endif
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -241,6 +244,26 @@ INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ENABLE_STATIC_COMPILE_CHECKS
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<const fundamental_type_reference>
+INSTANCE_COLLECTION_CLASS::get_type_ref(void) const {
+	return initial_instantiation_statement_ptr->get_type_ref();
+}
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ripped off from instance_collection_base::formal_size_equivalent.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+index_collection_item_ptr_type
+INSTANCE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
+	NEVER_NULL(initial_instantiation_statement_ptr);
+	return initial_instantiation_statement_ptr->get_indices();
+}
+
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
 INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
@@ -365,6 +388,10 @@ INSTANCE_COLLECTION_CLASS::make_array(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	initial_instantiation_statement_ptr is permitted to be NULL
+	for instance collections that belong to footprints.  
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
@@ -372,6 +399,11 @@ INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
 	parent_type::collect_transient_info_base(m);
 	collection_type_manager_parent_type::collect_transient_info_base(m);
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	if (this->initial_instantiation_statement_ptr) {
+		initial_instantiation_statement_ptr->collect_transient_info(m);
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -383,6 +415,9 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 	parent_type::write_object_base(m, o);
 	// specialization functor parameter writer
 	collection_type_manager_parent_type::write_object_base(m, o);
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	m.write_pointer(o, this->initial_instantiation_statement_ptr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -394,6 +429,9 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 	parent_type::load_object_base(m, i);
 	// specialization functor parameter loader
 	collection_type_manager_parent_type::load_object_base(m, i);
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	m.read_pointer(i, this->initial_instantiation_statement_ptr);
+#endif
 }
 
 //=============================================================================
@@ -783,6 +821,7 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 	NEVER_NULL(ret);
 	// Is this really copy-constructible?
 	// TODO: unroll first instantiation statement
+#if ENABLE_STATIC_COMPILE_CHECKS
 	INVARIANT(this->index_collection.size() == 1);	// port constraint
 	const index_collection_type::const_iterator
 		b(this->index_collection.begin());
@@ -790,6 +829,12 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 	if ((*b)->instantiate_port(c, *ret).good)
 		return ret;
 	else 	return count_ptr<physical_instance_collection>(NULL);
+#else
+	INVARIANT(initial_instantiation_statement_ptr);
+	if (initial_instantiation_statement_ptr->instantiate_port(c, *ret).good)
+		return ret;
+	else 	return count_ptr<physical_instance_collection>(NULL);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1404,6 +1449,7 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	const count_ptr<this_type> ret(new this_type(*this));
 	NEVER_NULL(ret);
+#if ENABLE_STATIC_COMPILE_CHECKS
 	// Is this really copy-constructible?
 	INVARIANT(this->index_collection.size() == 1);	// port constraint
 	const index_collection_type::const_iterator
@@ -1412,6 +1458,12 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 	if ((*b)->instantiate_port(c, *ret).good)
 		return ret;
 	else 	return count_ptr<physical_instance_collection>(NULL);
+#else
+	INVARIANT(initial_instantiation_statement_ptr);
+	if (initial_instantiation_statement_ptr->instantiate_port(c, *ret).good)
+		return ret;
+	else 	return count_ptr<physical_instance_collection>(NULL);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

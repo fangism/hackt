@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.9 2006/01/30 07:42:06 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.9.12.1 2006/02/17 05:07:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -33,6 +33,9 @@
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/def/footprint.h"
+#if !ENABLE_STATIC_COMPILE_CHECKS
+#include "Object/inst/instance_collection.h"
+#endif
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -119,8 +122,13 @@ void
 INSTANTIATION_STATEMENT_CLASS::attach_collection(
 		const never_ptr<instance_collection_base> i) {
 	INVARIANT(!this->inst_base);
-	this->inst_base = i.template is_a<collection_type>();
-	NEVER_NULL(this->inst_base);
+	const never_ptr<collection_type> c(i.template is_a<collection_type>());
+	NEVER_NULL(c);
+	this->inst_base = c;
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	const never_ptr<const this_type> _this(this);
+	type_ref_parent_type::attach_initial_instantiation_statement(*c, _this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -346,6 +354,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !UNIFY_UNROLL_PASS
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
@@ -353,6 +362,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
 	// would've exited already
 	return this->unroll(c);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

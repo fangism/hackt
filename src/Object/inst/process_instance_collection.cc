@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.8 2006/01/28 18:21:21 fang Exp $
+	$Id: process_instance_collection.cc,v 1.8.12.1 2006/02/17 05:07:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -31,7 +31,9 @@
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
 #include "Object/inst/internal_aliases_policy.tcc"
-
+#if !ENABLE_STATIC_COMPILE_CHECKS
+#include "Object/unroll/instantiation_statement_type_ref_default.h"
+#endif
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_instance_collection,

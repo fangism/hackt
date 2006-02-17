@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.12 2006/02/01 06:11:45 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.12.12.1 2006/02/17 05:07:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -72,7 +72,11 @@ ostream&
 MEMBER_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
 		const expr_dump_context& c) const {
 	base_inst_ref->dump(o, c);
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	return parent_type::dump(o << '.', c);
+#else
 	return simple_meta_instance_reference_base::dump(o << '.', c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -98,10 +102,14 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		dump_flags::default_value) << endl;
 #endif
 	// this also include member_meta_instance_references
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
+#else
 	const base_inst_type& _parent_inst_ref(
 		IS_A(const simple_meta_instance_reference_base&, 
 			*this->base_inst_ref));
-	if (_parent_inst_ref.dimensions()) {
+#endif
+	if (_parent_inst_ref.dimensions()){
 		cerr << "ERROR: parent instance reference of a "
 			"member reference must be scalar." << endl <<
 			"However, non-scalar member-parent references "
@@ -153,9 +161,13 @@ size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		const state_manager& sm) const {
 	STACKTRACE_VERBOSE;
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
+#else
 	const base_inst_type& _parent_inst_ref(
 		IS_A(const simple_meta_instance_reference_base&, 
 			*this->base_inst_ref));
+#endif
 	if (_parent_inst_ref.dimensions()) {
 		// error message copied from above
 		cerr << "ERROR: parent instance reference of a "
@@ -261,10 +273,12 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		const unroll_context& c) const {
+#if 0
 	// copy-modified from unroll_scalar_substructure_reference, below
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
+#endif
 	STACKTRACE_VERBOSE;
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));
@@ -286,9 +300,11 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& c) const {
+#if 0
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
+#endif
 	STACKTRACE_VERBOSE;
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));
@@ -302,7 +318,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 	// only the ultimate parent of the reference should use the footprint
 	// copy the unroll_context *except* for the footprint pointer
 	// The following should NOT be doing extra lookup! (pass false)
-	return substructure_implementation_policy::
+	return parent_type::substructure_implementation_policy::
 		template unroll_generic_scalar_substructure_reference<Tag>(
 			*inst_base, this->array_indices, cc, false);
 }
@@ -317,11 +333,13 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 		const state_manager& sm) const {
+#if 0
 	typedef	simple_meta_instance_reference_implementation<
 			class_traits<Tag>::has_substructure>
 				substructure_implementation_policy;
+#endif
 	STACKTRACE_VERBOSE;
-	return substructure_implementation_policy::
+	return parent_type::substructure_implementation_policy::
 		template member_lookup_footprint_frame<Tag>(*this, sm);
 }
 

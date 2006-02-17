@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.11 2006/01/30 07:41:59 fang Exp $
+ 	$Id: namespace.cc,v 1.11.12.1 2006/02/17 05:07:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -402,7 +402,7 @@ if (probe) {
 				"-D array, ERROR!  ";
 			return return_type(NULL);
 		}	// else dimensions match apropriately
-
+#if ENABLE_STATIC_COMPILE_CHECKS
 		// here, we know we're referring to the same collection
 		// check for overlap with existing static-const indices
 		// but ONLY if statement is not in a conditional scope
@@ -428,6 +428,7 @@ if (probe) {
 			// ... happy ending, or is it?
 			// attach non-const back-reference
 		// }
+#endif
 		inst_stmt->attach_collection(probe_inst);
 		return probe_inst;
 	} else {
@@ -442,11 +443,16 @@ if (probe) {
 			never_ptr<const scopespace>(this), id, dim);
 	// attach non-const back-reference
 	inst_stmt->attach_collection(new_inst);
+#if ENABLE_STATIC_COMPILE_CHECKS
 	// if (!cond) {
 		// only if unconditional
 		new_inst->add_instantiation_statement(
 			predicated_inst_stmt_ptr(inst_stmt, cond));
 	// }
+#else
+	// attaching collection will automatically set the first
+	// instantiation_statement pointer to it.  
+#endif
 	INVARIANT(inst_stmt->get_name() == id);
 	NEVER_NULL(new_inst);
 	const never_ptr<const instance_collection_base>

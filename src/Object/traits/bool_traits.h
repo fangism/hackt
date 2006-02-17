@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.8 2006/01/22 18:20:31 fang Exp $
+	$Id: bool_traits.h,v 1.8.18.1 2006/02/17 05:07:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -45,7 +45,13 @@ struct class_traits<bool_tag> {
 		typedef	entity::instance_array<tag_type,D>	type;
 	};
 
-	// later add instantiation_statement support...
+#if 0
+	typedef	class_traits<datatype_tag>::instantiation_statement_type_ref_base
+				instantiation_statement_type_ref_base;
+#endif
+	// TODO: proper subtyping with specialization
+	typedef	instantiation_statement_base	instantiation_statement_parent_type;
+	typedef	data_instantiation_statement	instantiation_statement_type;
 	/**
 		Unit of state storage for boolean data.
 	 */

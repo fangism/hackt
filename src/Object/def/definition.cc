@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.16 2006/02/04 06:43:16 fang Exp $
+ 	$Id: definition.cc,v 1.16.8.1 2006/02/17 05:07:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -43,7 +43,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/process_type_reference.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/physical_instance_collection.h"
+#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 #include "Object/unroll/param_instantiation_statement_base.h"
+#endif
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
@@ -2785,7 +2787,9 @@ process_definition::add_port_formal(
 		const token_identifier& id) {
 	typedef	never_ptr<const physical_instance_collection>	return_type;
 	NEVER_NULL(f);
+#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 	INVARIANT(!f.is_a<param_instantiation_statement_base>());
+#endif
 	// check and make sure identifier wasn't repeated in formal list!
 	{
 	const never_ptr<const object>

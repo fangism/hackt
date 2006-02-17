@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.12 2006/02/12 03:09:44 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.12.4.1 2006/02/17 05:07:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -749,6 +749,7 @@ dynamic_param_expr_list::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 bool
 dynamic_param_expr_list::is_template_dependent(void) const {
 	const_iterator i(begin());
@@ -775,6 +776,7 @@ dynamic_param_expr_list::is_loop_independent(void) const {
 	}
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

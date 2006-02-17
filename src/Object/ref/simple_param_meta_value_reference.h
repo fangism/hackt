@@ -3,11 +3,15 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_param_meta_value_reference.h,v 1.5.16.1 2006/02/13 21:05:15 fang Exp $
+	$Id: simple_param_meta_value_reference.h,v 1.5.16.1.2.1 2006/02/17 05:07:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_PARAM_META_VALUE_REFERENCE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_PARAM_META_VALUE_REFERENCE_H__
+
+#include "Object/devel_switches.h"
+// we're getting rid of this class...
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 #include "Object/ref/simple_meta_instance_reference_base.h"
 #include "Object/common/util_types.h"
@@ -67,8 +71,10 @@ protected:
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
 
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 private:
 	LOOKUP_FOOTPRINT_FRAME_PROTO;
+#endif
 
 };	// end class simple_param_meta_value_reference
 
@@ -79,6 +85,8 @@ private:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#endif	// !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 #endif	// __HAC_OBJECT_REF_SIMPLE_PARAM_META_VALUE_REFERENCE_H__
 

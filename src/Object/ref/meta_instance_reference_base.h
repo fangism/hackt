@@ -3,13 +3,18 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.7.16.1 2006/02/13 21:05:13 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.7.16.1.2.1 2006/02/17 05:07:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
 
+#include "Object/devel_switches.h"
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#include "util/persistent.h"
+#else
 #include "Object/ref/nonmeta_instance_reference_base.h"
+#endif
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
@@ -19,11 +24,13 @@ namespace HAC {
 namespace entity {
 class scopespace;
 struct footprint_frame;
+struct expr_dump_context;
 class state_manager;
 class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
 class aliases_connection_base;
+class port_connection_base;
 class const_range_list;
 class unroll_context;
 class aggregate_meta_instance_reference_base;
@@ -31,6 +38,9 @@ using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
+using std::istream;
+using std::ostream;
+using util::persistent;
 
 //=============================================================================
 /**
@@ -43,12 +53,23 @@ using util::memory::count_ptr;
 	We need separate stacks...
 	See NOTES.
  */
-class meta_instance_reference_base : 
-		virtual public nonmeta_instance_reference_base {
+class meta_instance_reference_base :
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+		virtual public persistent
+#else
+		virtual public nonmeta_instance_reference_base
+#endif
+{
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	typedef	nonmeta_instance_reference_base		parent_type;
+#endif
 	typedef	meta_instance_reference_base		this_type;
 public:
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	meta_instance_reference_base() : persistent() { }
+#else
 	meta_instance_reference_base() : parent_type() { }
+#endif
 
 virtual	~meta_instance_reference_base() { }
 
@@ -76,17 +97,24 @@ virtual	never_ptr<const definition_base>
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
+#if 0
 virtual	bool
 	may_be_densely_packed(void) const = 0;
 
 virtual	bool
 	must_be_densely_packed(void) const = 0;
+#endif
 
+#if 0
+// is his actually needed
 virtual	bool
 	has_static_constant_dimensions(void) const = 0;
+#endif
 
+#if 0
 virtual	const_range_list
 	static_constant_dimensions(void) const = 0;
+#endif
 
 // what kind of type equivalence?
 virtual	bool
@@ -110,6 +138,13 @@ virtual	bool
 	count_ptr<aggregate_meta_instance_reference_base>
 	make_aggregate_meta_instance_reference(
 		const count_ptr<const this_type>&);
+
+#if SUBTYPE_PORT_CONNECTION
+	static
+	excl_ptr<port_connection_base>
+	make_port_connection(
+		const count_ptr<const this_type>&);
+#endif
 
 /**
 	The implementation of this will be policy-determined, 
@@ -141,6 +176,12 @@ virtual	excl_ptr<aliases_connection_base>
 
 virtual	count_ptr<aggregate_meta_instance_reference_base>
 	make_aggregate_meta_instance_reference_private(void) const = 0;
+
+#if SUBTYPE_PORT_CONNECTION
+virtual	excl_ptr<port_connection_base>
+	make_port_connection_private(
+		const count_ptr<const this_type>&) const = 0;
+#endif
 
 };	// end class meta_instance_reference_base
 

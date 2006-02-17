@@ -2,17 +2,20 @@
 	\file "Object/common/util_types.h"
 	Collective typedefs for utility types.  
 	This file was "Object/common/util_types.h" in a former life.  
-	$Id: util_types.h,v 1.6 2006/01/22 18:19:26 fang Exp $
+	$Id: util_types.h,v 1.6.18.1 2006/02/17 05:07:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_UTIL_TYPES_H__
 #define	__HAC_OBJECT_COMMON_UTIL_TYPES_H__
 
 #include "util/STL/vector_fwd.h"
-#include "util/STL/deque_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
+#include "Object/devel_switches.h"
+#if ENABLE_STATIC_COMPILE_CHECKS
+#include "util/STL/deque_fwd.h"
 #include <deque>		// to complete type for deque
+#endif
 
 namespace HAC {
 namespace entity {
@@ -20,8 +23,10 @@ namespace entity {
 	class meta_instance_reference_base;
 	class meta_range_list;
 	class instantiation_statement_base;
+#if ENABLE_STATIC_COMPILE_CHECKS
 	using std::deque;
 	using std::default_deque;
+#endif
 	using std::default_vector;
 	using std::list;
 	using std::default_list;
@@ -49,12 +54,15 @@ namespace entity {
 	typedef count_ptr<const meta_range_list>
 			index_collection_item_ptr_type;
 
+#if 0
 	/**
 		Helper struct to predicate instantiation statements.  
 		Defined in "Object/common/predicated_inst_stmt_ptr.h".
 	 */
 	class predicated_inst_stmt_ptr;
+#endif
 
+#if ENABLE_STATIC_COMPILE_CHECKS
 	/**
 		UPDATE: now contains reference to instantiation_statements, 
 		which *contain* the index/range expressions.  
@@ -77,6 +85,7 @@ namespace entity {
 	 */
 	typedef index_collection_type::const_iterator
 			instantiation_state;
+#endif	// ENABLE_STATIC_COMPILE_CHECKS
 
 }	// end namespace entity
 }	// end namespace HAC

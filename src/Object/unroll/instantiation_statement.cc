@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.11 2006/02/10 21:50:44 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.11.4.1 2006/02/17 05:07:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -279,19 +279,27 @@ instantiation_statement_base::load_object_base(
 }
 
 //=============================================================================
+#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 // class param_instantiation_statement_base method definitions
 
 param_instantiation_statement_base::param_instantiation_statement_base(
 		const index_collection_item_ptr_type& i) :
 		parent_type(i) {
 }
+#endif
 
 //=============================================================================
 // explicit template class instantiations
 
+#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 template class param_instantiation_statement<pbool_tag>;
 template class param_instantiation_statement<pint_tag>;
 template class param_instantiation_statement<preal_tag>;
+#else
+template class instantiation_statement<pbool_tag>;
+template class instantiation_statement<pint_tag>;
+template class instantiation_statement<preal_tag>;
+#endif
 template class instantiation_statement<datatype_tag>;
 template class instantiation_statement<channel_tag>;
 template class instantiation_statement<process_tag>;

@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.7 2006/01/22 18:20:12 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.7.18.1 2006/02/17 05:07:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -28,6 +28,10 @@
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
+
+#if !ENABLE_STATIC_COMPILE_CHECKS
+#include "Object/unroll/datatype_instantiation_statement.h"
+#endif
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_instance_collection,

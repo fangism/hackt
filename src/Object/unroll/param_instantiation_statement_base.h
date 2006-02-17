@@ -3,11 +3,14 @@
 	Parameter instance statement classes for HAC.  
 	This file came from "Object/art_object_inst_stmt_param_base.h"
 		in a previous life.  
-	$Id: param_instantiation_statement_base.h,v 1.4 2006/01/22 18:21:00 fang Exp $
+	$Id: param_instantiation_statement_base.h,v 1.4.18.1 2006/02/17 05:07:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_BASE_H__
 #define	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_BASE_H__
+
+#include "Object/devel_switches.h"
+#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 
 #include "Object/unroll/instantiation_statement_base.h"
 
@@ -30,7 +33,7 @@ protected:
 public:
 virtual	~param_instantiation_statement_base() { }
 
-#if 1
+#if !UNIFY_UNROLL_PASS
 virtual	UNROLL_META_EVALUATE_PROTO = 0;
 #endif
 
@@ -44,6 +47,8 @@ protected:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#endif	// WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 
 #endif	// __HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_BASE_H__
 

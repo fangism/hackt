@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_relational_expr.h"
 	Boolean relations between real-valued parameters.  
-	$Id: preal_relational_expr.h,v 1.2 2006/02/10 21:50:38 fang Exp $
+	$Id: preal_relational_expr.h,v 1.2.4.1 2006/02/17 05:07:37 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_RELATIONAL_EXPR_H__
@@ -79,11 +79,13 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
 	bool
 	has_static_constant_dimensions(void) const { return true; }
 
 	const_range_list
 	static_constant_dimensions(void) const;
+#endif
 
 	bool
 	may_be_initialized(void) const;
@@ -97,6 +99,7 @@ public:
 	bool
 	is_relaxed_formal_dependent(void) const;
 
+#if WANT_IS_TEMPLATE_DEPENDENT
 	bool
 	is_template_dependent(void) const;
 
@@ -105,6 +108,7 @@ public:
 
 	bool
 	is_unconditional(void) const;
+#endif
 
 	value_type
 	static_constant_value(void) const;

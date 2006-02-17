@@ -3,13 +3,14 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.9.2.1 2006/02/12 06:15:32 fang Exp $
+	$Id: value_collection.h,v 1.9.2.1.2.1 2006/02/17 05:07:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
 
 #include <iosfwd>
+#include "Object/devel_switches.h"
 #include "util/string_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
@@ -30,6 +31,9 @@ class simple_meta_value_reference;
 // template <class>
 // class simple_meta_instance_reference;
 class meta_instance_reference_base;
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+class meta_value_reference_base;
+#endif
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
 class param_type_reference;
@@ -39,6 +43,7 @@ class const_range_list;
 class const_index_list;
 class scopespace;
 class unroll_context;
+template <class> class param_instantiation_statement;
 using std::list;
 using std::istream;
 using std::ostream;
@@ -67,25 +72,30 @@ class value_collection :
 	public class_traits<Tag>::value_collection_parent_type {
 // friend class simple_meta_instance_reference<Tag>;
 friend class simple_meta_value_reference<Tag>;
+public:
+	typedef	class_traits<Tag>		traits_type;
 private:
 	typedef	VALUE_COLLECTION_CLASS		this_type;
-	typedef	typename class_traits<Tag>::value_collection_parent_type
+	typedef	typename traits_type::value_collection_parent_type
 						parent_type;
 public:
-	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::simple_meta_value_reference_type
+	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::simple_meta_value_reference_type
 					simple_meta_value_reference_type;
-	typedef	typename class_traits<Tag>::simple_nonmeta_instance_reference_type
+	typedef	typename traits_type::simple_nonmeta_instance_reference_type
 					simple_nonmeta_instance_reference_type;
-	typedef	typename class_traits<Tag>::expr_base_type
+	typedef	typename traits_type::expr_base_type
 						expr_type;
-	typedef	typename class_traits<Tag>::const_expr_type
+	typedef	typename traits_type::const_expr_type
 						const_expr_type;
-	typedef	typename class_traits<Tag>::const_collection_type
+	typedef	typename traits_type::const_collection_type
 						const_collection_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
 protected:
+#if 1 || ENABLE_STATIC_COMPILE_CHECKS
 	/**
+		TODO: 20060214: eliminate static initial value analysis?
+
 		Expression or value with which parameter is initialized. 
 		Recall that parameters are static -- written once only.  
 		Not to be used by the hash_string.  
@@ -98,6 +108,17 @@ protected:
 		Collectives won't be checked until unroll time.  
 	 */
 	count_ptr<const expr_type>		ival;
+#endif
+
+#if !ENABLE_STATIC_COMPILE_CHECKS
+//	typedef param_instantiation_statement<Tag>
+	typedef typename traits_type::instantiation_statement_type
+					initial_instantiation_statement_type;
+	typedef	never_ptr<const initial_instantiation_statement_type>
+				initial_instantiation_statement_ptr_type;
+	initial_instantiation_statement_ptr_type
+					initial_instantiation_statement_ptr;
+#endif
 
 protected:
 	explicit
@@ -120,6 +141,20 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream& o) const;
 
+#if !ENABLE_STATIC_COMPILE_CHECKS
+	void
+	attach_initial_instantiation_statement(
+		const initial_instantiation_statement_ptr_type i) {
+		NEVER_NULL(i);
+		if (!initial_instantiation_statement_ptr) {
+			initial_instantiation_statement_ptr = i;
+		}
+	}
+
+	index_collection_item_ptr_type
+	get_initial_instantiation_indices(void) const;
+#endif
+
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
@@ -133,11 +168,16 @@ virtual	ostream&
 	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const;
 
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	count_ptr<meta_value_reference_base>
+	make_meta_value_reference(void) const;
+#else
 	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const;
 
 	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const;
+#endif
 
 	good_bool
 	initialize(const init_arg_type& e);

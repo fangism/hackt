@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1 2006/02/13 21:05:14 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1.2.1 2006/02/17 05:07:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -36,6 +36,9 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/def/footprint.h"
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#include "Object/ref/meta_value_reference.h"
+#endif
 #include "common/ICE.h"
 
 // experimental: suppressing automatic instantiation of template code
@@ -65,18 +68,33 @@ using util::persistent_traits;
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+		simple_meta_instance_reference_base(), 
+		parent_type(), 
+#else
 		common_base_type(), 
-		parent_type(), interface_type(), value_collection_ref(NULL) {
+		parent_type(), interface_type(),
+#endif
+		value_collection_ref(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 		const value_collection_ptr_type pi) :
-		common_base_type(
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#if ENABLE_STATIC_COMPILE_CHECKS
+		simple_meta_instance_reference_base(
 			pi->current_collection_state()), 
+#else
+		simple_meta_instance_reference_base(), 
+#endif
+		parent_type(), 
+#else
+		common_base_type(pi->current_collection_state()), 
 		parent_type(), 
 		interface_type(), 
+#endif
 		value_collection_ref(pi) {
 }
 
@@ -102,6 +120,14 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::~simple_meta_value_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<const param_value_collection>
+SIMPLE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
+	return value_collection_ref;
+}
+
+#else
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<const instance_collection_base>
 SIMPLE_META_VALUE_REFERENCE_CLASS::get_inst_base(void) const {
@@ -114,6 +140,7 @@ never_ptr<const typename SIMPLE_META_VALUE_REFERENCE_CLASS::value_collection_par
 SIMPLE_META_VALUE_REFERENCE_CLASS::get_param_inst_base(void) const {
 	return value_collection_ref;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
@@ -127,29 +154,193 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		const expr_dump_context& c) const {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	// shamelessly copied from new simple_meta_instance_reference::dump
+	if (c.include_type_info)
+		this->what(o) << " ";
+	NEVER_NULL(this->value_collection_ref);
+	if (c.enclosing_scope) {
+		this->value_collection_ref->dump_hierarchical_name(o,
+			dump_flags::no_definition_owner);
+	} else {
+		this->value_collection_ref->dump_hierarchical_name(o,
+			dump_flags::default_value);
+	}
+	return simple_meta_instance_reference_base::dump_indices(o, c);
+#else
 	return grandparent_type::dump(o, c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	// copied from simple_meta_instance_reference_base::dimensions();
+	// size_t dim = get_coll_base()->get_dimensions();
+	size_t dim = this->value_collection_ref->get_dimensions();
+	if (this->array_indices) {
+		const size_t c = this->array_indices->dimensions_collapsed();
+		INVARIANT(c <= dim);
+		return dim -c;
+	} else	return dim;
+#else
 	return grandparent_type::dimensions();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+/**
+	Copy-reduced from simple_meta_instance_reference_base.
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(
+		excl_ptr<index_list_type>& i) {
+	INVARIANT(!array_indices);
+	NEVER_NULL(i);
+	// dimension-check:
+	// number of indices must be <= dimension of instance collection.  
+	const size_t max_dim = dimensions();    // depends on indices
+	if (i->size() > max_dim) {
+		cerr << "ERROR: instance collection " <<
+			this->value_collection_ref->get_name()
+			<< " is " << max_dim << "-dimensional, and thus, "
+			"cannot be indexed " << i->size() <<
+			"-dimensionally!  ";
+			// caller will say where
+		return good_bool(false);
+	}
+	// no static dimension checking
+	array_indices = i;
+	return good_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_DIMENSION_ANALYSIS
+/**
+	[comment copied verbatim from simple_meta_instance_reference_base]
+
+	May need to perform dimension-collapsing in some cases.  
+	Precondition: array indices already bound-checked if static constant.  
+	Prerequisites for calling this method: non-zero dimension.  
+	This function guarantees nothing about the packed-ness of the
+	current state of the collection.  
+	Cases: 
+	1) Reference is not-indexed to a non-collective instance set.  
+		Then this is zero-dimensional (scalar).  
+	2) Reference is not-indexed to a collective instance set.
+		See if the instance collection from the point of reference
+		has statically resolvable dimensions.  
+	3) Reference is partially-indexed to a collective instance set.  
+	4) Reference is fully-indexed to a collective instance set, 
+		down to the last dimension.  
+	When in doubt, this is just a compile-time check, 
+		can conservatively return false.  
+ */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::has_static_constant_dimensions(void) const {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	// case 1: instance collection is not collective. 
+	const size_t base_dim = this->value_collection_ref->get_dimensions();
+	if (base_dim == 0)
+		return true;
+	// case 2: reference is not-indexed, and instance is collective.
+	// implicitly refers to the entire collection.
+	// (same case if dimensions are under-specified)
+	else if (!this->array_indices) {
+		// is the entire collection known statically?
+#if 0
+		return this->is_static_constant_collection();
+#else
+		return false;
+#endif
+	} else if (this->array_indices->size() < base_dim) {
+		// case 3: partially-specified indices, implicit sub-collections
+#if 0
+		if (!this->array_indices->is_static_constant())
+			return false;
+		else	return this->is_static_constant_collection();
+		// else we know entire collection statically.
+#else
+		return false;
+#endif
+	} else {
+		// case 4: fully-indexed down to last dimension
+		return this->array_indices->is_static_constant();
+	}
+#else
 	return grandparent_type::has_static_constant_dimensions();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	[comments copied from simple_meta_instance_reference_base]
+
+	Repacks the instance collection form the point of reference 
+	into a dense array, if possible.  
+	No dimension-collapsing in this routine!
+	Just checks for coverage and compactness.  
+	If fails, returns empty list.  
+	Prerequisites: must already satisfy:
+		non-zero dimensions
+		must_be_densely_packed (or not)
+		has_static_constant_dimensions
+	\return dense range list representation of the instance collection
+		if it is indeed compact, else returns an empty list.  
+	\sa implicit_static_constant_indices
+ */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 const_range_list
 SIMPLE_META_VALUE_REFERENCE_CLASS::static_constant_dimensions(void) const {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+/**
+	Can't implement...
+	Not performing static analysis.  
+ */
+#if 0
+	const size_t base_dim = this->value_collection_ref->get_dimensions();
+	INVARIANT(base_dim);            // must have no-zero dimensions
+	if (array_indices) {
+		const never_ptr<const index_list_type> il(array_indices);
+		const never_ptr<const const_index_list>
+			cil(il.is_a<const const_index_list>());
+		if (!cil)       // is dynamic
+			return const_range_list();
+		// array indices are underspecified or fully specified
+		const excl_ptr<const mset_base>
+			fui = unroll_static_instances(base_dim)
+				.as_a_xfer<const mset_base>();
+		NEVER_NULL(fui);
+		// convert index to ranges, but DON'T COLLAPSE dimensions yet!
+		// should collapse dimensions AFTER checking coverage
+		// and compactness of the range.  
+		const const_range_list crl(*cil);
+		const mset_base::range_list_type
+			rl(fui->query_compact_dimensions(crl));
+		return const_range_list(rl);    // will probably have to convert
+	} else {
+		// not indexed, implicitly refers to entire collection
+		// no dimensions will be collapsed
+		const excl_ptr<const mset_base>
+			fui = unroll_static_instances(base_dim)
+				.as_a_xfer<const mset_base>();
+		NEVER_NULL(fui);
+		const mset_base::range_list_type
+			rl(fui->compact_dimensions());
+		return const_range_list(rl);    // will probably have to convert
+	}
+#endif
+#else
 	return grandparent_type::static_constant_dimensions();
+#endif
 }
+#endif	// ENABLE_STATIC_DIMENSION_ANALYSIS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -167,31 +358,55 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::initialize(const init_arg_type& i) {
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::may_be_initialized(void) const {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	return this->value_collection_ref->may_be_initialized();
+#else
 	return common_base_type::may_be_initialized();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	return this->value_collection_ref->must_be_initialized();
+#else
 	return common_base_type::must_be_initialized();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	if (this->array_indices)
+		return false;
+	else if (this->value_collection_ref->get_dimensions())
+		return false;
+	else	return this->value_collection_ref->is_static_constant();
+#else
 	return common_base_type::is_static_constant();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_relaxed_formal_dependent(void) const {
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+	return this->value_collection_ref->is_relaxed_template_formal() ||
+		(this->array_indices ?
+			this->array_indices->is_relaxed_formal_dependent()
+			: false);
+#else
 	return common_base_type::is_relaxed_formal_dependent();
+#endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if WANT_IS_TEMPLATE_DEPENDENT
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_template_dependent(void) const {
@@ -211,6 +426,7 @@ bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_unconditional(void) const {
 	return common_base_type::is_unconditional();
 }
+#endif	// WANT_IS_TEMPLATE_DEPENDENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -632,6 +848,7 @@ if (value_collection_ref->is_template_formal()) {
 }	// end method unroll_resolve
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 /**
 	Parameters have value semantics, not alias semantics!
  */
@@ -679,6 +896,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::connect_port(
 	ICE_NEVER_CALL(cerr);
 	return bad_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

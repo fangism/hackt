@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.8 2006/02/05 19:45:05 fang Exp $
+	$Id: devel_switches.h,v 1.8.8.1 2006/02/17 05:07:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -35,6 +35,57 @@
 	fix a critical bug.  
  */
 #define INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST       1
+
+/**
+	Define to 1 to use "new and improved" class hierarchy
+	for instance references.  
+	Goal: 1
+ */
+#define	DECOUPLE_INSTANCE_REFERENCE_HIERARCHY		1
+
+/**
+	Define to 1 to separate port connections by sub-type (template).
+	Goal: 1?
+ */
+#define	SUBTYPE_PORT_CONNECTION				1
+
+/**
+	Define to 0 to disable static checking of arrays, 
+	and initialization, overlaps, initial values, etc.  
+	This is all more trouble than it's worth.  
+	This will also disable tracking of instantiation statements
+	in each collection.  Only port instantiations will
+	contain a back-link to the formal instantiation_statement.  
+	(declared member in instance_collection<>)
+	Goal: 0
+ */
+#define	ENABLE_STATIC_COMPILE_CHECKS			0
+/**
+	Same idea: specific to expressions'
+	static_constant_dimension analysis.  
+ */
+#define	ENABLE_STATIC_DIMENSION_ANALYSIS		0
+
+/**
+	I think this function is never called used.  
+	Also group other static analysis functions into same category.  
+	Goal: 0
+ */
+#define	WANT_IS_TEMPLATE_DEPENDENT			0
+
+/**
+	Major headache.
+	Completely f---ed up class hierarchy, dirtily hacked.  
+	Should just flatten the instantiation_statement hierarchy.  
+	Goal: 0
+ */
+#define	WANT_PARAM_INSTANTIATION_STATEMENT_BASE		0
+
+/**
+	Remnants of a 3-phase unroll pass to be tossed.  
+	Goal: 1
+ */
+#define	UNIFY_UNROLL_PASS				1
 
 //=============================================================================
 
