@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.1.2.1 2006/02/17 05:07:44 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.1.2.2 2006/02/17 22:24:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -30,7 +30,9 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 	const this_type* rr(IS_A(const this_type*, &r));
 	if (!rr) {
 		// could be more descriptive...
-		cerr << "Meta-class type does not match!" << endl;
+		cerr << "Meta-class type does not match!  got: ";
+		this->what(cerr) << " and: ";
+		r.what(cerr) << endl;
 		return false;
 	}
 #if 0
