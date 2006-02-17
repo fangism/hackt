@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.12.12.1 2006/02/17 05:07:43 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.12.12.2 2006/02/17 07:52:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -273,12 +273,6 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 typename MEMBER_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 		const unroll_context& c) const {
-#if 0
-	// copy-modified from unroll_scalar_substructure_reference, below
-	typedef	simple_meta_instance_reference_implementation<
-			class_traits<Tag>::has_substructure>
-				substructure_implementation_policy;
-#endif
 	STACKTRACE_VERBOSE;
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));
@@ -300,11 +294,6 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
 MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& c) const {
-#if 0
-	typedef	simple_meta_instance_reference_implementation<
-			class_traits<Tag>::has_substructure>
-				substructure_implementation_policy;
-#endif
 	STACKTRACE_VERBOSE;
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));
@@ -333,11 +322,6 @@ MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 		const state_manager& sm) const {
-#if 0
-	typedef	simple_meta_instance_reference_implementation<
-			class_traits<Tag>::has_substructure>
-				substructure_implementation_policy;
-#endif
 	STACKTRACE_VERBOSE;
 	return parent_type::substructure_implementation_policy::
 		template member_lookup_footprint_frame<Tag>(*this, sm);

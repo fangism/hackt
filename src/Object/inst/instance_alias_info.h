@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.12 2006/02/05 19:45:06 fang Exp $
+	$Id: instance_alias_info.h,v 1.12.8.1 2006/02/17 07:52:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -71,13 +71,14 @@ friend class instance_array<Tag, 3>;
 friend class instance_array<Tag, 4>;
 #endif
 public:
-	typedef	typename class_traits<Tag>::instance_alias_relaxed_actuals_type
+	typedef	class_traits<Tag>		traits_type;
+	typedef	typename traits_type::instance_alias_relaxed_actuals_type
 						actuals_parent_type;
-	typedef	substructure_alias_base<class_traits<Tag>::has_substructure>
+	typedef	substructure_alias_base<traits_type::has_substructure>
 						substructure_parent_type;
-	typedef	internal_aliases_policy<class_traits<Tag>::can_internally_alias>
+	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
-	typedef	typename class_traits<Tag>::instance_type
+	typedef	typename traits_type::instance_type
 						instance_type;
 	/**
 		The reference count pointer type to the underlying
@@ -88,7 +89,7 @@ public:
 	/**
 		Container type.
 	 */
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
 	typedef	instance_collection_generic_type	container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;

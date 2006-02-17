@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
 	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
 	5	##ADDR##	namespc_	0	#HEAD#	#TAIL#	26
-	6	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	45
+	6	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	40
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60

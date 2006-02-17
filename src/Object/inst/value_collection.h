@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.9.2.1.2.1 2006/02/17 05:07:42 fang Exp $
+	$Id: value_collection.h,v 1.9.2.1.2.2 2006/02/17 07:52:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -256,8 +256,9 @@ private:
 	typedef	value_collection<Tag>			parent_type;
 friend class value_collection<Tag>;
 public:
-	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::instance_type
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::instance_type
 							element_type;
 
 	// later change this to multikey_set or not?
@@ -265,7 +266,7 @@ public:
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 	typedef	typename collection_type::key_type	key_type;
-	typedef	typename class_traits<Tag>::const_collection_type
+	typedef	typename traits_type::const_collection_type
 							const_collection_type;
 private:
 	/// the collection of boolean instances
@@ -339,14 +340,13 @@ private:
 	typedef	value_collection<Tag>			parent_type;
 	typedef	VALUE_SCALAR_CLASS			this_type;
 public:
-	typedef	typename class_traits<Tag>::instance_type
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::instance_type
 							instance_type;
 	typedef	instance_type				element_type;
-	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::expr_base_type
-							expr_type;
-	typedef	typename class_traits<Tag>::const_expr_type
-							const_expr_type;
+	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::expr_base_type	expr_type;
+	typedef	typename traits_type::const_expr_type	const_expr_type;
 private:
 	instance_type					the_instance;
 	const_expr_type					cached_value;

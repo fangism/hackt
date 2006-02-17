@@ -4,17 +4,17 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	104
+	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	99
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	namespc_	0	#HEAD#	#TAIL#	39
-	9	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	882
+	9	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	877
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	13	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	295
+	13	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	290
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
@@ -35,7 +35,6 @@ In namespace "", we have: {
       0 typedefs
       Instances:
         fancier_array = bool^3 fancier_array with indices: {
-          [0..3][0..4][1..2]
         }
           unrolled indices: {
             [0][0][1] = ::more_arrays::fancier_array[0][0][1] (21) 
@@ -80,7 +79,6 @@ In namespace "", we have: {
             [3][4][2] = ::more_arrays::fancier_array[3][4][2] (60) 
           }
         fancy_array = bool^2 fancy_array with indices: {
-          [0..4][0..2]
         }
           unrolled indices: {
             [0][0] = ::more_arrays::fancy_array[0][0] (6) 
@@ -102,7 +100,6 @@ In namespace "", we have: {
     }
   Instances:
     good_array = bool^1 good_array with indices: {
-      [0..4]
     }
       unrolled indices: {
         0 = ::good_array[0] (1) 

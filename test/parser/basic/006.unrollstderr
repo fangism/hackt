@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	108
+	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	103
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
@@ -12,12 +12,12 @@ Persistent Object Manager text dump:
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	namespc_	0	#HEAD#	#TAIL#	39
-	11	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	886
+	11	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	881
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	16	##ADDR##	dintcoll	2	#HEAD#	#TAIL#	299
+	16	##ADDR##	dintcoll	2	#HEAD#	#TAIL#	294
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -39,7 +39,6 @@ In namespace "", we have: {
       0 typedefs
       Instances:
         fancier_array = int<32>^3 fancier_array with indices: {
-          [0..3][0..4][1..2]
         }
           unrolled indices: {
             [0][0][1] = ::more_arrays::fancier_array[0][0][1] 
@@ -84,7 +83,6 @@ In namespace "", we have: {
             [3][4][2] = ::more_arrays::fancier_array[3][4][2] 
           }
         fancy_array = int<32>^2 fancy_array with indices: {
-          [0..4][0..2]
         }
           unrolled indices: {
             [0][0] = ::more_arrays::fancy_array[0][0] 
@@ -106,7 +104,6 @@ In namespace "", we have: {
     }
   Instances:
     good_array = int<32>^1 good_array with indices: {
-      [0..4]
     }
       unrolled indices: {
         0 = ::good_array[0] 

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.7.16.2.2.1 2006/02/17 05:07:46 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.7.16.2.2.2 2006/02/17 07:52:04 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -55,10 +55,11 @@ class simple_meta_value_reference :
 #endif
 	{
 public:
-	typedef	typename class_traits<Tag>::value_type	value_type;
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::value_type	value_type;
 private:
 	typedef	SIMPLE_META_VALUE_REFERENCE_CLASS	this_type;
-	typedef	typename class_traits<Tag>::meta_value_reference_parent_type
+	typedef	typename traits_type::meta_value_reference_parent_type
 							parent_type;
 #if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	typedef	typename parent_type::expr_base_type	expr_base_type;
@@ -66,24 +67,23 @@ private:
 	typedef	simple_meta_instance_reference_base	common_base_type;
 	typedef	common_base_type			grandparent_type;
 #else
-	typedef	typename class_traits<Tag>::expr_base_type
-							expr_base_type;
+	typedef	typename traits_type::expr_base_type	expr_base_type;
 	typedef	simple_param_meta_value_reference	common_base_type;
 	typedef	common_base_type::parent_type		grandparent_type;
 #endif
 	typedef	expr_base_type				interface_type;
 public:
 	typedef	count_ptr<const interface_type>		init_arg_type;
-	typedef	typename class_traits<Tag>::value_collection_parent_type
+	typedef	typename traits_type::value_collection_parent_type
 						value_collection_parent_type;
 protected:
-	typedef	typename class_traits<Tag>::template value_array<0>::type
+	typedef	typename traits_type::template value_array<0>::type
 							value_scalar_type;
-	typedef	typename class_traits<Tag>::value_collection_generic_type
+	typedef	typename traits_type::value_collection_generic_type
 							value_collection_type;
-	typedef	typename class_traits<Tag>::const_collection_type
+	typedef	typename traits_type::const_collection_type
 							const_collection_type;
-	typedef	typename class_traits<Tag>::const_expr_type
+	typedef	typename traits_type::const_expr_type
 							const_expr_type;
 	typedef	never_ptr<value_collection_type>
 						value_collection_ptr_type;

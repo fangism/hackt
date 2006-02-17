@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.12.8.1 2006/02/17 05:07:39 fang Exp $
+	$Id: instance_collection.h,v 1.12.8.2 2006/02/17 07:52:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -111,7 +111,7 @@ protected:
 						instance_relaxed_actuals_type;
 	// type parameter, if applicable is inherited from
 	// collection_type_manager_parent_type
-	typedef	internal_aliases_policy<class_traits<Tag>::can_internally_alias>
+	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
 #if !ENABLE_STATIC_COMPILE_CHECKS
 public:
@@ -335,21 +335,22 @@ class instance_array :
 friend class instance_collection<Tag>;
 	typedef	instance_array<Tag,D>			this_type;
 public:
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::instance_collection_generic_type
 							parent_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
 //	typedef	typename parent_type::instance_alias_base_ptr_type
-	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
+	typedef	typename traits_type::instance_alias_base_ptr_type
 						instance_alias_base_ptr_type;
-	typedef	typename class_traits<Tag>::alias_collection_type
+	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
 	// template explicitly required by g++-4.0
-	typedef	typename class_traits<Tag>::template instance_alias<D>::type
+	typedef	typename traits_type::template instance_alias<D>::type
 							element_type;
 	/**
 		This is the data structure used to implement the collection.  
@@ -464,20 +465,21 @@ class instance_array<Tag,0> :
 friend class instance_collection<Tag>;
 	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::instance_collection_generic_type
 							parent_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
-	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
+	typedef	typename traits_type::instance_alias_base_ptr_type
 						instance_alias_base_ptr_type;
-	typedef	typename class_traits<Tag>::alias_collection_type
+	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
 	// template explicitly required by g++-4.0
-	typedef	typename class_traits<Tag>::template instance_alias<0>::type
+	typedef	typename traits_type::template instance_alias<0>::type
 							instance_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;

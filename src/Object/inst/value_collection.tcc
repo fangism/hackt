@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.10.2.1.2.1 2006/02/17 05:07:42 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10.2.1.2.2 2006/02/17 07:52:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -169,14 +169,14 @@ VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::type_dump(ostream& o) const {
-	return o << class_traits<Tag>::tag_name << '^' << this->dimensions;
+	return o << traits_type::tag_name << '^' << this->dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const param_type_reference>
 VALUE_COLLECTION_CLASS::get_param_type_ref(void) const {
-	return class_traits<Tag>::built_in_type_ptr;
+	return traits_type::built_in_type_ptr;
 		// declared in "traits/class_traits.h"
 		// initialized in "art_built_ins.cc"
 }
@@ -651,7 +651,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 				v = pi.value;
 			} else {
 				cerr << "ERROR: reference to uninitialized " <<
-					class_traits<Tag>::tag_name << ' ' <<
+					traits_type::tag_name << ' ' <<
 					this->get_qualified_name() << " at index: " <<
 					i << endl;
 			}
@@ -675,7 +675,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 		v = pi.value;
 	} else {
 		cerr << "ERROR: reference to uninitialized " <<
-			class_traits<Tag>::tag_name << ' ' <<
+			traits_type::tag_name << ' ' <<
 			this->get_qualified_name() << " at index: " <<
 			i << endl;
 	}
@@ -687,6 +687,9 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 	Assigns a single value, using an index.
 	Only call this if this is non-scalar (array).  
 	\return true on error.
+	TODO: if we're now using find instead of operator [], 
+		then we no longer need an 'instantiated' bit
+		in the instance value struct.  
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 bad_bool
@@ -694,7 +697,20 @@ VALUE_ARRAY_CLASS::assign(const multikey_index_type& k, const value_type i) {
 	// convert from generic to dimension-specific
 	// for efficiency, consider an unsafe pointer version, to save copying
 	const key_type index(k);
+#if 1
+	typedef	typename collection_type::iterator	iterator;
+	const iterator vi(collection.find(index));
+	if (vi == collection.end()) {
+		// wasn't instantiated
+		cerr << "Error: value referenced has not been instantiated!"
+			<< endl;
+		return bad_bool(true);
+	}
+	element_type& pi(vi->second);
+#else
+	// this may add uninstantiated elements to collection :S
 	element_type& pi = collection[index];
+#endif
 	return (pi = i);	// convert good_bool to bad_bool implicitly
 }
 
@@ -881,7 +897,7 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 				_val(IS_A(const this_type&, *_r.second));
 			if (!_val.the_instance.instantiated) {
 				cerr << "ERROR: Reference to uninstantiated " <<
-					class_traits<Tag>::tag_name << ' ' <<
+					traits_type::tag_name << ' ' <<
 					this->get_qualified_name() << "!" << endl;
 				return good_bool(false);
 			}
@@ -912,7 +928,7 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 	// else is top-level
 	if (!the_instance.instantiated) {
 		cerr << "ERROR: Reference to uninstantiated " <<
-			class_traits<Tag>::tag_name << ' ' <<
+			traits_type::tag_name << ' ' <<
 			this->get_qualified_name() << "!" << endl;
 		return good_bool(false);
 	}

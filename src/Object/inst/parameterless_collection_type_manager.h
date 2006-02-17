@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.5 2006/01/22 18:20:09 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.5.18.1 2006/02/17 07:52:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -31,12 +31,13 @@ template <class Tag>
 class parameterless_collection_type_manager {
 private:
 	typedef	parameterless_collection_type_manager<Tag>	this_type;
+	typedef	class_traits<Tag>			traits_type;
 protected:
-	typedef typename class_traits<Tag>::instance_collection_generic_type
+	typedef typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-	typedef typename class_traits<Tag>::instance_collection_parameter_type
+	typedef typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	typedef typename class_traits<Tag>::type_ref_ptr_type
+	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
 
 	/**

@@ -1,21 +1,23 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2006/02/10 21:50:56 fang Exp $
+#	$Id: Makefile.am,v 1.10.4.1 2006/02/17 07:52:17 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	    005 006 007 009 \
-	010 011 012 013 015 016 018 \
+	010 011 012 013 015 \
 	023 024 025 026 027 029 \
 	030 031 032 034 035 \
 	051 052 053 054 056 057
 
 # BISON_OUTPUTS +=
 
+# 016, 018 were moved to PASSES since we disabled static
+# dimension checking.  
 # the type-checked subset of the above
 HACKT_PARSE_TEST_PASSES = \
 	001 002 003 004 008 \
-	014 017 019 \
+	014 016 017 018 019 \
 	020 021 022 028 \
 	033 036 037 038 039 \
 	040 041 042 043 044 045 046 047 048 \

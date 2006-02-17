@@ -5,48 +5,48 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	214
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	34
+	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	34
+	14	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
 	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	38	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
 	39	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -64,11 +64,9 @@ In namespace "", we have: {
       Parameters:
         E = pint<> E
         M = pint<> M with indices: {
-          [0..::bogus::E-1]
         }
 
         N = pint<> N with indices: {
-          [0..::bogus::M[0]-1]
         }
 
       unroll sequence: 

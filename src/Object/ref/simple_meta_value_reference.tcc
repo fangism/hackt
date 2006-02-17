@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1.2.1 2006/02/17 05:07:46 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1.2.2 2006/02/17 07:52:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -808,7 +808,7 @@ if (value_collection_ref->is_template_formal()) {
 				// callee already has error message
 				cerr << "ERROR: looking up index " <<
 					key_gen << " of " <<
-					class_traits<Tag>::tag_name <<
+					traits_type::tag_name <<
 					" collection " <<
 					vcref.get_qualified_name() <<
 					"." << endl;
@@ -1027,7 +1027,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 	do {
 		if (_vals.assign(key_gen, *val_iter).bad) {
 			cerr << "ERROR: assigning index " << key_gen << 
-				" of " << class_traits<Tag>::tag_name <<
+				" of " << traits_type::tag_name <<
 				" collection " << _vals.get_qualified_name() <<
 				"." << endl;
 			assign_err.bad = true;

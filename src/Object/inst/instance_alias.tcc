@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.14 2006/02/05 20:14:08 fang Exp $
+	$Id: instance_alias.tcc,v 1.14.8.1 2006/02/17 07:52:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -1191,7 +1191,8 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 operator << (ostream& o,
 	const typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type& i) {
-	return o << class_traits<Tag>::tag_name << "-alias @ " << &i;
+	typedef	class_traits<Tag>	traits_type;
+	return o << traits_type::tag_name << "-alias @ " << &i;
 }
 
 //=============================================================================
@@ -1525,8 +1526,9 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_object(const persistent_object_manager& m,
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 ostream&
 operator << (ostream& o, const instance_alias<Tag,D>& b) {
+	typedef	class_traits<Tag>	traits_type;
 	INVARIANT(b.valid());
-	return o << '(' << class_traits<Tag>::tag_name << "-alias-" << D << ')';
+	return o << '(' << traits_type::tag_name << "-alias-" << D << ')';
 }
 
 //=============================================================================

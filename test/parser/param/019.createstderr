@@ -4,16 +4,16 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
-	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	91
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -25,8 +25,6 @@ In namespace "", we have: {
   Parameters:
     M = pint^0 M (init = 2) value: 2
     foo = pint^1 foo with indices: {
-      [2..4]
-      [0..1]
     }
       unrolled index-value pairs: {
         0 = ?
