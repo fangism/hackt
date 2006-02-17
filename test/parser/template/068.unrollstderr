@@ -5,30 +5,30 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	12	##ADDR##	proccoll	1	#HEAD#	#TAIL#	150
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	proccoll	1	#HEAD#	#TAIL#	140
+	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -61,8 +61,6 @@ In namespace "", we have: {
 
   Instances:
     car = process foo<5><4>^1 car with indices: {
-      [0..2]
-      [3..4]
     }
       unrolled indices: {
         0 = ::car[0] 

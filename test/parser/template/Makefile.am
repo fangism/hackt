@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2006/02/12 03:09:48 fang Exp $
+#	$Id: Makefile.am,v 1.15.4.1 2006/02/17 23:38:00 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -9,7 +9,10 @@ HACKT_PARSE_TEST_FAILURES = \
 	020 023 024 025 027 028 \
 	042 047 048 \
 	050 051 052 053 054 \
-	060 065 066 067 069
+	060 065 066 069
+
+# No longer statically checking dimensions, so the following tests pass parsing:
+# 067
 
 HACKT_PARSE_TEST_PASSES = \
 	001 002 004 006 007 008 008a 009 \
@@ -18,7 +21,7 @@ HACKT_PARSE_TEST_PASSES = \
 	030 031 032 033 033a 034 035 036 037 038 038a 039 \
 	040 041 043 044 045 046 049 \
 	055 056 057 058 059 \
-	061 062 063 064 068 \
+	061 062 063 064 067 068 \
 	070 071 072 073 073a 074 075 076 077 078
 
 # KNOWN BUGS:
