@@ -1,0 +1,5 @@
+ERROR: unrolling packed instance aliases in process_connection:
+	size of reference 2 (::bag) = [5]
+	size of reference 1 (::sack[0]) = [4]
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

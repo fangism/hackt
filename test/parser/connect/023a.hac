@@ -1,0 +1,10 @@
+// "023a.hac" 
+// should fail: size mismatches after dimension collapsing
+
+defproc barf() { }
+
+barf bag[5];
+barf sack[5][4];
+
+bag = sack[4];		// dies
+
