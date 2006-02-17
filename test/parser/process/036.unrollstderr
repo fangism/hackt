@@ -5,10 +5,10 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	4	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	37
+	4	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	32
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	36
+	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	31
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 
@@ -22,11 +22,9 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (declared) foo<
       pint<> bar with indices: {
-        [0..4]
       }
 
       pint<> blah with indices: {
-        [0..3]
       }
 
       >(
@@ -34,11 +32,9 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Parameters:
         bar = pint<> bar with indices: {
-          [0..4]
         }
 
         blah = pint<> blah with indices: {
-          [0..3]
         }
 
       }
