@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.4 2005/12/13 04:15:33 fang Exp $
+	$Id: CHP.cc,v 1.4.24.1 2006/02/18 08:29:10 fang Exp $
  */
 
 #include "Object/lang/CHP.h"
@@ -10,6 +10,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/ref/simple_datatype_nonmeta_value_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"

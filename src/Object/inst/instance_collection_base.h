@@ -3,22 +3,19 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.11.4.2 2006/02/18 06:28:32 fang Exp $
+	$Id: instance_collection_base.h,v 1.11.4.3 2006/02/18 08:29:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 #define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 
 #include <string>
-
-#include "Object/devel_switches.h"
 #include "util/macros.h"
 #include "util/boolean_types.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/persistent.h"		// for persistent object interface
-
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -313,10 +310,6 @@ public:
 	is_template_dependent(void) const;
 
 public:
-#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-virtual	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const = 0;
-#endif
 
 virtual	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const = 0;

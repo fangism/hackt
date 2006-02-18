@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.2.24.2 2006/02/18 04:34:20 fang Exp $
+	$Id: instance.h,v 1.2.24.3 2006/02/18 08:29:05 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -15,7 +15,6 @@
 #include "AST/definition_item.h"
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -265,13 +264,8 @@ public:
  */
 class connection_statement : public instance_management, public actuals_base {
 public:
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	typedef	entity::port_connection_base		result_type;
 	typedef	entity::meta_instance_reference_base	inst_ref_arg_type;
-#else
-	typedef	entity::port_connection			result_type;
-	typedef	simple_meta_instance_reference_base	inst_ref_arg_type;
-#endif
 protected:
 //	const excl_ptr<const expr_list>		actuals;	// inherited
 	/**

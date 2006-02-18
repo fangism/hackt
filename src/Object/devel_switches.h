@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.8.8.6 2006/02/18 06:28:25 fang Exp $
+	$Id: devel_switches.h,v 1.8.8.7 2006/02/18 08:29:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -35,13 +35,6 @@
 	fix a critical bug.  
  */
 #define INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST       1
-
-/**
-	Define to 1 to use "new and improved" class hierarchy
-	for instance references.  
-	Goal: 1
- */
-#define	DECOUPLE_INSTANCE_REFERENCE_HIERARCHY		1
 
 //=============================================================================
 

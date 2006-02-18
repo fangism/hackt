@@ -2,16 +2,13 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.9.14.1.2.3 2006/02/18 06:28:35 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.9.14.1.2.4 2006/02/18 08:29:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 
-#include "Object/devel_switches.h"
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/ref/meta_instance_reference_base.h"
-#endif
 #include "Object/ref/simple_meta_instance_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -100,7 +97,6 @@ virtual	ostream&
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	ostream&
 	dump_type_size(ostream&) const;
 
@@ -115,8 +111,6 @@ virtual	ostream&
 
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
-
-#endif	// DECOUPLE_INSTANCE_REFRENCE_HIERARCHY
 
 private:
 	/**

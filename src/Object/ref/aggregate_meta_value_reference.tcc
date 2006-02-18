@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.2.2.1 2006/02/17 05:07:42 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.2.2.2 2006/02/18 08:29:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -44,9 +44,6 @@ AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 AGGREGATE_META_VALUE_REFERENCE_CLASS::aggregate_meta_value_reference() :
 		aggregate_meta_value_reference_base(), 
 		parent_type(), 
-#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-		expr_base_type(), 
-#endif
 		subreferences() {
 }
 
@@ -103,7 +100,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 /**
 	Aggregates have more than one base collection!
  */
@@ -113,7 +109,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
 	ICE_NEVER_CALL(cerr);
 	return never_ptr<const param_value_collection>(NULL);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.1.2.2.2.1 2006/02/17 05:07:42 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.1.2.2.2.2 2006/02/18 08:29:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -45,11 +45,7 @@ aggregate_meta_value_reference<Tag>
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class aggregate_meta_value_reference :
 	public aggregate_meta_value_reference_base, 
-	public class_traits<Tag>::meta_value_reference_parent_type
-#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-	, public class_traits<Tag>::expr_base_type
-#endif
-{
+	public class_traits<Tag>::meta_value_reference_parent_type {
 	typedef	AGGREGATE_META_VALUE_REFERENCE_CLASS		this_type;
 public:
 	typedef	class_traits<Tag>				traits_type;
@@ -106,10 +102,8 @@ public:
 	size_t
 	dimensions(void) const;
 
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	never_ptr<const param_value_collection>
 	get_coll_base(void) const;
-#endif
 
 	/// probably just conservatively return false for simplicity
 	bool

@@ -3,14 +3,13 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.9.2.1.2.4 2006/02/18 06:28:33 fang Exp $
+	$Id: value_collection.h,v 1.9.2.1.2.5 2006/02/18 08:29:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
 
 #include <iosfwd>
-#include "Object/devel_switches.h"
 #include "util/string_fwd.h"
 #include "util/STL/list_fwd.h"
 #include "util/boolean_types.h"
@@ -31,9 +30,7 @@ class simple_meta_value_reference;
 // template <class>
 // class simple_meta_instance_reference;
 class meta_instance_reference_base;
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 class meta_value_reference_base;
-#endif
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
 class param_type_reference;
@@ -165,16 +162,8 @@ virtual	ostream&
 	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const;
 
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	count_ptr<meta_value_reference_base>
 	make_meta_value_reference(void) const;
-#else
-	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const;
-
-	count_ptr<nonmeta_instance_reference_base>
-	make_nonmeta_instance_reference(void) const;
-#endif
 
 	good_bool
 	initialize(const init_arg_type& e);

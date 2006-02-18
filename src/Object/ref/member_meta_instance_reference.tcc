@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.12.12.2 2006/02/17 07:52:04 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.12.12.3 2006/02/18 08:29:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -72,11 +72,7 @@ ostream&
 MEMBER_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
 		const expr_dump_context& c) const {
 	base_inst_ref->dump(o, c);
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	return parent_type::dump(o << '.', c);
-#else
-	return simple_meta_instance_reference_base::dump(o << '.', c);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -102,13 +98,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		dump_flags::default_value) << endl;
 #endif
 	// this also include member_meta_instance_references
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
-#else
-	const base_inst_type& _parent_inst_ref(
-		IS_A(const simple_meta_instance_reference_base&, 
-			*this->base_inst_ref));
-#endif
 	if (_parent_inst_ref.dimensions()){
 		cerr << "ERROR: parent instance reference of a "
 			"member reference must be scalar." << endl <<
@@ -161,13 +151,7 @@ size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		const state_manager& sm) const {
 	STACKTRACE_VERBOSE;
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
-#else
-	const base_inst_type& _parent_inst_ref(
-		IS_A(const simple_meta_instance_reference_base&, 
-			*this->base_inst_ref));
-#endif
 	if (_parent_inst_ref.dimensions()) {
 		// error message copied from above
 		cerr << "ERROR: parent instance reference of a "

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.18.8.2 2006/02/18 06:28:31 fang Exp $
+	$Id: instance_collection.tcc,v 1.18.8.3 2006/02/18 08:29:07 fang Exp $
 	TODO: trim includes
  */
 
@@ -42,6 +42,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/canonical_type.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/unroll/instantiation_statement_base.h"

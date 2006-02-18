@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.5.18.2 2006/02/18 04:34:22 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.5.18.3 2006/02/18 08:29:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -39,9 +39,7 @@
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/parameterless_collection_type_manager.h"
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/ref/meta_instance_reference_subtypes.tcc"
-#endif
 #include "Object/unroll/port_connection_base.h"
 
 namespace util {
@@ -191,12 +189,10 @@ struct data_type_resolver<datastruct_tag> {
 //=============================================================================
 // explicit template instantiations
 
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 template class meta_instance_reference<bool_tag>;
 template class meta_instance_reference<int_tag>;
 template class meta_instance_reference<enum_tag>;
 template class meta_instance_reference<datastruct_tag>;
-#endif
 
 template class simple_meta_instance_reference<bool_tag>;
 template class simple_meta_instance_reference<int_tag>;

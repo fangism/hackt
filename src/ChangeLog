@@ -5,6 +5,12 @@
 
 2006-02-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-10:
+	  Finally, committed DECOUPLE_INSTANCE_REFERENCE_HIERARCHY -> 1, 
+		(-1400 LoC).  This accomplishes the primary branch objective.
+	  Only little more clean-up and checking before merging.  
+
+
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-09:
 	  Committed ENABLE_STATIC_COMPILE_CHECKS -> 0, and
 		ENABLE_STATIC_DIMENSION_ANALYSIS -> 0, (-1500 LoC).

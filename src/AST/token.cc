@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.5.4.1 2006/02/17 05:07:25 fang Exp $
+	$Id: token.cc,v 1.5.4.2 2006/02/18 08:29:05 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -27,12 +27,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/built_in_datatype_def.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/ref/meta_instance_reference_base.h"
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/meta_reference_union.h"
 #include "Object/ref/nonmeta_instance_reference_base.h"
-#endif
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
@@ -97,10 +95,8 @@ using entity::pint_traits;
 using entity::preal_traits;
 using entity::bool_traits;
 using entity::int_traits;
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 using entity::physical_instance_collection;
 using entity::param_value_collection;
-#endif
 
 //=============================================================================
 // class terminal definitions
@@ -334,7 +330,6 @@ token_identifier::check_meta_reference(const context& c) const {
 	//	for loop varables.  
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		const never_ptr<const physical_instance_collection>
 			pinst(inst.is_a<const physical_instance_collection>());
 		if (pinst) {
@@ -343,9 +338,6 @@ token_identifier::check_meta_reference(const context& c) const {
 			return inst.is_a<const param_value_collection>()
 				->make_meta_value_reference();
 		}
-#else
-		return inst->make_meta_instance_reference();
-#endif
 	} else {
 		// better error handling later...
 		what(cerr << "failed to find ") << endl;

@@ -2,22 +2,17 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.7.16.2.2.4 2006/02/18 06:28:35 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.7.16.2.2.5 2006/02/18 08:29:13 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 #define __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 
-#include "Object/devel_switches.h"
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/common/multikey_index.h"
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/ref/meta_value_reference_base.h"
-#include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/ref/simple_meta_instance_reference_base.h"
 	// transformed to not be instance-specific
-#else
-#include "Object/ref/simple_param_meta_value_reference.h"
-#endif
 #include "Object/traits/class_traits_fwd.h"
 
 //=============================================================================
@@ -44,16 +39,8 @@ simple_meta_value_reference<Tag>
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_value_reference :
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	public simple_meta_instance_reference_base, 
-#else
-	public simple_param_meta_value_reference, 
-#endif
-	public class_traits<Tag>::meta_value_reference_parent_type
-#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-	, public class_traits<Tag>::expr_base_type
-#endif
-	{
+	public class_traits<Tag>::meta_value_reference_parent_type {
 public:
 	typedef	class_traits<Tag>			traits_type;
 	typedef	typename traits_type::value_type	value_type;
@@ -61,16 +48,9 @@ private:
 	typedef	SIMPLE_META_VALUE_REFERENCE_CLASS	this_type;
 	typedef	typename traits_type::meta_value_reference_parent_type
 							parent_type;
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	typedef	typename parent_type::expr_base_type	expr_base_type;
 	// is not actually specific to instances
 	typedef	simple_meta_instance_reference_base	common_base_type;
-	typedef	common_base_type			grandparent_type;
-#else
-	typedef	typename traits_type::expr_base_type	expr_base_type;
-	typedef	simple_param_meta_value_reference	common_base_type;
-	typedef	common_base_type::parent_type		grandparent_type;
-#endif
 	typedef	expr_base_type				interface_type;
 public:
 	typedef	count_ptr<const interface_type>		init_arg_type;
@@ -105,30 +85,12 @@ public:
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
 
-#if 0 && DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-	ostream&
-	dump_type_size(ostream&) const;
-
-	never_ptr<const definition_base>
-	get_base_def(void) const;
-
-	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
-#endif
-
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
 
 	never_ptr<const param_value_collection>
 	get_coll_base(void) const;
-#else
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
 
-	never_ptr<const instance_collection_base>
-	get_inst_base_subtype(void) const;
-#endif
 	never_ptr<const value_collection_parent_type>
 	get_param_inst_base(void) const;
 
@@ -185,19 +147,6 @@ public:
 	bad_bool
 	assign_value_collection(const const_collection_type&, 
 		const unroll_context&) const;
-
-#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-private:
-	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const;
-
-	count_ptr<aggregate_meta_instance_reference_base>
-	make_aggregate_meta_instance_reference_private(void) const;
-
-	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
-
-	CONNECT_PORT_PROTO;
-#endif
 
 protected:
 	using common_base_type::collect_transient_info_base;

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.4.4.1 2006/02/17 05:07:24 fang Exp $
+	$Id: expr_base.h,v 1.4.4.2 2006/02/18 08:29:05 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -11,7 +11,6 @@
 
 #include "AST/common.h"
 #include "util/STL/pair_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 //=============================================================================
@@ -28,11 +27,9 @@ namespace entity {
 	class simple_datatype_nonmeta_value_reference;
 	class nonmeta_index_list;
 	class int_range_list;		// a.k.a. nonmeta_range_list
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	// from "Object/ref/meta_reference_union.h"
 	class meta_reference_union;
 	class const_meta_reference_union;
-#endif
 namespace PRS {
 	class prs_expr;
 	class literal;
@@ -53,12 +50,7 @@ namespace parser {
 typedef	count_ptr<entity::meta_index_list>	range_list_meta_return_type;
 typedef	count_ptr<entity::nonmeta_index_list>	range_list_nonmeta_return_type;
 
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-typedef	entity::meta_reference_union
-#else
-typedef	count_ptr<entity::meta_instance_reference_base>
-#endif
-						inst_ref_meta_return_type;
+typedef	entity::meta_reference_union		inst_ref_meta_return_type;
 
 typedef	count_ptr<entity::nonmeta_instance_reference_base>
 						inst_ref_nonmeta_return_type;

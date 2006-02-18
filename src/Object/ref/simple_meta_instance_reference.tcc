@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.1.2.3 2006/02/18 06:28:35 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.1.2.4 2006/02/18 08:29:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -89,7 +89,6 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
 		const expr_dump_context& c) const {
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	if (c.include_type_info)
 		this->what(o) << " ";
 	NEVER_NULL(this->inst_collection_ref);
@@ -101,13 +100,9 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 			dump_flags::default_value);
 	}
 	return simple_meta_instance_reference_base::dump_indices(o, c);
-#else
-	return simple_meta_instance_reference_base::dump(o, c);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 /**
 	Simplified from simple_meta_instance_reference_base::dump_type_size().
  */
@@ -121,11 +116,8 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump_type_size(ostream& o) const {
 	}
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::dimensions(void) const {
@@ -177,7 +169,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(
 	array_indices = i;
 	return good_bool(true);
 }
-#endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.3.2.2.2.3 2006/02/18 04:34:21 fang Exp $
+	$Id: object_fwd.h,v 1.3.2.2.2.4 2006/02/18 08:29:06 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -14,7 +14,6 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/expr/types.h"
 #include "Object/type/canonical_type_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -98,7 +97,6 @@ namespace entity {
 	typedef	meta_instance_reference<datastruct_tag>
 		struct_meta_instance_reference_base;
 	// base classes for meta_value_references
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	class meta_value_reference_base;
 	template <class> class meta_value_reference;
 	typedef	meta_value_reference<pbool_tag>
@@ -107,14 +105,6 @@ namespace entity {
 		pint_meta_value_reference_base;
 	typedef	meta_value_reference<preal_tag>
 		preal_meta_value_reference_base;
-#else
-	typedef	meta_instance_reference<pbool_tag>
-		pbool_meta_value_reference_base;
-	typedef	meta_instance_reference<pint_tag>
-		pint_meta_value_reference_base;
-	typedef	meta_instance_reference<preal_tag>
-		preal_meta_value_reference_base;
-#endif
 
 	template <class>
 	class simple_meta_instance_reference;

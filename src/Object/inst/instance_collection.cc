@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.14.12.3 2006/02/18 06:28:30 fang Exp $
+ 	$Id: instance_collection.cc,v 1.14.12.4 2006/02/18 08:29:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -24,9 +24,7 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/ref/simple_meta_instance_reference.h"
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/ref/nonmeta_instance_reference_base.h"
-#endif
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
@@ -497,7 +495,7 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 
 //=============================================================================
 // class param_value_collection method definitions
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+
 #if 0
 count_ptr<meta_instance_reference_base>
 param_value_collection::make_meta_instance_reference(void) const {
@@ -513,8 +511,6 @@ param_value_collection::make_nonmeta_instance_reference(void) const {
 	ICE_NEVER_CALL(cerr);
 	return count_ptr<nonmeta_instance_reference_base>(NULL);
 }
-
-#endif
 
 //=============================================================================
 // class datatype_instance_collection method definitions

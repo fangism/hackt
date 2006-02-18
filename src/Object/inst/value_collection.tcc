@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.10.2.1.2.4 2006/02/18 06:28:34 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10.2.1.2.5 2006/02/18 08:29:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -36,18 +36,14 @@
 #include "Object/expr/const_range_list.h"
 #include "Object/common/dump_flags.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
 // #include "Object/unroll/unroll_context.h"
 #include "Object/unroll/unroll_context_value_resolver.h"
-
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
-#endif
 
 #include "common/ICE.h"
 
@@ -291,7 +287,6 @@ VALUE_COLLECTION_CLASS::initial_value(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<meta_value_reference_base>
 VALUE_COLLECTION_CLASS::make_meta_value_reference(void) const {
@@ -304,47 +299,6 @@ VALUE_COLLECTION_CLASS::make_meta_value_reference(void) const {
 			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
 }
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Create a param reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
-	Different: param type reference are always referred to in the global
-		scope because they cannot be templated!
-		Therefore, cache them in the global (or built-in) namespace.  
-	\return NULL.
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<meta_instance_reference_base>
-VALUE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//	check array dimensions.  
-
-	// problem: needs to be modifiable for later initialization
-	return count_ptr<simple_param_meta_value_reference>(
-		new simple_meta_value_reference_type(
-			never_ptr<this_type>(const_cast<this_type*>(this))));
-		// omitting index argument
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<nonmeta_instance_reference_base>
-VALUE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//	check array dimensions.  
-
-	// problem: needs to be modifiable for later initialization
-	return count_ptr<nonmeta_instance_reference_base>(
-		new simple_nonmeta_instance_reference_type(
-			never_ptr<this_type>(const_cast<this_type*>(this))));
-		// omitting index argument
-}
-#endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

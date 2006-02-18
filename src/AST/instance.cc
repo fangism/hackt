@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.5.2.1.2.2 2006/02/18 04:34:20 fang Exp $
+	$Id: instance.cc,v 1.5.2.1.2.3 2006/02/18 08:29:05 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -41,10 +41,8 @@
 #include "Object/unroll/port_connection.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/meta_reference_union.h"
-#endif
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -234,12 +232,7 @@ alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
 	checked_meta_refs_type::const_iterator i(temp.begin());
 	INVARIANT(temp.size() > 1);          // else what are you connecting?
 	const count_ptr<const meta_instance_reference_base>
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		fir(i->inst_ref());
-#else
-		fir(*i);
-#endif
-//		fir(i->is_a<const meta_instance_reference_base>());
 	NEVER_NULL(fir);
 	return_type ret = 
 		entity::meta_instance_reference_base::make_aliases_connection(fir);
@@ -250,11 +243,7 @@ alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
 	int j = 2;
 	for (i++; i!=temp.end(); i++, j++) {
 		const count_ptr<const meta_instance_reference_base>
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 			ir(i->inst_ref());
-#else
-			ir(*i);
-#endif
 		if (!ir) {
 			cerr << "ERROR: invalid instance reference at position "
 				<< j << " of alias list." << endl;
@@ -708,11 +697,7 @@ instance_connection::check_build(context& c) const {
 
 	NEVER_NULL(obj);		// we just created it!
 	const count_ptr<const connection_statement::inst_ref_arg_type>
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		inst_ref(obj.inst_ref());
-#else
-		inst_ref(obj);
-#endif
 	if (!inst_ref) {
 		cerr << "Error resolving instance reference of "
 			"port connection.  " << where(*id) << endl;
@@ -781,29 +766,19 @@ connection_statement::rightmost(void) const {
  */
 excl_ptr<const connection_statement::result_type>
 connection_statement::make_port_connection(
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		const expr_list::checked_meta_refs_type& _temp,
-#else
-		const expr_list::checked_meta_refs_type& temp,
-#endif
 		const count_ptr<const inst_ref_arg_type>& ir) {
 	typedef	excl_ptr<const result_type>	const_return_type;
 	typedef	excl_ptr<result_type>		return_type;
 	typedef	expr_list::checked_meta_refs_type		ref_list_type;
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	return_type ret =
 		meta_instance_reference_base::make_port_connection(ir);
 	NEVER_NULL(ret);
-#else
-	return_type ret(new entity::port_connection(ir));
-#endif
 	never_ptr<const definition_base>
 		base_def(ir->get_base_def());
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	entity::checked_refs_type temp;
 	transform(_temp.begin(), _temp.end(), back_inserter(temp), 
 		inst_ref_meta_return_type::inst_ref_selector());
-#endif
 	const size_t ir_dim = ir->dimensions();
 	if (ir_dim) {
 		cerr << "Instance reference port connection must be scalar, "
@@ -844,11 +819,7 @@ connection_statement::check_build(context& c) const {
 	}
 	// is not a complex aggregate instance reference
 	const count_ptr<const meta_instance_reference_base>
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		inst_ref(o.inst_ref());
-#else
-		inst_ref(o);
-#endif
 	if (!inst_ref) {
 		cerr << "Error checking instance reference of "
 			"connection statement.  " << where(*lvalue) << endl;

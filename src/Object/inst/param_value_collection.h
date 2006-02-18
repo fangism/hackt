@@ -3,13 +3,12 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.8.4.2 2006/02/18 01:52:35 fang Exp $
+	$Id: param_value_collection.h,v 1.8.4.3 2006/02/18 08:29:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
 
-#include "Object/devel_switches.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/expr/types.h"
 #include "util/boolean_types.h"
@@ -19,9 +18,7 @@ namespace HAC {
 namespace entity {
 class const_param;
 class param_type_reference;
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 class meta_value_reference_base;
-#endif
 using util::memory::count_ptr;
 using util::bad_bool;
 using util::good_bool;
@@ -84,25 +81,15 @@ virtual	count_ptr<const fundamental_type_reference>
 virtual	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const = 0;
 
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 // we want to dissociate values from instances
 // these should return NULL, as values are no longer instances
-#if 0
-private:
-	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const;
-#else
 public:
 virtual	count_ptr<meta_value_reference_base>
 	make_meta_value_reference(void) const = 0;
-#endif
+
 private:
 	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const;
-#else
-virtual	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const = 0;
-#endif
 
 public:
 	/** should just assert fail, forbid reference to param members */

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.5.2.2.2.1 2006/02/17 05:07:24 fang Exp $
+	$Id: expr.cc,v 1.5.2.2.2.2 2006/02/18 08:29:04 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -35,6 +35,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference_base.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
@@ -58,11 +59,9 @@
 #include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/meta_reference_union.h"
-#endif
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -140,13 +139,7 @@ expr::generic_meta_return_type
 expr::check_meta_generic(const context& c) const {
 	STACKTRACE("expr::check_meta_generic()");
 	const expr::meta_return_type ret(check_meta_expr(c));
-	return generic_meta_return_type(ret,
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-		ret
-#else
-		ret.is_a<inst_ref_meta_return_type::element_type>()
-#endif
-		);
+	return generic_meta_return_type(ret, ret);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -184,11 +177,7 @@ inst_ref_expr::check_meta_generic(const context& c) const {
 	STACKTRACE("inst_ref_expr::check_meta_generic()");
 	const meta_return_type ret(check_meta_reference(c));
 	return generic_meta_return_type(
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		ret.value_ref().is_a<expr::meta_return_type::element_type>(),
-#else
-		ret.is_a<expr::meta_return_type::element_type>(),
-#endif
 		ret);
 }
 
@@ -202,11 +191,7 @@ inst_ref_expr::check_meta_expr(const context& c) const {
 	typedef	expr::meta_return_type::element_type	param_type;
 	const inst_ref_expr::meta_return_type inst_ref(check_meta_reference(c));
 	const expr::meta_return_type
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		param_ref(inst_ref.value_ref().is_a<param_type>());
-#else
-		param_ref(inst_ref.is_a<param_type>());
-#endif
 	if (param_ref) {
 		// accepted
 		return param_ref;
@@ -248,17 +233,9 @@ inst_ref_expr::check_prs_literal(const context& c) const {
 	STACKTRACE_VERBOSE;
 	meta_return_type ref(check_meta_reference(c));
 	count_ptr<simple_bool_meta_instance_reference>
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		bool_ref(ref.inst_ref().is_a<simple_bool_meta_instance_reference>());
-#else
-		bool_ref(ref.is_a<simple_bool_meta_instance_reference>());
-#endif
 	if (bool_ref) {
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		ref.inst_ref().abandon();
-#else
-		ref.abandon();
-#endif
 		INVARIANT(bool_ref.refs() == 1);
 		if (bool_ref->dimensions()) {
 			cerr << "ERROR: bool reference at " << where(*this) <<
@@ -530,11 +507,7 @@ inst_ref_expr_list::make_aggregate_instance_reference(
 	}
 	// cross-cast from aggregate_meta_value_reference to param_expr
 	// return ret;
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	return ret;
-#else
-	return ret.is_a<return_type::element_type>();
-#endif
 #else
 	FINISH_ME(Fang);
 	return return_type(NULL);
@@ -845,7 +818,6 @@ id_expr::check_meta_reference(const context& c) const {
 			STACKTRACE("valid instance collection found");
 			// we found an instance which may be single
 			// or collective... info is in inst.
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 			const never_ptr<const physical_instance_collection>
 				pinst(inst.is_a<const physical_instance_collection>());
 			if (pinst) {
@@ -857,9 +829,6 @@ id_expr::check_meta_reference(const context& c) const {
 					vinst(inst.is_a<const param_value_collection>());
 				return vinst->make_meta_value_reference();
 			}	// no other possibility
-#else
-			return inst->make_meta_instance_reference();
-#endif
 		} else {
 			cerr << "object \"" << *qid <<
 				"\" does not refer to an instance, ERROR!  "
@@ -1187,12 +1156,7 @@ member_expr::check_meta_reference(const context& c) const {
 			<< where(*owner) << endl;
 		THROW_EXIT;
 	}
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	const return_type::inst_ref_ptr_type inst_ref(o.inst_ref());
-#else
-	const count_ptr<const simple_meta_instance_reference_base>
-		inst_ref(o.is_a<const simple_meta_instance_reference_base>());
-#endif
 	if (!inst_ref) {
 		NEVER_NULL(o.value_ref());
 		FINISH_ME_EXIT(Fang);
@@ -1427,16 +1391,12 @@ index_expr::check_meta_reference(const context& c) const {
 	// should cast to meta_instance_reference_base instead, 
 	// abstract attach_indices
 	const count_ptr<simple_meta_instance_reference_base>
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		base_inst(base_expr.inst_ref() ?
 			base_expr.inst_ref()
 				.is_a<simple_meta_instance_reference_base>() :
 			base_expr.value_ref()
 				.is_a<simple_meta_instance_reference_base>()
 			);
-#else
-		base_inst(base_expr.is_a<simple_meta_instance_reference_base>());
-#endif
 	NEVER_NULL(base_inst);
 
 	excl_ptr<range_list::checked_meta_indices_type::element_type>
@@ -1447,11 +1407,7 @@ index_expr::check_meta_reference(const context& c) const {
 		THROW_EXIT;
 	}
 	// return indexed instance reference
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	return base_expr;
-#else
-	return base_inst;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

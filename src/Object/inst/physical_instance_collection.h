@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.10.8.1 2006/02/17 05:07:41 fang Exp $
+	$Id: physical_instance_collection.h,v 1.10.8.2 2006/02/18 08:29:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -143,10 +143,8 @@ virtual	HACK_REMAP_INDICES_PROTO = 0;
 
 #endif
 
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;
-#endif
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

@@ -3,18 +3,13 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.7.16.1.2.2 2006/02/18 04:34:22 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.7.16.1.2.3 2006/02/18 08:29:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
 
-#include "Object/devel_switches.h"
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "util/persistent.h"
-#else
-#include "Object/ref/nonmeta_instance_reference_base.h"
-#endif
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
@@ -53,23 +48,10 @@ using util::persistent;
 	We need separate stacks...
 	See NOTES.
  */
-class meta_instance_reference_base :
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-		virtual public persistent
-#else
-		virtual public nonmeta_instance_reference_base
-#endif
-{
-#if !DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-	typedef	nonmeta_instance_reference_base		parent_type;
-#endif
+class meta_instance_reference_base : virtual public persistent {
 	typedef	meta_instance_reference_base		this_type;
 public:
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	meta_instance_reference_base() : persistent() { }
-#else
-	meta_instance_reference_base() : parent_type() { }
-#endif
 
 virtual	~meta_instance_reference_base() { }
 
@@ -82,12 +64,6 @@ virtual	ostream&
 virtual	ostream&
 	dump_type_size(ostream& o) const = 0;
 
-#if 0
-// only simple instance reference have a single base collection
-virtual never_ptr<const instance_collection_base>
-	get_inst_base(void) const = 0;
-#endif
-
 virtual	size_t
 	dimensions(void) const = 0;
 
@@ -97,24 +73,6 @@ virtual	never_ptr<const definition_base>
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
-#if 0
-virtual	bool
-	may_be_densely_packed(void) const = 0;
-
-virtual	bool
-	must_be_densely_packed(void) const = 0;
-#endif
-
-#if 0
-// is his actually needed
-virtual	bool
-	has_static_constant_dimensions(void) const = 0;
-#endif
-
-#if 0
-virtual	const_range_list
-	static_constant_dimensions(void) const = 0;
-#endif
 
 // what kind of type equivalence?
 virtual	bool
