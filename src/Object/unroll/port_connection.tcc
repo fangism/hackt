@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/port_connection.tcc"
- 	$Id: port_connection.tcc,v 1.1.2.1 2006/02/17 05:07:52 fang Exp $
+ 	$Id: port_connection.tcc,v 1.1.2.2 2006/02/18 03:20:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PORT_CONNECTION_TCC__
@@ -94,18 +94,6 @@ PORT_CONNECTION_CLASS::dump(ostream& o, const expr_dump_context& dc) const {
 	parent_type::dump_ports(o, dc);
 	return o << ");";
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !UNIFY_UNROLL_PASS
-/**
-	Expands and finalizes the connection at unroll time.  
- */
-PORT_CONNECTION_TEMPLATE_SIGNATURE
-good_bool
-PORT_CONNECTION_CLASS::unroll_meta_connect(const unroll_context& c) const {
-	return this->unroll(c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

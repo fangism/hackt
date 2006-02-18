@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: param_expression_assignment.h,v 1.5.12.1 2006/02/17 05:07:51 fang Exp $
+	$Id: param_expression_assignment.h,v 1.5.12.2 2006/02/18 03:20:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_EXPRESSION_ASSIGNMENT_H__
@@ -41,7 +41,7 @@ public:
 	typedef	count_ptr<param_expr>			src_ptr_type;
 	typedef	count_ptr<const param_expr>		src_const_ptr_type;
 #if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-	typedef	count_ptr<meta_value_reference_base>		dest_ptr_type;
+	typedef	count_ptr<meta_value_reference_base>	dest_ptr_type;
 	typedef	count_ptr<const meta_value_reference_base>
 							dest_const_ptr_type;
 #else
@@ -70,10 +70,6 @@ virtual	size_t
 	// TODO: rename me! append_meta_value_reference
 virtual	bad_bool
 	append_simple_param_meta_value_reference(const dest_ptr_type& e) = 0;
-
-#if !UNIFY_UNROLL_PASS
-virtual	UNROLL_META_EVALUATE_PROTO = 0;
-#endif
 
 	/**
 		Helper class for appending instance references to

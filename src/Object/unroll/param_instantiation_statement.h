@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.7.4.1 2006/02/17 05:07:52 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.7.4.2 2006/02/18 03:20:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -368,11 +368,6 @@ public:
 		const index_collection_item_ptr_type&);
 
 	~param_instantiation_statement();
-
-#if !UNIFY_UNROLL_PASS
-	UNROLL_META_EVALUATE_PROTO;
-	UNROLL_META_INSTANTIATE_PROTO;	// no-op
-#endif
 
 	FRIEND_PERSISTENT_TRAITS
 

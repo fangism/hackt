@@ -3,7 +3,7 @@
 	Parameter instance statement classes for HAC.  
 	This file came from "Object/art_object_inst_stmt_param_base.h"
 		in a previous life.  
-	$Id: param_instantiation_statement_base.h,v 1.4.18.1 2006/02/17 05:07:52 fang Exp $
+	$Id: param_instantiation_statement_base.h,v 1.4.18.2 2006/02/18 03:20:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_BASE_H__
@@ -32,10 +32,6 @@ protected:
 
 public:
 virtual	~param_instantiation_statement_base() { }
-
-#if !UNIFY_UNROLL_PASS
-virtual	UNROLL_META_EVALUATE_PROTO = 0;
-#endif
 
 protected:
 	using parent_type::collect_transient_info_base;

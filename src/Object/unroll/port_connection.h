@@ -2,7 +2,7 @@
 	\file "Object/unroll/port_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: port_connection.h,v 1.6.12.1 2006/02/17 05:07:52 fang Exp $
+	$Id: port_connection.h,v 1.6.12.2 2006/02/18 03:20:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PORT_CONNECTION_H__
@@ -98,10 +98,6 @@ public:
 
 	good_bool
 	unroll(const unroll_context& ) const;
-
-#if !UNIFY_UNROLL_PASS
-	UNROLL_META_CONNECT_PROTO;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -3,7 +3,7 @@
 	Template method definitions for param_instantiation_statement.  
 	This file came from "Object/art_object_inst_stmt_param.tcc"
 		in a previous life.  
-	$Id: param_instantiation_statement.tcc,v 1.5.18.1 2006/02/17 05:07:52 fang Exp $
+	$Id: param_instantiation_statement.tcc,v 1.5.18.2 2006/02/18 03:20:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_TCC__
@@ -35,30 +35,6 @@ PARAM_INSTANTIATION_STATEMENT_CLASS::param_instantiation_statement(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 PARAM_INSTANTIATION_STATEMENT_CLASS::~param_instantiation_statement() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !UNIFY_UNROLL_PASS
-/**
-	Temporary implementation.
- */
-PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-good_bool
-PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_evaluate(
-		const unroll_context& c) const {
-	return parent_type::unroll(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	No-op: params are evaluated in earlier pass.  
- */
-PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-good_bool
-PARAM_INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
-		const unroll_context& c) const {
-	return good_bool(true);
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

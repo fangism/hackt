@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.8.8.1 2006/02/17 05:07:26 fang Exp $
+	$Id: devel_switches.h,v 1.8.8.2 2006/02/18 03:20:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -80,12 +80,6 @@
 	Goal: 0
  */
 #define	WANT_PARAM_INSTANTIATION_STATEMENT_BASE		0
-
-/**
-	Remnants of a 3-phase unroll pass to be tossed.  
-	Goal: 1
- */
-#define	UNIFY_UNROLL_PASS				1
 
 //=============================================================================
 

@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.9.12.1 2006/02/17 05:07:51 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.9.12.2 2006/02/18 03:20:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -352,17 +352,6 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	}
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !UNIFY_UNROLL_PASS
-INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-good_bool
-INSTANTIATION_STATEMENT_CLASS::unroll_meta_instantiate(
-		const unroll_context& c) const {
-	// would've exited already
-	return this->unroll(c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

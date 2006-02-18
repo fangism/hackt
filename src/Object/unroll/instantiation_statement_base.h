@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.7.12.1 2006/02/17 05:07:51 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.7.12.2 2006/02/18 03:20:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -89,16 +89,8 @@ virtual	const_relaxed_args_type
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
-// should be pure virtual eventually
-#if !UNIFY_UNROLL_PASS
-virtual	good_bool
-	unroll(const unroll_context&) const;
-
-virtual	UNROLL_META_INSTANTIATE_PROTO = 0;
-#else
 virtual	good_bool
 	unroll(const unroll_context&) const = 0;
-#endif
 
 /**
 	2005-07-13:

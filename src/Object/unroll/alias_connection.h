@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: alias_connection.h,v 1.6.12.1 2006/02/17 05:07:49 fang Exp $
+	$Id: alias_connection.h,v 1.6.12.2 2006/02/18 03:20:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_H__
@@ -86,10 +86,6 @@ public:
 
 	good_bool
 	unroll(const unroll_context&) const;
-
-#if !UNIFY_UNROLL_PASS
-	UNROLL_META_CONNECT_PROTO;
-#endif
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

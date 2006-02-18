@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.11.12.1 2006/02/17 05:07:51 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.11.12.2 2006/02/18 03:20:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -287,17 +287,6 @@ port_connection::append_meta_instance_reference(const generic_inst_ptr_type& i) 
 	// do not assert, may be NULL.  
 	inst_list.push_back(i);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !UNIFY_UNROLL_PASS
-/**
-	Expands and finalizes the connection at unroll time.  
- */
-good_bool
-port_connection::unroll_meta_connect(const unroll_context& c) const {
-	return unroll(c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.8.12.2 2006/02/17 07:52:05 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.8.12.3 2006/02/18 03:20:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -265,17 +265,6 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 			*bunch_of_consts, c);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !UNIFY_UNROLL_PASS
-EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
-good_bool
-EXPRESSION_ASSIGNMENT_CLASS::unroll_meta_evaluate(
-		const unroll_context& c) const {
-	// would've exited upon error
-	return this->unroll(c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

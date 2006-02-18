@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.9.12.1 2006/02/17 05:07:50 fang Exp $
+	$Id: instantiation_statement.h,v 1.9.12.2 2006/02/18 03:20:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -124,9 +124,6 @@ public:
 
 	// careful: not declared virtual here, 
 	// yet overridden by param_instantiation_statement<>
-#if !UNIFY_UNROLL_PASS
-	UNROLL_META_INSTANTIATE_PROTO;
-#endif
 
 	INSTANTIATE_PORT_PROTO;
 

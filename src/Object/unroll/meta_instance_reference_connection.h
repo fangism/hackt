@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: meta_instance_reference_connection.h,v 1.4.18.1 2006/02/17 05:07:51 fang Exp $
+	$Id: meta_instance_reference_connection.h,v 1.4.18.2 2006/02/18 03:20:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_H__
@@ -38,33 +38,7 @@ virtual	~meta_instance_reference_connection();
 virtual	void
 	append_meta_instance_reference(const generic_inst_ptr_type& i) = 0;
 
-#if !UNIFY_UNROLL_PASS
-virtual	UNROLL_META_CONNECT_PROTO = 0;
-#endif
 };	// end class meta_instance_reference_connection
-
-//-----------------------------------------------------------------------------
-#if 0
-NOT READY TO UNVEIL
-/**
-	Wrapper reference to a loop or conditional namespace.  
- */
-class dynamic_connection_assignment : public connection_assignment_base {
-protected:
-	/** the dynamic scope, a loop or conditional */
-	never_ptr<const scopespace>			dscope;
-	// may be really static if bounds and conditions can be 
-	// resolved as static constants...
-public:
-	dynamic_connection_assignment(never_ptr<const scopespace> s);
-	~dynamic_connection_assignment() { }
-
-#if 0
-	ostream& what(ostream& o) const;
-	ostream& dump(ostream& o) const;
-#endif
-};	// end class dynamic_connection_assignment
-#endif
 
 //=============================================================================
 }	// end namespace entity

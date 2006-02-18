@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: instance_management_base.h,v 1.7.12.1 2006/02/17 05:07:50 fang Exp $
+	$Id: instance_management_base.h,v 1.7.12.2 2006/02/18 03:20:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
@@ -11,7 +11,6 @@
 
 #include "util/persistent.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -52,31 +51,11 @@ public:
 virtual ostream&
 	dump(ostream&, const expr_dump_context&) const = 0;
 
-#if !UNIFY_UNROLL_PASS
-#define	UNROLL_META_EVALUATE_PROTO					\
-	good_bool							\
-	unroll_meta_evaluate(const unroll_context& ) const
-
-#define	UNROLL_META_INSTANTIATE_PROTO					\
-	good_bool							\
-	unroll_meta_instantiate(const unroll_context& ) const
-
-#define	UNROLL_META_CONNECT_PROTO					\
-	good_bool							\
-	unroll_meta_connect(const unroll_context& ) const
-#endif
-
 	// need pure virtual unrolling methods
 	// argument should contain some stack of expression values
 	// possible single-pass unroll may be phased out...
 virtual good_bool
 	unroll(const unroll_context& ) const = 0;
-
-#if !UNIFY_UNROLL_PASS
-virtual	UNROLL_META_EVALUATE_PROTO;
-virtual	UNROLL_META_INSTANTIATE_PROTO;
-virtual	UNROLL_META_CONNECT_PROTO;
-#endif
 
 /**
 	Prototype for unique-creation pass.  
