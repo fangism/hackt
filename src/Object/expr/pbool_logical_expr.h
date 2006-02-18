@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_logical_expr.h,v 1.6.18.1 2006/02/17 05:07:35 fang Exp $
+	$Id: pbool_logical_expr.h,v 1.6.18.2 2006/02/18 05:16:38 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
@@ -97,17 +97,6 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
-
-#if WANT_IS_TEMPLATE_DEPENDENT
-	bool
-	is_template_dependent(void) const;
-
-	bool
-	is_loop_independent(void) const;
-
-	bool
-	is_unconditional(void) const;
-#endif
 
 	value_type
 	static_constant_value(void) const;

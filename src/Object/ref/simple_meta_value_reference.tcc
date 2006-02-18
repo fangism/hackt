@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1.2.2 2006/02/17 07:52:04 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1.2.3 2006/02/18 05:16:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -404,29 +404,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::is_relaxed_formal_dependent(void) const {
 	return common_base_type::is_relaxed_formal_dependent();
 #endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_IS_TEMPLATE_DEPENDENT
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::is_template_dependent(void) const {
-	return common_base_type::is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::is_loop_independent(void) const {
-	return common_base_type::is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::is_unconditional(void) const {
-	return common_base_type::is_unconditional();
-}
-#endif	// WANT_IS_TEMPLATE_DEPENDENT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

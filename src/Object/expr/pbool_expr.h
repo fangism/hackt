@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.7.2.1.2.1 2006/02/17 05:07:35 fang Exp $
+	$Id: pbool_expr.h,v 1.7.2.1.2.2 2006/02/18 05:16:38 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -86,11 +86,6 @@ virtual bool
 
 virtual	count_ptr<const const_param>
 	static_constant_param(void) const;
-
-#if WANT_IS_TEMPLATE_DEPENDENT
-virtual bool
-	is_loop_independent(void) const = 0;
-#endif
 
 virtual value_type
 	static_constant_value(void) const = 0;

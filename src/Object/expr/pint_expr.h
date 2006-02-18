@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.7.2.1.2.1 2006/02/17 05:07:36 fang Exp $
+	$Id: pint_expr.h,v 1.7.2.1.2.2 2006/02/18 05:16:39 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -91,17 +91,6 @@ virtual bool
 
 virtual	bool
 	is_relaxed_formal_dependent(void) const = 0;
-
-#if WANT_IS_TEMPLATE_DEPENDENT
-virtual	bool
-	is_template_dependent(void) const = 0;
-
-virtual bool
-	is_unconditional(void) const = 0;
-
-virtual bool
-	is_loop_independent(void) const = 0;
-#endif
 
 virtual	count_ptr<const const_param>
 	static_constant_param(void) const;

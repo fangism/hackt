@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.12.4.2 2006/02/18 01:52:35 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.12.4.3 2006/02/18 05:16:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -751,36 +751,6 @@ dynamic_param_expr_list::is_relaxed_formal_dependent(void) const {
 	}
 	return false;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_IS_TEMPLATE_DEPENDENT
-bool
-dynamic_param_expr_list::is_template_dependent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		const count_ptr<const param_expr> ip(*i);
-		NEVER_NULL(ip);	// nothing may be NULL at this point!
-		if (ip->is_template_dependent())
-			return true;
-		// else continue checking...
-	}
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_param_expr_list::is_loop_independent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		const count_ptr<const param_expr> ip(*i);
-		NEVER_NULL(ip);	// nothing may be NULL at this point!
-		if (!ip->is_loop_independent())
-			return false;
-		// else continue checking...
-	}
-	return true;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

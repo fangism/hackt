@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.8.8.4 2006/02/18 04:34:21 fang Exp $
+	$Id: devel_switches.h,v 1.8.8.5 2006/02/18 05:16:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -59,13 +59,6 @@
 	static_constant_dimension analysis.  
  */
 #define	ENABLE_STATIC_DIMENSION_ANALYSIS		0
-
-/**
-	I think this function is never called used.  
-	Also group other static analysis functions into same category.  
-	Goal: 0
- */
-#define	WANT_IS_TEMPLATE_DEPENDENT			0
 
 //=============================================================================
 

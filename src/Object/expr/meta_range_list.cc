@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.10.4.1 2006/02/17 05:07:33 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.10.4.2 2006/02/18 05:16:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -605,23 +605,6 @@ dynamic_meta_range_list::is_relaxed_formal_dependent(void) const {
 	}
 	return false;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_IS_TEMPLATE_DEPENDENT
-bool
-dynamic_meta_range_list::is_template_dependent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		const count_ptr<const pint_range> pr(*i);
-		NEVER_NULL(pr);
-		if (pr->is_template_dependent()) {
-			return true;
-		}
-		// else continue checking
-	}
-	return false;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

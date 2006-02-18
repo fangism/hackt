@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.9.4.1 2006/02/17 05:07:32 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.9.4.2 2006/02/18 05:16:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -260,20 +260,6 @@ bool
 const_index_list::is_static_constant(void) const {
 	return true;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_IS_TEMPLATE_DEPENDENT
-bool
-const_index_list::is_loop_independent(void) const {
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-const_index_list::is_unconditional(void) const {
-	return true;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
@@ -596,44 +582,6 @@ dynamic_meta_index_list::is_relaxed_formal_dependent(void) const {
 	}
 	return false;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if WANT_IS_TEMPLATE_DEPENDENT
-bool
-dynamic_meta_index_list::is_template_dependent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if ((*i)->is_template_dependent())
-			return true;
-	}
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::is_loop_independent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if (!(*i)->is_loop_independent())
-			return false;
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::is_unconditional(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if (!(*i)->is_unconditional())
-			return false;
-	}
-	return true;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

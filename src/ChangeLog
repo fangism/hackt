@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-08:
+	  Committed WANT_IS_TEMPLATE_DEPENDENT -> 0, (-650 LoC).
+
+
 2006-02-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-07:
