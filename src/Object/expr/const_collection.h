@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.7.4.2 2006/02/18 05:16:33 fang Exp $
+	$Id: const_collection.h,v 1.7.4.3 2006/02/18 06:28:26 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -12,7 +12,6 @@
 #include <iosfwd>
 #include "Object/expr/types.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/STL/construct_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
@@ -131,16 +130,6 @@ public:
 
 	bool
 	must_be_initialized(void) const { return true; }
-
-#if 0
-	// required by const_param
-	bool
-	may_be_equivalent(const param_expr& ) const;
-
-	// required by const_param
-	bool
-	must_be_equivalent(const param_expr& ) const;
-#endif
 
 	// required by pint_expr or pbool_expr
 	bool

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_preal.cc"
 		in a previous life.  
- 	$Id: preal_value_collection.cc,v 1.2 2006/02/10 21:50:38 fang Exp $
+ 	$Id: preal_value_collection.cc,v 1.2.4.1 2006/02/18 06:28:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PREAL_VALUE_COLLECTION_CC__
@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/expr/preal_const.h"
 #include "Object/persistent_type_hash.h"
+#include "Object/unroll/param_instantiation_statement.h"
 #include "Object/traits/preal_traits.h"
 #include "Object/inst/value_collection.tcc"
 

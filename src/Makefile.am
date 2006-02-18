@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.100.2.2.2.3 2006/02/18 03:55:55 fang Exp $
+#	$Id: Makefile.am,v 1.100.2.2.2.4 2006/02/18 06:28:22 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -309,7 +309,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
 	Object/common/scopespace.h \
-	Object/common/predicated_inst_stmt_ptr.h \
 	Object/traits/class_traits_fwd.h \
 	Object/traits/classification_tags.h \
 	Object/traits/chan_traits.h \

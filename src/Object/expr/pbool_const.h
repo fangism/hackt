@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.7.4.2 2006/02/18 05:16:38 fang Exp $
+	$Id: pbool_const.h,v 1.7.4.3 2006/02/18 06:28:28 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
@@ -62,16 +62,6 @@ public:
 
 	bool
 	must_be_initialized(void) const { return true; }
-
-#if 0
-	bool
-	may_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::may_be_equivalent_generic(e); }
-
-	bool
-	must_be_equivalent(const param_expr& e) const
-		{ return pbool_expr::must_be_equivalent_generic(e); }
-#endif
 
 	bool
 	is_static_constant(void) const { return true; }

@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_unary_expr.h"
 	Unary negation of meta real value.  
-	$Id: preal_unary_expr.h,v 1.2.4.2 2006/02/18 05:16:41 fang Exp $
+	$Id: preal_unary_expr.h,v 1.2.4.3 2006/02/18 06:28:29 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_UNARY_EXPR_H__
@@ -43,14 +43,6 @@ public:
 
 	size_t
 	dimensions(void) const { return 0; }
-
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-	bool
-	has_static_constant_dimensions(void) const { return true; }
-
-	const_range_list
-	static_constant_dimensions(void) const;
-#endif
 
 	bool
 	may_be_initialized(void) const { return ex->may_be_initialized(); }

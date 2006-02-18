@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.9.2.1.2.3 2006/02/18 01:52:35 fang Exp $
+	$Id: value_collection.h,v 1.9.2.1.2.4 2006/02/18 06:28:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -91,8 +91,12 @@ public:
 	typedef	typename traits_type::const_collection_type
 						const_collection_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
+
+	typedef typename traits_type::instantiation_statement_type
+					initial_instantiation_statement_type;
+	typedef	never_ptr<const initial_instantiation_statement_type>
+				initial_instantiation_statement_ptr_type;
 protected:
-#if 1 || ENABLE_STATIC_COMPILE_CHECKS
 	/**
 		TODO: 20060214: eliminate static initial value analysis?
 
@@ -108,17 +112,9 @@ protected:
 		Collectives won't be checked until unroll time.  
 	 */
 	count_ptr<const expr_type>		ival;
-#endif
 
-#if !ENABLE_STATIC_COMPILE_CHECKS
-//	typedef param_instantiation_statement<Tag>
-	typedef typename traits_type::instantiation_statement_type
-					initial_instantiation_statement_type;
-	typedef	never_ptr<const initial_instantiation_statement_type>
-				initial_instantiation_statement_ptr_type;
 	initial_instantiation_statement_ptr_type
 					initial_instantiation_statement_ptr;
-#endif
 
 protected:
 	explicit
@@ -141,7 +137,6 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream& o) const;
 
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	void
 	attach_initial_instantiation_statement(
 		const initial_instantiation_statement_ptr_type i) {
@@ -153,7 +148,6 @@ virtual	ostream&
 
 	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const;
-#endif
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;

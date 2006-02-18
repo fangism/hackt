@@ -3,17 +3,15 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.7.12.2 2006/02/18 03:20:49 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.7.12.3 2006/02/18 06:28:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 #define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 
 #include "util/string_fwd.h"
-#include "Object/devel_switches.h"
 #include "Object/unroll/instance_management_base.h"
 #include "Object/common/util_types.h"
-	// for index_collection_item_ptr_type
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -100,11 +98,6 @@ virtual	good_bool
 	good_bool							\
 	instantiate_port(const unroll_context&, 			\
 		physical_instance_collection&) const
-
-#if ENABLE_STATIC_COMPILE_CHECKS
-virtual	INSTANTIATE_PORT_PROTO = 0;
-// otherwise, this will be called from each specific instance_collection_type.
-#endif
 
 /***
 	case: A top-level instantiation is called.

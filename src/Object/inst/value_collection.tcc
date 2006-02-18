@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.10.2.1.2.3 2006/02/18 01:52:36 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10.2.1.2.4 2006/02/18 06:28:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -38,10 +38,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
-#if !ENABLE_STATIC_COMPILE_CHECKS
-#include "Object/unroll/param_instantiation_statement.h"
 #include "Object/unroll/instantiation_statement.h"
-#endif
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
 // #include "Object/unroll/unroll_context.h"
@@ -157,15 +154,12 @@ VALUE_COLLECTION_CLASS::what(ostream& o) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !ENABLE_STATIC_COMPILE_CHECKS
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 index_collection_item_ptr_type
 VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return this->initial_instantiation_statement_ptr->get_indices();
 }
-
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -297,19 +291,6 @@ VALUE_COLLECTION_CLASS::initial_value(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_COMPILE_CHECKS
-/**
-	Ripped off from instance_collection_base::formal_size_equivalent.
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-index_collection_item_ptr_type
-VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
-	NEVER_NULL(initial_instantiation_statement_ptr);
-	return initial_instantiation_statement_ptr->get_indices();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<meta_value_reference_base>
@@ -383,9 +364,6 @@ VALUE_COLLECTION_CLASS::may_type_check_actual_param_expr(
 	// this says that the only instantiation statement for this parameter
 	// in the original declaration, which in this case was in the ports.  
 	// only for formal parameters is this assertion valid.  
-#if ENABLE_STATIC_COMPILE_CHECKS
-	INVARIANT(this->index_collection.size() <= 1);
-#endif
 	// check dimensions (is conservative with dynamic sizes)
 	return this->may_check_expression_dimensions(*pi);
 }
@@ -404,9 +382,6 @@ VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
 	// only for formal parameters is this assertion valid.  
 	// this says that the only instantiation statement for this parameter
 	// in the original declaration, which in this case was in the ports.  
-#if ENABLE_STATIC_COMPILE_CHECKS
-	INVARIANT(this->index_collection.size() <= 1);
-#endif
 	// check dimensions (is conservative with dynamic sizes)
 	return this->must_check_expression_dimensions(pe, c);
 }
@@ -431,11 +406,9 @@ if (!m.register_transient_object(this,
 	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	if (this->initial_instantiation_statement_ptr) {
 		initial_instantiation_statement_ptr->collect_transient_info(m);
 	}
-#endif
 }
 // else already visited
 }
@@ -465,9 +438,7 @@ VALUE_COLLECTION_CLASS::write_object_base(
 	STACKTRACE("value_collection<>::write_object_base()");
 	parent_type::write_object_base(m, f);
 	m.write_pointer(f, ival);
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	m.write_pointer(f, this->initial_instantiation_statement_ptr);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -478,9 +449,7 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 	STACKTRACE("value_collection<>::load_object_base()");
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	m.read_pointer(f, this->initial_instantiation_statement_ptr);
-#endif
 }
 
 //=============================================================================

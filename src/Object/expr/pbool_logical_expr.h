@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_logical_expr.h,v 1.6.18.2 2006/02/18 05:16:38 fang Exp $
+	$Id: pbool_logical_expr.h,v 1.6.18.3 2006/02/18 06:28:28 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
@@ -74,14 +74,6 @@ public:
 
 	size_t
 	dimensions(void) const { return 0; }
-
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-	bool
-	has_static_constant_dimensions(void) const { return true; }
-
-	const_range_list
-	static_constant_dimensions(void) const;
-#endif
 
 	bool
 	may_be_initialized(void) const

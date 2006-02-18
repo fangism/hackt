@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.11.12.1 2006/02/17 05:07:27 fang Exp $
+ 	$Id: namespace.cc,v 1.11.12.2 2006/02/18 06:28:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -402,33 +402,11 @@ if (probe) {
 				"-D array, ERROR!  ";
 			return return_type(NULL);
 		}	// else dimensions match apropriately
-#if ENABLE_STATIC_COMPILE_CHECKS
-		// here, we know we're referring to the same collection
-		// check for overlap with existing static-const indices
-		// but ONLY if statement is not in a conditional scope
-		// to avoid rejecting unroll-time false conflicts.  
-		// if (!cond) {
-			const const_range_list
-				overlap(probe_inst->add_instantiation_statement(
-					predicated_inst_stmt_ptr(
-						inst_stmt, cond)));
-			if (!overlap.empty()) {
-				// returned true if there is definite overlap
-				cerr << "Detected overlap in the "
-					"sparse collection for " <<
-					id << ", precisely: ";
-				overlap.dump(cerr,
-					expr_dump_context::default_value);
-				cerr << ".  ERROR!  ";
-				return return_type(NULL);
-			}
-			// else didn't detect static conflict.  
-			// We discard the new instantiation, i, 
-			// and let it delete itself at the end of this scope.  
-			// ... happy ending, or is it?
-			// attach non-const back-reference
-		// }
-#endif
+		/**
+			We used to detect statically at compile time
+			some instantiation collisions, but the implementation's
+			little benefit didn't warrant the effort. 
+		**/
 		inst_stmt->attach_collection(probe_inst);
 		return probe_inst;
 	} else {
@@ -443,16 +421,8 @@ if (probe) {
 			never_ptr<const scopespace>(this), id, dim);
 	// attach non-const back-reference
 	inst_stmt->attach_collection(new_inst);
-#if ENABLE_STATIC_COMPILE_CHECKS
-	// if (!cond) {
-		// only if unconditional
-		new_inst->add_instantiation_statement(
-			predicated_inst_stmt_ptr(inst_stmt, cond));
-	// }
-#else
 	// attaching collection will automatically set the first
 	// instantiation_statement pointer to it.  
-#endif
 	INVARIANT(inst_stmt->get_name() == id);
 	NEVER_NULL(new_inst);
 	const never_ptr<const instance_collection_base>

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.9.14.1.2.2 2006/02/18 04:34:22 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.9.14.1.2.3 2006/02/18 06:28:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -112,33 +112,6 @@ virtual	ostream&
 
 	size_t
 	dimensions(void) const;
-
-#if 0
-	bool
-	may_be_densely_packed(void) const;
-
-	bool
-	must_be_densely_packed(void) const;
-#endif
-
-	bool
-	is_static_constant_collection(void) const;
-
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-	bool
-	has_static_constant_dimensions(void) const;
-
-	const_range_list
-	static_constant_dimensions(void) const;
-#endif
-
-#if 0
-	bool
-	may_be_type_equivalent(const meta_instance_reference_base&) const;
-
-	bool
-	must_be_type_equivalent(const meta_instance_reference_base&) const;
-#endif
 
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);

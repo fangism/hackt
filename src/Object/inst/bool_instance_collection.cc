@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.8.12.1 2006/02/17 05:07:38 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.8.12.2 2006/02/18 06:28:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -36,9 +36,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/state_instance.tcc"
 // #include "util/memory/chunk_map_pool.tcc"
-#if !ENABLE_STATIC_COMPILE_CHECKS
 #include "Object/unroll/datatype_instantiation_statement.h"
-#endif
 
 //=============================================================================
 // module-local specializations

@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_meta_instance_reference_base.h,v 1.8.18.1 2006/02/17 05:07:46 fang Exp $
+	$Id: simple_meta_instance_reference_base.h,v 1.8.18.2 2006/02/18 06:28:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
@@ -70,19 +70,8 @@ class simple_meta_instance_reference_base
 		: virtual public meta_instance_reference_base
 #endif
 {
-#if ENABLE_STATIC_COMPILE_CHECKS
 private:
 	typedef	simple_meta_instance_reference_base		this_type;
-	/**
-		Helper class for evaluating sparse, multidimensional
-		collections.  
-		Virtual base class wrapper around sparse set.  
-	 */
-	class mset_base;
-
-	template <size_t>
-	class mset;
-#endif
 
 	template <bool>
 	struct has_substructure { };
@@ -101,19 +90,6 @@ protected:
 	 */
 	excl_ptr<index_list_type>		array_indices;
 
-#if ENABLE_STATIC_COMPILE_CHECKS
-	/**
-		TODO: get rid of this crap in the far future (20060213).
-		The current state of the instantiation collection
-		at the point of reference.
-		Important because the state of an instantiation
-		collection may change, so implicit collection or
-		sub-collection references with the same indices may 
-		refer to different sets.  
-	 */
-	const instantiation_state		inst_state;
-#endif
-
 // for subclasses:
 //	never_ptr<const instance_collection_base>	inst_ref;
 
@@ -121,16 +97,9 @@ protected:
 	// constructors for children only
 	simple_meta_instance_reference_base();
 
-#if ENABLE_STATIC_COMPILE_CHECKS
-	explicit
-	simple_meta_instance_reference_base(const instantiation_state& st);
-
-	simple_meta_instance_reference_base(excl_ptr<index_list_type>& i, 
-		const instantiation_state& st);
-#else
 	explicit
 	simple_meta_instance_reference_base(excl_ptr<index_list_type>&);
-#endif
+
 public:
 
 virtual	~simple_meta_instance_reference_base();
@@ -147,14 +116,6 @@ virtual	~simple_meta_instance_reference_base();
 
 	bool
 	is_static_constant_collection(void) const;
-
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-	bool
-	has_static_constant_dimensions(void) const;
-
-	const_range_list
-	static_constant_dimensions(void) const;
-#endif
 
 	bool
 	is_relaxed_formal_dependent(void) const;
@@ -208,13 +169,6 @@ virtual never_ptr<const instance_collection_base>
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 #endif
 
-#if ENABLE_STATIC_COMPILE_CHECKS
-private:
-	// compute static index coverage
-	excl_ptr<mset_base>
-	unroll_static_instances(const size_t dim) const;
-#endif
-
 protected:		// for children only
 	// persistent object IO helper methods
 	void
@@ -226,15 +180,6 @@ protected:		// for children only
 	void
 	load_object_base(const persistent_object_manager& m, istream& i);
 
-#if ENABLE_STATIC_COMPILE_CHECKS
-private:
-	// need help with instantiation state, count?
-	void
-	write_instance_collection_state(ostream& f) const;
-
-	void
-	load_instance_collection_state(istream& f);
-#endif
 };	// end class simple_meta_instance_reference_base
 
 //=============================================================================

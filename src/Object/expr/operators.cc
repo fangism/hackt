@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.10.4.2 2006/02/18 05:16:37 fang Exp $
+ 	$Id: operators.cc,v 1.10.4.3 2006/02/18 06:28:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -133,14 +133,6 @@ pint_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 	if (p) o << ')';
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-const_range_list
-pint_unary_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -307,14 +299,6 @@ preal_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-const_range_list
-preal_unary_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_unary_expr::is_static_constant(void) const {
 	return ex->is_static_constant();
@@ -468,14 +452,6 @@ pbool_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 	if (p) o << ')';
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-const_range_list
-pbool_unary_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -689,14 +665,6 @@ pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 	return rx->dump(lx->dump(o, c) << reverse_op_map[op].op, c);
 #endif
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-const_range_list
-pint_arith_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -989,14 +957,6 @@ pint_relational_expr::must_be_initialized(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-const_range_list
-pint_relational_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_relational_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
@@ -1244,14 +1204,6 @@ preal_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 	if (p) o << ')';
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-const_range_list
-preal_arith_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1536,14 +1488,6 @@ preal_relational_expr::must_be_initialized(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-const_range_list
-preal_relational_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_relational_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
@@ -1782,14 +1726,6 @@ ostream&
 pbool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
 	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-const_range_list
-pbool_logical_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1.2.3 2006/02/18 05:16:42 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10.2.1.2.4 2006/02/18 06:28:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -83,12 +83,7 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 		const value_collection_ptr_type pi) :
 #if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-#if ENABLE_STATIC_COMPILE_CHECKS
-		simple_meta_instance_reference_base(
-			pi->current_collection_state()), 
-#else
 		simple_meta_instance_reference_base(), 
-#endif
 		parent_type(), 
 #else
 		common_base_type(pi->current_collection_state()), 
@@ -218,129 +213,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(
 	return good_bool(true);
 }
 #endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-/**
-	[comment copied verbatim from simple_meta_instance_reference_base]
-
-	May need to perform dimension-collapsing in some cases.  
-	Precondition: array indices already bound-checked if static constant.  
-	Prerequisites for calling this method: non-zero dimension.  
-	This function guarantees nothing about the packed-ness of the
-	current state of the collection.  
-	Cases: 
-	1) Reference is not-indexed to a non-collective instance set.  
-		Then this is zero-dimensional (scalar).  
-	2) Reference is not-indexed to a collective instance set.
-		See if the instance collection from the point of reference
-		has statically resolvable dimensions.  
-	3) Reference is partially-indexed to a collective instance set.  
-	4) Reference is fully-indexed to a collective instance set, 
-		down to the last dimension.  
-	When in doubt, this is just a compile-time check, 
-		can conservatively return false.  
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::has_static_constant_dimensions(void) const {
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-	// case 1: instance collection is not collective. 
-	const size_t base_dim = this->value_collection_ref->get_dimensions();
-	if (base_dim == 0)
-		return true;
-	// case 2: reference is not-indexed, and instance is collective.
-	// implicitly refers to the entire collection.
-	// (same case if dimensions are under-specified)
-	else if (!this->array_indices) {
-		// is the entire collection known statically?
-#if 0
-		return this->is_static_constant_collection();
-#else
-		return false;
-#endif
-	} else if (this->array_indices->size() < base_dim) {
-		// case 3: partially-specified indices, implicit sub-collections
-#if 0
-		if (!this->array_indices->is_static_constant())
-			return false;
-		else	return this->is_static_constant_collection();
-		// else we know entire collection statically.
-#else
-		return false;
-#endif
-	} else {
-		// case 4: fully-indexed down to last dimension
-		return this->array_indices->is_static_constant();
-	}
-#else
-	return grandparent_type::has_static_constant_dimensions();
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	[comments copied from simple_meta_instance_reference_base]
-
-	Repacks the instance collection form the point of reference 
-	into a dense array, if possible.  
-	No dimension-collapsing in this routine!
-	Just checks for coverage and compactness.  
-	If fails, returns empty list.  
-	Prerequisites: must already satisfy:
-		non-zero dimensions
-		must_be_densely_packed (or not)
-		has_static_constant_dimensions
-	\return dense range list representation of the instance collection
-		if it is indeed compact, else returns an empty list.  
-	\sa implicit_static_constant_indices
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-const_range_list
-SIMPLE_META_VALUE_REFERENCE_CLASS::static_constant_dimensions(void) const {
-#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
-/**
-	Can't implement...
-	Not performing static analysis.  
- */
-#if 0
-	const size_t base_dim = this->value_collection_ref->get_dimensions();
-	INVARIANT(base_dim);            // must have no-zero dimensions
-	if (array_indices) {
-		const never_ptr<const index_list_type> il(array_indices);
-		const never_ptr<const const_index_list>
-			cil(il.is_a<const const_index_list>());
-		if (!cil)       // is dynamic
-			return const_range_list();
-		// array indices are underspecified or fully specified
-		const excl_ptr<const mset_base>
-			fui = unroll_static_instances(base_dim)
-				.as_a_xfer<const mset_base>();
-		NEVER_NULL(fui);
-		// convert index to ranges, but DON'T COLLAPSE dimensions yet!
-		// should collapse dimensions AFTER checking coverage
-		// and compactness of the range.  
-		const const_range_list crl(*cil);
-		const mset_base::range_list_type
-			rl(fui->query_compact_dimensions(crl));
-		return const_range_list(rl);    // will probably have to convert
-	} else {
-		// not indexed, implicitly refers to entire collection
-		// no dimensions will be collapsed
-		const excl_ptr<const mset_base>
-			fui = unroll_static_instances(base_dim)
-				.as_a_xfer<const mset_base>();
-		NEVER_NULL(fui);
-		const mset_base::range_list_type
-			rl(fui->compact_dimensions());
-		return const_range_list(rl);    // will probably have to convert
-	}
-#endif
-#else
-	return grandparent_type::static_constant_dimensions();
-#endif
-}
-#endif	// ENABLE_STATIC_DIMENSION_ANALYSIS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.7.4.3 2006/02/18 03:56:01 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.7.4.4 2006/02/18 06:28:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -52,7 +52,6 @@ protected:
 
 	~instantiation_statement_type_ref_base() { }
 
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	template <class InstStmtType>
 	static
 	void
@@ -61,7 +60,6 @@ protected:
 			const never_ptr<const InstStmtType> i) {
 		v.attach_initial_instantiation_statement(i);
 	}
-#endif
 
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
@@ -157,7 +155,6 @@ protected:
 
 	~instantiation_statement_type_ref_base() { }
 
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	template <class InstStmtType>
 	static
 	void
@@ -166,7 +163,6 @@ protected:
 		const never_ptr<const InstStmtType> i) {
 		v.attach_initial_instantiation_statement(i);
 	}
-#endif
 
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
@@ -261,7 +257,6 @@ protected:
 
 	~instantiation_statement_type_ref_base() { }
 
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	template <class InstStmtType>
 	static
 	void
@@ -270,7 +265,6 @@ protected:
 		const never_ptr<const InstStmtType> i) {
 		v.attach_initial_instantiation_statement(i);
 	}
-#endif
 
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }

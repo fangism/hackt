@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.1.2.2 2006/02/18 04:34:23 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.1.2.3 2006/02/18 06:28:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -55,11 +55,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference() :
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference(
 		const instance_collection_ptr_type pi) :
-#if ENABLE_STATIC_COMPILE_CHECKS
-		common_base_type(pi->current_collection_state()), 
-#else
 		common_base_type(), 
-#endif
 		parent_type(), 
 		inst_collection_ref(pi) {
 	NEVER_NULL(inst_collection_ref);
@@ -156,62 +152,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// conditional on ENABLE_STATIC_COMPILE_CHECKS
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::may_be_densely_packed(void) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// conditional on ENABLE_STATIC_COMPILE_CHECKS
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::must_be_densely_packed(void) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_DIMENSION_ANALYSIS
-// conditional on ENABLE_STATIC_COMPILE_CHECKS
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::is_static_constant_collection(
-		void) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// conditional on ENABLE_STATIC_COMPILE_CHECKS
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::has_static_constant_dimensions(
-		void) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-const_range_list
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::static_constant_dimensions(void) const {
-}
-#endif
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// conditional on ENABLE_STATIC_COMPILE_CHECKS
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
-		const meta_instance_reference_base& r) const {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::must_be_type_equivalent(
-		const meta_instance_reference_base& r) const {
-}
-#endif
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Copy-reduced from simple_meta_instance_reference_base.
  */
@@ -248,11 +188,6 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		const state_manager& sm) const {
-#if 0
-	typedef	simple_meta_instance_reference_implementation<
-			traits_type::has_substructure>
-				substructure_implementation_policy;
-#endif
 	STACKTRACE_VERBOSE;
 	const unroll_context uc;
 	const instance_alias_base_ptr_type
@@ -282,11 +217,6 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 		const state_manager& sm) const {
-#if 0
-	typedef	simple_meta_instance_reference_implementation<
-			traits_type::has_substructure>
-				substructure_implementation_policy;
-#endif
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_lookup_footprint_frame<Tag>(
@@ -504,11 +434,6 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& c) const {
-#if 0
-	typedef	simple_meta_instance_reference_implementation<
-			traits_type::has_substructure>
-				substructure_implementation_policy;
-#endif
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_unroll_generic_scalar_substructure_reference<Tag>(

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.6.18.1 2006/02/17 05:07:49 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.6.18.2 2006/02/18 06:28:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -16,9 +16,9 @@
 #include "Object/type/canonical_type.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/expr/const_param_expr_list.h"
-#include "util/persistent_object_manager.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/def/footprint.h"
+#include "util/persistent_object_manager.h"
 
 namespace HAC {
 namespace entity {
@@ -67,7 +67,6 @@ protected:
 
 	~instantiation_statement_type_ref_base() { }
 
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	static
 	void
 	attach_initial_instantiation_statement(
@@ -75,7 +74,6 @@ protected:
 			const never_ptr<const data_instantiation_statement> d) {
 		i.attach_initial_instantiation_statement(d);
 	}
-#endif
 
 	type_ref_ptr_type
 	get_type(void) const { return type; }

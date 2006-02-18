@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.10.10.1.2.2 2006/02/18 04:34:21 fang Exp $
+ 	$Id: instance_reference.cc,v 1.10.10.1.2.3 2006/02/18 06:28:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -237,167 +237,15 @@ meta_instance_reference_base::__may_be_type_equivalent(
 #endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 //=============================================================================
-// class simple_meta_instance_reference_base::mset_base definition
-
-#if ENABLE_STATIC_COMPILE_CHECKS
-class simple_meta_instance_reference_base::mset_base {
-public:
-	typedef	multidimensional_sparse_set_traits<
-			pint_value_type, const_range, list>
-						traits_type;
-	// happens to be const_range_list::list_type
-	typedef	vector<const_range>		alt_range_list_type;
-	typedef	traits_type::range_type		range_type;
-	typedef	traits_type::range_list_type	range_list_type;
-
-	/// dimensions limit
-	enum { LIMIT = 4 };
-
-virtual	~mset_base() { }
-
-virtual	range_list_type
-	compact_dimensions(void) const = 0;
-
-virtual	range_list_type
-	query_compact_dimensions(const range_list_type& r) const = 0;
-
-virtual	range_list_type
-	query_compact_dimensions(const alt_range_list_type& r) const = 0;
-
-virtual	bool
-	add_ranges(const range_list_type& r) = 0;
-
-virtual	bool
-	add_ranges(const alt_range_list_type& r) = 0;
-
-virtual	bool
-	subtract_sparse_set(const mset_base& s) = 0;
-
-virtual	void
-	clear(void) = 0;
-
-virtual	bool
-	empty(void) const = 0;
-
-virtual	ostream&
-	dump(ostream& o) const = 0;
-
-	static
-	mset_base*
-	make_multidimensional_sparse_set(const size_t d);
-
-};	// end class simple_meta_instance_reference_base::mset_base
-
-//=============================================================================
-/**
-	Wrapper class to sparse set implementation, 
-	implements a limited interface for use in this module.  
- */
-template <size_t D>
-class simple_meta_instance_reference_base::mset :
-		public simple_meta_instance_reference_base::mset_base {
-protected:
-	typedef	multidimensional_sparse_set<D, pint_value_type,
-			const_range, list>
-							impl_type;
-	typedef	simple_meta_instance_reference_base::mset_base	base_type;
-	typedef	mset<D>					this_type;
-public:
-	typedef base_type::range_type			range_type;
-	typedef base_type::range_list_type		range_list_type;
-	typedef base_type::alt_range_list_type		alt_range_list_type;
-protected:
-	impl_type			sset;
-public:
-
-	// standard destructor
-
-	range_list_type
-	compact_dimensions(void) const {
-		return sset.compact_dimensions();
-	}
-
-	range_list_type
-	query_compact_dimensions(const range_list_type& r) const {
-		return sset.query_compact_dimensions(r);
-	}
-
-	range_list_type
-	query_compact_dimensions(const alt_range_list_type& r) const {
-		return sset.query_compact_dimensions(r);
-	}
-
-	bool
-	add_ranges(const range_list_type& r) {
-		return sset.add_ranges(r);
-	}
-
-	bool
-	add_ranges(const alt_range_list_type& r) {
-		return sset.add_ranges(r);
-	}
-
-	bool
-	subtract_sparse_set(const mset_base& s) {
-		const this_type* t = IS_A(const this_type*, &s);
-		INVARIANT(t);
-		return sset.subtract(t->sset);
-	}
-
-	void
-	clear(void) { sset.clear(); }
-
-	bool
-	empty(void) const { return sset.empty(); }
-
-	ostream&
-	dump(ostream& o) const {
-		return sset.dump(o);
-	}
-
-
-};	// end class simple_meta_instance_reference_base::mset
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_meta_instance_reference_base::mset_base*
-simple_meta_instance_reference_base::mset_base::make_multidimensional_sparse_set(
-		const size_t d) {
-	INVARIANT(d > 0 && d <= LIMIT);
-	switch(d) {
-		case 1: return new simple_meta_instance_reference_base::mset<1>();
-		case 2: return new simple_meta_instance_reference_base::mset<2>();
-		case 3: return new simple_meta_instance_reference_base::mset<3>();
-		case 4: return new simple_meta_instance_reference_base::mset<4>();
-		// add more cases if LIMIT is ever extended.
-		default: return NULL;
-	}
-}
-#endif	// ENABLE_STATIC_COMPILE_CHECKS
-
-//=============================================================================
 // class simple_meta_instance_reference_base method definitions
 
 /**
 	Private empty constructor.
  */
 simple_meta_instance_reference_base::simple_meta_instance_reference_base() :
-#if ENABLE_STATIC_COMPILE_CHECKS
-		array_indices(NULL), inst_state()
-#else
-		array_indices(NULL)
-#endif
-		{
+		array_indices(NULL) {
 	// no assert
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_COMPILE_CHECKS
-simple_meta_instance_reference_base::simple_meta_instance_reference_base(
-		const instantiation_state& st) :
-		array_indices(NULL), 
-		inst_state(st) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 simple_meta_instance_reference_base::~simple_meta_instance_reference_base() { }
@@ -865,81 +713,11 @@ simple_meta_instance_reference_base::dump_type_size(ostream& o) const {
 good_bool
 simple_meta_instance_reference_base::attach_indices(
 		excl_ptr<index_list_type>& i) {
-	// make sure not already indexed
-	// side note: if indexing were truly recursive and not list-based, 
-	//	we'd be able to append indices one-by-one.  
-#if ENABLE_STATIC_COMPILE_CHECKS
-	INVARIANT(!array_indices);
-	NEVER_NULL(i);
-	// dimension-check:
-	const never_ptr<const instance_collection_base>
-		inst_base(get_inst_base());
-	// number of indices must be <= dimension of instance collection.  
-	const size_t max_dim = dimensions();	// depends on indices
-	if (i->size() > max_dim) {
-		cerr << "ERROR: instance collection " << inst_base->get_name()
-			<< " is " << max_dim << "-dimensional, and thus, "
-			"cannot be indexed " << i->size() <<
-			"-dimensionally!  ";
-			// caller will say where
-		return good_bool(false);
-	} 
-	// else proceed...
-
-	// allow under-specified dimensions?  yeah for now...
-	// if indices are constant, check for total overlap
-	// with existing instances from the point of reference.
-
-	// mset_base typedef'd privately
-	// overriding default implementation with pair<int, int>
-	INVARIANT(max_dim <= mset_base::LIMIT);
-	const never_ptr<const index_list_type> il(i);
-	const never_ptr<const const_index_list>
-		cil(il.is_a<const const_index_list>());
-	if (!cil) {	// is dynamic, conservatively covers anything
-		const never_ptr<const dynamic_meta_index_list>
-			dil(il.is_a<const dynamic_meta_index_list>());
-		NEVER_NULL(dil);
-		array_indices = i;
-		return good_bool(true);
-	}
-	// else is constant index list, can compute coverage
-	//	using multidimensional_sparse_set
-
-	// eventually replace the following loop with unroll_static_instances
-	const size_t cil_size = cil->size();
-	const excl_ptr<mset_base>
-		cov(mset_base::make_multidimensional_sparse_set(cil_size));
-	NEVER_NULL(cov);
-	{
-		const_range_list cirl(*cil);
-		// if dimensions are underspecified, then
-		// we need to trim the lower dimension indices.
-		cov->add_ranges(cirl);
-	}
-	const excl_ptr<mset_base> inst = unroll_static_instances(cil_size);
-	if (inst) {
-		cov->subtract_sparse_set(*inst);
-		// make sure to clean if empty in subtract() method
-	} else {
-		// was dynamic, potentially covering all indices
-		cov->clear();
-	}
-
-	// if this point reached, then all instance additions
-	// were static constants.
-	// now, covered set must completely contain indices
-	if (!cov->empty()) {
-		// empty means covered.  
-		cerr << "ERROR: The following referenced indices of \""
-			<< get_inst_base()->get_name() <<
-			"\" have definitely not been instantiated: {";
-		cov->dump(cerr << endl) << "} ";
-		// cerr << where() << endl;	// caller
-		// fancy: list indices not instantiated?
-		return good_bool(false);
-	}
-#endif	// ENABLE_STATIC_COMPILE_CHECKS
+	/**
+		We used to perform static checks for index collisions, 
+		but there was little benefit in catching early errors, 
+		and the effort was not worthwhile.  
+	**/
 	array_indices = i;
 	return good_bool(true);
 }
@@ -1063,50 +841,6 @@ simple_meta_instance_reference_base::must_be_type_equivalent(
 #endif	// DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_COMPILE_CHECKS
-/**
-	For collection with only static constant additions, 
-	this returns the unrolled multidimensional set of instantiated
-	indices up to the point of reference.  
-	No dimension trimming.  
-	\param dim the number of dimensions to expand, 
-		which must be <= the instantiation's dimensions.  
-	\return newly allocated set of unrolled index instances
-		if everything is constant, else returns null, 
-		if there is even a single non-const range_list.  
- */
-excl_ptr<simple_meta_instance_reference_base::mset_base>
-simple_meta_instance_reference_base::unroll_static_instances(
-		const size_t dim) const {
-	INVARIANT(dim <= get_inst_base()->get_dimensions());
-	instantiation_state iter(inst_state);
-	const instantiation_state end(get_inst_base()->collection_state_end());
-	excl_ptr<mset_base>
-		cov(mset_base::make_multidimensional_sparse_set(dim));
-	NEVER_NULL(cov);
-	for ( ; iter!=end; iter++) {
-		if (iter->is_conditional() || (*iter)->get_indices()
-				.is_a<const dynamic_meta_range_list>()) {
-			// all we can do conservatively...
-			return excl_ptr<mset_base>(NULL);
-		} else {
-			const count_ptr<const const_range_list>
-				crlp((*iter)->get_indices()
-					.is_a<const const_range_list>());
-			NEVER_NULL(crlp);
-			const_range_list crl(*crlp);	// make deep copy
-			// dimension-trimming
-			while(crl.size() > dim)
-				crl.pop_back();
-			const bool overlap = cov->add_ranges(crl);
-			INVARIANT(!overlap);		// sanity check!
-		}
-	}
-	return cov;
-}
-#endif	// ENABLE_STATIC_COMPILE_CHECKS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Common persistence visitor for all subclasses.  
  */
@@ -1126,9 +860,6 @@ simple_meta_instance_reference_base::collect_transient_info_base(
 void
 simple_meta_instance_reference_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-#if ENABLE_STATIC_COMPILE_CHECKS
-	write_instance_collection_state(o);
-#endif
 	m.write_pointer(o, array_indices);
 }
 
@@ -1144,48 +875,11 @@ simple_meta_instance_reference_base::write_object_base(
 void
 simple_meta_instance_reference_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
-#if ENABLE_STATIC_COMPILE_CHECKS
-	load_instance_collection_state(i);
-#endif
 	m.read_pointer(i, array_indices);
-	// must load the 
+	// must load the indices early?
 	if (array_indices)
 		m.load_object_once(array_indices);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_COMPILE_CHECKS
-/**
-	The instantiation state can be store as an index into
-	an instantiation's index collection.  
-	To do this we just use the distance from inst_state to the "end".
- */
-void
-simple_meta_instance_reference_base::write_instance_collection_state(ostream& f) const {
-	const instantiation_state end =
-		get_inst_base()->collection_state_end();
-	// assuming this is safe, of course...
-	size_t dist = distance(inst_state, end);
-	write_value(f, dist);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Restores the reference to an instantiation's state, 
-	based on an index from the end, counting backwards.  
- */
-void
-simple_meta_instance_reference_base::load_instance_collection_state(istream& f) {
-	instantiation_state iter =
-		get_inst_base()->collection_state_end();
-	size_t i = 0;
-	size_t max;
-	read_value(f, max);
-	for ( ; i<max; i++)
-		iter--;
-	const_cast<instantiation_state&>(inst_state) = iter;
-}
-#endif
 
 //=============================================================================
 // class simple_nonmeta_instance_reference_base method definitions
@@ -1522,23 +1216,6 @@ simple_datatype_meta_instance_reference_base::
 		simple_meta_instance_reference_base() {
 	// no assert
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_COMPILE_CHECKS
-simple_datatype_meta_instance_reference_base::
-	simple_datatype_meta_instance_reference_base(
-		const instantiation_state& s) :
-		simple_meta_instance_reference_base(s) {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-simple_datatype_meta_instance_reference_base::simple_datatype_meta_instance_reference_base(
-		excl_ptr<index_list_type>& i, const instantiation_state& s) :
-		simple_meta_instance_reference_base(i, s) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 simple_datatype_meta_instance_reference_base::

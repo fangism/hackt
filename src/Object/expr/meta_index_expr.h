@@ -3,13 +3,12 @@
 	Base class related to lists of meta index expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_expr.h,v 1.6.18.2 2006/02/18 05:16:34 fang Exp $
+	$Id: meta_index_expr.h,v 1.6.18.3 2006/02/18 06:28:26 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
 #define __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
 
-#include "Object/devel_switches.h"
 #include "Object/expr/nonmeta_index_expr_base.h"
 #include "util/memory/pointer_classes_fwd.h"
 

@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.9.12.2 2006/02/18 03:20:49 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.9.12.3 2006/02/18 06:28:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -33,9 +33,7 @@
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/def/footprint.h"
-#if !ENABLE_STATIC_COMPILE_CHECKS
 #include "Object/inst/instance_collection.h"
-#endif
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -125,10 +123,8 @@ INSTANTIATION_STATEMENT_CLASS::attach_collection(
 	const never_ptr<collection_type> c(i.template is_a<collection_type>());
 	NEVER_NULL(c);
 	this->inst_base = c;
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	const never_ptr<const this_type> _this(this);
 	type_ref_parent_type::attach_initial_instantiation_statement(*c, _this);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

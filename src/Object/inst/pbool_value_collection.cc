@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_pbool.cc"
 		in a previous life.  
- 	$Id: pbool_value_collection.cc,v 1.5 2006/01/22 18:20:09 fang Exp $
+ 	$Id: pbool_value_collection.cc,v 1.5.18.1 2006/02/18 06:28:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
@@ -23,6 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/expr/pbool_const.h"
+#include "Object/unroll/param_instantiation_statement.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/inst/value_collection.tcc"

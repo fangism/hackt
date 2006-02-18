@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.6.18.2 2006/02/17 07:52:02 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.6.18.3 2006/02/18 06:28:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -75,14 +75,8 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::get_type(
 		// first instantiation statement.
 		// extract as in pulling teeth...
 		// TODO: subtype versions of the following calls
-#if ENABLE_STATIC_COMPILE_CHECKS
-		const never_ptr<const data_instantiation_statement>
-			first(i.index_collection.front()
-			.template is_a<const data_instantiation_statement>());
-#else
 		const never_ptr<const data_instantiation_statement>
 			first(i.get_initial_instantiation_statement());
-#endif
 		return first->get_type_ref()
 			.template is_a<const data_type_reference>();
 	}

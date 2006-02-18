@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.12.8.2 2006/02/17 07:52:01 fang Exp $
+	$Id: instance_collection.h,v 1.12.8.3 2006/02/18 06:28:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -113,7 +113,7 @@ protected:
 	// collection_type_manager_parent_type
 	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
-#if !ENABLE_STATIC_COMPILE_CHECKS
+
 public:
 	typedef	typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
@@ -127,15 +127,11 @@ public:
 	 */
 	initial_instantiation_statement_ptr_type
 					initial_instantiation_statement_ptr;
-#endif
 protected:
 	explicit
 	instance_collection(const size_t d) :
-		parent_type(d), collection_type_manager_parent_type()
-#if !ENABLE_STATIC_COMPILE_CHECKS
-		, initial_instantiation_statement_ptr()
-#endif
-		{ }
+		parent_type(d), collection_type_manager_parent_type(),
+		initial_instantiation_statement_ptr(NULL) { }
 
 	instance_collection(const this_type&, const footprint&);
 
@@ -148,19 +144,12 @@ public:
 
 virtual	~instance_collection();
 
-#if 0
-	// called by collection_type_manager_parent_type::dumper
-	const instance_collection_parameter_type&
-	get_type_parameter(void) const;
-#endif
-
 virtual	ostream&
 	what(ostream&) const = 0;
 
 	ostream&
 	type_dump(ostream&) const;
 
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	void
 	attach_initial_instantiation_statement(
 		const initial_instantiation_statement_ptr_type i) {
@@ -180,17 +169,14 @@ virtual	ostream&
 
 	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const;
-#endif
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
-#if !ENABLE_STATIC_COMPILE_CHECKS
 	// this could just return hard-coded built-in type...
 	// this returns the type as given by the first instantiation statement
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
-#endif
 
 	type_ref_ptr_type
 	get_type_ref_subtype(void) const;

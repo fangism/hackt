@@ -3,25 +3,19 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.11.4.1 2006/02/17 05:07:40 fang Exp $
+	$Id: instance_collection_base.h,v 1.11.4.2 2006/02/18 06:28:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 #define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 
-#include "Object/devel_switches.h"
 #include <string>
-#if ENABLE_STATIC_COMPILE_CHECKS
-#include <deque>
-#endif
 
+#include "Object/devel_switches.h"
 #include "util/macros.h"
 #include "util/boolean_types.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
-#if ENABLE_STATIC_COMPILE_CHECKS
-#include "Object/common/predicated_inst_stmt_ptr.h"
-#endif
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/persistent.h"		// for persistent object interface
 
@@ -71,6 +65,10 @@ using util::memory::count_ptr;
 	No type_ref member, acquire that from instantiation_statement.  
 	Instead of list of indices in index_collection, 
 	use list of statements that contain indices.  
+
+	NOTE: this used to have index_collection for tracking instantiation
+		statements per collection, but they were removed on the
+		HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref branch.
  */
 class instance_collection_base : public object, public persistent {
 	typedef	instance_collection_base	this_type;
@@ -105,19 +103,6 @@ protected:
 		Name of instance.
 	 */
 	string				key;
-
-#if ENABLE_STATIC_COMPILE_CHECKS
-	/**
-		This is a collection of instantiation statements 
-		that, when unrolled, will instantiate instances
-		at specified indices in the multidimensional collection, 
-		implemented in the leaf children classes.  
-		Can elements be NULL?
-		TODO: subtype this!  don't use generic type common to all
-		children.  Implement using class_traits policy.  
-	 */
-	index_collection_type		index_collection;
-#endif
 
 	/**
 		A somewhat redundant field for the dimensionality of the
@@ -161,9 +146,6 @@ protected:
 	explicit
 	instance_collection_base(const size_t d) :
 		object(), persistent(), owner(), key(), 
-#if ENABLE_STATIC_COMPILE_CHECKS
-		index_collection(), 
-#endif
 		dimensions(d), super_instance() { }
 
 	/**
@@ -174,9 +156,6 @@ protected:
 	 */
 	instance_collection_base(const this_type& t, const footprint&) :
 		object(), persistent(), owner(t.owner), key(t.key), 
-#if ENABLE_STATIC_COMPILE_CHECKS
-		index_collection(), 
-#endif
 		dimensions(t.dimensions),
 		super_instance() { }
 
@@ -294,13 +273,8 @@ virtual	string
 	This only returns the type given by the first (possibly predicated)
 	instantiation statement.  
  */
-#if ENABLE_STATIC_COMPILE_CHECKS
-	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
-#else
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
-#endif
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
@@ -308,28 +282,13 @@ virtual	count_ptr<const fundamental_type_reference>
 	owner_ptr_type
 	get_owner(void) const { return owner; }
 
-#if ENABLE_STATIC_COMPILE_CHECKS
-	instantiation_state
-	collection_state_end(void) const;
-
-	instantiation_state
-	current_collection_state(void) const;
-
-	const_range_list
-	detect_static_overlap(const index_collection_item_ptr_type& r) const;
-
-	const_range_list
-	add_instantiation_statement(const index_collection_type::value_type& r);
-#endif
-
 protected:
 	// to grant access to param_value_collection
 	bool
 	formal_size_equivalent(const this_type& b) const;
-#if !ENABLE_STATIC_COMPILE_CHECKS
+
 virtual	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const = 0;
-#endif
 
 public:
 	size_t

@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_list.h,v 1.6.18.2 2006/02/18 05:16:37 fang Exp $
+	$Id: meta_range_list.h,v 1.6.18.3 2006/02/18 06:28:26 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_RANGE_LIST_H__
@@ -11,7 +11,6 @@
 
 #include "util/persistent.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
