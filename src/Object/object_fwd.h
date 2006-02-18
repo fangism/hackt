@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.3.2.2.2.4 2006/02/18 08:29:06 fang Exp $
+	$Id: object_fwd.h,v 1.3.2.2.2.5 2006/02/18 21:47:29 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -55,7 +55,6 @@ namespace entity {
 	class enum_datatype_def;
 	class data_type_reference;
 	class datatype_instance_collection;
-	class simple_datatype_meta_instance_reference_base;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;

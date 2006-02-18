@@ -5,6 +5,14 @@
 
 2006-02-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-11:
+	  meta_instance_reference_base : persistent (non-virtual)
+	  Removed "Object/ref/simple_datatype_meta_instance_reference_base.h".
+	  Checked parser tests-cases against yacc, a few updates.  
+	  Minor touch-ups.  
+	  Status: ready to merge to parent branch.  
+
+
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-10:
 	  Finally, committed DECOUPLE_INSTANCE_REFERENCE_HIERARCHY -> 1, 
 		(-1400 LoC).  This accomplishes the primary branch objective.

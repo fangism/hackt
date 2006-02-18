@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.5.2.1.2.3 2006/02/18 08:29:05 fang Exp $
+	$Id: instance.cc,v 1.5.2.1.2.4 2006/02/18 21:47:28 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -32,6 +32,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/ref/simple_meta_instance_reference_base.h"
+#include "Object/ref/meta_value_reference_base.h"
 #include "Object/expr/pbool_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
@@ -99,6 +100,7 @@ using std::_Select1st;
 using std::_Select2nd;
 using std::find;
 using entity::meta_instance_reference_base;
+using entity::meta_value_reference_base;
 using entity::simple_meta_instance_reference_base;
 using entity::aliases_connection_base;
 using entity::meta_instance_reference_connection;
@@ -173,13 +175,33 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 							const_return_type;
 	typedef	excl_ptr<entity::param_expression_assignment>
 							return_type;
-	typedef	checked_meta_exprs_type::value_type		checked_expr_ptr_type;
+	typedef	checked_meta_exprs_type::value_type	checked_expr_ptr_type;
+// experimenting
+#define	CONSTRUCT_FROM_LVALUE		0
 	// then expect subsequent items to be the same
 	// or already param_expr in the case of some constants.
 	// However, only the last item may be a constant.  
 
-	bad_bool err(false);
 	// right-hand-side source expression
+#if CONSTRUCT_FROM_LVALUE
+	const checked_expr_ptr_type& first_obj(temp.front());
+	if (!first_obj) {
+		cerr << "Error in destination value reference." << endl;
+		return const_return_type(NULL);
+	}
+	// cross-cast check
+	const count_ptr<const meta_value_reference_base>
+		lhs(first_obj.is_a<const meta_value_reference_base>());
+	if (!lhs) {
+		cerr << "Error: destination expression of assignment "
+			"is not an lvalue." << endl;
+		return const_return_type(NULL);
+	}
+	return_type
+		ret(meta_value_reference_base::
+			make_param_expression_assignment(lhs));
+	NEVER_NULL(ret);
+#else
 	const checked_expr_ptr_type& last_obj(temp.back());
 	if (!last_obj) {
 		cerr << "Error in source expression." << endl;
@@ -188,8 +210,8 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 	const count_ptr<const param_expr>
 		rhse = last_obj.is_a<const param_expr>();
 	INVARIANT(rhse);
-
 	return_type ret;
+#endif
 	// later, fold these error messages into static constructor?
 	if (!last_obj) {
 		cerr << "ERROR: rhs of expression assignment "
@@ -207,6 +229,7 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 		return const_return_type(NULL);
 	}
 
+	bad_bool err(false);
 	entity::param_expression_assignment::meta_instance_reference_appender
 		append_it(*ret);
 	const checked_meta_exprs_type::const_iterator dest_end(--temp.end());
@@ -216,8 +239,10 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 	// if there are any errors, discard everything?
 	// later: track errors in partially constructed objects
 	if (err.bad) {
+		// already have error message
 		return const_return_type(NULL);
 	} else	return const_return_type(ret);             // is ok
+#undef	CONSTRUCT_FROM_LVALUE
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

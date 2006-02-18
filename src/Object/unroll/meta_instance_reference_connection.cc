@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.11.12.3 2006/02/18 04:34:23 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.11.12.4 2006/02/18 21:47:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -22,7 +22,6 @@
 #include "Object/unroll/port_connection.h"
 #include "Object/unroll/unroll_context.h"	// for debugging
 #include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/int_instance_collection.h"

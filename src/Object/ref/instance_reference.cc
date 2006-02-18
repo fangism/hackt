@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.10.10.1.2.4 2006/02/18 08:29:10 fang Exp $
+ 	$Id: instance_reference.cc,v 1.10.10.1.2.5 2006/02/18 21:47:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -20,7 +20,6 @@
 #include "Object/inst/param_value_collection.h"
 #include "Object/common/namespace.h"
 #include "Object/common/dump_flags.h"
-#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/simple_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
@@ -397,42 +396,6 @@ collective_meta_instance_reference::hash_string(void) const {
 //=============================================================================
 // class process_meta_instance_reference method definitions
 // replaced with meta_instance_reference template
-
-//=============================================================================
-// class simple_datatype_meta_instance_reference_base method definitions
-
-/**
-	Private empty constructor.  
- */
-simple_datatype_meta_instance_reference_base::
-	simple_datatype_meta_instance_reference_base() :
-		simple_meta_instance_reference_base() {
-	// no assert
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_datatype_meta_instance_reference_base::
-		~simple_datatype_meta_instance_reference_base() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-simple_datatype_meta_instance_reference_base::what(ostream& o) const {
-	return o << "datatype-inst-ref";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-USE simple_meta_instance_reference_base::dump
-ostream&
-simple_datatype_meta_instance_reference_base::dump(ostream& o) const {
-	what(o) << ": ";
-	data_inst_ref->dump(o);
-	if (array_indices)
-		array_indices->dump(o);
-	return o;
-}
-#endif
 
 //=============================================================================
 // class channel_meta_instance_reference method definitions

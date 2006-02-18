@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference.h"
-	$Id: meta_value_reference.h,v 1.1.2.1 2006/02/17 05:07:45 fang Exp $
+	$Id: meta_value_reference.h,v 1.1.2.2 2006/02/18 21:47:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_H__
@@ -25,8 +25,9 @@ class meta_value_reference :
 		public meta_value_reference_base, 
 		public class_traits<Tag>::expr_base_type {
 	typedef	META_VALUE_REFERENCE_CLASS	this_type;
+	typedef	class_traits<Tag>		traits_type;
 public:
-	typedef	typename class_traits<Tag>::expr_base_type
+	typedef	typename traits_type::expr_base_type
 						expr_base_type;
 	typedef	expr_base_type			interface_type;
 protected:

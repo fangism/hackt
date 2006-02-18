@@ -11,10 +11,13 @@ in state #STATE#, possible rules are:
 	optional_template_specification : .  (#RULE#)
 acceptable tokens are: 
 	end-of-file (reduce)
+	'!' (shift)
 	'(' (shift)
+	'-' (shift)
 	'[' (shift)
 	'{' (shift)
 	'}' (reduce)
+	'~' (shift)
 	ID (shift)
 	FLOAT (shift)
 	INT (shift)
