@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.3.2.2.2.1 2006/02/17 05:07:26 fang Exp $
+	$Id: object_fwd.h,v 1.3.2.2.2.2 2006/02/18 03:55:58 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -300,26 +300,12 @@ namespace entity {
 	class instantiation_statement_base;
 	template <class>
 	class instantiation_statement;
-#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
-	template <class>
-	class param_instantiation_statement;
-
-	class param_instantiation_statement_base;
-
-	typedef	param_instantiation_statement<pbool_tag>
-		pbool_instantiation_statement;
-	typedef	param_instantiation_statement<pint_tag>
-		pint_instantiation_statement;
-	typedef	param_instantiation_statement<preal_tag>
-		preal_instantiation_statement;
-#else
 	typedef	instantiation_statement<pbool_tag>
 		pbool_instantiation_statement;
 	typedef	instantiation_statement<pint_tag>
 		pint_instantiation_statement;
 	typedef	instantiation_statement<preal_tag>
 		preal_instantiation_statement;
-#endif
 	typedef	instantiation_statement<datatype_tag>
 		data_instantiation_statement;
 	typedef	instantiation_statement<channel_tag>

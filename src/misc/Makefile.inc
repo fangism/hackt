@@ -42,7 +42,9 @@ misc/sudoku-test.sh:
 
 CLEANFILES += misc/sudoku-test.sh
 
+if WANT_LIBMISCFUN
 ALL_HEADER_FILES += $(MISCFUN_H_FILES)
+endif
 
 SUBDIR_CVSIGNORE += misc/.cvsignore
 

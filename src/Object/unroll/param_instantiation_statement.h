@@ -3,13 +3,12 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.7.4.2 2006/02/18 03:20:50 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.7.4.3 2006/02/18 03:56:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
 #define	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
 
-#include "Object/unroll/param_instantiation_statement_base.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
 #include "Object/traits/pint_traits.h"
@@ -47,11 +46,9 @@ protected:
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
 
-#if !WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 	// just ignore the parameters
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&, 
 		const const_relaxed_args_type&) { }
-#endif
 
 	~instantiation_statement_type_ref_base() { }
 
@@ -153,11 +150,10 @@ protected:
 	 */
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
-#if !WANT_PARAM_INSTANTIATION_STATEMENT_BASE
+
 	// just ignore the parameters
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&, 
 		const const_relaxed_args_type&) { }
-#endif
 
 	~instantiation_statement_type_ref_base() { }
 
@@ -259,11 +255,9 @@ protected:
 	explicit
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&) { }
 
-#if !WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 	// just ignore the parameters
 	instantiation_statement_type_ref_base(const type_ref_ptr_type&, 
 		const const_relaxed_args_type&) { }
-#endif
 
 	~instantiation_statement_type_ref_base() { }
 
@@ -338,45 +332,6 @@ protected:
 		return good_bool(true);
 	}
 };      // end class instantiation_statement_type_ref_base
-
-//=============================================================================
-#if WANT_PARAM_INSTANTIATION_STATEMENT_BASE
-
-#define	PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE		\
-template <class Tag>
-
-#define	PARAM_INSTANTIATION_STATEMENT_CLASS				\
-param_instantiation_statement<Tag>
-
-/**
-	Instantiation statement refinement for parameter value instantiations.  
-	Inherits everything from regular instantiation_statement template, 
-	but implements unroll_meta_evaluate, of instance_management_base.
-	TODO: possible isolate value class hierarchy from instances.  
- */
-PARAM_INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-class param_instantiation_statement :
-	public instantiation_statement<Tag> {
-	typedef	PARAM_INSTANTIATION_STATEMENT_CLASS	this_type;
-	typedef	instantiation_statement<Tag>		parent_type;
-public:
-	typedef	typename parent_type::type_ref_ptr_type	type_ref_ptr_type;
-private:
-	param_instantiation_statement();
-public:
-	param_instantiation_statement(const type_ref_ptr_type&, 
-		const index_collection_item_ptr_type&);
-
-	~param_instantiation_statement();
-
-	FRIEND_PERSISTENT_TRAITS
-
-	using parent_type::collect_transient_info;
-	using parent_type::write_object;
-	using parent_type::load_object;
-};	// end class param_instantiation_statement
-
-#endif	// WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 
 //=============================================================================
 }	// end namespace entity

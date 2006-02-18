@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.8.8.2 2006/02/18 03:20:47 fang Exp $
+	$Id: devel_switches.h,v 1.8.8.3 2006/02/18 03:55:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -72,14 +72,6 @@
 	Goal: 0
  */
 #define	WANT_IS_TEMPLATE_DEPENDENT			0
-
-/**
-	Major headache.
-	Completely f---ed up class hierarchy, dirtily hacked.  
-	Should just flatten the instantiation_statement hierarchy.  
-	Goal: 0
- */
-#define	WANT_PARAM_INSTANTIATION_STATEMENT_BASE		0
 
 //=============================================================================
 

@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.9.12.2 2006/02/18 03:20:49 fang Exp $
+	$Id: instantiation_statement.h,v 1.9.12.3 2006/02/18 03:56:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -40,6 +40,8 @@ INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 class instantiation_statement :
 	public class_traits<Tag>::instantiation_statement_parent_type, 
 	public class_traits<Tag>::instantiation_statement_type_ref_base {
+public:
+	typedef	class_traits<Tag>			traits_type;
 protected:
 #if 0
 	typedef	INSTANTIATION_STATEMENT_CLASS		this_type;
@@ -49,11 +51,10 @@ protected:
 		appropriate child class, such is the case with
 		pint and pbool, which use param_instantiation_statement.  
 	 */
-	typedef	typename class_traits<Tag>::instantiation_statement_type
+	typedef	typename traits_type::instantiation_statement_type
 							this_type;
 #endif
-	typedef	typename
-		class_traits<Tag>::instantiation_statement_parent_type
+	typedef	typename traits_type::instantiation_statement_parent_type
 							parent_type;
 	/**
 		The parent from which to inherit a type reference pointer,
@@ -62,20 +63,16 @@ protected:
 		for space (EBCO).  
 	 */
 	typedef	typename
-		class_traits<Tag>::instantiation_statement_type_ref_base
+		traits_type::instantiation_statement_type_ref_base
 							type_ref_parent_type;
 public:
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename traits_type::instance_collection_generic_type
 							collection_type;
 	typedef	never_ptr<collection_type>		collection_ptr_type;
-	typedef	typename class_traits<Tag>::type_ref_ptr_type
+	typedef	typename traits_type::type_ref_ptr_type
 							type_ref_ptr_type;
-	typedef	typename class_traits<Tag>::instance_collection_parameter_type
+	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-#if 0
-	typedef	instantiation_statement_base::relaxed_args_type
-							relaxed_args_type;
-#endif
 	typedef	instantiation_statement_base::const_relaxed_args_type
 							const_relaxed_args_type;
 protected:
@@ -85,13 +82,10 @@ protected:
 
 	// for param_instantiation_statement and others that don't use
 	// relaxed template parameters
-#if !WANT_PARAM_INSTANTIATION_STATEMENT_BASE
 public:
-#endif
 	instantiation_statement(const type_ref_ptr_type& t, 
 		const index_collection_item_ptr_type& i);
 
-public:
 	instantiation_statement(const type_ref_ptr_type& t, 
 		const index_collection_item_ptr_type& i, 
 		const const_relaxed_args_type&);
