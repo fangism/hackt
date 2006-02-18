@@ -1,5 +1,5 @@
 # "test/parser/template/Makefile.am"
-#	$Id: Makefile.am,v 1.15.4.1 2006/02/17 23:38:00 fang Exp $
+#	$Id: Makefile.am,v 1.15.4.2 2006/02/18 01:52:37 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -22,7 +22,8 @@ HACKT_PARSE_TEST_PASSES = \
 	040 041 043 044 045 046 049 \
 	055 056 057 058 059 \
 	061 062 063 064 067 068 \
-	070 071 072 073 073a 074 075 076 077 078
+	070 071 072 073 073a 074 075 076 077 078 \
+	080
 
 # KNOWN BUGS:
 # should fail at unroll-time:

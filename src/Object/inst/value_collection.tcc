@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.10.2.1.2.2 2006/02/17 07:52:03 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10.2.1.2.3 2006/02/18 01:52:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -51,6 +51,8 @@
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #endif
+
+#include "common/ICE.h"
 
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -166,6 +168,32 @@ VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intended for diagnostic use, printing resolved dimensions
+	of template formal parameter value collection.  
+	\param c unroll_context is needed in case of template dependence.  
+ */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+ostream&
+VALUE_COLLECTION_CLASS::dump_formal(ostream& o, const unroll_context& c) const {
+	this->type_dump(o);
+if (this->dimensions) {
+	const index_collection_item_ptr_type
+		i(this->get_initial_instantiation_indices());
+	NEVER_NULL(i);
+	const_range_list crl;
+	if (!i->unroll_resolve(crl, c).good) {
+		ICE(cerr, 
+			cerr << "Unable to deduce formal parameter collection "
+				"size!  Little help, please." << endl;
+		);
+	}
+	crl.dump(o << ' ');
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::type_dump(ostream& o) const {
@@ -178,7 +206,7 @@ count_ptr<const param_type_reference>
 VALUE_COLLECTION_CLASS::get_param_type_ref(void) const {
 	return traits_type::built_in_type_ptr;
 		// declared in "traits/class_traits.h"
-		// initialized in "art_built_ins.cc"
+		// initialized in "traits/class_traits_types.cc"
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

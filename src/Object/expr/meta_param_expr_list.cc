@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.12.4.1 2006/02/17 05:07:32 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.12.4.2 2006/02/18 01:52:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -535,8 +535,12 @@ if (a_size != f_size) {
 				"template formal and actual." << endl;
 			pex->dump(cerr << "\tgot: ", 
 				expr_dump_context::default_value) << endl;
-			pinst->dump(cerr << "\texpected: ", 
+#if 0
+			pinst->dump(cerr << "\texpected: ", c, 
 				dump_flags::verbose) << endl;
+#else
+			pinst->dump_formal(cerr << "\texpected: ", c) << endl;
+#endif
 			return good_bool(false);
 		}
 		// else continue checking successive arguments

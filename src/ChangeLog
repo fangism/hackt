@@ -5,6 +5,12 @@
 
 2006-02-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-04:
+	  Tiny patch to improve an error message on formal/actual mismatch.  
+	  Repaired last test case, and added one more template/080.hac.
+	  With this patch, the source now passes make check and distcheck.
+
+
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-03:
 	  All remaining test directories updated, after re-verification.
 		What a pain in the asterisk.  
