@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.100.2.2.2.1 2006/02/17 05:07:21 fang Exp $
+#	$Id: Makefile.am,v 1.100.2.2.2.2 2006/02/18 02:31:37 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -421,9 +421,12 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/lang/PRS_footprint_rule.h \
 	Object/ref/meta_reference_union.h \
 	Object/ref/aggregate_meta_instance_reference_base.h \
+	Object/ref/aggregate_meta_instance_reference.h \
 	Object/ref/aggregate_meta_value_reference_base.h \
+	Object/ref/aggregate_meta_value_reference.h \
 	Object/ref/member_meta_instance_reference.h \
 	Object/ref/meta_instance_reference_base.h \
+	Object/ref/meta_instance_reference_subtypes.h \
 	Object/ref/meta_value_reference_base.h \
 	Object/ref/meta_value_reference.h \
 	Object/ref/nonmeta_instance_reference_base.h \
