@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.10.10.1.2.1 2006/02/17 05:07:43 fang Exp $
+ 	$Id: instance_reference.cc,v 1.10.10.1.2.2 2006/02/18 04:34:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -41,10 +41,7 @@
 #if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/ref/meta_instance_reference_subtypes.tcc"
 #endif
-
-#if SUBTYPE_PORT_CONNECTION
 #include "Object/unroll/port_connection_base.h"
-#endif
 
 // introduced by using canonical_types
 #include "Object/def/user_def_datatype.h"
@@ -133,13 +130,11 @@ meta_instance_reference_base::make_aggregate_meta_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBTYPE_PORT_CONNECTION
 excl_ptr<port_connection_base>
 meta_instance_reference_base::make_port_connection(
 		const count_ptr<const meta_instance_reference_base>& r) {
 	return r->make_port_connection_private(r);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0 && DECOUPLE_INSTANCE_REFERENCE_HIERARCHY

@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.5.2.1.2.1 2006/02/17 05:07:25 fang Exp $
+	$Id: instance.cc,v 1.5.2.1.2.2 2006/02/18 04:34:20 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -105,9 +105,7 @@ using entity::simple_meta_instance_reference_base;
 using entity::aliases_connection_base;
 using entity::meta_instance_reference_connection;
 using entity::port_connection;
-#if SUBTYPE_PORT_CONNECTION
 using entity::port_connection_base;
-#endif
 using entity::dynamic_param_expr_list;
 using entity::meta_range_expr;
 using entity::meta_loop_base;
@@ -709,16 +707,11 @@ instance_connection::check_build(context& c) const {
 		obj(id->check_meta_reference(c));
 
 	NEVER_NULL(obj);		// we just created it!
-#if SUBTYPE_PORT_CONNECTION
 	const count_ptr<const connection_statement::inst_ref_arg_type>
 #if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		inst_ref(obj.inst_ref());
 #else
 		inst_ref(obj);
-#endif
-#else
-	const count_ptr<const simple_meta_instance_reference_base>
-		inst_ref(obj.is_a<const simple_meta_instance_reference_base>());
 #endif
 	if (!inst_ref) {
 		cerr << "Error resolving instance reference of "
@@ -797,7 +790,7 @@ connection_statement::make_port_connection(
 	typedef	excl_ptr<const result_type>	const_return_type;
 	typedef	excl_ptr<result_type>		return_type;
 	typedef	expr_list::checked_meta_refs_type		ref_list_type;
-#if SUBTYPE_PORT_CONNECTION && DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	return_type ret =
 		meta_instance_reference_base::make_port_connection(ir);
 	NEVER_NULL(ret);
@@ -850,16 +843,11 @@ connection_statement::check_build(context& c) const {
 		THROW_EXIT;
 	}
 	// is not a complex aggregate instance reference
-#if SUBTYPE_PORT_CONNECTION
 	const count_ptr<const meta_instance_reference_base>
 #if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 		inst_ref(o.inst_ref());
 #else
 		inst_ref(o);
-#endif
-#else
-	const count_ptr<const simple_meta_instance_reference_base>
-		inst_ref(o.is_a<const simple_meta_instance_reference_base>());
 #endif
 	if (!inst_ref) {
 		cerr << "Error checking instance reference of "

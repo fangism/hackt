@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.8.8.3 2006/02/18 03:55:58 fang Exp $
+	$Id: devel_switches.h,v 1.8.8.4 2006/02/18 04:34:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -42,12 +42,6 @@
 	Goal: 1
  */
 #define	DECOUPLE_INSTANCE_REFERENCE_HIERARCHY		1
-
-/**
-	Define to 1 to separate port connections by sub-type (template).
-	Goal: 1?
- */
-#define	SUBTYPE_PORT_CONNECTION				1
 
 /**
 	Define to 0 to disable static checking of arrays, 

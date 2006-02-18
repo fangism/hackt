@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.7.16.1.2.1 2006/02/17 05:07:44 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.7.16.1.2.2 2006/02/18 04:34:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -139,12 +139,10 @@ virtual	bool
 	make_aggregate_meta_instance_reference(
 		const count_ptr<const this_type>&);
 
-#if SUBTYPE_PORT_CONNECTION
 	static
 	excl_ptr<port_connection_base>
 	make_port_connection(
 		const count_ptr<const this_type>&);
-#endif
 
 /**
 	The implementation of this will be policy-determined, 
@@ -177,11 +175,9 @@ virtual	excl_ptr<aliases_connection_base>
 virtual	count_ptr<aggregate_meta_instance_reference_base>
 	make_aggregate_meta_instance_reference_private(void) const = 0;
 
-#if SUBTYPE_PORT_CONNECTION
 virtual	excl_ptr<port_connection_base>
 	make_port_connection_private(
 		const count_ptr<const this_type>&) const = 0;
-#endif
 
 };	// end class meta_instance_reference_base
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.9.14.1.2.1 2006/02/17 05:07:45 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.9.14.1.2.2 2006/02/18 04:34:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -191,11 +191,9 @@ private:
 	count_ptr<aggregate_meta_instance_reference_base>
 	make_aggregate_meta_instance_reference_private(void) const;
 
-#if SUBTYPE_PORT_CONNECTION
 	excl_ptr<port_connection_base>
 	make_port_connection_private(
 		const count_ptr<const meta_instance_reference_base>&) const;
-#endif
 
 protected:
 	// helper function, also used by member

@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.3.2.2.2.2 2006/02/18 03:55:58 fang Exp $
+	$Id: object_fwd.h,v 1.3.2.2.2.3 2006/02/18 04:34:21 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -240,21 +240,12 @@ namespace entity {
 	class pint_instance;	// should be value
 	class pbool_instance;	// should be value
 	class preal_instance;	// should be value
-#if 0
-	class int_instance;
-	class bool_instance;
-	class enum_instance;
-	class struct_instance;
-	class channel_instance;
-	class process_instance;
-#else
 	typedef	state_instance<int_tag>		int_instance;
 	typedef	state_instance<bool_tag>	bool_instance;
 	typedef	state_instance<enum_tag>	enum_instance;
 	typedef	state_instance<datastruct_tag>	struct_instance;
 	typedef	state_instance<channel_tag>	channel_instance;
 	typedef	state_instance<process_tag>	process_instance;
-#endif
 
 	template <class>		class instance_alias_info;
 	template <class, size_t>	class instance_alias;
@@ -272,15 +263,13 @@ namespace entity {
 
 	// defined in "Object/unroll/*connection*.h"
 	class meta_instance_reference_connection;
-#if SUBTYPE_PORT_CONNECTION
+
 	class port_connection_base;
 	template <class>	class port_connection;
 	typedef	port_connection<process_tag>	process_port_connection;
 	typedef	port_connection<channel_tag>	channel_port_connection;
 	typedef	port_connection<datastruct_tag>	struct_port_connection;
-#else
-	class port_connection;
-#endif
+
 	class aliases_connection_base;
 	class data_alias_connection_base;
 	template <class>	class alias_connection;

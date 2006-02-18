@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.2.24.1 2006/02/17 05:07:25 fang Exp $
+	$Id: instance.h,v 1.2.24.2 2006/02/18 04:34:20 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -21,13 +21,8 @@ namespace HAC {
 namespace entity {
 	class param_expression_assignment;
 	class aliases_connection_base;
-#if SUBTYPE_PORT_CONNECTION
 	class port_connection_base;
 	class meta_instance_reference_base;
-#else
-	class port_connection;
-	class simple_meta_instance_reference_base;
-#endif
 }
 namespace parser {
 using util::good_bool;
@@ -270,7 +265,7 @@ public:
  */
 class connection_statement : public instance_management, public actuals_base {
 public:
-#if SUBTYPE_PORT_CONNECTION && DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
+#if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 	typedef	entity::port_connection_base		result_type;
 	typedef	entity::meta_instance_reference_base	inst_ref_arg_type;
 #else

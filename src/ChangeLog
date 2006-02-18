@@ -5,6 +5,10 @@
 
 2006-02-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-07:
+	  Committed SUBTYPE_PORT_CONNECTION -> 1, (-250 LoC).
+
+
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-06:
 	  Committed WANT_PARAM_INSTANTIATION_STATEMENT_BASE -> 0.  (-100 LoC)
 

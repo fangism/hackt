@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.5.18.1 2006/02/17 05:07:43 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.5.18.2 2006/02/18 04:34:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -42,10 +42,7 @@
 #if DECOUPLE_INSTANCE_REFERENCE_HIERARCHY
 #include "Object/ref/meta_instance_reference_subtypes.tcc"
 #endif
-
-#if SUBTYPE_PORT_CONNECTION
 #include "Object/unroll/port_connection_base.h"
-#endif
 
 namespace util {
 using HAC::entity::int_tag;

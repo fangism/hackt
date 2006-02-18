@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.1.2.1 2006/02/17 05:07:46 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.1.2.2 2006/02/18 04:34:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -27,9 +27,7 @@
 #include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/ref/inst_ref_implementation.h"
-#if SUBTYPE_PORT_CONNECTION
 #include "Object/unroll/port_connection.h"
-#endif
 #include "util/stacktrace.h"
 #include "util/wtf.h"
 
@@ -635,21 +633,14 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBTYPE_PORT_CONNECTION
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 excl_ptr<port_connection_base>
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::make_port_connection_private(
 		const count_ptr<const meta_instance_reference_base>& r) const {
 	INVARIANT(r == this);
-#if 1
 	return substructure_implementation_policy::make_port_connection(
 		r.template is_a<const this_type>());
-#else
-	return excl_ptr<port_connection_base>(
-		new port_connection<Tag>(r.template is_a<const this_type>()));
-#endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
