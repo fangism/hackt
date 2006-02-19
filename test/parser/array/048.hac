@@ -1,0 +1,9 @@
+// "048.hac"
+// should fail: mismatched dimensions of subarrays referenced.
+
+bool x[2];
+bool y;
+
+bool z[2];
+z = {x, y};
+

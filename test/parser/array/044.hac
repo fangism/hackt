@@ -4,6 +4,9 @@
 
 pbool x, y, z;
 
+x = true;
+y = false;
+
 pbool w[2];
 w = {x, y};
 

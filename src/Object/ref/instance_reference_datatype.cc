@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.5.16.1 2006/02/19 03:53:08 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.5.16.2 2006/02/19 06:09:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -21,6 +21,7 @@
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
+#include "Object/ref/aggregate_meta_instance_reference.tcc"
 #include "Object/expr/int_expr.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/enum_expr.h"
@@ -210,6 +211,14 @@ template class member_meta_instance_reference<bool_tag>;
 template class member_meta_instance_reference<int_tag>;
 template class member_meta_instance_reference<enum_tag>;
 template class member_meta_instance_reference<datastruct_tag>;
+
+#if 0
+// soon...
+template class aggregate_meta_instance_reference<bool_tag>;
+template class aggregate_meta_instance_reference<int_tag>;
+template class aggregate_meta_instance_reference<enum_tag>;
+template class aggregate_meta_instance_reference<datastruct_tag>;
+#endif
 
 // and my work is done!
 //=============================================================================

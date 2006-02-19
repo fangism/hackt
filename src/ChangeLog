@@ -5,7 +5,14 @@
 
 2006-02-18	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-77-8-aggregate-01-03-merged--ref-11:
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-04:
+	  Trimmed unnecessary methods from aggregate reference classes.
+	  Implemented appending of subreferences with dimension-only checking.
+		Packed-size checking is done only at unroll-time.  
+	  Added some simple parse test cases to parser/array.  
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-03-merged-ref-11:
 	  Merge of instance reference rework from child branch, 
 		-ref, revision -11.  (Major code surgery.)  
 

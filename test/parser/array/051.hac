@@ -1,0 +1,9 @@
+// "051.hac"
+// copy-modified from "050.hac"
+// should fail, incorrect dimensions of subarray reference
+
+bool x;
+bool y;
+
+bool z[2][2] = {x, y};
+

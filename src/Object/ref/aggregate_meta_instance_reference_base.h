@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference_base.h"
-	$Id: aggregate_meta_instance_reference_base.h,v 1.1.2.1 2006/02/13 21:05:12 fang Exp $
+	$Id: aggregate_meta_instance_reference_base.h,v 1.1.2.2 2006/02/19 06:09:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_BASE_H__
@@ -32,6 +32,10 @@ protected:
 	bool					_is_concatenation;
 
 	aggregate_meta_instance_reference_base() { }
+
+	aggregate_meta_instance_reference_base(const bool b) :
+		_is_concatenation(b) { }
+
 public:
 virtual	~aggregate_meta_instance_reference_base() { }
 

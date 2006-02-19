@@ -1,0 +1,10 @@
+// "055.hac"
+// copy-modified from "050.hac"
+// should pass parsing but fail unrolling
+
+pbool x[2];
+pbool y[3];
+
+pbool z[2][2];
+z = {x, y};	// error: got [2] and [3]
+

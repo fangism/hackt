@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.5.2.3 2006/02/19 03:52:42 fang Exp $
+	$Id: expr.cc,v 1.5.2.4 2006/02/19 06:09:02 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -396,8 +396,9 @@ expr_list::make_aggregate_value_reference(const checked_meta_exprs_type& ex,
 	for (++i; i!=e; ++i, ++j) {
 		const meta_expr_return_type mi(*i);
 		if (!mi) {
+			// could be error in construction, or wrong type.
 			cerr << "Error in subreference at position " << j <<
-				"cannot construct aggregate value reference."
+				", cannot construct aggregate value reference."
 				<< endl;
 			return return_type(NULL);
 		}
@@ -2084,7 +2085,6 @@ array_construction::check_nonmeta_expr(const context& c) const {
  */
 expr::generic_meta_return_type
 array_construction::check_meta_generic(const context& c) const {
-	FINISH_ME(Fang);
 	typedef	expr::generic_meta_return_type	return_type;
 	typedef	expr_list::checked_meta_generic_type	checked_array_type;
 	checked_array_type	temp;
@@ -2094,6 +2094,9 @@ array_construction::check_meta_generic(const context& c) const {
 	// going to use the first object to determine whether to construct
 	// aggregate value reference or aggregate instance reference
 	if (!first_obj->first && !first_obj->second) {
+		cerr << "Error checking first subreference of aggregate.  "
+			<< where(*ex) << endl;
+		return return_type();
 	} else if (first_obj->first) {
 		// then we have expressions and value references to combine
 		expr_list::checked_meta_exprs_type checked_exprs;
@@ -2103,7 +2106,7 @@ array_construction::check_meta_generic(const context& c) const {
 		ret(expr_list::make_aggregate_value_reference(
 				checked_exprs, false));
 		if (!ret) {
-			cerr << "Error building aggregate value reference."
+			cerr << "Error building aggregate value reference.  "
 				<< where(*ex) << endl;
 		}
 		return return_type(ret, inst_ref_meta_return_type(NULL));
@@ -2117,7 +2120,7 @@ array_construction::check_meta_generic(const context& c) const {
 		ret(inst_ref_expr_list::make_aggregate_instance_reference(
 				checked_refs, false));
 		if (!ret) {
-			cerr << "Error building aggregate instance reference."
+			cerr << "Error building aggregate instance reference.  "
 				<< where(*ex) << endl;
 		}
 		return return_type(meta_expr_return_type(NULL), ret);

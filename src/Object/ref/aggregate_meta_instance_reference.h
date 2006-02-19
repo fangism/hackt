@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.1.2.2 2006/02/13 21:05:12 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.1.2.3 2006/02/19 06:09:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -53,7 +53,7 @@ public:
 	~aggregate_meta_instance_reference();
 
 	ostream&
-	what(ostream&);
+	what(ostream&) const;
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
@@ -69,15 +69,6 @@ public:
 
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
-
-	bool
-	may_be_densely_packed(void) const;
-
-	bool
-	must_be_densely_packed(void) const;
-
-	bool
-	has_static_constant_dimensions(void) const;
 
 	bool
 	may_be_type_equivalent(const meta_instance_reference_base&) const;

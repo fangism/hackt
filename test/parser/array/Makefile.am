@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.10.10.2 2006/02/19 03:53:34 fang Exp $
+#	$Id: Makefile.am,v 1.10.10.3 2006/02/19 06:09:06 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -8,7 +8,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	011 012 014 017 018 019 \
 	020 021 022 023 024 025 026 027 028 \
 	030 031 032 033 034 035 036 \
-	042
+	042 \
+	052 053
 
 BISON_OUTPUTS += 042
 
@@ -47,7 +48,8 @@ HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 # nothing worth cflat-ing
 
 # test-cases to process
-EXTRA_DIST += 043.hac 044.hac 045.hac
+EXTRA_DIST += 043.hac 044.hac 045.hac 046.hac 047.hac \
+	048.hac 049.hac 050.hac 051.hac 054.hac 055.hac
 
 include $(top_srcdir)/test/Make.test-tail
 
