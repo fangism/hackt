@@ -4,25 +4,25 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	7	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	43
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
 	16	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -33,7 +33,6 @@ In namespace "", we have: {
   0 typedefs
   Instances:
     x = bool^1 x with indices: {
-      [$i..$i]
     }
       unrolled indices: {
         0 = ::x[1] 

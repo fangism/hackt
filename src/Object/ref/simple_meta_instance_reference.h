@@ -2,12 +2,13 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.9.14.1 2006/02/13 21:05:14 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.9.14.2 2006/02/19 03:53:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 
+#include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/simple_meta_instance_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -18,6 +19,8 @@
 namespace HAC {
 namespace entity {
 using util::packed_array_generic;
+
+template <bool>	struct simple_meta_instance_reference_implementation;
 
 //=============================================================================
 #define	SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE		\
@@ -46,26 +49,31 @@ class simple_meta_instance_reference :
 	friend struct simple_meta_instance_reference_implementation;
 #endif
 	typedef	SIMPLE_META_INSTANCE_REFERENCE_CLASS	this_type;
+public:
+	typedef	class_traits<Tag>		traits_type;
 protected:
-	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
+	typedef	typename traits_type::meta_instance_reference_parent_type
 						parent_type;
+	typedef	simple_meta_instance_reference_implementation
+			<traits_type::has_substructure>
+					substructure_implementation_policy;
 public:
 	typedef	simple_meta_instance_reference_base	common_base_type;
 	/// the instance collection base type
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
 	/// the type of alias element contained by instance collections
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
 	typedef	never_ptr<const instance_alias_base_type>
 					const_instance_alias_base_ptr_type;
 	/// the type of connections formed by the alias type
-	typedef	typename class_traits<Tag>::alias_connection_type
+	typedef	typename traits_type::alias_connection_type
 						alias_connection_type;
 	/// type used to unroll collections of instance aliases
-	typedef	typename class_traits<Tag>::alias_collection_type
+	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	/// pointer type for instance collections
 	typedef	never_ptr<const instance_collection_generic_type>
@@ -88,6 +96,21 @@ virtual	ostream&
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
+
+	ostream&
+	dump_type_size(ostream&) const;
+
+	never_ptr<const definition_base>
+	get_base_def(void) const;
+
+	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const;
+
+	size_t
+	dimensions(void) const;
+
+	good_bool
+	attach_indices(excl_ptr<index_list_type>&);
 
 private:
 	/**
@@ -134,6 +157,10 @@ private:
 	// need not be virtual, covers member_meta_instance_reference
 	count_ptr<aggregate_meta_instance_reference_base>
 	make_aggregate_meta_instance_reference_private(void) const;
+
+	excl_ptr<port_connection_base>
+	make_port_connection_private(
+		const count_ptr<const meta_instance_reference_base>&) const;
 
 protected:
 	// helper function, also used by member

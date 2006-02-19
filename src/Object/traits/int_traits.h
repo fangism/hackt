@@ -2,7 +2,7 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.8 2006/01/22 18:20:36 fang Exp $
+	$Id: int_traits.h,v 1.8.16.1 2006/02/19 03:53:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
@@ -45,7 +45,8 @@ struct class_traits<int_tag> {
 		typedef	entity::instance_array<tag_type,D>	type;
 	};
 
-	// later add instantiation_statement support...
+	typedef	instantiation_statement_base	instantiation_statement_parent_type;
+	typedef	data_instantiation_statement	instantiation_statement_type;
 
 	/**
 		Unit of state storage for integer data.

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.4 2006/02/10 21:50:34 fang Exp $
+	$Id: expr_base.h,v 1.4.2.1 2006/02/19 03:52:43 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -27,6 +27,9 @@ namespace entity {
 	class simple_datatype_nonmeta_value_reference;
 	class nonmeta_index_list;
 	class int_range_list;		// a.k.a. nonmeta_range_list
+	// from "Object/ref/meta_reference_union.h"
+	class meta_reference_union;
+	class const_meta_reference_union;
 namespace PRS {
 	class prs_expr;
 	class literal;
@@ -47,8 +50,7 @@ namespace parser {
 typedef	count_ptr<entity::meta_index_list>	range_list_meta_return_type;
 typedef	count_ptr<entity::nonmeta_index_list>	range_list_nonmeta_return_type;
 
-typedef	count_ptr<entity::meta_instance_reference_base>
-						inst_ref_meta_return_type;
+typedef	entity::meta_reference_union		inst_ref_meta_return_type;
 
 typedef	count_ptr<entity::nonmeta_instance_reference_base>
 						inst_ref_nonmeta_return_type;

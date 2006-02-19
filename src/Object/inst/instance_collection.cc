@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.14 2006/01/30 07:42:02 fang Exp $
+ 	$Id: instance_collection.cc,v 1.14.10.1 2006/02/19 03:52:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -24,6 +24,7 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/ref/simple_meta_instance_reference.h"
+#include "Object/ref/nonmeta_instance_reference_base.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
@@ -99,7 +100,8 @@ instance_collection_base::null(NULL);
 instance_collection_base::instance_collection_base(const scopespace& o, 
 		const string& n, const size_t d) : 
 		object(), owner(owner_ptr_type(&o)),
-		key(n), index_collection(), dimensions(d), 
+		key(n), 
+		dimensions(d), 
 		super_instance() {
 }
 
@@ -124,15 +126,10 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 			// loop induction variables don't have unroll statements
 			o << "(loop induction pint)";
 		} else {
-			// this dump is appropriate for pre-unrolled, 
-			// unresolved dumping
-			// get_type_ref just grabs the type of the 
-			// first statement
-			if (!index_collection.empty()) {
-				get_type_ref()->dump(o);
-			} else {
-				o << "(not unrolled yet)";
-			}
+			const count_ptr<const fundamental_type_reference>
+				t(get_type_ref());
+			if (t)	t->dump(o);
+			else	o << "(not unrolled yet)";
 		}
 	}
 	return o << ' ' << key;
@@ -172,42 +169,13 @@ instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 #else
 	dump_collection_only(o);
 #endif
-
 	if (dimensions) {
-#if 0
-		// invariant not true for instance_collections that belong
-		// to footprints' workspaces
-		INVARIANT(!index_collection.empty());
-#endif
+		// TODO: get rid of this, and update tests
+		// this was kept temporarily for the sake of easing
+		// test difference analysis
 		o << " with indices: {" << endl;
-	{	// indentation scope
-		INDENT_SECTION(o);
-		index_collection_type::const_iterator
-			i(index_collection.begin());
-		const index_collection_type::const_iterator
-			e(index_collection.end());
-		for ( ; i!=e; i++) {
-			NEVER_NULL(*i);
-			const index_collection_item_ptr_type
-				ind((*i)->get_indices());
-			// ind can be NULL?
-			NEVER_NULL(ind);
-			// use owner scope as context?
-			ind->dump(o << auto_indent, 
-				expr_dump_context::default_value);
-			if (i->is_conditional()) {
-				o << " (predicated)";
-			}
-			o << endl;
-		}
-	}	// end indentation scope
 		o << auto_indent << '}' << endl;
 	} else {
-#if 0
-		// invariant not true for instance_collections that belong
-		// to footprints' workspaces
-		INVARIANT(index_collection.size() == 1);
-#endif
 		// the list contains exactly one instantiation statement
 	}
 	return o;
@@ -306,130 +274,6 @@ instance_collection_base::hierarchical_depth(void) const {
 never_ptr<const definition_base>
 instance_collection_base::get_base_def(void) const {
 	return get_type_ref()->get_base_def();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	NOTE: can't call this on formal template parameter collections, 
-	because they don't have an index collection.
-	TODO: subtype index collections.  
- */
-count_ptr<const fundamental_type_reference>
-instance_collection_base::get_type_ref(void) const {
-#if 1
-	// HERE
-	// no longer true with conditional declarations!
-	// but first declaration is needed for type, even if it is conditional!
-	// thus we need conditionally predicated index_collections?
-	// ALSO not true for loop induction variables
-	INVARIANT(!index_collection.empty());
-	// INVARIANT(!index_collection.empty() || is_loop_variable());
-#endif
-	return (*index_collection.begin())->get_type_ref();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Grabs the current top of the deque of the index collection, 
-	so the encapsulating instance reference know what
-	instances were visible at the time of reference.  
-	QUESTION: what if it's empty because it is not collective?
-		will begin() = end()? should be...
- */
-instantiation_state
-instance_collection_base::current_collection_state(void) const {
-	return index_collection.begin();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	By "end", we mean the beginning of the collection state deque, 
-	the first item added to the the collection stack.  
-	Can't actually dereference the returned iterator, 
-	it's only useful for ending looped iterations.  
- */
-instantiation_state
-instance_collection_base::collection_state_end(void) const {
-	return index_collection.end();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Will need two flavors: may and must?
-	
-	\return true if the new range *definitely* overlaps with previous
-		static constant ranges.  Comparisons with dynamic ranges
-		will conservatively return false; they will be resolved
-		at unroll-time.  Also returns true if there was an error.  
-		By "true", we mean a valid precise range of overlap.  
- */
-const_range_list
-instance_collection_base::detect_static_overlap(
-		const index_collection_item_ptr_type& r) const {
-	NEVER_NULL(r);
-	INVARIANT(r->dimensions() == dimensions);
-#if 0
-	// DEBUG
-	cerr << "In instance_collection_base::detect_static_overlap with this = "
-		<< this << endl;
-	r->dump(cerr << "index_collection_item_ptr_type r = ") << endl;
-#endif
-	if (r.is_a<const const_range_list>()) {
-	index_collection_type::const_iterator i(index_collection.begin());
-	const index_collection_type::const_iterator e(index_collection.end());
-	for ( ; i!=e; i++) {
-	if (!i->is_conditional()) {
-		// return upon first overlap error
-		// later accumulate all overlaps.  
-		const const_range_list
-			ovlp((*i)->get_indices()->static_overlap(*r));
-		if (!ovlp.empty()) {
-			return ovlp;
-		}
-		// else keep checking...
-	}	// else is predicated, don't bother checking.
-	}
-	// if this point reached, then return false
-	} // else just return false, can't know statically without analysis
-	return const_range_list();	// empty constructed list
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: this can only be done with non-formals.  Check this.  
-	If this instance is a collection, add the new range of indices
-	which may be sparse or dense.  
-
-	TODO: type-check here?
-	see scopespace::add_instance's definition body
-	2005-07-07: need to register type of the first declaration up-front, 
-		i.e. its strict parameters, and relaxed parameters if available
-
-	This is only applicable if this instantiation was initialized
-	as a collective.  
-	Pre-condition: The dimensions better damn well match!  
-	\param r the instantiation statement with index ranges to be added.  
-	\return Overlapping range (true) if error condition. 
-	\sa detect_static_overlap
- */
-const_range_list
-instance_collection_base::add_instantiation_statement(
-		const index_collection_type::value_type& r) {
-	STACKTRACE("instance_collection_base::add_instantiation_statement()");
-	NEVER_NULL(r);
-	const index_collection_item_ptr_type i(r->get_indices());
-	INVARIANT(dimensions || index_collection.empty());	// catches 0-D
-	// TYPE CHECK!!!
-	const_range_list overlap;
-	if (i) {
-		INVARIANT(dimensions == i->dimensions());
-		overlap = detect_static_overlap(i);
-	} else {
-		INVARIANT(!dimensions);
-	}
-	// can the following accept NULL?
-	index_collection.push_back(r);
-	return overlap;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -555,6 +399,8 @@ instance_collection_base::port_formal_equivalent(const this_type& b) const {
 	parameter sizes (dimension) is dynamic.  
 	\param b the other template formal instantiation to compare against.  
 	\return true if dimensionality and sizes are equal.  
+	TODO: need to account for relaxed parameters of physical
+		instance collections?
  */
 bool
 instance_collection_base::formal_size_equivalent(const this_type& b) const {
@@ -562,64 +408,13 @@ instance_collection_base::formal_size_equivalent(const this_type& b) const {
 		// useful error message here: dimensions don't match
 		return false;
 	}
-	// formal instances can only be declared once, i.e. 
-	// can't add instances to their collection.
-	// and they must be dense arrays.  
-	const size_t this_coll = index_collection.size();
-	const size_t b_coll = b.index_collection.size();
-	INVARIANT(this_coll <= 1);
-	INVARIANT(b_coll <= 1);
-	if (this_coll != b_coll) {
-		// one is scalar, the other is array
-		return false;
-	}
-	if (this_coll == 1) {
-		// compare their collections
-		const index_collection_type::const_iterator
-			i(index_collection.begin());
-		const index_collection_type::const_iterator
-			j(b.index_collection.begin());
-		// difficult: what if some dimensions are not static?
-		// depends on some other former parameter?
-		// This is when it would help to walk the 
-		// former template formals list when visited with the second.  
-
-		// NEW (2005-01-30):
-		// For template, need notion of positional parameter 
-		// equivalence -- expressions referring to earlier
-		// formal parameters.  
-		// is count_ptr<meta_range_list>
-		const index_collection_item_ptr_type ii((*i)->get_indices());
-		const index_collection_item_ptr_type ji((*j)->get_indices());
-		if (ii && ji) {
-			return ii->must_be_formal_size_equivalent(*ji);
-		} else 	return (!ii && !ji);
-			// both NULL is ok too
-	} else {
-		// both are scalar, single instances
-		return true;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	\return true if any of the instantiation statements
-		contain parameters that are dependent on 
-		template formal parameters.  
- */
-bool
-instance_collection_base::is_template_dependent(void) const {
-	typedef	index_collection_type::const_iterator	const_index_iterator;
-	const_index_iterator i(index_collection.begin());
-	const const_index_iterator e(index_collection.end());
-	for ( ; i!=e; i++) {
-		const index_collection_item_ptr_type ii((*i)->get_indices());
-		if (ii && ii->is_template_dependent()) {
-			return true;
-		}
-		// else keep checking
-	}
-	return false;
+	const index_collection_item_ptr_type
+		ii(this->get_initial_instantiation_indices()),
+		ji(b.get_initial_instantiation_indices());
+	if (ii && ji) {
+		return ii->must_be_formal_size_equivalent(*ji);
+	} else 	return (!ii && !ji);
+	// both NULL is ok too
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -638,73 +433,9 @@ instance_collection_base::create_super_instance(footprint& f) {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Utility function for walking index collection list
-	and collecting pointers.  
- */
-inline
-void
-instance_collection_base::collect_index_collection_pointers(
-		persistent_object_manager& m) const {
-//	STACKTRACE_PERSISTENT("instance_collection_base::collect_index_collection_pointers()");
-#if 0
-	// keep this around for debugging, does same thing, but readable in gdb
-	index_collection_type::const_iterator i(index_collection.begin());
-	const index_collection_type::const_iterator e(index_collection.end());
-	for ( ; i!=e; i++) {
-		STACKTRACE_PERSISTENT("for all index_collection:");
-		NEVER_NULL(*i);
-#if 0
-		(*i)->what(STACKTRACE_STREAM << "at " << &**i << ", ") << endl;
-#endif
-		(*i)->collect_transient_info(m);
-	}
-#else
-	for_each(index_collection.begin(), index_collection.end(), 
-	unary_compose_void(
-		bind2nd_argval_void(mem_fun_ref(
-			&instance_management_base::collect_transient_info), m), 
-		dereference<never_ptr<const instance_management_base> >()
-	)
-	);
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_collection_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-//	STACKTRACE_PERSISTENT("instance_collection_base::collect_transient_info_base()");
-	collect_index_collection_pointers(m);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Write out serial list of pointers to index collection items, 
-	with pointers translated into indicies.  
-	Does NOT save the dimensions -- it is set upon reconstruction.
- */
-inline
-void
-instance_collection_base::write_index_collection_pointers(
-		const persistent_object_manager& m, ostream& o) const {
-	STACKTRACE_PERSISTENT("inst_coll_base::write_index_collection_pointers()");
-#if 0
-	// no longer simple pointer list, is now predicated
-	m.write_pointer_list(o, index_collection);
-#else
-{
-	typedef	index_collection_type::const_iterator	const_iterator;
-	write_value(o, index_collection.size());
-	const_iterator i(index_collection.begin());
-	const const_iterator e(index_collection.end());
-	for ( ; i!=e; i++) {
-		m.write_pointer(o,
-			static_cast<const predicated_inst_stmt_ptr::parent_ptr_type&>(*i));
-		write_value(o, i->is_conditional());
-	}
-}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -713,35 +444,6 @@ instance_collection_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, owner);
 	write_string(o, key);
-	write_index_collection_pointers(m, o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Loads serial list of pointers into index collection items, 
-	with indices translated into pointers.  
-	Does NOT restore dimensions -- it is set at reconstruction.  
- */
-inline
-void
-instance_collection_base::load_index_collection_pointers(
-		const persistent_object_manager& m, istream& i) {
-	STACKTRACE_PERSISTENT("inst_coll_base::load_index_collection_pointers()");
-#if 0
-	// no longer simple pointer list, is now predicated
-	m.read_pointer_list(i, index_collection);
-#else
-	size_t s;
-	read_value(i, s);
-	size_t j=0;
-	for ( ; j<s; j++) {
-		predicated_inst_stmt_ptr::parent_ptr_type p;
-		m.read_pointer(i, p);
-		bool c;
-		read_value(i, c);
-		index_collection.push_back(predicated_inst_stmt_ptr(p, c));
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -750,7 +452,6 @@ instance_collection_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, owner);
 	read_string(i, const_cast<string&>(key));
-	load_index_collection_pointers(m, i);
 }
 
 //=============================================================================
@@ -790,6 +491,25 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 		}
 	}
 	return o;
+}
+
+//=============================================================================
+// class param_value_collection method definitions
+
+#if 0
+count_ptr<meta_instance_reference_base>
+param_value_collection::make_meta_instance_reference(void) const {
+	ICE_NEVER_CALL(cerr);
+	return count_ptr<meta_instance_reference_base>(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+count_ptr<nonmeta_instance_reference_base>
+param_value_collection::make_nonmeta_instance_reference(void) const {
+	ICE_NEVER_CALL(cerr);
+	return count_ptr<nonmeta_instance_reference_base>(NULL);
 }
 
 //=============================================================================

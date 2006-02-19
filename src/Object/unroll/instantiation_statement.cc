@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.11 2006/02/10 21:50:44 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.11.2.1 2006/02/19 03:53:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -48,7 +48,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/channel_instantiation_statement.h"
 #include "Object/unroll/process_instantiation_statement.h"
 #include "Object/unroll/instantiation_statement.tcc"
-#include "Object/unroll/param_instantiation_statement.tcc"
 
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
@@ -279,19 +278,11 @@ instantiation_statement_base::load_object_base(
 }
 
 //=============================================================================
-// class param_instantiation_statement_base method definitions
-
-param_instantiation_statement_base::param_instantiation_statement_base(
-		const index_collection_item_ptr_type& i) :
-		parent_type(i) {
-}
-
-//=============================================================================
 // explicit template class instantiations
 
-template class param_instantiation_statement<pbool_tag>;
-template class param_instantiation_statement<pint_tag>;
-template class param_instantiation_statement<preal_tag>;
+template class instantiation_statement<pbool_tag>;
+template class instantiation_statement<pint_tag>;
+template class instantiation_statement<preal_tag>;
 template class instantiation_statement<datatype_tag>;
 template class instantiation_statement<channel_tag>;
 template class instantiation_statement<process_tag>;

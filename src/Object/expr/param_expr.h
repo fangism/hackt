@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.9.2.1 2006/02/13 21:05:11 fang Exp $
+	$Id: param_expr.h,v 1.9.2.2 2006/02/19 03:52:54 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -53,13 +53,6 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
-virtual	bool
-	has_static_constant_dimensions(void) const = 0;
-
-// only call this if dimensions are non-zero and sizes are static constant.  
-virtual	const_range_list
-	static_constant_dimensions(void) const = 0;
-
 /** is initialized if is resolved to constant or some other formal */
 virtual bool
 	may_be_initialized(void) const = 0;
@@ -80,19 +73,8 @@ virtual bool
 virtual bool
 	is_relaxed_formal_dependent(void) const = 0;
 
-virtual bool
-	is_template_dependent(void) const = 0;
-
 virtual	count_ptr<const const_param>
 	static_constant_param(void) const = 0;
-
-/** doesn't depend on loop variables */
-virtual bool
-	is_loop_independent(void) const = 0;
-
-/** doesn't depend on conditional variables */
-virtual bool
-	is_unconditional(void) const = 0;
 
 	static
 	excl_ptr<param_expression_assignment>

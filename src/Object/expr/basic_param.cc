@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.10.2.1 2006/02/13 21:05:11 fang Exp $
+ 	$Id: basic_param.cc,v 1.10.2.2 2006/02/19 03:52:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -42,6 +42,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/meta_instance_reference_subtypes.h"
 	// for aggregate_value_references' base
 #include "Object/ref/aggregate_meta_value_reference.h"
+#include "Object/ref/meta_value_reference.h"
 
 #include "common/TODO.h"
 

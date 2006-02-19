@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.7.2.1 2006/02/13 21:05:11 fang Exp $
+	$Id: pbool_expr.h,v 1.7.2.2 2006/02/19 03:52:55 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -58,12 +58,6 @@ virtual	size_t
 
 	GET_DATA_TYPE_REF_PROTO;
 
-virtual	bool
-	has_static_constant_dimensions(void) const = 0;
-
-virtual	const_range_list
-	static_constant_dimensions(void) const = 0;
-
 virtual bool
 	may_be_initialized(void) const = 0;
 
@@ -84,9 +78,6 @@ virtual bool
 
 virtual	count_ptr<const const_param>
 	static_constant_param(void) const;
-
-virtual bool
-	is_loop_independent(void) const = 0;
 
 virtual value_type
 	static_constant_value(void) const = 0;

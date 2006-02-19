@@ -1,5 +1,5 @@
 // "018.hac" should fail: statically detected overlap
-
+// now passes parsing, fail at unrolling
 pint M = 2;
 pint foo[M];
 

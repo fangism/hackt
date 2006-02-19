@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.3 2006/01/22 06:52:54 fang Exp $
+	$Id: range.cc,v 1.3.16.1 2006/02/19 03:52:43 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.3 2006/01/22 06:52:54 fang Exp $
+	$Id: range.cc,v 1.3.16.1 2006/02/19 03:52:43 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -665,8 +665,6 @@ dense_range_list::check_formal_dense_ranges(const context& c) const {
 			}
 			// can it be initialized, but non-const?
 			// yes, if a dimension depends on another formal param
-			INVARIANT(p->is_loop_independent());
-			INVARIANT(p->is_unconditional());
 		}
 	}
 	if (err.bad) {

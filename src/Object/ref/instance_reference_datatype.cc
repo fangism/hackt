@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.5 2006/01/22 18:20:21 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.5.16.1 2006/02/19 03:53:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -27,7 +27,7 @@
 #include "Object/expr/struct_expr.h"
 #include "Object/expr/const_range.h"
 
-// intriduced by canonical_type
+// introduced by canonical_type
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
@@ -39,6 +39,8 @@
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/parameterless_collection_type_manager.h"
+#include "Object/ref/meta_instance_reference_subtypes.tcc"
+#include "Object/unroll/port_connection_base.h"
 
 namespace util {
 using HAC::entity::int_tag;
@@ -186,6 +188,11 @@ struct data_type_resolver<datastruct_tag> {
 
 //=============================================================================
 // explicit template instantiations
+
+template class meta_instance_reference<bool_tag>;
+template class meta_instance_reference<int_tag>;
+template class meta_instance_reference<enum_tag>;
+template class meta_instance_reference<datastruct_tag>;
 
 template class simple_meta_instance_reference<bool_tag>;
 template class simple_meta_instance_reference<int_tag>;

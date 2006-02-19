@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.8 2006/02/11 03:56:49 fang Exp $
+	$Id: const_param_expr_list.h,v 1.8.2.1 2006/02/19 03:52:50 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -114,12 +114,6 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
-
-	bool
-	is_template_dependent(void) const { return false; }
-
-	bool
-	is_loop_independent(void) const { return true; }
 
 	unroll_resolve_return_type
 	unroll_resolve(const unroll_context&) const;

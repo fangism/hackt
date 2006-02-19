@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.100.2.2 2006/02/13 21:05:06 fang Exp $
+#	$Id: Makefile.am,v 1.100.2.3 2006/02/19 03:52:41 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -282,6 +282,7 @@ OBJECT_TCC_FILES = \
 	Object/inst/state_instance.tcc \
 	Object/ref/aggregate_meta_instance_reference.tcc \
 	Object/ref/aggregate_meta_value_reference.tcc \
+	Object/ref/meta_instance_reference_subtypes.tcc \
 	Object/ref/simple_meta_instance_reference.tcc \
 	Object/ref/simple_nonmeta_instance_reference.tcc \
 	Object/ref/member_meta_instance_reference.tcc \
@@ -291,7 +292,7 @@ OBJECT_TCC_FILES = \
 	Object/unroll/alias_connection.tcc \
 	Object/unroll/expression_assignment.tcc \
 	Object/unroll/instantiation_statement.tcc \
-	Object/unroll/param_instantiation_statement.tcc \
+	Object/unroll/port_connection.tcc \
 	Object/unroll/unroll_context.tcc \
 	Object/module.tcc \
 	Object/global_entry.tcc \
@@ -308,7 +309,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/common/multikey_index.h \
 	Object/common/util_types.h \
 	Object/common/scopespace.h \
-	Object/common/predicated_inst_stmt_ptr.h \
 	Object/traits/class_traits_fwd.h \
 	Object/traits/classification_tags.h \
 	Object/traits/chan_traits.h \
@@ -417,14 +417,18 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/lang/PRS_footprint_expr_pool_fwd.h \
 	Object/lang/PRS_footprint_macro.h \
 	Object/lang/PRS_footprint_rule.h \
+	Object/ref/meta_reference_union.h \
 	Object/ref/aggregate_meta_instance_reference_base.h \
+	Object/ref/aggregate_meta_instance_reference.h \
 	Object/ref/aggregate_meta_value_reference_base.h \
+	Object/ref/aggregate_meta_value_reference.h \
 	Object/ref/member_meta_instance_reference.h \
 	Object/ref/meta_instance_reference_base.h \
 	Object/ref/meta_instance_reference_subtypes.h \
+	Object/ref/meta_value_reference_base.h \
+	Object/ref/meta_value_reference.h \
 	Object/ref/nonmeta_instance_reference_base.h \
 	Object/ref/nonmeta_instance_reference_subtypes.h \
-	Object/ref/simple_datatype_meta_instance_reference_base.h \
 	Object/ref/simple_datatype_nonmeta_value_reference.h \
 	Object/ref/simple_meta_instance_reference.h \
 	Object/ref/simple_meta_instance_reference_base.h \
@@ -432,7 +436,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/ref/simple_nonmeta_instance_reference.h \
 	Object/ref/simple_nonmeta_instance_reference_base.h \
 	Object/ref/simple_nonmeta_value_reference.h \
-	Object/ref/simple_param_meta_value_reference.h \
 	Object/ref/inst_ref_implementation_fwd.h \
 	Object/ref/inst_ref_implementation.h \
 	Object/type/builtin_channel_type_reference.h \
@@ -454,7 +457,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/instantiation_statement_type_ref_default.h \
 	Object/unroll/param_expression_assignment.h \
 	Object/unroll/param_instantiation_statement.h \
-	Object/unroll/param_instantiation_statement_base.h \
+	Object/unroll/port_connection_base.h \
 	Object/unroll/port_connection.h \
 	Object/unroll/process_instantiation_statement.h \
 	Object/unroll/sequential_scope.h \

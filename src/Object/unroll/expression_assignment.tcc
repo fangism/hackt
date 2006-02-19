@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.8 2006/01/30 07:42:05 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.8.10.1 2006/02/19 03:53:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -24,6 +24,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/common/multikey_index.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/ref/meta_value_reference.h"
 
 #include "util/wtf.h"
 #include "util/what.h"
@@ -50,7 +51,7 @@ using util::persistent_traits;
 
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 typename EXPRESSION_ASSIGNMENT_CLASS::pool_type
-EXPRESSION_ASSIGNMENT_CLASS::pool(class_traits<Tag>::assignment_chunk_size);
+EXPRESSION_ASSIGNMENT_CLASS::pool(traits_type::assignment_chunk_size);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
@@ -184,7 +185,7 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 	dest_ptr_type pb(e.template is_a<value_reference_type>());
 	if (!pb) {
 		cerr << "ERROR: Cannot initialize a " <<
-			class_traits<Tag>::tag_name << " with a ";
+			traits_type::tag_name << " with a ";
 		e->what(cerr) << " expression!" << endl;
 		err.bad = true;
 	} else if (!pb->initialize(src).good) {	// type check
@@ -214,7 +215,7 @@ EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i,
 		if ((*i)->assign_value_collection(v, c).bad) {
 			// just re-using same old lame error message
 			cerr << "ERROR: something went wrong in " <<
-				class_traits<Tag>::tag_name <<
+				traits_type::tag_name <<
 				" assignment." << endl;
 			return good_bool(false);
 		}
@@ -239,7 +240,7 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 		this->src->dump(
 			cerr << "ERROR: failed to resolve source values of ",
 			expr_dump_context::error_mode) <<
-			" in " << class_traits<Tag>::tag_name <<
+			" in " << traits_type::tag_name <<
 			" assignment." << endl;
 		return good_bool(false);
 	}
@@ -261,15 +262,6 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 		return assign_dests(this->dests.begin(), this->dests.end(),
 			*bunch_of_consts, c);
 	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
-good_bool
-EXPRESSION_ASSIGNMENT_CLASS::unroll_meta_evaluate(
-		const unroll_context& c) const {
-	// would've exited upon error
-	return this->unroll(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

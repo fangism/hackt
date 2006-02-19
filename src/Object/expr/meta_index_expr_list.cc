@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.9 2006/02/12 03:09:44 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.9.2.1 2006/02/19 03:52:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -258,18 +258,6 @@ const_index_list::must_be_initialized(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 const_index_list::is_static_constant(void) const {
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-const_index_list::is_loop_independent(void) const {
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-const_index_list::is_unconditional(void) const {
 	return true;
 }
 
@@ -593,42 +581,6 @@ dynamic_meta_index_list::is_relaxed_formal_dependent(void) const {
 		}
 	}
 	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::is_template_dependent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if ((*i)->is_template_dependent())
-			return true;
-	}
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::is_loop_independent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if (!(*i)->is_loop_independent())
-			return false;
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::is_unconditional(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if (!(*i)->is_unconditional())
-			return false;
-	}
-	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

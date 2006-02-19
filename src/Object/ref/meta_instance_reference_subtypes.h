@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.4 2006/01/22 18:20:24 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.4.16.1 2006/02/19 03:53:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -11,7 +11,7 @@
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/traits/class_traits_fwd.h"
 // might as well include it here
-#include "Object/ref/nonmeta_instance_reference_subtypes.h"
+// #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 
 namespace HAC {
 namespace entity {
@@ -21,17 +21,26 @@ namespace entity {
 #define	META_INSTANCE_REFERENCE_CLASS		meta_instance_reference<Tag>
 
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-class meta_instance_reference :
-	virtual public meta_instance_reference_base, 
-	virtual public class_traits<Tag>::nonmeta_instance_reference_base_type {
-	typedef	typename class_traits<Tag>::nonmeta_instance_reference_base_type
-						nonmeta_parent_type;
+class meta_instance_reference : public meta_instance_reference_base {
 	typedef	META_INSTANCE_REFERENCE_CLASS	this_type;
 protected:
-	meta_instance_reference() : meta_instance_reference_base(), 
-		nonmeta_parent_type() { }
+	meta_instance_reference() : meta_instance_reference_base() { }
 public:
 virtual	~meta_instance_reference() { }
+
+virtual	size_t
+	dimensions(void) const = 0;
+
+	// consider sub-typing?
+virtual	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const = 0;
+
+	bool
+	may_be_type_equivalent(const meta_instance_reference_base&) const;
+
+	bool
+	must_be_type_equivalent(const meta_instance_reference_base&) const;
+
 };	// end class meta_instance_reference
 
 //=============================================================================

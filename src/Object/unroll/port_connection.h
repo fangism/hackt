@@ -2,21 +2,20 @@
 	\file "Object/unroll/port_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: port_connection.h,v 1.6 2006/01/30 07:42:06 fang Exp $
+	$Id: port_connection.h,v 1.6.10.1 2006/02/19 03:53:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PORT_CONNECTION_H__
 #define	__HAC_OBJECT_UNROLL_PORT_CONNECTION_H__
 
-#include <vector>
-#include "Object/unroll/meta_instance_reference_connection.h"
-#include "util/memory/count_ptr.h"
+#include "Object/traits/class_traits_fwd.h"
+#include "Object/unroll/port_connection_base.h"
+
+#define	PORT_CONNECTION_TEMPLATE_SIGNATURE		template <class Tag>
+#define	PORT_CONNECTION_CLASS				port_connection<Tag>
 
 namespace HAC {
 namespace entity {
-class simple_meta_instance_reference_base;
-using std::vector;
-class unroll_context;
 
 //=============================================================================
 /**
@@ -26,20 +25,23 @@ class unroll_context;
 	of the instance.  
 	Sub-type into process/data/channel?
  */
-class port_connection : public meta_instance_reference_connection {
-	typedef	port_connection				this_type;
+PORT_CONNECTION_TEMPLATE_SIGNATURE
+class port_connection : public port_connection_base {
+	typedef	PORT_CONNECTION_CLASS			this_type;
+public:
+	typedef	class_traits<Tag>			traits_type;
 protected:
-	typedef	meta_instance_reference_connection	parent_type;
-	typedef	parent_type::generic_inst_ptr_type	generic_inst_ptr_type;
-	typedef	vector<generic_inst_ptr_type>		inst_list_type;
+	typedef	port_connection_base			parent_type;
+
+	typedef	typename traits_type::simple_meta_instance_reference_type
+					simple_meta_instance_reference_type;
 	/**
 		The ported instance referenced must be a a scalar reference.  
 	 */
-	typedef	count_ptr<const simple_meta_instance_reference_base>
+	typedef	count_ptr<const simple_meta_instance_reference_type>
 							ported_inst_ptr_type;
 	/** should be reference to a simple instance, may be indexed.  */
 	ported_inst_ptr_type				ported_inst;
-	inst_list_type					inst_list;
 private:
 	port_connection();
 public:
@@ -55,16 +57,8 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
-	void
-	reserve(const size_t);
-
-	void
-	append_meta_instance_reference(const generic_inst_ptr_type& i);
-
 	good_bool
 	unroll(const unroll_context& ) const;
-
-	UNROLL_META_CONNECT_PROTO;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

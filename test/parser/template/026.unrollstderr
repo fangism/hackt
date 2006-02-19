@@ -5,23 +5,23 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	96
-	4	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	31
+	4	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
 	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
-	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	7	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
-	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	17	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

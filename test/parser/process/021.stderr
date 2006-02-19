@@ -14,10 +14,13 @@ in state #STATE#, possible rules are:
 	optional_template_specification : .  (#RULE#)
 	optional_definition_body : .  (#RULE#)
 acceptable tokens are: 
+	'!' (shift)
 	'(' (shift)
+	'-' (shift)
 	'[' (shift)
 	'{' (shift)
 	'}' (reduce)
+	'~' (shift)
 	ID (shift)
 	FLOAT (shift)
 	INT (shift)

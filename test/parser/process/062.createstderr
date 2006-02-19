@@ -4,14 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	58
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	308
-	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	34
+	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
+	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -19,17 +19,17 @@ Persistent Object Manager text dump:
 	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
+	22	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
 	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -37,22 +37,22 @@ Persistent Object Manager text dump:
 	33	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
 	34	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
-	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	56
-	43	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	69
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	43	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
 	44	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	49	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
@@ -65,7 +65,6 @@ In namespace "", we have: {
   0 typedefs
   Parameters:
     Q = pint^1 Q with indices: {
-      [0..1]
     }
       unrolled index-value pairs: {
         0 = 2
@@ -74,32 +73,26 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (defined) foo<
       pint<> N with indices: {
-        [0..1]
       }
 
       >(
         bool<> a with indices: {
-          [0..::foo::N[0]-1]
         }
 
         bool<> b with indices: {
-          [0..::foo::N[1]-1]
         }
 
       )
       In definition "foo", we have: {
       Parameters:
         N = pint<> N with indices: {
-          [0..1]
         }
 
       Instances:
         a = bool<> a with indices: {
-          [0..::foo::N[0]-1]
         }
 
         b = bool<> b with indices: {
-          [0..::foo::N[1]-1]
         }
 
       unroll sequence: 
@@ -140,14 +133,12 @@ In namespace "", we have: {
   Instances:
     poo = process foo<{2,3}>^0 poo (instantiated) = ::poo (1) (
       bool^1 a with indices: {
-        [0..::foo::N[0]-1]
       }
         unrolled indices: {
           0 = ::poo.a[0] (1) 
           1 = ::poo.a[1] (2) 
         }
       bool^1 b with indices: {
-        [0..::foo::N[1]-1]
       }
         unrolled indices: {
           0 = ::poo.b[0] (3) 

@@ -3,7 +3,7 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.8.2.2 2006/02/13 21:05:11 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.8.2.3 2006/02/19 03:52:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
@@ -22,6 +22,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/extern_templates.h"
 #include "Object/ref/simple_meta_value_reference.tcc"
 #include "Object/ref/aggregate_meta_value_reference.tcc"
+#include "Object/ref/meta_value_reference.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"

@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.6 2006/01/22 18:19:55 fang Exp $
+	$Id: pint_relational_expr.h,v 1.6.16.1 2006/02/19 03:52:56 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
@@ -82,12 +82,6 @@ public:
 	dimensions(void) const { return 0; }
 
 	bool
-	has_static_constant_dimensions(void) const { return true; }
-
-	const_range_list
-	static_constant_dimensions(void) const;
-
-	bool
 	may_be_initialized(void) const;
 
 	bool
@@ -98,15 +92,6 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
-
-	bool
-	is_template_dependent(void) const;
-
-	bool
-	is_loop_independent(void) const;
-
-	bool
-	is_unconditional(void) const;
 
 	value_type
 	static_constant_value(void) const;

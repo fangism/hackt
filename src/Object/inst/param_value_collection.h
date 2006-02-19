@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.8 2006/02/11 03:56:50 fang Exp $
+	$Id: param_value_collection.h,v 1.8.2.1 2006/02/19 03:53:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -18,6 +18,7 @@ namespace HAC {
 namespace entity {
 class const_param;
 class param_type_reference;
+class meta_value_reference_base;
 using util::memory::count_ptr;
 using util::bad_bool;
 using util::good_bool;
@@ -71,15 +72,26 @@ virtual	bool
 virtual	ostream&
 	dump_unrolled_values(ostream& o) const = 0;
 
+virtual	ostream&
+	dump_formal(ostream&, const unroll_context&) const = 0;
+
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
 virtual	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const = 0;
 
-virtual	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const = 0;
+// we want to dissociate values from instances
+// these should return NULL, as values are no longer instances
+public:
+virtual	count_ptr<meta_value_reference_base>
+	make_meta_value_reference(void) const = 0;
 
+private:
+	count_ptr<nonmeta_instance_reference_base>
+	make_nonmeta_instance_reference(void) const;
+
+public:
 	/** should just assert fail, forbid reference to param members */
 	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const;

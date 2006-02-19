@@ -1,5 +1,5 @@
-Types do not match! got: int<32> and: bool<>.
+Meta-class type does not match!  got: int-inst-ref and: bool-inst-ref
 ERROR: actual instance reference 3 of port connection doesn't match the formal type/size.
-	got: bool<>[4], expected: int<32>
+	got: bool<>{1-dim}, expected: int<32>
 At least one error in port connection.  
 HALT: at least one error in port connection list.  [12:1..16]

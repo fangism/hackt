@@ -3,13 +3,16 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_meta_instance_reference_base.h,v 1.8 2006/01/22 18:20:30 fang Exp $
+	$Id: simple_meta_instance_reference_base.h,v 1.8.16.1 2006/02/19 03:53:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
 
-#include "Object/ref/meta_instance_reference_base.h"
+#include <iosfwd>
+#include "util/persistent_fwd.h"
+#include "util/boolean_types.h"
+#include "util/memory/excl_ptr.h"
 #include "Object/common/util_types.h"
 
 namespace HAC {
@@ -19,12 +22,26 @@ class meta_index_list;
 class const_index_list;
 struct footprint_frame;
 class state_manager;
+class definition_base;
+class fundamental_type_reference;
+class instance_collection_base;
+struct expr_dump_context;
+class const_range_list;
+using std::ostream;
+using std::istream;
 using util::good_bool;
 using util::memory::excl_ptr;
 using util::persistent_object_manager;
 
 //=============================================================================
 /**
+	20060213: this class is now an implementation base for
+		any reference that may be indexed, be it instance or value.  
+	Plan: remove anything from this class that ties it to instances.  
+	Possibly define template helper methods.  
+	TODO: many of the functions no longer belong here.  
+	Most methods in here should be helpers.  
+
 	PHASE THIS back into meta_instance_reference_base.
 	OR... call this "simple_meta_instance_reference_base" instead.  
 		and replace collective_meta_instance_reference with
@@ -41,19 +58,9 @@ using util::persistent_object_manager;
 	Should these be hashed into used_id_map?
 		Will there be identifier conflicts?
  */
-class simple_meta_instance_reference_base :
-		virtual public meta_instance_reference_base {
+class simple_meta_instance_reference_base {
 private:
 	typedef	simple_meta_instance_reference_base		this_type;
-	/**
-		Helper class for evaluating sparse, multidimensional
-		collections.  
-		Virtual base class wrapper around sparse set.  
-	 */
-	class mset_base;
-
-	template <size_t>
-	class mset;
 
 	template <bool>
 	struct has_substructure { };
@@ -72,16 +79,6 @@ protected:
 	 */
 	excl_ptr<index_list_type>		array_indices;
 
-	/**
-		The current state of the instantiation collection
-		at the point of reference.
-		Important because the state of an instantiation
-		collection may change, so implicit collection or
-		sub-collection references with the same indices may 
-		refer to different sets.  
-	 */
-	const instantiation_state		inst_state;
-
 // for subclasses:
 //	never_ptr<const instance_collection_base>	inst_ref;
 
@@ -90,75 +87,17 @@ protected:
 	simple_meta_instance_reference_base();
 
 	explicit
-	simple_meta_instance_reference_base(const instantiation_state& st);
+	simple_meta_instance_reference_base(excl_ptr<index_list_type>&);
 
-	simple_meta_instance_reference_base(excl_ptr<index_list_type>& i, 
-		const instantiation_state& st);
 public:
 
 virtual	~simple_meta_instance_reference_base();
 
-	size_t
-	dimensions(void) const;
-
-	bool
-	may_be_densely_packed(void) const;
-
-	bool
-	must_be_densely_packed(void) const;
-
-	bool
-	is_static_constant_collection(void) const;
-
-	bool
-	has_static_constant_dimensions(void) const;
-
-	bool
-	is_relaxed_formal_dependent(void) const;
-
-	bool
-	is_template_dependent(void) const;
-
-	const_range_list
-	static_constant_dimensions(void) const;
-
-	const_index_list
-	implicit_static_constant_indices(void) const;
-
-	good_bool
-	attach_indices(excl_ptr<index_list_type>& i);
-
-virtual	ostream&
-	what(ostream& o) const = 0;
-
-virtual	ostream&
-	dump(ostream& o, const expr_dump_context&) const;
+virtual	good_bool
+	attach_indices(excl_ptr<index_list_type>&) = 0;
 
 	ostream&
-	dump_type_size(ostream& o) const;
-
-virtual never_ptr<const instance_collection_base>
-	get_inst_base(void) const = 0;
-
-	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
-
-	never_ptr<const definition_base>
-	get_base_def(void) const;
-
-	// need not be virtual
-	bool
-	may_be_type_equivalent(const meta_instance_reference_base& i) const;
-
-	bool
-	must_be_type_equivalent(const meta_instance_reference_base& i) const;
-
-virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
-
-private:
-	// compute static index coverage
-	excl_ptr<mset_base>
-	unroll_static_instances(const size_t dim) const;
+	dump_indices(ostream&, const expr_dump_context&) const;
 
 protected:		// for children only
 	// persistent object IO helper methods
@@ -171,13 +110,6 @@ protected:		// for children only
 	void
 	load_object_base(const persistent_object_manager& m, istream& i);
 
-private:
-	// need help with instantiation state, count?
-	void
-	write_instance_collection_state(ostream& f) const;
-
-	void
-	load_instance_collection_state(istream& f);
 };	// end class simple_meta_instance_reference_base
 
 //=============================================================================

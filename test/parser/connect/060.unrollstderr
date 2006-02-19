@@ -1,0 +1,7 @@
+ERROR sizes mismatch in port connection: 
+	expected: [2]
+	got: [1]
+	external references: ::r[1], 
+	local port references: ::p.j[0], ::p.j[1], 
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.10.2.1 2006/02/12 06:15:32 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10.2.2 2006/02/19 03:53:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -36,12 +36,16 @@
 #include "Object/expr/const_range_list.h"
 #include "Object/common/dump_flags.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
-#include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
+#include "Object/unroll/instantiation_statement.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
 // #include "Object/unroll/unroll_context.h"
 #include "Object/unroll/unroll_context_value_resolver.h"
+#include "Object/ref/meta_value_reference.h"
+#include "Object/ref/simple_meta_value_reference.h"
+
+#include "common/ICE.h"
 
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -147,18 +151,52 @@ VALUE_COLLECTION_CLASS::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
+index_collection_item_ptr_type
+VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
+	NEVER_NULL(this->initial_instantiation_statement_ptr);
+	return this->initial_instantiation_statement_ptr->get_indices();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intended for diagnostic use, printing resolved dimensions
+	of template formal parameter value collection.  
+	\param c unroll_context is needed in case of template dependence.  
+ */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+ostream&
+VALUE_COLLECTION_CLASS::dump_formal(ostream& o, const unroll_context& c) const {
+	this->type_dump(o);
+if (this->dimensions) {
+	const index_collection_item_ptr_type
+		i(this->get_initial_instantiation_indices());
+	NEVER_NULL(i);
+	const_range_list crl;
+	if (!i->unroll_resolve(crl, c).good) {
+		ICE(cerr, 
+			cerr << "Unable to deduce formal parameter collection "
+				"size!  Little help, please." << endl;
+		);
+	}
+	crl.dump(o << ' ');
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::type_dump(ostream& o) const {
-	return o << class_traits<Tag>::tag_name << '^' << this->dimensions;
+	return o << traits_type::tag_name << '^' << this->dimensions;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const param_type_reference>
 VALUE_COLLECTION_CLASS::get_param_type_ref(void) const {
-	return class_traits<Tag>::built_in_type_ptr;
+	return traits_type::built_in_type_ptr;
 		// declared in "traits/class_traits.h"
-		// initialized in "art_built_ins.cc"
+		// initialized in "traits/class_traits_types.cc"
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -249,41 +287,15 @@ VALUE_COLLECTION_CLASS::initial_value(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Create a param reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
-	Different: param type reference are always referred to in the global
-		scope because they cannot be templated!
-		Therefore, cache them in the global (or built-in) namespace.  
-	\return NULL.
- */
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<meta_instance_reference_base>
-VALUE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
+count_ptr<meta_value_reference_base>
+VALUE_COLLECTION_CLASS::make_meta_value_reference(void) const {
 	// depends on whether this instance is collective, 
 	//	check array dimensions.  
 
 	// problem: needs to be modifiable for later initialization
-	return count_ptr<simple_param_meta_value_reference>(
+	return count_ptr<meta_value_reference_base>(
 		new simple_meta_value_reference_type(
-			never_ptr<this_type>(const_cast<this_type*>(this))));
-		// omitting index argument
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<nonmeta_instance_reference_base>
-VALUE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//	check array dimensions.  
-
-	// problem: needs to be modifiable for later initialization
-	return count_ptr<nonmeta_instance_reference_base>(
-		new simple_nonmeta_instance_reference_type(
 			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
 }
@@ -306,7 +318,6 @@ VALUE_COLLECTION_CLASS::may_type_check_actual_param_expr(
 	// this says that the only instantiation statement for this parameter
 	// in the original declaration, which in this case was in the ports.  
 	// only for formal parameters is this assertion valid.  
-	INVARIANT(this->index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
 	return this->may_check_expression_dimensions(*pi);
 }
@@ -325,7 +336,6 @@ VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
 	// only for formal parameters is this assertion valid.  
 	// this says that the only instantiation statement for this parameter
 	// in the original declaration, which in this case was in the ports.  
-	INVARIANT(this->index_collection.size() <= 1);
 	// check dimensions (is conservative with dynamic sizes)
 	return this->must_check_expression_dimensions(pe, c);
 }
@@ -335,6 +345,8 @@ VALUE_COLLECTION_CLASS::must_type_check_actual_param_expr(
 	No need to virtualize this method as long as 
 	the dimension-specific subclasses have no pointers that 
 	need to be visited.  
+	initial_instantiation_statement_ptr can be NULL
+	for the collections that are used in footprints.  
  */
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 void
@@ -348,6 +360,9 @@ if (!m.register_transient_object(this,
 	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
+	if (this->initial_instantiation_statement_ptr) {
+		initial_instantiation_statement_ptr->collect_transient_info(m);
+	}
 }
 // else already visited
 }
@@ -357,7 +372,7 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS*
 VALUE_COLLECTION_CLASS::make_array(
 		const scopespace& o, const string& n, const size_t D) {
-	switch(D) {
+	switch (D) {
 		case 0:	return new value_array<Tag,0>(o, n);
 		case 1:	return new value_array<Tag,1>(o, n);
 		case 2:	return new value_array<Tag,2>(o, n);
@@ -377,6 +392,7 @@ VALUE_COLLECTION_CLASS::write_object_base(
 	STACKTRACE("value_collection<>::write_object_base()");
 	parent_type::write_object_base(m, f);
 	m.write_pointer(f, ival);
+	m.write_pointer(f, this->initial_instantiation_statement_ptr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -387,6 +403,7 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 	STACKTRACE("value_collection<>::load_object_base()");
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
+	m.read_pointer(f, this->initial_instantiation_statement_ptr);
 }
 
 //=============================================================================
@@ -585,7 +602,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 				v = pi.value;
 			} else {
 				cerr << "ERROR: reference to uninitialized " <<
-					class_traits<Tag>::tag_name << ' ' <<
+					traits_type::tag_name << ' ' <<
 					this->get_qualified_name() << " at index: " <<
 					i << endl;
 			}
@@ -609,7 +626,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 		v = pi.value;
 	} else {
 		cerr << "ERROR: reference to uninitialized " <<
-			class_traits<Tag>::tag_name << ' ' <<
+			traits_type::tag_name << ' ' <<
 			this->get_qualified_name() << " at index: " <<
 			i << endl;
 	}
@@ -621,6 +638,9 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 	Assigns a single value, using an index.
 	Only call this if this is non-scalar (array).  
 	\return true on error.
+	TODO: if we're now using find instead of operator [], 
+		then we no longer need an 'instantiated' bit
+		in the instance value struct.  
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 bad_bool
@@ -628,7 +648,20 @@ VALUE_ARRAY_CLASS::assign(const multikey_index_type& k, const value_type i) {
 	// convert from generic to dimension-specific
 	// for efficiency, consider an unsafe pointer version, to save copying
 	const key_type index(k);
+#if 1
+	typedef	typename collection_type::iterator	iterator;
+	const iterator vi(collection.find(index));
+	if (vi == collection.end()) {
+		// wasn't instantiated
+		cerr << "Error: value referenced has not been instantiated!"
+			<< endl;
+		return bad_bool(true);
+	}
+	element_type& pi(vi->second);
+#else
+	// this may add uninstantiated elements to collection :S
 	element_type& pi = collection[index];
+#endif
 	return (pi = i);	// convert good_bool to bad_bool implicitly
 }
 
@@ -815,7 +848,7 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 				_val(IS_A(const this_type&, *_r.second));
 			if (!_val.the_instance.instantiated) {
 				cerr << "ERROR: Reference to uninstantiated " <<
-					class_traits<Tag>::tag_name << ' ' <<
+					traits_type::tag_name << ' ' <<
 					this->get_qualified_name() << "!" << endl;
 				return good_bool(false);
 			}
@@ -846,7 +879,7 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 	// else is top-level
 	if (!the_instance.instantiated) {
 		cerr << "ERROR: Reference to uninstantiated " <<
-			class_traits<Tag>::tag_name << ' ' <<
+			traits_type::tag_name << ' ' <<
 			this->get_qualified_name() << "!" << endl;
 		return good_bool(false);
 	}

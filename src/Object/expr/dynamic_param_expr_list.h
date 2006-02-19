@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.6 2006/01/22 18:19:47 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.6.16.1 2006/02/19 03:52:51 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -75,12 +75,6 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
-
-	bool
-	is_template_dependent(void) const;
-
-	bool
-	is_loop_independent(void) const;
 
 	unroll_resolve_return_type
 	unroll_resolve(const unroll_context&) const;

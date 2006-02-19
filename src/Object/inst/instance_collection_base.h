@@ -3,24 +3,19 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.11 2006/02/11 03:56:49 fang Exp $
+	$Id: instance_collection_base.h,v 1.11.2.1 2006/02/19 03:53:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 #define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
 
 #include <string>
-#include <deque>
-// #include <list>
-
 #include "util/macros.h"
 #include "util/boolean_types.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
-#include "Object/common/predicated_inst_stmt_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/persistent.h"		// for persistent object interface
-
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -67,6 +62,10 @@ using util::memory::count_ptr;
 	No type_ref member, acquire that from instantiation_statement.  
 	Instead of list of indices in index_collection, 
 	use list of statements that contain indices.  
+
+	NOTE: this used to have index_collection for tracking instantiation
+		statements per collection, but they were removed on the
+		HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref branch.
  */
 class instance_collection_base : public object, public persistent {
 	typedef	instance_collection_base	this_type;
@@ -101,17 +100,6 @@ protected:
 		Name of instance.
 	 */
 	string				key;
-
-	/**
-		This is a collection of instantiation statements 
-		that, when unrolled, will instantiate instances
-		at specified indices in the multidimensional collection, 
-		implemented in the leaf children classes.  
-		Can elements be NULL?
-		TODO: subtype this!  don't use generic type common to all
-		children.  Implement using class_traits policy.  
-	 */
-	index_collection_type		index_collection;
 
 	/**
 		A somewhat redundant field for the dimensionality of the
@@ -155,7 +143,7 @@ protected:
 	explicit
 	instance_collection_base(const size_t d) :
 		object(), persistent(), owner(), key(), 
-		index_collection(), dimensions(d), super_instance() { }
+		dimensions(d), super_instance() { }
 
 	/**
 		Partial copy-constructor, copies everything 
@@ -165,7 +153,7 @@ protected:
 	 */
 	instance_collection_base(const this_type& t, const footprint&) :
 		object(), persistent(), owner(t.owner), key(t.key), 
-		index_collection(), dimensions(t.dimensions),
+		dimensions(t.dimensions),
 		super_instance() { }
 
 public:
@@ -278,9 +266,12 @@ virtual	string
 
 	Note: that this doesn't return the unrolled actual type, 
 	need a different method for that.  
+
+	This only returns the type given by the first (possibly predicated)
+	instantiation statement.  
  */
-	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
+virtual	count_ptr<const fundamental_type_reference>
+	get_type_ref(void) const = 0;
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;
@@ -288,22 +279,13 @@ virtual	string
 	owner_ptr_type
 	get_owner(void) const { return owner; }
 
-	instantiation_state
-	collection_state_end(void) const;
-
-	instantiation_state
-	current_collection_state(void) const;
-
-	const_range_list
-	detect_static_overlap(const index_collection_item_ptr_type& r) const;
-
-	const_range_list
-	add_instantiation_statement(const index_collection_type::value_type& r);
-
 protected:
 	// to grant access to param_value_collection
 	bool
 	formal_size_equivalent(const this_type& b) const;
+
+virtual	index_collection_item_ptr_type
+	get_initial_instantiation_indices(void) const = 0;
 
 public:
 	size_t
@@ -328,8 +310,6 @@ public:
 	is_template_dependent(void) const;
 
 public:
-virtual	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const = 0;
 
 virtual	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const = 0;

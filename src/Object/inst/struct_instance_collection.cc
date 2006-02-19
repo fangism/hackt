@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.7 2006/01/22 18:20:12 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.7.16.1 2006/02/19 03:53:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -16,7 +16,6 @@
 
 #include "Object/inst/struct_instance_collection.h"
 #include "Object/inst/alias_actuals.h"
-#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/expr/struct_expr.h"
@@ -28,6 +27,7 @@
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
+#include "Object/unroll/datatype_instantiation_statement.h"
 
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_instance_collection,

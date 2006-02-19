@@ -5,44 +5,44 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	276
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	34
+	8	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	29
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	33	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
-	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
-	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	76
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -57,7 +57,6 @@ In namespace "", we have: {
       pint<> N
       >(
         int<::bar::M> x with indices: {
-          [0..::bar::N-1]
         }
 
       )
@@ -67,7 +66,6 @@ In namespace "", we have: {
         N = pint<> N
       Instances:
         x = int<::bar::M> x with indices: {
-          [0..::bar::N-1]
         }
 
       unroll sequence: 
@@ -96,7 +94,6 @@ In namespace "", we have: {
   Instances:
     poo = process bar<3, 2>^0 poo (instantiated) = ::poo (1) (
       int<3>^1 x with indices: {
-        [0..::bar::N-1]
       }
         unrolled indices: {
           0 = ::poo.x[1] (1) 

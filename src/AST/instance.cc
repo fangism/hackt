@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.5.2.1 2006/02/13 21:05:10 fang Exp $
+	$Id: instance.cc,v 1.5.2.2 2006/02/19 03:52:43 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -32,6 +32,7 @@
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/ref/simple_meta_instance_reference_base.h"
+#include "Object/ref/meta_value_reference_base.h"
 #include "Object/expr/pbool_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
@@ -41,6 +42,8 @@
 #include "Object/unroll/port_connection.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
+#include "Object/ref/meta_instance_reference_base.h"
+#include "Object/ref/meta_reference_union.h"
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -97,10 +100,12 @@ using std::_Select1st;
 using std::_Select2nd;
 using std::find;
 using entity::meta_instance_reference_base;
+using entity::meta_value_reference_base;
 using entity::simple_meta_instance_reference_base;
 using entity::aliases_connection_base;
 using entity::meta_instance_reference_connection;
 using entity::port_connection;
+using entity::port_connection_base;
 using entity::dynamic_param_expr_list;
 using entity::meta_range_expr;
 using entity::meta_loop_base;
@@ -170,13 +175,33 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 							const_return_type;
 	typedef	excl_ptr<entity::param_expression_assignment>
 							return_type;
-	typedef	checked_meta_exprs_type::value_type		checked_expr_ptr_type;
+	typedef	checked_meta_exprs_type::value_type	checked_expr_ptr_type;
+// experimenting
+#define	CONSTRUCT_FROM_LVALUE		0
 	// then expect subsequent items to be the same
 	// or already param_expr in the case of some constants.
 	// However, only the last item may be a constant.  
 
-	bad_bool err(false);
 	// right-hand-side source expression
+#if CONSTRUCT_FROM_LVALUE
+	const checked_expr_ptr_type& first_obj(temp.front());
+	if (!first_obj) {
+		cerr << "Error in destination value reference." << endl;
+		return const_return_type(NULL);
+	}
+	// cross-cast check
+	const count_ptr<const meta_value_reference_base>
+		lhs(first_obj.is_a<const meta_value_reference_base>());
+	if (!lhs) {
+		cerr << "Error: destination expression of assignment "
+			"is not an lvalue." << endl;
+		return const_return_type(NULL);
+	}
+	return_type
+		ret(meta_value_reference_base::
+			make_param_expression_assignment(lhs));
+	NEVER_NULL(ret);
+#else
 	const checked_expr_ptr_type& last_obj(temp.back());
 	if (!last_obj) {
 		cerr << "Error in source expression." << endl;
@@ -185,8 +210,8 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 	const count_ptr<const param_expr>
 		rhse = last_obj.is_a<const param_expr>();
 	INVARIANT(rhse);
-
 	return_type ret;
+#endif
 	// later, fold these error messages into static constructor?
 	if (!last_obj) {
 		cerr << "ERROR: rhs of expression assignment "
@@ -204,6 +229,7 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 		return const_return_type(NULL);
 	}
 
+	bad_bool err(false);
 	entity::param_expression_assignment::meta_instance_reference_appender
 		append_it(*ret);
 	const checked_meta_exprs_type::const_iterator dest_end(--temp.end());
@@ -213,18 +239,16 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 	// if there are any errors, discard everything?
 	// later: track errors in partially constructed objects
 	if (err.bad) {
+		// already have error message
 		return const_return_type(NULL);
 	} else	return const_return_type(ret);             // is ok
+#undef	CONSTRUCT_FROM_LVALUE
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates an alias connection object, given a list of instance
 	references.  Performs type-checking.
-
-	TODO: once we separate objects and stacks into different types,
-	then we can eliminate this generic object list altogether.
-	(SOON...)
  */
 excl_ptr<const entity::aliases_connection_base>
 alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
@@ -232,12 +256,8 @@ alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
 	typedef excl_ptr<aliases_connection_base> 	return_type;
 	checked_meta_refs_type::const_iterator i(temp.begin());
 	INVARIANT(temp.size() > 1);          // else what are you connecting?
-#if 0
-	const count_ptr<const meta_instance_reference_base> fir;
-#else
-	const count_ptr<const meta_instance_reference_base> fir(*i);
-#endif
-//		fir(i->is_a<const meta_instance_reference_base>());
+	const count_ptr<const meta_instance_reference_base>
+		fir(i->inst_ref());
 	NEVER_NULL(fir);
 	return_type ret = 
 		entity::meta_instance_reference_base::make_aliases_connection(fir);
@@ -247,7 +267,8 @@ alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
 	// starting with second instance reference, type-check and alias
 	int j = 2;
 	for (i++; i!=temp.end(); i++, j++) {
-		const count_ptr<const meta_instance_reference_base> ir(*i);
+		const count_ptr<const meta_instance_reference_base>
+			ir(i->inst_ref());
 		if (!ir) {
 			cerr << "ERROR: invalid instance reference at position "
 				<< j << " of alias list." << endl;
@@ -680,6 +701,9 @@ instance_connection::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Create a port-style connection object.  
+ */
 never_ptr<const object>
 instance_connection::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
@@ -697,14 +721,18 @@ instance_connection::check_build(context& c) const {
 		obj(id->check_meta_reference(c));
 
 	NEVER_NULL(obj);		// we just created it!
-	const count_ptr<const simple_meta_instance_reference_base>
-		inst_ref(obj.is_a<const simple_meta_instance_reference_base>());
-	NEVER_NULL(inst_ref);
+	const count_ptr<const connection_statement::inst_ref_arg_type>
+		inst_ref(obj.inst_ref());
+	if (!inst_ref) {
+		cerr << "Error resolving instance reference of "
+			"port connection.  " << where(*id) << endl;
+		THROW_EXIT;
+	}
 
 	expr_list::checked_meta_refs_type temp;
 	if (actuals_base::check_actuals(temp, c).good) {
 
-	excl_ptr<const port_connection>
+	excl_ptr<const connection_statement::result_type>
 		port_con = connection_statement::make_port_connection(
 			temp, inst_ref);
 	if (!port_con) {
@@ -761,25 +789,31 @@ connection_statement::rightmost(void) const {
 	\param temp the list of checked references.
 	\param ir the invoking instance to which port should connect.
  */
-excl_ptr<const entity::port_connection>
+excl_ptr<const connection_statement::result_type>
 connection_statement::make_port_connection(
-		const expr_list::checked_meta_refs_type& temp,
-		const count_ptr<const entity::simple_meta_instance_reference_base>& ir) {
-	typedef	excl_ptr<const port_connection>		return_type;
+		const expr_list::checked_meta_refs_type& _temp,
+		const count_ptr<const inst_ref_arg_type>& ir) {
+	typedef	excl_ptr<const result_type>	const_return_type;
+	typedef	excl_ptr<result_type>		return_type;
 	typedef	expr_list::checked_meta_refs_type		ref_list_type;
-	excl_ptr<port_connection>
-		ret(new entity::port_connection(ir));
+	return_type ret =
+		meta_instance_reference_base::make_port_connection(ir);
+	NEVER_NULL(ret);
 	never_ptr<const definition_base>
 		base_def(ir->get_base_def());
-
+	entity::checked_refs_type temp;
+	transform(_temp.begin(), _temp.end(), back_inserter(temp), 
+		inst_ref_meta_return_type::inst_ref_selector());
 	const size_t ir_dim = ir->dimensions();
 	if (ir_dim) {
 		cerr << "Instance reference port connection must be scalar, "
 			"but got a " << ir_dim << "-dim reference!" << endl;
-		return return_type(NULL);
+		return const_return_type(NULL);
 	} else if (base_def->certify_port_actuals(temp).good) {
-		ref_list_type::const_iterator i(temp.begin());
-		const ref_list_type::const_iterator e(temp.end());
+		typedef	entity::checked_refs_type::const_iterator
+							const_iterator;
+		const_iterator i(temp.begin());
+		const const_iterator e(temp.end());
 		ret->reserve(temp.size());
 		for ( ; i!=e; i++) {
 			const count_ptr<const meta_instance_reference_base>
@@ -787,10 +821,10 @@ connection_statement::make_port_connection(
 			ret->append_meta_instance_reference(mir);
 		}
 		// transfers ownership
-		return return_type(ret);
+		return const_return_type(ret);
 	} else {
 		cerr << "At least one error in port connection.  " << endl;
-		return return_type(NULL);
+		return const_return_type(NULL);
 	}
 }
 
@@ -809,14 +843,17 @@ connection_statement::check_build(context& c) const {
 		THROW_EXIT;
 	}
 	// is not a complex aggregate instance reference
-	const count_ptr<const simple_meta_instance_reference_base>
-		inst_ref(o.is_a<const simple_meta_instance_reference_base>());
-	NEVER_NULL(inst_ref);
+	const count_ptr<const meta_instance_reference_base>
+		inst_ref(o.inst_ref());
+	if (!inst_ref) {
+		cerr << "Error checking instance reference of "
+			"connection statement.  " << where(*lvalue) << endl;
+	}
 
 	expr_list::checked_meta_refs_type temp;
 	if (actuals_base::check_actuals(temp, c).good) {
 	// useless return value, expect an object_list on object_stack
-	excl_ptr<const port_connection>
+	excl_ptr<const result_type>
 		port_con = make_port_connection(temp, inst_ref);
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "

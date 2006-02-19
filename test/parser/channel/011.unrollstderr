@@ -5,20 +5,20 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	chandefn	0	#HEAD#	#TAIL#	91
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	8	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

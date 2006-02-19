@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.7 2006/01/22 18:20:06 fang Exp $
+	$Id: int_instance_collection.cc,v 1.7.16.1 2006/02/19 03:53:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -24,7 +24,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/inst/int_instance_collection.h"
 #include "Object/inst/alias_empty.tcc"
-#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/expr/int_expr.h"
@@ -37,6 +36,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/int_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
+#include "Object/unroll/datatype_instantiation_statement.h"
 
 //=============================================================================
 // module-local specializations

@@ -1,6 +1,0 @@
-Size of dimension 1 does not match!  got: 4 and 3.
-got: [0..3] and: [0..2]
-ERROR: actual instance reference 2 of port connection doesn't match the formal type/size.
-	got: bool<>[3], expected: bool<>[4]
-At least one error in port connection.  
-HALT: at least one error in port connection list.  [12:1..22]

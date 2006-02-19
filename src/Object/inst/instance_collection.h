@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.12 2006/02/05 19:45:07 fang Exp $
+	$Id: instance_collection.h,v 1.12.6.1 2006/02/19 03:52:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -51,6 +51,7 @@ class const_param_expr_list;
 class unroll_context;
 class subinstance_manager;
 template <bool> class internal_aliases_policy;
+template <class> class instantiation_statement;
 
 //=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
@@ -71,34 +72,34 @@ class instance_collection :
 // temporary workaround until int's type is better integrated
 friend	class class_traits<Tag>::collection_type_manager_parent_type;
 friend	class subinstance_manager;
+public:
+	typedef	class_traits<Tag>			traits_type;
 private:
 	typedef	Tag					category_type;
-	typedef	typename class_traits<Tag>::instance_collection_parent_type
+	typedef	typename traits_type::instance_collection_parent_type
 							parent_type;
 	typedef	INSTANCE_COLLECTION_CLASS		this_type;
 // friend void subinstance_manager::unroll_port_instances(const this_type&);
 public:
-	typedef	typename class_traits<Tag>::type_ref_type
-							type_ref_type;
-	typedef	typename class_traits<Tag>::type_ref_ptr_type
-							type_ref_ptr_type;
-	typedef	typename class_traits<Tag>::collection_type_manager_parent_type
+	typedef	typename traits_type::type_ref_type	type_ref_type;
+	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
+	typedef	typename traits_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
-	typedef	typename class_traits<Tag>::instance_alias_info_type
+	typedef	typename traits_type::instance_alias_info_type
 						instance_alias_info_type;
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
 	typedef	never_ptr<instance_alias_base_type>
 						instance_alias_base_ptr_type;
-	typedef	typename class_traits<Tag>::alias_collection_type
-							alias_collection_type;
-	typedef	typename class_traits<Tag>::instance_collection_parameter_type
+	typedef	typename traits_type::alias_collection_type
+						alias_collection_type;
+	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
+	typedef	typename traits_type::simple_meta_instance_reference_type
 					simple_meta_instance_reference_type;
-	typedef	typename class_traits<Tag>::simple_nonmeta_instance_reference_type
+	typedef	typename traits_type::simple_nonmeta_instance_reference_type
 					simple_nonmeta_instance_reference_type;
-	typedef	typename class_traits<Tag>::member_simple_meta_instance_reference_type
+	typedef	typename traits_type::member_simple_meta_instance_reference_type
 				member_simple_meta_instance_reference_type;
 //	typedef	meta_instance_reference_base		meta_instance_reference_base_type;
 // public:
@@ -110,12 +111,27 @@ protected:
 						instance_relaxed_actuals_type;
 	// type parameter, if applicable is inherited from
 	// collection_type_manager_parent_type
-	typedef	internal_aliases_policy<class_traits<Tag>::can_internally_alias>
+	typedef	internal_aliases_policy<traits_type::can_internally_alias>
 						internal_alias_policy;
+
+public:
+	typedef	typename traits_type::instantiation_statement_type
+					initial_instantiation_statement_type;
+	typedef	never_ptr<const initial_instantiation_statement_type>
+				initial_instantiation_statement_ptr_type;
+	/**
+		All collections track the first instantiation statement,
+		for the sake of deducing the type.  
+		Scalars instance collections need this too because
+		of the possibility of relaxed template arguments.  
+	 */
+	initial_instantiation_statement_ptr_type
+					initial_instantiation_statement_ptr;
 protected:
 	explicit
 	instance_collection(const size_t d) :
-		parent_type(d), collection_type_manager_parent_type() { }
+		parent_type(d), collection_type_manager_parent_type(),
+		initial_instantiation_statement_ptr(NULL) { }
 
 	instance_collection(const this_type&, const footprint&);
 
@@ -128,26 +144,39 @@ public:
 
 virtual	~instance_collection();
 
-#if 0
-	// called by collection_type_manager_parent_type::dumper
-	const instance_collection_parameter_type&
-	get_type_parameter(void) const;
-#endif
-
 virtual	ostream&
 	what(ostream&) const = 0;
 
 	ostream&
 	type_dump(ostream&) const;
 
+	void
+	attach_initial_instantiation_statement(
+		const initial_instantiation_statement_ptr_type i) {
+		NEVER_NULL(i);
+		if (!initial_instantiation_statement_ptr)
+			initial_instantiation_statement_ptr = i;
+		// else skip
+	}
+
+	/**
+		CAVEAT: this statement could be conditional.  
+	 */
+	initial_instantiation_statement_ptr_type
+	get_initial_instantiation_statement(void) const {
+		return initial_instantiation_statement_ptr;
+	}
+
+	index_collection_item_ptr_type
+	get_initial_instantiation_indices(void) const;
+
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
-#if 0
 	// this could just return hard-coded built-in type...
+	// this returns the type as given by the first instantiation statement
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
-#endif
 
 	type_ref_ptr_type
 	get_type_ref_subtype(void) const;
@@ -292,21 +321,22 @@ class instance_array :
 friend class instance_collection<Tag>;
 	typedef	instance_array<Tag,D>			this_type;
 public:
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::instance_collection_generic_type
 							parent_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
 //	typedef	typename parent_type::instance_alias_base_ptr_type
-	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
+	typedef	typename traits_type::instance_alias_base_ptr_type
 						instance_alias_base_ptr_type;
-	typedef	typename class_traits<Tag>::alias_collection_type
+	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
 	// template explicitly required by g++-4.0
-	typedef	typename class_traits<Tag>::template instance_alias<D>::type
+	typedef	typename traits_type::template instance_alias<D>::type
 							element_type;
 	/**
 		This is the data structure used to implement the collection.  
@@ -421,20 +451,21 @@ class instance_array<Tag,0> :
 friend class instance_collection<Tag>;
 	typedef	INSTANCE_SCALAR_CLASS			this_type;
 public:
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::instance_collection_generic_type
 							parent_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
 	typedef	typename parent_type::internal_alias_policy
 						internal_alias_policy;
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
-	typedef	typename class_traits<Tag>::instance_alias_base_ptr_type
+	typedef	typename traits_type::instance_alias_base_ptr_type
 						instance_alias_base_ptr_type;
-	typedef	typename class_traits<Tag>::alias_collection_type
+	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
 	// template explicitly required by g++-4.0
-	typedef	typename class_traits<Tag>::template instance_alias<0>::type
+	typedef	typename traits_type::template instance_alias<0>::type
 							instance_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;

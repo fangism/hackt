@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.11 2006/01/30 07:42:07 fang Exp $
+	$Id: unroll_context.cc,v 1.11.10.1 2006/02/19 03:53:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -19,12 +19,11 @@
 #include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
 #include "Object/common/dump_flags.h"
-// #include "Object/inst/param_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
-#include "Object/ref/simple_param_meta_value_reference.h"
 #include "Object/type/template_actuals.h"
 #include "Object/def/template_formals_manager.h"
 #include "Object/expr/param_expr_list.h"
+#include "Object/ref/meta_value_reference_base.h"
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
@@ -279,11 +278,11 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 			ret->dump(STACKTRACE_STREAM << ") = ", edc) << endl;
 			}
 #endif
-			const count_ptr<const simple_param_meta_value_reference>
-				self(ret.is_a<const simple_param_meta_value_reference>());
+			const count_ptr<const meta_value_reference_base>
+				self(ret.is_a<const meta_value_reference_base>());
 			if (self) {
-				const never_ptr<const instance_collection_base>
-					pbase(self->get_inst_base());
+				const never_ptr<const param_value_collection>
+					pbase(self->get_coll_base());
 				if (pbase == &p) {
 				// need to safeguard against self-lookup
 				// may happen with value_reference

@@ -4,13 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	94
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	89
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	130
+	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	125
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	190
+	9	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	185
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 
@@ -23,7 +23,6 @@ In namespace "", we have: {
   0 typedefs
   Parameters:
     x = pint^1 x with indices: {
-      [0..4]
     }
       unrolled index-value pairs: {
         0 = ?
@@ -33,7 +32,6 @@ In namespace "", we have: {
         4 = ?
       }
     y = pint^1 y with indices: {
-      [5..12]
     }
       unrolled index-value pairs: {
         5 = ?
@@ -46,7 +44,6 @@ In namespace "", we have: {
         12 = ?
       }
     z = pint^1 z with indices: {
-      [-6..6]
     }
       unrolled index-value pairs: {
         -6 = ?

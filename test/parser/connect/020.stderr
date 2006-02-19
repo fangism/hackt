@@ -1,4 +1,0 @@
-Size of dimension 2 does not match!  got: 3 and 2.
-got: [0..1][0..2] and: [0..1][0..1]
-ERROR: type/size of instance reference 2 of alias list doesn't match the type/size of the first instance reference!  
-HALT: at least one error in connection list.  [11:1..11]

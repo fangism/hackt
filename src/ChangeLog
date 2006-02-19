@@ -3,6 +3,104 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-03-merged--ref-11:
+	  Merge of instance reference rework from child branch, 
+		-ref, revision -11.  (Major code surgery.)  
+
+
+2006-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-11:
+	  meta_instance_reference_base : persistent (non-virtual)
+	  Removed "Object/ref/simple_datatype_meta_instance_reference_base.h".
+	  Checked parser tests-cases against yacc, a few updates.  
+	  Minor touch-ups.  
+	  Status: ready to merge to parent branch.  
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-10:
+	  Finally, committed DECOUPLE_INSTANCE_REFERENCE_HIERARCHY -> 1, 
+		(-1400 LoC).  This accomplishes the primary branch objective.
+	  Only little more clean-up and checking before merging.  
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-09:
+	  Committed ENABLE_STATIC_COMPILE_CHECKS -> 0, and
+		ENABLE_STATIC_DIMENSION_ANALYSIS -> 0, (-1500 LoC).
+		There goes a lot of old commented code...
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-08:
+	  Committed WANT_IS_TEMPLATE_DEPENDENT -> 0, (-650 LoC).
+
+
+2006-02-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-07:
+	  Committed SUBTYPE_PORT_CONNECTION -> 1, (-250 LoC).
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-06:
+	  Committed WANT_PARAM_INSTANTIATION_STATEMENT_BASE -> 0.  (-100 LoC)
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-05:
+	  The axe-man cometh!
+	  First of several phases of committing code cuts.  
+	  Committed UNIFY_UNROLL_PASS -> 1.  (-250 LoC)
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-04:
+	  Tiny patch to improve an error message on formal/actual mismatch.  
+	  Repaired last test case, and added one more template/080.hac.
+	  With this patch, the source now passes make check and distcheck.
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-03:
+	  All remaining test directories updated, after re-verification.
+		What a pain in the asterisk.  
+	  Remains only one test case, waiting for better diagnostic message.
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-02:
+	  Fixed minor bug in assigning value to member of value collection.  
+	  Round of test updates in basic, param, namespace.  
+	  Round of source clean-up.  
+
+
+2006-02-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-01:
+	  MASSIVE code transplant.  
+		Thousands of LoC marked for substitution and deletion.  
+		Introduced a handful of switches to mark cuts in
+			"Object/devel_switches.h"
+		DECOUPLE_INSTANCE_REFERENCE_HIERARCHY -> 1
+			pry apart instance/value reference hierarchy.
+		SUBTYPE_PORT_CONNECTION -> 1
+		WANT_IS_TEMPLATE_DEPENDENT -> 0
+			compile-time checking facilities.  
+		UNIFY_UNROLL_PASS -> 1 (clean-up)
+	  Agenda:
+		Strip out much code related to static (compile-time)
+			checking of instantiation and initializations.  
+			ENABLE_STATIC_COMPILE_CHECKS -> 0
+			ENABLE_STATIC_DIMENSION_ANALYSIS -> 0
+		For instance, instance/value collections no longer contain
+			a sequence of pointers to instantiation statements.  
+			They now only contain the first instantiation stmt, 
+			for the sake of basic type checking.  
+	  Test suite introduced many differences.  
+		Before this branch is over, ALL 2500+ tests must 
+		be resolved and updated to satisfaction.  
+		Tests were NOT updated in this revision.
+		That will happen gradually over next revisions.  
+	  After all this is done, completing aggregate references should
+		be easier and cleaner than was formerly possible.  
+
+
 2006-02-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-02:

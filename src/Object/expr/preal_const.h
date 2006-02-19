@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: preal_const.h,v 1.2 2006/02/10 21:50:37 fang Exp $
+	$Id: preal_const.h,v 1.2.2.1 2006/02/19 03:52:56 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
@@ -64,24 +64,11 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
-#if 0
-	bool
-	may_be_equivalent(const param_expr& e) const
-		{ return preal_expr::may_be_equivalent_generic(e); }
-
-	bool
-	must_be_equivalent(const param_expr& e) const
-		{ return preal_expr::must_be_equivalent_generic(e); }
-#endif
-
 	bool
 	is_static_constant(void) const { return true; }
 
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
-
-	bool
-	is_template_dependent(void) const { return false; }
 
 	count_ptr<const const_param>
 	static_constant_param(void) const;
@@ -91,12 +78,6 @@ public:
 
 	bool
 	must_be_equivalent(const preal_expr& ) const;
-
-	bool
-	is_loop_independent(void) const { return true; }
-
-	bool
-	is_unconditional(void) const { return true; }
 
 	good_bool
 	resolve_value(value_type& i) const;

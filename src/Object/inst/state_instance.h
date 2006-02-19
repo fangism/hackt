@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.8 2006/01/28 18:21:21 fang Exp $
+	$Id: state_instance.h,v 1.8.10.1 2006/02/19 03:53:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -41,7 +41,10 @@ typedef	count_ptr<const const_param_expr_list>
 STATE_INSTANCE_TEMPLATE_SIGNATURE
 class state_instance {
 	typedef	STATE_INSTANCE_CLASS		this_type;
-	typedef	typename class_traits<Tag>::instance_alias_info_type
+public:
+	typedef	class_traits<Tag>		traits_type;
+private:
+	typedef	typename traits_type::instance_alias_info_type
 						alias_info_type;
 public:
 	typedef	never_ptr<const alias_info_type>	back_ref_type;
