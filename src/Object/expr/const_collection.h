@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.7.2.2 2006/02/19 21:57:35 fang Exp $
+	$Id: const_collection.h,v 1.7.2.3 2006/02/19 23:44:47 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -53,14 +53,17 @@ class const_collection :
 		public class_traits<Tag>::expr_base_type,
 		public class_traits<Tag>::const_collection_parent_type {
 	typedef	CONST_COLLECTION_CLASS			this_type;
-	typedef	typename class_traits<Tag>::expr_base_type
+public:
+	typedef	class_traits<Tag>			traits_type;
+private:
+	typedef	typename traits_type::expr_base_type
 							expr_base_type;
 public:
-	typedef	typename class_traits<Tag>::const_collection_parent_type
+	typedef	typename traits_type::const_collection_parent_type
 							parent_const_type;
-	typedef	typename class_traits<Tag>::const_expr_type
+	typedef	typename traits_type::const_expr_type
 							const_expr_type;
-	typedef	typename class_traits<Tag>::value_type	value_type;
+	typedef	typename traits_type::value_type	value_type;
 	typedef	util::packed_array_generic<pint_value_type, value_type>
 							array_type;
 	typedef	typename array_type::iterator		iterator;

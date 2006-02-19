@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.1.2.5 2006/02/19 21:57:35 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.1.2.6 2006/02/19 23:44:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -54,8 +54,11 @@ public:
 private:
 	typedef	typename traits_type::meta_value_reference_parent_type
 							parent_type;
+	typedef	typename traits_type::simple_meta_value_reference_type
+						simple_reference_type;
 	typedef	typename traits_type::expr_base_type	expr_base_type;
-	typedef	expr_base_type					interface_type;
+	typedef	expr_base_type				interface_type;
+	typedef	count_ptr<const interface_type>		init_arg_type;
 public:
 	// aggregates probably won't take initializers
 	// typedef	count_ptr<const interface_type>		init_arg_type;
@@ -98,6 +101,9 @@ public:
 
 	never_ptr<const param_value_collection>
 	get_coll_base(void) const;
+
+	good_bool
+	initialize(const init_arg_type&);
 
 	/// conservatively return true for simplicity
 	bool

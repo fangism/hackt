@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.9.2.2 2006/02/19 03:53:05 fang Exp $
+	$Id: value_collection.h,v 1.9.2.3 2006/02/19 23:44:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -244,8 +244,7 @@ friend class value_collection<Tag>;
 public:
 	typedef	class_traits<Tag>			traits_type;
 	typedef	typename traits_type::value_type	value_type;
-	typedef	typename traits_type::instance_type
-							element_type;
+	typedef	typename traits_type::instance_type	element_type;
 
 	// later change this to multikey_set or not?
 	/// Type for actual values, including validity and status.
@@ -327,8 +326,7 @@ private:
 	typedef	VALUE_SCALAR_CLASS			this_type;
 public:
 	typedef	class_traits<Tag>			traits_type;
-	typedef	typename traits_type::instance_type
-							instance_type;
+	typedef	typename traits_type::instance_type	instance_type;
 	typedef	instance_type				element_type;
 	typedef	typename traits_type::value_type	value_type;
 	typedef	typename traits_type::expr_base_type	expr_type;

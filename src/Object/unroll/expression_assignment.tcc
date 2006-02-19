@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.8.10.2 2006/02/19 21:57:36 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.8.10.3 2006/02/19 23:44:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -184,7 +184,6 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 		err.bad = true;
 	dest_ptr_type pb(e.template is_a<value_reference_type>());
 	if (!pb) {
-		// TODO: exception for aggregates
 		cerr << "ERROR: Cannot initialize a " <<
 			traits_type::tag_name << " with a ";
 		e->what(cerr) << " expression!" << endl;

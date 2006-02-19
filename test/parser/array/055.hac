@@ -5,6 +5,12 @@
 pbool x[2];
 pbool y[3];
 
+x[0] = true;
+x[1] = false;
+y[0] = true;
+y[1] = true;
+y[2] = false;
+
 pbool z[2][2];
 z = {x, y};	// error: got [2] and [3]
 

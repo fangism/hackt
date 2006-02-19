@@ -5,6 +5,18 @@
 
 2006-02-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-06:
+	  Partially implemented aggregate_value_ref::assign_value_collection, 
+		but going to abandon shortly.  *shrug* (reason below)
+	  experssion_assignments' value_reference type is now generalized, 
+		no longer limiter to simple references.  
+	  TODO: re-implement expression assignment to collect packed_array
+		of pointers to value instances (state_instance), to facilitate
+		en-masse collective value assignment.  
+		Ditch meta_value_reference::assign_value_collection.
+		Note: this is easier now with 'correct' class/interfaces.  
+
+
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-05:
 	  Repaired latent typo bug (never tripped before) in
 		simple_meta_value_reference::assign_value_collection, 

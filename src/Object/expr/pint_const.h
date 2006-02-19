@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.6.16.1 2006/02/19 03:52:55 fang Exp $
+	$Id: pint_const.h,v 1.6.16.2 2006/02/19 23:44:47 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -88,6 +88,14 @@ public:
 
 	this_type&
 	operator = (const value_type v) { val = v; return *this; }
+
+	/// prefix incerment
+	this_type&
+	operator ++ () { ++val; return *this; }
+
+	/// postfix increment (less efficient)
+	this_type
+	operator ++ (int) { const this_type ret(val); ++val; return ret; }
 
 	bool
 	range_size_equivalent(const const_index& i) const;

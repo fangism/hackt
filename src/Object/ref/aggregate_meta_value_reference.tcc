@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.5 2006/02/19 21:57:36 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.6 2006/02/19 23:44:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -15,9 +15,11 @@
 #include <algorithm>
 #include <iterator>
 #include "Object/ref/aggregate_meta_value_reference.h"
+#include "Object/ref/simple_meta_value_reference.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/multikey_index.h"
 #include "Object/expr/const_param.h"
+#include "Object/expr/pint_const.h"
 #include "Object/expr/const_collection.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
@@ -95,6 +97,19 @@ never_ptr<const param_value_collection>
 AGGREGATE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
 	ICE_NEVER_CALL(cerr);
 	return never_ptr<const param_value_collection>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is only for the sake of static compile-time
+	initialization analysis which is just sugar-coating.  
+	This just ignores the argument pointer.  
+	\return good, conservatively.  
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+AGGREGATE_META_VALUE_REFERENCE_CLASS::initialize(const init_arg_type&) {
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -384,6 +399,55 @@ if (this->_is_concatenation) {
 	// TODO: size-checking
 	FINISH_ME(Fang);
 	return return_type(NULL);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Assigns values to the aggregate values referenced.  
+	Prepare to const_collection_type::make_value_slice!
+	(Alternate implementation: collect pointers to values, and 
+		return in a packed_array, like with instance_references.)
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+AGGREGATE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
+		const const_collection_type& values,
+		const unroll_context& c) const {
+	typedef typename const_collection_type::key_type	key_type;
+	INVARIANT(values.dimensions() == this->dimensions());
+	const const_iterator b(subreferences.begin()), e(subreferences.end());
+	const_iterator i(b);
+	const size_t subdim = subreferences.front()->dimensions();
+if (this->_is_concatenation) {
+	// what difference does concatenation vs. construction make?
+	FINISH_ME(Fang);
+	return bad_bool(true);
+} else if (!subdim) {
+	// 1D array consisting of scalar references
+	const_index_list ind(1);
+	count_ptr<pint_const> ii(new pint_const(0));
+	ind.push_back(ii);
+	for ( ; i!=e; ++i, ++*ii) {
+		// nothing else could possibly be a scalar reference
+		// except member value references, if we ever allow them.
+		const count_ptr<const simple_reference_type>
+			s(i->template is_a<const simple_reference_type>());
+		NEVER_NULL(s);
+		if (s->assign_value_collection(
+				values.make_value_slice(ind), c).bad) {
+			cerr << "Error assigning subreference " <<
+				distance(b, i) +1 << " of ";
+			this->what(cerr) << endl;
+			return bad_bool(true);
+		}
+	}
+	// nothing went wrong
+	return bad_bool(false);
+} else {
+	// is higher dimension array
+	FINISH_ME(Fang);
+	return bad_bool(true);
 }
 }
 

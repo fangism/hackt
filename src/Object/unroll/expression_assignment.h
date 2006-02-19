@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: expression_assignment.h,v 1.7.10.2 2006/02/19 03:53:15 fang Exp $
+	$Id: expression_assignment.h,v 1.7.10.3 2006/02/19 23:44:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
@@ -35,7 +35,7 @@ public:
 	typedef	class_traits<Tag>			traits_type;
 	typedef	typename traits_type::expression_assignment_parent_type
 							parent_type;
-	typedef	typename traits_type::simple_meta_value_reference_type
+	typedef	typename traits_type::meta_value_reference_parent_type
 							value_reference_type;
 	typedef	typename traits_type::expr_base_type	expr_type;
 	typedef	typename traits_type::const_expr_type	const_expr_type;
