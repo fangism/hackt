@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10.2.2 2006/02/19 03:53:11 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10.2.3 2006/02/19 21:57:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -38,6 +38,7 @@
 #include "Object/def/footprint.h"
 #include "Object/ref/meta_value_reference.h"
 #include "common/ICE.h"
+#include "common/TODO.h"
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/common/extern_templates.h"
@@ -275,7 +276,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
 			return false;
 		}
 	} else {
-		STACKTRACE("ACK!!");
+		// FINISH_ME(Fang);	// could do more checking...
 		// conservatively
 		return false;
 	}
@@ -777,7 +778,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 		}
 		val_iter++;			// unsafe, but checked
 		key_gen++;
-	} while (key_gen != key_gen.get_upper_corner());
+	} while (key_gen != key_gen.get_lower_corner());
 	INVARIANT(val_iter == values.end());	// sanity check
 	return assign_err;
 }	// end method assign_value_collection

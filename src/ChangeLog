@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-05:
+	  Repaired latent typo bug (never tripped before) in
+		simple_meta_value_reference::assign_value_collection, 
+		incorrect loop-termination condition.
+		Added bunch of related test cases to parser/param..
+	  Implemented most simple methods of aggregate_value_reference. 
+	  Trimmed some more useless interface methods in aggregates.  
+	  TODO: expression_assignment's value_reference_type (dest) need not
+		be simple anymore, allow aggregates.  
+
+
 2006-02-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-04:

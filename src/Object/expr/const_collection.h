@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.7.2.1 2006/02/19 03:52:49 fang Exp $
+	$Id: const_collection.h,v 1.7.2.2 2006/02/19 21:57:35 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -67,7 +67,6 @@ public:
 	typedef	typename array_type::const_iterator	const_iterator;
 	typedef	typename array_type::reference		reference;
 	typedef	typename array_type::const_reference	const_reference;
-protected:
 	typedef	typename array_type::key_type		key_type;
 protected:
 	array_type					values;
@@ -76,7 +75,7 @@ public:
 	const_collection(const size_t d);
 
 	explicit
-	const_collection(const typename array_type::key_type&);
+	const_collection(const key_type&);
 
 	~const_collection();
 

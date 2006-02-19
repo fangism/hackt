@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.4 2006/02/19 06:09:03 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.5 2006/02/19 21:57:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -12,10 +12,13 @@
 #endif
 
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 #include "Object/ref/aggregate_meta_value_reference.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/multikey_index.h"
 #include "Object/expr/const_param.h"
+#include "Object/expr/const_collection.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
@@ -23,6 +26,7 @@
 #include "common/TODO.h"
 #include "common/ICE.h"
 #include "util/persistent_object_manager.h"
+#include "util/reserve.h"
 #include "util/multikey.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -32,6 +36,9 @@
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
+using std::distance;
+using std::transform;
+using std::back_inserter;
 using util::write_value;
 using util::read_value;
 using util::persistent_traits;
@@ -58,44 +65,25 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::what(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Accounts for cases where construction is partial.  
+ */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 AGGREGATE_META_VALUE_REFERENCE_CLASS::dump(ostream& o, 
 		const expr_dump_context& c) const {
-	FINISH_ME(Fang);
+	const char* delim = (this->_is_concatenation ? " # " : ", ");
+	if (!this->_is_concatenation) o << "{ ";
+if (subreferences.size()) {
+	const_iterator i(subreferences.begin());
+	const const_iterator e(subreferences.end());
+	if (*i) (*i)->dump(o, c);
+	for (++i; i!=e; ++i) {
+		if (*i) (*i)->dump(o << delim, c);
+	}
+}
+	if (!this->_is_concatenation) o << " }";
 	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-ostream&
-AGGREGATE_META_VALUE_REFERENCE_CLASS::dump_type_size(ostream& o) const {
-	FINISH_ME(Fang);
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Aggregate constituents should have the same type of course, 
-	so we use any one's base definition as the representative
-	definition for the entire collection. 
- */
-AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-never_ptr<const definition_base>
-AGGREGATE_META_VALUE_REFERENCE_CLASS::get_base_def(void) const {
-//	return traits_type::built_in_definition;	// private!?
-	ICE_NEVER_CALL(cerr);
-	return never_ptr<const definition_base>(NULL);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: account for relaxed types vs. strict types?
- */
-AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-count_ptr<const fundamental_type_reference>
-AGGREGATE_META_VALUE_REFERENCE_CLASS::get_type_ref(void) const {
-	return traits_type::built_in_type_ptr;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -174,56 +162,121 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Don't bother checking at parse time, leave until unroll time.  
+	\pre no subreferences may be NULL, array must be non-empty.
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::may_be_initialized(void) const {
-	// FINISH_ME(Fang);
+	INVARIANT(!subreferences.empty());
+	const_iterator i(subreferences.begin());
+	const const_iterator e(subreferences.end());
+	for ( ; i!=e; ++i) {
+		if (!(*i)->may_be_initialized())
+			return false;
+		// else keep checking...
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Really should use an expression visitor for this...
+	\pre no subreferences may be NULL.
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bool
+AGGREGATE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
+	INVARIANT(!subreferences.empty());
+	const_iterator i(subreferences.begin());
+	const const_iterator e(subreferences.end());
+	for ( ; i!=e; ++i) {
+		if (!(*i)->must_be_initialized())
+			return false;
+		// else keep checking...
+	}
 	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
-AGGREGATE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
-	// FINISH_ME(Fang);
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
-	FINISH_ME(Fang);
-	return false;
+	INVARIANT(!subreferences.empty());
+	const_iterator i(subreferences.begin());
+	const const_iterator e(subreferences.end());
+	for ( ; i!=e; ++i) {
+		if (!(*i)->is_static_constant())
+			return false;
+		// else keep checking...
+	}
+	return true;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::is_relaxed_formal_dependent(void) const {
-	FINISH_ME_EXIT(Fang);
+	INVARIANT(!subreferences.empty());
+	const_iterator i(subreferences.begin());
+	const const_iterator e(subreferences.end());
+	for ( ; i!=e; ++i) {
+		if ((*i)->is_relaxed_formal_dependent())
+			return true;
+		// else keep checking...
+	}
 	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Concatenations and constructions cannot be scalar values.  
+ */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 typename AGGREGATE_META_VALUE_REFERENCE_CLASS::value_type
 AGGREGATE_META_VALUE_REFERENCE_CLASS::static_constant_value(void) const {
-	FINISH_ME(Fang);
+	ICE_NEVER_CALL(cerr);
 	return value_type();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks for equivalence between formal references to formal parameters, 
+	for template signature equivalence.  
+	This may conservatively return false.  
+ */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
 		const expr_base_type& b) const {
+	STACKTRACE_VERBOSE;
+	const this_type* const vr = IS_A(const this_type*, &b);
+if (vr) {
+	if (this->_is_concatenation != vr->_is_concatenation) {
+		return false;
+	}
+	const size_t ls = subreferences.size();
+	const size_t rs = vr->subreferences.size();
+	INVARIANT(ls && rs);
+	if (ls != rs) {
+		return false;
+	}
+	const_iterator li(subreferences.begin()), ri(vr->subreferences.begin());
+	const const_iterator le(subreferences.end());
+	for ( ; li!=le; ++li, ++ri) {
+		if (!(*li)->must_be_equivalent(**ri))
+			return false;
+	}
+	return true;
+} else {
 	FINISH_ME(Fang);
 	return false;
 }
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Concatenations and constructions cannot be scalar values.  
+ */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
@@ -233,18 +286,25 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Concatenations and constructions cannot be scalar values.  
+ */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
-	FINISH_ME(Fang);
+	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Aggregate references cannot be indexed... yet.
+	(I think it'd be a bad idea.)
+ */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 const_index_list
 AGGREGATE_META_VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
-	FINISH_ME(Fang);
+	ICE_NEVER_CALL(cerr);
 	return const_index_list();
 }
 
@@ -252,18 +312,79 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 const_index_list
 AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
-		const unroll_context& c) const {
-	FINISH_ME(Fang);
+		const unroll_context&) const {
+	ICE_NEVER_CALL(cerr);
 	return const_index_list();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Packs subreferences into appropriate const_collection.  
+	Don't forget to check dimension limits.  
+	\pre subreferences non-empty, all non-NULL.
+ */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const_param>
 AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
 		const unroll_context& c) const {
+	typedef count_ptr<const_collection_type>	return_type;
+	typedef	vector<count_ptr<const_param> >		temp_type;
+	typedef	temp_type::const_iterator		temp_iterator;
+	typedef	temp_type::const_reference		temp_reference;
+	typedef	typename parent_type::unroll_resolver	unroll_resolver_type;
+	typedef typename const_collection_type::key_type	key_type;
+	typedef typename const_collection_type::iterator	target_iterator;
+
+	const size_t subdim = subreferences.front()->dimensions();
+	temp_type temp;
+	util::reserve(temp, subreferences.size());	// pre-allocate
+	transform(subreferences.begin(), subreferences.end(), 
+		back_inserter(temp), unroll_resolver_type(c));
+if (this->_is_concatenation) {
 	FINISH_ME(Fang);
-	return count_ptr<const_param>(NULL);
+	return return_type(NULL);
+} else if (!subdim) {
+	// we are constructing 1-dimension array from scalar subrefs.
+	key_type size_1d(1);
+	size_1d[0] = temp.size();
+	const return_type ret(new const_collection_type(size_1d));
+	NEVER_NULL(ret);
+	target_iterator ti(ret->begin());
+	const temp_iterator b(temp.begin()), e(temp.end());
+	temp_iterator i(b);
+	for ( ; i!=e; ++i, ++ti) {
+		temp_reference p(*i);
+		if (!p) {
+			cerr << "Error unroll-resolving sub-reference "
+				<< distance(b, i) +1 << " of ";
+			this->what(cerr) << endl;
+			return return_type(NULL);
+		}
+		const count_ptr<const_expr_type>
+			ce(p.template is_a<const_expr_type>());
+		if (ce) {
+			*ti = ce->static_constant_value();
+		} else {
+		const count_ptr<const_collection_type>
+			cc(p.template is_a<const_collection_type>());
+		if (cc) {
+			*ti = cc->static_constant_value();
+		} else {
+			ICE(cerr, 
+				cerr << "Unhandled case of constant resolution."
+					<< endl;
+			);
+		}
+		}
+	}
+	INVARIANT(ti == ret->end());
+	return ret;
+} else {
+	// we are constructing N-dimension array from N-1-dim. subrefs.
+	// TODO: size-checking
+	FINISH_ME(Fang);
+	return return_type(NULL);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

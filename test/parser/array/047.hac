@@ -5,7 +5,7 @@
 pbool x, y, z;
 
 pbool w[2];
-w[0] = 6;
-w[1] = 7;
+w[0] = false;
+w[1] = true;
 {x, y} = w;
 

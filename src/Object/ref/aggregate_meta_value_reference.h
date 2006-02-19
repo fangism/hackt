@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.1.2.4 2006/02/19 06:09:03 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.1.2.5 2006/02/19 21:57:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -75,6 +75,8 @@ private:
 						const_expr_type;
 	typedef	never_ptr<value_collection_type>
 						value_collection_ptr_type;
+	typedef	typename subreferences_array_type::const_iterator
+						const_iterator;
 private:
 	subreferences_array_type		subreferences;
 public:
@@ -90,15 +92,6 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
-
-	ostream&
-	dump_type_size(ostream&) const;
-
-	never_ptr<const definition_base>
-	get_base_def(void) const;
-
-	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
 
 	size_t
 	dimensions(void) const;

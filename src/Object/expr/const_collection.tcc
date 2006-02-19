@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.9.2.1 2006/02/19 03:52:49 fang Exp $
+ 	$Id: const_collection.tcc,v 1.9.2.2 2006/02/19 21:57:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -114,8 +114,7 @@ CONST_COLLECTION_CLASS::const_collection(const size_t d) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
-CONST_COLLECTION_CLASS::const_collection(
-		const typename array_type::key_type& k) :
+CONST_COLLECTION_CLASS::const_collection(const key_type& k) :
 		expr_base_type(), parent_const_type(), values(k) {
 	INVARIANT(k.size() <= 4);
 }
