@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.39 2006/02/16 02:59:43 fang Exp $
+#	$Id: configure.ac,v 1.40 2006/02/20 20:50:55 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -455,6 +455,30 @@ AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 1,
 [AC_MSG_RESULT([no])
 AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 0,
 	[True if compiler supports __attribute__((visibility("default"))) ])
+])
+
+dnl source taken from "src/util/STL/reverse_iterator.h"
+dnl known to be present in gcc-4.1 headers, but missing in all previous versions
+AC_MSG_CHECKING(
+[whether libstdc++ (STL) already contains reverse_iterator comparisons])
+AC_COMPILE_IFELSE(
+AC_LANG_PROGRAM([[
+#include <iterator>
+namespace std {
+template <class Iter1, class Iter2>
+inline bool
+operator == (const reverse_iterator<Iter1>& x,
+                const reverse_iterator<Iter2>& y) {
+        return x.base() == y.base();
+}
+}
+]], []),
+[AC_MSG_RESULT([no])
+AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, 0,
+	[True if STL <iterator> header defines reverse_iterator comparisons])],
+[AC_MSG_RESULT([yes])
+AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, 1,
+	[True if STL <iterator> header defines reverse_iterator comparisons])
 ])
 
 dnl restore normal compile flags

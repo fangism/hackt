@@ -1,7 +1,7 @@
 /**
 	\file "AST/HSE.cc"
 	Class method definitions for HSE-related syntax tree.  
-	$Id: HSE.cc,v 1.2 2005/12/13 04:14:46 fang Exp $
+	$Id: HSE.cc,v 1.3 2006/02/20 20:50:57 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_hse.cc,v 1.14.48.1 2005/12/11 00:45:07 fang Exp
  */
@@ -372,23 +372,25 @@ do_until::check_build(context& c) const {
 }
 
 //=============================================================================
+}	// end namespace HSE
+
+//=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
 #if 1
-template class node_list<const statement>;	// HSE::stmt_list
-template class node_list<const guarded_command>;	// HSE::det_sel_base
+template class node_list<const HSE::statement>;	// HSE::stmt_list
+template class node_list<const HSE::guarded_command>;	// HSE::det_sel_base
 							// HSE::prob_sel_base
 							// HSE::nondet_sel_base
 	// distinguish types, specialize delimiter (node_list_traits)
 #else
-template class node_list<const statement,semicolon>;	// HSE::stmt_list
-template class node_list<const guarded_command,thickbar>;	// HSE::det_sel_base
+template class node_list<const HSE::statement,semicolon>;	// HSE::stmt_list
+template class node_list<const HSE::guarded_command,thickbar>;	// HSE::det_sel_base
 							// HSE::prob_sel_base
-template class node_list<const guarded_command,colon>;	// HSE::nondet_sel_base
+template class node_list<const HSE::guarded_command,colon>;	// HSE::nondet_sel_base
 #endif
 
 //=============================================================================
-}	// end namespace HSE
 }	// end namespace parser
 }	// end namespace HAC
 

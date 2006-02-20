@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.11 2006/02/13 02:48:04 fang Exp $
+	$Id: PRS_footprint.cc,v 1.12 2006/02/20 20:50:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -522,22 +522,27 @@ footprint_macro::accept(cflat_visitor& v) const {
 }
 
 //=============================================================================
+}	// end namespace PRS
+}	// end namespace entity
+}	// end namespace HAC
+
+//=============================================================================
 // explicit template instantiations
 // really, only need to instantiate copy-constructures, nothing else referenced
 
+namespace util {
+using HAC::entity::PRS::footprint;
 // Apple gcc-4 rejects, probably fixed on the 4.0 branch...
 #if 0 
 template class footprint::rule_pool_type;
 template class footprint::expr_pool_type;
 template class footprint::macro_pool_type;
 #else
-template class util::list_vector<footprint::expr_node>;
-template class util::list_vector<footprint::rule>;
-template class util::list_vector<footprint::macro>;
+template class list_vector<footprint::expr_node>;
+template class list_vector<footprint::rule>;
+template class list_vector<footprint::macro>;
 #endif
+}
 
 //=============================================================================
-}	// end namespace PRS
-}	// end namespace entity
-}	// end namespace HAC
 

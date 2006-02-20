@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
-	$Id: PRS_attribute_registry.cc,v 1.4 2006/02/13 02:48:04 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.5 2006/02/20 20:50:58 fang Exp $
  */
 
 #include <iostream>
@@ -14,16 +14,20 @@
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 
+namespace util {
+//=============================================================================
+// explicit template instantiations
+template class qmap<std::string, HAC::entity::PRS::attribute_definition_entry>;
+// template attribute_registry_type;
+
+//=============================================================================
+}	// end namespace util
+
 namespace HAC {
 namespace entity {
 namespace PRS {
 #include "util/using_ostream.h"
 using util::qmap;
-
-//=============================================================================
-// explicit template instantiations
-template class qmap<string, attribute_definition_entry>;
-// template attribute_registry_type;
 
 //-----------------------------------------------------------------------------
 // global initializers

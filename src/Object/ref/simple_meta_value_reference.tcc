@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.11 2006/02/12 20:48:28 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.12 2006/02/20 20:50:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -690,7 +690,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {  
-	collect_transient_info_base(m);
+	this->collect_transient_info_base(m);
 	value_collection_ref->collect_transient_info(m);
 	// instantiation_state has no pointers
 }
@@ -710,7 +710,7 @@ void
 SIMPLE_META_VALUE_REFERENCE_CLASS::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	m.write_pointer(f, value_collection_ref);
-	write_object_base(m, f);
+	this->write_object_base(m, f);
 }
 	
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -730,7 +730,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(
 	NEVER_NULL(value_collection_ref);
 	m.load_object_once(
 		const_cast<value_collection_type*>(&*value_collection_ref));
-	load_object_base(m, f);
+	this->load_object_base(m, f);
 }
 
 //-----------------------------------------------------------------------------

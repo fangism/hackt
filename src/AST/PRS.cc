@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.7 2006/02/10 22:50:48 fang Exp $
+	$Id: PRS.cc,v 1.8 2006/02/20 20:50:57 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -674,6 +674,9 @@ attribute::check(context& c) const {
 }
 
 //=============================================================================
+}	// end namespace PRS
+
+//=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
 // template class node_list<const body_item>;		// PRS::rule_list
@@ -681,37 +684,36 @@ attribute::check(context& c) const {
 #if 1
 // This is temporary, until node_list::check_build is overhauled.  
 template
-node_list<const body_item>::node_list(const PRS::body_item*);
+node_list<const PRS::body_item>::node_list(const PRS::body_item*);
 
 template
 ostream&
-node_list<const body_item>::what(ostream&) const;
+node_list<const PRS::body_item>::what(ostream&) const;
 
 template
 line_position
-node_list<const body_item>::leftmost(void) const;
+node_list<const PRS::body_item>::leftmost(void) const;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // template class node_list<const attribute>;
 
 template
-node_list<const attribute>::node_list(const PRS::attribute*);
+node_list<const PRS::attribute>::node_list(const PRS::attribute*);
 
 template
 ostream&
-node_list<const attribute>::what(ostream&) const;
+node_list<const PRS::attribute>::what(ostream&) const;
 
 template
 line_position
-node_list<const attribute>::leftmost(void) const;
+node_list<const PRS::attribute>::leftmost(void) const;
 
 template
 line_position
-node_list<const attribute>::rightmost(void) const;
+node_list<const PRS::attribute>::rightmost(void) const;
 #endif
 
 //=============================================================================
-}	// end namespace PRS
 }	// end namespace parser
 }	// end namespace HAC
 

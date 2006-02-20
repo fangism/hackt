@@ -2,7 +2,7 @@
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
 	Consider renaming this file to value_read/writer...
-	$Id: IO_utils.tcc,v 1.14 2006/02/04 06:43:22 fang Exp $
+	$Id: IO_utils.tcc,v 1.15 2006/02/20 20:50:59 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -17,6 +17,7 @@
 #include <algorithm>
 #include <functional>
 #include <utility>		// for std::pair
+#include "util/macros.h"	// for INVARIANT
 
 // only needed for functional for_each where call_traits are needed.  
 // #include "util/binders.h"

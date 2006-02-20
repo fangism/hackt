@@ -2,14 +2,17 @@
 	\file "util/STL/reverse_iterator.h"
 	Extensions to the standard reverse_iterator template operations.  
 	Ideally this is not needed, but there are always shortcomings...
-	$Id: reverse_iterator.h,v 1.4 2005/09/05 05:04:53 fang Exp $
+	Known to be needed before gcc-4.1 fixed this in its headers.  
+	$Id: reverse_iterator.h,v 1.5 2006/02/20 20:51:00 fang Exp $
  */
 
 #ifndef	__UTIL_STL_REVERSE_ITERATOR_H__
 #define	__UTIL_STL_REVERSE_ITERATOR_H__
 
+#include "config.h"
 #include <iterator>
 
+#if !HAVE_STL_REVERSE_ITERATOR_COMPARISONS
 namespace std {
 
 /**
@@ -43,6 +46,7 @@ operator != (const reverse_iterator<Iter1>& x,
 // see <bits/stl_iterator.h> for reference
 
 }	// end namespace std
+#endif	// HAVE_STL_REVERSE_ITERATOR_COMPARISONS
 
 #endif	// __UTIL_STL_REVERSE_ITERATOR_H__
 

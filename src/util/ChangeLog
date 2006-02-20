@@ -1,8 +1,18 @@
 # "src/util/ChangeLog"
 
+2006-02-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-11:
+	  Checked against g++-4.1 (RC1) [prerelease 20060219].  
+		configure now checks for presence of reverse_iterator
+		comparisons for conditional use in 
+		"util/STL/reverse_iterator.h".
+	  const_assoc_query.tcc: qualified call to parent method find().
+
+
 2006-02-14	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-77-10:
+	* HACKT-00-01-04-main-00-77-10+:
 	  Disabled integer_traits_test #13 because 13! overflows 32b, DUH!
 
 

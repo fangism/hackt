@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.2 2005/12/13 04:14:46 fang Exp $
+	$Id: CHP.cc,v 1.3 2006/02/20 20:50:57 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -1165,10 +1165,12 @@ log::check_action(context& c) const {
 }
 
 //=============================================================================
+}	// end namespace CHP
+
+//=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS -- entire classes
 
 //=============================================================================
-}	// end namespace CHP
 }	// end namespace parser
 }	// end namespace HAC
 

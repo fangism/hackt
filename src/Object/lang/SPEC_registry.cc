@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.6 2006/02/13 02:48:04 fang Exp $
+	$Id: SPEC_registry.cc,v 1.7 2006/02/20 20:50:58 fang Exp $
  */
 
 #include <iostream>
@@ -13,20 +13,22 @@
 #include "common/TODO.h"
 #include "util/qmap.tcc"
 
-namespace HAC {
-namespace entity {
-
-namespace SPEC {
-using util::qmap;
-#include "util/using_ostream.h"
-
+namespace util {
 //=============================================================================
 // explicit template instantiations
 #if 1
-template class qmap<string, spec_definition_entry>;
+template class qmap<std::string, HAC::entity::SPEC::spec_definition_entry>;
 #else
 template spec_registry_type;
 #endif
+//=============================================================================
+}	// end namespace util
+
+namespace HAC {
+namespace entity {
+namespace SPEC {
+using util::qmap;
+#include "util/using_ostream.h"
 
 //=============================================================================
 /**
