@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.9.2.2 2006/02/19 21:57:35 fang Exp $
+ 	$Id: const_collection.tcc,v 1.9.2.3 2006/02/20 06:52:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -373,7 +373,7 @@ CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<typename CONST_COLLECTION_CLASS::parent_const_type>
-CONST_COLLECTION_CLASS::unroll_resolve(const unroll_context& c) const {
+CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c) const {
 	return count_ptr<parent_const_type>(new this_type(*this));
 }
 
@@ -382,7 +382,7 @@ CONST_COLLECTION_CLASS::unroll_resolve(const unroll_context& c) const {
 	Constructs and returns a value slice specfied by the index list
 	and returns the same type (possibly of lesser dimensions)
 	with copied/extracted values.  
-	NOTE: only called from simple_meta_value_reference::unroll_resolve
+	NOTE: only called from simple_meta_value_reference::unroll_resolve_rvalues
 		thus far.  
 	\param il the list of indices to visit.  
 	\throw std::out_of_range exception if indices are out of range.  
@@ -393,7 +393,7 @@ CONST_COLLECTION_TEMPLATE_SIGNATURE
 CONST_COLLECTION_CLASS
 CONST_COLLECTION_CLASS::make_value_slice(const const_index_list& il) const {
 if (il.empty()) {
-	// won't happen, as called from meta_value_reference<>::unroll_resolve.
+	// won't happen, as called from meta_value_reference<>::unroll_resolve_rvalues.
 	return *this;
 } else {
 	STACKTRACE_VERBOSE;

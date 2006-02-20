@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.9.2.1 2006/02/19 03:52:51 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.9.2.2 2006/02/20 06:52:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -78,7 +78,7 @@ using util::reserve;
 	pointer copy-ing.  
  */
 count_ptr<const const_index_list>
-meta_index_list::unroll_resolve(const count_ptr<const this_type>& _this, 
+meta_index_list::unroll_resolve_indices(const count_ptr<const this_type>& _this, 
 		const unroll_context& c) {
 	typedef	count_ptr<const const_index_list>	return_type;
 	NEVER_NULL(_this);
@@ -87,7 +87,7 @@ meta_index_list::unroll_resolve(const count_ptr<const this_type>& _this,
 		return ret;
 	else	return return_type(new const_index_list(
 			IS_A(const dynamic_meta_index_list&, *_this)
-			.unroll_resolve(c)));
+			.unroll_resolve_indices(c)));
 }
 
 //=============================================================================
@@ -269,7 +269,7 @@ const_index_list::resolve_index_list(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
-const_index_list::unroll_resolve(const unroll_context& c) const {
+const_index_list::unroll_resolve_indices(const unroll_context& c) const {
 	return *this;
 }
 
@@ -654,7 +654,7 @@ dynamic_meta_index_list::must_be_equivalent_indices(
 		successful resolved, else an empty list.
  */
 const_index_list
-dynamic_meta_index_list::unroll_resolve(const unroll_context& c) const {
+dynamic_meta_index_list::unroll_resolve_indices(const unroll_context& c) const {
 	const_index_list ret;
 	const_iterator i(begin());
 	const const_iterator e(end());

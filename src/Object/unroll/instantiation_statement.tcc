@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.9.10.1 2006/02/19 03:53:16 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.9.10.2 2006/02/20 06:52:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -258,7 +258,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 			relaxed_const_actuals;
 		if (relaxed_actuals) {
 			relaxed_const_actuals =
-				relaxed_actuals->unroll_resolve(c);
+				relaxed_actuals->unroll_resolve_rvalues(c);
 			if (!relaxed_const_actuals) {
 				cerr << "ERROR: unable to resolve relaxed "
 					"actual parameters in " <<
@@ -325,7 +325,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 			relaxed_const_actuals;
 		if (relaxed_actuals) {
 			relaxed_const_actuals =
-				relaxed_actuals->unroll_resolve(c);
+				relaxed_actuals->unroll_resolve_rvalues(c);
 			if (!relaxed_const_actuals) {
 				cerr << "ERROR: unable to resolve relaxed "
 					"actual parameters in " <<

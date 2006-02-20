@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.2 2006/02/19 03:53:11 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.3 2006/02/20 06:52:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -236,7 +236,7 @@ if (inst.get_dimensions()) {
 	STACKTRACE("is array");
 	const_index_list cil;
 	if (ind) {
-		cil = ind->unroll_resolve(c);
+		cil = ind->unroll_resolve_indices(c);
 		if (cil.empty()) {
 			cerr << "ERROR: Failed to resolve indices at "
 				"unroll-time!" << endl;

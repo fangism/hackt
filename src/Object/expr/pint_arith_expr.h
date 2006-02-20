@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.6.16.1 2006/02/19 03:52:55 fang Exp $
+	$Id: pint_arith_expr.h,v 1.6.16.2 2006/02/20 06:52:09 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -107,7 +107,7 @@ public:
 	resolve_dimensions(void) const;
 
 	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&) const;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

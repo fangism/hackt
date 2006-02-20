@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.10.2.1 2006/02/19 03:52:53 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.10.2.2 2006/02/20 06:52:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -401,7 +401,7 @@ const_range_list::resolve_ranges(const_range_list& r) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-const_range_list::unroll_resolve(const_range_list& r, 
+const_range_list::unroll_resolve_rvalues(const_range_list& r, 
 		const unroll_context& c) const {
 	r = *this;
 	return good_bool(true);
@@ -655,7 +655,7 @@ dynamic_meta_range_list::resolve_ranges(const_range_list& r) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-dynamic_meta_range_list::unroll_resolve(const_range_list& r, 
+dynamic_meta_range_list::unroll_resolve_rvalues(const_range_list& r, 
 		const unroll_context& c) const {
 	INVARIANT(r.empty());
 	// write as transform?

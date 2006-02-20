@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.1.2.7 2006/02/20 05:29:38 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.1.2.8 2006/02/20 06:52:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -9,7 +9,6 @@
 
 #include <iosfwd>
 #include <vector>
-#include "Object/devel_switches.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/meta_value_reference.h"
@@ -139,7 +138,7 @@ public:
 	unroll_resolve_value(const unroll_context&, value_type&) const;
 
 	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&) const;
 
 	/// should this be called? actually, yeah, possibly early check
 	const_index_list
@@ -149,17 +148,10 @@ public:
 	unroll_resolve_dimensions(const unroll_context&) const;
 
 	count_ptr<const_param>
-	uroll_resolve(const unroll_context&) const;
-
-#if USE_ASSIGN_VALUE_COLLECTION
-	// phase out
-	bad_bool
-	assign_value_collection(const const_collection_type&, 
-		const unroll_context&) const;
-#endif
+	uroll_resolve_rvalues(const unroll_context&) const;
 
 	bad_bool
-	unroll_references(const unroll_context&, 
+	unroll_lvalue_references(const unroll_context&, 
 		value_reference_collection_type&) const;
 
 	good_bool

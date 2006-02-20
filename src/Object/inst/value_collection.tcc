@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.10.2.3 2006/02/20 05:29:37 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10.2.4 2006/02/20 06:52:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -172,7 +172,7 @@ if (this->dimensions) {
 		i(this->get_initial_instantiation_indices());
 	NEVER_NULL(i);
 	const_range_list crl;
-	if (!i->unroll_resolve(crl, c).good) {
+	if (!i->unroll_resolve_rvalues(crl, c).good) {
 		ICE(cerr, 
 			cerr << "Unable to deduce formal parameter collection "
 				"size!  Little help, please." << endl;
@@ -634,48 +634,13 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_ASSIGN_VALUE_COLLECTION
-/**
-	DEPRECATED.
-	Assigns a single value, using an index.
-	Only call this if this is non-scalar (array).  
-	\return true on error.
-	TODO: if we're now using find instead of operator [], 
-		then we no longer need an 'instantiated' bit
-		in the instance value struct.  
- */
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-bad_bool
-VALUE_ARRAY_CLASS::assign(const multikey_index_type& k, const value_type i) {
-	// convert from generic to dimension-specific
-	// for efficiency, consider an unsafe pointer version, to save copying
-	const key_type index(k);
-#if 1
-	typedef	typename collection_type::iterator	iterator;
-	const iterator vi(collection.find(index));
-	if (vi == collection.end()) {
-		// wasn't instantiated
-		cerr << "Error: value referenced has not been instantiated!"
-			<< endl;
-		return bad_bool(true);
-	}
-	element_type& pi(vi->second);
-#else
-	// this may add uninstantiated elements to collection :S
-	element_type& pi = collection[index];
-#endif
-	return (pi = i);	// convert good_bool to bad_bool implicitly
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Gathers references (for assignment).  
 	Implementation ripped from instance_collection::unroll_aliases.
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 bad_bool
-VALUE_ARRAY_CLASS::unroll_references(const multikey_index_type& l, 
+VALUE_ARRAY_CLASS::unroll_lvalue_references(const multikey_index_type& l, 
 		const multikey_index_type& u,
 		value_reference_collection_type& a) const {
 	typedef typename value_reference_collection_type::key_type
@@ -956,35 +921,9 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_ASSIGN_VALUE_COLLECTION
-/**
-	Assigns a single value.
-	Only call this if this is scalar, 0-D.
-	Decision: should we allow multiple assignments of the same value?
-	\return true on error, false on success.  
- */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 bad_bool
-VALUE_SCALAR_CLASS::assign(const value_type i) {
-	// convert good_bool to bad_bool implicitly
-	return (the_instance = i);
-	// error message perhaps?
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-bad_bool
-VALUE_SCALAR_CLASS::assign(const multikey_index_type& k, const value_type i) {
-	// this should never be called
-	ICE_NEVER_CALL(cerr);
-	return bad_bool(true);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-bad_bool
-VALUE_SCALAR_CLASS::unroll_references(const multikey_index_type& l, 
+VALUE_SCALAR_CLASS::unroll_lvalue_references(const multikey_index_type& l, 
 		const multikey_index_type& u,
 		value_reference_collection_type& a) const {
 	typedef	typename value_reference_collection_type::value_type

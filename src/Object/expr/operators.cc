@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.10.2.1 2006/02/19 03:52:53 fang Exp $
+ 	$Id: operators.cc,v 1.10.2.2 2006/02/20 06:52:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -207,11 +207,11 @@ pint_unary_expr::resolve_dimensions(void) const {
 	The only unary pint operation is negation.  
  */
 count_ptr<const_param>
-pint_unary_expr::unroll_resolve(const unroll_context& c) const {
+pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type ret(ex->unroll_resolve(c));
+	const return_type ret(ex->unroll_resolve_rvalues(c));
 	if (ret) {
 #if 0
 		count_ptr<pint_const> pc(ret.is_a<pint_const>());
@@ -371,11 +371,11 @@ preal_unary_expr::resolve_dimensions(void) const {
 	The only unary preal operation is negation.  
  */
 count_ptr<const_param>
-preal_unary_expr::unroll_resolve(const unroll_context& c) const {
+preal_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-	const return_type ret(ex->unroll_resolve(c));
+	const return_type ret(ex->unroll_resolve_rvalues(c));
 	if (ret) {
 		return return_type(new preal_const(
 			-ret.is_a<const preal_expr>()->static_constant_value()));
@@ -514,11 +514,11 @@ pbool_unary_expr::resolve_value(value_type& i) const {
 	The only unary pbool operation is logical negation.  
  */
 count_ptr<const_param>
-pbool_unary_expr::unroll_resolve(const unroll_context& c) const {
+pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type ret(ex->unroll_resolve(c));
+	const return_type ret(ex->unroll_resolve_rvalues(c));
 	if (ret) {
 #if 0
 		count_ptr<pbool_const> pc(ret.is_a<pbool_const>());
@@ -769,12 +769,12 @@ pint_arith_expr::unroll_resolve_value(const unroll_context& c,
 	\return pint_const of the resolved value.
  */
 count_ptr<const_param>
-pint_arith_expr::unroll_resolve(const unroll_context& c) const {
+pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 		// actually could be scalar const_collection!
 #if 0
@@ -787,7 +787,7 @@ pint_arith_expr::unroll_resolve(const unroll_context& c) const {
 		const pint_value_type lop = lpc->static_constant_value();
 		const pint_value_type rop = rpc->static_constant_value();
 #else
-		// TODO: need a specialized unroll_resolve for the value_type
+		// TODO: need a specialized unroll_resolve_rvalues for the value_type
 		// for now, just assert the type
 		const pint_value_type lop =
 			lex.is_a<const pint_expr>()->static_constant_value();
@@ -1045,12 +1045,12 @@ pint_relational_expr::resolve_value(value_type& i) const {
 	\return pbool_const of the resolved value.
  */
 count_ptr<const_param>
-pint_relational_expr::unroll_resolve(const unroll_context& c) const {
+pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 #if 0
 		const count_ptr<pint_const> lpc(lex.is_a<pint_const>());
@@ -1308,15 +1308,15 @@ preal_arith_expr::unroll_resolve_value(const unroll_context& c,
 	\return preal_const of the resolved value.
  */
 count_ptr<const_param>
-preal_arith_expr::unroll_resolve(const unroll_context& c) const {
+preal_arith_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 		// actually could be scalar const_collection!
-		// TODO: need a specialized unroll_resolve for the value_type
+		// TODO: need a specialized unroll_resolve_rvalues for the value_type
 		// for now, just assert the type
 		const preal_value_type lop =
 			lex.is_a<const preal_expr>()->static_constant_value();
@@ -1576,12 +1576,12 @@ preal_relational_expr::resolve_value(value_type& i) const {
 	\return pbool_const of the resolved value.
  */
 count_ptr<const_param>
-preal_relational_expr::unroll_resolve(const unroll_context& c) const {
+preal_relational_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 		const preal_value_type lop =
 			lex.is_a<const preal_expr>()->static_constant_value();
@@ -1815,12 +1815,12 @@ pbool_logical_expr::resolve_value(value_type& i) const {
 	\return pbool_const of the resolved value.
  */
 count_ptr<const_param>
-pbool_logical_expr::unroll_resolve(const unroll_context& c) const {
+pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 #if 0
 		const count_ptr<pbool_const> lpc(lex.is_a<pbool_const>());

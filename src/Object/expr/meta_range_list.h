@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_list.h,v 1.6.16.1 2006/02/19 03:52:53 fang Exp $
+	$Id: meta_range_list.h,v 1.6.16.2 2006/02/20 06:52:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_RANGE_LIST_H__
@@ -62,7 +62,7 @@ virtual	good_bool
 	resolve_ranges(const_range_list& r) const = 0;
 
 virtual	good_bool
-	unroll_resolve(const_range_list&, const unroll_context&) const = 0;
+	unroll_resolve_rvalues(const_range_list&, const unroll_context&) const = 0;
 
 virtual	bool
 	must_be_formal_size_equivalent(const meta_range_list& ) const = 0;

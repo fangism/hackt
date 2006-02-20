@@ -2,13 +2,12 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.7.16.4 2006/02/20 05:29:39 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.7.16.5 2006/02/20 06:52:13 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 #define __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
 
-#include "Object/devel_switches.h"
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/common/multikey_index.h"
 #include "Object/ref/meta_value_reference_base.h"
@@ -140,23 +139,16 @@ public:
 	unroll_resolve_dimensions(const unroll_context&) const;
 
 	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&) const;
 
 #if 0
 	count_ptr<const_index>
-	unroll_resolve_index(const unroll_context&) const;
+	unroll_resolve_rvalues_index(const unroll_context&) const;
 #endif
 
 	bad_bool
-	unroll_references(const unroll_context&, 
+	unroll_lvalue_references(const unroll_context&, 
 		value_reference_collection_type&) const;
-
-#if USE_ASSIGN_VALUE_COLLECTION
-	// phase this out
-	bad_bool
-	assign_value_collection(const const_collection_type&, 
-		const unroll_context&) const;
-#endif
 
 protected:
 	using common_base_type::collect_transient_info_base;

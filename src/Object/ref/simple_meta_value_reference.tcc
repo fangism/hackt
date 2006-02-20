@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10.2.4 2006/02/20 05:29:39 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10.2.5 2006/02/20 06:52:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -312,7 +312,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 
 	if (this->array_indices) {
 		const const_index_list
-			indices(this->array_indices->unroll_resolve(c));
+			indices(this->array_indices->unroll_resolve_indices(c));
 		if (!indices.empty()) {
 			const multikey_index_type
 				lower(indices.lower_multikey());
@@ -428,7 +428,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// criterion 1: indices (if any) must be resolved to constant values.  
 	const_index_list c_i;
 	if (this->array_indices) {
-		c_i = this->array_indices->unroll_resolve(c);
+		c_i = this->array_indices->unroll_resolve_indices(c);
 		if (c_i.empty()) {
 			cerr << "ERROR: failed to unroll-resolve index list."
 				<< endl;
@@ -458,7 +458,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const_param>
-SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 		const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	STACKTRACE_VERBOSE;
@@ -491,9 +491,9 @@ if (value_collection_ref->is_template_formal()) {
 			// collection, so we only need to resolve
 			// parameter references in the indices.
 			const const_index_list
-				cil(this->array_indices->unroll_resolve(c));
+				cil(this->array_indices->unroll_resolve_indices(c));
 			// damn it, array_indices is an excl_ptr :S
-			// can't use static meta_index_list::unroll_resolve
+			// can't use static meta_index_list::unroll_resolve_rvalues
 			if (cil.empty()) {
 				cerr << "Error resolving indices of " <<
 					util::what<this_type>::name() << endl;
@@ -641,7 +641,7 @@ if (value_collection_ref->is_template_formal()) {
 			return return_type(new const_expr_type(_val));
 	}
 }
-}	// end method unroll_resolve
+}	// end method unroll_resolve_rvalues
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -699,94 +699,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(
 }
 
 //-----------------------------------------------------------------------------
-#if USE_ASSIGN_VALUE_COLLECTION
-/**
-	TODO: This will need some context eventually.
-	assignment's destination is either a top-level value collection 
-	or a definition-local, private value-collection.  
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bad_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
-		const const_collection_type& values, 
-		const unroll_context& c) const {
-#if 0
-	value_collection_type& _vals(*value_collection_ref);
-	if (_vals.get_owner().template is_a<const definition_base>()) {
-		cerr << "FANG, enable definition-local private "
-			"value reference resolution in "
-			"simple_meta_value_reference::assign_value_collection!"
-			<< endl;
-		return bad_bool(true);
-	}
-#else
-	value_collection_type&
-		_vals(unroll_context_value_resolver<Tag>().operator()
-			(c, *value_collection_ref));
-#endif
-	// else we have top-level value reference
-	// TODO: repeated call to same invariant source value is wasteful...
-	const const_range_list src_ranges(values.static_constant_dimensions());
-	if (src_ranges.empty()) {
-		INVARIANT(!values.dimensions());
-		// is scalar assignment, but may be indexed
-		value_scalar_type* const
-			scalar_inst(IS_A(value_scalar_type*, &_vals));
-		if (scalar_inst) {
-			return scalar_inst->assign(*values.begin());
-		}
-	}
-
-	const const_index_list dim(this->unroll_resolve_dimensions(c));
-	if (dim.empty()) {
-		cerr << "ERROR: unable to resolve constant dimensions."
-			<< endl;
-		return bad_bool(true);
-	}
-	// We are assured that the dimensions of the references
-	// are equal, b/c dimensionality is statically checked.  
-	// However, ranges may be of different length because
-	// of collapsible dimensions.  
-	// Compare dim against ranges: sizes of each dimension...
-	// but what about collapsed dimensions?
-	const const_range_list dst_ranges(dim.collapsed_dimension_ranges());
-	if (!src_ranges.empty() && !src_ranges.is_size_equivalent(dst_ranges)) {
-		// if range.empty(), then there is no need to match dimensions,
-		// dimensions must be equal because both src/dest are scalar.
-		cerr << "ERROR: resolved indices are not "
-			"dimension-equivalent!" << endl;
-		src_ranges.dump(cerr << "got: ",
-			expr_dump_context::default_value);
-		dim.dump(cerr << " and: ",
-			expr_dump_context::default_value) << endl;
-		return bad_bool(true);
-	}
-	// else good to continue
-	generic_index_generator_type key_gen(dim.size());
-	key_gen.get_lower_corner() = dim.lower_multikey();
-	key_gen.get_upper_corner() = dim.upper_multikey();
-	key_gen.initialize();
-
-	typename const_collection_type::const_iterator
-		val_iter(values.begin());
-	bad_bool assign_err(false);
-	do {
-		if (_vals.assign(key_gen, *val_iter).bad) {
-			cerr << "ERROR: assigning index " << key_gen << 
-				" of " << traits_type::tag_name <<
-				" collection " << _vals.get_qualified_name() <<
-				"." << endl;
-			assign_err.bad = true;
-		}
-		val_iter++;			// unsafe, but checked
-		key_gen++;
-	} while (key_gen != key_gen.get_lower_corner());
-	INVARIANT(val_iter == values.end());	// sanity check
-	return assign_err;
-}	// end method assign_value_collection
-#endif	// USE_ASSIGN_VALUE_COLLECTION
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Implementation partly ripped off from 
 	simple_meta_instance_reference::unroll_references_helper_no_lookup.  
@@ -794,21 +706,10 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_references(const unroll_context& c, 
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
+		const unroll_context& c, 
 		value_reference_collection_type& a) const {
 	STACKTRACE_VERBOSE;
-#if 0
-if (value_collection_ref->is_template_formal()) {
-	const count_ptr<const const_param>
-		// beware mutual recursion...
-		cpptr(c.lookup_actual(*value_collection_ref));
-	if (!cpptr) {
-		cerr << "Error unroll-resolving parameter values." << endl;
-		return return_type(NULL);
-	}
-}
-#endif
-
 	value_collection_type&
 		_vals(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref));
@@ -816,7 +717,7 @@ if (_vals.get_dimensions()) {
 	STACKTRACE("is array");
 	const_index_list cil;
 	if (this->array_indices) {
-		cil = this->array_indices->unroll_resolve(c);
+		cil = this->array_indices->unroll_resolve_indices(c);
 		if (cil.empty()) {
 			cerr << "ERROR: Failed to resolve indices at "
 				"unroll-time!" << endl;
@@ -855,7 +756,7 @@ if (_vals.get_dimensions()) {
 	const multikey_index_type lower(full_indices.lower_multikey());
 	const multikey_index_type upper(full_indices.upper_multikey());
 	// this will set the size and dimensions of packed_array a
-	if (_vals.unroll_references(lower, upper, a).bad) {
+	if (_vals.unroll_lvalue_references(lower, upper, a).bad) {
 		cerr << "ERROR: unrolling aliases." << endl;
 		return bad_bool(true);
 	}
@@ -867,7 +768,7 @@ if (_vals.get_dimensions()) {
 	// size the alias_collection_type appropriately
 	a.resize();             // empty
 	const multikey_index_type bogus;
-	if (_vals.unroll_references(bogus, bogus, a).bad) {
+	if (_vals.unroll_lvalue_references(bogus, bogus, a).bad) {
 		cerr << "ERROR: unrolling aliases." << endl;
 		return bad_bool(true);
 	}

@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.9.16.1 2006/02/19 03:52:54 fang Exp $
+	$Id: param_expr_list.h,v 1.9.16.2 2006/02/20 06:52:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -81,10 +81,10 @@ virtual	bool
 
 // coordinate with COUNT_TEMPLATE_ARGS in "Object/art_object_definition_base.h"
 	typedef	count_ptr<const_param_expr_list>
-					unroll_resolve_return_type;
+					unroll_resolve_rvalues_return_type;
 
-virtual	unroll_resolve_return_type
-	unroll_resolve(const unroll_context&) const = 0;
+virtual	unroll_resolve_rvalues_return_type
+	unroll_resolve_rvalues(const unroll_context&) const = 0;
 
 // coordinate with template_formals_manager::template_formals_list_type
 protected:

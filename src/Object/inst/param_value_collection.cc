@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.10.2.1 2006/02/19 03:53:02 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.10.2.2 2006/02/20 06:52:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -296,7 +296,7 @@ param_value_collection::must_check_expression_dimensions(
 			// we're in trouble for template-dependent expressions
 			// need unroll parameters!
 			const_range_list _r;
-			if (!mrl->unroll_resolve(_r, c).good) {
+			if (!mrl->unroll_resolve_rvalues(_r, c).good) {
 				// there was error resolving parameters!
 				// should this ever happen???
 			ICE(cerr, 

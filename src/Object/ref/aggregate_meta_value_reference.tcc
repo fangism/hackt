@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.7 2006/02/20 05:29:38 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.8 2006/02/20 06:52:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -342,7 +342,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const_param>
-AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
+AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 		const unroll_context& c) const {
 	typedef count_ptr<const_collection_type>	return_type;
 	typedef	vector<count_ptr<const_param> >		temp_type;
@@ -405,62 +405,11 @@ if (this->_is_concatenation) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_ASSIGN_VALUE_COLLECTION
-/**
-	Assigns values to the aggregate values referenced.  
-	Prepare to const_collection_type::make_value_slice!
-	(Alternate implementation: collect pointers to values, and 
-		return in a packed_array, like with instance_references.)
- */
-AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bad_bool
-AGGREGATE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
-		const const_collection_type& values,
-		const unroll_context& c) const {
-	typedef typename const_collection_type::key_type	key_type;
-	INVARIANT(values.dimensions() == this->dimensions());
-	const const_iterator b(subreferences.begin()), e(subreferences.end());
-	const_iterator i(b);
-	const size_t subdim = subreferences.front()->dimensions();
-if (this->_is_concatenation) {
-	// what difference does concatenation vs. construction make?
-	FINISH_ME(Fang);
-	return bad_bool(true);
-} else if (!subdim) {
-	// 1D array consisting of scalar references
-	const_index_list ind(1);
-	count_ptr<pint_const> ii(new pint_const(0));
-	ind.push_back(ii);
-	for ( ; i!=e; ++i, ++*ii) {
-		// nothing else could possibly be a scalar reference
-		// except member value references, if we ever allow them.
-		const count_ptr<const simple_reference_type>
-			s(i->template is_a<const simple_reference_type>());
-		NEVER_NULL(s);
-		if (s->assign_value_collection(
-				values.make_value_slice(ind), c).bad) {
-			cerr << "Error assigning subreference " <<
-				distance(b, i) +1 << " of ";
-			this->what(cerr) << endl;
-			return bad_bool(true);
-		}
-	}
-	// nothing went wrong
-	return bad_bool(false);
-} else {
-	// is higher dimension array
-	FINISH_ME(Fang);
-	return bad_bool(true);
-}
-}
-#endif	// USE_ASSIGN_VALUE_COLLECTION
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Aggregates subreference collections into one packed collection. 
 	\param a cell-written collection of lvalue references, 
 		unrolled by this aggregate reference.  
-	NOTE: rvalue collections should be obtained by unroll_resolve.
+	NOTE: rvalue collections should be obtained by unroll_resolve_rvalues.
 		(Perhaps we should name it so..., call this unroll_lvalues.)
 	\pre subreferences have equal dimension, but specific
 		sizes in each dimension are yet unknown.  
@@ -470,7 +419,7 @@ if (this->_is_concatenation) {
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_references(
+AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 		const unroll_context& c,
 		value_reference_collection_type& a) const {
 	// collection collection type
@@ -499,7 +448,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_references(
 				distance(b, i) +1 << " of ";
 			this->what(cerr) << endl;
 			return bad_bool(true);
-		} else if (lv->unroll_references(c, *ci).bad) {
+		} else if (lv->unroll_lvalue_references(c, *ci).bad) {
 			cerr << "Error unrolling subreference " <<
 				distance(b, i) +1 << " of ";
 			this->what(cerr) << endl;

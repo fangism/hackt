@@ -3,13 +3,12 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.9.2.4 2006/02/20 05:29:37 fang Exp $
+	$Id: value_collection.h,v 1.9.2.5 2006/02/20 06:52:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
 
-#include "Object/devel_switches.h"
 #include <iosfwd>
 #include "util/string_fwd.h"
 #include "util/STL/list_fwd.h"
@@ -203,22 +202,13 @@ virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 
-#if USE_ASSIGN_VALUE_COLLECTION
-public:
-// DEPRECATED: called from value_reference and expression_assignment
-// really should be protected, usable by pbool_meta_instance_reference::assigner
-virtual	bad_bool
-	assign(const multikey_index_type& k, const value_type b) = 0;
-#endif
-
-
-#define	UNROLL_REFERENCES_PROTO						\
+#define	UNROLL_LVALUE_REFERENCES_PROTO					\
 	bad_bool							\
-	unroll_references(const multikey_index_type&, 			\
+	unroll_lvalue_references(const multikey_index_type&, 		\
 		const multikey_index_type&, 				\
 		value_reference_collection_type&) const
 
-virtual	UNROLL_REFERENCES_PROTO = 0;
+virtual	UNROLL_LVALUE_REFERENCES_PROTO = 0;
 
 public:
 
@@ -309,12 +299,7 @@ public:
 
 	LOOKUP_VALUE_INDEXED_PROTO;
 
-#if USE_ASSIGN_VALUE_COLLECTION
-	bad_bool
-	assign(const multikey_index_type& k, const value_type i);
-#endif
-
-	UNROLL_REFERENCES_PROTO;
+	UNROLL_LVALUE_REFERENCES_PROTO;
 
 	/// helper functor for dumping values
 	struct key_value_dumper {
@@ -387,11 +372,6 @@ public:
 	good_bool
 	lookup_value(value_type& i, const unroll_context&) const;
 
-#if USE_ASSIGN_VALUE_COLLECTION
-	bad_bool
-	assign(const value_type i);
-#endif
-
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  
 	// update this to accept a const_range_list
@@ -402,17 +382,7 @@ public:
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 
-#if USE_ASSIGN_VALUE_COLLECTION
-	bad_bool
-	assign(const multikey_index_type& k, const value_type i);
-#endif
-
-	UNROLL_REFERENCES_PROTO;
-
-#if USE_ASSIGN_VALUE_COLLECTION
-	this_type&
-	operator = (const value_type);
-#endif
+	UNROLL_LVALUE_REFERENCES_PROTO;
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -428,7 +398,7 @@ public:
 }	// end namespace HAC
 
 #undef	LOOKUP_VALUE_INDEXED_PROTO
-#undef	UNROLL_REFERENCES_PROTO
+#undef	UNROLL_LVALUE_REFERENCES_PROTO
 
 #endif	// __HAC_OBJECT_INST_VALUE_COLLECTION_H__
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.11.2.1 2006/02/19 03:53:16 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.11.2.2 2006/02/20 06:52:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -191,7 +191,7 @@ instantiation_statement_base::resolve_instantiation_range(
 		const_range_list& r, const unroll_context& c) const {
 if (indices) {
 	INVARIANT(r.empty());	// not already constructed
-	const good_bool ret(indices->unroll_resolve(r, c));
+	const good_bool ret(indices->unroll_resolve_rvalues(r, c));
 	if (!ret.good) {
 		// ranges is passed and returned by reference
 		// fail

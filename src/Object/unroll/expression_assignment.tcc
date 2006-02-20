@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.8.10.4 2006/02/20 05:29:40 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.8.10.5 2006/02/20 06:52:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -16,7 +16,6 @@
 #include <iostream>
 #include <numeric>
 
-#include "Object/devel_switches.h"
 #include "Object/unroll/expression_assignment.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -215,17 +214,8 @@ EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i,
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
 	for ( ; i!=e; ++i) {
-#if USE_ASSIGN_VALUE_COLLECTION
-		if ((*i)->assign_value_collection(v, c).bad) {
-			// just re-using same old lame error message
-			cerr << "ERROR: something went wrong in " <<
-				traits_type::tag_name <<
-				" assignment." << endl;
-			return good_bool(false);
-		}
-#else
 		value_reference_collection_type temp;
-		if ((*i)->unroll_references(c, temp).bad) {
+		if ((*i)->unroll_lvalue_references(c, temp).bad) {
 			cerr << "ERROR: unrolling lvalue references in " <<
 				traits_type::tag_name << " assignment." << endl;
 			return good_bool(false);
@@ -258,7 +248,6 @@ EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i,
 			}
 		}
 		INVARIANT(li == temp.end());
-#endif
 	}
 	return good_bool(true);
 }
@@ -275,7 +264,7 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 	INVARIANT(this->src);
 	// works for scalars and multidimensional arrays alike
 	const count_ptr<const const_param>
-		src_values(this->src->unroll_resolve(c));
+		src_values(this->src->unroll_resolve_rvalues(c));
 	if (!src_values) {
 		this->src->dump(
 			cerr << "ERROR: failed to resolve source values of ",
