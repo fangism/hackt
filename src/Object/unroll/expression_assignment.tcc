@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.8.10.3 2006/02/19 23:44:49 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.8.10.4 2006/02/20 05:29:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -16,14 +16,15 @@
 #include <iostream>
 #include <numeric>
 
+#include "Object/devel_switches.h"
 #include "Object/unroll/expression_assignment.h"
-
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/common/multikey_index.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/const_collection.h"
 #include "Object/ref/meta_value_reference.h"
 
 #include "util/wtf.h"
@@ -205,13 +206,16 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Helper function.
+	TODO: deprecate assign_value_collection.
  */
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 good_bool
 EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i, 
 		const const_dest_iterator& e, const const_collection_type& v, 
 		const unroll_context& c) {
-	for ( ; i!=e; i++) {
+	STACKTRACE_VERBOSE;
+	for ( ; i!=e; ++i) {
+#if USE_ASSIGN_VALUE_COLLECTION
 		if ((*i)->assign_value_collection(v, c).bad) {
 			// just re-using same old lame error message
 			cerr << "ERROR: something went wrong in " <<
@@ -219,6 +223,42 @@ EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i,
 				" assignment." << endl;
 			return good_bool(false);
 		}
+#else
+		value_reference_collection_type temp;
+		if ((*i)->unroll_references(c, temp).bad) {
+			cerr << "ERROR: unrolling lvalue references in " <<
+				traits_type::tag_name << " assignment." << endl;
+			return good_bool(false);
+		}
+		typedef	typename value_reference_collection_type::key_type
+						lvalue_key_type;
+		typedef	typename const_collection_type::key_type
+						rvalue_key_type;
+		// these should be the same type
+		const lvalue_key_type ls(temp.size());
+		const rvalue_key_type rs(v.array_dimensions());
+		if (ls != rs) {
+			cerr << "lvalue/rvalue references dimensions mismatch "
+				"in " << traits_type::tag_name <<
+				" assignment." << endl;
+			cerr << "\tgot: " << ls << " and: " << rs << endl;
+			return good_bool(false);
+		}
+		typedef	typename value_reference_collection_type::const_iterator
+							lvalue_iterator;
+		typedef	typename const_collection_type::const_iterator
+							rvalue_iterator;
+		lvalue_iterator li(temp.begin());
+		rvalue_iterator ri(v.begin()), re(v.end());
+		// c'mon gcc, auto-vectorize this loop!
+		for ( ; ri!=re; ++ri, ++li) {
+			NEVER_NULL(*li);
+			if (!(**li = *ri).good) {
+				return good_bool(false);
+			}
+		}
+		INVARIANT(li == temp.end());
+#endif
 	}
 	return good_bool(true);
 }

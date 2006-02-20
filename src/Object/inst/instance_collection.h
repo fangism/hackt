@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.12.6.1 2006/02/19 03:52:59 fang Exp $
+	$Id: instance_collection.h,v 1.12.6.2 2006/02/20 05:29:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -558,6 +558,10 @@ public:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#undef	UNROLL_ALIASES_PROTO
+#undef	INSTANTIATE_INDICES_PROTO
+#undef	CREATE_UNIQUE_STATE_PROTO
 
 #endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
 

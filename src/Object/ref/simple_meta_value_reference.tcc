@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.10.2.3 2006/02/19 21:57:36 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.10.2.4 2006/02/20 05:29:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -44,6 +44,7 @@
 // #include "Object/common/extern_templates.h"
 
 #include "util/multikey.h"
+#include "util/packed_array.tcc"
 #include "util/macros.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -698,6 +699,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(
 }
 
 //-----------------------------------------------------------------------------
+#if USE_ASSIGN_VALUE_COLLECTION
 /**
 	TODO: This will need some context eventually.
 	assignment's destination is either a top-level value collection 
@@ -782,6 +784,96 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
 	INVARIANT(val_iter == values.end());	// sanity check
 	return assign_err;
 }	// end method assign_value_collection
+#endif	// USE_ASSIGN_VALUE_COLLECTION
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Implementation partly ripped off from 
+	simple_meta_instance_reference::unroll_references_helper_no_lookup.  
+	Needs additional check for template formal however.  
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_references(const unroll_context& c, 
+		value_reference_collection_type& a) const {
+	STACKTRACE_VERBOSE;
+#if 0
+if (value_collection_ref->is_template_formal()) {
+	const count_ptr<const const_param>
+		// beware mutual recursion...
+		cpptr(c.lookup_actual(*value_collection_ref));
+	if (!cpptr) {
+		cerr << "Error unroll-resolving parameter values." << endl;
+		return return_type(NULL);
+	}
+}
+#endif
+
+	value_collection_type&
+		_vals(unroll_context_value_resolver<Tag>().operator()
+			(c, *value_collection_ref));
+if (_vals.get_dimensions()) {
+	STACKTRACE("is array");
+	const_index_list cil;
+	if (this->array_indices) {
+		cil = this->array_indices->unroll_resolve(c);
+		if (cil.empty()) {
+			cerr << "ERROR: Failed to resolve indices at "
+				"unroll-time!" << endl;
+			return bad_bool(true);
+		}
+	}
+	// else empty, implicitly refer to whole collection if it is dense
+	// we have resolve constant indices
+	const const_index_list
+		full_indices(_vals.resolve_indices(cil));
+	if (full_indices.empty()) {
+		// might fail because implicit slice reference is not packed
+		cerr << "ERROR: failed to resolve implicit indices from "
+			"a collection whose subarray is not dense."  << endl;
+		cil.dump(_vals.dump_hierarchical_name(
+				cerr << "\tindices referenced: ",
+				dump_flags::verbose),
+			expr_dump_context::default_value) << endl;
+		_vals.dump(cerr << "\tcollection state: ", dump_flags::verbose)
+			<< endl;
+		// _vals.dump_unrolled_instances(cerr, dump_flags::verbose);
+		return bad_bool(true);
+	}       
+	// resize the array according to the collapsed dimensions, 
+	// before passing it to unroll_aliases.
+	{
+	const const_range_list
+		crl(full_indices.collapsed_dimension_ranges());
+	const multikey_index_type
+		array_sizes(crl.resolve_sizes());
+	a.resize(array_sizes);
+	// a.resize(upper -lower +ones);
+	}
+
+	// construct the range of aliases to collect
+	const multikey_index_type lower(full_indices.lower_multikey());
+	const multikey_index_type upper(full_indices.upper_multikey());
+	// this will set the size and dimensions of packed_array a
+	if (_vals.unroll_references(lower, upper, a).bad) {
+		cerr << "ERROR: unrolling aliases." << endl;
+		return bad_bool(true);
+	}
+	// success!
+	return bad_bool(false);
+} else {
+	STACKTRACE("is scalar");
+	// is a scalar instance
+	// size the alias_collection_type appropriately
+	a.resize();             // empty
+	const multikey_index_type bogus;
+	if (_vals.unroll_references(bogus, bogus, a).bad) {
+		cerr << "ERROR: unrolling aliases." << endl;
+		return bad_bool(true);
+	}
+	return bad_bool(false);
+}
+}
 
 //=============================================================================
 }	// end namepace entity

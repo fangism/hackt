@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: expression_assignment.h,v 1.7.10.3 2006/02/19 23:44:49 fang Exp $
+	$Id: expression_assignment.h,v 1.7.10.4 2006/02/20 05:29:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_H__
@@ -41,6 +41,8 @@ public:
 	typedef	typename traits_type::const_expr_type	const_expr_type;
 	typedef	typename traits_type::const_collection_type
 							const_collection_type;
+	typedef	typename traits_type::value_reference_collection_type
+						value_reference_collection_type;
 	typedef	count_ptr<value_reference_type>		dest_ptr_type;
 	typedef	count_ptr<const value_reference_type>	dest_const_ptr_type;
 	typedef	std::vector<dest_const_ptr_type>	dest_list_type;

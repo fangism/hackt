@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.1.2.3 2006/02/19 06:09:02 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.1.2.4 2006/02/20 05:29:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -38,10 +38,12 @@ class aggregate_meta_instance_reference :
 	public meta_instance_reference<Tag> {
 	typedef	AGGREGATE_META_INSTANCE_REFERENCE_CLASS		this_type;
 	typedef	meta_instance_reference<Tag>			parent_type;
+	typedef	class_traits<Tag>			traits_type;
 public:
-	typedef	count_ptr<const parent_type>	subreference_ptr_type;
-	typedef	std::vector<subreference_ptr_type>
-						subreference_array_type;
+	typedef	typename traits_type::alias_collection_type
+							alias_collection_type;
+	typedef	count_ptr<const parent_type>		subreference_ptr_type;
+	typedef	std::vector<subreference_ptr_type>	subreference_array_type;
 private:
 	subreference_array_type			subreferences;
 public:
@@ -81,6 +83,9 @@ public:
 	CONNECT_PORT_PROTO;
 
 	LOOKUP_FOOTPRINT_FRAME_PROTO;
+
+	bad_bool
+	unroll_references(const unroll_context&, alias_collection_type&) const;
 
 	good_bool
 	append_meta_instance_reference(

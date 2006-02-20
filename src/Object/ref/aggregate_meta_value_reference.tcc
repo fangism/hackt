@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.6 2006/02/19 23:44:48 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.7 2006/02/20 05:29:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -16,6 +16,7 @@
 #include <iterator>
 #include "Object/ref/aggregate_meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
+#include "Object/ref/meta_value_reference.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/multikey_index.h"
 #include "Object/expr/const_param.h"
@@ -34,6 +35,7 @@
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
+#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {
@@ -403,6 +405,7 @@ if (this->_is_concatenation) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ASSIGN_VALUE_COLLECTION
 /**
 	Assigns values to the aggregate values referenced.  
 	Prepare to const_collection_type::make_value_slice!
@@ -448,6 +451,91 @@ if (this->_is_concatenation) {
 	// is higher dimension array
 	FINISH_ME(Fang);
 	return bad_bool(true);
+}
+}
+#endif	// USE_ASSIGN_VALUE_COLLECTION
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Aggregates subreference collections into one packed collection. 
+	\param a cell-written collection of lvalue references, 
+		unrolled by this aggregate reference.  
+	NOTE: rvalue collections should be obtained by unroll_resolve.
+		(Perhaps we should name it so..., call this unroll_lvalues.)
+	\pre subreferences have equal dimension, but specific
+		sizes in each dimension are yet unknown.  
+	\return bad if any of the following error conditions occurs.
+		Any subreference contains a non-lvalue reference, 
+		because all references need to be assignable.  
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bad_bool
+AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_references(
+		const unroll_context& c,
+		value_reference_collection_type& a) const {
+	// collection collection type
+	typedef	vector<value_reference_collection_type>	coll_coll_type;
+	typedef	typename coll_coll_type::iterator	coll_coll_iterator;
+	typedef	typename coll_coll_type::const_iterator
+						const_coll_coll_iterator;
+	typedef	typename value_reference_collection_type::key_type
+							key_type;
+		// should be multikey_index_type
+	typedef	typename value_reference_collection_type::iterator
+							target_iterator;
+	coll_coll_type temp(subreferences.size());
+{
+	coll_coll_iterator ci(temp.begin());
+	const const_iterator b(subreferences.begin()), e(subreferences.end());
+	const_iterator i(b);
+	// std::transform pattern
+	for ( ; i!=e; ++i, ++ci) {
+		// util::wtf_is(*i);
+		const count_ptr<const parent_type>
+			lv(i->template is_a<const parent_type>());
+		if (!lv) {
+			cerr << "Error unrolling aggregate lvalue reference, "
+				"got rvalue in subreference " <<
+				distance(b, i) +1 << " of ";
+			this->what(cerr) << endl;
+			return bad_bool(true);
+		} else if (lv->unroll_references(c, *ci).bad) {
+			cerr << "Error unrolling subreference " <<
+				distance(b, i) +1 << " of ";
+			this->what(cerr) << endl;
+			return bad_bool(true);
+		}
+		// else continue
+	}
+}
+	// aggregation, by concatenation or construction
+	const size_t subdim = subreferences.front()->dimensions();
+if (this->_is_concatenation) {
+	FINISH_ME(Fang);
+	return bad_bool(true);
+} else {
+	// is array construction
+	if (subdim) {
+		// is higher dimension array
+		FINISH_ME(Fang);
+		return bad_bool(true);
+	} else {
+		// is 1-D array, and all constituents are scalar
+		// just copy pointer value-references over
+		key_type k(1);
+		k[0] = temp.size();
+		a.resize(k);
+		target_iterator ti(a.begin());
+		const const_coll_coll_iterator b(temp.begin()), e(temp.end());
+		const_coll_coll_iterator i(b);
+		for ( ; i!=e; ++i, ++ti) {
+			const key_type s(i->size());
+			INVARIANT(!s.dimensions());
+			*ti = i->front();
+		}
+		INVARIANT(ti == a.end());
+		return bad_bool(false);
+	}
 }
 }
 

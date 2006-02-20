@@ -2,7 +2,7 @@
 	\file "Object/traits/pbool_traits.h"
 	Traits and policies for parameter booleans.  
 	This file used to be "Object/art_object_pbool_traits.h".
-	$Id: pbool_traits.h,v 1.7.2.2 2006/02/19 03:53:13 fang Exp $
+	$Id: pbool_traits.h,v 1.7.2.3 2006/02/20 05:29:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PBOOL_TRAITS_H__
@@ -55,7 +55,7 @@ struct class_traits<pbool_tag> {
 	typedef const_param			const_collection_parent_type;
 
 	typedef	never_ptr<pbool_instance>	value_reference_ptr_type;
-	typedef	packed_array_generic<pbool_value_type, value_reference_ptr_type>
+	typedef	packed_array_generic<pint_value_type, value_reference_ptr_type>
 						value_reference_collection_type;
 	typedef	pbool_expression_assignment	expression_assignment_type;
 	typedef	param_expression_assignment	expression_assignment_parent_type;

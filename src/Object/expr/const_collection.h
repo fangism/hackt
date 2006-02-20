@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.7.2.3 2006/02/19 23:44:47 fang Exp $
+	$Id: const_collection.h,v 1.7.2.4 2006/02/20 05:29:35 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -123,6 +123,9 @@ public:
 
 	const_range_list
 	static_constant_dimensions(void) const;
+
+	key_type
+	array_dimensions(void) const { return values.size(); }
 
 	value_type
 	operator [] (const key_type&) const;

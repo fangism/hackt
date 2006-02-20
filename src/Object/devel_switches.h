@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.8.6.1 2006/02/19 03:52:44 fang Exp $
+	$Id: devel_switches.h,v 1.8.6.2 2006/02/20 05:29:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -35,6 +35,13 @@
 	fix a critical bug.  
  */
 #define INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST       1
+
+/**
+	Deprecating use of value_reference::assign_value_collection
+	in favor of new lvalue/rvalue assignment method.  
+	Goal: 0
+ */
+#define	USE_ASSIGN_VALUE_COLLECTION			0
 
 //=============================================================================
 

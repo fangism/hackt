@@ -5,6 +5,19 @@
 
 2006-02-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-07:
+	  Phasing out old meta_value_reference::assign_value_collection, 
+		in favor of new method of assigning parameter values
+		in expression_assignment::unroll().  
+		The new method collects lvalue references in a similar
+		fashion to instance_aliases in connections.  
+		Cleanner, easier to understand, more efficient.  
+	  Implemented value_collection::unroll_references, 
+		and meta_value_reference::unroll_references.  
+	  Separater out value-instance structs into their own headers.  
+	  Fixed array_generic types in pbool/preal_traits.h.
+
+
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-06:
 	  Partially implemented aggregate_value_ref::assign_value_collection, 
 		but going to abandon shortly.  *shrug* (reason below)

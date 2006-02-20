@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference.h"
-	$Id: meta_value_reference.h,v 1.1.4.4 2006/02/19 23:44:48 fang Exp $
+	$Id: meta_value_reference.h,v 1.1.4.5 2006/02/20 05:29:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_H__
@@ -10,6 +10,7 @@
 #include "Object/ref/meta_value_reference_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -39,6 +40,8 @@ public:
 	typedef	expr_base_type			interface_type;
 	typedef	typename traits_type::const_collection_type
 						const_collection_type;
+	typedef	typename traits_type::value_reference_collection_type
+						value_reference_collection_type;
 	typedef	count_ptr<const interface_type>	init_arg_type;
 protected:
 	meta_value_reference() :
@@ -50,8 +53,15 @@ virtual	good_bool
 	initialize(const init_arg_type&) = 0;
 
 virtual	bad_bool
+	unroll_references(const unroll_context&,
+		value_reference_collection_type&) const = 0;
+
+#if USE_ASSIGN_VALUE_COLLECTION
+// phase this out
+virtual	bad_bool
 	assign_value_collection(const const_collection_type&, 
 		const unroll_context&) const = 0;
+#endif
 
 	/**
 		Equivalent of bind/mem_fun/compose/dereference...

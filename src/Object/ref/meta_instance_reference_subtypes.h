@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.4.16.1 2006/02/19 03:53:09 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.4.16.2 2006/02/20 05:29:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -10,11 +10,13 @@
 
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/traits/class_traits_fwd.h"
-// might as well include it here
-// #include "Object/ref/nonmeta_instance_reference_subtypes.h"
+#include "util/boolean_types.h"
 
 namespace HAC {
 namespace entity {
+class unroll_context;
+using util::bad_bool;
+
 //=============================================================================
 
 #define	META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE	template <class Tag>
@@ -23,6 +25,10 @@ namespace entity {
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class meta_instance_reference : public meta_instance_reference_base {
 	typedef	META_INSTANCE_REFERENCE_CLASS	this_type;
+public:
+	typedef	class_traits<Tag>		traits_type;
+	typedef	typename traits_type::alias_collection_type
+						alias_collection_type;
 protected:
 	meta_instance_reference() : meta_instance_reference_base() { }
 public:
@@ -34,6 +40,10 @@ virtual	size_t
 	// consider sub-typing?
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
+
+virtual bad_bool
+	unroll_references(const unroll_context&,
+		alias_collection_type&) const = 0;
 
 	bool
 	may_be_type_equivalent(const meta_instance_reference_base&) const;

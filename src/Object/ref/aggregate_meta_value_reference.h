@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.1.2.6 2006/02/19 23:44:48 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.1.2.7 2006/02/20 05:29:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include <vector>
+#include "Object/devel_switches.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/meta_value_reference.h"
@@ -67,6 +68,8 @@ public:
 	typedef	count_ptr<const expr_base_type>	subreference_ptr_type;
 	typedef	std::vector<subreference_ptr_type>
 						subreferences_array_type;
+	typedef	typename traits_type::value_reference_collection_type
+						value_reference_collection_type;
 private:
 	typedef	typename traits_type::template value_array<0>::type
 						value_scalar_type;
@@ -148,9 +151,16 @@ public:
 	count_ptr<const_param>
 	uroll_resolve(const unroll_context&) const;
 
+#if USE_ASSIGN_VALUE_COLLECTION
+	// phase out
 	bad_bool
 	assign_value_collection(const const_collection_type&, 
 		const unroll_context&) const;
+#endif
+
+	bad_bool
+	unroll_references(const unroll_context&, 
+		value_reference_collection_type&) const;
 
 	good_bool
 	append_meta_value_reference(const count_ptr<const param_expr>&);

@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.5.2.1 2006/02/19 03:53:15 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.5.2.2 2006/02/20 05:29:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -16,6 +16,9 @@
 
 #include "Object/unroll/param_expression_assignment.h"
 #include "Object/unroll/expression_assignment.tcc"
+#include "Object/inst/pbool_instance.h"
+#include "Object/inst/pint_instance.h"
+#include "Object/inst/preal_instance.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"

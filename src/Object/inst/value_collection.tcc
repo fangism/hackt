@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.10.2.2 2006/02/19 03:53:05 fang Exp $
+ 	$Id: value_collection.tcc,v 1.10.2.3 2006/02/20 05:29:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -634,7 +634,9 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ASSIGN_VALUE_COLLECTION
 /**
+	DEPRECATED.
 	Assigns a single value, using an index.
 	Only call this if this is non-scalar (array).  
 	\return true on error.
@@ -663,6 +665,57 @@ VALUE_ARRAY_CLASS::assign(const multikey_index_type& k, const value_type i) {
 	element_type& pi = collection[index];
 #endif
 	return (pi = i);	// convert good_bool to bad_bool implicitly
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Gathers references (for assignment).  
+	Implementation ripped from instance_collection::unroll_aliases.
+ */
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+bad_bool
+VALUE_ARRAY_CLASS::unroll_references(const multikey_index_type& l, 
+		const multikey_index_type& u,
+		value_reference_collection_type& a) const {
+	typedef typename value_reference_collection_type::key_type
+						collection_key_type;
+	typedef typename value_reference_collection_type::iterator
+						reference_collection_iterator;
+	typedef	typename util::multikey<D, pint_value_type>::generator_type
+						key_generator_type;
+	typedef	typename collection_type::const_iterator	const_iterator;
+	STACKTRACE_VERBOSE;
+	const key_type lower(l);        // this will assert dimension match!
+	const key_type upper(u);        // this will assert dimension match!
+	key_generator_type key_gen(lower, upper);
+	key_gen.initialize();
+	bool ret = false;
+	reference_collection_iterator a_iter(a.begin());
+	const const_iterator collection_end(this->collection.end());
+	// maybe INVARIANT(sizes == iterations)
+	do {
+		// really is a monotonic incremental search, 
+		// don't need log(N) lookup each time, fix later...
+		const const_iterator it(this->collection.find(key_gen));
+		if (it == collection_end) {
+			cerr << "FATAL: reference to uninstantiated " <<
+				traits_type::tag_name << " at ";
+			this->dump_hierarchical_name(cerr) << " " <<
+				key_gen << endl;
+			*a_iter = never_ptr<element_type>(NULL);
+			ret = true;
+		} else {
+			const element_type& pi(it->second);
+			INVARIANT(pi.instantiated);
+			*a_iter = never_ptr<element_type>(
+				const_cast<element_type*>(&pi));
+		}
+		a_iter++;
+		key_gen++;
+	} while (key_gen != key_gen.lower_corner);
+	INVARIANT(a_iter == a.end());
+	return bad_bool(ret);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -813,10 +866,7 @@ VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 const_index_list
 VALUE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
-	cerr << "WARNING: VALUE_SCALAR_CLASS::resolve_indices(const_index_list) "
-		"always returns an empty list!" << endl;
-	// calling this is probably not intended, and is an error.  
-	// DIE;
+	ICE_NEVER_CALL(cerr);
 	return const_index_list();
 }
 
@@ -901,13 +951,12 @@ good_bool
 VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
 		const multikey_index_type& i, 
 		const unroll_context&) const {
-	cerr << "FATAL: VALUE_SCALAR_CLASS::lookup_value(int&, multikey) "
-		"should never be called!" << endl;
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ASSIGN_VALUE_COLLECTION
 /**
 	Assigns a single value.
 	Only call this if this is scalar, 0-D.
@@ -927,10 +976,29 @@ VALUE_SCALAR_TEMPLATE_SIGNATURE
 bad_bool
 VALUE_SCALAR_CLASS::assign(const multikey_index_type& k, const value_type i) {
 	// this should never be called
-	cerr << "FATAL: VALUE_SCALAR_CLASS::assign(multikey, int) "
-		"should never be called!" << endl;
-	DIE;
+	ICE_NEVER_CALL(cerr);
 	return bad_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+bad_bool
+VALUE_SCALAR_CLASS::unroll_references(const multikey_index_type& l, 
+		const multikey_index_type& u,
+		value_reference_collection_type& a) const {
+	typedef	typename value_reference_collection_type::value_type
+							value_ref_ptr_type;
+	if (this->the_instance.instantiated) {
+		(*a.begin()) = value_ref_ptr_type(
+			const_cast<element_type*>(&this->the_instance));
+		return bad_bool(false);
+	} else {
+		cerr << "ERROR: reference to uninstantiated " <<
+			traits_type::tag_name << " ";
+		this->dump_hierarchical_name(cerr) << endl;
+		return bad_bool(true);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
