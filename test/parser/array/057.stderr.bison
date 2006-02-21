@@ -5,14 +5,11 @@ state	value
 #STATE#	(null) 
 #STATE#	list<(root_item)>: (instance-decl) ... [6:1--7:6]
 #STATE#	(type-ref) [9:1..4]
-#STATE#	identifier: z [9:6]
-#STATE#	(null) 
-#STATE#	list<(range)>: (range) ... [9:8]
+#STATE#	list<(declaration-id)>: (declaration-array): identifier: zlist<(range)>: (range) ... ... [9:6..8]
 #STATE#	= [9:11]
 in state #STATE#, possible rules are:
-	instance_id_item : ID optional_template_arguments_in_angles sparse_range_list .  (#RULE#)
-	sparse_range_list : sparse_range_list . bracketed_sparse_range  (#RULE#)
+	type_instance_declaration: type_id instance_id_list . ';'  (#RULE#)
+	instance_id_list: instance_id_list . ',' instance_id_item  (#RULE#)
 acceptable tokens are: 
-	',' (reduce)
-	';' (reduce)
-	'[' (shift)
+	',' (shift)
+	';' (shift)
