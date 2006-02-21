@@ -2,14 +2,14 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.10 2006/02/21 04:48:38 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.11 2006/02/21 23:07:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
 
 #include "Object/ref/meta_instance_reference_base.h"
-#include "Object/ref/simple_meta_instance_reference_base.h"
+#include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -35,14 +35,14 @@ simple_meta_instance_reference<Tag>
 	derive from this class.  
 	\param Collection the instance collection type.
 	\param Parent the type from which this is derived, 
-		probably simple_meta_instance_reference_base or descendant.  
+		probably simple_meta_indexed_reference_base or descendant.  
 	TODO: derive using multiple inheritance from now on:
-		always derive from simple_meta_instance_reference_base and the
+		always derive from simple_meta_indexed_reference_base and the
 		type interface designated by class_traits.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_instance_reference :
-	public simple_meta_instance_reference_base, 
+	public simple_meta_indexed_reference_base, 
 	public class_traits<Tag>::meta_instance_reference_parent_type {
 #if 1
 	template <bool>
@@ -58,7 +58,7 @@ protected:
 			<traits_type::has_substructure>
 					substructure_implementation_policy;
 public:
-	typedef	simple_meta_instance_reference_base	common_base_type;
+	typedef	simple_meta_indexed_reference_base	common_base_type;
 	/// the instance collection base type
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;

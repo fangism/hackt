@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.4 2006/02/21 04:48:20 fang Exp $
+	$Id: object_fwd.h,v 1.5 2006/02/21 23:07:35 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -37,7 +37,7 @@ namespace entity {
 	class type_reference_base;
 	template <class> class canonical_type; // "Object/type/canonical_type.h"
 	class fundamental_type_reference;
-	class simple_meta_instance_reference_base;
+	class simple_meta_indexed_reference_base;
 	class simple_nonmeta_instance_reference_base;
 	class aggregate_meta_value_reference_base;
 	class aggregate_meta_instance_reference_base;

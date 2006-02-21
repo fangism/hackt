@@ -5,6 +5,12 @@
 
 2006-02-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-15:
+	  Documentation update in dox/lang -- for aggregate references.
+	  Renamed (file/class) simple_meta_instance_reference_base to
+		simple_meta_indexed_reference_base, for clarity.  
+
+
 	* HACKT-00-01-04-main-00-77-14:
 	  Implemented collectible-equivalent type checking for aggregate
 		instance references.  

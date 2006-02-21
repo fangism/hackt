@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.7 2006/02/21 18:13:34 fang Exp $
+	$Id: expr.cc,v 1.8 2006/02/21 23:07:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1160,7 +1160,7 @@ member_expr::check_meta_reference(const context& c) const {
 	typedef	inst_ref_expr::meta_return_type	return_type;
 	const return_type o(owner->check_meta_reference(c));
 	// useless return value
-	// expect: simple_meta_instance_reference_base on object stack
+	// expect: simple_meta_indexed_reference_base on object stack
 	if (!o) {
 		cerr << "ERROR in base instance reference of member expr at "
 			<< where(*owner) << endl;
@@ -1400,12 +1400,12 @@ index_expr::check_meta_reference(const context& c) const {
 	// later this may be a member_meta_instance_reference...
 	// should cast to meta_instance_reference_base instead, 
 	// abstract attach_indices
-	const count_ptr<simple_meta_instance_reference_base>
+	const count_ptr<simple_meta_indexed_reference_base>
 		base_inst(base_expr.inst_ref() ?
 			base_expr.inst_ref()
-				.is_a<simple_meta_instance_reference_base>() :
+				.is_a<simple_meta_indexed_reference_base>() :
 			base_expr.value_ref()
-				.is_a<simple_meta_instance_reference_base>()
+				.is_a<simple_meta_indexed_reference_base>()
 			);
 	NEVER_NULL(base_inst);
 

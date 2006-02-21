@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.15 2006/02/21 04:48:38 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.16 2006/02/21 23:07:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -84,7 +84,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just wrapped around common base class implmentation.  
-	Ripped off of the old simple_meta_instance_reference_base::dump()
+	Ripped off of the old simple_meta_indexed_reference_base::dump()
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
@@ -100,12 +100,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 		this->inst_collection_ref->dump_hierarchical_name(o,
 			dump_flags::default_value);
 	}
-	return simple_meta_instance_reference_base::dump_indices(o, c);
+	return simple_meta_indexed_reference_base::dump_indices(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Simplified from simple_meta_instance_reference_base::dump_type_size().
+	Simplified from simple_meta_indexed_reference_base::dump_type_size().
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
@@ -146,7 +146,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_type_ref(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Copy-reduced from simple_meta_instance_reference_base.
+	Copy-reduced from simple_meta_indexed_reference_base.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
@@ -325,7 +325,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 		const instance_collection_generic_type& _inst, 
 		const never_ptr<const index_list_type> ind, 
 		alias_collection_type& a) {
-	// possibly factor this part out into simple_meta_instance_reference_base?
+	// possibly factor this part out into simple_meta_indexed_reference_base?
 	STACKTRACE_VERBOSE;
 	const footprint* const f(c.get_target_footprint());
 	const string& inst_name(_inst.get_name());

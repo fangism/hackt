@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.13 2006/02/21 04:48:39 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.14 2006/02/21 23:07:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -68,7 +68,7 @@ using util::persistent_traits;
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
-		simple_meta_instance_reference_base(), 
+		simple_meta_indexed_reference_base(), 
 		parent_type(), 
 		value_collection_ref(NULL) {
 }
@@ -77,7 +77,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 		const value_collection_ptr_type pi) :
-		simple_meta_instance_reference_base(), 
+		simple_meta_indexed_reference_base(), 
 		parent_type(), 
 		value_collection_ref(pi) {
 }
@@ -133,14 +133,14 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->value_collection_ref->dump_hierarchical_name(o,
 			dump_flags::default_value);
 	}
-	return simple_meta_instance_reference_base::dump_indices(o, c);
+	return simple_meta_indexed_reference_base::dump_indices(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
-	// copied from simple_meta_instance_reference_base::dimensions();
+	// copied from simple_meta_indexed_reference_base::dimensions();
 	// size_t dim = get_coll_base()->get_dimensions();
 	size_t dim = this->value_collection_ref->get_dimensions();
 	if (this->array_indices) {
@@ -152,7 +152,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Copy-reduced from simple_meta_instance_reference_base.
+	Copy-reduced from simple_meta_indexed_reference_base.
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool

@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.8 2006/02/21 04:48:36 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.9 2006/02/21 23:07:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -40,7 +40,7 @@ using util::persistent;
 
 //=============================================================================
 /**
-	PHASE this back into what is currently simple_meta_instance_reference_base.  
+	PHASE this back into what is currently simple_meta_indexed_reference_base.  
 	Base class for anything that *refers* to an instance, 
 	or collection thereof.  
 	Instance reference should be cacheable?

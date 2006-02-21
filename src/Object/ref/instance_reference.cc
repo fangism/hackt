@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.12 2006/02/21 04:48:36 fang Exp $
+ 	$Id: instance_reference.cc,v 1.13 2006/02/21 23:07:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -142,25 +142,25 @@ meta_instance_reference_base::make_port_connection(
 }
 
 //=============================================================================
-// class simple_meta_instance_reference_base method definitions
+// class simple_meta_indexed_reference_base method definitions
 
 /**
 	Private empty constructor.
  */
-simple_meta_instance_reference_base::simple_meta_instance_reference_base() :
+simple_meta_indexed_reference_base::simple_meta_indexed_reference_base() :
 		array_indices(NULL) {
 	// no assert
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-simple_meta_instance_reference_base::~simple_meta_instance_reference_base() { }
+simple_meta_indexed_reference_base::~simple_meta_indexed_reference_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just print the index portion of the reference.  
  */
 ostream&
-simple_meta_instance_reference_base::dump_indices(ostream& o, 
+simple_meta_indexed_reference_base::dump_indices(ostream& o, 
 		const expr_dump_context& c) const {
 	if (array_indices) {
 		expr_dump_context dc(c);
@@ -185,7 +185,7 @@ simple_meta_instance_reference_base::dump_indices(ostream& o,
 	\return true if successful, else false.  
  */
 good_bool
-simple_meta_instance_reference_base::attach_indices(
+simple_meta_indexed_reference_base::attach_indices(
 		excl_ptr<index_list_type>& i) {
 	/**
 		We used to perform static checks for index collisions, 
@@ -201,7 +201,7 @@ simple_meta_instance_reference_base::attach_indices(
 	Common persistence visitor for all subclasses.  
  */
 void
-simple_meta_instance_reference_base::collect_transient_info_base(
+simple_meta_indexed_reference_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	if (array_indices)
 		array_indices->collect_transient_info(m);
@@ -214,7 +214,7 @@ simple_meta_instance_reference_base::collect_transient_info_base(
 	\pre o MUST BE the stream corresponding to this object.
  */
 void
-simple_meta_instance_reference_base::write_object_base(
+simple_meta_indexed_reference_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, array_indices);
 }
@@ -229,7 +229,7 @@ simple_meta_instance_reference_base::write_object_base(
 	\pre i MUST BE the stream corresponding to this object.
  */
 void
-simple_meta_instance_reference_base::load_object_base(
+simple_meta_indexed_reference_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, array_indices);
 	// must load the indices early?

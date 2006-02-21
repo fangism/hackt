@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.8 2006/02/21 04:48:36 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.9 2006/02/21 23:07:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -32,7 +32,7 @@ member_meta_instance_reference<Tag>
 	Re-usable type-specific member_meta_instance_reference class template.  
 	This class is final, nothing else derives from it, 
 	no need for virtual functions.  
-	\param InstRef must be a type derived from simple_meta_instance_reference_base.
+	\param InstRef must be a type derived from simple_meta_indexed_reference_base.
 	Consider moving this class definition to "art_object_inst_ref.h"?
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

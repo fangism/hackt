@@ -1,6 +1,6 @@
 % "chapters/arrays.tex"
 
-%	$Id: arrays.tex,v 1.5 2005/12/13 04:14:42 fang Exp $
+%	$Id: arrays.tex,v 1.6 2006/02/21 23:07:32 fang Exp $
 
 \chapter{Arrays}
 \label{sec:arrays}
@@ -148,20 +148,27 @@ Implicit array references that do not satisfy this are considered errors.
 [tons of examples]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Complex aggregates}
+\section{Aggregates}
 \label{sec:arrays:aggregate}
 
-Quite advanced, semantics not yet implemented.  
+For convenience, we often want to reference a collection of instances
+or expressions, and group them into the same entity.  
+This section describes the various modes of \emph{aggregate} references
+supported by the \hac\ language.  
 
-Splicing, concatenating, building higher dimensions... oh my.  
-
+\medskip
 \noindent
 \tit{complex-expr-term}
 : \tit{array-construction}
 $|$ \tit{loop-concatenation}
 $|$ \tit{simple-expr}
+\medskip
 
-The following subsections explain the array-related constructs.  
+(Here, \tit{simple-expr} is actually a \tit{shift-expr} in the grammar, 
+to eliminate ambiguity with repsect to the \ttt{<} and \ttt{>} operators, 
+which also wrap around template arguments.)
+
+The following subsections explain the various array-related constructs.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Array concatenation}
@@ -169,12 +176,28 @@ The following subsections explain the array-related constructs.
 
 The syntax for concatenating arrays:
 
+\medskip
 \noindent
 \tit{array-concatenation}\\
 : \tit{array-concatenation} \ttt{\#} \tit{complex-expr-term}\\
 $|$ \tit{complex-expr-term}
+\medskip
+
+Semantics: 
+The result is an array of the same dimensionality as its constituents, 
+but the size of the first dimension is the sum of the first dimension
+of its constituents.  The constituents, therefore, cannot be scalars.  
+In 2 or higher dimensions, the sizes of all trailing dimensions
+(past the first) must match to form a valid concatenation.  
+This construction is valid for both meta-expressions and instance-references.  
 
 Example:
+1D-arrays of size $[M], [N], [P]$ would be concatenated to form
+a 1D-array of size $[M+N+P]$.
+2D-arrays of size $[M][Q], [N][Q], [P][Q]$ would be concatenated to form
+a 2D-array of size $[M+N+P][Q]$.
+
+\tbf{Status}: not yet implemented, not deemed difficult, low-medium priority
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Array construction}
@@ -182,12 +205,29 @@ Example:
 
 The syntax for building higher-dimension arrays:
 
-\tit{array-construction} : \ttt{\{} \tit{array-concatenation} \ttt{\}} 
+\medskip
+\noindent
+\tit{array-construction} : \ttt{\{} \tit{construction-list} \ttt{\}}\\
+\tit{construction-list}\\
+: \tit{construction-list} \ttt{,} \tit{complex-expr-term}\\
+$|$ \tit{complex-expr-term}
+\medskip
 
-This construct takes an $N$-dimension array and produces an 
-$N+1$-dimension array of size $1\times\cdots$.
+Semantics:
+This construct takes $N$-dimension references and produces an 
+$N+1$-dimension array of references.  
+Technically, each element is first promoted one dimension
+(creating an $N+1$-dimension array with leading dimensions size $[1]$)
+and the results are then concatenated.  
+The following are equivalent: \ttt{\{ x, y \}} vs. \ttt{\{x\} \# \{y\}}.
+The dimension constraint for matching trailing dimensions also applies here.  
+This construction is valid for both meta-expressions and instance-references.  
 
 Example:
+This is most commonly used for grouping scalars into a 1D-array.  
+
+\tbf{Status}: implemented for 1D-array contruction from scalars, 
+	not difficult to add higher dimensions.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Loop concatenation}
@@ -195,15 +235,17 @@ Example:
 
 The syntax for loop-style concatenation:
 
+\medskip
+\noindent
 \ttt{( \# :} \tit{identifier} \ttt{:} \tit{range} \ttt{:}
 	\tit{complex-expr-term} \ttt{)}
+\medskip
+
+Semantics:
 
 Example:
 
-Denotational and operation semantics, please.
-
-Requiring size-equivalence (not range-equivalence) for construction.
-Remapping of indices.  
+Status: not yet implemented, low priority.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Issues}

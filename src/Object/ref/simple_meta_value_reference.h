@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.8 2006/02/21 04:48:38 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.9 2006/02/21 23:07:37 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -11,7 +11,7 @@
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/common/multikey_index.h"
 #include "Object/ref/meta_value_reference_base.h"
-#include "Object/ref/simple_meta_instance_reference_base.h"
+#include "Object/ref/simple_meta_indexed_reference_base.h"
 	// transformed to not be instance-specific
 #include "Object/traits/class_traits_fwd.h"
 
@@ -39,7 +39,7 @@ simple_meta_value_reference<Tag>
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_value_reference :
-	public simple_meta_instance_reference_base, 
+	public simple_meta_indexed_reference_base, 
 	public class_traits<Tag>::meta_value_reference_parent_type {
 public:
 	typedef	class_traits<Tag>			traits_type;
@@ -50,7 +50,7 @@ private:
 							parent_type;
 	typedef	typename parent_type::expr_base_type	expr_base_type;
 	// is not actually specific to instances
-	typedef	simple_meta_instance_reference_base	common_base_type;
+	typedef	simple_meta_indexed_reference_base	common_base_type;
 	typedef	expr_base_type				interface_type;
 public:
 	typedef	count_ptr<const interface_type>		init_arg_type;

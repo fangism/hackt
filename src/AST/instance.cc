@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.6 2006/02/21 04:48:19 fang Exp $
+	$Id: instance.cc,v 1.7 2006/02/21 23:07:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -31,7 +31,7 @@
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
-#include "Object/ref/simple_meta_instance_reference_base.h"
+#include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/ref/meta_value_reference_base.h"
 #include "Object/expr/pbool_expr.h"
 #include "Object/expr/meta_range_expr.h"
@@ -101,7 +101,7 @@ using std::_Select2nd;
 using std::find;
 using entity::meta_instance_reference_base;
 using entity::meta_value_reference_base;
-using entity::simple_meta_instance_reference_base;
+using entity::simple_meta_indexed_reference_base;
 using entity::aliases_connection_base;
 using entity::meta_instance_reference_connection;
 using entity::port_connection;

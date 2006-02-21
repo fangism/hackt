@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-15:
+	  Updated documentation on aggregate references in chapters/arrays.tex.
+	  NOTE: the semantics changed from before (which were never used).  
+
+
 2006-02-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-76-9:

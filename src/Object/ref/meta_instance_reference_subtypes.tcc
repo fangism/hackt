@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.2 2006/02/21 04:48:36 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.3 2006/02/21 23:07:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -22,7 +22,7 @@ namespace entity {
 
 /**
 	Implementation copied-modified from 
-	simple_meta_instance_reference_base::may_be_type_equivalent().
+	simple_meta_indexed_reference_base::may_be_type_equivalent().
 	Conservatively returns true.
 	NOTE: does not attempt to reason about static dimensions of arrays.  
 	TODO: be conservative w.r.t. aggregates?
@@ -44,9 +44,9 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 		lib(get_inst_base());
 	const this_type* const smir = IS_A(const this_type*, &i);
 	if (!smir) {
-		cerr << "Unhandled case in simple_meta_instance_reference_base"
+		cerr << "Unhandled case in simple_meta_indexed_reference_base"
 			"::may_be_type_equivalent(): "
-			"comparing to non-simple_meta_instance_reference_base, "
+			"comparing to non-simple_meta_indexed_reference_base, "
 			"probably intended for complex-aggregate instance "
 			"references *grin*... returning false." << endl;
 		return false;
@@ -89,7 +89,7 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 /**
 	<sarcasm>
 	Shamelessly copied from 
-	simple_meta_instance_reference_base::must_be_type_equivalent().
+	simple_meta_indexed_reference_base::must_be_type_equivalent().
 	</sarcasm>
 	This is probably never called.  
  */

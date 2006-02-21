@@ -1,9 +1,12 @@
 /**
-	\file "Object/ref/simple_meta_instance_reference_base.h"
-	Base class family for instance references in HAC.  
+	\file "Object/ref/simple_meta_indexed_reference_base.h"
+	Base implementation class for meta-indexed references in HAC.  
+	$Id: simple_meta_indexed_reference_base.h,v 1.1 2006/02/21 23:07:36 fang Exp $
+	This file was "Object/simple_meta_instance_reference_base.h"
+		in a previous life.  
+	Id: simple_meta_instance_reference_base.h,v 1.9 2006/02/21 04:48:38 fang Exp
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: simple_meta_instance_reference_base.h,v 1.9 2006/02/21 04:48:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_BASE_H__
@@ -43,7 +46,7 @@ using util::persistent_object_manager;
 	Most methods in here should be helpers.  
 
 	PHASE THIS back into meta_instance_reference_base.
-	OR... call this "simple_meta_instance_reference_base" instead.  
+	OR... call this "simple_meta_indexed_reference_base" instead.  
 		and replace collective_meta_instance_reference with
 		complex_aggregate_meta_instance_reference...
 	Base class for a reference to a particular instance.  
@@ -58,9 +61,9 @@ using util::persistent_object_manager;
 	Should these be hashed into used_id_map?
 		Will there be identifier conflicts?
  */
-class simple_meta_instance_reference_base {
+class simple_meta_indexed_reference_base {
 private:
-	typedef	simple_meta_instance_reference_base		this_type;
+	typedef	simple_meta_indexed_reference_base		this_type;
 
 	template <bool>
 	struct has_substructure { };
@@ -84,14 +87,14 @@ protected:
 
 protected:
 	// constructors for children only
-	simple_meta_instance_reference_base();
+	simple_meta_indexed_reference_base();
 
 	explicit
-	simple_meta_instance_reference_base(excl_ptr<index_list_type>&);
+	simple_meta_indexed_reference_base(excl_ptr<index_list_type>&);
 
 public:
 
-virtual	~simple_meta_instance_reference_base();
+virtual	~simple_meta_indexed_reference_base();
 
 virtual	good_bool
 	attach_indices(excl_ptr<index_list_type>&) = 0;
@@ -110,7 +113,7 @@ protected:		// for children only
 	void
 	load_object_base(const persistent_object_manager& m, istream& i);
 
-};	// end class simple_meta_instance_reference_base
+};	// end class simple_meta_indexed_reference_base
 
 //=============================================================================
 }	// end namespace entity

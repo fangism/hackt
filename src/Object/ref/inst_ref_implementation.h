@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.9 2006/02/21 04:48:35 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.10 2006/02/21 23:07:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -11,7 +11,7 @@
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
-#include "Object/ref/simple_meta_instance_reference_base.h"
+#include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/inst/instance_alias.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.h"
@@ -47,7 +47,7 @@ struct simple_meta_instance_reference_implementation<true> {
 	};
 
 	typedef	never_ptr<
-		const simple_meta_instance_reference_base::index_list_type>
+		const simple_meta_indexed_reference_base::index_list_type>
 				index_list_ptr_type;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -163,7 +163,7 @@ struct simple_meta_instance_reference_implementation<false> {
 	};
 
 	typedef	never_ptr<
-		const simple_meta_instance_reference_base::index_list_type>
+		const simple_meta_indexed_reference_base::index_list_type>
 				index_list_ptr_type;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.12 2006/01/28 18:21:17 fang Exp $
+#	$Id: TODO,v 1.13 2006/02/21 23:07:34 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -205,6 +205,7 @@ pass-gates:
 
 need to handle loops and conditionals *around* prs { ... } bodies
 	need intermediate representation support for conditional PRS (easy)
+	Tentatively not supported until issue is resolved.  
 
 ===============================================================================
 Expression resolutions:
