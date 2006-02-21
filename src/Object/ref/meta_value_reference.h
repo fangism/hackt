@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference.h"
-	$Id: meta_value_reference.h,v 1.1.4.6 2006/02/20 06:52:13 fang Exp $
+	$Id: meta_value_reference.h,v 1.1.4.7 2006/02/21 00:30:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_H__
@@ -47,6 +47,12 @@ protected:
 		meta_value_reference_base(), expr_base_type() { }
 public:
 virtual	~meta_value_reference() { }
+
+virtual	ostream&
+	what(ostream&) const = 0;
+
+virtual	ostream&
+	dump(ostream&, const expr_dump_context&) const = 0;
 
 virtual	good_bool
 	initialize(const init_arg_type&) = 0;

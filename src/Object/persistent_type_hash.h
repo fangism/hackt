@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.7.2.3 2006/02/19 03:52:46 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.7.2.4 2006/02/21 00:30:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -94,6 +94,8 @@
 #define	AGGREGATE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY	"achnmref"
 #define	AGGREGATE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY	"adbmiref"
 #define	AGGREGATE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"adimiref"
+#define	AGGREGATE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY		"ademiref"
+#define	AGGREGATE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY	"adsmiref"
 #define	AGGREGATE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY		"apbmvref"
 #define	AGGREGATE_PINT_META_VALUE_REFERENCE_TYPE_KEY		"apimvref"
 #define	AGGREGATE_PREAL_META_VALUE_REFERENCE_TYPE_KEY		"aprmvref"

@@ -1,9 +1,9 @@
 ERROR: reference to uninitialized pint ::W at index: [1]
 ERROR: in unroll_resolve-ing simple_meta_instance_reference.
-ERROR in expression 1 of param expr list: pint-inst-ref ::W[::W[0]]
+ERROR in expression 1 of param expr list: pint-val-ref ::W[::W[0]]
 ERROR in dynamic_param_expr_list::unroll_resolve_rvalues()
 ERROR in resolving strict template actuals.
-	pint-inst-ref ::W[::W[0]]
+	pint-val-ref ::W[::W[0]]
 ERROR resolving template arguments.
 ERROR: unable to resolve process-type-reference during unroll.
 Error encountered during module::unroll.

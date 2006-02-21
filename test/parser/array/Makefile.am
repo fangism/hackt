@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.10.10.5 2006/02/19 23:44:50 fang Exp $
+#	$Id: Makefile.am,v 1.10.10.6 2006/02/21 00:30:11 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -8,10 +8,10 @@ HACKT_PARSE_TEST_FAILURES = \
 	011 012 014 017 018 019 \
 	020 021 022 023 024 025 026 027 028 \
 	030 031 032 033 034 035 036 \
-	042 \
-	052 053
+	042 045 048 \
+	051 052 053 057
 
-BISON_OUTPUTS += 042
+BISON_OUTPUTS += 042 057
 
 # The following tests used to fail at compile-time when we were statically
 # checking for ovelapping indices: 017-028, 030, 031, 033-036
@@ -21,7 +21,7 @@ HACKT_PARSE_TEST_PASSES = \
 	010 013 015 016 017 018 019 \
 	020 021 022 023 024 025 026 027 028 029 \
 	030 031 033 034 035 036 037 038 039 \
-	040 041 044 047 \
+	040 041 043 044 046 047 \
 	056
 
 # unfortunately is out of order... to bad $(sort ...) is non-posix
@@ -43,15 +43,17 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	010 013 015 016 \
 	029 \
 	037 038 039 \
-	040 044
+	040 043 044 046
 
 HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 
-# nothing worth cflat-ing
+HACKT_CFLAT_TEST_SUBJECTS = \
+	043 046
 
 # test-cases to process
-EXTRA_DIST += 043.hac 045.hac 046.hac \
-	048.hac 049.hac 050.hac 051.hac 054.hac 055.hac
+# many of these are pending construction of higher dimension arrays
+EXTRA_DIST += \
+	049.hac 050.hac 054.hac 055.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

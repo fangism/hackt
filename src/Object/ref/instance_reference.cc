@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.10.10.2 2006/02/19 03:53:07 fang Exp $
+ 	$Id: instance_reference.cc,v 1.10.10.3 2006/02/21 00:30:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -23,7 +23,7 @@
 #include "Object/ref/simple_meta_instance_reference.tcc"
 #include "Object/ref/simple_nonmeta_instance_reference.tcc"
 #include "Object/ref/member_meta_instance_reference.tcc"
-#include "Object/ref/aggregate_meta_instance_reference_base.h"
+#include "Object/ref/aggregate_meta_instance_reference.tcc"
 #include "Object/expr/const_range.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/dynamic_meta_range_list.h"
@@ -66,6 +66,10 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::process_member_meta_instance_reference,
 		"process-member-inst-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::channel_member_meta_instance_reference, 
 		"channel-member-inst-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::aggregate_process_meta_instance_reference, 
+		"process-agg.-inst-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::aggregate_channel_meta_instance_reference, 
+		"channel-agg.-inst-ref")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_process_meta_instance_reference, 
@@ -85,6 +89,12 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_member_meta_instance_reference, 
 		MEMBER_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_process_meta_instance_reference, 
+		AGGREGATE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_channel_meta_instance_reference, 
+		AGGREGATE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -117,12 +127,11 @@ count_ptr<aggregate_meta_instance_reference_base>
 meta_instance_reference_base::make_aggregate_meta_instance_reference(
 		const count_ptr<const this_type>& i) {
 	NEVER_NULL(i);
-#if 0
-	return i->make_aggregate_meta_instance_reference_private();
-#else
-	FINISH_ME(Fang);
-	return count_ptr<aggregate_meta_instance_reference_base>(NULL);
-#endif
+	const count_ptr<aggregate_meta_instance_reference_base>
+		ret(i->make_aggregate_meta_instance_reference_private());
+	const good_bool g(ret->append_meta_instance_reference(i));
+	INVARIANT(g.good);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -354,46 +363,6 @@ simple_nonmeta_instance_reference_base::load_object_base(
 }
 
 //=============================================================================
-#if 0
-PHASE IN later...
-// class collective_meta_instance_reference method definitions
-
-collective_meta_instance_reference::collective_meta_instance_reference(
-		never_ptr<const meta_instance_reference_base> b, 
-		const param_expr* l, const param_expr* r) :
-		meta_instance_reference_base(), 
-		lower_index(never_ptr<const param_expr>(l)),
-		upper_index(never_ptr<const param_expr>(r)) {
-}
-
-collective_meta_instance_reference::~collective_meta_instance_reference() {
-}
-
-ostream&
-collective_meta_instance_reference::what(ostream& o) const {
-	return o << "collective-inst-ref";
-}
-
-ostream&
-collective_meta_instance_reference::dump(ostream& o) const {
-	return what(o);
-}
-
-string
-collective_meta_instance_reference::hash_string(void) const {
-	string ret(base_array->hash_string());
-	ret += "[";
-	ret += lower_index->hash_string();
-	if (upper_index) {
-		ret += "..";
-		ret += upper_index->hash_string();
-	}
-	ret += "]";
-	return ret;
-}
-#endif
-
-//=============================================================================
 // class process_meta_instance_reference method definitions
 // replaced with meta_instance_reference template
 
@@ -412,6 +381,8 @@ template class simple_nonmeta_instance_reference<channel_tag>;
 template class simple_nonmeta_instance_reference<process_tag>;
 template class member_meta_instance_reference<channel_tag>;
 template class member_meta_instance_reference<process_tag>;
+template class aggregate_meta_instance_reference<channel_tag>;
+template class aggregate_meta_instance_reference<process_tag>;
 
 //=============================================================================
 }	// end namespace entity

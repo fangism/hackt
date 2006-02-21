@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.1.4.2 2006/02/19 03:53:09 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.1.4.3 2006/02/21 00:30:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -8,6 +8,9 @@
 
 #include <iostream>
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/aggregate_meta_instance_reference.h"
+#include "Object/unroll/port_connection_base.h"
+#include "Object/unroll/alias_connection.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "util/macros.h"
 
@@ -87,12 +90,31 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 	Shamelessly copied from 
 	simple_meta_instance_reference_base::must_be_type_equivalent().
 	</sarcasm>
+	This is probably never called.  
  */
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 META_INSTANCE_REFERENCE_CLASS::must_be_type_equivalent(
 		const meta_instance_reference_base& r) const {
 	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+excl_ptr<aliases_connection_base>
+META_INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
+	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<aggregate_meta_instance_reference_base>
+META_INSTANCE_REFERENCE_CLASS::make_aggregate_meta_instance_reference_private(
+		void) const {
+	typedef	count_ptr<aggregate_meta_instance_reference_base>
+							return_type;
+	typedef	aggregate_meta_instance_reference<Tag>	aggregate_type;
+	return return_type(new aggregate_type);
 }
 
 //=============================================================================

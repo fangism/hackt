@@ -3,7 +3,7 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.8.2.3 2006/02/19 03:52:52 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.8.2.4 2006/02/21 00:30:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
@@ -45,17 +45,17 @@ DEFAULT_STATIC_TRACE_BEGIN
 //=============================================================================
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pbool_meta_value_reference,
-		"pbool-inst-ref")
+		"pbool-val-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pint_meta_value_reference,
-		"pint-inst-ref")
+		"pint-val-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::simple_preal_meta_value_reference,
-		"preal-inst-ref")
+		"preal-val-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::aggregate_pbool_meta_value_reference,
-		"agg.-pbool-inst-ref")
+		"agg.-pbool-val-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::aggregate_pint_meta_value_reference,
-		"agg.-pint-inst-ref")
+		"agg.-pint-val-ref")
 SPECIALIZE_UTIL_WHAT(HAC::entity::aggregate_preal_meta_value_reference,
-		"agg.-preal-inst-ref")
+		"agg.-preal-val-ref")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_pbool_meta_value_reference, 

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.3 2006/02/20 06:52:13 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.4 2006/02/21 00:30:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -525,28 +525,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 	INVARIANT(ri == port_aliases.end());
 	return bad_bool(false);
 }	// end method connect_port
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-excl_ptr<aliases_connection_base>
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(
-		void) const {
-	return excl_ptr<aliases_connection_base>(new alias_connection_type);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Creates an aggregate instance reference of the appropriate type.
- */
-SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-count_ptr<aggregate_meta_instance_reference_base>
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::
-		make_aggregate_meta_instance_reference_private(void) const {
-	typedef	count_ptr<aggregate_meta_instance_reference_base>
-							return_type;
-	FINISH_ME(Fang);
-	return return_type(NULL);
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

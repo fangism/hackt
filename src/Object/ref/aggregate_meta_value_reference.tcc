@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.8 2006/02/20 06:52:12 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.1.2.9 2006/02/21 00:30:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -83,7 +83,8 @@ if (subreferences.size()) {
 	const const_iterator e(subreferences.end());
 	if (*i) (*i)->dump(o, c);
 	for (++i; i!=e; ++i) {
-		if (*i) (*i)->dump(o << delim, c);
+		o << delim;
+		if (*i) (*i)->dump(o, c);
 	}
 }
 	if (!this->_is_concatenation) o << " }";
@@ -173,7 +174,7 @@ AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 AGGREGATE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
 	return subreferences.front()->dimensions()
-		+(_is_concatenation ? 0 : 1);
+		+(this->_is_concatenation ? 0 : 1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -283,8 +284,10 @@ if (vr) {
 		if (!(*li)->must_be_equivalent(**ri))
 			return false;
 	}
+	INVARIANT(ri == vr->subreferences.end());
 	return true;
 } else {
+	// don't necessarily need to finish, could just leave as is
 	FINISH_ME(Fang);
 	return false;
 }
@@ -460,6 +463,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 	// aggregation, by concatenation or construction
 	const size_t subdim = subreferences.front()->dimensions();
 if (this->_is_concatenation) {
+	// concatenation of arrays into like-dimension larger arrays
 	FINISH_ME(Fang);
 	return bad_bool(true);
 } else {
@@ -486,7 +490,7 @@ if (this->_is_concatenation) {
 		return bad_bool(false);
 	}
 }
-}
+}	// end method unroll_lvalue_references
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
@@ -495,7 +499,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
-	m.collect_pointer_list(subreferences);
+	m.collect_pointer_list(this->subreferences);
 }
 }
 
@@ -504,8 +508,8 @@ AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
 AGGREGATE_META_VALUE_REFERENCE_CLASS::write_object(
 		const persistent_object_manager& m, ostream& o) const {
-	write_value(o, _is_concatenation);
-	m.write_pointer_list(o, subreferences);
+	write_value(o, this->_is_concatenation);
+	m.write_pointer_list(o, this->subreferences);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -513,8 +517,8 @@ AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
 AGGREGATE_META_VALUE_REFERENCE_CLASS::load_object(
 		const persistent_object_manager& m, istream& i) {
-	read_value(i, _is_concatenation);
-	m.read_pointer_list(i, subreferences);
+	read_value(i, this->_is_concatenation);
+	m.read_pointer_list(i, this->subreferences);
 }
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference_base.h"
-	$Id: meta_value_reference_base.h,v 1.1.4.2 2006/02/19 03:53:10 fang Exp $
+	$Id: meta_value_reference_base.h,v 1.1.4.3 2006/02/21 00:30:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_BASE_H__
@@ -15,6 +15,7 @@ namespace entity {
 using std::ostream;
 using util::memory::never_ptr;
 class param_value_collection;
+struct expr_dump_context;
 
 //=============================================================================
 /**
@@ -33,6 +34,9 @@ virtual	size_t
 
 virtual	ostream&
 	what(ostream&) const = 0;
+
+virtual	ostream&
+	dump(ostream&, const expr_dump_context&) const = 0;
 
 virtual	never_ptr<const param_value_collection>
 	get_coll_base(void) const = 0;

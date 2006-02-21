@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.4.16.2 2006/02/20 05:29:38 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.4.16.3 2006/02/21 00:30:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -29,6 +29,8 @@ public:
 	typedef	class_traits<Tag>		traits_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
+	typedef	typename traits_type::alias_connection_type
+						alias_connection_type;
 protected:
 	meta_instance_reference() : meta_instance_reference_base() { }
 public:
@@ -50,6 +52,13 @@ virtual bad_bool
 
 	bool
 	must_be_type_equivalent(const meta_instance_reference_base&) const;
+
+private:
+	excl_ptr<aliases_connection_base>
+	make_aliases_connection_private(void) const;
+
+	count_ptr<aggregate_meta_instance_reference_base>
+	make_aggregate_meta_instance_reference_private(void) const;
 
 };	// end class meta_instance_reference
 

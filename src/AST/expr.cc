@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.5.2.4 2006/02/19 06:09:02 fang Exp $
+	$Id: expr.cc,v 1.5.2.5 2006/02/21 00:29:59 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -54,6 +54,7 @@
 #include "Object/expr/int_arith_expr.h"
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_logical_expr.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS.h"
 #include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
@@ -113,6 +114,7 @@ using std::distance;
 using std::_Select1st;
 using std::_Select2nd;
 using util::back_insert_assigner;
+using entity::expr_dump_context;
 
 //=============================================================================
 // class expr method definitions
@@ -392,6 +394,9 @@ expr_list::make_aggregate_value_reference(const checked_meta_exprs_type& ex,
 	}
 	const count_ptr<aggregate_meta_value_reference_base>
 		ret(param_expr::make_aggregate_meta_value_reference(bi));
+	NEVER_NULL(ret);
+	if (cat) ret->set_concatenation_mode();
+	else	ret->set_construction_mode();
 	size_t j = 2;
 	for (++i; i!=e; ++i, ++j) {
 		const meta_expr_return_type mi(*i);
@@ -477,10 +482,9 @@ inst_ref_expr_list::make_aggregate_instance_reference(
 		const checked_meta_refs_type& ref, const bool cat) {
 	typedef	inst_ref_meta_return_type		return_type;
 	typedef	checked_meta_refs_type::const_iterator	const_iterator;
-#if 0
 	INVARIANT(ref.size());
 	const_iterator i(ref.begin()), e(ref.end());
-	const inst_ref_meta_return_type bi(*i);
+	const inst_ref_meta_return_type::inst_ref_ptr_type& bi(i->inst_ref());
 	if (!bi) {
 		cerr << "Error in first subreference, cannot construct "
 			"aggregate instance reference." << endl;
@@ -489,13 +493,23 @@ inst_ref_expr_list::make_aggregate_instance_reference(
 	const count_ptr<aggregate_meta_instance_reference_base>
 		ret(meta_instance_reference_base::
 			make_aggregate_meta_instance_reference(bi));
+	NEVER_NULL(ret);
+	if (cat) ret->set_concatenation_mode();
+	else	ret->set_construction_mode();
 	size_t j = 2;
 	for (++i; i!=e; ++i, ++j) {
-		const inst_ref_meta_return_type mi(*i);
+		const inst_ref_meta_return_type::inst_ref_ptr_type&
+			mi(i->inst_ref());
 		if (!mi) {
 			cerr << "Error in subreference at position " << j <<
-				"cannot construct aggregate instance reference."
-				<< endl;
+				", cannot construct aggregate "
+				"instance reference." << endl;
+			if (i->value_ref()) {
+				cerr << "\tgot: ";
+				i->value_ref()->dump(cerr, 
+					expr_dump_context::error_mode)
+					<< endl;
+			}
 			return return_type(NULL);
 		}
 		if (!ret->append_meta_instance_reference(mi).good) {
@@ -505,13 +519,9 @@ inst_ref_expr_list::make_aggregate_instance_reference(
 		}
 		// else keep going
 	}
-	// cross-cast from aggregate_meta_value_reference to param_expr
-	// return ret;
-	return ret;
-#else
-	FINISH_ME(Fang);
-	return return_type(NULL);
-#endif
+	// cross-cast: from aggregate_meta_instance_reference 
+	// to meta_instance_reference_base
+	return ret.is_a<meta_instance_reference_base>();
 }
 
 //=============================================================================

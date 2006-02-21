@@ -5,6 +5,17 @@
 
 2006-02-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-09:
+	  Implemented aggregate_meta_instance_reference (.tcc), 
+		and instantiated aggregate template classes.  
+	  Moved some common functions from simple_meta_instance_reference
+		to meta_instance_reference (generic constructions).  
+	  Added necessary type_key and util::what specializations.  
+	  Trival updates of some test cases, due to string changes.
+	  Enabled bunch of basic 1D-array construction test cases (work).
+	  Branch status: nearly complete.
+
+
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-08:
 	  Committed deprecation of assign_value_collection from last revision.
 	  Renamed param/value_refs unroll_resolve -> unroll_resolve_rvalues.

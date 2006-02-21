@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.1.2.4 2006/02/20 05:29:38 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.1.2.5 2006/02/21 00:30:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -45,6 +45,9 @@ public:
 	typedef	count_ptr<const parent_type>		subreference_ptr_type;
 	typedef	std::vector<subreference_ptr_type>	subreference_array_type;
 private:
+	typedef	typename subreference_array_type::const_iterator
+							const_iterator;
+private:
 	subreference_array_type			subreferences;
 public:
 	aggregate_meta_instance_reference();
@@ -72,12 +75,6 @@ public:
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
 
-	bool
-	may_be_type_equivalent(const meta_instance_reference_base&) const;
-
-	bool
-	must_be_type_equivalent(const meta_instance_reference_base&) const;
-
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
 	CONNECT_PORT_PROTO;
@@ -91,13 +88,14 @@ public:
 	append_meta_instance_reference(
 		const count_ptr<const meta_instance_reference_base>&);
 
-	void
+	good_bool
 	append_meta_instance_reference(
 		const count_ptr<const parent_type>&);
 
 private:
-	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const;
+	excl_ptr<port_connection_base>
+	make_port_connection_private(
+		const count_ptr<const meta_instance_reference_base>&) const;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.5.16.2 2006/02/19 06:09:03 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.5.16.3 2006/02/21 00:30:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -88,6 +88,19 @@ SPECIALIZE_UTIL_WHAT(
 	HAC::entity::datastruct_member_meta_instance_reference,
 		"struct-member-inst-ref")
 
+SPECIALIZE_UTIL_WHAT(
+	HAC::entity::aggregate_int_meta_instance_reference,
+		"int-agg.-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	HAC::entity::aggregate_bool_meta_instance_reference,
+		"bool-agg.-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	HAC::entity::aggregate_enum_meta_instance_reference,
+		"enum-agg.-inst-ref")
+SPECIALIZE_UTIL_WHAT(
+	HAC::entity::aggregate_datastruct_meta_instance_reference,
+		"struct-agg.-inst-ref")
+
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::simple_int_meta_instance_reference, 
 		SIMPLE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
@@ -131,6 +144,19 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::datastruct_member_meta_instance_reference, 
 		MEMBER_STRUCT_INSTANCE_REFERENCE_TYPE_KEY, 0)
+
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_int_meta_instance_reference, 
+		AGGREGATE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_bool_meta_instance_reference, 
+		AGGREGATE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_enum_meta_instance_reference, 
+		AGGREGATE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_datastruct_meta_instance_reference, 
+		AGGREGATE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
 namespace HAC {
@@ -212,13 +238,10 @@ template class member_meta_instance_reference<int_tag>;
 template class member_meta_instance_reference<enum_tag>;
 template class member_meta_instance_reference<datastruct_tag>;
 
-#if 0
-// soon...
 template class aggregate_meta_instance_reference<bool_tag>;
 template class aggregate_meta_instance_reference<int_tag>;
 template class aggregate_meta_instance_reference<enum_tag>;
 template class aggregate_meta_instance_reference<datastruct_tag>;
-#endif
 
 // and my work is done!
 //=============================================================================
