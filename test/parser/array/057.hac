@@ -1,0 +1,10 @@
+// "057.hac"
+// copy-modified from "051.hac"
+// syntax does not allow array declaration and alias in one statement
+// because it can look confusing.  
+
+bool x;
+bool y;
+
+bool z[2] = {x, y};
+

@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: alias_connection.h,v 1.6 2006/01/30 07:42:05 fang Exp $
+	$Id: alias_connection.h,v 1.7 2006/02/21 04:48:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_H__
@@ -37,22 +37,25 @@ class alias_connection :
 	public class_traits<Tag>::alias_connection_parent_type {
 	typedef	ALIAS_CONNECTION_CLASS		this_type;
 public:
+	typedef	class_traits<Tag>		traits_type;
 	/// the base alias connection type, such as aliases_connection_base
-	typedef	typename class_traits<Tag>::alias_connection_parent_type
+	typedef	typename traits_type::alias_connection_parent_type
 						parent_type;
 	/// the instance reference type used by this connection
-	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
+	typedef	typename traits_type::simple_meta_instance_reference_type
 					simple_meta_instance_reference_type;
+	typedef	typename traits_type::meta_instance_reference_parent_type
+					meta_instance_reference_type;
 	/// the instance collection type referenced
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
 	/// the instance alias type resolved by unrolling
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
 
 	typedef	typename parent_type::generic_inst_ptr_type
 						generic_inst_ptr_type;
-	typedef	count_ptr<const simple_meta_instance_reference_type>
+	typedef	count_ptr<const meta_instance_reference_type>
 						inst_ref_ptr_type;
 	typedef	vector<inst_ref_ptr_type>	inst_list_type;
 	typedef	typename inst_list_type::iterator
@@ -60,7 +63,7 @@ public:
 	typedef	typename inst_list_type::const_iterator
 						const_iterator;
 	/// the type of collection for unrolled aliases
-	typedef	typename simple_meta_instance_reference_type::alias_collection_type
+	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 private:
 	typedef	util::multikey_generator_generic<pint_value_type>
@@ -86,8 +89,6 @@ public:
 
 	good_bool
 	unroll(const unroll_context&) const;
-
-	UNROLL_META_CONNECT_PROTO;
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

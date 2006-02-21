@@ -1,0 +1,15 @@
+// "054.hac"
+// copy-modified from "049.hac"
+// should pass: proper construction of higher dimension array
+
+pbool x[2];
+pbool y[2];
+
+x[0] = false;
+x[1] = true;
+y[0] = true;
+y[1] = false;
+
+pbool z[2][2];
+z = {x, y};
+

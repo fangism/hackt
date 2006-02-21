@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.10 2006/02/13 02:48:03 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.11 2006/02/21 04:48:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -78,7 +78,7 @@ using util::reserve;
 	pointer copy-ing.  
  */
 count_ptr<const const_index_list>
-meta_index_list::unroll_resolve(const count_ptr<const this_type>& _this, 
+meta_index_list::unroll_resolve_indices(const count_ptr<const this_type>& _this, 
 		const unroll_context& c) {
 	typedef	count_ptr<const const_index_list>	return_type;
 	NEVER_NULL(_this);
@@ -87,7 +87,7 @@ meta_index_list::unroll_resolve(const count_ptr<const this_type>& _this,
 		return ret;
 	else	return return_type(new const_index_list(
 			IS_A(const dynamic_meta_index_list&, *_this)
-			.unroll_resolve(c)));
+			.unroll_resolve_indices(c)));
 }
 
 //=============================================================================
@@ -262,18 +262,6 @@ const_index_list::is_static_constant(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-const_index_list::is_loop_independent(void) const {
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-const_index_list::is_unconditional(void) const {
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
 const_index_list::resolve_index_list(void) const {
 	return *this;
@@ -281,7 +269,7 @@ const_index_list::resolve_index_list(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
-const_index_list::unroll_resolve(const unroll_context& c) const {
+const_index_list::unroll_resolve_indices(const unroll_context& c) const {
 	return *this;
 }
 
@@ -596,42 +584,6 @@ dynamic_meta_index_list::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::is_template_dependent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if ((*i)->is_template_dependent())
-			return true;
-	}
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::is_loop_independent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if (!(*i)->is_loop_independent())
-			return false;
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::is_unconditional(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if (!(*i)->is_unconditional())
-			return false;
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For now const_index_list constains count_ptr<const_index>, 
 	not count_const_ptr, so we have to make deep copies, 
@@ -702,7 +654,7 @@ dynamic_meta_index_list::must_be_equivalent_indices(
 		successful resolved, else an empty list.
  */
 const_index_list
-dynamic_meta_index_list::unroll_resolve(const unroll_context& c) const {
+dynamic_meta_index_list::unroll_resolve_indices(const unroll_context& c) const {
 	const_index_list ret;
 	const_iterator i(begin());
 	const const_iterator e(end());

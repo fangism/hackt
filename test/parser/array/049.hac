@@ -1,0 +1,9 @@
+// "049.hac"
+// copy-modified from "048.hac"
+// should pass: proper construction of higher dimension array
+
+bool x[2];
+bool y[2];
+
+bool z[2][2] = {x, y};
+

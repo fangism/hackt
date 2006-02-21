@@ -5,32 +5,32 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	137
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
-	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	10	##ADDR##	proccoll	2	#HEAD#	#TAIL#	189
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	proccoll	2	#HEAD#	#TAIL#	239
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	proccoll	2	#HEAD#	#TAIL#	184
+	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	15	##ADDR##	proccoll	2	#HEAD#	#TAIL#	234
+	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	20	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -53,7 +53,6 @@ In namespace "", we have: {
 
   Instances:
     that = process fang<>^2 that with indices: {
-      [0..1][0..1]
     }
       unrolled indices: {
         [0][0] = ::this[0][0] (1) 
@@ -62,7 +61,6 @@ In namespace "", we have: {
         [1][1] = ::this[1][1] (5) 
       }
     this = process fang<>^2 this with indices: {
-      [0..1][0..2]
     }
       unrolled indices: {
         [0][0] = ::that[0][0] (1) 

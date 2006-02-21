@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.9 2006/02/12 03:09:44 fang Exp $
+ 	$Id: const_collection.tcc,v 1.10 2006/02/21 04:48:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -114,8 +114,7 @@ CONST_COLLECTION_CLASS::const_collection(const size_t d) :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
-CONST_COLLECTION_CLASS::const_collection(
-		const typename array_type::key_type& k) :
+CONST_COLLECTION_CLASS::const_collection(const key_type& k) :
 		expr_base_type(), parent_const_type(), values(k) {
 	INVARIANT(k.size() <= 4);
 }
@@ -195,10 +194,9 @@ CONST_COLLECTION_TEMPLATE_SIGNATURE
 const_range_list
 CONST_COLLECTION_CLASS::static_constant_dimensions(void) const {
 	const_range_list ret;
-	const key_type first(values.first_key());
-	const key_type last(values.last_key());
-	typename key_type::const_iterator f_iter = first.begin();
-	typename key_type::const_iterator l_iter = last.begin();
+	const key_type first(values.first_key()), last(values.last_key());
+	typename key_type::const_iterator
+		f_iter(first.begin()), l_iter(last.begin());
 	for ( ; f_iter != first.end(); f_iter++, l_iter++) {
 		ret.push_back(const_range(*f_iter, *l_iter));
 	}
@@ -375,7 +373,7 @@ CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<typename CONST_COLLECTION_CLASS::parent_const_type>
-CONST_COLLECTION_CLASS::unroll_resolve(const unroll_context& c) const {
+CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c) const {
 	return count_ptr<parent_const_type>(new this_type(*this));
 }
 
@@ -384,7 +382,7 @@ CONST_COLLECTION_CLASS::unroll_resolve(const unroll_context& c) const {
 	Constructs and returns a value slice specfied by the index list
 	and returns the same type (possibly of lesser dimensions)
 	with copied/extracted values.  
-	NOTE: only called from simple_meta_value_reference::unroll_resolve
+	NOTE: only called from simple_meta_value_reference::unroll_resolve_rvalues
 		thus far.  
 	\param il the list of indices to visit.  
 	\throw std::out_of_range exception if indices are out of range.  
@@ -395,7 +393,7 @@ CONST_COLLECTION_TEMPLATE_SIGNATURE
 CONST_COLLECTION_CLASS
 CONST_COLLECTION_CLASS::make_value_slice(const const_index_list& il) const {
 if (il.empty()) {
-	// won't happen, as called from meta_value_reference<>::unroll_resolve.
+	// won't happen, as called from meta_value_reference<>::unroll_resolve_rvalues.
 	return *this;
 } else {
 	STACKTRACE_VERBOSE;

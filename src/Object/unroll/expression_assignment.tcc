@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.8 2006/01/30 07:42:05 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.9 2006/02/21 04:48:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -17,13 +17,14 @@
 #include <numeric>
 
 #include "Object/unroll/expression_assignment.h"
-
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/common/multikey_index.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/const_collection.h"
+#include "Object/ref/meta_value_reference.h"
 
 #include "util/wtf.h"
 #include "util/what.h"
@@ -50,7 +51,7 @@ using util::persistent_traits;
 
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 typename EXPRESSION_ASSIGNMENT_CLASS::pool_type
-EXPRESSION_ASSIGNMENT_CLASS::pool(class_traits<Tag>::assignment_chunk_size);
+EXPRESSION_ASSIGNMENT_CLASS::pool(traits_type::assignment_chunk_size);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
@@ -184,7 +185,7 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 	dest_ptr_type pb(e.template is_a<value_reference_type>());
 	if (!pb) {
 		cerr << "ERROR: Cannot initialize a " <<
-			class_traits<Tag>::tag_name << " with a ";
+			traits_type::tag_name << " with a ";
 		e->what(cerr) << " expression!" << endl;
 		err.bad = true;
 	} else if (!pb->initialize(src).good) {	// type check
@@ -204,20 +205,49 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Helper function.
+	TODO: deprecate assign_value_collection.
  */
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 good_bool
 EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i, 
 		const const_dest_iterator& e, const const_collection_type& v, 
 		const unroll_context& c) {
-	for ( ; i!=e; i++) {
-		if ((*i)->assign_value_collection(v, c).bad) {
-			// just re-using same old lame error message
-			cerr << "ERROR: something went wrong in " <<
-				class_traits<Tag>::tag_name <<
-				" assignment." << endl;
+	STACKTRACE_VERBOSE;
+	for ( ; i!=e; ++i) {
+		value_reference_collection_type temp;
+		if ((*i)->unroll_lvalue_references(c, temp).bad) {
+			cerr << "ERROR: unrolling lvalue references in " <<
+				traits_type::tag_name << " assignment." << endl;
 			return good_bool(false);
 		}
+		typedef	typename value_reference_collection_type::key_type
+						lvalue_key_type;
+		typedef	typename const_collection_type::key_type
+						rvalue_key_type;
+		// these should be the same type
+		const lvalue_key_type ls(temp.size());
+		const rvalue_key_type rs(v.array_dimensions());
+		if (ls != rs) {
+			cerr << "lvalue/rvalue references dimensions mismatch "
+				"in " << traits_type::tag_name <<
+				" assignment." << endl;
+			cerr << "\tgot: " << ls << " and: " << rs << endl;
+			return good_bool(false);
+		}
+		typedef	typename value_reference_collection_type::const_iterator
+							lvalue_iterator;
+		typedef	typename const_collection_type::const_iterator
+							rvalue_iterator;
+		lvalue_iterator li(temp.begin());
+		rvalue_iterator ri(v.begin()), re(v.end());
+		// c'mon gcc, auto-vectorize this loop!
+		for ( ; ri!=re; ++ri, ++li) {
+			NEVER_NULL(*li);
+			if (!(**li = *ri).good) {
+				return good_bool(false);
+			}
+		}
+		INVARIANT(li == temp.end());
 	}
 	return good_bool(true);
 }
@@ -234,12 +264,12 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 	INVARIANT(this->src);
 	// works for scalars and multidimensional arrays alike
 	const count_ptr<const const_param>
-		src_values(this->src->unroll_resolve(c));
+		src_values(this->src->unroll_resolve_rvalues(c));
 	if (!src_values) {
 		this->src->dump(
 			cerr << "ERROR: failed to resolve source values of ",
 			expr_dump_context::error_mode) <<
-			" in " << class_traits<Tag>::tag_name <<
+			" in " << traits_type::tag_name <<
 			" assignment." << endl;
 		return good_bool(false);
 	}
@@ -261,15 +291,6 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 		return assign_dests(this->dests.begin(), this->dests.end(),
 			*bunch_of_consts, c);
 	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
-good_bool
-EXPRESSION_ASSIGNMENT_CLASS::unroll_meta_evaluate(
-		const unroll_context& c) const {
-	// would've exited upon error
-	return this->unroll(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

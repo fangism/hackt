@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	chandefn	0	#HEAD#	#TAIL#	67
-	4	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	4	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60

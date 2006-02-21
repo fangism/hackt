@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: bool_literal.cc,v 1.4 2006/02/21 04:48:33 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -8,7 +8,6 @@
 #include "Object/inst/instance_alias_info.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/lang/PRS.h"	// for PRS::literal, PRS::expr_dump_context
 #include "Object/expr/expr_dump_context.h"

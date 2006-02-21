@@ -11,7 +11,7 @@ in state #STATE#, possible rules are:
 	instance_id_item : ID . optional_template_arguments_in_angles sparse_range_list  (#RULE#)
 	instance_id_item : ID . optional_template_arguments_in_angles  (#RULE#)
 	instance_id_item : ID . optional_template_arguments_in_angles connection_actuals_list  (#RULE#)
-	instance_id_item : ID . optional_template_arguments_in_angles '=' rvalue_optional_alias_list  (#RULE#)
+	instance_id_item : ID . optional_template_arguments_in_angles '=' alias_list  (#RULE#)
 	optional_template_arguments_in_angles : .  (#RULE#)
 acceptable tokens are: 
 	'(' (reduce)

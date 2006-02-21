@@ -12,10 +12,13 @@ in state #STATE#, possible rules are:
 	top_root : .  (#RULE#)
 	optional_template_specification : .  (#RULE#)
 acceptable tokens are: 
+	'!' (shift)
 	'(' (shift)
+	'-' (shift)
 	'[' (shift)
 	'{' (shift)
 	'}' (reduce)
+	'~' (shift)
 	ID (shift)
 	FLOAT (shift)
 	INT (shift)

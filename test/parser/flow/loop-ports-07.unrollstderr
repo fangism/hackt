@@ -5,35 +5,35 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
-	4	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	10	##ADDR##	proccoll	1	#HEAD#	#TAIL#	142
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
-	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
-	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
-	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
-	19	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	230
+	10	##ADDR##	proccoll	1	#HEAD#	#TAIL#	137
+	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	75
+	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	75
+	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	75
+	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	75
+	19	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	225
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	23	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	25	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	portconn	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -45,14 +45,12 @@ In namespace "", we have: {
   Definitions:
     ass = process-definition (defined) ass(
         bool<> q with indices: {
-          [0..1]
         }
 
       )
       In definition "ass", we have: {
       Instances:
         q = bool<> q with indices: {
-          [0..1]
         }
 
       unroll sequence: 
@@ -69,12 +67,10 @@ In namespace "", we have: {
 
   Instances:
     myass = process ass<>^1 myass with indices: {
-      [0..3]
     }
       unrolled indices: {
         0 = ::myass[0] (
           bool^1 q with indices: {
-            [0..1]
           }
             unrolled indices: {
               0 = ::x[0][0] 
@@ -83,7 +79,6 @@ In namespace "", we have: {
         )
         1 = ::myass[1] (
           bool^1 q with indices: {
-            [0..1]
           }
             unrolled indices: {
               0 = ::x[1][0] 
@@ -92,7 +87,6 @@ In namespace "", we have: {
         )
         2 = ::myass[2] (
           bool^1 q with indices: {
-            [0..1]
           }
             unrolled indices: {
               0 = ::x[2][0] 
@@ -101,7 +95,6 @@ In namespace "", we have: {
         )
         3 = ::myass[3] (
           bool^1 q with indices: {
-            [0..1]
           }
             unrolled indices: {
               0 = ::x[3][0] 
@@ -110,7 +103,6 @@ In namespace "", we have: {
         )
       }
     x = bool^2 x with indices: {
-      [0..3][0..1]
     }
       unrolled indices: {
         [0][0] = ::myass[0].q[0] 

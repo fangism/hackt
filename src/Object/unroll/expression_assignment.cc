@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.5 2006/02/10 21:50:44 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.6 2006/02/21 04:48:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -16,6 +16,9 @@
 
 #include "Object/unroll/param_expression_assignment.h"
 #include "Object/unroll/expression_assignment.tcc"
+#include "Object/inst/pbool_instance.h"
+#include "Object/inst/pint_instance.h"
+#include "Object/inst/preal_instance.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
@@ -27,6 +30,7 @@
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/preal_traits.h"
 #include "Object/persistent_type_hash.h"
+#include "Object/ref/meta_value_reference_base.h"
 
 //=============================================================================
 namespace util {
@@ -78,7 +82,7 @@ param_expression_assignment::meta_instance_reference_appender::operator () (
 			" of assign-list." << endl;
 		return bad_bool(true);
 	}
-	const dest_ptr_type i(o.is_a<simple_param_meta_value_reference>());
+	const dest_ptr_type i(o.is_a<meta_value_reference_base>());
 	if (!i) {
 		cerr << "ERROR: unhandled case for item " << index <<
 			" of assign-list." << endl;

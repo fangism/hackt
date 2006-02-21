@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.3 2006/02/10 21:50:35 fang Exp $
+	$Id: object_fwd.h,v 1.4 2006/02/21 04:48:20 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -39,6 +39,8 @@ namespace entity {
 	class fundamental_type_reference;
 	class simple_meta_instance_reference_base;
 	class simple_nonmeta_instance_reference_base;
+	class aggregate_meta_value_reference_base;
+	class aggregate_meta_instance_reference_base;
 	class instance_collection_base;
 	class physical_instance_collection;
 	class meta_instance_reference_base;
@@ -53,7 +55,6 @@ namespace entity {
 	class enum_datatype_def;
 	class data_type_reference;
 	class datatype_instance_collection;
-	class simple_datatype_meta_instance_reference_base;
 	class process_definition_base;
 	class process_definition;
 	class process_type_reference;
@@ -64,15 +65,17 @@ namespace entity {
 	// from "Object/ref/*nonmeta_instance_reference*.h"
 	// note there are generic (non-meta) abstract base classes from which
 	// the meta-versions are derived.
+	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
 	class nonmeta_instance_reference_base;
 	class channel_instance_reference_base;
 	class process_instance_reference_base;
 	class datatype_instance_reference_base;
-	class param_instance_reference_base;
 	class int_instance_reference_base;
 	class bool_instance_reference_base;
 	class enum_instance_reference_base;
 	class struct_instance_reference_base;
+	// rename to value_reference_base? not yet
+	class param_instance_reference_base;
 	class pint_instance_reference_base;
 	class pbool_instance_reference_base;
 	class preal_instance_reference_base;
@@ -93,15 +96,21 @@ namespace entity {
 	typedef	meta_instance_reference<datastruct_tag>
 		struct_meta_instance_reference_base;
 	// base classes for meta_value_references
-	typedef	meta_instance_reference<pbool_tag>
-		pbool_meta_instance_reference_base;
-	typedef	meta_instance_reference<pint_tag>
-		pint_meta_instance_reference_base;
-	typedef	meta_instance_reference<preal_tag>
-		preal_meta_instance_reference_base;
+	class meta_value_reference_base;
+	template <class> class meta_value_reference;
+	typedef	meta_value_reference<pbool_tag>
+		pbool_meta_value_reference_base;
+	typedef	meta_value_reference<pint_tag>
+		pint_meta_value_reference_base;
+	typedef	meta_value_reference<preal_tag>
+		preal_meta_value_reference_base;
 
 	template <class>
 	class simple_meta_instance_reference;
+	template <class>
+	class aggregate_meta_instance_reference;
+	template <class>
+	class aggregate_meta_value_reference;
 	template <class>
 	class simple_nonmeta_instance_reference;
 	template <class>
@@ -169,6 +178,20 @@ namespace entity {
 	typedef	simple_meta_instance_reference<datastruct_tag>
 		simple_datastruct_meta_instance_reference;
 
+
+	typedef	aggregate_meta_instance_reference<channel_tag>
+		aggregate_channel_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<process_tag>
+		aggregate_process_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<bool_tag>
+		aggregate_bool_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<int_tag>
+		aggregate_int_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<enum_tag>
+		aggregate_enum_meta_instance_reference;
+	typedef	aggregate_meta_instance_reference<datastruct_tag>
+		aggregate_datastruct_meta_instance_reference;
+
 	template <class>
 	class member_meta_instance_reference;
 
@@ -206,21 +229,12 @@ namespace entity {
 	class pint_instance;	// should be value
 	class pbool_instance;	// should be value
 	class preal_instance;	// should be value
-#if 0
-	class int_instance;
-	class bool_instance;
-	class enum_instance;
-	class struct_instance;
-	class channel_instance;
-	class process_instance;
-#else
 	typedef	state_instance<int_tag>		int_instance;
 	typedef	state_instance<bool_tag>	bool_instance;
 	typedef	state_instance<enum_tag>	enum_instance;
 	typedef	state_instance<datastruct_tag>	struct_instance;
 	typedef	state_instance<channel_tag>	channel_instance;
 	typedef	state_instance<process_tag>	process_instance;
-#endif
 
 	template <class>		class instance_alias_info;
 	template <class, size_t>	class instance_alias;
@@ -238,7 +252,13 @@ namespace entity {
 
 	// defined in "Object/unroll/*connection*.h"
 	class meta_instance_reference_connection;
-	class port_connection;
+
+	class port_connection_base;
+	template <class>	class port_connection;
+	typedef	port_connection<process_tag>	process_port_connection;
+	typedef	port_connection<channel_tag>	channel_port_connection;
+	typedef	port_connection<datastruct_tag>	struct_port_connection;
+
 	class aliases_connection_base;
 	class data_alias_connection_base;
 	template <class>	class alias_connection;
@@ -255,19 +275,14 @@ namespace entity {
 	typedef alias_connection<process_tag>
 		process_alias_connection;
 
+	class instantiation_statement_base;
 	template <class>
 	class instantiation_statement;
-	template <class>
-	class param_instantiation_statement;
-
-	class instantiation_statement_base;
-	class param_instantiation_statement_base;
-
-	typedef	param_instantiation_statement<pbool_tag>
+	typedef	instantiation_statement<pbool_tag>
 		pbool_instantiation_statement;
-	typedef	param_instantiation_statement<pint_tag>
+	typedef	instantiation_statement<pint_tag>
 		pint_instantiation_statement;
-	typedef	param_instantiation_statement<preal_tag>
+	typedef	instantiation_statement<preal_tag>
 		preal_instantiation_statement;
 	typedef	instantiation_statement<datatype_tag>
 		data_instantiation_statement;
@@ -281,11 +296,18 @@ namespace entity {
 	template <class>
 	class simple_meta_value_reference;
 	typedef	simple_meta_value_reference<pint_tag>
-		simple_pint_meta_instance_reference;
+		simple_pint_meta_value_reference;
 	typedef	simple_meta_value_reference<pbool_tag>
-		simple_pbool_meta_instance_reference;
+		simple_pbool_meta_value_reference;
 	typedef	simple_meta_value_reference<preal_tag>
-		simple_preal_meta_instance_reference;
+		simple_preal_meta_value_reference;
+
+	typedef	aggregate_meta_value_reference<pint_tag>
+		aggregate_pint_meta_value_reference;
+	typedef	aggregate_meta_value_reference<pbool_tag>
+		aggregate_pbool_meta_value_reference;
+	typedef	aggregate_meta_value_reference<preal_tag>
+		aggregate_preal_meta_value_reference;
 
 	template <class>
 	class simple_nonmeta_value_reference;

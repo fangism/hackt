@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.tcc"
-	$Id: substructure_alias_base.tcc,v 1.5 2006/01/22 18:20:13 fang Exp $
+	$Id: substructure_alias_base.tcc,v 1.6 2006/02/21 04:48:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
@@ -53,8 +53,9 @@ template <class Tag>
 void
 substructure_alias_base<false>::__cflat_aliases(cflat_aliases_arg_type& c,
 		const global_entry<Tag>& e, const size_t gi) const {
+	typedef	class_traits<Tag>		traits_type;
 	STACKTRACE_VERBOSE;
-if (class_traits<Tag>::print_cflat_leaf) {
+if (traits_type::print_cflat_leaf) {
 	ostringstream os;
 	e.dump_canonical_name(os, c.topfp, c.sm);
 	const string& canonical(os.str());

@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.6 2006/02/12 03:09:45 fang Exp $
+	$Id: template_actuals.cc,v 1.7 2006/02/21 04:48:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -230,7 +230,7 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 	bool err = false;
 	arg_list_ptr_type sr, rr;
 	if (strict_template_args) {
-		sr = strict_template_args->unroll_resolve(c);
+		sr = strict_template_args->unroll_resolve_rvalues(c);
 		if (!sr) {
 			cerr << "ERROR in resolving strict template actuals."
 				<< endl;
@@ -240,7 +240,7 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 		}
 	}
 	if (relaxed_template_args) {
-		rr = relaxed_template_args->unroll_resolve(c);
+		rr = relaxed_template_args->unroll_resolve_rvalues(c);
 		if (!rr) {
 			cerr << "ERROR in resolving relaxed template actuals."
 				<< endl;

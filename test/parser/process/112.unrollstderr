@@ -5,41 +5,41 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
-	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	117
 	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
-	20	##ADDR##	proccoll	2	#HEAD#	#TAIL#	38
+	20	##ADDR##	proccoll	2	#HEAD#	#TAIL#	33
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	proccoll	2	#HEAD#	#TAIL#	157
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -54,7 +54,6 @@ In namespace "", we have: {
       In definition "bar", we have: {
       Instances:
         x = foo<> x with indices: {
-          [0..1][0..1]
         }
 
       unroll sequence: 
@@ -77,7 +76,6 @@ In namespace "", we have: {
       In definition "foo", we have: {
       Instances:
         a = bool<> a with indices: {
-          [0..1][0..1]
         }
 
       unroll sequence: 

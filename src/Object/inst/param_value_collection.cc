@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.10 2006/02/11 03:56:50 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.11 2006/02/21 04:48:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -187,6 +187,7 @@ param_value_collection::template_formal_equivalent(const this_type& b) const {
 	So far, only used by param_value_collection derivatives, 
 		in the context of checking template formals.  
 	May be useful else where for connections.  
+	NOTE: this is conservative and need not be precise.  
 	\return true if dimensions *may* match.  
  */
 good_bool
@@ -216,33 +217,15 @@ param_value_collection::may_check_expression_dimensions(
 	}
 	// dimensions match
 	if (dimensions != 0) {
-		INVARIANT(index_collection.size() == 1);	// huh? true?
-		// this is true only if parameters that check this
-		// are template formals.  
-		// not sure if this will be called by non-formals, will see...
-
-		// make sure sizes in each dimension
-		index_collection_type::const_iterator
-			i(index_collection.begin());
-		const count_ptr<const const_range_list>
-			crl((*i)->get_indices().is_a<const const_range_list>());
-		if (crl) {
-			if (pe.has_static_constant_dimensions()) {
-				const const_range_list
-					d(pe.static_constant_dimensions());
-				return good_bool(*crl == d);
-			} else {
-				// is dynamic, conservatively return true
-				return good_bool(true);
-			}
-		} else {
-			// is dynamic, conservatively return true
-			return good_bool(true);
-		}
+		/**
+			We used to statically check dimensions for 
+			early rejection, but the effort gave little benefit.  
+		**/
+		// be conservative
+		return good_bool(true);
 	} else {
 		// dimensions == 0 means instantiation is a single instance.  
 		// size may be zero b/c first statement hasn't been added yet
-		INVARIANT(index_collection.size() <= 1);
 		return good_bool(pe.dimensions() == 0);
 	}
 }
@@ -290,7 +273,6 @@ param_value_collection::must_check_expression_dimensions(
 	// dimensions match
 	if (dimensions != 0) {
 #if 1
-		INVARIANT(index_collection.size() == 1);
 		// true for formal parameters
 		// number of dimensions doesn't even match!
 		// this is true only if parameters that check this
@@ -301,10 +283,8 @@ param_value_collection::must_check_expression_dimensions(
 		const const_range_list d(pe.static_constant_dimensions());
 
 		// make sure sizes in each dimension
-		const index_collection_type::const_iterator
-			i(index_collection.begin());
-		const count_ptr<const meta_range_list>
-			mrl((*i)->get_indices());
+		const index_collection_item_ptr_type
+			mrl(this->get_initial_instantiation_indices());
 		NEVER_NULL(mrl);
 		const count_ptr<const const_range_list>
 			crl(mrl.is_a<const const_range_list>());
@@ -316,7 +296,7 @@ param_value_collection::must_check_expression_dimensions(
 			// we're in trouble for template-dependent expressions
 			// need unroll parameters!
 			const_range_list _r;
-			if (!mrl->unroll_resolve(_r, c).good) {
+			if (!mrl->unroll_resolve_rvalues(_r, c).good) {
 				// there was error resolving parameters!
 				// should this ever happen???
 			ICE(cerr, 
@@ -342,9 +322,6 @@ param_value_collection::must_check_expression_dimensions(
 		return good_bool(crl.is_size_equivalent(d));
 #endif
 	} else {
-		// dimensions == 0 means instantiation is a single instance.  
-		// size may be zero b/c first statement hasn't been added yet
-		INVARIANT(index_collection.size() <= 1);
 		return good_bool(pe.dimensions() == 0);
 	}
 }	// end method param_value_collection::must_check_expression_dimensions

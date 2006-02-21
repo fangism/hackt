@@ -5,9 +5,9 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	30
+	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -15,18 +15,18 @@ Persistent Object Manager text dump:
 	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	13	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
-	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	69
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -40,7 +40,6 @@ In namespace "", we have: {
       pint<> N
       >(
         bool<> a with indices: {
-          [0..::foo::N-1]
         }
 
       )
@@ -49,7 +48,6 @@ In namespace "", we have: {
         N = pint<> N
       Instances:
         a = bool<> a with indices: {
-          [0..::foo::N-1]
         }
 
       unroll sequence: 
@@ -72,7 +70,6 @@ In namespace "", we have: {
   Instances:
     poo = process foo<3>^0 poo (instantiated) = ::poo (
       bool^1 a with indices: {
-        [0..::foo::N-1]
       }
         unrolled indices: {
           0 = ::poo.a[0] 

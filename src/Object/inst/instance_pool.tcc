@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.9 2006/02/05 19:45:07 fang Exp $
+	$Id: instance_pool.tcc,v 1.10 2006/02/21 04:48:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -106,8 +106,7 @@ template <class T>
 ostream&
 instance_pool<T>::dump(ostream& o) const {
 if (this->size() > 1) {
-	o << auto_indent << class_traits<tag_type>::tag_name <<
-		" instance pool:" << endl;
+	o << auto_indent << traits_type::tag_name << " instance pool:" << endl;
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());
 	size_t j = 1;

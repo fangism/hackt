@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	74
+	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	69
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
@@ -12,31 +12,31 @@ Persistent Object Manager text dump:
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	232
-	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	34
+	15	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	29
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	19	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	47
-	25	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	76
+	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	25	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
 	26	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	mdintref	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -49,7 +49,6 @@ In namespace "", we have: {
     bar = process-definition (defined) bar(
         int<32> a
         int<32> b with indices: {
-          [0..1]
         }
 
       )
@@ -57,7 +56,6 @@ In namespace "", we have: {
       Instances:
         a = int<32> a
         b = int<32> b with indices: {
-          [0..1]
         }
 
       unroll sequence: 
@@ -80,7 +78,6 @@ In namespace "", we have: {
 
   Instances:
     foo = int<32>^1 foo with indices: {
-      [0..1]
     }
       unrolled indices: {
         0 = ::none.b[0] (1) 
@@ -89,7 +86,6 @@ In namespace "", we have: {
     none = process bar<>^0 none (instantiated) = ::none (1) (
       int<32>^0 a (instantiated) = ::foo[0] (1) 
       int<32>^1 b with indices: {
-        [0..1]
       }
         unrolled indices: {
           0 = ::none.a (1) 

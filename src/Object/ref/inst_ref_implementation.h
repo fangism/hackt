@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.8 2006/01/25 02:23:43 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.9 2006/02/21 04:48:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -16,7 +16,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
-
+#include "common/ICE.h"
 #include "util/stacktrace.h"
 #include "util/packed_array.h"
 #include "util/memory/excl_ptr.h"
@@ -27,6 +27,7 @@ namespace HAC {
 namespace entity {
 using util::bad_bool;
 using util::memory::never_ptr;
+using util::memory::count_ptr;
 #include "util/using_ostream.h"
 template <class> class simple_meta_instance_reference;
 
@@ -136,6 +137,16 @@ member_lookup_footprint_frame(
 	return &sm.template get_pool<Tag>()[id]._frame;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+static
+excl_ptr<port_connection_base>
+make_port_connection(
+	const count_ptr<const simple_meta_instance_reference<Tag> >& r) {
+	NEVER_NULL(r);
+	return excl_ptr<port_connection_base>(new port_connection<Tag>(r));
+}
+
 };	// end struct simple_meta_instance_reference_implementation<true>
 
 //-----------------------------------------------------------------------------
@@ -212,6 +223,17 @@ member_lookup_footprint_frame(
 		const state_manager&) {
 	// ICE?
 	return NULL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+static
+excl_ptr<port_connection_base>
+make_port_connection(
+	const count_ptr<const simple_meta_instance_reference<Tag> >& r) {
+	NEVER_NULL(r);
+	ICE_NEVER_CALL(cerr);
+	return excl_ptr<port_connection_base>(NULL);
 }
 
 };	// end struct simple_meta_instance_reference_implementation<false>

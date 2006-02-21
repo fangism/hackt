@@ -1,6 +1,0 @@
-Size of dimension 1 does not match!  got: 2 and 1.
-got: [0..1] and: [1..1]
-ERROR: actual instance reference 4 of port connection doesn't match the formal type/size.
-	got: int<32>[1], expected: int<32>[2]
-At least one error in port connection.  
-HALT: at least one error in port connection list.  [12:1..25]

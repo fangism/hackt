@@ -2,7 +2,7 @@
 	\file "Object/traits/pbool_traits.h"
 	Traits and policies for parameter booleans.  
 	This file used to be "Object/art_object_pbool_traits.h".
-	$Id: pbool_traits.h,v 1.7 2006/02/10 21:50:43 fang Exp $
+	$Id: pbool_traits.h,v 1.8 2006/02/21 04:48:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PBOOL_TRAITS_H__
@@ -33,7 +33,7 @@ struct class_traits<pbool_tag> {
 	typedef	pbool_const			const_expr_type;
 	typedef	pbool_const_collection		const_collection_type;
 
-	typedef	param_instantiation_statement_base
+	typedef	instantiation_statement_base
 					instantiation_statement_parent_type;
 	typedef	pbool_instantiation_statement
 					instantiation_statement_type;
@@ -44,18 +44,18 @@ struct class_traits<pbool_tag> {
 	// this will have a different template base
 	typedef	simple_pbool_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;
-	typedef	simple_pbool_meta_instance_reference
-					simple_meta_instance_reference_type;
+	typedef	simple_pbool_meta_value_reference
+					simple_meta_value_reference_type;
 	typedef	pbool_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-	typedef	pbool_meta_instance_reference_base
-				meta_instance_reference_parent_type;
+	typedef	pbool_meta_value_reference_base
+				meta_value_reference_parent_type;
 	typedef	bool_expr			data_expr_base_type;
 	typedef	pbool_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
 
 	typedef	never_ptr<pbool_instance>	value_reference_ptr_type;
-	typedef	packed_array_generic<pbool_value_type, value_reference_ptr_type>
+	typedef	packed_array_generic<pint_value_type, value_reference_ptr_type>
 						value_reference_collection_type;
 	typedef	pbool_expression_assignment	expression_assignment_type;
 	typedef	param_expression_assignment	expression_assignment_parent_type;

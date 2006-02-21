@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.12 2006/02/12 03:09:44 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.13 2006/02/21 04:48:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -347,12 +347,12 @@ const_param_expr_list::must_be_equivalent(const this_type& cpl) const {
 	Eventually will add some context argument, though it is not needed
 	because this is already constant.  
  */
-param_expr_list::unroll_resolve_return_type
-const_param_expr_list::unroll_resolve(const unroll_context& c) const {
+param_expr_list::unroll_resolve_rvalues_return_type
+const_param_expr_list::unroll_resolve_rvalues(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// safe to use default copy construction because
 	// count_ptr's are copy-constructible
-	return unroll_resolve_return_type(new const_param_expr_list(*this));
+	return unroll_resolve_rvalues_return_type(new const_param_expr_list(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -535,8 +535,12 @@ if (a_size != f_size) {
 				"template formal and actual." << endl;
 			pex->dump(cerr << "\tgot: ", 
 				expr_dump_context::default_value) << endl;
-			pinst->dump(cerr << "\texpected: ", 
+#if 0
+			pinst->dump(cerr << "\texpected: ", c, 
 				dump_flags::verbose) << endl;
+#else
+			pinst->dump_formal(cerr << "\texpected: ", c) << endl;
+#endif
 			return good_bool(false);
 		}
 		// else continue checking successive arguments
@@ -750,34 +754,6 @@ dynamic_param_expr_list::is_relaxed_formal_dependent(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_param_expr_list::is_template_dependent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		const count_ptr<const param_expr> ip(*i);
-		NEVER_NULL(ip);	// nothing may be NULL at this point!
-		if (ip->is_template_dependent())
-			return true;
-		// else continue checking...
-	}
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_param_expr_list::is_loop_independent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		const count_ptr<const param_expr> ip(*i);
-		NEVER_NULL(ip);	// nothing may be NULL at this point!
-		if (!ip->is_loop_independent())
-			return false;
-		// else continue checking...
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
 dynamic_param_expr_list::may_be_initialized(void) const {
 	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
@@ -915,9 +891,9 @@ if (cpl) {
 	\return constant-resolved parameter list, 
 		else NULL if resolution failed.
  */
-param_expr_list::unroll_resolve_return_type
-dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
-	typedef	unroll_resolve_return_type		return_type;
+param_expr_list::unroll_resolve_rvalues_return_type
+dynamic_param_expr_list::unroll_resolve_rvalues(const unroll_context& c) const {
+	typedef	unroll_resolve_rvalues_return_type		return_type;
 	STACKTRACE_VERBOSE;
 	const return_type ret(new const_param_expr_list);
 	NEVER_NULL(ret);
@@ -925,7 +901,7 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 	const const_iterator e(end());
 	for ( ; i!=e; i++) {
 		const count_ptr<const param_expr> ip(*i);
-		const count_ptr<const_param> pc(ip->unroll_resolve(c));
+		const count_ptr<const_param> pc(ip->unroll_resolve_rvalues(c));
 		if (pc) {
 			ret->push_back(pc);
 		} else {
@@ -934,7 +910,7 @@ dynamic_param_expr_list::unroll_resolve(const unroll_context& c) const {
 				" of param expr list: ";
 			ip->dump(cerr, expr_dump_context::error_mode)
 				<< endl;
-			cerr << "ERROR in dynamic_param_expr_list::unroll_resolve()" << endl;
+			cerr << "ERROR in dynamic_param_expr_list::unroll_resolve_rvalues()" << endl;
 			return return_type(NULL);
 		}
 	}

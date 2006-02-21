@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.10 2006/02/12 03:09:44 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.11 2006/02/21 04:48:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -401,7 +401,7 @@ const_range_list::resolve_ranges(const_range_list& r) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-const_range_list::unroll_resolve(const_range_list& r, 
+const_range_list::unroll_resolve_rvalues(const_range_list& r, 
 		const unroll_context& c) const {
 	r = *this;
 	return good_bool(true);
@@ -608,21 +608,6 @@ dynamic_meta_range_list::is_relaxed_formal_dependent(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
-dynamic_meta_range_list::is_template_dependent(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		const count_ptr<const pint_range> pr(*i);
-		NEVER_NULL(pr);
-		if (pr->is_template_dependent()) {
-			return true;
-		}
-		// else continue checking
-	}
-	return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
 dynamic_meta_range_list::is_static_constant(void) const {
 	const_iterator i(begin());
 	for ( ; i!=end(); i++) {
@@ -670,7 +655,7 @@ dynamic_meta_range_list::resolve_ranges(const_range_list& r) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
-dynamic_meta_range_list::unroll_resolve(const_range_list& r, 
+dynamic_meta_range_list::unroll_resolve_rvalues(const_range_list& r, 
 		const unroll_context& c) const {
 	INVARIANT(r.empty());
 	// write as transform?

@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.7 2006/02/10 21:50:35 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.8 2006/02/21 04:48:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -70,13 +70,13 @@
 	// simple instance reference may contain multidimensional indices
 #define	SIMPLE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY		"sprcmref"
 #define	SIMPLE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY		"schnmref"
-#define	SIMPLE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"sdbmref"
-#define	SIMPLE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdimref"
-#define	SIMPLE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY		"sdemref"
-#define	SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdsmref"
-#define	SIMPLE_PBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"spbmref"
-#define	SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY		"spimref"
-#define	SIMPLE_PREAL_META_INSTANCE_REFERENCE_TYPE_KEY		"sprmref"
+#define	SIMPLE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY		"sdbmiref"
+#define	SIMPLE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdimiref"
+#define	SIMPLE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY		"sdemiref"
+#define	SIMPLE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY		"sdsmiref"
+#define	SIMPLE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY		"spbmvref"
+#define	SIMPLE_PINT_META_VALUE_REFERENCE_TYPE_KEY		"spimvref"
+#define	SIMPLE_PREAL_META_VALUE_REFERENCE_TYPE_KEY		"sprmvref"
 
 	// simple non-meta instance references
 #define	SIMPLE_PROCESS_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprcnref"
@@ -90,13 +90,15 @@
 #define	SIMPLE_PREAL_NONMETA_INSTANCE_REFERENCE_TYPE_KEY	"sprnref"
 
 	// aggregates are complex compositions / concatenations of arrays
-#define	AGGREGATE_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"aprocref"
-#define	AGGREGATE_CHANNEL_INSTANCE_REFERENCE_TYPE_KEY		"achanref"
-#define	AGGREGATE_DBOOL_INSTANCE_REFERENCE_TYPE_KEY		"adbref"
-#define	AGGREGATE_DINT_INSTANCE_REFERENCE_TYPE_KEY		"adiref"
-#define	AGGREGATE_PBOOL_INSTANCE_REFERENCE_TYPE_KEY		"apbref"
-#define	AGGREGATE_PINT_INSTANCE_REFERENCE_TYPE_KEY		"apiref"
-#define	AGGREGATE_PREAL_INSTANCE_REFERENCE_TYPE_KEY		"aprref"
+#define	AGGREGATE_PROCESS_META_INSTANCE_REFERENCE_TYPE_KEY	"aprcmref"
+#define	AGGREGATE_CHANNEL_META_INSTANCE_REFERENCE_TYPE_KEY	"achnmref"
+#define	AGGREGATE_DBOOL_META_INSTANCE_REFERENCE_TYPE_KEY	"adbmiref"
+#define	AGGREGATE_DINT_META_INSTANCE_REFERENCE_TYPE_KEY		"adimiref"
+#define	AGGREGATE_ENUM_META_INSTANCE_REFERENCE_TYPE_KEY		"ademiref"
+#define	AGGREGATE_STRUCT_META_INSTANCE_REFERENCE_TYPE_KEY	"adsmiref"
+#define	AGGREGATE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY		"apbmvref"
+#define	AGGREGATE_PINT_META_VALUE_REFERENCE_TYPE_KEY		"apimvref"
+#define	AGGREGATE_PREAL_META_VALUE_REFERENCE_TYPE_KEY		"aprmvref"
 
 	// member references of the form x.y, (x may be indexed / member ref.)
 #define	MEMBER_PROCESS_INSTANCE_REFERENCE_TYPE_KEY		"mprocref"
@@ -182,7 +184,11 @@
 #define	CHANNEL_ALIAS_CONNECTION_TYPE_KEY			"chnalias"
 #define	PROCESS_ALIAS_CONNECTION_TYPE_KEY			"prcalias"
 
-#define	PORT_CONNECTION_TYPE_KEY				"portconn"
+// obsolete, in favor of subtypes
+// #define	PORT_CONNECTION_TYPE_KEY			"portconn"
+#define	PROCESS_PORT_CONNECTION_TYPE_KEY			"prcprtcn"
+#define	CHANNEL_PORT_CONNECTION_TYPE_KEY			"chnprtcn"
+#define	STRUCT_PORT_CONNECTION_TYPE_KEY				"dstprtcn"
 #define	LOOP_SCOPE_TYPE_KEY					"loopscop"
 #define	CONDITIONAL_SCOPE_TYPE_KEY				"condscop"
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.5 2006/02/10 21:50:34 fang Exp $
+	$Id: expr.cc,v 1.6 2006/02/21 04:48:19 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -29,10 +29,12 @@
 // will need these come time for type-checking
 #include "Object/inst/instance_collection_base.h"
 #include "Object/def/definition_base.h"
-#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
+#include "Object/ref/aggregate_meta_value_reference.h"
+#include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference_base.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
@@ -52,10 +54,14 @@
 #include "Object/expr/int_arith_expr.h"
 #include "Object/expr/int_relational_expr.h"
 #include "Object/expr/bool_logical_expr.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/lang/PRS.h"
 #include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
+#include "Object/inst/physical_instance_collection.h"
+#include "Object/inst/param_value_collection.h"
+#include "Object/ref/meta_reference_union.h"
 
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -108,6 +114,7 @@ using std::distance;
 using std::_Select1st;
 using std::_Select2nd;
 using util::back_insert_assigner;
+using entity::expr_dump_context;
 
 //=============================================================================
 // class expr method definitions
@@ -133,8 +140,7 @@ expr::generic_meta_return_type
 expr::check_meta_generic(const context& c) const {
 	STACKTRACE("expr::check_meta_generic()");
 	const expr::meta_return_type ret(check_meta_expr(c));
-	return generic_meta_return_type(ret,
-		ret.is_a<inst_ref_meta_return_type::element_type>());
+	return generic_meta_return_type(ret, ret);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -172,7 +178,8 @@ inst_ref_expr::check_meta_generic(const context& c) const {
 	STACKTRACE("inst_ref_expr::check_meta_generic()");
 	const meta_return_type ret(check_meta_reference(c));
 	return generic_meta_return_type(
-		ret.is_a<expr::meta_return_type::element_type>(), ret);
+		ret.value_ref().is_a<expr::meta_return_type::element_type>(),
+		ret);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -184,7 +191,8 @@ inst_ref_expr::check_meta_expr(const context& c) const {
 	STACKTRACE("inst_ref_expr::check_meta_expr() (should not be called)");
 	typedef	expr::meta_return_type::element_type	param_type;
 	const inst_ref_expr::meta_return_type inst_ref(check_meta_reference(c));
-	const expr::meta_return_type param_ref(inst_ref.is_a<param_type>());
+	const expr::meta_return_type
+		param_ref(inst_ref.value_ref().is_a<param_type>());
 	if (param_ref) {
 		// accepted
 		return param_ref;
@@ -226,9 +234,9 @@ inst_ref_expr::check_prs_literal(const context& c) const {
 	STACKTRACE_VERBOSE;
 	meta_return_type ref(check_meta_reference(c));
 	count_ptr<simple_bool_meta_instance_reference>
-		bool_ref(ref.is_a<simple_bool_meta_instance_reference>());
+		bool_ref(ref.inst_ref().is_a<simple_bool_meta_instance_reference>());
 	if (bool_ref) {
-		ref.abandon();
+		ref.inst_ref().abandon();
 		INVARIANT(bool_ref.refs() == 1);
 		if (bool_ref->dimensions()) {
 			cerr << "ERROR: bool reference at " << where(*this) <<
@@ -367,6 +375,49 @@ expr_list::select_checked_meta_refs(const checked_meta_generic_type& src,
 	);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constucts an aggregate value reference from its consituents.  
+ */
+meta_expr_return_type
+expr_list::make_aggregate_value_reference(const checked_meta_exprs_type& ex, 
+		const bool cat) {
+	typedef	meta_expr_return_type		return_type;
+	typedef	checked_meta_exprs_type::const_iterator	const_iterator;
+	INVARIANT(ex.size());
+	const_iterator i(ex.begin()), e(ex.end());
+	const meta_expr_return_type bi(*i);
+	if (!bi) {
+		cerr << "Error in first subreference, cannot construct "
+			"aggregate value reference." << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<aggregate_meta_value_reference_base>
+		ret(param_expr::make_aggregate_meta_value_reference(bi));
+	NEVER_NULL(ret);
+	if (cat) ret->set_concatenation_mode();
+	else	ret->set_construction_mode();
+	size_t j = 2;
+	for (++i; i!=e; ++i, ++j) {
+		const meta_expr_return_type mi(*i);
+		if (!mi) {
+			// could be error in construction, or wrong type.
+			cerr << "Error in subreference at position " << j <<
+				", cannot construct aggregate value reference."
+				<< endl;
+			return return_type(NULL);
+		}
+		if (!ret->append_meta_value_reference(mi).good) {
+			cerr << "Error appending aggregate value reference "
+				"at position " << j << "." << endl;
+			return return_type(NULL);
+		}
+		// else keep going
+	}
+	// cross-cast from aggregate_meta_value_reference to param_expr
+	return ret.is_a<return_type::element_type>();
+}
+
 //=============================================================================
 // class expr_list method definitions
 
@@ -420,6 +471,57 @@ inst_ref_expr_list::postorder_check_nonmeta_data_refs(
 	for ( ; i!=e; i++) {
 		temp.push_back((*i)->check_nonmeta_data_reference(c));
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: Account for both instance references and value references.  
+ */
+inst_ref_meta_return_type
+inst_ref_expr_list::make_aggregate_instance_reference(
+		const checked_meta_refs_type& ref, const bool cat) {
+	typedef	inst_ref_meta_return_type		return_type;
+	typedef	checked_meta_refs_type::const_iterator	const_iterator;
+	INVARIANT(ref.size());
+	const_iterator i(ref.begin()), e(ref.end());
+	const inst_ref_meta_return_type::inst_ref_ptr_type& bi(i->inst_ref());
+	if (!bi) {
+		cerr << "Error in first subreference, cannot construct "
+			"aggregate instance reference." << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<aggregate_meta_instance_reference_base>
+		ret(meta_instance_reference_base::
+			make_aggregate_meta_instance_reference(bi));
+	NEVER_NULL(ret);
+	if (cat) ret->set_concatenation_mode();
+	else	ret->set_construction_mode();
+	size_t j = 2;
+	for (++i; i!=e; ++i, ++j) {
+		const inst_ref_meta_return_type::inst_ref_ptr_type&
+			mi(i->inst_ref());
+		if (!mi) {
+			cerr << "Error in subreference at position " << j <<
+				", cannot construct aggregate "
+				"instance reference." << endl;
+			if (i->value_ref()) {
+				cerr << "\tgot: ";
+				i->value_ref()->dump(cerr, 
+					expr_dump_context::error_mode)
+					<< endl;
+			}
+			return return_type(NULL);
+		}
+		if (!ret->append_meta_instance_reference(mi).good) {
+			cerr << "Error appending aggregate instance reference "
+				"at position " << j << "." << endl;
+			return return_type(NULL);
+		}
+		// else keep going
+	}
+	// cross-cast: from aggregate_meta_instance_reference 
+	// to meta_instance_reference_base
+	return ret.is_a<meta_instance_reference_base>();
 }
 
 //=============================================================================
@@ -726,7 +828,17 @@ id_expr::check_meta_reference(const context& c) const {
 			STACKTRACE("valid instance collection found");
 			// we found an instance which may be single
 			// or collective... info is in inst.
-			return inst->make_meta_instance_reference();
+			const never_ptr<const physical_instance_collection>
+				pinst(inst.is_a<const physical_instance_collection>());
+			if (pinst) {
+				// physical instance collection
+				return pinst->make_meta_instance_reference();
+			} else {
+				// then must be a value collection
+				const never_ptr<const param_value_collection>
+					vinst(inst.is_a<const param_value_collection>());
+				return vinst->make_meta_value_reference();
+			}	// no other possibility
 		} else {
 			cerr << "object \"" << *qid <<
 				"\" does not refer to an instance, ERROR!  "
@@ -1054,9 +1166,11 @@ member_expr::check_meta_reference(const context& c) const {
 			<< where(*owner) << endl;
 		THROW_EXIT;
 	}
-	const count_ptr<const simple_meta_instance_reference_base>
-		inst_ref(o.is_a<const simple_meta_instance_reference_base>());
-	INVARIANT(inst_ref);
+	const return_type::inst_ref_ptr_type inst_ref(o.inst_ref());
+	if (!inst_ref) {
+		NEVER_NULL(o.value_ref());
+		FINISH_ME_EXIT(Fang);
+	}
 	if (inst_ref->dimensions()) {
 		cerr << "ERROR: cannot take the member of a " <<
 			inst_ref->dimensions() << "-dimension array, "
@@ -1287,7 +1401,12 @@ index_expr::check_meta_reference(const context& c) const {
 	// should cast to meta_instance_reference_base instead, 
 	// abstract attach_indices
 	const count_ptr<simple_meta_instance_reference_base>
-		base_inst(base_expr.is_a<simple_meta_instance_reference_base>());
+		base_inst(base_expr.inst_ref() ?
+			base_expr.inst_ref()
+				.is_a<simple_meta_instance_reference_base>() :
+			base_expr.value_ref()
+				.is_a<simple_meta_instance_reference_base>()
+			);
 	NEVER_NULL(base_inst);
 
 	excl_ptr<range_list::checked_meta_indices_type::element_type>
@@ -1298,7 +1417,7 @@ index_expr::check_meta_reference(const context& c) const {
 		THROW_EXIT;
 	}
 	// return indexed instance reference
-	return base_inst;
+	return base_expr;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1933,7 +2052,7 @@ loop_concatenation::check_meta_generic(const context& c) const {
 // class array_construction method definitions
 
 array_construction::array_construction(const char_punctuation_type* l,
-		const expr* e, const char_punctuation_type* r) : 
+		const expr_list* e, const char_punctuation_type* r) : 
 		expr(), lb(l), ex(e), rb(r) {
 	NEVER_NULL(ex);
 }
@@ -1958,23 +2077,65 @@ array_construction::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::meta_return_type
 array_construction::check_meta_expr(const context& c) const {
-	cerr << "Fang, finish array_construction::check_meta_expr()!" << endl;
+	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
 array_construction::check_nonmeta_expr(const context& c) const {
-	cerr << "Fang, finish array_construction::check_nonmeta_expr()!"
-		<< endl;
+	FINISH_ME(Fang);
 	return nonmeta_expr_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We don't know yet whether we have a value assignment or
+	alias connection.  So we check for both cases here.  
+ */
 expr::generic_meta_return_type
 array_construction::check_meta_generic(const context& c) const {
-	cerr << "Fang, finish array_construction::check_meta_generic()!" << endl;
-	return expr::generic_meta_return_type();
+	typedef	expr::generic_meta_return_type	return_type;
+	typedef	expr_list::checked_meta_generic_type	checked_array_type;
+	checked_array_type	temp;
+	ex->postorder_check_meta_generic(temp, c);
+	const checked_array_type::const_iterator
+		first_obj(temp.begin()), end_obj(temp.end());
+	// going to use the first object to determine whether to construct
+	// aggregate value reference or aggregate instance reference
+	if (!first_obj->first && !first_obj->second) {
+		cerr << "Error checking first subreference of aggregate.  "
+			<< where(*ex) << endl;
+		return return_type();
+	} else if (first_obj->first) {
+		// then we have expressions and value references to combine
+		expr_list::checked_meta_exprs_type checked_exprs;
+		expr_list::select_checked_meta_exprs(temp, checked_exprs);
+		// pass 'false' to indicate construction, not concatenation
+		const meta_expr_return_type
+		ret(expr_list::make_aggregate_value_reference(
+				checked_exprs, false));
+		if (!ret) {
+			cerr << "Error building aggregate value reference.  "
+				<< where(*ex) << endl;
+		}
+		return return_type(ret, inst_ref_meta_return_type(NULL));
+	} else {
+		// then we have instance references to combine
+		INVARIANT(first_obj->second);
+		expr_list::checked_meta_refs_type checked_refs;
+		expr_list::select_checked_meta_refs(temp, checked_refs);
+		// pass 'false' to indicate construction, not concatenation
+		const inst_ref_meta_return_type
+		ret(inst_ref_expr_list::make_aggregate_instance_reference(
+				checked_refs, false));
+		if (!ret) {
+			cerr << "Error building aggregate instance reference.  "
+				<< where(*ex) << endl;
+		}
+		return return_type(meta_expr_return_type(NULL), ret);
+	}
+	return return_type();
 }
 
 //=============================================================================

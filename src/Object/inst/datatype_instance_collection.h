@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.7 2006/01/30 07:42:02 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.8 2006/02/21 04:48:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -54,6 +54,10 @@ virtual	~datatype_instance_collection();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
+
+virtual	void
+	attach_initial_instantiation_statement(
+		const never_ptr<const data_instantiation_statement>) = 0;
 
 virtual bool
 	is_partially_unrolled(void) const = 0;

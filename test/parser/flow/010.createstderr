@@ -4,37 +4,37 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
-	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	6	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	240
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	235
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	18	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	22	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -48,7 +48,6 @@ In namespace "", we have: {
     N = pint^0 N (init = 3) value: 3
   Instances:
     x = bool^3 x with indices: {
-      [$i..$i][$j..$j][$k..$k]
     }
       unrolled indices: {
         [0][0][0] = ::x[0][0][0] (1) 

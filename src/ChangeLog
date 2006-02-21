@@ -5,12 +5,206 @@
 
 2006-02-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-12-merged-aggregate-01-10:
+	  Branch merge.
+	  Summary: implemented basic aggreegate value/instance references.
+		Includes major rework of the reference class hierarchy.
+		Some bug fixes and library fixes along the way.
+	  Also fixed scripts/promote_header_deps.awk to work properly
+		with any VPATH, by stripping away $(srcdir)/$(subdir)
+		in output dependencies, also updated Make.hchk-tail.
+	  Details below.  
+	
+
 	* HACKT-00-01-04-main-00-77-11:
 	  Cross-checking against g++-4.1 (RC1, 20060219).
 	  Instantiated template classes in the correct namespaces.
 	  Minor fixes described in util/ChangeLog.
 	  Now ready for 4.1 prime-time!
 
+
+2006-02-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-10:
+	  Minor clean-up only.  
+	  End of branch, merge to trunk.
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-09:
+	  Implemented aggregate_meta_instance_reference (.tcc), 
+		and instantiated aggregate template classes.  
+	  Moved some common functions from simple_meta_instance_reference
+		to meta_instance_reference (generic constructions).  
+	  Added necessary type_key and util::what specializations.  
+	  Trival updates of some test cases, due to string changes.
+	  Enabled bunch of basic 1D-array construction test cases (work).
+	  Branch status: nearly complete.
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-08:
+	  Committed deprecation of assign_value_collection from last revision.
+	  Renamed param/value_refs unroll_resolve -> unroll_resolve_rvalues.
+	  Renamed value_refs' unroll_references -> unroll_lvalue_references.
+	  Other similar trivial renaming for clarity.  
+
+
+2006-02-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-07:
+	  Phasing out old meta_value_reference::assign_value_collection, 
+		in favor of new method of assigning parameter values
+		in expression_assignment::unroll().  
+		The new method collects lvalue references in a similar
+		fashion to instance_aliases in connections.  
+		Cleanner, easier to understand, more efficient.  
+	  Implemented value_collection::unroll_references, 
+		and meta_value_reference::unroll_references.  
+	  Separater out value-instance structs into their own headers.  
+	  Fixed array_generic types in pbool/preal_traits.h.
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-06:
+	  Partially implemented aggregate_value_ref::assign_value_collection, 
+		but going to abandon shortly.  *shrug* (reason below)
+	  experssion_assignments' value_reference type is now generalized, 
+		no longer limiter to simple references.  
+	  TODO: re-implement expression assignment to collect packed_array
+		of pointers to value instances (state_instance), to facilitate
+		en-masse collective value assignment.  
+		Ditch meta_value_reference::assign_value_collection.
+		Note: this is easier now with 'correct' class/interfaces.  
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-05:
+	  Repaired latent typo bug (never tripped before) in
+		simple_meta_value_reference::assign_value_collection, 
+		incorrect loop-termination condition.
+		Added bunch of related test cases to parser/param..
+	  Implemented most simple methods of aggregate_value_reference. 
+	  Trimmed some more useless interface methods in aggregates.  
+	  TODO: expression_assignment's value_reference_type (dest) need not
+		be simple anymore, allow aggregates.  
+
+
+2006-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-04:
+	  Trimmed unnecessary methods from aggregate reference classes.
+	  Implemented appending of subreferences with dimension-only checking.
+		Packed-size checking is done only at unroll-time.  
+	  Added some simple parse test cases to parser/array.  
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-03-merged-ref-11:
+	  Merge of instance reference rework from child branch, 
+		-ref, revision -11.  (Major code surgery.)  
+
+
+2006-02-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-11:
+	  meta_instance_reference_base : persistent (non-virtual)
+	  Removed "Object/ref/simple_datatype_meta_instance_reference_base.h".
+	  Checked parser tests-cases against yacc, a few updates.  
+	  Minor touch-ups.  
+	  Status: ready to merge to parent branch.  
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-10:
+	  Finally, committed DECOUPLE_INSTANCE_REFERENCE_HIERARCHY -> 1, 
+		(-1400 LoC).  This accomplishes the primary branch objective.
+	  Only little more clean-up and checking before merging.  
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-09:
+	  Committed ENABLE_STATIC_COMPILE_CHECKS -> 0, and
+		ENABLE_STATIC_DIMENSION_ANALYSIS -> 0, (-1500 LoC).
+		There goes a lot of old commented code...
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-08:
+	  Committed WANT_IS_TEMPLATE_DEPENDENT -> 0, (-650 LoC).
+
+
+2006-02-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-07:
+	  Committed SUBTYPE_PORT_CONNECTION -> 1, (-250 LoC).
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-06:
+	  Committed WANT_PARAM_INSTANTIATION_STATEMENT_BASE -> 0.  (-100 LoC)
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-05:
+	  The axe-man cometh!
+	  First of several phases of committing code cuts.  
+	  Committed UNIFY_UNROLL_PASS -> 1.  (-250 LoC)
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-04:
+	  Tiny patch to improve an error message on formal/actual mismatch.  
+	  Repaired last test case, and added one more template/080.hac.
+	  With this patch, the source now passes make check and distcheck.
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-03:
+	  All remaining test directories updated, after re-verification.
+		What a pain in the asterisk.  
+	  Remains only one test case, waiting for better diagnostic message.
+
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-02:
+	  Fixed minor bug in assigning value to member of value collection.  
+	  Round of test updates in basic, param, namespace.  
+	  Round of source clean-up.  
+
+
+2006-02-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref-01:
+	  MASSIVE code transplant.  
+		Thousands of LoC marked for substitution and deletion.  
+		Introduced a handful of switches to mark cuts in
+			"Object/devel_switches.h"
+		DECOUPLE_INSTANCE_REFERENCE_HIERARCHY -> 1
+			pry apart instance/value reference hierarchy.
+		SUBTYPE_PORT_CONNECTION -> 1
+		WANT_IS_TEMPLATE_DEPENDENT -> 0
+			compile-time checking facilities.  
+		UNIFY_UNROLL_PASS -> 1 (clean-up)
+	  Agenda:
+		Strip out much code related to static (compile-time)
+			checking of instantiation and initializations.  
+			ENABLE_STATIC_COMPILE_CHECKS -> 0
+			ENABLE_STATIC_DIMENSION_ANALYSIS -> 0
+		For instance, instance/value collections no longer contain
+			a sequence of pointers to instantiation statements.  
+			They now only contain the first instantiation stmt, 
+			for the sake of basic type checking.  
+	  Test suite introduced many differences.  
+		Before this branch is over, ALL 2500+ tests must 
+		be resolved and updated to satisfaction.  
+		Tests were NOT updated in this revision.
+		That will happen gradually over next revisions.  
+	  After all this is done, completing aggregate references should
+		be easier and cleaner than was formerly possible.  
+
+
+2006-02-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-02:
+	  First major revision:
+		partially implemented AST construction of aggregates.
+		updated persistence type keys for aggregates
+		skeletal implementation of aggregate value references, 
+			instantiated: Object/expr/meta_param_value_reference.cc
+		grammar updated to generalize alias_lists (simplification)
+			now requires a little bit more checking in AST.  
+	  TODO: consider liberating param_value_references from
+		the meta_instance_reference_base hierarchy, analogous to
+		what was done with physical and value instance collections.  
+		
 
 2006-02-12	David Fang		<fangism@users.sourceforge.net>
 
@@ -25,6 +219,23 @@
 	  Fixed bug in referencing definition-local parameters, in
 		simple_meta_value_reference::unroll_resolve.
 	  Added test case: parser/template/079.hac
+
+
+2006-02-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-01:
+	  This branch is for implementing the long-awaited aggregate
+		references in the HAC language, such as {x, y, z}.
+	  Initial revision:
+		renamed some persistent type keys for clarity, 
+			test outputs of objdumps were updated.  
+		renamed some instance_reference classes to value_reference
+			for consistency.  
+		skeleton files for aggregate reference class templates
+		grammar adjusted to accommodate aggregate references, 
+			almost no change because difference is semantic.
+	  TODO: next, start with parser front-end, and construct
+		aggregate instance/value references.  
 
 
 2006-02-11	David Fang		<fangism@users.sourceforge.net>

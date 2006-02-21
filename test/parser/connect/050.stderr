@@ -1,5 +1,5 @@
 Dimensions do not match! got: 0 and: 1.
 ERROR: actual instance reference 1 of port connection doesn't match the formal type/size.
-	got: bool<>[1], expected: bool<>
+	got: bool<>{1-dim}, expected: bool<>
 At least one error in port connection.  
 HALT: at least one error in port connection list.  [12:1..19]

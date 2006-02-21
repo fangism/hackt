@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.9 2006/02/11 03:56:50 fang Exp $
+	$Id: value_collection.h,v 1.10 2006/02/21 04:48:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -26,8 +26,11 @@
 namespace HAC {
 namespace entity {
 template <class>
-class simple_meta_instance_reference;
+class simple_meta_value_reference;
+// template <class>
+// class simple_meta_instance_reference;
 class meta_instance_reference_base;
+class meta_value_reference_base;
 class nonmeta_instance_reference_base;
 class fundamental_type_reference;
 class param_type_reference;
@@ -37,6 +40,7 @@ class const_range_list;
 class const_index_list;
 class scopespace;
 class unroll_context;
+template <class> class param_instantiation_statement;
 using std::list;
 using std::istream;
 using std::ostream;
@@ -63,26 +67,38 @@ value_collection<Tag>
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 class value_collection :
 	public class_traits<Tag>::value_collection_parent_type {
-friend class simple_meta_instance_reference<Tag>;
+// friend class simple_meta_instance_reference<Tag>;
+friend class simple_meta_value_reference<Tag>;
+public:
+	typedef	class_traits<Tag>		traits_type;
 private:
 	typedef	VALUE_COLLECTION_CLASS		this_type;
-	typedef	typename class_traits<Tag>::value_collection_parent_type
+	typedef	typename traits_type::value_collection_parent_type
 						parent_type;
 public:
-	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
-					simple_meta_instance_reference_type;
-	typedef	typename class_traits<Tag>::simple_nonmeta_instance_reference_type
+	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::simple_meta_value_reference_type
+					simple_meta_value_reference_type;
+	typedef	typename traits_type::simple_nonmeta_instance_reference_type
 					simple_nonmeta_instance_reference_type;
-	typedef	typename class_traits<Tag>::expr_base_type
+	typedef	typename traits_type::expr_base_type
 						expr_type;
-	typedef	typename class_traits<Tag>::const_expr_type
+	typedef	typename traits_type::const_expr_type
 						const_expr_type;
-	typedef	typename class_traits<Tag>::const_collection_type
+	typedef	typename traits_type::const_collection_type
 						const_collection_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
+
+	typedef typename traits_type::instantiation_statement_type
+					initial_instantiation_statement_type;
+	typedef	never_ptr<const initial_instantiation_statement_type>
+				initial_instantiation_statement_ptr_type;
+	typedef	typename traits_type::value_reference_collection_type
+					value_reference_collection_type;
 protected:
 	/**
+		TODO: 20060214: eliminate static initial value analysis?
+
 		Expression or value with which parameter is initialized. 
 		Recall that parameters are static -- written once only.  
 		Not to be used by the hash_string.  
@@ -95,6 +111,9 @@ protected:
 		Collectives won't be checked until unroll time.  
 	 */
 	count_ptr<const expr_type>		ival;
+
+	initial_instantiation_statement_ptr_type
+					initial_instantiation_statement_ptr;
 
 protected:
 	explicit
@@ -117,11 +136,26 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream& o) const;
 
+	void
+	attach_initial_instantiation_statement(
+		const initial_instantiation_statement_ptr_type i) {
+		NEVER_NULL(i);
+		if (!initial_instantiation_statement_ptr) {
+			initial_instantiation_statement_ptr = i;
+		}
+	}
+
+	index_collection_item_ptr_type
+	get_initial_instantiation_indices(void) const;
+
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
 virtual	ostream&
 	dump_unrolled_values(ostream& o) const = 0;
+
+	ostream&
+	dump_formal(ostream&, const unroll_context&) const;
 
 	// PROBLEM: built-in? needs to be consistent
 	count_ptr<const fundamental_type_reference>
@@ -130,11 +164,8 @@ virtual	ostream&
 	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const;
 
-	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const;
-
-	count_ptr<nonmeta_instance_reference_base>
-	make_nonmeta_instance_reference(void) const;
+	count_ptr<meta_value_reference_base>
+	make_meta_value_reference(void) const;
 
 	good_bool
 	initialize(const init_arg_type& e);
@@ -158,6 +189,7 @@ virtual	ostream&
 virtual	good_bool
 	instantiate_indices(const const_range_list& i) = 0;
 
+// possibly DEPRECATED
 #define	LOOKUP_VALUE_INDEXED_PROTO					\
 	good_bool							\
 	lookup_value(value_type& v, const multikey_index_type& i, 	\
@@ -170,10 +202,13 @@ virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 
-public:
-// really should be protected, usable by pbool_meta_instance_reference::assigner
-virtual	bad_bool
-	assign(const multikey_index_type& k, const value_type b) = 0;
+#define	UNROLL_LVALUE_REFERENCES_PROTO					\
+	bad_bool							\
+	unroll_lvalue_references(const multikey_index_type&, 		\
+		const multikey_index_type&, 				\
+		value_reference_collection_type&) const
+
+virtual	UNROLL_LVALUE_REFERENCES_PROTO = 0;
 
 public:
 
@@ -213,17 +248,19 @@ private:
 	typedef	value_collection<Tag>			parent_type;
 friend class value_collection<Tag>;
 public:
-	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::instance_type
-							element_type;
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::instance_type	element_type;
 
 	// later change this to multikey_set or not?
 	/// Type for actual values, including validity and status.
 	typedef	multikey_map<D, pint_value_type, element_type, qmap>
 							collection_type;
 	typedef	typename collection_type::key_type	key_type;
-	typedef	typename class_traits<Tag>::const_collection_type
+	typedef	typename traits_type::const_collection_type
 							const_collection_type;
+	typedef	typename traits_type::value_reference_collection_type
+					value_reference_collection_type;
 private:
 	/// the collection of boolean instances
 	collection_type					collection;
@@ -262,8 +299,7 @@ public:
 
 	LOOKUP_VALUE_INDEXED_PROTO;
 
-	bad_bool
-	assign(const multikey_index_type& k, const value_type i);
+	UNROLL_LVALUE_REFERENCES_PROTO;
 
 	/// helper functor for dumping values
 	struct key_value_dumper {
@@ -296,14 +332,14 @@ private:
 	typedef	value_collection<Tag>			parent_type;
 	typedef	VALUE_SCALAR_CLASS			this_type;
 public:
-	typedef	typename class_traits<Tag>::instance_type
-							instance_type;
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::instance_type	instance_type;
 	typedef	instance_type				element_type;
-	typedef	typename class_traits<Tag>::value_type	value_type;
-	typedef	typename class_traits<Tag>::expr_base_type
-							expr_type;
-	typedef	typename class_traits<Tag>::const_expr_type
-							const_expr_type;
+	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::expr_base_type	expr_type;
+	typedef	typename traits_type::const_expr_type	const_expr_type;
+	typedef	typename traits_type::value_reference_collection_type
+					value_reference_collection_type;
 private:
 	instance_type					the_instance;
 	const_expr_type					cached_value;
@@ -336,9 +372,6 @@ public:
 	good_bool
 	lookup_value(value_type& i, const unroll_context&) const;
 
-	bad_bool
-	assign(const value_type i);
-
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  
 	// update this to accept a const_range_list
@@ -349,11 +382,7 @@ public:
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 
-	bad_bool
-	assign(const multikey_index_type& k, const value_type i);
-
-	this_type&
-	operator = (const value_type);
+	UNROLL_LVALUE_REFERENCES_PROTO;
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -367,6 +396,9 @@ public:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#undef	LOOKUP_VALUE_INDEXED_PROTO
+#undef	UNROLL_LVALUE_REFERENCES_PROTO
 
 #endif	// __HAC_OBJECT_INST_VALUE_COLLECTION_H__
 

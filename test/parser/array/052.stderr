@@ -1,0 +1,4 @@
+Error in subreference at position 2, cannot construct aggregate value reference.
+Error building aggregate value reference.  [10:6..9]
+Error in source expression.
+HALT: at least one error in the assignment list.  [10:1..10]

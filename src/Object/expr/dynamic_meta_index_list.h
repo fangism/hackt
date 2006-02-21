@@ -3,7 +3,7 @@
 	Dynamic meta parameter index list class.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_meta_index_list.h,v 1.6 2006/01/22 18:19:47 fang Exp $
+	$Id: dynamic_meta_index_list.h,v 1.7 2006/02/21 04:48:23 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_META_INDEX_LIST_H__
@@ -76,15 +76,6 @@ public:
 	bool
 	is_relaxed_formal_dependent(void) const;
 
-	bool
-	is_loop_independent(void) const;
-
-	bool
-	is_unconditional(void) const;
-
-	bool
-	is_template_dependent(void) const;
-
 	const_index_list
 	resolve_index_list(void) const;
 
@@ -94,7 +85,7 @@ public:
 #endif
 
 	const_index_list
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve_indices(const unroll_context&) const;
 
 	bool
 	must_be_equivalent_indices(const meta_index_list& ) const;

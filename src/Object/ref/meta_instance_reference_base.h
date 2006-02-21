@@ -3,13 +3,13 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.7 2006/01/22 18:20:24 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.8 2006/02/21 04:48:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
 
-#include "Object/ref/nonmeta_instance_reference_base.h"
+#include "util/persistent.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
@@ -19,17 +19,24 @@ namespace HAC {
 namespace entity {
 class scopespace;
 struct footprint_frame;
+struct expr_dump_context;
 class state_manager;
 class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
+class physical_instance_collection;
 class aliases_connection_base;
+class port_connection_base;
 class const_range_list;
 class unroll_context;
+class aggregate_meta_instance_reference_base;
 using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
+using std::istream;
+using std::ostream;
+using util::persistent;
 
 //=============================================================================
 /**
@@ -42,11 +49,10 @@ using util::memory::count_ptr;
 	We need separate stacks...
 	See NOTES.
  */
-class meta_instance_reference_base : 
-		virtual public nonmeta_instance_reference_base {
-	typedef	nonmeta_instance_reference_base		parent_type;
+class meta_instance_reference_base : public persistent {
+	typedef	meta_instance_reference_base		this_type;
 public:
-	meta_instance_reference_base() : parent_type() { }
+	meta_instance_reference_base() : persistent() { }
 
 virtual	~meta_instance_reference_base() { }
 
@@ -59,12 +65,6 @@ virtual	ostream&
 virtual	ostream&
 	dump_type_size(ostream& o) const = 0;
 
-#if 0
-// only simple instance reference have a single base collection
-virtual never_ptr<const instance_collection_base>
-	get_inst_base(void) const = 0;
-#endif
-
 virtual	size_t
 	dimensions(void) const = 0;
 
@@ -74,27 +74,14 @@ virtual	never_ptr<const definition_base>
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;
 
-virtual	bool
-	may_be_densely_packed(void) const = 0;
-
-virtual	bool
-	must_be_densely_packed(void) const = 0;
-
-virtual	bool
-	has_static_constant_dimensions(void) const = 0;
-
-virtual	const_range_list
-	static_constant_dimensions(void) const = 0;
 
 // what kind of type equivalence?
 virtual	bool
-	may_be_type_equivalent(
-		const meta_instance_reference_base& i) const = 0;
+	may_be_type_equivalent(const this_type&) const = 0;
 
 // what kind of type equivalence?
 virtual	bool
-	must_be_type_equivalent(
-		const meta_instance_reference_base& i) const = 0;
+	must_be_type_equivalent(const this_type&) const = 0;
 
 	/**
 		Start an aliases connection list based on the referenced type.  
@@ -104,7 +91,17 @@ virtual	bool
 	static
 	excl_ptr<aliases_connection_base>
 	make_aliases_connection(
-		const count_ptr<const meta_instance_reference_base>&);
+		const count_ptr<const this_type>&);
+
+	static
+	count_ptr<aggregate_meta_instance_reference_base>
+	make_aggregate_meta_instance_reference(
+		const count_ptr<const this_type>&);
+
+	static
+	excl_ptr<port_connection_base>
+	make_port_connection(
+		const count_ptr<const this_type>&);
 
 /**
 	The implementation of this will be policy-determined, 
@@ -119,7 +116,7 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO = 0;
 
 #define	CONNECT_PORT_PROTO						\
 	bad_bool							\
-	connect_port(instance_collection_base&, 			\
+	connect_port(physical_instance_collection&, 			\
 		const unroll_context&) const
 
 virtual	CONNECT_PORT_PROTO = 0;
@@ -133,44 +130,15 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 private:
 virtual	excl_ptr<aliases_connection_base>
 	make_aliases_connection_private(void) const = 0;
+
+virtual	count_ptr<aggregate_meta_instance_reference_base>
+	make_aggregate_meta_instance_reference_private(void) const = 0;
+
+virtual	excl_ptr<port_connection_base>
+	make_port_connection_private(
+		const count_ptr<const this_type>&) const = 0;
+
 };	// end class meta_instance_reference_base
-
-//=============================================================================
-#if 0
-PHASE OUT, or needs a facelift
-	EVOLVE INTO: complex_aggregate_meta_instance_reference, muhahahaha!
-/// in favor of using generic (simple/complex_aggregate) instance references
-//	all have potential indices, forget hierarchy
-// scheme has much changed since this idea was proposed...
-/**
-	Reference to an array (one-level) of instances.  
-	Self-reference is acceptable and intended for multidimensional
-	array element references.  
- */
-class collective_meta_instance_reference : public meta_instance_reference_base {
-protected:
-	// owned? no belongs to cache, even if multidimensional
-	// may also be collective
-	never_ptr<const meta_instance_reference_base>	base_array;
-	never_ptr<const param_expr>			lower_index;
-	never_ptr<const param_expr>			upper_index;
-public:
-	collective_meta_instance_reference(
-		never_ptr<const meta_instance_reference_base> b, 
-		const param_expr* l = NULL, const param_expr* r = NULL);
-
-virtual	~collective_meta_instance_reference();
-
-virtual	ostream&
-	what(ostream& o) const;
-
-virtual	ostream&
-	dump(ostream& o) const;
-
-virtual	string
-	hash_string(void) const;
-};	// end class collective_meta_instance_reference
-#endif
 
 //=============================================================================
 }	// end namespace entity

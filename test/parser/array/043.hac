@@ -1,0 +1,9 @@
+// "043.hac"
+// copy-modified from "042.hac"
+// should pass
+
+bool x, y, z;
+
+bool w[2];
+w = {x, y};
+

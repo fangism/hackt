@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.14 2006/02/01 06:11:45 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.15 2006/02/21 04:48:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -17,13 +17,18 @@
 #include "Object/common/dump_flags.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
+#include "common/TODO.h"
+#include "common/ICE.h"
 #include "util/what.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 	// will explicitly instantiate
 #include "util/persistent_object_manager.tcc"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/ref/inst_ref_implementation.h"
+#include "Object/unroll/port_connection.h"
 #include "util/stacktrace.h"
 #include "util/wtf.h"
 
@@ -51,7 +56,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference() :
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference(
 		const instance_collection_ptr_type pi) :
-		common_base_type(pi->current_collection_state()), 
+		common_base_type(), 
 		parent_type(), 
 		inst_collection_ref(pi) {
 	NEVER_NULL(inst_collection_ref);
@@ -79,12 +84,91 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just wrapped around common base class implmentation.  
+	Ripped off of the old simple_meta_instance_reference_base::dump()
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o, 
 		const expr_dump_context& c) const {
-	return simple_meta_instance_reference_base::dump(o, c);
+	if (c.include_type_info)
+		this->what(o) << " ";
+	NEVER_NULL(this->inst_collection_ref);
+	if (c.enclosing_scope) {
+		this->inst_collection_ref->dump_hierarchical_name(o,
+			dump_flags::no_definition_owner);
+	} else {
+		this->inst_collection_ref->dump_hierarchical_name(o,
+			dump_flags::default_value);
+	}
+	return simple_meta_instance_reference_base::dump_indices(o, c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Simplified from simple_meta_instance_reference_base::dump_type_size().
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+ostream&
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump_type_size(ostream& o) const {
+	this->get_type_ref()->dump(o);
+	const size_t d = this->dimensions();
+	if (d) {
+		o << '{' << d << "-dim}";
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+size_t
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::dimensions(void) const {
+	size_t dim = this->inst_collection_ref->get_dimensions();
+	if (array_indices) {
+		const size_t c = this->array_indices->dimensions_collapsed();
+		INVARIANT(c <= dim);
+		return dim -c;
+	} else	return dim;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+never_ptr<const definition_base>
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_base_def(void) const {
+	return this->inst_collection_ref->get_base_def();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const fundamental_type_reference>
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_type_ref(void) const {
+	return this->inst_collection_ref->get_type_ref();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copy-reduced from simple_meta_instance_reference_base.
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(
+		excl_ptr<index_list_type>& i) {
+	INVARIANT(!array_indices);
+	NEVER_NULL(i);
+	// dimension-check:
+	// number of indices must be <= dimension of instance collection.  
+	const size_t max_dim = dimensions();    // depends on indices
+	if (i->size() > max_dim) {
+		cerr << "ERROR: instance collection " <<
+			this->inst_collection_ref->get_name()
+			<< " is " << max_dim << "-dimensional, and thus, "
+			"cannot be indexed " << i->size() <<
+			"-dimensionally!  ";
+			// caller will say where
+		return good_bool(false);
+	}
+	// no static dimension checking
+	array_indices = i;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -96,9 +180,6 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		const state_manager& sm) const {
-	typedef	simple_meta_instance_reference_implementation<
-			class_traits<Tag>::has_substructure>
-				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
 	const unroll_context uc;
 	const instance_alias_base_ptr_type
@@ -128,9 +209,6 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 		const state_manager& sm) const {
-	typedef	simple_meta_instance_reference_implementation<
-			class_traits<Tag>::has_substructure>
-				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_lookup_footprint_frame<Tag>(
@@ -159,7 +237,7 @@ if (inst.get_dimensions()) {
 	STACKTRACE("is array");
 	const_index_list cil;
 	if (ind) {
-		cil = ind->unroll_resolve(c);
+		cil = ind->unroll_resolve_indices(c);
 		if (cil.empty()) {
 			cerr << "ERROR: Failed to resolve indices at "
 				"unroll-time!" << endl;
@@ -348,9 +426,6 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<substructure_alias>
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 		const unroll_context& c) const {
-	typedef	simple_meta_instance_reference_implementation<
-			class_traits<Tag>::has_substructure>
-				substructure_implementation_policy;
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_unroll_generic_scalar_substructure_reference<Tag>(
@@ -376,7 +451,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
-		instance_collection_base& cl, 
+		physical_instance_collection& cl, 
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// assert checked-cast, will throw bad_cast upon error
@@ -454,9 +529,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-excl_ptr<aliases_connection_base>
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
-	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+excl_ptr<port_connection_base>
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::make_port_connection_private(
+		const count_ptr<const meta_instance_reference_base>& r) const {
+	INVARIANT(r == this);
+	return substructure_implementation_policy::make_port_connection(
+		r.template is_a<const this_type>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

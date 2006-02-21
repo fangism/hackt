@@ -2,6 +2,10 @@
 
 2006-02-20	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-12-merged-aggregate-01-10:
+	  Branch merge.
+
+
 	* HACKT-00-01-04-main-00-77-11:
 	  Checked against g++-4.1 (RC1, 20060219).
 	  configure.ac: check for presence of STL reverse_iterator comparisons.

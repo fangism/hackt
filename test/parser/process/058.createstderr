@@ -5,33 +5,33 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	280
-	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	9	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	792
-	11	##ADDR##	proccoll	2	#HEAD#	#TAIL#	38
+	11	##ADDR##	proccoll	2	#HEAD#	#TAIL#	33
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	15	##ADDR##	proccoll	2	#HEAD#	#TAIL#	149
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	98
-	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	98
-	19	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	98
-	20	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	98
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	proccoll	2	#HEAD#	#TAIL#	154
+	17	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
+	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
+	19	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
+	20	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	proccoll	2	#HEAD#	#TAIL#	149
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	98
-	28	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	98
-	29	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	98
-	30	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	98
+	27	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
+	28	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
+	29	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
+	30	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	93
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -43,14 +43,12 @@ In namespace "", we have: {
   Definitions:
     bar = process-definition (defined) bar(
         foo<> x with indices: {
-          [0..1][0..1]
         }
 
       )
       In definition "bar", we have: {
       Instances:
         x = foo<> x with indices: {
-          [0..1][0..1]
         }
 
       unroll sequence: 
@@ -61,7 +59,6 @@ In namespace "", we have: {
           unrolled indices: {
             [0][0] = ::bar::x[0][0] (1) (
               bool^2 a with indices: {
-                [0..1][0..1]
               }
                 unrolled indices: {
                   [0][0] = ::bar::x[0][0].a[0][0] (1) 
@@ -72,7 +69,6 @@ In namespace "", we have: {
             )
             [0][1] = ::bar::x[0][1] (2) (
               bool^2 a with indices: {
-                [0..1][0..1]
               }
                 unrolled indices: {
                   [0][0] = ::bar::x[0][1].a[0][0] (5) 
@@ -83,7 +79,6 @@ In namespace "", we have: {
             )
             [1][0] = ::bar::x[1][0] (3) (
               bool^2 a with indices: {
-                [0..1][0..1]
               }
                 unrolled indices: {
                   [0][0] = ::bar::x[1][0].a[0][0] (9) 
@@ -94,7 +89,6 @@ In namespace "", we have: {
             )
             [1][1] = ::bar::x[1][1] (4) (
               bool^2 a with indices: {
-                [0..1][0..1]
               }
                 unrolled indices: {
                   [0][0] = ::bar::x[1][1].a[0][0] (13) 
@@ -131,14 +125,12 @@ In namespace "", we have: {
 
     foo = process-definition (defined) foo(
         bool<> a with indices: {
-          [0..1][0..1]
         }
 
       )
       In definition "foo", we have: {
       Instances:
         a = bool<> a with indices: {
-          [0..1][0..1]
         }
 
       unroll sequence: 
@@ -163,12 +155,10 @@ In namespace "", we have: {
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
       process foo<>^2 x with indices: {
-        [0..1][0..1]
       }
         unrolled indices: {
           [0][0] = ::poo.x[0][0] (2) (
             bool^2 a with indices: {
-              [0..1][0..1]
             }
               unrolled indices: {
                 [0][0] = ::poo.x[0][0].a[0][0] (1) 
@@ -179,7 +169,6 @@ In namespace "", we have: {
           )
           [0][1] = ::poo.x[0][1] (3) (
             bool^2 a with indices: {
-              [0..1][0..1]
             }
               unrolled indices: {
                 [0][0] = ::poo.x[0][1].a[0][0] (5) 
@@ -190,7 +179,6 @@ In namespace "", we have: {
           )
           [1][0] = ::poo.x[1][0] (4) (
             bool^2 a with indices: {
-              [0..1][0..1]
             }
               unrolled indices: {
                 [0][0] = ::poo.x[1][0].a[0][0] (9) 
@@ -201,7 +189,6 @@ In namespace "", we have: {
           )
           [1][1] = ::poo.x[1][1] (5) (
             bool^2 a with indices: {
-              [0..1][0..1]
             }
               unrolled indices: {
                 [0][0] = ::poo.x[1][1].a[0][0] (13) 

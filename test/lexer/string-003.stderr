@@ -3,13 +3,38 @@ parse error: syntax error
 parser stacks:
 state	value
 #STATE#	(null) 
-#STATE#	(array-concatenation) [4:53]
+#STATE#	string: "abcdef... "Quote" 'quote' the end is near!\\" [4:53]
 #STATE#	end-of-file
 in state #STATE#, possible rules are:
-	complex_aggregate_reference : array_concatenation .  (#RULE#)
-	array_concatenation : array_concatenation . '#' complex_expr_term  (#RULE#)
+	multiplicative_expr : multiplicative_expr . muldiv_op unary_expr  (#RULE#)
+	additive_expr : multiplicative_expr .  (#RULE#)
 acceptable tokens are: 
-	'#' (shift)
+	'#' (reduce)
+	'%' (shift)
+	'&' (reduce)
 	')' (reduce)
+	'*' (shift)
+	'+' (reduce)
 	',' (reduce)
+	'-' (reduce)
+	'/' (shift)
+	':' (reduce)
+	';' (reduce)
+	'<' (reduce)
 	'=' (reduce)
+	'>' (reduce)
+	']' (reduce)
+	'^' (reduce)
+	'|' (reduce)
+	'}' (reduce)
+	RANGE (reduce)
+	THICKBAR (reduce)
+	LE (reduce)
+	GE (reduce)
+	EQUAL (reduce)
+	NOTEQUAL (reduce)
+	RARROW (reduce)
+	LOGICAL_AND (reduce)
+	LOGICAL_OR (reduce)
+	INSERT (reduce)
+	EXTRACT (reduce)

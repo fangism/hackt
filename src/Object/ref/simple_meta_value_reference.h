@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.7 2006/01/22 18:20:30 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.8 2006/02/21 04:48:38 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -10,7 +10,9 @@
 
 #include "Object/expr/const_index_list.h"	// used in assigner, below
 #include "Object/common/multikey_index.h"
-#include "Object/ref/simple_param_meta_value_reference.h"
+#include "Object/ref/meta_value_reference_base.h"
+#include "Object/ref/simple_meta_instance_reference_base.h"
+	// transformed to not be instance-specific
 #include "Object/traits/class_traits_fwd.h"
 
 //=============================================================================
@@ -37,32 +39,33 @@ simple_meta_value_reference<Tag>
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_meta_value_reference :
-	public simple_param_meta_value_reference, 
-	public class_traits<Tag>::meta_instance_reference_parent_type, 
-	public class_traits<Tag>::expr_base_type {
+	public simple_meta_instance_reference_base, 
+	public class_traits<Tag>::meta_value_reference_parent_type {
 public:
-	typedef	typename class_traits<Tag>::value_type	value_type;
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::value_type	value_type;
 private:
 	typedef	SIMPLE_META_VALUE_REFERENCE_CLASS	this_type;
-	typedef	typename class_traits<Tag>::meta_instance_reference_parent_type
+	typedef	typename traits_type::meta_value_reference_parent_type
 							parent_type;
-	typedef	typename class_traits<Tag>::expr_base_type
-							expr_base_type;
-	typedef	simple_param_meta_value_reference	common_base_type;
-	typedef	common_base_type::parent_type		grandparent_type;
+	typedef	typename parent_type::expr_base_type	expr_base_type;
+	// is not actually specific to instances
+	typedef	simple_meta_instance_reference_base	common_base_type;
 	typedef	expr_base_type				interface_type;
 public:
 	typedef	count_ptr<const interface_type>		init_arg_type;
-	typedef	typename class_traits<Tag>::value_collection_parent_type
+	typedef	typename traits_type::value_collection_parent_type
 						value_collection_parent_type;
+	typedef	typename traits_type::value_reference_collection_type
+						value_reference_collection_type;
 protected:
-	typedef	typename class_traits<Tag>::template value_array<0>::type
+	typedef	typename traits_type::template value_array<0>::type
 							value_scalar_type;
-	typedef	typename class_traits<Tag>::value_collection_generic_type
+	typedef	typename traits_type::value_collection_generic_type
 							value_collection_type;
-	typedef	typename class_traits<Tag>::const_collection_type
+	typedef	typename traits_type::const_collection_type
 							const_collection_type;
-	typedef	typename class_traits<Tag>::const_expr_type
+	typedef	typename traits_type::const_expr_type
 							const_expr_type;
 	typedef	never_ptr<value_collection_type>
 						value_collection_ptr_type;
@@ -84,27 +87,17 @@ public:
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
 
-#if 0
-	using parent_type::dump;
-#endif
+	good_bool
+	attach_indices(excl_ptr<index_list_type>&);
 
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
-
-	never_ptr<const instance_collection_base>
-	get_inst_base_subtype(void) const;
+	never_ptr<const param_value_collection>
+	get_coll_base(void) const;
 
 	never_ptr<const value_collection_parent_type>
 	get_param_inst_base(void) const;
 
 	size_t
 	dimensions(void) const;
-
-	bool
-	has_static_constant_dimensions(void) const;
-
-	const_range_list
-	static_constant_dimensions(void) const;
 
 	good_bool
 	initialize(const init_arg_type& i);
@@ -124,15 +117,6 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
-
-	bool
-	is_template_dependent(void) const;
-
-	bool
-	is_unconditional(void) const;
-
-	bool
-	is_loop_independent(void) const;
 
 	value_type
 	static_constant_value(void) const;
@@ -155,24 +139,17 @@ public:
 	unroll_resolve_dimensions(const unroll_context&) const;
 
 	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&) const;
 
 #if 0
 	count_ptr<const_index>
-	unroll_resolve_index(const unroll_context&) const;
+	unroll_resolve_rvalues_index(const unroll_context&) const;
 #endif
 
 	bad_bool
-	assign_value_collection(const const_collection_type&, 
-		const unroll_context&) const;
+	unroll_lvalue_references(const unroll_context&, 
+		value_reference_collection_type&) const;
 
-private:
-	excl_ptr<aliases_connection_base>
-	make_aliases_connection_private(void) const;
-
-	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
-
-	CONNECT_PORT_PROTO;
 protected:
 	using common_base_type::collect_transient_info_base;
 	using common_base_type::write_object_base;

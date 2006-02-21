@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.10 2006/02/10 21:50:36 fang Exp $
+ 	$Id: basic_param.cc,v 1.11 2006/02/21 04:48:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -39,6 +39,10 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/data_type_reference.h"
 #include "Object/unroll/expression_assignment.h"
 #include "Object/persistent_type_hash.h"
+#include "Object/ref/meta_instance_reference_subtypes.h"
+	// for aggregate_value_references' base
+#include "Object/ref/aggregate_meta_value_reference.h"
+#include "Object/ref/meta_value_reference.h"
 
 #include "common/TODO.h"
 
@@ -92,11 +96,14 @@ REQUIRES_STACKTRACE_STATIC_INIT
 	Wrapped calls to private constructors.  
 	\param p the right-hand-side expression of the assignment object.  
 	\return newly constructed and initialized assignment object.  
+	NOTE: the check for may_be_initialized is optional, just an
+		attempt to catch obvious errors earlier.  
  */
 excl_ptr<param_expression_assignment>
 param_expr::make_param_expression_assignment(
 		const count_ptr<const param_expr>& p) {
 	typedef	excl_ptr<param_expression_assignment>	return_type;
+	NEVER_NULL(p);
 	if (!p->may_be_initialized()) {
 		p->dump(cerr << "ERROR: rhs of expr-assignment is "
 			"not initialized or dependent on formals: ",
@@ -104,6 +111,23 @@ param_expr::make_param_expression_assignment(
 		THROW_EXIT;		// temporary
 		return return_type(NULL);
 	} else	return p->make_param_expression_assignment_private(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constructs an aggregate value reference of the appropriate type.  
+	NOTE: it is the caller's job to set the mode:
+		construction vs. concatenation.  
+	NOTE: we already add the first element to the aggregate reference.
+ */
+count_ptr<aggregate_meta_value_reference_base>
+param_expr::make_aggregate_meta_value_reference(
+		const count_ptr<const param_expr>& p) {
+	typedef	count_ptr<aggregate_meta_value_reference_base>	return_type;
+	NEVER_NULL(p);
+	const return_type
+		ret(p->make_aggregate_meta_value_reference_private(p));
+	return ret;
 }
 
 //-----------------------------------------------------------------------------
@@ -183,7 +207,19 @@ pbool_expr::make_param_expression_assignment_private(
 	typedef	excl_ptr<param_expression_assignment>	return_type;
 	INVARIANT(p == this);
 	return return_type(
-		new pbool_expression_assignment(p.is_a<const pbool_expr>()));
+		new pbool_expression_assignment(p.is_a<const this_type>()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<aggregate_meta_value_reference_base>
+pbool_expr::make_aggregate_meta_value_reference_private(
+		const count_ptr<const param_expr>& p) const {
+	const count_ptr<const this_type> pb(p.is_a<const this_type>());
+	NEVER_NULL(pb);
+	const count_ptr<aggregate_meta_value_reference<tag_type> >
+		ret(new aggregate_meta_value_reference<tag_type>);
+	ret->append_meta_value_reference(pb);
+	return ret;
 }
 
 //-----------------------------------------------------------------------------
@@ -255,6 +291,18 @@ pint_expr::make_param_expression_assignment_private(
 	INVARIANT(p == this);
 	return return_type(
 		new pint_expression_assignment(p.is_a<const pint_expr>()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<aggregate_meta_value_reference_base>
+pint_expr::make_aggregate_meta_value_reference_private(
+		const count_ptr<const param_expr>& p) const {
+	const count_ptr<const this_type> pb(p.is_a<const this_type>());
+	NEVER_NULL(pb);
+	const count_ptr<aggregate_meta_value_reference<tag_type> >
+		ret(new aggregate_meta_value_reference<tag_type>);
+	ret->append_meta_value_reference(pb);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -359,6 +407,18 @@ preal_expr::make_param_expression_assignment_private(
 	INVARIANT(p == this);
 	return return_type(
 		new preal_expression_assignment(p.is_a<const preal_expr>()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<aggregate_meta_value_reference_base>
+preal_expr::make_aggregate_meta_value_reference_private(
+		const count_ptr<const param_expr>& p) const {
+	const count_ptr<const this_type> pb(p.is_a<const this_type>());
+	NEVER_NULL(pb);
+	const count_ptr<aggregate_meta_value_reference<tag_type> >
+		ret(new aggregate_meta_value_reference<tag_type>);
+	ret->append_meta_value_reference(pb);
+	return ret;
 }
 
 //=============================================================================
@@ -526,7 +586,7 @@ pint_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_param>
-pint_const::unroll_resolve(const unroll_context&) const {
+pint_const::unroll_resolve_rvalues(const unroll_context&) const {
 	return count_ptr<const_param>(new pint_const(*this));
 }
 
@@ -651,7 +711,7 @@ pbool_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_param>
-pbool_const::unroll_resolve(const unroll_context& c) const {
+pbool_const::unroll_resolve_rvalues(const unroll_context& c) const {
 	return count_ptr<const_param>(new pbool_const(*this));
 }
 
@@ -778,7 +838,7 @@ preal_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_param>
-preal_const::unroll_resolve(const unroll_context& c) const {
+preal_const::unroll_resolve_rvalues(const unroll_context& c) const {
 	return count_ptr<const_param>(new preal_const(*this));
 }
 

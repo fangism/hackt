@@ -2,7 +2,7 @@
 	\file "Object/unroll/meta_instance_reference_connection.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.cc".
- 	$Id: meta_instance_reference_connection.cc,v 1.11 2006/01/30 07:42:06 fang Exp $
+ 	$Id: meta_instance_reference_connection.cc,v 1.12 2006/02/21 04:48:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_INSTANCE_REFERENCE_CONNECTION_CC__
@@ -22,7 +22,6 @@
 #include "Object/unroll/port_connection.h"
 #include "Object/unroll/unroll_context.h"	// for debugging
 #include "Object/ref/simple_meta_instance_reference.h"
-#include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/int_instance_collection.h"
@@ -36,15 +35,16 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/struct_traits.h"
+#include "Object/unroll/port_connection.tcc"
 
 #include "util/what.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
 #include "util/stacktrace.h"
-#include "util/binders.h"
-#include "util/compose.h"
-#include "util/dereference.h"
+// #include "util/binders.h"
+// #include "util/compose.h"
+// #include "util/dereference.h"
 #include "util/reserve.h"
 
 //=============================================================================
@@ -55,6 +55,13 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::enum_alias_connection, "enum_connection")
 SPECIALIZE_UTIL_WHAT(HAC::entity::datastruct_alias_connection, "struct_connection")
 SPECIALIZE_UTIL_WHAT(HAC::entity::channel_alias_connection, "channel_connection")
 SPECIALIZE_UTIL_WHAT(HAC::entity::process_alias_connection, "process_connection")
+
+SPECIALIZE_UTIL_WHAT(HAC::entity::process_port_connection,
+	"process_port_connection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::channel_port_connection,
+	"channel_port_connection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::struct_port_connection,
+	"struct_port_connection")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_alias_connection, 
@@ -76,7 +83,14 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 		PROCESS_ALIAS_CONNECTION_TYPE_KEY, 0)
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::port_connection, PORT_CONNECTION_TYPE_KEY, 0)
+	HAC::entity::process_port_connection,
+	PROCESS_PORT_CONNECTION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::channel_port_connection,
+	CHANNEL_PORT_CONNECTION_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::struct_port_connection,
+	STRUCT_PORT_CONNECTION_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -120,60 +134,39 @@ aliases_connection_base::what(ostream& o) const {
 }
 
 //=============================================================================
-// class port_connection method definitions
+// class port_connection_base method definitions
+
+port_connection_base::port_connection_base() : parent_type(), inst_list() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private empty constructor.
- */
-port_connection::port_connection() :
-		parent_type(), ported_inst(NULL) , inst_list() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Initial constructor for a port-connection.  
-	\param i an instance of the definition that is to be connected.
- */
-port_connection::port_connection(const ported_inst_ptr_type& i) :
-		parent_type(), ported_inst(i), inst_list() {
-	NEVER_NULL(ported_inst);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Default destructor.
- */
-port_connection::~port_connection() { }
+port_connection_base::~port_connection_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-port_connection::what(ostream& o) const {
-	return o << "port-connection";
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-port_connection::dump(ostream& o, const expr_dump_context& dc) const {
-	NEVER_NULL(ported_inst);
-	ported_inst->dump(o, dc) << " (";
-	if (!inst_list.empty()) {
-		inst_list_type::const_iterator iter(inst_list.begin());
-		const inst_list_type::const_iterator end(inst_list.end());
+port_connection_base::dump_ports(ostream& o, 
+		const expr_dump_context& dc) const {
+if (!inst_list.empty()) {
+	// for_each_if... almost
+	inst_list_type::const_iterator iter(inst_list.begin());
+	const inst_list_type::const_iterator end(inst_list.end());
+	if (*iter)
+		(*iter)->dump(o, dc);
+	else o << " ";
+	for (iter++ ; iter!=end; iter++) {
+		o << ", ";
 		if (*iter)
 			(*iter)->dump(o, dc);
-		else o << " ";
-		for (iter++ ; iter!=end; iter++) {
-			o << ", ";
-			if (*iter)
-				(*iter)->dump(o, dc);
-		}
 	}
-	return o << ");";
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Pre-allocation.  
+ */
 void
-port_connection::reserve(const size_t s) {
+port_connection_base::reserve(const size_t s) {
 	util::reserve(inst_list, s);
 }
 
@@ -183,75 +176,29 @@ port_connection::reserve(const size_t s) {
 	\param i instance reference to connect, may be NULL.
  */
 void
-port_connection::append_meta_instance_reference(const generic_inst_ptr_type& i) {
-	// do not assert, may be NULL.  
+port_connection_base::append_meta_instance_reference(
+		const generic_inst_ptr_type& i) {
 	inst_list.push_back(i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Expands and finalizes the connection at unroll time.  
- */
-good_bool
-port_connection::unroll(const unroll_context& c) const {
-	return unroll_meta_connect(c);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Expands and finalizes the connection at unroll time.  
- */
-good_bool
-port_connection::unroll_meta_connect(const unroll_context& c) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "context c @ " << &c << endl;
-	c.dump(cerr) << endl;
-#endif
-	NEVER_NULL(ported_inst);
-	const never_ptr<substructure_alias>
-		parent_instance(
-			ported_inst->unroll_scalar_substructure_reference(c));
-	if (!parent_instance) {
-		cerr << "ERROR: resolving super instance of port connection: ";
-		ported_inst->dump(cerr, 
-			expr_dump_context::default_value) << endl;
-		return good_bool(false);
-	}
-	// iterators point to meta_instance_reference_base
-	return parent_instance->connect_ports(inst_list, c);
+void
+port_connection_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+	m.collect_pointer_list(inst_list);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_connection::collect_transient_info(persistent_object_manager& m) const {
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
-	NEVER_NULL(ported_inst);
-	ported_inst->collect_transient_info(m);
-	inst_list_type::const_iterator iter(inst_list.begin());
-	const inst_list_type::const_iterator end(inst_list.end());
-	for ( ; iter!=end; iter++) {
-		// port connection arguments may be NULL
-		if (*iter)
-			(*iter)->collect_transient_info(m);
-	}
-}
-// else already visited
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-port_connection::write_object(const persistent_object_manager& m, 
+port_connection_base::write_object_base(const persistent_object_manager& m, 
 		ostream& f) const {
-	m.write_pointer(f, ported_inst);
 	m.write_pointer_list(f, inst_list);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-port_connection::load_object(const persistent_object_manager& m, istream& f) {
-	m.read_pointer(f, ported_inst);
+port_connection_base::load_object_base(const persistent_object_manager& m,
+		istream& f) {
 	m.read_pointer_list(f, inst_list);
 }
 
@@ -263,20 +210,10 @@ template class alias_connection<datastruct_tag>;
 template class alias_connection<channel_tag>;
 template class alias_connection<process_tag>;
 
-//=============================================================================
-#if 0
-NOT READY TO UNVEIL
-// class dynamic_connection_assignment method definitions
+template class port_connection<datastruct_tag>;
+template class port_connection<channel_tag>;
+template class port_connection<process_tag>;
 
-dynamic_connection_assignment::dynamic_connection_assignment(
-		never_ptr<const scopespace> s) :
-		connection_assignment_base(), dscope(s) {
-	// check that dscope is actually a loop or conditional
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#endif
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC

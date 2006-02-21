@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_range.h,v 1.6 2006/01/22 18:19:55 fang Exp $
+	$Id: pint_range.h,v 1.7 2006/02/21 04:48:26 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RANGE_H__
@@ -69,16 +69,6 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
-
-	bool
-	is_template_dependent(void) const;
-
-	// for now just return false, don't bother checking recursively...
-	bool
-	is_loop_independent(void) const { return false; }
-
-	bool
-	is_unconditional(void) const { return false; }
 
 	const_range
 	static_constant_range(void) const;

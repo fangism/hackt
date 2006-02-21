@@ -1,0 +1,18 @@
+At: "-stdin-":9:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	list<(root_item)>: (instance-decl) ... [6:1--7:6]
+#STATE#	(type-ref) [9:1..4]
+#STATE#	identifier: z [9:6]
+#STATE#	(null) 
+#STATE#	list<(range)>: (range) ... [9:8]
+#STATE#	= [9:11]
+in state #STATE#, possible rules are:
+	instance_id_item : ID optional_template_arguments_in_angles sparse_range_list .  (#RULE#)
+	sparse_range_list : sparse_range_list . bracketed_sparse_range  (#RULE#)
+acceptable tokens are: 
+	',' (reduce)
+	';' (reduce)
+	'[' (shift)

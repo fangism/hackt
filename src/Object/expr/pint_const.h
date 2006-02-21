@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.6 2006/01/22 18:19:55 fang Exp $
+	$Id: pint_const.h,v 1.7 2006/02/21 04:48:26 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -67,24 +67,11 @@ public:
 	bool
 	must_be_initialized(void) const { return true; }
 
-#if 0
-	bool
-	may_be_equivalent(const param_expr& e) const
-		{ return pint_expr::may_be_equivalent_generic(e); }
-
-	bool
-	must_be_equivalent(const param_expr& e) const
-		{ return pint_expr::must_be_equivalent_generic(e); }
-#endif
-
 	bool
 	is_static_constant(void) const { return true; }
 
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
-
-	bool
-	is_template_dependent(void) const { return false; }
 
 	count_ptr<const const_param>
 	static_constant_param(void) const;
@@ -97,16 +84,18 @@ public:
 	must_be_equivalent(const pint_expr& ) const;
 
 	bool
-	is_loop_independent(void) const { return true; }
-
-	bool
-	is_unconditional(void) const { return true; }
-
-	bool
 	operator == (const const_range& c) const;
 
 	this_type&
 	operator = (const value_type v) { val = v; return *this; }
+
+	/// prefix incerment
+	this_type&
+	operator ++ () { ++val; return *this; }
+
+	/// postfix increment (less efficient)
+	this_type
+	operator ++ (int) { const this_type ret(val); ++val; return ret; }
 
 	bool
 	range_size_equivalent(const const_index& i) const;
@@ -130,7 +119,7 @@ public:
 	resolve_dimensions(void) const;
 
 	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&) const;
 
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;

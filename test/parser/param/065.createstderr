@@ -1,0 +1,71 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	93
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	6	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	93
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  2 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    x = pint^2 x with indices: {
+    }
+      unrolled index-value pairs: {
+        [0][0] = 12
+        [0][1] = 34
+        [1][0] = 56
+        [1][1] = 78
+      }
+    y = pint^2 y with indices: {
+    }
+      unrolled index-value pairs: {
+        [0][0] = 12
+        [0][1] = 34
+        [1][0] = 56
+        [1][1] = 78
+      }
+}
+
+Created state:
+

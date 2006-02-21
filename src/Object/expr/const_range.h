@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.6 2006/01/22 18:19:43 fang Exp $
+	$Id: const_range.h,v 1.7 2006/02/21 04:48:23 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__
@@ -143,20 +143,6 @@ public:
 #endif
 		return false;
 	}
-
-	bool
-	is_template_dependent(void) const {
-#if !ALLOW_NEGATIVE_RANGES
-		INVARIANT(!empty());
-#endif
-		return false;
-	}
-
-	bool
-	is_loop_independent(void) const { return !empty(); }
-
-	bool
-	is_unconditional(void) const { return !empty(); }
 
 	bool
 	range_size_equivalent(const const_index& i) const;

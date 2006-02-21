@@ -1,0 +1,5 @@
+Error in subreference at position 2, cannot construct aggregate instance reference.
+	got: pbool-val-ref ::y
+Error building aggregate instance reference.  [10:6..9]
+ERROR: invalid instance reference at position 2 of alias list.
+HALT: at least one error in connection list.  [10:1..10]

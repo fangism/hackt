@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "promote_header_deps.awk"
-#	$Id: promote_header_deps.awk,v 1.3 2005/12/10 03:56:56 fang Exp $
+#	$Id: promote_header_deps.awk,v 1.4 2006/02/21 04:48:47 fang Exp $
 
 # Description:
 #	Takes a make-dependence file produced by gcc -MD
@@ -10,8 +10,30 @@
 # Usage:
 #	-v srcdir=<path> -- the path to srcdir, may be left blank
 
-BEGIN {	current_target = ""; }
+BEGIN {
+	current_target = "";
+	strip_length = length(srcdir) +1;
+	strip_dir = srcdir;
+	strip_dir_regex = literal_string_to_regex(strip_dir);
+#	print "# strip_dir = " strip_dir;
+#	print "# strip_dir_regex = " strip_dir_regex;
+}
 
+# converts a literal string into a regular expression for that exact string
+function literal_string_to_regex(str) {
+	gsub("\\\\", "\\\\", str);
+	gsub("\\.", "\\.", str);
+# some of these are wacky, hope not to find these in any path name
+#	gsub("\\[", "\\[", str);
+#	gsub("\\]", "\\]", str);
+#	gsub("\\^", "\\^", str);
+#	gsub("\\$", "\\$", str);
+#	gsub("\\?", "\\?", str);
+#	gsub("\\&", "\\&", str);
+	return str;
+}
+
+# main:
 {
 	n = split($0, toks);
 	for (i=1; i<=n; i++) {
@@ -58,22 +80,15 @@ function demote_header_dep(f) {
 # Since gcc -MD resolves header dependencies to their srcdir paths, 
 # we have to undo that effect, by redirecting it to look in the
 # builddir for generated .hchk and .tccchk files.  
-# To do this, for every "../" in the path string, we strip it off
-# as well as the first non "../" part of the path, EXCEPT the first one.  
-# Repeat until path doesn't start with "../".
-# For Windows, which uses "..\" I'll have to punt and make this script
-# configure-dependent later.  
-function srcdir_to_builddir(f, 
-	# local variable
-	i, stripcount) {
-	# assuming "../" doesn't appear in the middle...
-	stripcount = gsub("\\.\\.\\/", "", f);
-	if (stripcount > 0) {
-		# one LESS than the number stripped
-		for (i=0; i < stripcount-1; i++) {
-			sub("^[^/]*\\/", "", f);
-		}
-	}
+# To accomplish this, we strip off the srcdir.
+function srcdir_to_builddir(f) {
+#	if (match(f, "^" strip_dir_regex)) {
+#		# just decapitate the $(srcdir)/ part of the path name
+#		# same effect as substitution
+#		i = length(f);
+#		return substr(f, strip_length +1, i -strip_length +1);
+#	} else	return f;
+	sub("^" strip_dir_regex "/", "", f);
 	return f;
 }
 

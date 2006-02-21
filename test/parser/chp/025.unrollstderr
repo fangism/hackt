@@ -5,28 +5,28 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	121
-	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	56
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
 	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	56
+	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
 	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	36
 	27	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16

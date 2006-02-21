@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.10 2006/01/30 07:42:06 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.11 2006/02/21 04:48:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -44,39 +44,6 @@ USING_UTIL_COMPOSE
 //=============================================================================
 // class instance_management_base method definitions
 
-/**
-	Overriding implementations reserved for param_instantiation_statements
-	and param_expression_assignments.  (also flow control scopes)
-	Default action does nothing.  
- */
-good_bool
-instance_management_base::unroll_meta_evaluate(const unroll_context&) const {
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Overriding implementations reserved for physical
-	instantiation_statements.  (also flow control scopes)
-	Default action does nothing.  
- */
-good_bool
-instance_management_base::unroll_meta_instantiate(const unroll_context&) const {
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Overriding implementations reserved for instance_reference_connections.
-	(also for flow control scopes)
-	Default action does nothing.  
- */
-good_bool
-instance_management_base::unroll_meta_connect(const unroll_context&) const {
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Overrideable default for unroll creation.  
 	Only instantiation_statements actually provide a real implementation.  
@@ -163,48 +130,6 @@ sequential_scope::unroll(const unroll_context& c) const {
 		}
 	}
 #endif
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
-sequential_scope::unroll_meta_evaluate(const unroll_context& c) const {
-	STACKTRACE("sequential_scope::unroll_meta_evaluate()");
-	const_iterator i(instance_management_list.begin());
-	const const_iterator e(instance_management_list.end());
-	for ( ; i!=e; i++) {
-		if (!(*i)->unroll_meta_evaluate(c).good) {
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
-sequential_scope::unroll_meta_instantiate(const unroll_context& c) const {
-	STACKTRACE("sequential_scope::unroll_meta_instantiate()");
-	const_iterator i(instance_management_list.begin());
-	const const_iterator e(instance_management_list.end());
-	for ( ; i!=e; i++) {
-		if (!(*i)->unroll_meta_instantiate(c).good) {
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
-sequential_scope::unroll_meta_connect(const unroll_context& c) const {
-	STACKTRACE("sequential_scope::unroll_meta_connect()");
-	const_iterator i(instance_management_list.begin());
-	const const_iterator e(instance_management_list.end());
-	for ( ; i!=e; i++) {
-		if (!(*i)->unroll_meta_connect(c).good) {
-			return good_bool(false);
-		}
-	}
 	return good_bool(true);
 }
 

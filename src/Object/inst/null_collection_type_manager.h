@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.5 2006/01/22 18:20:08 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.6 2006/02/21 04:48:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -31,12 +31,13 @@ template <class Tag>
 class null_collection_type_manager {
 private:
 	typedef	null_collection_type_manager<Tag>	this_type;
+	typedef	class_traits<Tag>			traits_type;
 protected:
-	typedef typename class_traits<Tag>::instance_collection_generic_type
+	typedef typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-	typedef typename class_traits<Tag>::instance_collection_parameter_type
+	typedef typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	typedef typename class_traits<Tag>::type_ref_ptr_type
+	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
 
 	// has no type parameter

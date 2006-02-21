@@ -4,15 +4,15 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	3	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	29
 	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	8	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	10	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -23,8 +23,6 @@ In namespace "", we have: {
   0 typedefs
   Parameters:
     b = pbool<> b with indices: {
-      [0..0] (predicated)
-      [0..0] (predicated)
     }
 
 }

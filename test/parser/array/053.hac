@@ -1,0 +1,12 @@
+// "053.hac"
+// copy-modified from "048.hac"
+// should fail: mismatched dimensions of subarrays referenced.
+
+pbool x[2];
+pbool y = false;
+x[0] = false;
+x[1] = true;
+
+pbool z[2];
+z = {x, y};		// fail here
+

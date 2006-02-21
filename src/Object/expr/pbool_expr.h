@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.7 2006/02/10 21:50:37 fang Exp $
+	$Id: pbool_expr.h,v 1.8 2006/02/21 04:48:25 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -17,6 +17,7 @@
 //=============================================================================
 namespace HAC {
 namespace entity {
+struct pbool_tag;
 class const_param;
 class const_index_list;
 class unroll_context;
@@ -31,7 +32,9 @@ using util::memory::never_ptr;
 	Abstract expression checked to be a single boolean.  
  */
 class pbool_expr : virtual public param_expr, public bool_expr {
+	typedef	pbool_expr			this_type;
 public:
+	typedef	pbool_tag			tag_type;
 	/**
 		The global boolean value type, set in "Object/expr/types.h".
 		We bother with this typedef for the future potential of 
@@ -55,12 +58,6 @@ virtual	size_t
 
 	GET_DATA_TYPE_REF_PROTO;
 
-virtual	bool
-	has_static_constant_dimensions(void) const = 0;
-
-virtual	const_range_list
-	static_constant_dimensions(void) const = 0;
-
 virtual bool
 	may_be_initialized(void) const = 0;
 
@@ -82,9 +79,6 @@ virtual bool
 virtual	count_ptr<const const_param>
 	static_constant_param(void) const;
 
-virtual bool
-	is_loop_independent(void) const = 0;
-
 virtual value_type
 	static_constant_value(void) const = 0;
 
@@ -100,7 +94,12 @@ virtual	const_index_list
 protected:
 	excl_ptr<param_expression_assignment>
 	make_param_expression_assignment_private(
-		const count_ptr<const param_expr>& p) const;
+		const count_ptr<const param_expr>&) const;
+
+	count_ptr<aggregate_meta_value_reference_base>
+	make_aggregate_meta_value_reference_private(
+		const count_ptr<const param_expr>&) const;
+
 };	// end class pbool_expr
 
 //=============================================================================

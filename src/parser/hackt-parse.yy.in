@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.9 2006/02/10 21:50:45 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.10 2006/02/21 04:48:46 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -584,8 +584,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_type_completion_statement>	instance_type_completion_statement
 %type	<_type_completion_connection_statement>	instance_type_completion_connection_statement
 /* %type	<_instance_alias>	instance_alias	*/
-%type	<_alias_list>	rvalue_optional_alias_list
-%type	<_alias_list>	alias_list
+/* %type	<_alias_list>	rvalue_optional_alias_list */
+%type	<_alias_list>	alias_list nonempty_alias_list
 %type	<_expr_list>	connection_actuals_list
 %type	<_guarded_definition_body_list>	guarded_definition_body_list
 %type	<_guarded_definition_body>	guarded_definition_body
@@ -685,10 +685,12 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>		complex_aggregate_reference
 %type	<_expr>		optional_complex_aggregate_reference
 %type	<_expr>		complex_expr_term
+/* %type	<_expr_list>	complex_expr_term_list */
 %type	<_array_concatenation>		array_concatenation
-%type	<_loop_concatenation>		loop_concatenation
+/* %type	<_loop_concatenation>		loop_concatenation	*/
 %type	<_array_construction>		array_construction
 %type	<_expr_list>	complex_aggregate_reference_list
+%type	<_expr_list>	mandatory_complex_aggregate_reference_list
 
 %start	module
 %pure_parser
@@ -1284,8 +1286,13 @@ instance_item
 	| connection_statement { $$ = $1; }	/* connection of ports */
 	| instance_type_completion_statement { $$ = $1; }
 	| instance_type_completion_connection_statement { $$ = $1; }
+/*	| alias_list ';'	*/
+	| nonempty_alias_list ';'
+		{ $$ = $1; DELETE_TOKEN($2); }
+/**
 	| alias_list '=' expr ';'
 		{ $$ = $1; APPEND_LIST($1, $2, $3); DELETE_TOKEN($4); }
+**/
 			/* alias connection */
 	| loop_instantiation { $$ = $1; }
 	| conditional_instantiation { $$ = $1; }
@@ -1330,7 +1337,8 @@ instance_id_item
 		{ $$ = new instance_connection($1, $2, $3); }
 	/* instance alias or parameter assignment */
 	| ID optional_template_arguments_in_angles
-	  '=' rvalue_optional_alias_list
+	  /* '=' rvalue_optional_alias_list */
+	  '=' alias_list
 		{ WRAP_LIST($3, $4, NULL);
 		  $$ = new instance_alias($1, $2, $4); }
 	;
@@ -1358,12 +1366,22 @@ instance_type_completion_connection_statement
 		  DELETE_TOKEN($4); }
 	;
 
-rvalue_optional_alias_list
 /* note that expr can be just another member_index_expr */
+/**
+rvalue_optional_alias_list
 	: alias_list '=' expr
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| expr
 		{ $$ = new alias_list($1); }
+	;
+**/
+
+/* minimum of LHS and RHS */
+nonempty_alias_list
+	: nonempty_alias_list '=' complex_aggregate_reference
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| complex_aggregate_reference '=' complex_aggregate_reference
+		{ $$ = new alias_list($1); APPEND_LIST($$, $2, $3); }
 	;
 
 /* aliasing syntax, or data types is value assignment (general expr?)
@@ -1377,6 +1395,7 @@ alias_list
 	;
 /* used to be member_index_expr */
 
+/* allowed to be missing actuals */
 connection_actuals_list
 	/* down-cast to more specific type?  internal to consumer */
 /*	: member_index_expr_list_in_parens	*/
@@ -2397,21 +2416,26 @@ array_concatenation
 
 complex_expr_term
 	: array_construction { $$ = $1; }
-	| loop_concatenation { $$ = $1; }
-	| simple_expr { $$ = $1; }
+/*	| loop_concatenation { $$ = $1; }	*/
+/*	| simple_expr { $$ = $1; }		*/
+/*	| expr { $$ = $1; }			*/	// S/R conflict on '<'
+	| shift_expr { $$ = $1; }	/* conflict-free */
 	;
 
 /* building up to higher-dimensions */
 array_construction
+	: '{' mandatory_complex_aggregate_reference_list '}'
+		{ $$ = new array_construction($1, $2, $3); }
+/**
 	: '{' array_concatenation '}'
 		{ $$ = new array_construction($1, $2, $3); }
+**/
 	;
 
 /**
 	Later, introduces loop concatenations?
 	Don't always know number of terms statically...
 	For now, add to grammar, but don't implement for a while.  
-**/
 loop_concatenation
 	: '(' '#' ':' ID ':' range ':' complex_expr_term ')'
 		{ $$ = new loop_concatenation($1, $4, $6, $8, $9);
@@ -2419,11 +2443,22 @@ loop_concatenation
 		  DELETE_TOKEN($5); DELETE_TOKEN($7);
 		}
 	;
+**/
 
 optional_complex_aggregate_reference
 	: complex_aggregate_reference { $$ = $1; }
 	| { $$ = NULL; }
 	;
+
+mandatory_complex_aggregate_reference_list
+	: mandatory_complex_aggregate_reference_list ','
+		complex_aggregate_reference
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| complex_aggregate_reference
+		{ $$ = new expr_list($1); }
+	;
+
+/* ---- end complex expressions ------------------------------------------- */
 
 /** items are optional! */
 complex_aggregate_reference_list

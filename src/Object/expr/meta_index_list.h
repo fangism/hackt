@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_list.h,v 1.6 2006/01/22 18:19:51 fang Exp $
+	$Id: meta_index_list.h,v 1.7 2006/02/21 04:48:23 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_LIST_H__
@@ -66,27 +66,18 @@ virtual	bool
 	is_static_constant(void) const = 0;
 
 virtual	bool
-	is_template_dependent(void) const = 0;
-
-virtual	bool
 	is_relaxed_formal_dependent(void) const = 0;
-
-virtual	bool
-	is_loop_independent(void) const = 0;
-
-virtual	bool
-	is_unconditional(void) const = 0;
 
 virtual	const_index_list
 	resolve_index_list(void) const = 0;
 
 	static
 	count_ptr<const const_index_list>
-	unroll_resolve(const count_ptr<const this_type>&,
+	unroll_resolve_indices(const count_ptr<const this_type>&,
 		const unroll_context&);
 
 virtual	const_index_list
-	unroll_resolve(const unroll_context&) const = 0;
+	unroll_resolve_indices(const unroll_context&) const = 0;
 
 #if 0
 virtual	bool

@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: param_expression_assignment.h,v 1.5 2006/01/30 07:42:06 fang Exp $
+	$Id: param_expression_assignment.h,v 1.6 2006/02/21 04:48:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_EXPRESSION_ASSIGNMENT_H__
@@ -15,7 +15,7 @@
 
 namespace HAC {
 namespace entity {
-class simple_param_meta_value_reference;
+class meta_value_reference_base;
 using util::bad_bool;
 using util::good_bool;
 using util::memory::count_ptr;
@@ -28,15 +28,15 @@ class param_expr;
 	Consider separating, rhs from the rest?
 		rhs is any param_expr, while the rest are 
 		meta_instance_references, may eventually be complex-aggregate.
-	Consider sub-typing into pint and pbool assignments, 
+	TODO: Consider sub-typing into pint and pbool assignments, 
 		since types are static.  
  */
 class param_expression_assignment : public instance_management_base {
 public:
-	typedef	count_ptr<param_expr>				src_ptr_type;
-	typedef	count_ptr<const param_expr>			src_const_ptr_type;
-	typedef	count_ptr<simple_param_meta_value_reference>	dest_ptr_type;
-	typedef	count_ptr<const simple_param_meta_value_reference>
+	typedef	count_ptr<param_expr>			src_ptr_type;
+	typedef	count_ptr<const param_expr>		src_const_ptr_type;
+	typedef	count_ptr<meta_value_reference_base>	dest_ptr_type;
+	typedef	count_ptr<const meta_value_reference_base>
 							dest_const_ptr_type;
 
 // protected:
@@ -56,10 +56,9 @@ virtual	ostream&
 virtual	size_t
 	size(void) const = 0;
 
+	// TODO: rename me! append_meta_value_reference
 virtual	bad_bool
 	append_simple_param_meta_value_reference(const dest_ptr_type& e) = 0;
-
-virtual	UNROLL_META_EVALUATE_PROTO = 0;
 
 	/**
 		Helper class for appending instance references to

@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.6 2006/01/22 18:19:54 fang Exp $
+	$Id: pint_arith_expr.h,v 1.7 2006/02/21 04:48:26 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -77,12 +77,6 @@ public:
 	dimensions(void) const { return 0; }
 
 	bool
-	has_static_constant_dimensions(void) const { return true; }
-
-	const_range_list
-	static_constant_dimensions(void) const;
-
-	bool
 	may_be_initialized(void) const
 		{ return lx->may_be_initialized() && rx->may_be_initialized(); }
 
@@ -96,15 +90,6 @@ public:
 
 	bool
 	is_relaxed_formal_dependent(void) const;
-
-	bool
-	is_template_dependent(void) const;
-
-	bool
-	is_loop_independent(void) const;
-
-	bool
-	is_unconditional(void) const;
 
 	value_type
 	static_constant_value(void) const;
@@ -122,7 +107,7 @@ public:
 	resolve_dimensions(void) const;
 
 	count_ptr<const_param>
-	unroll_resolve(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&) const;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

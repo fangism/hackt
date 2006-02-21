@@ -5,22 +5,22 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	194
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
-	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	41
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	31
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	15	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	91
-	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
-	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -36,8 +36,6 @@ In namespace "", we have: {
       Parameters:
         M = pint<> M (init = 2)
         foo = pint<> foo with indices: {
-          [0..1]
-          [2..4]
         }
 
       unroll sequence: 

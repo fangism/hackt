@@ -4,20 +4,20 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
-	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	56
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	14	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 
@@ -32,7 +32,6 @@ In namespace "", we have: {
     N = pint^0 N (init = 2) value: 2
   Instances:
     x = bool^1 x with indices: {
-      [$i..$i]
     }
       unrolled indices: {
         0 = ::x[0] (1) 

@@ -2,7 +2,7 @@
 	\file "Object/traits/pint_traits.h"
 	Traits and policies for parameter integers.  
 	This file used to be "Object/art_object_pint_traits.h".
-	$Id: pint_traits.h,v 1.7 2006/02/10 21:50:43 fang Exp $
+	$Id: pint_traits.h,v 1.8 2006/02/21 04:48:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PINT_TRAITS_H__
@@ -33,7 +33,7 @@ struct class_traits<pint_tag> {
 	typedef	pint_const			const_expr_type;
 	typedef	pint_const_collection		const_collection_type;
 
-	typedef	param_instantiation_statement_base
+	typedef	instantiation_statement_base
 					instantiation_statement_parent_type;
 	typedef	pint_instantiation_statement
 					instantiation_statement_type;
@@ -44,12 +44,12 @@ struct class_traits<pint_tag> {
 	// this will have a different template base
 	typedef	simple_pint_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;
-	typedef	simple_pint_meta_instance_reference
-					simple_meta_instance_reference_type;
+	typedef	simple_pint_meta_value_reference
+					simple_meta_value_reference_type;
 	typedef	pint_instance_reference_base	
 					nonmeta_instance_reference_base_type;
-	typedef	pint_meta_instance_reference_base
-				meta_instance_reference_parent_type;
+	typedef	pint_meta_value_reference_base
+				meta_value_reference_parent_type;
 	typedef	int_expr			data_expr_base_type;
 	typedef	pint_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;

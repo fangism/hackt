@@ -4,52 +4,52 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	58
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	15	##ADDR##	proccoll	1	#HEAD#	#TAIL#	150
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	27	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	proccoll	1	#HEAD#	#TAIL#	140
+	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	33	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	spimref_	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -60,7 +60,6 @@ In namespace "", we have: {
   0 typedefs
   Parameters:
     X = pint^1 X with indices: {
-      [0..1]
     }
       unrolled index-value pairs: {
         0 = 4
@@ -90,8 +89,6 @@ In namespace "", we have: {
 
   Instances:
     car = process foo<5><4>^1 car with indices: {
-      [0..2]
-      [3..4]
     }
       unrolled indices: {
         0 = ::car[0] 

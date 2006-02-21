@@ -1,0 +1,14 @@
+// "080.hac" should die: wrong size of template actuals
+// copy-modified from "039.hac"
+
+template <pint M; pint N[M]>
+defproc foo();
+
+pint W[3];
+W[0] = 1;
+W[1] = 0;
+
+foo<3, W[W[1]..W[1]]> bar;
+
+// for type-checking ok if foo undefined
+

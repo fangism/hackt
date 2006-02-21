@@ -3,7 +3,7 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.8 2006/02/10 21:50:36 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.9 2006/02/21 04:48:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
@@ -21,6 +21,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/common/extern_templates.h"
 #include "Object/ref/simple_meta_value_reference.tcc"
+#include "Object/ref/aggregate_meta_value_reference.tcc"
+#include "Object/ref/meta_value_reference.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/preal_const.h"
@@ -42,22 +44,37 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 //=============================================================================
 namespace util {
-SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pbool_meta_instance_reference,
-		"pbool-inst-ref")
-SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pint_meta_instance_reference,
-		"pint-inst-ref")
-SPECIALIZE_UTIL_WHAT(HAC::entity::simple_preal_meta_instance_reference,
-		"preal-inst-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pbool_meta_value_reference,
+		"pbool-val-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_pint_meta_value_reference,
+		"pint-val-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::simple_preal_meta_value_reference,
+		"preal-val-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::aggregate_pbool_meta_value_reference,
+		"agg.-pbool-val-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::aggregate_pint_meta_value_reference,
+		"agg.-pint-val-ref")
+SPECIALIZE_UTIL_WHAT(HAC::entity::aggregate_preal_meta_value_reference,
+		"agg.-preal-val-ref")
 
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::simple_pbool_meta_instance_reference, 
-		SIMPLE_PBOOL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+	HAC::entity::simple_pbool_meta_value_reference, 
+		SIMPLE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::simple_pint_meta_instance_reference, 
-		SIMPLE_PINT_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+	HAC::entity::simple_pint_meta_value_reference, 
+		SIMPLE_PINT_META_VALUE_REFERENCE_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
-	HAC::entity::simple_preal_meta_instance_reference, 
-		SIMPLE_PREAL_META_INSTANCE_REFERENCE_TYPE_KEY, 0)
+	HAC::entity::simple_preal_meta_value_reference, 
+		SIMPLE_PREAL_META_VALUE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_pbool_meta_value_reference, 
+		AGGREGATE_PBOOL_META_VALUE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_pint_meta_value_reference, 
+		AGGREGATE_PINT_META_VALUE_REFERENCE_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::aggregate_preal_meta_value_reference, 
+		AGGREGATE_PREAL_META_VALUE_REFERENCE_TYPE_KEY, 0)
 }	// end namespace util
 
 //=============================================================================
@@ -69,6 +86,10 @@ namespace entity {
 template class simple_meta_value_reference<pint_tag>;
 template class simple_meta_value_reference<pbool_tag>;
 template class simple_meta_value_reference<preal_tag>;
+
+template class aggregate_meta_value_reference<pint_tag>;
+template class aggregate_meta_value_reference<pbool_tag>;
+template class aggregate_meta_value_reference<preal_tag>;
 
 //=============================================================================
 }	// end namepace entity

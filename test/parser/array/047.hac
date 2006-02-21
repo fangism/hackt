@@ -1,0 +1,11 @@
+// "047.hac"
+// copy-modified from "044.hac"
+// should pass, legitimate aggregate value reference in assignment
+
+pbool x, y, z;
+
+pbool w[2];
+w[0] = false;
+w[1] = true;
+{x, y} = w;
+

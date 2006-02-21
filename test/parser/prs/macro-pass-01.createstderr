@@ -5,56 +5,56 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	135
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	10	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	37
-	22	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	36	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	37
-	37	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	41	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 	43	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	portconn	0	#HEAD#	#TAIL#	28
-	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	portconn	0	#HEAD#	#TAIL#	28
-	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	52	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	sdbmref_	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

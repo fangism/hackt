@@ -5,40 +5,40 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	38
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	proccoll	1	#HEAD#	#TAIL#	239
-	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	8	##ADDR##	proccoll	1	#HEAD#	#TAIL#	224
+	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -65,9 +65,6 @@ In namespace "", we have: {
 
   Instances:
     bar = process foo<5>^1 bar with indices: {
-      [0..2]
-      [7..9]
-      [4..6]
     }
       unrolled indices: {
         0<4> = ::bar[0] 

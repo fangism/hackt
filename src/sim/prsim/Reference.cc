@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.2 2006/01/22 06:53:30 fang Exp $
+	$Id: Reference.cc,v 1.3 2006/02/21 04:48:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,6 +20,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/ref/meta_reference_union.h"
 #include "util/stacktrace.h"
 #include "util/libc.h"			// for tmpfile, rewind,...
 #include "util/memory/excl_ptr.h"
@@ -133,7 +134,7 @@ parse_node_to_index(const string& n, const module& m) {
 		typedef	simple_bool_meta_instance_reference
 					bool_ref_type;
 		const count_ptr<const bool_ref_type>
-			b(r.is_a<const bool_ref_type>());
+			b(r.inst_ref().is_a<const bool_ref_type>());
 		if (!b) {
 			// later: write another procedure
 			// to print *collections* of bools
@@ -143,52 +144,13 @@ parse_node_to_index(const string& n, const module& m) {
 			return INVALID_NODE_INDEX;
 		}
 		// reminder: this is a packed_array_generic
-#if 0
-		// this code is only effective for reference through
-		// public port members only because it only uses information
-		// available from the unroll/create phases, which excludes
-		// global allocation information.
-		typedef	bool_ref_type::alias_collection_type
-				alias_collection_type;
-		alias_collection_type jar;	// a container of bools
-		const unroll_context uc(true);	// true enables private members
-		if (b->unroll_references(uc, jar).bad) {
-			cerr << "Error unrolling bool reference." << endl;
-			return INVALID_NODE_INDEX;
-		}
-		if (alias_collection_type::sizes_product(jar.size()) > 1) {
-			cerr << "Error: bool reference is underspecified, "
-				"referring to a collection instead of a "
-				"single instance." << endl;
-			return INVALID_NODE_INDEX;
-		}
-		typedef alias_collection_type::value_type	alias_ptr_type;
-		typedef	alias_ptr_type::element_type		bool_alias_type;
-		// is a bool_instance_alias_info, in case you lost track...
-		const alias_ptr_type ap(jar.front());
-		NEVER_NULL(ap);	// must've succeeded, else would've errored out
-		const bool_alias_type& a(*ap);
-		// util::wtf_is(a);
-		// OK, now how do we go from point in the alias-name
-		// hierarchy to canonical index?
-		// query the state_manager?
-		// see how instance_alias_info::cflat_aliases is implemented
-		// using a cflat_aliases_arg_type visitor.
-		const node_index_type ret = a.instance_index;
-#if 0
-		a.dump_hierarchical_name(cerr << "Hi, my name is ") << endl;
-		cerr << "ID = " << ret << endl;
-#endif
-		INVARIANT(ret);
-#else
 		// this code uses the allocation information from the 
 		// alloc phase to find the canonical ID number.  
 		const state_manager& sm(m.get_state_manager());
 		const node_index_type ret =
 			b->lookup_globally_allocated_index(sm);
-#if 1
+#if 0
 		cerr << "index = " << ret << endl;
-#endif
 #endif
 		return ret;
 	}

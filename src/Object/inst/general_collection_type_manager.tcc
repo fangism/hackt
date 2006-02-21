@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.tcc,v 1.5 2006/01/22 18:20:05 fang Exp $
+	$Id: general_collection_type_manager.tcc,v 1.6 2006/02/21 04:48:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
@@ -34,7 +34,7 @@ struct GENERAL_COLLECTION_TYPE_MANAGER_CLASS::dumper {
 
 	ostream&
 	operator () (const instance_collection_generic_type& c) {
-		os << class_traits<Tag>::tag_name << ' ';
+		os << traits_type::tag_name << ' ';
 		c.type_parameter.dump(os)
 			<< '^' << c.get_dimensions();
 		return os;

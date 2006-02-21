@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.6 2006/01/22 18:20:09 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.7 2006/02/21 04:48:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -35,7 +35,7 @@ struct PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::dumper {
 
 	ostream&
 	operator () (const instance_collection_generic_type& c) {
-		return os << class_traits<Tag>::tag_name << ' ' <<
+		return os << traits_type::tag_name << ' ' <<
 			c.type_parameter->get_qualified_name() <<
 			'^' << c.get_dimensions();
 	}

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.12 2006/02/20 20:50:58 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.13 2006/02/21 04:48:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -23,6 +23,7 @@
 
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/aggregate_meta_instance_reference_base.h"
 #include "Object/traits/class_traits.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
@@ -35,12 +36,15 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/def/footprint.h"
+#include "Object/ref/meta_value_reference.h"
 #include "common/ICE.h"
+#include "common/TODO.h"
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/common/extern_templates.h"
 
 #include "util/multikey.h"
+#include "util/packed_array.tcc"
 #include "util/macros.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -64,18 +68,17 @@ using util::persistent_traits;
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
-		common_base_type(), 
-		parent_type(), interface_type(), value_collection_ref(NULL) {
+		simple_meta_instance_reference_base(), 
+		parent_type(), 
+		value_collection_ref(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 		const value_collection_ptr_type pi) :
-		common_base_type(
-			pi->current_collection_state()), 
+		simple_meta_instance_reference_base(), 
 		parent_type(), 
-		interface_type(), 
 		value_collection_ref(pi) {
 }
 
@@ -102,15 +105,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::~simple_meta_value_reference() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-never_ptr<const instance_collection_base>
-SIMPLE_META_VALUE_REFERENCE_CLASS::get_inst_base(void) const {
-	return value_collection_ref;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-never_ptr<const typename SIMPLE_META_VALUE_REFERENCE_CLASS::value_collection_parent_type>
-SIMPLE_META_VALUE_REFERENCE_CLASS::get_param_inst_base(void) const {
+never_ptr<const param_value_collection>
+SIMPLE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
 	return value_collection_ref;
 }
 
@@ -126,28 +122,59 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		const expr_dump_context& c) const {
-	return grandparent_type::dump(o, c);
+	// shamelessly copied from new simple_meta_instance_reference::dump
+	if (c.include_type_info)
+		this->what(o) << " ";
+	NEVER_NULL(this->value_collection_ref);
+	if (c.enclosing_scope) {
+		this->value_collection_ref->dump_hierarchical_name(o,
+			dump_flags::no_definition_owner);
+	} else {
+		this->value_collection_ref->dump_hierarchical_name(o,
+			dump_flags::default_value);
+	}
+	return simple_meta_instance_reference_base::dump_indices(o, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
-	return grandparent_type::dimensions();
+	// copied from simple_meta_instance_reference_base::dimensions();
+	// size_t dim = get_coll_base()->get_dimensions();
+	size_t dim = this->value_collection_ref->get_dimensions();
+	if (this->array_indices) {
+		const size_t c = this->array_indices->dimensions_collapsed();
+		INVARIANT(c <= dim);
+		return dim -c;
+	} else	return dim;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Copy-reduced from simple_meta_instance_reference_base.
+ */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::has_static_constant_dimensions(void) const {
-	return grandparent_type::has_static_constant_dimensions();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-const_range_list
-SIMPLE_META_VALUE_REFERENCE_CLASS::static_constant_dimensions(void) const {
-	return grandparent_type::static_constant_dimensions();
+good_bool
+SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(
+		excl_ptr<index_list_type>& i) {
+	INVARIANT(!array_indices);
+	NEVER_NULL(i);
+	// dimension-check:
+	// number of indices must be <= dimension of instance collection.  
+	const size_t max_dim = dimensions();    // depends on indices
+	if (i->size() > max_dim) {
+		cerr << "ERROR: instance collection " <<
+			this->value_collection_ref->get_name()
+			<< " is " << max_dim << "-dimensional, and thus, "
+			"cannot be indexed " << i->size() <<
+			"-dimensionally!  ";
+			// caller will say where
+		return good_bool(false);
+	}
+	// no static dimension checking
+	array_indices = i;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -166,49 +193,35 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::initialize(const init_arg_type& i) {
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::may_be_initialized(void) const {
-	return common_base_type::may_be_initialized();
+	return this->value_collection_ref->may_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
-	return common_base_type::must_be_initialized();
+	return this->value_collection_ref->must_be_initialized();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
-	return common_base_type::is_static_constant();
+	if (this->array_indices)
+		return false;
+	else if (this->value_collection_ref->get_dimensions())
+		return false;
+	else	return this->value_collection_ref->is_static_constant();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_relaxed_formal_dependent(void) const {
-	return common_base_type::is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::is_template_dependent(void) const {
-	return common_base_type::is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::is_loop_independent(void) const {
-	return common_base_type::is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::is_unconditional(void) const {
-	return common_base_type::is_unconditional();
+	return this->value_collection_ref->is_relaxed_template_formal() ||
+		(this->array_indices ?
+			this->array_indices->is_relaxed_formal_dependent()
+			: false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -264,7 +277,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
 			return false;
 		}
 	} else {
-		STACKTRACE("ACK!!");
+		// FINISH_ME(Fang);	// could do more checking...
 		// conservatively
 		return false;
 	}
@@ -299,7 +312,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 
 	if (this->array_indices) {
 		const const_index_list
-			indices(this->array_indices->unroll_resolve(c));
+			indices(this->array_indices->unroll_resolve_indices(c));
 		if (!indices.empty()) {
 			const multikey_index_type
 				lower(indices.lower_multikey());
@@ -415,7 +428,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// criterion 1: indices (if any) must be resolved to constant values.  
 	const_index_list c_i;
 	if (this->array_indices) {
-		c_i = this->array_indices->unroll_resolve(c);
+		c_i = this->array_indices->unroll_resolve_indices(c);
 		if (c_i.empty()) {
 			cerr << "ERROR: failed to unroll-resolve index list."
 				<< endl;
@@ -445,7 +458,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const_param>
-SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve(
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 		const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	STACKTRACE_VERBOSE;
@@ -478,9 +491,9 @@ if (value_collection_ref->is_template_formal()) {
 			// collection, so we only need to resolve
 			// parameter references in the indices.
 			const const_index_list
-				cil(this->array_indices->unroll_resolve(c));
+				cil(this->array_indices->unroll_resolve_indices(c));
 			// damn it, array_indices is an excl_ptr :S
-			// can't use static meta_index_list::unroll_resolve
+			// can't use static meta_index_list::unroll_resolve_rvalues
 			if (cil.empty()) {
 				cerr << "Error resolving indices of " <<
 					util::what<this_type>::name() << endl;
@@ -532,7 +545,7 @@ if (value_collection_ref->is_template_formal()) {
 		// so its collection may be augmented at any time.  
 		const_index_list cil;		// initialize empty
 		if (this->array_indices) {
-			cil = this->array_indices->unroll_resolve(c);
+			cil = this->array_indices->unroll_resolve_indices(c);
 			if (cil.empty()) {
 				cerr << "Error resolving indices of " <<
 					util::what<this_type>::name() << endl;
@@ -603,7 +616,7 @@ if (value_collection_ref->is_template_formal()) {
 				// callee already has error message
 				cerr << "ERROR: looking up index " <<
 					key_gen << " of " <<
-					class_traits<Tag>::tag_name <<
+					traits_type::tag_name <<
 					" collection " <<
 					vcref.get_qualified_name() <<
 					"." << endl;
@@ -640,43 +653,7 @@ if (value_collection_ref->is_template_formal()) {
 			return return_type(new const_expr_type(_val));
 	}
 }
-}	// end method unroll_resolve
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Parameters have value semantics, not alias semantics!
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-excl_ptr<aliases_connection_base>
-SIMPLE_META_VALUE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
-	ICE_NEVER_CALL(cerr);
-	return excl_ptr<aliases_connection_base>(NULL);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This should never be called.  
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-never_ptr<substructure_alias>
-SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
-		const unroll_context& ) const {
-	ICE_NEVER_CALL(cerr);
-	return never_ptr<substructure_alias>(NULL);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This should never be called.  
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bad_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::connect_port(
-		instance_collection_base&, 
-		const unroll_context&) const {
-	ICE_NEVER_CALL(cerr);
-	return bad_bool(true);
-}
+}	// end method unroll_resolve_rvalues
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -735,89 +712,81 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(
 
 //-----------------------------------------------------------------------------
 /**
-	TODO: This will need some context eventually.
-	assignment's destination is either a top-level value collection 
-	or a definition-local, private value-collection.  
+	Implementation partly ripped off from 
+	simple_meta_instance_reference::unroll_references_helper_no_lookup.  
+	Needs additional check for template formal however.  
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::assign_value_collection(
-		const const_collection_type& values, 
-		const unroll_context& c) const {
-#if 0
-	value_collection_type& _vals(*value_collection_ref);
-	if (_vals.get_owner().template is_a<const definition_base>()) {
-		cerr << "FANG, enable definition-local private "
-			"value reference resolution in "
-			"simple_meta_value_reference::assign_value_collection!"
-			<< endl;
-		return bad_bool(true);
-	}
-#else
+SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
+		const unroll_context& c, 
+		value_reference_collection_type& a) const {
+	STACKTRACE_VERBOSE;
 	value_collection_type&
 		_vals(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref));
-#endif
-	// else we have top-level value reference
-	// TODO: repeated call to same invariant source value is wasteful...
-	const const_range_list src_ranges(values.static_constant_dimensions());
-	if (src_ranges.empty()) {
-		INVARIANT(!values.dimensions());
-		// is scalar assignment, but may be indexed
-		value_scalar_type* const
-			scalar_inst(IS_A(value_scalar_type*, &_vals));
-		if (scalar_inst) {
-			return scalar_inst->assign(*values.begin());
+if (_vals.get_dimensions()) {
+	STACKTRACE("is array");
+	const_index_list cil;
+	if (this->array_indices) {
+		cil = this->array_indices->unroll_resolve_indices(c);
+		if (cil.empty()) {
+			cerr << "ERROR: Failed to resolve indices at "
+				"unroll-time!" << endl;
+			return bad_bool(true);
 		}
 	}
-
-	const const_index_list dim(this->unroll_resolve_dimensions(c));
-	if (dim.empty()) {
-		cerr << "ERROR: unable to resolve constant dimensions."
-			<< endl;
-		return bad_bool(true);
-	}
-	// We are assured that the dimensions of the references
-	// are equal, b/c dimensionality is statically checked.  
-	// However, ranges may be of different length because
-	// of collapsible dimensions.  
-	// Compare dim against ranges: sizes of each dimension...
-	// but what about collapsed dimensions?
-	const const_range_list dst_ranges(dim.collapsed_dimension_ranges());
-	if (!src_ranges.empty() && !src_ranges.is_size_equivalent(dst_ranges)) {
-		// if range.empty(), then there is no need to match dimensions,
-		// dimensions must be equal because both src/dest are scalar.
-		cerr << "ERROR: resolved indices are not "
-			"dimension-equivalent!" << endl;
-		src_ranges.dump(cerr << "got: ",
-			expr_dump_context::default_value);
-		dim.dump(cerr << " and: ",
+	// else empty, implicitly refer to whole collection if it is dense
+	// we have resolve constant indices
+	const const_index_list
+		full_indices(_vals.resolve_indices(cil));
+	if (full_indices.empty()) {
+		// might fail because implicit slice reference is not packed
+		cerr << "ERROR: failed to resolve implicit indices from "
+			"a collection whose subarray is not dense."  << endl;
+		cil.dump(_vals.dump_hierarchical_name(
+				cerr << "\tindices referenced: ",
+				dump_flags::verbose),
 			expr_dump_context::default_value) << endl;
+		_vals.dump(cerr << "\tcollection state: ", dump_flags::verbose)
+			<< endl;
+		// _vals.dump_unrolled_instances(cerr, dump_flags::verbose);
+		return bad_bool(true);
+	}       
+	// resize the array according to the collapsed dimensions, 
+	// before passing it to unroll_aliases.
+	{
+	const const_range_list
+		crl(full_indices.collapsed_dimension_ranges());
+	const multikey_index_type
+		array_sizes(crl.resolve_sizes());
+	a.resize(array_sizes);
+	// a.resize(upper -lower +ones);
+	}
+
+	// construct the range of aliases to collect
+	const multikey_index_type lower(full_indices.lower_multikey());
+	const multikey_index_type upper(full_indices.upper_multikey());
+	// this will set the size and dimensions of packed_array a
+	if (_vals.unroll_lvalue_references(lower, upper, a).bad) {
+		cerr << "ERROR: unrolling aliases." << endl;
 		return bad_bool(true);
 	}
-	// else good to continue
-	generic_index_generator_type key_gen(dim.size());
-	key_gen.get_lower_corner() = dim.lower_multikey();
-	key_gen.get_upper_corner() = dim.upper_multikey();
-	key_gen.initialize();
-
-	typename const_collection_type::const_iterator
-		val_iter(values.begin());
-	bad_bool assign_err(false);
-	do {
-		if (_vals.assign(key_gen, *val_iter).bad) {
-			cerr << "ERROR: assigning index " << key_gen << 
-				" of " << class_traits<Tag>::tag_name <<
-				" collection " << _vals.get_qualified_name() <<
-				"." << endl;
-			assign_err.bad = true;
-		}
-		val_iter++;			// unsafe, but checked
-		key_gen++;
-	} while (key_gen != key_gen.get_upper_corner());
-	INVARIANT(val_iter == values.end());	// sanity check
-	return assign_err;
-}	// end method assign_value_collection
+	// success!
+	return bad_bool(false);
+} else {
+	STACKTRACE("is scalar");
+	// is a scalar instance
+	// size the alias_collection_type appropriately
+	a.resize();             // empty
+	const multikey_index_type bogus;
+	if (_vals.unroll_lvalue_references(bogus, bogus, a).bad) {
+		cerr << "ERROR: unrolling aliases." << endl;
+		return bad_bool(true);
+	}
+	return bad_bool(false);
+}
+}
 
 //=============================================================================
 }	// end namepace entity

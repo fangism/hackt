@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.9 2006/02/05 19:45:07 fang Exp $
+	$Id: instance_pool.h,v 1.10 2006/02/21 04:48:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -51,6 +51,7 @@ class instance_pool : private index_pool<util::list_vector<T> > {
 	typedef	instance_pool<T>		this_type;
 	typedef	typename T::tag_type		tag_type;
 public:
+	typedef	typename T::traits_type			traits_type;
 	typedef	typename parent_type::const_iterator	const_iterator;
 	typedef	typename parent_type::size_type		size_type;
 	typedef	typename parent_type::value_type	value_type;

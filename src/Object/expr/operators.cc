@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.10 2006/02/10 21:50:36 fang Exp $
+ 	$Id: operators.cc,v 1.11 2006/02/21 04:48:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -135,12 +135,6 @@ pint_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list
-pint_unary_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_unary_expr::is_static_constant(void) const {
 	return ex->is_static_constant();
@@ -150,24 +144,6 @@ pint_unary_expr::is_static_constant(void) const {
 bool
 pint_unary_expr::is_relaxed_formal_dependent(void) const {
 	return ex->is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_unary_expr::is_template_dependent(void) const {
-	return ex->is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_unary_expr::is_loop_independent(void) const {
-	return ex->is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_unary_expr::is_unconditional(void) const {
-	return ex->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -231,11 +207,11 @@ pint_unary_expr::resolve_dimensions(void) const {
 	The only unary pint operation is negation.  
  */
 count_ptr<const_param>
-pint_unary_expr::unroll_resolve(const unroll_context& c) const {
+pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type ret(ex->unroll_resolve(c));
+	const return_type ret(ex->unroll_resolve_rvalues(c));
 	if (ret) {
 #if 0
 		count_ptr<pint_const> pc(ret.is_a<pint_const>());
@@ -323,12 +299,6 @@ preal_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list
-preal_unary_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_unary_expr::is_static_constant(void) const {
 	return ex->is_static_constant();
@@ -338,24 +308,6 @@ preal_unary_expr::is_static_constant(void) const {
 bool
 preal_unary_expr::is_relaxed_formal_dependent(void) const {
 	return ex->is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_unary_expr::is_template_dependent(void) const {
-	return ex->is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_unary_expr::is_loop_independent(void) const {
-	return ex->is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_unary_expr::is_unconditional(void) const {
-	return ex->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -419,11 +371,11 @@ preal_unary_expr::resolve_dimensions(void) const {
 	The only unary preal operation is negation.  
  */
 count_ptr<const_param>
-preal_unary_expr::unroll_resolve(const unroll_context& c) const {
+preal_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-	const return_type ret(ex->unroll_resolve(c));
+	const return_type ret(ex->unroll_resolve_rvalues(c));
 	if (ret) {
 		return return_type(new preal_const(
 			-ret.is_a<const preal_expr>()->static_constant_value()));
@@ -502,12 +454,6 @@ pbool_unary_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list
-pbool_unary_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_unary_expr::is_static_constant(void) const {
 	return ex->is_static_constant();
@@ -517,24 +463,6 @@ pbool_unary_expr::is_static_constant(void) const {
 bool
 pbool_unary_expr::is_relaxed_formal_dependent(void) const {
 	return ex->is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pbool_unary_expr::is_template_dependent(void) const {
-	return ex->is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pbool_unary_expr::is_loop_independent(void) const {
-	return ex->is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pbool_unary_expr::is_unconditional(void) const {
-	return ex->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -586,11 +514,11 @@ pbool_unary_expr::resolve_value(value_type& i) const {
 	The only unary pbool operation is logical negation.  
  */
 count_ptr<const_param>
-pbool_unary_expr::unroll_resolve(const unroll_context& c) const {
+pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type ret(ex->unroll_resolve(c));
+	const return_type ret(ex->unroll_resolve_rvalues(c));
 	if (ret) {
 #if 0
 		count_ptr<pbool_const> pc(ret.is_a<pbool_const>());
@@ -739,12 +667,6 @@ pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list
-pint_arith_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_arith_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
@@ -755,25 +677,6 @@ bool
 pint_arith_expr::is_relaxed_formal_dependent(void) const {
 	return lx->is_relaxed_formal_dependent() ||
 		rx->is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_arith_expr::is_template_dependent(void) const {
-	return lx->is_template_dependent() ||
-		rx->is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_arith_expr::is_loop_independent(void) const {
-	return lx->is_loop_independent() && rx->is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_arith_expr::is_unconditional(void) const {
-	return lx->is_unconditional() && rx->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -866,12 +769,12 @@ pint_arith_expr::unroll_resolve_value(const unroll_context& c,
 	\return pint_const of the resolved value.
  */
 count_ptr<const_param>
-pint_arith_expr::unroll_resolve(const unroll_context& c) const {
+pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 		// actually could be scalar const_collection!
 #if 0
@@ -884,7 +787,7 @@ pint_arith_expr::unroll_resolve(const unroll_context& c) const {
 		const pint_value_type lop = lpc->static_constant_value();
 		const pint_value_type rop = rpc->static_constant_value();
 #else
-		// TODO: need a specialized unroll_resolve for the value_type
+		// TODO: need a specialized unroll_resolve_rvalues for the value_type
 		// for now, just assert the type
 		const pint_value_type lop =
 			lex.is_a<const pint_expr>()->static_constant_value();
@@ -1054,12 +957,6 @@ pint_relational_expr::must_be_initialized(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list
-pint_relational_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_relational_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
@@ -1070,25 +967,6 @@ bool
 pint_relational_expr::is_relaxed_formal_dependent(void) const {
 	return lx->is_relaxed_formal_dependent() ||
 		rx->is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_relational_expr::is_template_dependent(void) const {
-	return lx->is_template_dependent() ||
-		rx->is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_relational_expr::is_loop_independent(void) const {
-	return lx->is_loop_independent() && rx->is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_relational_expr::is_unconditional(void) const {
-	return lx->is_unconditional() && rx->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1167,12 +1045,12 @@ pint_relational_expr::resolve_value(value_type& i) const {
 	\return pbool_const of the resolved value.
  */
 count_ptr<const_param>
-pint_relational_expr::unroll_resolve(const unroll_context& c) const {
+pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 #if 0
 		const count_ptr<pint_const> lpc(lex.is_a<pint_const>());
@@ -1328,12 +1206,6 @@ preal_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list
-preal_arith_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_arith_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
@@ -1344,25 +1216,6 @@ bool
 preal_arith_expr::is_relaxed_formal_dependent(void) const {
 	return lx->is_relaxed_formal_dependent() ||
 		rx->is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_arith_expr::is_template_dependent(void) const {
-	return lx->is_template_dependent() ||
-		rx->is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_arith_expr::is_loop_independent(void) const {
-	return lx->is_loop_independent() && rx->is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_arith_expr::is_unconditional(void) const {
-	return lx->is_unconditional() && rx->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1455,15 +1308,15 @@ preal_arith_expr::unroll_resolve_value(const unroll_context& c,
 	\return preal_const of the resolved value.
  */
 count_ptr<const_param>
-preal_arith_expr::unroll_resolve(const unroll_context& c) const {
+preal_arith_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 		// actually could be scalar const_collection!
-		// TODO: need a specialized unroll_resolve for the value_type
+		// TODO: need a specialized unroll_resolve_rvalues for the value_type
 		// for now, just assert the type
 		const preal_value_type lop =
 			lex.is_a<const preal_expr>()->static_constant_value();
@@ -1635,12 +1488,6 @@ preal_relational_expr::must_be_initialized(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list
-preal_relational_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_relational_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
@@ -1651,25 +1498,6 @@ bool
 preal_relational_expr::is_relaxed_formal_dependent(void) const {
 	return lx->is_relaxed_formal_dependent() ||
 		rx->is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_relational_expr::is_template_dependent(void) const {
-	return lx->is_template_dependent() ||
-		rx->is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_relational_expr::is_loop_independent(void) const {
-	return lx->is_loop_independent() && rx->is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_relational_expr::is_unconditional(void) const {
-	return lx->is_unconditional() && rx->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1748,12 +1576,12 @@ preal_relational_expr::resolve_value(value_type& i) const {
 	\return pbool_const of the resolved value.
  */
 count_ptr<const_param>
-preal_relational_expr::unroll_resolve(const unroll_context& c) const {
+preal_relational_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 		const preal_value_type lop =
 			lex.is_a<const preal_expr>()->static_constant_value();
@@ -1900,12 +1728,6 @@ pbool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-const_range_list
-pbool_logical_expr::static_constant_dimensions(void) const {
-	return const_range_list();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_logical_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
@@ -1916,25 +1738,6 @@ bool
 pbool_logical_expr::is_relaxed_formal_dependent(void) const {
 	return lx->is_relaxed_formal_dependent() ||
 		rx->is_relaxed_formal_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pbool_logical_expr::is_template_dependent(void) const {
-	return lx->is_template_dependent() ||
-		rx->is_template_dependent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pbool_logical_expr::is_loop_independent(void) const {
-	return lx->is_loop_independent() && rx->is_loop_independent();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pbool_logical_expr::is_unconditional(void) const {
-	return lx->is_unconditional() && rx->is_unconditional();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2012,12 +1815,12 @@ pbool_logical_expr::resolve_value(value_type& i) const {
 	\return pbool_const of the resolved value.
  */
 count_ptr<const_param>
-pbool_logical_expr::unroll_resolve(const unroll_context& c) const {
+pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 	typedef	count_ptr<const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-	const return_type lex(lx->unroll_resolve(c));
-	const return_type rex(rx->unroll_resolve(c));
+	const return_type lex(lx->unroll_resolve_rvalues(c));
+	const return_type rex(rx->unroll_resolve_rvalues(c));
 	if (lex && rex) {
 #if 0
 		const count_ptr<pbool_const> lpc(lex.is_a<pbool_const>());

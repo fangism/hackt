@@ -1,0 +1,9 @@
+// "046.hac"
+// copy-modified from "043.hac"
+// should pass, connecting with aggregate first.
+
+bool x, y, z;
+
+bool w[2];
+{x, y} = w;
+

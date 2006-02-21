@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.5 2006/01/22 18:20:06 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.6 2006/02/21 04:48:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -33,12 +33,13 @@ template <class Tag>
 class int_collection_type_manager {
 private:
 	typedef	int_collection_type_manager<Tag>	this_type;
+	typedef	class_traits<Tag>			traits_type;
 protected:
-	typedef typename class_traits<Tag>::instance_collection_generic_type
+	typedef typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-	typedef typename class_traits<Tag>::instance_collection_parameter_type
+	typedef typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-	typedef typename class_traits<Tag>::type_ref_ptr_type
+	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
 
 	/**

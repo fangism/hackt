@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.7 2006/01/22 18:20:05 fang Exp $
+	$Id: instance_alias.h,v 1.8 2006/02/21 04:48:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
@@ -47,25 +47,26 @@ class instance_alias :
 		typename instance_alias_info<Tag>::instance_alias_base_type> {
 	typedef	INSTANCE_ALIAS_CLASS			this_type;
 public:
+	typedef	class_traits<Tag>			traits_type;
 	typedef	multikey_set_element_derived<D, pint_value_type, 
-		typename class_traits<Tag>::instance_alias_base_type>
+		typename traits_type::instance_alias_base_type>
 							parent_type;
 	/**
 		Dimension-generic container type.  
 	 */
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
 	/**
 		Dimension-specific container type, 
 		should be sub-type of instance_collection_generic_type;
 	 */
 	// template explicitly required by g++-4.0
-	typedef	typename class_traits<Tag>::template instance_array<D>::type
+	typedef	typename traits_type::template instance_array<D>::type
 							container_type;
 
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 					instance_alias_base_type;
-	typedef	typename class_traits<Tag>::instance_alias_info_type
+	typedef	typename traits_type::instance_alias_info_type
 					instance_alias_info_type;
 private:
 	/**
@@ -166,14 +167,15 @@ class instance_alias<Tag,0> :
 private:
 	typedef	KEYLESS_INSTANCE_ALIAS_CLASS		this_type;
 public:
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::instance_alias_base_type
 							parent_type;
-	typedef	typename class_traits<Tag>::instance_alias_base_type
+	typedef	typename traits_type::instance_alias_base_type
 					instance_alias_base_type;
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
 	// template explicitly required by g++-4.0
-	typedef	typename class_traits<Tag>::template instance_array<0>::type
+	typedef	typename traits_type::template instance_array<0>::type
 							container_type;
 	typedef	typename instance_alias_info<Tag>::const_iterator
 							const_iterator;

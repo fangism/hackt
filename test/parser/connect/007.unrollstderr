@@ -4,33 +4,33 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	44
+	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	45
+	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	40
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
 	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	44
+	16	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	44
+	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	dialias_	0	#HEAD#	#TAIL#	28
-	26	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	sdimref_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

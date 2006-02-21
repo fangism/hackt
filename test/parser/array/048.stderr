@@ -1,0 +1,5 @@
+Error: instance reference 2 is 0-dimensional, but the former references in the aggregate are 1-dimensional.
+Error appending aggregate instance reference at position 2.
+Error building aggregate instance reference.  [8:6..9]
+ERROR: invalid instance reference at position 2 of alias list.
+HALT: at least one error in connection list.  [8:1..10]

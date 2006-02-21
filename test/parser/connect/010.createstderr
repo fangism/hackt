@@ -4,18 +4,18 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	4	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
-	7	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
-	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	136
+	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

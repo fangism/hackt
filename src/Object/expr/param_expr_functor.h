@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/param_expr_functor.h"
 	Handy functor definitions for param_expr.  
-	$Id: param_expr_functor.h,v 1.1 2006/02/11 04:32:42 fang Exp $
+	$Id: param_expr_functor.h,v 1.2 2006/02/21 04:48:25 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_FUNCTOR_H__
@@ -29,7 +29,7 @@ struct param_expr::unroller {
 	template <class P>
 	return_type
 	operator () (const P& p) const {
-		return (p ? p->unroll_resolve(_context) : 
+		return (p ? p->unroll_resolve_rvalues(_context) : 
 			return_type(NULL));
 	}
 };	// end struct unroller

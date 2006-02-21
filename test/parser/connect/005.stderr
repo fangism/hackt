@@ -1,3 +1,3 @@
-Types do not match! got: int<32> and: bool<>.
+Meta-class type does not match!  got: int-inst-ref and: bool-inst-ref
 ERROR: type/size of instance reference 2 of alias list doesn't match the type/size of the first instance reference!  
 HALT: at least one error in connection list.  [4:13..22]

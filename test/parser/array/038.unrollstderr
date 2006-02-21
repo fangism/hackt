@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	443
+	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	403
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
@@ -31,14 +31,6 @@ In namespace "", we have: {
   0 typedefs
   Parameters:
     foo = pint^1 foo with indices: {
-      [0..3]
-      [40..42]
-      [6..12]
-      [15..20]
-      [25..29]
-      [21..24]
-      [4..4]
-      [5..5]
     }
       unrolled index-value pairs: {
         0 = ?

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.12 2006/02/10 21:50:39 fang Exp $
+	$Id: PRS.cc,v 1.13 2006/02/21 04:48:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -21,7 +21,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
-// #include "Object/ref/simple_datatype_meta_instance_reference_base.h"
 // #include "Object/inst/alias_empty.h"
 // #include "Object/inst/instance_alias_info.h"
 
@@ -305,7 +304,7 @@ count_ptr<const const_param_expr_list>
 attribute::unroll_values(const unroll_context& c) const {
 	NEVER_NULL(values);
 	const count_ptr<const const_param_expr_list>
-		ret(values->unroll_resolve(c));
+		ret(values->unroll_resolve_rvalues(c));
 	if (!ret) {
 		cerr << "Error resolving attribute values!" << endl;
 	}

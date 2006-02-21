@@ -2,7 +2,7 @@
 	\file "Object/traits/preal_traits.h"
 	Traits and policies for parameter floats.  
 	This file used to be "Object/art_object_preal_traits.h".
-	$Id: preal_traits.h,v 1.2 2006/02/10 21:50:43 fang Exp $
+	$Id: preal_traits.h,v 1.3 2006/02/21 04:48:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PREAL_TRAITS_H__
@@ -37,7 +37,7 @@ struct class_traits<preal_tag> {
 	typedef	preal_const			const_expr_type;
 	typedef	preal_const_collection		const_collection_type;
 
-	typedef	param_instantiation_statement_base
+	typedef	instantiation_statement_base
 					instantiation_statement_parent_type;
 	typedef	preal_instantiation_statement
 					instantiation_statement_type;
@@ -70,16 +70,16 @@ struct class_traits<preal_tag> {
 		simple_nonmeta_instance_reference_type(const T&) { }
 	};
 #endif
-	typedef	simple_preal_meta_instance_reference
-					simple_meta_instance_reference_type;
-	typedef	preal_meta_instance_reference_base
-				meta_instance_reference_parent_type;
+	typedef	simple_preal_meta_value_reference
+					simple_meta_value_reference_type;
+	typedef	preal_meta_value_reference_base
+				meta_value_reference_parent_type;
 	typedef	real_expr			data_expr_base_type;
 	typedef	preal_expr			expr_base_type;
 	typedef const_param			const_collection_parent_type;
 
 	typedef	never_ptr<preal_instance>	value_reference_ptr_type;
-	typedef	packed_array_generic<preal_value_type, value_reference_ptr_type>
+	typedef	packed_array_generic<pint_value_type, value_reference_ptr_type>
 						value_reference_collection_type;
 	typedef	preal_expression_assignment	expression_assignment_type;
 	typedef	param_expression_assignment	expression_assignment_parent_type;
