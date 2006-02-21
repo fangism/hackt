@@ -5,6 +5,13 @@
 
 2006-02-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-14:
+	  Implemented collectible-equivalent type checking for aggregate
+		instance references.  
+	  Renamed "must_check_type" to "must_be_collectibly_type_equivalent"
+		in collection_type_manager and instance-collections.
+
+
 	* HACKT-00-01-04-main-00-77-13:
 	  Forgot to enable aggregate expressions in template arguments.  
 	  Trivial mods in grammar and AST/expr.cc.

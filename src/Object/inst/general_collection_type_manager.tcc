@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.tcc,v 1.6 2006/02/21 04:48:28 fang Exp $
+	$Id: general_collection_type_manager.tcc,v 1.7 2006/02/21 21:33:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
@@ -88,8 +88,9 @@ GENERAL_COLLECTION_TYPE_MANAGER_CLASS::is_relaxed_type(void) const {
  */
 GENERAL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 bool
-GENERAL_COLLECTION_TYPE_MANAGER_CLASS::must_match_type(
+GENERAL_COLLECTION_TYPE_MANAGER_CLASS::must_be_collectibly_type_equivalent(
 		const this_type& r) const {
+	// is this correct, calling connectibly_type_equivalent?
 	return this->type_parameter.must_be_connectibly_type_equivalent(
 		r.type_parameter);
 }

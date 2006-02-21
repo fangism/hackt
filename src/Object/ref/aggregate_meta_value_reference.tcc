@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.2 2006/02/21 04:48:35 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.3 2006/02/21 21:33:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -216,9 +216,15 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just conservatively return false.
+	Following this, the reference is expected to produce a
+	constant SCALAR value, which this cannot produce.  
+ */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
+#if 0
 	INVARIANT(!subreferences.empty());
 	const_iterator i(subreferences.begin());
 	const const_iterator e(subreferences.end());
@@ -228,6 +234,9 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
 		// else keep checking...
 	}
 	return true;
+#else
+	return false;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -484,6 +493,7 @@ if (this->_is_concatenation) {
 		for ( ; i!=e; ++i, ++ti) {
 			const key_type s(i->size());
 			INVARIANT(!s.dimensions());
+			// no checking necessary, we statically know the type
 			*ti = i->front();
 		}
 		INVARIANT(ti == a.end());

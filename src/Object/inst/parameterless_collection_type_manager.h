@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.6 2006/02/21 04:48:30 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.7 2006/02/21 21:33:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -85,7 +85,7 @@ protected:
 		NOTE: called during connection checking.  
 	 */
 	bool
-	must_match_type(const this_type&) const;
+	must_be_collectibly_type_equivalent(const this_type&) const;
 
 	bad_bool
 	check_type(const instance_collection_parameter_type&) const;

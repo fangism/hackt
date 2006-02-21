@@ -1,0 +1,12 @@
+// "058.hac"
+// should fail type-checking (unroll)
+// cannot aggregate different types into an array
+
+pint W = 13;
+pint L = 12;
+
+int<W> x, y;
+int<L> z, w;
+
+{x, z} = {y, w};
+

@@ -1,0 +1,13 @@
+// "059.hac"
+// copy-modified from "058.hac"
+// should fail type-checking (unroll)
+// cannot aggregate different types into an array
+
+defproc foo () { }
+defproc bar () { }
+
+foo x, y;
+bar z, w;
+
+{x, z} = {y, w};
+

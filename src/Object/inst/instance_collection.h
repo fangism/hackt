@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.13 2006/02/21 04:48:29 fang Exp $
+	$Id: instance_collection.h,v 1.14 2006/02/21 21:33:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -182,7 +182,7 @@ virtual	bool
 	get_type_ref_subtype(void) const;
 
 	bool
-	must_match_type(const this_type&) const;
+	must_be_collectibly_type_equivalent(const this_type&) const;
 
 	// 2005-07-07: intended for first-time type establishment, 
 	// which determines whether or not the collection is relaxed or 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.2 2006/02/21 04:48:34 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.3 2006/02/21 21:33:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -10,6 +10,7 @@
 #include <iostream>
 #include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/inst/instance_collection.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -145,6 +146,10 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 	Shamelessly copy-modified from aggregate_meta_value_reference.  
 	\param a is returned by reference as a constructed packed array
 		of references.  
+	TODO: type check collectible equivalence
+	NOTE: only need to check one element ifrom each subreference, 
+		recusive construction guarantees uniformity within each
+		collection.  
  */
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
@@ -160,6 +165,8 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 		// should be multikey_index_type
 	typedef	typename alias_collection_type::iterator
 							target_iterator;
+	typedef typename alias_collection_type::value_type
+							alias_ptr_type;
 	coll_coll_type temp(subreferences.size());
 {
 	coll_coll_iterator ci(temp.begin());
@@ -198,14 +205,36 @@ if (this->_is_concatenation) {
 		a.resize(k);
 		target_iterator ti(a.begin());
 		const const_coll_coll_iterator b(temp.begin()), e(temp.end());
+		const alias_ptr_type ba(b->front());
+		const never_ptr<const instance_collection_generic_type>
+			bc(ba->container);
 		const_coll_coll_iterator i(b);
+		bool err = false;
 		for ( ; i!=e; ++i, ++ti) {
 			const key_type s(i->size());
 			INVARIANT(!s.dimensions());
+			// type check: collectibly_type_equivalent
+			const alias_ptr_type ia(i->front());
+			const never_ptr<const instance_collection_generic_type>
+				ic(ia->container);
+			// this should be trivially fast for meta-classes
+			// that need minimal or zero checking :)
+			// we only need to check the container type, 
+			// since relaxed actuals will never matter for
+			// collectible type equivalence.  
+			if (!bc->must_be_collectibly_type_equivalent(*ic)) {
+				// may already come with partial error msg.
+				cerr << "Type mismatch in aggregate " <<
+					traits_type::tag_name << " reference."
+					<< endl;
+				bc->type_dump(cerr << "\tgot: ") << endl;
+				ic->type_dump(cerr << "\tand: ") << endl;
+				err = true;
+			}
 			*ti = i->front();
 		}
 		INVARIANT(ti == a.end());
-		return bad_bool(false);
+		return bad_bool(err);
 	}
 }
 }	// end method unroll_references

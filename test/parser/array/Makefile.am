@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2006/02/21 04:49:08 fang Exp $
+#	$Id: Makefile.am,v 1.12 2006/02/21 21:33:03 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -22,7 +22,7 @@ HACKT_PARSE_TEST_PASSES = \
 	020 021 022 023 024 025 026 027 028 029 \
 	030 031 033 034 035 036 037 038 039 \
 	040 041 043 044 046 047 \
-	056
+	056 058 059
 
 # unfortunately is out of order... to bad $(sort ...) is non-posix
 HACKT_PARSE_TEST_SUBJECTS = \

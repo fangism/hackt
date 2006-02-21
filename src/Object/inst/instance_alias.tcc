@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.16 2006/02/21 04:48:28 fang Exp $
+	$Id: instance_alias.tcc,v 1.17 2006/02/21 21:33:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -668,13 +668,14 @@ INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Compares collection types of the two instances and then
-	(TODO) compares their relaxed actuals (if applicable).
+	TODO: compares their relaxed actuals (if applicable).
 	NOTE: relaxed actuals are compared by synchronize/compare_actuals().  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 bool
 INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
-	return this->container->must_match_type(*a.container);
+	return this->container->must_be_collectibly_type_equivalent(
+		*a.container);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

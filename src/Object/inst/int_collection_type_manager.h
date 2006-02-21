@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.6 2006/02/21 04:48:29 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.7 2006/02/21 21:33:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -87,7 +87,7 @@ protected:
 		NOTE: called during connection checking.  
 	 */
 	bool
-	must_match_type(const this_type& t) const {
+	must_be_collectibly_type_equivalent(const this_type& t) const {
 		if (type_parameter == t.type_parameter) {
 			return true;
 		} else {

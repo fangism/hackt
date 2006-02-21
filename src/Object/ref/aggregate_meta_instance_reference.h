@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.2 2006/02/21 04:48:33 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.3 2006/02/21 21:33:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -42,6 +42,8 @@ class aggregate_meta_instance_reference :
 public:
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
+	typedef	typename traits_type::instance_collection_generic_type
+					instance_collection_generic_type;
 	typedef	count_ptr<const parent_type>		subreference_ptr_type;
 	typedef	std::vector<subreference_ptr_type>	subreference_array_type;
 private:

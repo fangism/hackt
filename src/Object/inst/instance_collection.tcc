@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.19 2006/02/21 04:48:29 fang Exp $
+	$Id: instance_collection.tcc,v 1.20 2006/02/21 21:33:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -243,11 +243,17 @@ INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Returns the type-reference given by the first instantiation
+	statement (which may be predicated).  
+	This is not guaranteed to be the *final* type of the collection.  
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 INSTANCE_COLLECTION_CLASS::get_type_ref(void) const {
 	return initial_instantiation_statement_ptr->get_type_ref();
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Ripped off from instance_collection_base::formal_size_equivalent.  
@@ -267,13 +273,23 @@ INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Must match exact type, i.e. be connectibly type equivalent.  
+	Includes relaxed parameters, if applicable.  
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bool
-INSTANCE_COLLECTION_CLASS::must_match_type(const this_type& c) const {
-	return collection_type_manager_parent_type::must_match_type(c);
+INSTANCE_COLLECTION_CLASS::must_be_collectibly_type_equivalent(
+		const this_type& c) const {
+	return collection_type_manager_parent_type::
+		must_be_collectibly_type_equivalent(c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets the type of the collection during the first instantiation
+	of any of its members.  
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 void
 INSTANCE_COLLECTION_CLASS::establish_collection_type(
@@ -296,7 +312,6 @@ INSTANCE_COLLECTION_CLASS::has_relaxed_type(void) const {
 		must already be resolved to a const_param_expr_list.  
 	\return false on success, true on error.  
 	\post the integer width is fixed for the rest of the program.  
-	TODO: rename this!, doesn't commit anymore, just checks (const)
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 bad_bool
@@ -308,13 +323,8 @@ INSTANCE_COLLECTION_CLASS::check_established_type(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: update this description, nothing to do with context
-	Create a meta instance reference object.
-	See if it's already registered in the current context.  
-	If so, delete the new one (inefficient), 
-	and return the one found.  
-	Else, register the new one in the context, and return it.  
-	Depends on context's method for checking references in used_id_map.  
+	Just creates a simple instance_reference to this collection.  
+	If indexed, the index is set by the caller.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<meta_instance_reference_base>
@@ -345,6 +355,9 @@ INSTANCE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Does exactly what it says.  
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::member_inst_ref_ptr_type
 INSTANCE_COLLECTION_CLASS::make_member_meta_instance_reference(
@@ -367,6 +380,9 @@ INSTANCE_COLLECTION_CLASS::get_actual_param_list(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return newly constructed d-dimensional array.  
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS*
 INSTANCE_COLLECTION_CLASS::make_array(
@@ -407,7 +423,6 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::write_base()");
 	parent_type::write_object_base(m, o);
-	// specialization functor parameter writer
 	collection_type_manager_parent_type::write_object_base(m, o);
 	m.write_pointer(o, this->initial_instantiation_statement_ptr);
 }
@@ -419,7 +434,6 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::load_base()");
 	parent_type::load_object_base(m, i);
-	// specialization functor parameter loader
 	collection_type_manager_parent_type::load_object_base(m, i);
 	m.read_pointer(i, this->initial_instantiation_statement_ptr);
 }

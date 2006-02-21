@@ -1,0 +1,13 @@
+// "084.hac" should pass
+// copy-modified from "081.hac"
+// should fail type checking: attempt hetergenous aggregates
+
+template <pint M; pint N[M]>
+defproc foo() { }
+
+foo<3, {1,2,3}> bar, ick;
+foo<3, {7,8,9}> baz, poo;
+
+{bar, baz} = {ick, poo};
+
+

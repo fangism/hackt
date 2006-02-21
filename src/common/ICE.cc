@@ -1,7 +1,7 @@
 /**
 	\file "common/ICE.cc"
 	String and common symbols defined for internal compiler errors.
-	$Id: ICE.cc,v 1.5 2006/02/21 04:48:45 fang Exp $
+	$Id: ICE.cc,v 1.6 2006/02/21 21:33:02 fang Exp $
  */
 
 #include <ostream>
@@ -14,7 +14,7 @@ using std::ostream;
 using std::endl;
 
 //=============================================================================
-const char ICE_never_call[] = ".. is never supposed to be called.";
+const char ICE_never_call[] = "... is never supposed to be called.";
 
 //-----------------------------------------------------------------------------
 static const char ICE_greeting[] = "Internal compiler error: in ";
