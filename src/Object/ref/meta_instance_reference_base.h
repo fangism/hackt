@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.7.16.2 2006/02/19 03:53:09 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.7.16.3 2006/02/21 01:56:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -24,6 +24,7 @@ class state_manager;
 class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
+class physical_instance_collection;
 class aliases_connection_base;
 class port_connection_base;
 class const_range_list;
@@ -115,7 +116,7 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO = 0;
 
 #define	CONNECT_PORT_PROTO						\
 	bad_bool							\
-	connect_port(instance_collection_base&, 			\
+	connect_port(physical_instance_collection&, 			\
 		const unroll_context&) const
 
 virtual	CONNECT_PORT_PROTO = 0;

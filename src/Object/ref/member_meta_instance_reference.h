@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.7 2006/01/22 18:20:22 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.7.16.1 2006/02/21 01:56:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -41,12 +41,13 @@ class member_meta_instance_reference :
 private:
 	typedef	MEMBER_INSTANCE_REFERENCE_CLASS		this_type;
 public:
+	typedef	class_traits<Tag>			traits_type;
 	/// the underlying type of the member instance referenced
-	typedef	typename class_traits<Tag>::simple_meta_instance_reference_type
+	typedef	typename traits_type::simple_meta_instance_reference_type
 							parent_type;
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename traits_type::instance_collection_generic_type
 						instance_collection_generic_type;
-	typedef	typename class_traits<Tag>::alias_collection_type
+	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.1.2.3 2006/02/21 00:30:04 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.1.2.4 2006/02/21 01:56:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -126,7 +126,7 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::connect_port(
-		instance_collection_base&, const unroll_context&) const {
+		physical_instance_collection&, const unroll_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return bad_bool(true);
 }

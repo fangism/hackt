@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.4 2006/02/21 00:30:06 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.14.10.5 2006/02/21 01:56:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -26,6 +26,7 @@
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/inst/substructure_alias_base.h"
+#include "Object/inst/physical_instance_collection.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/unroll/port_connection.h"
 #include "util/stacktrace.h"
@@ -450,7 +451,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::connect_port(
-		instance_collection_base& cl, 
+		physical_instance_collection& cl, 
 		const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	// assert checked-cast, will throw bad_cast upon error

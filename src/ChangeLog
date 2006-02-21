@@ -5,6 +5,11 @@
 
 2006-02-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-8-aggregate-01-10:
+	  Minor clean-up only.  
+	  End of branch, merge to trunk.
+
+
 	* HACKT-00-01-04-main-00-77-8-aggregate-01-09:
 	  Implemented aggregate_meta_instance_reference (.tcc), 
 		and instantiated aggregate template classes.  

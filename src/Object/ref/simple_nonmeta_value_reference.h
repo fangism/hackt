@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.6 2006/02/10 21:50:42 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.6.2.1 2006/02/21 01:56:11 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -63,19 +63,20 @@ class simple_nonmeta_value_reference :
 	public class_traits<Tag>::data_expr_base_type {
 friend struct data_type_resolver<Tag>;
 public:
-	typedef	typename class_traits<Tag>::data_value_type
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::data_value_type
 							data_value_type;
 private:
 	typedef	SIMPLE_NONMETA_VALUE_REFERENCE_CLASS	this_type;
-	typedef	typename class_traits<Tag>::nonmeta_instance_reference_base_type
+	typedef	typename traits_type::nonmeta_instance_reference_base_type
 							parent_type;
-	typedef	typename class_traits<Tag>::data_expr_base_type
+	typedef	typename traits_type::data_expr_base_type
 							data_expr_base_type;
 	typedef	simple_datatype_nonmeta_value_reference	common_base_type;
 	typedef	common_base_type::parent_type		grandparent_type;
 	typedef	data_expr_base_type			interface_type;
 protected:
-	typedef	typename class_traits<Tag>::instance_collection_generic_type
+	typedef	typename traits_type::instance_collection_generic_type
 							value_collection_type;
 	// NOTE: this is const, unlike simple_meta_value_reference
 	typedef	never_ptr<const value_collection_type>
