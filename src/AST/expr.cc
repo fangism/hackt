@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.6 2006/02/21 04:48:19 fang Exp $
+	$Id: expr.cc,v 1.7 2006/02/21 18:13:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -2075,13 +2075,29 @@ array_construction::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Code partially ripped from check_meta_generic, below.  
+ */
 expr::meta_return_type
 array_construction::check_meta_expr(const context& c) const {
-	FINISH_ME(Fang);
-	return expr::meta_return_type(NULL);
+	typedef	expr::meta_return_type			return_type;
+	typedef	expr_list::checked_meta_exprs_type	checked_array_type;
+	checked_array_type	temp;
+	ex->postorder_check_meta_exprs(temp, c);
+	// pass 'false' to indicate construction, not concatenation
+	const return_type
+		ret(expr_list::make_aggregate_value_reference(temp, false));
+	if (!ret) {
+		cerr << "Error constructing aggregate expression.  "
+			<< where(*ex) << endl;
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We may not allow aggregates in the non-meta language.  
+ */
 nonmeta_expr_return_type
 array_construction::check_nonmeta_expr(const context& c) const {
 	FINISH_ME(Fang);

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-13:
+	  Forgot to enable aggregate expressions in template arguments.  
+	  Trivial mods in grammar and AST/expr.cc.
+	  Added some related test cases to parser/template.
+
+
 2006-02-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-12-merged-aggregate-01-10:

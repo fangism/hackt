@@ -1,0 +1,4 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	bar	foo<3, {1,2,3}>
+2	(top)	-	2	baz	foo<3, {7,8,9}>

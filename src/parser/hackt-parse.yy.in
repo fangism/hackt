@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.10 2006/02/21 04:48:46 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.11 2006/02/21 18:13:35 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -2329,8 +2329,11 @@ shift_expr_optional_list
 	| optional_shift_expr { $$ = new expr_list($1); }
 	;
 
+/* now we allow aggregate expressions */
 optional_shift_expr
-	: shift_expr { $$ = $1; }
+/*	: shift_expr { $$ = $1; }	*/
+	: complex_expr_term { $$ = $1; }
+/* already covers shift_expr, defined below */
 	| { $$ = NULL; }
 	;
 

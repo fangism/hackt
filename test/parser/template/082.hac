@@ -1,0 +1,11 @@
+// "082.hac" should pass
+// copy-modified from "081.hac"
+// testing passing of aggregate values to template parameter
+// should fail with wrong size
+
+template <pint M; pint N[M]>
+defproc foo() { }
+
+foo<3, {1,2}> bar;	// expect 3 parameters
+
+
