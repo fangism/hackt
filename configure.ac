@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.42 2006/02/21 04:48:15 fang Exp $
+#	$Id: configure.ac,v 1.42.2.1 2006/02/22 08:09:38 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -138,41 +138,10 @@ AC_SUBST(LIBTOOL_DEPS)
 # appends --silent option to all libtool invocations
 LIBTOOL="$LIBTOOL --silent"
 
-dnl testing the AC_ARG_ENABLE autoconf feature
-AC_MSG_CHECKING([whether divine powers are bestowed upon thee])
-AC_ARG_ENABLE(god_mode,
-	dnl help text
-	AC_HELP_STRING([--enable-god-mode],
-		[Powers fit for only immortals [(default=disabled)]]),
-	dnl if given
-	[if test "$enable_god_mode" = "yes"
-	then	AC_MSG_RESULT([you wish])
-	else	AC_MSG_RESULT([no])
-	fi
-	],
-	dnl if not given
-	[AC_MSG_RESULT([no (default)])]
-)
-
-dnl enable or disable anal header tests in src/Make.hchk-tail.am
-AC_MSG_CHECKING([whether header validation is desired])
-AC_ARG_ENABLE(header_validation,
-	dnl help text
-	AC_HELP_STRING([--disable-header-validation],
-		[Perform source header validation before compiling.
-		Disable to speed-up release builds [(default=enabled)]]),
-	dnl if given
-	[AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, 
-		test "$enable_header_validation" = "yes")
-	if test "$enable_header_validation" = "yes"
-	then	AC_MSG_RESULT([yes])
-	else	AC_MSG_RESULT([no])
-	fi
-	],
-	dnl if not given
-	[AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, test "yes")
-	AC_MSG_RESULT([yes (default)])]
-)
+dnl defined in config.hackt.m4
+HACKT_ARG_ENABLE_GOD_MODE
+dnl defined in config/header_validation.m4
+AC_ARG_ENABLE_HEADER_VALIDATION
 
 dnl whether or not to build universal binary
 AC_MSG_CHECKING([whether universal binaries are requested])

@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-02-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-01:
+	  Organizing the clutter of autoconf macros into the config directory.
+	  This first revision is just a start for demonstration.  
+
+
 2006-02-20	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-12-merged-aggregate-01-10:

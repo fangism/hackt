@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.28 2006/02/22 07:45:13 fang Exp $
+#	$Id: Makefile.am,v 1.27.10.1 2006/02/22 08:09:38 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
