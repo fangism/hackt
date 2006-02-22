@@ -213,23 +213,20 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     e1of2 = process-definition (defined) e1of2(
-        bool<> d with indices: {
-        }
+        bool<> d
 
         bool<> e
       )
       In definition "e1of2", we have: {
       Instances:
-        d = bool<> d with indices: {
-        }
+        d = bool<> d
 
         e = bool<> e
       unroll sequence: 
         bool<> d[0..1]
         bool<> e
       footprint: {
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::e1of2::d[0] (1) 
             1 = ::e1of2::d[1] (2) 
@@ -276,8 +273,7 @@ In namespace "", we have: {
       Instances:
         L = e1of2<> L
         R = e1of2<> R
-        _r = bool<> _r with indices: {
-        }
+        _r = bool<> _r
 
         r0 = inv<> r0
         r1 = inv<> r1
@@ -302,8 +298,7 @@ In namespace "", we have: {
         ~L.d[1] & ~R.e -> _r[1]+
         _r[0] & _r[1] -> rv-
       footprint: {
-        bool^1 _r with indices: {
-        }
+        bool^1 _r
           unrolled indices: {
             0 = ::wchb_e1of2::r0.a (7) 
             1 = ::wchb_e1of2::r1.a (8) 
@@ -317,8 +312,7 @@ In namespace "", we have: {
           bool^0 b (instantiated) = ::wchb_e1of2::R.d[1] (5) 
         )
         process e1of2<>^0 L (instantiated) = ::wchb_e1of2::L (1) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::wchb_e1of2::L.d[0] (1) 
               1 = ::wchb_e1of2::L.d[1] (2) 
@@ -326,8 +320,7 @@ In namespace "", we have: {
           bool^0 e (instantiated) = ::wchb_e1of2::re.b (3) 
         )
         process e1of2<>^0 R (instantiated) = ::wchb_e1of2::R (2) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::wchb_e1of2::r0.b (4) 
               1 = ::wchb_e1of2::r1.b (5) 
@@ -367,8 +360,7 @@ In namespace "", we have: {
 
   Instances:
     L = process e1of2<>^0 L (instantiated) = ::b.L (2) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::L.d[0] (1) 
           1 = ::L.d[1] (2) 
@@ -376,8 +368,7 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::L.e (3) 
     )
     R = process e1of2<>^0 R (instantiated) = ::b.R (3) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::R.d[0] (4) 
           1 = ::R.d[1] (5) 
@@ -386,8 +377,7 @@ In namespace "", we have: {
     )
     b = process wchb_e1of2<>^0 b (instantiated) = ::b (1) (
       process e1of2<>^0 L (instantiated) = ::L (2) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::b.L.d[0] (1) 
             1 = ::b.L.d[1] (2) 
@@ -395,8 +385,7 @@ In namespace "", we have: {
         bool^0 e (instantiated) = ::b.L.e (3) 
       )
       process e1of2<>^0 R (instantiated) = ::R (3) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::b.R.d[0] (4) 
             1 = ::b.R.d[1] (5) 

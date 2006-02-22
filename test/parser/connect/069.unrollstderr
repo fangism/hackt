@@ -95,23 +95,19 @@ In namespace "", we have: {
   Definitions:
     portaproc = process-definition (defined) portaproc(
         bool<> b
-        bool<> c with indices: {
-        }
+        bool<> c
 
         int<32> i
-        int<32> j with indices: {
-        }
+        int<32> j
 
       )
       In definition "portaproc", we have: {
       Instances:
         b = bool<> b
-        c = bool<> c with indices: {
-        }
+        c = bool<> c
 
         i = int<32> i
-        j = int<32> j with indices: {
-        }
+        j = int<32> j
 
       unroll sequence: 
         bool<> b
@@ -120,8 +116,7 @@ In namespace "", we have: {
         int<32> j[0..1]
       footprint: {
         bool^0 b (instantiated) = ::portaproc::b 
-        bool^1 c with indices: {
-        }
+        bool^1 c
           unrolled indices: {
             0 = ::portaproc::c[0] 
             1 = ::portaproc::c[1] 
@@ -129,8 +124,7 @@ In namespace "", we have: {
             3 = ::portaproc::c[3] 
           }
         int<32>^0 i (instantiated) = ::portaproc::i 
-        int<32>^1 j with indices: {
-        }
+        int<32>^1 j
           unrolled indices: {
             0 = ::portaproc::j[0] 
             1 = ::portaproc::j[1] 
@@ -140,13 +134,11 @@ In namespace "", we have: {
 
   Instances:
     a = bool^0 a (instantiated) = ::p[0][1].b 
-    p = process portaproc<>^2 p with indices: {
-    }
+    p = process portaproc<>^2 p
       unrolled indices: {
         [0][0] = ::p[0][0] (
           bool^0 b (instantiated) = ::p[0][0].b 
-          bool^1 c with indices: {
-          }
+          bool^1 c
             unrolled indices: {
               0 = ::p[0][0].c[0] 
               1 = ::p[0][0].c[1] 
@@ -154,8 +146,7 @@ In namespace "", we have: {
               3 = ::p[0][0].c[3] 
             }
           int<32>^0 i (instantiated) = ::p[0][0].i 
-          int<32>^1 j with indices: {
-          }
+          int<32>^1 j
             unrolled indices: {
               0 = ::p[0][0].j[0] 
               1 = ::p[0][0].j[1] 
@@ -163,8 +154,7 @@ In namespace "", we have: {
         )
         [0][1] = ::p[0][1] (
           bool^0 b (instantiated) = ::a 
-          bool^1 c with indices: {
-          }
+          bool^1 c
             unrolled indices: {
               0 = ::x[0] 
               1 = ::x[1] 
@@ -172,8 +162,7 @@ In namespace "", we have: {
               3 = ::x[3] 
             }
           int<32>^0 i (instantiated) = ::q 
-          int<32>^1 j with indices: {
-          }
+          int<32>^1 j
             unrolled indices: {
               0 = ::r[0] 
               1 = ::r[1] 
@@ -181,8 +170,7 @@ In namespace "", we have: {
         )
         [0][2] = ::p[0][2] (
           bool^0 b (instantiated) = ::p[0][2].b 
-          bool^1 c with indices: {
-          }
+          bool^1 c
             unrolled indices: {
               0 = ::p[0][2].c[0] 
               1 = ::p[0][2].c[1] 
@@ -190,8 +178,7 @@ In namespace "", we have: {
               3 = ::p[0][2].c[3] 
             }
           int<32>^0 i (instantiated) = ::p[0][2].i 
-          int<32>^1 j with indices: {
-          }
+          int<32>^1 j
             unrolled indices: {
               0 = ::p[0][2].j[0] 
               1 = ::p[0][2].j[1] 
@@ -199,8 +186,7 @@ In namespace "", we have: {
         )
         [1][0] = ::p[1][0] (
           bool^0 b (instantiated) = ::p[1][0].b 
-          bool^1 c with indices: {
-          }
+          bool^1 c
             unrolled indices: {
               0 = ::p[1][0].c[0] 
               1 = ::p[1][0].c[1] 
@@ -208,8 +194,7 @@ In namespace "", we have: {
               3 = ::p[1][0].c[3] 
             }
           int<32>^0 i (instantiated) = ::p[1][0].i 
-          int<32>^1 j with indices: {
-          }
+          int<32>^1 j
             unrolled indices: {
               0 = ::p[1][0].j[0] 
               1 = ::p[1][0].j[1] 
@@ -217,8 +202,7 @@ In namespace "", we have: {
         )
         [1][1] = ::p[1][1] (
           bool^0 b (instantiated) = ::p[1][1].b 
-          bool^1 c with indices: {
-          }
+          bool^1 c
             unrolled indices: {
               0 = ::p[1][1].c[0] 
               1 = ::p[1][1].c[1] 
@@ -226,8 +210,7 @@ In namespace "", we have: {
               3 = ::p[1][1].c[3] 
             }
           int<32>^0 i (instantiated) = ::p[1][1].i 
-          int<32>^1 j with indices: {
-          }
+          int<32>^1 j
             unrolled indices: {
               0 = ::p[1][1].j[0] 
               1 = ::p[1][1].j[1] 
@@ -235,8 +218,7 @@ In namespace "", we have: {
         )
         [1][2] = ::p[1][2] (
           bool^0 b (instantiated) = ::p[1][2].b 
-          bool^1 c with indices: {
-          }
+          bool^1 c
             unrolled indices: {
               0 = ::p[1][2].c[0] 
               1 = ::p[1][2].c[1] 
@@ -244,8 +226,7 @@ In namespace "", we have: {
               3 = ::p[1][2].c[3] 
             }
           int<32>^0 i (instantiated) = ::p[1][2].i 
-          int<32>^1 j with indices: {
-          }
+          int<32>^1 j
             unrolled indices: {
               0 = ::p[1][2].j[0] 
               1 = ::p[1][2].j[1] 
@@ -253,14 +234,12 @@ In namespace "", we have: {
         )
       }
     q = int<32>^0 q (instantiated) = ::p[0][1].i 
-    r = int<32>^1 r with indices: {
-    }
+    r = int<32>^1 r
       unrolled indices: {
         0 = ::p[0][1].j[0] 
         1 = ::p[0][1].j[1] 
       }
-    x = bool^1 x with indices: {
-    }
+    x = bool^1 x
       unrolled indices: {
         0 = ::p[0][1].c[0] 
         1 = ::p[0][1].c[1] 

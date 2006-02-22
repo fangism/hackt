@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.12 2006/02/21 04:48:20 fang Exp $
+ 	$Id: namespace.cc,v 1.13 2006/02/22 04:45:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -24,7 +24,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <list>
 
 #include "util/ptrs_functional.h"
-// #include "util/ptrs_functional_proposed.h"	// experimental, now works
 #include "util/compose.h"
 #include "util/binders.h"
 #include "util/conditional.h"
@@ -78,7 +77,9 @@ using util::hash_map;
 using util::qmap;
 using parser::scope;
 using std::_Select2nd;
+using std::bind1st;
 using util::mem_fun;
+using std::not1;
 USING_UTIL_COMPOSE
 using util::indent;
 using util::auto_indent;

@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.11 2006/02/21 04:48:23 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.12 2006/02/22 04:45:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -39,7 +39,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/compose.h"
 #include "util/conditional.h"		// for compare_if
 #include "util/dereference.h"
-#include "util/ptrs_functional.h"
 
 //=============================================================================
 namespace util {

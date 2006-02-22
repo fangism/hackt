@@ -24,8 +24,7 @@ In namespace "", we have: {
     barbar = process-definition (declared) barbar<
       pint<> milk
       pint<> tea
-      pbool<> water with indices: {
-      }
+      pbool<> water
 
       >(
       )
@@ -33,8 +32,7 @@ In namespace "", we have: {
       Parameters:
         milk = pint<> milk
         tea = pint<> tea
-        water = pbool<> water with indices: {
-        }
+        water = pbool<> water
 
       }
 

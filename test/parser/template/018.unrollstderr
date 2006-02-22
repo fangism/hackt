@@ -40,15 +40,13 @@ In namespace "", we have: {
   Definitions:
     the_matrix = process-definition (defined) the_matrix<
       pint<> N
-      pint<> M with indices: {
-      }
+      pint<> M
 
       >(
       )
       In definition "the_matrix", we have: {
       Parameters:
-        M = pint<> M with indices: {
-        }
+        M = pint<> M
 
         N = pint<> N
       Instances:

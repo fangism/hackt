@@ -48,8 +48,7 @@ In namespace "", we have: {
         fee = bool<> fee
         fi = bool<> fi
         fo = bool<> fo
-        fum = bool<> fum with indices: {
-        }
+        fum = bool<> fum
 
         x = int<8> x
         y = bool<> y

@@ -40,30 +40,26 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    W = pint^1 W with indices: {
-    }
+    W = pint^1 W
       unrolled index-value pairs: {
         0 = 0
         1 = 1
       }
   Definitions:
     foo = process-definition (defined) foo<
-      pint<> N with indices: {
-      }
+      pint<> N
 
       >(
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> N with indices: {
-        }
+        N = pint<> N
 
       unroll sequence: 
         pint<> N[0..1]
       footprint collection: {
         <{0,1}> {
-          pint^1 N with indices: {
-          }
+          pint^1 N
             unrolled index-value pairs: {
               0 = ?
               1 = ?

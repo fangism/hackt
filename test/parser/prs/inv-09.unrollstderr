@@ -52,8 +52,7 @@ In namespace "", we have: {
       pint<> I
       pint<> J
       >(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "crazy_inv", we have: {
@@ -62,8 +61,7 @@ In namespace "", we have: {
         J = pint<> J
         N = pint<> N
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         pint<> N

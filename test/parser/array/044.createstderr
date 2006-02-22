@@ -33,8 +33,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    w = pbool^1 w with indices: {
-    }
+    w = pbool^1 w
       unrolled index-value pairs: {
         0 = 1
         1 = 0

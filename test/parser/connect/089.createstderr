@@ -59,15 +59,13 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<1>^1 bar with indices: {
-    }
+    bar = process foo<1>^1 bar
       unrolled indices: {
         0 = ::poo[1] (1) 
         1 = ::bar[1] (2) 
       }
     ick = process foo<1>^0 ick (instantiated) = ::bar[0] (1) 
-    poo = process foo<1>^1 poo with indices: {
-    }
+    poo = process foo<1>^1 poo
       unrolled indices: {
         0 = ::poo[0] (3) 
         1 = ::ick (1) 

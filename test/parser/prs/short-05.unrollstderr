@@ -206,8 +206,7 @@ In namespace "", we have: {
     celem = process-definition (defined) celem<
       pint<> N
       >(
-        bool<> in with indices: {
-        }
+        bool<> in
 
         bool<> out
       )
@@ -215,8 +214,7 @@ In namespace "", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        in = bool<> in with indices: {
-        }
+        in = bool<> in
 
         out = bool<> out
       unroll sequence: 
@@ -229,8 +227,7 @@ In namespace "", we have: {
       footprint collection: {
         <2> {
           bool^0 out (instantiated) = ::celem::out 
-          bool^1 in with indices: {
-          }
+          bool^1 in
             unrolled indices: {
               0 = ::celem::in[0] 
               1 = ::celem::in[1] 
@@ -259,8 +256,7 @@ In namespace "", we have: {
     nand = process-definition (defined) nand<
       pint<> N
       >(
-        bool<> in with indices: {
-        }
+        bool<> in
 
         bool<> out
       )
@@ -268,8 +264,7 @@ In namespace "", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        in = bool<> in with indices: {
-        }
+        in = bool<> in
 
         out = bool<> out
       unroll sequence: 
@@ -282,8 +277,7 @@ In namespace "", we have: {
       footprint collection: {
         <4> {
           bool^0 out (instantiated) = ::nand::out 
-          bool^1 in with indices: {
-          }
+          bool^1 in
             unrolled indices: {
               0 = ::nand::in[0] 
               1 = ::nand::in[1] 
@@ -298,8 +292,7 @@ In namespace "", we have: {
     nor = process-definition (defined) nor<
       pint<> N
       >(
-        bool<> in with indices: {
-        }
+        bool<> in
 
         bool<> out
       )
@@ -307,8 +300,7 @@ In namespace "", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        in = bool<> in with indices: {
-        }
+        in = bool<> in
 
         out = bool<> out
       unroll sequence: 
@@ -321,8 +313,7 @@ In namespace "", we have: {
       footprint collection: {
         <4> {
           bool^0 out (instantiated) = ::nor::out 
-          bool^1 in with indices: {
-          }
+          bool^1 in
             unrolled indices: {
               0 = ::nor::in[0] 
               1 = ::nor::in[1] 
@@ -336,8 +327,7 @@ In namespace "", we have: {
 
   Instances:
     _c = process celem<2>^0 _c (instantiated) = ::_c (
-      bool^1 in with indices: {
-      }
+      bool^1 in
         unrolled indices: {
           0 = ::_c.in[0] 
           1 = ::_c.in[1] 
@@ -345,8 +335,7 @@ In namespace "", we have: {
       bool^0 out (instantiated) = ::z 
     )
     _nand = process nand<4>^0 _nand (instantiated) = ::_nand (
-      bool^1 in with indices: {
-      }
+      bool^1 in
         unrolled indices: {
           0 = ::_nand.in[0] 
           1 = ::_nand.in[1] 
@@ -356,8 +345,7 @@ In namespace "", we have: {
       bool^0 out (instantiated) = ::_nor.out 
     )
     _nor = process nor<4>^0 _nor (instantiated) = ::_nor (
-      bool^1 in with indices: {
-      }
+      bool^1 in
         unrolled indices: {
           0 = ::_nor.in[0] 
           1 = ::_nor.in[1] 

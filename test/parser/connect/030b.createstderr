@@ -45,23 +45,20 @@ In namespace "", we have: {
   Definitions:
     bar = process-definition (defined) bar(
         bool<> a
-        bool<> b with indices: {
-        }
+        bool<> b
 
       )
       In definition "bar", we have: {
       Instances:
         a = bool<> a
-        b = bool<> b with indices: {
-        }
+        b = bool<> b
 
       unroll sequence: 
         bool<> a
         bool<> b[0..1]
       footprint: {
         bool^0 a (instantiated) = ::bar::a (1) 
-        bool^1 b with indices: {
-        }
+        bool^1 b
           unrolled indices: {
             0 = ::bar::b[0] (2) 
             1 = ::bar::b[1] (3) 
@@ -74,16 +71,14 @@ In namespace "", we have: {
       }
 
   Instances:
-    foo = bool^1 foo with indices: {
-    }
+    foo = bool^1 foo
       unrolled indices: {
         0 = ::none.b[0] (1) 
         1 = ::none.b[1] (2) 
       }
     none = process bar<>^0 none (instantiated) = ::none (1) (
       bool^0 a (instantiated) = ::foo[0] (1) 
-      bool^1 b with indices: {
-      }
+      bool^1 b
         unrolled indices: {
           0 = ::none.a (1) 
           1 = ::foo[1] (2) 

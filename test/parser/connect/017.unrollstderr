@@ -43,8 +43,7 @@ In namespace "", we have: {
 
   Instances:
     bag = process barf<>^0 bag (instantiated) = ::sack[4] 
-    sack = process barf<>^1 sack with indices: {
-    }
+    sack = process barf<>^1 sack
       unrolled indices: {
         0 = ::bag 
         1 = ::sack[1] 

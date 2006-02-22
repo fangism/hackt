@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.11 2006/02/21 04:48:32 fang Exp $
+ 	$Id: value_collection.tcc,v 1.12 2006/02/22 04:45:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -54,7 +54,6 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/compose.h"
 #include "util/binders.h"
-#include "util/ptrs_functional.h"
 #include "util/dereference.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"

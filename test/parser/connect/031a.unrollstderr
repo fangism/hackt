@@ -82,20 +82,17 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     basket = process-definition (defined) basket(
-        egg<> egg_array with indices: {
-        }
+        egg<> egg_array
 
       )
       In definition "basket", we have: {
       Instances:
-        egg_array = egg<> egg_array with indices: {
-        }
+        egg_array = egg<> egg_array
 
       unroll sequence: 
         egg<> egg_array[0..1]
       footprint: {
-        process egg<>^1 egg_array with indices: {
-        }
+        process egg<>^1 egg_array
           unrolled indices: {
             0 = ::basket::egg_array[0] (
               int<32>^0 yolk (instantiated) = ::basket::egg_array[0].yolk 
@@ -108,24 +105,20 @@ In namespace "", we have: {
       }
 
     bundle = process-definition (defined) bundle(
-        basket<> c with indices: {
-        }
+        basket<> c
 
       )
       In definition "bundle", we have: {
       Instances:
-        c = basket<> c with indices: {
-        }
+        c = basket<> c
 
       unroll sequence: 
         basket<> c[0..1]
       footprint: {
-        process basket<>^1 c with indices: {
-        }
+        process basket<>^1 c
           unrolled indices: {
             0 = ::bundle::c[0] (
-              process egg<>^1 egg_array with indices: {
-              }
+              process egg<>^1 egg_array
                 unrolled indices: {
                   0 = ::bundle::c[0].egg_array[0] (
                     int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[0].yolk 
@@ -136,8 +129,7 @@ In namespace "", we have: {
                 }
             )
             1 = ::bundle::c[1] (
-              process egg<>^1 egg_array with indices: {
-              }
+              process egg<>^1 egg_array
                 unrolled indices: {
                   0 = ::bundle::c[1].egg_array[0] (
                     int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[0].yolk 
@@ -170,12 +162,10 @@ In namespace "", we have: {
       int<32>^0 yolk (instantiated) = ::count 
     )
     load = process bundle<>^0 load (instantiated) = ::load (
-      process basket<>^1 c with indices: {
-      }
+      process basket<>^1 c
         unrolled indices: {
           0 = ::load.c[0] (
-            process egg<>^1 egg_array with indices: {
-            }
+            process egg<>^1 egg_array
               unrolled indices: {
                 0 = ::load.c[0].egg_array[0] (
                   int<32>^0 yolk (instantiated) = ::load.c[0].egg_array[0].yolk 
@@ -186,8 +176,7 @@ In namespace "", we have: {
               }
           )
           1 = ::load.c[1] (
-            process egg<>^1 egg_array with indices: {
-            }
+            process egg<>^1 egg_array
               unrolled indices: {
                 0 = ::load.c[1].egg_array[0] (
                   int<32>^0 yolk (instantiated) = ::load.c[1].egg_array[0].yolk 

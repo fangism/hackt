@@ -31,16 +31,14 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    a = bool^1 a with indices: {
-    }
+    a = bool^1 a
       unrolled indices: {
         0 = ::b[0] (1) 
         1 = ::a[1] (2) 
         2 = ::a[2] (3) 
         3 = ::a[3] (4) 
       }
-    b = bool^1 b with indices: {
-    }
+    b = bool^1 b
       unrolled indices: {
         0 = ::a[0] (1) 
         1 = ::b[1] (5) 

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.17 2006/02/21 21:33:01 fang Exp $
+	$Id: instance_alias.tcc,v 1.18 2006/02/22 04:45:23 fang Exp $
 	TODO: trim includes
  */
 
@@ -64,7 +64,6 @@
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/static_trace.h"
-#include "util/ptrs_functional.h"
 #include "util/compose.h"
 #include "util/binders.h"
 #include "util/dereference.h"
@@ -79,7 +78,6 @@ using std::_Select1st;
 using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
-using std::mem_fun_ref;
 using util::multikey;
 using util::value_writer;
 using util::value_reader;

@@ -33,8 +33,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    b = bool^1 b with indices: {
-    }
+    b = bool^1 b
       unrolled indices: {
         0 = ::q (1) 
       }

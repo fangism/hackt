@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.20 2006/02/21 21:33:01 fang Exp $
+	$Id: instance_collection.tcc,v 1.21 2006/02/22 04:45:23 fang Exp $
 	TODO: trim includes
  */
 
@@ -63,7 +63,6 @@
 #include "util/wtf.h"
 #include "util/stacktrace.h"
 #include "util/static_trace.h"
-#include "util/ptrs_functional.h"
 #include "util/compose.h"
 #include "util/binders.h"
 #include "util/dereference.h"
@@ -660,13 +659,13 @@ INSTANCE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 	transform(l.begin(), l.end(), back_inserter(lower_list),
 		unary_compose(
 			mem_fun_ref(&const_index::lower_bound),
-			dereference<count_ptr<const const_index> >()
+			dereference<const_index_list::value_type>()
 		)
 	);
 	transform(l.begin(), l.end(), back_inserter(upper_list),
 		unary_compose(
 			mem_fun_ref(&const_index::upper_bound),
-			dereference<count_ptr<const const_index> >()
+			dereference<const_index_list::value_type>()
 		)
 	);
 	return const_index_list(l,

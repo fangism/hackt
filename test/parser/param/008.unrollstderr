@@ -21,8 +21,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    bar = pint^1 bar with indices: {
-    }
+    bar = pint^1 bar
       unrolled index-value pairs: {
         0 = ?
         1 = ?

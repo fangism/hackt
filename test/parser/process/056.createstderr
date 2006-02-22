@@ -28,20 +28,17 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     bar = process-definition (defined) bar(
-        foo<> x with indices: {
-        }
+        foo<> x
 
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> x with indices: {
-        }
+        x = foo<> x
 
       unroll sequence: 
         foo<> x[0..1]
       footprint: {
-        process foo<>^1 x with indices: {
-        }
+        process foo<>^1 x
           unrolled indices: {
             0 = ::bar::x[0] (1) 
             1 = ::bar::x[1] (2) 
@@ -62,8 +59,7 @@ In namespace "", we have: {
 
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
-      process foo<>^1 x with indices: {
-      }
+      process foo<>^1 x
         unrolled indices: {
           0 = ::poo.x[0] (2) 
           1 = ::poo.x[1] (3) 

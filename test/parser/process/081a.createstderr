@@ -54,20 +54,17 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     foo = process-definition (defined) foo(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         bool<> a[0..2]
       footprint: {
-        bool^1 a with indices: {
-        }
+        bool^1 a
           unrolled indices: {
             0 = ::foo::a[0] (1) 
             1 = ::foo::a[1] (2) 
@@ -81,12 +78,10 @@ In namespace "", we have: {
       }
 
   Instances:
-    x = process foo<>^1 x with indices: {
-    }
+    x = process foo<>^1 x
       unrolled indices: {
         0 = ::x[0] (1) (
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::x[2].a[0] (1) 
               1 = ::x[0].a[1] (2) 
@@ -94,8 +89,7 @@ In namespace "", we have: {
             }
         )
         1 = ::x[1] (2) (
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::x[1].a[0] (3) 
               1 = ::x[1].a[1] (4) 
@@ -103,8 +97,7 @@ In namespace "", we have: {
             }
         )
         2 = ::x[2] (3) (
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::x[2].a[2] (1) 
               1 = ::x[2].a[1] (6) 

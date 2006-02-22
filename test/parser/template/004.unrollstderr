@@ -36,21 +36,17 @@ In namespace "", we have: {
   Definitions:
     array_me = process-definition (declared) array_me<
       pint<> N
-      pint<> A with indices: {
-      }
+      pint<> A
 
-      pint<> B with indices: {
-      }
+      pint<> B
 
       >(
       )
       In definition "array_me", we have: {
       Parameters:
-        A = pint<> A with indices: {
-        }
+        A = pint<> A
 
-        B = pint<> B with indices: {
-        }
+        B = pint<> B
 
         N = pint<> N
       }

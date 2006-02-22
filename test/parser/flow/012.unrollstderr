@@ -51,8 +51,7 @@ In namespace "", we have: {
   Parameters:
     N = pint^0 N (init = 5) value: 5
   Instances:
-    x = bool^3 x with indices: {
-    }
+    x = bool^3 x
       unrolled indices: {
         [2][1][0] = ::x[2][1][0] 
         [3][1][0] = ::x[3][1][0] 

@@ -125,8 +125,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    p = pint^2 p with indices: {
-    }
+    p = pint^2 p
       unrolled index-value pairs: {
         [0][0] = 1
         [0][1] = 0
@@ -141,8 +140,7 @@ In namespace "", we have: {
   Definitions:
     ass = process-definition (defined) ass<
       pint<> N
-      pint<> d with indices: {
-      }
+      pint<> d
 
       >(
         bool<> x
@@ -152,8 +150,7 @@ In namespace "", we have: {
       In definition "ass", we have: {
       Parameters:
         N = pint<> N
-        d = pint<> d with indices: {
-        }
+        d = pint<> d
 
       Instances:
         x = bool<> x
@@ -168,8 +165,7 @@ In namespace "", we have: {
       footprint collection: {
         <3, {{1,0,1},{0,1,0},{1,0,1}}> {
           pint^0 N value: ?
-          pint^2 d with indices: {
-          }
+          pint^2 d
             unrolled index-value pairs: {
               [0][0] = ?
               [0][1] = ?

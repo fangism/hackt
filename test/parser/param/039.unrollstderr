@@ -32,8 +32,7 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        bar = pint<> bar with indices: {
-        }
+        bar = pint<> bar
 
         foo = pint<> foo (init = 3)
       unroll sequence: 
@@ -42,8 +41,7 @@ In namespace "", we have: {
         pint<> bar[0..2]
       footprint: {
         pint^0 foo value: 3
-        pint^1 bar with indices: {
-        }
+        pint^1 bar
           unrolled index-value pairs: {
             0 = ?
             1 = ?

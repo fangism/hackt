@@ -338,8 +338,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     e1of2 = process-definition (defined) e1of2(
-        bool<> d with indices: {
-        }
+        bool<> d
 
         bool<> t
         bool<> f
@@ -347,8 +346,7 @@ In namespace "", we have: {
       )
       In definition "e1of2", we have: {
       Instances:
-        d = bool<> d with indices: {
-        }
+        d = bool<> d
 
         e = bool<> e
         f = bool<> f
@@ -361,8 +359,7 @@ In namespace "", we have: {
         d[0] = f;
         d[1] = t;
       footprint: {
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::e1of2::f (1) 
             1 = ::e1of2::t (2) 
@@ -410,8 +407,7 @@ In namespace "", we have: {
         e1of2<> x
       footprint: {
         process e1of2<>^0 a (instantiated) = ::merge::a (2) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::merge::a.f (1) 
               1 = ::merge::a.t (2) 
@@ -421,8 +417,7 @@ In namespace "", we have: {
           bool^0 e (instantiated) = ::merge::a.e (3) 
         )
         process e1of2<>^0 b (instantiated) = ::merge::b (3) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::merge::b.f (4) 
               1 = ::merge::b.t (5) 
@@ -432,8 +427,7 @@ In namespace "", we have: {
           bool^0 e (instantiated) = ::merge::b.e (6) 
         )
         process e1of2<>^0 c (instantiated) = ::merge::c (4) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::merge::c.f (7) 
               1 = ::merge::c.t (8) 
@@ -444,8 +438,7 @@ In namespace "", we have: {
         )
         process globals<>^0 g (instantiated) = ::merge::g (1) 
         process e1of2<>^0 x (instantiated) = ::merge::x (5) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::merge::x.f (10) 
               1 = ::merge::x.t (11) 
@@ -499,8 +492,7 @@ In namespace "", we have: {
       footprint: {
         process globals<>^0 g (instantiated) = ::source_e1of2_1::g (1) 
         process e1of2<>^0 r (instantiated) = ::source_e1of2_1::r (2) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::source_e1of2_1::r.f (1) 
               1 = ::source_e1of2_1::r.t (2) 
@@ -544,8 +536,7 @@ In namespace "", we have: {
         e1of2<> b
       footprint: {
         process e1of2<>^0 a (instantiated) = ::split4::a (4) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::split4::a.f (7) 
               1 = ::split4::a.t (8) 
@@ -555,8 +546,7 @@ In namespace "", we have: {
           bool^0 e (instantiated) = ::split4::a.e (9) 
         )
         process e1of2<>^0 b (instantiated) = ::split4::b (5) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::split4::b.f (10) 
               1 = ::split4::b.t (11) 
@@ -566,8 +556,7 @@ In namespace "", we have: {
           bool^0 e (instantiated) = ::split4::b.e (12) 
         )
         process e1of2<>^0 c (instantiated) = ::split4::c (3) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::split4::c.f (4) 
               1 = ::split4::c.t (5) 
@@ -578,8 +567,7 @@ In namespace "", we have: {
         )
         process globals<>^0 g (instantiated) = ::split4::g (1) 
         process e1of2<>^0 l (instantiated) = ::split4::l (2) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::split4::l.f (1) 
               1 = ::split4::l.t (2) 
@@ -633,8 +621,7 @@ In namespace "", we have: {
         l.d = r.d;
       footprint: {
         process e1of2<>^0 l (instantiated) = ::upcopy::l (1) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::upcopy::r.f (1) 
               1 = ::upcopy::r.t (2) 
@@ -644,8 +631,7 @@ In namespace "", we have: {
           bool^0 e (instantiated) = ::upcopy::l.e (3) 
         )
         process e1of2<>^0 r (instantiated) = ::upcopy::r (2) (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::upcopy::l.f (1) 
               1 = ::upcopy::l.t (2) 
@@ -671,8 +657,7 @@ In namespace "", we have: {
   Instances:
     cpywcon = process upcopy<>^0 cpywcon (instantiated) = ::cpywcon (14) (
       process e1of2<>^0 l (instantiated) = ::wcon (13) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::cpywcon.l.f (4) 
             1 = ::cpywcon.l.t (5) 
@@ -682,8 +667,7 @@ In namespace "", we have: {
         bool^0 e (instantiated) = ::cpywcon.l.e (25) 
       )
       process e1of2<>^0 r (instantiated) = ::splt.c (4) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::cpywcon.r.f (4) 
             1 = ::cpywcon.r.t (5) 
@@ -695,8 +679,7 @@ In namespace "", we have: {
     )
     g = process globals<>^0 g (instantiated) = ::srcwcon.g (2) 
     ja = process e1of2<>^0 ja (instantiated) = ::splt.a (5) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::ja.f (7) 
           1 = ::ja.t (8) 
@@ -706,8 +689,7 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::ja.e (9) 
     )
     jb = process e1of2<>^0 jb (instantiated) = ::splt.b (6) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::jb.f (10) 
           1 = ::jb.t (11) 
@@ -717,8 +699,7 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::jb.e (12) 
     )
     l = process e1of2<>^0 l (instantiated) = ::splt.l (3) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::l.f (1) 
           1 = ::l.t (2) 
@@ -730,8 +711,7 @@ In namespace "", we have: {
     mrg = process merge<>^0 mrg (instantiated) = ::mrg (7) (
       process globals<>^0 g (instantiated) = ::splt.g (2) 
       process e1of2<>^0 a (instantiated) = ::xa (8) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::mrg.a.f (13) 
             1 = ::mrg.a.t (14) 
@@ -741,8 +721,7 @@ In namespace "", we have: {
         bool^0 e (instantiated) = ::mrg.a.e (15) 
       )
       process e1of2<>^0 b (instantiated) = ::xb (9) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::mrg.b.f (16) 
             1 = ::mrg.b.t (17) 
@@ -752,8 +731,7 @@ In namespace "", we have: {
         bool^0 e (instantiated) = ::mrg.b.e (18) 
       )
       process e1of2<>^0 c (instantiated) = ::wconm (10) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::mrg.c.f (19) 
             1 = ::mrg.c.t (20) 
@@ -763,8 +741,7 @@ In namespace "", we have: {
         bool^0 e (instantiated) = ::mrg.c.e (21) 
       )
       process e1of2<>^0 x (instantiated) = ::xw (11) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::mrg.x.f (22) 
             1 = ::mrg.x.t (23) 
@@ -777,8 +754,7 @@ In namespace "", we have: {
     splt = process split4<>^0 splt (instantiated) = ::splt (1) (
       process globals<>^0 g (instantiated) = ::g (2) 
       process e1of2<>^0 l (instantiated) = ::l (3) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::splt.l.f (1) 
             1 = ::splt.l.t (2) 
@@ -788,8 +764,7 @@ In namespace "", we have: {
         bool^0 e (instantiated) = ::splt.l.e (3) 
       )
       process e1of2<>^0 c (instantiated) = ::wcons (4) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::splt.c.f (4) 
             1 = ::splt.c.t (5) 
@@ -799,8 +774,7 @@ In namespace "", we have: {
         bool^0 e (instantiated) = ::splt.c.e (6) 
       )
       process e1of2<>^0 a (instantiated) = ::ja (5) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::splt.a.f (7) 
             1 = ::splt.a.t (8) 
@@ -810,8 +784,7 @@ In namespace "", we have: {
         bool^0 e (instantiated) = ::splt.a.e (9) 
       )
       process e1of2<>^0 b (instantiated) = ::jb (6) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::splt.b.f (10) 
             1 = ::splt.b.t (11) 
@@ -824,8 +797,7 @@ In namespace "", we have: {
     srcwcon = process source_e1of2_1<>^0 srcwcon (instantiated) = ::srcwcon (12) (
       process globals<>^0 g (instantiated) = ::mrg.g (2) 
       process e1of2<>^0 r (instantiated) = ::cpywcon.l (13) (
-        bool^1 d with indices: {
-        }
+        bool^1 d
           unrolled indices: {
             0 = ::srcwcon.r.f (4) 
             1 = ::srcwcon.r.t (5) 
@@ -836,8 +808,7 @@ In namespace "", we have: {
       )
     )
     wcon = process e1of2<>^0 wcon (instantiated) = ::srcwcon.r (13) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::wcon.f (4) 
           1 = ::wcon.t (5) 
@@ -847,8 +818,7 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::wcon.e (25) 
     )
     wconm = process e1of2<>^0 wconm (instantiated) = ::mrg.c (10) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::wconm.f (19) 
           1 = ::wconm.t (20) 
@@ -858,8 +828,7 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::wconm.e (21) 
     )
     wcons = process e1of2<>^0 wcons (instantiated) = ::cpywcon.r (4) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::wcons.f (4) 
           1 = ::wcons.t (5) 
@@ -869,8 +838,7 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::wcons.e (6) 
     )
     xa = process e1of2<>^0 xa (instantiated) = ::mrg.a (8) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::xa.f (13) 
           1 = ::xa.t (14) 
@@ -880,8 +848,7 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::xa.e (15) 
     )
     xb = process e1of2<>^0 xb (instantiated) = ::mrg.b (9) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::xb.f (16) 
           1 = ::xb.t (17) 
@@ -891,8 +858,7 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::xb.e (18) 
     )
     xw = process e1of2<>^0 xw (instantiated) = ::mrg.x (11) (
-      bool^1 d with indices: {
-      }
+      bool^1 d
         unrolled indices: {
           0 = ::xw.f (22) 
           1 = ::xw.t (23) 

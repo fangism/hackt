@@ -73,17 +73,14 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     lut = process-definition (defined) lut(
-        pbitint<> pbint with indices: {
-        }
+        pbitint<> pbint
 
       )
       In definition "lut", we have: {
       Instances:
-        p = pbit<> p with indices: {
-        }
+        p = pbit<> p
 
-        pbint = pbitint<> pbint with indices: {
-        }
+        pbint = pbitint<> pbint
 
       unroll sequence: 
         pbitint<> pbint[0..1]
@@ -92,8 +89,7 @@ In namespace "", we have: {
           p[$i].t = pbint[$i].pb.t;
         )
       footprint: {
-        process pbitint<>^1 pbint with indices: {
-        }
+        process pbitint<>^1 pbint
           unrolled indices: {
             0 = ::lut::pbint[0] (1) (
               process pbit<>^0 pb (instantiated) = ::lut::pbint[0].pb (2) (
@@ -106,8 +102,7 @@ In namespace "", we have: {
               )
             )
           }
-        process pbit<>^1 p with indices: {
-        }
+        process pbit<>^1 p
           unrolled indices: {
             0 = ::lut::p[0] (5) (
               bool^0 t (instantiated) = ::lut::pbint[0].pb.t (1) 
@@ -165,8 +160,7 @@ In namespace "", we have: {
 
   Instances:
     l = process lut<>^0 l (instantiated) = ::l (1) (
-      process pbitint<>^1 pbint with indices: {
-      }
+      process pbitint<>^1 pbint
         unrolled indices: {
           0 = ::l.pbint[0] (2) (
             process pbit<>^0 pb (instantiated) = ::l.pbint[0].pb (3) (

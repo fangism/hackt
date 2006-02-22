@@ -27,8 +27,7 @@ In namespace "", we have: {
   0 typedefs
   Parameters:
     M = pint^0 M (init = 2) value: 2
-    foo = pint^1 foo with indices: {
-    }
+    foo = pint^1 foo
       unrolled index-value pairs: {
         0 = 2
         1 = ?

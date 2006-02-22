@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.11 2006/02/21 04:48:43 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.12 2006/02/22 04:45:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -20,7 +20,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <list>
 
-#include "util/ptrs_functional.h"
 #include "util/dereference.h"
 #include "util/compose.h"
 #include "util/binders.h"
@@ -34,7 +33,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 namespace HAC {
 namespace entity {
-using std::mem_fun_ref;
 using util::dereference;
 using util::auto_indent;
 using std::istream;

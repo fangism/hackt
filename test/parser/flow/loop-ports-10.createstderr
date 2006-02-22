@@ -44,20 +44,17 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     ass = process-definition (defined) ass(
-        bool<> q with indices: {
-        }
+        bool<> q
 
       )
       In definition "ass", we have: {
       Instances:
-        q = bool<> q with indices: {
-        }
+        q = bool<> q
 
       unroll sequence: 
         bool<> q[0..2][0..1]
       footprint: {
-        bool^2 q with indices: {
-        }
+        bool^2 q
           unrolled indices: {
             [0][0] = ::ass::q[0][0] (1) 
             [0][1] = ::ass::q[0][1] (2) 
@@ -77,12 +74,10 @@ In namespace "", we have: {
       }
 
   Instances:
-    myass = process ass<>^1 myass with indices: {
-    }
+    myass = process ass<>^1 myass
       unrolled indices: {
         0 = ::myass[0] (1) (
-          bool^2 q with indices: {
-          }
+          bool^2 q
             unrolled indices: {
               [0][0] = ::x[0][0][0] (1) 
               [0][1] = ::x[0][0][1] (2) 
@@ -93,8 +88,7 @@ In namespace "", we have: {
             }
         )
         1 = ::myass[1] (2) (
-          bool^2 q with indices: {
-          }
+          bool^2 q
             unrolled indices: {
               [0][0] = ::x[1][0][0] (7) 
               [0][1] = ::x[1][0][1] (8) 
@@ -105,8 +99,7 @@ In namespace "", we have: {
             }
         )
         2 = ::myass[2] (3) (
-          bool^2 q with indices: {
-          }
+          bool^2 q
             unrolled indices: {
               [0][0] = ::x[2][0][0] (13) 
               [0][1] = ::x[2][0][1] (14) 
@@ -117,8 +110,7 @@ In namespace "", we have: {
             }
         )
         3 = ::myass[3] (4) (
-          bool^2 q with indices: {
-          }
+          bool^2 q
             unrolled indices: {
               [0][0] = ::x[3][0][0] (19) 
               [0][1] = ::x[3][0][1] (20) 
@@ -129,8 +121,7 @@ In namespace "", we have: {
             }
         )
       }
-    x = bool^3 x with indices: {
-    }
+    x = bool^3 x
       unrolled indices: {
         [0][0][0] = ::myass[0].q[0][0] (1) 
         [0][0][1] = ::myass[0].q[0][1] (2) 

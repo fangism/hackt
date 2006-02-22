@@ -87,8 +87,7 @@ In namespace "", we have: {
   2 definitions
   0 typedefs
   Parameters:
-    Q = pint^1 Q with indices: {
-    }
+    Q = pint^1 Q
       unrolled index-value pairs: {
         0 = 1
         1 = 2

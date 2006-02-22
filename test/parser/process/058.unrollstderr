@@ -42,24 +42,20 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     bar = process-definition (defined) bar(
-        foo<> x with indices: {
-        }
+        foo<> x
 
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> x with indices: {
-        }
+        x = foo<> x
 
       unroll sequence: 
         foo<> x[0..1][0..1]
       footprint: {
-        process foo<>^2 x with indices: {
-        }
+        process foo<>^2 x
           unrolled indices: {
             [0][0] = ::bar::x[0][0] (
-              bool^2 a with indices: {
-              }
+              bool^2 a
                 unrolled indices: {
                   [0][0] = ::bar::x[0][0].a[0][0] 
                   [0][1] = ::bar::x[0][0].a[0][1] 
@@ -68,8 +64,7 @@ In namespace "", we have: {
                 }
             )
             [0][1] = ::bar::x[0][1] (
-              bool^2 a with indices: {
-              }
+              bool^2 a
                 unrolled indices: {
                   [0][0] = ::bar::x[0][1].a[0][0] 
                   [0][1] = ::bar::x[0][1].a[0][1] 
@@ -78,8 +73,7 @@ In namespace "", we have: {
                 }
             )
             [1][0] = ::bar::x[1][0] (
-              bool^2 a with indices: {
-              }
+              bool^2 a
                 unrolled indices: {
                   [0][0] = ::bar::x[1][0].a[0][0] 
                   [0][1] = ::bar::x[1][0].a[0][1] 
@@ -88,8 +82,7 @@ In namespace "", we have: {
                 }
             )
             [1][1] = ::bar::x[1][1] (
-              bool^2 a with indices: {
-              }
+              bool^2 a
                 unrolled indices: {
                   [0][0] = ::bar::x[1][1].a[0][0] 
                   [0][1] = ::bar::x[1][1].a[0][1] 
@@ -102,20 +95,17 @@ In namespace "", we have: {
       }
 
     foo = process-definition (defined) foo(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         bool<> a[0..1][0..1]
       footprint: {
-        bool^2 a with indices: {
-        }
+        bool^2 a
           unrolled indices: {
             [0][0] = ::foo::a[0][0] 
             [0][1] = ::foo::a[0][1] 
@@ -127,12 +117,10 @@ In namespace "", we have: {
 
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (
-      process foo<>^2 x with indices: {
-      }
+      process foo<>^2 x
         unrolled indices: {
           [0][0] = ::poo.x[0][0] (
-            bool^2 a with indices: {
-            }
+            bool^2 a
               unrolled indices: {
                 [0][0] = ::poo.x[0][0].a[0][0] 
                 [0][1] = ::poo.x[0][0].a[0][1] 
@@ -141,8 +129,7 @@ In namespace "", we have: {
               }
           )
           [0][1] = ::poo.x[0][1] (
-            bool^2 a with indices: {
-            }
+            bool^2 a
               unrolled indices: {
                 [0][0] = ::poo.x[0][1].a[0][0] 
                 [0][1] = ::poo.x[0][1].a[0][1] 
@@ -151,8 +138,7 @@ In namespace "", we have: {
               }
           )
           [1][0] = ::poo.x[1][0] (
-            bool^2 a with indices: {
-            }
+            bool^2 a
               unrolled indices: {
                 [0][0] = ::poo.x[1][0].a[0][0] 
                 [0][1] = ::poo.x[1][0].a[0][1] 
@@ -161,8 +147,7 @@ In namespace "", we have: {
               }
           )
           [1][1] = ::poo.x[1][1] (
-            bool^2 a with indices: {
-            }
+            bool^2 a
               unrolled indices: {
                 [0][0] = ::poo.x[1][1].a[0][0] 
                 [0][1] = ::poo.x[1][1].a[0][1] 

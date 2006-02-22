@@ -24,8 +24,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    x = bool^1 x with indices: {
-    }
+    x = bool^1 x
       unrolled indices: {
         0 = ::x[0] 
         1 = ::x[1] 

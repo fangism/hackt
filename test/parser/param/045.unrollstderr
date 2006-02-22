@@ -52,8 +52,7 @@ In namespace "", we have: {
       In definition "bogus", we have: {
       Parameters:
         E = pint<> E
-        M = pint<> M with indices: {
-        }
+        M = pint<> M
 
       unroll sequence: 
         pint<> E
@@ -63,8 +62,7 @@ In namespace "", we have: {
       footprint collection: {
         <2> {
           pint^0 E value: ?
-          pint^1 M with indices: {
-          }
+          pint^1 M
             unrolled index-value pairs: {
               0 = 3
               1 = 5

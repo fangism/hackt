@@ -49,8 +49,7 @@ In namespace "", we have: {
       pint<> N
       pint<> K
       >(
-        int<::fangism::K> ick with indices: {
-        }
+        int<::fangism::K> ick
 
       )
       In definition "fangism", we have: {
@@ -58,8 +57,7 @@ In namespace "", we have: {
         K = pint<> K
         N = pint<> N
       Instances:
-        ick = int<::fangism::K> ick with indices: {
-        }
+        ick = int<::fangism::K> ick
 
       }
 

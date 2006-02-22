@@ -58,16 +58,14 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     matrix_array = process-definition (defined) matrix_array(
-        bool<> in with indices: {
-        }
+        bool<> in
 
         bool<> _o
       )
       In definition "matrix_array", we have: {
       Instances:
         _o = bool<> _o
-        in = bool<> in with indices: {
-        }
+        in = bool<> in
 
       unroll sequence: 
         bool<> in[0..3][0..3]
@@ -77,8 +75,7 @@ In namespace "", we have: {
         (&:i:[0..3]: (|:j:[0..3]: ~in[0][$j])) -> _o+
       footprint: {
         bool^0 _o (instantiated) = ::matrix_array::_o (17) 
-        bool^2 in with indices: {
-        }
+        bool^2 in
           unrolled indices: {
             [0][0] = ::matrix_array::in[0][0] (1) 
             [0][1] = ::matrix_array::in[0][1] (2) 
@@ -123,8 +120,7 @@ In namespace "", we have: {
 
   Instances:
     foo = process matrix_array<>^0 foo (instantiated) = ::foo (1) (
-      bool^2 in with indices: {
-      }
+      bool^2 in
         unrolled indices: {
           [0][0] = ::foo.in[0][0] (1) 
           [0][1] = ::foo.in[0][1] (2) 

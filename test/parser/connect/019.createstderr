@@ -49,8 +49,7 @@ In namespace "", we have: {
       }
 
   Instances:
-    that = process fang<>^2 that with indices: {
-    }
+    that = process fang<>^2 that
       unrolled indices: {
         [0][0] = ::this[0][0] (1) 
         [0][1] = ::this[0][1] (2) 
@@ -59,8 +58,7 @@ In namespace "", we have: {
         [1][1] = ::this[1][1] (5) 
         [1][2] = ::this[1][2] (6) 
       }
-    this = process fang<>^2 this with indices: {
-    }
+    this = process fang<>^2 this
       unrolled indices: {
         [0][0] = ::that[0][0] (1) 
         [0][1] = ::that[0][1] (2) 

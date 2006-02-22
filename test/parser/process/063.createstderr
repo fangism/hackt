@@ -58,16 +58,14 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       >(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "foo", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         pint<> N
@@ -75,8 +73,7 @@ In namespace "", we have: {
       footprint collection: {
         <4> {
           pint^0 N value: ?
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::foo::a[0] (1) 
               1 = ::foo::a[1] (2) 
@@ -99,8 +96,7 @@ In namespace "", we have: {
       = foo<::bar::X+1>
   Instances:
     goo = process foo<4>^0 goo (instantiated) = ::poo (1) (
-      bool^1 a with indices: {
-      }
+      bool^1 a
         unrolled indices: {
           0 = ::goo.a[0] (1) 
           1 = ::goo.a[1] (2) 
@@ -109,8 +105,7 @@ In namespace "", we have: {
         }
     )
     poo = process foo<4>^0 poo (instantiated) = ::goo (1) (
-      bool^1 a with indices: {
-      }
+      bool^1 a
         unrolled indices: {
           0 = ::poo.a[0] (1) 
           1 = ::poo.a[1] (2) 

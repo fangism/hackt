@@ -48,8 +48,7 @@ In namespace "", we have: {
   Parameters:
     N = pint^0 N (init = 6) value: 6
   Instances:
-    m = bool^2 m with indices: {
-    }
+    m = bool^2 m
       unrolled indices: {
         [0][0] = ::m[1][1] (1) 
         [0][1] = ::m[1][2] (2) 

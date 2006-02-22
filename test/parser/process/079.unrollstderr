@@ -102,8 +102,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        foo<::bar::M> x with indices: {
-        }
+        foo<::bar::M> x
 
       )
       In definition "bar", we have: {
@@ -111,8 +110,7 @@ In namespace "", we have: {
         M = pint<> M
         N = pint<> N
       Instances:
-        x = foo<::bar::M> x with indices: {
-        }
+        x = foo<::bar::M> x
 
       unroll sequence: 
         pint<> M
@@ -123,12 +121,10 @@ In namespace "", we have: {
         <3, 2> {
           pint^0 M value: ?
           pint^0 N value: ?
-          process foo<3>^1 x with indices: {
-          }
+          process foo<3>^1 x
             unrolled indices: {
               0 = ::bar::x[0] (
-                bool^1 a with indices: {
-                }
+                bool^1 a
                   unrolled indices: {
                     0 = ::bar::x[0].a[2] 
                     1 = ::bar::x[0].a[1] 
@@ -136,8 +132,7 @@ In namespace "", we have: {
                   }
               )
               1 = ::bar::x[1] (
-                bool^1 a with indices: {
-                }
+                bool^1 a
                   unrolled indices: {
                     0 = ::bar::x[0].a[0] 
                     1 = ::bar::x[1].a[1] 
@@ -152,16 +147,14 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> D
       >(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "foo", we have: {
       Parameters:
         D = pint<> D
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         pint<> D
@@ -169,8 +162,7 @@ In namespace "", we have: {
       footprint collection: {
         <3> {
           pint^0 D value: ?
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::foo::a[0] 
               1 = ::foo::a[1] 
@@ -182,12 +174,10 @@ In namespace "", we have: {
 
   Instances:
     poo = process bar<3, 2>^0 poo (instantiated) = ::poo (
-      process foo<3>^1 x with indices: {
-      }
+      process foo<3>^1 x
         unrolled indices: {
           0 = ::poo.x[0] (
-            bool^1 a with indices: {
-            }
+            bool^1 a
               unrolled indices: {
                 0 = ::poo.x[0].a[0] 
                 1 = ::poo.x[0].a[1] 
@@ -195,8 +185,7 @@ In namespace "", we have: {
               }
           )
           1 = ::poo.x[1] (
-            bool^1 a with indices: {
-            }
+            bool^1 a
               unrolled indices: {
                 0 = ::poo.x[1].a[0] 
                 1 = ::poo.x[1].a[1] 

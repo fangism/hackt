@@ -48,8 +48,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    foo = int<32>^1 foo with indices: {
-    }
+    foo = int<32>^1 foo
       unrolled indices: {
         0 = ::foo[0] 
         1 = ::foo[1] 

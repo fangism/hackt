@@ -65,8 +65,7 @@ In namespace "", we have: {
         N = pint<> N
       Instances:
         a = int<::foo::N> a
-        blah = int<::foo::N> blah with indices: {
-        }
+        blah = int<::foo::N> blah
 
       unroll sequence: 
         pint<> N
@@ -77,8 +76,7 @@ In namespace "", we have: {
         <8> {
           pint^0 N value: ?
           int<8>^0 a (instantiated) = ::foo::blah[1] (1) 
-          int<8>^1 blah with indices: {
-          }
+          int<8>^1 blah
             unrolled indices: {
               0 = ::foo::blah[0] (2) 
               1 = ::foo::a (1) 
@@ -92,8 +90,7 @@ In namespace "", we have: {
         <11> {
           pint^0 N value: ?
           int<11>^0 a (instantiated) = ::foo::blah[1] (1) 
-          int<11>^1 blah with indices: {
-          }
+          int<11>^1 blah
             unrolled indices: {
               0 = ::foo::blah[0] (2) 
               1 = ::foo::a (1) 

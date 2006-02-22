@@ -40,8 +40,7 @@ In namespace "", we have: {
       Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
-        b = bool<> b with indices: {
-        }
+        b = bool<> b
 
       unroll sequence: 
         chan?(bool<>) L

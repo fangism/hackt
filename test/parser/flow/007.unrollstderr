@@ -44,15 +44,13 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    j = pint^1 j with indices: {
-    }
+    j = pint^1 j
       unrolled index-value pairs: {
         0 = 1
         1 = 2
       }
   Instances:
-    x = bool^1 x with indices: {
-    }
+    x = bool^1 x
       unrolled indices: {
         0 = ::x[0] 
         1 = ::x[1] 

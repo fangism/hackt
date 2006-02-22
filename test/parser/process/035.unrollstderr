@@ -18,15 +18,13 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     foo = process-definition (declared) foo<
-      pint<> bar with indices: {
-      }
+      pint<> bar
 
       >(
       )
       In definition "foo", we have: {
       Parameters:
-        bar = pint<> bar with indices: {
-        }
+        bar = pint<> bar
 
       }
 

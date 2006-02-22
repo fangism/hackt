@@ -53,8 +53,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    X = pint^1 X with indices: {
-    }
+    X = pint^1 X
       unrolled index-value pairs: {
         0 = 4
         1 = 3
@@ -82,8 +81,7 @@ In namespace "", we have: {
       }
 
   Instances:
-    car = process foo<5><4>^1 car with indices: {
-    }
+    car = process foo<5><4>^1 car
       unrolled indices: {
         0 = ::car[0] (1) 
         1 = ::car[1] (2) 

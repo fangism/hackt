@@ -60,8 +60,7 @@ In namespace "", we have: {
       }
 
   Instances:
-    car = process foo<5><4>^1 car with indices: {
-    }
+    car = process foo<5><4>^1 car
       unrolled indices: {
         0 = ::car[0] 
         1 = ::car[1] 

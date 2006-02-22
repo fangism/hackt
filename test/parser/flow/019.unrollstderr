@@ -133,8 +133,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        bool<> m with indices: {
-        }
+        bool<> m
 
       )
       In definition "checkers", we have: {
@@ -142,8 +141,7 @@ In namespace "", we have: {
         M = pint<> M
         N = pint<> N
       Instances:
-        m = bool<> m with indices: {
-        }
+        m = bool<> m
 
       unroll sequence: 
         pint<> M
@@ -159,8 +157,7 @@ In namespace "", we have: {
         <3, 3> {
           pint^0 M value: ?
           pint^0 N value: ?
-          bool^2 m with indices: {
-          }
+          bool^2 m
             unrolled indices: {
               [0][0] = ::checkers::m[0][2] 
               [0][1] = ::checkers::m[1][2] 
@@ -176,8 +173,7 @@ In namespace "", we have: {
         <3, 4> {
           pint^0 M value: ?
           pint^0 N value: ?
-          bool^2 m with indices: {
-          }
+          bool^2 m
             unrolled indices: {
               [0][0] = ::checkers::m[0][2] 
               [0][1] = ::checkers::m[0][3] 
@@ -196,8 +192,7 @@ In namespace "", we have: {
         <4, 3> {
           pint^0 M value: ?
           pint^0 N value: ?
-          bool^2 m with indices: {
-          }
+          bool^2 m
             unrolled indices: {
               [0][0] = ::checkers::m[0][2] 
               [0][1] = ::checkers::m[3][0] 
@@ -216,8 +211,7 @@ In namespace "", we have: {
         <4, 4> {
           pint^0 M value: ?
           pint^0 N value: ?
-          bool^2 m with indices: {
-          }
+          bool^2 m
             unrolled indices: {
               [0][0] = ::checkers::m[0][2] 
               [0][1] = ::checkers::m[3][0] 
@@ -242,8 +236,7 @@ In namespace "", we have: {
 
   Instances:
     a = process checkers<3, 3>^0 a (instantiated) = ::a (
-      bool^2 m with indices: {
-      }
+      bool^2 m
         unrolled indices: {
           [0][0] = ::a.m[0][0] 
           [0][1] = ::a.m[0][1] 
@@ -257,8 +250,7 @@ In namespace "", we have: {
         }
     )
     b = process checkers<3, 4>^0 b (instantiated) = ::b (
-      bool^2 m with indices: {
-      }
+      bool^2 m
         unrolled indices: {
           [0][0] = ::b.m[0][0] 
           [0][1] = ::b.m[0][1] 
@@ -275,8 +267,7 @@ In namespace "", we have: {
         }
     )
     c = process checkers<4, 3>^0 c (instantiated) = ::c (
-      bool^2 m with indices: {
-      }
+      bool^2 m
         unrolled indices: {
           [0][0] = ::c.m[0][0] 
           [0][1] = ::c.m[0][1] 
@@ -293,8 +284,7 @@ In namespace "", we have: {
         }
     )
     d = process checkers<4, 4>^0 d (instantiated) = ::d (
-      bool^2 m with indices: {
-      }
+      bool^2 m
         unrolled indices: {
           [0][0] = ::d.m[0][0] 
           [0][1] = ::d.m[0][1] 

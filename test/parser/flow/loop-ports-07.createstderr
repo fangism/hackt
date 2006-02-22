@@ -44,20 +44,17 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     ass = process-definition (defined) ass(
-        bool<> q with indices: {
-        }
+        bool<> q
 
       )
       In definition "ass", we have: {
       Instances:
-        q = bool<> q with indices: {
-        }
+        q = bool<> q
 
       unroll sequence: 
         bool<> q[0..1]
       footprint: {
-        bool^1 q with indices: {
-        }
+        bool^1 q
           unrolled indices: {
             0 = ::ass::q[0] (1) 
             1 = ::ass::q[1] (2) 
@@ -69,44 +66,38 @@ In namespace "", we have: {
       }
 
   Instances:
-    myass = process ass<>^1 myass with indices: {
-    }
+    myass = process ass<>^1 myass
       unrolled indices: {
         0 = ::myass[0] (1) (
-          bool^1 q with indices: {
-          }
+          bool^1 q
             unrolled indices: {
               0 = ::x[0][0] (1) 
               1 = ::x[0][1] (2) 
             }
         )
         1 = ::myass[1] (2) (
-          bool^1 q with indices: {
-          }
+          bool^1 q
             unrolled indices: {
               0 = ::x[1][0] (3) 
               1 = ::x[1][1] (4) 
             }
         )
         2 = ::myass[2] (3) (
-          bool^1 q with indices: {
-          }
+          bool^1 q
             unrolled indices: {
               0 = ::x[2][0] (5) 
               1 = ::x[2][1] (6) 
             }
         )
         3 = ::myass[3] (4) (
-          bool^1 q with indices: {
-          }
+          bool^1 q
             unrolled indices: {
               0 = ::x[3][0] (7) 
               1 = ::x[3][1] (8) 
             }
         )
       }
-    x = bool^2 x with indices: {
-    }
+    x = bool^2 x
       unrolled indices: {
         [0][0] = ::myass[0].q[0] (1) 
         [0][1] = ::myass[0].q[1] (2) 

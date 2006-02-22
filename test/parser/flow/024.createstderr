@@ -22,8 +22,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    b = pbool<> b with indices: {
-    }
+    b = pbool<> b
 
 }
 

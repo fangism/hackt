@@ -41,14 +41,12 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     inv = process-definition (defined) inv(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "inv", we have: {
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         bool<> a[0..0][0..1]

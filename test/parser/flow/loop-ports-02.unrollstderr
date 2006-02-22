@@ -82,8 +82,7 @@ In namespace "", we have: {
       In definition "lut", we have: {
       Instances:
         ad = ch1of1<> ad
-        ce = dcelm<> ce with indices: {
-        }
+        ce = dcelm<> ce
 
       unroll sequence: 
         ch1of1<> ad
@@ -95,8 +94,7 @@ In namespace "", we have: {
         process ch1of1<>^0 ad (instantiated) = ::lut::ad (
           bool^0 d (instantiated) = ::lut::ce[0].a 
         )
-        process dcelm<>^1 ce with indices: {
-        }
+        process dcelm<>^1 ce
           unrolled indices: {
             0 = ::lut::ce[0] (
               bool^0 a (instantiated) = ::lut::ad.d 

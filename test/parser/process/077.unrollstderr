@@ -67,36 +67,29 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    Q = pint^1 Q with indices: {
-    }
+    Q = pint^1 Q
       unrolled index-value pairs: {
         0 = 2
         1 = 2
       }
   Definitions:
     foo = process-definition (defined) foo<
-      pint<> N with indices: {
-      }
+      pint<> N
 
       >(
-        bool<> a with indices: {
-        }
+        bool<> a
 
-        bool<> b with indices: {
-        }
+        bool<> b
 
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> N with indices: {
-        }
+        N = pint<> N
 
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
-        b = bool<> b with indices: {
-        }
+        b = bool<> b
 
       unroll sequence: 
         pint<> N[0..1]
@@ -105,20 +98,17 @@ In namespace "", we have: {
         a = b;
       footprint collection: {
         <{2,2}> {
-          pint^1 N with indices: {
-          }
+          pint^1 N
             unrolled index-value pairs: {
               0 = ?
               1 = ?
             }
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::foo::b[0] 
               1 = ::foo::b[1] 
             }
-          bool^1 b with indices: {
-          }
+          bool^1 b
             unrolled indices: {
               0 = ::foo::a[0] 
               1 = ::foo::a[1] 
@@ -129,14 +119,12 @@ In namespace "", we have: {
 
   Instances:
     poo = process foo<{2,2}>^0 poo (instantiated) = ::poo (
-      bool^1 a with indices: {
-      }
+      bool^1 a
         unrolled indices: {
           0 = ::poo.a[0] 
           1 = ::poo.a[1] 
         }
-      bool^1 b with indices: {
-      }
+      bool^1 b
         unrolled indices: {
           0 = ::poo.b[0] 
           1 = ::poo.b[1] 

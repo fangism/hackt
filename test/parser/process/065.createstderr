@@ -77,8 +77,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        foo<::bar::M, ::foo::D+1> x with indices: {
-        }
+        foo<::bar::M, ::foo::D+1> x
 
       )
       In definition "bar", we have: {
@@ -86,8 +85,7 @@ In namespace "", we have: {
         M = pint<> M
         N = pint<> N
       Instances:
-        x = foo<::bar::M, ::foo::D+1> x with indices: {
-        }
+        x = foo<::bar::M, ::foo::D+1> x
 
       unroll sequence: 
         pint<> M
@@ -97,12 +95,10 @@ In namespace "", we have: {
         <3, 2> {
           pint^0 M value: ?
           pint^0 N value: ?
-          process foo<3, 4>^1 x with indices: {
-          }
+          process foo<3, 4>^1 x
             unrolled indices: {
               0 = ::bar::x[0] (1) (
-                bool^1 a with indices: {
-                }
+                bool^1 a
                   unrolled indices: {
                     0 = ::bar::x[0].a[0] (1) 
                     1 = ::bar::x[0].a[1] (2) 
@@ -110,8 +106,7 @@ In namespace "", we have: {
                   }
               )
               1 = ::bar::x[1] (2) (
-                bool^1 a with indices: {
-                }
+                bool^1 a
                   unrolled indices: {
                     0 = ::bar::x[1].a[0] (4) 
                     1 = ::bar::x[1].a[1] (5) 
@@ -137,8 +132,7 @@ In namespace "", we have: {
       pint<> D
       pint<> E (default = D+1)
       >(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "foo", we have: {
@@ -146,8 +140,7 @@ In namespace "", we have: {
         D = pint<> D
         E = pint<> E (default = D+1)
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         pint<> D
@@ -157,8 +150,7 @@ In namespace "", we have: {
         <3, 4> {
           pint^0 D value: ?
           pint^0 E value: ?
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::foo::a[0] (1) 
               1 = ::foo::a[1] (2) 
@@ -174,12 +166,10 @@ In namespace "", we have: {
 
   Instances:
     poo = process bar<3, 2>^0 poo (instantiated) = ::poo (1) (
-      process foo<3, 4>^1 x with indices: {
-      }
+      process foo<3, 4>^1 x
         unrolled indices: {
           0 = ::poo.x[0] (2) (
-            bool^1 a with indices: {
-            }
+            bool^1 a
               unrolled indices: {
                 0 = ::poo.x[0].a[0] (1) 
                 1 = ::poo.x[0].a[1] (2) 
@@ -187,8 +177,7 @@ In namespace "", we have: {
               }
           )
           1 = ::poo.x[1] (3) (
-            bool^1 a with indices: {
-            }
+            bool^1 a
               unrolled indices: {
                 0 = ::poo.x[1].a[0] (4) 
                 1 = ::poo.x[1].a[1] (5) 

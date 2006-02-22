@@ -30,8 +30,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    w = bool^1 w with indices: {
-    }
+    w = bool^1 w
       unrolled indices: {
         0 = ::x 
         1 = ::y 

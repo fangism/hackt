@@ -126,8 +126,7 @@ In namespace "", we have: {
   2 definitions
   0 typedefs
   Parameters:
-    p = pint^1 p with indices: {
-    }
+    p = pint^1 p
       unrolled index-value pairs: {
         0 = 1
         1 = 0
@@ -136,8 +135,7 @@ In namespace "", we have: {
   Definitions:
     ass = process-definition (defined) ass<
       pint<> N
-      pint<> d with indices: {
-      }
+      pint<> d
 
       >(
         bool<> x
@@ -147,8 +145,7 @@ In namespace "", we have: {
       In definition "ass", we have: {
       Parameters:
         N = pint<> N
-        d = pint<> d with indices: {
-        }
+        d = pint<> d
 
       Instances:
         myfoo = foo<::ass::N, 3, ::ass::d[0..::ass::N-1]> myfoo
@@ -170,8 +167,7 @@ In namespace "", we have: {
             bool^0 s (instantiated) = ::ass::y (2) 
           )
           pint^0 N value: ?
-          pint^1 d with indices: {
-          }
+          pint^1 d
             unrolled index-value pairs: {
               0 = ?
               1 = ?
@@ -193,8 +189,7 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       pint<> M
-      pint<> d with indices: {
-      }
+      pint<> d
 
       >(
         bool<> r
@@ -204,8 +199,7 @@ In namespace "", we have: {
       Parameters:
         M = pint<> M
         N = pint<> N
-        d = pint<> d with indices: {
-        }
+        d = pint<> d
 
       Instances:
         r = bool<> r
@@ -220,8 +214,7 @@ In namespace "", we have: {
         <3, 3, {1,0,1}> {
           pint^0 M value: ?
           pint^0 N value: ?
-          pint^1 d with indices: {
-          }
+          pint^1 d
             unrolled index-value pairs: {
               0 = ?
               1 = ?

@@ -48,8 +48,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    bar = int<32>^3 bar with indices: {
-    }
+    bar = int<32>^3 bar
       unrolled indices: {
         [0][0][0] = ::blah[0] (1) 
         [0][0][1] = ::bar[0][0][1] (61) 
@@ -92,16 +91,14 @@ In namespace "", we have: {
         [3][4][0] = ::foo[0][3][4] (20) 
         [3][4][1] = ::bar[3][4][1] (80) 
       }
-    blah = int<32>^1 blah with indices: {
-    }
+    blah = int<32>^1 blah
       unrolled indices: {
         0 = ::foo[0][0][0] (1) 
         1 = ::foo[0][0][1] (2) 
         2 = ::foo[0][0][2] (3) 
         3 = ::foo[0][0][3] (4) 
       }
-    foo = int<32>^3 foo with indices: {
-    }
+    foo = int<32>^3 foo
       unrolled indices: {
         [0][0][0] = ::bar[0][0][0] (1) 
         [0][0][1] = ::bar[0][1][0] (2) 

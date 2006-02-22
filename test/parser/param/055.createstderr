@@ -42,8 +42,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    matrix = preal^2 matrix with indices: {
-    }
+    matrix = preal^2 matrix
       unrolled index-value pairs: {
         [0][0] = 1.1
         [0][1] = 2.4

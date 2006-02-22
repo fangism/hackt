@@ -51,16 +51,14 @@ In namespace "", we have: {
     foo = process-definition (declared) foo<
       pint<> N
       >(
-        int<32> arg with indices: {
-        }
+        int<32> arg
 
       )
       In definition "foo", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        arg = int<32> arg with indices: {
-        }
+        arg = int<32> arg
 
       }
 

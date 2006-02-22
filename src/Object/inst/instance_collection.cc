@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.15 2006/02/21 04:48:28 fang Exp $
+ 	$Id: instance_collection.cc,v 1.16 2006/02/22 04:45:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -55,7 +55,6 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/compose.h"
 #include "util/binders.h"
-#include "util/ptrs_functional.h"
 #include "util/dereference.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
@@ -68,7 +67,6 @@ namespace entity {
 using namespace ADS;		// for composition functors
 using util::dereference;
 #include "util/using_ostream.h"
-using std::mem_fun_ref;
 using std::bind2nd_argval_void;
 using util::indent;
 using util::auto_indent;
@@ -170,11 +168,15 @@ instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 	dump_collection_only(o);
 #endif
 	if (dimensions) {
+#if 0
 		// TODO: get rid of this, and update tests
 		// this was kept temporarily for the sake of easing
 		// test difference analysis
 		o << " with indices: {" << endl;
 		o << auto_indent << '}' << endl;
+#else
+		o << endl;
+#endif
 	} else {
 		// the list contains exactly one instantiation statement
 	}

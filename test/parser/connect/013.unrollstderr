@@ -38,15 +38,13 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<>^1 bar with indices: {
-    }
+    bar = process foo<>^1 bar
       unrolled indices: {
         0 = ::blah[0] 
         1 = ::blah[1] 
         2 = ::blah[2] 
       }
-    blah = process foo<>^1 blah with indices: {
-    }
+    blah = process foo<>^1 blah
       unrolled indices: {
         0 = ::bar[0] 
         1 = ::bar[1] 

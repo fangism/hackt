@@ -5,6 +5,14 @@
 
 2006-02-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-16:
+	  No longer printing "with indices { ... }" (empty) in dumps, 
+		because instantiation statement index tracking was 
+		deprecated from the aggregate-ref branch.  
+		Many test cases trivially updated.  
+	  Minor header cleanups.  
+
+
 	* HACKT-00-01-04-main-00-77-15:
 	  Documentation update in dox/lang -- for aggregate references.
 	  Renamed (file/class) simple_meta_instance_reference_base to

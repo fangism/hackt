@@ -42,14 +42,12 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> x with indices: {
-        }
+        x = foo<> x
 
       unroll sequence: 
         foo<> x[0..1]
       footprint: {
-        process foo<>^1 x with indices: {
-        }
+        process foo<>^1 x
           unrolled indices: {
             0 = ::bar::x[0] (1) 
             1 = ::bar::x[1] (2) 
@@ -64,14 +62,12 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         bool<> a[0..1]
       footprint: {
-        bool^1 a with indices: {
-        }
+        bool^1 a
           unrolled indices: {
             0 = ::foo::a[0] (1) 
             1 = ::foo::a[1] (2) 
@@ -86,14 +82,12 @@ In namespace "", we have: {
       )
       In definition "ick", we have: {
       Instances:
-        p = bar<> p with indices: {
-        }
+        p = bar<> p
 
       unroll sequence: 
         bar<> p[0..1]
       footprint: {
-        process bar<>^1 p with indices: {
-        }
+        process bar<>^1 p
           unrolled indices: {
             0 = ::ick::p[0] (1) 
             1 = ::ick::p[1] (2) 

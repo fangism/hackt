@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.9 2006/02/21 04:48:42 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.10 2006/02/22 04:45:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -31,7 +31,6 @@
 #include "util/binders.h"
 #include "util/compose.h"
 #include "util/dereference.h"
-#include "util/ptrs_functional.h"
 #include "util/stacktrace.h"
 
 //=============================================================================

@@ -63,8 +63,7 @@ In namespace "", we have: {
         fee = bool<> fee
         fi = bool<> fi
         fo = bool<> fo
-        fum = bool<> fum with indices: {
-        }
+        fum = bool<> fum
 
         x = int<8> x
         y = bool<> y
@@ -81,8 +80,7 @@ In namespace "", we have: {
         bool^0 fee (instantiated) = ::my_data::fee 
         int<8>^0 x (instantiated) = ::my_data::x 
         bool^0 y (instantiated) = ::my_data::y 
-        bool^1 fum with indices: {
-        }
+        bool^1 fum
           unrolled indices: {
             0 = ::my_data::fum[0] 
             1 = ::my_data::fum[1] 
@@ -91,8 +89,7 @@ In namespace "", we have: {
       }
 
   Instances:
-    Z = struct my_data<>^1 Z with indices: {
-    }
+    Z = struct my_data<>^1 Z
       unrolled indices: {
         0 = ::Z[0] (
           int<8>^0 x (instantiated) = ::Z[0].x 

@@ -40,8 +40,7 @@ In namespace "", we have: {
   Definitions:
     mychan = user-def-chan (declared) mychan<
       pint<> K
-      pint<> J with indices: {
-      }
+      pint<> J
 
       >
       chan(
@@ -52,8 +51,7 @@ In namespace "", we have: {
       )
       In channel definition "mychan", we have: {
       Parameters:
-        J = pint<> J with indices: {
-        }
+        J = pint<> J
 
         K = pint<> K
       Instances:

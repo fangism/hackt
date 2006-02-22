@@ -46,8 +46,7 @@ In namespace "", we have: {
       In definition "null", we have: {
       Instances:
         o = bool<> o
-        z = bool<> z with indices: {
-        }
+        z = bool<> z
 
       unroll sequence: 
         bool<> z[0..1]
@@ -57,8 +56,7 @@ In namespace "", we have: {
         (|:i:[0..-1]: ~z[$i]) -> o+
       footprint: {
         bool^0 o (instantiated) = ::null::o 
-        bool^1 z with indices: {
-        }
+        bool^1 z
           unrolled indices: {
             0 = ::null::z[0] 
             1 = ::null::z[1] 

@@ -77,8 +77,7 @@ In namespace "", we have: {
     celemNinv = process-definition (defined) celemNinv<
       pint<> N
       >(
-        bool<> a with indices: {
-        }
+        bool<> a
 
         bool<> _o
       )
@@ -88,8 +87,7 @@ In namespace "", we have: {
         N = pint<> N
       Instances:
         _o = bool<> _o
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         pint<> N
@@ -105,8 +103,7 @@ In namespace "", we have: {
           bool^0 _o (instantiated) = ::celemNinv::_o (5) 
           pint^0 M value: 4
           pint^0 N value: ?
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::celemNinv::a[0] (1) 
               1 = ::celemNinv::a[1] (2) 
@@ -128,8 +125,7 @@ In namespace "", we have: {
 
   Instances:
     c = process celemNinv<4>^0 c (instantiated) = ::c (1) (
-      bool^1 a with indices: {
-      }
+      bool^1 a
         unrolled indices: {
           0 = ::c.a[0] (1) 
           1 = ::c.a[1] (2) 

@@ -235,16 +235,14 @@ In namespace "", we have: {
     ch1of = process-definition (defined) ch1of<
       pint<> N
       >(
-        bool<> d with indices: {
-        }
+        bool<> d
 
       )
       In definition "ch1of", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        d = bool<> d with indices: {
-        }
+        d = bool<> d
 
       unroll sequence: 
         pint<> N
@@ -252,8 +250,7 @@ In namespace "", we have: {
       footprint collection: {
         <4> {
           pint^0 N value: ?
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::ch1of::d[0] 
               1 = ::ch1of::d[1] 
@@ -263,8 +260,7 @@ In namespace "", we have: {
         }
         <16> {
           pint^0 N value: ?
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::ch1of::d[0] 
               1 = ::ch1of::d[1] 
@@ -290,16 +286,14 @@ In namespace "", we have: {
     ch_1of = process-definition (defined) ch_1of<
       pint<> N
       >(
-        bool<> d with indices: {
-        }
+        bool<> d
 
       )
       In definition "ch_1of", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        d = bool<> d with indices: {
-        }
+        d = bool<> d
 
       unroll sequence: 
         pint<> N
@@ -307,8 +301,7 @@ In namespace "", we have: {
       footprint collection: {
         <4> {
           pint^0 N value: ?
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::ch_1of::d[0] 
               1 = ::ch_1of::d[1] 
@@ -318,8 +311,7 @@ In namespace "", we have: {
         }
         <16> {
           pint^0 N value: ?
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::ch_1of::d[0] 
               1 = ::ch_1of::d[1] 
@@ -376,15 +368,12 @@ In namespace "", we have: {
       )
       In definition "lut", we have: {
       Instances:
-        _ad = ch_1of<4> _ad with indices: {
-        }
+        _ad = ch_1of<4> _ad
 
         _d = ch_1of<16> _d
-        ad = ch1of<4> ad with indices: {
-        }
+        ad = ch1of<4> ad
 
-        ce = dcelm<> ce with indices: {
-        }
+        ce = dcelm<> ce
 
         d = ch1of<16> d
       unroll sequence: 
@@ -397,12 +386,10 @@ In namespace "", we have: {
           ce[$b] (ad[1].d[$b/4], ad[0].d[$b%4], _d.d[$b], d.d[$b]);
         )
       footprint: {
-        process ch1of<4>^1 ad with indices: {
-        }
+        process ch1of<4>^1 ad
           unrolled indices: {
             0 = ::lut::ad[0] (
-              bool^1 d with indices: {
-              }
+              bool^1 d
                 unrolled indices: {
                   0 = ::lut::ce[0].b 
                   1 = ::lut::ce[1].b 
@@ -411,8 +398,7 @@ In namespace "", we have: {
                 }
             )
             1 = ::lut::ad[1] (
-              bool^1 d with indices: {
-              }
+              bool^1 d
                 unrolled indices: {
                   0 = ::lut::ce[0].a 
                   1 = ::lut::ce[4].a 
@@ -421,8 +407,7 @@ In namespace "", we have: {
                 }
             )
           }
-        process dcelm<>^1 ce with indices: {
-        }
+        process dcelm<>^1 ce
           unrolled indices: {
             0 = ::lut::ce[0] (
               bool^0 a (instantiated) = ::lut::ce[1].a 
@@ -521,12 +506,10 @@ In namespace "", we have: {
               bool^0 out (instantiated) = ::lut::d.d[15] 
             )
           }
-        process ch_1of<4>^1 _ad with indices: {
-        }
+        process ch_1of<4>^1 _ad
           unrolled indices: {
             0 = ::lut::_ad[0] (
-              bool^1 d with indices: {
-              }
+              bool^1 d
                 unrolled indices: {
                   0 = ::lut::_ad[0].d[0] 
                   1 = ::lut::_ad[0].d[1] 
@@ -535,8 +518,7 @@ In namespace "", we have: {
                 }
             )
             1 = ::lut::_ad[1] (
-              bool^1 d with indices: {
-              }
+              bool^1 d
                 unrolled indices: {
                   0 = ::lut::_ad[1].d[0] 
                   1 = ::lut::_ad[1].d[1] 
@@ -546,8 +528,7 @@ In namespace "", we have: {
             )
           }
         process ch1of<16>^0 d (instantiated) = ::lut::d (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::lut::ce[0].out 
               1 = ::lut::ce[1].out 
@@ -568,8 +549,7 @@ In namespace "", we have: {
             }
         )
         process ch_1of<16>^0 _d (instantiated) = ::lut::_d (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::lut::ce[0]._out 
               1 = ::lut::ce[1]._out 

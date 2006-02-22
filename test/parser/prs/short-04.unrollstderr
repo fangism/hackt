@@ -92,8 +92,7 @@ In namespace "", we have: {
     nor = process-definition (defined) nor<
       pint<> N
       >(
-        bool<> in with indices: {
-        }
+        bool<> in
 
         bool<> out
       )
@@ -101,8 +100,7 @@ In namespace "", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        in = bool<> in with indices: {
-        }
+        in = bool<> in
 
         out = bool<> out
       unroll sequence: 
@@ -115,8 +113,7 @@ In namespace "", we have: {
       footprint collection: {
         <2> {
           bool^0 out (instantiated) = ::nor::out 
-          bool^1 in with indices: {
-          }
+          bool^1 in
             unrolled indices: {
               0 = ::nor::in[0] 
               1 = ::nor::in[1] 
@@ -125,8 +122,7 @@ In namespace "", we have: {
         }
         <4> {
           bool^0 out (instantiated) = ::nor::out 
-          bool^1 in with indices: {
-          }
+          bool^1 in
             unrolled indices: {
               0 = ::nor::in[0] 
               1 = ::nor::in[1] 
@@ -140,8 +136,7 @@ In namespace "", we have: {
 
   Instances:
     a = process nor<2>^0 a (instantiated) = ::a (
-      bool^1 in with indices: {
-      }
+      bool^1 in
         unrolled indices: {
           0 = ::a.in[0] 
           1 = ::a.in[1] 
@@ -149,8 +144,7 @@ In namespace "", we have: {
       bool^0 out (instantiated) = ::b.out 
     )
     b = process nor<4>^0 b (instantiated) = ::b (
-      bool^1 in with indices: {
-      }
+      bool^1 in
         unrolled indices: {
           0 = ::b.in[0] 
           1 = ::b.in[1] 

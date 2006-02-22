@@ -78,8 +78,7 @@ In namespace "", we have: {
     nandN = process-definition (defined) nandN<
       pint<> N
       >(
-        bool<> in with indices: {
-        }
+        bool<> in
 
         bool<> _out
       )
@@ -88,8 +87,7 @@ In namespace "", we have: {
         N = pint<> N
       Instances:
         _out = bool<> _out
-        in = bool<> in with indices: {
-        }
+        in = bool<> in
 
       unroll sequence: 
         pint<> N
@@ -102,8 +100,7 @@ In namespace "", we have: {
         )
       footprint collection: {
         <4> {
-          bool^1 in with indices: {
-          }
+          bool^1 in
             unrolled indices: {
               0 = ::nandN::in[0] 
               1 = ::nandN::in[1] 
@@ -118,8 +115,7 @@ In namespace "", we have: {
 
   Instances:
     foo = process nandN<4>^0 foo (instantiated) = ::foo (
-      bool^1 in with indices: {
-      }
+      bool^1 in
         unrolled indices: {
           0 = ::foo.in[0] 
           1 = ::foo.in[1] 

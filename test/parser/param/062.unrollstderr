@@ -50,16 +50,14 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    x = pint^2 x with indices: {
-    }
+    x = pint^2 x
       unrolled index-value pairs: {
         [0][0] = 12
         [0][1] = 34
         [1][0] = 56
         [1][1] = 78
       }
-    y = pint^2 y with indices: {
-    }
+    y = pint^2 y
       unrolled index-value pairs: {
         [0][0] = 56
         [0][1] = 78

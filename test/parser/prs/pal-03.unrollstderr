@@ -98,8 +98,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        bool<> in with indices: {
-        }
+        bool<> in
 
         bool<> _o
       )
@@ -109,8 +108,7 @@ In namespace "", we have: {
         N = pint<> N
       Instances:
         _o = bool<> _o
-        in = bool<> in with indices: {
-        }
+        in = bool<> in
 
       unroll sequence: 
         pint<> M
@@ -123,8 +121,7 @@ In namespace "", we have: {
       footprint collection: {
         <3, 4> {
           bool^0 _o (instantiated) = ::matrix_array::_o 
-          bool^2 in with indices: {
-          }
+          bool^2 in
             unrolled indices: {
               [0][0] = ::matrix_array::in[0][0] 
               [0][1] = ::matrix_array::in[0][1] 
@@ -147,8 +144,7 @@ In namespace "", we have: {
 
   Instances:
     foo = process matrix_array<3, 4>^0 foo (instantiated) = ::foo (
-      bool^2 in with indices: {
-      }
+      bool^2 in
         unrolled indices: {
           [0][0] = ::foo.in[0][0] 
           [0][1] = ::foo.in[0][1] 

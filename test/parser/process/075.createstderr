@@ -56,8 +56,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        int<::bar::M> x with indices: {
-        }
+        int<::bar::M> x
 
       )
       In definition "bar", we have: {
@@ -65,8 +64,7 @@ In namespace "", we have: {
         M = pint<> M
         N = pint<> N
       Instances:
-        x = int<::bar::M> x with indices: {
-        }
+        x = int<::bar::M> x
 
       unroll sequence: 
         pint<> M
@@ -77,8 +75,7 @@ In namespace "", we have: {
         <3, 2> {
           pint^0 M value: ?
           pint^0 N value: ?
-          int<3>^1 x with indices: {
-          }
+          int<3>^1 x
             unrolled indices: {
               0 = ::bar::x[1] (1) 
               1 = ::bar::x[0] (1) 
@@ -93,8 +90,7 @@ In namespace "", we have: {
 
   Instances:
     poo = process bar<3, 2>^0 poo (instantiated) = ::poo (1) (
-      int<3>^1 x with indices: {
-      }
+      int<3>^1 x
         unrolled indices: {
           0 = ::poo.x[1] (1) 
           1 = ::poo.x[0] (1) 

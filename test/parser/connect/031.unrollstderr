@@ -612,20 +612,17 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     basket = process-definition (defined) basket(
-        egg<> egg_array with indices: {
-        }
+        egg<> egg_array
 
       )
       In definition "basket", we have: {
       Instances:
-        egg_array = egg<> egg_array with indices: {
-        }
+        egg_array = egg<> egg_array
 
       unroll sequence: 
         egg<> egg_array[0..11]
       footprint: {
-        process egg<>^1 egg_array with indices: {
-        }
+        process egg<>^1 egg_array
           unrolled indices: {
             0 = ::basket::egg_array[0] (
               bool^0 white (instantiated) = ::basket::egg_array[0].white 
@@ -682,16 +679,14 @@ In namespace "", we have: {
     bundle = process-definition (defined) bundle(
         basket<> a
         basket<> b
-        basket<> c with indices: {
-        }
+        basket<> c
 
       )
       In definition "bundle", we have: {
       Instances:
         a = basket<> a
         b = basket<> b
-        c = basket<> c with indices: {
-        }
+        c = basket<> c
 
       unroll sequence: 
         basket<> a
@@ -699,8 +694,7 @@ In namespace "", we have: {
         basket<> c[0..5]
       footprint: {
         process basket<>^0 a (instantiated) = ::bundle::a (
-          process egg<>^1 egg_array with indices: {
-          }
+          process egg<>^1 egg_array
             unrolled indices: {
               0 = ::bundle::a.egg_array[0] (
                 bool^0 white (instantiated) = ::bundle::a.egg_array[0].white 
@@ -753,8 +747,7 @@ In namespace "", we have: {
             }
         )
         process basket<>^0 b (instantiated) = ::bundle::b (
-          process egg<>^1 egg_array with indices: {
-          }
+          process egg<>^1 egg_array
             unrolled indices: {
               0 = ::bundle::b.egg_array[0] (
                 bool^0 white (instantiated) = ::bundle::b.egg_array[0].white 
@@ -806,12 +799,10 @@ In namespace "", we have: {
               )
             }
         )
-        process basket<>^1 c with indices: {
-        }
+        process basket<>^1 c
           unrolled indices: {
             0 = ::bundle::c[0] (
-              process egg<>^1 egg_array with indices: {
-              }
+              process egg<>^1 egg_array
                 unrolled indices: {
                   0 = ::bundle::c[0].egg_array[0] (
                     bool^0 white (instantiated) = ::bundle::c[0].egg_array[0].white 
@@ -864,8 +855,7 @@ In namespace "", we have: {
                 }
             )
             1 = ::bundle::c[1] (
-              process egg<>^1 egg_array with indices: {
-              }
+              process egg<>^1 egg_array
                 unrolled indices: {
                   0 = ::bundle::c[1].egg_array[0] (
                     bool^0 white (instantiated) = ::bundle::c[1].egg_array[0].white 
@@ -918,8 +908,7 @@ In namespace "", we have: {
                 }
             )
             2 = ::bundle::c[2] (
-              process egg<>^1 egg_array with indices: {
-              }
+              process egg<>^1 egg_array
                 unrolled indices: {
                   0 = ::bundle::c[2].egg_array[0] (
                     bool^0 white (instantiated) = ::bundle::c[2].egg_array[0].white 
@@ -972,8 +961,7 @@ In namespace "", we have: {
                 }
             )
             3 = ::bundle::c[3] (
-              process egg<>^1 egg_array with indices: {
-              }
+              process egg<>^1 egg_array
                 unrolled indices: {
                   0 = ::bundle::c[3].egg_array[0] (
                     bool^0 white (instantiated) = ::bundle::c[3].egg_array[0].white 
@@ -1026,8 +1014,7 @@ In namespace "", we have: {
                 }
             )
             4 = ::bundle::c[4] (
-              process egg<>^1 egg_array with indices: {
-              }
+              process egg<>^1 egg_array
                 unrolled indices: {
                   0 = ::bundle::c[4].egg_array[0] (
                     bool^0 white (instantiated) = ::bundle::c[4].egg_array[0].white 
@@ -1080,8 +1067,7 @@ In namespace "", we have: {
                 }
             )
             5 = ::bundle::c[5] (
-              process egg<>^1 egg_array with indices: {
-              }
+              process egg<>^1 egg_array
                 unrolled indices: {
                   0 = ::bundle::c[5].egg_array[0] (
                     bool^0 white (instantiated) = ::bundle::c[5].egg_array[0].white 
@@ -1156,8 +1142,7 @@ In namespace "", we have: {
 
   Instances:
     a_basket = process basket<>^0 a_basket (instantiated) = ::load.a (
-      process egg<>^1 egg_array with indices: {
-      }
+      process egg<>^1 egg_array
         unrolled indices: {
           0 = ::a_basket.egg_array[0] (
             bool^0 white (instantiated) = ::a_basket.egg_array[0].white 
@@ -1217,8 +1202,7 @@ In namespace "", we have: {
     )
     load = process bundle<>^0 load (instantiated) = ::load (
       process basket<>^0 a (instantiated) = ::load.c[2] (
-        process egg<>^1 egg_array with indices: {
-        }
+        process egg<>^1 egg_array
           unrolled indices: {
             0 = ::load.c[4].egg_array[11] (
               bool^0 white (instantiated) = ::load.a.egg_array[0].white 
@@ -1271,8 +1255,7 @@ In namespace "", we have: {
           }
       )
       process basket<>^0 b (instantiated) = ::load.b (
-        process egg<>^1 egg_array with indices: {
-        }
+        process egg<>^1 egg_array
           unrolled indices: {
             0 = ::load.b.egg_array[0] (
               bool^0 white (instantiated) = ::load.b.egg_array[0].white 
@@ -1324,12 +1307,10 @@ In namespace "", we have: {
             )
           }
       )
-      process basket<>^1 c with indices: {
-      }
+      process basket<>^1 c
         unrolled indices: {
           0 = ::load.c[0] (
-            process egg<>^1 egg_array with indices: {
-            }
+            process egg<>^1 egg_array
               unrolled indices: {
                 0 = ::load.c[0].egg_array[0] (
                   bool^0 white (instantiated) = ::load.c[0].egg_array[0].white 
@@ -1382,8 +1363,7 @@ In namespace "", we have: {
               }
           )
           1 = ::load.c[1] (
-            process egg<>^1 egg_array with indices: {
-            }
+            process egg<>^1 egg_array
               unrolled indices: {
                 0 = ::load.c[1].egg_array[0] (
                   bool^0 white (instantiated) = ::load.c[1].egg_array[0].white 
@@ -1436,8 +1416,7 @@ In namespace "", we have: {
               }
           )
           2 = ::a_basket (
-            process egg<>^1 egg_array with indices: {
-            }
+            process egg<>^1 egg_array
               unrolled indices: {
                 0 = ::load.c[2].egg_array[0] (
                   bool^0 white (instantiated) = ::load.c[2].egg_array[0].white 
@@ -1490,8 +1469,7 @@ In namespace "", we have: {
               }
           )
           3 = ::load.c[3] (
-            process egg<>^1 egg_array with indices: {
-            }
+            process egg<>^1 egg_array
               unrolled indices: {
                 0 = ::load.c[3].egg_array[0] (
                   bool^0 white (instantiated) = ::load.c[3].egg_array[0].white 
@@ -1544,8 +1522,7 @@ In namespace "", we have: {
               }
           )
           4 = ::load.c[4] (
-            process egg<>^1 egg_array with indices: {
-            }
+            process egg<>^1 egg_array
               unrolled indices: {
                 0 = ::load.c[4].egg_array[0] (
                   bool^0 white (instantiated) = ::load.c[4].egg_array[0].white 
@@ -1598,8 +1575,7 @@ In namespace "", we have: {
               }
           )
           5 = ::load.c[5] (
-            process egg<>^1 egg_array with indices: {
-            }
+            process egg<>^1 egg_array
               unrolled indices: {
                 0 = ::load.c[5].egg_array[0] (
                   bool^0 white (instantiated) = ::load.c[5].egg_array[0].white 

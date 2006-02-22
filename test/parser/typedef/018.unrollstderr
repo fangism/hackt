@@ -74,8 +74,7 @@ In namespace "", we have: {
       >(
         bool<> x
         bool<> y
-        bool<> z with indices: {
-        }
+        bool<> z
 
       )
       In definition "baz", we have: {
@@ -84,8 +83,7 @@ In namespace "", we have: {
       Instances:
         x = bool<> x
         y = bool<> y
-        z = bool<> z with indices: {
-        }
+        z = bool<> z
 
       unroll sequence: 
         pint<> N
@@ -97,8 +95,7 @@ In namespace "", we have: {
           pint^0 N value: ?
           bool^0 x (instantiated) = ::baz::x 
           bool^0 y (instantiated) = ::baz::y 
-          bool^1 z with indices: {
-          }
+          bool^1 z
             unrolled indices: {
               0 = ::baz::z[0] 
               1 = ::baz::z[1] 
@@ -109,8 +106,7 @@ In namespace "", we have: {
           pint^0 N value: ?
           bool^0 x (instantiated) = ::baz::x 
           bool^0 y (instantiated) = ::baz::y 
-          bool^1 z with indices: {
-          }
+          bool^1 z
             unrolled indices: {
               0 = ::baz::z[0] 
               1 = ::baz::z[1] 
@@ -130,8 +126,7 @@ In namespace "", we have: {
     P = process baz<4>^0 P (instantiated) = ::P (
       bool^0 x (instantiated) = ::Q.y 
       bool^0 y (instantiated) = ::P.y 
-      bool^1 z with indices: {
-      }
+      bool^1 z
         unrolled indices: {
           0 = ::P.z[0] 
           1 = ::P.z[1] 
@@ -142,8 +137,7 @@ In namespace "", we have: {
     Q = process baz<3>^0 Q (instantiated) = ::Q (
       bool^0 x (instantiated) = ::Q.x 
       bool^0 y (instantiated) = ::P.x 
-      bool^1 z with indices: {
-      }
+      bool^1 z
         unrolled indices: {
           0 = ::Q.z[0] 
           1 = ::Q.z[1] 

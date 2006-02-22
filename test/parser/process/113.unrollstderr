@@ -61,8 +61,7 @@ In namespace "", we have: {
         M = pint<> M
         N = pint<> N
       Instances:
-        x = int<::bar::M> x with indices: {
-        }
+        x = int<::bar::M> x
 
       unroll sequence: 
         pint<> M
@@ -73,8 +72,7 @@ In namespace "", we have: {
         <3, 2> {
           pint^0 M value: ?
           pint^0 N value: ?
-          int<3>^1 x with indices: {
-          }
+          int<3>^1 x
             unrolled indices: {
               0 = ::bar::x[1] 
               1 = ::bar::x[0] 

@@ -65,25 +65,21 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     bar = process-definition (defined) bar(
-        foo<> x with indices: {
-        }
+        foo<> x
 
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> x with indices: {
-        }
+        x = foo<> x
 
       unroll sequence: 
         foo<> x[0..2]
         x[0].a[0] = x[2].a[0] = x[0].a[2] = x[2].a[2];
       footprint: {
-        process foo<>^1 x with indices: {
-        }
+        process foo<>^1 x
           unrolled indices: {
             0 = ::bar::x[0] (
-              bool^1 a with indices: {
-              }
+              bool^1 a
                 unrolled indices: {
                   0 = ::bar::x[0].a[2] 
                   1 = ::bar::x[0].a[1] 
@@ -91,8 +87,7 @@ In namespace "", we have: {
                 }
             )
             1 = ::bar::x[1] (
-              bool^1 a with indices: {
-              }
+              bool^1 a
                 unrolled indices: {
                   0 = ::bar::x[1].a[0] 
                   1 = ::bar::x[1].a[1] 
@@ -100,8 +95,7 @@ In namespace "", we have: {
                 }
             )
             2 = ::bar::x[2] (
-              bool^1 a with indices: {
-              }
+              bool^1 a
                 unrolled indices: {
                   0 = ::bar::x[0].a[0] 
                   1 = ::bar::x[2].a[1] 
@@ -113,20 +107,17 @@ In namespace "", we have: {
       }
 
     foo = process-definition (defined) foo(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         bool<> a[0..2]
       footprint: {
-        bool^1 a with indices: {
-        }
+        bool^1 a
           unrolled indices: {
             0 = ::foo::a[0] 
             1 = ::foo::a[1] 
@@ -137,12 +128,10 @@ In namespace "", we have: {
 
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (
-      process foo<>^1 x with indices: {
-      }
+      process foo<>^1 x
         unrolled indices: {
           0 = ::poo.x[0] (
-            bool^1 a with indices: {
-            }
+            bool^1 a
               unrolled indices: {
                 0 = ::poo.x[0].a[0] 
                 1 = ::poo.x[0].a[1] 
@@ -150,8 +139,7 @@ In namespace "", we have: {
               }
           )
           1 = ::poo.x[1] (
-            bool^1 a with indices: {
-            }
+            bool^1 a
               unrolled indices: {
                 0 = ::poo.x[1].a[0] 
                 1 = ::poo.x[1].a[1] 
@@ -159,8 +147,7 @@ In namespace "", we have: {
               }
           )
           2 = ::poo.x[2] (
-            bool^1 a with indices: {
-            }
+            bool^1 a
               unrolled indices: {
                 0 = ::poo.x[2].a[0] 
                 1 = ::poo.x[2].a[1] 

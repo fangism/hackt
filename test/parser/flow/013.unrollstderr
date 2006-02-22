@@ -63,8 +63,7 @@ In namespace "", we have: {
   Parameters:
     N = pint^0 N (init = 5) value: 5
   Instances:
-    x = bool^2 x with indices: {
-    }
+    x = bool^2 x
       unrolled indices: {
         [0][0] = ::y[0] 
         [0][1] = ::x[1][0] 
@@ -92,8 +91,7 @@ In namespace "", we have: {
         [4][3] = ::x[3][4] 
         [4][4] = ::x[4][4] 
       }
-    y = bool^1 y with indices: {
-    }
+    y = bool^1 y
       unrolled indices: {
         0 = ::z[0] 
         1 = ::z[1] 
@@ -101,8 +99,7 @@ In namespace "", we have: {
         3 = ::z[3] 
         4 = ::z[4] 
       }
-    z = bool^1 z with indices: {
-    }
+    z = bool^1 z
       unrolled indices: {
         0 = ::x[0][0] 
         1 = ::x[0][1] 

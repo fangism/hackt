@@ -54,8 +54,7 @@ In namespace "", we have: {
     M = pint^0 M (init = 10) value: 10
     N = pint^0 N (init = 6) value: 6
   Instances:
-    m = bool^2 m with indices: {
-    }
+    m = bool^2 m
       unrolled indices: {
         [0][0] = ::m[0][2] 
         [0][1] = ::m[0][3] 

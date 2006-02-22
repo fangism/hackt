@@ -70,16 +70,14 @@ In namespace "", we have: {
     ch1of = process-definition (defined) ch1of<
       pint<> N
       >(
-        bool<> d with indices: {
-        }
+        bool<> d
 
       )
       In definition "ch1of", we have: {
       Parameters:
         N = pint<> N
       Instances:
-        d = bool<> d with indices: {
-        }
+        d = bool<> d
 
       unroll sequence: 
         pint<> N
@@ -87,8 +85,7 @@ In namespace "", we have: {
       footprint collection: {
         <4> {
           pint^0 N value: ?
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::ch1of::d[0] 
               1 = ::ch1of::d[1] 
@@ -117,8 +114,7 @@ In namespace "", we have: {
       In definition "lut", we have: {
       Instances:
         ad = ch1of<4> ad
-        ce = dcelm<> ce with indices: {
-        }
+        ce = dcelm<> ce
 
       unroll sequence: 
         ch1of<4> ad
@@ -128,8 +124,7 @@ In namespace "", we have: {
         )
       footprint: {
         process ch1of<4>^0 ad (instantiated) = ::lut::ad (
-          bool^1 d with indices: {
-          }
+          bool^1 d
             unrolled indices: {
               0 = ::lut::ce[0].a 
               1 = ::lut::ad.d[1] 
@@ -137,8 +132,7 @@ In namespace "", we have: {
               3 = ::lut::ad.d[3] 
             }
         )
-        process dcelm<>^1 ce with indices: {
-        }
+        process dcelm<>^1 ce
           unrolled indices: {
             0 = ::lut::ce[0] (
               bool^0 a (instantiated) = ::lut::ad.d[0] 

@@ -46,8 +46,7 @@ In namespace "", we have: {
       Instances:
         L = chan?(bool<>) L
         R = chan!(bool<>) R
-        b = bool<> b with indices: {
-        }
+        b = bool<> b
 
         x = int<32> x
       unroll sequence: 

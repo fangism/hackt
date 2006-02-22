@@ -26,16 +26,14 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (declared) foo<
       pint<> bar
-      pbool<> jinx with indices: {
-      }
+      pbool<> jinx
 
       >(
       )
       In definition "foo", we have: {
       Parameters:
         bar = pint<> bar
-        jinx = pbool<> jinx with indices: {
-        }
+        jinx = pbool<> jinx
 
       }
 

@@ -54,16 +54,14 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (defined) foo<
       pint<> M
-      pint<> N with indices: {
-      }
+      pint<> N
 
       >(
       )
       In definition "foo", we have: {
       Parameters:
         M = pint<> M
-        N = pint<> N with indices: {
-        }
+        N = pint<> N
 
       unroll sequence: 
         pint<> M
@@ -71,8 +69,7 @@ In namespace "", we have: {
       footprint collection: {
         <3, {1,2,3}> {
           pint^0 M value: ?
-          pint^1 N with indices: {
-          }
+          pint^1 N
             unrolled index-value pairs: {
               0 = ?
               1 = ?
@@ -81,8 +78,7 @@ In namespace "", we have: {
         }
         <3, {7,8,9}> {
           pint^0 M value: ?
-          pint^1 N with indices: {
-          }
+          pint^1 N
             unrolled index-value pairs: {
               0 = ?
               1 = ?

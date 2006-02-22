@@ -30,14 +30,12 @@ In namespace "", we have: {
         int<32>
       )
       (
-        int<16> i with indices: {
-        }
+        int<16> i
 
       )
       In channel definition "mychan", we have: {
       Instances:
-        i = int<16> i with indices: {
-        }
+        i = int<16> i
 
       unroll sequence: 
         int<16> i[0..1]

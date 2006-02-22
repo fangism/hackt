@@ -104,8 +104,7 @@ In namespace "", we have: {
         M = pint<> M
         N = pint<> N
       Instances:
-        x = foo<::bar::M> x with indices: {
-        }
+        x = foo<::bar::M> x
 
       unroll sequence: 
         pint<> M
@@ -116,12 +115,10 @@ In namespace "", we have: {
         <3, 3> {
           pint^0 M value: ?
           pint^0 N value: ?
-          process foo<3>^1 x with indices: {
-          }
+          process foo<3>^1 x
             unrolled indices: {
               0 = ::bar::x[0] (1) (
-                bool^1 a with indices: {
-                }
+                bool^1 a
                   unrolled indices: {
                     0 = ::bar::x[2].a[0] (1) 
                     1 = ::bar::x[0].a[1] (2) 
@@ -129,8 +126,7 @@ In namespace "", we have: {
                   }
               )
               1 = ::bar::x[1] (2) (
-                bool^1 a with indices: {
-                }
+                bool^1 a
                   unrolled indices: {
                     0 = ::bar::x[1].a[0] (3) 
                     1 = ::bar::x[1].a[1] (4) 
@@ -138,8 +134,7 @@ In namespace "", we have: {
                   }
               )
               2 = ::bar::x[2] (3) (
-                bool^1 a with indices: {
-                }
+                bool^1 a
                   unrolled indices: {
                     0 = ::bar::x[2].a[2] (1) 
                     1 = ::bar::x[2].a[1] (6) 
@@ -165,16 +160,14 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> D
       >(
-        bool<> a with indices: {
-        }
+        bool<> a
 
       )
       In definition "foo", we have: {
       Parameters:
         D = pint<> D
       Instances:
-        a = bool<> a with indices: {
-        }
+        a = bool<> a
 
       unroll sequence: 
         pint<> D
@@ -182,8 +175,7 @@ In namespace "", we have: {
       footprint collection: {
         <3> {
           pint^0 D value: ?
-          bool^1 a with indices: {
-          }
+          bool^1 a
             unrolled indices: {
               0 = ::foo::a[0] (1) 
               1 = ::foo::a[1] (2) 

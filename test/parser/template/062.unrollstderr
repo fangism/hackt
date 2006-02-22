@@ -73,22 +73,19 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<5>^1 bar with indices: {
-    }
+    bar = process foo<5>^1 bar
       unrolled indices: {
         0<4> = ::bar[0] 
         1<4> = ::bar[1] 
         2<4> = ::bar[2] 
       }
-    car = process foo<5><4>^1 car with indices: {
-    }
+    car = process foo<5><4>^1 car
       unrolled indices: {
         0 = ::car[0] 
         1 = ::car[1] 
         2 = ::car[2] 
       }
-    dar = process foo<5>^1 dar with indices: {
-    }
+    dar = process foo<5>^1 dar
       unrolled indices: {
         0 = ::dar[0] 
         1 = ::dar[1] 

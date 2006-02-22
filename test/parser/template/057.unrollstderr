@@ -43,8 +43,7 @@ In namespace "", we have: {
         W = pint<> W
         Z = pint<> Z (init = W)
       Instances:
-        my_int = int<32> my_int with indices: {
-        }
+        my_int = int<32> my_int
 
       unroll sequence: 
         pint<> W

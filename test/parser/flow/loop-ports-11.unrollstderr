@@ -1,7 +1,6 @@
 ERROR: failed to resolve implicit indices from a collection whose subarray is not dense.
 	indices referenced: ::x[3]
-	collection state: bool^3 x with indices: {
-}
+	collection state: bool^3 x
   unrolled indices: {
     [0][0][0] = ::myass[0].q[0][0] 
     [0][0][1] = ::myass[0].q[0][1] 

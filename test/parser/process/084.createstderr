@@ -37,14 +37,12 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     foo = process-definition (defined) foo(
-        bool<> r with indices: {
-        }
+        bool<> r
 
       )
       In definition "foo", we have: {
       Instances:
-        r = bool<> r with indices: {
-        }
+        r = bool<> r
 
         x = int<32> x
         y = bool<> y
@@ -53,8 +51,7 @@ In namespace "", we have: {
         int<32> x
         bool<> y
       footprint: {
-        bool^1 r with indices: {
-        }
+        bool^1 r
           unrolled indices: {
             0 = ::foo::r[0] (1) 
             1 = ::foo::r[1] (2) 
@@ -72,8 +69,7 @@ In namespace "", we have: {
 
   Instances:
     burp = process foo<>^0 burp (instantiated) = ::burp (1) (
-      bool^1 r with indices: {
-      }
+      bool^1 r
         unrolled indices: {
           0 = ::burp.r[0] (1) 
           1 = ::burp.r[1] (2) 

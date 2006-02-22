@@ -47,8 +47,7 @@ In namespace "", we have: {
       )
       In definition "lt", we have: {
       Instances:
-        p = bool<> p with indices: {
-        }
+        p = bool<> p
 
         x = bool<> x
       unroll sequence: 
@@ -58,8 +57,7 @@ In namespace "", we have: {
           p[$i] = x;
         )
       footprint: {
-        bool^1 p with indices: {
-        }
+        bool^1 p
           unrolled indices: {
             0 = ::lt::p[1] 
             1 = ::lt::x 
