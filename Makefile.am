@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.27 2006/02/05 03:26:04 fang Exp $
+#	$Id: Makefile.am,v 1.28 2006/02/22 07:45:13 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -21,6 +21,8 @@ DOXYGEN_CONFIG = hackt.doxygen.config
 # When to update the libtool script:
 libtool: $(LIBTOOL_DEPS)
 	$(SHELL) ./config.status --recheck
+
+ACLOCAL_AMFLAGS = -I $(srcdir)/config
 
 # see configure.in for adding libtool flags
 
