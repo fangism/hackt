@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.42.2.1 2006/02/22 08:09:38 fang Exp $
+#	$Id: configure.ac,v 1.42.2.2 2006/02/23 04:36:10 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -28,30 +28,6 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 
 AC_CANONICAL_HOST
 
-# ripped from ngspice's configure.in
-# TODO: rip the library and header checks too, to be invoked later
-# It would be a good idea to see how they handled compatiblity between the two
-dnl --with-readline:  Includes GNU readline support into CLI.  Default is "no".
-dnl Including readline into ngspice is a violation of GPL license. It's use
-dnl is discouraged.
-AC_ARG_WITH(readline,
-	AS_HELP_STRING([--with-readline[=yes/no]],
-		[Enable GNU readline support for CLI.  Default=no.]))
-
-dnl --with-editline:  Includes BSD Editline support into CLI.  Default is "no".
-AC_ARG_WITH(editline,
-	AS_HELP_STRING([--with-editline[=yes/no]],
-		[Enable BSD editline support for CLI.  Default=no.]))
-
-dnl readline and editline cannot both be enabled
-if test "$with_readline" = "yes"; then
-	AC_MSG_WARN([
-	This project license is not GPL-compatible to qualify for using GNU 
-	readline.  Please consider linking against BSD editline instead.])
-	if test "$with_editline" = "yes"; then
-		AC_MSG_ERROR(Readline and editline cannot both be enabled!)
-	fi
-fi
 
 AC_CHECK_PROG([SH], sh, sh)
 AC_PATH_PROG(SH_PATH, sh)
@@ -97,31 +73,15 @@ AC_CHECK_PROGS([M4], gm4 m4, m4)
 AC_CHECK_PROG([PERL], perl, perl)
 AC_PATH_PROG([PERL_PATH], perl)
 
-# documentation support
-AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)
-AM_CONDITIONAL(HAVE_DOXYGEN, test -n "$DOXYGEN")
-
-AC_CHECK_PROG([DOT], dot, dot)
-AM_CONDITIONAL(HAVE_DOT, test -n "$DOT" )
-
-AC_CHECK_PROG([LATEX], latex, latex)
-AM_CONDITIONAL(HAVE_LATEX, test -n "$LATEX" )
-
-AC_CHECK_PROG([PDFLATEX], pdflatex, pdflatex)
-AM_CONDITIONAL(HAVE_PDFLATEX, test -n "$PDFLATEX" )
-
-AC_CHECK_PROG([DVIPS], dvips, dvips)
-AM_CONDITIONAL(HAVE_DVIPS, test -n "$DVIPS" )
-
-AC_CHECK_PROG([BIBTEX], bibtex, bibtex)
-AM_CONDITIONAL(HAVE_BIBTEX, test -n "$BIBTEX" )
-
-AC_CHECK_PROG([MAKEINDEX], makeindex, makeindex)
-AM_CONDITIONAL(HAVE_MAKEINDEX, test -n "$MAKEINDEX" )
-
-AC_CHECK_PROG([PS2PDF], ps2pdf, ps2pdf)
-AM_CONDITIONAL(HAVE_PS2PDF, test -n "$PS2PDF" )
-
+# documentation support, macros efined in "config/documentation.m4"
+DOC_CHECK_PROG_DOXYGEN
+DOC_CHECK_PROG_DOT
+DOC_CHECK_PROG_LATEX
+DOC_CHECK_PROG_PDFLATEX
+DOC_CHECK_PROG_DVIPS
+DOC_CHECK_PROG_BIBTEX
+DOC_CHECK_PROG_MAKEINDEX
+DOC_CHECK_PROG_PS2PDF
 
 # comment out until time for release
 # this causes too many rebuilds during development
@@ -143,65 +103,16 @@ HACKT_ARG_ENABLE_GOD_MODE
 dnl defined in config/header_validation.m4
 AC_ARG_ENABLE_HEADER_VALIDATION
 
-dnl whether or not to build universal binary
-AC_MSG_CHECKING([whether universal binaries are requested])
-AC_ARG_ENABLE(fat_binary,
-	AC_HELP_STRING([--enable-fat-binary],
-		[Compile programs for multiple architectures.]),
-	[AC_MSG_RESULT([yes, but...])
-	dnl AC_CHECK_PROG(lipo)
-	dnl check whether or not compiler support multiple -arch flags
-	AC_MSG_NOTICE([Support for this is forthcoming for Darwin.])
-	dnl if enabled, then disable dynamic dependence-tracking
-	],
-	[AC_MSG_RESULT([no])]
-)
+AC_ARG_WITH_READLINE_EDITLINE
 
+dnl whether or not to build universal binary (config/hackt.m4)
+HACKT_ARG_ENABLE_UNIVERSAL_BINARY
 
-dnl whether ot not to enable build ps and pdf targets by default
-AC_MSG_CHECKING([whether to build documents by default (all)])
-AC_ARG_ENABLE(enable_docs, 
-	AC_HELP_STRING([--disable-docs],
-		[Suppress default building of PS and PDF documents.]),
-	dnl if given
-	[AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
-	if test "$enable_docs" = "yes"
-	then	AC_MSG_RESULT([yes])
-	else	AC_MSG_RESULT([no])
-	fi
-	],
-	dnl if not give
-	[AM_CONDITIONAL(ENABLE_DOCS, test "yes")
-	AC_MSG_RESULT([yes (default)])]
-)
-if test "$enable_docs" != "no"
-then
-	if test -z "$LATEX"
-	then	AC_MSG_WARN([
-		Want to build PS documents, but latex not found.
-		Configure with --disable-docs to suppress PS builds.])
-	fi
-	if test -z "$PDFLATEX"
-	then	AC_MSG_WARN([
-		Want to build PDF documents, but pdflatex not found.
-		Configure with --disable-docs to suppress PDF builds.])
-	fi
-fi
+dnl AC_ARG_ENABLE for building documentation (on by default)
+DOC_ARG_ENABLE_DOCS
 
 dnl enable or disable fun modules
-AC_MSG_CHECKING([how bored we are])
-AC_ARG_ENABLE(fun, 
-	AC_HELP_STRING([--enable-fun],
-		[Miscellanous fun modules. (default=disabled)]),
-	AM_CONDITIONAL(WANT_LIBMISCFUN, test "$enable_fun" = "yes"),
-	AM_CONDITIONAL(WANT_LIBMISCFUN, test ! "yes")
-)
-if test "$enable_fun" = "yes"
-then	AC_MSG_RESULT([quite])
-	AC_DEFINE(WANT_TO_HAVE_FUN, 1, [Conditional inclusion of fun modules.])
-else	AC_MSG_RESULT([not yet])
-	AC_DEFINE(WANT_TO_HAVE_FUN, 0, [Conditional inclusion of fun modules.])
-fi
+HACKT_ARG_ENABLE_FUN
 
 dnl define WORDS_BIGENDIAN if is big endian
 dnl not actually needed in this project yet
@@ -210,282 +121,52 @@ AC_C_BIGENDIAN
 AC_PROG_CXX
 dnl we need these anal flags for checking for certain charateristics
 dnl TODO: what are the equivalent flags for other compilers?
-ANAL_FLAGS="-W -Wall -ansi -pedantic-errors -Werror"
-cat > conftest.c <<CEOF
-extern int main(int, char**);
-CEOF
-cp conftest.c conftest.cc
-if $CC $ANAL_FLAGS -c conftest.c
-then :
-else AC_MSG_ERROR([Your C compiler doesn't like flags: $ANAL_FLAGS])
-fi
-if $CXX $ANAL_FLAGS -c conftest.cc
-then :
-else AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS])
-fi
+FANG_ANAL_COMPILE_FLAGS
 
-dnl test what flags to set in AM_CFLAGS and AM_CXXFLAGS
-dnl no need for -Wsequence-point, already covered by -Wall
-TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
-TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual -Wcast-align"
-TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wconversion -Werror"
-TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
-TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
-TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
-TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
-FANG_WARN_FLAGS=""
-FANG_WARN_CFLAGS=""
-FANG_WARN_CXXFLAGS=""
-FANG_DIALECT_FLAGS=""
-for f in $TRY_WARN_FLAGS
-do
-	AC_MSG_CHECKING([whether C and C++ compilers accept flag $f])
-	if ( $CC $f -c conftest.c && $CXX $f -c conftest.cc )
-	then
-		AC_MSG_RESULT([yes])
-		FANG_WARN_FLAGS="$FANG_WARN_FLAGS $f"
-	else
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN([Your C or C++ compiler doesn't like flag: $f])
-	fi
-done
-for f in $TRY_DIALECT_FLAGS
-do
-	AC_MSG_CHECKING([whether C and C++ compilers accept flag $f])
-	if ( $CC $f -c conftest.c && $CXX $f -c conftest.cc )
-	then
-		AC_MSG_RESULT([yes])
-		FANG_DIALECT_FLAGS="$FANG_DIALECT_FLAGS $f"
-	else
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN([Your C or C++ compiler doesn't like flag: $f])
-	fi
-done
-for f in $TRY_WARN_CFLAGS
-do
-	AC_MSG_CHECKING([whether C compiler accepts flag $f])
-	if $CC $f -c conftest.c
-	then
-		AC_MSG_RESULT([yes])
-		FANG_WARN_CFLAGS="$FANG_WARN_CFLAGS $f"
-	else
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN([Your C compiler doesn't like flag: $f])
-	fi
-done
-for f in $TRY_WARN_CXXFLAGS
-do
-	AC_MSG_CHECKING([whether C++ compiler accepts flag $f])
-	if $CXX $f -c conftest.cc
-	then
-		AC_MSG_RESULT([yes])
-		FANG_WARN_CXXFLAGS="$FANG_WARN_CXXFLAGS $f"
-	else
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN([Your C++ compiler doesn't like flag: $f])
-	fi
-done
-dnl AC_MSG_NOTICE([general warning flags: $FANG_WARN_FLAGS])
-dnl AC_MSG_NOTICE([general C warning flags: $FANG_WARN_CFLAGS])
-dnl AC_MSG_NOTICE([general C++ warning flags: $FANG_WARN_CXXFLAGS])
-dnl AC_MSG_NOTICE([general C/C++ dialect flags: $FANG_DIALECT_FLAGS])
-AC_SUBST(FANG_WARN_FLAGS)
-AC_SUBST(FANG_WARN_CFLAGS)
-AC_SUBST(FANG_WARN_CXXFLAGS)
-AC_SUBST(FANG_DIALECT_FLAGS)
+dnl from "config/cxx.m4"
+FANG_AM_FLAGS
 
-CXX_VERSION=`$CXX --version | head -n 1`
-AC_SUBST(CXX_VERSION)
+dnl from "config/cxx.m4"
+AC_CXX_VERSION
 
 
 dnl need to set LANG to C++ to check for C++ headers
 
 dnl which set of pre-determined compiler flags to apply?
-AM_CONDITIONAL(HAVE_GXX, test "$ac_cv_cxx_compiler_gnu" = "yes")
+AM_CONDITIONAL_HAVE_GXX
 dnl TODO: add other conditionals for other common compilers
 dnl XLC++, ICC, HPCC, etc...
-if ( echo "$CXX_VERSION" | grep -i prerelease )
-then
-	AC_MSG_WARN([
-	Detected prerelease version of compiler.  No PRERELEASE compilers 
-	are officially supported.  Use at your own risk.])
-fi
 
 AC_LANG_SAVE
 AC_LANG_CPLUSPLUS
 AM_PROG_CC_C_O
 AC_ISC_POSIX
 
-dnl more compiler characteristic checks
-dnl these require the anal compile flags
-SAVE_CXXFLAGS=$CXXFLAGS
-CXXFLAGS="$SAVE_CXXFLAGS $ANAL_FLAGS"
+AC_CXX_ATTRIBUTE_UNUSED
+AC_CXX_ATTRIBUTE_UNUSED_CTOR
+AC_CXX_ATTRIBUTE_CONST
+AC_CXX_ATTRIBUTE_PURE
+AC_CXX_ATTRIBUTE_HOLY
+AC_CXX_ATTRIBUTE_NORETURN
+AC_CXX_ATTRIBUTE_MALLOC
+AC_CXX_ATTRIBUTE_VISIBILITY
+AC_CXX_ATTRIBUTE_PACKED
+AC_CXX_ATTRIBUTE_ALIGNED
+AC_CXX_ATTRIBUTE_ALIGNED_SIZE
+AC_CXX_ATTRIBUTE_EVIL
 
-AC_MSG_CHECKING([whether compiler accepts __attribute__((unused))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([],[
-const int foo __attribute__ ((unused)) = 0;]
-),
-dnl action on success
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED, 1,
-	[True if compiler supports __attribute__((unused)) ])],
-dnl action on failure
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED, 0,
-	[True if compiler supports __attribute__((unused)) ])
-])
-
-dnl only need the next two tests if __attribute__((unused)) is accepted
-AC_MSG_CHECKING([if __attribute__((unused)) comes before construction])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([class foo { public: foo(const int); };],[
-const foo bar __attribute__ ((unused)) (13);]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR, 1,
-	[True if __attribute__((unused)) is accepted before construction])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR, 0,
-	[True if __attribute__((unused)) is accepted before construction])
-])
-
-AC_MSG_CHECKING([if __attribute__((unused)) comes after construction])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([class foo { public: foo(const int); };],[
-const foo bar (13) __attribute__ ((unused));]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR, 1,
-	[True if __attribute__((unused)) is accepted after construction])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR, 0,
-	[True if __attribute__((unused)) is accepted after construction])
-])
-
-AC_MSG_CHECKING([whether compiler accepts __attribute__((const))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM(
-[#include <cstdlib>
-void pure_func (void) __attribute__ ((const));
-void pure_func (void) { exit (1); }
-],[pure_func();]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_CONST, 1,
-	[True if compiler supports __attribute__((const)) ])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_CONST, 0,
-	[True if compiler supports __attribute__((const)) ])
-])
-
-AC_MSG_CHECKING([whether compiler accepts __attribute__((noreturn))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM(
-[#include <cstdlib>
-void die (int) __attribute__ ((noreturn));
-void die (int k) { exit (k); }
-],[die(1);]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_NORETURN, 1,
-	[True if compiler supports __attribute__((noreturn)) ])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_NORETURN, 0,
-	[True if compiler supports __attribute__((noreturn)) ])
-])
-
-
-AC_MSG_CHECKING(
-[whether compiler accepts __attribute__((visibility("hidden")))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM(
-[struct __attribute__((visibility("hidden"))) foo { foo() { } ~foo() { } }; ],
-[foo bar;]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_HIDDEN, 1,
-	[True if compiler supports __attribute__((visibility("hidden"))) ])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_HIDDEN, 0,
-	[True if compiler supports __attribute__((visibility("hidden"))) ])
-])
-
-AC_MSG_CHECKING(
-[whether compiler accepts __attribute__((visibility("default")))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM(
-[struct __attribute__((visibility("default"))) foo { foo() { } ~foo() { } }; ],
-[foo bar;]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 1,
-	[True if compiler supports __attribute__((visibility("default"))) ])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 0,
-	[True if compiler supports __attribute__((visibility("default"))) ])
-])
-
-dnl source taken from "src/util/STL/reverse_iterator.h"
-dnl known to be present in gcc-4.1 headers, but missing in all previous versions
-AC_MSG_CHECKING(
-[whether libstdc++ (STL) already contains reverse_iterator comparisons])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([[
-#include <iterator>
-namespace std {
-template <class Iter1, class Iter2>
-inline bool
-operator == (const reverse_iterator<Iter1>& x,
-                const reverse_iterator<Iter2>& y) {
-        return x.base() == y.base();
-}
-}
-]], []),
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, 0,
-	[True if STL <iterator> header defines reverse_iterator comparisons])],
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, 1,
-	[True if STL <iterator> header defines reverse_iterator comparisons])
-])
-
-dnl restore normal compile flags
-CXXFLAGS=$SAVE_CXXFLAGS
+AC_CXX_STL_REVERSE_ITERATOR_COMPARISONS
 
 # additional header checks
+AC_HEADER_STDC
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
 AC_CHECK_HEADERS([malloc.h])
 AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
-# C++ wrappers to standard C headers
-AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath cctype])
-AC_CHECK_HEADERS([cerrno cfloat climits clocale csignal csetjmp cstdarg ctime])
-AC_CHECK_HEADERS([cwchar cwctype])
-# checking all possible locations of (some equivalent) header files
-# spanning versions gcc-2.95 to 4.x
-# I bet you didn't know some of these locations were ever used!
-# However, you're not supposed to use anything older than gcc-3.3 anyways...
 
-# where is that damn hash_map?
-AC_CHECK_HEADERS([ext/hash_map hash_map])
-# used mainly in "src/util/hash_specializations.h"
-AC_CHECK_HEADERS([ext/stl_hash_fun.h ext/hash_fun.h stl_hash_fun.h])
-AC_CHECK_HEADERS([ext/hash_set hash_set])
-AC_CHECK_HEADERS([ext/hashtable.h tr1/hashtable hashtable.h])
-AC_CHECK_HEADERS([tr1/unordered_map tr1/unordered_set])
-AC_CHECK_HEADERS([ext/functional tr1/functional])
-# used in "src/util/string_fwd.h"
-AC_CHECK_HEADERS([bits/stringfwd.h])
-AC_CHECK_HEADERS([bits/concept_check.h])
-AC_CHECK_HEADERS([bits/type_traits.h tr1/type_traits tr1/type_traits_fwd.h type_traits.h])
-# among these, only sstream should be used, the rest are long gone
-AC_CHECK_HEADERS([sstream strstream stringstream])
-# can't include <tr1/boost_shared_ptr.h> directly
-AC_CHECK_HEADERS([tr1/memory])
-AC_CHECK_HEADERS([tr1/tuple tr1/array])
+AC_HEADER_STDCXX
 
 dnl suggestions from autoscan
 AC_FUNC_ALLOCA			dnl wanted by the y.tab.c generated
@@ -674,42 +355,44 @@ AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 dnl	Option to include GNU readline support in ngspice CLI
 dnl	Default: disabled.
 dnl	Hope to see in the future readline replacement.
-if test "$with_readline" != "yes"; then
-	AC_MSG_RESULT(GNU readline disabled.)
-else
-	AC_MSG_RESULT(Checking for readline:)
-	AC_CHECK_HEADERS([readline/readline.h readline/history.h],
-		[AC_DEFINE(HAVE_GNUREADLINE,[],
-			[Define if we have GNU readline])],
-		[AC_MSG_ERROR(Couldn't find GNU readline headers.)])
-	AC_SEARCH_LIBS(tputs,ncurses termcap,
-		AC_DEFINE(HAVE_TERMCAP,[],
-			[Define if we have ncurses or termcap]),
-		AC_MSG_ERROR(Found neither ncurses or termcap))
-	AC_CHECK_LIB(readline, readline,
-		[LIBS="$LIBS -lreadline"],
-		[AC_MSG_ERROR(Couldn't find readline libraries.  Try passing extra LDFLAGS.)])
-fi
+dnl if test "$with_readline" != "yes"; then
+dnl 	AC_MSG_RESULT(GNU readline disabled.)
+dnl else
+dnl 	AC_MSG_RESULT(Checking for readline:)
+dnl 	AC_CHECK_HEADERS([readline/readline.h readline/history.h],
+dnl 		[AC_DEFINE(HAVE_GNUREADLINE,[],
+dnl 			[Define if we have GNU readline])],
+dnl 		[AC_MSG_ERROR(Couldn't find GNU readline headers.)])
+dnl 	AC_SEARCH_LIBS(tputs,ncurses termcap,
+dnl 		AC_DEFINE(HAVE_TERMCAP,[],
+dnl 			[Define if we have ncurses or termcap]),
+dnl 		AC_MSG_ERROR(Found neither ncurses or termcap))
+dnl 	AC_CHECK_LIB(readline, readline,
+dnl 		[LIBS="$LIBS -lreadline"],
+dnl 		[AC_MSG_ERROR(Couldn't find readline libraries.  Try passing extra LDFLAGS.)])
+dnl fi
+AC_CHECK_READLINE
 
 dnl	Option to include BSD editline support in ngspice CLI
 dnl	Default: disabled.
-if test "$with_editline" != "yes"; then
-	AC_MSG_RESULT(BSD editline disabled.)
-else
-	AC_MSG_RESULT(Checking for editline:)
-	AC_CHECK_HEADERS([editline/readline.h],
-		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
-			[Define to enable BSD editline])],
-		[AC_MSG_ERROR(Couldn't find BSD editline headers.)])
-	AC_SEARCH_LIBS(tputs,ncurses termcap,
-		AC_DEFINE(HAVE_TERMCAP,[],
-			[Define if we have ncurses or termcap]),
-		AC_MSG_ERROR(Found neither ncurses or termcap))
-	AC_CHECK_LIB(edit, readline,
-		[LIBS="$LIBS -ledit"],
-		[AC_MSG_ERROR(Couldn't find editline libraries.  Try passing extra LDFLAGS.)],
-		-lncurses )
-fi
+dnl if test "$with_editline" != "yes"; then
+dnl 	AC_MSG_RESULT(BSD editline disabled.)
+dnl else
+dnl 	AC_MSG_RESULT(Checking for editline:)
+dnl 	AC_CHECK_HEADERS([editline/readline.h],
+dnl 		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
+dnl 			[Define to enable BSD editline])],
+dnl 		[AC_MSG_ERROR(Couldn't find BSD editline headers.)])
+dnl 	AC_SEARCH_LIBS(tputs,ncurses termcap,
+dnl 		AC_DEFINE(HAVE_TERMCAP,[],
+dnl 			[Define if we have ncurses or termcap]),
+dnl 		AC_MSG_ERROR(Found neither ncurses or termcap))
+dnl 	AC_CHECK_LIB(edit, readline,
+dnl 		[LIBS="$LIBS -ledit"],
+dnl 		[AC_MSG_ERROR(Couldn't find editline libraries.  Try passing extra LDFLAGS.)],
+dnl 		-lncurses )
+dnl fi
+AC_CHECK_EDITLINE
 
 dnl if test "$ac_cv_header_readline_readline_h" = "yes" || \
 dnl	test "$ac_cv_header_editline_readline_h" = "yes"

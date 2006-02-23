@@ -3,7 +3,7 @@
 	Extensions to the standard reverse_iterator template operations.  
 	Ideally this is not needed, but there are always shortcomings...
 	Known to be needed before gcc-4.1 fixed this in its headers.  
-	$Id: reverse_iterator.h,v 1.5 2006/02/20 20:51:00 fang Exp $
+	$Id: reverse_iterator.h,v 1.5.2.1 2006/02/23 04:36:14 fang Exp $
  */
 
 #ifndef	__UTIL_STL_REVERSE_ITERATOR_H__
@@ -12,7 +12,10 @@
 #include "config.h"
 #include <iterator>
 
-#if !HAVE_STL_REVERSE_ITERATOR_COMPARISONS
+/**
+	These are missing before gcc-4.1.  
+ */
+#ifndef	HAVE_STL_REVERSE_ITERATOR_COMPARISONS
 namespace std {
 
 /**
