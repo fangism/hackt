@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.42.2.2 2006/02/23 04:36:10 fang Exp $
+#	$Id: configure.ac,v 1.42.2.3 2006/02/23 06:29:59 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -38,6 +38,7 @@ AC_PATH_PROG(SH_PATH, sh)
 AC_CHECK_PROGS([CALLMAKE], gmake make)
 
 # basic program checks
+AC_PROG_LN_S
 AC_CHECK_PROG([CAT], cat, cat)
 AC_CHECK_PROG([CPP_TRADITIONAL], cpp, cpp)
 AC_CHECK_PROG([CHMOD], chmod, chmod)
@@ -59,13 +60,7 @@ AC_CHECK_PROG([TAIL], tail, tail)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)
 AC_CHECK_PROG([TOUCH], touch, touch)
-AC_CHECK_PROG([SLEEP], sleep, sleep)
-if test ! -n "$SLEEP"
-then
-	AC_MSG_ERROR([How do you expect to work without sleep?])
-fi
-AC_MSG_CHECKING([for *enough* sleep])
-AC_MSG_RESULT([maybe])
+AC_PROG_SLEEP
 AC_CHECK_PROG([INDENT], indent, indent)
 AC_CHECK_PROGS([M4], gm4 m4, m4)
 
@@ -83,6 +78,31 @@ DOC_CHECK_PROG_BIBTEX
 DOC_CHECK_PROG_MAKEINDEX
 DOC_CHECK_PROG_PS2PDF
 
+# figure related stuff
+AC_CHECK_PROG([XFIG], xfig, xfig)
+AC_CHECK_PROG([TRANSFIG], transfig, transfig)
+dnl only fig2dev is needed for converting xfigs
+AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
+
+# checking for old CAST tools for regression and backwards compatibility tests
+# no big deal if they don't exist...
+# NOTE: AM_CONDITIONAL is usable in generation of AC_CONFIG_FILES
+#	just use @VAR_TRUE@ instead of the if ... version in automake
+AC_CHECK_PROG([PRSIM], prsim, prsim)
+AC_CHECK_PROG([CFLAT], cflat, cflat)
+AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
+AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
+
+# Lex/Yacc support
+AM_PROG_LEX
+AC_PROG_YACC
+
+HACKT_ARG_VAR_LEX
+HACKT_ARG_VAR_YACC
+HACKT_AM_CONDITIONAL_HAVE_YACC
+HACKT_YACC_VERSION
+HACKT_LEX_VERSION
+
 # comment out until time for release
 # this causes too many rebuilds during development
 # AC_DEFINE_UNQUOTED(HACKT_BUILD_DATE, "`$DATE`", [Define the build date.])
@@ -90,28 +110,27 @@ DOC_CHECK_PROG_PS2PDF
 # This takes care of many standard C[++] compiler configuration checks.  
 AC_PROG_RANLIB
 AC_PROG_LIBTOOL
-
+HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 # Automatically update if libtool script is outdated.  
 # Adds corresponding dependencies to "Makefile.in".  
 AC_SUBST(LIBTOOL_DEPS)
-
-# appends --silent option to all libtool invocations
-LIBTOOL="$LIBTOOL --silent"
 
 dnl defined in config.hackt.m4
 HACKT_ARG_ENABLE_GOD_MODE
 dnl defined in config/header_validation.m4
 AC_ARG_ENABLE_HEADER_VALIDATION
-
+dnl from "config/rl_el.m4"
 AC_ARG_WITH_READLINE_EDITLINE
 
 dnl whether or not to build universal binary (config/hackt.m4)
+dnl not actually implemented yet
 HACKT_ARG_ENABLE_UNIVERSAL_BINARY
 
 dnl AC_ARG_ENABLE for building documentation (on by default)
+dnl from "config/documentation.m4"
 DOC_ARG_ENABLE_DOCS
 
-dnl enable or disable fun modules
+dnl enable or disable fun modules ("config/hackt.m4")
 HACKT_ARG_ENABLE_FUN
 
 dnl define WORDS_BIGENDIAN if is big endian
@@ -119,26 +138,21 @@ dnl not actually needed in this project yet
 AC_C_BIGENDIAN
 
 AC_PROG_CXX
-dnl we need these anal flags for checking for certain charateristics
-dnl TODO: what are the equivalent flags for other compilers?
-FANG_ANAL_COMPILE_FLAGS
-
-dnl from "config/cxx.m4"
-FANG_AM_FLAGS
 
 dnl from "config/cxx.m4"
 AC_CXX_VERSION
 
-
-dnl need to set LANG to C++ to check for C++ headers
+dnl we need these anal flags for checking for certain charateristics
+dnl TODO: what are the equivalent flags for other compilers?
+dnl from "config/cxx.m4"
+FANG_ANAL_COMPILE_FLAGS
+FANG_AM_FLAGS
 
 dnl which set of pre-determined compiler flags to apply?
 AM_CONDITIONAL_HAVE_GXX
 dnl TODO: add other conditionals for other common compilers
 dnl XLC++, ICC, HPCC, etc...
 
-AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
 AM_PROG_CC_C_O
 AC_ISC_POSIX
 
@@ -166,6 +180,8 @@ AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 
+dnl checks tons of standard C++ headers in various locations
+dnl from "config/cxx_STL.m4"
 AC_HEADER_STDCXX
 
 dnl suggestions from autoscan
@@ -180,11 +196,7 @@ AC_C_INLINE
 AC_C_RESTRICT
 AC_TYPE_SIZE_T
 AC_C_VOLATILE
-AC_CHECK_TYPES([struct __sFILE])	dnl BSD, Darwin
-AC_CHECK_TYPES([struct _IO_FILE])	dnl linux
-AC_CHECK_TYPES([__FILE_TAG])		dnl Sun (C++)
-AC_CHECK_TYPES([struct __FILE_TAG])	dnl Sun (C)
-AC_CHECK_TYPES([__FILE])		dnl Sun
+AC_TYPEDEF_FILE			dnl defined in "config/cc.m4"
 AC_CHECK_TYPES([ptrdiff_t])
 AC_CHECK_FUNCS([sqrt])
 AC_CHECK_FUNCS([getopt])
@@ -228,205 +240,13 @@ AC_CHECK_SIZEOF(size_t)
 AC_CHECK_SIZEOF(int64_t)
 AC_CHECK_SIZEOF(uint64_t)
 
-AC_LANG_RESTORE
+HACKT_CHECK_SANITY
 
-# Lex/Yacc support
-AM_PROG_LEX
-AC_PROG_YACC
-
-AC_ARG_VAR(LEX, [lexer/scanner, such as [f]lex])
-AC_ARG_VAR(YACC, [parser generator, requires LALR(1), such as yacc/bison])
-
-# Miscellaneous
-AC_PROG_LN_S
-
-# not so funny...
-AC_MSG_CHECKING([whether fang is sane])
-# sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "." sleep 1; 
-$SLEEP 3
-AC_MSG_RESULT([no]);
-# not enough sleep
-
-# check whether or not bison is disguising as yacc (with bison -y)
-# some parser builds in sub-directories will compile differently
-# depending on which parser is used.  
-AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
-AM_CONDITIONAL(HAVE_BYACC, echo "$YACC" | grep -q byacc)
-AM_CONDITIONAL(HAVE_YACC, echo "$YACC" | grep -v byacc | grep -q yacc)
-
-dnl TODO: check whether or not bison/yacc works on a basic file
-dnl this must be consistent with the above
-dnl there might be a better way to do this...
-case $YACC in
-	*bison* )
-		dnl echo "GOT bison"
-		AC_DEFINE(USING_BISON, 1, [Define to 1 if we're using bison.])
-		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
-		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
-		dnl Now would be a good place to check for version
-		dnl since bison is known to have significant variations.  
-		YACC_VERSION=`$YACC --version 2>&1 | head -n 1`
-		[BISON_VERSION=`echo x$YACC_VERSION | sed 's/[^.0-9]//g'`]
-		AC_MSG_NOTICE([found bison version $BISON_VERSION.])
-		dnl known version checks
-dnl the below code doesn't work...
-dnl	if { awk 'END{ if($BISON_VERSION +0.0<=1.35) exit 1;}' </dev/null;}
-dnl	then 
-dnl dnl		if { awk 'END{if($BISON_VERSION +0.0<=1.28) exit 1;}' </dev/null;}
-dnl dnl		then AC_MSG_ERROR([
-dnl dnl	Your bison (<= 1.28) is known to fail with this project.
-dnl dnl	Please upgrade to 1.875 or higher, or use traditional yacc.])
-dnl dnl		else
-dnl			AC_MSG_WARN([
-dnl	Your bison (<= 1.35) is not officially supported by this project.  
-dnl	Consider upgrading to 1.875 or higher, or use traditional yacc.])
-dnl dnl		fi
-dnl	fi
-		;;
-	*byacc* )
-		dnl echo "GOT byacc"
-		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
-		AC_DEFINE(USING_BYACC, 1, [Define to 1 if we're using byacc.])
-		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
-		YACC_VERSION=`which $YACC | head -n 1`
-		;;
-	*yacc* )
-		dnl echo "GOT yacc"
-		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
-		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
-		AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
-		dnl traditional yacc has no version flag :(
-		YACC_VERSION=`which $YACC | head -n 1`
-		;;
-	* ) AC_MSG_ERROR([No parser-generator found.]) ;;
-esac
-AC_SUBST(YACC_VERSION)
-
-# unfortunately, lex is often IDENTICAL to flex...
-case $LEX in
-	*flex* )
-		AC_DEFINE(USING_FLEX, 1, [Define to 1 if we're using flex.])
-		AC_DEFINE(USING_LEX, 0, [Define to 1 if we're using lex.])
-		;;
-	*lex* )
-		AC_DEFINE(USING_FLEX, 0, [Define to 1 if we're using lex.])
-		AC_DEFINE(USING_LEX, 1, [Define to 1 if we're using lex.])
-		;;
-	* ) AC_MSG_ERROR([No lexer-generator found.]) ;;
-esac
-LEX_VERSION=`$LEX --version | head -n 1`
-AC_SUBST(LEX_VERSION)
-
-# some substitution variables for the doxygen configuration
-if test -n "$DOT"
-then
-	AC_SUBST(HAVE_DOT, "YES")
-	AC_PATH_PROG([DOT_PATH], dot)
-else
-	AC_SUBST(HAVE_DOT, "NO")
-fi
-
-if test -n "$LATEX"
-then AC_SUBST(HAVE_LATEX, "YES")
-else AC_SUBST(HAVE_LATEX, "NO")
-fi
-
-if test -n "$PDFLATEX"
-then AC_SUBST(HAVE_PDFLATEX, "YES")
-else AC_SUBST(HAVE_PDFLATEX, "NO")
-fi
-
-# figure related stuff
-AC_CHECK_PROG([XFIG], xfig, xfig)
-AC_CHECK_PROG([TRANSFIG], transfig, transfig)
-dnl only fig2dev is needed for converting xfigs
-AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
-
-# checking for old CAST tools for regression and backwards compatibility tests
-# no big deal if they don't exist...
-# NOTE: AM_CONDITIONAL is usable in generation of AC_CONFIG_FILES
-#	just use @VAR_TRUE@ instead of the if ... version in automake
-AC_CHECK_PROG([PRSIM], prsim, prsim)
-AC_CHECK_PROG([CFLAT], cflat, cflat)
-AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
-AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
-
-# shamelessly copied autoconf snippet from ngspige's configure.in
-dnl	Option to include GNU readline support in ngspice CLI
-dnl	Default: disabled.
-dnl	Hope to see in the future readline replacement.
-dnl if test "$with_readline" != "yes"; then
-dnl 	AC_MSG_RESULT(GNU readline disabled.)
-dnl else
-dnl 	AC_MSG_RESULT(Checking for readline:)
-dnl 	AC_CHECK_HEADERS([readline/readline.h readline/history.h],
-dnl 		[AC_DEFINE(HAVE_GNUREADLINE,[],
-dnl 			[Define if we have GNU readline])],
-dnl 		[AC_MSG_ERROR(Couldn't find GNU readline headers.)])
-dnl 	AC_SEARCH_LIBS(tputs,ncurses termcap,
-dnl 		AC_DEFINE(HAVE_TERMCAP,[],
-dnl 			[Define if we have ncurses or termcap]),
-dnl 		AC_MSG_ERROR(Found neither ncurses or termcap))
-dnl 	AC_CHECK_LIB(readline, readline,
-dnl 		[LIBS="$LIBS -lreadline"],
-dnl 		[AC_MSG_ERROR(Couldn't find readline libraries.  Try passing extra LDFLAGS.)])
-dnl fi
+dnl readline or editline support
 AC_CHECK_READLINE
-
-dnl	Option to include BSD editline support in ngspice CLI
-dnl	Default: disabled.
-dnl if test "$with_editline" != "yes"; then
-dnl 	AC_MSG_RESULT(BSD editline disabled.)
-dnl else
-dnl 	AC_MSG_RESULT(Checking for editline:)
-dnl 	AC_CHECK_HEADERS([editline/readline.h],
-dnl 		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
-dnl 			[Define to enable BSD editline])],
-dnl 		[AC_MSG_ERROR(Couldn't find BSD editline headers.)])
-dnl 	AC_SEARCH_LIBS(tputs,ncurses termcap,
-dnl 		AC_DEFINE(HAVE_TERMCAP,[],
-dnl 			[Define if we have ncurses or termcap]),
-dnl 		AC_MSG_ERROR(Found neither ncurses or termcap))
-dnl 	AC_CHECK_LIB(edit, readline,
-dnl 		[LIBS="$LIBS -ledit"],
-dnl 		[AC_MSG_ERROR(Couldn't find editline libraries.  Try passing extra LDFLAGS.)],
-dnl 		-lncurses )
-dnl fi
 AC_CHECK_EDITLINE
-
-dnl if test "$ac_cv_header_readline_readline_h" = "yes" || \
-dnl	test "$ac_cv_header_editline_readline_h" = "yes"
-if test "$with_readline" = "yes" || test "$with_editline" = "yes"
-then
-AC_MSG_CHECKING([if readline()'s prompt argument is const char*])
-AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
-dnl need to have warnings enabled and turned to errors here
-SAVE_CXXFLAGS=$CXXFLAGS
-CXXFLAGS="$SAVE_CXXFLAGS $ANAL_FLAGS"
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([
-#include <cstdio>
-#if defined(HAVE_GNUREADLINE)
-#include <readline/readline.h>
-#elif defined(HAVE_BSDEDITLINE)
-#include <editline/readline.h>
-#endif
-],[[[const char null[] = "foo"; readline(null) ]]]),
-dnl action on success
-[AC_MSG_RESULT([yes])
-AC_DEFINE(READLINE_PROMPT_CONST, 1,
-	[True if readline's argument is const char*])],
-dnl action on failure
-[AC_MSG_RESULT([no (you suck!)])
-AC_DEFINE(READLINE_PROMPT_CONST, 0,
-	[True if readline's argument is const char*])
-])
-dnl restore compile flags
-CXXFLAGS=$SAVE_CXXFLAGS
-AC_LANG_RESTORE
-fi
-
+dnl check prototype of readline() if applicable
+AC_CHECK_READLINE_ARG_CONST
 
 dnl first, create a useful variable substitution script for use in config.status
 AC_CONFIG_FILES([config_subst.awk.sh:config/config_subst.awk],

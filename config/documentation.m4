@@ -1,5 +1,5 @@
 dnl "config/documentation.m4"
-dnl	$Id: documentation.m4,v 1.1.2.1 2006/02/23 04:36:13 fang Exp $
+dnl	$Id: documentation.m4,v 1.1.2.2 2006/02/23 06:30:02 fang Exp $
 dnl Autoconf macros pertaining to package documentation.
 dnl This provides macros for checking for latex and related programs
 dnl that are used in building the documentation.  
@@ -27,35 +27,55 @@ AM_CONDITIONAL(HAVE_DOXYGEN, test -n "$DOXYGEN")]
 
 dnl
 dnl Checks for dot, from graphviz, from AT&T.  
-dnl Defines HAVE_DOT.
+dnl Defines HAVE_DOT_TRUE/FALSE for automake.
+dnl Defines HAVE_DOT for doxygen configuration.  
 dnl
 AC_DEFUN([DOC_CHECK_PROG_DOT],
 [AC_CHECK_PROG([DOT], dot, dot)
-AM_CONDITIONAL(HAVE_DOT, test -n "$DOT" )]
-)
+AM_CONDITIONAL(HAVE_DOT, test -n "$DOT" )
+dnl HAVE_DOT and DOT_PATH are used in doxygen's configuration
+if test -n "$DOT"
+then
+	AC_SUBST(HAVE_DOT, "YES")
+	AC_PATH_PROG([DOT_PATH], dot)
+else
+	AC_SUBST(HAVE_DOT, "NO")
+fi
+])
 
 dnl
 dnl Checks for our favorite typesetter, LaTeX.  
-dnl Defines HAVE_LATEX for Makefiles.  
+dnl Defines HAVE_LATEX_TRUE/FALSE for Makefiles.  
+dnl Defines HAVE_LATEX for doxygen configuration.
 dnl
 AC_DEFUN([DOC_CHECK_PROG_LATEX],
 [AC_CHECK_PROG([LATEX], latex, latex)
-AM_CONDITIONAL(HAVE_LATEX, test -n "$LATEX" )]
-)
+AM_CONDITIONAL(HAVE_LATEX, test -n "$LATEX" )
+if test -n "$LATEX"
+then AC_SUBST(HAVE_LATEX, "YES")
+else AC_SUBST(HAVE_LATEX, "NO")
+fi
+])
 
 dnl
-dnl Checks for pdflatex, and defines HAVE_PDFLATEX for automake.  
+dnl Checks for pdflatex, and defines HAVE_PDFLATEX_TRUE/FALSE for automake.  
+dnl Defines HAVE_PDFLATEX for doxygen configuration.
 dnl
 AC_DEFUN([DOC_CHECK_PROG_PDFLATEX],
 [AC_CHECK_PROG([PDFLATEX], pdflatex, pdflatex)
-AM_CONDITIONAL(HAVE_PDFLATEX, test -n "$PDFLATEX" )]
-)
+AM_CONDITIONAL(HAVE_PDFLATEX, test -n "$PDFLATEX" )
+if test -n "$PDFLATEX"
+then AC_SUBST(HAVE_PDFLATEX, "YES")
+else AC_SUBST(HAVE_PDFLATEX, "NO")
+fi
+])
 
 dnl
 dnl Checks for dvips, a DVI to PS converter.  
 dnl
 AC_DEFUN([DOC_CHECK_PROG_DVIPS],
-[AC_CHECK_PROG([DVIPS], dvips, dvips)
+[AC_REQUIRE([DOC_CHECK_PROG_LATEX])
+AC_CHECK_PROG([DVIPS], dvips, dvips)
 AM_CONDITIONAL(HAVE_DVIPS, test -n "$DVIPS" )]
 )
 

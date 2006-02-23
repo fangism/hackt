@@ -1,5 +1,5 @@
 dnl "config/rl_el.m4"
-dnl	$Id: rl_el.m4,v 1.1.2.1 2006/02/23 04:36:13 fang Exp $
+dnl	$Id: rl_el.m4,v 1.1.2.2 2006/02/23 06:30:02 fang Exp $
 dnl Readline and Editline support for the utility library used by hackt.
 dnl This is not only specific to hackt, so we place these macros here.  
 dnl
@@ -103,6 +103,44 @@ else
 fi
 ])
 
+dnl
 dnl check for const char* in prototype
+dnl
+AC_DEFUN([AC_CHECK_READLINE_ARG_CONST],
+[AC_REQUIRE([AC_CHECK_READLINE])
+AC_REQUIRE([AC_CHECK_EDITLINE])
+AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+dnl if test "$ac_cv_header_readline_readline_h" = "yes" || \
+dnl     test "$ac_cv_header_editline_readline_h" = "yes"
+if test "$with_readline" = "yes" || test "$with_editline" = "yes"
+then
+AC_MSG_CHECKING([if readline()'s prompt argument is const char*])
+dnl need to have warnings enabled and turned to errors here
+AC_LANG_PUSH(C++)
+save_CXXFLAGS=$CXXFLAGS
+CXXFLAGS="$save_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+	#include <cstdio>
+	#if defined(HAVE_GNUREADLINE)
+	#include <readline/readline.h>
+	#elif defined(HAVE_BSDEDITLINE)
+	#include <editline/readline.h>
+	#endif
+	],[[[const char null[] = "foo"; readline(null) ]]]),
+	dnl action on success
+	[AC_MSG_RESULT([yes])
+	AC_DEFINE(READLINE_PROMPT_CONST, 1,
+		[True if readline's argument is const char*])],
+	dnl action on failure
+	[AC_MSG_RESULT([no (you suck!)])
+	AC_DEFINE(READLINE_PROMPT_CONST, 0,
+		[True if readline's argument is const char*])
+	])
+dnl restore compile flags
+CXXFLAGS=$save_CXXFLAGS
+AC_LANG_POP(C++)
+fi
+])
 
 
