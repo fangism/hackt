@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2006-02-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-05:
+	  Added configure-wrapped "util/xdr.h"
+	  Suppressing LIBS in the util/test directory.  
+
+
 2006-02-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-16-maintainence-04:

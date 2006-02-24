@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.13.10.2 2006/02/24 06:11:41 fang Exp $
+#	$Id: Make.global,v 1.13.10.3 2006/02/24 10:55:33 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -113,6 +113,18 @@ echo-LEX: force
 echo-YACC: force
 	@$(ECHO) $(YACC)
 
+echo-AM_CFLAGS: force
+	@$(ECHO) $(AM_CFLAGS)
+
+echo-AM_CXXFLAGS: force
+	@$(ECHO) $(AM_CXXFLAGS)
+
+echo-AM_CPPFLAGS: force
+	@$(ECHO) $(AM_CPPFLAGS)
+
+echo-AM_LDFLAGS: force
+	@$(ECHO) $(AM_LDFLAGS)
+
 echo-CFLAGS: force
 	@$(ECHO) $(CFLAGS)
 
@@ -193,7 +205,7 @@ help-global:
 	@$(ECHO) "	auto-ignore: list of automatic cvsignored files"
 	@$(ECHO) "	srcdir, top-srcdir, subdir, build, host, prefix, exec-prefix"
 	@$(ECHO) "	program-transform-name, package{,-version,-bugreport}"
-	@$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, LIBS, LEX, YACC"
+	@$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, AM_*FLAGS, LIBS, LEX, YACC"
 
 # standard phony target for unconditional targets
 force:

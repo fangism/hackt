@@ -2,7 +2,7 @@
 	\file "main/version.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: version.cc,v 1.5.26.1 2006/02/24 06:11:48 fang Exp $
+	$Id: version.cc,v 1.5.26.2 2006/02/24 10:55:40 fang Exp $
  */
 
 #include <iostream>
@@ -101,7 +101,9 @@ version::cxx(ostream& o) {
  */
 ostream&
 version::cxxflags(ostream& o) {
-	o << "AM_CXXFLAGS: " AM_CXXFLAGS;
+		o << "AM_CPPFLAGS: " AM_CPPFLAGS;
+	o << endl << "AM_CXXFLAGS: " AM_CXXFLAGS;
+	o << endl << "AM_LDFLAGS: " AM_LDFLAGS;
 	o << endl << "config-CXXFLAGS: " CONFIG_CXXFLAGS;
 	o << endl << "config-CPPFLAGS: " CONFIG_CPPFLAGS;
 	o << endl << "config-LDFLAGS: " CONFIG_LDFLAGS;

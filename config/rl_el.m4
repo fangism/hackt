@@ -1,5 +1,5 @@
 dnl "config/rl_el.m4"
-dnl	$Id: rl_el.m4,v 1.1.2.3 2006/02/24 06:11:43 fang Exp $
+dnl	$Id: rl_el.m4,v 1.1.2.4 2006/02/24 10:55:38 fang Exp $
 dnl Readline and Editline support for the utility library used by hackt.
 dnl This is not only specific to hackt, so we place these macros here.  
 dnl
@@ -74,28 +74,40 @@ if test "$with_readline" != yes ; then
 	rl_include="-I$with_readline/include"
 fi
 saved_CPPFLAGS="$CPPFLAGS"
-saved_LDFLAGS="$LDFLAGS"
 CPPFLAGS="$CPPFLAGS $rl_include"
-LDFLAGS="$LDFLAGS $rl_ldpath"
         AC_MSG_RESULT(Checking for readline:)
         AC_CHECK_HEADERS([readline/readline.h readline/history.h],
                 [AC_DEFINE(HAVE_GNUREADLINE,[], 
                         [Define if we have GNU readline])
-		saved_CPPFLAGS="$CPPFLAGS"],
+		dnl saved_CPPFLAGS="$CPPFLAGS"
+		RL_INCLUDE="$rl_include"],
                 [AC_MSG_ERROR(Couldn't find GNU readline headers.)])
 	dnl depends on terminal library support
 	if test x"$ac_cv_search_tputs" != xno ; then
-		LIBS="$ac_cv_search_tputs $LIBS"
+		:
+		dnl remember to link in proper order
+		dnl LIBS="$ac_cv_search_tputs $LIBS"
 	else
 	AC_MSG_ERROR([Found neither ncurses or termcap, needed by readline])
 	fi
+	saved_LDFLAGS="$LDFLAGS"
+	LDFLAGS="$LDFLAGS $rl_ldpath"
         AC_CHECK_LIB(readline, readline,
-                [LIBS="-lreadline $LIBS"
-		saved_LDFLAGS="$LDFLAGS"],
-                [AC_MSG_ERROR(Couldn't find readline libraries in LDFLAGS paths.)])
-LDFLAGS="$saved_LDFLAGS"
+                [
+		dnl LIBS="-lreadline $LIBS"
+		dnl saved_LDFLAGS="$LDFLAGS"
+		RL_LDPATH="$rl_ldpath"
+		RL_LIB="-lreadline"],
+                [AC_MSG_ERROR(Couldn't find readline libraries in LDFLAGS paths.)],
+	dnl extra library argument to link during link test
+	$NCURSES_LIB )
+	LDFLAGS="$saved_LDFLAGS"
 CPPFLAGS="$saved_CPPFLAGS"
 fi
+dnl these are set only oif libs/headers are found
+AC_SUBST(RL_INCLUDE)
+AC_SUBST(RL_LIB)
+AC_SUBST(RL_LDPATH)
 ])
 
 dnl
@@ -122,22 +134,33 @@ LDFLAGS="$LDFLAGS $el_ldpath"
 	AC_CHECK_HEADERS([editline/readline.h],
 		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
 			[Define to enable BSD editline])
-		saved_CPPFLAGS="$CPPFLAGS"],
+		dnl saved_CPPFLAGS="$CPPFLAGS"
+		EL_INCLUDE="$el_include"],
 		[AC_MSG_ERROR(Couldn't find BSD editline headers.)])
 	dnl depends on terminal library support
 	if test x"$ac_cv_search_tputs" != xno ; then
-		LIBS="$ac_cv_search_tputs $LIBS"
+		:
+		dnl remember to link in proper order
+		dnl LIBS="$ac_cv_search_tputs $LIBS"
 	else
 	AC_MSG_ERROR([Found neither ncurses or termcap, needed by editline])
 	fi
 	AC_CHECK_LIB(edit, readline,
-		[LIBS="-ledit $LIBS"
-		saved_LDFLAGS="$LDFLAGS"],
-		[AC_MSG_ERROR(Couldn't find editline libraries in LDFLAGS paths.)]
-	)
+		[
+		dnl LIBS="-ledit $LIBS"
+		dnl saved_LDFLAGS="$LDFLAGS"
+		EL_LDPATH="$el_ldpath"
+		EL_LIB="-ledit"],
+		[AC_MSG_ERROR(Couldn't find editline libraries in LDFLAGS paths.)],
+	dnl extra library argument to link during link test
+	$NCURSES_LIB )
 LDFLAGS="$saved_LDFLAGS"
 CPPFLAGS="$saved_CPPFLAGS"
 fi
+dnl these are set only oif libs/headers are found
+AC_SUBST(EL_INCLUDE)
+AC_SUBST(EL_LIB)
+AC_SUBST(EL_LDPATH)
 ])
 
 dnl

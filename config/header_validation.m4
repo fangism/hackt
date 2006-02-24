@@ -1,5 +1,5 @@
 dnl "config.header_validation.m4"
-dnl	$Id: header_validation.m4,v 1.1.2.1 2006/02/22 08:09:41 fang Exp $
+dnl	$Id: header_validation.m4,v 1.1.2.2 2006/02/24 10:55:38 fang Exp $
 dnl autoconf macros dealing with header validation checks
 dnl	related files:
 dnl	src/Make.hchk-head
@@ -24,7 +24,8 @@ fi
 dnl if not given 
 AC_MSG_RESULT([yes (default)])
 )
-AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, test x$enable_header_validation = xyes)
+AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, 
+test -z "$enable_header_validation" || test x"$enable_header_validation" = xyes)
 ]
 )
 

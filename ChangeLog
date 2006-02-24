@@ -1,5 +1,21 @@
 "ChangeLog"
 
+2006-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-05:
+	  New configure macro policy:
+		Instead of allowing LIBS to accumulate across many library
+		check invocations, we're going to store the result of
+		each library in its own _LIB variable and accumulate
+		into AUTO_LIBS in configure.ac, which then becomes LIBS.
+		The reason: for better control, we're no longer accumulating
+		LDFLAGS and CPPFLAGS in each package check; each one produces
+		its own private variable.  This results in better isolation
+		for each package check, whish is made possible by use of
+		PATH arguments in all the various AC_ARG_WITH macro calls.  
+	  Added main/*.h to header-checks, was strangely missing before.  
+
+
 2006-02-23	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-16-maintainence-04:

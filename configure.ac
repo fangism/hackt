@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.42.2.4 2006/02/24 06:11:41 fang Exp $
+#	$Id: configure.ac,v 1.42.2.5 2006/02/24 10:55:33 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -122,6 +122,7 @@ AC_ARG_ENABLE_HEADER_VALIDATION
 dnl from "config/rl_el.m4"
 AC_ARG_WITH_READLINE_EDITLINE
 HACKT_ARG_WITH_GMP
+HACKT_ARG_WITH_XDR
 
 dnl whether or not to build universal binary (config/hackt.m4)
 dnl not actually implemented yet
@@ -249,6 +250,22 @@ AC_CHECK_READLINE
 AC_CHECK_EDITLINE
 dnl check prototype of readline() if applicable
 AC_CHECK_READLINE_ARG_CONST
+
+dnl TODO: xdr
+dnl for automake consumption
+dnl order would matter if there are cross-conflicting headers installed
+AUTO_CPPFLAGS="$EL_INCLUDE $RL_INCLUDE $NCURSES_INCLUDE $GMP_INCLUDE"
+dnl order might matter in the presence of cross-conflicting libraries
+AUTO_LDFLAGS="$EL_LDPATH $RL_LDPATH $NCURSES_LDPATH $GMP_LDPATH"
+dnl order matters! we are taking responsibility for this
+dnl rather than letting LIBS accumulate over checks.  
+AUTO_LIBS="$EL_LIB $RL_LIB $NCURSES_LIB $GMP_LIB"
+LIBS="$AUTO_LIBS"
+dnl may decide not to use these, depending on how much control is needed
+AC_SUBST(AUTO_CPPFLAGS)
+AC_SUBST(AUTO_LDFLAGS)
+dnl AC_SUBST(AUTO_LIBS)
+
 
 dnl first, create a useful variable substitution script for use in config.status
 AC_CONFIG_FILES([config_subst.awk.sh:config/config_subst.awk],
