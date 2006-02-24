@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.1.2.5 2006/02/24 10:55:38 fang Exp $
+dnl	$Id: hackt.m4,v 1.1.2.6 2006/02/24 19:25:28 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -58,8 +58,9 @@ dnl Thus, we check for tputs unconditionally
 saved_LDFLAGS="$LDFLAGS"
 LDFLAGS="$LDFLAGS $xdr_ldpath"
 dnl NOTE: SEARCH_LIBS automatically prepends LIBS
-dnl expecting 'none required', since no specific libraries are passed
-AC_SEARCH_LIBS(xdr_char, [],
+dnl expecting 'none required' on most systems
+dnl we have to pass some library else will expand into bad for loop syntax.
+AC_SEARCH_LIBS(xdr_char, [c],
 	[XDR_LDPATH="$xdr_ldpath"
 	XDR_LIB=""],
 	[:]
