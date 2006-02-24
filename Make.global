@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.13.10.1 2006/02/23 06:29:59 fang Exp $
+#	$Id: Make.global,v 1.13.10.2 2006/02/24 06:11:41 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -107,6 +107,27 @@ echo-package-bugreport: force
 echo-package-version: force
 	@$(ECHO) $(PACKAGE_VERSION)
 
+echo-LEX: force
+	@$(ECHO) $(LEX)
+
+echo-YACC: force
+	@$(ECHO) $(YACC)
+
+echo-CFLAGS: force
+	@$(ECHO) $(CFLAGS)
+
+echo-CXXFLAGS: force
+	@$(ECHO) $(CXXFLAGS)
+
+echo-CPPFLAGS: force
+	@$(ECHO) $(CPPFLAGS)
+
+echo-LDFLAGS: force
+	@$(ECHO) $(LDFLAGS)
+
+echo-LIBS: force
+	@$(ECHO) $(LIBS)
+
 # might as well include this for non-maintainers too
 # again, can't append to file with cat redirection because distclean
 # sets permissions of new files as read-only
@@ -172,6 +193,7 @@ help-global:
 	@$(ECHO) "	auto-ignore: list of automatic cvsignored files"
 	@$(ECHO) "	srcdir, top-srcdir, subdir, build, host, prefix, exec-prefix"
 	@$(ECHO) "	program-transform-name, package{,-version,-bugreport}"
+	@$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, LIBS, LEX, YACC"
 
 # standard phony target for unconditional targets
 force:

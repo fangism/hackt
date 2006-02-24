@@ -2,6 +2,11 @@
 
 2006-02-23	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-16-maintainence-04:
+	  More autoconf macro checks for libraries, and automatic
+		accumulation of CPPFLAGS, LDFLAGS.  (Should use AC_SUBST)
+
+
 	* HACKT-00-01-04-main-00-77-16-maintainence-03:
 	  AC_DEFUN'd more attribute macros and lex/yacc checking.  
 	  configure.ac: is reasonably clean (maintainable) now.  

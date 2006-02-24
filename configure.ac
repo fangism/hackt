@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.42.2.3 2006/02/23 06:29:59 fang Exp $
+#	$Id: configure.ac,v 1.42.2.4 2006/02/24 06:11:41 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -121,6 +121,7 @@ dnl defined in config/header_validation.m4
 AC_ARG_ENABLE_HEADER_VALIDATION
 dnl from "config/rl_el.m4"
 AC_ARG_WITH_READLINE_EDITLINE
+HACKT_ARG_WITH_GMP
 
 dnl whether or not to build universal binary (config/hackt.m4)
 dnl not actually implemented yet
@@ -170,6 +171,7 @@ AC_CXX_ATTRIBUTE_ALIGNED_SIZE
 AC_CXX_ATTRIBUTE_EVIL
 
 AC_CXX_STL_REVERSE_ITERATOR_COMPARISONS
+AC_C_BUILTIN_EXPECT
 
 # additional header checks
 AC_HEADER_STDC

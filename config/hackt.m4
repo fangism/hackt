@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.1.2.3 2006/02/23 06:30:02 fang Exp $
+dnl	$Id: hackt.m4,v 1.1.2.4 2006/02/24 06:11:43 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -21,6 +21,132 @@ if test x"$enable_libtool_verbose" != "xyes" ; then
 	LIBTOOL="$LIBTOOL --silent"
 fi
 ])
+
+dnl
+dnl Check for terminal library.
+dnl
+AC_DEFUN([HACKT_ARG_WITH_NCURSES],
+[AC_REQUIRE([AC_PROG_CC])
+AC_ARG_WITH(ncurses,
+[[  --with-ncurses[=PATH]   Terminal manipulation library.]])
+dnl check headers and libraries independently
+dnl because headers may not be needed for compiling, while
+dnl libraries might be needed for linking
+ncurses_include=
+ncurses_ldpath=
+if test "$with_ncurses" && test x"$with_ncurses" != xno ; then
+if test "$with_ncurses" != yes ; then
+	ncurses_include="-I$with_ncurses/include"
+	ncurses_ldpath="-L$with_ncurses/lib"
+fi
+saved_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $ncurses_include"
+AC_CHECK_HEADERS([ncurses.h curses.h termcap.h])
+if test x"$ac_cv_header_ncurses_h" = xyes || \
+	test x"$ac_cv_header_curses_h" = xyes || \
+	test x"$ac_cv_header_termcap_h" = xyes ; then
+saved_CPPFLAGS="$CPPFLAGS"
+fi
+CPPFLAGS="$saved_CPPFLAGS"
+fi
+dnl realine may need to link against ncurses, without requiring headers
+dnl Thus, we check for tputs unconditionally
+saved_LDFLAGS="$LDFLAGS"
+LDFLAGS="$LDFLAGS $ncurses_ldpath"
+AC_SEARCH_LIBS(tputs, ncurses termcap,
+	[saved_LDFLAGS="$LDFLAGS"
+	AC_DEFINE(HAVE_TERMCAP, [], [Define if have ncurses OR termcap])],
+	[:]
+	dnl check for ac_cv_search_tputs for the result of this check
+)
+LDFLAGS="$saved_LDFLAGS"
+])
+
+
+dnl
+dnl Check for GMP libraries and headers.
+dnl
+AC_DEFUN([HACKT_ARG_WITH_GMP],
+[AC_REQUIRE([AC_PROG_CC])
+AC_REQUIRE([AC_PROG_CXX])
+AC_ARG_WITH(gmp,
+[[  --with-gmp[=PATH]       GNU multi-precision arithmetic library]])
+gmp_ldpath=
+gmp_lib=
+gmp_include=
+if test x"$with_gmp" != x ; then
+	if test "$with_gmp" != yes ; then
+		gmp_ldpath="-L$with_gmp/lib"
+		gmp_lib="-lgmp"
+		gmp_include="-I$with_gmp/include"
+	dnl else just look in the standard paths
+	fi
+	saved_CPPFLAGS="$CPPFLAGS"
+	CPPFLAGS="$saved_CPPFLAGS $gmp_include"
+dnl check for headers and libraries
+AC_CHECK_HEADERS([gmp.h])
+if test x"$ac_cv_header_gmp_h" = xyes ; then
+AC_LANG_PUSH(C++)
+AC_CHECK_HEADERS([gmpxx.h])
+if test x"$ac_cv_header_gmpxx_h" = xyes ; then
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM([[#include <gmpxx.h>
+		#if __GNU_MP_VERSION < 4
+		#error	Require GMP version 4 or higher.
+		#endif
+		]],[]),
+		[saved_CPPFLAGS="$CPPFLAGS"	dnl commit CPPFLAGS
+		dnl now check for library
+		saved_LDFLAGS="$LDFLAGS"
+		saved_LIBS="$LIBS"
+		LDFLAGS="$LDFLAGS $gmp_ldpath"
+		LIBS="$gmp_lib $LIBS"
+dnl		AC_CHECK_LIB(gmp, __gmpz_init,
+dnl			[saved_LDFLAGS="$LDFLAGS"	dnl commit LDFLAGS
+dnl			saved_LIBS="$LIBS"],		dnl commit LIBS
+dnl [AC_MSG_ERROR([Couldn't find libgmp, please specify the path to libgmp])]
+dnl		)
+		dnl prefer LINK_IFELSE to CHECK_LIB because GMP's 
+		dnl function names are macro-defined to internal names.  
+		AC_CACHE_CHECK([for linkable libgmp library],
+		[ac_cv_lib_gmp_mpz_init],
+		[AC_LANG_ASSERT(C++)
+		AC_LINK_IFELSE(
+			AC_LANG_PROGRAM([#include <gmpxx.h>
+				],[mpz_t _z; mpz_init(_z); mpz_clear(_z);]),
+			[ac_cv_lib_gmp_mpz_init=yes],
+			[ac_cv_lib_gmp_mpz_init=no]
+		)
+		])
+		if test "$ac_cv_lib_gmp_mpz_init" = yes ; then
+			dnl commit LDFLAGS and LIBS
+			saved_LDFLAGS="$LDFLAGS"
+			saved_LIBS="$LIBS"
+			dnl blank line
+		else
+			AC_MSG_ERROR([Couldn't find libgmp, please specify the path to libgmp])
+		fi
+		dnl restore (or commit) flags
+		LDFLAGS="$saved_LDFLAGS"
+		LIBS="$saved_LIBS"
+		],
+		dnl else found wrong version
+		[AC_MSG_NOTICE([[Found wrong version of GMP, (need >= 4)]])]
+		dnl will restore CPPFLAGS
+	)
+	dnl end AC_COMPILE_IFELSE
+else
+	AC_MSG_WARN([GMP requested, but gmpxx.h not found])
+fi
+AC_LANG_POP(C++)
+else
+	AC_MSG_WARN([GMP requested, but gmp.h not found])
+fi
+dnl end check for libraries and headers
+	CPPFLAGS="$saved_CPPFLAGS"
+fi
+])
+
 
 dnl testing the AC_ARG_ENABLE autoconf feature
 dnl god-mode doesn't actually do anything... yet
