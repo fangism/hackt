@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.14 2005/09/04 21:15:09 fang Exp $
+	$Id: list_vector_pool.h,v 1.14.46.1 2006/02/24 06:12:14 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -325,11 +325,12 @@ public:
 	~list_vector_pool();
 
 	pointer
-	allocate(void);
+	allocate(void) __ATTRIBUTE_MALLOC__ ;
 
 	/// allocate n elements without construction, unimplemented
 	pointer
-	allocate(size_type n, list_vector_pool<void>::const_pointer hint = 0);
+	allocate(size_type n, list_vector_pool<void>::const_pointer hint = 0)
+		__ATTRIBUTE_MALLOC__ ;
 
 	void
 	deallocate(pointer p);

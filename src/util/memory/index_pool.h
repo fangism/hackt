@@ -2,7 +2,7 @@
 	\file "util/memory/index_pool.h"
 	An adapter class to turn a vector-like class into 
 	an index-based allocator.  
-	$Id: index_pool.h,v 1.3 2006/01/28 18:21:21 fang Exp $
+	$Id: index_pool.h,v 1.3.14.1 2006/02/24 06:12:13 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_INDEX_POOL_H__
@@ -20,9 +20,11 @@ namespace memory {
 	This is a special kind of allocator for which deallocation
 	is not needed, only a one-time allocate interface.  
 	This is NOT a general allocator, as it does not keep track of
-	what's allocater or not, and never expects entries
+	what's allocated or not, and never expects entries
 	to be returned/deallocated.  
 	Consider a different name, like index_alloc_adaptor?
+	\param Pool underlying container array type whose interface
+		is like std::vector.  
  */
 template <class Pool>
 class index_pool : protected Pool {

@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.7 2005/12/08 22:01:13 fang Exp $
+	$Id: chunk_map_pool.h,v 1.7.28.1 2006/02/24 06:12:13 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -14,6 +14,7 @@
 #include "util/memory/chunk_map_pool_fwd.h"
 #include "util/numeric/inttype_traits.h"
 #include "util/bitset.h"
+#include "util/attributes.h"
 
 #define	CHUNK_MAP_POOL_CHUNK_CLASS					\
 chunk_map_pool_chunk<T,C>
@@ -229,7 +230,7 @@ public:
 
 protected:		// really only intended for internal use
 	void*
-	__allocate(void);
+	__allocate(void) __ATTRIBUTE_MALLOC__;
 
 	void
 	__deallocate(void*);
@@ -264,7 +265,7 @@ public:
 
 	/// wrap around parent's
 	pointer
-	allocate(void);
+	allocate(void) __ATTRIBUTE_MALLOC__ ;
 
 	void
 	deallocate(pointer);
@@ -346,13 +347,14 @@ public:
 	contains(pointer p) const;
 
 	pointer
-	allocate(void);
+	allocate(void) __ATTRIBUTE_MALLOC__ ;
 
 #if 0
 	// unimplemented
 	pointer
 	allocate(size_type n,
-		chunk_map_pool<void,C,Threaded>::const_pointer hint = 0);
+		chunk_map_pool<void,C,Threaded>::const_pointer hint = 0)
+		__ATTRIBUTE_MALLOC__ ;
 #endif
 
 	void

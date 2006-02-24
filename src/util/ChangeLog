@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2006-02-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-04:
+	  Applied __ATTRIBUTE_MALLOC__ to memory pool allocators.  
+	  Properly detect and use __builtin_expect "in util/likely.h".
+
+
 2006-02-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-11:
