@@ -1,14 +1,13 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.4 2006/01/25 20:26:04 fang Exp $
+	$Id: compile_options.h,v 1.5 2006/02/25 04:55:02 fang Exp $
  */
 
 #include <list>
 #include <string>
 
 namespace HAC {
-#include "util/using_ostream.h"
 using std::list;
 using std::string;
 

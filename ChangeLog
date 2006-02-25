@@ -1,5 +1,51 @@
 "ChangeLog"
 
+2006-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-17-merged-maintainence-05:
+	  Merged configure-maintainence revisions from branch.
+
+
+2006-02-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-05:
+	  New configure macro policy:
+		Instead of allowing LIBS to accumulate across many library
+		check invocations, we're going to store the result of
+		each library in its own _LIB variable and accumulate
+		into AUTO_LIBS in configure.ac, which then becomes LIBS.
+		The reason: for better control, we're no longer accumulating
+		LDFLAGS and CPPFLAGS in each package check; each one produces
+		its own private variable.  This results in better isolation
+		for each package check, whish is made possible by use of
+		PATH arguments in all the various AC_ARG_WITH macro calls.  
+	  Added main/*.h to header-checks, was strangely missing before.  
+
+
+2006-02-23	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-04:
+	  More autoconf macro checks for libraries, and automatic
+		accumulation of CPPFLAGS, LDFLAGS.  (Should use AC_SUBST)
+
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-03:
+	  AC_DEFUN'd more attribute macros and lex/yacc checking.  
+	  configure.ac: is reasonably clean (maintainable) now.  
+
+
+2006-02-22	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-02:
+	  Round two of defining autoconf checks in config/*.m4.
+		This already feels much more organized and manageable.  
+
+
+	* HACKT-00-01-04-main-00-77-16-maintainence-01:
+	  Organizing the clutter of autoconf macros into the config directory.
+	  This first revision is just a start for demonstration.  
+
+
 2006-02-20	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-12-merged-aggregate-01-10:

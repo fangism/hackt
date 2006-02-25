@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.104 2006/02/21 23:07:34 fang Exp $
+#	$Id: Makefile.am,v 1.105 2006/02/25 04:55:01 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -623,12 +623,12 @@ libhacktparsers_la_SOURCES = \
 	$(PARSER_CC_FILES) $(PARSER_H_FILES)
 
 ALL_HEADER_FILES += \
+	config.h \
 	$(OBJECT_H_FILES) \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
-	config.h \
-	main/main_funcs.h
+	$(MAIN_EXEC_H_FILES)
 
 ALL_TCC_FILES += \
 	$(OBJECT_TCC_FILES) \
@@ -845,9 +845,11 @@ parser/instref-union.cc: $(INSTREF_PARSE_OUTPUT) parser/instref.types \
 		$(INSTREF_PARSE_OUTPUT) > $@
 
 
-AM_CPPFLAGS = -I$(srcdir)
+# configure accumulated AUTO_CPPFLAGS for dependent package includes
+AM_CPPFLAGS = -I$(srcdir) @AUTO_CPPFLAGS@
 # will need _build directories for "make distcheck" with auto-generated headers
 # the last -Iparser is for the relative path in the build directory
+
 
 # extremely anal-retentive
 if HAVE_GXX
@@ -887,10 +889,20 @@ endif
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)
 
+# configure accumulated AUTO_LDFLAGS for linking LIBS of dependent packages
+AM_LDFLAGS = @AUTO_LDFLAGS@
+
+# now extended to include other important flags
 am_cxxflags.h: $(srcdir)/Makefile.am
-	@$(ECHO) "#ifndef	AM_CXXFLAGS" > $@
+	@$(ECHO) "#ifndef	AM_CPPFLAGS" > $@
+	@$(ECHO) "#define	AM_CPPFLAGS \"$(AM_CPPFLAGS)\"" >> $@
+	@$(ECHO) "#endif	// AM_CPPFLAGS" >> $@
+	@$(ECHO) "#ifndef	AM_CXXFLAGS" >> $@
 	@$(ECHO) "#define	AM_CXXFLAGS \"$(AM_CXXFLAGS)\"" >> $@
 	@$(ECHO) "#endif	// AM_CXXFLAGS" >> $@
+	@$(ECHO) "#ifndef	AM_LDFLAGS" >> $@
+	@$(ECHO) "#define	AM_LDFLAGS \"$(AM_LDFLAGS)\"" >> $@
+	@$(ECHO) "#endif	// AM_LDFLAGS" >> $@
 
 # flags needed to produce .output from yacc/bison
 AM_YFLAGS = -d -t -v
@@ -916,7 +928,7 @@ endif
 BOGUS_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS) $(MORE_BOGUS_CPPFLAGS)
 BOGUS_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(MORE_BOGUS_CXXFLAGS)
 # *COUGH* *HACK*:
-# LIBBOGUS tells lexer/hackt-lex.cc to use un-transfomed symbol names
+# LIBBOGUS tells lexer/hackt-lex.cc to use un-transformed symbol names
 
 # the -include is necessary because flex doesn't respectfully
 # include user header files early enough to rename declarations ^@#!%&!@^&%

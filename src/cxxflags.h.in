@@ -1,4 +1,16 @@
-#ifndef	CONFIG_CXXFLAGS
+/**
+	Configure-substituted definitions of build variables.  
+ */
+#ifndef	__CXXFLAGS_H__
+#define	__CXXFLAGS_H__
+
 #define	CONFIG_CXXFLAGS	"@CXXFLAGS@"
-#endif
+
+#define	CONFIG_CPPFLAGS "@CPPFLAGS@"
+
+#define	CONFIG_LDFLAGS	"@LDFLAGS@"
+
+#define	CONFIG_LIBS	"@LIBS@"
+
+#endif	/* __CXXFLAGS_H__ */
 

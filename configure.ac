@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.42 2006/02/21 04:48:15 fang Exp $
+#	$Id: configure.ac,v 1.43 2006/02/25 04:54:56 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -28,30 +28,6 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 
 AC_CANONICAL_HOST
 
-# ripped from ngspice's configure.in
-# TODO: rip the library and header checks too, to be invoked later
-# It would be a good idea to see how they handled compatiblity between the two
-dnl --with-readline:  Includes GNU readline support into CLI.  Default is "no".
-dnl Including readline into ngspice is a violation of GPL license. It's use
-dnl is discouraged.
-AC_ARG_WITH(readline,
-	AS_HELP_STRING([--with-readline[=yes/no]],
-		[Enable GNU readline support for CLI.  Default=no.]))
-
-dnl --with-editline:  Includes BSD Editline support into CLI.  Default is "no".
-AC_ARG_WITH(editline,
-	AS_HELP_STRING([--with-editline[=yes/no]],
-		[Enable BSD editline support for CLI.  Default=no.]))
-
-dnl readline and editline cannot both be enabled
-if test "$with_readline" = "yes"; then
-	AC_MSG_WARN([
-	This project license is not GPL-compatible to qualify for using GNU 
-	readline.  Please consider linking against BSD editline instead.])
-	if test "$with_editline" = "yes"; then
-		AC_MSG_ERROR(Readline and editline cannot both be enabled!)
-	fi
-fi
 
 AC_CHECK_PROG([SH], sh, sh)
 AC_PATH_PROG(SH_PATH, sh)
@@ -62,6 +38,7 @@ AC_PATH_PROG(SH_PATH, sh)
 AC_CHECK_PROGS([CALLMAKE], gmake make)
 
 # basic program checks
+AC_PROG_LN_S
 AC_CHECK_PROG([CAT], cat, cat)
 AC_CHECK_PROG([CPP_TRADITIONAL], cpp, cpp)
 AC_CHECK_PROG([CHMOD], chmod, chmod)
@@ -83,13 +60,7 @@ AC_CHECK_PROG([TAIL], tail, tail)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)
 AC_CHECK_PROG([TOUCH], touch, touch)
-AC_CHECK_PROG([SLEEP], sleep, sleep)
-if test ! -n "$SLEEP"
-then
-	AC_MSG_ERROR([How do you expect to work without sleep?])
-fi
-AC_MSG_CHECKING([for *enough* sleep])
-AC_MSG_RESULT([maybe])
+AC_PROG_SLEEP
 AC_CHECK_PROG([INDENT], indent, indent)
 AC_CHECK_PROGS([M4], gm4 m4, m4)
 
@@ -97,31 +68,40 @@ AC_CHECK_PROGS([M4], gm4 m4, m4)
 AC_CHECK_PROG([PERL], perl, perl)
 AC_PATH_PROG([PERL_PATH], perl)
 
-# documentation support
-AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)
-AM_CONDITIONAL(HAVE_DOXYGEN, test -n "$DOXYGEN")
+# documentation support, macros efined in "config/documentation.m4"
+DOC_CHECK_PROG_DOXYGEN
+DOC_CHECK_PROG_DOT
+DOC_CHECK_PROG_LATEX
+DOC_CHECK_PROG_PDFLATEX
+DOC_CHECK_PROG_DVIPS
+DOC_CHECK_PROG_BIBTEX
+DOC_CHECK_PROG_MAKEINDEX
+DOC_CHECK_PROG_PS2PDF
 
-AC_CHECK_PROG([DOT], dot, dot)
-AM_CONDITIONAL(HAVE_DOT, test -n "$DOT" )
+# figure related stuff
+AC_CHECK_PROG([XFIG], xfig, xfig)
+AC_CHECK_PROG([TRANSFIG], transfig, transfig)
+dnl only fig2dev is needed for converting xfigs
+AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
 
-AC_CHECK_PROG([LATEX], latex, latex)
-AM_CONDITIONAL(HAVE_LATEX, test -n "$LATEX" )
+# checking for old CAST tools for regression and backwards compatibility tests
+# no big deal if they don't exist...
+# NOTE: AM_CONDITIONAL is usable in generation of AC_CONFIG_FILES
+#	just use @VAR_TRUE@ instead of the if ... version in automake
+AC_CHECK_PROG([PRSIM], prsim, prsim)
+AC_CHECK_PROG([CFLAT], cflat, cflat)
+AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
+AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 
-AC_CHECK_PROG([PDFLATEX], pdflatex, pdflatex)
-AM_CONDITIONAL(HAVE_PDFLATEX, test -n "$PDFLATEX" )
+# Lex/Yacc support
+AM_PROG_LEX
+AC_PROG_YACC
 
-AC_CHECK_PROG([DVIPS], dvips, dvips)
-AM_CONDITIONAL(HAVE_DVIPS, test -n "$DVIPS" )
-
-AC_CHECK_PROG([BIBTEX], bibtex, bibtex)
-AM_CONDITIONAL(HAVE_BIBTEX, test -n "$BIBTEX" )
-
-AC_CHECK_PROG([MAKEINDEX], makeindex, makeindex)
-AM_CONDITIONAL(HAVE_MAKEINDEX, test -n "$MAKEINDEX" )
-
-AC_CHECK_PROG([PS2PDF], ps2pdf, ps2pdf)
-AM_CONDITIONAL(HAVE_PS2PDF, test -n "$PS2PDF" )
-
+HACKT_ARG_VAR_LEX
+HACKT_ARG_VAR_YACC
+HACKT_AM_CONDITIONAL_HAVE_YACC
+HACKT_YACC_VERSION
+HACKT_LEX_VERSION
 
 # comment out until time for release
 # this causes too many rebuilds during development
@@ -130,393 +110,82 @@ AM_CONDITIONAL(HAVE_PS2PDF, test -n "$PS2PDF" )
 # This takes care of many standard C[++] compiler configuration checks.  
 AC_PROG_RANLIB
 AC_PROG_LIBTOOL
-
+HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 # Automatically update if libtool script is outdated.  
 # Adds corresponding dependencies to "Makefile.in".  
 AC_SUBST(LIBTOOL_DEPS)
 
-# appends --silent option to all libtool invocations
-LIBTOOL="$LIBTOOL --silent"
+dnl defined in config.hackt.m4
+HACKT_ARG_ENABLE_GOD_MODE
+dnl defined in config/header_validation.m4
+AC_ARG_ENABLE_HEADER_VALIDATION
+dnl from "config/rl_el.m4"
+AC_ARG_WITH_READLINE_EDITLINE
+HACKT_ARG_WITH_GMP
+HACKT_ARG_WITH_XDR
 
-dnl testing the AC_ARG_ENABLE autoconf feature
-AC_MSG_CHECKING([whether divine powers are bestowed upon thee])
-AC_ARG_ENABLE(god_mode,
-	dnl help text
-	AC_HELP_STRING([--enable-god-mode],
-		[Powers fit for only immortals [(default=disabled)]]),
-	dnl if given
-	[if test "$enable_god_mode" = "yes"
-	then	AC_MSG_RESULT([you wish])
-	else	AC_MSG_RESULT([no])
-	fi
-	],
-	dnl if not given
-	[AC_MSG_RESULT([no (default)])]
-)
+dnl whether or not to build universal binary (config/hackt.m4)
+dnl not actually implemented yet
+HACKT_ARG_ENABLE_UNIVERSAL_BINARY
 
-dnl enable or disable anal header tests in src/Make.hchk-tail.am
-AC_MSG_CHECKING([whether header validation is desired])
-AC_ARG_ENABLE(header_validation,
-	dnl help text
-	AC_HELP_STRING([--disable-header-validation],
-		[Perform source header validation before compiling.
-		Disable to speed-up release builds [(default=enabled)]]),
-	dnl if given
-	[AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, 
-		test "$enable_header_validation" = "yes")
-	if test "$enable_header_validation" = "yes"
-	then	AC_MSG_RESULT([yes])
-	else	AC_MSG_RESULT([no])
-	fi
-	],
-	dnl if not given
-	[AM_CONDITIONAL(ENABLE_HEADER_VALIDATION, test "yes")
-	AC_MSG_RESULT([yes (default)])]
-)
+dnl AC_ARG_ENABLE for building documentation (on by default)
+dnl from "config/documentation.m4"
+DOC_ARG_ENABLE_DOCS
 
-dnl whether or not to build universal binary
-AC_MSG_CHECKING([whether universal binaries are requested])
-AC_ARG_ENABLE(fat_binary,
-	AC_HELP_STRING([--enable-fat-binary],
-		[Compile programs for multiple architectures.]),
-	[AC_MSG_RESULT([yes, but...])
-	dnl AC_CHECK_PROG(lipo)
-	dnl check whether or not compiler support multiple -arch flags
-	AC_MSG_NOTICE([Support for this is forthcoming for Darwin.])
-	dnl if enabled, then disable dynamic dependence-tracking
-	],
-	[AC_MSG_RESULT([no])]
-)
-
-
-dnl whether ot not to enable build ps and pdf targets by default
-AC_MSG_CHECKING([whether to build documents by default (all)])
-AC_ARG_ENABLE(enable_docs, 
-	AC_HELP_STRING([--disable-docs],
-		[Suppress default building of PS and PDF documents.]),
-	dnl if given
-	[AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
-	if test "$enable_docs" = "yes"
-	then	AC_MSG_RESULT([yes])
-	else	AC_MSG_RESULT([no])
-	fi
-	],
-	dnl if not give
-	[AM_CONDITIONAL(ENABLE_DOCS, test "yes")
-	AC_MSG_RESULT([yes (default)])]
-)
-if test "$enable_docs" != "no"
-then
-	if test -z "$LATEX"
-	then	AC_MSG_WARN([
-		Want to build PS documents, but latex not found.
-		Configure with --disable-docs to suppress PS builds.])
-	fi
-	if test -z "$PDFLATEX"
-	then	AC_MSG_WARN([
-		Want to build PDF documents, but pdflatex not found.
-		Configure with --disable-docs to suppress PDF builds.])
-	fi
-fi
-
-dnl enable or disable fun modules
-AC_MSG_CHECKING([how bored we are])
-AC_ARG_ENABLE(fun, 
-	AC_HELP_STRING([--enable-fun],
-		[Miscellanous fun modules. (default=disabled)]),
-	AM_CONDITIONAL(WANT_LIBMISCFUN, test "$enable_fun" = "yes"),
-	AM_CONDITIONAL(WANT_LIBMISCFUN, test ! "yes")
-)
-if test "$enable_fun" = "yes"
-then	AC_MSG_RESULT([quite])
-	AC_DEFINE(WANT_TO_HAVE_FUN, 1, [Conditional inclusion of fun modules.])
-else	AC_MSG_RESULT([not yet])
-	AC_DEFINE(WANT_TO_HAVE_FUN, 0, [Conditional inclusion of fun modules.])
-fi
+dnl enable or disable fun modules ("config/hackt.m4")
+HACKT_ARG_ENABLE_FUN
 
 dnl define WORDS_BIGENDIAN if is big endian
 dnl not actually needed in this project yet
 AC_C_BIGENDIAN
 
 AC_PROG_CXX
+
+dnl from "config/cxx.m4"
+AC_CXX_VERSION
+
 dnl we need these anal flags for checking for certain charateristics
 dnl TODO: what are the equivalent flags for other compilers?
-ANAL_FLAGS="-W -Wall -ansi -pedantic-errors -Werror"
-cat > conftest.c <<CEOF
-extern int main(int, char**);
-CEOF
-cp conftest.c conftest.cc
-if $CC $ANAL_FLAGS -c conftest.c
-then :
-else AC_MSG_ERROR([Your C compiler doesn't like flags: $ANAL_FLAGS])
-fi
-if $CXX $ANAL_FLAGS -c conftest.cc
-then :
-else AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS])
-fi
-
-dnl test what flags to set in AM_CFLAGS and AM_CXXFLAGS
-dnl no need for -Wsequence-point, already covered by -Wall
-TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
-TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual -Wcast-align"
-TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wconversion -Werror"
-TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
-TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
-TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
-TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
-FANG_WARN_FLAGS=""
-FANG_WARN_CFLAGS=""
-FANG_WARN_CXXFLAGS=""
-FANG_DIALECT_FLAGS=""
-for f in $TRY_WARN_FLAGS
-do
-	AC_MSG_CHECKING([whether C and C++ compilers accept flag $f])
-	if ( $CC $f -c conftest.c && $CXX $f -c conftest.cc )
-	then
-		AC_MSG_RESULT([yes])
-		FANG_WARN_FLAGS="$FANG_WARN_FLAGS $f"
-	else
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN([Your C or C++ compiler doesn't like flag: $f])
-	fi
-done
-for f in $TRY_DIALECT_FLAGS
-do
-	AC_MSG_CHECKING([whether C and C++ compilers accept flag $f])
-	if ( $CC $f -c conftest.c && $CXX $f -c conftest.cc )
-	then
-		AC_MSG_RESULT([yes])
-		FANG_DIALECT_FLAGS="$FANG_DIALECT_FLAGS $f"
-	else
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN([Your C or C++ compiler doesn't like flag: $f])
-	fi
-done
-for f in $TRY_WARN_CFLAGS
-do
-	AC_MSG_CHECKING([whether C compiler accepts flag $f])
-	if $CC $f -c conftest.c
-	then
-		AC_MSG_RESULT([yes])
-		FANG_WARN_CFLAGS="$FANG_WARN_CFLAGS $f"
-	else
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN([Your C compiler doesn't like flag: $f])
-	fi
-done
-for f in $TRY_WARN_CXXFLAGS
-do
-	AC_MSG_CHECKING([whether C++ compiler accepts flag $f])
-	if $CXX $f -c conftest.cc
-	then
-		AC_MSG_RESULT([yes])
-		FANG_WARN_CXXFLAGS="$FANG_WARN_CXXFLAGS $f"
-	else
-		AC_MSG_RESULT([no])
-		AC_MSG_WARN([Your C++ compiler doesn't like flag: $f])
-	fi
-done
-dnl AC_MSG_NOTICE([general warning flags: $FANG_WARN_FLAGS])
-dnl AC_MSG_NOTICE([general C warning flags: $FANG_WARN_CFLAGS])
-dnl AC_MSG_NOTICE([general C++ warning flags: $FANG_WARN_CXXFLAGS])
-dnl AC_MSG_NOTICE([general C/C++ dialect flags: $FANG_DIALECT_FLAGS])
-AC_SUBST(FANG_WARN_FLAGS)
-AC_SUBST(FANG_WARN_CFLAGS)
-AC_SUBST(FANG_WARN_CXXFLAGS)
-AC_SUBST(FANG_DIALECT_FLAGS)
-
-CXX_VERSION=`$CXX --version | head -n 1`
-AC_SUBST(CXX_VERSION)
-
-
-dnl need to set LANG to C++ to check for C++ headers
+dnl from "config/cxx.m4"
+FANG_ANAL_COMPILE_FLAGS
+FANG_AM_FLAGS
 
 dnl which set of pre-determined compiler flags to apply?
-AM_CONDITIONAL(HAVE_GXX, test "$ac_cv_cxx_compiler_gnu" = "yes")
+AM_CONDITIONAL_HAVE_GXX
 dnl TODO: add other conditionals for other common compilers
 dnl XLC++, ICC, HPCC, etc...
-if ( echo "$CXX_VERSION" | grep -i prerelease )
-then
-	AC_MSG_WARN([
-	Detected prerelease version of compiler.  No PRERELEASE compilers 
-	are officially supported.  Use at your own risk.])
-fi
 
-AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
 AM_PROG_CC_C_O
 AC_ISC_POSIX
 
-dnl more compiler characteristic checks
-dnl these require the anal compile flags
-SAVE_CXXFLAGS=$CXXFLAGS
-CXXFLAGS="$SAVE_CXXFLAGS $ANAL_FLAGS"
+AC_CXX_ATTRIBUTE_UNUSED
+AC_CXX_ATTRIBUTE_UNUSED_CTOR
+AC_CXX_ATTRIBUTE_CONST
+AC_CXX_ATTRIBUTE_PURE
+AC_CXX_ATTRIBUTE_HOLY
+AC_CXX_ATTRIBUTE_NORETURN
+AC_CXX_ATTRIBUTE_MALLOC
+AC_CXX_ATTRIBUTE_VISIBILITY
+AC_CXX_ATTRIBUTE_PACKED
+AC_CXX_ATTRIBUTE_ALIGNED
+AC_CXX_ATTRIBUTE_ALIGNED_SIZE
+AC_CXX_ATTRIBUTE_EVIL
 
-AC_MSG_CHECKING([whether compiler accepts __attribute__((unused))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([],[
-const int foo __attribute__ ((unused)) = 0;]
-),
-dnl action on success
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED, 1,
-	[True if compiler supports __attribute__((unused)) ])],
-dnl action on failure
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED, 0,
-	[True if compiler supports __attribute__((unused)) ])
-])
-
-dnl only need the next two tests if __attribute__((unused)) is accepted
-AC_MSG_CHECKING([if __attribute__((unused)) comes before construction])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([class foo { public: foo(const int); };],[
-const foo bar __attribute__ ((unused)) (13);]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR, 1,
-	[True if __attribute__((unused)) is accepted before construction])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR, 0,
-	[True if __attribute__((unused)) is accepted before construction])
-])
-
-AC_MSG_CHECKING([if __attribute__((unused)) comes after construction])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([class foo { public: foo(const int); };],[
-const foo bar (13) __attribute__ ((unused));]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR, 1,
-	[True if __attribute__((unused)) is accepted after construction])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR, 0,
-	[True if __attribute__((unused)) is accepted after construction])
-])
-
-AC_MSG_CHECKING([whether compiler accepts __attribute__((const))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM(
-[#include <cstdlib>
-void pure_func (void) __attribute__ ((const));
-void pure_func (void) { exit (1); }
-],[pure_func();]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_CONST, 1,
-	[True if compiler supports __attribute__((const)) ])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_CONST, 0,
-	[True if compiler supports __attribute__((const)) ])
-])
-
-AC_MSG_CHECKING([whether compiler accepts __attribute__((noreturn))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM(
-[#include <cstdlib>
-void die (int) __attribute__ ((noreturn));
-void die (int k) { exit (k); }
-],[die(1);]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_NORETURN, 1,
-	[True if compiler supports __attribute__((noreturn)) ])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_NORETURN, 0,
-	[True if compiler supports __attribute__((noreturn)) ])
-])
-
-
-AC_MSG_CHECKING(
-[whether compiler accepts __attribute__((visibility("hidden")))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM(
-[struct __attribute__((visibility("hidden"))) foo { foo() { } ~foo() { } }; ],
-[foo bar;]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_HIDDEN, 1,
-	[True if compiler supports __attribute__((visibility("hidden"))) ])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_HIDDEN, 0,
-	[True if compiler supports __attribute__((visibility("hidden"))) ])
-])
-
-AC_MSG_CHECKING(
-[whether compiler accepts __attribute__((visibility("default")))])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM(
-[struct __attribute__((visibility("default"))) foo { foo() { } ~foo() { } }; ],
-[foo bar;]
-),
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 1,
-	[True if compiler supports __attribute__((visibility("default"))) ])],
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, 0,
-	[True if compiler supports __attribute__((visibility("default"))) ])
-])
-
-dnl source taken from "src/util/STL/reverse_iterator.h"
-dnl known to be present in gcc-4.1 headers, but missing in all previous versions
-AC_MSG_CHECKING(
-[whether libstdc++ (STL) already contains reverse_iterator comparisons])
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([[
-#include <iterator>
-namespace std {
-template <class Iter1, class Iter2>
-inline bool
-operator == (const reverse_iterator<Iter1>& x,
-                const reverse_iterator<Iter2>& y) {
-        return x.base() == y.base();
-}
-}
-]], []),
-[AC_MSG_RESULT([no])
-AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, 0,
-	[True if STL <iterator> header defines reverse_iterator comparisons])],
-[AC_MSG_RESULT([yes])
-AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, 1,
-	[True if STL <iterator> header defines reverse_iterator comparisons])
-])
-
-dnl restore normal compile flags
-CXXFLAGS=$SAVE_CXXFLAGS
+AC_CXX_STL_REVERSE_ITERATOR_COMPARISONS
+AC_C_BUILTIN_EXPECT
 
 # additional header checks
+AC_HEADER_STDC
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
 AC_CHECK_HEADERS([malloc.h])
 AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
-# C++ wrappers to standard C headers
-AC_CHECK_HEADERS([cstddef cstdlib cstdio cstring cassert cmath cctype])
-AC_CHECK_HEADERS([cerrno cfloat climits clocale csignal csetjmp cstdarg ctime])
-AC_CHECK_HEADERS([cwchar cwctype])
-# checking all possible locations of (some equivalent) header files
-# spanning versions gcc-2.95 to 4.x
-# I bet you didn't know some of these locations were ever used!
-# However, you're not supposed to use anything older than gcc-3.3 anyways...
 
-# where is that damn hash_map?
-AC_CHECK_HEADERS([ext/hash_map hash_map])
-# used mainly in "src/util/hash_specializations.h"
-AC_CHECK_HEADERS([ext/stl_hash_fun.h ext/hash_fun.h stl_hash_fun.h])
-AC_CHECK_HEADERS([ext/hash_set hash_set])
-AC_CHECK_HEADERS([ext/hashtable.h tr1/hashtable hashtable.h])
-AC_CHECK_HEADERS([tr1/unordered_map tr1/unordered_set])
-AC_CHECK_HEADERS([ext/functional tr1/functional])
-# used in "src/util/string_fwd.h"
-AC_CHECK_HEADERS([bits/stringfwd.h])
-AC_CHECK_HEADERS([bits/concept_check.h])
-AC_CHECK_HEADERS([bits/type_traits.h tr1/type_traits tr1/type_traits_fwd.h type_traits.h])
-# among these, only sstream should be used, the rest are long gone
-AC_CHECK_HEADERS([sstream strstream stringstream])
-# can't include <tr1/boost_shared_ptr.h> directly
-AC_CHECK_HEADERS([tr1/memory])
-AC_CHECK_HEADERS([tr1/tuple tr1/array])
+dnl checks tons of standard C++ headers in various locations
+dnl from "config/cxx_STL.m4"
+AC_HEADER_STDCXX
 
 dnl suggestions from autoscan
 AC_FUNC_ALLOCA			dnl wanted by the y.tab.c generated
@@ -530,11 +199,7 @@ AC_C_INLINE
 AC_C_RESTRICT
 AC_TYPE_SIZE_T
 AC_C_VOLATILE
-AC_CHECK_TYPES([struct __sFILE])	dnl BSD, Darwin
-AC_CHECK_TYPES([struct _IO_FILE])	dnl linux
-AC_CHECK_TYPES([__FILE_TAG])		dnl Sun (C++)
-AC_CHECK_TYPES([struct __FILE_TAG])	dnl Sun (C)
-AC_CHECK_TYPES([__FILE])		dnl Sun
+AC_TYPEDEF_FILE			dnl defined in "config/cc.m4"
 AC_CHECK_TYPES([ptrdiff_t])
 AC_CHECK_FUNCS([sqrt])
 AC_CHECK_FUNCS([getopt])
@@ -578,202 +243,28 @@ AC_CHECK_SIZEOF(size_t)
 AC_CHECK_SIZEOF(int64_t)
 AC_CHECK_SIZEOF(uint64_t)
 
-AC_LANG_RESTORE
+HACKT_CHECK_SANITY
 
-# Lex/Yacc support
-AM_PROG_LEX
-AC_PROG_YACC
+dnl readline or editline support
+AC_CHECK_READLINE
+AC_CHECK_EDITLINE
+dnl check prototype of readline() if applicable
+AC_CHECK_READLINE_ARG_CONST
 
-AC_ARG_VAR(LEX, [lexer/scanner, such as [f]lex])
-AC_ARG_VAR(YACC, [parser generator, requires LALR(1), such as yacc/bison])
-
-# Miscellaneous
-AC_PROG_LN_S
-
-# not so funny...
-AC_MSG_CHECKING([whether fang is sane])
-# sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "." sleep 1; 
-$SLEEP 3
-AC_MSG_RESULT([no]);
-# not enough sleep
-
-# check whether or not bison is disguising as yacc (with bison -y)
-# some parser builds in sub-directories will compile differently
-# depending on which parser is used.  
-AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
-AM_CONDITIONAL(HAVE_BYACC, echo "$YACC" | grep -q byacc)
-AM_CONDITIONAL(HAVE_YACC, echo "$YACC" | grep -v byacc | grep -q yacc)
-
-dnl TODO: check whether or not bison/yacc works on a basic file
-dnl this must be consistent with the above
-dnl there might be a better way to do this...
-case $YACC in
-	*bison* )
-		dnl echo "GOT bison"
-		AC_DEFINE(USING_BISON, 1, [Define to 1 if we're using bison.])
-		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
-		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
-		dnl Now would be a good place to check for version
-		dnl since bison is known to have significant variations.  
-		YACC_VERSION=`$YACC --version 2>&1 | head -n 1`
-		[BISON_VERSION=`echo x$YACC_VERSION | sed 's/[^.0-9]//g'`]
-		AC_MSG_NOTICE([found bison version $BISON_VERSION.])
-		dnl known version checks
-dnl the below code doesn't work...
-dnl	if { awk 'END{ if($BISON_VERSION +0.0<=1.35) exit 1;}' </dev/null;}
-dnl	then 
-dnl dnl		if { awk 'END{if($BISON_VERSION +0.0<=1.28) exit 1;}' </dev/null;}
-dnl dnl		then AC_MSG_ERROR([
-dnl dnl	Your bison (<= 1.28) is known to fail with this project.
-dnl dnl	Please upgrade to 1.875 or higher, or use traditional yacc.])
-dnl dnl		else
-dnl			AC_MSG_WARN([
-dnl	Your bison (<= 1.35) is not officially supported by this project.  
-dnl	Consider upgrading to 1.875 or higher, or use traditional yacc.])
-dnl dnl		fi
-dnl	fi
-		;;
-	*byacc* )
-		dnl echo "GOT byacc"
-		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
-		AC_DEFINE(USING_BYACC, 1, [Define to 1 if we're using byacc.])
-		AC_DEFINE(USING_YACC, 0, [Define to 1 if we're using yacc.])
-		YACC_VERSION=`which $YACC | head -n 1`
-		;;
-	*yacc* )
-		dnl echo "GOT yacc"
-		AC_DEFINE(USING_BISON, 0, [Define to 1 if we're using bison.])
-		AC_DEFINE(USING_BYACC, 0, [Define to 1 if we're using byacc.])
-		AC_DEFINE(USING_YACC, 1, [Define to 1 if we're using yacc.])
-		dnl traditional yacc has no version flag :(
-		YACC_VERSION=`which $YACC | head -n 1`
-		;;
-	* ) AC_MSG_ERROR([No parser-generator found.]) ;;
-esac
-AC_SUBST(YACC_VERSION)
-
-# unfortunately, lex is often IDENTICAL to flex...
-case $LEX in
-	*flex* )
-		AC_DEFINE(USING_FLEX, 1, [Define to 1 if we're using flex.])
-		AC_DEFINE(USING_LEX, 0, [Define to 1 if we're using lex.])
-		;;
-	*lex* )
-		AC_DEFINE(USING_FLEX, 0, [Define to 1 if we're using lex.])
-		AC_DEFINE(USING_LEX, 1, [Define to 1 if we're using lex.])
-		;;
-	* ) AC_MSG_ERROR([No lexer-generator found.]) ;;
-esac
-LEX_VERSION=`$LEX --version | head -n 1`
-AC_SUBST(LEX_VERSION)
-
-# some substitution variables for the doxygen configuration
-if test -n "$DOT"
-then
-	AC_SUBST(HAVE_DOT, "YES")
-	AC_PATH_PROG([DOT_PATH], dot)
-else
-	AC_SUBST(HAVE_DOT, "NO")
-fi
-
-if test -n "$LATEX"
-then AC_SUBST(HAVE_LATEX, "YES")
-else AC_SUBST(HAVE_LATEX, "NO")
-fi
-
-if test -n "$PDFLATEX"
-then AC_SUBST(HAVE_PDFLATEX, "YES")
-else AC_SUBST(HAVE_PDFLATEX, "NO")
-fi
-
-# figure related stuff
-AC_CHECK_PROG([XFIG], xfig, xfig)
-AC_CHECK_PROG([TRANSFIG], transfig, transfig)
-dnl only fig2dev is needed for converting xfigs
-AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
-
-# checking for old CAST tools for regression and backwards compatibility tests
-# no big deal if they don't exist...
-# NOTE: AM_CONDITIONAL is usable in generation of AC_CONFIG_FILES
-#	just use @VAR_TRUE@ instead of the if ... version in automake
-AC_CHECK_PROG([PRSIM], prsim, prsim)
-AC_CHECK_PROG([CFLAT], cflat, cflat)
-AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
-AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
-
-# shamelessly copied autoconf snippet from ngspige's configure.in
-dnl	Option to include GNU readline support in ngspice CLI
-dnl	Default: disabled.
-dnl	Hope to see in the future readline replacement.
-if test "$with_readline" != "yes"; then
-	AC_MSG_RESULT(GNU readline disabled.)
-else
-	AC_MSG_RESULT(Checking for readline:)
-	AC_CHECK_HEADERS([readline/readline.h readline/history.h],
-		[AC_DEFINE(HAVE_GNUREADLINE,[],
-			[Define if we have GNU readline])],
-		[AC_MSG_ERROR(Couldn't find GNU readline headers.)])
-	AC_SEARCH_LIBS(tputs,ncurses termcap,
-		AC_DEFINE(HAVE_TERMCAP,[],
-			[Define if we have ncurses or termcap]),
-		AC_MSG_ERROR(Found neither ncurses or termcap))
-	AC_CHECK_LIB(readline, readline,
-		[LIBS="$LIBS -lreadline"],
-		[AC_MSG_ERROR(Couldn't find readline libraries.  Try passing extra LDFLAGS.)])
-fi
-
-dnl	Option to include BSD editline support in ngspice CLI
-dnl	Default: disabled.
-if test "$with_editline" != "yes"; then
-	AC_MSG_RESULT(BSD editline disabled.)
-else
-	AC_MSG_RESULT(Checking for editline:)
-	AC_CHECK_HEADERS([editline/readline.h],
-		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
-			[Define to enable BSD editline])],
-		[AC_MSG_ERROR(Couldn't find BSD editline headers.)])
-	AC_SEARCH_LIBS(tputs,ncurses termcap,
-		AC_DEFINE(HAVE_TERMCAP,[],
-			[Define if we have ncurses or termcap]),
-		AC_MSG_ERROR(Found neither ncurses or termcap))
-	AC_CHECK_LIB(edit, readline,
-		[LIBS="$LIBS -ledit"],
-		[AC_MSG_ERROR(Couldn't find editline libraries.  Try passing extra LDFLAGS.)],
-		-lncurses )
-fi
-
-dnl if test "$ac_cv_header_readline_readline_h" = "yes" || \
-dnl	test "$ac_cv_header_editline_readline_h" = "yes"
-if test "$with_readline" = "yes" || test "$with_editline" = "yes"
-then
-AC_MSG_CHECKING([if readline()'s prompt argument is const char*])
-AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
-dnl need to have warnings enabled and turned to errors here
-SAVE_CXXFLAGS=$CXXFLAGS
-CXXFLAGS="$SAVE_CXXFLAGS $ANAL_FLAGS"
-AC_COMPILE_IFELSE(
-AC_LANG_PROGRAM([
-#include <cstdio>
-#if defined(HAVE_GNUREADLINE)
-#include <readline/readline.h>
-#elif defined(HAVE_BSDEDITLINE)
-#include <editline/readline.h>
-#endif
-],[[[const char null[] = "foo"; readline(null) ]]]),
-dnl action on success
-[AC_MSG_RESULT([yes])
-AC_DEFINE(READLINE_PROMPT_CONST, 1,
-	[True if readline's argument is const char*])],
-dnl action on failure
-[AC_MSG_RESULT([no (you suck!)])
-AC_DEFINE(READLINE_PROMPT_CONST, 0,
-	[True if readline's argument is const char*])
-])
-dnl restore compile flags
-CXXFLAGS=$SAVE_CXXFLAGS
-AC_LANG_RESTORE
-fi
+dnl TODO: xdr
+dnl for automake consumption
+dnl order would matter if there are cross-conflicting headers installed
+AUTO_CPPFLAGS="$EL_INCLUDE $RL_INCLUDE $NCURSES_INCLUDE $GMP_INCLUDE"
+dnl order might matter in the presence of cross-conflicting libraries
+AUTO_LDFLAGS="$EL_LDPATH $RL_LDPATH $NCURSES_LDPATH $GMP_LDPATH"
+dnl order matters! we are taking responsibility for this
+dnl rather than letting LIBS accumulate over checks.  
+AUTO_LIBS="$EL_LIB $RL_LIB $NCURSES_LIB $GMP_LIB"
+LIBS="$AUTO_LIBS"
+dnl may decide not to use these, depending on how much control is needed
+AC_SUBST(AUTO_CPPFLAGS)
+AC_SUBST(AUTO_LDFLAGS)
+dnl AC_SUBST(AUTO_LIBS)
 
 
 dnl first, create a useful variable substitution script for use in config.status

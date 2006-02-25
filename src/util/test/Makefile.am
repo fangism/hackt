@@ -1,4 +1,10 @@
 # "src/util/test/Makefile.am"
+#	$Id: Makefile.am,v 1.40 2006/02/25 04:55:04 fang Exp $
+# NOTE: none of the tests in this directory should depend on ANY
+# external package libraries or headers, so we coercively set
+# LIBS and LDFLAGS to empty, which is normally bad policy for the
+# real project being built.  We forgive this directory, for it is exceptional.
+# We do, however, keep CXXFLAGS as specified by the user.  
 
 include $(top_srcdir)/Make.stddef
 
@@ -53,6 +59,9 @@ noinst_PROGRAMS = \
 
 noinst_LTLIBRARIES = libfangutil.la libpooled.la \
 	liblinktest.la libbogusutil.la
+
+# No external libraries! see comment at top of this Makefile.am
+LIBS = 
 
 # but is included in distribution, EXTRA_DIST? don't bother cleaning?
 EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \

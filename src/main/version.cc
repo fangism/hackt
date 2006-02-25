@@ -2,7 +2,7 @@
 	\file "main/version.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: version.cc,v 1.5 2005/12/13 04:15:48 fang Exp $
+	$Id: version.cc,v 1.6 2006/02/25 04:55:02 fang Exp $
  */
 
 #include <iostream>
@@ -95,10 +95,20 @@ version::cxx(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Now prints more than just CXXFLAGS, other related configuration
+	flags used in the build.
+ */
 ostream&
 version::cxxflags(ostream& o) {
-	o << "AM_CXXFLAGS: " AM_CXXFLAGS;
-	return o << endl << "config-CXXFLAGS: " CONFIG_CXXFLAGS;
+		o << "AM_CPPFLAGS: " AM_CPPFLAGS;
+	o << endl << "AM_CXXFLAGS: " AM_CXXFLAGS;
+	o << endl << "AM_LDFLAGS: " AM_LDFLAGS;
+	o << endl << "config-CXXFLAGS: " CONFIG_CXXFLAGS;
+	o << endl << "config-CPPFLAGS: " CONFIG_CPPFLAGS;
+	o << endl << "config-LDFLAGS: " CONFIG_LDFLAGS;
+	o << endl << "config-LIBS: " CONFIG_LIBS;
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
