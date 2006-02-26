@@ -1,8 +1,12 @@
 /**
 	\file "chunk_map_pool_test.cc"
 	Testing functionality of chunk_map_pool allocator.  
-	$Id: chunk_map_pool_test.cc,v 1.4 2005/09/04 21:15:10 fang Exp $
+	$Id: chunk_map_pool_test.cc,v 1.5 2006/02/26 02:28:03 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include "util/numeric/bigger_ints.h"
 #include "util/memory/chunk_map_pool.tcc"

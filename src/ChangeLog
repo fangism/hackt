@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-18:
+	  Util library update only, implemented union_find template struct.  
+
+
 2006-02-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-17-merged-maintainence-05:

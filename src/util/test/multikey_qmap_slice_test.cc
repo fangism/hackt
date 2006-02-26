@@ -1,8 +1,12 @@
 /**
 	\file "multikey_qmap_slice_test.cc"
 	Testing the ability to detect dense sub-arrays.
-	$Id: multikey_qmap_slice_test.cc,v 1.5 2006/02/01 06:11:47 fang Exp $
+	$Id: multikey_qmap_slice_test.cc,v 1.6 2006/02/26 02:28:05 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include "util/qmap.tcc"
 #include "cube_slice.h"

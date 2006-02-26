@@ -1,8 +1,12 @@
 /**
 	\file "deque_iterator_test.cc"
 	Testing if we can save away iterators of a deque.
-	$Id: deque_iterator_test.cc,v 1.5 2005/09/04 21:15:10 fang Exp $
+	$Id: deque_iterator_test.cc,v 1.6 2006/02/26 02:28:04 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include <string>

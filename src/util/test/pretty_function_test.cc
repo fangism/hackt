@@ -1,5 +1,11 @@
 /**
+	\file "pretty_function_test.cc"
+	$Id: pretty_function_test.cc,v 1.3 2006/02/26 02:28:05 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 

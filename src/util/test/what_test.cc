@@ -1,7 +1,11 @@
 /**
 	\file "what_test.cc"
-	$Id: what_test.cc,v 1.5 2005/09/04 21:15:14 fang Exp $
+	$Id: what_test.cc,v 1.6 2006/02/26 02:28:06 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 

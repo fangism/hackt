@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2006-02-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-18:
+	  Finished writing union_find classes, including test case.
+	  Updated all tests in util/test/ with #undef NDEBUG.
+
+
 2006-02-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-17-merged-maintainence-05:

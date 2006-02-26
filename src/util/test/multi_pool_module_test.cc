@@ -2,11 +2,15 @@
 	\file "multi_pool_module_test.cc"
 	Testing robust static initialization of separate memory pools.
 	This is just a dummy file to provide a main symbol.
-	$Id: multi_pool_module_test.cc,v 1.5 2006/01/22 06:53:46 fang Exp $
+	$Id: multi_pool_module_test.cc,v 1.6 2006/02/26 02:28:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		1
 #define	ENABLE_STATIC_TRACE		1
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include "util/using_ostream.h"

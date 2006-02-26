@@ -3,10 +3,14 @@
 	Test for stacktrace dumping utility.
  */
 
+#define	ENABLE_STACKTRACE	1
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
+
 #include <iostream>
 #include "util/using_ostream.h"
-
-#define	ENABLE_STACKTRACE	1
 
 #include "util/stacktrace.h"
 

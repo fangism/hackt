@@ -1,8 +1,12 @@
 /**
 	\file "ring_node_test.cc"
 	Test for ring_node structures.  
-	$Id: ring_node_test.cc,v 1.3 2005/09/04 21:15:13 fang Exp $
+	$Id: ring_node_test.cc,v 1.4 2006/02/26 02:28:05 fang Exp $
  */
+
+#ifdef	NDEUBG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include <string>

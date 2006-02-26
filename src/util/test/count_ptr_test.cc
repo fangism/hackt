@@ -1,8 +1,12 @@
 /**
 	\file "count_ptr_test.cc"
 	Test program for checking reference-counted pointers.  
-	$Id: count_ptr_test.cc,v 1.7 2005/09/04 21:15:10 fang Exp $
+	$Id: count_ptr_test.cc,v 1.8 2006/02/26 02:28:03 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include <string>

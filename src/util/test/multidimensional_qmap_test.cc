@@ -1,8 +1,12 @@
 /**
 	\file "multidimensional_qmap_test.cc"
  	Test for multidimensional, queryable map.
-	$Id: multidimensional_qmap_test.cc,v 1.7 2006/01/22 06:53:46 fang Exp $
+	$Id: multidimensional_qmap_test.cc,v 1.8 2006/02/26 02:28:05 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include <string>

@@ -1,7 +1,11 @@
 /**
 	\file "new_functortest.cc"
-	$Id: new_functor_test.cc,v 1.3 2005/09/04 21:15:13 fang Exp $
+	$Id: new_functor_test.cc,v 1.4 2006/02/26 02:28:05 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include <vector>

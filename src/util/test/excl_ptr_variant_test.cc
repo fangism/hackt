@@ -1,7 +1,12 @@
 /**
 	\file "excl_ptr_variant_test.cc"
-	$Id: excl_ptr_variant_test.cc,v 1.2 2006/01/22 06:53:45 fang Exp $
+	$Id: excl_ptr_variant_test.cc,v 1.3 2006/02/26 02:28:04 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
+
 // #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/excl_array_ptr.h"
 #include "util/memory/excl_ptr.h"

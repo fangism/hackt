@@ -8,10 +8,14 @@
 	doesn't seem to be destroyed.  
 	Don't know what the standard says about this behoavior...
 
-	$Id: local_static_store_test.cc,v 1.5 2006/01/22 06:53:46 fang Exp $
+	$Id: local_static_store_test.cc,v 1.6 2006/02/26 02:28:04 fang Exp $
  */
 
 #define ENABLE_STACKTRACE		1
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 // #include <string>

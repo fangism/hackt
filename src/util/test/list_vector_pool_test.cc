@@ -1,10 +1,14 @@
 /**
 	\file "list_vector_pool_test.cc"
 	Test for list-vector based allocator.  
-	$Id: list_vector_pool_test.cc,v 1.9 2005/09/04 21:15:11 fang Exp $
+	$Id: list_vector_pool_test.cc,v 1.10 2006/02/26 02:28:04 fang Exp $
  */
 
-#include <assert.h>
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
+
+#include <cassert>
 #include <iostream>
 #include <algorithm>
 #include <string>

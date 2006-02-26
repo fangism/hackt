@@ -1,8 +1,12 @@
 /**
 	\file "integer_traits_test.cc"
 	Testing compile-time integer traits facilities.
-	$Id: integer_traits_test.cc,v 1.5 2006/02/14 18:18:21 fang Exp $
+	$Id: integer_traits_test.cc,v 1.6 2006/02/26 02:28:04 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <string>
 #include <iostream>

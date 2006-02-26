@@ -3,6 +3,10 @@
 	Testing maplikeset template class adapter.  
  */
 
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
+
 #include <iostream>
 #include <string>
 #include <set>

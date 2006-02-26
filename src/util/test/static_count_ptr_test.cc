@@ -1,12 +1,17 @@
 /**
 	'static_count_ptr_test.cc"
 	Testing "unsafe" uses of count_ptr.  
-	$Id: static_count_ptr_test.cc,v 1.5 2006/01/22 06:53:47 fang Exp $
+	$Id: static_count_ptr_test.cc,v 1.6 2006/02/26 02:28:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		1
 
 #define	ENABLE_STATIC_TRACE		0
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
+
 #include "util/static_trace.h"
 STATIC_TRACE_BEGIN("static_count_ptr_test::main")
 

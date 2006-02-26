@@ -1,7 +1,12 @@
 /**
 	\file "count_ptr_variant_test.cc"
-	$Id: count_ptr_variant_test.cc,v 1.2 2006/01/22 06:53:45 fang Exp $
+	$Id: count_ptr_variant_test.cc,v 1.3 2006/02/26 02:28:03 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
+
 // #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/count_array_ptr.tcc"

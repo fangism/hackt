@@ -2,8 +2,12 @@
 	\file "multikey_generator_test.cc"
 	Test for multidimensional key generator, which steps 
 	through rings of values of an N-dimensional cube slice.
-	$Id: multikey_generator_test.cc,v 1.5 2005/09/04 21:15:12 fang Exp $
+	$Id: multikey_generator_test.cc,v 1.6 2006/02/26 02:28:05 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include "util/multikey.tcc"

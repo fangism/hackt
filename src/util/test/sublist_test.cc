@@ -1,8 +1,12 @@
 /**
 	\file "sublist_test.cc"
 	Test for sublist structure.  
-	$Id: sublist_test.cc,v 1.5 2006/01/22 06:53:47 fang Exp $
+	$Id: sublist_test.cc,v 1.6 2006/02/26 02:28:06 fang Exp $
  */
+
+#ifdef	NDEBUG
+#undef	NDEBUG
+#endif
 
 #include <iostream>
 #include <list>
