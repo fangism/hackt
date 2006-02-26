@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.9 2006/01/27 08:07:18 fang Exp $
+	$Id: chan_traits.h,v 1.10 2006/02/26 05:19:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -37,14 +37,12 @@ struct class_traits<channel_tag> {
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
 	/**
-		Actually, this may have to be split into 
-		sub-tags, one for built-in, one for user-defined.  
-		Built-in channel types have no relaxed parameters
-		(currently decided in language constraints.)
+		UPDATE: 
+		Channels no longer can take relaxed parameters. 
 	 */
-	typedef	instance_alias_info_actuals
+	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
-	/// defined in "Object/inst/channel_instance_collection.h"
+	/// defined in "Object/inst/channel_instance.h"
 	class state_instance_base;
 	template <size_t D>
 	struct instance_alias {

@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.10 2006/02/21 04:48:41 fang Exp $
+	$Id: struct_traits.h,v 1.11 2006/02/26 05:19:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -29,10 +29,14 @@ struct class_traits<datastruct_tag> {
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
-	typedef	instance_alias_info_actuals
+	/**
+		Update:
+		Datatypes can no longer take relaxed parameters.  
+	 */
+	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
 	typedef	datastruct_instance_alias_info	instance_alias_info_type;
-	/// defined in "Object/inst/struct_instance_collection.h"
+	/// defined in "Object/inst/struct_instance.h"
 	class state_instance_base;
 	template <size_t D>
 	struct instance_alias {

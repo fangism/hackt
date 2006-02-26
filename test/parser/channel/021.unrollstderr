@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	chancoll	0	#HEAD#	#TAIL#	64
+	3	##ADDR##	chancoll	0	#HEAD#	#TAIL#	60
 	4	##ADDR##	enumdefn	0	#HEAD#	#TAIL#	59
 	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24

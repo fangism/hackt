@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.8 2006/02/21 04:48:32 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.9 2006/02/26 05:19:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -15,7 +15,8 @@
 #include <algorithm>
 
 #include "Object/inst/struct_instance_collection.h"
-#include "Object/inst/alias_actuals.h"
+// #include "Object/inst/alias_actuals.h"
+#include "Object/inst/alias_empty.tcc"
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
 #include "Object/expr/struct_expr.h"

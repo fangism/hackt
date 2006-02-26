@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.12 2006/02/06 01:30:46 fang Exp $
+	$Id: global_entry.tcc,v 1.13 2006/02/26 05:19:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -25,7 +25,7 @@
 #include "Object/state_manager.h"
 #include "Object/def/footprint.h"
 #include "Object/inst/instance_alias_info.h"
-#include "Object/inst/alias_empty.h"
+#include "Object/inst/alias_empty.tcc"
 #include "Object/inst/alias_actuals.tcc"	// for dump_complete_type
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/port_alias_tracker.h"

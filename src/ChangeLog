@@ -5,6 +5,15 @@
 
 2006-02-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-19:
+	  Channels and user-defined data types no longer have relaxed
+		template parameters, so they been set to empty in
+		their respective traits classes.  
+	  Temporary implementation of methods in instance_alias_info_empty,
+		leeched off of instance_alias_info_actuals.  
+	  Test cases updated with reduced sizes of alias collections.  
+
+
 	* HACKT-00-01-04-main-00-77-18:
 	  Util library update only, implemented union_find template struct.  
 

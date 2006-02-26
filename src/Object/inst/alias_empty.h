@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.6 2006/01/22 18:19:58 fang Exp $
+	$Id: alias_empty.h,v 1.7 2006/02/26 05:19:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -97,7 +97,17 @@ protected:
 	/**
 		Thus far, no meta types without alias actuals can have 
 		substructure.  
+		NOT TRUE ANYMORE! channels and datatypes now cannot
+		have relaxed types.  
 	 */
+#if 1
+	template <class AliasType>
+	static
+	good_bool
+	__initialize_assign_footprint_frame(const AliasType&,
+			footprint_frame&, state_manager&,
+			const port_member_context&, const size_t);
+#else
 	template <class AliasType>
 	static
 	good_bool
@@ -107,6 +117,7 @@ protected:
 		// no-op.
 		return good_bool(true);
 	}
+#endif
 
 public:
 	static
@@ -127,7 +138,6 @@ public:
 	ostream&
 	dump_complete_type(const AliasType&, ostream&, const footprint* const);
 
-protected:
 	/**
 		Since type has no relaxed actuals, 
 		just return the canonical type of the collection. 
@@ -137,6 +147,27 @@ protected:
 	complete_type_actuals(const InstColl& _inst) const {
 		return _inst.get_canonical_type();
 	}
+
+public:
+	template <class AliasType>
+	static
+	void
+	collect_canonical_footprint(const AliasType&,
+		persistent_object_manager&);
+
+	template <class AliasType>
+	static
+	void
+	save_canonical_footprint(const AliasType&,
+		const persistent_object_manager&,
+		ostream&, const footprint* const);
+
+	template <class AliasType>
+	static
+	void
+	restore_canonical_footprint(const AliasType&,
+		const persistent_object_manager&,
+		istream&, const footprint*&);
 
 protected:
 	void
