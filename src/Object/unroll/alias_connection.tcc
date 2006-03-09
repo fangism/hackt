@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.11 2006/02/21 04:48:42 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.11.4.1 2006/03/09 05:52:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -18,6 +18,7 @@
 #include <functional>
 #include <algorithm>
 
+#include "Object/devel_switches.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/expr/expr_dump_context.h"
@@ -253,6 +254,7 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 		// ref_iter_iter will walk along the array of references
 		// starting with the second packed collection
 		iter_iter_type ref_iter_iter(ref_iter_head);
+#if USE_ALIAS_RING_NODES
 		/***
 			Aliases in this sequence must be connectibly
 			type-equivalent, i.e. their relaxed parameters
@@ -292,6 +294,10 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 			// already have error message
 			return good_bool(false);
 		}
+#else
+		// we postpone relaxed actuals checking until the create phase,
+		// after having collected all union_find sets
+#endif
 		// skip the head, don't try to connect it to itself
 		for (ref_iter_iter++; ref_iter_iter != ref_iter_end;
 				ref_iter_iter++) {
@@ -304,12 +310,21 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 				connectee(**ref_iter_iter);
 			NEVER_NULL(connectee);
 			// all type-checking is done in this call:
+#if USE_ALIAS_RING_NODES
 			if (!instance_alias_base_type::checked_connect_alias(
 					*head, *connectee,
 					first_relaxed_actuals).good) {
 				// already have error message
 				return good_bool(false);
 			}
+#else
+			// punt relaxed type checking until create
+			if (!instance_alias_base_type::checked_connect_alias(
+					*head, *connectee).good) {
+				// already have error message
+				return good_bool(false);
+			}
+#endif
 		}
 		for_each(ref_iter_head, ref_iter_end, 
 			// ambiguous, postfix or prefix (doesn't matter)

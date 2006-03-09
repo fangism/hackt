@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.10 2006/02/06 01:30:50 fang Exp $
+	$Id: alias_actuals.tcc,v 1.10.12.1 2006/03/09 05:51:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -26,6 +26,7 @@ namespace entity {
 //=============================================================================
 // class instance_alias_info_actuals method definitions
 
+#if USE_ALIAS_RING_NODES
 /**
 	\pre if this has actuals, then everything else in the ring has 
 		equivalent actuals, though not necesarily the same pointer, 
@@ -126,6 +127,7 @@ if (l.actuals) {
 }
 	return good_bool(true);
 }
+#endif	// USE_ALIAS_RING_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

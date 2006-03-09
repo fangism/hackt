@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.10 2006/02/05 19:45:08 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.10.12.1 2006/03/09 05:51:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -44,6 +44,7 @@ substructure_alias::hierarchical_depth(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Implemented for real in instance_alias_info.  
  */
@@ -52,6 +53,7 @@ substructure_alias::allocate_state(footprint&) const {
 	ICE_NEVER_CALL(cerr);
 	return 0;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 subinstance_manager::value_type
@@ -95,10 +97,12 @@ substructure_alias::collect_port_aliases(port_alias_tracker& p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 void
 substructure_alias::allocate_subinstances(footprint& f) {
 	return subinstances.allocate(f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool

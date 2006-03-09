@@ -2,16 +2,16 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.17 2006/02/21 04:48:21 fang Exp $
+ 	$Id: definition.cc,v 1.17.4.1 2006/03/09 05:50:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
 #define	__HAC_OBJECT_DEFINITION_CC__
 
-#define ENABLE_STACKTRACE		0
-#define	STACKTRACE_DUMPS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define ENABLE_STACKTRACE		1
+#define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
 #include "util/static_trace.h"
@@ -2230,6 +2230,9 @@ if (defined) {
 			// error message
 			return good_bool(false);
 		}
+#if SEPARATE_ALLOCATE_SUBPASS
+		FINISH_ME(Fang);
+#else
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->evaluate_scope_aliases();
 			// has no PRS
@@ -2239,6 +2242,7 @@ if (defined) {
 			// cpt.dump(cerr << "Instantiated from ") << endl;
 			return good_bool(false);
 		}
+#endif
 	}
 	return good_bool(true);
 } else {
@@ -3029,6 +3033,9 @@ if (defined) {
 			// error message
 			return good_bool(false);
 		}
+#if SEPARATE_ALLOCATE_SUBPASS
+		FINISH_ME(Fang);
+#else
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->evaluate_scope_aliases();
 			// also resolve copy of production rules
@@ -3048,6 +3055,7 @@ if (defined) {
 			// cpt.dump(cerr << "Instantiated from ") << endl;
 			return good_bool(false);
 		}
+#endif
 	}
 	return good_bool(true);
 } else {

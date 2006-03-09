@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.14 2006/02/05 19:45:08 fang Exp $
+	$Id: subinstance_manager.cc,v 1.14.12.1 2006/03/09 05:51:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -204,6 +204,7 @@ subinstance_manager::replay_internal_aliases(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 good_bool
 subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
 	STACKTRACE_VERBOSE;
@@ -228,6 +229,7 @@ subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
 	// all connections good
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -247,6 +249,7 @@ subinstance_manager::relink_super_instance_alias(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Allocates each port entirely.  
  */
@@ -303,6 +306,7 @@ subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
 		pi->inherit_created_state(*pj, f);
 	}
 }
+#endif	// SEPARATE_ALLOCATE_SUBPASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

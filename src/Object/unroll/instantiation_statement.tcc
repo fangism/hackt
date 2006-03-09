@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.12 2006/02/21 04:48:43 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.12.4.1 2006/03/09 05:52:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -165,6 +165,12 @@ INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
 	\param c the unroll context.  
 	\return good if successful, else false.
 	TODO: clean-up the hack in here
+	TODO: use a consistent policy/trait class to specialize implementations
+		of type checking for each meta class.  
+		Don't go through common class for type-references.  
+	TODO: we unroll the canonical_type if it is complete, 
+		i.e. not relaxed or relaxed with relaxed actuals.  
+		For now, we punt on relaxed types until a future date.  
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
@@ -172,6 +178,11 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	typedef	typename type_ref_ptr_type::element_type	element_type;
 	STACKTRACE_VERBOSE;
 	const footprint* const f(c.get_target_footprint());
+#if ENABLE_STACKTRACE
+	if (f) {
+		f->dump(cerr << "footprint: ") << endl;
+	}
+#endif
 	collection_type& _inst(f ? IS_A(collection_type&, 
 			*(*f)[this->inst_base->get_name()])
 		: *this->inst_base);
@@ -193,12 +204,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 			// already have error message
 			return good_bool(false);
 		}
-#if 0
-		if (!cft.unroll_definition_footprint().good) {
-			// already have error message
-			return good_bool(false);
-		}
-#endif
+		// note: commit_type_first_time also unrolls the complete type
 		if (!type_ref_parent_type::commit_type_first_time(
 				_inst, cft).good) {
 			type_ref_parent_type::get_type()->dump(
@@ -225,12 +231,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 			" during unroll." << endl;
 		return good_bool(false);
 	}
-#if 0
-	if (!final_type_ref.unroll_definition_footprint().good) {
-		// already have error message
-		return good_bool(false);
-	}
-#endif
+	// note: commit_type_check also unrolls the complete type
 	// TODO: decide what do to about relaxed type parameters
 	// 2005-07-07: answer is above under "HACK"
 	const good_bool
@@ -270,6 +271,9 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		// actuals are allowed to be NULL, and in some cases,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
+#if ENABLE_STACKTRACE
+		STACKTRACE_INDENT << "&_inst = " << &_inst << endl;
+#endif
 		return type_ref_parent_type::instantiate_indices_with_actuals(
 				_inst, crl, 
 				final_type_ref.make_unroll_context(), 
@@ -351,6 +355,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Allocates state space for the aliases referenced by this statement.  
 	\pre already unrolled.  
@@ -370,11 +375,12 @@ INSTANTIATION_STATEMENT_CLASS::create_unique(
 	const footprint* const _f(c.get_target_footprint());
 	if (_f)
 		INVARIANT(_f == &f);
-	collection_type& _inst(_f ? IS_A(collection_type&, 
-			*f[this->inst_base->get_name()])
-		: *this->inst_base);
+	collection_type& _inst(_f ?
+		IS_A(collection_type&, *f[this->inst_base->get_name()]) :
+		*this->inst_base);
 	return type_ref_parent_type::create_unique_state(_inst, crl, f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE

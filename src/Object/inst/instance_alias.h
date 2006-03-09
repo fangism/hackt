@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.8 2006/02/21 04:48:28 fang Exp $
+	$Id: instance_alias.h,v 1.8.4.1 2006/03/09 05:51:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
@@ -82,10 +82,17 @@ private:
 public:
 	typedef	typename parent_type::key_type		key_type;
 	// or simple_type?
+#if USE_ALIAS_RING_NODES
 	typedef	typename instance_alias_info_type::const_iterator
 							const_iterator;
 	typedef	typename instance_alias_info_type::iterator
 							iterator;
+#else
+	typedef	typename instance_alias_info_type::pseudo_const_iterator
+							pseudo_const_iterator;
+	typedef	typename instance_alias_info_type::pseudo_iterator
+							pseudo_iterator;
+#endif
 public:
 	instance_alias() : parent_type() { }
 
@@ -108,6 +115,7 @@ public:
 	 */
 	operator const key_type& () const { return this->key; }
 
+#if USE_ALIAS_RING_NODES
 	const_iterator
 	begin(void) const;
 
@@ -120,10 +128,19 @@ private:
 
 	iterator
 	end(void);
+#else
+	pseudo_iterator
+	find(void);
+
+	pseudo_const_iterator
+	find(void) const;
+#endif
 
 public:
 	using parent_type::instantiate;
+#if !SEPARATE_ALLOCATE_SUBPASS
 	using parent_type::allocate_state;
+#endif
 
 	void
 	write_next_connection(const persistent_object_manager& m, 
@@ -174,19 +191,29 @@ public:
 					instance_alias_base_type;
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+	typedef	typename traits_type::instance_alias_info_type
+					instance_alias_info_type;
 	// template explicitly required by g++-4.0
 	typedef	typename traits_type::template instance_array<0>::type
 							container_type;
-	typedef	typename instance_alias_info<Tag>::const_iterator
+#if USE_ALIAS_RING_NODES
+	typedef	typename instance_alias_info_type::const_iterator
 							const_iterator;
-	typedef	typename instance_alias_info<Tag>::iterator
+	typedef	typename instance_alias_info_type::iterator
 							iterator;
+#else
+	typedef	typename instance_alias_info_type::pseudo_const_iterator
+							pseudo_const_iterator;
+	typedef	typename instance_alias_info_type::pseudo_iterator
+							pseudo_iterator;
+#endif
 public:
 	~instance_alias();
 
 	ostream&
 	dump_alias(ostream& o, const dump_flags&) const;
 
+#if USE_ALIAS_RING_NODES
 	const_iterator
 	begin(void) const;
 
@@ -199,6 +226,13 @@ private:
 
 	iterator
 	end(void);
+#else
+	pseudo_iterator
+	find(void);
+
+	pseudo_const_iterator
+	find(void) const;
+#endif
 
 public:
 	TRACE_ALIAS_BASE_PROTO;

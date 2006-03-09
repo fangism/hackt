@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.18 2006/02/22 04:45:23 fang Exp $
+	$Id: instance_alias.tcc,v 1.18.4.1 2006/03/09 05:51:10 fang Exp $
 	TODO: trim includes
  */
 
@@ -55,7 +55,10 @@
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
+#if USE_ALIAS_RING_NODES
 #include "util/ring_node.tcc"
+#endif
+#include "util/wtf.h"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/sstream.h"
@@ -110,6 +113,7 @@ INSTANCE_ALIAS_INFO_CLASS::~instance_alias_info() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This check is cheap and critical, do not disable it.  
 	TODO: add more checks for relationship with parent instance
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
@@ -135,10 +139,20 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p, 
 		const unroll_context& c) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
 	INVARIANT(!this->container);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "this->container (old) = " << &*this->container << endl;
+#endif
 	this->container = p;
 	substructure_parent_type::unroll_port_instances(*this->container, c);
+	// do we ever want to instantiate more than the ports?
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "this->container (new) = " << &*this->container << endl;
+	this->dump_hierarchical_name(STACKTRACE_INDENT << "instantiate: ")
+		<< endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -326,6 +340,7 @@ INSTANCE_ALIAS_INFO_CLASS::retrace_collection(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_RING_NODES
 /**
 	If this container is a port formal, then this will invoke
 	it's parent super-instance's state allocation.  
@@ -366,8 +381,10 @@ INSTANCE_ALIAS_INFO_CLASS::create_super_instance(footprint& f) {
 		return good_bool(true);
 	}
 }
+#endif	// USE_ALIAS_RING_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	This (public) variant of state allocation is intended for top-level
 	construction, where we need to check for super-instance of aliases
@@ -383,6 +400,7 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 	this->dump_hierarchical_name(STACKTRACE_INDENT << "allocating: ");
 	this->dump_aliases(STACKTRACE_STREAM << " with aliases: ") << endl;
 #endif
+#if USE_ALIAS_RING_NODES
 	this_type& _this = const_cast<this_type&>(*this);
 	// BUG FIX: need to see if aliases have super-instances
 	// upward recursion!
@@ -397,10 +415,17 @@ INSTANCE_ALIAS_INFO_CLASS::allocate_state(footprint& f) const {
 			return 0;
 		}
 	}
+#else
+	// allocation is done after all internal aliases have been replayed
+	// during the create phase.
+	// iterate over all top-level instances of each scope
+#endif
 	return _this.__allocate_state(f);
 }
+#endif	// SEPARATE_ALLOCATE_SUBPASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Allocates space for a sub-instance, during the create phase  
 	Checks whether or not this alias already points to allocated
@@ -450,6 +475,10 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	// NOTE: can't _this.allocate_subinstances() yet because there
 	// may be aliases between the ports, see comment below.  
 	// Visit each alias in the ring and connect
+#if SEPARATE_ALLOCATE_SUBPASS
+	// just create dependent types, and assign instance_id's after
+	// all internal aliases have been replayed.  
+#else
 	iterator j(_this.begin());	// begin points to next! (ring_node)
 	// skip itself, the start
 	iterator i(j++);
@@ -498,6 +527,7 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 		if (!_this.create_subinstance_state(*i, f).good)
 			return 0;	// 0 means error
 	}
+#endif
 	// after having synchronized relaxed actuals
 	// create footprints of dependent types bottom up
 	// this must be done before allocating subinstances
@@ -518,8 +548,10 @@ INSTANCE_ALIAS_INFO_CLASS::__allocate_state(footprint& f) const {
 	_this.allocate_subinstances(f);
 	return this->instance_index;
 }	// end method __allocate_state
+#endif	// SEPARATE_ALLOCATE_SUBPASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Don't forget to merge all aliases too!
 	TODO: compare-and-update relaxed actuals as connections are made!
@@ -613,8 +645,10 @@ INSTANCE_ALIAS_INFO_CLASS::merge_allocate_state(this_type& t, footprint& f) {
 	return good_bool(true);
 #endif
 }	// end method merge_allocate_state
+#endif	// SEPARATE_ALLOCATE_SUBPASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Simply copy state_instance indices from source to this destination.  
 	\param t the source alias from which to inherit the ID.  
@@ -662,6 +696,7 @@ INSTANCE_ALIAS_INFO_CLASS::inherit_subinstances_state(const this_type& t,
 		i->inherit_state(inst, f);
 	}
 }
+#endif	// SEPARATE_ALLOCATE_SUBPASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -677,6 +712,7 @@ INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_RING_NODES
 /**
 	\pre every alias in this ring must have NULL actuals.  
 	\post every alias in this ring has the same valid actuals, 
@@ -756,6 +792,7 @@ INSTANCE_ALIAS_INFO_CLASS::synchronize_actuals_recursive(
 #endif
 	return good_bool(true);
 }
+#endif	// USE_ALIAS_RING_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -772,6 +809,7 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 		// already have error message
 		return good_bool(false);
 	}
+#if USE_ALIAS_RING_NODES
 	// TODO: this only necessary for types with relaxed actuals
 	// specialize to optimize later.  
 	// note: should not be recursive at unroll-time
@@ -779,9 +817,14 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 		// already have error message
 		return good_bool(false);
 	}
+#endif
 	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
 	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
+#if USE_ALIAS_RING_NODES
 	ll.merge(rr);
+#else
+	ll = rr;			// union
+#endif
 	return good_bool(true);
 }
 
@@ -800,20 +843,31 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r, 
-		const relaxed_actuals_type& a) {
+INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r
+#if USE_ALIAS_RING_NODES
+		, const relaxed_actuals_type& a
+#endif
+		) {
 	if (!l.must_match_type(r)) {
 		// already have error message
 		return good_bool(false);
 	}
+#if USE_ALIAS_RING_NODES
 	if (!r.compare_and_propagate_actuals(a).good) {
 		// already have partial error message
 		l.dump_hierarchical_name(cerr << "\tand :") << endl;
 		return good_bool(false);
 	}
+#endif
 	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
 	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
+#if USE_ALIAS_RING_NODES
 	ll.merge(rr);
+#else
+	*ll = *rr;
+	// TODO: recursively connect ports now, instead of deferring
+	// check until create time
+#endif
 	return good_bool(true);
 }
 
@@ -972,20 +1026,29 @@ INSTANCE_ALIAS_INFO_CLASS::dump_alias(ostream& o, const dump_flags&) const {
 /**
 	Since begin points to next, self will always be printed last.  
 	NOTE: always prints with default dump_flags.  
+	NOTE: Now only prints the canonical alias's name
+		because ring_nodes were iterable, but union-finds are not.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_ALIAS_INFO_CLASS::dump_aliases(ostream& o) const {
+#if USE_ALIAS_RING_NODES
 	const_iterator i(this->begin());
 	const const_iterator e(this->end());
 	i->dump_hierarchical_name(o);
 	for (i++; i!=e; i++) {
 		i->dump_hierarchical_name(o << " = ");
 	}
+#else
+	this->dump_hierarchical_name(o);
+	// use non-path-conmpressing find() because of const qualifier
+	this->find()->dump_hierarchical_name(o << " = ");
+#endif
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_RING_NODES
 #if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 /**
 	20060127:
@@ -1007,6 +1070,7 @@ INSTANCE_ALIAS_INFO_CLASS::force_update_index(const size_t ind) {
 	}
 }
 #endif
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
@@ -1026,6 +1090,7 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_RING_NODES
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::const_iterator
 INSTANCE_ALIAS_INFO_CLASS::begin(void) const {
@@ -1056,6 +1121,25 @@ INSTANCE_ALIAS_INFO_CLASS::end(void) {
 	ICE_NEVER_CALL(cerr);
 	return iterator(NULL);
 }
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
+INSTANCE_ALIAS_INFO_CLASS::find(void) {
+	ICE_NEVER_CALL(cerr);
+	return pseudo_iterator();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_INFO_CLASS::pseudo_const_iterator
+INSTANCE_ALIAS_INFO_CLASS::find(void) const {
+	ICE_NEVER_CALL(cerr);
+	return pseudo_const_iterator();
+}
+
+#endif	// USE_ALIAS_RING_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
@@ -1219,6 +1303,7 @@ INSTANCE_ALIAS_CLASS::dump_alias(ostream& o, const dump_flags& df) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_RING_NODES
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_CLASS::const_iterator
 INSTANCE_ALIAS_CLASS::begin(void) const {
@@ -1245,6 +1330,23 @@ typename INSTANCE_ALIAS_CLASS::iterator
 INSTANCE_ALIAS_CLASS::end(void) {
 	return instance_alias_base_type::end();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#else
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::pseudo_iterator
+INSTANCE_ALIAS_CLASS::find(void) {
+	return instance_alias_base_type::find();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename INSTANCE_ALIAS_CLASS::pseudo_const_iterator
+INSTANCE_ALIAS_CLASS::find(void) const {
+	return instance_alias_base_type::find();
+}
+
+#endif	// USE_ALIAS_RING_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
@@ -1312,9 +1414,15 @@ INSTANCE_ALIAS_CLASS::load_next_connection(
 #if STACKTRACE_PERSISTENTS
 	cerr << "ring size before = " << this->size();
 #endif
-	this->merge(n);       // re-link
+#if USE_ALIAS_RING_NODES
+	this->merge(n);		// re-link
 	// this->unsafe_merge(n);       // re-link (undeclared!??)
 	// unsafe is OK because we've already checked linkage when it was made!
+#else
+	// *this = n;		// union-find with path-compression
+	// util::wtf_is(n);
+	this->set(&n);	// manual unionization without path compression
+#endif
 #if STACKTRACE_PERSISTENTS
 	cerr << ", after = " << this->size() << endl;
 #endif
@@ -1371,6 +1479,7 @@ KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_RING_NODES
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename KEYLESS_INSTANCE_ALIAS_CLASS::const_iterator
 KEYLESS_INSTANCE_ALIAS_CLASS::begin(void) const {
@@ -1397,6 +1506,23 @@ typename KEYLESS_INSTANCE_ALIAS_CLASS::iterator
 KEYLESS_INSTANCE_ALIAS_CLASS::end(void) {
 	return instance_alias_base_type::end();
 }
+
+#else
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::pseudo_iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::find(void) {
+	return instance_alias_base_type::find();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+typename KEYLESS_INSTANCE_ALIAS_CLASS::pseudo_const_iterator
+KEYLESS_INSTANCE_ALIAS_CLASS::find(void) const {
+	return instance_alias_base_type::find();
+}
+
+#endif	// USE_ALIAS_RING_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
@@ -1462,7 +1588,11 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_next_connection(
 	cerr << "ring size before = " << this->size();
 #endif
 	instance_alias_base_type& n(next_container->load_reference(i));
+#if USE_ALIAS_RING_NODES
 	this->merge(n);
+#else
+	this->set(&n);	// manual unionization without path compression
+#endif
 #if STACKTRACE_PERSISTENTS
 	cerr << ", after = " << this->size() << endl;
 #endif
@@ -1477,7 +1607,11 @@ KEYLESS_INSTANCE_ALIAS_CLASS::collect_transient_info(
 	// this isn't truly a persistent type, so we don't register this addr.
 	INSTANCE_ALIAS_INFO_CLASS::collect_transient_info_base(m);
 	if (this->next != this)
+#if USE_ALIAS_RING_NODES
 		this->next->collect_transient_info_base(m);
+#else
+		this->peek()->collect_transient_info_base(m);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1497,7 +1631,11 @@ KEYLESS_INSTANCE_ALIAS_CLASS::write_object(const persistent_object_manager& m,
 		cerr << "Writing a real connection!" << endl;
 #endif
 		write_value<char>(o, 1);
+#if USE_ALIAS_RING_NODES
 		this->next->write_next_connection(m, o);
+#else
+		this->peek()->write_next_connection(m, o);
+#endif
 	}
 }
 

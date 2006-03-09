@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.7 2006/02/10 21:50:36 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.7.8.1 2006/03/09 05:51:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -14,8 +14,8 @@
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
-#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS				(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS				(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
 // start of static initializations

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/conditional_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: conditional_scope.cc,v 1.6 2006/01/30 07:42:05 fang Exp $
+ 	$Id: conditional_scope.cc,v 1.6.16.1 2006/03/09 05:52:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
@@ -89,6 +89,7 @@ if (b) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Code blatantly copy-modified from above conditional_scope::unroll(). 
 	TODO: consider templating code for reusability.  
@@ -111,6 +112,7 @@ if (b) {
 	// else don't bother expanding inside
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

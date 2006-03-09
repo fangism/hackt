@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.13 2006/02/05 19:45:08 fang Exp $
+	$Id: substructure_alias_base.h,v 1.13.12.1 2006/03/09 05:51:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -71,6 +71,7 @@ protected:
 		restore_parent_child_links();
 	}
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	good_bool
 	create_subinstance_state(this_type& t, footprint& f) {
 		return subinstances.create_state(t.subinstances, f);
@@ -92,6 +93,7 @@ protected:
 		return subinstance_manager::synchronize_port_actuals(
 			l.subinstances, r.subinstances);
 	}
+#endif
 
 	good_bool
 	replay_substructure_aliases(void) const;
@@ -114,8 +116,10 @@ virtual	ostream&
 virtual	size_t
 	hierarchical_depth(void) const;
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 virtual	size_t
 	allocate_state(footprint&) const;
+#endif
 
 	ostream&
 	dump_ports(ostream& o, const dump_flags& df) const {
@@ -189,6 +193,7 @@ protected:
 	unroll_port_instances(const instance_collection<Tag>&, 
 		const unroll_context&) const { }
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	/**
 		Has no substructure, thus does not recur.  
 	 */
@@ -206,6 +211,7 @@ protected:
 
 	void
 	allocate_subinstances(footprint&) const { }
+#endif
 
 	/**
 		No-op.  
@@ -213,11 +219,13 @@ protected:
 	void
 	restore_parent_child_links(void) { }
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	static
 	good_bool
 	synchronize_port_actuals(const this_type&, const this_type&) {
 		return good_bool(true);
 	}
+#endif
 
 	/**
 		No-op, because this has no substructure.  

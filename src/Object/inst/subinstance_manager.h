@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.11 2006/02/05 19:45:08 fang Exp $
+	$Id: subinstance_manager.h,v 1.11.12.1 2006/03/09 05:51:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -112,6 +112,7 @@ public:
 	good_bool
 	connect_ports(const connection_references_type&, const unroll_context&);
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	void
 	allocate(footprint&);
 
@@ -125,6 +126,7 @@ public:
 
 	void
 	inherit_state(const this_type&, const footprint&);
+#endif
 
 	good_bool
 	replay_internal_aliases(void) const;

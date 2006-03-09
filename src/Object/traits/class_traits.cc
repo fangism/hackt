@@ -2,7 +2,7 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.6 2006/02/10 21:50:42 fang Exp $
+	$Id: class_traits.cc,v 1.6.8.1 2006/03/09 05:51:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
@@ -20,6 +20,7 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/struct_traits.h"
 #include "Object/unroll/unroll_context.h"
+#include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
 
 namespace HAC {
 namespace entity {

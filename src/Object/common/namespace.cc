@@ -3,15 +3,15 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.13 2006/02/22 04:45:22 fang Exp $
+ 	$Id: namespace.cc,v 1.13.4.1 2006/03/09 05:50:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
 #define	__HAC_OBJECT_COMMON_NAMESPACE_CC__
 
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN

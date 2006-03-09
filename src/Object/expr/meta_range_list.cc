@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.11 2006/02/21 04:48:24 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.11.4.1 2006/03/09 05:51:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -13,8 +13,8 @@
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
-#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS				(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS				(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
 // start of static initializations

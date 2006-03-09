@@ -1,11 +1,11 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.12 2006/02/20 20:50:58 fang Exp $
+	$Id: PRS_footprint.cc,v 1.12.4.1 2006/03/09 05:51:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_DUMPS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include "Object/lang/PRS_footprint.h"

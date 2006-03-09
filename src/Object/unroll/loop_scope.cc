@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.8 2006/02/01 06:11:46 fang Exp $
+ 	$Id: loop_scope.cc,v 1.8.16.1 2006/03/09 05:52:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -136,6 +136,7 @@ loop_scope::unroll(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Code blatantly copy-modified from above loop_scope::unroll(). 
 	TODO: consider templating code for reusability.  
@@ -178,6 +179,7 @@ loop_scope::create_unique(const unroll_context& c, footprint& f) const {
 	}
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

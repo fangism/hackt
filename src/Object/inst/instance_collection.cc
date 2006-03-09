@@ -3,15 +3,15 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.16 2006/02/22 04:45:23 fang Exp $
+ 	$Id: instance_collection.cc,v 1.16.4.1 2006/03/09 05:51:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
 #define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 
 #include <iostream>
@@ -26,6 +26,7 @@
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_base.h"
 #include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/null_parameter_type.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"

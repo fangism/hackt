@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.105 2006/02/25 04:55:01 fang Exp $
+#	$Id: Makefile.am,v 1.105.2.1 2006/03/09 05:49:34 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -455,9 +455,11 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/channel_instantiation_statement.h \
 	Object/unroll/data_alias_connection_base.h \
 	Object/unroll/datatype_instantiation_statement.h \
+	Object/unroll/empty_instantiation_statement_type_ref_base.h \
 	Object/unroll/instance_management_base.h \
 	Object/unroll/instantiation_statement_base.h \
 	Object/unroll/instantiation_statement_type_ref_default.h \
+	Object/unroll/null_parameter_type.h \
 	Object/unroll/param_expression_assignment.h \
 	Object/unroll/param_instantiation_statement.h \
 	Object/unroll/port_connection_base.h \

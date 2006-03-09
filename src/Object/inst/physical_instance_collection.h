@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.11 2006/02/21 04:48:31 fang Exp $
+	$Id: physical_instance_collection.h,v 1.11.4.1 2006/03/09 05:51:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -90,6 +90,7 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const = 0;
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 virtual	good_bool
 	allocate_state(footprint&) = 0;
 
@@ -101,6 +102,7 @@ virtual	void
 
 virtual	good_bool
 	synchronize_actuals(this_type&) = 0;
+#endif
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\
 	good_bool							\

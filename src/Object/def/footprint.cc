@@ -1,11 +1,11 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.13 2006/02/05 19:45:06 fang Exp $
+	$Id: footprint.cc,v 1.13.12.1 2006/03/09 05:50:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
-#define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include <algorithm>
 #include <iterator>
@@ -408,24 +408,36 @@ footprint::clear_instance_collection_map(void) {
 good_bool
 footprint::create_dependent_types(void) const {
 	STACKTRACE_VERBOSE;
-	const_instance_map_iterator i(instance_collection_map.begin());
-	const const_instance_map_iterator e(instance_collection_map.end());
+	const const_instance_map_iterator
+		b(instance_collection_map.begin()),
+		e(instance_collection_map.end());
+	const_instance_map_iterator i(b);
 	for ( ; i!=e; i++) {
 		const count_ptr<const physical_instance_collection>
 			pic(i->second.is_a<const physical_instance_collection>());
-		if (pic && !pic->create_dependent_types().good)
+		// not only does this create dependent types, but it also
+		// replays all internal aliases as well.
+		if (pic && !pic->create_dependent_types().good) {
 			return good_bool(false);
+		}
 	}
 #if ENABLE_STACKTRACE
 	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl, 
 		dump_flags::default_value) << endl;
+#endif
+#if SEPARATE_ALLOCATE_SUBPASS
+	// having replayed all necessary aliases, it is safe and correct
+	// to allocate-assign local instance_id's and evaluate_scope_aliases
+	// we assign ID's based on overall union-find structure.
+	// evaluate_scope_aliases();
 #endif
 	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Collects all aliases in this scope.  
+	Collects all aliases in this scope and also creates a set
+	of port aliases for the sake of replaying internal aliases.  
 	\pre the sequential scope was already played for creation.  
  */
 void

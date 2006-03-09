@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19=connect-02-01:
+	  Preliminary check-in of modifications for reworking connection
+		unrolling and footprint creation.  
+	  Status: compiles but expected to fail unrolling (all tests), 
+		debugging flags also turned on.
+	  Parts: replacing ring-node structures with union-finds.  
+		Replacing unroll-like pass for allocating instance_id's.
+	  TODO: figure out how to fix unrolling, whether or not private 
+		subinstances should be unrolled for complete_type unrolling.  
+		Issue: complete_type-unrolling needed for replaying
+		internal aliases.  
+
+
 2006-02-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-19:

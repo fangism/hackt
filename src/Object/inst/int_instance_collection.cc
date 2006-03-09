@@ -4,15 +4,15 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.8 2006/02/21 04:48:30 fang Exp $
+	$Id: int_instance_collection.cc,v 1.8.4.1 2006/03/09 05:51:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
 #define	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
 #include "util/static_trace.h"

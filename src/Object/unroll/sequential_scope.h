@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.9 2006/02/21 04:48:45 fang Exp $
+	$Id: sequential_scope.h,v 1.9.4.1 2006/03/09 05:52:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -93,7 +93,9 @@ protected:
 	good_bool
 	unroll(const unroll_context& ) const;
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	CREATE_UNIQUE_PROTO;
+#endif
 
 };      // end class sequential_scope
 

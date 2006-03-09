@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.12 2006/02/22 04:45:24 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.12.4.1 2006/03/09 05:52:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -10,8 +10,8 @@
 
 // compilation switches for debugging
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -42,6 +42,7 @@ USING_UTIL_COMPOSE
 //=============================================================================
 // class instance_management_base method definitions
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Overrideable default for unroll creation.  
 	Only instantiation_statements actually provide a real implementation.  
@@ -51,6 +52,7 @@ instance_management_base::create_unique(const unroll_context&,
 		footprint&) const {
 	return good_bool(true);
 }
+#endif
 
 //=============================================================================
 // class sequential_scope method definitions
@@ -132,6 +134,7 @@ sequential_scope::unroll(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	NOTE: need a pass for hierarchical gluing.  
  */
@@ -147,6 +150,7 @@ sequential_scope::create_unique(const unroll_context& c, footprint& f) const {
 	}
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

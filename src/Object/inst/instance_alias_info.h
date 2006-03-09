@@ -4,15 +4,20 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.13 2006/02/21 04:48:28 fang Exp $
+	$Id: instance_alias_info.h,v 1.13.4.1 2006/03/09 05:51:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 #define	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 
+#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#if USE_ALIAS_RING_NODES
 #include "util/ring_node.h"
+#else
+#include "util/union_find.h"
+#endif
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -29,8 +34,10 @@ struct cflat_args_base;
 struct cflat_aliases_arg_type;
 using std::ostream;
 using std::istream;
+#if USE_ALIAS_RING_NODES
 using util::ring_node_derived;
 using util::ring_node_derived_iterator_default;
+#endif
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
@@ -62,6 +69,7 @@ friend class instance_alias_info_actuals;
 // want to express this:
 template <size_t D> friend class instance_array<Tag, D>;
 #else
+#if !SEPARATE_ALLOCATE_SUBPASS
 // for the sake of granting direct access to __allocate_state.
 // but have to write this:
 friend class instance_array<Tag, 0>;
@@ -69,6 +77,7 @@ friend class instance_array<Tag, 1>;
 friend class instance_array<Tag, 2>;
 friend class instance_array<Tag, 3>;
 friend class instance_array<Tag, 4>;
+#endif
 #endif
 public:
 	typedef	class_traits<Tag>		traits_type;
@@ -93,6 +102,7 @@ public:
 					instance_collection_generic_type;
 	typedef	instance_collection_generic_type	container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
+#if USE_ALIAS_RING_NODES
 	typedef	ring_node_derived<this_type>	instance_alias_base_type;
 
 #if 1
@@ -113,6 +123,16 @@ public:
 	typedef	typename instance_alias_base_type::iterator
 						iterator;
 #endif
+#else	// USE_ALIAS_RING_NODES
+	typedef	util::union_find_derived<this_type>
+						instance_alias_base_type;
+	// we won't have iterator interface anymore!
+	typedef	util::union_find_derived_pseudo_iterator_default<this_type>
+						iterator_policy;
+	typedef	typename iterator_policy::type	pseudo_iterator;
+	typedef	typename iterator_policy::const_type
+						pseudo_const_iterator;
+#endif	// USE_ALIAS_RING_NODES
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
 public:
@@ -164,6 +184,7 @@ public:
 	void
 	check(const container_type* p) const;
 
+#if USE_ALIAS_RING_NODES
 // should be pure virtual (but can't)
 virtual	const_iterator
 	begin(void) const;
@@ -178,6 +199,13 @@ virtual	iterator
 
 virtual	iterator
 	end(void);
+#else
+virtual	pseudo_const_iterator
+	find(void) const;
+
+virtual	pseudo_iterator
+	find(void);
+#endif
 
 public:
 	/**
@@ -188,28 +216,37 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	// this implements the virtual function 
 	// from substructure_alias_base<true>
 	// really shouldn't be const...
 	size_t
 	allocate_state(footprint&) const;
+#endif
 
+#if USE_ALIAS_RING_NODES
+#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 	void
 	force_update_index(const size_t);
+#endif
+#endif
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 private:
 	// want to allow instance_collection<> to call this directly
 	// so we make it a friend :S
 	size_t
 	__allocate_state(footprint&) const;
+#endif
 
 public:
-
+#if !SEPARATE_ALLOCATE_SUBPASS
 	good_bool
 	merge_allocate_state(this_type&, footprint&);
 
 	void
 	inherit_subinstances_state(const this_type&, const footprint&);
+#endif
 
 	/**
 		Attaches actual parameters to this alias.  
@@ -250,6 +287,7 @@ public:
 virtual	TRACE_ALIAS_BASE_PROTO;
 virtual	TRACE_ALIAS_PROTO;
 
+#if USE_ALIAS_RING_NODES
 protected:
 	void
 	progagate_actuals(const relaxed_actuals_type&);
@@ -268,9 +306,12 @@ private:
 
 	void
 	propagate_actuals(const relaxed_actuals_type&);
+#endif
 
+#if USE_ALIAS_RING_NODES
 	good_bool
 	create_super_instance(footprint&);
+#endif
 
 public:
 	bool
@@ -346,10 +387,17 @@ public:
 	good_bool
 	checked_connect_port(this_type&, this_type&);
 
+#if USE_ALIAS_RING_NODES
 	static
 	good_bool
 	checked_connect_alias(this_type&, this_type&,
 		const relaxed_actuals_type&);
+#else
+	// punting relaxed actuals checking until after unroll phase
+	static
+	good_bool
+	checked_connect_alias(this_type&, this_type&);
+#endif
 
 	/// counterpart to load_alias_reference (should be pure virtual)
 virtual	void

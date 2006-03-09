@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.14 2006/02/21 21:33:01 fang Exp $
+	$Id: instance_collection.h,v 1.14.4.1 2006/03/09 05:51:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -226,6 +226,7 @@ virtual	INSTANTIATE_INDICES_PROTO = 0;
 
 virtual	CREATE_UNIQUE_STATE_PROTO = 0;
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 virtual	good_bool
 	allocate_state(footprint&) = 0;
 
@@ -238,6 +239,7 @@ virtual	void
 
 virtual	good_bool
 	synchronize_actuals(physical_instance_collection&) = 0;
+#endif
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -358,6 +360,9 @@ private:
 private:
 	instance_array();
 
+	explicit
+	instance_array(const this_type&);
+
 	instance_array(const this_type&, const footprint&);
 
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
@@ -379,6 +384,7 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	good_bool
 	allocate_state(footprint&);
 
@@ -391,6 +397,7 @@ public:
 
 	good_bool
 	synchronize_actuals(physical_instance_collection&);
+#endif
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -475,6 +482,9 @@ private:
 private:
 	instance_array();
 
+	explicit
+	instance_array(const this_type&);
+
 	instance_array(const this_type&, const footprint&);
 
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
@@ -497,6 +507,7 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	good_bool
 	allocate_state(footprint&);
 
@@ -509,6 +520,7 @@ public:
 
 	good_bool
 	synchronize_actuals(physical_instance_collection&);
+#endif
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;

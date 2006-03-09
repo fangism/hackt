@@ -2,14 +2,14 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.12 2006/02/21 04:48:45 fang Exp $
+	$Id: unroll_context.cc,v 1.12.4.1 2006/03/09 05:52:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 #define	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
 
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_DUMP			0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DUMP			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include "Object/unroll/unroll_context.h"

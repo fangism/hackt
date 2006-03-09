@@ -3,7 +3,7 @@
 	Template instantiations of meta value references.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_value_reference.cc,v 1.9 2006/02/21 04:48:24 fang Exp $
+ 	$Id: meta_param_value_reference.cc,v 1.9.4.1 2006/03/09 05:51:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_VALUE_REFERENCE_CC__
@@ -11,8 +11,8 @@
 
 // flags for controlling conditional compilation, mostly for debugging
 #define	ENABLE_STACKTRACE				0
-#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS				(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS				(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
 // start of static initializations

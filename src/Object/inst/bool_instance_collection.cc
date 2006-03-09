@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.9 2006/02/21 04:48:27 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.9.4.1 2006/03/09 05:51:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -11,9 +11,9 @@
 
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
-#define	ENABLE_STACKTRACE				0
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	ENABLE_STACKTRACE				1
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -36,6 +36,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/state_instance.tcc"
 // #include "util/memory/chunk_map_pool.tcc"
 #include "Object/unroll/datatype_instantiation_statement.h"
+#include "Object/unroll/null_parameter_type.h"
 
 //=============================================================================
 // module-local specializations

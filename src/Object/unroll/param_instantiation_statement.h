@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.8 2006/02/21 04:48:44 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.8.4.1 2006/03/09 05:52:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -11,6 +11,7 @@
 
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
+#include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/preal_traits.h"
@@ -30,9 +31,11 @@ class class_traits<pint_tag>::instantiation_statement_type_ref_base :
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
+#if 0
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
+#endif
 	// probably null_parameter_type
 	typedef	traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
@@ -64,18 +67,12 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
+#if 0
 	instance_collection_parameter_type
 	get_canonical_type(const unroll_context&) const {
 		return instance_collection_parameter_type();
 	}
-
-	/**
-		Relaxed parameters to not apply to built-in parameter types.  
-	 */
-	const_relaxed_args_type
-	get_relaxed_actuals(void) const {
-		return const_relaxed_args_type(NULL);
-	}
+#endif
 
 	const type_ref_ptr_type&
 	unroll_type_reference(const unroll_context&) const {
@@ -167,11 +164,14 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
+#if 0
 	instance_collection_parameter_type
 	get_canonical_type(const unroll_context&) const {
 		return instance_collection_parameter_type();
 	}
+#endif
 
+#if 0
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
 	 */
@@ -179,6 +179,7 @@ protected:
 	get_relaxed_actuals(void) const {
 		return const_relaxed_args_type(NULL);
 	}
+#endif
 
 	const type_ref_ptr_type&
 	unroll_type_reference(const unroll_context&) const {
@@ -269,11 +270,14 @@ protected:
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
 
+#if 0
 	instance_collection_parameter_type
 	get_canonical_type(const unroll_context&) const {
 		return instance_collection_parameter_type();
 	}
+#endif
 
+#if 0
 	/**
 		Relaxed parameters to not apply to built-in parameter types.  
 	 */
@@ -281,6 +285,7 @@ protected:
 	get_relaxed_actuals(void) const {
 		return const_relaxed_args_type(NULL);
 	}
+#endif
 
 	const type_ref_ptr_type&
 	unroll_type_reference(const unroll_context&) const {

@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.14 2006/02/06 01:30:47 fang Exp $
+ 	$Id: module.cc,v 1.14.12.1 2006/03/09 05:50:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -24,6 +24,7 @@
 #include "main/cflat_options.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
+#include "common/TODO.h"
 
 namespace util {
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -269,11 +270,15 @@ module::create_unique(void) {
 			// alraedy have error mesage
 			return good_bool(false);
 		}
+#if SEPARATE_ALLOCATE_SUBPASS
+		FINISH_ME(Fang);
+#else
 		const unroll_context c;	// empty top-level context
 		if (!sequential_scope::create_unique(c, _footprint).good) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
+#endif
 		// this is needed for evaluating scope_aliases, 
 		// but cannot be maintained persistently because
 		// of memory pointer hack (see implementation of 
