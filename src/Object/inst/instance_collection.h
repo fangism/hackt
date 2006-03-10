@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.14.4.1 2006/03/09 05:51:11 fang Exp $
+	$Id: instance_collection.h,v 1.14.4.2 2006/03/10 23:26:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -119,6 +119,7 @@ public:
 					initial_instantiation_statement_type;
 	typedef	never_ptr<const initial_instantiation_statement_type>
 				initial_instantiation_statement_ptr_type;
+protected:
 	/**
 		All collections track the first instantiation statement,
 		for the sake of deducing the type.  

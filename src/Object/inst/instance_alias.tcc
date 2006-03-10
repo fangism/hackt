@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.18.4.1 2006/03/09 05:51:10 fang Exp $
+	$Id: instance_alias.tcc,v 1.18.4.2 2006/03/10 23:26:21 fang Exp $
 	TODO: trim includes
  */
 
@@ -864,7 +864,8 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r
 #if USE_ALIAS_RING_NODES
 	ll.merge(rr);
 #else
-	*ll = *rr;
+	// *ll = *rr;
+	ll = rr;
 	// TODO: recursively connect ports now, instead of deferring
 	// check until create time
 #endif
@@ -1412,7 +1413,9 @@ INSTANCE_ALIAS_CLASS::load_next_connection(
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
 	instance_alias_base_type& n(this->load_alias_reference(m, i));
 #if STACKTRACE_PERSISTENTS
+#if USE_ALIAS_RING_NODES
 	cerr << "ring size before = " << this->size();
+#endif
 #endif
 #if USE_ALIAS_RING_NODES
 	this->merge(n);		// re-link
@@ -1424,7 +1427,9 @@ INSTANCE_ALIAS_CLASS::load_next_connection(
 	this->set(&n);	// manual unionization without path compression
 #endif
 #if STACKTRACE_PERSISTENTS
+#if USE_ALIAS_RING_NODES
 	cerr << ", after = " << this->size() << endl;
+#endif
 #endif
 }
 
@@ -1585,7 +1590,9 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_next_connection(
 	// problem: container is a never_ptr<const ...>, yucky
 	m.load_object_once(next_container);
 #if STACKTRACE_PERSISTENTS
+#if USE_ALIAS_RING_NODES
 	cerr << "ring size before = " << this->size();
+#endif
 #endif
 	instance_alias_base_type& n(next_container->load_reference(i));
 #if USE_ALIAS_RING_NODES
@@ -1594,7 +1601,9 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_next_connection(
 	this->set(&n);	// manual unionization without path compression
 #endif
 #if STACKTRACE_PERSISTENTS
+#if USE_ALIAS_RING_NODES
 	cerr << ", after = " << this->size() << endl;
+#endif
 #endif
 }
 

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.105.2.1 2006/03/09 05:49:34 fang Exp $
+#	$Id: Makefile.am,v 1.105.2.2 2006/03/10 23:24:18 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1197,6 +1197,11 @@ dist-hook:
 		$(RM) $(distdir)/$$f ; \
 	done
 
+# useful for rapidly turning off debugging
+show-stacktrace-sources: force
+	-$(GREP) ENABLE_STACKTRACE */{,*}/*.{tcc,cc} | $(GREP) 1 | \
+		$(GREP) -v "util/test" | $(GREP) -v "util/stacktrace"
+
 help-local:
 	-@$(CALLMAKE) help-check-headers 2> /dev/null
 	@$(ECHO) "Local make targets:"
@@ -1211,6 +1216,7 @@ help-local:
 	@$(ECHO) "    clean-lexer: cleans lexer subdir's objects"
 	@$(ECHO) "    clean-parser: cleans parser subdir's objects"
 	@$(ECHO) "    clean-libs: cleans all libraries and archives"
+	@$(ECHO) "    show-stacktrace-sources: grep for debug-enabled sources"
 	@$(ECHO) "Local echo-* targets:"
 	@$(ECHO) "    libhacktexec-sources"
 

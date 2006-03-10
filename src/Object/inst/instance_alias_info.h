@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.13.4.1 2006/03/09 05:51:10 fang Exp $
+	$Id: instance_alias_info.h,v 1.13.4.2 2006/03/10 23:26:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -237,10 +237,8 @@ private:
 	// so we make it a friend :S
 	size_t
 	__allocate_state(footprint&) const;
-#endif
 
 public:
-#if !SEPARATE_ALLOCATE_SUBPASS
 	good_bool
 	merge_allocate_state(this_type&, footprint&);
 

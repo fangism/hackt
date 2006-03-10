@@ -3,9 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-02:
+	  Fixed typo buglet in new code (wrong alias assignment operator).
+	  Disabled debugging in sources.  
+	  Disabled tests: create, alloc, cflat-prsim (everything beyond unroll)
+	  Unroll-tests need to be re-verified by hand with new union-find
+		structure... a long, arduous task.  Most fail right now, 
+		due to these structural differences.  
+	  Note from previous log: there a distinction between unrolling
+		public ports (for the sake of public aliases) and unrolling
+		a complete type's internals.  
+	  TODO: New create pass for assigning unique IDs.  
+
+
 2006-03-08	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-77-19=connect-02-01:
+	* HACKT-00-01-04-main-00-77-19-connect-02-01:
 	  Preliminary check-in of modifications for reworking connection
 		unrolling and footprint creation.  
 	  Status: compiles but expected to fail unrolling (all tests), 

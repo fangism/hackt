@@ -2,13 +2,13 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.17.4.1 2006/03/09 05:50:36 fang Exp $
+ 	$Id: definition.cc,v 1.17.4.2 2006/03/10 23:25:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
 #define	__HAC_OBJECT_DEFINITION_CC__
 
-#define ENABLE_STACKTRACE		1
+#define ENABLE_STACKTRACE		0
 #define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)

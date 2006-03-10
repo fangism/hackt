@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.21.4.1 2006/03/09 05:51:11 fang Exp $
+	$Id: instance_collection.tcc,v 1.21.4.2 2006/03/10 23:26:31 fang Exp $
 	TODO: trim includes
  */
 
@@ -213,15 +213,20 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
 		const string& n, const size_t d) :
-		parent_type(o, n, d), collection_type_manager_parent_type() {
+		parent_type(o, n, d), collection_type_manager_parent_type(), 
+		initial_instantiation_statement_ptr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: we don't bother copying the initial_instantiation_statement_ptr.
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const this_type& t, 
 		const footprint& f) :
 		parent_type(t, f),
-		collection_type_manager_parent_type(t) {
+		collection_type_manager_parent_type(t), 
+		initial_instantiation_statement_ptr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -458,6 +463,8 @@ INSTANCE_ARRAY_CLASS::instance_array(const scopespace& o, const string& n) :
 		whether implemented as ring-node or union-find.
 		When copying for footprints, the aliases must be replayed
 		separately.  
+	\pre The source collection must be empty.  
+	\post The source collection must be empty.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array(const this_type& t, const footprint& f) :
@@ -469,6 +476,8 @@ INSTANCE_ARRAY_CLASS::instance_array(const this_type& t, const footprint& f) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private copy-constructor, reserved for port instantiation.  
+	\pre The source collection must be empty.  
+	\post The source collection must be empty.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array(const this_type& t) :
@@ -1287,6 +1296,8 @@ INSTANCE_SCALAR_CLASS::instance_array(const scopespace& o, const string& n) :
 		whether implemented as ring-node or union-find.
 		When copying for footprints, the aliases must be replayed
 		separately.  
+	\pre The source collection must be empty.  
+	\post The source collection must be empty.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array(const this_type& t, const footprint& f) :
@@ -1297,6 +1308,8 @@ INSTANCE_SCALAR_CLASS::instance_array(const this_type& t, const footprint& f) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private copy-constructor, reserved for port instantiation.  
+	\pre The source collection must be empty.  
+	\post The source collection must be empty.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array(const this_type& t) :
