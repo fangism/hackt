@@ -32,14 +32,14 @@ Persistent Object Manager text dump:
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	31	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	33	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	37	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
 	39	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
@@ -92,8 +92,8 @@ In namespace "", we have: {
 
   Instances:
     P = process chan_proc<>^0 P (instantiated) = ::P (
-      channel fake_chan<>^0 L (instantiated) = ::X 
-      channel fake_chan<>^0 R (instantiated) = ::Y 
+      channel fake_chan<>^0 L (instantiated) = ::P.L 
+      channel fake_chan<>^0 R (instantiated) = ::P.R 
     )
     X = channel fake_chan<>^0 X (instantiated) = ::P.L 
     Y = channel fake_chan<>^0 Y (instantiated) = ::P.R 

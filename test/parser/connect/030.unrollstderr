@@ -26,7 +26,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
-	25	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	67
+	25	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
 	26	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	27	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -72,15 +72,15 @@ In namespace "", we have: {
   Instances:
     foo = int<32>^1 foo
       unrolled indices: {
-        0 = ::none.a 
+        0 = ::none.b[0] 
         1 = ::none.b[1] 
       }
     none = process bar<>^0 none (instantiated) = ::none (
-      int<32>^0 a (instantiated) = ::none.b[0] 
+      int<32>^0 a (instantiated) = ::foo[0] 
       int<32>^1 b
         unrolled indices: {
-          0 = ::foo[0] 
-          1 = ::foo[1] 
+          0 = ::none.b[0] 
+          1 = ::none.b[1] 
         }
     )
 }

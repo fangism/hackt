@@ -54,7 +54,7 @@ Persistent Object Manager text dump:
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
+	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
 	54	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	55	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	56	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -145,7 +145,7 @@ In namespace "", we have: {
         unrolled indices: {
           0 = ::Q.z[0] 
           1 = ::Q.z[1] 
-          2 = ::P.z[3] 
+          2 = ::Q.z[2] 
         }
     )
 }

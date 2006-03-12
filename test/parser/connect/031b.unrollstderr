@@ -10,7 +10,7 @@ Persistent Object Manager text dump:
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -33,18 +33,18 @@ Persistent Object Manager text dump:
 	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	36	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
@@ -110,9 +110,9 @@ In namespace "", we have: {
       }
 
   Instances:
-    count = int<32>^0 count (instantiated) = ::golden.yolk 
-    golden = process egg<>^0 golden (instantiated) = ::load.c.egg_array (
-      int<32>^0 yolk (instantiated) = ::count 
+    count = int<32>^0 count (instantiated) = ::load.c.egg_array.yolk 
+    golden = process egg<>^0 golden (instantiated) = ::golden (
+      int<32>^0 yolk (instantiated) = ::load.c.egg_array.yolk 
     )
     load = process bundle<>^0 load (instantiated) = ::load (
       process basket<>^0 c (instantiated) = ::load.c (

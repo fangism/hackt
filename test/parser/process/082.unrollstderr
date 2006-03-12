@@ -37,16 +37,16 @@ Persistent Object Manager text dump:
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -93,7 +93,7 @@ In namespace "", we have: {
         x.a = z.a = x.c = z.c;
       footprint: {
         process foo<>^0 x (instantiated) = ::bar::x (
-          bool^0 a (instantiated) = ::bar::z.a 
+          bool^0 a (instantiated) = ::bar::x.c 
           bool^0 b (instantiated) = ::bar::x.b 
           bool^0 c (instantiated) = ::bar::z.c 
         )
@@ -105,7 +105,7 @@ In namespace "", we have: {
         process foo<>^0 z (instantiated) = ::bar::z (
           bool^0 a (instantiated) = ::bar::x.c 
           bool^0 b (instantiated) = ::bar::z.b 
-          bool^0 c (instantiated) = ::bar::x.a 
+          bool^0 c (instantiated) = ::bar::z.c 
         )
       }
       }

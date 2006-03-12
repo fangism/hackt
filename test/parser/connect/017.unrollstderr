@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	153
+	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	149
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	161
 	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -45,11 +45,11 @@ In namespace "", we have: {
     bag = process barf<>^0 bag (instantiated) = ::sack[4] 
     sack = process barf<>^1 sack
       unrolled indices: {
-        0 = ::bag 
+        0 = ::sack[4] 
         1 = ::sack[1] 
         2 = ::sack[2] 
         3 = ::sack[3] 
-        4 = ::sack[0] 
+        4 = ::sack[4] 
       }
 }
 

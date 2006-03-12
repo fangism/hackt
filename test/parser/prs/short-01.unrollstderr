@@ -28,14 +28,14 @@ Persistent Object Manager text dump:
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	28	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -78,7 +78,7 @@ In namespace "", we have: {
     )
     B = process inv<>^0 B (instantiated) = ::B (
       bool^0 a (instantiated) = ::B.a 
-      bool^0 b (instantiated) = ::z 
+      bool^0 b (instantiated) = ::B.b 
     )
     z = bool^0 z (instantiated) = ::A.b 
 }

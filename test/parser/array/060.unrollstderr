@@ -11,7 +11,7 @@ Persistent Object Manager text dump:
 	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	1611
+	10	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	1579
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -23,11 +23,11 @@ Persistent Object Manager text dump:
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 	20	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	24
@@ -93,17 +93,17 @@ In namespace "", we have: {
       }
     blah = int<32>^1 blah
       unrolled indices: {
-        0 = ::foo[0][0][0] 
-        1 = ::foo[0][0][1] 
-        2 = ::foo[0][0][2] 
-        3 = ::foo[0][0][3] 
+        0 = ::bar[0][0][0] 
+        1 = ::bar[0][1][0] 
+        2 = ::bar[0][2][0] 
+        3 = ::bar[0][3][0] 
       }
     foo = int<32>^3 foo
       unrolled indices: {
-        [0][0][0] = ::bar[0][0][0] 
-        [0][0][1] = ::bar[0][1][0] 
-        [0][0][2] = ::bar[0][2][0] 
-        [0][0][3] = ::bar[0][3][0] 
+        [0][0][0] = ::blah[0] 
+        [0][0][1] = ::blah[1] 
+        [0][0][2] = ::blah[2] 
+        [0][0][3] = ::blah[3] 
         [0][0][4] = ::bar[0][4][0] 
         [0][1][0] = ::bar[1][0][0] 
         [0][1][1] = ::bar[1][1][0] 

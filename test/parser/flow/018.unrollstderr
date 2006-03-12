@@ -76,22 +76,22 @@ Persistent Object Manager text dump:
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	73	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	74	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	75	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	286
+	75	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	274
 	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	78	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	79	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	80	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	373
+	80	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	361
 	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	83	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	84	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	85	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	373
+	85	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	361
 	86	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	88	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	89	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	90	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	489
+	90	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	465
 	91	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	92	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	93	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -163,15 +163,15 @@ In namespace "", we have: {
           pint^0 N value: ?
           bool^2 m
             unrolled indices: {
-              [0][0] = ::checkers::m[1][0] 
-              [0][1] = ::checkers::m[0][2] 
-              [0][2] = ::checkers::m[2][0] 
-              [1][0] = ::checkers::m[0][1] 
-              [1][1] = ::checkers::m[2][2] 
-              [1][2] = ::checkers::m[2][1] 
-              [2][0] = ::checkers::m[1][2] 
-              [2][1] = ::checkers::m[1][1] 
-              [2][2] = ::checkers::m[0][0] 
+              [0][0] = ::checkers::m[2][2] 
+              [0][1] = ::checkers::m[2][2] 
+              [0][2] = ::checkers::m[2][2] 
+              [1][0] = ::checkers::m[2][2] 
+              [1][1] = ::checkers::m[2][1] 
+              [1][2] = ::checkers::m[2][2] 
+              [2][0] = ::checkers::m[2][2] 
+              [2][1] = ::checkers::m[2][2] 
+              [2][2] = ::checkers::m[2][2] 
             }
         }
         <3, 4> {
@@ -179,18 +179,18 @@ In namespace "", we have: {
           pint^0 N value: ?
           bool^2 m
             unrolled indices: {
-              [0][0] = ::checkers::m[0][1] 
-              [0][1] = ::checkers::m[0][3] 
-              [0][2] = ::checkers::m[1][3] 
-              [0][3] = ::checkers::m[1][0] 
-              [1][0] = ::checkers::m[2][1] 
-              [1][1] = ::checkers::m[2][2] 
-              [1][2] = ::checkers::m[2][0] 
-              [1][3] = ::checkers::m[1][1] 
-              [2][0] = ::checkers::m[0][0] 
-              [2][1] = ::checkers::m[0][2] 
+              [0][0] = ::checkers::m[2][3] 
+              [0][1] = ::checkers::m[2][3] 
+              [0][2] = ::checkers::m[2][3] 
+              [0][3] = ::checkers::m[2][3] 
+              [1][0] = ::checkers::m[2][3] 
+              [1][1] = ::checkers::m[1][3] 
+              [1][2] = ::checkers::m[2][1] 
+              [1][3] = ::checkers::m[2][3] 
+              [2][0] = ::checkers::m[2][3] 
+              [2][1] = ::checkers::m[2][3] 
               [2][2] = ::checkers::m[2][3] 
-              [2][3] = ::checkers::m[1][2] 
+              [2][3] = ::checkers::m[2][3] 
             }
         }
         <4, 3> {
@@ -198,18 +198,18 @@ In namespace "", we have: {
           pint^0 N value: ?
           bool^2 m
             unrolled indices: {
-              [0][0] = ::checkers::m[3][0] 
-              [0][1] = ::checkers::m[0][2] 
-              [0][2] = ::checkers::m[2][0] 
-              [1][0] = ::checkers::m[0][1] 
-              [1][1] = ::checkers::m[2][2] 
-              [1][2] = ::checkers::m[2][1] 
-              [2][0] = ::checkers::m[0][0] 
-              [2][1] = ::checkers::m[3][2] 
-              [2][2] = ::checkers::m[3][1] 
-              [3][0] = ::checkers::m[1][1] 
-              [3][1] = ::checkers::m[1][2] 
-              [3][2] = ::checkers::m[1][0] 
+              [0][0] = ::checkers::m[3][2] 
+              [0][1] = ::checkers::m[3][2] 
+              [0][2] = ::checkers::m[3][2] 
+              [1][0] = ::checkers::m[2][2] 
+              [1][1] = ::checkers::m[2][1] 
+              [1][2] = ::checkers::m[3][2] 
+              [2][0] = ::checkers::m[3][2] 
+              [2][1] = ::checkers::m[3][1] 
+              [2][2] = ::checkers::m[3][2] 
+              [3][0] = ::checkers::m[3][2] 
+              [3][1] = ::checkers::m[3][2] 
+              [3][2] = ::checkers::m[3][2] 
             }
         }
         <4, 4> {
@@ -217,22 +217,22 @@ In namespace "", we have: {
           pint^0 N value: ?
           bool^2 m
             unrolled indices: {
-              [0][0] = ::checkers::m[0][2] 
-              [0][1] = ::checkers::m[3][0] 
-              [0][2] = ::checkers::m[2][0] 
-              [0][3] = ::checkers::m[0][1] 
-              [1][0] = ::checkers::m[2][1] 
-              [1][1] = ::checkers::m[2][2] 
-              [1][2] = ::checkers::m[2][3] 
-              [1][3] = ::checkers::m[1][1] 
-              [2][0] = ::checkers::m[3][1] 
-              [2][1] = ::checkers::m[3][2] 
+              [0][0] = ::checkers::m[3][3] 
+              [0][1] = ::checkers::m[3][2] 
+              [0][2] = ::checkers::m[3][3] 
+              [0][3] = ::checkers::m[3][2] 
+              [1][0] = ::checkers::m[2][3] 
+              [1][1] = ::checkers::m[1][3] 
+              [1][2] = ::checkers::m[2][1] 
+              [1][3] = ::checkers::m[3][3] 
+              [2][0] = ::checkers::m[3][3] 
+              [2][1] = ::checkers::m[2][3] 
               [2][2] = ::checkers::m[3][3] 
-              [2][3] = ::checkers::m[1][0] 
-              [3][0] = ::checkers::m[1][2] 
-              [3][1] = ::checkers::m[1][3] 
-              [3][2] = ::checkers::m[0][3] 
-              [3][3] = ::checkers::m[0][0] 
+              [2][3] = ::checkers::m[3][2] 
+              [3][0] = ::checkers::m[3][2] 
+              [3][1] = ::checkers::m[3][3] 
+              [3][2] = ::checkers::m[3][2] 
+              [3][3] = ::checkers::m[3][3] 
             }
         }
       }

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.9.4.1 2006/03/09 05:50:22 fang Exp $
+	$Id: devel_switches.h,v 1.9.4.2 2006/03/12 21:39:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -55,6 +55,16 @@
 	Goal: 1
  */
 #define	SEPARATE_ALLOCATE_SUBPASS		(1 && !USE_ALIAS_RING_NODES)
+
+/**
+	Whether or not to push top-down hierarchical structured aliases
+	down to leaf nodes.  
+	NOTE: this is independent of the implementation of aliasing information
+	but wasn't introduced until union-find replaced ring-nodes.  
+	TODO: decide policy for handling relaxed type actuals.  
+	Goal: 1
+ */
+#define	RECURSIVE_PORT_ALIAS			(1 && !USE_ALIAS_RING_NODES)
 
 /**
 	Rework the create phase to NOT use the same traversal as unrolling.

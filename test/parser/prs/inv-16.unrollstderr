@@ -25,16 +25,16 @@ Persistent Object Manager text dump:
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -90,16 +90,16 @@ In namespace "", we have: {
 
   Instances:
     i1 = process inv<>^0 i1 (instantiated) = ::i1 (
-      bool^0 a (instantiated) = ::x 
-      bool^0 b (instantiated) = ::y 
+      bool^0 a (instantiated) = ::i1.a 
+      bool^0 b (instantiated) = ::i1.b 
     )
     i2 = process inv<>^0 i2 (instantiated) = ::i2 (
-      bool^0 a (instantiated) = ::p 
+      bool^0 a (instantiated) = ::i2.a 
       bool^0 b (instantiated) = ::i2.b 
     )
     i3 = process inv<>^0 i3 (instantiated) = ::i3 (
       bool^0 a (instantiated) = ::i3.a 
-      bool^0 b (instantiated) = ::q 
+      bool^0 b (instantiated) = ::i3.b 
     )
     p = bool^0 p (instantiated) = ::i2.a 
     q = bool^0 q (instantiated) = ::i3.b 

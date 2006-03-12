@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.14.12.1 2006/03/09 05:51:41 fang Exp $
+	$Id: subinstance_manager.cc,v 1.14.12.2 2006/03/12 21:39:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -186,9 +186,38 @@ subinstance_manager::connect_ports(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RECURSIVE_PORT_ALIAS
+/**
+	\param cr sequence of meta instance references to resolve and 
+		connect to ports.  
+	\pre list sizes (ports vs. references) must be equal, 
+		already checked earlier.  
+	TODO: future, let port instantiation be on-demand, 
+		so check whether or not this is expanded first.  
+ */
+good_bool
+subinstance_manager::connect_port_aliases_recursive(this_type& r) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(subinstance_array.size() == r.subinstance_array.size());
+	iterator pi(subinstance_array.begin());	// instance_collection_type
+	iterator ri(r.subinstance_array.begin());
+	const iterator pe(subinstance_array.end());
+	for ( ; pi!=pe; ++pi, ++ri) {
+		NEVER_NULL(*ri);
+		if (!(*ri)->connect_port_aliases_recursive(**pi).good) {
+			// already have error message?
+			return good_bool(false);
+		}	// else good to continue
+	}
+	return good_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Copied from footprint::create_dependent_types
 	and module::create_dependent_types.
+	TODO: rename call to create_dependent_types...
  */
 good_bool
 subinstance_manager::replay_internal_aliases(void) const {

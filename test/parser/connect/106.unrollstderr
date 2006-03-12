@@ -26,7 +26,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
@@ -44,7 +44,7 @@ Persistent Object Manager text dump:
 	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
@@ -120,8 +120,8 @@ In namespace "", we have: {
       process foo<2>^0 b (instantiated) = ::z.b 
     )
     z = process bar<>^0 z (instantiated) = ::z (
-      process foo<1>^0 a (instantiated) = ::a 
-      process foo<2>^0 b (instantiated) = ::b 
+      process foo<1>^0 a (instantiated) = ::z.a 
+      process foo<2>^0 b (instantiated) = ::z.b 
     )
 }
 

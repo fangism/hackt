@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-03:
+	  Enabled recursive port aliasing, so substructures' nodes are
+		also aliases top-down.  
+	  Manually hand-checked almost all unroll tests.  
+	  Saved connect/031,129 for later because they are too long...
+		Will update after create/alloc tests are enabled to 
+		aid in re-verification.  
+	  Next: create-pass for replaying internal aliases and 
+		allocating local instance_id's.  
+
+
 2006-03-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-19-connect-02-02:

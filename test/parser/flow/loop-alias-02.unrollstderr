@@ -21,8 +21,8 @@ Persistent Object Manager text dump:
 	17	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	20	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
@@ -59,10 +59,10 @@ In namespace "", we have: {
       footprint: {
         bool^1 p
           unrolled indices: {
-            0 = ::lt::p[1] 
+            0 = ::lt::x 
             1 = ::lt::x 
           }
-        bool^0 x (instantiated) = ::lt::p[0] 
+        bool^0 x (instantiated) = ::lt::x 
       }
       }
 

@@ -166,18 +166,18 @@ Persistent Object Manager text dump:
 	162	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	163	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
 	164	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
-	165	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	165	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	32
 	166	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	167	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	168	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	169	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
-	170	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	171	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	172	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	173	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	174	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	175	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	176	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
+	169	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	170	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	171	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	172	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	173	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	174	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	175	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
+	176	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
 	177	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
 	178	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	179	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -332,7 +332,7 @@ In namespace "", we have: {
           0 = ::_c.in[0] 
           1 = ::_c.in[1] 
         }
-      bool^0 out (instantiated) = ::z 
+      bool^0 out (instantiated) = ::_c.out 
     )
     _nand = process nand<4>^0 _nand (instantiated) = ::_nand (
       bool^1 in
@@ -354,6 +354,6 @@ In namespace "", we have: {
         }
       bool^0 out (instantiated) = ::_c.out 
     )
-    z = bool^0 z (instantiated) = ::_nand.out 
+    z = bool^0 z (instantiated) = ::_nor.out 
 }
 

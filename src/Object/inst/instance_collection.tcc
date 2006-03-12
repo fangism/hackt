@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.21.4.2 2006/03/10 23:26:31 fang Exp $
+	$Id: instance_collection.tcc,v 1.21.4.3 2006/03/12 21:39:30 fang Exp $
 	TODO: trim includes
  */
 
@@ -918,7 +918,7 @@ INSTANCE_ARRAY_CLASS::inherit_created_state(
 	iterator i(this->collection.begin());
 	const_iterator j(t.collection.begin());
 	const iterator e(this->collection.end());
-	for ( ; i!=e; i++, j++) {
+	for ( ; i!=e; ++i, ++j) {
 		// unfortunately, set iterators only return const refs
 		// we only intend to modify the value without modifying the key
 		element_type& ii(const_cast<element_type&>(
@@ -938,12 +938,12 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
 	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->collection.size() == t.collection.size());
 	iterator i(this->collection.begin());
 	iterator j(t.collection.begin());
 	const iterator e(this->collection.end());
-	for ( ; i!=e; i++, j++) {
+	for ( ; i!=e; ++i, ++j) {
 		// unfortunately, set iterators only return const refs
 		// we only intend to modify the value without modifying the key
 		element_type& ii(const_cast<element_type&>(
@@ -958,6 +958,40 @@ INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
 	return good_bool(true);
 }
 #endif	// SEPARATE_ALLOCATE_SUBPASS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RECURSIVE_PORT_ALIAS
+/**
+	Recursively aliases public ports between two instance collections.  
+	\param p subinstance collection to connect to this.  
+	\pre this has identical type to p
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
+		physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	INVARIANT(this->collection.size() == t.collection.size());
+	iterator i(this->collection.begin());
+	iterator j(t.collection.begin());
+	const iterator e(this->collection.end());
+	for ( ; i!=e; ++i, ++j) {
+		// unfortunately, set iterators only return const refs
+		// we only intend to modify the value without modifying the key
+		element_type& ii(const_cast<element_type&>(
+			AS_A(const element_type&, *i)));
+		element_type& jj(const_cast<element_type&>(
+			AS_A(const element_type&, *j)));
+		// possibly redundant port type checking is unnecessary
+		if (!element_type::checked_connect_port(ii, jj).good) {
+			// error message?
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1579,6 +1613,24 @@ INSTANCE_SCALAR_CLASS::synchronize_actuals(physical_instance_collection& p) {
 		t.the_instance);
 }
 #endif	// SEPARATE_ALLOCATE_SUBPASS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RECURSIVE_PORT_ALIAS
+/**
+	Recursively aliases public ports between two instance collections.  
+	\param p subinstance collection to connect to this.  
+	\pre this has identical type to p
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
+		physical_instance_collection& p) {
+	STACKTRACE_VERBOSE;
+	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
+	return instance_type::checked_connect_port(
+		this->the_instance, t.the_instance);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

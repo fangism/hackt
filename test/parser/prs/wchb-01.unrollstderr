@@ -20,24 +20,24 @@ Persistent Object Manager text dump:
 	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	24	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	29	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	38	##ADDR##	procdefn	0	#HEAD#	#TAIL#	271
 	39	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	26
@@ -298,21 +298,21 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::R.e 
     )
     b = process wchb_e1of2<>^0 b (instantiated) = ::b (
-      process e1of2<>^0 L (instantiated) = ::L (
+      process e1of2<>^0 L (instantiated) = ::b.L (
         bool^1 d
           unrolled indices: {
-            0 = ::b.L.d[0] 
-            1 = ::b.L.d[1] 
+            0 = ::L.d[0] 
+            1 = ::L.d[1] 
           }
-        bool^0 e (instantiated) = ::b.L.e 
+        bool^0 e (instantiated) = ::L.e 
       )
-      process e1of2<>^0 R (instantiated) = ::R (
+      process e1of2<>^0 R (instantiated) = ::b.R (
         bool^1 d
           unrolled indices: {
-            0 = ::b.R.d[0] 
-            1 = ::b.R.d[1] 
+            0 = ::R.d[0] 
+            1 = ::R.d[1] 
           }
-        bool^0 e (instantiated) = ::b.R.e 
+        bool^0 e (instantiated) = ::R.e 
       )
     )
 }

@@ -26,7 +26,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	192
@@ -106,8 +106,8 @@ In namespace "", we have: {
         d = b;
         c = d;
       footprint: {
-        bool^0 a (instantiated) = ::foo::d 
-        bool^0 b (instantiated) = ::foo::c 
+        bool^0 a (instantiated) = ::foo::b 
+        bool^0 b (instantiated) = ::foo::b 
         bool^0 c (instantiated) = ::foo::a 
         bool^0 d (instantiated) = ::foo::b 
       }

@@ -16,7 +16,7 @@ Persistent Object Manager text dump:
 	12	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
 	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
@@ -77,7 +77,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         process ick<>^0 a (instantiated) = ::foo::b 
-        process ick<>^0 b (instantiated) = ::foo::a 
+        process ick<>^0 b (instantiated) = ::foo::b 
       }
       }
 

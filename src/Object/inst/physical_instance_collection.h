@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.11.4.1 2006/03/09 05:51:38 fang Exp $
+	$Id: physical_instance_collection.h,v 1.11.4.2 2006/03/12 21:39:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -102,6 +102,14 @@ virtual	void
 
 virtual	good_bool
 	synchronize_actuals(this_type&) = 0;
+#endif
+
+#if RECURSIVE_PORT_ALIAS
+#define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
+	good_bool							\
+	connect_port_aliases_recursive(physical_instance_collection&)
+
+virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 #endif
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\

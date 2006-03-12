@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	228
 	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -40,17 +40,17 @@ Persistent Object Manager text dump:
 	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -92,18 +92,18 @@ In namespace "", we have: {
         q = z.b;
         y.a = q;
       footprint: {
-        bool^0 q (instantiated) = ::bar::z.b 
+        bool^0 q (instantiated) = ::bar::x.b 
         process foo<>^0 x (instantiated) = ::bar::z (
           bool^0 a (instantiated) = ::bar::x.a 
           bool^0 b (instantiated) = ::bar::x.b 
         )
         process foo<>^0 y (instantiated) = ::bar::y (
-          bool^0 a (instantiated) = ::bar::q 
+          bool^0 a (instantiated) = ::bar::x.b 
           bool^0 b (instantiated) = ::bar::y.b 
         )
-        process foo<>^0 z (instantiated) = ::bar::x (
-          bool^0 a (instantiated) = ::bar::z.a 
-          bool^0 b (instantiated) = ::bar::y.a 
+        process foo<>^0 z (instantiated) = ::bar::z (
+          bool^0 a (instantiated) = ::bar::x.a 
+          bool^0 b (instantiated) = ::bar::x.b 
         )
       }
       }
@@ -122,7 +122,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b 
-        bool^0 b (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
       }
       }
 

@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
 	16	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -28,12 +28,12 @@ Persistent Object Manager text dump:
 	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	proccoll	1	#HEAD#	#TAIL#	107
+	27	##ADDR##	proccoll	1	#HEAD#	#TAIL#	99
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -71,9 +71,9 @@ In namespace "", we have: {
               bool^0 a (instantiated) = ::bar::x[0].a 
               bool^0 b (instantiated) = ::bar::x[0].b 
             )
-            1 = ::bar::x[0] (
-              bool^0 a (instantiated) = ::bar::x[1].a 
-              bool^0 b (instantiated) = ::bar::x[1].b 
+            1 = ::bar::x[1] (
+              bool^0 a (instantiated) = ::bar::x[0].a 
+              bool^0 b (instantiated) = ::bar::x[0].b 
             )
           }
       }
@@ -93,7 +93,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b 
-        bool^0 b (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
       }
       }
 

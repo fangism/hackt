@@ -33,7 +33,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -91,7 +91,7 @@ In namespace "", we have: {
           bool^0 d (instantiated) = ::lut::ce.a 
         )
         process dcelm<>^0 ce (instantiated) = ::lut::ce (
-          bool^0 a (instantiated) = ::lut::ad.d 
+          bool^0 a (instantiated) = ::lut::ce.a 
         )
       }
       }

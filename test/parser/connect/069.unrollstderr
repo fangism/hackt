@@ -28,7 +28,7 @@ Persistent Object Manager text dump:
 	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	proccoll	2	#HEAD#	#TAIL#	279
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -38,13 +38,13 @@ Persistent Object Manager text dump:
 	34	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	36	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	37	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	39	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	37	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	41	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	42	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	43	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
 	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	45	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	46	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
@@ -57,10 +57,10 @@ Persistent Object Manager text dump:
 	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	54	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	55	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	57	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	59	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	58	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
 	61	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	62	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -153,19 +153,19 @@ In namespace "", we have: {
             }
         )
         [0][1] = ::p[0][1] (
-          bool^0 b (instantiated) = ::a 
+          bool^0 b (instantiated) = ::p[0][1].b 
           bool^1 c
             unrolled indices: {
-              0 = ::x[0] 
-              1 = ::x[1] 
-              2 = ::x[2] 
-              3 = ::x[3] 
+              0 = ::p[0][1].c[0] 
+              1 = ::p[0][1].c[1] 
+              2 = ::p[0][1].c[2] 
+              3 = ::p[0][1].c[3] 
             }
-          int<32>^0 i (instantiated) = ::q 
+          int<32>^0 i (instantiated) = ::p[0][1].i 
           int<32>^1 j
             unrolled indices: {
-              0 = ::r[0] 
-              1 = ::r[1] 
+              0 = ::p[0][1].j[0] 
+              1 = ::p[0][1].j[1] 
             }
         )
         [0][2] = ::p[0][2] (

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.18.4.2 2006/03/10 23:26:21 fang Exp $
+	$Id: instance_alias.tcc,v 1.18.4.3 2006/03/12 21:39:29 fang Exp $
 	TODO: trim includes
  */
 
@@ -825,7 +825,11 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 #else
 	ll = rr;			// union
 #endif
+#if RECURSIVE_PORT_ALIAS
+	return l.connect_port_aliases_recursive(r);
+#else
 	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -866,10 +870,14 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r
 #else
 	// *ll = *rr;
 	ll = rr;
-	// TODO: recursively connect ports now, instead of deferring
-	// check until create time
 #endif
+#if RECURSIVE_PORT_ALIAS
+	// TODO: recursively connect ports now, 
+	// instead of deferring check until create time
+	return l.connect_port_aliases_recursive(r);
+#else
 	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

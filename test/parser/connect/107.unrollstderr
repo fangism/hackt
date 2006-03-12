@@ -58,7 +58,7 @@ Persistent Object Manager text dump:
 	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
@@ -148,7 +148,7 @@ In namespace "", we have: {
       process foo<3>^0 b (instantiated) = ::z.a 
     )
     z = process bar<3, 4>^0 z (instantiated) = ::z (
-      process foo<3>^0 a (instantiated) = ::w.b 
+      process foo<3>^0 a (instantiated) = ::z.a 
       process foo<4>^0 b (instantiated) = ::z.b 
     )
 }

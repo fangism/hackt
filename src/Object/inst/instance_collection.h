@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.14.4.2 2006/03/10 23:26:28 fang Exp $
+	$Id: instance_collection.h,v 1.14.4.3 2006/03/12 21:39:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -218,6 +218,10 @@ virtual	bool
 
 virtual	INSTANTIATE_INDICES_PROTO = 0;
 
+#if RECURSIVE_PORT_ALIAS
+virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
+#endif
+
 /**
 	Prototype for allocating unique state during create phase.
  */
@@ -383,6 +387,10 @@ public:
 
 	INSTANTIATE_INDICES_PROTO;
 
+#if RECURSIVE_PORT_ALIAS
+	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
+#endif
+
 	CREATE_UNIQUE_STATE_PROTO;
 
 #if !SEPARATE_ALLOCATE_SUBPASS
@@ -505,6 +513,10 @@ public:
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
 
 	INSTANTIATE_INDICES_PROTO;
+
+#if RECURSIVE_PORT_ALIAS
+	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
+#endif
 
 	CREATE_UNIQUE_STATE_PROTO;
 
