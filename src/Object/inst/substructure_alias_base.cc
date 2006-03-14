@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.10.12.2 2006/03/14 01:32:58 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.10.12.3 2006/03/14 21:07:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -144,14 +144,6 @@ substructure_alias::__construct_port_context(port_member_context& pmc,
 		const footprint_frame& ff) const {
 	subinstances.construct_port_context(pmc, ff);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-void
-substructure_alias::__hack_remap_indices(footprint& f) {
-	subinstances.hack_remap_indices(f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

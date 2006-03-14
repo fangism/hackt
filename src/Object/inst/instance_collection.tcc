@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.21.4.5 2006/03/14 06:31:14 fang Exp $
+	$Id: instance_collection.tcc,v 1.21.4.6 2006/03/14 21:07:02 fang Exp $
 	TODO: trim includes
  */
 
@@ -1085,24 +1085,6 @@ INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-/**
-	Temporary hack.  :(
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
-INSTANCE_ARRAY_CLASS::hack_remap_indices(footprint& f) {
-	STACKTRACE_VERBOSE;
-	iterator i(this->collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; i++) {
-		element_type& ii(const_cast<element_type&>(*i));
-		ii.hack_remap_indices(f);
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reads a key from binary stream then returns a reference to the 
 	indexed instance alias.  
@@ -1713,15 +1695,6 @@ INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 			&const_cast<instance_type&>(this->the_instance)));
 	this->the_instance.collect_port_aliases(t);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
-INSTANCE_SCALAR_CLASS::hack_remap_indices(footprint& f) {
-	this->the_instance.hack_remap_indices(f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

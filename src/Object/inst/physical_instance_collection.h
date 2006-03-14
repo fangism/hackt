@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.11.4.3 2006/03/14 01:32:57 fang Exp $
+	$Id: physical_instance_collection.h,v 1.11.4.4 2006/03/14 21:07:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -149,15 +149,6 @@ virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 	cflat_aliases(const cflat_aliases_arg_type&) const
 
 virtual	CFLAT_ALIASES_PROTO = 0;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-#define	HACK_REMAP_INDICES_PROTO					\
-	void								\
-	hack_remap_indices(footprint&)
-
-virtual	HACK_REMAP_INDICES_PROTO = 0;
-
-#endif
 
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;

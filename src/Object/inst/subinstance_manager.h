@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.11.12.3 2006/03/14 01:32:57 fang Exp $
+	$Id: subinstance_manager.h,v 1.11.12.4 2006/03/14 21:07:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -146,11 +146,6 @@ public:
 
 	void
 	cflat_aliases(const cflat_aliases_arg_type&) const;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	void
-	hack_remap_indices(footprint&);
-#endif
 
 	// for each entry, re-link
 	void

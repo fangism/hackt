@@ -5,6 +5,10 @@
 
 2006-03-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-19-connect-02-07:
+	  Cut 500 LoC of INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST hack.
+
+
 	* HACKT-00-01-04-main-00-77-19-connect-02-06:
 	  Finally turned off INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST hack.
 	  Enabled all remaining test cases, updated remaining expect-outputs.

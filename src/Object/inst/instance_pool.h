@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.10 2006/02/21 04:48:29 fang Exp $
+	$Id: instance_pool.h,v 1.10.4.1 2006/03/14 21:07:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -13,14 +13,6 @@
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/memory/index_pool.h"
-#include "Object/devel_switches.h"
-
-
-#if	INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-#include <queue>	// for std::priority_queue
-#include "util/STL/queue_fwd.h"
-#include <map>
-#endif
 
 namespace HAC {
 namespace entity {
@@ -55,20 +47,6 @@ public:
 	typedef	typename parent_type::const_iterator	const_iterator;
 	typedef	typename parent_type::size_type		size_type;
 	typedef	typename parent_type::value_type	value_type;
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	typedef	typename parent_type::iterator		iterator;
-private:
-	/**
-		Reverse sorting: lower numbers have higher priority.  
-	 */
-	typedef	typename std::default_priority_queue<size_type>::reverse_type
-							free_list_type;
-//	typedef	std::priority_queue<size_type>		free_list_type;
-	free_list_type					free_list;
-
-	typedef	std::map<size_type, size_type>		index_remap_type;
-	index_remap_type				remap;
-#endif
 private:
 	/**
 		Default chunk size when not specified.  
@@ -90,35 +68,7 @@ public:
 	using parent_type::begin;
 	using parent_type::end;
 	using parent_type::operator[];
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	size_type
-	allocate(void);
-
-	size_type
-	allocate(const value_type&);
-
-	void
-	deallocate(const size_type);
-
-	// dirty, dirty hack :( called by definition::create_complete...
-	void
-	compact(void);
-
-	// dirty hack accomplice
-	void
-	truncate(void);
-
-	size_t
-	translate_remap(const size_t) const;
-private:
-	// as long as underlying type support this operation
-	using parent_type::array_type::pop_back;
-
-public:
-#else
 	using parent_type::allocate;
-#endif
 
 	// there is no deallocate
 

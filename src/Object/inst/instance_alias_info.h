@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.13.4.4 2006/03/14 06:31:14 fang Exp $
+	$Id: instance_alias_info.h,v 1.13.4.5 2006/03/14 21:07:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -230,13 +230,6 @@ virtual	void
 	allocate_state(footprint&) const;
 #endif
 
-#if USE_ALIAS_RING_NODES
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	void
-	force_update_index(const size_t);
-#endif
-#endif
-
 #if !SEPARATE_ALLOCATE_SUBPASS
 private:
 	// want to allow instance_collection<> to call this directly
@@ -360,11 +353,6 @@ virtual	ostream&
 	using substructure_parent_type::connect_ports;
 	// using substructure_parent_type::lookup_port_instance;
 	using substructure_parent_type::replay_substructure_aliases;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	void
-	hack_remap_indices(footprint&);
-#endif
 
 	/// called by top-level
 	good_bool

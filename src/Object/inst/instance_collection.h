@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.14.4.4 2006/03/14 01:32:55 fang Exp $
+	$Id: instance_collection.h,v 1.14.4.5 2006/03/14 21:07:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -280,10 +280,6 @@ virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 
 virtual	CFLAT_ALIASES_PROTO = 0;
 
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-virtual	HACK_REMAP_INDICES_PROTO = 0;
-#endif
-
 public:
 virtual	instance_alias_base_type&
 	load_reference(istream& i) const = 0;
@@ -446,10 +442,6 @@ public:
 
 	CFLAT_ALIASES_PROTO;
 
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	HACK_REMAP_INDICES_PROTO;
-#endif
-
 private:
 	class element_collector;
 	class element_writer;
@@ -573,10 +565,6 @@ public:
 	ASSIGN_FOOTPRINT_FRAME_PROTO;
 
 	CFLAT_ALIASES_PROTO;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	HACK_REMAP_INDICES_PROTO;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

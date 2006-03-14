@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.9.4.3 2006/03/14 19:57:39 fang Exp $
+	$Id: devel_switches.h,v 1.9.4.4 2006/03/14 21:07:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -29,13 +29,6 @@
 
 //=============================================================================
 // define your module-wide development switches here:
-
-/**
-	Whether or not to apply the quick and dirty hack to
-	fix a critical bug.  
-	Goal: 0
- */
-#define INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST       0
 
 /**
 	Preparing to make major cuts, carving out ring_node structures...

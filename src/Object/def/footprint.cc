@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.13.12.3 2006/03/14 06:31:13 fang Exp $
+	$Id: footprint.cc,v 1.13.12.4 2006/03/14 21:07:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -144,54 +144,6 @@ footprint_base<Tag>::__expand_unique_subinstances(
 	}
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-/**
-	Revised implementation using a waste_list is due to a bug found
-	and described in the comments of instance_pool<>::compact().  
-	This is an unfortunate consequence of hackery to backpatch
-	an inherent flaw in the unique ID allocation algorithm.  
-	Once we switch over to a union-find algorithm, then this won't be a 
-	problem.  
-
-	The waste list is converted into an index remap.
-	We then go through the instance hierarchy and remap any indices
-	we've missed.  :(
- */
-template <class Tag>
-void
-footprint_base<Tag>::__compact(void) {
-	STACKTRACE_VERBOSE;
-#if 1
-	_pool.compact();
-#else
-	// changed my mind...
-	typedef vector<size_t> waste_list_type;
-	waste_list_type waste_list;
-	_pool.compact(waste_list);
-	size_t truncate = waste_list.size();
-	if (waste_list.size()) {
-		typedef	waste_list_type::const_iterator	const_iterator;
-		const_iterator i(waste_list.begin());
-		const const_iterator e(waste_list.end());
-		for ( ; i!=e; ++i) {
-			// *i is the index of a free-list entry
-			--truncate;	// index to replace
-			_remap[truncate] = *i;
-		}
-	}
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template <class Tag>
-void
-footprint_base<Tag>::__truncate(void) {
-	_pool.truncate();
-}
-
-#endif	// INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -464,27 +416,6 @@ footprint::create_dependent_types(void) {
 void
 footprint::evaluate_scope_aliases(void) {
 	STACKTRACE_VERBOSE;
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	// first 'compact' establishes the index remapping in each 
-	// footprint base
-	compact();
-	// need to walk the hierarchy to make sure aliases have migrated
-	// where need be for the hack backpatch to be correct
-{
-	instance_map_iterator i(instance_collection_map.begin());
-	const instance_map_iterator e(instance_collection_map.end());
-	for ( ; i!=e; ++i) {
-		const count_ptr<const physical_instance_collection>
-			pic(i->second.is_a<const physical_instance_collection>());
-		if (pic) {
-			const_cast<physical_instance_collection&>(*pic)
-				.hack_remap_indices(*this);
-		}
-	}
-}
-	// then truncate the pools in each footprint_base
-	truncate();
-#endif
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "got " << instance_collection_map.size()
 		<< " entries." << endl;
@@ -608,35 +539,6 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 		// else is a param_value_collection, skip
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-/**
-	Re-compaction hack.  
- */
-void
-footprint::compact(void) {
-	footprint_base<process_tag>::__compact();
-	footprint_base<channel_tag>::__compact();
-	footprint_base<datastruct_tag>::__compact();
-	footprint_base<enum_tag>::__compact();
-	footprint_base<int_tag>::__compact();
-	footprint_base<bool_tag>::__compact();
-}
-
-/**
-	Re-compaction hack.  
- */
-void
-footprint::truncate(void) {
-	footprint_base<process_tag>::__truncate();
-	footprint_base<channel_tag>::__truncate();
-	footprint_base<datastruct_tag>::__truncate();
-	footprint_base<enum_tag>::__truncate();
-	footprint_base<int_tag>::__truncate();
-	footprint_base<bool_tag>::__truncate();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

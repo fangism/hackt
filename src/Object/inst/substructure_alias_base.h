@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.13.12.3 2006/03/14 01:32:58 fang Exp $
+	$Id: substructure_alias_base.h,v 1.13.12.4 2006/03/14 21:07:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -156,11 +156,6 @@ protected:
 	__cflat_aliases(cflat_aliases_arg_type&,
 		const global_entry<Tag>&, const size_t) const;
 
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	void
-	__hack_remap_indices(footprint&);
-#endif
-
 #if RECURSIVE_PORT_ALIAS
 	good_bool
 	connect_port_aliases_recursive(this_type& r) {
@@ -278,11 +273,6 @@ protected:
 	void
 	__cflat_aliases(cflat_aliases_arg_type&, 
 		const global_entry<Tag>&, const size_t) const;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	void
-	__hack_remap_indices(footprint&) const { }
-#endif
 
 #if RECURSIVE_PORT_ALIAS
 	// has no substructure

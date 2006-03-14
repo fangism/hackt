@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.14.12.3 2006/03/14 01:32:57 fang Exp $
+	$Id: subinstance_manager.cc,v 1.14.12.4 2006/03/14 21:07:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -385,18 +385,6 @@ subinstance_manager::cflat_aliases(const cflat_aliases_arg_type& c) const {
 		pi->cflat_aliases(c);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-void
-subinstance_manager::hack_remap_indices(footprint& f) {
-	iterator i(subinstance_array.begin());
-	const iterator e(subinstance_array.end());
-	for ( ; i!=e; i++) {
-		(*i)->hack_remap_indices(f);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
