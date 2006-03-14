@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.8.4.1 2006/03/09 05:51:09 fang Exp $
+	$Id: instance_alias.h,v 1.8.4.2 2006/03/14 06:31:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
@@ -140,6 +140,9 @@ public:
 	using parent_type::instantiate;
 #if !SEPARATE_ALLOCATE_SUBPASS
 	using parent_type::allocate_state;
+#else
+	void
+	finalize_canonicalize(instance_alias_base_type&);
 #endif
 
 	void
@@ -232,6 +235,11 @@ private:
 
 	pseudo_const_iterator
 	find(void) const;
+#endif
+
+#if SEPARATE_ALLOCATE_SUBPASS
+	void
+	finalize_canonicalize(instance_alias_base_type&);
 #endif
 
 public:

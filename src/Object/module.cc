@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.14.12.2 2006/03/14 01:32:51 fang Exp $
+ 	$Id: module.cc,v 1.14.12.3 2006/03/14 06:31:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -236,6 +236,7 @@ good_bool
 module::create_dependent_types(void) {
 #if 0 && SEPARATE_ALLOCATE_SUBPASS
 	// enabling this requires changes in the end of ::create_unique
+	// this doesn't quite work the way I expected it...
 	const top_level_footprint_importer foo(*this);
 	return _footprint.create_dependent_types();
 #else
@@ -274,6 +275,11 @@ module::create_dependent_types(void) {
 		}
 	}
 }
+{
+	const top_level_footprint_importer foo(*this);
+	_footprint.evaluate_scope_aliases();
+	_footprint.mark_created();
+}
 #endif
 	return good_bool(true);
 #endif
@@ -306,7 +312,6 @@ module::create_unique(void) {
 			cerr << "Error during create_unique." << endl;
 			return good_bool(false);
 		}
-#endif
 		// this is needed for evaluating scope_aliases, 
 		// but cannot be maintained persistently because
 		// of memory pointer hack (see implementation of 
@@ -317,6 +322,7 @@ module::create_unique(void) {
 		const top_level_footprint_importer foo(*this);
 		_footprint.evaluate_scope_aliases();
 		_footprint.mark_created();
+#endif
 	}
 	return good_bool(true);
 }

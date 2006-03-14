@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.18.4.4 2006/03/14 01:32:53 fang Exp $
+	$Id: instance_alias.tcc,v 1.18.4.5 2006/03/14 06:31:14 fang Exp $
 	TODO: trim includes
  */
 
@@ -1196,6 +1196,15 @@ INSTANCE_ALIAS_INFO_CLASS::find(void) const {
 #endif	// USE_ALIAS_RING_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SEPARATE_ALLOCATE_SUBPASS
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(instance_alias_base_type&) {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename instance_alias_info<Tag>::substructure_parent_type&
 INSTANCE_ALIAS_INFO_CLASS::__trace_alias_base(const substructure_alias&) const {
@@ -1403,6 +1412,18 @@ INSTANCE_ALIAS_CLASS::find(void) const {
 #endif	// USE_ALIAS_RING_NODES
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SEPARATE_ALLOCATE_SUBPASS
+/**
+	Manually update the next pointer of the union-find.  
+ */
+INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_CLASS::finalize_canonicalize(instance_alias_base_type& n) {
+	this->set(&n);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 INSTANCE_ALIAS_INFO_CLASS&
 INSTANCE_ALIAS_CLASS::trace_alias(const substructure_alias& a) const {
@@ -1581,6 +1602,19 @@ KEYLESS_INSTANCE_ALIAS_CLASS::find(void) const {
 }
 
 #endif	// USE_ALIAS_RING_NODES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SEPARATE_ALLOCATE_SUBPASS
+/**
+	Manually update the next pointer of the union-find.  
+ */
+KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
+void
+KEYLESS_INSTANCE_ALIAS_CLASS::finalize_canonicalize(
+		instance_alias_base_type& n) {
+	this->set(&n);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE

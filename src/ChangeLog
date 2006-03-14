@@ -5,6 +5,17 @@
 
 2006-03-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-19-connect-02-05:
+	  Reorganized module::create_dependent_types(), maintainability.  
+	  Added instance_alias_info::finalize_canonicalize() for the final
+		flattening of the alias-set to point to the canonical alias.
+	  port_alias_tracker: shortest_alias now performs union-find
+		reflattening after finding the most-favorable canonical alias.
+	  alloc-tests updated, except for a few which are really long.  
+		Total of 6 test differences remain: 2 unroll, 2 create, 2 alloc
+	  Next: disabling old instance_pool-realloc hack!
+
+
 	* HACKT-00-01-04-main-00-77-19-connect-02-04:
 	  Enabled create-pass with this revision, assigning unique local IDs.
 		Updated create tests: mostly changes is ID numbers

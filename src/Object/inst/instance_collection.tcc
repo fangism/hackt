@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.21.4.4 2006/03/14 01:32:55 fang Exp $
+	$Id: instance_collection.tcc,v 1.21.4.5 2006/03/14 06:31:14 fang Exp $
 	TODO: trim includes
  */
 
@@ -1063,19 +1063,23 @@ if (this->has_relaxed_type()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre already called create_dependent_types.
+	NOTE: this should not be const-qualified, because we allow
+	the port_alias_tracker to modify and update the aliases.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
+	// TODO: use iterator instead
 	const_iterator i(this->collection.begin());
 	const const_iterator e(this->collection.end());
 	for ( ; i!=e; i++) {
-		const element_type& ii(*i);
+		// fix-remove const casting...
+		element_type& ii(const_cast<element_type&>(*i));
 		INVARIANT(ii.instance_index);
 		// 0 is not an acceptable index
 		t.template get_id_map<Tag>()[ii.instance_index]
-			.push_back(never_ptr<const element_type>(&ii));
+			.push_back(never_ptr<element_type>(&ii));
 		ii.collect_port_aliases(t);
 	}
 }
@@ -1696,13 +1700,17 @@ if (this->has_relaxed_type()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: redefine this method as non-const.
+ */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	INVARIANT(this->the_instance.instance_index);
 	// 0 is not an acceptable index
 	t.template get_id_map<Tag>()[this->the_instance.instance_index]
-		.push_back(never_ptr<const instance_type>(&this->the_instance));
+		.push_back(never_ptr<instance_type>(
+			&const_cast<instance_type&>(this->the_instance)));
 	this->the_instance.collect_port_aliases(t);
 }
 

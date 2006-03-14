@@ -2,7 +2,7 @@
 	\file "Object/inst/port_alias_tracker.h"
 	Pair of classes used to keep track of port aliases.  
 	Intended as replacement for port_alias_signature.
-	$Id: port_alias_tracker.h,v 1.7 2006/01/22 18:20:10 fang Exp $
+	$Id: port_alias_tracker.h,v 1.7.22.1 2006/03/14 06:31:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_ALIAS_TRACKER_H__
@@ -39,6 +39,9 @@ using util::good_bool;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 
+template <class>
+struct class_traits;
+
 template <class Tag>
 class instance_alias_info;
 
@@ -56,8 +59,11 @@ template <class Tag>
 class alias_reference_set {
 public:
 	typedef	Tag					tag_type;
-	typedef instance_alias_info<Tag>		alias_type;
-	typedef never_ptr<const alias_type>		alias_ptr_type;
+	typedef	class_traits<Tag>			traits_type;
+	typedef typename traits_type::instance_alias_info_type	alias_type;
+	typedef typename traits_type::instance_alias_base_type	alias_base_type;
+	typedef never_ptr<const alias_type>		const_alias_ptr_type;
+	typedef never_ptr<alias_type>			alias_ptr_type;
 #if USE_ALIAS_STRING_CACHE
 	/**
 		Blatantly copied from class global_entry<Tag>.
@@ -67,6 +73,7 @@ public:
 #endif
 private:
 	typedef	std::vector<alias_ptr_type>		alias_array_type;
+	typedef	typename alias_array_type::iterator	iterator;
 public:
 	typedef	typename alias_array_type::const_iterator
 							const_iterator;
@@ -105,8 +112,8 @@ public:
 	good_bool
 	replay_internal_aliases(substructure_alias&) const;
 
-	alias_ptr_type
-	shortest_alias(void) const;
+	const_alias_ptr_type
+	shortest_alias(void);
 
 #if USE_ALIAS_STRING_CACHE
 	void
@@ -156,7 +163,7 @@ protected:
 
 	void
 	__shorten_canonical_aliases(
-		instance_pool<state_instance<Tag> >&) const;
+		instance_pool<state_instance<Tag> >&);
 
 	void
 	collect_map(persistent_object_manager&) const;

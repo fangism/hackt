@@ -1,7 +1,7 @@
 /**
 	\file "util/union_find.h"
 	Classic union-find data structure.
-	$Id: union_find.h,v 1.3.2.2 2006/03/14 01:32:58 fang Exp $
+	$Id: union_find.h,v 1.3.2.3 2006/03/14 06:31:16 fang Exp $
  */
 
 #ifndef	__UTIL_UNION_FIND_H__
@@ -417,7 +417,7 @@ public:
 
 	reference
 	operator * () const {
-		return *static_cast<node_type&>(*current);
+		return *static_cast<node_type&>(*this->current);
 		// return static_cast<reference>(*this->current);
 	}
 
