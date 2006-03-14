@@ -5,6 +5,14 @@
 
 2006-03-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-19-connect-02-08:
+	  Cut 2000 LoC of switches, and cleaned "Object/devel_switches.h".
+	  No more ring-nodes, and dirty instance ID allocation hacks, 
+		just clean, provably correct code for the create-pass.  
+	  Status: only cleanup, portability, and packaging checking left
+		before branch is merged to trunk.  
+
+
 	* HACKT-00-01-04-main-00-77-19-connect-02-07:
 	  Cut 500 LoC of INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST hack.
 

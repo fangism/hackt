@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.11.12.4 2006/03/14 21:07:04 fang Exp $
+	$Id: subinstance_manager.h,v 1.11.12.5 2006/03/14 22:16:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -10,7 +10,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -112,26 +111,11 @@ public:
 	good_bool
 	connect_ports(const connection_references_type&, const unroll_context&);
 
-#if RECURSIVE_PORT_ALIAS
 	good_bool
 	connect_port_aliases_recursive(this_type&);
-#endif
 
 	void
 	allocate(footprint&);
-
-#if !SEPARATE_ALLOCATE_SUBPASS
-	static
-	good_bool
-	synchronize_port_actuals(this_type&, this_type&);
-
-	// const is bogus here (temporary workaround)
-	good_bool
-	create_state(const this_type&, footprint&);
-
-	void
-	inherit_state(const this_type&, const footprint&);
-#endif
 
 	good_bool
 	replay_internal_aliases(void) const;

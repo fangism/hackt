@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.13.12.4 2006/03/14 21:07:00 fang Exp $
+	$Id: footprint.cc,v 1.13.12.5 2006/03/14 22:16:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -385,7 +385,6 @@ footprint::create_dependent_types(void) {
 	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl, 
 		dump_flags::default_value) << endl;
 #endif
-#if SEPARATE_ALLOCATE_SUBPASS
 {
 	// having replayed all necessary aliases, it is safe and correct
 	// to allocate-assign local instance_id's and evaluate_scope_aliases
@@ -403,7 +402,6 @@ footprint::create_dependent_types(void) {
 }
 	evaluate_scope_aliases();
 	mark_created();
-#endif
 	return good_bool(true);
 }
 

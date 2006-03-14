@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.21.4.6 2006/03/14 21:07:02 fang Exp $
+	$Id: instance_collection.tcc,v 1.21.4.7 2006/03/14 22:16:51 fang Exp $
 	TODO: trim includes
  */
 
@@ -539,13 +539,8 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 	if (p.container->has_relaxed_type())
 		p.dump_actuals(os);
 	os << " = ";
-#if USE_ALIAS_RING_NODES
-	NEVER_NULL(p.get_next());
-	p.get_next()->dump_hierarchical_name(os, df);
-#else
 	NEVER_NULL(p.peek());
 	p.peek()->dump_hierarchical_name(os, df);
-#endif
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ', df);
@@ -626,32 +621,6 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Creates uniquely allocated space for aliases instances.  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges, 
-		footprint& f) {
-	STACKTRACE_VERBOSE;
-	multikey_generator<D, pint_value_type> key_gen;
-	ranges.make_multikey_generator(key_gen);
-	key_gen.initialize();
-	do {
-		// should be iterator, not const_iterator
-		const const_iterator iter(this->collection.find(key_gen));
-		INVARIANT(iter != collection.end());
-#if !SEPARATE_ALLOCATE_SUBPASS
-		if (!iter->allocate_state(f))
-			return good_bool(false);
-#endif
-		key_gen++;
-	} while (key_gen != key_gen.get_lower_corner());
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SEPARATE_ALLOCATE_SUBPASS
-/**
 	Assigns local instance ids to all aliases. 
 	\pre all aliases have been played (internal and external)
 		and union-find structures are final.  
@@ -668,27 +637,6 @@ INSTANCE_ARRAY_CLASS::allocate_local_instance_ids(footprint& f) {
 	}
 	return good_bool(true);
 }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	Like create_unique_state except it operates on the entire collection.
-	Called from subinstance_manager::create_state.
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ARRAY_CLASS::allocate_state(footprint& f) {
-	STACKTRACE_VERBOSE;
-	iterator i(collection.begin());
-	const iterator e(collection.end());
-	for ( ; i!=e; i++) {
-		if (!i->__allocate_state(f))
-			return good_bool(false);
-	}
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -894,94 +842,6 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	Merges two instance collections, assigning them the same allocated
-	state.  
-	Called by subinstance_manager::create_state(), 
-		during create-unique phase.  
-	this and t must be port subinstances, 
-		and hence, must be densely packed.  
-	Since collection p was type/size checked during connection, 
-	we can conclude that they have the same size.  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p, 
-		footprint& f) {
-	STACKTRACE_VERBOSE;
-	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
-	INVARIANT(this->collection.size() == t.collection.size());
-	iterator i(this->collection.begin());
-	iterator j(t.collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; i++, j++) {
-		// unfortunately, set iterators only return const refs
-		// we only intend to modify the value without modifying the key
-		element_type& ii(const_cast<element_type&>(
-			AS_A(const element_type&, *i)));
-		element_type& jj(const_cast<element_type&>(
-			AS_A(const element_type&, *j)));
-		if (!ii.merge_allocate_state(jj, f).good)
-			return good_bool(false);
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
-INSTANCE_ARRAY_CLASS::inherit_created_state(
-		const physical_instance_collection& p, const footprint& f) {
-	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
-	INVARIANT(this->collection.size() == t.collection.size());
-	iterator i(this->collection.begin());
-	const_iterator j(t.collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; ++i, ++j) {
-		// unfortunately, set iterators only return const refs
-		// we only intend to modify the value without modifying the key
-		element_type& ii(const_cast<element_type&>(
-			AS_A(const element_type&, *i)));
-		ii.inherit_subinstances_state(*j, f);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Recursively synchronize relaxed actuals of ports.  
-	Even though this type may not have relaxed actuals, 
-	the ports (and ports-of-ports) might, so recursion is necessary.  
-	This is called at create-time. 
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
-	STACKTRACE_VERBOSE;
-	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
-	INVARIANT(this->collection.size() == t.collection.size());
-	iterator i(this->collection.begin());
-	iterator j(t.collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; ++i, ++j) {
-		// unfortunately, set iterators only return const refs
-		// we only intend to modify the value without modifying the key
-		element_type& ii(const_cast<element_type&>(
-			AS_A(const element_type&, *i)));
-		element_type& jj(const_cast<element_type&>(
-			AS_A(const element_type&, *j)));
-		if (!element_type::synchronize_actuals_recursive(ii, jj).good) {
-			// error message?
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
-}
-#endif	// SEPARATE_ALLOCATE_SUBPASS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if RECURSIVE_PORT_ALIAS
 /**
 	Recursively aliases public ports between two instance collections.  
 	\param p subinstance collection to connect to this.  
@@ -1012,7 +872,6 @@ INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
 	}
 	return good_bool(true);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1167,11 +1026,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::connection_writer::operator() (const element_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_writer::operator()");
-#if USE_ALIAS_RING_NODES
-	const instance_alias_base_type* const next(e.get_next());
-#else
 	const instance_alias_base_type* const next(e.peek());
-#endif
 	NEVER_NULL(next);
 	if (next != &e) {
 		write_value<char>(os, 1);
@@ -1402,11 +1257,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o,
 		(df.show_namespace_owner ? "(ns) " : " ") <<
 		(df.show_leading_scope ? "(::)]" : "]");
 #endif
-#if USE_ALIAS_RING_NODES
-	this->the_instance.get_next()->dump_hierarchical_name(o << " = ", df);
-#else
 	this->the_instance.peek()->dump_hierarchical_name(o << " = ", df);
-#endif
 	if (this->the_instance.instance_index)
 		o << " (" << this->the_instance.instance_index << ')';
 	this->the_instance.dump_ports(o << ' ', df);
@@ -1452,25 +1303,6 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Creates state for a single instance alias.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges, 
-		footprint& f) {
-	STACKTRACE("instance_array<Tag,0>::create_unique_state()");
-	INVARIANT(ranges.empty());
-	INVARIANT(this->the_instance.valid());
-#if SEPARATE_ALLOCATE_SUBPASS
-	return good_bool(true);
-#else
-	return good_bool(this->the_instance.allocate_state(f));
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SEPARATE_ALLOCATE_SUBPASS
-/**
 	Assigns local instance ids to all aliases. 
 	\pre all aliases have been played (internal and external)
 		and union-find structures are final.  
@@ -1482,21 +1314,6 @@ INSTANCE_SCALAR_CLASS::allocate_local_instance_ids(footprint& f) {
 	INVARIANT(this->the_instance.valid());
 	return good_bool(this->the_instance.assign_local_instance_id(f) != 0);
 }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	Same as create_unique_state.
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_SCALAR_CLASS::allocate_state(footprint& f) {
-	STACKTRACE_VERBOSE;
-	INVARIANT(this->the_instance.valid());
-	return good_bool(this->the_instance.__allocate_state(f) != 0);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1595,50 +1412,6 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	Merges two instances, assigning them the same allocated state.  
-	Called by subinstance_manager::create_state(), 
-		during create-unique phase.  
-	this and p must be port subinstances.
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_SCALAR_CLASS::merge_created_state(physical_instance_collection& p, 
-		footprint& f) {
-	STACKTRACE_VERBOSE;
-	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
-	return this->the_instance.merge_allocate_state(t.the_instance, f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
-INSTANCE_SCALAR_CLASS::inherit_created_state(
-		const physical_instance_collection& p, const footprint& f) {
-	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
-	this->the_instance.inherit_subinstances_state(t.the_instance, f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Called at create-time to check that the implicit connections
-	in the port hierarchy are compatible, w.r.t. relaxed actual
-	parameters.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_SCALAR_CLASS::synchronize_actuals(physical_instance_collection& p) {
-	STACKTRACE_VERBOSE;
-	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
-	return instance_type::synchronize_actuals_recursive(this->the_instance,
-		t.the_instance);
-}
-#endif	// SEPARATE_ALLOCATE_SUBPASS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if RECURSIVE_PORT_ALIAS
 /**
 	Recursively aliases public ports between two instance collections.  
 	\param p subinstance collection to connect to this.  
@@ -1653,7 +1426,6 @@ INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
 	return instance_type::checked_connect_port(
 		this->the_instance, t.the_instance);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

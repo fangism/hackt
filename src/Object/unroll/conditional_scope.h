@@ -2,7 +2,7 @@
 	\file "Object/unroll/conditional_scope.h"
 	This file contains class definitions for control-flow scopes
 	of the HAC language.  
-	$Id: conditional_scope.h,v 1.6.16.1 2006/03/09 05:52:32 fang Exp $
+	$Id: conditional_scope.h,v 1.6.16.2 2006/03/14 22:16:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_H__
@@ -44,10 +44,6 @@ public:
 
 	good_bool
 	unroll(const unroll_context&) const;
-
-#if !SEPARATE_ALLOCATE_SUBPASS
-	CREATE_UNIQUE_PROTO;
-#endif
 
 	void
 	collect_transient_info(persistent_object_manager&) const;

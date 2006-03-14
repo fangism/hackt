@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.12.4.1 2006/03/09 05:52:35 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.12.4.2 2006/03/14 22:16:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -41,18 +41,6 @@ USING_UTIL_COMPOSE
 
 //=============================================================================
 // class instance_management_base method definitions
-
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	Overrideable default for unroll creation.  
-	Only instantiation_statements actually provide a real implementation.  
- */
-good_bool
-instance_management_base::create_unique(const unroll_context&,
-		footprint&) const {
-	return good_bool(true);
-}
-#endif
 
 //=============================================================================
 // class sequential_scope method definitions
@@ -132,25 +120,6 @@ sequential_scope::unroll(const unroll_context& c) const {
 #endif
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	NOTE: need a pass for hierarchical gluing.  
- */
-good_bool
-sequential_scope::create_unique(const unroll_context& c, footprint& f) const {
-	STACKTRACE("sequential_scope::create_unique()");
-	const_iterator i(instance_management_list.begin());
-	const const_iterator e(instance_management_list.end());
-	for ( ; i!=e; i++) {
-		if (!(*i)->create_unique(c, f).good) {
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

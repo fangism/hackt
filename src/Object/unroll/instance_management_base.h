@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: instance_management_base.h,v 1.8.4.1 2006/03/09 05:52:35 fang Exp $
+	$Id: instance_management_base.h,v 1.8.4.2 2006/03/14 22:16:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
@@ -11,7 +11,6 @@
 
 #include "util/persistent.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -57,17 +56,6 @@ virtual ostream&
 	// possible single-pass unroll may be phased out...
 virtual good_bool
 	unroll(const unroll_context& ) const = 0;
-
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	Prototype for unique-creation pass.  
- */
-#define	CREATE_UNIQUE_PROTO						\
-	good_bool							\
-	create_unique(const unroll_context&, footprint&) const
-
-virtual	CREATE_UNIQUE_PROTO;
-#endif
 
 };	// end class instance_management_base
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.14.12.4 2006/03/14 21:07:04 fang Exp $
+	$Id: subinstance_manager.cc,v 1.14.12.5 2006/03/14 22:16:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -186,7 +186,6 @@ subinstance_manager::connect_ports(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if RECURSIVE_PORT_ALIAS
 /**
 	\param cr sequence of meta instance references to resolve and 
 		connect to ports.  
@@ -211,7 +210,6 @@ subinstance_manager::connect_port_aliases_recursive(this_type& r) {
 	}
 	return good_bool(true);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -231,34 +229,6 @@ subinstance_manager::replay_internal_aliases(void) const {
 	}
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-good_bool
-subinstance_manager::synchronize_port_actuals(this_type& l, this_type& r) {
-	STACKTRACE_VERBOSE;
-	typedef	connection_references_type::const_iterator
-						const_ref_iterator;
-	array_type& la(l.subinstance_array);
-	array_type& ra(r.subinstance_array);
-	INVARIANT(la.size() == ra.size());
-	iterator li(la.begin());	// instance_collection_type
-	iterator ri(ra.begin());
-	const iterator le(la.end());
-	// const const_ref_iterator re(cr.end());
-	for ( ; li!=le; li++, ri++) {
-	// references may be NULL (no-connect)
-		if (*li && *ri) {
-			if (!(*li)->synchronize_actuals(**ri).good) {
-				// already have error message
-				return good_bool(false);
-			}	// else good to continue
-		}
-	}
-	// all connections good
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -289,61 +259,12 @@ subinstance_manager::allocate(footprint& f) {
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-#if SEPARATE_ALLOCATE_SUBPASS
 		if (!(*i)->allocate_local_instance_ids(f).good) {
 			cerr << "Error allocating local instance IDs" << endl;
 			THROW_EXIT;
 		}
-#else
-		(*i)->allocate_state(f);	// expands the whole collection
-#endif
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	TODO: clean up the const-hack.  
- */
-good_bool
-subinstance_manager::create_state(const this_type& s, footprint& f) {
-	STACKTRACE("subinstance_manager::create_state()");
-	this_type& t(const_cast<this_type&>(s));
-	INVARIANT(subinstance_array.size() == s.subinstance_array.size());
-	iterator i(subinstance_array.begin());
-	iterator j(t.subinstance_array.begin());
-	const iterator e(subinstance_array.end());
-	for ( ; i!=e; i++, j++) {
-		// merge created state (instance_collection_types)
-		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
-		NEVER_NULL(pi);
-		NEVER_NULL(pj);
-		if (!pi->merge_created_state(*pj, f).good)
-			return good_bool(false);
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	TODO: write comment
- */
-void
-subinstance_manager::inherit_state(const this_type& s, const footprint& f) {
-	STACKTRACE("subinstance_manager::inherit_state()");
-	INVARIANT(subinstance_array.size() == s.subinstance_array.size());
-	iterator i(subinstance_array.begin());
-	const_iterator j(s.subinstance_array.begin());
-	const iterator e(subinstance_array.end());
-	for ( ; i!=e; i++, j++) {
-		// merge created state (instance_collection_types)
-		const count_ptr<physical_instance_collection>& pi(*i), pj(*j);
-		NEVER_NULL(pi);
-		NEVER_NULL(pj);
-		pi->inherit_created_state(*pj, f);
-	}
-}
-#endif	// SEPARATE_ALLOCATE_SUBPASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.13.12.4 2006/03/14 21:07:05 fang Exp $
+	$Id: substructure_alias_base.h,v 1.13.12.5 2006/03/14 22:16:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,7 +11,6 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -71,31 +70,8 @@ protected:
 		restore_parent_child_links();
 	}
 
-#if !SEPARATE_ALLOCATE_SUBPASS
-	good_bool
-	create_subinstance_state(this_type& t, footprint& f) {
-		return subinstances.create_state(t.subinstances, f);
-		// t.get_back_ref()->subinstances.create_state(subinstances);
-	}
-
-	template <class Tag>
-	void
-	inherit_state(const state_instance<Tag>& t, const footprint& f) {
-		subinstances.inherit_state(t.get_back_ref()->subinstances, f);
-	}
-#endif
-
 	void
 	allocate_subinstances(footprint&);
-
-#if !SEPARATE_ALLOCATE_SUBPASS
-	static
-	good_bool
-	synchronize_port_actuals(this_type& l, this_type& r) {
-		return subinstance_manager::synchronize_port_actuals(
-			l.subinstances, r.subinstances);
-	}
-#endif
 
 	good_bool
 	replay_substructure_aliases(void) const;
@@ -117,11 +93,6 @@ virtual	ostream&
 
 virtual	size_t
 	hierarchical_depth(void) const;
-
-#if !SEPARATE_ALLOCATE_SUBPASS
-virtual	size_t
-	allocate_state(footprint&) const;
-#endif
 
 	ostream&
 	dump_ports(ostream& o, const dump_flags& df) const {
@@ -156,13 +127,11 @@ protected:
 	__cflat_aliases(cflat_aliases_arg_type&,
 		const global_entry<Tag>&, const size_t) const;
 
-#if RECURSIVE_PORT_ALIAS
 	good_bool
 	connect_port_aliases_recursive(this_type& r) {
 		return subinstances.connect_port_aliases_recursive(
 			r.subinstances);
 	}
-#endif
 
 protected:
 	// call forwarding
@@ -198,23 +167,6 @@ protected:
 	unroll_port_instances(const instance_collection<Tag>&, 
 		const unroll_context&) const { }
 
-#if !SEPARATE_ALLOCATE_SUBPASS
-	/**
-		Has no substructure, thus does not recur.  
-	 */
-	good_bool
-	create_subinstance_state(const this_type&, footprint&) const {
-		return good_bool(true);
-	}
-
-	/**
-		Nothing to copy recursively.  
-	 */
-	template <class Tag>
-	void
-	inherit_state(const state_instance<Tag>&, const footprint&) const { }
-#endif
-
 	void
 	allocate_subinstances(footprint&) const { }
 
@@ -223,14 +175,6 @@ protected:
 	 */
 	void
 	restore_parent_child_links(void) { }
-
-#if !SEPARATE_ALLOCATE_SUBPASS
-	static
-	good_bool
-	synchronize_port_actuals(const this_type&, const this_type&) {
-		return good_bool(true);
-	}
-#endif
 
 	/**
 		No-op, because this has no substructure.  
@@ -274,13 +218,11 @@ protected:
 	__cflat_aliases(cflat_aliases_arg_type&, 
 		const global_entry<Tag>&, const size_t) const;
 
-#if RECURSIVE_PORT_ALIAS
 	// has no substructure
 	good_bool
 	connect_port_aliases_recursive(this_type& r) {
 		return good_bool(true);
 	}
-#endif
 
 protected:
 	void

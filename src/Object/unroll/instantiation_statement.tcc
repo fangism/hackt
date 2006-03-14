@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.12.4.1 2006/03/09 05:52:35 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.12.4.2 2006/03/14 22:16:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -353,34 +353,6 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	}
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	Allocates state space for the aliases referenced by this statement.  
-	\pre already unrolled.  
-	TODO: possibly cache the resolved indices from unrolling, 
-		but don't bother saving them persistently.  
-	TODO: translate using footprint from the unroll_context.  
- */
-INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-good_bool
-INSTANTIATION_STATEMENT_CLASS::create_unique(
-		const unroll_context& c, footprint& f) const {
-	STACKTRACE("instantiation_statement::create_unique()");
-	const_range_list crl;
-	const good_bool rr(this->resolve_instantiation_range(crl, c));
-	INVARIANT(rr.good);
-	// _f determines whether or not we are in a definition context
-	const footprint* const _f(c.get_target_footprint());
-	if (_f)
-		INVARIANT(_f == &f);
-	collection_type& _inst(_f ?
-		IS_A(collection_type&, *f[this->inst_base->get_name()]) :
-		*this->inst_base);
-	return type_ref_parent_type::create_unique_state(_inst, crl, f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE

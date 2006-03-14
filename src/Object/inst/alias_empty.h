@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.7.2.1 2006/03/09 05:51:09 fang Exp $
+	$Id: alias_empty.h,v 1.7.2.2 2006/03/14 22:16:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -12,7 +12,6 @@
 #define	DEBUG_ALIAS_EMPTY		1
 
 #include <iosfwd>
-#include "Object/devel_switches.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
@@ -80,23 +79,6 @@ public:
 	}
 
 protected:
-#if USE_ALIAS_RING_NODES
-	/// No-op
-	template <class AliasType>
-	good_bool
-	__compare_and_propagate_actuals(const alias_actuals_type&, 
-			const AliasType&) const {
-		return good_bool(true);
-	}
-
-	template <class AliasType>
-	static
-	good_bool
-	__symmetric_synchronize(const AliasType&, const AliasType&) {
-		return good_bool(true);
-	}
-#endif
-
 	/**
 		Thus far, no meta types without alias actuals can have 
 		substructure.  

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.17.4.3 2006/03/14 01:32:51 fang Exp $
+ 	$Id: definition.cc,v 1.17.4.4 2006/03/14 22:16:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2231,17 +2231,7 @@ if (defined) {
 			// error message
 			return good_bool(false);
 		}
-#if !SEPARATE_ALLOCATE_SUBPASS
-		if (sequential_scope::create_unique(c, *f).good) {
-			f->evaluate_scope_aliases();
-			// has no PRS
-			f->mark_created();
-		} else {
-			// already have partial error message
-			// cpt.dump(cerr << "Instantiated from ") << endl;
-			return good_bool(false);
-		}
-#endif
+		// TODO: CHP
 	}
 	return good_bool(true);
 } else {
@@ -3033,7 +3023,6 @@ if (defined) {
 			// error message
 			return good_bool(false);
 		}
-#if SEPARATE_ALLOCATE_SUBPASS
 		// after all aliases have been successfully assigned local IDs
 		// then process the PRS and CHP bodies
 		if (!prs.unroll(c, f->get_pool<bool_tag>(), 
@@ -3046,27 +3035,6 @@ if (defined) {
 			// already have error message
 			return good_bool(false);
 		}
-#else
-		if (sequential_scope::create_unique(c, *f).good) {
-			f->evaluate_scope_aliases();
-			// also resolve copy of production rules
-			if (!prs.unroll(c, f->get_pool<bool_tag>(), 
-					f->get_prs_footprint()).good) {
-				// already have error message
-				return good_bool(false);
-			}
-			if (!spec.unroll(c, f->get_pool<bool_tag>(), 
-					f->get_spec_footprint()).good) {
-				// already have error message
-				return good_bool(false);
-			}
-			f->mark_created();
-		} else {
-			// already have partial error message
-			// cpt.dump(cerr << "Instantiated from ") << endl;
-			return good_bool(false);
-		}
-#endif
 	}
 	return good_bool(true);
 } else {

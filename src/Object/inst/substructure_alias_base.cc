@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.10.12.3 2006/03/14 21:07:05 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.10.12.4 2006/03/14 22:16:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -42,18 +42,6 @@ substructure_alias::hierarchical_depth(void) const {
 	ICE_NEVER_CALL(cerr);
 	return 0;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
-/**
-	Implemented for real in instance_alias_info.  
- */
-size_t
-substructure_alias::allocate_state(footprint&) const {
-	ICE_NEVER_CALL(cerr);
-	return 0;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 subinstance_manager::value_type

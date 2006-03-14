@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.5.22.1 2006/03/09 05:51:43 fang Exp $
+	$Id: class_traits.h,v 1.5.22.2 2006/03/14 22:16:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -11,29 +11,19 @@
 
 #include <iosfwd>
 #include "Object/object_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/packed_array_fwd.h"
-#if USE_ALIAS_RING_NODES
-#include "util/ring_node_fwd.h"
-#endif
 
-#if !USE_ALIAS_RING_NODES
 namespace util {
 	template <class> class union_find_derived;
 }
-#endif
 
 namespace HAC {
 namespace entity {
 using std::istream;
 using std::ostream;
 using util::packed_array_generic;
-#if USE_ALIAS_RING_NODES
-using util::ring_node_derived;
-#else
 using util::union_find_derived;
-#endif
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
@@ -178,20 +168,6 @@ typedef	instance_alias_info<datastruct_tag>	datastruct_instance_alias_info;
 typedef	instance_alias_info<channel_tag>	channel_instance_alias_info;
 typedef	instance_alias_info<process_tag>	process_instance_alias_info;
 
-#if USE_ALIAS_RING_NODES
-typedef ring_node_derived<bool_instance_alias_info>
-						bool_instance_alias_base;
-typedef ring_node_derived<int_instance_alias_info>
-						int_instance_alias_base;
-typedef ring_node_derived<enum_instance_alias_info>
-						enum_instance_alias_base;
-typedef ring_node_derived<datastruct_instance_alias_info>
-						struct_instance_alias_base;
-typedef ring_node_derived<channel_instance_alias_info>
-						channel_instance_alias_base;
-typedef ring_node_derived<process_instance_alias_info>
-						process_instance_alias_base;
-#else
 typedef union_find_derived<bool_instance_alias_info>
 						bool_instance_alias_base;
 typedef union_find_derived<int_instance_alias_info>
@@ -204,7 +180,6 @@ typedef union_find_derived<channel_instance_alias_info>
 						channel_instance_alias_base;
 typedef union_find_derived<process_instance_alias_info>
 						process_instance_alias_base;
-#endif
 
 //=============================================================================
 // useful base templates

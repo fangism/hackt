@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.14.4.5 2006/03/14 21:07:02 fang Exp $
+	$Id: instance_collection.h,v 1.14.4.6 2006/03/14 22:16:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -218,36 +218,11 @@ virtual	bool
 
 virtual	INSTANTIATE_INDICES_PROTO = 0;
 
-#if RECURSIVE_PORT_ALIAS
 virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
-#endif
-
-/**
-	Prototype for allocating unique state during create phase.
- */
-#define	CREATE_UNIQUE_STATE_PROTO					\
-	good_bool							\
-	create_unique_state(const const_range_list&, footprint&)
-
-virtual	CREATE_UNIQUE_STATE_PROTO = 0;
 
 protected:
-#if SEPARATE_ALLOCATE_SUBPASS
 virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
-#else
-virtual	good_bool
-	allocate_state(footprint&) = 0;
 
-virtual	good_bool
-	merge_created_state(physical_instance_collection&, footprint&) = 0;
-
-virtual	void
-	inherit_created_state(const physical_instance_collection&, 
-		const footprint&) = 0;
-
-virtual	good_bool
-	synchronize_actuals(physical_instance_collection&) = 0;
-#endif
 public:
 
 	never_ptr<const const_param_expr_list>
@@ -387,28 +362,9 @@ public:
 
 	INSTANTIATE_INDICES_PROTO;
 
-#if RECURSIVE_PORT_ALIAS
 	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
-#endif
 
-	CREATE_UNIQUE_STATE_PROTO;
-
-#if SEPARATE_ALLOCATE_SUBPASS
 	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
-#else
-	good_bool
-	allocate_state(footprint&);
-
-	good_bool
-	merge_created_state(physical_instance_collection&, footprint&);
-
-	void
-	inherit_created_state(const physical_instance_collection&, 
-		const footprint&);
-
-	good_bool
-	synchronize_actuals(physical_instance_collection&);
-#endif
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -512,28 +468,9 @@ public:
 
 	INSTANTIATE_INDICES_PROTO;
 
-#if RECURSIVE_PORT_ALIAS
 	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
-#endif
 
-	CREATE_UNIQUE_STATE_PROTO;
-
-#if SEPARATE_ALLOCATE_SUBPASS
 	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
-#else
-	good_bool
-	allocate_state(footprint&);
-
-	good_bool
-	merge_created_state(physical_instance_collection&, footprint&);
-
-	void
-	inherit_created_state(const physical_instance_collection&, 
-		const footprint&);
-
-	good_bool
-	synchronize_actuals(physical_instance_collection&);
-#endif
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
@@ -582,7 +519,6 @@ public:
 
 #undef	UNROLL_ALIASES_PROTO
 #undef	INSTANTIATE_INDICES_PROTO
-#undef	CREATE_UNIQUE_STATE_PROTO
 
 #endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.h"
 	Template class wrapper around list_vector.
-	$Id: instance_pool.h,v 1.10.4.1 2006/03/14 21:07:03 fang Exp $
+	$Id: instance_pool.h,v 1.10.4.2 2006/03/14 22:16:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_H__
@@ -29,13 +29,6 @@ using util::memory::index_pool;
 	Wrapped interface to list_vector being used as an indexable pool, 
 	intended for use of pseudo-allocating instances.  
 	Consider adding this as an index_vector_pool to the util library.  
-
-	(20060126: fangism)
-		Due to a critical ICE in the create_unique index allocation, 
-	we need to support deallocation for back-patching a botched
-	algorithm.  (This is NOT the way I prefer to handle it, but
-	delivery time is critical.)
-	TODO: Go back and revisit the algorithm.  
  */
 template <class T>
 class instance_pool : private index_pool<util::list_vector<T> > {

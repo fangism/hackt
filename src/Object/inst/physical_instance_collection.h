@@ -2,14 +2,13 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.11.4.4 2006/03/14 21:07:04 fang Exp $
+	$Id: physical_instance_collection.h,v 1.11.4.5 2006/03/14 22:16:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -90,33 +89,17 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const = 0;
 
-#if SEPARATE_ALLOCATE_SUBPASS
 #define	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO				\
 	good_bool							\
 	allocate_local_instance_ids(footprint&)
 
 virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
-#else
-virtual	good_bool
-	allocate_state(footprint&) = 0;
 
-virtual	good_bool
-	merge_created_state(this_type&, footprint&) = 0;
-
-virtual	void
-	inherit_created_state(const this_type&, const footprint&) = 0;
-
-virtual	good_bool
-	synchronize_actuals(this_type&) = 0;
-#endif
-
-#if RECURSIVE_PORT_ALIAS
 #define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
 	good_bool							\
 	connect_port_aliases_recursive(physical_instance_collection&)
 
 virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
-#endif
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\
 	good_bool							\

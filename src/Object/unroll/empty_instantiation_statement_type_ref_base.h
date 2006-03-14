@@ -1,13 +1,12 @@
 /**
 	\file "Object/unroll/empty_instantiation_statement_type_ref_base.h"
-	$Id: empty_instantiation_statement_type_ref_base.h,v 1.1.2.1 2006/03/09 05:52:35 fang Exp $
+	$Id: empty_instantiation_statement_type_ref_base.h,v 1.1.2.2 2006/03/14 22:16:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EMPTY_INSTANTIATION_STATEMENT_TYPE_REF_BASE_H__
 #define	__HAC_OBJECT_UNROLL_EMPTY_INSTANTIATION_STATEMENT_TYPE_REF_BASE_H__
 
 #include <iosfwd>
-#include "Object/devel_switches.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/unroll/null_parameter_type.h"
 #include "util/memory/count_ptr.h"

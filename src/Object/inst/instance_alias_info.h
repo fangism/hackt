@@ -4,20 +4,15 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.13.4.5 2006/03/14 21:07:02 fang Exp $
+	$Id: instance_alias_info.h,v 1.13.4.6 2006/03/14 22:16:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 #define	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 
-#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#if USE_ALIAS_RING_NODES
-#include "util/ring_node.h"
-#else
 #include "util/union_find.h"
-#endif
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -34,10 +29,6 @@ struct cflat_args_base;
 struct cflat_aliases_arg_type;
 using std::ostream;
 using std::istream;
-#if USE_ALIAS_RING_NODES
-using util::ring_node_derived;
-using util::ring_node_derived_iterator_default;
-#endif
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
@@ -65,20 +56,6 @@ class instance_alias_info :
 		public class_traits<Tag>::instance_alias_relaxed_actuals_type {
 	typedef	INSTANCE_ALIAS_INFO_CLASS	this_type;
 friend class instance_alias_info_actuals;
-#if 0
-// want to express this:
-template <size_t D> friend class instance_array<Tag, D>;
-#else
-#if !SEPARATE_ALLOCATE_SUBPASS
-// for the sake of granting direct access to __allocate_state.
-// but have to write this:
-friend class instance_array<Tag, 0>;
-friend class instance_array<Tag, 1>;
-friend class instance_array<Tag, 2>;
-friend class instance_array<Tag, 3>;
-friend class instance_array<Tag, 4>;
-#endif
-#endif
 public:
 	typedef	class_traits<Tag>		traits_type;
 	typedef	typename traits_type::instance_alias_relaxed_actuals_type
@@ -102,28 +79,6 @@ public:
 					instance_collection_generic_type;
 	typedef	instance_collection_generic_type	container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
-#if USE_ALIAS_RING_NODES
-	typedef	ring_node_derived<this_type>	instance_alias_base_type;
-
-#if 1
-	// workaround for shortcoming of gcc: direct reference to
-	// the resolved type.  
-	// since ring_node_derived derives from the parameter type, 
-	// it is considered an incomplete type, and hence unusable.  
-	typedef	typename ring_node_derived_iterator_default<this_type>::type
-						iterator;
-	typedef	typename ring_node_derived_iterator_default<this_type>::const_type
-						const_iterator;
-#else
-	// this is what we really mean
-	// doesn't like this: thinks ring_node_derived<...> is incomplete.
-	// because this_type is still incomplete, BAH!
-	typedef	typename instance_alias_base_type::const_iterator
-						const_iterator;
-	typedef	typename instance_alias_base_type::iterator
-						iterator;
-#endif
-#else	// USE_ALIAS_RING_NODES
 	typedef	util::union_find_derived<this_type>
 						instance_alias_base_type;
 	// we won't have iterator interface anymore!
@@ -132,7 +87,6 @@ public:
 	typedef	typename iterator_policy::type	pseudo_iterator;
 	typedef	typename iterator_policy::const_type
 						pseudo_const_iterator;
-#endif	// USE_ALIAS_RING_NODES
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
 public:
@@ -184,28 +138,11 @@ public:
 	void
 	check(const container_type* p) const;
 
-#if USE_ALIAS_RING_NODES
-// should be pure virtual (but can't)
-virtual	const_iterator
-	begin(void) const;
-
-// should be pure virtual (but can't)
-virtual	const_iterator
-	end(void) const;
-
-private:
-virtual	iterator
-	begin(void);
-
-virtual	iterator
-	end(void);
-#else
 virtual	pseudo_const_iterator
 	find(void) const;
 
 virtual	pseudo_iterator
 	find(void);
-#endif
 
 public:
 	/**
@@ -216,34 +153,11 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
-#if SEPARATE_ALLOCATE_SUBPASS
 virtual	void
 	finalize_canonicalize(instance_alias_base_type&);
 
 	size_t
 	assign_local_instance_id(footprint&);
-#else
-	// this implements the virtual function 
-	// from substructure_alias_base<true>
-	// really shouldn't be const...
-	size_t
-	allocate_state(footprint&) const;
-#endif
-
-#if !SEPARATE_ALLOCATE_SUBPASS
-private:
-	// want to allow instance_collection<> to call this directly
-	// so we make it a friend :S
-	size_t
-	__allocate_state(footprint&) const;
-
-public:
-	good_bool
-	merge_allocate_state(this_type&, footprint&);
-
-	void
-	inherit_subinstances_state(const this_type&, const footprint&);
-#endif
 
 	/**
 		Attaches actual parameters to this alias.  
@@ -283,32 +197,6 @@ public:
 
 virtual	TRACE_ALIAS_BASE_PROTO;
 virtual	TRACE_ALIAS_PROTO;
-
-#if USE_ALIAS_RING_NODES
-protected:
-	void
-	progagate_actuals(const relaxed_actuals_type&);
-
-public:
-	good_bool
-	compare_and_propagate_actuals(const relaxed_actuals_type&);
-
-	static
-	good_bool
-	synchronize_actuals_recursive(this_type&, this_type&);
-private:
-	static
-	good_bool
-	synchronize_actuals(this_type&, this_type&);
-
-	void
-	propagate_actuals(const relaxed_actuals_type&);
-#endif
-
-#if USE_ALIAS_RING_NODES
-	good_bool
-	create_super_instance(footprint&);
-#endif
 
 public:
 	bool
@@ -379,17 +267,10 @@ public:
 	good_bool
 	checked_connect_port(this_type&, this_type&);
 
-#if USE_ALIAS_RING_NODES
-	static
-	good_bool
-	checked_connect_alias(this_type&, this_type&,
-		const relaxed_actuals_type&);
-#else
 	// punting relaxed actuals checking until after unroll phase
 	static
 	good_bool
 	checked_connect_alias(this_type&, this_type&);
-#endif
 
 	/// counterpart to load_alias_reference (should be pure virtual)
 virtual	void

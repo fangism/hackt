@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.7.12.2 2006/03/14 06:31:15 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.7.12.3 2006/03/14 22:16:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -174,7 +174,6 @@ alias_reference_set<Tag>::shortest_alias(void) {
 			shortest_depth = depth;
 		}
 	}
-#if SEPARATE_ALLOCATE_SUBPASS
 {
 	// manually flatten the union-find structure
 	iterator ii(alias_array.begin());
@@ -184,7 +183,6 @@ alias_reference_set<Tag>::shortest_alias(void) {
 			IS_A(alias_base_type&, **shortest_alias_iter));
 	}
 }
-#endif
 	// pardon the const_cast :S, we intend to modify, yes
 	// consider making mutable...
 	return *shortest_alias_iter;

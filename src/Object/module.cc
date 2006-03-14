@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.14.12.3 2006/03/14 06:31:13 fang Exp $
+ 	$Id: module.cc,v 1.14.12.4 2006/03/14 22:16:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -195,31 +195,11 @@ module::unroll_module(void) {
 		STACKTRACE("not already unrolled, unrolling...");
 		// start with blank context
 		unroll_context c;
-#if 1
 		if (!sequential_scope::unroll(c).good) {
 			cerr << "Error encountered during module::unroll."
 				<< endl;
 			return good_bool(false);
 		}
-#else
-		// three-phase unrolling
-		if (!sequential_scope::unroll_meta_evaluate(c).good) {
-			cerr << "Error during unroll_meta_evaluate." << endl;
-			return good_bool(false);
-		}
-		if (!sequential_scope::unroll_meta_instantiate(c).good) {
-			cerr << "Error during unroll_meta_instantiate." << endl;
-			return good_bool(false);
-		}
-		// this would be a good point to finalize sparse and dense
-		// array collections into index maps
-		// Top-level finalization would bind indexed instances
-		// to fixed offsets.  
-		if (!sequential_scope::unroll_meta_connect(c).good) {
-			cerr << "Error during unroll_meta_connect." << endl;
-			return good_bool(false);
-		}
-#endif
 		_footprint.mark_unrolled();
 	}
 	return good_bool(true);
@@ -261,7 +241,6 @@ module::create_dependent_types(void) {
 		}
 	}
 }
-#if SEPARATE_ALLOCATE_SUBPASS
 {
 	// after replaying internal aliases, we can now assign instance_id's
 	const collection_iterator
@@ -280,7 +259,6 @@ module::create_dependent_types(void) {
 	_footprint.evaluate_scope_aliases();
 	_footprint.mark_created();
 }
-#endif
 	return good_bool(true);
 #endif
 }
@@ -306,23 +284,6 @@ module::create_unique(void) {
 			// alraedy have error mesage
 			return good_bool(false);
 		}
-#if !SEPARATE_ALLOCATE_SUBPASS
-		const unroll_context c;	// empty top-level context
-		if (!sequential_scope::create_unique(c, _footprint).good) {
-			cerr << "Error during create_unique." << endl;
-			return good_bool(false);
-		}
-		// this is needed for evaluating scope_aliases, 
-		// but cannot be maintained persistently because
-		// of memory pointer hack (see implementation of 
-		// footprint::import_hierarchical_scopespace.
-		// Plan B: destroy after evaluating aliases!
-		// we call clear_instance_collection_map after we're done.
-		// This is now taken care of by the helper class:
-		const top_level_footprint_importer foo(*this);
-		_footprint.evaluate_scope_aliases();
-		_footprint.mark_created();
-#endif
 	}
 	return good_bool(true);
 }
@@ -363,12 +324,6 @@ module::allocate_unique(void) {
 good_bool
 module::__cflat(ostream& o, const cflat_options& cf) const {
 	// print the production rules first, using canonical names
-#if 0
-	if (!global_state.cflat_prs(o, _footprint, cf).good) {
-		cerr << "Unexpected error during cflat." << endl;
-		return good_bool(false);
-	}
-#else
 {
 	// our priting visitor functor
 	PRS::cflat_prs_printer cfp(o, cf);
@@ -377,7 +332,6 @@ module::__cflat(ostream& o, const cflat_options& cf) const {
 	global_state.accept(cfp);	// print!
 	if (cf.dsim_prs)	o << "}" << endl;
 }
-#endif
 	// print the name aliases in the manner requested in cflat_options
 	// TODO: instance_visitor
 	if (cf.connect_style) {
