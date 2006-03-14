@@ -28,24 +28,24 @@ Persistent Object Manager text dump:
 	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	34	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
 	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	proccoll	2	#HEAD#	#TAIL#	406
+	44	##ADDR##	proccoll	2	#HEAD#	#TAIL#	402
 	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	47	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
@@ -65,32 +65,32 @@ Persistent Object Manager text dump:
 	61	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	62	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	63	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	65	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	67	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	69	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	70	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	71	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	73	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	74	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	75	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	77	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	78	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	79	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	81	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	82	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	83	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	84	##ADDR##	proccoll	0	#HEAD#	#TAIL#	74
-	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	86	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	88	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	89	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	66	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	67	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	68	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	69	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	73	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	76	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	77	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	79	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	80	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	81	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	82	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	83	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	84	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	85	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	86	##ADDR##	proccoll	0	#HEAD#	#TAIL#	74
+	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	89	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	90	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
 	91	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
 	92	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -174,19 +174,19 @@ In namespace "", we have: {
   Instances:
     a = bool^0 a (instantiated) = ::p.b (1) 
     p = process portaproc<>^0 p (instantiated) = ::p (1) (
-      bool^0 b (instantiated) = ::a (1) 
+      bool^0 b (instantiated) = ::p.b (1) 
       bool^1 c
         unrolled indices: {
-          0 = ::x[0] (2) 
-          1 = ::x[1] (3) 
-          2 = ::x[2] (4) 
-          3 = ::x[3] (5) 
+          0 = ::p.c[0] (2) 
+          1 = ::p.c[1] (3) 
+          2 = ::p.c[2] (4) 
+          3 = ::p.c[3] (5) 
         }
-      int<32>^0 i (instantiated) = ::q (1) 
+      int<32>^0 i (instantiated) = ::p.i (1) 
       int<32>^1 j
         unrolled indices: {
-          0 = ::r[0] (2) 
-          1 = ::r[1] (3) 
+          0 = ::p.j[0] (2) 
+          1 = ::p.j[1] (3) 
         }
     )
     q = int<32>^0 q (instantiated) = ::p.i (1) 
@@ -261,20 +261,20 @@ In namespace "", we have: {
               1 = ::s[1][0].j[1] (15) 
             }
         )
-        [1][1] = ::t (6) (
-          bool^0 b (instantiated) = ::s[1][1].b (26) 
+        [1][1] = ::s[1][1] (6) (
+          bool^0 b (instantiated) = ::t.b (26) 
           bool^1 c
             unrolled indices: {
-              0 = ::s[1][1].c[0] (27) 
-              1 = ::s[1][1].c[1] (28) 
-              2 = ::s[1][1].c[2] (29) 
-              3 = ::s[1][1].c[3] (30) 
+              0 = ::t.c[0] (27) 
+              1 = ::t.c[1] (28) 
+              2 = ::t.c[2] (29) 
+              3 = ::t.c[3] (30) 
             }
-          int<32>^0 i (instantiated) = ::s[1][1].i (16) 
+          int<32>^0 i (instantiated) = ::t.i (16) 
           int<32>^1 j
             unrolled indices: {
-              0 = ::s[1][1].j[0] (17) 
-              1 = ::s[1][1].j[1] (18) 
+              0 = ::t.j[0] (17) 
+              1 = ::t.j[1] (18) 
             }
         )
         [1][2] = ::s[1][2] (7) (

@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.18.4.3 2006/03/12 21:39:29 fang Exp $
+	$Id: instance_alias.tcc,v 1.18.4.4 2006/03/14 01:32:53 fang Exp $
 	TODO: trim includes
  */
 
@@ -382,6 +382,51 @@ INSTANCE_ALIAS_INFO_CLASS::create_super_instance(footprint& f) {
 	}
 }
 #endif	// USE_ALIAS_RING_NODES
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SEPARATE_ALLOCATE_SUBPASS
+/**
+	Much simplified algorithm for assigning unique local instance ids. 
+	Also performs path compression.  
+	TODO: check for alias actuals match.  
+	TODO: error handling on allocate_subinstances. 
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+size_t
+INSTANCE_ALIAS_INFO_CLASS::assign_local_instance_id(footprint& f) {
+	STACKTRACE_VERBOSE;
+	if (this->instance_index)
+		return this->instance_index;
+	// compress path to canonical
+	const pseudo_iterator i(this->find());
+	// i points to the canonical alias for this set
+	if (!i->instance_index) {
+		// only allocate if this is the canonical member of the 
+		// union-find set, otherwise, just copy.
+		// for now the creator will be the canonical back-reference
+		typename instance_type::pool_type&
+			the_pool(f.template get_pool<Tag>());
+		i->instance_index = the_pool.allocate(instance_type(*i));
+		// also need to recursively allocate subinstances ids
+		i->allocate_subinstances(f);
+	}
+	// by here, the canonical alias in this set has been processed
+	if (&*i != this) {
+		// just copy from the canonical alias
+		INVARIANT(i->instance_index);
+		this->instance_index = i->instance_index;
+		// also need to recursively allocate subinstances ids
+		this->allocate_subinstances(f);
+	}
+#if ENABLE_STACKTRACE
+	this->dump_hierarchical_name(STACKTRACE_INDENT)
+		<< " assigned id: " << this << " = "
+		<< this->instance_index << endl;
+#endif
+	INVARIANT(this->instance_index);
+	return this->instance_index;
+}
+#endif	// SEPARATE_ALLOCATE_SUBPASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !SEPARATE_ALLOCATE_SUBPASS

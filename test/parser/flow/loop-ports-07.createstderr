@@ -16,10 +16,10 @@ Persistent Object Manager text dump:
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	75
-	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	75
-	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	75
-	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	75
+	15	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	19	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	225
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -71,29 +71,29 @@ In namespace "", we have: {
         0 = ::myass[0] (1) (
           bool^1 q
             unrolled indices: {
-              0 = ::x[0][0] (1) 
-              1 = ::x[0][1] (2) 
+              0 = ::myass[0].q[0] (1) 
+              1 = ::myass[0].q[1] (2) 
             }
         )
         1 = ::myass[1] (2) (
           bool^1 q
             unrolled indices: {
-              0 = ::x[1][0] (3) 
-              1 = ::x[1][1] (4) 
+              0 = ::myass[1].q[0] (3) 
+              1 = ::myass[1].q[1] (4) 
             }
         )
         2 = ::myass[2] (3) (
           bool^1 q
             unrolled indices: {
-              0 = ::x[2][0] (5) 
-              1 = ::x[2][1] (6) 
+              0 = ::myass[2].q[0] (5) 
+              1 = ::myass[2].q[1] (6) 
             }
         )
         3 = ::myass[3] (4) (
           bool^1 q
             unrolled indices: {
-              0 = ::x[3][0] (7) 
-              1 = ::x[3][1] (8) 
+              0 = ::myass[3].q[0] (7) 
+              1 = ::myass[3].q[1] (8) 
             }
         )
       }

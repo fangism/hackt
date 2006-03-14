@@ -14,14 +14,14 @@ Persistent Object Manager text dump:
 	10	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -60,13 +60,13 @@ In namespace "", we have: {
 
   Instances:
     p = process bar<>^0 p (instantiated) = ::q (1) (
-      bool^0 a (instantiated) = ::x (1) 
+      bool^0 a (instantiated) = ::p.a (1) 
     )
-    q = process bar<>^0 q (instantiated) = ::p (1) (
-      bool^0 a (instantiated) = ::y (1) 
+    q = process bar<>^0 q (instantiated) = ::q (1) (
+      bool^0 a (instantiated) = ::p.a (1) 
     )
     x = bool^0 x (instantiated) = ::p.a (1) 
-    y = bool^0 y (instantiated) = ::q.a (1) 
+    y = bool^0 y (instantiated) = ::p.a (1) 
 }
 
 Created state:

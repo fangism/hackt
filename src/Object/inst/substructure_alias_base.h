@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.13.12.2 2006/03/12 21:39:32 fang Exp $
+	$Id: substructure_alias_base.h,v 1.13.12.3 2006/03/14 01:32:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -83,10 +83,12 @@ protected:
 	inherit_state(const state_instance<Tag>& t, const footprint& f) {
 		subinstances.inherit_state(t.get_back_ref()->subinstances, f);
 	}
+#endif
 
 	void
 	allocate_subinstances(footprint&);
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	static
 	good_bool
 	synchronize_port_actuals(this_type& l, this_type& r) {
@@ -216,10 +218,10 @@ protected:
 	template <class Tag>
 	void
 	inherit_state(const state_instance<Tag>&, const footprint&) const { }
+#endif
 
 	void
 	allocate_subinstances(footprint&) const { }
-#endif
 
 	/**
 		No-op.  

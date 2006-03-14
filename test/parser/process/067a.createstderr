@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	288
 	16	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -28,20 +28,20 @@ Persistent Object Manager text dump:
 	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	proccoll	1	#HEAD#	#TAIL#	107
+	27	##ADDR##	proccoll	1	#HEAD#	#TAIL#	99
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	107
+	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	99
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 
@@ -69,11 +69,11 @@ In namespace "", we have: {
           unrolled indices: {
             0 = ::bar::x[1] (1) (
               bool^0 a (instantiated) = ::bar::x[0].b (1) 
-              bool^0 b (instantiated) = ::bar::x[0].a (1) 
+              bool^0 b (instantiated) = ::bar::x[0].b (1) 
             )
-            1 = ::bar::x[0] (1) (
-              bool^0 a (instantiated) = ::bar::x[1].b (1) 
-              bool^0 b (instantiated) = ::bar::x[1].a (1) 
+            1 = ::bar::x[1] (1) (
+              bool^0 a (instantiated) = ::bar::x[0].b (1) 
+              bool^0 b (instantiated) = ::bar::x[0].b (1) 
             )
           }
         process instance pool:
@@ -101,7 +101,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b (1) 
-        bool^0 b (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::b (1) 
         bool instance pool:
         1	::foo::a
         bool port aliases:
@@ -115,11 +115,11 @@ In namespace "", we have: {
         unrolled indices: {
           0 = ::poo.x[1] (2) (
             bool^0 a (instantiated) = ::poo.x[0].b (1) 
-            bool^0 b (instantiated) = ::poo.x[1].a (1) 
+            bool^0 b (instantiated) = ::poo.x[0].b (1) 
           )
-          1 = ::poo.x[0] (2) (
-            bool^0 a (instantiated) = ::poo.x[1].b (1) 
-            bool^0 b (instantiated) = ::poo.x[0].a (1) 
+          1 = ::poo.x[1] (2) (
+            bool^0 a (instantiated) = ::poo.x[0].b (1) 
+            bool^0 b (instantiated) = ::poo.x[0].b (1) 
           )
         }
     )

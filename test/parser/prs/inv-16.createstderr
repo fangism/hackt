@@ -25,16 +25,16 @@ Persistent Object Manager text dump:
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -96,21 +96,21 @@ In namespace "", we have: {
 
   Instances:
     i1 = process inv<>^0 i1 (instantiated) = ::i1 (1) (
-      bool^0 a (instantiated) = ::x (1) 
-      bool^0 b (instantiated) = ::y (2) 
+      bool^0 a (instantiated) = ::i1.a (3) 
+      bool^0 b (instantiated) = ::i1.b (4) 
     )
     i2 = process inv<>^0 i2 (instantiated) = ::i2 (2) (
-      bool^0 a (instantiated) = ::p (3) 
-      bool^0 b (instantiated) = ::i2.b (4) 
+      bool^0 a (instantiated) = ::i2.a (1) 
+      bool^0 b (instantiated) = ::i2.b (5) 
     )
     i3 = process inv<>^0 i3 (instantiated) = ::i3 (3) (
-      bool^0 a (instantiated) = ::i3.a (5) 
-      bool^0 b (instantiated) = ::q (6) 
+      bool^0 a (instantiated) = ::i3.a (6) 
+      bool^0 b (instantiated) = ::i3.b (2) 
     )
-    p = bool^0 p (instantiated) = ::i2.a (3) 
-    q = bool^0 q (instantiated) = ::i3.b (6) 
-    x = bool^0 x (instantiated) = ::i1.a (1) 
-    y = bool^0 y (instantiated) = ::i1.b (2) 
+    p = bool^0 p (instantiated) = ::i2.a (1) 
+    q = bool^0 q (instantiated) = ::i3.b (2) 
+    x = bool^0 x (instantiated) = ::i1.a (3) 
+    y = bool^0 y (instantiated) = ::i1.b (4) 
 }
 
 Created state:
@@ -119,10 +119,10 @@ process instance pool:
 2	::i2
 3	::i3
 bool instance pool:
-1	::x
-2	::y
-3	::p
-4	::i2.b
-5	::i3.a
-6	::q
+1	::p
+2	::q
+3	::x
+4	::y
+5	::i2.b
+6	::i3.a
 

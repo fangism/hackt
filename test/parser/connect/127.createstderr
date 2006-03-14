@@ -16,18 +16,18 @@ Persistent Object Manager text dump:
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
 	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
@@ -43,7 +43,7 @@ Persistent Object Manager text dump:
 	39	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	42
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	44	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -51,10 +51,10 @@ Persistent Object Manager text dump:
 	47	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	56	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -83,7 +83,7 @@ In namespace "", we have: {
         y = z;
       footprint: {
         bool^0 y (instantiated) = ::ar::z (1) 
-        bool^0 z (instantiated) = ::ar::y (1) 
+        bool^0 z (instantiated) = ::ar::z (1) 
         bool instance pool:
         1	::ar::y
       }
@@ -101,7 +101,7 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        bool^0 composite (instantiated) = ::array::x (1) 
+        bool^0 composite (instantiated) = ::array::composite (1) 
         bool^0 x (instantiated) = ::array::composite (1) 
         bool instance pool:
         1	::array::composite
@@ -120,35 +120,35 @@ In namespace "", we have: {
         array<> k
         k (r.y);
       footprint: {
-        process array<>^0 k (instantiated) = ::foo::k (2) (
-          bool^0 x (instantiated) = ::foo::r.y (1) 
+        process array<>^0 k (instantiated) = ::foo::k (1) (
+          bool^0 x (instantiated) = ::foo::k.x (1) 
         )
-        process ar<>^0 r (instantiated) = ::foo::r (1) (
+        process ar<>^0 r (instantiated) = ::foo::r (2) (
           bool^0 y (instantiated) = ::foo::k.x (1) 
         )
         process instance pool:
-        1	::foo::r
-        2	::foo::k
+        1	::foo::k
+        2	::foo::r
         bool instance pool:
         1	::foo::k.x
       }
       }
 
   Instances:
-    B = process ar<>^0 B (instantiated) = ::C.r (2) (
+    B = process ar<>^0 B (instantiated) = ::C.r (1) (
       bool^0 y (instantiated) = ::B.y (1) 
     )
-    C = process foo<>^0 C (instantiated) = ::C (1) (
-      process ar<>^0 r (instantiated) = ::B (2) (
-        bool^0 y (instantiated) = ::C.r.y (1) 
+    C = process foo<>^0 C (instantiated) = ::C (2) (
+      process ar<>^0 r (instantiated) = ::C.r (1) (
+        bool^0 y (instantiated) = ::B.y (1) 
       )
     )
 }
 
 Created state:
 process instance pool:
-1	::C
-2	::B
+1	::B
+2	::C
 bool instance pool:
 1	::B.y
 

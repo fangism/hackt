@@ -35,7 +35,7 @@ Persistent Object Manager text dump:
 	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
@@ -105,7 +105,7 @@ In namespace "", we have: {
         )
         process bar<>^0 q (instantiated) = ::ick::q (3) (
           process foo<>^0 x (instantiated) = ::ick::q.x (4) (
-            bool^0 a (instantiated) = ::ick::p.x.a (1) 
+            bool^0 a (instantiated) = ::ick::q.x.a (1) 
           )
         )
         process instance pool:

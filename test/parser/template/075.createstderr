@@ -45,14 +45,14 @@ Persistent Object Manager text dump:
 	41	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	173
 	42	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	46	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	49	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	54	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
@@ -193,9 +193,9 @@ In namespace "", we have: {
     b = bool^0 b (instantiated) = ::myass.y (2) 
     c = bool^0 c (instantiated) = ::myass.z (3) 
     myass = process ass<3, {{1,0,1},{0,1,0},{1,0,1}}>^0 myass (instantiated) = ::myass (1) (
-      bool^0 x (instantiated) = ::a (1) 
-      bool^0 y (instantiated) = ::b (2) 
-      bool^0 z (instantiated) = ::c (3) 
+      bool^0 x (instantiated) = ::myass.x (1) 
+      bool^0 y (instantiated) = ::myass.y (2) 
+      bool^0 z (instantiated) = ::myass.z (3) 
     )
 }
 

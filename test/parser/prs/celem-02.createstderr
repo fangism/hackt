@@ -71,16 +71,16 @@ In namespace "", we have: {
         a[0] & a[1] -> _o-
         ~a[0] & ~a[1] -> _o+
       footprint: {
-        bool^0 _o (instantiated) = ::celem2inv::_o (3) 
+        bool^0 _o (instantiated) = ::celem2inv::_o (1) 
         bool^1 a
           unrolled indices: {
-            0 = ::celem2inv::a[0] (1) 
-            1 = ::celem2inv::a[1] (2) 
+            0 = ::celem2inv::a[0] (2) 
+            1 = ::celem2inv::a[1] (3) 
           }
         bool instance pool:
-        1	::celem2inv::a[0]
-        2	::celem2inv::a[1]
-        3	::celem2inv::_o
+        1	::celem2inv::_o
+        2	::celem2inv::a[0]
+        3	::celem2inv::a[1]
         resolved prs:
         a[0] & a[1] -> _o-
         ~a[0] & ~a[1] -> _o+

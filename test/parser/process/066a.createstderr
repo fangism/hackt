@@ -15,13 +15,13 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -45,7 +45,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b (1) 
-        bool^0 b (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::b (1) 
         bool instance pool:
         1	::foo::a
         bool port aliases:
@@ -56,7 +56,7 @@ In namespace "", we have: {
   Instances:
     poo = process foo<>^0 poo (instantiated) = ::poo (1) (
       bool^0 a (instantiated) = ::poo.b (1) 
-      bool^0 b (instantiated) = ::poo.a (1) 
+      bool^0 b (instantiated) = ::poo.b (1) 
     )
 }
 

@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	344
 	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -36,18 +36,18 @@ Persistent Object Manager text dump:
 	32	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -55,11 +55,11 @@ Persistent Object Manager text dump:
 	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -87,18 +87,18 @@ In namespace "", we have: {
         bool<> q
         q = z.b;
       footprint: {
-        bool^0 q (instantiated) = ::bar::z.a (1) 
+        bool^0 q (instantiated) = ::bar::x.b (1) 
         process foo<>^0 x (instantiated) = ::bar::z (1) (
           bool^0 a (instantiated) = ::bar::x.b (1) 
-          bool^0 b (instantiated) = ::bar::x.a (1) 
+          bool^0 b (instantiated) = ::bar::x.b (1) 
         )
         process foo<>^0 y (instantiated) = ::bar::y (2) (
           bool^0 a (instantiated) = ::bar::y.b (2) 
-          bool^0 b (instantiated) = ::bar::y.a (2) 
+          bool^0 b (instantiated) = ::bar::y.b (2) 
         )
-        process foo<>^0 z (instantiated) = ::bar::x (1) (
-          bool^0 a (instantiated) = ::bar::z.b (1) 
-          bool^0 b (instantiated) = ::bar::q (1) 
+        process foo<>^0 z (instantiated) = ::bar::z (1) (
+          bool^0 a (instantiated) = ::bar::x.b (1) 
+          bool^0 b (instantiated) = ::bar::x.b (1) 
         )
         process instance pool:
         1	::bar::x
@@ -126,7 +126,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b (1) 
-        bool^0 b (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::b (1) 
         bool instance pool:
         1	::foo::a
         bool port aliases:
@@ -138,11 +138,11 @@ In namespace "", we have: {
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
       process foo<>^0 x (instantiated) = ::poo.x (2) (
         bool^0 a (instantiated) = ::poo.x.b (1) 
-        bool^0 b (instantiated) = ::poo.x.a (1) 
+        bool^0 b (instantiated) = ::poo.x.b (1) 
       )
       process foo<>^0 y (instantiated) = ::poo.y (3) (
         bool^0 a (instantiated) = ::poo.y.b (2) 
-        bool^0 b (instantiated) = ::poo.y.a (2) 
+        bool^0 b (instantiated) = ::poo.y.b (2) 
       )
     )
 }

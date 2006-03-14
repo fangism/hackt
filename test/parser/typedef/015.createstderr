@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -77,7 +77,7 @@ In namespace "", we have: {
     )
     Q = process baz<>^0 Q (instantiated) = ::Q (2) (
       bool^0 x (instantiated) = ::Q.x (4) 
-      bool^0 y (instantiated) = ::P.z (3) 
+      bool^0 y (instantiated) = ::Q.y (3) 
       bool^0 z (instantiated) = ::Q.z (5) 
     )
 }

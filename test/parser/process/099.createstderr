@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -36,7 +36,7 @@ Persistent Object Manager text dump:
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 
 In module created from: ##FILE## (unrolled) (created)
@@ -64,7 +64,7 @@ In namespace "", we have: {
           bool^0 a (instantiated) = ::bar::y (1) 
           bool^0 b (instantiated) = ::bar::x.b (2) 
         )
-        bool^0 y (instantiated) = ::bar::x.a (1) 
+        bool^0 y (instantiated) = ::bar::y (1) 
         process instance pool:
         1	::bar::x
         bool instance pool:
@@ -101,7 +101,7 @@ In namespace "", we have: {
         bool^0 a (instantiated) = ::poo.y (1) 
         bool^0 b (instantiated) = ::poo.x.b (2) 
       )
-      bool^0 y (instantiated) = ::poo.x.a (1) 
+      bool^0 y (instantiated) = ::poo.y (1) 
     )
 }
 

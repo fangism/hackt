@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -39,7 +39,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -72,7 +72,7 @@ In namespace "", we have: {
         )
         process foo<>^0 y (instantiated) = ::bar::y (2) (
           bool^0 a (instantiated) = ::bar::y.a (3) 
-          bool^0 b (instantiated) = ::bar::x.a (1) 
+          bool^0 b (instantiated) = ::bar::y.b (1) 
         )
         process instance pool:
         1	::bar::x
@@ -114,7 +114,7 @@ In namespace "", we have: {
       )
       process foo<>^0 y (instantiated) = ::poo.y (3) (
         bool^0 a (instantiated) = ::poo.y.a (3) 
-        bool^0 b (instantiated) = ::poo.x.a (1) 
+        bool^0 b (instantiated) = ::poo.y.b (1) 
       )
     )
 }

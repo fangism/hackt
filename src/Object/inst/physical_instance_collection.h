@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.11.4.2 2006/03/12 21:39:31 fang Exp $
+	$Id: physical_instance_collection.h,v 1.11.4.3 2006/03/14 01:32:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -77,7 +77,7 @@ public:
 	must_check_reference_dimensions(...) const;
 #endif
 
-// macro co-defined in "Object/art_object_instance_collection.h"
+// macro co-defined in "Object/inst/instance_collection.h"
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
@@ -90,7 +90,13 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const = 0;
 
-#if !SEPARATE_ALLOCATE_SUBPASS
+#if SEPARATE_ALLOCATE_SUBPASS
+#define	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO				\
+	good_bool							\
+	allocate_local_instance_ids(footprint&)
+
+virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
+#else
 virtual	good_bool
 	allocate_state(footprint&) = 0;
 
@@ -114,7 +120,7 @@ virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\
 	good_bool							\
-	create_dependent_types(void) const
+	create_dependent_types(void)
 
 virtual	CREATE_DEPENDENT_TYPES_PROTO = 0;
 

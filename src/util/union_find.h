@@ -1,7 +1,7 @@
 /**
 	\file "util/union_find.h"
 	Classic union-find data structure.
-	$Id: union_find.h,v 1.3.2.1 2006/03/09 05:52:42 fang Exp $
+	$Id: union_find.h,v 1.3.2.2 2006/03/14 01:32:58 fang Exp $
  */
 
 #ifndef	__UTIL_UNION_FIND_H__
@@ -59,6 +59,9 @@ protected:
 	find_type				next;
 
 	union_find_base() : next(this) { }
+public:
+	bool
+	is_canonical(void) const { return this == next; }
 
 protected:
 

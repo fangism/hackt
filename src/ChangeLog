@@ -3,6 +3,27 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-04:
+	  Enabled create-pass with this revision, assigning unique local IDs.
+		Updated create tests: mostly changes is ID numbers
+		and same updates from new unroll pass with union finds.  
+		A few tests left un-updated because they are large
+		and require more concentration to verify.  
+	  Implemeneted instance_alias_info::assign_local_instance_id, 
+		the new ID assignment pass, recursive to substructures.  
+	  footprint::create_dependent_types():
+		removed const-method qualifier.
+		In addition to replaying internal aliases and 
+		assigning local instance IDs, this now calls 
+		evaluate_scope_aliases() and mark_created() before returning.
+		Consider privatizing these two methods.  
+	  TODO: try simple version of module::create_dependent_types().  
+	  TODO: Update port_alias_tracker::__shorted_canonical_alias to
+		update the union-find structure, as well as back-reference.  
+
+
 2006-03-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-19-connect-02-03:

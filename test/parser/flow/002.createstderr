@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
+	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
@@ -35,9 +35,9 @@ In namespace "", we have: {
     x = bool^1 x
       unrolled indices: {
         0 = ::y (1) 
-        1 = ::x[0] (1) 
+        1 = ::y (1) 
       }
-    y = bool^0 y (instantiated) = ::x[1] (1) 
+    y = bool^0 y (instantiated) = ::y (1) 
 }
 
 Created state:

@@ -58,7 +58,7 @@ Persistent Object Manager text dump:
 	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	58	##ADDR##	procdefn	0	#HEAD#	#TAIL#	751
 	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
 	60	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -188,89 +188,89 @@ Persistent Object Manager text dump:
 	184	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	185	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
 	186	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	187	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	188	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
-	189	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	190	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	191	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	192	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
-	193	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	194	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	60
-	195	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
-	196	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	197	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	187	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	188	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	189	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	190	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	191	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	192	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	60
+	193	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	194	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	195	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	196	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	197	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	198	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
-	199	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	199	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	200	##ADDR##	proccoll	0	#HEAD#	#TAIL#	67
 	201	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	202	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	203	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	204	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	205	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
-	206	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	207	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	208	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	209	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
-	210	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
-	211	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	212	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	213	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	214	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	215	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	216	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	217	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	218	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
+	202	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	203	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	204	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	205	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	206	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	207	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	208	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	209	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	210	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	211	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	212	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	213	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	214	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	215	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	216	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	217	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
+	218	##ADDR##	proccoll	0	#HEAD#	#TAIL#	67
 	219	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	220	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
-	221	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
-	222	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	223	##ADDR##	proccoll	0	#HEAD#	#TAIL#	67
-	224	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	225	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	226	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	227	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	228	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	229	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	230	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	220	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	221	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	222	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
+	223	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	224	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	225	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	226	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	227	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
+	228	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	229	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	230	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	231	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	232	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	233	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	234	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	235	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	232	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	233	##ADDR##	proccoll	0	#HEAD#	#TAIL#	63
+	234	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	235	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	236	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	237	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	238	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	239	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	239	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	240	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	241	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	242	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	243	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	244	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	245	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	246	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	245	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	246	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	247	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	248	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	249	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	250	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	251	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	249	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	250	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	251	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	252	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	253	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	254	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	253	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	254	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	255	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	256	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	257	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	258	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	259	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	260	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	259	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	260	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	261	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	262	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	263	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	264	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	265	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	266	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	267	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	268	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	269	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	263	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	264	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	265	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	266	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	267	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	268	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	269	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	270	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	271	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	272	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -305,13 +305,13 @@ In namespace "", we have: {
         a & b -> _o-
         ~a & ~b -> _o+
       footprint: {
-        bool^0 _o (instantiated) = ::celem2inv::_o (3) 
-        bool^0 a (instantiated) = ::celem2inv::a (1) 
-        bool^0 b (instantiated) = ::celem2inv::b (2) 
+        bool^0 _o (instantiated) = ::celem2inv::_o (1) 
+        bool^0 a (instantiated) = ::celem2inv::a (2) 
+        bool^0 b (instantiated) = ::celem2inv::b (3) 
         bool instance pool:
-        1	::celem2inv::a
-        2	::celem2inv::b
-        3	::celem2inv::_o
+        1	::celem2inv::_o
+        2	::celem2inv::a
+        3	::celem2inv::b
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+
@@ -389,13 +389,13 @@ In namespace "", we have: {
         a & b -> _o-
         ~a | ~b -> _o+
       footprint: {
-        bool^0 _o (instantiated) = ::nand2::_o (3) 
-        bool^0 a (instantiated) = ::nand2::a (1) 
-        bool^0 b (instantiated) = ::nand2::b (2) 
+        bool^0 _o (instantiated) = ::nand2::_o (1) 
+        bool^0 a (instantiated) = ::nand2::a (2) 
+        bool^0 b (instantiated) = ::nand2::b (3) 
         bool instance pool:
-        1	::nand2::a
-        2	::nand2::b
-        3	::nand2::_o
+        1	::nand2::_o
+        2	::nand2::a
+        3	::nand2::b
         resolved prs:
         a & b -> _o-
         ~a | ~b -> _o+
@@ -446,94 +446,94 @@ In namespace "", we have: {
         nand2<> __la__
         __la__ = la;
       footprint: {
-        process celem2inv<>^0 l0 (instantiated) = ::wchb_e1of2::l0 (4) (
-          bool^0 a (instantiated) = ::wchb_e1of2::L.d[0] (1) 
-          bool^0 b (instantiated) = ::wchb_e1of2::R.e (6) 
-          bool^0 _o (instantiated) = ::wchb_e1of2::r0.a (7) 
+        process celem2inv<>^0 l0 (instantiated) = ::wchb_e1of2::l0 (1) (
+          bool^0 a (instantiated) = ::wchb_e1of2::l0.a (1) 
+          bool^0 b (instantiated) = ::wchb_e1of2::__l1__.b (2) 
+          bool^0 _o (instantiated) = ::wchb_e1of2::__la__.a (3) 
         )
-        process celem2inv<>^0 l1 (instantiated) = ::wchb_e1of2::__l1__ (7) (
-          bool^0 a (instantiated) = ::wchb_e1of2::L.d[1] (2) 
-          bool^0 b (instantiated) = ::wchb_e1of2::l0.b (6) 
-          bool^0 _o (instantiated) = ::wchb_e1of2::r1.a (8) 
+        process celem2inv<>^0 l1 (instantiated) = ::wchb_e1of2::l1 (2) (
+          bool^0 a (instantiated) = ::wchb_e1of2::__l1__.a (5) 
+          bool^0 b (instantiated) = ::wchb_e1of2::__l1__.b (2) 
+          bool^0 _o (instantiated) = ::wchb_e1of2::__la__.b (4) 
         )
         bool^1 _r
           unrolled indices: {
-            0 = ::wchb_e1of2::la.a (7) 
-            1 = ::wchb_e1of2::la.b (8) 
+            0 = ::wchb_e1of2::__la__.a (3) 
+            1 = ::wchb_e1of2::__la__.b (4) 
           }
-        process celem2inv<>^0 __l1__ (instantiated) = ::wchb_e1of2::l1 (7) (
-          bool^0 a (instantiated) = ::wchb_e1of2::__l1__.a (2) 
-          bool^0 b (instantiated) = ::wchb_e1of2::__l1__.b (6) 
-          bool^0 _o (instantiated) = ::wchb_e1of2::__l1__._o (8) 
+        process celem2inv<>^0 __l1__ (instantiated) = ::wchb_e1of2::l1 (2) (
+          bool^0 a (instantiated) = ::wchb_e1of2::__l1__.a (5) 
+          bool^0 b (instantiated) = ::wchb_e1of2::__l1__.b (2) 
+          bool^0 _o (instantiated) = ::wchb_e1of2::__la__.b (4) 
         )
-        process inv<>^0 r0 (instantiated) = ::wchb_e1of2::__r0__ (3) (
-          bool^0 a (instantiated) = ::wchb_e1of2::_r[0] (7) 
-          bool^0 b (instantiated) = ::wchb_e1of2::R.d[0] (4) 
+        process inv<>^0 r0 (instantiated) = ::wchb_e1of2::r0 (3) (
+          bool^0 a (instantiated) = ::wchb_e1of2::__la__.a (3) 
+          bool^0 b (instantiated) = ::wchb_e1of2::__r0__.b (6) 
         )
-        process inv<>^0 r1 (instantiated) = ::wchb_e1of2::r1 (6) (
-          bool^0 a (instantiated) = ::wchb_e1of2::_r[1] (8) 
-          bool^0 b (instantiated) = ::wchb_e1of2::R.d[1] (5) 
+        process inv<>^0 r1 (instantiated) = ::wchb_e1of2::r1 (4) (
+          bool^0 a (instantiated) = ::wchb_e1of2::__la__.b (4) 
+          bool^0 b (instantiated) = ::wchb_e1of2::r1.b (7) 
         )
-        process nand2<>^0 la (instantiated) = ::wchb_e1of2::__la__ (5) (
-          bool^0 a (instantiated) = ::wchb_e1of2::l0._o (7) 
-          bool^0 b (instantiated) = ::wchb_e1of2::l1._o (8) 
-          bool^0 _o (instantiated) = ::wchb_e1of2::re.a (9) 
+        process nand2<>^0 la (instantiated) = ::wchb_e1of2::la (5) (
+          bool^0 a (instantiated) = ::wchb_e1of2::__la__.a (3) 
+          bool^0 b (instantiated) = ::wchb_e1of2::__la__.b (4) 
+          bool^0 _o (instantiated) = ::wchb_e1of2::__la__._o (8) 
         )
         process nand2<>^0 __la__ (instantiated) = ::wchb_e1of2::la (5) (
-          bool^0 a (instantiated) = ::wchb_e1of2::__la__.a (7) 
-          bool^0 b (instantiated) = ::wchb_e1of2::__la__.b (8) 
-          bool^0 _o (instantiated) = ::wchb_e1of2::__la__._o (9) 
+          bool^0 a (instantiated) = ::wchb_e1of2::__la__.a (3) 
+          bool^0 b (instantiated) = ::wchb_e1of2::__la__.b (4) 
+          bool^0 _o (instantiated) = ::wchb_e1of2::__la__._o (8) 
         )
-        process e1of2<>^0 L (instantiated) = ::wchb_e1of2::L (1) (
+        process e1of2<>^0 L (instantiated) = ::wchb_e1of2::L (6) (
           bool^1 d
             unrolled indices: {
               0 = ::wchb_e1of2::l0.a (1) 
-              1 = ::wchb_e1of2::l1.a (2) 
+              1 = ::wchb_e1of2::__l1__.a (5) 
             }
-          bool^0 e (instantiated) = ::wchb_e1of2::re.b (3) 
+          bool^0 e (instantiated) = ::wchb_e1of2::re.b (9) 
         )
-        process e1of2<>^0 R (instantiated) = ::wchb_e1of2::R (2) (
+        process e1of2<>^0 R (instantiated) = ::wchb_e1of2::R (7) (
           bool^1 d
             unrolled indices: {
-              0 = ::wchb_e1of2::r0.b (4) 
-              1 = ::wchb_e1of2::r1.b (5) 
+              0 = ::wchb_e1of2::__r0__.b (6) 
+              1 = ::wchb_e1of2::r1.b (7) 
             }
-          bool^0 e (instantiated) = ::wchb_e1of2::l1.b (6) 
+          bool^0 e (instantiated) = ::wchb_e1of2::__l1__.b (2) 
         )
         process inv<>^0 re (instantiated) = ::wchb_e1of2::re (8) (
-          bool^0 a (instantiated) = ::wchb_e1of2::rv (9) 
-          bool^0 b (instantiated) = ::wchb_e1of2::L.e (3) 
+          bool^0 a (instantiated) = ::wchb_e1of2::__la__._o (8) 
+          bool^0 b (instantiated) = ::wchb_e1of2::re.b (9) 
         )
-        bool^0 rv (instantiated) = ::wchb_e1of2::la._o (9) 
+        bool^0 rv (instantiated) = ::wchb_e1of2::__la__._o (8) 
         process inv<>^0 __r0__ (instantiated) = ::wchb_e1of2::r0 (3) (
-          bool^0 a (instantiated) = ::wchb_e1of2::__r0__.a (7) 
-          bool^0 b (instantiated) = ::wchb_e1of2::__r0__.b (4) 
+          bool^0 a (instantiated) = ::wchb_e1of2::__la__.a (3) 
+          bool^0 b (instantiated) = ::wchb_e1of2::__r0__.b (6) 
         )
         process instance pool:
-        1	::wchb_e1of2::L
-        2	::wchb_e1of2::R
+        1	::wchb_e1of2::l0
+        2	::wchb_e1of2::l1
         3	::wchb_e1of2::r0
-        4	::wchb_e1of2::l0
+        4	::wchb_e1of2::r1
         5	::wchb_e1of2::la
-        6	::wchb_e1of2::r1
-        7	::wchb_e1of2::l1
+        6	::wchb_e1of2::L
+        7	::wchb_e1of2::R
         8	::wchb_e1of2::re
         bool instance pool:
         1	::wchb_e1of2::l0.a
-        2	::wchb_e1of2::l1.a
-        3	::wchb_e1of2::L.e
-        4	::wchb_e1of2::r0.b
-        5	::wchb_e1of2::r1.b
-        6	::wchb_e1of2::l0.b
-        7	::wchb_e1of2::_r[0]
-        8	::wchb_e1of2::_r[1]
-        9	::wchb_e1of2::rv
+        2	::wchb_e1of2::l0.b
+        3	::wchb_e1of2::_r[0]
+        4	::wchb_e1of2::_r[1]
+        5	::wchb_e1of2::l1.a
+        6	::wchb_e1of2::r0.b
+        7	::wchb_e1of2::r1.b
+        8	::wchb_e1of2::rv
+        9	::wchb_e1of2::L.e
       }
       }
 
   Instances:
-    B = process wchb_e1of2<>^0 B (instantiated) = ::b (1) (
-      process e1of2<>^0 L (instantiated) = ::B.L (2) (
+    B = process wchb_e1of2<>^0 B (instantiated) = ::B (1) (
+      process e1of2<>^0 L (instantiated) = ::b.L (2) (
         bool^1 d
           unrolled indices: {
             0 = ::B.L.d[0] (1) 
@@ -541,7 +541,7 @@ In namespace "", we have: {
           }
         bool^0 e (instantiated) = ::B.L.e (3) 
       )
-      process e1of2<>^0 R (instantiated) = ::B.R (3) (
+      process e1of2<>^0 R (instantiated) = ::b.R (3) (
         bool^1 d
           unrolled indices: {
             0 = ::B.R.d[0] (4) 
@@ -553,35 +553,35 @@ In namespace "", we have: {
     L = process e1of2<>^0 L (instantiated) = ::b.L (2) (
       bool^1 d
         unrolled indices: {
-          0 = ::L.d[0] (1) 
-          1 = ::L.d[1] (2) 
+          0 = ::B.L.d[0] (1) 
+          1 = ::B.L.d[1] (2) 
         }
-      bool^0 e (instantiated) = ::L.e (3) 
+      bool^0 e (instantiated) = ::B.L.e (3) 
     )
     R = process e1of2<>^0 R (instantiated) = ::b.R (3) (
       bool^1 d
         unrolled indices: {
-          0 = ::R.d[0] (4) 
-          1 = ::R.d[1] (5) 
+          0 = ::B.R.d[0] (4) 
+          1 = ::B.R.d[1] (5) 
         }
-      bool^0 e (instantiated) = ::R.e (6) 
+      bool^0 e (instantiated) = ::B.R.e (6) 
     )
     b = process wchb_e1of2<>^0 b (instantiated) = ::B (1) (
-      process e1of2<>^0 L (instantiated) = ::L (2) (
+      process e1of2<>^0 L (instantiated) = ::b.L (2) (
         bool^1 d
           unrolled indices: {
-            0 = ::b.L.d[0] (1) 
-            1 = ::b.L.d[1] (2) 
+            0 = ::B.L.d[0] (1) 
+            1 = ::B.L.d[1] (2) 
           }
-        bool^0 e (instantiated) = ::b.L.e (3) 
+        bool^0 e (instantiated) = ::B.L.e (3) 
       )
-      process e1of2<>^0 R (instantiated) = ::R (3) (
+      process e1of2<>^0 R (instantiated) = ::b.R (3) (
         bool^1 d
           unrolled indices: {
-            0 = ::b.R.d[0] (4) 
-            1 = ::b.R.d[1] (5) 
+            0 = ::B.R.d[0] (4) 
+            1 = ::B.R.d[1] (5) 
           }
-        bool^0 e (instantiated) = ::b.R.e (6) 
+        bool^0 e (instantiated) = ::B.R.e (6) 
       )
     )
 }

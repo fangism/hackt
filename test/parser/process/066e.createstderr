@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	228
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -52,7 +52,7 @@ In namespace "", we have: {
       footprint: {
         process foo<>^0 x (instantiated) = ::bar::x (1) (
           bool^0 a (instantiated) = ::bar::x.b (1) 
-          bool^0 b (instantiated) = ::bar::x.a (1) 
+          bool^0 b (instantiated) = ::bar::x.b (1) 
         )
         process instance pool:
         1	::bar::x
@@ -77,7 +77,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b (1) 
-        bool^0 b (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::b (1) 
         bool instance pool:
         1	::foo::a
         bool port aliases:
@@ -89,7 +89,7 @@ In namespace "", we have: {
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
       process foo<>^0 x (instantiated) = ::poo.x (2) (
         bool^0 a (instantiated) = ::poo.x.b (1) 
-        bool^0 b (instantiated) = ::poo.x.a (1) 
+        bool^0 b (instantiated) = ::poo.x.b (1) 
       )
     )
 }

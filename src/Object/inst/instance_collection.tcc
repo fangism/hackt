@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.21.4.3 2006/03/12 21:39:30 fang Exp $
+	$Id: instance_collection.tcc,v 1.21.4.4 2006/03/14 01:32:55 fang Exp $
 	TODO: trim includes
  */
 
@@ -650,6 +650,27 @@ INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SEPARATE_ALLOCATE_SUBPASS
+/**
+	Assigns local instance ids to all aliases. 
+	\pre all aliases have been played (internal and external)
+		and union-find structures are final.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_ARRAY_CLASS::allocate_local_instance_ids(footprint& f) {
+	STACKTRACE_VERBOSE;
+	iterator i(collection.begin());
+	const iterator e(collection.end());
+	for ( ; i!=e; i++) {
+		if (!const_cast<element_type&>(*i).assign_local_instance_id(f))
+			return good_bool(false);
+	}
+	return good_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Like create_unique_state except it operates on the entire collection.
@@ -1005,7 +1026,7 @@ INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::create_dependent_types(void) const {
+INSTANCE_ARRAY_CLASS::create_dependent_types(void) {
 	STACKTRACE_VERBOSE;
 	iterator i(this->collection.begin());
 	const iterator e(this->collection.end());
@@ -1462,6 +1483,22 @@ INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SEPARATE_ALLOCATE_SUBPASS
+/**
+	Assigns local instance ids to all aliases. 
+	\pre all aliases have been played (internal and external)
+		and union-find structures are final.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+good_bool
+INSTANCE_SCALAR_CLASS::allocate_local_instance_ids(footprint& f) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(this->the_instance.valid());
+	return good_bool(this->the_instance.assign_local_instance_id(f) != 0);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Same as create_unique_state.
@@ -1638,7 +1675,7 @@ INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::create_dependent_types(void) const {
+INSTANCE_SCALAR_CLASS::create_dependent_types(void) {
 	STACKTRACE_VERBOSE;
 if (this->has_relaxed_type()) {
 	if (!instance_type::create_dependent_types(this->the_instance).good) {

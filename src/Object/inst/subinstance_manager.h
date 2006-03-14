@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.11.12.2 2006/03/12 21:39:31 fang Exp $
+	$Id: subinstance_manager.h,v 1.11.12.3 2006/03/14 01:32:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -117,10 +117,10 @@ public:
 	connect_port_aliases_recursive(this_type&);
 #endif
 
-#if !SEPARATE_ALLOCATE_SUBPASS
 	void
 	allocate(footprint&);
 
+#if !SEPARATE_ALLOCATE_SUBPASS
 	static
 	good_bool
 	synchronize_port_actuals(this_type&, this_type&);

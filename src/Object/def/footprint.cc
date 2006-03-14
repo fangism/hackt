@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.13.12.1 2006/03/09 05:50:57 fang Exp $
+	$Id: footprint.cc,v 1.13.12.2 2006/03/14 01:32:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -406,30 +406,51 @@ footprint::clear_instance_collection_map(void) {
 	(called by process_definition::create)
  */
 good_bool
-footprint::create_dependent_types(void) const {
+footprint::create_dependent_types(void) {
 	STACKTRACE_VERBOSE;
-	const const_instance_map_iterator
+	const instance_map_iterator
 		b(instance_collection_map.begin()),
 		e(instance_collection_map.end());
-	const_instance_map_iterator i(b);
-	for ( ; i!=e; i++) {
-		const count_ptr<const physical_instance_collection>
-			pic(i->second.is_a<const physical_instance_collection>());
+#if 0 && ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "instance_collection_map.size() = " <<
+		instance_collection_map.size() << endl;
+#endif
+{
+	// Apple's g++-3.3 -O2 breaks this!
+	// instance_map_iterator i(b);
+	instance_map_iterator i(instance_collection_map.begin());
+	for ( ; i!=e; ++i) {
+		const count_ptr<physical_instance_collection>
+			pic(i->second.is_a<physical_instance_collection>());
 		// not only does this create dependent types, but it also
 		// replays all internal aliases as well.
 		if (pic && !pic->create_dependent_types().good) {
 			return good_bool(false);
 		}
 	}
+}
 #if ENABLE_STACKTRACE
 	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl, 
 		dump_flags::default_value) << endl;
 #endif
 #if SEPARATE_ALLOCATE_SUBPASS
+{
 	// having replayed all necessary aliases, it is safe and correct
 	// to allocate-assign local instance_id's and evaluate_scope_aliases
 	// we assign ID's based on overall union-find structure.
-	// evaluate_scope_aliases();
+	// instance_map_iterator i(b);
+	instance_map_iterator i(instance_collection_map.begin());
+	for ( ; i!=e; ++i) {
+		const count_ptr<physical_instance_collection>
+			pic(i->second.is_a<physical_instance_collection>());
+		if (pic && !pic->allocate_local_instance_ids(*this).good) {
+			// have error message already?
+			return good_bool(false);
+		}
+	}
+}
+	evaluate_scope_aliases();
+	mark_created();
 #endif
 	return good_bool(true);
 }

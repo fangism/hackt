@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.14.12.2 2006/03/12 21:39:31 fang Exp $
+	$Id: subinstance_manager.cc,v 1.14.12.3 2006/03/14 01:32:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -278,9 +278,9 @@ subinstance_manager::relink_super_instance_alias(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	Allocates each port entirely.  
+	TODO: give this a return value for error handling.  
  */
 void
 subinstance_manager::allocate(footprint& f) {
@@ -289,11 +289,19 @@ subinstance_manager::allocate(footprint& f) {
 	const iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
+#if SEPARATE_ALLOCATE_SUBPASS
+		if (!(*i)->allocate_local_instance_ids(f).good) {
+			cerr << "Error allocating local instance IDs" << endl;
+			THROW_EXIT;
+		}
+#else
 		(*i)->allocate_state(f);	// expands the whole collection
+#endif
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !SEPARATE_ALLOCATE_SUBPASS
 /**
 	TODO: clean up the const-hack.  
  */

@@ -22,34 +22,34 @@ Persistent Object Manager text dump:
 	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	28
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	cnstpic_	0	#HEAD#	#TAIL#	28
+	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	50	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
 	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
@@ -133,18 +133,18 @@ In namespace "", we have: {
       }
 
   Instances:
-    p = process foo<1>^0 p (instantiated) = ::w.a (2) 
-    q = process foo<2>^0 q (instantiated) = ::w.b (3) 
-    r = process foo<1>^0 r (instantiated) = ::p (2) 
-    w = process bar<>^0 w (instantiated) = ::w (1) (
-      process foo<1>^0 a (instantiated) = ::r (2) 
-      process foo<2>^0 b (instantiated) = ::q (3) 
+    p = process foo<1>^0 p (instantiated) = ::w.a (1) 
+    q = process foo<2>^0 q (instantiated) = ::w.b (2) 
+    r = process foo<1>^0 r (instantiated) = ::w.a (1) 
+    w = process bar<>^0 w (instantiated) = ::w (3) (
+      process foo<1>^0 a (instantiated) = ::w.a (1) 
+      process foo<2>^0 b (instantiated) = ::w.b (2) 
     )
 }
 
 Created state:
 process instance pool:
-1	::w
-2	::p
-3	::q
+1	::p
+2	::q
+3	::w
 

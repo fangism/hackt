@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	65
+	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	69
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	22	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	22	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	23	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -77,11 +77,11 @@ In namespace "", we have: {
         1 = ::none.b[1] (2) 
       }
     none = process bar<>^0 none (instantiated) = ::none (1) (
-      bool^0 a (instantiated) = ::foo[0] (1) 
+      bool^0 a (instantiated) = ::none.b[0] (1) 
       bool^1 b
         unrolled indices: {
-          0 = ::none.a (1) 
-          1 = ::foo[1] (2) 
+          0 = ::none.b[0] (1) 
+          1 = ::none.b[1] (2) 
         }
     )
 }

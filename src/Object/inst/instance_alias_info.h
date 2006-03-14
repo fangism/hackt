@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.13.4.2 2006/03/10 23:26:25 fang Exp $
+	$Id: instance_alias_info.h,v 1.13.4.3 2006/03/14 01:32:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -216,7 +216,10 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
-#if !SEPARATE_ALLOCATE_SUBPASS
+#if SEPARATE_ALLOCATE_SUBPASS
+	size_t
+	assign_local_instance_id(footprint&);
+#else
 	// this implements the virtual function 
 	// from substructure_alias_base<true>
 	// really shouldn't be const...

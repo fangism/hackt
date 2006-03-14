@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.14.4.3 2006/03/12 21:39:30 fang Exp $
+	$Id: instance_collection.h,v 1.14.4.4 2006/03/14 01:32:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -231,7 +231,10 @@ virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 
 virtual	CREATE_UNIQUE_STATE_PROTO = 0;
 
-#if !SEPARATE_ALLOCATE_SUBPASS
+protected:
+#if SEPARATE_ALLOCATE_SUBPASS
+virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
+#else
 virtual	good_bool
 	allocate_state(footprint&) = 0;
 
@@ -245,6 +248,7 @@ virtual	void
 virtual	good_bool
 	synchronize_actuals(physical_instance_collection&) = 0;
 #endif
+public:
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -393,7 +397,9 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
-#if !SEPARATE_ALLOCATE_SUBPASS
+#if SEPARATE_ALLOCATE_SUBPASS
+	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
+#else
 	good_bool
 	allocate_state(footprint&);
 
@@ -520,7 +526,9 @@ public:
 
 	CREATE_UNIQUE_STATE_PROTO;
 
-#if !SEPARATE_ALLOCATE_SUBPASS
+#if SEPARATE_ALLOCATE_SUBPASS
+	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
+#else
 	good_bool
 	allocate_state(footprint&);
 

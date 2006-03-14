@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.17.4.2 2006/03/10 23:25:36 fang Exp $
+ 	$Id: definition.cc,v 1.17.4.3 2006/03/14 01:32:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2197,6 +2197,7 @@ if (defined) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	definition copied verbatim from process_definition::create_complete_type
+	TODO: create send/recv CHP after creating dependent types.  
  */
 good_bool
 user_def_datatype::create_complete_type(
@@ -2230,9 +2231,7 @@ if (defined) {
 			// error message
 			return good_bool(false);
 		}
-#if SEPARATE_ALLOCATE_SUBPASS
-		FINISH_ME(Fang);
-#else
+#if !SEPARATE_ALLOCATE_SUBPASS
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->evaluate_scope_aliases();
 			// has no PRS
@@ -3000,6 +2999,7 @@ if (defined) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Create the definition footprint for a complete process_type.  
+	TODO: unroll CHP body.
  */
 good_bool
 process_definition::create_complete_type(
@@ -3034,7 +3034,18 @@ if (defined) {
 			return good_bool(false);
 		}
 #if SEPARATE_ALLOCATE_SUBPASS
-		FINISH_ME(Fang);
+		// after all aliases have been successfully assigned local IDs
+		// then process the PRS and CHP bodies
+		if (!prs.unroll(c, f->get_pool<bool_tag>(), 
+				f->get_prs_footprint()).good) {
+			// already have error message
+			return good_bool(false);
+		}
+		if (!spec.unroll(c, f->get_pool<bool_tag>(), 
+				f->get_spec_footprint()).good) {
+			// already have error message
+			return good_bool(false);
+		}
 #else
 		if (sequential_scope::create_unique(c, *f).good) {
 			f->evaluate_scope_aliases();

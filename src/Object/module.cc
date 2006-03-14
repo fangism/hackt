@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.14.12.1 2006/03/09 05:50:27 fang Exp $
+ 	$Id: module.cc,v 1.14.12.2 2006/03/14 01:32:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -228,18 +228,30 @@ module::unroll_module(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Creates placeholder footprints depedent types bottom up.
+	This replays internal aliases from the leaf-most types up.  
+	This routine is modeled after footprint::create_dependent_types.  
+	Need to figure out why we can't just use that...
  */
 good_bool
 module::create_dependent_types(void) {
+#if 0 && SEPARATE_ALLOCATE_SUBPASS
+	// enabling this requires changes in the end of ::create_unique
+	const top_level_footprint_importer foo(*this);
+	return _footprint.create_dependent_types();
+#else
 	typedef list<never_ptr<physical_instance_collection> >
 			collection_list_type;
 	typedef collection_list_type::const_iterator
 			const_collection_iterator;
+	typedef collection_list_type::iterator
+			collection_iterator;
 	STACKTRACE_VERBOSE;
 	collection_list_type collections;
 	collect(collections);
-	const_collection_iterator i(collections.begin());
-	const const_collection_iterator e(collections.end());
+{
+	const const_collection_iterator
+		b(collections.begin()), e(collections.end());
+	const_collection_iterator i(b);
 	for ( ; i!=e; i++) {
 		if (!(*i)->create_dependent_types().good) {
 			// error message
@@ -247,7 +259,24 @@ module::create_dependent_types(void) {
 			return good_bool(false);
 		}
 	}
+}
+#if SEPARATE_ALLOCATE_SUBPASS
+{
+	// after replaying internal aliases, we can now assign instance_id's
+	const collection_iterator
+		b(collections.begin()), e(collections.end());
+	collection_iterator i(b);
+	for ( ; i!=e; i++) {
+		if (!(*i)->allocate_local_instance_ids(_footprint).good) {
+			// error message
+			cerr << "Error during create_unique." << endl;
+			return good_bool(false);
+		}
+	}
+}
+#endif
 	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -266,13 +295,12 @@ module::create_unique(void) {
 	if (!is_created()) {
 		STACKTRACE("not already created, creating...");
 		// this replays all internal aliases recursively
+		// and assigns local instance IDs
 		if (!create_dependent_types().good) {
 			// alraedy have error mesage
 			return good_bool(false);
 		}
-#if SEPARATE_ALLOCATE_SUBPASS
-		FINISH_ME(Fang);
-#else
+#if !SEPARATE_ALLOCATE_SUBPASS
 		const unroll_context c;	// empty top-level context
 		if (!sequential_scope::create_unique(c, _footprint).good) {
 			cerr << "Error during create_unique." << endl;

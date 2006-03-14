@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.7 2006/02/05 19:45:08 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.7.12.1 2006/03/14 01:32:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -281,6 +281,8 @@ port_alias_tracker_base<Tag>::__replay_aliases(substructure_alias& s) const {
 /**
 	Re-sets the back references of the unique aliases to
 	be the 'shortest; for canonicalization.  
+	TODO: in addition to setting the back-reference, 
+		also restructure the union-finds.  
  */
 template <class Tag>
 void
