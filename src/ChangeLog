@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-06:
+	  Finally turned off INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST hack.
+	  Enabled all remaining test cases, updated remaining expect-outputs.
+	  Next: Clean-up and excising tons of code marked by switches
+		in "Object/devel_switches.h".
+	  Status: after several stages of cutting, branch will be ready.  
+
+
 2006-03-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-19-connect-02-05:

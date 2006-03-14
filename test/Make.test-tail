@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.18.8.3 2006/03/14 06:31:16 fang Exp $
+#	$Id: Make.test-tail,v 1.18.8.4 2006/03/14 19:57:39 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -273,12 +273,10 @@ TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \
 	$(HACKT_OBJ_TEST_SUBJECTS:=.hacktobjtest) \
 	$(HACKT_UNROLL_TEST_SUBJECTS:=.hacktunrolltest) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
-	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest)
-
-# temporarily disabled while developing on this branch
-#	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
-#	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
-#	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) 
+	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
+	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
+	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) 
 
 # not yet...
 #	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatefromhacotest)

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.9.4.2 2006/03/12 21:39:29 fang Exp $
+	$Id: devel_switches.h,v 1.9.4.3 2006/03/14 19:57:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -35,7 +35,7 @@
 	fix a critical bug.  
 	Goal: 0
  */
-#define INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST       1
+#define INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST       0
 
 /**
 	Preparing to make major cuts, carving out ring_node structures...
@@ -65,15 +65,6 @@
 	Goal: 1
  */
 #define	RECURSIVE_PORT_ALIAS			(1 && !USE_ALIAS_RING_NODES)
-
-/**
-	Rework the create phase to NOT use the same traversal as unrolling.
-	Instead, walk over all instance collections in each scope.
-	For each alias in each collection, replay internal aliases.  
-	This should result in a more efficient create pass.  
-	Goal: 1
- */
-#define	INSTANCE_BASED_CREATE_PHASE			1
 
 //=============================================================================
 
