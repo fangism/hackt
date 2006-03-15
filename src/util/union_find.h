@@ -1,7 +1,7 @@
 /**
 	\file "util/union_find.h"
 	Classic union-find data structure.
-	$Id: union_find.h,v 1.3.2.3 2006/03/14 06:31:16 fang Exp $
+	$Id: union_find.h,v 1.3.2.4 2006/03/15 00:43:01 fang Exp $
  */
 
 #ifndef	__UTIL_UNION_FIND_H__
@@ -279,6 +279,9 @@ public:
  */
 template <class T>
 class union_find : protected union_find_base {
+template <class, class, class>
+friend class union_find_pseudo_iterator;
+
 	typedef	union_find<T>		this_type;
 protected:
 	typedef	union_find_base		parent_type;
@@ -451,6 +454,9 @@ public:
  */
 template <class T>
 class union_find_derived : protected union_find_base, public T {
+template <class, class, class>
+friend class union_find_derived_pseudo_iterator;
+
 	typedef	union_find_derived<T>	this_type;
 protected:
 	typedef	union_find_base		parent_type;

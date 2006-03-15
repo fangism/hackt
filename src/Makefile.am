@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.105.2.2 2006/03/10 23:24:18 fang Exp $
+#	$Id: Makefile.am,v 1.105.2.3 2006/03/15 00:42:59 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -546,12 +546,14 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/cflat_options.h \
 	main/compile_options.h
 
-COMMON_FILES = \
-	common/ICE.cc \
+COMMON_H_FILES = 
 	common/ICE.h \
-	common/TODO.cc \
 	common/TODO.h \
 	common/devel_switches.h
+
+COMMON_FILES = $(COMMON_H_FILES) \
+	common/ICE.cc \
+	common/TODO.cc
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(HACKT_PARSE_ROOT)-real.cc
@@ -626,6 +628,7 @@ libhacktparsers_la_SOURCES = \
 
 ALL_HEADER_FILES += \
 	config.h \
+	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \

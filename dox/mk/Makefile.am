@@ -1,5 +1,5 @@
 # "dox/mk/Makefile.am"
-#	$Id: Makefile.am,v 1.3 2006/02/05 03:26:06 fang Exp $
+#	$Id: Makefile.am,v 1.3.12.1 2006/03/15 00:42:57 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -19,7 +19,7 @@ AUTO_IGNORE += local.cvsignore
 DISTCLEANFILES += local.cvsignore
 
 local.cvsignore: $(srcdir)/../local.cvsignore
-	$(CP) $< $@
+	$(CP) $? $@
 
 # This doesn't quite work because VPATH building picks up the srcdir's:
 # maketexdepend.tex:
@@ -32,7 +32,7 @@ phony_mktexdep:
 	@if test ! -f $(mktexdep) ; then $(CP) $(srcdir)/$(mktexdep) $(mktexdep) ; fi
 
 distclean-local:
-	if test "$(srcdir)" != "." ; then $(RM) maketexdepend.tex ; fi
+	if test "$(srcdir)" != "." ; then $(RM) $(mktexdep) ; fi
 
 include $(top_srcdir)/Make.global
 

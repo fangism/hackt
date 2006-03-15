@@ -1,0 +1,20 @@
+#!@SH_PATH@
+
+hash_map_iterator_O2_bug_test
+case $? in
+	0) break ;;
+	*)
+@ECHO@ "WARNING: I have detected a known compiler bug with your configuration!"
+@ECHO@ "    Your compiler and flags are producing WRONG-CODE on with the test case:"
+@ECHO@ "	hash_map_iterator_O2_bug.cc"
+@ECHO@ "    This is known to be a problem with:"
+@ECHO@ "	apple-g++-3.3 (builds 1640, 1819) at -O2 optimization"
+@ECHO@ "    You are fortunate that I know about this problem and have worked around"
+@ECHO@ "    it in the revelant source.  You are welcome to continue using this"
+@ECHO@ "    configuration, but be forewarned that in the future, support for this"
+@ECHO@ "    particular configuration may be dropped.  I highly recommend upgrading"
+@ECHO@ "    your compiler to avoid instances of this bug in the future."
+@ECHO@ "    Thank you, and have a nice day.  --- fangism"
+	break ;;
+esac
+

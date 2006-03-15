@@ -5,6 +5,13 @@
 
 2006-03-14	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-77-19-connect-02-09:
+	  Maintainence.
+		Added hash_map_iterator_O2_bug_test.cc to util/test.
+		distcheck-ed with g++-3.3, VPATH built/checked against g++-4.1
+	  Status: ready to merge to trunk.
+
+
 	* HACKT-00-01-04-main-00-77-19-connect-02-08:
 	  Cut 2000 LoC of switches, and cleaned "Object/devel_switches.h".
 	  No more ring-nodes, and dirty instance ID allocation hacks, 
