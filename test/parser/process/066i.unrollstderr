@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -88,7 +88,7 @@ In namespace "", we have: {
         )
         process foo<>^0 y (instantiated) = ::bar::y (
           bool^0 a (instantiated) = ::bar::y.a 
-          bool^0 b (instantiated) = ::bar::x.a 
+          bool^0 b (instantiated) = ::bar::y.b 
         )
       }
       }

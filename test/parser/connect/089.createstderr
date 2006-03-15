@@ -16,12 +16,12 @@ Persistent Object Manager text dump:
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	proccoll	1	#HEAD#	#TAIL#	85
+	15	##ADDR##	proccoll	1	#HEAD#	#TAIL#	77
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	proccoll	1	#HEAD#	#TAIL#	81
+	20	##ADDR##	proccoll	1	#HEAD#	#TAIL#	85
 	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
@@ -64,11 +64,11 @@ In namespace "", we have: {
         0 = ::poo[1] (1) 
         1 = ::bar[1] (2) 
       }
-    ick = process foo<1>^0 ick (instantiated) = ::bar[0] (1) 
+    ick = process foo<1>^0 ick (instantiated) = ::poo[1] (1) 
     poo = process foo<1>^1 poo
       unrolled indices: {
         0 = ::poo[0] (3) 
-        1 = ::ick (1) 
+        1 = ::poo[1] (1) 
       }
 }
 

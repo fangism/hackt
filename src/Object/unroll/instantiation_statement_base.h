@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.8 2006/02/21 04:48:43 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.9 2006/03/15 04:38:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -104,8 +104,6 @@ virtual	good_bool
 	case: won't happen?  instantiation inside definition called
 ***/
 	// unroll (context?)
-
-virtual	CREATE_UNIQUE_PROTO = 0;
 
 protected:
 

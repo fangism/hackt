@@ -3,6 +3,134 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-merged-connect-02-09:
+	  Major branch merge.
+	  Completely reworked unroll/create passes using new union_find
+		data structure and algorithms in place of ring_nodes.
+		The old implementation was hacked and error-prone, as proven
+		several times by the bug reports, whereas the new 
+		implementation is clean and provably correct.
+		Most regression tests' expected output were updated.
+	  Summary: using union-finds to maintain alias information, 
+		unroll pass now recursively aliases public ports of
+			substructured instances,
+		create-pass uses a different traversal (unlike unroll)
+			to replay internal port aliases and a second pass
+			to allocate unique local instance IDs.
+		union-finds are path flattened (compressed) during the 
+			ID assignment phase and reflattened if a new
+			canonical alias is chosen within the set.  
+		Some test-cases involving relaxed actuals were disabled
+			because they too need to be reworked correctly.
+			We punt that for another day.  
+
+
+2006-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-09:
+	  Maintainence.
+		Added hash_map_iterator_O2_bug_test.cc to util/test.
+		distcheck-ed with g++-3.3, VPATH built/checked against g++-4.1
+	  Status: ready to merge to trunk.
+
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-08:
+	  Cut 2000 LoC of switches, and cleaned "Object/devel_switches.h".
+	  No more ring-nodes, and dirty instance ID allocation hacks, 
+		just clean, provably correct code for the create-pass.  
+	  Status: only cleanup, portability, and packaging checking left
+		before branch is merged to trunk.  
+
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-07:
+	  Cut 500 LoC of INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST hack.
+
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-06:
+	  Finally turned off INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST hack.
+	  Enabled all remaining test cases, updated remaining expect-outputs.
+	  Next: Clean-up and excising tons of code marked by switches
+		in "Object/devel_switches.h".
+	  Status: after several stages of cutting, branch will be ready.  
+
+
+2006-03-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-05:
+	  Reorganized module::create_dependent_types(), maintainability.  
+	  Added instance_alias_info::finalize_canonicalize() for the final
+		flattening of the alias-set to point to the canonical alias.
+	  port_alias_tracker: shortest_alias now performs union-find
+		reflattening after finding the most-favorable canonical alias.
+	  alloc-tests updated, except for a few which are really long.  
+		Total of 6 test differences remain: 2 unroll, 2 create, 2 alloc
+	  Next: disabling old instance_pool-realloc hack!
+
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-04:
+	  Enabled create-pass with this revision, assigning unique local IDs.
+		Updated create tests: mostly changes is ID numbers
+		and same updates from new unroll pass with union finds.  
+		A few tests left un-updated because they are large
+		and require more concentration to verify.  
+	  Implemeneted instance_alias_info::assign_local_instance_id, 
+		the new ID assignment pass, recursive to substructures.  
+	  footprint::create_dependent_types():
+		removed const-method qualifier.
+		In addition to replaying internal aliases and 
+		assigning local instance IDs, this now calls 
+		evaluate_scope_aliases() and mark_created() before returning.
+		Consider privatizing these two methods.  
+	  TODO: try simple version of module::create_dependent_types().  
+	  TODO: Update port_alias_tracker::__shorted_canonical_alias to
+		update the union-find structure, as well as back-reference.  
+
+
+2006-03-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-03:
+	  Enabled recursive port aliasing, so substructures' nodes are
+		also aliases top-down.  
+	  Manually hand-checked almost all unroll tests.  
+	  Saved connect/031,129 for later because they are too long...
+		Will update after create/alloc tests are enabled to 
+		aid in re-verification.  
+	  Next: create-pass for replaying internal aliases and 
+		allocating local instance_id's.  
+
+
+2006-03-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-02:
+	  Fixed typo buglet in new code (wrong alias assignment operator).
+	  Disabled debugging in sources.  
+	  Disabled tests: create, alloc, cflat-prsim (everything beyond unroll)
+	  Unroll-tests need to be re-verified by hand with new union-find
+		structure... a long, arduous task.  Most fail right now, 
+		due to these structural differences.  
+	  Note from previous log: there a distinction between unrolling
+		public ports (for the sake of public aliases) and unrolling
+		a complete type's internals.  
+	  TODO: New create pass for assigning unique IDs.  
+
+
+2006-03-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-01:
+	  Preliminary check-in of modifications for reworking connection
+		unrolling and footprint creation.  
+	  Status: compiles but expected to fail unrolling (all tests), 
+		debugging flags also turned on.
+	  Parts: replacing ring-node structures with union-finds.  
+		Replacing unroll-like pass for allocating instance_id's.
+	  TODO: figure out how to fix unrolling, whether or not private 
+		subinstances should be unrolled for complete_type unrolling.  
+		Issue: complete_type-unrolling needed for replaying
+		internal aliases.  
+
+
 2006-02-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-19:

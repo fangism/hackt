@@ -44,14 +44,14 @@ Persistent Object Manager text dump:
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
-	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	49	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -93,12 +93,12 @@ In namespace "", we have: {
           unrolled indices: {
             0 = ::lut::pbint[0] (1) (
               process pbit<>^0 pb (instantiated) = ::lut::pbint[0].pb (2) (
-                bool^0 t (instantiated) = ::lut::p[0].t (1) 
+                bool^0 t (instantiated) = ::lut::pbint[0].pb.t (1) 
               )
             )
             1 = ::lut::pbint[1] (3) (
               process pbit<>^0 pb (instantiated) = ::lut::pbint[1].pb (4) (
-                bool^0 t (instantiated) = ::lut::p[1].t (2) 
+                bool^0 t (instantiated) = ::lut::pbint[1].pb.t (2) 
               )
             )
           }

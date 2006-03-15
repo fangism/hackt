@@ -1,0 +1,13 @@
+// "060.hac" 
+// copy-modified from "037.hac"
+// should pass: type and dimensions match
+// for comparison, check the .unrolldump's produced from these sources
+
+int foo[3][4][5];
+int bar[4][5][2];
+
+int blah[4];
+foo[0][0][0..3] = blah;		// testing converse connection
+
+foo[0][0..3][0..4] = bar[0..3][0..4][0];
+

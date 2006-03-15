@@ -64,8 +64,8 @@ Persistent Object Manager text dump:
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	62	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	46
-	64	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	1942
+	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	64	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	1646
 	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	67	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -112,109 +112,109 @@ In namespace "", we have: {
       footprint collection: {
         <100> {
           pint^0 P value: ?
-          bool^0 composite (instantiated) = ::prime_array::x[0] 
+          bool^0 composite (instantiated) = ::prime_array::composite 
           bool^1 x
             unrolled indices: {
               0 = ::prime_array::x[1] 
-              1 = ::prime_array::x[4] 
+              1 = ::prime_array::composite 
               2 = ::prime_array::x[2] 
               3 = ::prime_array::x[3] 
-              4 = ::prime_array::x[6] 
+              4 = ::prime_array::composite 
               5 = ::prime_array::x[5] 
-              6 = ::prime_array::x[8] 
+              6 = ::prime_array::composite 
               7 = ::prime_array::x[7] 
-              8 = ::prime_array::x[10] 
-              9 = ::prime_array::x[15] 
-              10 = ::prime_array::x[12] 
+              8 = ::prime_array::composite 
+              9 = ::prime_array::composite 
+              10 = ::prime_array::composite 
               11 = ::prime_array::x[11] 
-              12 = ::prime_array::x[14] 
+              12 = ::prime_array::composite 
               13 = ::prime_array::x[13] 
-              14 = ::prime_array::x[16] 
-              15 = ::prime_array::x[21] 
-              16 = ::prime_array::x[18] 
+              14 = ::prime_array::composite 
+              15 = ::prime_array::composite 
+              16 = ::prime_array::composite 
               17 = ::prime_array::x[17] 
-              18 = ::prime_array::x[20] 
+              18 = ::prime_array::composite 
               19 = ::prime_array::x[19] 
-              20 = ::prime_array::x[22] 
-              21 = ::prime_array::x[27] 
-              22 = ::prime_array::x[24] 
+              20 = ::prime_array::composite 
+              21 = ::prime_array::composite 
+              22 = ::prime_array::composite 
               23 = ::prime_array::x[23] 
-              24 = ::prime_array::x[26] 
-              25 = ::prime_array::x[35] 
-              26 = ::prime_array::x[28] 
-              27 = ::prime_array::x[33] 
-              28 = ::prime_array::x[30] 
+              24 = ::prime_array::composite 
+              25 = ::prime_array::composite 
+              26 = ::prime_array::composite 
+              27 = ::prime_array::composite 
+              28 = ::prime_array::composite 
               29 = ::prime_array::x[29] 
-              30 = ::prime_array::x[32] 
+              30 = ::prime_array::composite 
               31 = ::prime_array::x[31] 
-              32 = ::prime_array::x[34] 
-              33 = ::prime_array::x[39] 
-              34 = ::prime_array::x[36] 
-              35 = ::prime_array::x[55] 
-              36 = ::prime_array::x[38] 
+              32 = ::prime_array::composite 
+              33 = ::prime_array::composite 
+              34 = ::prime_array::composite 
+              35 = ::prime_array::composite 
+              36 = ::prime_array::composite 
               37 = ::prime_array::x[37] 
-              38 = ::prime_array::x[40] 
-              39 = ::prime_array::x[45] 
-              40 = ::prime_array::x[42] 
+              38 = ::prime_array::composite 
+              39 = ::prime_array::composite 
+              40 = ::prime_array::composite 
               41 = ::prime_array::x[41] 
-              42 = ::prime_array::x[44] 
+              42 = ::prime_array::composite 
               43 = ::prime_array::x[43] 
-              44 = ::prime_array::x[46] 
-              45 = ::prime_array::x[51] 
-              46 = ::prime_array::x[48] 
+              44 = ::prime_array::composite 
+              45 = ::prime_array::composite 
+              46 = ::prime_array::composite 
               47 = ::prime_array::x[47] 
-              48 = ::prime_array::x[50] 
-              49 = ::prime_array::x[77] 
-              50 = ::prime_array::x[52] 
-              51 = ::prime_array::x[57] 
-              52 = ::prime_array::x[54] 
+              48 = ::prime_array::composite 
+              49 = ::prime_array::composite 
+              50 = ::prime_array::composite 
+              51 = ::prime_array::composite 
+              52 = ::prime_array::composite 
               53 = ::prime_array::x[53] 
-              54 = ::prime_array::x[56] 
-              55 = ::prime_array::x[65] 
-              56 = ::prime_array::x[58] 
-              57 = ::prime_array::x[63] 
-              58 = ::prime_array::x[60] 
+              54 = ::prime_array::composite 
+              55 = ::prime_array::composite 
+              56 = ::prime_array::composite 
+              57 = ::prime_array::composite 
+              58 = ::prime_array::composite 
               59 = ::prime_array::x[59] 
-              60 = ::prime_array::x[62] 
+              60 = ::prime_array::composite 
               61 = ::prime_array::x[61] 
-              62 = ::prime_array::x[64] 
-              63 = ::prime_array::x[69] 
-              64 = ::prime_array::x[66] 
-              65 = ::prime_array::x[85] 
-              66 = ::prime_array::x[68] 
+              62 = ::prime_array::composite 
+              63 = ::prime_array::composite 
+              64 = ::prime_array::composite 
+              65 = ::prime_array::composite 
+              66 = ::prime_array::composite 
               67 = ::prime_array::x[67] 
-              68 = ::prime_array::x[70] 
-              69 = ::prime_array::x[75] 
-              70 = ::prime_array::x[72] 
+              68 = ::prime_array::composite 
+              69 = ::prime_array::composite 
+              70 = ::prime_array::composite 
               71 = ::prime_array::x[71] 
-              72 = ::prime_array::x[74] 
+              72 = ::prime_array::composite 
               73 = ::prime_array::x[73] 
-              74 = ::prime_array::x[76] 
-              75 = ::prime_array::x[81] 
-              76 = ::prime_array::x[78] 
-              77 = ::prime_array::x[91] 
-              78 = ::prime_array::x[80] 
+              74 = ::prime_array::composite 
+              75 = ::prime_array::composite 
+              76 = ::prime_array::composite 
+              77 = ::prime_array::composite 
+              78 = ::prime_array::composite 
               79 = ::prime_array::x[79] 
-              80 = ::prime_array::x[82] 
-              81 = ::prime_array::x[87] 
-              82 = ::prime_array::x[84] 
+              80 = ::prime_array::composite 
+              81 = ::prime_array::composite 
+              82 = ::prime_array::composite 
               83 = ::prime_array::x[83] 
-              84 = ::prime_array::x[86] 
-              85 = ::prime_array::x[49] 
-              86 = ::prime_array::x[88] 
-              87 = ::prime_array::x[93] 
-              88 = ::prime_array::x[90] 
+              84 = ::prime_array::composite 
+              85 = ::prime_array::composite 
+              86 = ::prime_array::composite 
+              87 = ::prime_array::composite 
+              88 = ::prime_array::composite 
               89 = ::prime_array::x[89] 
-              90 = ::prime_array::x[92] 
-              91 = ::prime_array::x[95] 
-              92 = ::prime_array::x[94] 
-              93 = ::prime_array::x[25] 
-              94 = ::prime_array::x[96] 
-              95 = ::prime_array::x[99] 
-              96 = ::prime_array::x[98] 
+              90 = ::prime_array::composite 
+              91 = ::prime_array::composite 
+              92 = ::prime_array::composite 
+              93 = ::prime_array::composite 
+              94 = ::prime_array::composite 
+              95 = ::prime_array::composite 
+              96 = ::prime_array::composite 
               97 = ::prime_array::x[97] 
-              98 = ::prime_array::x[9] 
-              99 = ::prime_array::x[100] 
+              98 = ::prime_array::composite 
+              99 = ::prime_array::composite 
               100 = ::prime_array::composite 
             }
         }

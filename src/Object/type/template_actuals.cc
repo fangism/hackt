@@ -2,12 +2,12 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.7 2006/02/21 04:48:41 fang Exp $
+	$Id: template_actuals.cc,v 1.8 2006/03/15 04:38:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_CONSTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
 
 #include <algorithm>
 #include <iterator>

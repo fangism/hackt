@@ -76,7 +76,7 @@ Persistent Object Manager text dump:
 	72	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
 	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
-	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
+	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
 	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -134,9 +134,9 @@ In namespace "", we have: {
               1 = ::bar::x[1] (
                 bool^1 a
                   unrolled indices: {
-                    0 = ::bar::x[0].a[0] 
+                    0 = ::bar::x[0].a[2] 
                     1 = ::bar::x[1].a[1] 
-                    2 = ::bar::x[1].a[0] 
+                    2 = ::bar::x[1].a[2] 
                   }
               )
             }

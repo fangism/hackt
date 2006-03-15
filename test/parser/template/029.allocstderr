@@ -1,4 +1,4 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	q	foo<12, 12>
-2	(top)	-	2	p	foo<12, 34>
+1	(top)	-	1	p	foo<12, 34>
+2	(top)	-	2	q	foo<12, 12>

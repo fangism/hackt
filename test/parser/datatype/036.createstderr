@@ -75,11 +75,11 @@ In namespace "", we have: {
         bool<> fo
         bool<> fum[0..1]
       footprint: {
-        bool^0 fi (instantiated) = ::my_data::fi (3) 
-        bool^0 fo (instantiated) = ::my_data::fo (4) 
-        bool^0 fee (instantiated) = ::my_data::fee (2) 
+        bool^0 fi (instantiated) = ::my_data::fi (1) 
+        bool^0 fo (instantiated) = ::my_data::fo (2) 
+        bool^0 fee (instantiated) = ::my_data::fee (3) 
         int<8>^0 x (instantiated) = ::my_data::x (1) 
-        bool^0 y (instantiated) = ::my_data::y (1) 
+        bool^0 y (instantiated) = ::my_data::y (4) 
         bool^1 fum
           unrolled indices: {
             0 = ::my_data::fum[0] (5) 
@@ -88,10 +88,10 @@ In namespace "", we have: {
         int instance pool:
         1	::my_data::x
         bool instance pool:
-        1	::my_data::y
-        2	::my_data::fee
-        3	::my_data::fi
-        4	::my_data::fo
+        1	::my_data::fi
+        2	::my_data::fo
+        3	::my_data::fee
+        4	::my_data::y
         5	::my_data::fum[0]
         6	::my_data::fum[1]
       }

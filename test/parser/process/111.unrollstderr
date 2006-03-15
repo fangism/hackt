@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	188
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -67,7 +67,7 @@ In namespace "", we have: {
         x = y;
       footprint: {
         process foo<>^0 x (instantiated) = ::bar::y 
-        process foo<>^0 y (instantiated) = ::bar::x 
+        process foo<>^0 y (instantiated) = ::bar::y 
       }
       }
 
@@ -83,7 +83,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b 
-        bool^0 b (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
       }
       }
 
@@ -99,7 +99,7 @@ In namespace "", we have: {
         p = q;
       footprint: {
         process bar<>^0 p (instantiated) = ::ick::q 
-        process bar<>^0 q (instantiated) = ::ick::p 
+        process bar<>^0 q (instantiated) = ::ick::q 
       }
       }
 

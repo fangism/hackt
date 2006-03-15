@@ -20,7 +20,7 @@ Persistent Object Manager text dump:
 	16	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	42
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -49,7 +49,7 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        bool^0 composite (instantiated) = ::array::x 
+        bool^0 composite (instantiated) = ::array::composite 
         bool^0 x (instantiated) = ::array::composite 
       }
       }

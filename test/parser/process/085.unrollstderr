@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	224
 	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -36,14 +36,14 @@ Persistent Object Manager text dump:
 	32	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
@@ -87,7 +87,7 @@ In namespace "", we have: {
         bool<> q
         q = z.b;
       footprint: {
-        bool^0 q (instantiated) = ::bar::z.b 
+        bool^0 q (instantiated) = ::bar::x.b 
         process foo<>^0 x (instantiated) = ::bar::z (
           bool^0 a (instantiated) = ::bar::x.a 
           bool^0 b (instantiated) = ::bar::x.b 
@@ -96,9 +96,9 @@ In namespace "", we have: {
           bool^0 a (instantiated) = ::bar::y.a 
           bool^0 b (instantiated) = ::bar::y.b 
         )
-        process foo<>^0 z (instantiated) = ::bar::x (
-          bool^0 a (instantiated) = ::bar::z.a 
-          bool^0 b (instantiated) = ::bar::q 
+        process foo<>^0 z (instantiated) = ::bar::z (
+          bool^0 a (instantiated) = ::bar::x.a 
+          bool^0 b (instantiated) = ::bar::x.b 
         )
       }
       }
@@ -117,7 +117,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b 
-        bool^0 b (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
       }
       }
 

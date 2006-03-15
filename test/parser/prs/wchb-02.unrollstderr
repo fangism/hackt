@@ -37,24 +37,24 @@ Persistent Object Manager text dump:
 	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	41	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	46	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	52	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	52	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	55	##ADDR##	procdefn	0	#HEAD#	#TAIL#	295
 	56	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	26
@@ -177,24 +177,24 @@ Persistent Object Manager text dump:
 	173	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	60
 	174	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
 	175	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	176	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	177	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	178	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
-	179	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	180	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	181	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	182	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	183	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	184	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	185	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	186	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	187	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	188	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	189	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	176	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	177	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	178	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	179	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	180	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	181	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	182	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	183	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	184	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	185	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	186	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	187	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	188	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	189	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
 	190	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	191	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
 	192	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	193	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	193	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	194	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	195	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	196	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -294,12 +294,12 @@ In namespace "", we have: {
             1 = ::wchb_e1of2::r1.a 
           }
         process inv<>^0 r0 (instantiated) = ::wchb_e1of2::r0 (
-          bool^0 a (instantiated) = ::wchb_e1of2::_r[0] 
-          bool^0 b (instantiated) = ::wchb_e1of2::R.d[0] 
+          bool^0 a (instantiated) = ::wchb_e1of2::r0.a 
+          bool^0 b (instantiated) = ::wchb_e1of2::r0.b 
         )
         process inv<>^0 r1 (instantiated) = ::wchb_e1of2::r1 (
-          bool^0 a (instantiated) = ::wchb_e1of2::_r[1] 
-          bool^0 b (instantiated) = ::wchb_e1of2::R.d[1] 
+          bool^0 a (instantiated) = ::wchb_e1of2::r1.a 
+          bool^0 b (instantiated) = ::wchb_e1of2::r1.b 
         )
         process e1of2<>^0 L (instantiated) = ::wchb_e1of2::L (
           bool^1 d
@@ -318,8 +318,8 @@ In namespace "", we have: {
           bool^0 e (instantiated) = ::wchb_e1of2::R.e 
         )
         process inv<>^0 re (instantiated) = ::wchb_e1of2::re (
-          bool^0 a (instantiated) = ::wchb_e1of2::rv 
-          bool^0 b (instantiated) = ::wchb_e1of2::L.e 
+          bool^0 a (instantiated) = ::wchb_e1of2::re.a 
+          bool^0 b (instantiated) = ::wchb_e1of2::re.b 
         )
         bool^0 rv (instantiated) = ::wchb_e1of2::re.a 
       }
@@ -343,21 +343,21 @@ In namespace "", we have: {
       bool^0 e (instantiated) = ::R.e 
     )
     b = process wchb_e1of2<>^0 b (instantiated) = ::b (
-      process e1of2<>^0 L (instantiated) = ::L (
+      process e1of2<>^0 L (instantiated) = ::b.L (
         bool^1 d
           unrolled indices: {
-            0 = ::b.L.d[0] 
-            1 = ::b.L.d[1] 
+            0 = ::L.d[0] 
+            1 = ::L.d[1] 
           }
-        bool^0 e (instantiated) = ::b.L.e 
+        bool^0 e (instantiated) = ::L.e 
       )
-      process e1of2<>^0 R (instantiated) = ::R (
+      process e1of2<>^0 R (instantiated) = ::b.R (
         bool^1 d
           unrolled indices: {
-            0 = ::b.R.d[0] 
-            1 = ::b.R.d[1] 
+            0 = ::R.d[0] 
+            1 = ::R.d[1] 
           }
-        bool^0 e (instantiated) = ::b.R.e 
+        bool^0 e (instantiated) = ::R.e 
       )
     )
 }

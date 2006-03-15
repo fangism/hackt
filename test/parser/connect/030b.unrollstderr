@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	22	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
+	22	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	23	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -69,15 +69,15 @@ In namespace "", we have: {
   Instances:
     foo = bool^1 foo
       unrolled indices: {
-        0 = ::none.a 
+        0 = ::none.b[0] 
         1 = ::none.b[1] 
       }
     none = process bar<>^0 none (instantiated) = ::none (
-      bool^0 a (instantiated) = ::none.b[0] 
+      bool^0 a (instantiated) = ::foo[0] 
       bool^1 b
         unrolled indices: {
-          0 = ::foo[0] 
-          1 = ::foo[1] 
+          0 = ::none.b[0] 
+          1 = ::none.b[1] 
         }
     )
 }

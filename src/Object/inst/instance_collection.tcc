@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.21 2006/02/22 04:45:23 fang Exp $
+	$Id: instance_collection.tcc,v 1.22 2006/03/15 04:38:18 fang Exp $
 	TODO: trim includes
  */
 
@@ -213,15 +213,20 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
 		const string& n, const size_t d) :
-		parent_type(o, n, d), collection_type_manager_parent_type() {
+		parent_type(o, n, d), collection_type_manager_parent_type(), 
+		initial_instantiation_statement_ptr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: we don't bother copying the initial_instantiation_statement_ptr.
+ */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const this_type& t, 
 		const footprint& f) :
 		parent_type(t, f),
-		collection_type_manager_parent_type(t) {
+		collection_type_manager_parent_type(t), 
+		initial_instantiation_statement_ptr() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -454,11 +459,31 @@ INSTANCE_ARRAY_CLASS::instance_array(const scopespace& o, const string& n) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Partial deep-copy constructor for footprint management.  
-	NOTE: this collection should be empty, but we copy it anyhow.  
+	NOTE: the alias connection information is not retained
+		whether implemented as ring-node or union-find.
+		When copying for footprints, the aliases must be replayed
+		separately.  
+	\pre The source collection must be empty.  
+	\post The source collection must be empty.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array(const this_type& t, const footprint& f) :
-		parent_type(t, f), collection(t.collection) {
+		parent_type(t, f),
+		collection() {
+	INVARIANT(t.collection.empty());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private copy-constructor, reserved for port instantiation.  
+	\pre The source collection must be empty.  
+	\post The source collection must be empty.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+INSTANCE_ARRAY_CLASS::instance_array(const this_type& t) :
+		parent_type(t),
+		collection() {
+	INVARIANT(t.collection.empty());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -514,8 +539,8 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 	if (p.container->has_relaxed_type())
 		p.dump_actuals(os);
 	os << " = ";
-	NEVER_NULL(p.get_next());
-	p.get_next()->dump_hierarchical_name(os, df);
+	NEVER_NULL(p.peek());
+	p.peek()->dump_hierarchical_name(os, df);
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ', df);
@@ -535,6 +560,9 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		const instance_relaxed_actuals_type& actuals, 
 		const unroll_context& c) {
 	STACKTRACE("instance_array<Tag,D>::instantiate_indices()");
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "this = " << this << endl;
+#endif
 	if (!ranges.is_valid()) {
 		ranges.dump(cerr << "ERROR: invalid instantiation range list: ",
 			expr_dump_context::default_value) << endl;
@@ -593,40 +621,18 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Creates uniquely allocated space for aliases instances.  
+	Assigns local instance ids to all aliases. 
+	\pre all aliases have been played (internal and external)
+		and union-find structures are final.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::create_unique_state(const const_range_list& ranges, 
-		footprint& f) {
-	STACKTRACE_VERBOSE;
-	multikey_generator<D, pint_value_type> key_gen;
-	ranges.make_multikey_generator(key_gen);
-	key_gen.initialize();
-	do {
-		// should be iterator, not const_iterator
-		const const_iterator iter(this->collection.find(key_gen));
-		INVARIANT(iter != collection.end());
-		if (!iter->allocate_state(f))
-			return good_bool(false);
-		key_gen++;
-	} while (key_gen != key_gen.get_lower_corner());
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Like create_unique_state except it operates on the entire collection.
-	Called from subinstance_manager::create_state.
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ARRAY_CLASS::allocate_state(footprint& f) {
+INSTANCE_ARRAY_CLASS::allocate_local_instance_ids(footprint& f) {
 	STACKTRACE_VERBOSE;
 	iterator i(collection.begin());
 	const iterator e(collection.end());
 	for ( ; i!=e; i++) {
-		if (!i->__allocate_state(f))
+		if (!const_cast<element_type&>(*i).assign_local_instance_id(f))
 			return good_bool(false);
 	}
 	return good_bool(true);
@@ -814,12 +820,17 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Expands this collection into a copy for a port formal.  
+	Is safe to use the initial instantiation statement because
+	public ports are unconditionally instantiated once.  
 	\return owned pointer to new created collection.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "this = " << this << endl;
+#endif
 	const count_ptr<this_type> ret(new this_type(*this));
 	NEVER_NULL(ret);
 	// Is this really copy-constructible?
@@ -832,82 +843,29 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Merges two instance collections, assigning them the same allocated
-	state.  
-	Called by subinstance_manager::create_state(), 
-		during create-unique phase.  
-	this and t must be port subinstances, 
-		and hence, must be densely packed.  
-	Since collection p was type/size checked during connection, 
-	we can conclude that they have the same size.  
+	Recursively aliases public ports between two instance collections.  
+	\param p subinstance collection to connect to this.  
+	\pre this has identical type to p
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::merge_created_state(physical_instance_collection& p, 
-		footprint& f) {
+INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
+		physical_instance_collection& p) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
 	INVARIANT(this->collection.size() == t.collection.size());
 	iterator i(this->collection.begin());
 	iterator j(t.collection.begin());
 	const iterator e(this->collection.end());
-	for ( ; i!=e; i++, j++) {
+	for ( ; i!=e; ++i, ++j) {
 		// unfortunately, set iterators only return const refs
 		// we only intend to modify the value without modifying the key
 		element_type& ii(const_cast<element_type&>(
 			AS_A(const element_type&, *i)));
 		element_type& jj(const_cast<element_type&>(
 			AS_A(const element_type&, *j)));
-		if (!ii.merge_allocate_state(jj, f).good)
-			return good_bool(false);
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
-INSTANCE_ARRAY_CLASS::inherit_created_state(
-		const physical_instance_collection& p, const footprint& f) {
-	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
-	INVARIANT(this->collection.size() == t.collection.size());
-	iterator i(this->collection.begin());
-	const_iterator j(t.collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; i++, j++) {
-		// unfortunately, set iterators only return const refs
-		// we only intend to modify the value without modifying the key
-		element_type& ii(const_cast<element_type&>(
-			AS_A(const element_type&, *i)));
-		ii.inherit_subinstances_state(*j, f);
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Recursively synchronize relaxed actuals of ports.  
-	Even though this type may not have relaxed actuals, 
-	the ports (and ports-of-ports) might, so recursion is necessary.  
-	This is called at create-time. 
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
-	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
-	INVARIANT(this->collection.size() == t.collection.size());
-	iterator i(this->collection.begin());
-	iterator j(t.collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; i++, j++) {
-		// unfortunately, set iterators only return const refs
-		// we only intend to modify the value without modifying the key
-		element_type& ii(const_cast<element_type&>(
-			AS_A(const element_type&, *i)));
-		element_type& jj(const_cast<element_type&>(
-			AS_A(const element_type&, *j)));
-		if (!element_type::synchronize_actuals_recursive(ii, jj).good) {
+		// possibly redundant port type checking is unnecessary
+		if (!element_type::checked_connect_port(ii, jj).good) {
 			// error message?
 			return good_bool(false);
 		}
@@ -918,12 +876,16 @@ INSTANCE_ARRAY_CLASS::synchronize_actuals(physical_instance_collection& p) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Walks the entire collection and create definition footprints of
-	constitutent types.  
+	constituent types.  
+	The call to internal_alias_policy::connect also replays the 
+	internal aliases for each complete type to each instance of that type.  
+	(Consider renaming: create_dependent_types_and_replay_internal_aliases.)
 	TODO: optimize with specialization for non-recursive types.  
+		(low priority)
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::create_dependent_types(void) const {
+INSTANCE_ARRAY_CLASS::create_dependent_types(void) {
 	STACKTRACE_VERBOSE;
 	iterator i(this->collection.begin());
 	const iterator e(this->collection.end());
@@ -933,6 +895,7 @@ if (this->has_relaxed_type()) {
 			return good_bool(false);
 		element_type& ii(const_cast<element_type&>(
 			AS_A(const element_type&, *i)));
+		// this call will deduce the canonical type from ii
 		if (!internal_alias_policy::connect(ii).good) {
 			return good_bool(false);
 		}
@@ -942,12 +905,12 @@ if (this->has_relaxed_type()) {
 	// evaluate it once and re-use it when replaying internal aliases
 	const typename parent_type::instance_collection_parameter_type
 		t(collection_type_manager_parent_type::get_canonical_type());
-	if (!create_definition_footprint(t).good)
+	if (!create_definition_footprint(t).good) {
 		return good_bool(false);
+	}
 	for ( ; i!=e; i++) {
 		element_type& ii(const_cast<element_type&>(
 			AS_A(const element_type&, *i)));
-		// shouldn't we pass in the canonical type 't'?
 		if (!internal_alias_policy::connect(ii, t).good) {
 			return good_bool(false);
 		}
@@ -959,40 +922,26 @@ if (this->has_relaxed_type()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre already called create_dependent_types.
+	NOTE: this should not be const-qualified, because we allow
+	the port_alias_tracker to modify and update the aliases.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
+	// TODO: use iterator instead
 	const_iterator i(this->collection.begin());
 	const const_iterator e(this->collection.end());
 	for ( ; i!=e; i++) {
-		const element_type& ii(*i);
+		// fix-remove const casting...
+		element_type& ii(const_cast<element_type&>(*i));
 		INVARIANT(ii.instance_index);
 		// 0 is not an acceptable index
 		t.template get_id_map<Tag>()[ii.instance_index]
-			.push_back(never_ptr<const element_type>(&ii));
+			.push_back(never_ptr<element_type>(&ii));
 		ii.collect_port_aliases(t);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-/**
-	Temporary hack.  :(
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
-INSTANCE_ARRAY_CLASS::hack_remap_indices(footprint& f) {
-	STACKTRACE_VERBOSE;
-	iterator i(this->collection.begin());
-	const iterator e(this->collection.end());
-	for ( ; i!=e; i++) {
-		element_type& ii(const_cast<element_type&>(*i));
-		ii.hack_remap_indices(f);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1077,7 +1026,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::connection_writer::operator() (const element_type& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_writer::operator()");
-	const instance_alias_base_type* const next(e.get_next());
+	const instance_alias_base_type* const next(e.peek());
 	NEVER_NULL(next);
 	if (next != &e) {
 		write_value<char>(os, 1);
@@ -1238,11 +1187,30 @@ INSTANCE_SCALAR_CLASS::instance_array(const scopespace& o, const string& n) :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Partial deep-copy constructor for footprint management.  
-	NOTE: this collection should be empty, but we copy it anyhow.  
+	NOTE: this collection should be empty.
+	NOTE: the alias connection information is not retained
+		whether implemented as ring-node or union-find.
+		When copying for footprints, the aliases must be replayed
+		separately.  
+	\pre The source collection must be empty.  
+	\post The source collection must be empty.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array(const this_type& t, const footprint& f) :
-		parent_type(t, f), the_instance(t.the_instance) {
+		parent_type(t, f),
+		the_instance() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Private copy-constructor, reserved for port instantiation.  
+	\pre The source collection must be empty.  
+	\post The source collection must be empty.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+INSTANCE_SCALAR_CLASS::instance_array(const this_type& t) :
+		parent_type(t),
+		the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1289,7 +1257,7 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o,
 		(df.show_namespace_owner ? "(ns) " : " ") <<
 		(df.show_leading_scope ? "(::)]" : "]");
 #endif
-	this->the_instance.get_next()->dump_hierarchical_name(o << " = ", df);
+	this->the_instance.peek()->dump_hierarchical_name(o << " = ", df);
 	if (this->the_instance.instance_index)
 		o << " (" << this->the_instance.instance_index << ')';
 	this->the_instance.dump_ports(o << ' ', df);
@@ -1311,6 +1279,9 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const instance_relaxed_actuals_type& actuals, 
 		const unroll_context& c) {
 	STACKTRACE("instance_array<Tag,0>::instantiate_indices()");
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "this = " << this << endl;
+#endif
 	INVARIANT(r.empty());
 	if (this->the_instance.valid()) {
 		// should never happen, but just in case...
@@ -1332,28 +1303,16 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Creates state for a single instance alias.  
+	Assigns local instance ids to all aliases. 
+	\pre all aliases have been played (internal and external)
+		and union-find structures are final.  
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::create_unique_state(const const_range_list& ranges, 
-		footprint& f) {
-	STACKTRACE("instance_array<Tag,0>::create_unique_state()");
-	INVARIANT(ranges.empty());
-	INVARIANT(this->the_instance.valid());
-	return good_bool(this->the_instance.allocate_state(f));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Same as create_unique_state.
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_SCALAR_CLASS::allocate_state(footprint& f) {
+INSTANCE_SCALAR_CLASS::allocate_local_instance_ids(footprint& f) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->the_instance.valid());
-	return good_bool(this->the_instance.__allocate_state(f) != 0);
+	return good_bool(this->the_instance.assign_local_instance_id(f) != 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1440,6 +1399,9 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "this = " << this << endl;
+#endif
 	const count_ptr<this_type> ret(new this_type(*this));
 	NEVER_NULL(ret);
 	INVARIANT(this->initial_instantiation_statement_ptr);
@@ -1451,43 +1413,18 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Merges two instances, assigning them the same allocated state.  
-	Called by subinstance_manager::create_state(), 
-		during create-unique phase.  
-	this and t must be port subinstances.
+	Recursively aliases public ports between two instance collections.  
+	\param p subinstance collection to connect to this.  
+	\pre this has identical type to p
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::merge_created_state(physical_instance_collection& p, 
-		footprint& f) {
+INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
+		physical_instance_collection& p) {
 	STACKTRACE_VERBOSE;
 	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
-	return this->the_instance.merge_allocate_state(t.the_instance, f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
-INSTANCE_SCALAR_CLASS::inherit_created_state(
-		const physical_instance_collection& p, const footprint& f) {
-	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));	// assert dynamic_cast
-	this->the_instance.inherit_subinstances_state(t.the_instance, f);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Called at create-time to check that the implicit connections
-	in the port hierarchy are compatible, w.r.t. relaxed actual
-	parameters.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-good_bool
-INSTANCE_SCALAR_CLASS::synchronize_actuals(physical_instance_collection& p) {
-	STACKTRACE_VERBOSE;
-	this_type& t(IS_A(this_type&, p));	// assert dynamic_cast
-	return instance_type::synchronize_actuals_recursive(this->the_instance,
-		t.the_instance);
+	return instance_type::checked_connect_port(
+		this->the_instance, t.the_instance);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1496,7 +1433,7 @@ INSTANCE_SCALAR_CLASS::synchronize_actuals(physical_instance_collection& p) {
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::create_dependent_types(void) const {
+INSTANCE_SCALAR_CLASS::create_dependent_types(void) {
 	STACKTRACE_VERBOSE;
 if (this->has_relaxed_type()) {
 	if (!instance_type::create_dependent_types(this->the_instance).good) {
@@ -1517,24 +1454,19 @@ if (this->has_relaxed_type()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: redefine this method as non-const.
+ */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	INVARIANT(this->the_instance.instance_index);
 	// 0 is not an acceptable index
 	t.template get_id_map<Tag>()[this->the_instance.instance_index]
-		.push_back(never_ptr<const instance_type>(&this->the_instance));
+		.push_back(never_ptr<instance_type>(
+			&const_cast<instance_type&>(this->the_instance)));
 	this->the_instance.collect_port_aliases(t);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
-INSTANCE_SCALAR_CLASS::hack_remap_indices(footprint& f) {
-	this->the_instance.hack_remap_indices(f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

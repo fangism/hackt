@@ -9,7 +9,7 @@ Persistent Object Manager text dump:
 	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
+	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
 	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -34,7 +34,7 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<>^0 bar (instantiated) = ::blah (1) 
+    bar = process foo<>^0 bar (instantiated) = ::bar (1) 
     blah = process foo<>^0 blah (instantiated) = ::bar (1) 
 }
 

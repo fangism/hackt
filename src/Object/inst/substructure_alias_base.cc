@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.10 2006/02/05 19:45:08 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.11 2006/03/15 04:38:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -39,16 +39,6 @@ substructure_alias::dump_hierarchical_name(ostream& o,
  */
 size_t
 substructure_alias::hierarchical_depth(void) const {
-	ICE_NEVER_CALL(cerr);
-	return 0;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Implemented for real in instance_alias_info.  
- */
-size_t
-substructure_alias::allocate_state(footprint&) const {
 	ICE_NEVER_CALL(cerr);
 	return 0;
 }
@@ -142,14 +132,6 @@ substructure_alias::__construct_port_context(port_member_context& pmc,
 		const footprint_frame& ff) const {
 	subinstances.construct_port_context(pmc, ff);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-void
-substructure_alias::__hack_remap_indices(footprint& f) {
-	subinstances.hack_remap_indices(f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

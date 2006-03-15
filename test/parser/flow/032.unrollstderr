@@ -1,0 +1,115 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	570
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	150
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	150
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	loopscop	0	#HEAD#	#TAIL#	32
+	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	22	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	33	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    N = pint^0 N (init = 5) value: 5
+  Instances:
+    x = bool^2 x
+      unrolled indices: {
+        [0][0] = ::x[0][0] 
+        [0][1] = ::x[0][1] 
+        [0][2] = ::x[0][2] 
+        [0][3] = ::x[0][3] 
+        [0][4] = ::x[0][4] 
+        [1][0] = ::x[0][1] 
+        [1][1] = ::x[1][1] 
+        [1][2] = ::x[1][2] 
+        [1][3] = ::x[1][3] 
+        [1][4] = ::x[1][4] 
+        [2][0] = ::x[0][2] 
+        [2][1] = ::x[1][2] 
+        [2][2] = ::x[2][2] 
+        [2][3] = ::x[2][3] 
+        [2][4] = ::x[2][4] 
+        [3][0] = ::x[0][3] 
+        [3][1] = ::x[1][3] 
+        [3][2] = ::x[2][3] 
+        [3][3] = ::x[3][3] 
+        [3][4] = ::x[3][4] 
+        [4][0] = ::x[0][4] 
+        [4][1] = ::x[1][4] 
+        [4][2] = ::x[2][4] 
+        [4][3] = ::x[3][4] 
+        [4][4] = ::x[4][4] 
+      }
+    y = bool^1 y
+      unrolled indices: {
+        0 = ::x[0][0] 
+        1 = ::x[0][1] 
+        2 = ::x[0][2] 
+        3 = ::x[0][3] 
+        4 = ::x[0][4] 
+      }
+    z = bool^1 z
+      unrolled indices: {
+        0 = ::x[0][0] 
+        1 = ::x[0][1] 
+        2 = ::x[0][2] 
+        3 = ::x[0][3] 
+        4 = ::x[0][4] 
+      }
+}
+

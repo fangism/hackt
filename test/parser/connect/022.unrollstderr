@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	701
+	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	661
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	161
 	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -68,11 +68,11 @@ In namespace "", we have: {
         [3][2] = ::sack[3][2] 
         [3][3] = ::sack[3][3] 
         [3][4] = ::sack[3][4] 
-        [4][0] = ::bag[0] 
-        [4][1] = ::bag[1] 
-        [4][2] = ::bag[2] 
-        [4][3] = ::bag[3] 
-        [4][4] = ::bag[4] 
+        [4][0] = ::sack[4][0] 
+        [4][1] = ::sack[4][1] 
+        [4][2] = ::sack[4][2] 
+        [4][3] = ::sack[4][3] 
+        [4][4] = ::sack[4][4] 
       }
 }
 

@@ -101,14 +101,14 @@ In namespace "", we have: {
       >
       = array2d<1, ::row::Q>
   Instances:
-    the_col = process array2d<10, 1>^0 the_col (instantiated) = ::the_col (3) 
+    the_col = process array2d<10, 1>^0 the_col (instantiated) = ::the_col (2) 
     the_matrix = process array2d<3, 3>^0 the_matrix (instantiated) = ::the_matrix (1) 
-    the_row = process array2d<1, 12>^0 the_row (instantiated) = ::the_row (2) 
+    the_row = process array2d<1, 12>^0 the_row (instantiated) = ::the_row (3) 
 }
 
 Created state:
 process instance pool:
 1	::the_matrix
-2	::the_row
-3	::the_col
+2	::the_col
+3	::the_row
 

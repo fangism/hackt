@@ -1,7 +1,7 @@
 /**
 	\file "util/ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.5 2005/08/08 16:51:15 fang Exp $
+	$Id: ring_node.h,v 1.6 2006/03/15 04:38:25 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -11,6 +11,13 @@
 #ifndef	FORCE_INLINE_RING_NODE
 #define	FORCE_INLINE_RING_NODE		0
 #endif
+
+/**
+	Define to 1 if we want ring_node's copy-constructor.
+	The unusual copy-constructor does NOT preserve connectivity.
+	Using it inadvertently is likely to be a mistake.  
+ */
+#define	WANT_RING_NODE_COPY_CTOR	0
 
 #include <iterator>
 #include "util/macros.h"
@@ -423,6 +430,7 @@ public:
 	explicit
 	ring_node(const value_type& v) : ring_node_base(), value(v) { }
 
+#if WANT_RING_NODE_COPY_CTOR
 	/**
 		NOTE the unusual copy construct semantics!
 		Copy constructor does not copy the ring!
@@ -431,7 +439,14 @@ public:
 		No ring_node shall be pointed to be more than one other
 		ring_node.  
 	 */
-	ring_node(const ring_node& r) : ring_node_base(), value(r.value) { }
+	ring_node(const this_type& r) : ring_node_base(), value(r.value) { }
+#else
+protected:
+	// explicit, protected copy-ctor
+	explicit
+	ring_node(const this_type& r) : ring_node_base(), value(r.value) { }
+#endif
+public:
 
 	/**
 		Uses base destructor, which walks the list.  
@@ -723,6 +738,7 @@ public:
 	explicit
 	ring_node_derived(const value_type& v) : T(v), next(this) { }
 	
+#if WANT_RING_NODE_COPY_CTOR
 	/**
 		NOTE the unusual copy construct semantics!
 		Copy constructor does not copy the ring!
@@ -733,6 +749,14 @@ public:
 	 */
 	ring_node_derived(const this_type& r) :
 		T(static_cast<const T&>(r)), next(this) { }
+#else
+protected:
+	// explicit, protected copy-ctor
+	explicit
+	ring_node_derived(const this_type& r) :
+		T(static_cast<const T&>(r)), next(this) { }
+#endif
+public:
 
 	/**
 		Note: non-virtual destructor.  

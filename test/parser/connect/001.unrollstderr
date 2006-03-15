@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	37
+	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
@@ -23,7 +23,7 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    fool = bool^0 fool (instantiated) = ::frodo 
+    fool = bool^0 fool (instantiated) = ::fool 
     frodo = bool^0 frodo (instantiated) = ::fool 
 }
 

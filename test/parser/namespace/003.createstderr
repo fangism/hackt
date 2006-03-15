@@ -36,7 +36,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        meow = int<32>^0 meow (instantiated) = ::cat::meow (2) 
+        meow = int<32>^0 meow (instantiated) = ::cat::meow (3) 
     }
     dog =     In namespace "dog", we have: {
       0 parameter-collections
@@ -45,14 +45,14 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        moo = int<32>^0 moo (instantiated) = ::dog::moo (3) 
-        woof = int<32>^0 woof (instantiated) = ::dog::woof (1) 
+        moo = int<32>^0 moo (instantiated) = ::dog::moo (1) 
+        woof = int<32>^0 woof (instantiated) = ::dog::woof (2) 
     }
 }
 
 Created state:
 int instance pool:
-1	::dog::woof
-2	::cat::meow
-3	::dog::moo
+1	::dog::moo
+2	::dog::woof
+3	::cat::meow
 

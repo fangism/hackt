@@ -26,7 +26,7 @@ Persistent Object Manager text dump:
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	119
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	111
 	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -68,7 +68,7 @@ In namespace "", we have: {
               1 = ::foo::a[1] 
               2 = ::foo::a[2] 
               3 = ::foo::a[3] 
-              4 = ::foo::a[0] 
+              4 = ::foo::a[4] 
               5 = ::foo::a[5] 
             }
         }

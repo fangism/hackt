@@ -1,59 +1,59 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	splt	split4<>
-	process: 2,3,4,5,6
-	bool: 1,2,3,4,5,6,7,8,9,10,11,12
-2	(top)	-	2	g	globals<>
-3	(top)	-	3	l	e1of2<>
+1	(top)	-	1	srcwcon	source_e1of2_1<>
+	process: 2,3
 	bool: 1,2,3
-4	(top)	-	4	wcons	e1of2<>
+2	(top)	-	2	g	globals<>
+3	(top)	-	3	wcon	e1of2<>
+	bool: 1,2,3
+4	(top)	-	4	ja	e1of2<>
 	bool: 4,5,6
-5	(top)	-	5	ja	e1of2<>
+5	(top)	-	5	jb	e1of2<>
 	bool: 7,8,9
-6	(top)	-	6	jb	e1of2<>
+6	(top)	-	6	wconm	e1of2<>
 	bool: 10,11,12
-7	(top)	-	7	mrg	merge<>
-	process: 2,8,9,10,11
-	bool: 13,14,15,16,17,18,19,20,21,22,23,24
-8	(top)	-	8	xa	e1of2<>
-	bool: 13,14,15
-9	(top)	-	9	xb	e1of2<>
-	bool: 16,17,18
-10	(top)	-	10	wconm	e1of2<>
-	bool: 19,20,21
-11	(top)	-	11	xw	e1of2<>
-	bool: 22,23,24
-12	(top)	-	12	srcwcon	source_e1of2_1<>
-	process: 2,13
-	bool: 4,5,25
-13	(top)	-	13	wcon	e1of2<>
-	bool: 4,5,25
-14	(top)	-	14	cpywcon	upcopy<>
-	process: 13,4
-	bool: 4,5,25,6
+7	(top)	-	7	wcons	e1of2<>
+	bool: 1,2,13
+8	(top)	-	8	splt	split4<>
+	process: 4,5,7,2,9
+	bool: 4,5,6,7,8,9,1,2,13,14,15,16
+9	(top)	-	9	l	e1of2<>
+	bool: 14,15,16
+10	(top)	-	10	cpywcon	upcopy<>
+	process: 3,7
+	bool: 1,2,3,13
+11	(top)	-	11	mrg	merge<>
+	process: 12,13,6,2,14
+	bool: 17,18,19,20,21,22,10,11,12,23,24,25
+12	(top)	-	12	xa	e1of2<>
+	bool: 17,18,19
+13	(top)	-	13	xb	e1of2<>
+	bool: 20,21,22
+14	(top)	-	14	xw	e1of2<>
+	bool: 23,24,25
 [global bool entries]
-1	(top)	-	1	l.d[0]	
-2	(top)	-	2	l.d[1]	
-3	(top)	-	3	l.e	
-4	(top)	-	4	wcons.d[0]	
-5	(top)	-	5	wcons.d[1]	
-6	(top)	-	6	wcons.e	
-7	(top)	-	7	ja.d[0]	
-8	(top)	-	8	ja.d[1]	
-9	(top)	-	9	ja.e	
-10	(top)	-	10	jb.d[0]	
-11	(top)	-	11	jb.d[1]	
-12	(top)	-	12	jb.e	
-13	(top)	-	13	xa.d[0]	
-14	(top)	-	14	xa.d[1]	
-15	(top)	-	15	xa.e	
-16	(top)	-	16	xb.d[0]	
-17	(top)	-	17	xb.d[1]	
-18	(top)	-	18	xb.e	
-19	(top)	-	19	wconm.d[0]	
-20	(top)	-	20	wconm.d[1]	
-21	(top)	-	21	wconm.e	
-22	(top)	-	22	xw.d[0]	
-23	(top)	-	23	xw.d[1]	
-24	(top)	-	24	xw.e	
-25	(top)	-	25	wcon.e	
+1	(top)	-	1	wcons.d[0]	
+2	(top)	-	2	wcons.d[1]	
+3	(top)	-	3	wcon.e	
+4	(top)	-	4	ja.d[0]	
+5	(top)	-	5	ja.d[1]	
+6	(top)	-	6	ja.e	
+7	(top)	-	7	jb.d[0]	
+8	(top)	-	8	jb.d[1]	
+9	(top)	-	9	jb.e	
+10	(top)	-	10	wconm.d[0]	
+11	(top)	-	11	wconm.d[1]	
+12	(top)	-	12	wconm.e	
+13	(top)	-	13	wcons.e	
+14	(top)	-	14	l.d[0]	
+15	(top)	-	15	l.d[1]	
+16	(top)	-	16	l.e	
+17	(top)	-	17	xa.d[0]	
+18	(top)	-	18	xa.d[1]	
+19	(top)	-	19	xa.e	
+20	(top)	-	20	xb.d[0]	
+21	(top)	-	21	xb.d[1]	
+22	(top)	-	22	xb.e	
+23	(top)	-	23	xw.d[0]	
+24	(top)	-	24	xw.d[1]	
+25	(top)	-	25	xw.e	

@@ -1,11 +1,11 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.6 2006/01/30 07:42:00 fang Exp $
+	$Id: footprint_manager.cc,v 1.7 2006/03/15 04:38:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
-#define	STACKTRACE_PERSISTENTS			0 && ENABLE_STACKTRACE
+#define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include "util/macros.h"

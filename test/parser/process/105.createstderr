@@ -27,11 +27,11 @@ Persistent Object Manager text dump:
 	23	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	27	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	31	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -75,7 +75,7 @@ In namespace "", we have: {
       footprint collection: {
         <8> {
           pint^0 N value: ?
-          int<8>^0 a (instantiated) = ::foo::blah[1] (1) 
+          int<8>^0 a (instantiated) = ::foo::a (1) 
           int<8>^1 blah
             unrolled indices: {
               0 = ::foo::blah[0] (2) 
@@ -89,7 +89,7 @@ In namespace "", we have: {
         }
         <11> {
           pint^0 N value: ?
-          int<11>^0 a (instantiated) = ::foo::blah[1] (1) 
+          int<11>^0 a (instantiated) = ::foo::a (1) 
           int<11>^1 blah
             unrolled indices: {
               0 = ::foo::blah[0] (2) 
@@ -105,19 +105,19 @@ In namespace "", we have: {
       }
 
   Instances:
-    achoo = process foo<11>^0 achoo (instantiated) = ::achoo (2) (
-      int<11>^0 a (instantiated) = ::achoo.a (2) 
+    achoo = process foo<11>^0 achoo (instantiated) = ::achoo (1) (
+      int<11>^0 a (instantiated) = ::achoo.a (1) 
     )
-    poo = process foo<8>^0 poo (instantiated) = ::poo (1) (
-      int<8>^0 a (instantiated) = ::poo.a (1) 
+    poo = process foo<8>^0 poo (instantiated) = ::poo (2) (
+      int<8>^0 a (instantiated) = ::poo.a (2) 
     )
 }
 
 Created state:
 process instance pool:
-1	::poo
-2	::achoo
+1	::achoo
+2	::poo
 int instance pool:
-1	::poo.a
-2	::achoo.a
+1	::achoo.a
+2	::poo.a
 

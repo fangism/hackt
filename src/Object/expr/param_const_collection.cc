@@ -3,7 +3,7 @@
 	Class instantiations for const collections.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: param_const_collection.cc,v 1.7 2006/02/10 21:50:37 fang Exp $
+ 	$Id: param_const_collection.cc,v 1.8 2006/03/15 04:38:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_PARAM_CONST_COLLECTION_CC__
@@ -13,8 +13,8 @@
 #define	DEBUG_LIST_VECTOR_POOL				0
 #define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
-#define	STACKTRACE_DESTRUCTORS				0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS				0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DESTRUCTORS				(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS				(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
 // start of static initializations

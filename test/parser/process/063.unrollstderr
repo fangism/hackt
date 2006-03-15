@@ -20,26 +20,26 @@ Persistent Object Manager text dump:
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	52
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	37	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	26	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	52
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	32	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
@@ -90,13 +90,13 @@ In namespace "", we have: {
       >
       = foo<::bar::X+1>
   Instances:
-    goo = process foo<4>^0 goo (instantiated) = ::poo (
+    goo = process foo<4>^0 goo (instantiated) = ::goo (
       bool^1 a
         unrolled indices: {
-          0 = ::goo.a[0] 
-          1 = ::goo.a[1] 
-          2 = ::goo.a[2] 
-          3 = ::goo.a[3] 
+          0 = ::poo.a[0] 
+          1 = ::poo.a[1] 
+          2 = ::poo.a[2] 
+          3 = ::poo.a[3] 
         }
     )
     poo = process foo<4>^0 poo (instantiated) = ::goo (

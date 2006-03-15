@@ -30,7 +30,7 @@ Persistent Object Manager text dump:
 	26	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -69,13 +69,13 @@ In namespace "", we have: {
         process pb<>^1 p
           unrolled indices: {
             0 = ::lt::p[0] (
-              bool^0 t (instantiated) = ::lt::p[1].t 
+              bool^0 t (instantiated) = ::lt::x 
             )
             1 = ::lt::p[1] (
               bool^0 t (instantiated) = ::lt::x 
             )
           }
-        bool^0 x (instantiated) = ::lt::p[0].t 
+        bool^0 x (instantiated) = ::lt::x 
       }
       }
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.7 2006/02/05 19:45:08 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.8 2006/03/15 04:38:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -154,10 +154,12 @@ alias_reference_set<Tag>::replay_internal_aliases(substructure_alias& s) const {
 /**
 	Edits the canonical back reference to point to the 
 	shallowest instance.  
+	Now this also flattens the union-find structure of each alias
+	set by setting all aliases to point to the chosen canonical alias.
  */
 template <class Tag>
-typename alias_reference_set<Tag>::alias_ptr_type
-alias_reference_set<Tag>::shortest_alias(void) const {
+typename alias_reference_set<Tag>::const_alias_ptr_type
+alias_reference_set<Tag>::shortest_alias(void) {
 	// typedef	alias_array_type::iterator		iterator;
 	INVARIANT(alias_array.size());
 	const_iterator i(alias_array.begin());
@@ -172,6 +174,15 @@ alias_reference_set<Tag>::shortest_alias(void) const {
 			shortest_depth = depth;
 		}
 	}
+{
+	// manually flatten the union-find structure
+	iterator ii(alias_array.begin());
+	const iterator ee(alias_array.end());
+	for ( ; i!=e; ++i) {
+		(*i)->finalize_canonicalize(
+			IS_A(alias_base_type&, **shortest_alias_iter));
+	}
+}
 	// pardon the const_cast :S, we intend to modify, yes
 	// consider making mutable...
 	return *shortest_alias_iter;
@@ -281,21 +292,23 @@ port_alias_tracker_base<Tag>::__replay_aliases(substructure_alias& s) const {
 /**
 	Re-sets the back references of the unique aliases to
 	be the 'shortest; for canonicalization.  
+	TODO: in addition to setting the back-reference, 
+		also restructure the union-finds.  
  */
 template <class Tag>
 void
 port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
-		instance_pool<state_instance<Tag> >& p) const {
+		instance_pool<state_instance<Tag> >& p) {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	STACKTRACE_INDENT << "p.size() = " << p.size() << endl;
 #endif
-	const_iterator i(_ids.begin());
-	const const_iterator e(_ids.end());
+	iterator i(_ids.begin());
+	const iterator e(_ids.end());
 	for ( ; i!=e; i++) {
-		typedef	typename alias_reference_set<Tag>::alias_ptr_type
-						alias_ptr_type;
-		const alias_ptr_type al(i->second.shortest_alias());
+		typedef	typename alias_reference_set<Tag>::const_alias_ptr_type
+						const_alias_ptr_type;
+		const const_alias_ptr_type al(i->second.shortest_alias());
 		INVARIANT(i->first);	// non-zero
 #if ENABLE_STACKTRACE
 		STACKTRACE_INDENT << "i->first = " << i->first << endl;
@@ -483,7 +496,7 @@ if (has_internal_aliases) {
 
 #define	INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(Tag)			\
 template void alias_reference_set<Tag>::push_back(			\
-		never_ptr<const instance_alias_info<Tag> >);
+		never_ptr<instance_alias_info<Tag> >);
 
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(process_tag)
 INSTANTIATE_ALIAS_REFERENCE_SET_PUSH_BACK(channel_tag)

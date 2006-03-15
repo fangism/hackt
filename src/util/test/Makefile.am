@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.41 2006/02/26 02:28:03 fang Exp $
+#	$Id: Makefile.am,v 1.42 2006/03/15 04:38:26 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -34,6 +34,7 @@ noinst_PROGRAMS = \
 	count_ptr_variant_test \
 	sublist_test \
 	deque_iterator_test \
+	hash_map_iterator_O2_bug_test \
 	hash_qmap_test \
 	discrete_interval_set_test \
 	EBCO_test \
@@ -67,7 +68,8 @@ LIBS =
 # but is included in distribution, EXTRA_DIST? don't bother cleaning?
 EMPTY_STDERR_FILES = friend_function_formal_bug.stderr \
 	link_test.stderr excl_ptr_variant_test.stderr \
-	count_ptr_variant_test.stderr
+	count_ptr_variant_test.stderr \
+	hash_map_iterator_O2_bug_test.stderr
 
 AUTO_STDERR_FILES = multikey_set_derived_test.stderr
 
@@ -83,6 +85,7 @@ count_ptr_test_LDADD = libfangutil.la
 sublist_test_SOURCES = sublist_test.cc
 deque_iterator_test_SOURCES = deque_iterator_test.cc
 deque_iterator_test_LDADD = libfangutil.la
+hash_map_iterator_O2_bug_test_SOURCES = hash_map_iterator_O2_bug_test.cc
 hash_qmap_test_SOURCES = hash_qmap_test.cc
 friend_function_formal_bug_SOURCES = friend_function_formal_bug.cc
 link_test_SOURCES = link_test.cc
@@ -167,6 +170,9 @@ excl_ptr_variant_test.stderr:
 count_ptr_variant_test.stderr:
 	$(TOUCH) $@
 
+hash_map_iterator_O2_bug_test.stderr:
+	$(TOUCH) $@
+
 # some tests require more than the default filtering
 MOREFILTER_TESTS = \
 	local_static_store_test \
@@ -205,7 +211,7 @@ PIPE_FLAG =
 endif
 
 MORE_CFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CFLAGS) $(GENERAL_WARN_FLAGS)
-MORE_CXXFLAGS = $(PIPE_FLAG)  $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
+MORE_CXXFLAGS = $(PIPE_FLAG) $(DIALECT_FLAGS) $(WARN_CXXFLAGS) $(GENERAL_WARN_FLAGS)
 
 AM_CFLAGS = $(MORE_CFLAGS)
 AM_CXXFLAGS = $(MORE_CXXFLAGS)

@@ -16,10 +16,10 @@ Persistent Object Manager text dump:
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	223
-	16	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	223
-	17	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	223
-	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	223
+	15	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
+	16	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
+	17	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
+	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
 	19	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	817
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -72,45 +72,45 @@ In namespace "", we have: {
         0 = ::myass[0] (
           bool^2 q
             unrolled indices: {
-              [0][0] = ::x[0][0][0] 
-              [0][1] = ::x[0][0][1] 
-              [1][0] = ::x[0][1][0] 
-              [1][1] = ::x[0][1][1] 
-              [2][0] = ::x[0][2][0] 
-              [2][1] = ::x[0][2][1] 
+              [0][0] = ::myass[0].q[0][0] 
+              [0][1] = ::myass[0].q[0][1] 
+              [1][0] = ::myass[0].q[1][0] 
+              [1][1] = ::myass[0].q[1][1] 
+              [2][0] = ::myass[0].q[2][0] 
+              [2][1] = ::myass[0].q[2][1] 
             }
         )
         1 = ::myass[1] (
           bool^2 q
             unrolled indices: {
-              [0][0] = ::x[1][0][0] 
-              [0][1] = ::x[1][0][1] 
-              [1][0] = ::x[1][1][0] 
-              [1][1] = ::x[1][1][1] 
-              [2][0] = ::x[1][2][0] 
-              [2][1] = ::x[1][2][1] 
+              [0][0] = ::myass[1].q[0][0] 
+              [0][1] = ::myass[1].q[0][1] 
+              [1][0] = ::myass[1].q[1][0] 
+              [1][1] = ::myass[1].q[1][1] 
+              [2][0] = ::myass[1].q[2][0] 
+              [2][1] = ::myass[1].q[2][1] 
             }
         )
         2 = ::myass[2] (
           bool^2 q
             unrolled indices: {
-              [0][0] = ::x[2][0][0] 
-              [0][1] = ::x[2][0][1] 
-              [1][0] = ::x[2][1][0] 
-              [1][1] = ::x[2][1][1] 
-              [2][0] = ::x[2][2][0] 
-              [2][1] = ::x[2][2][1] 
+              [0][0] = ::myass[2].q[0][0] 
+              [0][1] = ::myass[2].q[0][1] 
+              [1][0] = ::myass[2].q[1][0] 
+              [1][1] = ::myass[2].q[1][1] 
+              [2][0] = ::myass[2].q[2][0] 
+              [2][1] = ::myass[2].q[2][1] 
             }
         )
         3 = ::myass[3] (
           bool^2 q
             unrolled indices: {
-              [0][0] = ::x[3][0][0] 
-              [0][1] = ::x[3][0][1] 
-              [1][0] = ::x[3][1][0] 
-              [1][1] = ::x[3][1][1] 
-              [2][0] = ::x[3][2][0] 
-              [2][1] = ::x[3][2][1] 
+              [0][0] = ::myass[3].q[0][0] 
+              [0][1] = ::myass[3].q[0][1] 
+              [1][0] = ::myass[3].q[1][0] 
+              [1][1] = ::myass[3].q[1][1] 
+              [2][0] = ::myass[3].q[2][0] 
+              [2][1] = ::myass[3].q[2][1] 
             }
         )
       }

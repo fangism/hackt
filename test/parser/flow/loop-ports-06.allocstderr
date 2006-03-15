@@ -3,96 +3,96 @@ globID	super		localID	canonical	footprint-frame
 1	(top)	-	1	l	lut<>
 	process: 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23
 	bool: 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48
-2	process	1	1	l._ad[0]	ch_1of<4>
+2	process	1	1	l.ad[0]	ch1of<4>
 	bool: 1,2,3,4
-3	process	1	2	l._ad[1]	ch_1of<4>
+3	process	1	2	l.ad[1]	ch1of<4>
 	bool: 5,6,7,8
-4	process	1	3	l.ad[0]	ch1of<4>
-	bool: 9,10,11,12
-5	process	1	4	l.ad[1]	ch1of<4>
-	bool: 13,14,15,16
-6	process	1	5	l.d	ch1of<16>
-	bool: 17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32
-7	process	1	6	l._d	ch_1of<16>
-	bool: 33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48
-8	process	1	7	l.ce[0]	dcelm<>
-	bool: 13,9,33,17
-9	process	1	8	l.ce[1]	dcelm<>
-	bool: 13,10,34,18
-10	process	1	9	l.ce[2]	dcelm<>
-	bool: 13,11,35,19
-11	process	1	10	l.ce[3]	dcelm<>
-	bool: 13,12,36,20
-12	process	1	11	l.ce[4]	dcelm<>
-	bool: 14,9,37,21
-13	process	1	12	l.ce[5]	dcelm<>
-	bool: 14,10,38,22
-14	process	1	13	l.ce[6]	dcelm<>
-	bool: 14,11,39,23
-15	process	1	14	l.ce[7]	dcelm<>
-	bool: 14,12,40,24
-16	process	1	15	l.ce[8]	dcelm<>
-	bool: 15,9,41,25
-17	process	1	16	l.ce[9]	dcelm<>
-	bool: 15,10,42,26
-18	process	1	17	l.ce[10]	dcelm<>
-	bool: 15,11,43,27
-19	process	1	18	l.ce[11]	dcelm<>
-	bool: 15,12,44,28
-20	process	1	19	l.ce[12]	dcelm<>
-	bool: 16,9,45,29
-21	process	1	20	l.ce[13]	dcelm<>
-	bool: 16,10,46,30
-22	process	1	21	l.ce[14]	dcelm<>
-	bool: 16,11,47,31
-23	process	1	22	l.ce[15]	dcelm<>
-	bool: 16,12,48,32
+4	process	1	3	l.ce[0]	dcelm<>
+	bool: 10,5,1,9
+5	process	1	4	l.ce[1]	dcelm<>
+	bool: 12,5,2,11
+6	process	1	5	l.ce[2]	dcelm<>
+	bool: 14,5,3,13
+7	process	1	6	l.ce[3]	dcelm<>
+	bool: 16,5,4,15
+8	process	1	7	l.ce[4]	dcelm<>
+	bool: 18,6,1,17
+9	process	1	8	l.ce[5]	dcelm<>
+	bool: 20,6,2,19
+10	process	1	9	l.ce[6]	dcelm<>
+	bool: 22,6,3,21
+11	process	1	10	l.ce[7]	dcelm<>
+	bool: 24,6,4,23
+12	process	1	11	l.ce[8]	dcelm<>
+	bool: 26,7,1,25
+13	process	1	12	l.ce[9]	dcelm<>
+	bool: 28,7,2,27
+14	process	1	13	l.ce[10]	dcelm<>
+	bool: 30,7,3,29
+15	process	1	14	l.ce[11]	dcelm<>
+	bool: 32,7,4,31
+16	process	1	15	l.ce[12]	dcelm<>
+	bool: 34,8,1,33
+17	process	1	16	l.ce[13]	dcelm<>
+	bool: 36,8,2,35
+18	process	1	17	l.ce[14]	dcelm<>
+	bool: 38,8,3,37
+19	process	1	18	l.ce[15]	dcelm<>
+	bool: 40,8,4,39
+20	process	1	19	l._ad[0]	ch_1of<4>
+	bool: 41,42,43,44
+21	process	1	20	l._ad[1]	ch_1of<4>
+	bool: 45,46,47,48
+22	process	1	21	l.d	ch1of<16>
+	bool: 10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40
+23	process	1	22	l._d	ch_1of<16>
+	bool: 9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39
 [global bool entries]
-1	process	1	1	l._ad[0].d[0]	
-2	process	1	2	l._ad[0].d[1]	
-3	process	1	3	l._ad[0].d[2]	
-4	process	1	4	l._ad[0].d[3]	
-5	process	1	5	l._ad[1].d[0]	
-6	process	1	6	l._ad[1].d[1]	
-7	process	1	7	l._ad[1].d[2]	
-8	process	1	8	l._ad[1].d[3]	
-9	process	1	9	l.ad[0].d[0]	
-10	process	1	10	l.ad[0].d[1]	
-11	process	1	11	l.ad[0].d[2]	
-12	process	1	12	l.ad[0].d[3]	
-13	process	1	13	l.ad[1].d[0]	
-14	process	1	14	l.ad[1].d[1]	
-15	process	1	15	l.ad[1].d[2]	
-16	process	1	16	l.ad[1].d[3]	
-17	process	1	17	l.ce[0].out	
-18	process	1	18	l.ce[1].out	
-19	process	1	19	l.ce[2].out	
-20	process	1	20	l.ce[3].out	
-21	process	1	21	l.ce[4].out	
-22	process	1	22	l.ce[5].out	
-23	process	1	23	l.ce[6].out	
+1	process	1	1	l.ad[0].d[0]	
+2	process	1	2	l.ad[0].d[1]	
+3	process	1	3	l.ad[0].d[2]	
+4	process	1	4	l.ad[0].d[3]	
+5	process	1	5	l.ad[1].d[0]	
+6	process	1	6	l.ad[1].d[1]	
+7	process	1	7	l.ad[1].d[2]	
+8	process	1	8	l.ad[1].d[3]	
+9	process	1	9	l.ce[0]._out	
+10	process	1	10	l.ce[0].out	
+11	process	1	11	l.ce[1]._out	
+12	process	1	12	l.ce[1].out	
+13	process	1	13	l.ce[2]._out	
+14	process	1	14	l.ce[2].out	
+15	process	1	15	l.ce[3]._out	
+16	process	1	16	l.ce[3].out	
+17	process	1	17	l.ce[4]._out	
+18	process	1	18	l.ce[4].out	
+19	process	1	19	l.ce[5]._out	
+20	process	1	20	l.ce[5].out	
+21	process	1	21	l.ce[6]._out	
+22	process	1	22	l.ce[6].out	
+23	process	1	23	l.ce[7]._out	
 24	process	1	24	l.ce[7].out	
-25	process	1	25	l.ce[8].out	
-26	process	1	26	l.ce[9].out	
-27	process	1	27	l.ce[10].out	
-28	process	1	28	l.ce[11].out	
-29	process	1	29	l.ce[12].out	
-30	process	1	30	l.ce[13].out	
-31	process	1	31	l.ce[14].out	
-32	process	1	32	l.ce[15].out	
-33	process	1	33	l.ce[0]._out	
-34	process	1	34	l.ce[1]._out	
-35	process	1	35	l.ce[2]._out	
-36	process	1	36	l.ce[3]._out	
-37	process	1	37	l.ce[4]._out	
-38	process	1	38	l.ce[5]._out	
-39	process	1	39	l.ce[6]._out	
-40	process	1	40	l.ce[7]._out	
-41	process	1	41	l.ce[8]._out	
-42	process	1	42	l.ce[9]._out	
-43	process	1	43	l.ce[10]._out	
-44	process	1	44	l.ce[11]._out	
-45	process	1	45	l.ce[12]._out	
-46	process	1	46	l.ce[13]._out	
-47	process	1	47	l.ce[14]._out	
-48	process	1	48	l.ce[15]._out	
+25	process	1	25	l.ce[8]._out	
+26	process	1	26	l.ce[8].out	
+27	process	1	27	l.ce[9]._out	
+28	process	1	28	l.ce[9].out	
+29	process	1	29	l.ce[10]._out	
+30	process	1	30	l.ce[10].out	
+31	process	1	31	l.ce[11]._out	
+32	process	1	32	l.ce[11].out	
+33	process	1	33	l.ce[12]._out	
+34	process	1	34	l.ce[12].out	
+35	process	1	35	l.ce[13]._out	
+36	process	1	36	l.ce[13].out	
+37	process	1	37	l.ce[14]._out	
+38	process	1	38	l.ce[14].out	
+39	process	1	39	l.ce[15]._out	
+40	process	1	40	l.ce[15].out	
+41	process	1	41	l._ad[0].d[0]	
+42	process	1	42	l._ad[0].d[1]	
+43	process	1	43	l._ad[0].d[2]	
+44	process	1	44	l._ad[0].d[3]	
+45	process	1	45	l._ad[1].d[0]	
+46	process	1	46	l._ad[1].d[1]	
+47	process	1	47	l._ad[1].d[2]	
+48	process	1	48	l._ad[1].d[3]	

@@ -20,7 +20,7 @@ Persistent Object Manager text dump:
 	16	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	42
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -31,9 +31,9 @@ Persistent Object Manager text dump:
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -61,7 +61,7 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        bool^0 composite (instantiated) = ::array::x 
+        bool^0 composite (instantiated) = ::array::composite 
         bool^0 x (instantiated) = ::array::composite 
       }
       }
@@ -81,8 +81,8 @@ In namespace "", we have: {
         process array<>^0 p (instantiated) = ::foo::q (
           bool^0 x (instantiated) = ::foo::p.x 
         )
-        process array<>^0 q (instantiated) = ::foo::p (
-          bool^0 x (instantiated) = ::foo::q.x 
+        process array<>^0 q (instantiated) = ::foo::q (
+          bool^0 x (instantiated) = ::foo::p.x 
         )
       }
       }

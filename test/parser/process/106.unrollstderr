@@ -43,15 +43,15 @@ Persistent Object Manager text dump:
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
+	42	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
 	43	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	46
 	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	46	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	93
+	46	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	85
 	47	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
 	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	49	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	50	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	106
+	50	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	98
 	51	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -107,7 +107,7 @@ In namespace "", we have: {
           bool^1 a
             unrolled indices: {
               0 = ::foo::a[1] 
-              1 = ::foo::q[0] 
+              1 = ::foo::a[1] 
               2 = ::foo::a[2] 
             }
           bool^1 q
@@ -121,7 +121,7 @@ In namespace "", we have: {
             unrolled indices: {
               0 = ::foo::a[2] 
               1 = ::foo::a[1] 
-              2 = ::foo::q[0] 
+              2 = ::foo::a[2] 
               3 = ::foo::a[3] 
             }
           bool^1 q
@@ -136,7 +136,7 @@ In namespace "", we have: {
             unrolled indices: {
               0 = ::foo::a[2] 
               1 = ::foo::a[1] 
-              2 = ::foo::q[0] 
+              2 = ::foo::a[2] 
               3 = ::foo::a[3] 
               4 = ::foo::a[4] 
             }

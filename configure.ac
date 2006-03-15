@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.44 2006/02/25 04:56:52 fang Exp $
+#	$Id: configure.ac,v 1.45 2006/03/15 04:38:07 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060224, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060314, fangism@users.sourceforge.net)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_CONFIG_SRCDIR([src/main/main_funcs.cc])
@@ -317,6 +317,8 @@ AC_CONFIG_FILES([scripts/replace_if_changed.sh],
 	[chmod +x scripts/replace_if_changed.sh])
 AC_CONFIG_FILES([src/util/test/test-expect.sh],
 	[chmod +x src/util/test/test-expect.sh])
+AC_CONFIG_FILES([src/util/test/hash_map_iterator_O2_bug_test.test],
+	[chmod +x src/util/test/hash_map_iterator_O2_bug_test.test])
 AC_CONFIG_FILES([src/scripts/deps_to_dot.awk],
 	[chmod +x src/scripts/deps_to_dot.awk])
 AC_CONFIG_FILES([test/parse-test-expect.sh],

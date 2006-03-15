@@ -70,12 +70,12 @@ Persistent Object Manager text dump:
 	66	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
 	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	71	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	73	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	74	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
+	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	71	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	72	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
+	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	75	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
@@ -87,14 +87,14 @@ Persistent Object Manager text dump:
 	83	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
 	84	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	85	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	86	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	88	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	89	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	91	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	92	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	86	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	89	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	90	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	91	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	93	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	94	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	95	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	96	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
@@ -163,8 +163,8 @@ In namespace "", we have: {
       footprint collection: {
         <3, {1,0,1}> {
           process foo<3, 3, {1,0,1}>^0 myfoo (instantiated) = ::ass::myfoo (1) (
-            bool^0 r (instantiated) = ::ass::x (1) 
-            bool^0 s (instantiated) = ::ass::y (2) 
+            bool^0 r (instantiated) = ::ass::myfoo.r (1) 
+            bool^0 s (instantiated) = ::ass::myfoo.s (2) 
           )
           pint^0 N value: ?
           pint^1 d
@@ -234,9 +234,9 @@ In namespace "", we have: {
     b = bool^0 b (instantiated) = ::myass.y (2) 
     c = bool^0 c (instantiated) = ::myass.z (3) 
     myass = process ass<3, {1,0,1}>^0 myass (instantiated) = ::myass (1) (
-      bool^0 x (instantiated) = ::a (1) 
-      bool^0 y (instantiated) = ::b (2) 
-      bool^0 z (instantiated) = ::c (3) 
+      bool^0 x (instantiated) = ::myass.x (1) 
+      bool^0 y (instantiated) = ::myass.y (2) 
+      bool^0 z (instantiated) = ::myass.z (3) 
     )
 }
 

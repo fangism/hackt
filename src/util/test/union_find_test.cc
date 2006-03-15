@@ -1,6 +1,6 @@
 /**
 	\file "union_find_test.cc"
-	$Id: union_find_test.cc,v 1.1 2006/02/26 02:28:06 fang Exp $
+	$Id: union_find_test.cc,v 1.2 2006/03/15 04:38:27 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -41,7 +41,7 @@ inline
 ostream&
 dump_union_find(ostream& o, const test_type& t) {
 	o << t.value() << " -> " << t.peek()->value() << " ~> " <<
-		t.find()->value();
+		*t.find();
 	return o;
 }
 

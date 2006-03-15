@@ -64,16 +64,16 @@ Persistent Object Manager text dump:
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	66	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	71	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -156,14 +156,14 @@ In namespace "", we have: {
         bool^0 d (instantiated) = ::passnp::n.d 
         bool^0 g (instantiated) = ::passnp::n.g 
         process passn<>^0 n (instantiated) = ::passnp::n (
-          bool^0 g (instantiated) = ::passnp::g 
+          bool^0 g (instantiated) = ::passnp::n.g 
           bool^0 s (instantiated) = ::passnp::p.s 
           bool^0 d (instantiated) = ::passnp::p.d 
         )
         process passp<>^0 p (instantiated) = ::passnp::p (
-          bool^0 g (instantiated) = ::passnp::_g 
-          bool^0 s (instantiated) = ::passnp::s 
-          bool^0 d (instantiated) = ::passnp::d 
+          bool^0 g (instantiated) = ::passnp::p.g 
+          bool^0 s (instantiated) = ::passnp::p.s 
+          bool^0 d (instantiated) = ::passnp::p.d 
         )
         bool^0 s (instantiated) = ::passnp::n.s 
         bool^0 _g (instantiated) = ::passnp::p.g 

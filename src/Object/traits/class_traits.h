@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.5 2006/01/22 18:20:33 fang Exp $
+	$Id: class_traits.h,v 1.6 2006/03/15 04:38:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -13,10 +13,9 @@
 #include "Object/object_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/packed_array_fwd.h"
-#include "util/ring_node_fwd.h"
 
 namespace util {
-	class persistent_object_manager;
+	template <class> class union_find_derived;
 }
 
 namespace HAC {
@@ -24,8 +23,7 @@ namespace entity {
 using std::istream;
 using std::ostream;
 using util::packed_array_generic;
-using util::ring_node_derived;
-using util::persistent_object_manager;
+using util::union_find_derived;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
@@ -163,15 +161,6 @@ struct class_traits {
 template <class>
 class instantiation_statement_type_ref_default;
 
-// for classes without parameter (bool)
-struct null_parameter_type {
-	/// type is never null, added since canonical_type was used
-	operator bool () const { return true; }
-
-	unroll_context
-	make_unroll_context(void) const;
-};	// end struct null_parameter_type
-
 typedef	instance_alias_info<bool_tag>		bool_instance_alias_info;
 typedef	instance_alias_info<int_tag>		int_instance_alias_info;
 typedef	instance_alias_info<enum_tag>		enum_instance_alias_info;
@@ -179,45 +168,25 @@ typedef	instance_alias_info<datastruct_tag>	datastruct_instance_alias_info;
 typedef	instance_alias_info<channel_tag>	channel_instance_alias_info;
 typedef	instance_alias_info<process_tag>	process_instance_alias_info;
 
-typedef ring_node_derived<bool_instance_alias_info>
+typedef union_find_derived<bool_instance_alias_info>
 						bool_instance_alias_base;
-typedef ring_node_derived<int_instance_alias_info>
+typedef union_find_derived<int_instance_alias_info>
 						int_instance_alias_base;
-typedef ring_node_derived<enum_instance_alias_info>
+typedef union_find_derived<enum_instance_alias_info>
 						enum_instance_alias_base;
-typedef ring_node_derived<datastruct_instance_alias_info>
+typedef union_find_derived<datastruct_instance_alias_info>
 						struct_instance_alias_base;
-typedef ring_node_derived<channel_instance_alias_info>
+typedef union_find_derived<channel_instance_alias_info>
 						channel_instance_alias_base;
-typedef ring_node_derived<process_instance_alias_info>
+typedef union_find_derived<process_instance_alias_info>
 						process_instance_alias_base;
 
 //=============================================================================
 // useful base templates
 
-/**
-	Handy empty class that does nothing but meet a convenient interface
-	for persistent object management of type references.  
- */
-class empty_instantiation_statement_type_ref_base {
-public:
-
-	void 
-	collect_transient_info_base(persistent_object_manager&) const {
-		// nothing to collect
-	}
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const {
-		// nothing to write
-	}
-
-	void
-	load_object_base(const persistent_object_manager&, istream&) {
-		// nothing to load
-	} 
-
-};	// end class empty_instantiation_statement_type_ref_base
+// defined in "Object/unroll/empty_instantiation_statement_type_ref_base.h"
+struct null_parameter_type;
+class empty_instantiation_statement_type_ref_base;
 
 //=============================================================================
 }	// end namespace entity

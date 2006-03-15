@@ -27,7 +27,7 @@ Persistent Object Manager text dump:
 	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -64,7 +64,7 @@ In namespace "", we have: {
           bool^0 a (instantiated) = ::bar::y 
           bool^0 b (instantiated) = ::bar::x.b 
         )
-        bool^0 y (instantiated) = ::bar::x.a 
+        bool^0 y (instantiated) = ::bar::y 
       }
       }
 

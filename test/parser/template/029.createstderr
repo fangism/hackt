@@ -65,12 +65,12 @@ In namespace "", we have: {
       }
 
   Instances:
-    p = process foo<12, 34>^0 p (instantiated) = ::p (2) 
-    q = process foo<12, 12>^0 q (instantiated) = ::q (1) 
+    p = process foo<12, 34>^0 p (instantiated) = ::p (1) 
+    q = process foo<12, 12>^0 q (instantiated) = ::q (2) 
 }
 
 Created state:
 process instance pool:
-1	::q
-2	::p
+1	::p
+2	::q
 

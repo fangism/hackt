@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.11 2006/02/05 19:45:08 fang Exp $
+	$Id: subinstance_manager.h,v 1.12 2006/03/15 04:38:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -10,7 +10,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -112,19 +111,11 @@ public:
 	good_bool
 	connect_ports(const connection_references_type&, const unroll_context&);
 
+	good_bool
+	connect_port_aliases_recursive(this_type&);
+
 	void
 	allocate(footprint&);
-
-	static
-	good_bool
-	synchronize_port_actuals(this_type&, this_type&);
-
-	// const is bogus here (temporary workaround)
-	good_bool
-	create_state(const this_type&, footprint&);
-
-	void
-	inherit_state(const this_type&, const footprint&);
 
 	good_bool
 	replay_internal_aliases(void) const;
@@ -139,11 +130,6 @@ public:
 
 	void
 	cflat_aliases(const cflat_aliases_arg_type&) const;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	void
-	hack_remap_indices(footprint&);
-#endif
 
 	// for each entry, re-link
 	void

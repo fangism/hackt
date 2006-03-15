@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.14 2006/02/21 21:33:01 fang Exp $
+	$Id: instance_collection.h,v 1.15 2006/03/15 04:38:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -119,6 +119,7 @@ public:
 					initial_instantiation_statement_type;
 	typedef	never_ptr<const initial_instantiation_statement_type>
 				initial_instantiation_statement_ptr_type;
+protected:
 	/**
 		All collections track the first instantiation statement,
 		for the sake of deducing the type.  
@@ -217,27 +218,12 @@ virtual	bool
 
 virtual	INSTANTIATE_INDICES_PROTO = 0;
 
-/**
-	Prototype for allocating unique state during create phase.
- */
-#define	CREATE_UNIQUE_STATE_PROTO					\
-	good_bool							\
-	create_unique_state(const const_range_list&, footprint&)
+virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 
-virtual	CREATE_UNIQUE_STATE_PROTO = 0;
+protected:
+virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
 
-virtual	good_bool
-	allocate_state(footprint&) = 0;
-
-virtual	good_bool
-	merge_created_state(physical_instance_collection&, footprint&) = 0;
-
-virtual	void
-	inherit_created_state(const physical_instance_collection&, 
-		const footprint&) = 0;
-
-virtual	good_bool
-	synchronize_actuals(physical_instance_collection&) = 0;
+public:
 
 	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;
@@ -268,10 +254,6 @@ virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 
 virtual	CFLAT_ALIASES_PROTO = 0;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-virtual	HACK_REMAP_INDICES_PROTO = 0;
-#endif
 
 public:
 virtual	instance_alias_base_type&
@@ -358,6 +340,9 @@ private:
 private:
 	instance_array();
 
+	explicit
+	instance_array(const this_type&);
+
 	instance_array(const this_type&, const footprint&);
 
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
@@ -377,20 +362,9 @@ public:
 
 	INSTANTIATE_INDICES_PROTO;
 
-	CREATE_UNIQUE_STATE_PROTO;
+	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 
-	good_bool
-	allocate_state(footprint&);
-
-	good_bool
-	merge_created_state(physical_instance_collection&, footprint&);
-
-	void
-	inherit_created_state(const physical_instance_collection&, 
-		const footprint&);
-
-	good_bool
-	synchronize_actuals(physical_instance_collection&);
+	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
@@ -423,10 +397,6 @@ public:
 	ASSIGN_FOOTPRINT_FRAME_PROTO;
 
 	CFLAT_ALIASES_PROTO;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	HACK_REMAP_INDICES_PROTO;
-#endif
 
 private:
 	class element_collector;
@@ -475,6 +445,9 @@ private:
 private:
 	instance_array();
 
+	explicit
+	instance_array(const this_type&);
+
 	instance_array(const this_type&, const footprint&);
 
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
@@ -495,20 +468,9 @@ public:
 
 	INSTANTIATE_INDICES_PROTO;
 
-	CREATE_UNIQUE_STATE_PROTO;
+	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
 
-	good_bool
-	allocate_state(footprint&);
-
-	good_bool
-	merge_created_state(physical_instance_collection&, footprint&);
-
-	void
-	inherit_created_state(const physical_instance_collection&, 
-		const footprint&);
-
-	good_bool
-	synchronize_actuals(physical_instance_collection&);
+	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
 
 	instance_alias_base_ptr_type
 	lookup_instance(const multikey_index_type& l) const;
@@ -541,10 +503,6 @@ public:
 
 	CFLAT_ALIASES_PROTO;
 
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-	HACK_REMAP_INDICES_PROTO;
-#endif
-
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
@@ -561,7 +519,6 @@ public:
 
 #undef	UNROLL_ALIASES_PROTO
 #undef	INSTANTIATE_INDICES_PROTO
-#undef	CREATE_UNIQUE_STATE_PROTO
 
 #endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
 

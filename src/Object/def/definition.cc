@@ -2,16 +2,16 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.17 2006/02/21 04:48:21 fang Exp $
+ 	$Id: definition.cc,v 1.18 2006/03/15 04:38:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
 #define	__HAC_OBJECT_DEFINITION_CC__
 
 #define ENABLE_STACKTRACE		0
-#define	STACKTRACE_DUMPS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_DESTRUCTORS		0 && ENABLE_STACKTRACE
-#define	STACKTRACE_PERSISTENTS		0 && ENABLE_STACKTRACE
+#define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
 
 //=============================================================================
 #include "util/static_trace.h"
@@ -2197,6 +2197,7 @@ if (defined) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	definition copied verbatim from process_definition::create_complete_type
+	TODO: create send/recv CHP after creating dependent types.  
  */
 good_bool
 user_def_datatype::create_complete_type(
@@ -2230,15 +2231,7 @@ if (defined) {
 			// error message
 			return good_bool(false);
 		}
-		if (sequential_scope::create_unique(c, *f).good) {
-			f->evaluate_scope_aliases();
-			// has no PRS
-			f->mark_created();
-		} else {
-			// already have partial error message
-			// cpt.dump(cerr << "Instantiated from ") << endl;
-			return good_bool(false);
-		}
+		// TODO: CHP
 	}
 	return good_bool(true);
 } else {
@@ -2996,6 +2989,7 @@ if (defined) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Create the definition footprint for a complete process_type.  
+	TODO: unroll CHP body.
  */
 good_bool
 process_definition::create_complete_type(
@@ -3029,23 +3023,16 @@ if (defined) {
 			// error message
 			return good_bool(false);
 		}
-		if (sequential_scope::create_unique(c, *f).good) {
-			f->evaluate_scope_aliases();
-			// also resolve copy of production rules
-			if (!prs.unroll(c, f->get_pool<bool_tag>(), 
-					f->get_prs_footprint()).good) {
-				// already have error message
-				return good_bool(false);
-			}
-			if (!spec.unroll(c, f->get_pool<bool_tag>(), 
-					f->get_spec_footprint()).good) {
-				// already have error message
-				return good_bool(false);
-			}
-			f->mark_created();
-		} else {
-			// already have partial error message
-			// cpt.dump(cerr << "Instantiated from ") << endl;
+		// after all aliases have been successfully assigned local IDs
+		// then process the PRS and CHP bodies
+		if (!prs.unroll(c, f->get_pool<bool_tag>(), 
+				f->get_prs_footprint()).good) {
+			// already have error message
+			return good_bool(false);
+		}
+		if (!spec.unroll(c, f->get_pool<bool_tag>(), 
+				f->get_spec_footprint()).good) {
+			// already have error message
 			return good_bool(false);
 		}
 	}

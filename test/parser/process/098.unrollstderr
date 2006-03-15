@@ -31,10 +31,10 @@ Persistent Object Manager text dump:
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
@@ -85,9 +85,9 @@ In namespace "", we have: {
           bool^0 a (instantiated) = ::bar::a.a 
           bool^0 b (instantiated) = ::bar::a.b 
         )
-        process foo<>^0 b (instantiated) = ::bar::a (
-          bool^0 a (instantiated) = ::bar::b.a 
-          bool^0 b (instantiated) = ::bar::b.b 
+        process foo<>^0 b (instantiated) = ::bar::b (
+          bool^0 a (instantiated) = ::bar::a.a 
+          bool^0 b (instantiated) = ::bar::a.b 
         )
         process foo<>^0 x (instantiated) = ::bar::x (
           bool^0 a (instantiated) = ::bar::x.a 

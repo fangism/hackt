@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -33,10 +33,10 @@ Persistent Object Manager text dump:
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
@@ -46,22 +46,22 @@ Persistent Object Manager text dump:
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	60	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	61	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	63	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -112,9 +112,9 @@ In namespace "", we have: {
           bool^0 a (instantiated) = ::bar::x.a 
           bool^0 b (instantiated) = ::bar::x.b 
         )
-        process foo<>^0 y (instantiated) = ::bar::x (
-          bool^0 a (instantiated) = ::bar::y.a 
-          bool^0 b (instantiated) = ::bar::y.b 
+        process foo<>^0 y (instantiated) = ::bar::y (
+          bool^0 a (instantiated) = ::bar::x.a 
+          bool^0 b (instantiated) = ::bar::x.b 
         )
       }
       }
@@ -133,7 +133,7 @@ In namespace "", we have: {
         a = b;
       footprint: {
         bool^0 a (instantiated) = ::foo::b 
-        bool^0 b (instantiated) = ::foo::a 
+        bool^0 b (instantiated) = ::foo::b 
       }
       }
 
@@ -152,20 +152,20 @@ In namespace "", we have: {
       footprint: {
         process bar<>^0 p (instantiated) = ::ick::q (
           process foo<>^0 x (instantiated) = ::ick::p.x (
-            bool^0 a (instantiated) = ::ick::p.x.a 
-            bool^0 b (instantiated) = ::ick::p.x.b 
-          )
-          process foo<>^0 y (instantiated) = ::ick::p.y (
-            bool^0 a (instantiated) = ::ick::p.y.a 
-            bool^0 b (instantiated) = ::ick::p.y.b 
-          )
-        )
-        process bar<>^0 q (instantiated) = ::ick::p (
-          process foo<>^0 x (instantiated) = ::ick::q.x (
             bool^0 a (instantiated) = ::ick::q.x.a 
             bool^0 b (instantiated) = ::ick::q.x.b 
           )
-          process foo<>^0 y (instantiated) = ::ick::q.y (
+          process foo<>^0 y (instantiated) = ::ick::p.y (
+            bool^0 a (instantiated) = ::ick::q.y.a 
+            bool^0 b (instantiated) = ::ick::q.y.b 
+          )
+        )
+        process bar<>^0 q (instantiated) = ::ick::q (
+          process foo<>^0 x (instantiated) = ::ick::p.x (
+            bool^0 a (instantiated) = ::ick::q.x.a 
+            bool^0 b (instantiated) = ::ick::q.x.b 
+          )
+          process foo<>^0 y (instantiated) = ::ick::p.y (
             bool^0 a (instantiated) = ::ick::q.y.a 
             bool^0 b (instantiated) = ::ick::q.y.b 
           )

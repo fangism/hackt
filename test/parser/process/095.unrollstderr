@@ -39,16 +39,16 @@ Persistent Object Manager text dump:
 	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -93,17 +93,17 @@ In namespace "", we have: {
           bool^0 a (instantiated) = ::bar::w.a 
           bool^0 b (instantiated) = ::bar::w.b 
         )
-        process foo<>^0 x (instantiated) = ::bar::z (
-          bool^0 a (instantiated) = ::bar::x.a 
-          bool^0 b (instantiated) = ::bar::x.b 
+        process foo<>^0 x (instantiated) = ::bar::y (
+          bool^0 a (instantiated) = ::bar::w.a 
+          bool^0 b (instantiated) = ::bar::w.b 
         )
-        process foo<>^0 y (instantiated) = ::bar::w (
-          bool^0 a (instantiated) = ::bar::y.a 
-          bool^0 b (instantiated) = ::bar::y.b 
-        )
-        process foo<>^0 z (instantiated) = ::bar::y (
+        process foo<>^0 y (instantiated) = ::bar::y (
           bool^0 a (instantiated) = ::bar::z.a 
           bool^0 b (instantiated) = ::bar::z.b 
+        )
+        process foo<>^0 z (instantiated) = ::bar::y (
+          bool^0 a (instantiated) = ::bar::w.a 
+          bool^0 b (instantiated) = ::bar::w.b 
         )
       }
       }

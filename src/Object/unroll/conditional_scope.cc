@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/conditional_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: conditional_scope.cc,v 1.6 2006/01/30 07:42:05 fang Exp $
+ 	$Id: conditional_scope.cc,v 1.7 2006/03/15 04:38:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_CONDITIONAL_SCOPE_CC__
@@ -79,30 +79,6 @@ conditional_scope::unroll(const unroll_context& c) const {
 	}
 if (b) {
 	if (!parent_type::unroll(c).good) {
-		cerr << "Error resolving conditional-body:"
-			<< endl;
-		return good_bool(false);
-	}
-}
-	// else don't bother expanding inside
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Code blatantly copy-modified from above conditional_scope::unroll(). 
-	TODO: consider templating code for reusability.  
- */
-good_bool
-conditional_scope::create_unique(const unroll_context& c, footprint& f) const {
-	bool b;
-	if (!guard->unroll_resolve_value(c, b).good) {
-		cerr << "Error resolving guard expression: ";
-		guard->dump(cerr, expr_dump_context::default_value) << endl;
-		return good_bool(false);
-	}
-if (b) {
-	if (!parent_type::create_unique(c, f).good) {
 		cerr << "Error resolving conditional-body:"
 			<< endl;
 		return good_bool(false);

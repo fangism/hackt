@@ -46,7 +46,7 @@ Persistent Object Manager text dump:
 	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -125,7 +125,7 @@ In namespace "", we have: {
         process bar<>^0 q (instantiated) = ::ick::q (
           process foo<>^0 x (instantiated) = ::ick::q.x (
             bool^0 a (instantiated) = ::ick::q.x.a 
-            bool^0 b (instantiated) = ::ick::p.x.a 
+            bool^0 b (instantiated) = ::ick::q.x.b 
           )
         )
       }

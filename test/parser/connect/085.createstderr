@@ -28,78 +28,78 @@ Persistent Object Manager text dump:
 	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	34	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
 	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	proccoll	2	#HEAD#	#TAIL#	426
+	44	##ADDR##	proccoll	2	#HEAD#	#TAIL#	402
 	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	47	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	49	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	50	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	51	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	54	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	55	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	57	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	50	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	51	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	52	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	53	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	56	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	57	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
 	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	59	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	60	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	61	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	62	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	63	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	65	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	67	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	69	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	70	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	71	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	73	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	74	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	75	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	77	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	78	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	79	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	81	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	82	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	83	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	84	##ADDR##	proccoll	1	#HEAD#	#TAIL#	180
-	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	86	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	87	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	89	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	90	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	91	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	93	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	94	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	59	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	60	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	62	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	63	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	64	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	65	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	66	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	67	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	68	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	69	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	73	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	76	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	77	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	79	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	80	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	81	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	82	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	83	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	84	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	85	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	86	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	87	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	88	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	89	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	90	##ADDR##	proccoll	1	#HEAD#	#TAIL#	180
+	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	93	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	95	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	96	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	97	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	98	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	96	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	97	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	98	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	99	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
 	100	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
 	101	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -182,19 +182,19 @@ In namespace "", we have: {
   Instances:
     a = bool^0 a (instantiated) = ::p.b (1) 
     p = process portaproc<>^0 p (instantiated) = ::p (1) (
-      bool^0 b (instantiated) = ::a (1) 
+      bool^0 b (instantiated) = ::p.b (1) 
       bool^1 c
         unrolled indices: {
-          0 = ::x[0] (2) 
-          1 = ::x[1] (3) 
-          2 = ::x[2] (4) 
-          3 = ::x[3] (5) 
+          0 = ::p.c[0] (2) 
+          1 = ::p.c[1] (3) 
+          2 = ::p.c[2] (4) 
+          3 = ::p.c[3] (5) 
         }
-      int<32>^0 i (instantiated) = ::q (1) 
+      int<32>^0 i (instantiated) = ::p.i (1) 
       int<32>^1 j
         unrolled indices: {
-          0 = ::r[0] (2) 
-          1 = ::r[1] (3) 
+          0 = ::p.j[0] (2) 
+          1 = ::p.j[1] (3) 
         }
     )
     q = int<32>^0 q (instantiated) = ::p.i (1) 
@@ -205,52 +205,52 @@ In namespace "", we have: {
       }
     s = process portaproc<>^2 s
       unrolled indices: {
-        [1][1] = ::t[2] (2) (
-          bool^0 b (instantiated) = ::s[1][1].b (6) 
+        [1][1] = ::s[1][1] (2) (
+          bool^0 b (instantiated) = ::t[2].b (6) 
           bool^1 c
             unrolled indices: {
-              0 = ::s[1][1].c[0] (7) 
-              1 = ::s[1][1].c[1] (8) 
-              2 = ::s[1][1].c[2] (9) 
-              3 = ::s[1][1].c[3] (10) 
+              0 = ::t[2].c[0] (7) 
+              1 = ::t[2].c[1] (8) 
+              2 = ::t[2].c[2] (9) 
+              3 = ::t[2].c[3] (10) 
             }
-          int<32>^0 i (instantiated) = ::s[1][1].i (4) 
+          int<32>^0 i (instantiated) = ::t[2].i (4) 
           int<32>^1 j
             unrolled indices: {
-              0 = ::s[1][1].j[0] (5) 
-              1 = ::s[1][1].j[1] (6) 
+              0 = ::t[2].j[0] (5) 
+              1 = ::t[2].j[1] (6) 
             }
         )
-        [1][2] = ::t[3] (3) (
-          bool^0 b (instantiated) = ::s[1][2].b (11) 
+        [1][2] = ::s[1][2] (3) (
+          bool^0 b (instantiated) = ::t[3].b (11) 
           bool^1 c
             unrolled indices: {
-              0 = ::s[1][2].c[0] (12) 
-              1 = ::s[1][2].c[1] (13) 
-              2 = ::s[1][2].c[2] (14) 
-              3 = ::s[1][2].c[3] (15) 
+              0 = ::t[3].c[0] (12) 
+              1 = ::t[3].c[1] (13) 
+              2 = ::t[3].c[2] (14) 
+              3 = ::t[3].c[3] (15) 
             }
-          int<32>^0 i (instantiated) = ::s[1][2].i (7) 
+          int<32>^0 i (instantiated) = ::t[3].i (7) 
           int<32>^1 j
             unrolled indices: {
-              0 = ::s[1][2].j[0] (8) 
-              1 = ::s[1][2].j[1] (9) 
+              0 = ::t[3].j[0] (8) 
+              1 = ::t[3].j[1] (9) 
             }
         )
-        [1][3] = ::t[4] (4) (
-          bool^0 b (instantiated) = ::s[1][3].b (16) 
+        [1][3] = ::s[1][3] (4) (
+          bool^0 b (instantiated) = ::t[4].b (16) 
           bool^1 c
             unrolled indices: {
-              0 = ::s[1][3].c[0] (17) 
-              1 = ::s[1][3].c[1] (18) 
-              2 = ::s[1][3].c[2] (19) 
-              3 = ::s[1][3].c[3] (20) 
+              0 = ::t[4].c[0] (17) 
+              1 = ::t[4].c[1] (18) 
+              2 = ::t[4].c[2] (19) 
+              3 = ::t[4].c[3] (20) 
             }
-          int<32>^0 i (instantiated) = ::s[1][3].i (10) 
+          int<32>^0 i (instantiated) = ::t[4].i (10) 
           int<32>^1 j
             unrolled indices: {
-              0 = ::s[1][3].j[0] (11) 
-              1 = ::s[1][3].j[1] (12) 
+              0 = ::t[4].j[0] (11) 
+              1 = ::t[4].j[1] (12) 
             }
         )
         [2][1] = ::s[2][1] (5) (

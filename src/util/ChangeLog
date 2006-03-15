@@ -1,5 +1,16 @@
 # "src/util/ChangeLog"
 
+2006-03-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-09:
+	  There've been minor tweaks to the ring_node and union_find code.
+		ring_node code is no longer used for the hackt project.  
+	  Added util/test/hash_map_iterator_O2_bug.cc test to test dir
+		which covers a known -O2 wrong-code bug in Apple's g++-3.3.
+		We've safely worked around it in the main source.  
+	  Minor g++-4.1 fixes applied.  
+
+
 2006-02-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-18:

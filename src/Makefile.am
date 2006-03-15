@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.105 2006/02/25 04:55:01 fang Exp $
+#	$Id: Makefile.am,v 1.106 2006/03/15 04:38:11 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -455,9 +455,11 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/channel_instantiation_statement.h \
 	Object/unroll/data_alias_connection_base.h \
 	Object/unroll/datatype_instantiation_statement.h \
+	Object/unroll/empty_instantiation_statement_type_ref_base.h \
 	Object/unroll/instance_management_base.h \
 	Object/unroll/instantiation_statement_base.h \
 	Object/unroll/instantiation_statement_type_ref_default.h \
+	Object/unroll/null_parameter_type.h \
 	Object/unroll/param_expression_assignment.h \
 	Object/unroll/param_instantiation_statement.h \
 	Object/unroll/port_connection_base.h \
@@ -544,12 +546,14 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/cflat_options.h \
 	main/compile_options.h
 
-COMMON_FILES = \
-	common/ICE.cc \
+COMMON_H_FILES = 
 	common/ICE.h \
-	common/TODO.cc \
 	common/TODO.h \
 	common/devel_switches.h
+
+COMMON_FILES = $(COMMON_H_FILES) \
+	common/ICE.cc \
+	common/TODO.cc
 
 # automake doesn't like macro in generating .Plo, a bug methinks
 #	parser/$(HACKT_PARSE_ROOT)-real.cc
@@ -624,6 +628,7 @@ libhacktparsers_la_SOURCES = \
 
 ALL_HEADER_FILES += \
 	config.h \
+	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
@@ -1195,6 +1200,11 @@ dist-hook:
 		$(RM) $(distdir)/$$f ; \
 	done
 
+# useful for rapidly turning off debugging
+show-stacktrace-sources: force
+	-$(GREP) ENABLE_STACKTRACE */{,*}/*.{tcc,cc} | $(GREP) 1 | \
+		$(GREP) -v "util/test" | $(GREP) -v "util/stacktrace"
+
 help-local:
 	-@$(CALLMAKE) help-check-headers 2> /dev/null
 	@$(ECHO) "Local make targets:"
@@ -1209,6 +1219,7 @@ help-local:
 	@$(ECHO) "    clean-lexer: cleans lexer subdir's objects"
 	@$(ECHO) "    clean-parser: cleans parser subdir's objects"
 	@$(ECHO) "    clean-libs: cleans all libraries and archives"
+	@$(ECHO) "    show-stacktrace-sources: grep for debug-enabled sources"
 	@$(ECHO) "Local echo-* targets:"
 	@$(ECHO) "    libhacktexec-sources"
 

@@ -26,14 +26,14 @@ Persistent Object Manager text dump:
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	119
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	111
 	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	119
+	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	111
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -68,7 +68,7 @@ In namespace "", we have: {
               1 = ::foo::a[1] (2) 
               2 = ::foo::a[2] (3) 
               3 = ::foo::a[3] (4) 
-              4 = ::foo::a[0] (1) 
+              4 = ::foo::a[4] (1) 
               5 = ::foo::a[5] (5) 
             }
           bool instance pool:
@@ -91,7 +91,7 @@ In namespace "", we have: {
           1 = ::poo.a[1] (2) 
           2 = ::poo.a[2] (3) 
           3 = ::poo.a[3] (4) 
-          4 = ::poo.a[0] (1) 
+          4 = ::poo.a[4] (1) 
           5 = ::poo.a[5] (5) 
         }
     )

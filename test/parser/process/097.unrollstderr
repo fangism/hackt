@@ -36,11 +36,11 @@ Persistent Object Manager text dump:
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -85,15 +85,15 @@ In namespace "", we have: {
         b = y.b;
         a = b;
       footprint: {
-        bool^0 a (instantiated) = ::bar::x.a 
+        bool^0 a (instantiated) = ::bar::y.b 
         bool^0 b (instantiated) = ::bar::y.b 
         process foo<>^0 x (instantiated) = ::bar::x (
-          bool^0 a (instantiated) = ::bar::b 
+          bool^0 a (instantiated) = ::bar::a 
           bool^0 b (instantiated) = ::bar::x.b 
         )
         process foo<>^0 y (instantiated) = ::bar::y (
           bool^0 a (instantiated) = ::bar::y.a 
-          bool^0 b (instantiated) = ::bar::a 
+          bool^0 b (instantiated) = ::bar::y.b 
         )
       }
       }

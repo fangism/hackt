@@ -36,7 +36,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32>^0 foo (instantiated) = ::bar::foo (1) 
+        foo = int<32>^0 foo (instantiated) = ::bar::foo (3) 
     }
     ick =     In namespace "ick", we have: {
       0 parameter-collections
@@ -45,15 +45,15 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32>^0 foo (instantiated) = ::ick::foo (3) 
+        foo = int<32>^0 foo (instantiated) = ::ick::foo (2) 
     }
   Instances:
-    foo = int<32>^0 foo (instantiated) = ::foo (2) 
+    foo = int<32>^0 foo (instantiated) = ::foo (1) 
 }
 
 Created state:
 int instance pool:
-1	::bar::foo
-2	::foo
-3	::ick::foo
+1	::foo
+2	::ick::foo
+3	::bar::foo
 

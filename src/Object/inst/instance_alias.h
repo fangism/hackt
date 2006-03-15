@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.8 2006/02/21 04:48:28 fang Exp $
+	$Id: instance_alias.h,v 1.9 2006/03/15 04:38:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
@@ -82,10 +82,10 @@ private:
 public:
 	typedef	typename parent_type::key_type		key_type;
 	// or simple_type?
-	typedef	typename instance_alias_info_type::const_iterator
-							const_iterator;
-	typedef	typename instance_alias_info_type::iterator
-							iterator;
+	typedef	typename instance_alias_info_type::pseudo_const_iterator
+							pseudo_const_iterator;
+	typedef	typename instance_alias_info_type::pseudo_iterator
+							pseudo_iterator;
 public:
 	instance_alias() : parent_type() { }
 
@@ -108,22 +108,17 @@ public:
 	 */
 	operator const key_type& () const { return this->key; }
 
-	const_iterator
-	begin(void) const;
+	pseudo_iterator
+	find(void);
 
-	const_iterator
-	end(void) const;
-
-private:
-	iterator
-	begin(void);
-
-	iterator
-	end(void);
+	pseudo_const_iterator
+	find(void) const;
 
 public:
 	using parent_type::instantiate;
-	using parent_type::allocate_state;
+
+	void
+	finalize_canonicalize(instance_alias_base_type&);
 
 	void
 	write_next_connection(const persistent_object_manager& m, 
@@ -174,31 +169,29 @@ public:
 					instance_alias_base_type;
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+	typedef	typename traits_type::instance_alias_info_type
+					instance_alias_info_type;
 	// template explicitly required by g++-4.0
 	typedef	typename traits_type::template instance_array<0>::type
 							container_type;
-	typedef	typename instance_alias_info<Tag>::const_iterator
-							const_iterator;
-	typedef	typename instance_alias_info<Tag>::iterator
-							iterator;
+	typedef	typename instance_alias_info_type::pseudo_const_iterator
+							pseudo_const_iterator;
+	typedef	typename instance_alias_info_type::pseudo_iterator
+							pseudo_iterator;
 public:
 	~instance_alias();
 
 	ostream&
 	dump_alias(ostream& o, const dump_flags&) const;
 
-	const_iterator
-	begin(void) const;
+	pseudo_iterator
+	find(void);
 
-	const_iterator
-	end(void) const;
+	pseudo_const_iterator
+	find(void) const;
 
-private:
-	iterator
-	begin(void);
-
-	iterator
-	end(void);
+	void
+	finalize_canonicalize(instance_alias_base_type&);
 
 public:
 	TRACE_ALIAS_BASE_PROTO;

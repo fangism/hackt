@@ -30,11 +30,11 @@ Persistent Object Manager text dump:
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -42,15 +42,15 @@ Persistent Object Manager text dump:
 	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -78,9 +78,9 @@ In namespace "", we have: {
           process oof<>^0 m (instantiated) = ::foo::a.m (2) 
           process oof<>^0 n (instantiated) = ::foo::a.n (3) 
         )
-        process ick<>^0 b (instantiated) = ::foo::a (1) (
-          process oof<>^0 m (instantiated) = ::foo::b.m (2) 
-          process oof<>^0 n (instantiated) = ::foo::b.n (3) 
+        process ick<>^0 b (instantiated) = ::foo::b (1) (
+          process oof<>^0 m (instantiated) = ::foo::a.m (2) 
+          process oof<>^0 n (instantiated) = ::foo::a.n (3) 
         )
         process instance pool:
         1	::foo::a
@@ -124,10 +124,10 @@ In namespace "", we have: {
   Instances:
     poo = process foo<>^0 poo (instantiated) = ::poo (1) (
       process ick<>^0 a (instantiated) = ::poo.b (2) (
-        process oof<>^0 m (instantiated) = ::poo.b.m (3) 
-        process oof<>^0 n (instantiated) = ::poo.b.n (4) 
+        process oof<>^0 m (instantiated) = ::poo.a.m (3) 
+        process oof<>^0 n (instantiated) = ::poo.a.n (4) 
       )
-      process ick<>^0 b (instantiated) = ::poo.a (2) (
+      process ick<>^0 b (instantiated) = ::poo.b (2) (
         process oof<>^0 m (instantiated) = ::poo.a.m (3) 
         process oof<>^0 n (instantiated) = ::poo.a.n (4) 
       )

@@ -100,22 +100,22 @@ In namespace "", we have: {
         (&:i:[0..M-1]: ~a[$i]) -> _o+
       footprint collection: {
         <4> {
-          bool^0 _o (instantiated) = ::celemNinv::_o (5) 
+          bool^0 _o (instantiated) = ::celemNinv::_o (1) 
           pint^0 M value: 4
           pint^0 N value: ?
           bool^1 a
             unrolled indices: {
-              0 = ::celemNinv::a[0] (1) 
-              1 = ::celemNinv::a[1] (2) 
-              2 = ::celemNinv::a[2] (3) 
-              3 = ::celemNinv::a[3] (4) 
+              0 = ::celemNinv::a[0] (2) 
+              1 = ::celemNinv::a[1] (3) 
+              2 = ::celemNinv::a[2] (4) 
+              3 = ::celemNinv::a[3] (5) 
             }
           bool instance pool:
-          1	::celemNinv::a[0]
-          2	::celemNinv::a[1]
-          3	::celemNinv::a[2]
-          4	::celemNinv::a[3]
-          5	::celemNinv::_o
+          1	::celemNinv::_o
+          2	::celemNinv::a[0]
+          3	::celemNinv::a[1]
+          4	::celemNinv::a[2]
+          5	::celemNinv::a[3]
           resolved prs:
           a[0] & a[1] & a[2] & a[3] -> _o-
           ~a[0] & ~a[1] & ~a[2] & ~a[3] -> _o+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/internal_alaises_policy.tcc"
-	$Id: internal_aliases_policy.tcc,v 1.4 2006/01/22 18:20:07 fang Exp $
+	$Id: internal_aliases_policy.tcc,v 1.5 2006/03/15 04:38:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INTERNAL_ALIASES_POLICY_TCC__
@@ -21,6 +21,8 @@ namespace entity {
 
 /**
 	THIS IS WRONG AND OBSOLETE.
+	(seems OK to me... 20060308, and this is actually called by
+		instance_array::create_dependent_types.)
 	Replays a structure's internal aliases explicitly.  
 	\param AliasType must have substructure.  
 	\param _alias must be a top-most in scope alias, 

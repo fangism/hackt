@@ -2,14 +2,13 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.11 2006/02/21 04:48:31 fang Exp $
+	$Id: physical_instance_collection.h,v 1.12 2006/03/15 04:38:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -77,7 +76,7 @@ public:
 	must_check_reference_dimensions(...) const;
 #endif
 
-// macro co-defined in "Object/art_object_instance_collection.h"
+// macro co-defined in "Object/inst/instance_collection.h"
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
@@ -90,21 +89,21 @@ virtual bool
 virtual ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const = 0;
 
-virtual	good_bool
-	allocate_state(footprint&) = 0;
+#define	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO				\
+	good_bool							\
+	allocate_local_instance_ids(footprint&)
 
-virtual	good_bool
-	merge_created_state(this_type&, footprint&) = 0;
+virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
 
-virtual	void
-	inherit_created_state(const this_type&, const footprint&) = 0;
+#define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
+	good_bool							\
+	connect_port_aliases_recursive(physical_instance_collection&)
 
-virtual	good_bool
-	synchronize_actuals(this_type&) = 0;
+virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\
 	good_bool							\
-	create_dependent_types(void) const
+	create_dependent_types(void)
 
 virtual	CREATE_DEPENDENT_TYPES_PROTO = 0;
 
@@ -133,15 +132,6 @@ virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 	cflat_aliases(const cflat_aliases_arg_type&) const
 
 virtual	CFLAT_ALIASES_PROTO = 0;
-
-#if INSTANCE_POOL_ALLOW_DEALLOCATION_FREELIST
-#define	HACK_REMAP_INDICES_PROTO					\
-	void								\
-	hack_remap_indices(footprint&)
-
-virtual	HACK_REMAP_INDICES_PROTO = 0;
-
-#endif
 
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;

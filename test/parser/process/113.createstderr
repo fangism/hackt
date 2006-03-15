@@ -34,7 +34,7 @@ Persistent Object Manager text dump:
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	33	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	33	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	63
 	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -75,7 +75,7 @@ In namespace "", we have: {
           int<3>^1 x
             unrolled indices: {
               0 = ::bar::x[1] (1) 
-              1 = ::bar::x[0] (1) 
+              1 = ::bar::x[1] (1) 
             }
           int instance pool:
           1	::bar::x[0]

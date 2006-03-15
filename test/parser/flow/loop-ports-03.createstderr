@@ -54,7 +54,7 @@ Persistent Object Manager text dump:
 	50	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
 	51	##ADDR##	proccoll	1	#HEAD#	#TAIL#	59
 	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	55	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	56	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -142,7 +142,7 @@ In namespace "", we have: {
         process dcelm<>^1 ce
           unrolled indices: {
             0 = ::lut::ce[0] (2) (
-              bool^0 a (instantiated) = ::lut::ad.d[0] (1) 
+              bool^0 a (instantiated) = ::lut::ce[0].a (1) 
             )
           }
         process instance pool:

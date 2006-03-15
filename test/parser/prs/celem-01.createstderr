@@ -66,13 +66,13 @@ In namespace "", we have: {
         a & b -> _o-
         ~a & ~b -> _o+
       footprint: {
-        bool^0 _o (instantiated) = ::celem2inv::_o (3) 
-        bool^0 a (instantiated) = ::celem2inv::a (1) 
-        bool^0 b (instantiated) = ::celem2inv::b (2) 
+        bool^0 _o (instantiated) = ::celem2inv::_o (1) 
+        bool^0 a (instantiated) = ::celem2inv::a (2) 
+        bool^0 b (instantiated) = ::celem2inv::b (3) 
         bool instance pool:
-        1	::celem2inv::a
-        2	::celem2inv::b
-        3	::celem2inv::_o
+        1	::celem2inv::_o
+        2	::celem2inv::a
+        3	::celem2inv::b
         resolved prs:
         a & b -> _o-
         ~a & ~b -> _o+

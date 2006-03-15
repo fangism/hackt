@@ -59,15 +59,15 @@ Persistent Object Manager text dump:
 	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	56	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	52
 	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
-	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	59	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
-	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	66	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	52
+	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	32
+	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	63	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	52
+	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	65	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	66	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	67	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	68	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	69	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -132,7 +132,7 @@ In namespace "", we have: {
           0 = ::b.in[0] 
           1 = ::b.in[1] 
         }
-      bool^0 out (instantiated) = ::z 
+      bool^0 out (instantiated) = ::b.out 
     )
     z = bool^0 z (instantiated) = ::a.out 
 }

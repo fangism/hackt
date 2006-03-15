@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
+	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -33,7 +33,7 @@ In namespace "", we have: {
   Instances:
     x = bool^1 x
       unrolled indices: {
-        0 = ::x[1] 
+        0 = ::x[0] 
         1 = ::x[0] 
       }
 }

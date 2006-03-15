@@ -1,5 +1,16 @@
 "ChangeLog"
 
+2006-03-14	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-merged-connect-02-09:
+	  Branch merge.  Major unroll/create pass improvements.  
+
+
+	* HACKT-00-01-04-main-00-77-19-connect-02-09:
+	  Added test for known compiler bug in the util test-suite, 
+		configurating the shell script for it.  
+
+
 2006-02-24	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-17-merged-maintainence-05:

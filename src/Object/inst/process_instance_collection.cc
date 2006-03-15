@@ -4,16 +4,16 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.9 2006/02/21 04:48:32 fang Exp $
+	$Id: process_instance_collection.cc,v 1.10 2006/03/15 04:38:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
 #define	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
-#define	STACKTRACE_PERSISTENTS		0
-#define	STACKTRACE_DESTRUCTORS		0
-#define	STACKTRACE_CONSTRUCTORS		0
+#define	STACKTRACE_PERSISTENTS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DESTRUCTORS		(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_CONSTRUCTORS		(0 && ENABLE_STACKTRACE)
 
 #include <exception>
 #include <iostream>

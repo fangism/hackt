@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	721
+	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	697
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	137
 	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -47,35 +47,35 @@ In namespace "", we have: {
   Instances:
     bag = process barf<>^1 bag
       unrolled indices: {
-        2 = ::sack[1][0] (1) 
-        3 = ::sack[2][0] (2) 
-        4 = ::sack[3][0] (3) 
+        2 = ::sack[4][0] (6) 
+        3 = ::sack[4][1] (11) 
+        4 = ::sack[4][2] (16) 
       }
     sack = process barf<>^2 sack
       unrolled indices: {
-        [0][0] = ::sack[0][0] (4) 
-        [0][1] = ::sack[0][1] (5) 
-        [0][2] = ::sack[0][2] (6) 
-        [0][3] = ::sack[0][3] (7) 
-        [0][4] = ::sack[0][4] (8) 
-        [1][0] = ::sack[4][0] (1) 
-        [1][1] = ::sack[1][1] (9) 
-        [1][2] = ::sack[1][2] (10) 
-        [1][3] = ::sack[1][3] (11) 
-        [1][4] = ::sack[1][4] (12) 
-        [2][0] = ::sack[4][1] (2) 
-        [2][1] = ::sack[2][1] (13) 
-        [2][2] = ::sack[2][2] (14) 
-        [2][3] = ::sack[2][3] (15) 
-        [2][4] = ::sack[2][4] (16) 
-        [3][0] = ::sack[4][2] (3) 
+        [0][0] = ::sack[0][0] (1) 
+        [0][1] = ::sack[0][1] (2) 
+        [0][2] = ::sack[0][2] (3) 
+        [0][3] = ::sack[0][3] (4) 
+        [0][4] = ::sack[0][4] (5) 
+        [1][0] = ::sack[4][0] (6) 
+        [1][1] = ::sack[1][1] (7) 
+        [1][2] = ::sack[1][2] (8) 
+        [1][3] = ::sack[1][3] (9) 
+        [1][4] = ::sack[1][4] (10) 
+        [2][0] = ::sack[4][1] (11) 
+        [2][1] = ::sack[2][1] (12) 
+        [2][2] = ::sack[2][2] (13) 
+        [2][3] = ::sack[2][3] (14) 
+        [2][4] = ::sack[2][4] (15) 
+        [3][0] = ::sack[4][2] (16) 
         [3][1] = ::sack[3][1] (17) 
         [3][2] = ::sack[3][2] (18) 
         [3][3] = ::sack[3][3] (19) 
         [3][4] = ::sack[3][4] (20) 
-        [4][0] = ::bag[2] (1) 
-        [4][1] = ::bag[3] (2) 
-        [4][2] = ::bag[4] (3) 
+        [4][0] = ::sack[4][0] (6) 
+        [4][1] = ::sack[4][1] (11) 
+        [4][2] = ::sack[4][2] (16) 
         [4][3] = ::sack[4][3] (21) 
         [4][4] = ::sack[4][4] (22) 
       }
@@ -83,22 +83,22 @@ In namespace "", we have: {
 
 Created state:
 process instance pool:
-1	::sack[1][0]
-2	::sack[2][0]
-3	::sack[3][0]
-4	::sack[0][0]
-5	::sack[0][1]
-6	::sack[0][2]
-7	::sack[0][3]
-8	::sack[0][4]
-9	::sack[1][1]
-10	::sack[1][2]
-11	::sack[1][3]
-12	::sack[1][4]
-13	::sack[2][1]
-14	::sack[2][2]
-15	::sack[2][3]
-16	::sack[2][4]
+1	::sack[0][0]
+2	::sack[0][1]
+3	::sack[0][2]
+4	::sack[0][3]
+5	::sack[0][4]
+6	::sack[1][0]
+7	::sack[1][1]
+8	::sack[1][2]
+9	::sack[1][3]
+10	::sack[1][4]
+11	::sack[2][0]
+12	::sack[2][1]
+13	::sack[2][2]
+14	::sack[2][3]
+15	::sack[2][4]
+16	::sack[3][0]
 17	::sack[3][1]
 18	::sack[3][2]
 19	::sack[3][3]

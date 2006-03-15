@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.10 2006/02/21 04:48:43 fang Exp $
+	$Id: instantiation_statement.h,v 1.11 2006/03/15 04:38:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -121,7 +121,6 @@ public:
 
 	INSTANTIATE_PORT_PROTO;
 
-	CREATE_UNIQUE_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

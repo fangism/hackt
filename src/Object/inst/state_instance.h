@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/state_instance.h"
 	Class template for instance state.
-	$Id: state_instance.h,v 1.9 2006/02/21 04:48:32 fang Exp $
+	$Id: state_instance.h,v 1.10 2006/03/15 04:38:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STATE_INSTANCE_H__
@@ -24,6 +24,7 @@ using std::istream;
 using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
+using util::persistent_object_manager;
 
 #define	STATE_INSTANCE_TEMPLATE_SIGNATURE	template <class Tag>
 #define	STATE_INSTANCE_CLASS			state_instance<Tag>

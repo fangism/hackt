@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.8 2006/02/21 04:48:27 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.9 2006/03/15 04:38:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -82,9 +82,6 @@ virtual good_bool
 	instantiate_indices(const const_range_list& i, 
 		const instance_relaxed_actuals_type&, 
 		const unroll_context&) = 0;
-
-virtual	good_bool
-	create_unique_state(const const_range_list&, footprint&) = 0;
 
 virtual	never_ptr<const const_param_expr_list>
 	get_actual_param_list(void) const;	// = 0;
