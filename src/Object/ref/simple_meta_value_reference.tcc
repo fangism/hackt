@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.14 2006/02/21 23:07:37 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.15 2006/03/16 03:40:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -123,8 +123,9 @@ ostream&
 SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		const expr_dump_context& c) const {
 	// shamelessly copied from new simple_meta_instance_reference::dump
-	if (c.include_type_info)
+	if (c.include_type_info) {
 		this->what(o) << " ";
+	}
 	NEVER_NULL(this->value_collection_ref);
 	if (c.enclosing_scope) {
 		this->value_collection_ref->dump_hierarchical_name(o,

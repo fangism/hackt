@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.8 2006/02/21 23:07:34 fang Exp $
+	$Id: expr.cc,v 1.9 2006/03/16 03:40:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1454,7 +1454,7 @@ index_expr::check_nonmeta_reference(const context& c) const {
 		return return_type(NULL);
 	}
 	// return indexed instance reference
-	return base_inst;
+	return base_inst.is_a<return_type::element_type>();
 }
 
 //=============================================================================

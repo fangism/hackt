@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.7 2006/02/21 04:48:26 fang Exp $
+	$Id: pint_const.h,v 1.8 2006/03/16 03:40:24 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -12,8 +12,7 @@
 #include "Object/expr/pint_expr.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_param.h"
-#include "util/memory/list_vector_pool_fwd.h"
-// switch over to chunk_map_pool
+#include "util/memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
 namespace HAC {
@@ -134,8 +133,9 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
+	// would like to be as high as 1024
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
+	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS(64)
 };	// end class pint_const
 
 //=============================================================================

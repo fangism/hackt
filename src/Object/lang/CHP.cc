@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.5 2006/02/21 04:48:32 fang Exp $
+	$Id: CHP.cc,v 1.6 2006/03/16 03:40:26 fang Exp $
  */
 
 #include "Object/lang/CHP.h"
@@ -87,14 +87,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(action_sequence)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-action_sequence::dump(ostream& o) const {
+action_sequence::dump(ostream& o, const expr_dump_context& c) const {
 	o << "sequential: {" << endl;
 	{
 		INDENT_SECTION(o);
 		const_iterator i(begin());
 		const const_iterator e(end());
 		for ( ; i!=e; i++)
-			(*i)->dump(o << auto_indent) << endl;
+			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << '}';
 }
@@ -154,14 +154,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(concurrent_actions)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-concurrent_actions::dump(ostream& o) const {
+concurrent_actions::dump(ostream& o, const expr_dump_context& c) const {
 	o << "concurrent: {" << endl;
 	{
 		INDENT_SECTION(o);
 		const_iterator i(begin());
 		const const_iterator e(end());
 		for ( ; i!=e; i++)
-			(*i)->dump(o << auto_indent) << endl;
+			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << '}';
 }
@@ -228,13 +228,13 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(guarded_action)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-guarded_action::dump(ostream& o) const {
+guarded_action::dump(ostream& o, const expr_dump_context& c) const {
 	if (guard)
-		guard->dump(o, expr_dump_context::default_value);
+		guard->dump(o, c);
 	else 	o << "else";
 	o << " -> ";
 	if (stmt)
-		return stmt->dump(o);
+		return stmt->dump(o, c);
 	else 	return o << "skip";
 }
 
@@ -276,14 +276,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(deterministic_selection)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-deterministic_selection::dump(ostream& o) const {
+deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 	o << "deterministic: {" << endl;
 	{
 		INDENT_SECTION(o);
 		const_iterator i(begin());
 		const const_iterator e(end());
 		for ( ; i!=e; i++)
-			(*i)->dump(o << auto_indent) << endl;
+			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << '}';
 }
@@ -324,14 +324,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(nondeterministic_selection)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-nondeterministic_selection::dump(ostream& o) const {
+nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 	o << "nondeterministic: {" << endl;
 	{
 		INDENT_SECTION(o);
 		const_iterator i(begin());
 		const const_iterator e(end());
 		for ( ; i!=e; i++)
-			(*i)->dump(o << auto_indent) << endl;
+			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << '}';
 }
@@ -377,8 +377,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(assignment)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-assignment::dump(ostream& o) const {
-	const expr_dump_context& c(expr_dump_context::default_value);
+assignment::dump(ostream& o, const expr_dump_context& c) const {
+	// const expr_dump_context& c(expr_dump_context::default_value);
 	return rval->dump(lval->dump(o, c) << " := ", c);
 }
 
@@ -425,8 +425,8 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(condition_wait)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-condition_wait::dump(ostream& o) const {
-	return cond->dump(o << '[', expr_dump_context::default_value) << ']';
+condition_wait::dump(ostream& o, const expr_dump_context& c) const {
+	return cond->dump(o << '[', c) << ']';
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -469,9 +469,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_send)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-channel_send::dump(ostream& o) const {
+channel_send::dump(ostream& o, const expr_dump_context& c) const {
 	typedef	expr_list_type::const_iterator	const_iterator;
-	const expr_dump_context& c(expr_dump_context::default_value);
+	// const expr_dump_context& c(expr_dump_context::default_value);
 	chan->dump(o, c) << "!(";
 	INVARIANT(!exprs.empty());
 	const_iterator i(exprs.begin());
@@ -526,9 +526,9 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(channel_receive)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-channel_receive::dump(ostream& o) const {
+channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 	typedef	inst_ref_list_type::const_iterator	const_iterator;
-	const expr_dump_context& c(expr_dump_context::default_value);
+	// const expr_dump_context& c(expr_dump_context::default_value);
 	chan->dump(o, c) << "?(";
 	INVARIANT(!insts.empty());
 	const_iterator i(insts.begin());
@@ -585,11 +585,11 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(do_forever_loop)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-do_forever_loop::dump(ostream& o) const {
+do_forever_loop::dump(ostream& o, const expr_dump_context& c) const {
 	o << "*[" << endl;
 	{
 		INDENT_SECTION(o);
-		body->dump(o << auto_indent) << endl;
+		body->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << ']';
 }
@@ -629,14 +629,14 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(do_while_loop)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-do_while_loop::dump(ostream& o) const {
+do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
 	o << "*[" << endl;
 	{
 		INDENT_SECTION(o);
 		const_iterator i(begin());
 		const const_iterator e(end());
 		for ( ; i!=e; i++)
-			(*i)->dump(o << auto_indent) << endl;
+			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << ']';
 }

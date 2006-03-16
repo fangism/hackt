@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-01:
+	  Added switches to turn on pool-allocation for instance_collections
+		and value_collections.  Strange regression with one test case
+		with instance_collection pool enabled, so that is left off.  
+	  Switched over {pint,pbool,preal)_const to use chunk_map_pool
+		for pool allocation (was list_vector_pool) because it is
+		more suitable for small object allocation.  
+		Unfortunately, bit_mask size is currently limited to 64, 
+		but this can be easily extended in integer_traits.  
+	  Added expression context parameter to CHP dumps.  
+	  Discovered minor type-checking problem with nonmeta references, 
+		need to fix shortly.  Already reworked parts of
+		nonmeta reference class hierarchy, analogous to earlier
+		rework of meta references.  
+	  util library: improvements in pool-allocator macros.  
+
+
 2006-03-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-merged-connect-02-09:

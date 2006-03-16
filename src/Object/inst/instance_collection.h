@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.15 2006/03/15 04:38:18 fang Exp $
+	$Id: instance_collection.h,v 1.16 2006/03/16 03:40:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -22,6 +22,13 @@
 #include "util/persistent.h"
 #include "util/multikey_set.h"
 #include "util/boolean_types.h"
+#include "util/memory/chunk_map_pool_fwd.h"
+
+/**
+	Define to 1 if you want instance_arrays and scalars pool-allocated.  
+	Causes regression in one strange test case, needs debugging.  
+ */
+#define	POOL_ALLOCATE_INSTANCE_COLLECTIONS		0
 
 namespace HAC {
 namespace entity {
@@ -68,8 +75,6 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
 	public class_traits<Tag>::instance_collection_parent_type, 
 	public class_traits<Tag>::collection_type_manager_parent_type {
-// friend struct collection_type_manager<Tag>;
-// temporary workaround until int's type is better integrated
 friend	class class_traits<Tag>::collection_type_manager_parent_type;
 friend	class subinstance_manager;
 public:
@@ -79,7 +84,6 @@ private:
 	typedef	typename traits_type::instance_collection_parent_type
 							parent_type;
 	typedef	INSTANCE_COLLECTION_CLASS		this_type;
-// friend void subinstance_manager::unroll_port_instances(const this_type&);
 public:
 	typedef	typename traits_type::type_ref_type	type_ref_type;
 	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
@@ -409,6 +413,9 @@ private:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
+#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
+#endif
 };	// end class instance_array
 
 //-----------------------------------------------------------------------------
@@ -506,10 +513,8 @@ public:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-#if 0
-	// soon...
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS
+#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
 #endif
 };	// end class instance_array (specialized)
 

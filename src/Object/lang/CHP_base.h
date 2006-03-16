@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.5 2006/01/22 18:20:15 fang Exp $
+	$Id: CHP_base.h,v 1.6 2006/03/16 03:40:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -11,6 +11,7 @@
 
 namespace HAC {
 namespace entity {
+struct expr_dump_context;
 /**
 	Namespace for CHP object classes.  
  */
@@ -29,7 +30,7 @@ public:
 virtual	~action() { }
 
 virtual	ostream&
-	dump(ostream&) const = 0;
+	dump(ostream&, const expr_dump_context&) const = 0;
 
 };	// end class action
 

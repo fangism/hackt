@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.18 2006/03/15 04:38:13 fang Exp $
+ 	$Id: definition.cc,v 1.19 2006/03/16 03:40:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -815,21 +815,21 @@ user_def_chan::dump(ostream& o) const {
 		"In channel definition \"" << key << "\", we have: {" << endl;
 	{
 		scopespace::dump_for_definitions(o);
+		const expr_dump_context dc(this);
 		o << auto_indent << "unroll sequence: " << endl;
 		{	INDENT_SECTION(o);
-			const expr_dump_context dc(this);
 			sequential_scope::dump(o, dc);
 		}
 		// CHP
 		if (!send_chp.empty()) {
 			o << auto_indent << "send-CHP:" << endl;
 			INDENT_SECTION(o);
-			send_chp.dump(o << auto_indent) << endl;
+			send_chp.dump(o << auto_indent, dc) << endl;
 		}
 		if (!recv_chp.empty()) {
 			o << auto_indent << "recv-CHP:" << endl;
 			INDENT_SECTION(o);
-			recv_chp.dump(o << auto_indent) << endl;
+			recv_chp.dump(o << auto_indent, dc) << endl;
 		}
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
@@ -1937,21 +1937,21 @@ user_def_datatype::dump(ostream& o) const {
 		"In datatype definition \"" << key << "\", we have: {" << endl;
 	{
 		scopespace::dump_for_definitions(o);
+		const expr_dump_context dc(this);
 		o << auto_indent << "unroll sequence: " << endl;
 		{	INDENT_SECTION(o);
-			const expr_dump_context dc(this);
 			sequential_scope::dump(o, dc);
 		}
 		// CHP
 		if (!set_chp.empty()) {
 			o << auto_indent << "set-CHP:" << endl;
 			INDENT_SECTION(o);
-			set_chp.dump(o << auto_indent) << endl;
+			set_chp.dump(o << auto_indent, dc) << endl;
 		}
 		if (!get_chp.empty()) {
 			o << auto_indent << "get-CHP:" << endl;
 			INDENT_SECTION(o);
-			get_chp.dump(o << auto_indent) << endl;
+			get_chp.dump(o << auto_indent, dc) << endl;
 		}
 		if (footprint_map.size()) {
 			footprint_map.dump(o << auto_indent) << endl;
@@ -2627,11 +2627,9 @@ ostream&
 process_definition::dump(ostream& o) const {
 	STACKTRACE_DUMP(__PRETTY_FUNCTION__);
 	definition_base::dump(o);	// dump template signature first
-	// unique ID not working with INDENT_SECTION marco... :(
 	INDENT_SECTION(o);	
 	// now dump ports
 	port_formals.dump(o) << endl;
-
 	// now dump rest of contents
 	o << auto_indent <<
 		"In definition \"" << key << "\", we have: {" << endl;
@@ -2654,7 +2652,8 @@ process_definition::dump(ostream& o) const {
 			if (!chp.empty()) {
 				o << auto_indent << "chp:" << endl;
 				INDENT_SECTION(o);
-				chp.dump(o << auto_indent) << endl;
+				const expr_dump_context dc(this);
+				chp.dump(o << auto_indent, dc) << endl;
 			}
 			// SPEC
 			if (!spec.empty()) {

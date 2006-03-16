@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.5 2006/01/22 18:20:13 fang Exp $
+	$Id: CHP.h,v 1.6 2006/03/16 03:40:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -47,7 +47,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	// helper methods needed for process_definition
 	void
@@ -79,7 +79,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	// helper methods needed for process_definition
 	void
@@ -130,7 +130,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class guarded_action
@@ -158,7 +158,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class deterministic_selection
@@ -180,7 +180,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nondeterministic_selection
@@ -211,7 +211,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class assignment
@@ -239,7 +239,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class condition_wait
@@ -272,7 +272,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	template <class L>
 	good_bool
@@ -308,7 +308,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	template <class L>
 	good_bool
@@ -334,7 +334,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class do_while_loop
@@ -361,7 +361,7 @@ public:
 	what(ostream&) const;
 
 	ostream&
-	dump(ostream&) const;
+	dump(ostream&, const expr_dump_context&) const;
 
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

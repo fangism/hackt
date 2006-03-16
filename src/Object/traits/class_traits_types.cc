@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.8 2006/03/15 04:38:21 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.9 2006/03/16 03:40:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -16,7 +16,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.tcc"
-#include "util/memory/list_vector_pool.h"
+// #include "util/memory/list_vector_pool.h"
+#include "util/memory/chunk_map_pool.h"
 #include "Object/def/built_in_datatype_def.h"
 #include "Object/def/param_definition.h"
 #include "Object/common/namespace.h"
@@ -32,9 +33,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/int_traits.h"
 
 #if DEBUG_TRAITS_CLASS_TRAITS_TYPES
-	#define	ENABLE_STACKTRACE		DEBUG_TRAITS_CLASS_TRAITS_TYPES
-	#include "util/stacktrace.h"
-
+#define	ENABLE_STACKTRACE		DEBUG_TRAITS_CLASS_TRAITS_TYPES
+#include "util/stacktrace.h"
 REQUIRES_STACKTRACE_STATIC_INIT
 #endif
 
@@ -46,10 +46,11 @@ namespace entity {
 // this holds onto a reference count that will be guaranteed to be
 // discarded AFTER subsequent static objects are deallocated in this module
 // becaused of reverse-order static destruction.
-REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const)
-#if 0
+// REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_const)
+REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(pint_const)
+#if POOL_ALLOCATE_VALUE_COLLECTIONS
 // re-enable this when it switches back to pooled...
-REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(pint_scalar)
+REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(pint_scalar)
 #endif
 // this early because int_def contains a pint_scalar, 
 // and built_in_namespace contains the int_def.

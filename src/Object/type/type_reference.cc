@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.12 2006/03/15 04:38:22 fang Exp $
+ 	$Id: type_reference.cc,v 1.13 2006/03/16 03:40:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -494,12 +494,16 @@ struct data_type_reference::canonical_compare_result_type {
 };	// end struct canonical_compare_result_type
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// rather not inline
+/**
+	What about integer widths?
+	(rather not inline)
+ */
 data_type_reference::canonical_compare_result_type
 	::canonical_compare_result_type(
 		const this_type& l, const this_type& r) :
 		lt(l.make_canonical_data_type_reference()),
 		rt(r.make_canonical_data_type_reference()) {
+	STACKTRACE_VERBOSE;
 	if (!lt || !rt) {
 	ICE(cerr, 
 		cerr << "got null left-type or right-type "
@@ -511,6 +515,12 @@ data_type_reference::canonical_compare_result_type
 	INVARIANT(ld && rd);
 	INVARIANT(!ld.is_a<const typedef_base>());
 	INVARIANT(!rd.is_a<const typedef_base>());
+#if ENABLE_STACKTRACE
+	lt->dump(STACKTRACE_INDENT << "lt = ") << endl;
+	rt->dump(STACKTRACE_INDENT << "rt = ") << endl;
+	ld->dump(STACKTRACE_INDENT << "ld = ") << endl;
+	rd->dump(STACKTRACE_INDENT << "rd = ") << endl;
+#endif
 	equal = (ld == rd);
 }
 
@@ -530,6 +540,7 @@ data_type_reference::may_be_collectibly_type_equivalent(
 bool
 data_type_reference::may_be_connectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
 	const this_type& t(IS_A(const this_type&, ft));	// assert cast
 	const canonical_compare_result_type eq(*this, t);
 	if (!eq.equal)

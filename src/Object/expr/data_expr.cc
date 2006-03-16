@@ -1,9 +1,11 @@
 /**
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
-	NOTE: file was moved from "Object/art_objec_data_expr.cc"
-	$Id: data_expr.cc,v 1.5 2005/12/13 04:15:22 fang Exp $
+	NOTE: file was moved from "Object/art_object_data_expr.cc"
+	$Id: data_expr.cc,v 1.6 2006/03/16 03:40:24 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include "Object/expr/int_arith_expr.h"
@@ -27,6 +29,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
 #include "util/IO_utils.h"
+#include "util/stacktrace.h"
 
 namespace util {
 using HAC::entity::int_arith_expr;
@@ -327,14 +330,26 @@ int_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	BUG: may_be_type_equivalent rejects pint vs. int comparison.  
+	TODO: replace get_data_type_ref with nonmeta_inst_ref
+		type_equivalence call directly.  
  */
 count_ptr<const data_type_reference>
 int_relational_expr::get_data_type_ref(void) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
+	STACKTRACE_VERBOSE;
 	const return_type lt(lx->get_data_type_ref());
 	const return_type rt(rx->get_data_type_ref());
 	if (!lt || !rt)
 		return return_type(NULL);
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "We have operands: " << endl;
+	lx->dump(STACKTRACE_INDENT << "\tlex = ",
+		expr_dump_context::error_mode) << endl;
+	rx->dump(STACKTRACE_INDENT << "\trex = ",
+		expr_dump_context::error_mode) << endl;
+	lt->dump(STACKTRACE_INDENT << "\tleft = ") << endl;
+	rt->dump(STACKTRACE_INDENT << "\tright = ") << endl;
+#endif
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
 	if (lt->may_be_connectibly_type_equivalent(*rt)) {

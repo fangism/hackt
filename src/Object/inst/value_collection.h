@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.10 2006/02/21 04:48:32 fang Exp $
+	$Id: value_collection.h,v 1.11 2006/03/16 03:40:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -22,6 +22,12 @@
 #include "util/new_functor_fwd.h"
 #include "util/multikey_fwd.h"
 #include "util/multikey_qmap_fwd.h"
+#include "util/memory/chunk_map_pool_fwd.h"
+
+/**
+	Define to 1 to enable pool-allocations of value-arrays and scalars.  
+ */
+#define	POOL_ALLOCATE_VALUE_COLLECTIONS			1
 
 namespace HAC {
 namespace entity {
@@ -313,7 +319,9 @@ public:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
-
+#if POOL_ALLOCATE_VALUE_COLLECTIONS
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
+#endif
 };	// end class value_array
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -389,8 +397,9 @@ public:
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC_NO_POINTERS
-	// POOL?
-
+#if POOL_ALLOCATE_VALUE_COLLECTIONS
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
+#endif
 };	// end class value_array specialization
 
 //=============================================================================

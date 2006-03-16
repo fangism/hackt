@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.13 2006/02/21 23:07:34 fang Exp $
+#	$Id: TODO,v 1.14 2006/03/16 03:40:20 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -200,12 +200,13 @@ parser:
 ===============================================================================
 PRS and CHP
 
-pass-gates:
-	add to parser, and intermediate representation
-
 need to handle loops and conditionals *around* prs { ... } bodies
 	need intermediate representation support for conditional PRS (easy)
 	Tentatively not supported until issue is resolved.  
+
+CHP:
+	restrict references in the nonmeta language to be scalar?
+		no aggregates?
 
 ===============================================================================
 Expression resolutions:

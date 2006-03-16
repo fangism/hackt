@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool_fwd.h"
 	Forward declarations for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool_fwd.h,v 1.5 2005/05/22 06:24:22 fang Exp $
+	$Id: chunk_map_pool_fwd.h,v 1.6 2006/03/16 03:40:30 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_FWD_H__
@@ -36,7 +36,9 @@ private:								\
 						pool_ref_ref_type;	\
 public:									\
 	typedef	util::memory::count_ptr<const pool_type> pool_ref_type;	\
-									\
+private:								\
+	static const pool_ref_type __robust_init__;			\
+public:									\
 	static								\
 	pool_ref_ref_type						\
 	get_pool(void);
@@ -44,11 +46,10 @@ public:									\
 /**
 	Friend declarations needed if default constructor is private.
  */
-#define	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS				\
-	template <size_t C>						\
+#define	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS(C)				\
 	friend class util::memory::chunk_map_pool<this_type,C>;		\
-	friend void std::_Construct<this_type>(this_type* __p);		\
-	friend void std::_Construct<this_type, this_type>(		\
+	friend void _Construct<this_type>(this_type* __p);		\
+	friend void _Construct<this_type, this_type>(			\
 		this_type* __p, const this_type& __value);
 
 

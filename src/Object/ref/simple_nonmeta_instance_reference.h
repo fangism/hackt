@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.5 2006/02/21 04:48:39 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.6 2006/03/16 03:40:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -65,16 +65,27 @@ public:
 
 	~simple_nonmeta_instance_reference();
 
+	size_t
+	dimensions(void) const;
+
 	ostream&
 	what(ostream&) const;
 
+#if 0
 	using parent_type::dump;
+#else
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+#endif
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 
 	instance_collection_ptr_type
 	get_inst_base_subtype(void) const;
+
+	good_bool
+	attach_indices(excl_ptr<index_list_type>&);
 
 #if 0
 // only needed if included statically, such as in member_instance_reference

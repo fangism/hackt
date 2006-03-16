@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
 
+2006-03-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-01:
+	  list_vector_pool, chunk_map_pool: added rebind template typedef, 
+		improved class member definition macros to be generalizable
+		to simple templates (as long as commas don't interfere with
+		the C preprocessor...) and other macro fixes.  
+
+
 2006-03-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-19-connect-02-09:

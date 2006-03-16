@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: preal_const.h,v 1.3 2006/02/21 04:48:27 fang Exp $
+	$Id: preal_const.h,v 1.4 2006/03/16 03:40:24 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
@@ -11,7 +11,7 @@
 
 #include "Object/expr/preal_expr.h"
 #include "Object/expr/const_param.h"
-#include "util/memory/list_vector_pool_fwd.h"
+#include "util/memory/chunk_map_pool_fwd.h"
 
 //=============================================================================
 namespace HAC {
@@ -101,8 +101,8 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
-	LIST_VECTOR_POOL_ESSENTIAL_FRIENDS
-	LIST_VECTOR_POOL_ROBUST_STATIC_DECLARATIONS
+	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS(64)
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
 };	// end class preal_const
 
 //=============================================================================

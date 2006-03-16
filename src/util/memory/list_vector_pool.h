@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.15 2006/02/25 04:55:04 fang Exp $
+	$Id: list_vector_pool.h,v 1.16 2006/03/16 03:40:30 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -235,7 +235,11 @@ public:
 	typedef void*		pointer;
 	typedef const void*	const_pointer;
 	typedef void		value_type;
-// no rebind yet...
+/**
+	Rebind allocator to another type.  
+ */
+template <class T>
+struct rebind { typedef	list_vector_pool<T>	other; };
 };
 
 //-----------------------------------------------------------------------------
@@ -286,6 +290,11 @@ public:
 	typedef	const T*			const_pointer;
 	typedef	T&				reference;
 	typedef	const T&			const_reference;
+	/**
+		Rebind allocator to another type.  
+	 */
+	template <class S>
+	struct rebind { typedef	list_vector_pool<S>	other; };
 private:
 	// could propagate thread-sensitivity parameter to the respective
 	// STL data-structures' allocators...

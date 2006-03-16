@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.22 2006/03/15 04:38:18 fang Exp $
+	$Id: instance_collection.tcc,v 1.23 2006/03/16 03:40:24 fang Exp $
 	TODO: trim includes
  */
 
@@ -56,6 +56,7 @@
 #include "util/ring_node.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
+#include "util/memory/chunk_map_pool.tcc"
 
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
@@ -444,6 +445,29 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 
 //=============================================================================
 // class array method definitions
+
+#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
+// The following macro calls are intended to be equivalent to:
+// TEMPLATE_CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(
+//	INSTANCE_ARRAY_TEMPLATE_SIGNATURE, INSTANCE_ARRAY_CLASS)
+// but the preprocessor is retarded about arguments with commas in them, 
+// so we forced to expand this macro by hand.  :S
+
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+__SELF_CHUNK_MAP_POOL_STATIC_INIT( , typename, INSTANCE_ARRAY_CLASS)
+
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(, typename, INSTANCE_ARRAY_CLASS)
+
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW( , INSTANCE_ARRAY_CLASS)
+
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW( , INSTANCE_ARRAY_CLASS)
+
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE( , INSTANCE_ARRAY_CLASS)
+#endif	// POOL_ALLOCATE_INSTANCE_COLLECTIONS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -1171,6 +1195,29 @@ INSTANCE_ARRAY_CLASS::load_object(
 
 //=============================================================================
 // class array method definitions (specialized)
+
+#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
+// The following macro calls are intended to be equivalent to:
+// TEMPLATE_CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(
+//	INSTANCE_SCALAR_TEMPLATE_SIGNATURE, INSTANCE_SCALAR_CLASS)
+// but the preprocessor is retarded about arguments with commas in them, 
+// so we forced to expand this macro by hand.  :S
+
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+__SELF_CHUNK_MAP_POOL_STATIC_INIT( , typename, INSTANCE_SCALAR_CLASS)
+
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(, typename, INSTANCE_SCALAR_CLASS)
+
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW( , INSTANCE_SCALAR_CLASS)
+
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW( , INSTANCE_SCALAR_CLASS)
+
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE( , INSTANCE_SCALAR_CLASS)
+#endif	// POOL_ALLOCATE_INSTANCE_COLLECTIONS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

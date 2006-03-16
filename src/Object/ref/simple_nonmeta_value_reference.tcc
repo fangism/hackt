@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.7 2006/01/22 18:20:31 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.8 2006/03/16 03:40:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -28,6 +28,9 @@
 #include "Object/type/data_type_reference.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
+#include "Object/common/dump_flags.h"
+#include "Object/expr/expr_dump_context.h"
+#include "Object/expr/nonmeta_index_list.h"
 
 #include "util/what.h"
 #include "util/stacktrace.h"
@@ -97,14 +100,38 @@ SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		const expr_dump_context& c) const {
-	return grandparent_type::dump(o, c);
+#if 0
+	return common_base_type::dump(o, c);
+#else
+	if (c.include_type_info) {
+		this->what(o) << " ";
+	}
+	NEVER_NULL(this->value_collection_ref);
+	if (c.enclosing_scope) {
+		this->value_collection_ref->dump_hierarchical_name(o,
+			dump_flags::no_definition_owner);
+	} else {
+		this->value_collection_ref->dump_hierarchical_name(o,
+			dump_flags::default_value);
+	}
+	return simple_nonmeta_instance_reference_base::dump_indices(o, c);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dimensions(void) const {
-	return grandparent_type::dimensions();
+#if 0
+	return common_base_type::dimensions();
+#else
+	size_t dim = this->value_collection_ref->get_dimensions();
+	if (this->array_indices) {
+		const size_t c = this->array_indices->dimensions_collapsed();
+		INVARIANT(c <= dim);
+		return dim -c;
+	} else  return dim;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -112,6 +139,43 @@ SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const data_type_reference>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_data_type_ref(void) const {
 	return data_type_resolver<Tag>()(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Tentative: no nonscalar references allowed in the nonmeta language.
+ */
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::attach_indices(
+		excl_ptr<index_list_type>& i) {
+	INVARIANT(!this->array_indices);
+	NEVER_NULL(i);
+
+	// dimension-check:
+	// number of indices must be <= dimension of instance collection.  
+	const size_t max_dim =
+		this->value_collection_ref->get_dimensions();
+	if (i->size() != max_dim) {
+		cerr << "ERROR: instance collection " <<
+			this->value_collection_ref->get_name()
+			<< " is " << max_dim << "-dimensional, and thus, "
+			"cannot be indexed " << i->size() <<
+			"-dimensionally!  ";
+			// caller will say where
+		return good_bool(false);
+	}
+	// else proceed...
+
+	// allow under-specified dimensions?  
+	// NOT for nonmeta instance references, or ALL or NONE
+	// TODO: enforce this, modifying the above check
+
+	// TODO: limited static range checking?
+	// only if indices are ALL meta values
+
+	this->array_indices = i;
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

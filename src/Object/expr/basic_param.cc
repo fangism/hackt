@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.12 2006/03/15 04:38:14 fang Exp $
+ 	$Id: basic_param.cc,v 1.13 2006/03/16 03:40:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -49,6 +49,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/what.tcc"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/persistent_object_manager.tcc"
 
@@ -463,7 +464,8 @@ param_expr_collective::hash_string(void) const {
 	of built-ins, we may need a safeguard to ensure that
 	the allocator is initialized first!
 ***/
-LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_const, 1024)
+// LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_const, 1024)
+CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(pint_const)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_const)
@@ -640,7 +642,8 @@ pint_const::load_object(const persistent_object_manager& m, istream& f) {
 // class pbool_const method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pbool_const, 1024)
+// LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pbool_const, 1024)
+CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(pbool_const)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pbool_const)
@@ -763,7 +766,8 @@ pbool_const::load_object(const persistent_object_manager& m, istream& f) {
 // class preal_const method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(preal_const, 256)
+// LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(preal_const, 256)
+CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(preal_const)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(preal_const)

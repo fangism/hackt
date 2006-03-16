@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.13 2006/02/21 23:07:35 fang Exp $
+ 	$Id: instance_reference.cc,v 1.14 2006/03/16 03:40:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -241,17 +241,18 @@ simple_meta_indexed_reference_base::load_object_base(
 // class simple_nonmeta_instance_reference_base method definitions
 
 simple_nonmeta_instance_reference_base::simple_nonmeta_instance_reference_base(
-		) : parent_type(), array_indices() { }
+		) : array_indices() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 simple_nonmeta_instance_reference_base::simple_nonmeta_instance_reference_base(
 		excl_ptr<index_list_type>& i) :
-		parent_type(), array_indices(i) { }
+		array_indices(i) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 simple_nonmeta_instance_reference_base::~simple_nonmeta_instance_reference_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 size_t
 simple_nonmeta_instance_reference_base::dimensions(void) const {
 	size_t dim = get_inst_base()->get_dimensions();
@@ -262,8 +263,10 @@ simple_nonmeta_instance_reference_base::dimensions(void) const {
 	}
 	else return dim;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Temporary: un meta-checked.  
  */
@@ -298,23 +301,25 @@ simple_nonmeta_instance_reference_base::attach_indices(
 	array_indices = i;
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Improved dump, ues contex flags to modify and format dump.  
+	Improved dump, uses context flags to modify and format dump.  
  */
 ostream&
-simple_nonmeta_instance_reference_base::dump(ostream& o, 
+simple_nonmeta_instance_reference_base::dump_indices(ostream& o, 
 		const expr_dump_context& c) const {
 #if 0
-	if (c.include_type_info)
+	if (c.include_type_info) {
 		what(o) << " ";
-#endif
+	}
 	// modify flags for this?
 	// depend on c.enclosing_scope?
 	const never_ptr<const instance_collection_base>
 		ib(get_inst_base());
 	ib->dump_hierarchical_name(o, dump_flags::no_definition_owner);
+#endif
 	if (array_indices) {
 		array_indices->dump(o, c);
 	}

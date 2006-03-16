@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.12 2006/02/22 04:45:24 fang Exp $
+ 	$Id: value_collection.tcc,v 1.13 2006/03/16 03:40:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -47,7 +47,8 @@
 
 #include "common/ICE.h"
 
-#include "util/memory/list_vector_pool.tcc"
+// #include "util/memory/list_vector_pool.tcc"
+#include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
 #include "util/multikey_qmap.tcc"		// include "qmap.tcc"
@@ -408,6 +409,29 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 //=============================================================================
 // class value_array method_definitions
 
+#if POOL_ALLOCATE_VALUE_COLLECTIONS
+// The following macro calls are intended to be equivalent to:
+// TEMPLATE_CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(
+//      VALUE_ARRAY_TEMPLATE_SIGNATURE, VALUE_ARRAY_CLASS)
+// but the preprocessor is retarded about arguments with commas in them, 
+// so we forced to expand this macro by hand.  :S
+        
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+__SELF_CHUNK_MAP_POOL_STATIC_INIT( , typename, VALUE_ARRAY_CLASS)
+        
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(, typename, VALUE_ARRAY_CLASS)
+
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW( , VALUE_ARRAY_CLASS)
+
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW( , VALUE_ARRAY_CLASS)
+        
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE( , VALUE_ARRAY_CLASS)
+#endif  // POOL_ALLOCATE_VALUE_COLLECTIONS
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array() :
@@ -704,10 +728,28 @@ VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
 //-----------------------------------------------------------------------------
 // class value_array<Tag,0> specialization method definitions
 
-#if 1 && 0
-// reminder: pint_scalar == pint_array<0>
-LIST_VECTOR_POOL_ROBUST_STATIC_DEFINITION(pint_scalar, 64);
-#endif
+#if POOL_ALLOCATE_VALUE_COLLECTIONS
+// The following macro calls are intended to be equivalent to:
+// TEMPLATE_CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(
+//      VALUE_SCALAR_TEMPLATE_SIGNATURE, VALUE_SCALAR_CLASS)
+// but the preprocessor is retarded about arguments with commas in them, 
+// so we forced to expand this macro by hand.  :S
+        
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+__SELF_CHUNK_MAP_POOL_STATIC_INIT( , typename, VALUE_SCALAR_CLASS)
+        
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(, typename, VALUE_SCALAR_CLASS)
+
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW( , VALUE_SCALAR_CLASS)
+
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW( , VALUE_SCALAR_CLASS)
+        
+VALUE_SCALAR_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE( , VALUE_SCALAR_CLASS)
+#endif  // POOL_ALLOCATE_VALUE_COLLECTIONS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
