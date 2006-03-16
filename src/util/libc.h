@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.4 2006/01/23 21:19:29 fang Exp $
+	$Id: libc.h,v 1.5 2006/03/16 23:36:15 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -252,10 +252,12 @@ END_C_DECLS
  *	This might go in something like "libm.h".
  *===========================================================================*/
 BEGIN_C_DECLS
+#if 0
 /* sqrt */
 #if 	defined(HAVE_SQRT) && HAVE_SQRT
 #else
 #error	"Need a substitute for sqrt!"
+#endif
 #endif
 END_C_DECLS
 

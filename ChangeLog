@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2006-03-16	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-02:
+	  Removed the configure check for sqrt because we're not using it
+		and it seems to be causing problems (bad test).  
+		Possibly built-in funcs should be checked differently.  
+
+
 2006-03-14	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-merged-connect-02-09:
