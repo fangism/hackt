@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.5 2006/03/16 03:40:27 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.6 2006/03/16 03:49:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -10,6 +10,9 @@
 
 #include <iostream>
 #include "Object/ref/simple_nonmeta_instance_reference.h"
+#include "Object/expr/expr_dump_context.h"
+#include "Object/common/dump_flags.h"
+#include "Object/expr/nonmeta_index_list.h"
 #include "util/what.h"
 #include "util/persistent_object_manager.tcc"
 
@@ -19,6 +22,7 @@
 namespace HAC {
 namespace entity {
 using util::persistent_traits;
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class simple_nonmeta_instance_reference method definitions
