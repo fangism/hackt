@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.106 2006/03/15 04:38:11 fang Exp $
+#	$Id: Makefile.am,v 1.107 2006/03/16 21:28:22 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -546,7 +546,7 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/cflat_options.h \
 	main/compile_options.h
 
-COMMON_H_FILES = 
+COMMON_H_FILES = \
 	common/ICE.h \
 	common/TODO.h \
 	common/devel_switches.h
