@@ -1,5 +1,5 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.4 2006/02/06 00:04:32 fang Exp $
+#	$Id: Make.dox-head,v 1.5 2006/03/17 04:52:10 fang Exp $
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
 
@@ -41,8 +41,12 @@ AUTOPDFS += $(PDFS)
 endif
 endif
 
-pdf-local: $(AUTOPDFS)
-ps-local: $(AUTOPSS)
+# Can always explicitly try to build pdf/ps with "make pdf ps", 
+# regardless of configuration
+pdf-local: $(PDFS)
+ps-local: $(PSS)
 
+# The documents are only built by default if configure had docs enabled by
+# default and the right latex programs were found.  
 doc_DATA = $(AUTOPDFS) $(AUTOPSS)
 
