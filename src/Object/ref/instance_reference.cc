@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.14 2006/03/16 03:40:26 fang Exp $
+ 	$Id: instance_reference.cc,v 1.14.2.1 2006/03/17 02:05:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -252,74 +252,12 @@ simple_nonmeta_instance_reference_base::simple_nonmeta_instance_reference_base(
 simple_nonmeta_instance_reference_base::~simple_nonmeta_instance_reference_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-size_t
-simple_nonmeta_instance_reference_base::dimensions(void) const {
-	size_t dim = get_inst_base()->get_dimensions();
-	if (array_indices) {
-		const size_t c = array_indices->dimensions_collapsed();
-		INVARIANT(c <= dim);
-		return dim -c;
-	}
-	else return dim;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Temporary: un meta-checked.  
- */
-good_bool
-simple_nonmeta_instance_reference_base::attach_indices(
-		excl_ptr<index_list_type>& i) {
-	INVARIANT(!array_indices);
-	NEVER_NULL(i);
-
-	// dimension-check:
-	const never_ptr<const instance_collection_base>
-		inst_base(get_inst_base());
-	// number of indices must be <= dimension of instance collection.  
-	const size_t max_dim = dimensions();    // depends on indices
-	if (i->size() > max_dim) {
-		cerr << "ERROR: instance collection " << inst_base->get_name()
-			<< " is " << max_dim << "-dimensional, and thus, "
-			"cannot be indexed " << i->size() <<
-			"-dimensionally!  ";
-			// caller will say where
-		return good_bool(false);
-	} 
-	// else proceed...
-
-	// allow under-specified dimensions?  
-	// NOT for nonmeta instance references, or ALL or NONE
-	// TODO: enforce this, modifying the above check
-
-	// TODO: limited static range checking?
-	// only if indices are ALL meta values
-
-	array_indices = i;
-	return good_bool(true);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Improved dump, uses context flags to modify and format dump.  
  */
 ostream&
 simple_nonmeta_instance_reference_base::dump_indices(ostream& o, 
 		const expr_dump_context& c) const {
-#if 0
-	if (c.include_type_info) {
-		what(o) << " ";
-	}
-	// modify flags for this?
-	// depend on c.enclosing_scope?
-	const never_ptr<const instance_collection_base>
-		ib(get_inst_base());
-	ib->dump_hierarchical_name(o, dump_flags::no_definition_owner);
-#endif
 	if (array_indices) {
 		array_indices->dump(o, c);
 	}

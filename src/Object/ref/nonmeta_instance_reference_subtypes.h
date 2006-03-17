@@ -3,13 +3,14 @@
 	Class family for instance references in HAC.  
 	This file used to be "Object/art_object_nonmeta_inst_ref_subtypes.h"
 		in a previous life.  
-	$Id: nonmeta_instance_reference_subtypes.h,v 1.5 2006/02/10 21:50:42 fang Exp $
+	$Id: nonmeta_instance_reference_subtypes.h,v 1.5.10.1 2006/03/17 02:05:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 #define	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 
 #include "Object/ref/nonmeta_instance_reference_base.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -17,6 +18,7 @@ namespace entity {
 // classes pint_nonmeta_instance_reference and pbool_nonmeta_instance_reference
 //	are in "art_object_expr_param_ref.*"
 
+#if !SIMPLIFY_NONMETA_INSTANCE_REFERENCES
 class channel_instance_reference_base :
 		virtual public nonmeta_instance_reference_base {
 	typedef	nonmeta_instance_reference_base		parent_type;
@@ -64,7 +66,7 @@ protected:
 	bool_instance_reference_base() : parent_type() { }
 public:
 virtual	~bool_instance_reference_base() { }
-};	// end clas bool_instance_reference_base
+};	// end class bool_instance_reference_base
 
 //-----------------------------------------------------------------------------
 class enum_instance_reference_base :
@@ -94,7 +96,7 @@ protected:
 	param_instance_reference_base() : parent_type() { }
 public:
 virtual	~param_instance_reference_base() { }
-};	// end clas param_instance_reference_base
+};	// end class param_instance_reference_base
 
 //-----------------------------------------------------------------------------
 class pint_instance_reference_base :
@@ -125,6 +127,7 @@ protected:
 public:
 virtual	~preal_instance_reference_base() { }
 };	// end class preal_instance_reference_base
+#endif
 
 //=============================================================================
 }	// end namespace entity

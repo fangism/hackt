@@ -1,9 +1,9 @@
 /**
-	\file "Object/ref/simple_nonmeta_instnace_reference.h"
+	\file "Object/ref/simple_nonmeta_instance_reference.h"
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.6 2006/03/16 03:40:27 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.6.2.1 2006/03/17 02:05:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -71,12 +71,8 @@ public:
 	ostream&
 	what(ostream&) const;
 
-#if 0
-	using parent_type::dump;
-#else
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
-#endif
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
@@ -87,20 +83,11 @@ public:
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
 
-#if 0
-// only needed if included statically, such as in member_instance_reference
-// however, we don't support members references of 
-// non-meta instance references... yet.
-protected:
-	void
-	collect_transient_info_base(persistent_object_manager& ) const;
+	bool
+	may_be_type_equivalent(const nonmeta_instance_reference_base&) const;
 
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-#endif
+	bool
+	must_be_type_equivalent(const nonmeta_instance_reference_base&) const;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

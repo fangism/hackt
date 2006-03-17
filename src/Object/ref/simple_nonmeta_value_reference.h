@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.8 2006/03/16 03:40:27 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.8.2.1 2006/03/17 02:05:44 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -73,7 +73,6 @@ private:
 	typedef	typename traits_type::data_expr_base_type
 							data_expr_base_type;
 	typedef	simple_datatype_nonmeta_value_reference	common_base_type;
-//	typedef	common_base_type::parent_type		grandparent_type;
 	typedef	data_expr_base_type			interface_type;
 protected:
 	typedef	typename traits_type::instance_collection_generic_type
@@ -115,13 +114,6 @@ public:
 
 	bool
 	must_be_equivalent(const interface_type& ) const;
-
-#if 0
-protected:
-	using common_base_type::collect_transient_info_base;
-	using common_base_type::write_object_base;
-	using common_base_type::load_object_base;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.10 2006/03/15 04:38:12 fang Exp $
+	$Id: devel_switches.h,v 1.10.2.1 2006/03/17 02:05:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -22,7 +22,7 @@
 #endif
 
 // leave this error enabled for released code
-#if 1
+#if 0
 #error	Production code should NOT include this header file.  \
 	However, if you are developing, use this file as you see fit.  
 #endif
@@ -33,6 +33,13 @@
 /**
 	TODO: decide policy for handling relaxed type actuals.  
  */
+
+/**
+	Define to 1 to use a simple nonmeta instance reference class
+	hierarchy.  
+	Goal: 1
+ */
+#define	SIMPLIFY_NONMETA_INSTANCE_REFERENCES		1
 
 //=============================================================================
 

@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-01:
+	  Branch: Reworking nonmeta reference infrastructure analogously to
+		meta instance references for type checking, etc...
+		Initial revision collapses part of the class hierarchy.  
+	  Cleanup some obsolete code.  
+
+
+	* HACKT-00-01-04-main-00-78-02:
+	  Configuration update only.  
+
+
 2006-03-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-01:

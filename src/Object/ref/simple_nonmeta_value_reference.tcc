@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.8 2006/03/16 03:40:27 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.8.2.1 2006/03/17 02:05:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -100,9 +100,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		const expr_dump_context& c) const {
-#if 0
-	return common_base_type::dump(o, c);
-#else
 	if (c.include_type_info) {
 		this->what(o) << " ";
 	}
@@ -115,23 +112,18 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 			dump_flags::default_value);
 	}
 	return simple_nonmeta_instance_reference_base::dump_indices(o, c);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dimensions(void) const {
-#if 0
-	return common_base_type::dimensions();
-#else
 	size_t dim = this->value_collection_ref->get_dimensions();
 	if (this->array_indices) {
 		const size_t c = this->array_indices->dimensions_collapsed();
 		INVARIANT(c <= dim);
 		return dim -c;
 	} else  return dim;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
