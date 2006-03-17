@@ -1,5 +1,5 @@
 dnl "config/documentation.m4"
-dnl	$Id: documentation.m4,v 1.2 2006/02/25 04:54:58 fang Exp $
+dnl	$Id: documentation.m4,v 1.3 2006/03/17 04:15:35 fang Exp $
 dnl Autoconf macros pertaining to package documentation.
 dnl This provides macros for checking for latex and related programs
 dnl that are used in building the documentation.  
@@ -102,21 +102,17 @@ AC_DEFUN([DOC_ARG_ENABLE_DOCS],
 [AC_REQUIRE([DOC_CHECK_PROG_LATEX])
 AC_REQUIRE([DOC_CHECK_PROG_PDFLATEX])
 AC_MSG_CHECKING([whether to build documents by default (all)])
-AC_ARG_ENABLE(enable_docs,
-	AC_HELP_STRING([--disable-docs],
+AC_ARG_ENABLE(docs,
+	AS_HELP_STRING([--disable-docs],
 		[Suppress default building of PS and PDF documents.]),
 dnl if given
-	[AM_CONDITIONAL(ENABLE_DOCS, test "$enable_docs" = "yes")
-	if test "$enable_docs" = "yes"
-	then    AC_MSG_RESULT([yes])
-	else    AC_MSG_RESULT([no])
-	fi
-	],
-dnl if not give
-	[AM_CONDITIONAL(ENABLE_DOCS, test "yes")
+	[AC_MSG_RESULT([$enable_docs])],
+dnl if not given
+	[enable_docs="yes"
 	AC_MSG_RESULT([yes (default)])]
 )
-if test x"$enable_docs" != "xno"
+AM_CONDITIONAL(ENABLE_DOCS, test x"$enable_docs" = "xyes")
+if test x"$enable_docs" = "xyes"
 then
 	if test -z "$LATEX"
 	then    AC_MSG_WARN([
@@ -128,6 +124,8 @@ then
 		Want to build PDF documents, but pdflatex not found.
 		Configure with --disable-docs to suppress PDF builds.])
 	fi
+else
+AC_MSG_NOTICE([You can still build latex documents explicitly with 'make pdf ps'])
 fi
 ])
 
