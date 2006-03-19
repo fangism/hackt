@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.10.4.1 2006/03/19 06:14:14 fang Exp $
+	$Id: chan_traits.h,v 1.10.4.2 2006/03/19 22:47:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -72,7 +72,7 @@ struct class_traits<channel_tag> {
 					simple_meta_instance_reference_type;
 	typedef	channel_meta_instance_reference_base
 				meta_instance_reference_parent_type;
-#if !NONMETA_TYPE_EQUIVALENCE
+#if 0
 	typedef	channel_instance_reference_base
 				nonmeta_instance_reference_parent_type;
 #endif

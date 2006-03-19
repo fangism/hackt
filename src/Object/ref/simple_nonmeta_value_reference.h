@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.8.2.2 2006/03/19 06:14:14 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.8.2.3 2006/03/19 22:47:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -57,14 +57,6 @@ simple_nonmeta_value_reference<Tag>
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_value_reference :
-#if NONMETA_TYPE_EQUIVALENCE
-#if NEW_NONMETA_REFERENCE_HIERARCHY
-	public class_traits<Tag>::nonmeta_instance_reference_base_type, 
-#else
-	public nonmeta_instance_reference_base, 
-#endif
-	public simple_nonmeta_instance_reference_base, 
-#else
 #if NEW_NONMETA_REFERENCE_HIERARCHY
 	public class_traits<Tag>::nonmeta_instance_reference_base_type, 
 	public simple_nonmeta_instance_reference_base, 
@@ -72,22 +64,15 @@ class simple_nonmeta_value_reference :
 	public simple_datatype_nonmeta_value_reference, 
 	public class_traits<Tag>::nonmeta_instance_reference_parent_type, 
 #endif
-#endif
 	// will be something like int_expr or bool_expr
 	public class_traits<Tag>::data_expr_base_type {
-#if !NONMETA_TYPE_EQUIVALENCE
 friend struct data_type_resolver<Tag>;
-#endif
 public:
 	typedef	class_traits<Tag>			traits_type;
 	typedef	typename traits_type::data_value_type	data_value_type;
 private:
 	typedef	SIMPLE_NONMETA_VALUE_REFERENCE_CLASS	this_type;
-#if NONMETA_TYPE_EQUIVALENCE
-	typedef	simple_nonmeta_instance_reference_base
-#else
-	typedef	typename traits_type::nonmeta_instance_reference_parent_type
-#endif
+	typedef	typename traits_type::nonmeta_instance_reference_base_type
 							parent_type;
 	typedef	typename traits_type::data_expr_base_type
 							data_expr_base_type;
@@ -95,11 +80,7 @@ private:
 	typedef	typename traits_type::nonmeta_instance_reference_base_type
 							common_base_type;
 #else
-#if !NONMETA_TYPE_EQUIVALENCE
 	typedef	simple_datatype_nonmeta_value_reference	common_base_type;
-#else
-	typedef	nonmeta_instance_reference_base		common_base_type;
-#endif
 #endif
 	typedef	data_expr_base_type			interface_type;
 protected:
@@ -126,12 +107,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
-#if NONMETA_TYPE_EQUIVALENCE
-	bool
-	may_accept_expr_type(const data_expr&) const;
-#endif
-
-#if !NONMETA_TYPE_EQUIVALENCE
+#if 0
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 #endif
@@ -145,15 +121,7 @@ public:
 	size_t
 	dimensions(void) const;
 
-#if NONMETA_TYPE_EQUIVALENCE
-	bool
-	may_be_type_equivalent(const nonmeta_instance_reference_base&) const;
-
-	bool
-	must_be_type_equivalent(const nonmeta_instance_reference_base&) const;
-#else
 	GET_DATA_TYPE_REF_PROTO;
-#endif
 
 	bool
 	must_be_equivalent(const interface_type& ) const;

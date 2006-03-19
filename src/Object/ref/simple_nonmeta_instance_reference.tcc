@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.6.2.1 2006/03/19 06:14:13 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.6.2.2 2006/03/19 22:47:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -30,22 +30,14 @@ using util::persistent_traits;
 /// private empty constructor
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::simple_nonmeta_instance_reference() :
-#if NONMETA_TYPE_EQUIVALENCE
-		parent_type(), common_base_type(),
-#else
 		common_base_type(), parent_type(),
-#endif
 		inst_collection_ref() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::simple_nonmeta_instance_reference(
 		const instance_collection_ptr_type i) :
-#if NONMETA_TYPE_EQUIVALENCE
-		parent_type(), common_base_type(),
-#else
 		common_base_type(), parent_type(),
-#endif
 		inst_collection_ref(i) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -61,7 +53,7 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::get_inst_base_subtype(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !NONMETA_TYPE_EQUIVALENCE
+#if 0
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<const instance_collection_base>
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::get_inst_base(void) const {

@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.6.2.1 2006/03/19 06:14:10 fang Exp $
+	$Id: data_expr.cc,v 1.6.2.2 2006/03/19 22:47:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -166,7 +166,6 @@ int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !NONMETA_TYPE_EQUIVALENCE
 count_ptr<const data_type_reference>
 int_arith_expr::get_data_type_ref(void) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
@@ -187,7 +186,6 @@ int_arith_expr::get_data_type_ref(void) const {
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -330,7 +328,6 @@ int_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !NONMETA_TYPE_EQUIVALENCE
 /**
 	BUG: may_be_type_equivalent rejects pint vs. int comparison.  
 	TODO: replace get_data_type_ref with nonmeta_inst_ref
@@ -344,15 +341,6 @@ int_relational_expr::get_data_type_ref(void) const {
 	const return_type rt(rx->get_data_type_ref());
 	if (!lt || !rt)
 		return return_type(NULL);
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "We have operands: " << endl;
-	lx->dump(STACKTRACE_INDENT << "\tlex = ",
-		expr_dump_context::error_mode) << endl;
-	rx->dump(STACKTRACE_INDENT << "\trex = ",
-		expr_dump_context::error_mode) << endl;
-	lt->dump(STACKTRACE_INDENT << "\tleft = ") << endl;
-	rt->dump(STACKTRACE_INDENT << "\tright = ") << endl;
-#endif
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
 	if (lt->may_be_connectibly_type_equivalent(*rt)) {
@@ -366,7 +354,6 @@ int_relational_expr::get_data_type_ref(void) const {
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -499,7 +486,6 @@ bool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !NONMETA_TYPE_EQUIVALENCE
 count_ptr<const data_type_reference>
 bool_logical_expr::get_data_type_ref(void) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
@@ -516,7 +502,6 @@ bool_logical_expr::get_data_type_ref(void) const {
 	// idea: if one type is complete and resolvable, then prefer it.
 	else	return return_type(NULL);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -573,12 +558,10 @@ int_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !NONMETA_TYPE_EQUIVALENCE
 count_ptr<const data_type_reference>
 int_negation_expr::get_data_type_ref(void) const {
 	return ex->get_data_type_ref();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -625,12 +608,10 @@ bool_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !NONMETA_TYPE_EQUIVALENCE
 count_ptr<const data_type_reference>
 bool_negation_expr::get_data_type_ref(void) const {
 	return ex->get_data_type_ref();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

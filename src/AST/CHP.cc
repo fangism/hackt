@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.3.6.1 2006/03/19 06:14:08 fang Exp $
+	$Id: CHP.cc,v 1.3.6.2 2006/03/19 22:47:02 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -587,17 +587,6 @@ binary_assignment::check_action(context& c) const {
 			where(*lval) << " not supported in CHP yet." << endl;
 		return statement::return_type(NULL);
 	}
-#if NONMETA_TYPE_EQUIVALENCE
-	if (!lref->may_accept_expr_type(*rv)) {
-		cerr << "Type mismatch in nonmeta assignment at " <<
-			where(*this) << ':' << endl;
-#if 0
-		lref->dump(cerr << "\tleft: ") << endl;
-		rval->dump(cerr << "\tright: ") << endl;
-#endif
-		return statement::return_type(NULL);
-	}
-#else
 	const count_ptr<const data_type_reference>
 		ltype(lref->get_data_type_ref());
 	if (!ltype) {
@@ -621,7 +610,6 @@ binary_assignment::check_action(context& c) const {
 		rtype->dump(cerr << "\tright: ") << endl;
 		return statement::return_type(NULL);
 	}
-#endif
 	// at this point, all is good
 	return statement::return_type(new entity::CHP::assignment(lref, rv));
 }
@@ -661,10 +649,8 @@ bool_assignment::check_action(context& c) const {
 #else
 	typedef	simple_datatype_nonmeta_value_reference		lref_type;
 #endif
-#if !NONMETA_TYPE_EQUIVALENCE
 	static const bool_traits::type_ref_ptr_type&
 		bool_type_ptr(bool_traits::built_in_type_ptr);
-#endif
 	const inst_ref_expr::nonmeta_data_return_type
 		lr(bool_var->check_nonmeta_data_reference(c));
 	if (!lr) {
@@ -685,17 +671,8 @@ bool_assignment::check_action(context& c) const {
 			<< endl;
 		return statement::return_type(NULL);
 	}
-#if NONMETA_TYPE_EQUIVALENCE
 	// wait, there is no rvalue in this assignment, it is implicit
 	// in the direction (dir: +/-) field.  
-#if 0
-	if (!lref->may_accept_expr_type(*rv)) {
-		cerr << "Type mismatch in boolean assignment at " <<
-			where(*this) << ':' << endl;
-		return statement::return_type(NULL);
-	}
-#endif
-#else
 	const count_ptr<const data_type_reference>
 		ltype(lref->get_data_type_ref());
 	if (!ltype) {
@@ -710,7 +687,6 @@ bool_assignment::check_action(context& c) const {
 		ltype->dump(cerr << "\tgot: ") << endl;
 		return statement::return_type(NULL);
 	}
-#endif
 	// at this point, all is good
 	return statement::return_type(
 		new entity::CHP::assignment(lref, 

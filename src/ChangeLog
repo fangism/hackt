@@ -5,6 +5,10 @@
 
 2006-03-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-04:
+	  Undone NONMETA_TYPE_EQUIVALENCE proposed changes.  
+
+
 	* HACKT-00-01-04-main-00-78-02-nonmeta-02-03:
 	  Fixed strange bug with nonmeta integer type comparison, 
 		didn't properly initialize int_instance_tollection's

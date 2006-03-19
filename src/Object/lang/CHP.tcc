@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.5.24.1 2006/03/19 06:14:12 fang Exp $
+	$Id: CHP.tcc,v 1.5.24.2 2006/03/19 22:47:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -75,10 +75,6 @@ channel_send::add_expressions(const L& l) {
 		for ( ; ti!=te; ti++, ei++, i++) {
 			// TODO: consider using a predicated copy_if functor?
 			NEVER_NULL(*ei);
-#if NONMETA_TYPE_EQUIVALENCE
-			// temporary until we rework data type references
-			if (!(*ti)->may_be_nonmeta_type_equivalent(**ei))
-#else
 			const count_ptr<const data_type_reference>
 				etype((*ei)->get_data_type_ref());
 			if (!etype) {
@@ -87,16 +83,10 @@ channel_send::add_expressions(const L& l) {
 				return good_bool(false);
 			}
 			if (!(*ti)->may_be_connectibly_type_equivalent(*etype))
-#endif
 			{
 				cerr << "Type mismatch in expression " << i <<
 					" of send expression list.  " << endl;
-#if NONMETA_TYPE_EQUIVALENCE
-				(*ei)->dump(cerr << "\tgot: ", 
-					expr_dump_context::error_mode) << endl;
-#else
 				etype->dump(cerr << "\tgot: ") << endl;
-#endif
 				(*ti)->dump(cerr << "\texpected: ") << endl;
 				return good_bool(false);
 			}
@@ -171,9 +161,6 @@ channel_receive::add_references(const L& l) {
 #endif
 				sdir(*ei);
 			NEVER_NULL(sdir);
-#if NONMETA_TYPE_EQUIVALENCE
-			if (!(*ti)->may_be_nonmeta_type_equivalent(*sdir))
-#else
 			const count_ptr<const data_type_reference>
 				etype(sdir->get_data_type_ref());
 			if (!etype) {
@@ -182,16 +169,10 @@ channel_receive::add_references(const L& l) {
 				return good_bool(false);
 			}
 			if (!(*ti)->may_be_connectibly_type_equivalent(*etype))
-#endif
 			{
 				cerr << "Type mismatch in reference " << i <<
 					" of receive list.  " << endl;
-#if NONMETA_TYPE_EQUIVALENCE
-				(*ei)->dump(cerr << "\tgot: ", 
-					expr_dump_context::error_mode) << endl;
-#else
 				etype->dump(cerr << "\tgot: ") << endl;
-#endif
 				(*ti)->dump(cerr << "\texpected: ") << endl;
 				return good_bool(false);
 			}

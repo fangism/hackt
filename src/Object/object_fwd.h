@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.5.6.2 2006/03/19 06:14:09 fang Exp $
+	$Id: object_fwd.h,v 1.5.6.3 2006/03/19 22:47:03 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -69,7 +69,7 @@ namespace entity {
 	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
 	class nonmeta_instance_reference_base;
 #if SIMPLIFY_NONMETA_INSTANCE_REFERENCES
-#if !NONMETA_TYPE_EQUIVALENCE
+#if 0
 	typedef	nonmeta_instance_reference_base	channel_instance_reference_base;
 	typedef	nonmeta_instance_reference_base	process_instance_reference_base;
 	typedef	nonmeta_instance_reference_base datatype_instance_reference_base;

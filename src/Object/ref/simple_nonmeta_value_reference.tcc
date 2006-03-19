@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.8.2.2 2006/03/19 06:14:14 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.8.2.3 2006/03/19 22:47:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -61,7 +61,7 @@ struct nonmeta_reference_type_check_policy;
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference() :
 #if 0
-#if NONMETA_TYPE_EQUIVALENCE || NEW_NONMETA_REFERENCE_HIERARCHY
+#if NEW_NONMETA_REFERENCE_HIERARCHY
 		common_base_type(), 
 #endif
 		parent_type(),
@@ -75,7 +75,7 @@ SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference(
 		const value_collection_ptr_type pi) :
 #if 0
-#if NONMETA_TYPE_EQUIVALENCE || NEW_NONMETA_REFERENCE_HIERARCHY
+#if NEW_NONMETA_REFERENCE_HIERARCHY
 		common_base_type(), 
 #endif
 		parent_type(), 
@@ -93,7 +93,7 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::~simple_nonmeta_value_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !NONMETA_TYPE_EQUIVALENCE
+#if 0
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<const instance_collection_base>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_inst_base(void) const {
@@ -147,29 +147,11 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !NONMETA_TYPE_EQUIVALENCE
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const data_type_reference>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_data_type_ref(void) const {
 	return data_type_resolver<Tag>()(*this);
 }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if NONMETA_TYPE_EQUIVALENCE
-/**
-	Checks whether or not an lvalue of this_type can be assigned 
-	an rvalue of the argument's type.  
-	Called by AST::CHP::assignment::check...
- */
-SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::may_accept_expr_type(
-		const data_expr& d) const {
-	return nonmeta_reference_type_check_policy<Tag>::may_accept_expr_type(
-			*this, d);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

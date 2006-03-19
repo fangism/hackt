@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.5.24.1 2006/03/19 06:14:10 fang Exp $
+	$Id: data_expr.h,v 1.5.24.2 2006/03/19 22:47:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DATA_EXPR_H__
@@ -14,7 +14,6 @@
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
-#include "Object/devel_switches.h"
 
 #define	USE_DATA_EXPR_EQUIVALENCE	0
 
@@ -49,13 +48,11 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
-#if !NONMETA_TYPE_EQUIVALENCE
 #define	GET_DATA_TYPE_REF_PROTO						\
 	count_ptr<const data_type_reference>				\
 	get_data_type_ref(void) const
 
 virtual	GET_DATA_TYPE_REF_PROTO = 0;
-#endif
 
 #if USE_DATA_EXPR_EQUIVALENCE
 #define	DATA_EXPR_MAY_EQUIVALENCE_PROTO					\

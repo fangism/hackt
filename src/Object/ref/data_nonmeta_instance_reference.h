@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/data_nonmeta_instance_reference.h"
-	$Id: data_nonmeta_instance_reference.h,v 1.1.2.1 2006/03/19 06:14:12 fang Exp $
+	$Id: data_nonmeta_instance_reference.h,v 1.1.2.2 2006/03/19 22:47:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_DATA_NONMETA_INSTANCE_REFERENCE_H__
@@ -28,13 +28,8 @@ public:
 
 virtual	~data_nonmeta_instance_reference() { }
 
-#if NONMETA_TYPE_EQUIVALENCE
-virtual	bool
-	may_accept_expr_type(const data_expr&) const = 0;
-#else
 virtual	count_ptr<const data_type_reference>
 	get_data_type_ref(void) const = 0;
-#endif
 
 };	// end class data_nonmeta_instance_reference
 

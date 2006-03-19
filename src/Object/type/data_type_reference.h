@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.7.22.1 2006/03/19 06:14:16 fang Exp $
+ 	$Id: data_type_reference.h,v 1.7.22.2 2006/03/19 22:47:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -112,22 +112,6 @@ private:
 #endif
 public:
 	TYPE_EQUIVALENT_PROTOS
-
-#if NONMETA_TYPE_EQUIVALENCE
-	// type-checking of send nonmeta-expressions (rvalue)
-	bool
-	may_be_nonmeta_type_equivalent(const data_expr&) const;
-
-	// type-checking of receive nonmeta-references (lvalue)
-	bool
-	may_be_nonmeta_type_equivalent(
-#if NEW_NONMETA_REFERENCE_HIERARCHY
-		const data_nonmeta_instance_reference&
-#else
-		const simple_datatype_nonmeta_value_reference&
-#endif
-		) const;
-#endif
 
 	MERGE_RELAXED_ACTUALS_PROTO;
 

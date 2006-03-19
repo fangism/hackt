@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.9.6.1 2006/03/19 06:14:14 fang Exp $
+	$Id: bool_traits.h,v 1.9.6.2 2006/03/19 22:47:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -59,7 +59,7 @@ struct class_traits<bool_tag> {
 					simple_meta_instance_reference_type;
 	typedef	bool_meta_instance_reference_base
 				meta_instance_reference_parent_type;
-#if !NONMETA_TYPE_EQUIVALENCE
+#if 0
 	typedef	bool_instance_reference_base
 				nonmeta_instance_reference_parent_type;
 #endif

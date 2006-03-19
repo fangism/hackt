@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.6.2.2 2006/03/19 06:14:13 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.6.2.3 2006/03/19 22:47:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -41,33 +41,15 @@ simple_nonmeta_instance_reference<Tag>
  */
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_instance_reference :
-#if NONMETA_TYPE_EQUIVALENCE
-#if NEW_NONMETA_REFERENCE_HIERARCHY
-	public class_traits<Tag>::nonmeta_instance_reference_base_type, 
-#else
-	public nonmeta_instance_reference_base, 
-#endif
-	public simple_nonmeta_instance_reference_base
-#else
 	public simple_nonmeta_instance_reference_base, 
-	public class_traits<Tag>::nonmeta_instance_reference_parent_type
-#endif
-	{
+	public class_traits<Tag>::nonmeta_instance_reference_base_type {
 	typedef	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
 protected:
 	typedef	simple_nonmeta_instance_reference_base
 						common_base_type;
-#if NONMETA_TYPE_EQUIVALENCE
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 	typedef	typename traits_type::nonmeta_instance_reference_base_type
-#else
-	typedef	nonmeta_instance_reference_base
-#endif
-#else
-	typedef	typename traits_type::nonmeta_instance_reference_parent_type
-#endif
 						parent_type;
 public:
 	/// the instance collection base type
@@ -95,12 +77,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
-#if NONMETA_TYPE_EQUIVALENCE
-	bool
-	may_accept_expr_type(const data_expr&) const;
-#endif
-
-#if !NONMETA_TYPE_EQUIVALENCE
+#if 0
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
 #endif
@@ -110,14 +87,6 @@ public:
 
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
-
-#if NONMETA_TYPE_EQUIVALENCE
-	bool
-	may_be_type_equivalent(const nonmeta_instance_reference_base&) const;
-
-	bool
-	must_be_type_equivalent(const nonmeta_instance_reference_base&) const;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

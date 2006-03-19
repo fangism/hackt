@@ -2,7 +2,7 @@
 	\file "Object/traits/preal_traits.h"
 	Traits and policies for parameter floats.  
 	This file used to be "Object/art_object_preal_traits.h".
-	$Id: preal_traits.h,v 1.3.6.1 2006/03/19 06:14:16 fang Exp $
+	$Id: preal_traits.h,v 1.3.6.2 2006/03/19 22:47:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PREAL_TRAITS_H__
@@ -47,7 +47,7 @@ struct class_traits<preal_tag> {
 
 #if 1
 	// this will have a different template base
-#if !NONMETA_TYPE_EQUIVALENCE
+#if 0
 	typedef	preal_instance_reference_base
 					nonmeta_instance_reference_parent_type;
 #endif
