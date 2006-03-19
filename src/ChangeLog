@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-02:
+	  Marked up code with possible reworkings of nonmeta references:
+		1) replacing checking of nonmeta type equivalence,
+			but changed my mind back and likely cancelling changes.
+		2) new nonmeta reference class hierarchy, analogous
+			to the rework with meta reference classes.
+	  This revision has implemented 2) and will likely commit.  
+	  Next: will commit some revisions, and run more tests, also attempt 
+		to switch over to all pooled instance collections.
+
+
 2006-03-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-02-nonmeta-02-01:

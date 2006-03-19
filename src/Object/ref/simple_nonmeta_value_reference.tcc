@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.8.2.1 2006/03/17 02:05:44 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.8.2.2 2006/03/19 06:14:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -46,6 +46,12 @@ using namespace util::memory;
 using util::persistent_traits;
 
 //=============================================================================
+// defined by specializations only, 
+// in "Object/ref/instance_reference_datatype.cc"
+template <class>
+struct nonmeta_reference_type_check_policy;
+
+//=============================================================================
 // class simple_nonmeta_value_reference method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,14 +60,26 @@ using util::persistent_traits;
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference() :
-		parent_type(), interface_type(), value_collection_ref(NULL) {
+#if 0
+#if NONMETA_TYPE_EQUIVALENCE || NEW_NONMETA_REFERENCE_HIERARCHY
+		common_base_type(), 
+#endif
+		parent_type(),
+#endif
+		interface_type(),
+		value_collection_ref(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference(
 		const value_collection_ptr_type pi) :
+#if 0
+#if NONMETA_TYPE_EQUIVALENCE || NEW_NONMETA_REFERENCE_HIERARCHY
+		common_base_type(), 
+#endif
 		parent_type(), 
+#endif
 		interface_type(), 
 		value_collection_ref(pi) {
 }
@@ -75,11 +93,13 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::~simple_nonmeta_value_reference() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !NONMETA_TYPE_EQUIVALENCE
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 never_ptr<const instance_collection_base>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_inst_base(void) const {
 	return value_collection_ref;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
@@ -127,11 +147,29 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !NONMETA_TYPE_EQUIVALENCE
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const data_type_reference>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_data_type_ref(void) const {
 	return data_type_resolver<Tag>()(*this);
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NONMETA_TYPE_EQUIVALENCE
+/**
+	Checks whether or not an lvalue of this_type can be assigned 
+	an rvalue of the argument's type.  
+	Called by AST::CHP::assignment::check...
+ */
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bool
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::may_accept_expr_type(
+		const data_expr& d) const {
+	return nonmeta_reference_type_check_policy<Tag>::may_accept_expr_type(
+			*this, d);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -263,8 +301,8 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::write_object(
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& m, 
-		istream& f) {
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::load_object(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, value_collection_ref);
 	NEVER_NULL(value_collection_ref);
 	m.load_object_once(

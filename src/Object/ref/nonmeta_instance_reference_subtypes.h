@@ -3,13 +3,17 @@
 	Class family for instance references in HAC.  
 	This file used to be "Object/art_object_nonmeta_inst_ref_subtypes.h"
 		in a previous life.  
-	$Id: nonmeta_instance_reference_subtypes.h,v 1.5.10.1 2006/03/17 02:05:43 fang Exp $
+	$Id: nonmeta_instance_reference_subtypes.h,v 1.5.10.2 2006/03/19 06:14:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 #define	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_SUBTYPES_H__
 
 #include "Object/ref/nonmeta_instance_reference_base.h"
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+#include "Object/ref/data_nonmeta_instance_reference.h"
+#endif
+#include "Object/traits/class_traits_fwd.h"
 #include "Object/devel_switches.h"
 
 namespace HAC {
@@ -128,6 +132,35 @@ public:
 virtual	~preal_instance_reference_base() { }
 };	// end class preal_instance_reference_base
 #endif
+
+//=============================================================================
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+
+#define	NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE	template <class Tag>
+#define	NONMETA_INSTANCE_REFERENCE_CLASS	nonmeta_instance_reference<Tag>
+/**
+	Meta-class specific base classes for nonmeta references.  
+	From these classes, simply-indexed, and member references will sprout.  
+	This concept is modeled after the meta_instance_reference hierarchy.  
+	The base class specified by the traits_type must be either
+	nonmeta_instance_reference_base or some derivative thereof.  
+ */
+NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+class nonmeta_instance_reference :
+	public class_traits<Tag>::nonmeta_instance_reference_base_type {
+public:
+	typedef	class_traits<Tag>			traits_type;
+	typedef	typename traits_type::nonmeta_instance_reference_base_type
+							parent_type;
+
+protected:
+	nonmeta_instance_reference() : parent_type() { }
+
+virtual	~nonmeta_instance_reference() { }
+
+};	// end class nonmeta_instance_reference
+
+#endif	// NEW_NONMETA_REFERENCE_HIERARCHY
 
 //=============================================================================
 }	// end namespace entity

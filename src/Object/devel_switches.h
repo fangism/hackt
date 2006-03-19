@@ -1,7 +1,7 @@
 /**
 	\file "Object/devel_switches.h"
 	Module-wide preprocessor conditionals.
-	Use of this file (ideally) should be confied to the Object directory.  
+	Use of this file (ideally) should be confined to the Object directory.  
 
 	The sole purpose of this file is to provide a convenient
 	place to include developer switches.  
@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.10.2.1 2006/03/17 02:05:42 fang Exp $
+	$Id: devel_switches.h,v 1.10.2.2 2006/03/19 06:14:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -40,6 +40,19 @@
 	Goal: 1
  */
 #define	SIMPLIFY_NONMETA_INSTANCE_REFERENCES		1
+
+/**
+	Define to 1 to use type_equivalence between nonmeta references
+	and expressions, instead of get_data_type_ref.  
+	Goal: now 0 (unchanged), was 1 (new, afer having second thoughts)
+ */
+#define	NONMETA_TYPE_EQUIVALENCE			0
+
+/**
+	Define to 1 to use new (hopefully improved) nonmeta instance
+	reference class hierarchy.  
+ */
+#define	NEW_NONMETA_REFERENCE_HIERARCHY	(1 && SIMPLIFY_NONMETA_INSTANCE_REFERENCES)
 
 //=============================================================================
 

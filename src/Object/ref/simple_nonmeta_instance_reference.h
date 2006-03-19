@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.6.2.1 2006/03/17 02:05:43 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.6.2.2 2006/03/19 06:14:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -16,6 +16,7 @@
 
 namespace HAC {
 namespace entity {
+class data_expr;
 class unroll_context;
 using util::packed_array_generic;
 
@@ -35,18 +36,38 @@ simple_nonmeta_instance_reference<Tag>
 		probably simple_nonmeta_instance_reference or descendant.  
 	NOTE: nothing is virtual, this is a final class until
 		otherwise changed.  
+	NOTE: we may need to support nonmeta member references soon, 
+		in which case, the contents of this class may be refactored.  
  */
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_instance_reference :
+#if NONMETA_TYPE_EQUIVALENCE
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+	public class_traits<Tag>::nonmeta_instance_reference_base_type, 
+#else
+	public nonmeta_instance_reference_base, 
+#endif
+	public simple_nonmeta_instance_reference_base
+#else
 	public simple_nonmeta_instance_reference_base, 
-	public class_traits<Tag>::nonmeta_instance_reference_parent_type {
+	public class_traits<Tag>::nonmeta_instance_reference_parent_type
+#endif
+	{
 	typedef	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
 protected:
 	typedef	simple_nonmeta_instance_reference_base
 						common_base_type;
+#if NONMETA_TYPE_EQUIVALENCE
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+	typedef	typename traits_type::nonmeta_instance_reference_base_type
+#else
+	typedef	nonmeta_instance_reference_base
+#endif
+#else
 	typedef	typename traits_type::nonmeta_instance_reference_parent_type
+#endif
 						parent_type;
 public:
 	/// the instance collection base type
@@ -74,8 +95,15 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if NONMETA_TYPE_EQUIVALENCE
+	bool
+	may_accept_expr_type(const data_expr&) const;
+#endif
+
+#if !NONMETA_TYPE_EQUIVALENCE
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
+#endif
 
 	instance_collection_ptr_type
 	get_inst_base_subtype(void) const;
@@ -83,11 +111,13 @@ public:
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
 
+#if NONMETA_TYPE_EQUIVALENCE
 	bool
 	may_be_type_equivalent(const nonmeta_instance_reference_base&) const;
 
 	bool
 	must_be_type_equivalent(const nonmeta_instance_reference_base&) const;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

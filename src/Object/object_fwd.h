@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.5.6.1 2006/03/17 02:05:42 fang Exp $
+	$Id: object_fwd.h,v 1.5.6.2 2006/03/19 06:14:09 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -69,6 +69,7 @@ namespace entity {
 	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
 	class nonmeta_instance_reference_base;
 #if SIMPLIFY_NONMETA_INSTANCE_REFERENCES
+#if !NONMETA_TYPE_EQUIVALENCE
 	typedef	nonmeta_instance_reference_base	channel_instance_reference_base;
 	typedef	nonmeta_instance_reference_base	process_instance_reference_base;
 	typedef	nonmeta_instance_reference_base datatype_instance_reference_base;
@@ -80,6 +81,7 @@ namespace entity {
 	typedef	nonmeta_instance_reference_base	pint_instance_reference_base;
 	typedef	nonmeta_instance_reference_base	pbool_instance_reference_base;
 	typedef	nonmeta_instance_reference_base	preal_instance_reference_base;
+#endif
 #else
 	class channel_instance_reference_base;
 	class process_instance_reference_base;
@@ -93,6 +95,13 @@ namespace entity {
 	class pint_instance_reference_base;
 	class pbool_instance_reference_base;
 	class preal_instance_reference_base;
+#endif
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+	// base class per meta-class, 
+	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
+	template <class>
+	class nonmeta_instance_reference;
+	class data_nonmeta_instance_reference;
 #endif
 
 	template <class>

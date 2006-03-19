@@ -3,7 +3,7 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.5 2006/01/22 18:19:39 fang Exp $
+	$Id: bool_logical_expr.h,v 1.5.24.1 2006/03/19 06:14:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
@@ -75,7 +75,9 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+#if !NONMETA_TYPE_EQUIVALENCE
 	GET_DATA_TYPE_REF_PROTO;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.13 2006/03/16 03:40:28 fang Exp $
+ 	$Id: type_reference.cc,v 1.13.2.1 2006/03/19 06:14:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -60,6 +60,10 @@
 #include "Object/inst/int_collection_type_manager.h"
 #include "Object/inst/subinstance_manager.h"
 #include "Object/type/canonical_generic_chan_type.h"
+#if NONMETA_TYPE_EQUIVALENCE
+#include "Object/expr/int_expr.h"
+#include "Object/expr/bool_expr.h"
+#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 
@@ -550,6 +554,56 @@ data_type_reference::may_be_connectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if NONMETA_TYPE_EQUIVALENCE
+/**
+	Checking a data-type against a nonmeta rvalue expression.  
+	Temporary placeholder implementation: sequential dynamic_casts
+	case-by-case. 
+ */
+bool
+data_type_reference::may_be_nonmeta_type_equivalent(const data_expr& d) const {
+	if (base_type_def == &bool_traits::built_in_definition) {
+		return IS_A(const bool_expr*, &d);
+	} else if (base_type_def == &int_traits::built_in_definition) {
+		return IS_A(const int_expr*, &d);
+	} else if (base_type_def.is_a<const enum_datatype_def>()) {
+		FINISH_ME(Fang);
+#if 0
+		const enum_expr* ee = IS_A(const enum_expr*, &d);
+		// get ee's base definition
+#endif
+		return false;
+	} else {
+		// can't really have data_expr whose values are structured?
+		FINISH_ME(Fang);
+		return false;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checking a data-type against a nonmeta lvalue reference.  
+	Temporary placeholder implementation: sequential dynamic_casts
+	case-by-case. 
+ */
+bool
+data_type_reference::may_be_nonmeta_type_equivalent(
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+		const data_nonmeta_instance_reference& r
+#else
+		const simple_datatype_nonmeta_value_reference& r
+#endif
+		) const {
+#if 0
+	return r.__may_be_nonmeta_type_equivalent(*this);
+#else
+	FINISH_ME(Fang);
+	return false;
+#endif
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Static helper function.
  */
@@ -560,7 +614,7 @@ data_type_reference::unroll_port_instances(
 		const unroll_context& c, subinstance_manager& sub) {
 	if (def == &bool_traits::built_in_definition) {
 		// do nothing!
-	} else if (def == &bool_traits::built_in_definition) {
+	} else if (def == &int_traits::built_in_definition) {
 		// do nothing... for now
 		// don't really anticipate expanding bits fields.  
 	} else if (def.is_a<const enum_datatype_def>()) {

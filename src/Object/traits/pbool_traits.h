@@ -2,7 +2,7 @@
 	\file "Object/traits/pbool_traits.h"
 	Traits and policies for parameter booleans.  
 	This file used to be "Object/art_object_pbool_traits.h".
-	$Id: pbool_traits.h,v 1.8 2006/02/21 04:48:41 fang Exp $
+	$Id: pbool_traits.h,v 1.8.6.1 2006/03/19 06:14:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PBOOL_TRAITS_H__
@@ -42,12 +42,18 @@ struct class_traits<pbool_tag> {
 	class instantiation_statement_type_ref_base;
 
 	// this will have a different template base
+#if !NONMETA_TYPE_EQUIVALENCE
+	typedef	pbool_instance_reference_base
+					nonmeta_instance_reference_parent_type;
+#endif
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+	typedef	data_nonmeta_instance_reference
+					nonmeta_instance_reference_base_type;
+#endif
 	typedef	simple_pbool_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;
 	typedef	simple_pbool_meta_value_reference
 					simple_meta_value_reference_type;
-	typedef	pbool_instance_reference_base	
-					nonmeta_instance_reference_base_type;
 	typedef	pbool_meta_value_reference_base
 				meta_value_reference_parent_type;
 	typedef	bool_expr			data_expr_base_type;

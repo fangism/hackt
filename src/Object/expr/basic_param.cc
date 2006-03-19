@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.13 2006/03/16 03:40:23 fang Exp $
+ 	$Id: basic_param.cc,v 1.13.2.1 2006/03/19 06:14:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -149,6 +149,7 @@ pbool_expr::~pbool_expr() {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !NONMETA_TYPE_EQUIVALENCE
 /**
 	When pint is interpreted as an int, in non-meta language...
  */
@@ -156,6 +157,7 @@ count_ptr<const data_type_reference>
 pbool_expr::get_data_type_ref(void) const {
 	return bool_traits::built_in_type_ptr;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -233,6 +235,7 @@ pint_expr::~pint_expr() {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !NONMETA_TYPE_EQUIVALENCE
 /**
 	When pint is interpreted as an int, in non-meta language...
  */
@@ -240,6 +243,7 @@ count_ptr<const data_type_reference>
 pint_expr::get_data_type_ref(void) const {
 	return int_traits::int32_type_ptr;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -351,6 +355,7 @@ pint_expr::must_be_equivalent_index(const meta_index_expr& i) const {
 // class preal_expr method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !NONMETA_TYPE_EQUIVALENCE
 /**
 	When pint is interpreted as an int, in non-meta language...
  */
@@ -363,6 +368,7 @@ preal_expr::get_data_type_ref(void) const {
 	return bool_traits::built_in_type_ptr;
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

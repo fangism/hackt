@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.6 2006/02/21 04:48:36 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.6.6.1 2006/03/19 06:14:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -214,6 +214,46 @@ struct data_type_resolver<datastruct_tag> {
 };	// end class data_type_resolver
 
 //=============================================================================
+#if 0
+// template specializations of struct nonmeta_reference_type_check_policy
+
+template <>
+struct nonmeta_reference_type_check_policy<bool_tag> {
+	typedef	bool_nonmeta_instance_reference		reference_type;
+	static
+	bool
+	may_accept_expr_type(const reference_type&, const data_expr& d) {
+		// this should cover bools and pbools (by subclass)
+		return IS_A(const bool_expr*, &d);
+	}
+};	// end struct nonmeta_reference_type_check_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <>
+struct nonmeta_reference_type_check_policy<int_tag> {
+	typedef	int_nonmeta_instance_reference		reference_type;
+	static
+	bool
+	may_accept_expr_type(const reference_type& r, const data_expr& d) {
+		// this should cover int and pint
+		const int_expr* i = IS_A(const int_expr*, &d);
+		if (!i)	return false;
+		// see if it references another int, if so, check width
+#if 0
+		const reference_type* rv = IS_A(const reference_type*, i);
+		if (rv) {
+		} else {
+			// is some other 
+			return true;
+		}
+#endif
+	}
+};	// end struct nonmeta_reference_type_check_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif
+
+//=============================================================================
 // explicit template instantiations
 
 template class meta_instance_reference<bool_tag>;
@@ -242,6 +282,9 @@ template class aggregate_meta_instance_reference<bool_tag>;
 template class aggregate_meta_instance_reference<int_tag>;
 template class aggregate_meta_instance_reference<enum_tag>;
 template class aggregate_meta_instance_reference<datastruct_tag>;
+
+// NOTE: nonmeta_value_reference<{pint,pbool,preal}_tag> are instantiated in
+// "Object/expr/nonmeta_param_value_reference.cc"
 
 // and my work is done!
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.5.6.1 2006/03/17 02:05:41 fang Exp $
+	$Id: expr_base.h,v 1.5.6.2 2006/03/19 06:14:08 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -27,7 +27,11 @@ namespace entity {
 #if !SIMPLIFY_NONMETA_INSTANCE_REFERENCES
 	class datatype_instance_reference_base;
 #endif
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+	class data_nonmeta_instance_reference;
+#else
 	class simple_datatype_nonmeta_value_reference;
+#endif
 	class nonmeta_index_list;
 	class int_range_list;		// a.k.a. nonmeta_range_list
 	// from "Object/ref/meta_reference_union.h"
@@ -60,7 +64,11 @@ typedef	count_ptr<entity::nonmeta_instance_reference_base>
 
 // why not simple_datatype_nonmeta_value_reference?
 #if SIMPLIFY_NONMETA_INSTANCE_REFERENCES
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+typedef	count_ptr<entity::data_nonmeta_instance_reference>
+#else
 typedef	count_ptr<entity::nonmeta_instance_reference_base>
+#endif
 #else
 typedef	count_ptr<entity::datatype_instance_reference_base>
 #endif

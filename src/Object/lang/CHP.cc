@@ -1,14 +1,19 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.6 2006/03/16 03:40:26 fang Exp $
+	$Id: CHP.cc,v 1.6.2.1 2006/03/19 06:14:11 fang Exp $
  */
 
 #include "Object/lang/CHP.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/int_expr.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/devel_switches.h"
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+#include "Object/ref/data_nonmeta_instance_reference.h"
+#else
 #include "Object/ref/simple_datatype_nonmeta_value_reference.h"
+#endif
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"

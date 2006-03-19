@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.5 2006/01/22 18:20:14 fang Exp $
+	$Id: CHP.tcc,v 1.5.24.1 2006/03/19 06:14:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -15,8 +15,14 @@
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+#include "Object/ref/data_nonmeta_instance_reference.h"
+#else
 #include "Object/ref/simple_datatype_nonmeta_value_reference.h"
+#endif
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
+#include "Object/expr/expr_dump_context.h"
+#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {
@@ -69,6 +75,10 @@ channel_send::add_expressions(const L& l) {
 		for ( ; ti!=te; ti++, ei++, i++) {
 			// TODO: consider using a predicated copy_if functor?
 			NEVER_NULL(*ei);
+#if NONMETA_TYPE_EQUIVALENCE
+			// temporary until we rework data type references
+			if (!(*ti)->may_be_nonmeta_type_equivalent(**ei))
+#else
 			const count_ptr<const data_type_reference>
 				etype((*ei)->get_data_type_ref());
 			if (!etype) {
@@ -76,10 +86,17 @@ channel_send::add_expressions(const L& l) {
 					" in send expression list.  " << endl;
 				return good_bool(false);
 			}
-			if (!(*ti)->may_be_connectibly_type_equivalent(*etype)) {
+			if (!(*ti)->may_be_connectibly_type_equivalent(*etype))
+#endif
+			{
 				cerr << "Type mismatch in expression " << i <<
 					" of send expression list.  " << endl;
+#if NONMETA_TYPE_EQUIVALENCE
+				(*ei)->dump(cerr << "\tgot: ", 
+					expr_dump_context::error_mode) << endl;
+#else
 				etype->dump(cerr << "\tgot: ") << endl;
+#endif
 				(*ti)->dump(cerr << "\texpected: ") << endl;
 				return good_bool(false);
 			}
@@ -147,9 +164,16 @@ channel_receive::add_references(const L& l) {
 		size_t i = 1;
 		for ( ; ti!=te; ti++, ei++, i++) {
 			// TODO: consider using a predicated copy_if functor?
-			NEVER_NULL(*ei);
+#if NEW_NONMETA_REFERENCE_HIERARCHY
+			const count_ptr<data_nonmeta_instance_reference>
+#else
 			const count_ptr<simple_datatype_nonmeta_value_reference>
+#endif
 				sdir(*ei);
+			NEVER_NULL(sdir);
+#if NONMETA_TYPE_EQUIVALENCE
+			if (!(*ti)->may_be_nonmeta_type_equivalent(*sdir))
+#else
 			const count_ptr<const data_type_reference>
 				etype(sdir->get_data_type_ref());
 			if (!etype) {
@@ -157,10 +181,17 @@ channel_receive::add_references(const L& l) {
 					" in receive list.  " << endl;
 				return good_bool(false);
 			}
-			if (!(*ti)->may_be_connectibly_type_equivalent(*etype)) {
+			if (!(*ti)->may_be_connectibly_type_equivalent(*etype))
+#endif
+			{
 				cerr << "Type mismatch in reference " << i <<
 					" of receive list.  " << endl;
+#if NONMETA_TYPE_EQUIVALENCE
+				(*ei)->dump(cerr << "\tgot: ", 
+					expr_dump_context::error_mode) << endl;
+#else
 				etype->dump(cerr << "\tgot: ") << endl;
+#endif
 				(*ti)->dump(cerr << "\texpected: ") << endl;
 				return good_bool(false);
 			}

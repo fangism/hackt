@@ -3,13 +3,14 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: nonmeta_instance_reference_base.h,v 1.5.24.1 2006/03/17 02:05:43 fang Exp $
+	$Id: nonmeta_instance_reference_base.h,v 1.5.24.2 2006/03/19 06:14:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 
 #include "util/persistent.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -41,7 +42,7 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
-#if 0
+#if NONMETA_TYPE_EQUIVALENCE
 virtual	bool
 	may_be_type_equivalent(const this_type&) const = 0;
 
