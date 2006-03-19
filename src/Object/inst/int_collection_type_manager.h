@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.7 2006/02/21 21:33:01 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.7.6.1 2006/03/19 19:54:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -46,6 +46,13 @@ protected:
 		Type is a constant integer.  
 	 */
 	instance_collection_parameter_type		type_parameter;
+
+	/**
+		Width is zero before it is determined at unroll-time.
+		Is this the correct thing to do?
+		TODO: fix me for good.
+	 */
+	int_collection_type_manager() : type_parameter(0) { }
 
 	struct dumper;
 

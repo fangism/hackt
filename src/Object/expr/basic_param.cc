@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.13.2.1 2006/03/19 06:14:09 fang Exp $
+ 	$Id: basic_param.cc,v 1.13.2.2 2006/03/19 19:54:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -238,6 +238,7 @@ pint_expr::~pint_expr() {
 #if !NONMETA_TYPE_EQUIVALENCE
 /**
 	When pint is interpreted as an int, in non-meta language...
+	TODO: return int<0>? to signal something special?
  */
 count_ptr<const data_type_reference>
 pint_expr::get_data_type_ref(void) const {

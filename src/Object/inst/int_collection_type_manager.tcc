@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.7 2006/02/21 04:48:30 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.7.6.1 2006/03/19 19:54:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -15,6 +15,7 @@
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/expr/pint_const.h"
 #include "util/persistent_object_manager.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
