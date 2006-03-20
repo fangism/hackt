@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.5 2006/01/22 18:20:14 fang Exp $
+	$Id: CHP.tcc,v 1.6 2006/03/20 02:41:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -15,8 +15,10 @@
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
-#include "Object/ref/simple_datatype_nonmeta_value_reference.h"
+#include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
+#include "Object/expr/expr_dump_context.h"
+#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {
@@ -76,7 +78,8 @@ channel_send::add_expressions(const L& l) {
 					" in send expression list.  " << endl;
 				return good_bool(false);
 			}
-			if (!(*ti)->may_be_connectibly_type_equivalent(*etype)) {
+			if (!(*ti)->may_be_connectibly_type_equivalent(*etype))
+			{
 				cerr << "Type mismatch in expression " << i <<
 					" of send expression list.  " << endl;
 				etype->dump(cerr << "\tgot: ") << endl;
@@ -147,9 +150,9 @@ channel_receive::add_references(const L& l) {
 		size_t i = 1;
 		for ( ; ti!=te; ti++, ei++, i++) {
 			// TODO: consider using a predicated copy_if functor?
-			NEVER_NULL(*ei);
-			const count_ptr<simple_datatype_nonmeta_value_reference>
+			const count_ptr<data_nonmeta_instance_reference>
 				sdir(*ei);
+			NEVER_NULL(sdir);
 			const count_ptr<const data_type_reference>
 				etype(sdir->get_data_type_ref());
 			if (!etype) {
@@ -157,7 +160,8 @@ channel_receive::add_references(const L& l) {
 					" in receive list.  " << endl;
 				return good_bool(false);
 			}
-			if (!(*ti)->may_be_connectibly_type_equivalent(*etype)) {
+			if (!(*ti)->may_be_connectibly_type_equivalent(*etype))
+			{
 				cerr << "Type mismatch in reference " << i <<
 					" of receive list.  " << endl;
 				etype->dump(cerr << "\tgot: ") << endl;

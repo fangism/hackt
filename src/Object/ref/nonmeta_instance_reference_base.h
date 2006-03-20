@@ -3,7 +3,7 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: nonmeta_instance_reference_base.h,v 1.5 2006/01/22 18:20:25 fang Exp $
+	$Id: nonmeta_instance_reference_base.h,v 1.6 2006/03/20 02:41:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
@@ -29,6 +29,7 @@ using util::persistent;
 	is derived from nonmeta_instance_reference_base.  
  */
 class nonmeta_instance_reference_base : virtual public persistent {
+	typedef	nonmeta_instance_reference_base		this_type;
 protected:
 	nonmeta_instance_reference_base() : persistent() { }
 public:

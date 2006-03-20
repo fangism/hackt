@@ -1,9 +1,9 @@
 /**
-	\file "Object/ref/simple_nonmeta_instnace_reference.h"
+	\file "Object/ref/simple_nonmeta_instance_reference.h"
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.6 2006/03/16 03:40:27 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.7 2006/03/20 02:41:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -16,6 +16,7 @@
 
 namespace HAC {
 namespace entity {
+class data_expr;
 class unroll_context;
 using util::packed_array_generic;
 
@@ -35,18 +36,20 @@ simple_nonmeta_instance_reference<Tag>
 		probably simple_nonmeta_instance_reference or descendant.  
 	NOTE: nothing is virtual, this is a final class until
 		otherwise changed.  
+	NOTE: we may need to support nonmeta member references soon, 
+		in which case, the contents of this class may be refactored.  
  */
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_instance_reference :
 	public simple_nonmeta_instance_reference_base, 
-	public class_traits<Tag>::nonmeta_instance_reference_parent_type {
+	public class_traits<Tag>::nonmeta_instance_reference_base_type {
 	typedef	SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
 protected:
 	typedef	simple_nonmeta_instance_reference_base
 						common_base_type;
-	typedef	typename traits_type::nonmeta_instance_reference_parent_type
+	typedef	typename traits_type::nonmeta_instance_reference_base_type
 						parent_type;
 public:
 	/// the instance collection base type
@@ -71,36 +74,14 @@ public:
 	ostream&
 	what(ostream&) const;
 
-#if 0
-	using parent_type::dump;
-#else
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
-#endif
-
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
 
 	instance_collection_ptr_type
 	get_inst_base_subtype(void) const;
 
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
-
-#if 0
-// only needed if included statically, such as in member_instance_reference
-// however, we don't support members references of 
-// non-meta instance references... yet.
-protected:
-	void
-	collect_transient_info_base(persistent_object_manager& ) const;
-
-	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

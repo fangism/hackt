@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.8 2006/03/16 03:40:27 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.9 2006/03/20 02:41:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -12,7 +12,7 @@
 #include "util/boolean_types.h"
 #include "Object/common/multikey_index.h"
 #include "Object/expr/data_expr.h"
-#include "Object/ref/simple_datatype_nonmeta_value_reference.h"
+#include "Object/ref/simple_nonmeta_instance_reference_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -57,23 +57,21 @@ simple_nonmeta_value_reference<Tag>
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 class simple_nonmeta_value_reference :
-	public simple_datatype_nonmeta_value_reference, 
 	public class_traits<Tag>::nonmeta_instance_reference_base_type, 
+	public simple_nonmeta_instance_reference_base, 
 	// will be something like int_expr or bool_expr
 	public class_traits<Tag>::data_expr_base_type {
 friend struct data_type_resolver<Tag>;
 public:
 	typedef	class_traits<Tag>			traits_type;
-	typedef	typename traits_type::data_value_type
-							data_value_type;
+	typedef	typename traits_type::data_value_type	data_value_type;
 private:
 	typedef	SIMPLE_NONMETA_VALUE_REFERENCE_CLASS	this_type;
 	typedef	typename traits_type::nonmeta_instance_reference_base_type
 							parent_type;
 	typedef	typename traits_type::data_expr_base_type
 							data_expr_base_type;
-	typedef	simple_datatype_nonmeta_value_reference	common_base_type;
-//	typedef	common_base_type::parent_type		grandparent_type;
+	typedef	simple_nonmeta_instance_reference_base	common_base_type;
 	typedef	data_expr_base_type			interface_type;
 protected:
 	typedef	typename traits_type::instance_collection_generic_type
@@ -99,9 +97,6 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
-	never_ptr<const instance_collection_base>
-	get_inst_base(void) const;
-
 	value_collection_ptr_type
 	get_inst_base_subtype(void) const;
 
@@ -115,13 +110,6 @@ public:
 
 	bool
 	must_be_equivalent(const interface_type& ) const;
-
-#if 0
-protected:
-	using common_base_type::collect_transient_info_base;
-	using common_base_type::write_object_base;
-	using common_base_type::load_object_base;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

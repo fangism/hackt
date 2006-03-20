@@ -3,6 +3,58 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-03-merged-nonmeta-02-05:
+	  Branch merge of reworking of nonmeta reference classes.  
+	  Includes minor bug fix with int type initialization, and
+		has enabled instance collection pooled allocation.  
+
+
+2006-03-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-05:
+	  Committed new nonmeta reference hierarchy, and cleaned up.
+	  Status: ready for merge to trunk.  
+
+
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-04:
+	  Undone NONMETA_TYPE_EQUIVALENCE proposed changes.  
+
+
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-03:
+	  Fixed strange bug with nonmeta integer type comparison, 
+		didn't properly initialize int_instance_tollection's
+		type manager, and was getting garbage integer.  
+	  Now pooled instance allocations are enabled.
+
+
+2006-03-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-02:
+	  Marked up code with possible reworkings of nonmeta references:
+		1) replacing checking of nonmeta type equivalence,
+			but changed my mind back and likely cancelling changes.
+		2) new nonmeta reference class hierarchy, analogous
+			to the rework with meta reference classes.
+	  This revision has implemented 2) and will likely commit.  
+	  Next: will commit some revisions, and run more tests, also attempt 
+		to switch over to all pooled instance collections.
+
+
+2006-03-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-01:
+	  Branch: Reworking nonmeta reference infrastructure analogously to
+		meta instance references for type checking, etc...
+		Initial revision collapses part of the class hierarchy.  
+	  Cleanup some obsolete code.  
+
+
+	* HACKT-00-01-04-main-00-78-02:
+	  Configuration update only.  
+
+
 2006-03-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-01:

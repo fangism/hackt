@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.5 2006/02/21 23:07:35 fang Exp $
+	$Id: object_fwd.h,v 1.6 2006/03/20 02:41:03 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -67,18 +67,11 @@ namespace entity {
 	// the meta-versions are derived.
 	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
 	class nonmeta_instance_reference_base;
-	class channel_instance_reference_base;
-	class process_instance_reference_base;
-	class datatype_instance_reference_base;
-	class int_instance_reference_base;
-	class bool_instance_reference_base;
-	class enum_instance_reference_base;
-	class struct_instance_reference_base;
-	// rename to value_reference_base? not yet
-	class param_instance_reference_base;
-	class pint_instance_reference_base;
-	class pbool_instance_reference_base;
-	class preal_instance_reference_base;
+	// base class per meta-class, 
+	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
+	template <class>
+	class nonmeta_instance_reference;
+	class data_nonmeta_instance_reference;
 
 	template <class>
 	class meta_instance_reference;

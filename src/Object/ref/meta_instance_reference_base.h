@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.9 2006/02/21 23:07:36 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.10 2006/03/20 02:41:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -49,7 +49,7 @@ using util::persistent;
 	We need separate stacks...
 	See NOTES.
  */
-class meta_instance_reference_base : public persistent {
+class meta_instance_reference_base : virtual public persistent {
 	typedef	meta_instance_reference_base		this_type;
 public:
 	meta_instance_reference_base() : persistent() { }

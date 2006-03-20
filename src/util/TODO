@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.11 2005/12/07 22:36:38 fang Exp $
+	$Id: TODO,v 1.12 2006/03/20 02:41:10 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
@@ -48,6 +48,21 @@ persistent_object_manager:
 		from class persistent, but uses template polymorphism
 		to implement a certain interface.  
 		(reference: see how AST::node was removed from hierarchy)
+
+	(20060319)
+	persistence is really slow and memory hogging because:
+	1) pointer collection traversal touches many pages
+	2) all objects binaries are stored in reconstruction buffers
+		before being written out to memory, doubling mem. footprint.
+	Proposal:
+	a) write binary objects to temporary buffers only and
+		stream binary out to temporary file, then concatenate
+		with header.
+	b) consider writing/collecting objects in one single pass?
+		construct separate header on the fly?
+	Consider dictionary support for common small object values
+		such as strings and integers, to avoid replication.  
+		(classification: enhancement)
 
 -------------------------------------------------------------------------------
 

@@ -3,7 +3,7 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: simple_nonmeta_instance_reference_base.h,v 1.6 2006/03/16 03:40:27 fang Exp $
+	$Id: simple_nonmeta_instance_reference_base.h,v 1.7 2006/03/20 02:41:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_BASE_H__
@@ -28,15 +28,8 @@ using util::memory::excl_ptr;
 	A simple non-meta instance reference may have nonmeta
 	expressions and instance references in the index list.  
  */
-class simple_nonmeta_instance_reference_base
-#if 0
-	: virtual public nonmeta_instance_reference_base
-#endif
-{
+class simple_nonmeta_instance_reference_base {
 	typedef	simple_nonmeta_instance_reference_base	this_type;
-#if 0
-	typedef	nonmeta_instance_reference_base		parent_type;
-#endif
 public:
 	typedef	nonmeta_index_list			index_list_type;
 protected:
@@ -50,26 +43,11 @@ public:
 
 virtual	~simple_nonmeta_instance_reference_base();
 
-#if 0
-virtual	ostream&
-	dump(ostream&, const expr_dump_context&) const = 0;
-#else
 	ostream&
 	dump_indices(ostream&, const expr_dump_context&) const;
-#endif
-
-#if 0
-	size_t
-	dimensions(void) const;
-
-virtual	never_ptr<const instance_collection_base>
-	get_inst_base(void) const = 0;
-#endif
 
 virtual	good_bool
 	attach_indices(excl_ptr<index_list_type>&) = 0;
-
-	// type equivalence methods...
 
 public:
 	void

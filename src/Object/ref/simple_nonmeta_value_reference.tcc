@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.8 2006/03/16 03:40:27 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.9 2006/03/20 02:41:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -46,6 +46,12 @@ using namespace util::memory;
 using util::persistent_traits;
 
 //=============================================================================
+// defined by specializations only, 
+// in "Object/ref/instance_reference_datatype.cc"
+template <class>
+struct nonmeta_reference_type_check_policy;
+
+//=============================================================================
 // class simple_nonmeta_value_reference method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -54,7 +60,10 @@ using util::persistent_traits;
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference() :
-		parent_type(), interface_type(), value_collection_ref(NULL) {
+		parent_type(),
+		common_base_type(), 
+		interface_type(),
+		value_collection_ref(NULL) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -62,6 +71,7 @@ SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference(
 		const value_collection_ptr_type pi) :
 		parent_type(), 
+		common_base_type(), 
 		interface_type(), 
 		value_collection_ref(pi) {
 }
@@ -72,13 +82,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference(
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::~simple_nonmeta_value_reference() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-never_ptr<const instance_collection_base>
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_inst_base(void) const {
-	return value_collection_ref;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -100,9 +103,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		const expr_dump_context& c) const {
-#if 0
-	return common_base_type::dump(o, c);
-#else
 	if (c.include_type_info) {
 		this->what(o) << " ";
 	}
@@ -115,23 +115,18 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 			dump_flags::default_value);
 	}
 	return simple_nonmeta_instance_reference_base::dump_indices(o, c);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dimensions(void) const {
-#if 0
-	return common_base_type::dimensions();
-#else
 	size_t dim = this->value_collection_ref->get_dimensions();
 	if (this->array_indices) {
 		const size_t c = this->array_indices->dimensions_collapsed();
 		INVARIANT(c <= dim);
 		return dim -c;
 	} else  return dim;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -271,8 +266,8 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::write_object(
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 void
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::load_object(const persistent_object_manager& m, 
-		istream& f) {
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::load_object(
+		const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, value_collection_ref);
 	NEVER_NULL(value_collection_ref);
 	m.load_object_once(

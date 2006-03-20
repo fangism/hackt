@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.7 2006/01/27 08:07:19 fang Exp $
+ 	$Id: data_type_reference.h,v 1.8 2006/03/20 02:41:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -18,6 +18,8 @@ namespace HAC {
 namespace entity {
 class datatype_definition_base;
 class unroll_context;
+class data_expr;
+class data_nonmeta_instance_reference;
 using std::ostream;
 using parser::token_identifier;
 

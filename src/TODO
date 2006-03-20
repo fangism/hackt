@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.14 2006/03/16 03:40:20 fang Exp $
+#	$Id: TODO,v 1.15 2006/03/20 02:41:03 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -132,6 +132,12 @@ hackt diff (or objdiff):
 		with executable.  
 		run unix diff first, etc...
 
+(200601--)
+Need consistency checking between different ways of generating
+		intermediate object files!
+	This is now possible after reworking the connection
+		data structure with precisely reconstructible union-finds.  
+
 ===============================================================================
 Interactive shell:
 	the hackt shell
@@ -216,6 +222,13 @@ Expression resolutions:
 		until g++-3.4.x, therefore we'd have to check for
 		covariant correctness during configure and work-around.
 		Too much effort for now... just screw it.  
+
+===============================================================================
+External package dependence and support
+
+	consider support for BSD histedit support, older non-wrapped
+		version of readline, not exactly readline compatible.
+		e.g. on Apple: /usr/include/histedit.h /usr/lib/libedit.dylib
 
 ===============================================================================
 KNOWN BUGS

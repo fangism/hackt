@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.13 2006/03/16 03:40:28 fang Exp $
+ 	$Id: type_reference.cc,v 1.14 2006/03/20 02:41:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -560,7 +560,7 @@ data_type_reference::unroll_port_instances(
 		const unroll_context& c, subinstance_manager& sub) {
 	if (def == &bool_traits::built_in_definition) {
 		// do nothing!
-	} else if (def == &bool_traits::built_in_definition) {
+	} else if (def == &int_traits::built_in_definition) {
 		// do nothing... for now
 		// don't really anticipate expanding bits fields.  
 	} else if (def.is_a<const enum_datatype_def>()) {

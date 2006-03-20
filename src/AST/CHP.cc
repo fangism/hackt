@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.3 2006/02/20 20:50:57 fang Exp $
+	$Id: CHP.cc,v 1.4 2006/03/20 02:41:03 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -27,7 +27,7 @@
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/bool_expr.h"
-#include "Object/ref/simple_datatype_nonmeta_value_reference.h"
+#include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
@@ -37,6 +37,7 @@
 #include "Object/def/process_definition.h"
 #include "Object/inst/general_collection_type_manager.h"
 
+#include "util/wtf.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
@@ -85,7 +86,7 @@ using entity::channel_type_reference_base;
 using entity::user_def_chan;
 using entity::user_def_datatype;
 using entity::process_definition;
-using entity::simple_datatype_nonmeta_value_reference;
+using entity::data_nonmeta_instance_reference;
 using entity::data_type_reference;
 
 //=============================================================================
@@ -546,6 +547,7 @@ binary_assignment::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 binary_assignment::check_action(context& c) const {
+	typedef	data_nonmeta_instance_reference			lref_type;
 	const inst_ref_expr::nonmeta_data_return_type
 		lr(lval->check_nonmeta_data_reference(c));
 	if (!lr) {
@@ -553,8 +555,7 @@ binary_assignment::check_action(context& c) const {
 			where(*lval) << endl;
 		return statement::return_type(NULL);
 	}
-	const count_ptr<simple_datatype_nonmeta_value_reference>
-		lref(lr.is_a<simple_datatype_nonmeta_value_reference>());
+	const count_ptr<lref_type> lref(lr.is_a<lref_type>());
 	if (!lref) {
 		cerr << "Unsupported reference at " << where(*lval) << endl;
 		cerr << "Sorry, currently only support simple datatype "
@@ -598,8 +599,7 @@ binary_assignment::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	// at this point, all is good
-	return statement::return_type(
-		new entity::CHP::assignment(lref, rv));
+	return statement::return_type(new entity::CHP::assignment(lref, rv));
 }
 
 //=============================================================================
@@ -632,6 +632,7 @@ bool_assignment::rightmost(void) const {
 statement::return_type
 bool_assignment::check_action(context& c) const {
 	typedef	entity::bool_traits	bool_traits;
+	typedef	data_nonmeta_instance_reference			lref_type;
 	static const bool_traits::type_ref_ptr_type&
 		bool_type_ptr(bool_traits::built_in_type_ptr);
 	const inst_ref_expr::nonmeta_data_return_type
@@ -641,8 +642,7 @@ bool_assignment::check_action(context& c) const {
 			where(*bool_var) << endl;
 		return statement::return_type(NULL);
 	}
-	const count_ptr<simple_datatype_nonmeta_value_reference>
-		lref(lr.is_a<simple_datatype_nonmeta_value_reference>());
+	const count_ptr<lref_type> lref(lr.is_a<lref_type>());
 	if (!lref) {
 		cerr << "Unsupported reference at " << where(*bool_var) << endl;
 		cerr << "Sorry, currently only support simple datatype "
@@ -650,11 +650,13 @@ bool_assignment::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	if (lref->dimensions()) {
-		cerr << "Sorry, non-scalar instance reference at " <<
+		cerr << "Sorry, non-scalar boolean reference at " <<
 			where(*bool_var) << " not supported in CHP yet."
 			<< endl;
 		return statement::return_type(NULL);
 	}
+	// wait, there is no rvalue in this assignment, it is implicit
+	// in the direction (dir: +/-) field.  
 	const count_ptr<const data_type_reference>
 		ltype(lref->get_data_type_ref());
 	if (!ltype) {
@@ -888,6 +890,7 @@ statement::return_type
 receive::check_action(context& c) const {
 	const communication::checked_channel_type
 		receiver(check_channel(c));
+	typedef	data_nonmeta_instance_reference			lref_type;
 	if (!receiver) {
 		return statement::return_type(NULL);
 	}
@@ -915,12 +918,11 @@ receive::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	// need to dynamic cast the list into simple_nonmeta_datatype_value_refs
-	typedef vector<count_ptr<simple_datatype_nonmeta_value_reference> >
+	typedef vector<count_ptr<lref_type> >
 						val_refs_type;
 	val_refs_type val_refs;
 	transform(i, e, back_inserter(val_refs), 
-		mem_fun_ref(&count_ptr<checked_element_type>::
-			is_a<simple_datatype_nonmeta_value_reference>)
+		mem_fun_ref(&count_ptr<checked_element_type>::is_a<lref_type>)
 	);
 	if (find(val_refs.begin(), val_refs.end(), val_refs_type::value_type())
 			!= val_refs.end()) {

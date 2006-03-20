@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/simple_meta_indexed_reference_base.h"
 	Base implementation class for meta-indexed references in HAC.  
-	$Id: simple_meta_indexed_reference_base.h,v 1.1 2006/02/21 23:07:36 fang Exp $
+	$Id: simple_meta_indexed_reference_base.h,v 1.2 2006/03/20 02:41:07 fang Exp $
 	This file was "Object/simple_meta_instance_reference_base.h"
 		in a previous life.  
 	Id: simple_meta_instance_reference_base.h,v 1.9 2006/02/21 04:48:38 fang Exp
@@ -38,28 +38,9 @@ using util::persistent_object_manager;
 
 //=============================================================================
 /**
+	The common base class for meta-indexed references.  
 	20060213: this class is now an implementation base for
 		any reference that may be indexed, be it instance or value.  
-	Plan: remove anything from this class that ties it to instances.  
-	Possibly define template helper methods.  
-	TODO: many of the functions no longer belong here.  
-	Most methods in here should be helpers.  
-
-	PHASE THIS back into meta_instance_reference_base.
-	OR... call this "simple_meta_indexed_reference_base" instead.  
-		and replace collective_meta_instance_reference with
-		complex_aggregate_meta_instance_reference...
-	Base class for a reference to a particular instance.  
-	Where a particular instance, either array or single, is 
-	connected or aliased, this object refers to a simple instance
-	of a datatype, channel, or process.  
-	To check, that the instance references was actually in the 
-	dimension range of the array declared.  
-	Collection, bundle?
-	Sub-classes must contain a const pointer to the appropriate
-	subclass of fundamental_type_reference.  
-	Should these be hashed into used_id_map?
-		Will there be identifier conflicts?
  */
 class simple_meta_indexed_reference_base {
 private:
@@ -81,9 +62,6 @@ protected:
 		Could be implicit reference to entire collection.  
 	 */
 	excl_ptr<index_list_type>		array_indices;
-
-// for subclasses:
-//	never_ptr<const instance_collection_base>	inst_ref;
 
 protected:
 	// constructors for children only

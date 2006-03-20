@@ -1,7 +1,7 @@
 /**
 	\file "Object/devel_switches.h"
 	Module-wide preprocessor conditionals.
-	Use of this file (ideally) should be confied to the Object directory.  
+	Use of this file (ideally) should be confined to the Object directory.  
 
 	The sole purpose of this file is to provide a convenient
 	place to include developer switches.  
@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.10 2006/03/15 04:38:12 fang Exp $
+	$Id: devel_switches.h,v 1.11 2006/03/20 02:41:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__

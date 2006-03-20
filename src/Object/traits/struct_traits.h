@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.11 2006/02/26 05:19:58 fang Exp $
+	$Id: struct_traits.h,v 1.12 2006/03/20 02:41:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -63,12 +63,10 @@ struct class_traits<datastruct_tag> {
 					simple_nonmeta_instance_reference_type;
 	typedef	simple_datastruct_meta_instance_reference
 					simple_meta_instance_reference_type;
-	typedef	struct_instance_reference_base	
-					nonmeta_instance_reference_base_type;
 	typedef	struct_meta_instance_reference_base
 				meta_instance_reference_parent_type;
-	typedef	struct_instance_reference_base
-				nonmeta_instance_reference_parent_type;
+	typedef	data_nonmeta_instance_reference
+					nonmeta_instance_reference_base_type;
 	typedef	datastruct_member_meta_instance_reference
 				member_simple_meta_instance_reference_type;
 	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
