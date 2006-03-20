@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.6.2.1 2006/03/19 06:14:12 fang Exp $
+	$Id: CHP.h,v 1.6.2.2 2006/03/20 01:06:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -16,11 +16,7 @@
 
 namespace HAC {
 namespace entity {
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 class data_nonmeta_instance_reference;
-#else
-class simple_datatype_nonmeta_value_reference;
-#endif
 namespace CHP {
 using std::list;
 using std::vector;
@@ -200,11 +196,7 @@ private:
 	typedef	action					parent_type;
 	typedef	assignment				this_type;
 public:
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 	typedef	count_ptr<data_nonmeta_instance_reference>
-#else
-	typedef	count_ptr<simple_datatype_nonmeta_value_reference>
-#endif
 							lval_ptr_type;
 	typedef	count_ptr<data_expr>			rval_ptr_type;
 private:
@@ -298,11 +290,7 @@ class channel_receive : public action {
 	typedef	action					parent_type;
 	typedef	channel_receive				this_type;
 public:
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 	typedef	count_ptr<data_nonmeta_instance_reference>
-#else
-	typedef	count_ptr<simple_datatype_nonmeta_value_reference>
-#endif
 							inst_ref_ptr_type;
 	typedef	vector<inst_ref_ptr_type>		inst_ref_list_type;
 	typedef	count_ptr<simple_channel_nonmeta_instance_reference>

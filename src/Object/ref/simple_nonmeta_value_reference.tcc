@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.8.2.3 2006/03/19 22:47:07 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.8.2.4 2006/03/20 01:06:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -60,12 +60,8 @@ struct nonmeta_reference_type_check_policy;
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference() :
-#if 0
-#if NEW_NONMETA_REFERENCE_HIERARCHY
-		common_base_type(), 
-#endif
 		parent_type(),
-#endif
+		common_base_type(), 
 		interface_type(),
 		value_collection_ref(NULL) {
 }
@@ -74,12 +70,8 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference() :
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference(
 		const value_collection_ptr_type pi) :
-#if 0
-#if NEW_NONMETA_REFERENCE_HIERARCHY
-		common_base_type(), 
-#endif
 		parent_type(), 
-#endif
+		common_base_type(), 
 		interface_type(), 
 		value_collection_ref(pi) {
 }
@@ -91,15 +83,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::simple_nonmeta_value_reference(
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::~simple_nonmeta_value_reference() {
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-never_ptr<const instance_collection_base>
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_inst_base(void) const {
-	return value_collection_ref;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE

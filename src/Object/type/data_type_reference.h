@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.7.22.2 2006/03/19 22:47:10 fang Exp $
+ 	$Id: data_type_reference.h,v 1.7.22.3 2006/03/20 01:06:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -13,18 +13,13 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/expr/types.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
 class datatype_definition_base;
 class unroll_context;
 class data_expr;
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 class data_nonmeta_instance_reference;
-#else
-class simple_datatype_nonmeta_value_reference;
-#endif
 using std::ostream;
 using parser::token_identifier;
 

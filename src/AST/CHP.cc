@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.3.6.2 2006/03/19 22:47:02 fang Exp $
+	$Id: CHP.cc,v 1.3.6.3 2006/03/20 01:06:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -27,11 +27,7 @@
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/bool_expr.h"
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 #include "Object/ref/data_nonmeta_instance_reference.h"
-#else
-#include "Object/ref/simple_datatype_nonmeta_value_reference.h"
-#endif
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
@@ -90,11 +86,7 @@ using entity::channel_type_reference_base;
 using entity::user_def_chan;
 using entity::user_def_datatype;
 using entity::process_definition;
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 using entity::data_nonmeta_instance_reference;
-#else
-using entity::simple_datatype_nonmeta_value_reference;
-#endif
 using entity::data_type_reference;
 
 //=============================================================================
@@ -555,11 +547,7 @@ binary_assignment::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 statement::return_type
 binary_assignment::check_action(context& c) const {
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 	typedef	data_nonmeta_instance_reference			lref_type;
-#else
-	typedef	simple_datatype_nonmeta_value_reference		lref_type;
-#endif
 	const inst_ref_expr::nonmeta_data_return_type
 		lr(lval->check_nonmeta_data_reference(c));
 	if (!lr) {
@@ -644,11 +632,7 @@ bool_assignment::rightmost(void) const {
 statement::return_type
 bool_assignment::check_action(context& c) const {
 	typedef	entity::bool_traits	bool_traits;
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 	typedef	data_nonmeta_instance_reference			lref_type;
-#else
-	typedef	simple_datatype_nonmeta_value_reference		lref_type;
-#endif
 	static const bool_traits::type_ref_ptr_type&
 		bool_type_ptr(bool_traits::built_in_type_ptr);
 	const inst_ref_expr::nonmeta_data_return_type
@@ -906,11 +890,7 @@ statement::return_type
 receive::check_action(context& c) const {
 	const communication::checked_channel_type
 		receiver(check_channel(c));
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 	typedef	data_nonmeta_instance_reference			lref_type;
-#else
-	typedef	simple_datatype_nonmeta_value_reference		lref_type;
-#endif
 	if (!receiver) {
 		return statement::return_type(NULL);
 	}

@@ -5,6 +5,11 @@
 
 2006-03-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-02-nonmeta-02-05:
+	  Committed new nonmeta reference hierarchy, and cleaned up.
+	  Status: ready for merge to trunk.  
+
+
 	* HACKT-00-01-04-main-00-78-02-nonmeta-02-04:
 	  Undone NONMETA_TYPE_EQUIVALENCE proposed changes.  
 

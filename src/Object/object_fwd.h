@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.5.6.3 2006/03/19 22:47:03 fang Exp $
+	$Id: object_fwd.h,v 1.5.6.4 2006/03/20 01:06:17 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -14,7 +14,6 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/expr/types.h"
 #include "Object/type/canonical_type_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -68,41 +67,11 @@ namespace entity {
 	// the meta-versions are derived.
 	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
 	class nonmeta_instance_reference_base;
-#if SIMPLIFY_NONMETA_INSTANCE_REFERENCES
-#if 0
-	typedef	nonmeta_instance_reference_base	channel_instance_reference_base;
-	typedef	nonmeta_instance_reference_base	process_instance_reference_base;
-	typedef	nonmeta_instance_reference_base datatype_instance_reference_base;
-	typedef	nonmeta_instance_reference_base int_instance_reference_base;
-	typedef	nonmeta_instance_reference_base bool_instance_reference_base;
-	typedef	nonmeta_instance_reference_base enum_instance_reference_base;
-	typedef	nonmeta_instance_reference_base struct_instance_reference_base;
-	typedef	nonmeta_instance_reference_base	param_instance_reference_base;
-	typedef	nonmeta_instance_reference_base	pint_instance_reference_base;
-	typedef	nonmeta_instance_reference_base	pbool_instance_reference_base;
-	typedef	nonmeta_instance_reference_base	preal_instance_reference_base;
-#endif
-#else
-	class channel_instance_reference_base;
-	class process_instance_reference_base;
-	class datatype_instance_reference_base;
-	class int_instance_reference_base;
-	class bool_instance_reference_base;
-	class enum_instance_reference_base;
-	class struct_instance_reference_base;
-	// rename to value_reference_base? not yet
-	class param_instance_reference_base;
-	class pint_instance_reference_base;
-	class pbool_instance_reference_base;
-	class preal_instance_reference_base;
-#endif
-#if NEW_NONMETA_REFERENCE_HIERARCHY
 	// base class per meta-class, 
 	// defined in "Object/ref/nonmeta_instance_reference_subtypes.h"
 	template <class>
 	class nonmeta_instance_reference;
 	class data_nonmeta_instance_reference;
-#endif
 
 	template <class>
 	class meta_instance_reference;

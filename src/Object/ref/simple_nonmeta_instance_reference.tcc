@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.6.2.2 2006/03/19 22:47:07 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.6.2.3 2006/03/20 01:06:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -51,15 +51,6 @@ typename SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::instance_collection_ptr_type
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::get_inst_base_subtype(void) const {
 	return inst_collection_ref;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-never_ptr<const instance_collection_base>
-SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::get_inst_base(void) const {
-	return inst_collection_ref;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

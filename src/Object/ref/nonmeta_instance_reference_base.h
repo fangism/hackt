@@ -3,14 +3,13 @@
 	Most general non-meta instance references.  
 	This file was "Object/art_object_nonmeta_inst_ref_base.h"
 		in its previous life.  
-	$Id: nonmeta_instance_reference_base.h,v 1.5.24.3 2006/03/19 22:47:06 fang Exp $
+	$Id: nonmeta_instance_reference_base.h,v 1.5.24.4 2006/03/20 01:06:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 #define	__HAC_OBJECT_REF_NONMETA_INSTANCE_REFERENCE_BASE_H__
 
 #include "util/persistent.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
