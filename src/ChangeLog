@@ -5,6 +5,11 @@
 
 2006-03-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-05:
+	  No source change.
+	  Enabled alloc-target object consistency checks in test dirs.
+
+
 	* HACKT-00-01-04-main-00-78-04:
 	  Important: hash_mapped structures are now saved and restored
 		persistently with precise order reconstruction within

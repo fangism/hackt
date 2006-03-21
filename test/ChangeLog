@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2006-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05:
+	  Enabled object consistency checks for create and alloc targets.
+	  Basically, they diff against the objects produced by various
+		partial compiles of intermediate objects and verify that
+		the contents produce identical object dumps.  
+
+
 2006-02-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-4-preal-01-09:

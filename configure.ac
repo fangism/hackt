@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.48 2006/03/21 21:53:07 fang Exp $
+#	$Id: configure.ac,v 1.49 2006/03/21 23:37:31 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -331,6 +331,8 @@ AC_CONFIG_FILES([test/hackt-create-expect.sh],
 	[chmod +x test/hackt-create-expect.sh])
 AC_CONFIG_FILES([test/check-create-consistency.sh],
 	[chmod +x test/check-create-consistency.sh])
+AC_CONFIG_FILES([test/check-alloc-consistency.sh],
+	[chmod +x test/check-alloc-consistency.sh])
 AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
 	[chmod +x test/hackt-alloc-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
