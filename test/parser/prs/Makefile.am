@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2006/02/10 22:50:49 fang Exp $
+#	$Id: Makefile.am,v 1.16 2006/03/21 21:53:14 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -17,7 +17,7 @@ HACKT_PARSE_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	nand-01 nand-02 nand-03 nand-04 nand-05 nand-06 nand-07 \
 	nor-01 xor-01 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
-	wchb-01 wchb-02 wchb-03 wchb-04 \
+	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 \
@@ -39,7 +39,7 @@ HACKT_UNROLL_TEST_SUBJECTS = $(HACKT_OBJ_TEST_SUBJECTS)
 HACKT_CREATE_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
-	wchb-01 wchb-02 wchb-03 wchb-04 \
+	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 \
@@ -59,7 +59,7 @@ HACKT_CREATE_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 HACKT_ALLOC_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	celem-01 celem-02 celem-03 celem-04 celem-05 celem-06 \
 	nand-04 nand-05 nand-06 nand-07 \
-	wchb-01 wchb-02 wchb-03 wchb-04 \
+	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-06 loop-08 \

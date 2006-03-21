@@ -395,16 +395,16 @@ In namespace "", we have: {
           bool^0 b (instantiated) = ::wchb_e1of2::l1.b (2) 
           bool^0 _o (instantiated) = ::wchb_e1of2::la.a (3) 
         )
-        process celem2inv<>^0 l1 (instantiated) = ::wchb_e1of2::l1 (2) (
-          bool^0 a (instantiated) = ::wchb_e1of2::l1.a (5) 
-          bool^0 b (instantiated) = ::wchb_e1of2::l1.b (2) 
-          bool^0 _o (instantiated) = ::wchb_e1of2::la.b (4) 
-        )
         bool^1 _r
           unrolled indices: {
             0 = ::wchb_e1of2::la.a (3) 
             1 = ::wchb_e1of2::la.b (4) 
           }
+        process celem2inv<>^0 l1 (instantiated) = ::wchb_e1of2::l1 (2) (
+          bool^0 a (instantiated) = ::wchb_e1of2::l1.a (5) 
+          bool^0 b (instantiated) = ::wchb_e1of2::l1.b (2) 
+          bool^0 _o (instantiated) = ::wchb_e1of2::la.b (4) 
+        )
         process inv<>^0 r0 (instantiated) = ::wchb_e1of2::r0 (3) (
           bool^0 a (instantiated) = ::wchb_e1of2::la.a (3) 
           bool^0 b (instantiated) = ::wchb_e1of2::r0.b (6) 

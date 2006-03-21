@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-04:
+	  Important: hash_mapped structures are now saved and restored
+		persistently with precise order reconstruction within
+		each bucket -- the trick was to reverse the buckets
+		on write-out so that bucket insertion on reconstruction
+		would result in the original ordering.  
+		Affected classes: scopespace, entity::footprint.
+	  Now, we have enabled perfect object reproduction across
+		various compile phases, so haco -> haco-u -> haco-c
+		results in the identical object produced by haco -> haco-c.
+		Many tests enabled to confirm this behavior.  
+	  Next: enabling object consistency checks up through the alloc phase.
+
+
 2006-03-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-03-merged-nonmeta-02-05:

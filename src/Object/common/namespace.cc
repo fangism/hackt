@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.14 2006/03/15 04:38:13 fang Exp $
+ 	$Id: namespace.cc,v 1.15 2006/03/21 21:53:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -17,6 +17,7 @@
 DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
+#include <iterator>
 #include <fstream>
 #include <algorithm>
 #include <numeric>
@@ -35,6 +36,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 // include this as early as possible
 #include "util/hash_specializations.h"		// substitute for the following
+#include "util/STL/hash_map_utils.h"
 #include "util/hash_qmap.tcc"
 #include "util/qmap.tcc"
 
@@ -76,6 +78,7 @@ namespace entity {
 using util::hash_map;
 using util::qmap;
 using parser::scope;
+using std::_Select1st;
 using std::_Select2nd;
 using std::bind1st;
 using util::mem_fun;
@@ -89,6 +92,7 @@ using util::read_value;
 using util::write_string;
 using util::read_string;
 using util::persistent_traits;
+using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
 
 //=============================================================================
 // general non-member function definitions
@@ -207,6 +211,16 @@ if (id.is_absolute()) {
 		return ns->lookup_object(**(--id.end()));
 	else return return_type(NULL);
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+scopespace::__dump_map_keys(ostream& o, const used_id_map_type& m) {
+	std::ostream_iterator<string> osi(o, "\n");
+	std::transform(m.begin(), m.end(), osi, 
+		_Select1st<used_id_map_type::value_type>()
+	);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -520,14 +534,14 @@ inline
 void
 scopespace::collect_used_id_map_pointers(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT("scopespace::collect_used_id_map_pointers()");
-	used_id_map_type::const_iterator m_iter = used_id_map.begin();
-	const used_id_map_type::const_iterator m_end = used_id_map.end();
+	used_id_map_type::const_iterator m_iter(used_id_map.begin());
+	const used_id_map_type::const_iterator m_end(used_id_map.end());
 	for ( ; m_iter!=m_end; m_iter++) {
 		const never_ptr<const object> m_obj(m_iter->second);
 		NEVER_NULL(m_obj);		// no NULLs in hash_map
 		// checks for excluded objects, virtual call
 		if (!exclude_object(*m_iter)) {
-			never_ptr<const persistent>
+			const never_ptr<const persistent>
 				m_p(m_obj.is_a<const persistent>());
 			if (m_p)
 				m_p->collect_transient_info(m);
@@ -547,6 +561,8 @@ scopespace::collect_transient_info_base(persistent_object_manager& m) const {
 /**
 	Serializes the used_id_map hash_map's pointers to an 
 	output stream, translating pointers to indices.  
+	NOTE: we use a copy of the hash-table with its buckets reversed
+	so that it will be reconstructed in the correct order.  
  */
 inline
 void
@@ -560,8 +576,10 @@ scopespace::write_object_used_id_map(const persistent_object_manager& m,
 	size_t ex = exclude_population();
 	INVARIANT(ex <= s);		// sanity check b/c unsigned
 	write_value(f, s -ex);
-	const used_id_map_type::const_iterator m_end = used_id_map.end();
-	used_id_map_type::const_iterator m_iter = used_id_map.begin();
+	used_id_map_type temp;
+	copy_map_reverse_bucket(used_id_map, temp);
+	const used_id_map_type::const_iterator m_end(temp.end());
+	used_id_map_type::const_iterator m_iter(temp.begin());
 	for ( ; m_iter!=m_end; m_iter++) {
 		// any distinction between aliases and non-owners?
 		if (!exclude_object(*m_iter)) {
@@ -608,14 +626,8 @@ scopespace::load_object_used_id_map(
 	size_t s, i=0;
 	read_value(f, s);
 	for ( ; i<s; i++) {
-#if 0
-		long index;
-		read_value(f, index);
-		excl_ptr<persistent> m_obj(m.lookup_obj_ptr(index));
-#else
 		excl_ptr<persistent> m_obj;
 		m.read_pointer(f, m_obj);	// replaced, b/c need index
-#endif
 		// need to add it back through hash_map.  
 		if (!m_obj) {
 			// this really should never happen...
@@ -1102,8 +1114,8 @@ name_space::leave_namespace(void) {
 	dump(cerr) << endl;
 #endif
 	// for all open_aliases, release their names from used-map
-	alias_map_type::const_iterator i = open_aliases.begin();
-	const alias_map_type::const_iterator a_end = open_aliases.end();
+	alias_map_type::const_iterator i(open_aliases.begin());
+	const alias_map_type::const_iterator a_end(open_aliases.end());
 	for ( ; i!=a_end; i++) {
 #if 0
 		cerr << "Removing \"" << i->first << "\" from used_id_map."
@@ -1310,7 +1322,7 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 		return (id.is_absolute()) ? get_global_namespace() : 
 			return_type(this);
 	}
-	qualified_id_slice::const_iterator i = id.begin();
+	qualified_id_slice::const_iterator i(id.begin());
 	NEVER_NULL(*i);
 	const count_ptr<const token_identifier>& tidp(*i);
 	NEVER_NULL(tidp);
@@ -1372,7 +1384,7 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		return (id.is_absolute()) ? get_global_namespace() : 
 			never_ptr<const name_space>(this);
 	}
-	qualified_id_slice::const_iterator i = id.begin();
+	qualified_id_slice::const_iterator i(id.begin());
 	NEVER_NULL(*i);		// *i is a count_ptr<const token_identifier>
 	const token_identifier& tid(**i);
 	// no check for absoluteness
@@ -1432,7 +1444,7 @@ query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
 	}
 	// always search these unconditionally? or only if not found so far?
 	{	// with open namespaces list
-		namespace_list::const_iterator i = open_spaces.begin();
+		namespace_list::const_iterator i(open_spaces.begin());
 		for ( ; i!=open_spaces.end(); i++) {
 			const never_ptr<const name_space>
 				ret((*i)->query_subnamespace_match(id));
@@ -1572,8 +1584,8 @@ name_space::lookup_open_alias(const string& id) const {
  */
 void
 name_space::collect_namespaces(namespace_collection_type& l) const {
-	used_id_map_type::const_iterator i = used_id_map.begin();
-	const used_id_map_type::const_iterator e = used_id_map.end();
+	used_id_map_type::const_iterator i(used_id_map.begin());
+	const used_id_map_type::const_iterator e(used_id_map.end());
 	// consider transform_if
 	for ( ; i!=e; i++) {
 		const namespace_collection_type::value_type

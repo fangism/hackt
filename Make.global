@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.14 2006/02/25 04:54:55 fang Exp $
+#	$Id: Make.global,v 1.15 2006/03/21 21:53:07 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -79,6 +79,9 @@ echo-srcdir: force
 
 echo-top-srcdir: force
 	@$(ECHO) $(top_srcdir)
+
+echo-top-builddir: force
+	@$(ECHO) $(top_builddir)
 
 echo-subdir: force
 	@$(ECHO) $(subdir)
@@ -203,7 +206,8 @@ help-global:
 	@$(ECHO) "	extra-dist: list of EXTRA_DIST files"
 	@$(ECHO) "	dist-common: list automatic DIST_COMMON files"
 	@$(ECHO) "	auto-ignore: list of automatic cvsignored files"
-	@$(ECHO) "	srcdir, top-srcdir, subdir, build, host, prefix, exec-prefix"
+	@$(ECHO) "	srcdir, top-srcdir, top-builddir, subdir, "
+	@$(ECHO) "	build, host, prefix, exec-prefix"
 	@$(ECHO) "	program-transform-name, package{,-version,-bugreport}"
 	@$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, AM_*FLAGS, LIBS, LEX, YACC"
 

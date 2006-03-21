@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.14 2006/03/15 04:38:14 fang Exp $
+	$Id: footprint.cc,v 1.15 2006/03/21 21:53:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -25,6 +25,7 @@
 #include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
+#include "util/STL/hash_map_utils.h"
 #include "util/hash_qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
@@ -39,6 +40,7 @@ using util::read_value;
 using util::auto_indent;
 using std::ostream_iterator;
 using std::copy;
+using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
 
 //=============================================================================
 // class footprint_base method definitions
@@ -625,6 +627,11 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: to preserve precise hash_table ordering, we use a copy
+	of the hash-table with its internal buckets reversed, 
+	so that reconstruction will occur in the desired original order.  
+ */
 void
 footprint::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
@@ -634,8 +641,10 @@ footprint::write_object_base(const persistent_object_manager& m,
 {
 	// instance_collection_map
 	write_value(o, instance_collection_map.size());
-	const_instance_map_iterator i(instance_collection_map.begin());
-	const const_instance_map_iterator e(instance_collection_map.end());
+	instance_collection_map_type temp;
+	copy_map_reverse_bucket(instance_collection_map, temp);
+	const_instance_map_iterator i(temp.begin());
+	const const_instance_map_iterator e(temp.end());
 	for ( ; i!=e; i++) {
 		// remember, the keys are stored in the instance_collections
 		const instance_collection_map_type::mapped_type&

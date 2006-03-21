@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_fwd.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
 	\todo Make this configuration dependent on ac_cxx_ext_hash_map.
-	$Id: hash_map_fwd.h,v 1.6 2006/01/22 06:53:39 fang Exp $
+	$Id: hash_map_fwd.h,v 1.7 2006/03/21 21:53:13 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_FWD_H__
@@ -37,7 +37,14 @@ namespace HASH_MAP_NAMESPACE {
 template <class K>
 struct hash;
 
+#define	HASH_MAP_TEMPLATE_SIGNATURE					\
 template <class K, class T, class H, class E, class A>
+
+#define	DEFAULT_HASH_MAP_TEMPLATE_SIGNATURE	template <class K, class T>
+
+#define	HASH_MAP_CLASS			hash_map<K,T,H,E,A >
+
+HASH_MAP_TEMPLATE_SIGNATURE
 class hash_map;
 
 #if 0
@@ -49,7 +56,7 @@ template <class K, class T,
 class hash_map;
 #endif
 
-template <class K, class T>
+DEFAULT_HASH_MAP_TEMPLATE_SIGNATURE
 struct default_hash_map {
 	typedef	hash_map<K, T, hash<K>, std::equal_to<K>, std::allocator<T> >
 					type;
@@ -60,11 +67,6 @@ struct default_hash_map {
 #define	USING_HASH	using HASH_MAP_NAMESPACE::hash;
 #define	USING_HASH_MAP	using HASH_MAP_NAMESPACE::hash_map;
 
-#if 0
-#define	DEFAULT_HASH_MAP(K,T)						\
-	hash_map<K, T, HASH_MAP_NAMESPACE::hash<K>,			\
-		std::equal_to<K>, std::allocator<T> >
-#endif
 
 #endif	// __UTIL_STL_HASH_MAP_FWD_H__
 

@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "check-create-consistency"
-#	$Id: check-create-consistency.sh.in,v 1.1 2006/02/06 03:20:12 fang Exp $
+#	$Id: check-create-consistency.sh.in,v 1.2 2006/03/21 21:53:14 fang Exp $
 # run this test AFTER the corresponding create-test has been run
 
 # $1 is the executable for the creator (hackt create), expecting 2 arguments
@@ -61,7 +61,7 @@ esac
 
 
 # ignore whitespace differences
-@DIFF@ -buw $srcroot.createdump.filter $bldroot.create-from-haco-dump.filter \
+@DIFF@ -buw $bldroot.createdump.filter $bldroot.create-from-haco-dump.filter \
 	> $bldroot.create-from-haco-diff 2>&1
 
 if test -s $bldroot.create-from-haco-diff

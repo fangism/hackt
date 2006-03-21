@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.19 2006/03/16 03:40:23 fang Exp $
+ 	$Id: definition.cc,v 1.20 2006/03/21 21:53:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3054,6 +3054,9 @@ process_definition::collect_transient_info(persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+#if 0
+	cerr << "registering definition: " << key << endl;
+#endif
 	// no need to visit template formals, port formals, separately, 
 	// b/c they're all registered in the used_id_map.  
 	scopespace::collect_transient_info_base(m);
@@ -3254,6 +3257,9 @@ process_definition_alias::collect_transient_info(
 	STACKTRACE_PERSISTENT_VERBOSE;
 if (!m.register_transient_object(this, 
 		persistent_traits<this_type>::type_key)) {
+#if 0
+	cerr << "registering alias: " << key << endl;
+#endif
 	base->collect_transient_info(m);
 	definition_base::collect_transient_info_base(m);
 	scopespace::collect_transient_info_base(m);	// covers formals?

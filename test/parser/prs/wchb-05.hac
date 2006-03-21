@@ -1,0 +1,16 @@
+// "wchb-05.hac"
+// should pass
+// copy-reduced from "wchb-05.hac" for sake of testing hash_map ordering
+
+defproc e1of2(bool d[2], e) { }
+
+// note: contains no PRS locally, but recursively in sub-instances
+defproc wchb_e1of2(e1of2 L, R) {
+// the following two identifiers collide in hash
+bool _r;
+bool l1;
+}
+
+e1of2 L, R;
+wchb_e1of2 b(L, R);
+
