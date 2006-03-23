@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4 2006/02/13 05:35:23 fang Exp $
+	$Id: State.cc,v 1.4.8.1 2006/03/23 07:05:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,13 +12,16 @@
 #include <string>
 #include "sim/prsim/State.h"
 #include "sim/prsim/ExprAlloc.h"
+#include "sim/prsim/Event.tcc"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
+#include "util/attributes.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
+#include "util/memory/index_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 
 namespace HAC {
@@ -27,6 +30,7 @@ namespace entity { }
 namespace SIM {
 namespace PRSIM {
 using std::string;
+using std::ostringstream;
 using std::for_each;
 using std::mem_fun_ref;
 using entity::state_manager;
@@ -64,7 +68,8 @@ State::State(const entity::module& m) :
 #endif
 		mod(m), 
 		node_pool(), expr_pool(), expr_graph_node_pool(),
-		event_pool(), event_queue() {
+		event_pool(), event_queue(), 
+		current_time(0) {
 #if 0
 	NEVER_NULL(m);
 	const state_manager& sm(m->get_state_manager());
@@ -143,7 +148,7 @@ State::initialize(void) {
 		mem_fun_ref(&expr_type::initialize));
 	// the expr_graph_node_pool contains no stateful information.  
 	while (!event_queue.empty()) {
-		const EventPlaceholder next(event_queue.pop());
+		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
 }
@@ -151,6 +156,7 @@ State::initialize(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Pre-allocates one element in node and expr pools, which are 1-indexed.
+	NOTE: the event pool takes care of itself already.  
 	\pre all pools are empty, as if just clear()ed.
 	\post the pools have one null element at position 0.  
  */
@@ -245,6 +251,79 @@ State::check_expr(const expr_index_type i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+event_index_type
+State::allocate_event(void) {
+	return event_pool.allocate();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre i is not already deallocated.  (not checked!)
+ */
+void
+State::deallocate_event(const event_index_type i) {
+	event_pool.deallocate(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+State::event_type&
+State::get_event(const event_index_type i) {
+	return event_pool[i];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::enqueue_event(const event_placeholder_type& e) {
+	event_queue.push(e);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param ni the canonically allocated global index of the bool node.
+	\param val the new value to set the node.
+	\param t the time at which the event should occur.  
+	\return status: 0 is accepted, 1 is warning.  
+ */
+int
+State::set_node_time(const node_index_type ni, const char val,
+		const time_type t) {
+
+	// we have ni = the canonically allocated index of the bool node
+	// just look it up in the node_pool
+	node_type& n(get_node(ni));
+	const bool pending = n.pending_event();
+	const char last_val = n.current_value();
+/***
+	If node is in the event queue already and is set to the 
+	same value, then issue warning.  
+***/
+	if (pending && val == last_val) {
+		const string objname(get_node_canonical_name(ni));
+		cout << "WARNING: ignoring set_node on `" << objname <<
+			"\' [interferes with pending event]" << endl;
+		return ENQUEUE_WARNING;
+	}
+// If the value is the same as former value, then ignore it.
+// What if delay differs?
+	if (val == last_val) { return ENQUEUE_ACCEPT; }
+// If node has pending even in queue already, warn and ignore.
+	if (pending) {
+		const string objname(get_node_canonical_name(ni));
+		cout << "WARNING: pending value for node `" << objname <<
+			"\'; ignoring request" << endl;
+		return ENQUEUE_WARNING;
+	}
+// otherwise, enqueue the event.  
+	const event_index_type ei = allocate_event();
+	event_type& e(get_event(ei));
+	e.node = ni;
+	e.val = val;
+	n.set_event(ei);
+	enqueue_event(event_placeholder_type(t, ei));
+	return ENQUEUE_ACCEPT;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Structural assertions.  
 	TODO: run-time flag to enable/disable calls to this.  
@@ -273,6 +352,21 @@ State::check_structure(void) const {
 		check_node(j);
 	}
 }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i global node index.  
+	\return string of the canonical node name.  
+ */
+string
+State::get_node_canonical_name(const node_index_type i) const {
+	const state_manager& sm(mod.get_state_manager());
+	const entity::footprint& topfp(mod.get_footprint());
+	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
+	ostringstream oss;
+	bp[i].dump_canonical_name(oss, topfp, sm);
+	return oss.str();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -330,7 +424,7 @@ State::dump_struct_dot(ostream& o) const {
 	const node_index_type nodes = node_pool.size();
 	node_index_type i = FIRST_VALID_NODE;
 	for ( ; i<nodes; ++i) {
-		std::ostringstream oss;
+		ostringstream oss;
 		oss << "NODE_" << i;
 		const string& s(oss.str());
 		o << s;
@@ -353,6 +447,27 @@ State::dump_struct_dot(ostream& o) const {
 	}
 }
 	o << "}" << endl;
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints the event queue.  
+ */
+ostream&
+State::dump_event_queue(ostream& o) const {
+	typedef	vector<event_queue_type::value_type>	temp_type;
+	typedef	temp_type::const_iterator		const_iterator;
+	temp_type temp;
+	event_queue.copy_to(temp);
+	const_iterator i(temp.begin()), e(temp.end());
+	o << "event queue:" << endl;
+	for ( ; i!=e; ++i) {
+		o << '\t' << i->time << '\t';
+		const event_type& ev(event_pool[i->event_index]);
+		o << get_node_canonical_name(ev.node) << " : " <<
+			node_type::value_to_char[ev.val] << endl;
+	}
 	return o;
 }
 

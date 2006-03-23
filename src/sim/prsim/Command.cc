@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3 2006/02/13 02:48:05 fang Exp $
+	$Id: Command.cc,v 1.3.8.1 2006/03/23 07:05:17 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -575,10 +575,62 @@ Initialize::usage(ostream& o) {
 // DECLARE_COMMAND_CLASS(Step, "step", simulation, "step through event")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Queue, "queue", simulation, "show event queue")
+DECLARE_COMMAND_CLASS(Queue, "queue", simulation, "show event queue")
+
+int
+Queue::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	s.dump_event_queue(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+Queue::usage(ostream& o) {
+	o << "queue: " << brief << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Set, "set", simulation, "set node immediately")
+DECLARE_COMMAND_CLASS(Set, "set", simulation, "set node immediately")
+
+/**
+	Do we need an optional time argument?
+ */
+int
+Set::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	typedef	State::event_type		event_type;
+	typedef	State::event_placeholder_type	event_placeholder_type;
+	// now I'm wishing string_list was string_vector... :) can do!
+	const string& objname(*++a.begin());	// node name
+	const string& _val(a.back());	// node value
+	// valid values are 0, 1, 2(X)
+	const char val = node_type::string_to_value(_val);
+	if (val < 0) {
+		return Command::SYNTAX;
+	}
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		int err = s.set_node(ni, val);
+		return (err < 1) ? Command::NORMAL : Command::BADARG;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Set::usage(ostream& o) {
+	o << "set <node> <value 0|1|X>" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_COMMAND_CLASS(Setr, "setr", simulation, "set node after random delay")

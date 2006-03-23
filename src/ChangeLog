@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-01:
+	  Branch for resuming prsim development.  
+	  Templated EventQueue and EventPlaceholder classes.  
+	  Implemented 'set' and 'queue' commands in interface.  
+	  EventPool now reserves the 0-indexed (invalid) entry so 
+		it should not be touched.
+	  NodeState class extends Node with stateful information.
+		Ideally, Node should only contain structural information.  
+	  Some generally useful short functions added.  
+	  State class: added current_time, a few methods for
+		event queue changes and printing feedback.  
+
+
 2006-03-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.2 2006/01/22 06:53:29 fang Exp $
+	$Id: Node.cc,v 1.2.26.1 2006/03/23 07:05:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,6 +24,10 @@ using std::string;
 //=============================================================================
 // class Node method definitions
 
+const char
+Node::value_to_char[3] = { '0', '1', 'X' };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Node::Node() : pull_up_index(0), pull_dn_index(0), fanout() {
 	INVARIANT(!fanout.size());
 }
@@ -132,6 +136,38 @@ Node::dump_fanout_dot(ostream& o, const string& s) const {
 		o << s << " -> EXPR_" << *i << ';' << endl;
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Lexes string to node value.  
+	TODO: add synonymous character mappings.  
+	\return 0, 1, 2 (X), or -1 on error.  
+ */
+char
+Node::string_to_value(const string& v) {
+	if (v.length() != 1) {
+		return -1;
+	} else {
+		switch (v[0]) {
+		case '0': return 0;
+		case '1': return 1;
+		case 'X':
+		case 'x':
+			return 2;
+		default:
+			return -1;
+		}
+	}
+}
+
+//=============================================================================
+// class NodeState method definitions
+
+void
+NodeState::initialize(void) {
+	parent_type::initialize();
+	event_index = INVALID_EVENT_INDEX;
 }
 
 //=============================================================================

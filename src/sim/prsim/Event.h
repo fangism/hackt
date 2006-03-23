@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.2 2006/01/22 06:53:27 fang Exp $
+	$Id: Event.h,v 1.2.26.1 2006/03/23 07:05:18 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -12,6 +12,7 @@
 #include <vector>
 #include "sim/common.h"
 #include "sim/time.h"
+#include "util/macros.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
 
@@ -46,18 +47,23 @@ struct Event {
 	An ordered placeholder for events.  
 	These will go into the event queue on behalf of the actual event.  
  */
+template <typename T>
 struct EventPlaceholder {
+	typedef	T			time_type;
 	/**
 		The time at which the event should occur.  
 		This is also the Key.  
 	 */
-	real_time			time;
+	time_type			time;
 	/**
 		The index of the corresponding event belonging to the
 		global event pool.  
 		This will be used to index directly into the pool.  
 	 */
 	event_index_type		event_index;
+
+	EventPlaceholder(const time_type t, const event_index_type i)
+		: time(t), event_index(i) { }
 
 	bool
 	operator < (const EventPlaceholder& r) const {
@@ -85,11 +91,13 @@ public:
 
 	const Event&
 	operator [] (const event_index_type i) const {
+		INVARIANT(i);
 		return event_pool[i];
 	}
 
 	Event&
 	operator [] (const event_index_type i) {
+		INVARIANT(i);
 		return event_pool[i];
 	}
 
@@ -98,6 +106,7 @@ public:
 		if (free_indices.empty()) {	// UNLIKELY
 			const event_index_type ret = event_pool.size();
 			event_pool.allocate();	// will realloc
+			INVARIANT(ret);
 			return ret;
 		} else {			// LIKELY
 			return free_list_acquire(free_indices);
@@ -115,6 +124,8 @@ public:
 };	// end class EventPool
 
 //=============================================================================
+#define	EVENT_QUEUE_TEMPLATE_SIGNATURE		template <class E>
+#define	EVENT_QUEUE_CLASS			EventQueue<E>
 /**
 	For now, hard-coded to one type of event.  
 	TODO: template this to use custom structures.  
@@ -122,17 +133,26 @@ public:
 	TODO: document a consistent interface.  
 	TODO: instead of using pointers, recycle ID numbers.  
 	TODO: use list_vector pool allocation.  
+	\param E is the event-placeholder type.  
  */
+EVENT_QUEUE_TEMPLATE_SIGNATURE
 class EventQueue {
+	typedef	EVENT_QUEUE_CLASS		this_type;
+public:
+	typedef	E				value_type;
+private:
 	/**
 		Heap-like structure. 
+		Also consider trying multimap.  
 	 */
-	typedef	priority_queue<EventPlaceholder, vector<EventPlaceholder> >
+	typedef	priority_queue<value_type, vector<value_type> >
 						queue_type;
+private:
 	queue_type				equeue;
 
 public:
 	EventQueue();
+	// allow default copy-constructor
 	~EventQueue();
 
 	bool
@@ -141,22 +161,33 @@ public:
 	}
 
 	void
-	push(const EventPlaceholder& p) {
+	push(const value_type& p) {
 		equeue.push(p);
 	}
 
 	/**
 		\pre queue is not empty.  
 	 */
-	EventPlaceholder
+	value_type
 	pop(void) {
-		const EventPlaceholder ret(equeue.top());
+		const value_type ret(equeue.top());
 		equeue.pop();
 		return ret;
 	}
 
+	// semantically equivalent variation, but guaranteed to elide copy
+	void
+	pop(value_type& v) {
+		v = equeue.top();
+		equeue.pop();
+	}
+
 	void
 	clear(void);
+
+	template <class S>
+	void
+	copy_to(S&) const;
 
 };	// end struct EventQueue
 

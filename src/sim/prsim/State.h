@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2 2006/01/22 06:53:31 fang Exp $
+	$Id: State.h,v 1.2.26.1 2006/03/23 07:05:18 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -11,6 +11,7 @@
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
+#include "util/string_fwd.h"
 #include "util/list_vector.h"
 // #include "util/memory/count_ptr.h"
 
@@ -22,6 +23,7 @@ namespace entity {
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
+using std::string;
 using entity::module;
 using util::list_vector;
 using std::ostream;
@@ -42,11 +44,15 @@ class State {
 public:
 	// these typedefs will make it convenient to template this
 	// class in the future...
-	typedef	Node				node_type;
+	/// can switch between integer and real-valued time
+	typedef	real_time			time_type;
+	typedef	NodeState			node_type;
 	typedef	Expr				expr_type;
 	typedef	ExprGraphNode			graph_node_type;
+	typedef	Event				event_type;
 	typedef	EventPool			event_pool_type;
-	typedef	EventQueue			event_queue_type;
+	typedef	EventPlaceholder<time_type>	event_placeholder_type;
+	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 
 	typedef	vector<node_type>		node_pool_type;
 	typedef	vector<Expr>			expr_pool_type;
@@ -65,9 +71,20 @@ private:
 
 	enum {
 		/// index of the first valid node
-		FIRST_VALID_NODE = 1,
+		FIRST_VALID_NODE = SIM::INVALID_NODE_INDEX +1,
 		/// index of the first valid expr/expr_graph_node
-		FIRST_VALID_EXPR = 1
+		FIRST_VALID_EXPR = SIM::INVALID_EXPR_INDEX +1,
+		/// index of the first valid event
+		FIRST_VALID_EVENT = SIM::INVALID_EVENT_INDEX +1
+	};
+	/**
+		Return codes for set_node_time.  
+	 */
+	enum {
+		ENQUEUE_ACCEPT = 0,
+		ENQUEUE_WARNING = 1,
+		ENQUEUE_REJECT = 2,
+		ENQUEUE_FATAL = 3
 	};
 private:
 //	count_ptr<const module>			mod;
@@ -78,6 +95,7 @@ private:
 	event_pool_type				event_pool;
 	event_queue_type			event_queue;
 	// current time, etc...
+	time_type				current_time;
 	// watched nodes
 	// vectors
 	// channels
@@ -117,6 +135,32 @@ public:
 	node_type&
 	get_node(const node_index_type);
 
+	string
+	get_node_canonical_name(const node_index_type) const;
+
+	int
+	set_node_time(const node_index_type, const char val, 
+		const time_type t);
+
+	int
+	set_node(const node_index_type n, const char val) {
+		return set_node_time(n, val, this->current_time);
+	}
+
+private:
+	event_index_type
+	allocate_event(void);
+
+	void
+	deallocate_event(const event_index_type);
+
+	event_type&
+	get_event(const event_index_type);
+
+	void
+	enqueue_event(const event_placeholder_type&);
+
+public:
 	void
 	check_expr(const expr_index_type) const;
 
@@ -143,6 +187,9 @@ public:
 	/// prints output in DOT form for visualization (options?)
 	ostream&
 	dump_struct_dot(ostream&) const;
+
+	ostream&
+	dump_event_queue(ostream&) const;
 
 private:
 	void

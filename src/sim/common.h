@@ -1,7 +1,7 @@
 /**
 	\file "sim/common.h"
 	Definitions useful for ALL simulations.  
-	$Id: common.h,v 1.2 2006/01/22 06:53:26 fang Exp $
+	$Id: common.h,v 1.2.26.1 2006/03/23 07:05:17 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMON_H__
@@ -23,7 +23,8 @@ typedef	index_type	event_index_type;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum {
 	INVALID_NODE_INDEX = 0,
-	INVALID_EXPR_INDEX = 0
+	INVALID_EXPR_INDEX = 0,
+	INVALID_EVENT_INDEX = 0
 };
 
 //-----------------------------------------------------------------------------
