@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.2 2006/03/24 00:01:50 fang Exp $
+	$Id: State.cc,v 1.4.8.3 2006/03/24 03:56:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -525,6 +525,23 @@ State::dump_node_fanout(ostream& o, const node_index_type ni) const {
 #endif
 		dump_subexpr(o, pi) << " -> ";
 		o << get_node_canonical_name(nr) << (dir ? '+' : '-') << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: OR-combinations on separate lines?
+ */
+ostream&
+State::dump_node_fanin(ostream& o, const node_index_type ni) const {
+	const node_type& n(get_node(ni));
+	const string cn(get_node_canonical_name(ni));
+	if (n.pull_up_index) {
+		dump_subexpr(o, n.pull_up_index) << " -> " << cn << '+' << endl;
+	}
+	if (n.pull_dn_index) {
+		dump_subexpr(o, n.pull_dn_index) << " -> " << cn << '-' << endl;
 	}
 	return o;
 }

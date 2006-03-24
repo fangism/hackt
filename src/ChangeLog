@@ -5,6 +5,12 @@
 
 2006-03-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-05-prsim-01-03:
+	  Implemented 'what' and 'fanin' commands in prsim.  
+	  Broke up parse_node_to_index into reusable subroutines in
+		"sim/prsim/Reference.cc"
+
+
 	* HACKT-00-01-04-main-00-78-05-prsim-01-02:
 	  Added -h option to prsim main module for command help,
 		with optional objfile, equivalent to "help all" in interpreter.

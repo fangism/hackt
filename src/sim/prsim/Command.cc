@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.2 2006/03/24 00:01:49 fang Exp $
+	$Id: Command.cc,v 1.3.8.3 2006/03/24 03:56:26 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -655,7 +655,29 @@ Set::usage(ostream& o) {
 //	"remove all breakpoints")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info, "print value of node/vector")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(What, "what", info,
+	"print type information of named entity")
+
+int
+What::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	if (parse_name_to_what(cout, a.back(), s.get_module()))
+		return Command::BADARG;
+	else	return Command::NORMAL;
+}
+}
+
+void
+What::usage(ostream& o) {
+	o << "what <name>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
+	"print value of node/vector")
 
 /**
 	TODO: if instance referenced is an aggregate, 
@@ -692,8 +714,33 @@ Get::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
-//	"print rules that influence a node")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
+	"print rules that influence a node")
+
+int
+Fanin::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// const State::node_type& n(s.get_node(ni));
+		cout << "Fanins of node `" << objname << "\':" << endl;
+		s.dump_node_fanin(cout, ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Fanin::usage(ostream& o) {
+	o << "fanin <node>" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info, 
