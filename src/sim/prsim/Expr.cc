@@ -1,12 +1,13 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.2 2006/01/22 06:53:28 fang Exp $
+	$Id: Expr.cc,v 1.2.26.1 2006/03/24 00:01:50 fang Exp $
  */
 
 #include <iostream>
 #include <algorithm>
 #include "sim/prsim/Expr.h"
+#include "Object/lang/PRS_enum.h"
 #include "util/macros.h"
 
 namespace HAC {
@@ -45,6 +46,28 @@ void
 Expr::initialize(void) {
 	unknowns = size;
 	countdown = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+char
+Expr::to_prs_enum(void) const {
+	if (is_not())
+		return entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
+	else if (is_or())
+		return entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
+	else	return entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Determine whether or not to parenthesize this subexpression
+	during pretty-printing.  
+	\param ptype is the parent expression type enumeration.
+ */
+bool
+Expr::parenthesize(const char ptype) const {
+	return (ptype != entity::PRS::PRS_LITERAL_TYPE_ENUM) &&
+		(ptype != to_prs_enum()) && (size > 1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.1 2006/03/23 07:05:18 fang Exp $
+	$Id: State.h,v 1.2.26.2 2006/03/24 00:01:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -11,6 +11,7 @@
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
+#include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/list_vector.h"
 // #include "util/memory/count_ptr.h"
@@ -190,6 +191,16 @@ public:
 
 	ostream&
 	dump_event_queue(ostream&) const;
+
+	ostream&
+	dump_node_fanout(ostream&, const node_index_type) const;
+
+	ostream&
+	dump_node_fanin(ostream&, const node_index_type) const;
+
+	ostream&
+	dump_subexpr(ostream&, const expr_index_type, 
+		const char p = entity::PRS::PRS_LITERAL_TYPE_ENUM) const;
 
 private:
 	void

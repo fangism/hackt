@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.2 2006/01/22 06:53:11 fang Exp $
+	$Id: prsim.cc,v 1.2.26.1 2006/03/24 00:01:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -41,6 +41,8 @@ template class options_modifier_policy<prsim_options>;
 class prsim_options {
 public:
 	// none
+	/// just print help and exit
+	bool			help_only;
 	/// whether or not to show result of expression allocation
 	bool			dump_expr_alloc;
 	/// whether or not to run the simulation or just terminate after setup
@@ -50,7 +52,8 @@ public:
 	/// whether or not to produce a dot-format structure dump before running
 	bool			dump_dot_struct;
 
-	prsim_options() : dump_expr_alloc(false), run(true),
+	prsim_options() : help_only(false), 
+		dump_expr_alloc(false), run(true),
 		check_structure(true), dump_dot_struct(false) { }
 };	// end class options
 
@@ -78,6 +81,13 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 		usage();
 		return 1;
 	}
+	if (opt.help_only) {
+		util::string_list args;
+		args.push_back("help");
+		args.push_back("all");
+		SIM::PRSIM::Help::main(args);
+		return 0;
+	}
 	if (optind+1 != argc) {
 		cerr << "Error: Exactly one non-option argument "
 			"allowed/required." << endl;
@@ -89,11 +99,7 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 	if (!check_object_loadable(ofn).good)
 		return 1;
 
-#if 0
-	const count_ptr<module> the_module(load_module(argv[1]).release());
-#else
 	excl_ptr<module> the_module = load_module(ofn);
-#endif
 	if (!the_module)
 		return 1;
 
@@ -121,6 +127,7 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 	if (opt.run) {
 		sim_state.initialize();
 		// outermost level is interactive
+		// until later, when we give a source file, or redirect in
 		const int ret = CommandRegistry::interpret(sim_state, true);
 		if (ret)	return ret;
 	}
@@ -131,16 +138,52 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
-	// using simple template function
+#if 0
+	// using simple template function for now
 	return parse_simple_command_options(
 		argc, argv, o, options_modifier_map);
+#else
+	// now we're adding our own flags
+	static const char optstring[] = "+f:h";
+	int c;
+	while ((c = getopt(argc, argv, optstring)) != -1) {
+	switch (c) {
+		case 'f': {
+			const options_modifier_info&
+				om(options_modifier_map[optarg]);
+			if (!om) {
+				cerr << "Invalid mode: " << optarg << endl;
+				return 1;
+			} else {
+				om(o);
+			}
+			break;
+		}
+		case 'h':
+			o.help_only = true;
+			// return 0
+			break;
+		case ':':
+			cerr << "Expected but missing option-argument." << endl;
+			return 1;
+		case '?':
+			unknown_option(optopt);
+			return 1;
+		default:
+			THROW_EXIT;
+	}       // end switch
+	}       // end while
+	return 0;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 prsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-infile>" << endl;
-	cerr << "options: -f <flag>" << endl;
+	cerr << "options:" << endl;
+	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
+	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
         const size_t flags = options_modifier_map.size();
 	if (flags) {
 		cerr << "flags (" << flags << " total):" << endl;

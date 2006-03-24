@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.1 2006/03/23 07:05:17 fang Exp $
+	$Id: Command.cc,v 1.3.8.2 2006/03/24 00:01:49 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -163,6 +163,10 @@ CommandRegistry::list_commands(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Interpreter termination condition.  
+	TODO: Shouldn't interpreter halt on Command::FATAL (assert fail)?
+ */
 bool
 CommandRegistry::continue_interpreter(const int _status, const bool ia) {
 	return (_status != Command::END) && (!_status || ia);
@@ -387,30 +391,23 @@ static CommandCategory
 /**
 	Use this macro to declare ordinary commands.
 	This includes static initializers for the non-function members.  
-	\param class_name the name of the class.
-	\param cmd_name the string-quoted name of the command.
-	\param cmd_category the cateory object with which to associate.  
-	\param brief_str one-line quoted-string description.
+	\param _class the name of the class.
+	\param _cmd the string-quoted name of the command.
+	\param _category the cateory object with which to associate.  
+	\param _brief one-line quoted-string description.
  */
-#define	DECLARE_COMMAND_CLASS(class_name, cmd_name, cmd_category, brief_str) \
-struct class_name {							\
-public:									\
-	static const char		name[];				\
-	static const char		brief[];			\
-	static CommandCategory&		category;			\
-	static int	main(State&, const string_list&);		\
-	static void	usage(ostream&);				\
-private:								\
-	static const size_t		receipt_id;			\
-};									\
-const char class_name::name[] = cmd_name;				\
-const char class_name::brief[] = brief_str;				\
-CommandCategory& class_name::category(cmd_category);			\
-const size_t class_name::receipt_id =					\
-	CommandRegistry::register_command<class_name>();
+#define	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)	\
+const char _class::name[] = _cmd;					\
+const char _class::brief[] = _brief;					\
+CommandCategory& _class::category(_category);				\
+const size_t _class::receipt_id = CommandRegistry::register_command<_class >();
+
+#define	DECLARE_AND_INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief) \
+	DECLARE_COMMAND_CLASS(_class)					\
+	INITIALIZE_COMMAND_CLASS(_class, _cmd, _category, _brief)
 
 //-----------------------------------------------------------------------------
-DECLARE_COMMAND_CLASS(Echo, "echo", builtin, 
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Echo, "echo", builtin, 
 	"prints arguments back to stdout, space-delimited")
 
 int
@@ -429,7 +426,7 @@ Echo::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(Help, "help", builtin,
+INITIALIZE_COMMAND_CLASS(Help, "help", builtin,
 	"show available commands and categories")
 
 /**
@@ -437,7 +434,7 @@ DECLARE_COMMAND_CLASS(Help, "help", builtin,
 		as the first token.
  */
 int
-Help::main(State&, const string_list& args) {
+Help::main(const string_list& args) {
 	INVARIANT(args.size());
 	const string_list::const_iterator argi(++args.begin());
 	// skip first, which is 'help'
@@ -454,6 +451,11 @@ Help::main(State&, const string_list& args) {
 	return Command::NORMAL;
 }
 
+int
+Help::main(State&, const string_list& args) {
+	return main(args);
+}
+
 void
 Help::usage(ostream& o) {
 	o << "help: lists available commands and categories" << endl;
@@ -463,8 +465,8 @@ Help::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(CommentPound, "#", builtin, "comment")
-DECLARE_COMMAND_CLASS(CommentComment, "comment", builtin, "comment")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CommentPound, "#", builtin, "comment")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CommentComment, "comment", builtin, "comment")
 
 int
 CommentPound::main(State&, const string_list&) { return Command::NORMAL; }
@@ -481,7 +483,7 @@ void
 CommentComment::usage(ostream& o) { CommentPound::usage(o); }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(All, "all", builtin, "show all commands")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(All, "all", builtin, "show all commands")
 
 int
 All::main(State&, const string_list&) {
@@ -495,8 +497,8 @@ All::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(Exit, "exit", builtin, "exits simulator")
-DECLARE_COMMAND_CLASS(Quit, "quit", builtin, "exits simulator")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Exit, "exit", builtin, "exits simulator")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Quit, "quit", builtin, "exits simulator")
 
 int
 Exit::main(State&, const string_list&) {
@@ -519,7 +521,7 @@ Quit::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(Source, "source", simulation,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Source, "source", simulation,
 	"execute commands from script file(s)")
 
 /**
@@ -553,7 +555,7 @@ Source::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(Initialize, "initialize", simulation,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Initialize, "initialize", simulation,
 	"resets simulator state and event queue")
 
 int
@@ -568,14 +570,14 @@ Initialize::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Cycle, "cycle", simulation,
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
 // 	"run until event queue empty")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Step, "step", simulation, "step through event")
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation, "step through event")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(Queue, "queue", simulation, "show event queue")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Queue, "queue", simulation, "show event queue")
 
 int
 Queue::main(State& s, const string_list& a) {
@@ -594,7 +596,7 @@ Queue::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(Set, "set", simulation, "set node immediately")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation, "set node immediately")
 
 /**
 	Do we need an optional time argument?
@@ -614,6 +616,7 @@ if (a.size() != 3) {
 	// valid values are 0, 1, 2(X)
 	const char val = node_type::string_to_value(_val);
 	if (val < 0) {
+		cerr << "Invalid logic value: " << _val << endl;
 		return Command::SYNTAX;
 	}
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
@@ -633,26 +636,26 @@ Set::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Setr, "setr", simulation, "set node after random delay")
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation, "set node after random delay")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Setrwhen, "setrwhen", simulation,
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setrwhen, "setrwhen", simulation,
 //	"set node with random delay after event")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Breakpt, "breakpt", simulation,
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Breakpt, "breakpt", simulation,
 //	"set breakpoint on node/vector")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(NoBreakpt, "nobreakpt", simulation,
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakpt, "nobreakpt", simulation,
 //	"remove breakpoint on node/vector")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(NoBreakptAll, "nobreakptall", simulation,
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakptAll, "nobreakptall", simulation,
 //	"remove all breakpoints")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_COMMAND_CLASS(Get, "get", info, "print value of node/vector")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info, "print value of node/vector")
 
 /**
 	TODO: if instance referenced is an aggregate, 
@@ -689,35 +692,148 @@ Get::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Fanin, "fanin", info, 
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
 //	"print rules that influence a node")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Fanout, "fanout", info, 
-//	"print rules that influence a node")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info, 
+	"print rules that a node influences")
+
+int
+Fanout::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// const State::node_type& n(s.get_node(ni));
+		cout << "Fanouts of node `" << objname << "\':" << endl;
+		s.dump_node_fanout(cout, ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Fanout::usage(ostream& o) {
+	o << "fanout <node>" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // will category conflict with command?
-// DECLARE_COMMAND_CLASS(Info, "info", info, 
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Info, "info", info, 
 //	"print information about a node/vector")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Assert, "assert", info, 
-//	"error if node is NOT expected value")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Assert, "assert", info, 
+	"error if node is NOT expected value")
+
+/**
+	Checks expected value of node against actual value.  
+	\return FATAL on assertion failure.  
+ */
+int
+Assert::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const node_type& n(s.get_node(ni));
+		const string& _val(a.back());	// node value
+		// valid values are 0, 1, 2(X)
+		const char val = node_type::string_to_value(_val);
+		if (val < 0) {
+			cerr << "Invalid logic value: " << _val << endl;
+			return Command::SYNTAX;
+		}
+		const char actual = n.current_value();
+		if (actual != val) {
+			cout << "assert failed: expecting node `" << objname <<
+				"\' at " <<
+				node_type::value_to_char[size_t(val)] <<
+				", but got ";
+			n.dump_value(cout) << "." << endl;
+			return Command::FATAL;
+		}
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Assert::usage(ostream& o) {
+	o << "assert <node> <value>" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(AssertN, "assertn", info, 
-//	"error if node IS expected value")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertN, "assertn", info, 
+	"error if node IS expected value")
+
+/**
+	Checks expected value of node against actual value.  
+	\return FATAL on assertion failure.  
+ */
+int
+AssertN::main(State& s, const string_list& a) {
+if (a.size() != 3) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const string& objname(*++a.begin());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const node_type& n(s.get_node(ni));
+		const string& _val(a.back());	// node value
+		// valid values are 0, 1, 2(X)
+		const char val = node_type::string_to_value(_val);
+		if (val < 0) {
+			cerr << "Invalid logic value: " << _val << endl;
+			return Command::SYNTAX;
+		}
+		const char actual = n.current_value();
+		if (actual == val) {
+			cout << "assert failed: expecting node `" << objname <<
+				"\' not at " <<
+				node_type::value_to_char[size_t(val)] <<
+				", but got ";
+			n.dump_value(cout) << "." << endl;
+			return Command::FATAL;
+		}
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+AssertN::usage(ostream& o) {
+	o << "assertn <node> <value>" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(Confirm, "confirm", info, 
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Confirm, "confirm", info, 
 //	"confirm assertions verbosely")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_COMMAND_CLASS(NoConfirm, "noconfirm", info, 
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoConfirm, "noconfirm", info, 
 //	"confirm assertions silently")
 
-#undef	DECLARE_COMMAND_CLASS
+#undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
 //=============================================================================
 }	// end namespace PRSIM
 }	// end namespace SIM

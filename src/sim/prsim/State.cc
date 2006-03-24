@@ -1,10 +1,11 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.1 2006/03/23 07:05:18 fang Exp $
+	$Id: State.cc,v 1.4.8.2 2006/03/24 00:01:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
+#define	DEBUG_FANOUT			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <algorithm>
@@ -361,6 +362,8 @@ State::check_structure(void) const {
  */
 string
 State::get_node_canonical_name(const node_index_type i) const {
+	INVARIANT(i);
+	INVARIANT(i < node_pool.size());
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
@@ -467,6 +470,108 @@ State::dump_event_queue(ostream& o) const {
 		const event_type& ev(event_pool[i->event_index]);
 		o << get_node_canonical_name(ev.node) << " : " <<
 			node_type::value_to_char[ev.val] << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints out nodes affected by the node argument.  
+	Note: this only requires structural information, no stateful info.  
+	TODO: check for replications.  
+	TODO: including all OR combinations, or just the paths that
+		include this node conjunctively?
+ */
+ostream&
+State::dump_node_fanout(ostream& o, const node_index_type ni) const {
+	typedef	node_type::fanout_array_type	fanout_array_type;
+	typedef	fanout_array_type::const_iterator	const_iterator;
+	STACKTRACE_VERBOSE;
+#if DEBUG_FANOUT
+	STACKTRACE_INDENT << "ni = " << ni << endl;
+#endif
+	const node_type& n(get_node(ni));
+	const fanout_array_type& foa(n.fanout);
+	const_iterator fi(foa.begin()), fe(foa.end());
+	for ( ; fi!=fe; ++fi) {
+		// for each leaf expression in the fanout list, 
+		// trace up the propagation path to find the affected node.
+		expr_index_type ei = *fi;
+		const expr_type* e = &expr_pool[ei];
+		while (!e->is_root()) {
+#if DEBUG_FANOUT
+			STACKTRACE_INDENT << "ei = " << ei << endl;
+#endif
+			ei = e->parent;
+			e = &expr_pool[ei];
+		}
+#if DEBUG_FANOUT
+		STACKTRACE_INDENT << "ei = " << ei << endl;
+#endif
+		// ei is an index to the expression whose parent is *node*.
+		const node_index_type nr = e->parent;
+		// nr is an index to the root *node*.
+#if DEBUG_FANOUT
+		STACKTRACE_INDENT << "nr = " << nr << endl;
+#endif
+		const node_type& no(get_node(nr));
+		// track the direction of propagation (pull-up/dn)
+		const bool dir = e->direction();
+		// then print the entire fanin rule for that node, 
+		const expr_index_type pi =
+			(dir ? no.pull_up_index : no.pull_dn_index);
+#if DEBUG_FANOUT
+		STACKTRACE_INDENT << "pi = " << pi << endl;
+#endif
+		dump_subexpr(o, pi) << " -> ";
+		o << get_node_canonical_name(nr) << (dir ? '+' : '-') << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Recursive expression printer.  
+	Should be modeled after cflat's expression printer.  
+ */
+ostream&
+State::dump_subexpr(ostream& o, const expr_index_type ei, 
+		const char ptype) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(ei);
+	INVARIANT(ei < expr_pool.size());
+	const expr_type& e(expr_pool[ei]);
+	const graph_node_type& g(expr_graph_node_pool[ei]);
+	// can elaborate more on when parens are needed
+	const bool need_parens = e.parenthesize(ptype);
+	const char _type = e.to_prs_enum();
+	if (e.is_not()) {
+		o << '~';
+	}
+	const char* op = e.is_or() ? " | " : " & ";
+	typedef	graph_node_type::const_iterator		const_iterator;
+	const_iterator ci(g.begin()), ce(g.end());
+	if (need_parens) {
+		o << '(';
+	}
+	// peel out first iteration for infix printing
+	if (ci->first) {
+		o << get_node_canonical_name(ci->second);
+	} else {
+		dump_subexpr(o, ci->second, _type);
+	}
+	if (g.children.size() >= 1) {
+	for (++ci; ci!=ce; ++ci) {
+		o << op;
+		if (ci->first) {
+			o << get_node_canonical_name(ci->second);
+		} else {
+			dump_subexpr(o, ci->second, _type);
+		}
+	}
+	}
+	if (need_parens) {
+		o << ')';
 	}
 	return o;
 }

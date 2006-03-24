@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-02:
+	  Added -h option to prsim main module for command help,
+		with optional objfile, equivalent to "help all" in interpreter.
+	  Redefined some command-class macros for "sim/prsim/Command.h".
+	  Implemented 'fanout' 'assert' and 'assertn' commands.  
+	  Added bunch of utility methods to expr/node/state classes.  
+
+
 2006-03-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05-prsim-01-01:

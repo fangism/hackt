@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.2 2006/01/22 06:53:28 fang Exp $
+	$Id: Expr.h,v 1.2.26.1 2006/03/24 00:01:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -108,6 +108,9 @@ public:
 	bool
 	is_root(void) const { return type & EXPR_ROOT; }
 
+	bool
+	is_not(void) const { return type & EXPR_NOT; }
+
 	/**
 		\pre direction is only meaningful if this expression is 
 		a root pull-up or pull-dn.  
@@ -154,6 +157,14 @@ public:
 
 	bool
 	is_or(void) const { return !(type & EXPR_AND) && !(type & EXPR_NOT); }
+
+	/// see "Object/lang/PRS_enum.h"
+	bool
+	parenthesize(const char) const;
+
+	/// see "Object/lang/PRS_enum.h"
+	char
+	to_prs_enum(void) const;
 
 	ostream&
 	dump_struct(ostream&) const;

@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.2 2006/01/22 06:53:27 fang Exp $
+	$Id: Command.h,v 1.2.26.1 2006/03/24 00:01:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__
@@ -44,7 +44,7 @@ public:
 			return type size or standard enums.
 	 */
 	enum Status {
-		FATAL = -4,	///< terminate immediately
+		FATAL = -4,	///< terminate immediately (e.g. assert fail)
 		BADFILE = -3,	///< source file not found
 		SYNTAX = -2,	///< bad syntax
 		UNKNOWN = -1,	///< unknown command
@@ -229,6 +229,40 @@ public:
  */
 class CommandAlias {
 };	// end class command
+
+//=============================================================================
+
+/**
+	Declares a command class.  
+ */
+#define	DECLARE_COMMAND_CLASS(class_name)				\
+struct class_name {                                                     \
+public:                                                                 \
+	static const char		name[];				\
+	static const char		brief[];			\
+	static CommandCategory&		category;			\
+	static int	main(State&, const string_list&);		\
+	static void	usage(ostream&);				\
+private:								\
+	static const size_t		receipt_id;			\
+};
+
+// declare some generally useful commands
+/**
+	The 'help' command class.  
+	Not using the macro to define because we extend the interface somewhat.
+ */
+struct Help {
+public:
+	static const char		name[];
+	static const char		brief[];
+	static CommandCategory&		category;
+	static int	main(const string_list&);	// no state needed
+	static int	main(State&, const string_list&);
+	static void	usage(ostream&);
+private:
+	static const size_t		receipt_id;
+};	// end class Help
 
 //=============================================================================
 }	// end namespace PRSIM

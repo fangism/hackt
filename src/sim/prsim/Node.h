@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.2.26.1 2006/03/23 07:05:18 fang Exp $
+	$Id: Node.h,v 1.2.26.2 2006/03/24 00:01:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -40,7 +40,8 @@ struct Node {
 		LOGIC_LOW = 0x0,		// 0
 		LOGIC_HIGH = 0x1,		// 1
 		LOGIC_VALUE = 0x1,		// value mask
-		LOGIC_OTHER = 0x2		// 2
+		LOGIC_OTHER = 0x2,		// 2
+		LOGIC_MASK = 0x3
 	} value_enum;
 #if 0
 	/**
