@@ -1,6 +1,6 @@
 #!@SH_PATH@
 
-hash_map_iterator_O2_bug_test
+./hash_map_iterator_O2_bug_test
 case $? in
 	0) break ;;
 	*)
