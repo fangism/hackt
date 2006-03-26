@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.2.26.2 2006/03/24 00:01:50 fang Exp $
+	$Id: Node.cc,v 1.2.26.3 2006/03/26 02:46:20 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -26,6 +26,45 @@ using std::string;
 
 const char
 Node::value_to_char[3] = { '0', '1', 'X' };
+
+const char
+Node::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
+
+/**
+	First index is the guard state,
+	second index is the pending event state.
+ */
+const char
+Node::upguard[3][3] = {
+	{	EVENT_VACUOUS, 		// guard F, event F: vacuous
+		EVENT_UNSTABLE,		// guard F, event T: unstable
+		EVENT_VACUOUS		// guard F, event X: vacuous
+	},
+	{	EVENT_INTERFERENCE,	// guard T, event F: interference
+		EVENT_VACUOUS,		// guard T, event T: vacuous
+		EVENT_VACUOUS		// guard T, event X: vacuous
+	},
+	{	EVENT_WEAK_INTERFERENCE,// guard X, event F:
+		EVENT_WEAK_UNSTABLE,	// guard X, event T:
+		EVENT_VACUOUS		// guard X, event X: vacuous
+	}
+};
+
+const char
+Node::dnguard[3][3] = {
+	{	EVENT_UNSTABLE,		// guard F, event F: vacuous
+		EVENT_VACUOUS,		// guard F, event T: unstable
+		EVENT_VACUOUS		// guard F, event X: vacuous
+	},
+	{	EVENT_VACUOUS,		// guard T, event F: interference
+		EVENT_INTERFERENCE,	// guard T, event T: vacuous
+		EVENT_VACUOUS		// guard T, event X: vacuous
+	},
+	{	EVENT_WEAK_UNSTABLE,	// guard X, event F:
+		EVENT_WEAK_INTERFERENCE,// guard X, event T:
+		EVENT_VACUOUS		// guard X, event X: vacuous
+	}
+};
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Node::Node() : pull_up_index(0), pull_dn_index(0), fanout() {

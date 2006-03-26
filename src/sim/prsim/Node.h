@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.2.26.2 2006/03/24 00:01:50 fang Exp $
+	$Id: Node.h,v 1.2.26.3 2006/03/26 02:46:20 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -43,6 +43,14 @@ struct Node {
 		LOGIC_OTHER = 0x2,		// 2
 		LOGIC_MASK = 0x3
 	} value_enum;
+	enum {
+		EVENT_VACUOUS = 0x1,		// no visible outcome
+		EVENT_UNSTABLE = 0x2,		// pending event incomplete
+		EVENT_INTERFERENCE = 0x4,	// contention with pending event
+		EVENT_WEAK = 0x8,		// w.r.t. LOGIC_OTHER
+		EVENT_WEAK_UNSTABLE = EVENT_UNSTABLE | EVENT_WEAK,
+		EVENT_WEAK_INTERFERENCE = EVENT_INTERFERENCE | EVENT_WEAK
+	}; 
 #if 0
 	/**
 		Optional: the globally allocated index.  
@@ -110,6 +118,9 @@ struct Node {
 	fanout_array_type		fanout;
 public:
 	static const char		value_to_char[3];
+	static const char		invert_value[3];
+	static const char		upguard[3][3];
+	static const char		dnguard[3][3];
 public:
 	typedef	fanout_array_type::const_iterator
 					const_fanout_iterator;
@@ -155,6 +166,9 @@ public:
 	char
 	current_value(void) const { return value; }
 
+	void
+	set_value(const char c) { value = c; }
+
 	/// \return < 0 on error, else returns 0, 1, 2
 	static
 	char
@@ -185,6 +199,9 @@ public:
 		INVARIANT(i != INVALID_EVENT_INDEX);
 		event_index = i;
 	}
+
+	bool
+	is_breakpoint(void) const { return breakpoint; }
 
 	void
 	initialize(void);

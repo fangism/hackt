@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.2.26.1 2006/03/23 07:05:18 fang Exp $
+	$Id: Event.h,v 1.2.26.2 2006/03/26 02:46:20 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -36,9 +36,14 @@ struct Event {
 	 */
 	node_index_type			node;
 	/**
-		The node's new value: 0, 1, X.
+		The node's new value: 0, 1, 2 (X).
 	 */
 	unsigned char			val;
+
+	Event() : node(INVALID_NODE_INDEX) { }
+
+	Event(const node_index_type n, const unsigned char v) :
+		node(n), val(v) { }
 
 };	// end struct Event
 
@@ -80,6 +85,7 @@ struct EventPlaceholder {
  */
 class EventPool {
 public:
+	typedef	Event				event_type;
 	typedef	index_pool<vector<Event> >	event_allocator_type;
 	typedef	vector<event_index_type>	free_list_type;
 private:
@@ -101,11 +107,25 @@ public:
 		return event_pool[i];
 	}
 
+#if 0
 	event_index_type
 	allocate(void) {
 		if (free_indices.empty()) {	// UNLIKELY
 			const event_index_type ret = event_pool.size();
 			event_pool.allocate();	// will realloc
+			INVARIANT(ret);
+			return ret;
+		} else {			// LIKELY
+			return free_list_acquire(free_indices);
+		}
+	}
+#endif
+
+	event_index_type
+	allocate(const event_type& e) {
+		if (free_indices.empty()) {	// UNLIKELY
+			const event_index_type ret = event_pool.size();
+			event_pool.allocate(e);	// will realloc
 			INVARIANT(ret);
 			return ret;
 		} else {			// LIKELY

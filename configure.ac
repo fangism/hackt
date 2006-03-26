@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.49 2006/03/21 23:37:31 fang Exp $
+#	$Id: configure.ac,v 1.49.2.1 2006/03/26 02:46:15 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -182,6 +182,7 @@ AC_CHECK_HEADERS([malloc.h])
 AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
+AC_CHECK_HEADERS([signal.h sys/signal.h])
 
 dnl checks tons of standard C++ headers in various locations
 dnl from "config/cxx_STL.m4"
@@ -242,6 +243,8 @@ AC_CHECK_SIZEOF(void*)
 AC_CHECK_SIZEOF(size_t)
 AC_CHECK_SIZEOF(int64_t)
 AC_CHECK_SIZEOF(uint64_t)
+AC_CHECK_SIZEOF(quad_t)
+AC_CHECK_SIZEOF(u_quad_t)
 
 HACKT_CHECK_SANITY
 

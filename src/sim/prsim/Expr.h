@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.2.26.1 2006/03/24 00:01:50 fang Exp $
+	$Id: Expr.h,v 1.2.26.2 2006/03/26 02:46:20 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -27,6 +27,7 @@ using std::pair;
 	Except that this is never used to represent a literal Node.  
 	Because of const non-static members, 
 	Expr is not Assignable, only copy-constructible.  
+	TODO: split up into structural and stateful information.  
  */
 struct Expr {
 	typedef	unsigned char		count_type;
@@ -46,6 +47,12 @@ struct Expr {
 		EXPR_ROOT = 0x4, ///< if the parent expression is a node
 		EXPR_DIR = 0x8	 ///< if parent is node, what direction to pull
 	} type_enum;
+
+	typedef	enum {
+		PULL_OFF = 0,
+		PULL_ON = 1,
+		PULL_WEAK = 2
+	} pull_enum;
 #if 0
 	/**
 		The globally assigned ID of this expression node.
@@ -78,13 +85,15 @@ struct Expr {
 	 */
 //	const
 	count_type		size;
-	
+
 	/**
 		'val'
+		NOTE: this is stateful information.
 	 */
 	count_type			countdown;
 	/**
 		'valx'
+		NOTE: this is stateful information.
 	 */
 	count_type			unknowns;
 public:
@@ -110,6 +119,30 @@ public:
 
 	bool
 	is_not(void) const { return type & EXPR_NOT; }
+
+#if 0
+	// (stateful) -- need to confirm this (depends on or/and)
+	// TODO: fix for real
+	bool
+	is_pulling_strongly(void) const {
+		return !countdown && !unknowns;
+	}
+
+	// TODO: should depend on OR/AND
+	bool
+	may_be_pulling(void) const {
+		return !countdown || !unknowns;
+	}
+#endif
+
+	/**
+		TODO: finish me!
+		\return 0 if off, 1 if on, 2 if weak (X)
+	 */
+	pull_enum
+	pull_state(void) const {
+		return PULL_OFF;
+	}
 
 	/**
 		\pre direction is only meaningful if this expression is 

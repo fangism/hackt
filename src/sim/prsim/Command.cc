@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.3 2006/03/24 03:56:26 fang Exp $
+	$Id: Command.cc,v 1.3.8.4 2006/03/26 02:46:19 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -25,6 +25,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/qmap.tcc"
 #include "util/readline_wrap.h"
 #include "util/libc.h"
+#include "util/string.tcc"
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/tokenize.h"
 #include "util/attributes.h"
@@ -39,6 +40,8 @@ using std::ostream_iterator;
 using util::readline_wrapper;
 using util::tokenize;
 using util::excl_malloc_ptr;
+using util::strings::string_to_int;
+
 //=============================================================================
 // class Command method definitions
 
@@ -570,14 +573,93 @@ Initialize::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Command class for stepping through one event at a time from
+	the event queue. 
+ */
+struct Step {
+public:
+	static const char               name[];
+	static const char               brief[];
+	static CommandCategory&         category;
+	static int      main(State&, const string_list&);
+	static void     usage(ostream&);
+	static int	interrupted;
+private:
+	static const size_t             receipt_id;
+};      // end class Step
+
+INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
+	"step through event")
+
+/**
+	Used in conjunction with signal handler.  
+ */
+int
+Step::interrupted = 0;
+
+#if 0
+/**
+	Like prs_step() from original prsim.
+	\return index of the affected node.  
+ */
+node_index_type
+Step::main(State& s) {
+	return s.step();
+}
+#endif
+
+/**
+	Like process_step() from original prsim.  
+ */
+int
+Step::main(State& s, const string_list& a) {
+if (a.size() > 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	State::time_type		time_type;
+	typedef	State::node_type		node_type;
+	size_t i;
+	node_index_type ni;
+	if (a.size() == 2) {
+		if (string_to_int(a.back(), i))
+			return Command::BADARG;
+	} else {
+		i = 1;
+	}
+	interrupted = 0;
+	time_type tm = s.time();
+	while (!interrupted && i && (ni = s.step())) {
+		// if time actually advanced, decrement steps-remaining
+		// NB: may need specialization for real-valued (float) time.  
+		const time_type& ct(s.time());
+		if (tm != ct) {
+			i--;
+			tm = ct;
+		}
+		// tracing stuff here later...
+		const node_type& n(s.get_node(ni));
+		if (n.is_breakpoint()) {
+			// do stuff...
+		}
+	}	// end while
+	return Command::NORMAL;
+}
+}
+
+void
+Step::usage(ostream& o) {
+	o << "step [#steps]" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
 // 	"run until event queue empty")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Step, "step", simulation, "step through event")
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Queue, "queue", simulation, "show event queue")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Queue, "queue", simulation,
+	"show event queue")
 
 int
 Queue::main(State& s, const string_list& a) {
