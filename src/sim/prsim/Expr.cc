@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.2.26.1 2006/03/24 00:01:50 fang Exp $
+	$Id: Expr.cc,v 1.2.26.2 2006/03/26 05:14:39 fang Exp $
  */
 
 #include <iostream>
@@ -40,13 +40,6 @@ Expr::Expr(const expr_index_type p, const unsigned char t,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Expr::~Expr() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-Expr::initialize(void) {
-	unknowns = size;
-	countdown = 0;
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 char
@@ -103,13 +96,6 @@ Expr::dump_struct(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-Expr::dump_state(ostream& o) const {
-	o << "ctdn: " << countdown << " X: " << unknowns << "(/" << size << ')';
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
 Expr::dump_parent_dot_edge(ostream& o) const {
 	if (is_root()) {
 		o << "NODE_" << parent << "\t[arrowhead=" <<
@@ -136,6 +122,23 @@ Expr::dump_type_dot_shape(ostream& o) const {
 	case EXPR_NOR: o << "invtriangle"; break;
 	default: THROW_EXIT;
 	}
+	return o;
+}
+
+//=============================================================================
+/**
+	Initializes expression state.  
+ */
+void
+ExprState::initialize(void) {
+	unknowns = size;
+	countdown = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+ExprState::dump_state(ostream& o) const {
+	o << "ctdn: " << countdown << " X: " << unknowns << "(/" << size << ')';
 	return o;
 }
 

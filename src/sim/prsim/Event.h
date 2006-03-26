@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.2.26.2 2006/03/26 02:46:20 fang Exp $
+	$Id: Event.h,v 1.2.26.3 2006/03/26 05:14:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -31,6 +31,22 @@ using util::memory::free_list_release;
 	Based on struct prs_event (PrsEvent).  
  */
 struct Event {
+public:
+	/**
+		Event attribute encoding.  
+	 */
+	typedef	enum {
+		EVENT_VACUOUS = 0x01,		// no visible outcome
+		EVENT_UNSTABLE = 0x02,		// pending event incomplete
+		EVENT_INTERFERENCE = 0x04,	// contention with pending event
+		EVENT_WEAK = 0x08,		// w.r.t. LOGIC_OTHER
+		EVENT_WEAK_UNSTABLE = EVENT_UNSTABLE | EVENT_WEAK,
+		EVENT_WEAK_INTERFERENCE = EVENT_INTERFERENCE | EVENT_WEAK
+	} event_flags_enum;
+public:
+	static const char		upguard[3][3];
+	static const char		dnguard[3][3];
+public:
 	/**
 		The index of the node to switch.
 	 */

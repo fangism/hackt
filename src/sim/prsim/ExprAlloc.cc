@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.4 2006/02/04 06:43:22 fang Exp $
+	$Id: ExprAlloc.cc,v 1.4.16.1 2006/03/26 05:14:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -44,6 +44,8 @@ ExprAlloc::ExprAlloc(State& _s) : state(_s), ret_ex_index(INVALID_EXPR_INDEX) {
  */
 void
 ExprAlloc::visit(const footprint_rule& r) {
+	typedef	State::expr_type		expr_type;
+	typedef	State::graph_node_type		graph_node_type;
 	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
 	(*expr_pool)[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
@@ -60,8 +62,8 @@ ExprAlloc::visit(const footprint_rule& r) {
 		st_graph_node_pool(state.expr_graph_node_pool);
 	Node& output_node(st_node_pool[ni]);
 	// now link root expression to node
-	Expr& e(st_expr_pool[top_ex_index]);
-	ExprGraphNode& g(st_graph_node_pool[top_ex_index]);
+	expr_type& e(st_expr_pool[top_ex_index]);
+	graph_node_type& g(st_graph_node_pool[top_ex_index]);
 
 	// ignored: state.expr_graph_node_pool[top_ex_index].offset
 	// not computing node fanin?  this would be the place to do it...
@@ -85,6 +87,8 @@ ExprAlloc::visit(const footprint_rule& r) {
  */
 void
 ExprAlloc::visit(const footprint_expr_node& e) {
+	typedef	State::expr_type		expr_type;
+	typedef	State::graph_node_type		graph_node_type;
 	STACKTRACE("ExprAlloc::visit(footprint_expr_node&)");
 	const size_t sz = e.size();
 	const char type = e.get_type();
@@ -111,8 +115,9 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 			st_node_pool[ni].dump_struct(STACKTRACE_INDENT) << endl;
 #endif
 			st_node_pool[ni].push_back_fanout(st_expr_pool.size());
-			st_expr_pool.push_back(Expr(Expr::EXPR_NODE,1));
-			st_graph_node_pool.push_back(ExprGraphNode());
+			st_expr_pool.push_back(
+				expr_type(expr_type::EXPR_NODE,1));
+			st_graph_node_pool.push_back(graph_node_type());
 			st_graph_node_pool.back().push_back_node(ni);
 			// literal graph node has no children
 			ret_ex_index = st_expr_pool.size() -1;
@@ -129,12 +134,14 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 			STACKTRACE_INDENT << "sub_ex_index = " <<
 				sub_ex_index << endl;
 #endif
-			st_expr_pool.push_back(Expr(Expr::EXPR_NOT,1));
-			st_graph_node_pool.push_back(ExprGraphNode());
+			st_expr_pool.push_back(
+				expr_type(expr_type::EXPR_NOT,1));
+			st_graph_node_pool.push_back(graph_node_type());
 			// now link parent to only-child
 			const expr_index_type last = st_expr_pool.size() -1;
 			st_expr_pool[sub_ex_index].parent = last;
-			ExprGraphNode& child(st_graph_node_pool[sub_ex_index]);
+			graph_node_type&
+				child(st_graph_node_pool[sub_ex_index]);
 			child.offset = 0;
 			st_graph_node_pool.back().push_back_expr(sub_ex_index);
 			ret_ex_index = st_expr_pool.size() -1;
@@ -147,10 +154,10 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 			STACKTRACE_INDENT << "or/and" << endl;
 #endif
 			INVARIANT(sz);
-			st_expr_pool.push_back(Expr(
+			st_expr_pool.push_back(expr_type(
 				(type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
-				Expr::EXPR_AND : Expr::EXPR_OR), sz));
-			st_graph_node_pool.push_back(ExprGraphNode());
+				expr_type::EXPR_AND : expr_type::EXPR_OR), sz));
+			st_graph_node_pool.push_back(graph_node_type());
 			const expr_index_type last = st_expr_pool.size() -1;
 			size_t i = 1;
 			for ( ; i<=sz; i++) {
@@ -160,7 +167,7 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 				const size_t sub_ex_index = ret_ex_index;
 				// now link parent to each child
 				st_expr_pool[sub_ex_index].parent = last;
-				ExprGraphNode&
+				graph_node_type&
 					child(st_graph_node_pool[sub_ex_index]);
 				child.offset = i-1;
 				st_graph_node_pool[last]
@@ -202,6 +209,8 @@ void
 ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 		Expr& ne, ExprGraphNode& ng, 
 		const expr_index_type top_ex_index, const bool dir) {
+	typedef	State::expr_type		expr_type;
+	typedef	State::graph_node_type		graph_node_type;
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	// prepare to take OR-combination?
 	// or can we get away with multiple pull-up/dn roots?
@@ -219,8 +228,8 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 		State::expr_pool_type& st_expr_pool(state.expr_pool);
 		State::expr_graph_node_pool_type&
 			st_graph_node_pool(state.expr_graph_node_pool);
-		Expr& pe(st_expr_pool[dir_index]);
-		ExprGraphNode& pg(st_graph_node_pool[dir_index]);
+		expr_type& pe(st_expr_pool[dir_index]);
+		graph_node_type& pg(st_graph_node_pool[dir_index]);
 		// see if either previous pull-up expr is OR-type already
 		// may also work with NAND!
 		if (pe.is_or()) {
@@ -253,10 +262,11 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 			// then need to allocate new root-expression
 			const expr_index_type root_ex_id = st_expr_pool.size();
 			// TODO: check for NAND, which is OR-like
-			st_expr_pool.push_back(Expr(Expr::EXPR_OR, 2));
-			st_graph_node_pool.push_back(ExprGraphNode());
-			Expr& new_ex(st_expr_pool.back());
-			ExprGraphNode& new_g(st_graph_node_pool.back());
+			st_expr_pool.push_back(
+				expr_type(expr_type::EXPR_OR, 2));
+			st_graph_node_pool.push_back(graph_node_type());
+			expr_type& new_ex(st_expr_pool.back());
+			graph_node_type& new_g(st_graph_node_pool.back());
 			new_ex.pull(ni, dir);
 			// link sub-expressions to new root expression
 			new_g.push_back_expr(dir_index);

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.2.26.3 2006/03/26 02:46:20 fang Exp $
+	$Id: Node.cc,v 1.2.26.4 2006/03/26 05:14:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,50 +24,9 @@ using std::string;
 //=============================================================================
 // class Node method definitions
 
-const char
-Node::value_to_char[3] = { '0', '1', 'X' };
-
-const char
-Node::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
-
-/**
-	First index is the guard state,
-	second index is the pending event state.
- */
-const char
-Node::upguard[3][3] = {
-	{	EVENT_VACUOUS, 		// guard F, event F: vacuous
-		EVENT_UNSTABLE,		// guard F, event T: unstable
-		EVENT_VACUOUS		// guard F, event X: vacuous
-	},
-	{	EVENT_INTERFERENCE,	// guard T, event F: interference
-		EVENT_VACUOUS,		// guard T, event T: vacuous
-		EVENT_VACUOUS		// guard T, event X: vacuous
-	},
-	{	EVENT_WEAK_INTERFERENCE,// guard X, event F:
-		EVENT_WEAK_UNSTABLE,	// guard X, event T:
-		EVENT_VACUOUS		// guard X, event X: vacuous
-	}
-};
-
-const char
-Node::dnguard[3][3] = {
-	{	EVENT_UNSTABLE,		// guard F, event F: vacuous
-		EVENT_VACUOUS,		// guard F, event T: unstable
-		EVENT_VACUOUS		// guard F, event X: vacuous
-	},
-	{	EVENT_VACUOUS,		// guard T, event F: interference
-		EVENT_INTERFERENCE,	// guard T, event T: vacuous
-		EVENT_VACUOUS		// guard T, event X: vacuous
-	},
-	{	EVENT_WEAK_UNSTABLE,	// guard X, event F:
-		EVENT_WEAK_INTERFERENCE,// guard X, event T:
-		EVENT_VACUOUS		// guard X, event X: vacuous
-	}
-};
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Node::Node() : pull_up_index(0), pull_dn_index(0), fanout() {
+Node::Node() : pull_up_index(INVALID_EXPR_INDEX),
+	pull_dn_index(INVALID_EXPR_INDEX), fanout(),
+	struct_flags(NODE_DEFAULT_STRUCT_FLAGS) {
 	INVARIANT(!fanout.size());
 }
 
@@ -75,16 +34,16 @@ Node::Node() : pull_up_index(0), pull_dn_index(0), fanout() {
 Node::~Node() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Resets the state of the node.
 	Not expected to be called frequently.  
  */
 void
 Node::initialize(void) {
-	value = LOGIC_OTHER;
-	breakpoint = 0;
-	tcount = 0;
+	struct_flags = NODE_DEFAULT_STRUCT_FLAGS;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -141,32 +100,6 @@ Node::dump_struct(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Dumps stateful information about the Node only.  
- */
-ostream&
-Node::dump_value(ostream& o) const {
-#if 0
-	return  (value & LOGIC_OTHER) ?
-		// or do you prefer 'U'?
-		o << 'X' :
-		o << size_t(value & LOGIC_VALUE);
-#else
-	return o << value_to_char[value & LOGIC_MASK];
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Dumps stateful information about the Node only.  
- */
-ostream&
-Node::dump_state(ostream& o) const {
-	o << "val = ";
-	return dump_value(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Prints a dot-edge from this node to each fanout expression.  
 	\param s is the name of the node corresponding to the tail 
 	of the edge.  
@@ -207,11 +140,47 @@ Node::string_to_value(const string& v) {
 //=============================================================================
 // class NodeState method definitions
 
+const char
+NodeState::value_to_char[3] = { '0', '1', 'X' };
+
+const char
+NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 NodeState::initialize(void) {
-	parent_type::initialize();
+//	parent_type::initialize();
 	event_index = INVALID_EVENT_INDEX;
+	value = LOGIC_OTHER;
+	state_flags = NODE_INITIAL_STATE_FLAGS;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps stateful information about the Node only.  
+ */
+ostream&
+NodeState::dump_value(ostream& o) const {
+#if 0
+	return  (value & LOGIC_OTHER) ?
+		// or do you prefer 'U'?
+		o << 'X' :
+		o << size_t(value & LOGIC_VALUE);
+#else
+	return o << value_to_char[value & LOGIC_MASK];
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps stateful information about the Node only.  
+ */
+ostream&
+NodeState::dump_state(ostream& o) const {
+	o << "val = ";
+	return dump_value(o);
+}
+
 
 //=============================================================================
 }	// end namespace PRSIM

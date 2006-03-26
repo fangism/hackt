@@ -5,6 +5,15 @@
 
 2006-03-25	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-05-prsim-01-05:
+	  Separated node and expression classes better into structural base
+		classes and stateful derived classes.  The structural classes
+		will be the core foundation for other tools.  
+		The stateful classes (e.g.) can be used for simulators.  
+	  In-class enumerations were moved to more appropriate classes.  
+	  Bit-field accesses have been fused into method calls for clarity.  
+
+
 	* HACKT-00-01-04-main-00-78-05-prsim-01-04:
 	  Implemented (untested) prsim:step command.
 	  Copy-ported much code from prsim's prs.c over to State's 

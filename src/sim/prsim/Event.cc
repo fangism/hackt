@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.2.26.1 2006/03/23 07:05:17 fang Exp $
+	$Id: Event.cc,v 1.2.26.2 2006/03/26 05:14:39 fang Exp $
  */
 
 #include "sim/prsim/Event.h"
@@ -13,8 +13,46 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 //=============================================================================
-// class EventPool method definitions
+// class Event static initializations
 
+/**
+	First index is the guard state,
+	second index is the pending event state.
+ */
+const char
+Event::upguard[3][3] = {
+	{	EVENT_VACUOUS, 		// guard F, event F: vacuous
+		EVENT_UNSTABLE,		// guard F, event T: unstable
+		EVENT_VACUOUS		// guard F, event X: vacuous
+	},
+	{	EVENT_INTERFERENCE,	// guard T, event F: interference
+		EVENT_VACUOUS,		// guard T, event T: vacuous
+		EVENT_VACUOUS		// guard T, event X: vacuous
+	},
+	{	EVENT_WEAK_INTERFERENCE,// guard X, event F:
+		EVENT_WEAK_UNSTABLE,	// guard X, event T:
+		EVENT_VACUOUS		// guard X, event X: vacuous
+	}
+};
+
+const char
+Event::dnguard[3][3] = {
+	{	EVENT_UNSTABLE,		// guard F, event F: vacuous
+		EVENT_VACUOUS,		// guard F, event T: unstable
+		EVENT_VACUOUS		// guard F, event X: vacuous
+	},
+	{	EVENT_VACUOUS,		// guard T, event F: interference
+		EVENT_INTERFERENCE,	// guard T, event T: vacuous
+		EVENT_VACUOUS		// guard T, event X: vacuous
+	},
+	{	EVENT_WEAK_UNSTABLE,	// guard X, event F:
+		EVENT_WEAK_INTERFERENCE,// guard X, event T:
+		EVENT_VACUOUS		// guard X, event X: vacuous
+	}
+};
+
+//=============================================================================
+// class EventPool method definitions
 /**
 	This always reserves the 0th entry as an invalid entry.  
 	Thus, 0 should never be in the freelist.  

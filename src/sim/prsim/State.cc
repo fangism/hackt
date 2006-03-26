@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.4 2006/03/26 02:46:20 fang Exp $
+	$Id: State.cc,v 1.4.8.5 2006/03/26 05:14:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -263,14 +263,6 @@ State::check_expr(const expr_index_type i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-event_index_type
-State::allocate_event(void) {
-	return event_pool.allocate();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 event_index_type
 State::allocate_event(const node_index_type ni, const char val) {
 	return event_pool.allocate(event_type(ni, val));
@@ -459,7 +451,7 @@ State::flush_pending_queue(void) {
 				break;
 			case node_type::LOGIC_OTHER:
 				_n.event_index = INVALID_EVENT_INDEX;
-				_n.ex_queue = false;
+				_n.clear_excl_queue();
 				deallocate_event(ne);
 				break;
 			default:
@@ -470,7 +462,7 @@ State::flush_pending_queue(void) {
 		} else {
 			// cancel event
 			_n.event_index = INVALID_EVENT_INDEX;
-			_n.ex_queue = false;
+			_n.clear_excl_queue();
 			deallocate_event(ne);
 		}	// end if may_be_pulled ...
 	}	// end for all in pending_queue
@@ -507,7 +499,7 @@ for ( ; i!=e; ++i) {
 				(n.pending_event() && 
 				(event_pool[n.event_index].val ==
 					node_type::LOGIC_HIGH) &&
-				!n.ex_queue)) {
+				!n.in_excl_queue())) {
 				++prev;
 			}
 			if (ni == epni) {
@@ -519,13 +511,13 @@ for ( ; i!=e; ++i) {
 			// then insert event into primary queue
 			// keep the same event_index
 			enqueue_event(ep.time, ep.event_index);
-			epn.ex_queue = false;
+			epn.clear_excl_queue();
 		}
 	}	// end for all excl ring nodes
-	if (epn.ex_queue) {
+	if (epn.in_excl_queue()) {
 		// then violates some excl directive, just cancel the event
 		epn.event_index = INVALID_EVENT_INDEX;
-		epn.ex_queue = false;
+		epn.clear_excl_queue();
 		deallocate_event(ep.event_index);
 	}
 }	// end for all exclhi_queue events
@@ -560,7 +552,7 @@ for ( ; i!=e; ++i) {
 				(n.pending_event() && 
 				(event_pool[n.event_index].val ==
 					node_type::LOGIC_LOW) &&
-				!n.ex_queue)) {
+				!n.in_excl_queue())) {
 				++prev;
 			}
 			if (ni == epni) {
@@ -572,13 +564,13 @@ for ( ; i!=e; ++i) {
 			// then insert event into primary queue
 			// keep the same event_index
 			enqueue_event(ep.time, ep.event_index);
-			epn.ex_queue = false;
+			epn.clear_excl_queue();
 		}
 	}	// end for all excl ring nodes
-	if (epn.ex_queue) {
+	if (epn.in_excl_queue()) {
 		// then violates some excl directive, just cancel the event
 		epn.event_index = INVALID_EVENT_INDEX;
-		epn.ex_queue = false;
+		epn.clear_excl_queue();
 		deallocate_event(ep.event_index);
 	}
 }	// end for all excllo_queue events
@@ -709,7 +701,7 @@ State::step(void) {
 		return ni;
 	}
 	// assert: vacuous firings on the event queue
-	assert(prev != pe.val || n.unstab);
+	assert(prev != pe.val || n.is_unstab());
 #if 0
 	// more cause propagation debugging statements
 #endif
@@ -730,12 +722,12 @@ State::step(void) {
 	}
 }
 	// exclhi ring enforcement (TODO: move into subroutine)
-	if (n.exclhi && n.current_value() == node_type::LOGIC_LOW) {
+	if (n.has_exclhi() && n.current_value() == node_type::LOGIC_LOW) {
 		enforce_exclhi(ni);
 	}	// end if (exclhi enforcement)
 
 	// excllo ring enforcement (copy-modified from exclhi code, above)
-	if (n.excllo && n.current_value() == node_type::LOGIC_HIGH) {
+	if (n.has_excllo() && n.current_value() == node_type::LOGIC_HIGH) {
 		enforce_excllo(ni);
 	}	// end if (excllo enforcement)
 
@@ -838,7 +830,7 @@ if (!n.pending_event()) {
 		const event_index_type pe = allocate_event(ui, next);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
-		if (n.exclhi) {
+		if (n.has_exclhi()) {
 			// insert into exclhi queue
 			enqueue_exclhi(get_delay_up(e), pe);
 		} else {
@@ -857,14 +849,14 @@ if (!n.pending_event()) {
 		const event_index_type pe =
 			allocate_event(ui, node_type::LOGIC_LOW);
 		// pe->cause = root
-		if (n.excllo) {
+		if (n.has_excllo()) {
 			const event_type& e(get_event(pe));
 			enqueue_excllo(get_delay_up(e), pe);
 		} else {
 			enqueue_pending(pe);
 		}
 	}
-} else if (!n.ex_queue) {
+} else if (!n.in_excl_queue()) {
 	// there is a pending event
 	event_type& e(get_event(n.event_index));
 	if (next == node_type::LOGIC_LOW && n.pull_dn_index &&
@@ -876,21 +868,23 @@ if (!n.pending_event()) {
 		// e.cause = ni
 	} else {
 		// something is amiss!
-		const char eu = node_type::upguard[size_t(next)][size_t(e.val)];
-		const bool vacuous = eu & node_type::EVENT_VACUOUS;
+		const char eu =
+			event_type::upguard[size_t(next)][size_t(e.val)];
+		const bool vacuous = eu & event_type::EVENT_VACUOUS;
 		if (!vacuous) {
 			// then must be unstable or interfering (exclusive)
 			const bool instability =
-				(eu & node_type::EVENT_UNSTABLE) && !n.unstab;
+				(eu & event_type::EVENT_UNSTABLE) &&
+				!n.is_unstab();
 			const bool interference =
-				eu & node_type::EVENT_INTERFERENCE;
+				eu & event_type::EVENT_INTERFERENCE;
 			const string cause_name(get_node_canonical_name(ni));
 			const string out_name(get_node_canonical_name(ui));
 			// e.cause = ni
 			e.val = node_type::LOGIC_OTHER;
 			// diagnostic message
 			cout << "WARNING: ";
-			if (eu & node_type::EVENT_WEAK)
+			if (eu & event_type::EVENT_WEAK)
 				cout << "weak-";
 			if (interference) {
 				cout << "interference `";
@@ -916,7 +910,7 @@ if (!n.pending_event()) {
 			node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
-		if (n.excllo) {
+		if (n.has_excllo()) {
 			// insert into exclhi queue
 			enqueue_excllo(get_delay_dn(e), pe);
 		} else {
@@ -935,14 +929,14 @@ if (!n.pending_event()) {
 		const event_index_type pe =
 			allocate_event(ui, node_type::LOGIC_HIGH);
 		// pe->cause = root
-		if (n.exclhi) {
+		if (n.has_exclhi()) {
 			const event_type& e(get_event(pe));
 			enqueue_exclhi(get_delay_dn(e), pe);
 		} else {
 			enqueue_pending(pe);
 		}
 	}
-} else if (!n.ex_queue) {
+} else if (!n.in_excl_queue()) {
 	// there is a pending event
 	event_type& e(get_event(n.event_index));
 	if (next == node_type::LOGIC_LOW && n.pull_up_index &&
@@ -954,21 +948,23 @@ if (!n.pending_event()) {
 		// e.cause = ni
 	} else {
 		// something is amiss!
-		const char eu = node_type::dnguard[size_t(next)][size_t(e.val)];
-		const bool vacuous = eu & node_type::EVENT_VACUOUS;
+		const char eu =
+			event_type::dnguard[size_t(next)][size_t(e.val)];
+		const bool vacuous = eu & event_type::EVENT_VACUOUS;
 		if (!vacuous) {
 			// then must be unstable or interfering (exclusive)
 			const bool instability =
-				(eu & node_type::EVENT_UNSTABLE) && !n.unstab;
+				(eu & event_type::EVENT_UNSTABLE) &&
+				!n.is_unstab();
 			const bool interference =
-				eu & node_type::EVENT_INTERFERENCE;
+				eu & event_type::EVENT_INTERFERENCE;
 			const string cause_name(get_node_canonical_name(ni));
 			const string out_name(get_node_canonical_name(ui));
 			// e.cause = ni
 			e.val = node_type::LOGIC_OTHER;
 			// diagnostic message
 			cout << "WARNING: ";
-			if (eu & node_type::EVENT_WEAK)
+			if (eu & event_type::EVENT_WEAK)
 				cout << "weak-";
 			if (interference) {
 				cout << "interference `";

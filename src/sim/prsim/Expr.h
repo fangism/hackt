@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.2.26.2 2006/03/26 02:46:20 fang Exp $
+	$Id: Expr.h,v 1.2.26.3 2006/03/26 05:14:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -48,18 +48,6 @@ struct Expr {
 		EXPR_DIR = 0x8	 ///< if parent is node, what direction to pull
 	} type_enum;
 
-	typedef	enum {
-		PULL_OFF = 0,
-		PULL_ON = 1,
-		PULL_WEAK = 2
-	} pull_enum;
-#if 0
-	/**
-		The globally assigned ID of this expression node.
-		May not be needed.  
-	 */
-	expr_index_type			index;
-#endif
 	/**
 		Uplink to parent expression (or node).
 		Interpreted as expression index if !(type & EXPR_ROOT), 
@@ -67,7 +55,6 @@ struct Expr {
 	 */
 //	const
 	expr_index_type		parent;
-
 
 	/**
 		Type enumeration.  
@@ -86,16 +73,6 @@ struct Expr {
 //	const
 	count_type		size;
 
-	/**
-		'val'
-		NOTE: this is stateful information.
-	 */
-	count_type			countdown;
-	/**
-		'valx'
-		NOTE: this is stateful information.
-	 */
-	count_type			unknowns;
 public:
 	Expr();
 
@@ -104,9 +81,6 @@ public:
 	Expr(const expr_index_type, const unsigned char, const count_type);
 
 	~Expr();
-
-	void
-	initialize(void);
 
 	void
 	set_root(void) { type |= EXPR_ROOT; }
@@ -120,29 +94,6 @@ public:
 	bool
 	is_not(void) const { return type & EXPR_NOT; }
 
-#if 0
-	// (stateful) -- need to confirm this (depends on or/and)
-	// TODO: fix for real
-	bool
-	is_pulling_strongly(void) const {
-		return !countdown && !unknowns;
-	}
-
-	// TODO: should depend on OR/AND
-	bool
-	may_be_pulling(void) const {
-		return !countdown || !unknowns;
-	}
-#endif
-
-	/**
-		TODO: finish me!
-		\return 0 if off, 1 if on, 2 if weak (X)
-	 */
-	pull_enum
-	pull_state(void) const {
-		return PULL_OFF;
-	}
 
 	/**
 		\pre direction is only meaningful if this expression is 
@@ -203,22 +154,72 @@ public:
 	dump_struct(ostream&) const;
 
 	ostream&
-	dump_state(ostream&) const;
-
-	ostream&
 	dump_type_dot_shape(ostream&) const;
 
 	ostream&
 	dump_parent_dot_edge(ostream&) const;
 
-private:
 #if 0
+private:
 	Expr&
 	operator = (const Expr&) {
 		parent = 
 	}
 #endif
 };	// end struct Expr
+
+//=============================================================================
+/**
+	Stateful expression class, derived from expression structure.  
+ */
+struct ExprState : public Expr {
+public:
+	typedef	Expr			parent_type;
+	typedef	enum {
+		PULL_OFF = 0,
+		PULL_ON = 1,
+		PULL_WEAK = 2
+	} pull_enum;
+
+public:
+	/**
+		'val'
+		NOTE: this is stateful information.
+	 */
+	count_type			countdown;
+	/**
+		'valx'
+		NOTE: this is stateful information.
+	 */
+	count_type			unknowns;
+public:
+	ExprState() : parent_type() { }
+
+	/**
+		Leaves countdown and unknowns uninitialized, 
+		because they shouldn't be set until the structure is finalized
+		by the responsible State object.  
+	 */
+	ExprState(const unsigned char t, const count_type s) :
+		parent_type(t, s) { }
+
+
+	void
+	initialize(void);
+
+	/**
+		TODO: finish me!
+		\return 0 if off, 1 if on, 2 if weak (X)
+	 */
+	pull_enum
+	pull_state(void) const {
+		return PULL_OFF;
+	}
+
+	ostream&
+	dump_state(ostream&) const;
+
+};	// end struct ExprState
 
 //=============================================================================
 /**

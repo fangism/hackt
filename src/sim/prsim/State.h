@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.3 2006/03/26 02:46:21 fang Exp $
+	$Id: State.h,v 1.2.26.4 2006/03/26 05:14:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -14,7 +14,6 @@
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/list_vector.h"
-// #include "util/memory/count_ptr.h"
 
 namespace HAC {
 namespace entity {
@@ -50,7 +49,7 @@ public:
 	/// can switch between integer and real-valued time
 	typedef	real_time			time_type;
 	typedef	NodeState			node_type;
-	typedef	Expr				expr_type;
+	typedef	ExprState			expr_type;
 	typedef	ExprGraphNode			graph_node_type;
 	typedef	Event				event_type;
 	typedef	EventPool			event_pool_type;
@@ -58,7 +57,7 @@ public:
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
 
 	typedef	vector<node_type>		node_pool_type;
-	typedef	vector<Expr>			expr_pool_type;
+	typedef	vector<expr_type>		expr_pool_type;
 private:
 	/**
 		A fast, realloc-free vector-like structure
@@ -215,11 +214,6 @@ public:
 	step(void);
 
 private:
-#if 0
-	event_index_type
-	allocate_event(void);
-#endif
-
 	event_index_type
 	allocate_event(const node_index_type, const char);
 
@@ -262,14 +256,11 @@ private:
 	event_placeholder_type
 	dequeue_event(void);
 
-	// replaces NEWTIME
 	time_type
 	get_delay_up(const event_type&) const;
 
 	time_type
 	get_delay_dn(const event_type&) const;
-
-	// TODO: delay_up and delay_dn
 
 	void
 	propagate_evaluation(const node_index_type, expr_index_type, 
