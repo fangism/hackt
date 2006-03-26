@@ -1,0 +1,11 @@
+# "celem-01.prsimrc"
+# @haco@ celem.haco-a
+initialize
+get a
+get b
+get c
+
+get C.a
+get C.b
+get C.c
+

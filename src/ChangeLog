@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-06:
+	  Tests: added preliminary support for prsim tests.  
+	  main/prsim.cc: added -b/-i batch-mode/interactive flags.  
+		Batch-mode suppresses prompting, default is interactive.  
+	  TODO: add interpreter modes, where termnation conditions
+		depending on error status of command can be set.  
+
+
 2006-03-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05-prsim-01-05:

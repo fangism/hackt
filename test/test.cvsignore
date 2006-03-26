@@ -31,6 +31,9 @@ core.*
 *.prsimexpr-dot
 *.prsimexpr-ps
 *.prsimexprdiff
+*.prsimtest
+*.prsimrc-out
+*.prsimrc-diff
 *.sort
 *.sprs
 *.sprsdiff

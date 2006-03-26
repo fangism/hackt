@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.15 2006/03/20 02:41:03 fang Exp $
+#	$Id: TODO,v 1.15.2.1 2006/03/26 23:36:30 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -21,7 +21,39 @@ Simulation:
 		lexer generation manipulation.  Then each lexer/parser
 		may use it's own and temporarily save away the previous
 		counter.  
-	
+
+prsim:
+	interpreter commands:
+		source <script-file>
+			should have a interpreter routine without readline.
+		interp key [value]
+			for interpreter mode flags:
+			termination conditions: assert, syntax error, 
+				bad-argument,...
+			echo on, echo off (only heeded in batch mode)
+		time
+			echo the current simulation timestamp
+		advance
+			advance the simulation in time units instead of steps
+		aliases <name>
+			print all aliases of a node (can be slow)
+			might walk entire hierarchy, or cache results?
+			(not expected to be used often)
+			could use smart traversal, conditional recursion
+			*Just walk the alloc footprint frames?*
+		set <node> <value> [[+] time]
+			at a specific time (or relative to present)
+		setr <node> <value>
+			set node at random time
+		break
+			break points
+		watch
+			watch points
+		mode run | reset
+		use getopt-style interpretation?
+	enable escape to shell commands via system?
+	concept of environment variables?
+	far future: expression evaluation! variable expansion!
 
 ===============================================================================
 complete type creation: (20060128)

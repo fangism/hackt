@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.2.26.1 2006/03/24 00:01:49 fang Exp $
+	$Id: prsim.cc,v 1.2.26.2 2006/03/26 23:36:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -43,6 +43,8 @@ public:
 	// none
 	/// just print help and exit
 	bool			help_only;
+	/// interactive (default true) vs. batch mode
+	bool			interactive;
 	/// whether or not to show result of expression allocation
 	bool			dump_expr_alloc;
 	/// whether or not to run the simulation or just terminate after setup
@@ -52,7 +54,7 @@ public:
 	/// whether or not to produce a dot-format structure dump before running
 	bool			dump_dot_struct;
 
-	prsim_options() : help_only(false), 
+	prsim_options() : help_only(false), interactive(true), 
 		dump_expr_alloc(false), run(true),
 		check_structure(true), dump_dot_struct(false) { }
 };	// end class options
@@ -128,7 +130,8 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 		sim_state.initialize();
 		// outermost level is interactive
 		// until later, when we give a source file, or redirect in
-		const int ret = CommandRegistry::interpret(sim_state, true);
+		const int ret = CommandRegistry::interpret(sim_state,
+			opt.interactive);
 		if (ret)	return ret;
 	}
 	// else just exit
@@ -136,6 +139,9 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: -I for search paths for recursive scripts.  
+ */
 int
 prsim::parse_command_options(const int argc, char* argv[], options& o) {
 #if 0
@@ -144,10 +150,14 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 		argc, argv, o, options_modifier_map);
 #else
 	// now we're adding our own flags
-	static const char optstring[] = "+f:h";
+	static const char optstring[] = "+bf:hi";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
+		case 'b':
+			// batch-mode, non-interactive
+			o.interactive = false;
+			break;
 		case 'f': {
 			const options_modifier_info&
 				om(options_modifier_map[optarg]);
@@ -162,6 +172,9 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 		case 'h':
 			o.help_only = true;
 			// return 0
+			break;
+		case 'i':
+			o.interactive = true;
 			break;
 		case ':':
 			cerr << "Expected but missing option-argument." << endl;
@@ -182,8 +195,10 @@ void
 prsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-infile>" << endl;
 	cerr << "options:" << endl;
+	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
 	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
 	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
+	cerr << "\t-i : interactive (default)" << endl;
         const size_t flags = options_modifier_map.size();
 	if (flags) {
 		cerr << "flags (" << flags << " total):" << endl;

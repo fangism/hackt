@@ -1,5 +1,11 @@
 # "test/ChangeLog"
 
+2006-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-06:
+	  Added preliminary support for prsim run-commands tests.
+
+
 2006-03-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05:

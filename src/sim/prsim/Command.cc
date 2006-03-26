@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.4 2006/03/26 02:46:19 fang Exp $
+	$Id: Command.cc,v 1.3.8.5 2006/03/26 23:36:32 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -213,8 +213,9 @@ public:
 int
 CommandRegistry::interpret(State& s, const bool interactive) {
 	static const char prompt[] = "prsim> ";
-	readline_wrapper rl(prompt);
-	// do NOT delete this line, it is already managed.
+	static const char noprompt[] = "";
+	readline_wrapper rl(interactive ? prompt : noprompt);
+	// do NOT delete this line string, it is already managed.
 	const char* line = NULL;
 	int status = Command::NORMAL;
 	size_t lineno = 1;
