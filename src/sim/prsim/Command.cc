@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.5 2006/03/26 23:36:32 fang Exp $
+	$Id: Command.cc,v 1.3.8.6 2006/03/27 05:40:48 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -40,7 +40,7 @@ using std::ostream_iterator;
 using util::readline_wrapper;
 using util::tokenize;
 using util::excl_malloc_ptr;
-using util::strings::string_to_int;
+using util::strings::string_to_num;
 
 //=============================================================================
 // class Command method definitions
@@ -621,20 +621,24 @@ if (a.size() > 2) {
 } else {
 	typedef	State::time_type		time_type;
 	typedef	State::node_type		node_type;
-	size_t i;
+	size_t i;		// the number of discrete time steps
+		// not necessarily == the number of discrete events
 	node_index_type ni;
 	if (a.size() == 2) {
-		if (string_to_int(a.back(), i))
+		if (string_to_num(a.back(), i)) {
+			cerr << "Error parsing #steps." << endl;
 			return Command::BADARG;
+		}
 	} else {
 		i = 1;
 	}
 	interrupted = 0;
 	time_type tm = s.time();
+	// could check s.pending_events()
 	while (!interrupted && i && (ni = s.step())) {
 		// if time actually advanced, decrement steps-remaining
 		// NB: may need specialization for real-valued (float) time.  
-		const time_type& ct(s.time());
+		const time_type ct(s.time());
 		if (tm != ct) {
 			i--;
 			tm = ct;
@@ -679,14 +683,16 @@ Queue::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation, "set node immediately")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
+	"set node immediately, or after delay")
 
 /**
 	Do we need an optional time argument?
  */
 int
 Set::main(State& s, const string_list& a) {
-if (a.size() != 3) {
+	const size_t asz = a.size();
+if (asz < 3 || asz > 4) {
 	usage(cerr);
 	return Command::SYNTAX;
 } else {
@@ -694,8 +700,9 @@ if (a.size() != 3) {
 	typedef	State::event_type		event_type;
 	typedef	State::event_placeholder_type	event_placeholder_type;
 	// now I'm wishing string_list was string_vector... :) can do!
-	const string& objname(*++a.begin());	// node name
-	const string& _val(a.back());	// node value
+	string_list::const_iterator ai(++a.begin());
+	const string& objname(*ai++);	// node name
+	const string& _val(*ai++);	// node value
 	// valid values are 0, 1, 2(X)
 	const char val = node_type::string_to_value(_val);
 	if (val < 0) {
@@ -704,7 +711,34 @@ if (a.size() != 3) {
 	}
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		int err = s.set_node(ni, val);
+		int err;
+		if (ai != a.end()) {
+			// extract time
+			const string& d(*ai);
+			// cout << "d = " << d << endl;
+			State::time_type t;
+			if (string_to_num(d, t)) {
+				cerr << "Error parsing delay value." << endl;
+				return Command::BADARG;
+			}
+			if (d[0] == '+') {
+				// relative delay into the future
+				if (t < 0) {
+					cerr << "Error: delay must be non-negative." << endl;
+					return Command::BADARG;
+				}
+				err = s.set_node_after(ni, val, t);
+			} else {
+				// schedule at absolute time
+				if (t < s.time()) {
+					cerr << "Error: time cannot be in the past." << endl;
+					return Command::BADARG;
+				}
+				err = s.set_node_time(ni, val, t);
+			}
+		} else {
+			err = s.set_node(ni, val);
+		}
 		return (err < 1) ? Command::NORMAL : Command::BADARG;
 	} else {
 		cerr << "No such node found." << endl;
@@ -715,7 +749,11 @@ if (a.size() != 3) {
 
 void
 Set::usage(ostream& o) {
-	o << "set <node> <value 0|1|X>" << endl;
+	o << "set <node> <value 0|1|X> [+delay | time]" << endl;
+	o <<
+"\tWithout delay, node is set immediately.  Relative delay into future\n"
+"\tis given by +delay, whereas an absolute time is given without \'+\'."
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

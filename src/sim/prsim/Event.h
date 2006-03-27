@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.2.26.3 2006/03/26 05:14:39 fang Exp $
+	$Id: Event.h,v 1.2.26.4 2006/03/27 05:40:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -86,9 +86,12 @@ struct EventPlaceholder {
 	EventPlaceholder(const time_type t, const event_index_type i)
 		: time(t), event_index(i) { }
 
+	/**
+		Smaller (sooner) time gets higher priority.  
+	 */
 	bool
 	operator < (const EventPlaceholder& r) const {
-		return time < r.time;
+		return time >= r.time;
 	}
 };	// end struct EventPlaceholder
 
@@ -145,7 +148,10 @@ public:
 			INVARIANT(ret);
 			return ret;
 		} else {			// LIKELY
-			return free_list_acquire(free_indices);
+			const event_index_type ret =
+				free_list_acquire(free_indices);
+			event_pool[ret] = e;
+			return ret;
 		}
 	}
 

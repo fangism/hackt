@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.15.2.1 2006/03/26 23:36:30 fang Exp $
+#	$Id: TODO,v 1.15.2.2 2006/03/27 05:40:46 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -41,8 +41,6 @@ prsim:
 			(not expected to be used often)
 			could use smart traversal, conditional recursion
 			*Just walk the alloc footprint frames?*
-		set <node> <value> [[+] time]
-			at a specific time (or relative to present)
 		setr <node> <value>
 			set node at random time
 		break

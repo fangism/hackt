@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.4 2006/03/26 05:14:41 fang Exp $
+	$Id: State.h,v 1.2.26.5 2006/03/27 05:40:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -201,9 +201,18 @@ public:
 	const time_type&
 	time(void) const { return current_time; }
 
+	bool
+	pending_events(void) const { return !event_queue.empty(); }
+
 	int
 	set_node_time(const node_index_type, const char val, 
 		const time_type t);
+
+	int
+	set_node_after(const node_index_type n, const char val, 
+		const time_type t) {
+		return set_node_time(n, val, this->current_time +t);
+	}
 
 	int
 	set_node(const node_index_type n, const char val) {

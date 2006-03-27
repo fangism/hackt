@@ -1,11 +1,12 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.5 2006/03/26 05:14:41 fang Exp $
+	$Id: State.cc,v 1.4.8.6 2006/03/27 05:40:49 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		0
+#define	ENABLE_STACKTRACE		1
 #define	DEBUG_FANOUT			(0 && ENABLE_STACKTRACE)
+#define	DEBUG_STEP			(1 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <algorithm>
@@ -181,7 +182,8 @@ State::head_sentinel(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Node accessor.
+	Node accessor, const.
+	Can remove bounds checks if we're really confident.
  */
 const State::node_type&
 State::get_node(const node_index_type i) const {
@@ -191,6 +193,10 @@ State::get_node(const node_index_type i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Node accessor, mutable.  
+	Can remove bounds checks if we're really confident.
+ */
 State::node_type&
 State::get_node(const node_index_type i) {
 	INVARIANT(i);
@@ -295,6 +301,9 @@ State::get_event(const event_index_type i) {
  */
 void
 State::enqueue_event(const time_type t, const event_index_type ei) {
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "enqueuing event ID " << ei << " at " << t << endl;
+#endif
 	event_queue.push(event_placeholder_type(t, ei));
 }
 
@@ -305,6 +314,9 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
  */
 void
 State::enqueue_exclhi(const time_type t, const event_index_type ei) {
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "enqueuing exclhi ID " << ei << " at " << t << endl;
+#endif
 	exclhi_queue.push_back(event_placeholder_type(t, ei));
 }
 
@@ -315,6 +327,9 @@ State::enqueue_exclhi(const time_type t, const event_index_type ei) {
  */
 void
 State::enqueue_excllo(const time_type t, const event_index_type ei) {
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "enqueuing excllo ID " << ei << " at " << t << endl;
+#endif
 	excllo_queue.push_back(event_placeholder_type(t, ei));
 }
 
@@ -325,6 +340,9 @@ State::enqueue_excllo(const time_type t, const event_index_type ei) {
  */
 void
 State::enqueue_pending(const event_index_type ei) {
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "enqueuing pending ID " << ei << endl;
+#endif
 	pending_queue.push_back(ei);
 }
 
@@ -344,7 +362,12 @@ State::dequeue_event(void) {
 int
 State::set_node_time(const node_index_type ni, const char val,
 		const time_type t) {
-
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "setting " << get_node_canonical_name(ni) <<
+		" to " << node_type::value_to_char[size_t(val)] <<
+		" at " << t << endl;
+#endif
 	// we have ni = the canonically allocated index of the bool node
 	// just look it up in the node_pool
 	node_type& n(get_node(ni));
@@ -374,6 +397,10 @@ State::set_node_time(const node_index_type ni, const char val,
 	const event_index_type ei = allocate_event(ni, val);
 	// event_type& e(get_event(ei));
 	n.set_event(ei);
+#if 0
+	const event_type& e(get_event(ei));
+	STACKTRACE_INDENT << "new event: (node,val)" << endl;
+#endif
 	enqueue_event(t, ei);
 	return ENQUEUE_ACCEPT;
 }
@@ -408,6 +435,9 @@ State::get_delay_dn(const event_type& e) const {
 void
 State::flush_pending_queue(void) {
 	typedef	pending_queue_type::const_iterator	const_iterator;
+#if DEBUG_STEP
+	STACKTRACE_VERBOSE;
+#endif
 	const_iterator i(pending_queue.begin()), e(pending_queue.end());
 	for ( ; i!=e; ++i) {
 		const event_index_type ne = *i;
@@ -478,6 +508,9 @@ State::flush_pending_queue(void) {
 void
 State::flush_exclhi_queue(void) {
 	typedef	excl_queue_type::const_iterator	const_iterator;
+#if DEBUG_STEP
+	STACKTRACE_VERBOSE;
+#endif
 	const_iterator i(exclhi_queue.begin()), e(exclhi_queue.end());
 for ( ; i!=e; ++i) {
 	const event_placeholder_type& ep(*i);
@@ -531,6 +564,9 @@ for ( ; i!=e; ++i) {
 void
 State::flush_excllo_queue(void) {
 	typedef	excl_queue_type::const_iterator	const_iterator;
+#if DEBUG_STEP
+	STACKTRACE_VERBOSE;
+#endif
 	const_iterator i(excllo_queue.begin()), e(excllo_queue.end());
 for ( ; i!=e; ++i) {
 	const event_placeholder_type& ep(*i);
@@ -590,6 +626,9 @@ State::enforce_exclhi(const node_index_type ni) {
 		If so, insert them into the exclhi-queue.
 	***/
 	typedef	excl_ring_map_type::const_iterator	const_iterator;
+#if DEBUG_STEP
+	STACKTRACE_VERBOSE;
+#endif
 	const_iterator i(exhi.begin()), e(exhi.end());
 for ( ; i!=e; ++i) {
 	INVARIANT(*i);
@@ -638,6 +677,9 @@ State::enforce_excllo(const node_index_type ni) {
 		If so, insert them into the excllo-queue.
 	***/
 	typedef	excl_ring_map_type::const_iterator	const_iterator;
+#if DEBUG_STEP
+	STACKTRACE_VERBOSE;
+#endif
 	const_iterator i(exlo.begin()), e(exlo.end());
 for ( ; i!=e; ++i) {
 	INVARIANT(*i);
@@ -679,20 +721,39 @@ for ( ; i!=e; ++i) {
 	TODO: possible add arguments later. 
 	\pre the exclhi, excllo, and pending queues are empty.
 	\post the exclhi, excllo, and pending queues are empty.
+	\return index of the affected node, 
+		INVALID_NODE_INDEX if nothing happened.  
  */
 node_index_type
 State::step(void) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(pending_queue.empty());
 	INVARIANT(exclhi_queue.empty());
 	INVARIANT(excllo_queue.empty());
+	if (event_queue.empty()) {
+		return INVALID_NODE_INDEX;
+	}
 	const event_placeholder_type ep(dequeue_event());
-	const event_index_type ei(ep.event_index);
+	const event_index_type& ei(ep.event_index);
 	INVARIANT(ei);
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "event_index = " << ei << endl;
+#endif
 	const event_type& pe(get_event(ei));
-	const node_index_type& ni = pe.node;
+	const node_index_type ni = pe.node;
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "examining node: " <<
+		get_node_canonical_name(ni) << endl;
+#endif
 	node_type& n(get_node(ni));
-	n.event_index = INVALID_EVENT_INDEX;	// no longer pending event
 	const char prev = n.current_value();
+	n.event_index = INVALID_EVENT_INDEX;	// no longer pending event
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "former value: " <<
+		node_type::value_to_char[size_t(prev)] << endl;
+	STACKTRACE_INDENT << "new value: " <<
+		node_type::value_to_char[size_t(pe.val)] << endl;
+#endif
 	// comment?
 	if (pe.val == node_type::LOGIC_OTHER &&
 		prev == node_type::LOGIC_OTHER) {
@@ -762,34 +823,42 @@ State::step(void) {
 void
 State::propagate_evaluation(const node_index_type ni, expr_index_type ui, 
 		char prev, char next) {
+#if DEBUG_STEP
+	STACKTRACE_VERBOSE;
+#endif
 	expr_type* u;
 do {
-	char old_val, new_val;
+	char old_pull, new_pull;	// pulling state of the subexpression
 	u = &expr_pool[ui];
+#if DEBUG_STEP
+	u->dump_struct(STACKTRACE_INDENT) << endl;
+	u->dump_state(STACKTRACE_INDENT << "before: ") << endl;
+#endif
+	// trust compiler to effectively perform branch-invariant
+	// code-motion
 	if (u->is_or()) {
 		// is disjunctive (or)
-		old_val = (u->countdown) ? node_type::LOGIC_HIGH :
-			(u->unknowns ? node_type::LOGIC_OTHER :
-				node_type::LOGIC_LOW);
+		old_pull = u->or_pull_state();
 #if 0
 		if (prev & node_type::LOGIC_OTHER) --u->unknowns;
 		if (!prev) --u->countdown;
 		if (next & node_type::LOGIC_OTHER) ++u->unknowns;
 		if (!next) ++u->countdown;
 #else
+#if 0
 		u->unknowns -= (prev >> 1);	// assuming bit position 1 is X
 		u->countdown -= !prev;
 		u->unknowns += (next >> 1);
 		u->countdown += !next;
+#else
+		u->unknowns += (next >> 1) - (prev >> 1);
+		u->countdown += !next - !prev;
 #endif
-		new_val = (u->countdown) ? node_type::LOGIC_HIGH :
-			(u->unknowns ? node_type::LOGIC_OTHER :
-				node_type::LOGIC_LOW);
+#endif
+		new_pull = u->or_pull_state();
 	} else {
 		// is conjunctive (and)
-		old_val = (u->countdown) ? node_type::LOGIC_LOW :
-			(u->unknowns ? node_type::LOGIC_OTHER :
-				node_type::LOGIC_HIGH);
+		old_pull = u->and_pull_state();
 		// see which produces better asm (configure time?)
 #if 0
 		if (prev & node_type::LOGIC_OTHER) --u->unknowns;
@@ -797,36 +866,68 @@ do {
 		if (next & node_type::LOGIC_OTHER) ++u->unknowns;
 		if (next & node_type::LOGIC_VALUE) ++u->countdown;
 #else
+#if 0
 		u->unknowns -= (prev >> 1);	// assuming bit position 1 is X
 		u->countdown -= (prev & node_type::LOGIC_VALUE);
 		u->unknowns += (next >> 1);
 		u->countdown += (next & node_type::LOGIC_VALUE);
+#else
+		u->unknowns += (next >> 1) - (prev >> 1);
+		u->countdown += (next & node_type::LOGIC_VALUE)
+			- (prev & node_type::LOGIC_VALUE);
 #endif
-		new_val = (u->countdown) ? node_type::LOGIC_LOW :
-			(u->unknowns ? node_type::LOGIC_OTHER :
-				node_type::LOGIC_HIGH);
+#endif
+		new_pull = u->and_pull_state();
 	}
-	if (old_val == new_val) return;
+#if DEBUG_STEP
+	u->dump_state(STACKTRACE_INDENT << "after : ") << endl;
+#endif
+	if (old_pull == new_pull) {
+		// then the pull-state did not change.
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "end of propagation." << endl;
+#endif
+		return;
+	}
 	// whether we're inverting the result (e.g. NOT, NAND, NOR)
 	if (u->is_not()) {
-		prev = node_type::invert_value[size_t(old_val)];
-		next = node_type::invert_value[size_t(new_val)];
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "negated..." << endl;
+#endif
+		prev = node_type::invert_value[size_t(old_pull)];
+		next = node_type::invert_value[size_t(new_pull)];
 	} else {
-		prev = old_val;
-		next = new_val;
+		prev = old_pull;
+		next = new_pull;
 	}
 	ui = u->parent;
 } while (!u->is_root());
 // propagation made it to the root node, indexed by ui (now node_index_type)
 	node_type& n(get_node(ui));
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "propagated to output node: " <<
+		get_node_canonical_name(ui) << endl;
+#endif
 if (u->direction()) {
 	// pull-up
 if (!n.pending_event()) {
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "no pending event on this node being pulled up."
+		<< endl;
+#endif
 	// no former event pending, ok to enqueue
-	if ((next == node_type::LOGIC_HIGH &&
+	if ((next == expr_type::PULL_ON &&
 			n.current_value() != node_type::LOGIC_HIGH) ||
-		(next == node_type::LOGIC_OTHER &&
+		(next == expr_type::PULL_WEAK &&
 			n.current_value() == node_type::LOGIC_LOW)) {
+		/***
+			if (PULL_ON and wasn't already HIGH ||
+				PULL_WEAK and was LOW before)
+			then we enqueue the event somewhere.
+		***/
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "pulling up (on or weak)" << endl;
+#endif
 		const event_index_type pe = allocate_event(ui, next);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
@@ -843,9 +944,18 @@ if (!n.pending_event()) {
 	}
 	// "Is this right??" expr_pool[n.pull_dn_index] 
 	// might not have been updated yet...
-	else if (next == node_type::LOGIC_LOW && n.pull_dn_index &&
+	else if (next == expr_type::PULL_OFF && n.pull_dn_index &&
 		// n->dn->val == PRS_VAL_T
 		expr_pool[n.pull_dn_index].pull_state() == expr_type::PULL_ON) {
+		/***
+			if (PULL_OFF and opposing pull-down is ON)
+			then enqueue the pull-down event.  
+		***/
+#if DEBUG_STEP
+		STACKTRACE_INDENT <<
+			"pull-up turned off, yielding to opposing pull-down."
+			<< endl;
+#endif
 		const event_index_type pe =
 			allocate_event(ui, node_type::LOGIC_LOW);
 		// pe->cause = root
@@ -857,16 +967,33 @@ if (!n.pending_event()) {
 		}
 	}
 } else if (!n.in_excl_queue()) {
-	// there is a pending event
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "pending, but not excl event on this node."
+		<< endl;
+#endif
+	// there is a pending event, not in the exclusive queue
 	event_type& e(get_event(n.event_index));
-	if (next == node_type::LOGIC_LOW && n.pull_dn_index &&
+	if (next == expr_type::PULL_OFF && n.pull_dn_index &&
 		expr_pool[n.pull_dn_index].pull_state() == expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_LOW) {
-		// there is a pending 'X' in the queue
+		/***
+			if (PULL_OFF and opposing pull-down is ON and
+			the pending event's value is X and
+			the current node value is NOT LOW)
+			The pending X should be cancelled and replaced
+			with a pending LOW (keeping the same time).
+		***/
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "changing pending X to 0 in queue."
+			<< endl;
+#endif
 		e.val = node_type::LOGIC_LOW;
 		// e.cause = ni
 	} else {
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "checking for anolamy..." << endl;
+#endif
 		// something is amiss!
 		const char eu =
 			event_type::upguard[size_t(next)][size_t(e.val)];
@@ -901,11 +1028,23 @@ if (!n.pending_event()) {
 } else {
 	// pull-dn
 if (!n.pending_event()) {
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "no pending event on this node being pulled down."
+		<< endl;
+#endif
 	// no former event pending, ok to enqueue
-	if ((next == node_type::LOGIC_HIGH &&
+	if ((next == expr_type::PULL_ON &&
 			n.current_value() != node_type::LOGIC_LOW) ||
-		(next == node_type::LOGIC_OTHER &&
+		(next == expr_type::PULL_WEAK &&
 			n.current_value() == node_type::LOGIC_HIGH)) {
+		/***
+			if (PULL_ON and wasn't already LOW ||
+				PULL_WEAK and was HIGH before)
+			then we enqueue the event somewhere.
+		***/
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "pulling down (on or weak)" << endl;
+#endif
 		const event_index_type pe = allocate_event(ui,
 			node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
@@ -923,9 +1062,18 @@ if (!n.pending_event()) {
 	}
 	// "Is this right??" expr_pool[n.pull_dn_index] 
 	// might not have been updated yet...
-	else if (next == node_type::LOGIC_LOW && n.pull_up_index &&
+	else if (next == expr_type::PULL_OFF && n.pull_up_index &&
 		// n->up->val == PRS_VAL_T
 		expr_pool[n.pull_up_index].pull_state() == expr_type::PULL_ON) {
+		/***
+			if (PULL_OFF and opposing pull-up is ON)
+			then enqueue the pull-up event.  
+		***/
+#if DEBUG_STEP
+		STACKTRACE_INDENT <<
+			"pull-down turned off, yielding to opposing pull-up."
+			<< endl;
+#endif
 		const event_index_type pe =
 			allocate_event(ui, node_type::LOGIC_HIGH);
 		// pe->cause = root
@@ -937,16 +1085,30 @@ if (!n.pending_event()) {
 		}
 	}
 } else if (!n.in_excl_queue()) {
-	// there is a pending event
+	// there is a pending event, not in an exclusive queue
 	event_type& e(get_event(n.event_index));
 	if (next == node_type::LOGIC_LOW && n.pull_up_index &&
 		expr_pool[n.pull_up_index].pull_state() == expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
 		n.current_value() != node_type::LOGIC_HIGH) {
+		/***
+			if (PULL_OFF and opposing pull-up is ON and
+			the pending event's value is X and
+			the current node value is NOT HIGH)
+			The pending X should be cancelled and replaced
+			with a pending HIGH (keeping the same time).
+		***/
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "changing pending X to 1 in queue."
+			<< endl;
+#endif
 		// there is a pending 'X' in the queue
 		e.val = node_type::LOGIC_HIGH;
 		// e.cause = ni
 	} else {
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "checking for anolamy..." << endl;
+#endif
 		// something is amiss!
 		const char eu =
 			event_type::dnguard[size_t(next)][size_t(e.val)];
@@ -1143,8 +1305,8 @@ ostream&
 State::dump_node_fanout(ostream& o, const node_index_type ni) const {
 	typedef	node_type::fanout_array_type	fanout_array_type;
 	typedef	fanout_array_type::const_iterator	const_iterator;
-	STACKTRACE_VERBOSE;
 #if DEBUG_FANOUT
+	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT << "ni = " << ni << endl;
 #endif
 	const node_type& n(get_node(ni));
@@ -1211,7 +1373,9 @@ State::dump_node_fanin(ostream& o, const node_index_type ni) const {
 ostream&
 State::dump_subexpr(ostream& o, const expr_index_type ei, 
 		const char ptype) const {
+#if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;
+#endif
 	INVARIANT(ei);
 	INVARIANT(ei < expr_pool.size());
 	const expr_type& e(expr_pool[ei]);

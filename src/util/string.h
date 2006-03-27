@@ -2,7 +2,7 @@
 	\file "util/string.h"
 	Configure-detected string library header.  
 	For now, this is really reserved for C++.
-	$Id: string.h,v 1.2.26.1 2006/03/26 02:46:22 fang Exp $
+	$Id: string.h,v 1.2.26.2 2006/03/27 05:40:50 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_H__
@@ -61,7 +61,7 @@ struct string_to_int_converter { };
 /// Return false if conversion-assignment to int is successful.  
 template <class I>
 bool
-string_to_int(const std::string&, I&);
+string_to_num(const std::string&, I&);
 
 }	// end namespace strings
 }	// end namespace util

@@ -1,7 +1,7 @@
 /**
 	\file "util/string.tcc"
 	Implementations of some useful string functions.  
-	$Id: string.tcc,v 1.1.2.1 2006/03/26 02:46:22 fang Exp $
+	$Id: string.tcc,v 1.1.2.2 2006/03/27 05:40:50 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_TCC__
@@ -45,10 +45,11 @@ struct string_to_int_converter<int32_t> {
 	Helper function for converting string to int.  
 	Just a wrapper around using stringstream to convert to int.  
 	\param I some integer type.  
+	\return true on error.  
  */
 template <class I>
 bool
-string_to_int(const std::string& s, I& i) {
+string_to_num(const std::string& s, I& i) {
 #if 0
 	i = string_to_int_converter<I>()(s);
 	return errno;
@@ -56,7 +57,7 @@ string_to_int(const std::string& s, I& i) {
 	// prefer this over error-prone libc functions.  
 	istringstream str(s);
 	str >> i;
-	return std::ios_base::badbit;
+	return str.fail();
 #endif
 }
 

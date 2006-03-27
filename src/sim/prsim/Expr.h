@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.2.26.3 2006/03/26 05:14:40 fang Exp $
+	$Id: Expr.h,v 1.2.26.4 2006/03/27 05:40:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -175,6 +175,10 @@ private:
 struct ExprState : public Expr {
 public:
 	typedef	Expr			parent_type;
+	/**
+		These values are special, they correspond to 
+		LOGIC_LOW, LOGIC_HIGH, LOGIC_OTHER.  
+	 */
 	typedef	enum {
 		PULL_OFF = 0,
 		PULL_ON = 1,
@@ -183,15 +187,15 @@ public:
 
 public:
 	/**
-		'val'
-		NOTE: this is stateful information.
+		'val' of the old PrsExpr.
 	 */
 	count_type			countdown;
 	/**
-		'valx'
-		NOTE: this is stateful information.
+		'valx' of the old PrsExpr.
 	 */
 	count_type			unknowns;
+protected:
+	// consider a redundant pull-state enum (cached) to avoid re-evaluation?
 public:
 	ExprState() : parent_type() { }
 
@@ -208,12 +212,30 @@ public:
 	initialize(void);
 
 	/**
-		TODO: finish me!
+		\pre this->is_or();
+	 */
+	pull_enum
+	or_pull_state(void) const {
+		return (countdown ? PULL_ON :
+			(unknowns ? PULL_WEAK : PULL_OFF));
+	}
+
+	/**
+		\pre !this->is_or();
+	 */
+	pull_enum
+	and_pull_state(void) const {
+		return (countdown ? PULL_OFF :
+			(unknowns ? PULL_WEAK : PULL_ON));
+	}
+
+	/**
+		See pull_enum enumerations.  
 		\return 0 if off, 1 if on, 2 if weak (X)
 	 */
 	pull_enum
 	pull_state(void) const {
-		return PULL_OFF;
+		return is_or() ? or_pull_state() : and_pull_state();
 	}
 
 	ostream&

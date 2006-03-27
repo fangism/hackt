@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-prsimrc-expect.sh.in"
-#	$Id: hackt-prsimrc-expect.sh.in,v 1.1.2.1 2006/03/26 23:36:33 fang Exp $
+#	$Id: hackt-prsimrc-expect.sh.in,v 1.1.2.2 2006/03/27 05:40:50 fang Exp $
 # Template test script for comparing prsim outputs against 
 #	expected results.  
 
@@ -13,7 +13,7 @@ prsim=$1
 obj=$2
 prsimrc=$3
 # strip srcdir path
-bldroot=`@SED@ 's|.*/||g' $prsimrc`
+bldroot=`@ECHO@ "$prsimrc" | @SED@ 's|.*/||g'`
 
 @CALLMAKE@ $2 > /dev/null 2>&1
 if test ! -f $obj

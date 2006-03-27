@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.2.26.2 2006/03/26 05:14:39 fang Exp $
+	$Id: Expr.cc,v 1.2.26.3 2006/03/27 05:40:48 fang Exp $
  */
 
 #include <iostream>
@@ -138,7 +138,8 @@ ExprState::initialize(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 ExprState::dump_state(ostream& o) const {
-	o << "ctdn: " << countdown << " X: " << unknowns << "(/" << size << ')';
+	o << "ctdn: " << size_t(countdown) <<
+		" X: " << size_t(unknowns) << "(/" << size_t(size) << ')';
 	return o;
 }
 
