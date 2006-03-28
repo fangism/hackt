@@ -1,0 +1,125 @@
+import "channel.hac";
+
+// WCHB no Reset
+defproc wchb_buf(e1of2 r, l){
+e1of2 _r,_l;
+prs {
+  r.e & l.z -> _r.z-
+  ~r.e & ~l.z -> _r.z+
+  r.e & l.o -> _r.o-
+  ~r.e & ~l.o -> _r.o+
+  _r.z -> r.z-
+  ~_r.z -> r.z+
+  _r.o -> r.o-
+  ~_r.o -> r.o+
+  _r.o & _r.z -> _l.e-
+  ~_r.o | ~_r.z -> _l.e+
+  _l.e -> l.e-
+  ~_l.e -> l.e+
+}
+}
+
+// WCHB with Reset high
+defproc wchb_buf_rh(e1of2 r, l; bool _Reset){
+e1of2 _r,_l;
+prs {
+  _Reset & r.e & l.z -> _r.z-
+  ~_Reset | (~r.e & ~l.z) -> _r.z+
+  _Reset & r.e & l.o -> _r.o-
+  ~_Reset | (~r.e & ~l.o) -> _r.o+
+  _r.z -> r.z-
+  ~_r.z -> r.z+
+  _r.o -> r.o-
+  ~_r.o -> r.o+
+  _r.o & _r.z -> _l.e-
+  ~_r.o | ~_r.z -> _l.e+
+  _l.e -> l.e-
+  ~_l.e -> l.e+
+}
+}
+
+// PCHB no reset
+defproc pchb_buf(a1of2 r, l){
+a1of2 _r, _l;
+prs {
+  r.z -> _r.z-
+  ~r.z -> _r.z+
+  r.o -> _r.o-
+  ~r.o -> _r.o+
+  r.a & l.a -> r.z-
+  ~r.a & ~_l.z -> r.z+
+  r.a & l.a -> r.o-  
+  ~r.a & ~_l.o -> r.o+
+  _l.z & _l.o & _r.z & _r.o -> l.a-
+  ~_r.z | ~_r.o -> l.a+
+  l.z -> _l.z-
+  ~l.z -> _l.z+
+  l.o -> _l.o-
+  ~l.o -> _l.o+
+}
+}
+
+// PCHB with Reset high
+defproc pchb_buf_rh(a1of2 r, l; bool Reset){
+a1of2 _r, _l;
+prs {
+  r.z -> _r.z-
+  ~r.z -> _r.z+
+  r.o -> _r.o-
+  ~r.o -> _r.o+
+  Reset | (r.a & l.a) -> r.z-
+  ~Reset & ~r.a & ~_l.z -> r.z+
+  Reset | (r.a & l.a) -> r.o-
+  ~Reset & ~r.a & ~_l.o -> r.o+
+  Reset | (_l.z & _l.o & _r.z & _r.o) -> l.a-
+  ~Reset & (~_r.z | ~_r.o) -> l.a+
+  l.z -> _l.z-
+  ~l.z -> _l.z+
+  l.o -> _l.o-
+  ~l.o -> _l.o+
+}
+}
+
+// PCFB no Reset
+defproc pcfb_buf(e1of2 r, l){
+e1of2 _r, _l;
+bool en;
+prs {
+  l.z & r.e -> _r.z-
+  ~en & ~r.e -> _r.z+
+  _r.z -> r.z-
+  ~_r.z -> r.z+
+  l.o & r.e -> _r.o-
+  ~en & ~r.e -> _r.o+
+  _r.o -> r.o-
+  ~_r.o -> r.o+
+  r.z | r.o -> l.e-
+  ~en & ~l.z & ~l.o -> l.e+
+  l.e -> _l.e-
+  ~l.e -> _l.e+
+  _l.e -> en-
+  ~r.z & ~ r.o & ~_l.e -> en+
+}
+}
+
+// PCFB with Reset high
+defproc pcfb_buf_rh(e1of2 r, l; bool _Reset){
+e1of2 _r, _l;
+bool en;
+prs {
+  _Reset & l.z & r.e -> _r.z-
+  ~_Reset | (~en & ~r.e) -> _r.z+
+  _r.z -> r.z-
+  ~_r.z -> r.z+
+  _Reset & l.o & r.e -> _r.o-
+  ~_Reset | (~en & ~r.e ) -> _r.o+
+  _r.o -> r.o-
+  ~_r.o -> r.o+
+  _Reset & r.z | r.o -> l.e-
+  ~_Reset | (~en & ~l.z & ~l.o) -> l.e+
+  l.e -> _l.e-
+  ~l.e -> _l.e+
+  _l.e -> en-
+  ~r.z & ~ r.o & ~_l.e -> en+
+}
+}

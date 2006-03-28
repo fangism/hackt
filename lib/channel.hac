@@ -1,0 +1,146 @@
+// 1of1
+
+defproc e1of1(bool d,i,e){d=i;}
+defproc a1of1(bool d,i,e){d=i;}
+
+// 1of2
+
+defproc c1of2(bool d[2]; bool z,o,t,f)
+{
+  z=d[0]=f;
+  o=d[1]=t;
+}
+
+defproc _c1of2(bool d[2]; bool z,o,t,f)
+{
+  z=d[0]=f;
+  o=d[1]=t;
+}
+
+defproc e1of2(bool d[2]; bool z,o,t,f,e)
+{
+  z=d[0]=f;
+  o=d[1]=t;
+}
+
+defproc a1of2(bool d[2]; bool z,o,t,f,a)
+{
+  z=d[0]=f;
+  o=d[1]=t;
+}
+
+defproc e2x1of2(c1of2 b[2]; c1of2 b0,b1; bool e)
+{
+  b0=b[0];
+  b1=b[1];
+}
+
+defproc a2x1of2(c1of2 b[2]; c1of2 b0,b1; bool a)
+{
+  b0=b[0];
+  b1=b[1];
+}
+
+defproc c1of3(bool d[3]; bool z,o,w)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+}
+
+defproc _c1of3(bool d[3]; bool z,o,w)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+}
+
+defproc e1of3(bool d[3]; bool z,o,w,e)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+}
+
+defproc a1of3(bool d[3]; bool z,o,w,a)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+}
+
+defproc c1of4(bool d[4]; bool z,o,w,h)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+}
+
+defproc _c1of4(bool d[4]; bool z,o,w,h)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+}
+
+defproc _e1of4(bool d[4]; bool z,o,w,h,e)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+}
+
+defproc elof4(bool d[4]; bool z,o,w,h,e)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+}
+
+defproc a1of4(bool d[4]; bool z,o,w,h,e)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+}
+
+defproc c1of5(bool d[5]; bool z,o,w,h,f)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+  f=d[4];
+}
+
+defproc _c1of5(bool d[5]; bool z,o,w,h,f)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+  f=d[4];
+}
+
+defproc e1of5(bool d[5]; bool z,o,w,h,f)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+  f=d[4];
+}
+
+defproc a1of5(bool d[5]; bool z,o,w,h,f)
+{
+  z=d[0];
+  o=d[1];
+  w=d[2];
+  h=d[3];
+  f=d[4];
+}
