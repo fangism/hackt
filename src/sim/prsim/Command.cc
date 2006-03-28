@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.6 2006/03/27 05:40:48 fang Exp $
+	$Id: Command.cc,v 1.3.8.7 2006/03/28 03:48:04 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -22,6 +22,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <iterator>
 #include "sim/prsim/State.h"
 #include "sim/prsim/Reference.h"
+#include "common/TODO.h"
 #include "util/qmap.tcc"
 #include "util/readline_wrap.h"
 #include "util/libc.h"
@@ -659,8 +660,38 @@ Step::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
-// 	"run until event queue empty")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
+ 	"run until event queue empty or breakpoint")
+
+/**
+	TODO: add cause tracing.
+	TODO: handle breakpoint.
+	TODO: implement no/globaltime policy for resetting.  
+ */
+int
+Cycle::main(State& s, const string_list & a) {
+if (a.size() != 1) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	bool interrupted = false;
+	s.resume();	// clear STOP flag
+	while (!interrupted) {
+		const node_index_type ni = s.cycle();
+		if (!ni)	return Command::NORMAL;
+		else {
+			FINISH_ME(Fang);
+			cerr << "Cycle halted on breakpoint." << endl;
+			return Command::NORMAL;
+		}
+	}	// end while (!interrupted)
+}
+}
+
+void
+Cycle::usage(ostream& o) {
+	o << "cycle" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Queue, "queue", simulation,
@@ -991,6 +1022,33 @@ if (a.size() != 3) {
 void
 AssertN::usage(ostream& o) {
 	o << "assertn <node> <value>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Time, "time", info, 
+	"display current simulation time")
+
+/**
+	TODO:
+	Allow "time x" to manually set the time if the event queue is empty. 
+	Useful for manually resetting the timer.  
+	Allow "time +x" to advance by time, like step.  
+		(or reserve for the advance command?)
+ */
+int
+Time::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	cout << "time: " << s.time() << endl;
+	return Command::NORMAL;
+}
+}
+
+void
+Time::usage(ostream& o) {
+	o << "time" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

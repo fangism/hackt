@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.15.2.2 2006/03/27 05:40:46 fang Exp $
+#	$Id: TODO,v 1.15.2.3 2006/03/28 03:48:02 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -24,15 +24,11 @@ Simulation:
 
 prsim:
 	interpreter commands:
-		source <script-file>
-			should have a interpreter routine without readline.
 		interp key [value]
 			for interpreter mode flags:
 			termination conditions: assert, syntax error, 
 				bad-argument,...
 			echo on, echo off (only heeded in batch mode)
-		time
-			echo the current simulation timestamp
 		advance
 			advance the simulation in time units instead of steps
 		aliases <name>

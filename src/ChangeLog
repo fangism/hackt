@@ -5,6 +5,15 @@
 
 2006-03-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-05-prsim-01-08:
+	  Debugged 'step' command so simulation execution looks reasonable.
+	  Implemented 'cycle' and 'time' commands.  
+	  EXPR_NAND and EXPR_NOR enumerations betwixt.  
+	  More meaningful comments.  
+	  TODO: tons of tests, trying to cover every corner of prsim
+		execution, every event scenario.  
+
+
 	* HACKT-00-01-04-main-00-78-05-prsim-01-07:
 	  Few minor fixes in prsim, as we slowly test the hell out of it.  
 	  Oodles of debugging code added and (temporarily) enabled.

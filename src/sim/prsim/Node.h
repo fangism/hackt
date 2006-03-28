@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.2.26.4 2006/03/26 05:14:41 fang Exp $
+	$Id: Node.h,v 1.2.26.5 2006/03/28 03:48:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -186,7 +186,6 @@ protected:
 		8-bit field for flagging stateful information.  
 	 */
 	char					state_flags;
-public:
 	/**
 		Current enqueued event index associated with this node.
 		INVALID_EVENT_INDEX (0) means no pending event.  
@@ -195,14 +194,18 @@ public:
 
 	/**
 		Transition counts.  
+		Not critical to simulation, unless we want statistics.  
 	 */
 	size_t					tcount;
 public:
 	/// count on compiler to optimize zero comparison
 	bool
 	pending_event(void) const {
-		return event_index != INVALID_NODE_INDEX;
+		return event_index != INVALID_EVENT_INDEX;
 	}
+
+	event_index_type
+	get_event(void) const { return event_index; }
 
 	void
 	set_event(const event_index_type i) {
@@ -210,6 +213,9 @@ public:
 		INVARIANT(i != INVALID_EVENT_INDEX);
 		event_index = i;
 	}
+
+	void
+	clear_event(void) { event_index = INVALID_EVENT_INDEX; }
 
 	bool
 	is_breakpoint(void) const { return state_flags & NODE_BREAKPOINT; }

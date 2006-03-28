@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.2.26.4 2006/03/27 05:40:49 fang Exp $
+	$Id: Expr.h,v 1.2.26.5 2006/03/28 03:48:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -41,8 +41,8 @@ struct Expr {
 		EXPR_OR = 0x0,
 		EXPR_AND = 0x1,
 		EXPR_NOT = 0x2,	///< could be used to mask for negation
-		EXPR_NAND = 0x2,
-		EXPR_NOR = 0x3,
+		EXPR_NOR = 0x2,
+		EXPR_NAND = 0x3,
 		EXPR_MASK = 0x3, ///< two LSB encode the logic function
 		EXPR_ROOT = 0x4, ///< if the parent expression is a node
 		EXPR_DIR = 0x8	 ///< if parent is node, what direction to pull
@@ -188,6 +188,8 @@ public:
 public:
 	/**
 		'val' of the old PrsExpr.
+		For OR-expressions, this represents the number of 1's.
+		For AND-expressions, this represents the number of 0's.
 	 */
 	count_type			countdown;
 	/**
@@ -213,6 +215,10 @@ public:
 
 	/**
 		\pre this->is_or();
+		countdown represents the number of 1's
+		PULL_ON: countdown != 0
+		PULL_OFF: countdown == 0 && unknowns == 0
+		PULL_WEAK: countdown == 0 && unknowns != 0
 	 */
 	pull_enum
 	or_pull_state(void) const {
@@ -222,6 +228,10 @@ public:
 
 	/**
 		\pre !this->is_or();
+		countdown represents the number of 0's
+		PULL_OFF: countdown != 0
+		PULL_ON: countdown == 0 && unknowns == 0
+		PULL_WEAK: countdown == 0 && unknowns != 0
 	 */
 	pull_enum
 	and_pull_state(void) const {

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.2.26.4 2006/03/27 05:40:48 fang Exp $
+	$Id: Event.h,v 1.2.26.5 2006/03/28 03:48:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -91,7 +91,7 @@ struct EventPlaceholder {
 	 */
 	bool
 	operator < (const EventPlaceholder& r) const {
-		return time >= r.time;
+		return time > r.time;
 	}
 };	// end struct EventPlaceholder
 

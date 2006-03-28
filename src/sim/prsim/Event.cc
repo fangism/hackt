@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.2.26.2 2006/03/26 05:14:39 fang Exp $
+	$Id: Event.cc,v 1.2.26.3 2006/03/28 03:48:04 fang Exp $
  */
 
 #include "sim/prsim/Event.h"
@@ -16,7 +16,7 @@ namespace PRSIM {
 // class Event static initializations
 
 /**
-	First index is the guard state,
+	First index is the guard's pulling state (F = OFF, T = ON, X = WEAK),
 	second index is the pending event state.
  */
 const char

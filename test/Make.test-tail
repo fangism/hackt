@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.22.2.1 2006/03/26 23:36:33 fang Exp $
+#	$Id: Make.test-tail,v 1.22.2.2 2006/03/28 03:48:06 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -207,6 +207,14 @@ endif
 	@$(ECHO) $(HACKT_CFLAT_SPRS_TEST_SH) "\"$(HACKT_CFLAT_SPRS_EXE)\"" \
 		$(srcdir) $* >> $@
 	@$(CHMOD) +x $@
+
+if HAVE_CFLAT
+.cast.castprs:
+	$(CFLAT) -prsim $< > $@
+else
+.cast.castprs:
+	@$(ECHO) "Sorry, no cflat found in path." ; exit 1
+endif
 
 # Each run-commands script should include the command to invoke
 # for loading the object, e.g.: hackt prsim foo.haco-a

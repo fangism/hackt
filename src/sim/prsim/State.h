@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.5 2006/03/27 05:40:49 fang Exp $
+	$Id: State.h,v 1.2.26.6 2006/03/28 03:48:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -222,12 +222,31 @@ public:
 	node_index_type
 	step(void);
 
-private:
-	event_index_type
-	allocate_event(const node_index_type, const char);
+	node_index_type
+	cycle(void);
+
+	bool
+	stopped(void) const { return flags & FLAG_STOP_SIMULATION; }
 
 	void
+	resume(void) { flags &= ~FLAG_STOP_SIMULATION; }
+
+private:
+	event_index_type
+	__allocate_event(node_type&, const node_index_type, const char);
+
+#if 0
+	event_index_type
+	allocate_event(const node_index_type, const char);
+#endif
+
+	void
+	__deallocate_event(node_type&, const event_index_type);
+
+#if 0
+	void
 	deallocate_event(const event_index_type);
+#endif
 
 	const event_type&
 	get_event(const event_index_type) const;

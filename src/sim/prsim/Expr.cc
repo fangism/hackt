@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.2.26.3 2006/03/27 05:40:48 fang Exp $
+	$Id: Expr.cc,v 1.2.26.4 2006/03/28 03:48:05 fang Exp $
  */
 
 #include <iostream>
@@ -128,18 +128,22 @@ Expr::dump_type_dot_shape(ostream& o) const {
 //=============================================================================
 /**
 	Initializes expression state.  
+	Assuming everything is X on startup, the initialization
+	of the countdown depends on whether or not this expression
+	is conjunctive or disjunctive.  
  */
 void
 ExprState::initialize(void) {
 	unknowns = size;
-	countdown = 0;
+	countdown = 0;	// All X's, no 1's or 0's
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 ExprState::dump_state(ostream& o) const {
 	o << "ctdn: " << size_t(countdown) <<
-		" X: " << size_t(unknowns) << "(/" << size_t(size) << ')';
+		" X: " << size_t(unknowns) << "(/" << size_t(size) << ')'
+		<< " pull: " << size_t(pull_state());
 	return o;
 }
 

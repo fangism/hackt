@@ -1,12 +1,12 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.6 2006/03/27 05:40:49 fang Exp $
+	$Id: State.cc,v 1.4.8.7 2006/03/28 03:48:05 fang Exp $
  */
 
-#define	ENABLE_STACKTRACE		1
+#define	ENABLE_STACKTRACE		0
 #define	DEBUG_FANOUT			(0 && ENABLE_STACKTRACE)
-#define	DEBUG_STEP			(1 && ENABLE_STACKTRACE)
+#define	DEBUG_STEP			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <algorithm>
@@ -162,7 +162,7 @@ State::initialize(void) {
 	// the expr_graph_node_pool contains no stateful information.  
 	while (!event_queue.empty()) {
 		const event_placeholder_type next(event_queue.pop());
-		deallocate_event(next.event_index);
+		event_pool.deallocate(next.event_index);
 	}
 }
 
@@ -269,17 +269,34 @@ State::check_expr(const expr_index_type i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Like the old prsim's newevent macro.  
+	Should be inline only.  
+	\param n the reference to the node.
+	\param ni the referenced node's index.
+	\param val the future value of the node.
+	\pre n must not already have a pending event.
+	\pre n must be the node corresponding to node index ni
+ */
 event_index_type
-State::allocate_event(const node_index_type ni, const char val) {
-	return event_pool.allocate(event_type(ni, val));
+State::__allocate_event(node_type& n,
+		const node_index_type ni, const char val) {
+	INVARIANT(!n.pending_event());
+	n.set_event(event_pool.allocate(event_type(ni, val)));
+	return n.get_event();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param n the node associated with the event being freed.  
+	\param i the event index to return to the freelist. 
+	\pre n's former pending event is event index i
 	\pre i is not already deallocated.  (not checked!)
  */
 void
-State::deallocate_event(const event_index_type i) {
+State::__deallocate_event(node_type& n, const event_index_type i) {
+	INVARIANT(n.get_event() == i);
+	n.clear_event();
 	event_pool.deallocate(i);
 }
 
@@ -394,9 +411,7 @@ State::set_node_time(const node_index_type ni, const char val,
 		return ENQUEUE_WARNING;
 	}
 // otherwise, enqueue the event.  
-	const event_index_type ei = allocate_event(ni, val);
-	// event_type& e(get_event(ei));
-	n.set_event(ei);
+	const event_index_type ei = __allocate_event(n, ni, val);
 #if 0
 	const event_type& e(get_event(ei));
 	STACKTRACE_INDENT << "new event: (node,val)" << endl;
@@ -411,7 +426,7 @@ State::get_delay_up(const event_type& e) const {
 #if 0
 	return get_node(e.node).delay ... random ...
 #else
-	return 15;
+	return 10;
 #endif
 }
 
@@ -439,65 +454,80 @@ State::flush_pending_queue(void) {
 	STACKTRACE_VERBOSE;
 #endif
 	const_iterator i(pending_queue.begin()), e(pending_queue.end());
-	for ( ; i!=e; ++i) {
-		const event_index_type ne = *i;
-		event_type& ev(get_event(ne));
-		const node_index_type& _ni(ev.node);
-		node_type& _n(get_node(_ni));
-		const expr_type::pull_enum may_be_pulled_up =
-			expr_pool[_n.pull_up_index].pull_state();
-		const expr_type::pull_enum may_be_pulled_dn =
-			expr_pool[_n.pull_dn_index].pull_state();
-		if (may_be_pulled_up != expr_type::PULL_OFF &&
-			may_be_pulled_dn != expr_type::PULL_OFF) {
-		/***
-			There is interference.  If there is weak interference,
-			suppress report unless explicitly requested.  
-			weak = (X && T) or (T && X);
-		***/
-			const bool pending_weak =
-				(may_be_pulled_up == expr_type::PULL_WEAK) ||
-				(may_be_pulled_dn == expr_type::PULL_WEAK);
-				// not XOR (^), see pending_weak table in prs.c
-			// issue diagnostic
-			if (!(flags & FLAG_NO_WEAK_INTERFERENCE) ||
-					!pending_weak) {
-				cout << "WARNING: ";
-				if (pending_weak)
-					cout << "weak-";
-				cout << "interference `";
-				cout << get_node_canonical_name(_ni) <<
-					"\'" << endl;
-				// TODO: if (ne->cause)
-				//	... caused by ...
-			}
-			ev.val = node_type::LOGIC_OTHER;
-			switch (_n.current_value()) {
-			case node_type::LOGIC_LOW:
-				enqueue_event(get_delay_dn(ev), ne);
-				break;
-			case node_type::LOGIC_HIGH:
+for ( ; i!=e; ++i) {
+	const event_index_type ne = *i;
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "checking pending ID: " << ne << endl;
+#endif
+	event_type& ev(get_event(ne));
+	const node_index_type& _ni(ev.node);
+	node_type& _n(get_node(_ni));
+	const expr_type::pull_enum may_be_pulled_up =
+		expr_pool[_n.pull_up_index].pull_state();
+	const expr_type::pull_enum may_be_pulled_dn =
+		expr_pool[_n.pull_dn_index].pull_state();
+	if (may_be_pulled_up != expr_type::PULL_OFF &&
+		may_be_pulled_dn != expr_type::PULL_OFF) {
+	/***
+		There is interference.  If there is weak interference,
+		suppress report unless explicitly requested.  
+		weak = (X && T) or (T && X);
+	***/
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "some interference." << endl;
+#endif
+		const bool pending_weak =
+			(may_be_pulled_up == expr_type::PULL_WEAK) ||
+			(may_be_pulled_dn == expr_type::PULL_WEAK);
+			// not XOR (^), see pending_weak table in prs.c
+		// issue diagnostic
+		if (!(flags & FLAG_NO_WEAK_INTERFERENCE) ||
+				!pending_weak) {
+			cout << "WARNING: ";
+			if (pending_weak)
+				cout << "weak-";
+			cout << "interference `";
+			cout << get_node_canonical_name(_ni) <<
+				"\'" << endl;
+			// TODO: if (ne->cause)
+			//	... caused by ...
+		}
+		ev.val = node_type::LOGIC_OTHER;
+		switch (_n.current_value()) {
+		case node_type::LOGIC_LOW:
+			enqueue_event(get_delay_dn(ev), ne);
+			break;
+		case node_type::LOGIC_HIGH:
+			enqueue_event(get_delay_up(ev), ne);
+			break;
+		case node_type::LOGIC_OTHER:
+			_n.clear_excl_queue();
+			__deallocate_event(_n, ne);
+			break;
+		default:
+			ICE(cerr, 
+				cerr << "Invalid logic value." << endl;
+			);
+		}	// end switch
+	} else {
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "no interference." << endl;
+#endif
+		if (_n.current_value() != ev.val) {
+			if (ev.val == node_type::LOGIC_HIGH) {
 				enqueue_event(get_delay_up(ev), ne);
-				break;
-			case node_type::LOGIC_OTHER:
-				_n.event_index = INVALID_EVENT_INDEX;
-				_n.clear_excl_queue();
-				deallocate_event(ne);
-				break;
-			default:
-				ICE(cerr, 
-					cerr << "Invalid logic value." << endl;
-				);
+			} else {
+				enqueue_event(get_delay_dn(ev), ne);
 			}
 		} else {
-			// cancel event
-			_n.event_index = INVALID_EVENT_INDEX;
+			// no change in value, just cancel
 			_n.clear_excl_queue();
-			deallocate_event(ne);
-		}	// end if may_be_pulled ...
-	}	// end for all in pending_queue
+			__deallocate_event(_n, ne);
+		}	// end switch
+	}	// end if may_be_pulled ...
+}	// end for all in pending_queue
 	pending_queue.clear();	// or .resize(0), same thing
-}
+}	// end method flush_pending_queue
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -530,7 +560,7 @@ for ( ; i!=e; ++i) {
 			const node_type& n(get_node(ni));
 			if (n.current_value() == node_type::LOGIC_HIGH ||
 				(n.pending_event() && 
-				(event_pool[n.event_index].val ==
+				(event_pool[n.get_event()].val ==
 					node_type::LOGIC_HIGH) &&
 				!n.in_excl_queue())) {
 				++prev;
@@ -549,9 +579,8 @@ for ( ; i!=e; ++i) {
 	}	// end for all excl ring nodes
 	if (epn.in_excl_queue()) {
 		// then violates some excl directive, just cancel the event
-		epn.event_index = INVALID_EVENT_INDEX;
 		epn.clear_excl_queue();
-		deallocate_event(ep.event_index);
+		__deallocate_event(epn, ep.event_index);
 	}
 }	// end for all exclhi_queue events
 	exclhi_queue.clear();
@@ -586,7 +615,7 @@ for ( ; i!=e; ++i) {
 			const node_type& n(get_node(ni));
 			if (n.current_value() == node_type::LOGIC_LOW ||
 				(n.pending_event() && 
-				(event_pool[n.event_index].val ==
+				(event_pool[n.get_event()].val ==
 					node_type::LOGIC_LOW) &&
 				!n.in_excl_queue())) {
 				++prev;
@@ -605,9 +634,8 @@ for ( ; i!=e; ++i) {
 	}	// end for all excl ring nodes
 	if (epn.in_excl_queue()) {
 		// then violates some excl directive, just cancel the event
-		epn.event_index = INVALID_EVENT_INDEX;
 		epn.clear_excl_queue();
-		deallocate_event(ep.event_index);
+		__deallocate_event(epn, ep.event_index);
 	}
 }	// end for all excllo_queue events
 	excllo_queue.clear();
@@ -646,14 +674,14 @@ for ( ; i!=e; ++i) {
 		eri = exhi[*i];
 		INVARIANT(eri);
 		do {
-			const node_type& er(get_node(eri));
-			if (!er.event_index && er.pull_up_index &&
+			node_type& er(get_node(eri));
+			if (!er.pending_event() && er.pull_up_index &&
 				// er->n->up->val == PRS_VAL_T
 				// what if is pulling weakly?
 				expr_pool[er.pull_up_index].pull_state()
 					== expr_type::PULL_ON) {
 				const event_index_type ne =
-					allocate_event(eri,
+					__allocate_event(er, eri,
 						node_type::LOGIC_HIGH);
 				// ne->cause = ni
 				enqueue_exclhi(get_delay_up(get_event(ne)), ne);
@@ -697,14 +725,14 @@ for ( ; i!=e; ++i) {
 		eri = exlo[*i];
 		INVARIANT(eri);
 		do {
-			const node_type& er(get_node(eri));
-			if (!er.event_index && er.pull_dn_index &&
+			node_type& er(get_node(eri));
+			if (!er.pending_event() && er.pull_dn_index &&
 				// er->n->dn->val == PRS_VAL_T
 				// what if is pulling weakly?
 				expr_pool[er.pull_dn_index].pull_state()
 					== expr_type::PULL_ON) {
 				const event_index_type ne =
-					allocate_event(eri,
+					__allocate_event(er, eri,
 						node_type::LOGIC_LOW);
 				// ne->cause = ni
 				enqueue_excllo(get_delay_dn(get_event(ne)), ne);
@@ -734,6 +762,7 @@ State::step(void) {
 		return INVALID_NODE_INDEX;
 	}
 	const event_placeholder_type ep(dequeue_event());
+	current_time = ep.time;
 	const event_index_type& ei(ep.event_index);
 	INVARIANT(ei);
 #if DEBUG_STEP
@@ -747,7 +776,6 @@ State::step(void) {
 #endif
 	node_type& n(get_node(ni));
 	const char prev = n.current_value();
-	n.event_index = INVALID_EVENT_INDEX;	// no longer pending event
 #if DEBUG_STEP
 	STACKTRACE_INDENT << "former value: " <<
 		node_type::value_to_char[size_t(prev)] << endl;
@@ -773,7 +801,7 @@ State::step(void) {
 #endif
 	// saved previous value above already
 	n.set_value(pe.val);
-	deallocate_event(ei);
+	__deallocate_event(n, ei);
 	// value propagation...
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
@@ -825,6 +853,9 @@ State::propagate_evaluation(const node_index_type ni, expr_index_type ui,
 		char prev, char next) {
 #if DEBUG_STEP
 	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT << "node " << ni << " from " <<
+		node_type::value_to_char[size_t(prev)] << " -> " <<
+		node_type::value_to_char[size_t(next)] << endl;
 #endif
 	expr_type* u;
 do {
@@ -838,45 +869,18 @@ do {
 	// code-motion
 	if (u->is_or()) {
 		// is disjunctive (or)
+		// countdown represents the number of 1's
 		old_pull = u->or_pull_state();
-#if 0
-		if (prev & node_type::LOGIC_OTHER) --u->unknowns;
-		if (!prev) --u->countdown;
-		if (next & node_type::LOGIC_OTHER) ++u->unknowns;
-		if (!next) ++u->countdown;
-#else
-#if 0
-		u->unknowns -= (prev >> 1);	// assuming bit position 1 is X
-		u->countdown -= !prev;
-		u->unknowns += (next >> 1);
-		u->countdown += !next;
-#else
 		u->unknowns += (next >> 1) - (prev >> 1);
-		u->countdown += !next - !prev;
-#endif
-#endif
+		u->countdown += (next & node_type::LOGIC_VALUE)
+			- (prev & node_type::LOGIC_VALUE);
 		new_pull = u->or_pull_state();
 	} else {
 		// is conjunctive (and)
 		old_pull = u->and_pull_state();
-		// see which produces better asm (configure time?)
-#if 0
-		if (prev & node_type::LOGIC_OTHER) --u->unknowns;
-		if (prev & node_type::LOGIC_VALUE) --u->countdown;
-		if (next & node_type::LOGIC_OTHER) ++u->unknowns;
-		if (next & node_type::LOGIC_VALUE) ++u->countdown;
-#else
-#if 0
-		u->unknowns -= (prev >> 1);	// assuming bit position 1 is X
-		u->countdown -= (prev & node_type::LOGIC_VALUE);
-		u->unknowns += (next >> 1);
-		u->countdown += (next & node_type::LOGIC_VALUE);
-#else
+		// countdown represents the number of 0's
 		u->unknowns += (next >> 1) - (prev >> 1);
-		u->countdown += (next & node_type::LOGIC_VALUE)
-			- (prev & node_type::LOGIC_VALUE);
-#endif
-#endif
+		u->countdown += !next - !prev;
 		new_pull = u->and_pull_state();
 	}
 #if DEBUG_STEP
@@ -906,7 +910,8 @@ do {
 	node_type& n(get_node(ui));
 #if DEBUG_STEP
 	STACKTRACE_INDENT << "propagated to output node: " <<
-		get_node_canonical_name(ui) << endl;
+		get_node_canonical_name(ui) << " with pull state " <<
+		size_t(next) << endl;
 #endif
 if (u->direction()) {
 	// pull-up
@@ -928,7 +933,7 @@ if (!n.pending_event()) {
 #if DEBUG_STEP
 		STACKTRACE_INDENT << "pulling up (on or weak)" << endl;
 #endif
-		const event_index_type pe = allocate_event(ui, next);
+		const event_index_type pe = __allocate_event(n, ui, next);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
 		if (n.has_exclhi()) {
@@ -957,7 +962,7 @@ if (!n.pending_event()) {
 			<< endl;
 #endif
 		const event_index_type pe =
-			allocate_event(ui, node_type::LOGIC_LOW);
+			__allocate_event(n, ui, node_type::LOGIC_LOW);
 		// pe->cause = root
 		if (n.has_excllo()) {
 			const event_type& e(get_event(pe));
@@ -972,7 +977,7 @@ if (!n.pending_event()) {
 		<< endl;
 #endif
 	// there is a pending event, not in the exclusive queue
-	event_type& e(get_event(n.event_index));
+	event_type& e(get_event(n.get_event()));
 	if (next == expr_type::PULL_OFF && n.pull_dn_index &&
 		expr_pool[n.pull_dn_index].pull_state() == expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
@@ -992,11 +997,15 @@ if (!n.pending_event()) {
 		// e.cause = ni
 	} else {
 #if DEBUG_STEP
-		STACKTRACE_INDENT << "checking for anolamy..." << endl;
+		STACKTRACE_INDENT << "checking for upguard anomaly: guard=" <<
+			size_t(next) << ", val=" << size_t(e.val) << endl;
 #endif
 		// something is amiss!
 		const char eu =
 			event_type::upguard[size_t(next)][size_t(e.val)];
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "event_update = " << size_t(eu) << endl;
+#endif
 		const bool vacuous = eu & event_type::EVENT_VACUOUS;
 		if (!vacuous) {
 			// then must be unstable or interfering (exclusive)
@@ -1045,7 +1054,7 @@ if (!n.pending_event()) {
 #if DEBUG_STEP
 		STACKTRACE_INDENT << "pulling down (on or weak)" << endl;
 #endif
-		const event_index_type pe = allocate_event(ui,
+		const event_index_type pe = __allocate_event(n, ui,
 			node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
@@ -1075,7 +1084,7 @@ if (!n.pending_event()) {
 			<< endl;
 #endif
 		const event_index_type pe =
-			allocate_event(ui, node_type::LOGIC_HIGH);
+			__allocate_event(n, ui, node_type::LOGIC_HIGH);
 		// pe->cause = root
 		if (n.has_exclhi()) {
 			const event_type& e(get_event(pe));
@@ -1086,7 +1095,7 @@ if (!n.pending_event()) {
 	}
 } else if (!n.in_excl_queue()) {
 	// there is a pending event, not in an exclusive queue
-	event_type& e(get_event(n.event_index));
+	event_type& e(get_event(n.get_event()));
 	if (next == node_type::LOGIC_LOW && n.pull_up_index &&
 		expr_pool[n.pull_up_index].pull_state() == expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
@@ -1107,11 +1116,15 @@ if (!n.pending_event()) {
 		// e.cause = ni
 	} else {
 #if DEBUG_STEP
-		STACKTRACE_INDENT << "checking for anolamy..." << endl;
+		STACKTRACE_INDENT << "checking for dnguard anomaly: guard=" <<
+			size_t(next) << ", val=" << size_t(e.val) << endl;
 #endif
 		// something is amiss!
 		const char eu =
 			event_type::dnguard[size_t(next)][size_t(e.val)];
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "event_update = " << size_t(eu) << endl;
+#endif
 		const bool vacuous = eu & event_type::EVENT_VACUOUS;
 		if (!vacuous) {
 			// then must be unstable or interfering (exclusive)
@@ -1142,6 +1155,22 @@ if (!n.pending_event()) {
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
 }	// end method propagate_evaluation
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Run until event queue is empty or breakpoint reached.  
+	\return null node index if queue is emptied, else
+		the ID of the node that tripped a breakpoint.  
+ */
+node_index_type
+State::cycle(void) {
+	node_index_type ret;
+	while ((ret = step())) {
+		if (get_node(ret).is_breakpoint() || stopped())
+			break;
+	}
+	return ret;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

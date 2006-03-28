@@ -1,0 +1,9 @@
+# "inv-01.prsimrc"
+# @haco@ inv.haco-a
+initialize
+get a
+get b
+
+get I.a
+get I.b
+

@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.11.12.1 2006/03/26 23:36:32 fang Exp $
+#	$Id: Make.test-head,v 1.11.12.2 2006/03/28 03:48:06 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -15,6 +15,10 @@ SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.haco-c-from-haco .haco-a-from-haco .haco-a-from-u \
 	.hacktcreatefromhacotest .hacktallocfromhacotest \
 	.prsimrc .prsimtest
+
+if HAVE_CFLAT
+SUFFIXES += .cast .castprs
+endif
 
 # the {in,out,unroll,create,alloc}dump suffixes are just 
 # for testing convenience.   They follow the procedures in the test scripts.  
