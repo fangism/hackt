@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.1 2006/02/05 03:26:09 fang Exp $
+#	$Id: Makefile.am,v 1.2 2006/03/28 21:58:39 sandra Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -25,7 +25,9 @@ make_DATA = \
 	mk/hackt-rules.am
 
 EXTRA_DIST += README \
-	$(make_DATA)
+	buffer.hac \
+	channel.hac \
+        $(make_DATA)
 
 local.cvsignore:
 	$(TOUCH) $@
