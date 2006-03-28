@@ -6,6 +6,6 @@ expr[1]: type: or<1> (pull-dn: 2)
 	children: #1, offset: -
 expr[2]: type: or<1> (parent: 3)
 	children: #1, offset: 0
-expr[3]: type: nand<1> (pull-up: 2)
+expr[3]: type: nor<1> (pull-up: 2)
 	children: 2, offset: -
 

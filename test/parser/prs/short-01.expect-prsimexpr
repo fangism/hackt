@@ -7,13 +7,13 @@ expr[1]: type: or<2> (pull-dn: 2)
 	children: #1, 4, offset: -
 expr[2]: type: or<1> (parent: 3)
 	children: #1, offset: 0
-expr[3]: type: nand<1> (parent: 7)
+expr[3]: type: nor<1> (parent: 7)
 	children: 2, offset: 0
 expr[4]: type: or<1> (parent: 1)
 	children: #3, offset: 1
 expr[5]: type: or<1> (parent: 6)
 	children: #3, offset: 0
-expr[6]: type: nand<1> (parent: 7)
+expr[6]: type: nor<1> (parent: 7)
 	children: 5, offset: 1
 expr[7]: type: or<2> (pull-up: 2)
 	children: 3, 6, offset: -
