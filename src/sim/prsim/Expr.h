@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.2.26.5 2006/03/28 03:48:05 fang Exp $
+	$Id: Expr.h,v 1.2.26.6 2006/03/29 05:49:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -178,6 +178,8 @@ public:
 	/**
 		These values are special, they correspond to 
 		LOGIC_LOW, LOGIC_HIGH, LOGIC_OTHER.  
+		Consider re-enumerating so that 2-x can be used
+		to invert.  (Will need to recode some tables in this case.)
 	 */
 	typedef	enum {
 		PULL_OFF = 0,
@@ -219,11 +221,12 @@ public:
 		PULL_ON: countdown != 0
 		PULL_OFF: countdown == 0 && unknowns == 0
 		PULL_WEAK: countdown == 0 && unknowns != 0
+		Negation only affects the ON/OFF states.
 	 */
-	pull_enum
+	char
 	or_pull_state(void) const {
-		return (countdown ? PULL_ON :
-			(unknowns ? PULL_WEAK : PULL_OFF));
+		return (countdown ? PULL_ON ^ is_not() :
+			(unknowns ? PULL_WEAK : PULL_OFF ^ is_not()));
 	}
 
 	/**
@@ -232,18 +235,19 @@ public:
 		PULL_OFF: countdown != 0
 		PULL_ON: countdown == 0 && unknowns == 0
 		PULL_WEAK: countdown == 0 && unknowns != 0
+		Negation only affects the ON/OFF states.
 	 */
-	pull_enum
+	char
 	and_pull_state(void) const {
-		return (countdown ? PULL_OFF :
-			(unknowns ? PULL_WEAK : PULL_ON));
+		return (countdown ? PULL_OFF ^ is_not() :
+			(unknowns ? PULL_WEAK : PULL_ON ^ is_not()));
 	}
 
 	/**
 		See pull_enum enumerations.  
 		\return 0 if off, 1 if on, 2 if weak (X)
 	 */
-	pull_enum
+	char
 	pull_state(void) const {
 		return is_or() ? or_pull_state() : and_pull_state();
 	}

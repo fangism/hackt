@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.7 2006/03/28 03:48:05 fang Exp $
+	$Id: State.cc,v 1.4.8.8 2006/03/29 05:49:28 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -318,8 +318,10 @@ State::get_event(const event_index_type i) {
  */
 void
 State::enqueue_event(const time_type t, const event_index_type ei) {
+	INVARIANT(t >= current_time);
 #if DEBUG_STEP
-	STACKTRACE_INDENT << "enqueuing event ID " << ei << " at " << t << endl;
+	STACKTRACE_INDENT << "enqueuing event ID " << ei <<
+		" at time " << t << endl;
 #endif
 	event_queue.push(event_placeholder_type(t, ei));
 }
@@ -331,8 +333,10 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
  */
 void
 State::enqueue_exclhi(const time_type t, const event_index_type ei) {
+	INVARIANT(t >= current_time);
 #if DEBUG_STEP
-	STACKTRACE_INDENT << "enqueuing exclhi ID " << ei << " at " << t << endl;
+	STACKTRACE_INDENT << "enqueuing exclhi ID " << ei <<
+		" at time " << t << endl;
 #endif
 	exclhi_queue.push_back(event_placeholder_type(t, ei));
 }
@@ -344,8 +348,10 @@ State::enqueue_exclhi(const time_type t, const event_index_type ei) {
  */
 void
 State::enqueue_excllo(const time_type t, const event_index_type ei) {
+	INVARIANT(t >= current_time);
 #if DEBUG_STEP
-	STACKTRACE_INDENT << "enqueuing excllo ID " << ei << " at " << t << endl;
+	STACKTRACE_INDENT << "enqueuing excllo ID " << ei <<
+		" at time " << t << endl;
 #endif
 	excllo_queue.push_back(event_placeholder_type(t, ei));
 }
@@ -421,22 +427,28 @@ State::set_node_time(const node_index_type ni, const char val,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return absolute time of scheduled pull-up event.
+ */
 State::time_type
 State::get_delay_up(const event_type& e) const {
 #if 0
 	return get_node(e.node).delay ... random ...
 #else
-	return 10;
+	return current_time +10;
 #endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return absolute time of scheduled pull-down event.
+ */
 State::time_type
 State::get_delay_dn(const event_type& e) const {
 #if 0
 	return get_node(e.node).delay ... random ...
 #else
-	return 10;
+	return current_time +10;
 #endif
 }
 
@@ -457,17 +469,24 @@ State::flush_pending_queue(void) {
 for ( ; i!=e; ++i) {
 	const event_index_type ne = *i;
 #if DEBUG_STEP
-	STACKTRACE_INDENT << "checking pending ID: " << ne << endl;
+	STACKTRACE_INDENT << "checking pending event ID: " << ne << endl;
 #endif
 	event_type& ev(get_event(ne));
 	const node_index_type& _ni(ev.node);
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "... on node " <<
+		get_node_canonical_name(_ni) << endl;
+#endif
 	node_type& _n(get_node(_ni));
-	const expr_type::pull_enum may_be_pulled_up =
-		expr_pool[_n.pull_up_index].pull_state();
-	const expr_type::pull_enum may_be_pulled_dn =
-		expr_pool[_n.pull_dn_index].pull_state();
-	if (may_be_pulled_up != expr_type::PULL_OFF &&
-		may_be_pulled_dn != expr_type::PULL_OFF) {
+	const char pull_up_state = expr_pool[_n.pull_up_index].pull_state();
+	const char pull_dn_state = expr_pool[_n.pull_dn_index].pull_state();
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "current pull-states: up=" <<
+		size_t(pull_up_state) << ", dn=" <<
+		size_t(pull_dn_state) << endl;
+#endif
+	if ((pull_up_state != expr_type::PULL_OFF) &&
+		(pull_dn_state != expr_type::PULL_OFF)) {
 	/***
 		There is interference.  If there is weak interference,
 		suppress report unless explicitly requested.  
@@ -477,8 +496,8 @@ for ( ; i!=e; ++i) {
 		STACKTRACE_INDENT << "some interference." << endl;
 #endif
 		const bool pending_weak =
-			(may_be_pulled_up == expr_type::PULL_WEAK) ||
-			(may_be_pulled_dn == expr_type::PULL_WEAK);
+			(pull_up_state == expr_type::PULL_WEAK) ||
+			(pull_dn_state == expr_type::PULL_WEAK);
 			// not XOR (^), see pending_weak table in prs.c
 		// issue diagnostic
 		if (!(flags & FLAG_NO_WEAK_INTERFERENCE) ||
@@ -787,6 +806,9 @@ State::step(void) {
 		prev == node_type::LOGIC_OTHER) {
 		// cause propagation?
 		// if (cause) *cause = pe->cause;
+#if DEBUG_STEP
+		STACKTRACE_INDENT << "X: returning node index " << ni << endl;
+#endif
 		return ni;
 	}
 	// assert: vacuous firings on the event queue
@@ -802,21 +824,22 @@ State::step(void) {
 	// saved previous value above already
 	n.set_value(pe.val);
 	__deallocate_event(n, ei);
+	const char next = n.current_value();
 	// value propagation...
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i(n.fanout.begin()), e(n.fanout.end());
 	for ( ; i!=e; ++i) {
-		propagate_evaluation(ni, *i, prev, n.current_value());
+		propagate_evaluation(ni, *i, prev, next);
 	}
 }
 	// exclhi ring enforcement (TODO: move into subroutine)
-	if (n.has_exclhi() && n.current_value() == node_type::LOGIC_LOW) {
+	if (n.has_exclhi() && (next == node_type::LOGIC_LOW)) {
 		enforce_exclhi(ni);
 	}	// end if (exclhi enforcement)
 
 	// excllo ring enforcement (copy-modified from exclhi code, above)
-	if (n.has_excllo() && n.current_value() == node_type::LOGIC_HIGH) {
+	if (n.has_excllo() && (next == node_type::LOGIC_HIGH)) {
 		enforce_excllo(ni);
 	}	// end if (excllo enforcement)
 
@@ -831,6 +854,9 @@ State::step(void) {
 	flush_excllo_queue();
 
 	// return the affected node's index
+#if DEBUG_STEP
+	STACKTRACE_INDENT << "returning node index " << ni << endl;
+#endif
 	return ni;
 }	// end method step()
 
@@ -862,6 +888,7 @@ do {
 	char old_pull, new_pull;	// pulling state of the subexpression
 	u = &expr_pool[ui];
 #if DEBUG_STEP
+	STACKTRACE_INDENT << "examining expression ID: " << ui << endl;
 	u->dump_struct(STACKTRACE_INDENT) << endl;
 	u->dump_state(STACKTRACE_INDENT << "before: ") << endl;
 #endif
@@ -893,6 +920,7 @@ do {
 #endif
 		return;
 	}
+#if 0
 	// whether we're inverting the result (e.g. NOT, NAND, NOR)
 	if (u->is_not()) {
 #if DEBUG_STEP
@@ -904,6 +932,11 @@ do {
 		prev = old_pull;
 		next = new_pull;
 	}
+#else
+	// already accounted for negation in pull_state()
+	prev = old_pull;
+	next = new_pull;
+#endif
 	ui = u->parent;
 } while (!u->is_root());
 // propagation made it to the root node, indexed by ui (now node_index_type)

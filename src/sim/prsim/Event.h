@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.2.26.5 2006/03/28 03:48:04 fang Exp $
+	$Id: Event.h,v 1.2.26.6 2006/03/29 05:49:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -11,7 +11,7 @@
 #include <queue>
 #include <vector>
 #include "sim/common.h"
-#include "sim/time.h"
+// #include "sim/time.h"
 #include "util/macros.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"

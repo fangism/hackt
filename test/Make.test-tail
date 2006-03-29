@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.22.2.2 2006/03/28 03:48:06 fang Exp $
+#	$Id: Make.test-tail,v 1.22.2.3 2006/03/29 05:49:29 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -229,9 +229,10 @@ endif
 
 CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
 	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \
-	prsdiffs prsdiffs.sort \
+	prsdiffs prsdiffs.sort prsimexprdiffs \
 	sprsdiffs sprsdiffs.sort \
-	createfromhacodiffs
+	createfromhacodiffs allocfromhacodiffs \
+	prsimrcdiffs
 # need prs summaries? nah...
 
 compilediffs: force
@@ -248,6 +249,11 @@ creatediffs: force
 
 createfromhacodiffs: force
 	-$(CAT) *.create-from-haco-diff > $@
+
+allocfromhacodiffs: force
+	-$(CAT) *.alloc-from-haco-diff > $@
+	-$(CAT) *.alloc-from-haco-u-diff >> $@
+	-$(CAT) *.alloc-from-haco-c-from-haco-diff >> $@
 
 allocdiffs: force
 	-$(CAT) *.allocdiff > $@
@@ -270,6 +276,12 @@ allocdiffs.noindex: force
 prsdiffs.sort: force
 	-$(CAT) *.prsdiff.sort > $@
 
+prsimrcdiffs: force
+	-$(CAT) *.prsimrc-diff > $@
+
+prsimexprdiffs: force
+	-$(CAT) *.prsimexprdiff > $@
+
 sprsdiffs.sort: force
 	-$(CAT) *.sprsdiff.sort > $@
 
@@ -288,7 +300,7 @@ EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.expect-sprs) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.expect-prsimexpr) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.hac) \
-	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc)
+	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimrc-expect)
 
 TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \

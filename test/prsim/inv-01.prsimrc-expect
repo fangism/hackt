@@ -1,5 +1,48 @@
+time should be 0 
+time: 0
 a : X
 b : X
+c : X
 I.a : X
 I.b : X
+J.a : X
+J.b : X
+time should still be 0 
+time: 0
+setting 'a-' and letting propagate 
+expect to see a- in queue 
+event queue:
+	0	a : 0
+expect to see c- in queue, b+ just happened 
+event queue:
+	20	c : 0
+queue should be empty after step 
+event queue:
+time should be 20 
+time: 20
+setting 'a+' and letting propagate 
+expect to see a+ in queue 
+event queue:
+	20	a : 1
+expect to see c+ in queue, b- just happened 
+event queue:
+	40	c : 1
+queue should be empty after step 
+event queue:
+time should be 40 
+time: 40
+setting 'a' to X and letting propagate 
+expect to see a : X in queue 
+event queue:
+	40	a : X
+expecting weak interference of X vs. X on b, propagating to c 
+WARNING: weak-interference `b'
+WARNING: weak-interference `c'
+expect to see c:x in queue, b:x just happened 
+event queue:
+	60	c : X
+queue should be empty after step 
+event queue:
+time should be 60 
+time: 60
 

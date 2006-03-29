@@ -3,7 +3,7 @@
 	Useful time typedefs and structures.  
 	Also contains some time macros and inline functions.  
 	TODO: use mpz_t for really long integers.  
-	$Id: time.h,v 1.2 2006/01/22 06:53:26 fang Exp $
+	$Id: time.h,v 1.2.26.1 2006/03/29 05:49:27 fang Exp $
  */
 
 #ifndef	__SIM_TIME_H__
@@ -21,7 +21,7 @@ typedef	double		real_time;
 	Integer time.
 	TODO: should be fixed at 32 or 64 b, depending on uintxx_t.
  */
-typedef	long		int_time;
+typedef	long		discrete_time;
 
 //=============================================================================
 }	// end namespace SIM

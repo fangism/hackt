@@ -1,11 +1,12 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.2.26.3 2006/03/28 03:48:04 fang Exp $
+	$Id: Event.cc,v 1.2.26.4 2006/03/29 05:49:28 fang Exp $
  */
 
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Event.tcc"
+#include "sim/time.h"
 #include "util/attributes.h"
 #include "util/memory/index_pool.tcc"
 

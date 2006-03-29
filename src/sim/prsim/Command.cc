@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.7 2006/03/28 03:48:04 fang Exp $
+	$Id: Command.cc,v 1.3.8.8 2006/03/29 05:49:27 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -641,7 +641,7 @@ if (a.size() > 2) {
 		// NB: may need specialization for real-valued (float) time.  
 		const time_type ct(s.time());
 		if (tm != ct) {
-			i--;
+			--i;
 			tm = ct;
 		}
 		// tracing stuff here later...

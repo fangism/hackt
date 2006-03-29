@@ -1,13 +1,14 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.6 2006/03/28 03:48:05 fang Exp $
+	$Id: State.h,v 1.2.26.7 2006/03/29 05:49:29 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
 #define	__HAC_SIM_PRSIM_STATE_H__
 
 #include <iosfwd>
+#include "sim/time.h"
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
@@ -47,6 +48,7 @@ public:
 	// these typedefs will make it convenient to template this
 	// class in the future...
 	/// can switch between integer and real-valued time
+	// typedef	discrete_time			time_type;
 	typedef	real_time			time_type;
 	typedef	NodeState			node_type;
 	typedef	ExprState			expr_type;
