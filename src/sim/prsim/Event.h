@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.2.26.6 2006/03/29 05:49:28 fang Exp $
+	$Id: Event.h,v 1.2.26.7 2006/03/30 00:50:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -222,6 +222,16 @@ public:
 	pop(value_type& v) {
 		v = equeue.top();
 		equeue.pop();
+	}
+
+	/**
+		\pre This queue must not be empty.  
+		\return the next event time.  
+	 */
+	const value_type&
+	top(void) const {
+		INVARIANT(!empty());
+		return equeue.top();
 	}
 
 	void

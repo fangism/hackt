@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.8 2006/03/29 05:49:27 fang Exp $
+	$Id: Command.cc,v 1.3.8.9 2006/03/30 00:50:13 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -34,6 +34,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+#include "util/using_istream.h"
 #include "util/using_ostream.h"
 using std::ifstream;
 using std::copy;
@@ -215,14 +216,19 @@ int
 CommandRegistry::interpret(State& s, const bool interactive) {
 	static const char prompt[] = "prsim> ";
 	static const char noprompt[] = "";
+if (interactive) {
 	readline_wrapper rl(interactive ? prompt : noprompt);
 	// do NOT delete this line string, it is already managed.
 	const char* line = NULL;
 	int status = Command::NORMAL;
-	size_t lineno = 1;
+	size_t lineno = 0;
 	do {
 		line = rl.gets();	// already eaten leading whitespace
+		// GOTCHA: readline eats '\t' characters!?
 	if (line) {
+#if 0
+		cout << "echo: " << line << endl;
+#endif
 		string_list toks;
 		tokenize(line, toks);
 		status = execute(s, toks);
@@ -238,11 +244,41 @@ CommandRegistry::interpret(State& s, const bool interactive) {
 			", aborting commands." << endl;
 		return status;
 	} else	return Command::NORMAL;
+} else {
+	// non interactive, skip readline, preserves tab-characters
+	return __source(cin, s);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i the input stream, such as file or cin.
+	\param s the simulation state.  
+	\return interpreter's exit status.
+ */
+int
+CommandRegistry::__source(istream& i, State& s) {
+	int status = Command::NORMAL;
+	// const interactive_mode tmp(false);
+	string line;
+	do {
+		std::getline(i, line);
+	if (i) {
+#if 0
+		cout << "echo: " << line << endl;
+#endif
+		string_list toks;
+		tokenize(line, toks);
+		status = execute(s, toks);
+	}	// end if
+	} while (i && continue_interpreter(status, false));
+	return status;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\param f the file name.  
+	\param st the simulator state.  
 	\return status of the interpreter.
 	TODO: manage the interactive bit with an object/class, 
 		for prope stack restoration with exception safety.  
@@ -253,6 +289,7 @@ int
 CommandRegistry::source(State& st, const string& f) {
 	ifstream i(f.c_str());
 if (i) {
+#if 0
 	int status = Command::NORMAL;
 	// const interactive_mode tmp(false);
 	string line;
@@ -260,7 +297,6 @@ if (i) {
 		std::getline(i, line);
 	if (i) {
 #if 0
-		// echo-debugging
 		cout << "echo: " << line << endl;
 #endif
 		string_list toks;
@@ -269,6 +305,9 @@ if (i) {
 	}	// end if
 	} while (i && continue_interpreter(status, false));
 	return status;
+#else
+	return __source(i, st);
+#endif
 } else {
 	cerr << "Error opening file: " << f << endl;
 	return Command::BADFILE;
@@ -586,6 +625,7 @@ public:
 	static CommandCategory&         category;
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
+	// Q: does this need to be static?
 	static int	interrupted;
 private:
 	static const size_t             receipt_id;
@@ -644,19 +684,127 @@ if (a.size() > 2) {
 			--i;
 			tm = ct;
 		}
-		// tracing stuff here later...
 		const node_type& n(s.get_node(ni));
+		/***
+			The following code should be consistent with
+			Cycle::main() and Advance::main().
+			tracing stuff here later...
+		***/
+		if (s.watching_all_nodes()) {
+			const string nodename(s.get_node_canonical_name(ni));
+			cout << '\t' << ct << '\t';
+			n.dump_value(cout << nodename << " : ") << endl;
+			// possibly add cause information too
+		}
 		if (n.is_breakpoint()) {
-			// do stuff...
+			// this includes watchpoints
+			const bool w = s.is_watching_node(ni);
+			const string nodename(s.get_node_canonical_name(ni));
+			if (w) {
+			if (!s.watching_all_nodes()) {
+				cout << '\t' << ct << '\t';
+				n.dump_value(cout << nodename << " : ") << endl;
+				// possibly add cause information too
+			}	// else already have message from before
+			}
+			// channel support
+			if (!w) {
+				// node is plain breakpoint
+				cout << "\t*** break, " << i <<
+					" steps left: `" << nodename <<
+					"\' became ";
+				n.dump_value(cout) << endl;
+				return Command::NORMAL;
+				// or Command::BREAK; ?
+			}
 		}
 	}	// end while
 	return Command::NORMAL;
 }
-}
+}	// end Step::main()
 
 void
 Step::usage(ostream& o) {
 	o << "step [#steps]" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Advance, "advance", simulation,
+	"advance the simulation in time units")
+
+int
+Advance::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	State::time_type		time_type;
+	typedef	State::node_type		node_type;
+	Step::interrupted = 0;
+	time_type add;		// time to add
+	if (string_to_num(a.back(), add)) {
+		cerr << "Error parsing time." << endl;
+		return Command::BADARG;
+	} else if (add < 0) {
+		cerr << "Error: time must be non-negative." << endl;
+		return Command::BADARG;
+	}
+	const time_type stop_time = s.time() +add;
+	node_index_type ni;
+	// could check s.pending_events()
+	while (!Step::interrupted && s.pending_events() &&
+			(s.next_event_time() < stop_time) && (ni = s.step())) {
+		// NB: may need specialization for real-valued (float) time.  
+
+		// honor breakpoints?
+		// tracing stuff here later...
+		const node_type& n(s.get_node(ni));
+		/***
+			The following code should be consistent with
+			Cycle::main() and Step::main().
+			TODO: factor this out for maintainability.  
+		***/
+		if (s.watching_all_nodes()) {
+			const string nodename(s.get_node_canonical_name(ni));
+			cout << '\t' << s.time() << '\t';
+			n.dump_value(cout << nodename << " : ") << endl;
+			// possibly add cause information too
+		}
+		if (n.is_breakpoint()) {
+			// this includes watchpoints
+			const bool w = s.is_watching_node(ni);
+			const string nodename(s.get_node_canonical_name(ni));
+			if (w) {
+			if (!s.watching_all_nodes()) {
+				cout << '\t' << s.time() << '\t';
+				n.dump_value(cout << nodename << " : ") << endl;
+				// possibly add cause information too
+			}	// else already have message from before
+			}
+			// channel support
+			if (!w) {
+				// node is plain breakpoint
+				cout << "\t*** break, " <<
+					stop_time -s.time() <<
+					" time left: `" << nodename <<
+					"\' became ";
+				n.dump_value(cout) << endl;
+				return Command::NORMAL;
+				// or Command::BREAK; ?
+			}
+		}
+	}	// end while
+	if (!Step::interrupted && s.time() < stop_time) {
+		s.update_time(stop_time);
+	}
+	// else leave the time at the time as of the last event
+	return Command::NORMAL;
+}
+}	// end Advance::main()
+
+void
+Advance::usage(ostream& o) {
+	o << "advance <time>" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -674,19 +822,48 @@ if (a.size() != 1) {
 	usage(cerr);
 	return Command::SYNTAX;
 } else {
-	bool interrupted = false;
+	typedef	State::node_type		node_type;
+	node_index_type ni;
+	Step::interrupted = 0;
 	s.resume();	// clear STOP flag
-	while (!interrupted) {
-		const node_index_type ni = s.cycle();
+	while (!Step::interrupted && (ni = s.step())) {
 		if (!ni)	return Command::NORMAL;
-		else {
-			FINISH_ME(Fang);
-			cerr << "Cycle halted on breakpoint." << endl;
-			return Command::NORMAL;
+		const node_type& n(s.get_node(ni));
+		/***
+			The following code should be consistent with
+			Step::main() and Advance::main().
+		***/
+		if (s.watching_all_nodes()) {
+			const string nodename(s.get_node_canonical_name(ni));
+			cout << '\t' << s.time() << '\t';
+			n.dump_value(cout << nodename << " : ") << endl;
+			// possibly add cause information too
+		}
+		if (n.is_breakpoint()) {
+			// this includes watchpoints
+			const bool w = s.is_watching_node(ni);
+			const string nodename(s.get_node_canonical_name(ni));
+			if (w) {
+			if (!s.watching_all_nodes()) {
+				cout << '\t' << s.time() << '\t';
+				n.dump_value(cout << nodename << " : ") << endl;
+				// possibly add cause information too
+			}	// else already have message from before
+			}
+			// channel support
+			if (!w) {
+				// node is plain breakpoint
+				cout << "\t*** break, `" << nodename <<
+					"\' became ";
+				n.dump_value(cout) << endl;
+				return Command::NORMAL;
+				// or Command::BREAK; ?
+			}
 		}
 	}	// end while (!interrupted)
-}
-}
+	return Command::NORMAL;
+}	// end if
+}	// end Cycle::main()
 
 void
 Cycle::usage(ostream& o) {
@@ -1059,6 +1236,138 @@ Time::usage(ostream& o) {
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoConfirm, "noconfirm", info, 
 //	"confirm assertions silently")
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
+	"print activity on node")
+
+/**
+	Adds a node to the watch list.  
+	TODO: watch defined structures!
+ */
+int
+Watch::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.watch_node(ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Watch::usage(ostream& o) {
+	o << "watch <node>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatch, "unwatch", view, 
+	"silence activity reporting on node")
+
+/**
+	Removes a node from the watch list.  
+ */
+int
+UnWatch::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.unwatch_node(ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+UnWatch::usage(ostream& o) {
+	o << "unwatch <node>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchAll, "watchall", view, 
+	"print activity on all nodes (flag)")
+
+/**
+	Enables a watchall flag to report all transitions.  
+ */
+int
+WatchAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.watch_all_nodes();
+	return Command::NORMAL;
+}
+}
+
+void
+WatchAll::usage(ostream& o) {
+	o << "watchall" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatchAll, "unwatchall", view, 
+	"remove all nodes from watchlist")
+
+/**
+	Enables a watchall flag to report all transitions.  
+ */
+int
+UnWatchAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.unwatch_all_nodes();
+	return Command::NORMAL;
+}
+}
+
+void
+UnWatchAll::usage(ostream& o) {
+	o << "unwatchall" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchAll, "nowatchall", view, 
+	"only print activity on explicitly watched nodes (flag)")
+
+/**
+	Disables global watchall, but still maintains explicitly
+	watched nodes.  
+ */
+int
+NoWatchAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.nowatch_all_nodes();
+	return Command::NORMAL;
+}
+}
+
+void
+NoWatchAll::usage(ostream& o) {
+	o << "nowatchall" << endl;
+}
+
+//=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
 //=============================================================================
 }	// end namespace PRSIM

@@ -1,6 +1,6 @@
 /**
 	\file "util/tokenize.cc"
-	$Id: tokenize.cc,v 1.2 2006/01/22 06:53:38 fang Exp $
+	$Id: tokenize.cc,v 1.2.26.1 2006/03/30 00:50:14 fang Exp $
  */
 
 #include "util/tokenize.h"
@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <functional>
 #include "util/macros.h"
-// #include "util/libc.h"
-// #include "util/memory/excl_malloc_ptr.h"
 #include "util/compose.h"
 
 namespace util {
@@ -19,7 +17,6 @@ using std::find;
 using std::find_if;
 using std::logical_not;
 using std::ptr_fun;
-// using util::memory::excl_malloc_ptr;
 using ADS::unary_compose;
 //=============================================================================
 /**
@@ -35,6 +32,8 @@ tokenize(const string& s, string_list& l) {
 		// find non-whitespace
 		i = find_if(i, e,
 			unary_compose(logical_not<int>(), ptr_fun(&isspace)));
+			// int should correspond to return type of isspace
+			// TODO: use TMP to deduce this.
 		if (i != e) {
 			// find whitespace
 			const const_iterator g(find_if(i, e, isspace));

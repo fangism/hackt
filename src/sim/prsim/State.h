@@ -1,13 +1,14 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.7 2006/03/29 05:49:29 fang Exp $
+	$Id: State.h,v 1.2.26.8 2006/03/30 00:50:14 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
 #define	__HAC_SIM_PRSIM_STATE_H__
 
 #include <iosfwd>
+#include <map>
 #include "sim/time.h"
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
@@ -60,6 +61,20 @@ public:
 
 	typedef	vector<node_type>		node_pool_type;
 	typedef	vector<expr_type>		expr_pool_type;
+	/**
+		Watch list entry.  
+		Node index not included because it will be the first
+		value of the mapped pair.  
+	 */
+	struct watch_entry {
+		/// true if node is also a breakpoint
+		char	breakpoint;
+		// TODO: if is also a member of vector
+		char	__padding1__;
+		short	__padding2__;
+		watch_entry() : breakpoint(0) { }
+	};
+	typedef	std::map<node_index_type,watch_entry>	watch_list_type;
 private:
 	/**
 		A fast, realloc-free vector-like structure
@@ -92,14 +107,32 @@ private:
 	};
 
 	/**
-		Simulation flags, bit fields.  
+		Simulation flags, bit fields, corresponding the
+		the flags member.  
 	 */
 	enum {
-		FLAGS_DEFAULT = 0x0,
-		FLAG_NO_WEAK_INTERFERENCE = 0x1,
-		FLAG_STOP_SIMULATION = 0x2,
-		FLAG_ESTIMATE_ENERGY = 0x4,
-		FLAG_RANDOM_TIMING = 0x8
+		/// initial flags
+		FLAGS_DEFAULT = 0x00,
+		/**
+			If true, then no weak interference is reported.  
+		 */
+		FLAG_NO_WEAK_INTERFERENCE = 0x01,
+		/**
+			Whether or not the simulation was stopped
+			by interrupt or event error/warning.  
+		 */
+		FLAG_STOP_SIMULATION = 0x02,
+		FLAG_ESTIMATE_ENERGY = 0x04,
+		/**
+			TODO: use different field to track timing mode.  
+		 */
+		FLAG_RANDOM_TIMING = 0x08,
+		/**
+			Use this to determine whether or not to print
+			transition on every node, rather than using the
+			sparse watch_list.  
+		 */
+		FLAG_WATCHALL = 0x10
 	};
 	typedef	unsigned int			flags_type;
 
@@ -139,6 +172,7 @@ private:
 	// current time, etc...
 	time_type				current_time;
 	// watched nodes
+	watch_list_type				watch_list;
 	// vectors
 	// channels
 	// mode of operation
@@ -206,6 +240,9 @@ public:
 	bool
 	pending_events(void) const { return !event_queue.empty(); }
 
+	time_type
+	next_event_time(void) const;
+
 	int
 	set_node_time(const node_index_type, const char val, 
 		const time_type t);
@@ -232,6 +269,37 @@ public:
 
 	void
 	resume(void) { flags &= ~FLAG_STOP_SIMULATION; }
+
+	void
+	watch_node(const node_index_type);
+
+	void
+	unwatch_node(const node_index_type);
+
+	void
+	watch_all_nodes(void) { flags |= FLAG_WATCHALL; }
+
+	void
+	nowatch_all_nodes(void) { flags &= ~FLAG_WATCHALL; }
+
+	void
+	unwatch_all_nodes(void);
+
+	bool
+	watching_all_nodes(void) const {
+		return flags & FLAG_WATCHALL;
+	}
+
+	bool
+	is_watching_node(const node_index_type) const;
+
+	/// for any user-defined structures from the .hac
+	void
+	watch_structure(void);
+
+	/// for any user-defined structures from the .hac
+	void
+	unwatch_structure(void);
 
 private:
 	event_index_type

@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.2.26.1 2006/03/24 00:01:50 fang Exp $
+	$Id: Command.h,v 1.2.26.2 2006/03/30 00:50:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__
@@ -178,6 +178,10 @@ public:
 
 private:
 	class interactive_mode;
+
+	static
+	int
+	__source(std::istream&, State&);
 
 };	// end class CommandRegistry
 

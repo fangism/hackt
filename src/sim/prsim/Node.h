@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.2.26.5 2006/03/28 03:48:05 fang Exp $
+	$Id: Node.h,v 1.2.26.6 2006/03/30 00:50:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -219,6 +219,12 @@ public:
 
 	bool
 	is_breakpoint(void) const { return state_flags & NODE_BREAKPOINT; }
+
+	void
+	set_breakpoint(void) { state_flags |= NODE_BREAKPOINT; }
+
+	void
+	clear_breakpoint(void) { state_flags &= ~NODE_BREAKPOINT; }
 
 	bool
 	is_flagged(void) const { return state_flags & NODE_FLAG; }

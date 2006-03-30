@@ -45,4 +45,16 @@ queue should be empty after step
 event queue:
 time should be 60 
 time: 60
-
+now testing cycle commands 
+time should be 80, queue should be empty 
+time: 80
+event queue:
+time should be 100, queue should be empty 
+time: 100
+event queue:
+expecting weak interference, of course 
+WARNING: weak-interference `b'
+WARNING: weak-interference `c'
+time should be 120, queue should be empty 
+time: 120
+event queue:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.8 2006/03/29 05:49:28 fang Exp $
+	$Id: State.cc,v 1.4.8.9 2006/03/30 00:50:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -78,6 +78,7 @@ State::State(const entity::module& m) :
 		exclhi_queue(), excllo_queue(), 
 		pending_queue(), 
 		current_time(0), 
+		watch_list(), 
 		flags(FLAGS_DEFAULT) {
 #if 0
 	NEVER_NULL(m);
@@ -151,6 +152,7 @@ State::reset(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Resets the state of simulation, as if it had just started up.  
 	\pre expressions are already properly sized.  
  */
 void
@@ -164,6 +166,9 @@ State::initialize(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
+	current_time = 0;
+	// unwatchall()?
+	// nowatchall()?
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -373,6 +378,16 @@ State::enqueue_pending(const event_index_type ei) {
 State::event_placeholder_type
 State::dequeue_event(void) {
 	return event_queue.pop();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre There must be at least one event in queue before this is called.  
+	\return the scheduled time of the next event.  
+ */
+State::time_type
+State::next_event_time(void) const {
+	return event_queue.top().time;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1203,6 +1218,67 @@ State::cycle(void) {
 			break;
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds a watch point to the indexed node.
+	\param ni the index of the node to be watched.  
+ */
+void
+State::watch_node(const node_index_type ni) {
+	// this will create an entry if doesn't already exist
+	watch_entry& w(watch_list[ni]);
+	node_type& n(get_node(ni));
+	// remember whether or not this is a breakpoint or a watchpoint
+	w.breakpoint = n.is_breakpoint();
+	n.set_breakpoint();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Removes node from the watchlist.  
+	Q: if node is set as a breakpoint while it is watched, 
+		but then unwatched, will it undo the effect of the breakpoint?
+ */
+void
+State::unwatch_node(const node_index_type ni) {
+	typedef	watch_list_type::iterator		iterator;
+	iterator i(watch_list.find(ni));	// won't add an element
+	if (i != watch_list.end()) {
+		node_type& n(get_node(ni));
+		if (i->second.breakpoint) {
+			n.set_breakpoint();
+		} else {
+			n.clear_breakpoint();
+		}
+		watch_list.erase(i);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+State::is_watching_node(const node_index_type ni) const {
+	return (watch_list.find(ni) != watch_list.end());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Clears the watch-list, restoring nodes' former breakpoint states.  
+ */
+void
+State::unwatch_all_nodes(void) {
+	typedef	watch_list_type::const_iterator		const_iterator;
+	const_iterator i(watch_list.begin()), e(watch_list.end());
+	for (; i!=e; ++i) {
+		node_type& n(get_node(i->first));
+		if (i->second.breakpoint) {
+			n.set_breakpoint();
+		} else {
+			n.clear_breakpoint();
+		}
+	}
+	watch_list.clear();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
