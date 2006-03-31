@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.8 2006/03/30 00:50:14 fang Exp $
+	$Id: State.h,v 1.2.26.9 2006/03/31 06:08:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -16,6 +16,7 @@
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/list_vector.h"
+#include "util/named_ifstream_manager.h"
 
 namespace HAC {
 namespace entity {
@@ -29,6 +30,7 @@ using std::string;
 using entity::module;
 using util::list_vector;
 using std::ostream;
+using util::ifstream_manager;
 // using util::memory::count_ptr;
 //=============================================================================
 /**
@@ -176,7 +178,10 @@ private:
 	// vectors
 	// channels
 	// mode of operation
+	// operation flags
 	flags_type				flags;
+	// interpreter state
+	ifstream_manager			ifstreams;
 public:
 	enum {
 		EVENT_VACUOUS = 0x1,
@@ -203,6 +208,11 @@ public:
 
 	const module&
 	get_module(void) const { return mod; }
+
+	ifstream_manager&
+	get_stream_manager(void) {
+		return ifstreams;
+	}
 
 	/// initializes the simulator state, all nodes and exprs X
 	void
@@ -301,22 +311,22 @@ public:
 	void
 	unwatch_structure(void);
 
+	template <class L>
+	void
+	import_source_paths(const L& l) {
+		typedef	typename L::const_iterator	const_iterator;
+		const_iterator i(l.begin()), e(l.end());
+		for ( ; i!=e; ++i) {
+			ifstreams.add_path(*i);
+		}
+	}
+
 private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type, const char);
 
-#if 0
-	event_index_type
-	allocate_event(const node_index_type, const char);
-#endif
-
 	void
 	__deallocate_event(node_type&, const event_index_type);
-
-#if 0
-	void
-	deallocate_event(const event_index_type);
-#endif
 
 	const event_type&
 	get_event(const event_index_type) const;

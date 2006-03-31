@@ -33,6 +33,7 @@ core.*
 *.prsimexprdiff
 *.prsimtest
 *.prsimrc-out
+*.prsimrc-out-filter
 *.prsimrc-diff
 *.sort
 *.sprs

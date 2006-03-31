@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-11:
+	  Added option to prsim to search include paths added by -I <path>.
+	  prsim State now includes a named_ifstream_manager (new in util/)
+		for managing recursively included source scripts.  
+	  Added a few test cases that demonstrate this.  
+
+
 2006-03-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05-prsim-01-10:

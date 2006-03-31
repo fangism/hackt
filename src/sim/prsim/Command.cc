@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.9 2006/03/30 00:50:13 fang Exp $
+	$Id: Command.cc,v 1.3.8.10 2006/03/31 06:08:53 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -287,29 +287,14 @@ CommandRegistry::__source(istream& i, State& s) {
  */
 int
 CommandRegistry::source(State& st, const string& f) {
-	ifstream i(f.c_str());
-if (i) {
-#if 0
-	int status = Command::NORMAL;
-	// const interactive_mode tmp(false);
-	string line;
-	do {
-		std::getline(i, line);
-	if (i) {
-#if 0
-		cout << "echo: " << line << endl;
-#endif
-		string_list toks;
-		tokenize(line, toks);
-		status = execute(st, toks);
-	}	// end if
-	} while (i && continue_interpreter(status, false));
-	return status;
-#else
-	return __source(i, st);
-#endif
+	ifstream_manager::placeholder p(st.get_stream_manager(), f);
+	// ifstream i(f.c_str());
+if (p) {
+	return __source(p.get_stream(), st);
+	// return __source(i, st);
 } else {
-	cerr << "Error opening file: " << f << endl;
+	cerr << "Error opening file: \"" << f << '\"' << endl;
+	p.error_msg(cerr) << endl;
 	return Command::BADFILE;
 }
 }
@@ -326,9 +311,9 @@ if (s) {
 		return p->second.main(st, args);
 	} else {
 		cerr << "Unknown command: " << *argi << endl;
-		return 1;
+		return Command::SYNTAX;
 	}
-} else	return 0;
+} else	return Command::NORMAL;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -586,7 +571,9 @@ if (a.size() < 2) {
 		status = CommandRegistry::source(s, *i);
 	}
 	if (status) {
-		cerr << "Error encountered during source." << endl;
+		--i;
+		cerr << "Error encountered during source \"" <<
+			*i << "\"." << endl;
 	}
 	return status;
 }

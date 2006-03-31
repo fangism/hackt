@@ -1,0 +1,10 @@
+# "cycle-source-b.prsimrc"
+#	$Id: cycle-source-b.prsimrc,v 1.1.2.1 2006/03/31 06:08:59 fang Exp $
+# @haco@ inv.haco-a
+# tests error handling of cyclic sources
+
+get b
+assert a x
+assert b x
+source cycle-source-a.prsimrc
+

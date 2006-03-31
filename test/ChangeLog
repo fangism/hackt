@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2006-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-11:
+	  Added prsimrc-filter.awk for post-processing prsimrc output logs.
+	  Updated the way prsimrc tests are run, using the new filter, 
+		and passing -I$(srcdir) to enable checking of recursive
+		source scripts.  Should pass VPATH build checks.  :)
+
+
 2006-03-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05-prsim-01-06:

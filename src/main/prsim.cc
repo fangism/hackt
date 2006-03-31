@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.2.26.2 2006/03/26 23:36:31 fang Exp $
+	$Id: prsim.cc,v 1.2.26.3 2006/03/31 06:08:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <cstring>
+#include <list>
 
 #include "main/prsim.h"
 #include "main/program_registry.h"
@@ -53,6 +54,10 @@ public:
 	bool			check_structure;
 	/// whether or not to produce a dot-format structure dump before running
 	bool			dump_dot_struct;
+
+	typedef	std::list<string>	source_paths_type;
+	/// include search paths for sources
+	source_paths_type	source_paths;
 
 	prsim_options() : help_only(false), interactive(true), 
 		dump_expr_alloc(false), run(true),
@@ -126,6 +131,7 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 
 	if (opt.dump_dot_struct)
 		sim_state.dump_struct_dot(cout) << endl;
+	sim_state.import_source_paths(opt.source_paths);
 	if (opt.run) {
 		sim_state.initialize();
 		// outermost level is interactive
@@ -150,7 +156,7 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 		argc, argv, o, options_modifier_map);
 #else
 	// now we're adding our own flags
-	static const char optstring[] = "+bf:hi";
+	static const char optstring[] = "+bf:hiI:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -176,6 +182,9 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 		case 'i':
 			o.interactive = true;
 			break;
+		case 'I':
+			o.source_paths.push_back(optarg);
+			break;
 		case ':':
 			cerr << "Expected but missing option-argument." << endl;
 			return 1;
@@ -199,6 +208,7 @@ prsim::usage(void) {
 	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
 	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
 	cerr << "\t-i : interactive (default)" << endl;
+	cerr << "\t-I <path> : include path for scripts (repeatable)" << endl;
         const size_t flags = options_modifier_map.size();
 	if (flags) {
 		cerr << "flags (" << flags << " total):" << endl;

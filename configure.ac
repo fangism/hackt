@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.49.2.2 2006/03/26 23:36:25 fang Exp $
+#	$Id: configure.ac,v 1.49.2.3 2006/03/31 06:08:47 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -83,6 +83,10 @@ AC_CHECK_PROG([XFIG], xfig, xfig)
 AC_CHECK_PROG([TRANSFIG], transfig, transfig)
 dnl only fig2dev is needed for converting xfigs
 AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
+
+AC_CHECK_FILES([/dev/null])
+dnl standard terminal devices for redirection (test doesn't work)
+dnl AC_CHECK_FILES([/dev/stdin /dev/stdout /dev/stderr])
 
 # checking for old CAST tools for regression and backwards compatibility tests
 # no big deal if they don't exist...
@@ -172,6 +176,9 @@ AC_CXX_ATTRIBUTE_ALIGNED_SIZE
 AC_CXX_ATTRIBUTE_EVIL
 
 AC_CXX_STL_REVERSE_ITERATOR_COMPARISONS
+AC_CXX_STD_IFSTREAM_DEV_STDIN
+AC_CXX_STD_OFSTREAM_DEV_STDOUT
+AC_CXX_STD_OFSTREAM_DEV_STDERR
 AC_C_BUILTIN_EXPECT
 
 # additional header checks

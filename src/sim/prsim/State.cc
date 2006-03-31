@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.9 2006/03/30 00:50:13 fang Exp $
+	$Id: State.cc,v 1.4.8.10 2006/03/31 06:08:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -79,7 +79,8 @@ State::State(const entity::module& m) :
 		pending_queue(), 
 		current_time(0), 
 		watch_list(), 
-		flags(FLAGS_DEFAULT) {
+		flags(FLAGS_DEFAULT),
+		ifstreams() {
 #if 0
 	NEVER_NULL(m);
 	const state_manager& sm(m->get_state_manager());

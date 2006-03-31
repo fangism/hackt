@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2006-03-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-11:
+	  Wrote some configure tests for checking usability of standard
+		file descriptors with C++ file streams.  
+		This achieves redirection from inside a program back to
+		stdin and stdout.  
+
+
 2006-03-25	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05-prsim-01-04:

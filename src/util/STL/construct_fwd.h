@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/construct_fwd.h"
 	Forward declaration of std::_Construct, and std::_Destroy.
-	$Id: construct_fwd.h,v 1.4 2005/05/10 04:51:31 fang Exp $
+	$Id: construct_fwd.h,v 1.4.84.1 2006/03/31 06:08:56 fang Exp $
  */
 
 #ifndef	__UTIL_STL_CONSTRUCT_FWD_H__
@@ -47,6 +47,13 @@ _Destroy(FwdIter, FwdIter);
 
 #define	USING_CONSTRUCT		using std::_Construct;
 #define	USING_DESTROY		using std::_Destroy;
+
+#define	FRIEND_STD_CONSTRUCT						\
+	template <class _T1>						\
+	friend void std::_Construct(_T1*);
+#define	FRIEND_STD_CONSTRUCT2						\
+	template <class _T1, class _T2>					\
+	friend void std::_Construct(_T1*, const _T2&);
 
 #endif	// __UTIL_STL_CONSTRUCT_FWD_H__
 

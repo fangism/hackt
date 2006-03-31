@@ -1,5 +1,21 @@
 # "src/util/ChangeLog"
 
+2006-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-11:
+	  Added util/named_ifstream_manager.{h,cc}, spawned from external 
+		lexer/file_manager.{h,cc} with the following differences:
+		Already seen files are also opened, AS LONG AS the are
+		not currently open on the file stack, in other words, 
+		cyclic file references are still caught, but once-only
+		processing is not enabled for this.  
+		Possible TODO: use a flag to decide opening policy.
+		named_ifstream_manager also kept the include-path list
+		for effective file searching.  
+	  util/STL/construct_fwd.h: added some friend function macros
+		for those pesky exceptional cases for std::_Construct.  
+
+
 2006-03-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05-prsim-01-07:
