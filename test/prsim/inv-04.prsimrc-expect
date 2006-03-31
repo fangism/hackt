@@ -1,0 +1,196 @@
+time should be 0 
+time: 0
+time should still be 0 
+time: 0
+setting 'a-' and letting propagate 
+expect to see a- in queue 
+event queue:
+	0	a : 0
+	0	a : 0
+	10	b : 1
+expect to see c- in queue, b+ just happened 
+event queue:
+	20	c : 0
+	20	c : 0
+queue should be empty after step 
+event queue:
+time should be 20 
+time: 20
+setting 'a+' and letting propagate 
+expect to see a+ in queue 
+event queue:
+	20	a : 1
+	20	a : 1
+	30	b : 0
+expect to see c+ in queue, b- just happened 
+event queue:
+	40	c : 1
+	40	c : 1
+queue should be empty after step 
+event queue:
+time should be 40 
+time: 40
+setting 'a' to X and letting propagate 
+expect to see a : X in queue 
+event queue:
+	40	a : X
+expecting weak interference of X vs. X on b, propagating to c 
+WARNING: weak-interference `b'
+	40	a : X
+WARNING: weak-interference `c'
+	50	b : X
+expect to see c:x in queue, b:x just happened 
+event queue:
+	60	c : X
+	60	c : X
+queue should be empty after step 
+event queue:
+time should be 60 
+time: 60
+now testing cycle commands 
+	60	a : 0
+	70	b : 1
+	80	c : 0
+time should be 80, queue should be empty 
+time: 80
+event queue:
+	80	a : 1
+	90	b : 0
+	100	c : 1
+time should be 100, queue should be empty 
+time: 100
+event queue:
+expecting weak interference, of course 
+WARNING: weak-interference `b'
+	100	a : X
+WARNING: weak-interference `c'
+	110	b : X
+	120	c : X
+time should be 120, queue should be empty 
+time: 120
+event queue:
+re-initializing should keep the simulator watchall mode 
+time should be 0 
+time: 0
+time should still be 0 
+time: 0
+setting 'a-' and letting propagate 
+expect to see a- in queue 
+event queue:
+	0	a : 0
+	0	a : 0
+	10	b : 1
+expect to see c- in queue, b+ just happened 
+event queue:
+	20	c : 0
+	20	c : 0
+queue should be empty after step 
+event queue:
+time should be 20 
+time: 20
+setting 'a+' and letting propagate 
+expect to see a+ in queue 
+event queue:
+	20	a : 1
+	20	a : 1
+	30	b : 0
+expect to see c+ in queue, b- just happened 
+event queue:
+	40	c : 1
+	40	c : 1
+queue should be empty after step 
+event queue:
+time should be 40 
+time: 40
+setting 'a' to X and letting propagate 
+expect to see a : X in queue 
+event queue:
+	40	a : X
+expecting weak interference of X vs. X on b, propagating to c 
+WARNING: weak-interference `b'
+	40	a : X
+WARNING: weak-interference `c'
+	50	b : X
+expect to see c:x in queue, b:x just happened 
+event queue:
+	60	c : X
+	60	c : X
+queue should be empty after step 
+event queue:
+time should be 60 
+time: 60
+now testing cycle commands 
+	60	a : 0
+	70	b : 1
+	80	c : 0
+time should be 80, queue should be empty 
+time: 80
+event queue:
+	80	a : 1
+	90	b : 0
+	100	c : 1
+time should be 100, queue should be empty 
+time: 100
+event queue:
+expecting weak interference, of course 
+WARNING: weak-interference `b'
+	100	a : X
+WARNING: weak-interference `c'
+	110	b : X
+	120	c : X
+time should be 120, queue should be empty 
+time: 120
+event queue:
+time should be 0 
+time: 0
+time should still be 0 
+time: 0
+setting 'a-' and letting propagate 
+expect to see a- in queue 
+event queue:
+	0	a : 0
+expect to see c- in queue, b+ just happened 
+event queue:
+	20	c : 0
+queue should be empty after step 
+event queue:
+time should be 20 
+time: 20
+setting 'a+' and letting propagate 
+expect to see a+ in queue 
+event queue:
+	20	a : 1
+expect to see c+ in queue, b- just happened 
+event queue:
+	40	c : 1
+queue should be empty after step 
+event queue:
+time should be 40 
+time: 40
+setting 'a' to X and letting propagate 
+expect to see a : X in queue 
+event queue:
+	40	a : X
+expecting weak interference of X vs. X on b, propagating to c 
+WARNING: weak-interference `b'
+WARNING: weak-interference `c'
+expect to see c:x in queue, b:x just happened 
+event queue:
+	60	c : X
+queue should be empty after step 
+event queue:
+time should be 60 
+time: 60
+now testing cycle commands 
+time should be 80, queue should be empty 
+time: 80
+event queue:
+time should be 100, queue should be empty 
+time: 100
+event queue:
+expecting weak interference, of course 
+WARNING: weak-interference `b'
+WARNING: weak-interference `c'
+time should be 120, queue should be empty 
+time: 120
+event queue:

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.15.2.4 2006/03/30 00:50:11 fang Exp $
+#	$Id: TODO,v 1.15.2.5 2006/03/31 23:47:05 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -25,7 +25,6 @@ Simulation:
 prsim:
 	Need to pass attributes to nodes/exprs during allocation/construction.
 	delay-up/dn support for rule-expressions
-	-I include paths for recursive source scripts
 	interpreter commands:
 		interp key [value]
 			for interpreter mode flags:
@@ -38,22 +37,26 @@ prsim:
 			(not expected to be used often)
 			could use smart traversal, conditional recursion
 			*Just walk the alloc footprint frames?*
+		alias command [expanded command]
 		setr <node> <value>
 			set node at random time
 		break
 			break points
-		watch, unwatch, unwatchall, watchall, nowatchall
-			watch points
-			watch processes?
+		watch processes and structures?
 		mode run | reset
 		vector support:
 			Q: do we allow nodes to belong to multiple vectors?
 				current state of old prsims cannot.
 		use getopt-style interpretation?
+		sh syntax?
 	enable escape to shell commands via system?
 	concept of environment variables?
 	far future: expression evaluation! variable expansion!
 	checkpoint generation and restoration
+
+	Q: should initialize clear the watching state?
+		in the old prsim, watch/break points are preserved
+		so we keep that behavior for now.  
 
 ===============================================================================
 complete type creation: (20060128)

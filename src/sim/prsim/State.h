@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.9 2006/03/31 06:08:54 fang Exp $
+	$Id: State.h,v 1.2.26.10 2006/03/31 23:47:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -134,7 +134,17 @@ private:
 			transition on every node, rather than using the
 			sparse watch_list.  
 		 */
-		FLAG_WATCHALL = 0x10
+		FLAG_WATCHALL = 0x10,
+		/**
+			Flags to set upon initialize().
+		 */
+		FLAGS_INITIALIZE_SET_MASK = 0x00,
+		/**
+			Flags to clear upon initialize().
+			We keep the previous timing modes and watch mode.  
+		 */
+		FLAGS_INITIALIZE_CLEAR_MASK =
+			FLAG_STOP_SIMULATION
 	};
 	typedef	unsigned int			flags_type;
 
@@ -218,9 +228,13 @@ public:
 	void
 	initialize(void);
 
-	/// wipes the simulation state (like destructor)
+	/// Wipes the simulator state AND modes as if fresh started.  
 	void
 	reset(void);
+
+	/// wipes the simulation state (like destructor)
+	void
+	destroy(void);
 
 	void
 	check_node(const node_index_type) const;

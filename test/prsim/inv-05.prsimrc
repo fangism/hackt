@@ -1,0 +1,42 @@
+# "inv-03.prsimrc"
+# @haco@ inv.haco-a
+# testing for instabilities
+
+watchall
+assert a x
+assert b x
+assert c x
+time
+
+echo setting 'a-' and letting propagate
+set a 0
+cycle
+assert b 1
+assert c 0
+
+echo introduce a low pulse on 'a'
+set a 1
+advance 5
+set a 0
+echo expect instability on b- because of a-
+cycle
+assert b x
+assert c x
+
+echo bring back to known states
+set a 1
+cycle
+assert b 0
+assert c 1
+
+echo introduce a high pulse on 'a'
+set a 0
+advance 5
+set a 1
+echo expect instability on b+ because of a+
+echo BUT GETS INTEFERENCE BECAUSE OF FANOUT EVALUATION ORDERING...
+cycle
+assert b x
+assert c x
+
+

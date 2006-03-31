@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.10 2006/03/31 06:08:53 fang Exp $
+	$Id: State.cc,v 1.4.8.11 2006/03/31 23:47:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -136,7 +136,7 @@ State::~State() { }
 	Destroys the simulator state, releasing all of its memory too.  
  */
 void
-State::reset(void) {
+State::destroy(void) {
 	node_pool.clear();
 #if 0
 	expr_pool.clear();
@@ -153,7 +153,9 @@ State::reset(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Resets the state of simulation, as if it had just started up.  
+	Resets the state of simulation by X-ing all nodes, but
+	also preserves some simulator modes, such as the 
+	watch/break point state.
 	\pre expressions are already properly sized.  
  */
 void
@@ -167,9 +169,32 @@ State::initialize(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
+	flags |= FLAGS_INITIALIZE_SET_MASK;
+	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
+	// unwatchall()? no, preserved
 	current_time = 0;
-	// unwatchall()?
-	// nowatchall()?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets the state of simulation, as if it had just started up.  
+	Preserve the watch/break point state.
+	\pre expressions are already properly sized.  
+ */
+void
+State::reset(void) {
+	for_each(node_pool.begin(), node_pool.end(), 
+		mem_fun_ref(&node_type::reset));
+	for_each(expr_pool.begin(), expr_pool.end(), 
+		mem_fun_ref(&expr_type::reset));
+	// the expr_graph_node_pool contains no stateful information.  
+	while (!event_queue.empty()) {
+		const event_placeholder_type next(event_queue.pop());
+		event_pool.deallocate(next.event_index);
+	}
+	flags = FLAGS_DEFAULT;
+	// unwatchall()? no, preserved
+	current_time = 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1078,7 +1103,9 @@ if (!n.pending_event()) {
 			}
 			cout << out_name << "\'+" << endl;
 			cout << ">> cause: `" << cause_name << "\' (val: ";
-			n.dump_value(cout) << ")" << endl;
+			get_node(ni).dump_value(cout) << 	// " -> " <<
+			// cout << node_type::value_to_char[size_t(e.val)] <<
+				")" << endl;
 		}
 		// else is OK
 	}	// end if diagnostic
@@ -1197,7 +1224,9 @@ if (!n.pending_event()) {
 			}
 			cout << out_name << "\'-" << endl;
 			cout << ">> cause: `" << cause_name << "\' (val: ";
-			n.dump_value(cout) << ")" << endl;
+			get_node(ni).dump_value(cout) <<	// " -> " <<
+			// cout << node_type::value_to_char[size_t(e.val)] <<
+				")" << endl;
 		}
 		// else is OK
 	}	// end if diagonstic

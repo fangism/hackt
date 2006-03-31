@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.2.26.6 2006/03/30 00:50:13 fang Exp $
+	$Id: Node.h,v 1.2.26.7 2006/03/31 23:47:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -108,11 +108,6 @@ public:
 		return b ? pull_up_index : pull_dn_index;
 	}
 
-#if 0
-	void
-	initialize(void);
-#endif
-
 	bool
 	is_unstab(void) const { return struct_flags & NODE_UNSTAB; }
 
@@ -128,10 +123,6 @@ public:
 	ostream&
 	dump_struct(ostream&) const;
 
-	/// \return < 0 on error, else returns 0, 1, 2
-	static
-	char
-	string_to_value(const std::string&);
 };	// end struct Node
 
 //=============================================================================
@@ -168,7 +159,13 @@ struct NodeState : public Node {
 			Whether or not this node is currently in
 			one of the exclusive ring queues.  
 		 */
-		NODE_EX_QUEUE = 0x04
+		NODE_EX_QUEUE = 0x04,
+
+		/// OR-mask for initialization
+		NODE_INITIALIZE_SET_MASK = 0x00,
+		/// AND-mask (negated) for initialization
+		NODE_INITIALIZE_CLEAR_MASK =
+			NODE_FLAG | NODE_EX_QUEUE
 	} state_flags_enum;
 
 public:
@@ -250,8 +247,16 @@ public:
 	ostream&
 	dump_state(ostream&) const;
 
+	/// \return < 0 on error, else returns 0, 1, 2
+	static
+	char
+	string_to_value(const std::string&);
+
 	void
 	initialize(void);
+
+	void
+	reset(void);
 };	// end struct NodeState
 
 //=============================================================================

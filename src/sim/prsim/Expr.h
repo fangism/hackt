@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.2.26.6 2006/03/29 05:49:28 fang Exp $
+	$Id: Expr.h,v 1.2.26.7 2006/03/31 23:47:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -214,6 +214,9 @@ public:
 
 	void
 	initialize(void);
+
+	void
+	reset(void) { initialize(); }
 
 	/**
 		\pre this->is_or();

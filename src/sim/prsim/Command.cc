@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.10 2006/03/31 06:08:53 fang Exp $
+	$Id: Command.cc,v 1.3.8.11 2006/03/31 23:47:06 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -587,7 +587,7 @@ Source::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Initialize, "initialize", simulation,
-	"resets simulator state and event queue")
+	"resets simulator state and event queue, preserving modes")
 
 int
 Initialize::main(State& s, const string_list&) {
@@ -598,6 +598,21 @@ Initialize::main(State& s, const string_list&) {
 void
 Initialize::usage(ostream& o) {
 	o << "initialize: " << brief << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Reset, "reset", simulation, 
+	"resets simulator state, queue, and modes (fresh start)")
+
+int
+Reset::main(State& s, const string_list&) {
+	s.reset();
+	return Command::NORMAL;
+}
+
+void
+Reset::usage(ostream& o) {
+	o << "reset: " << brief << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1225,63 +1240,75 @@ Time::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
-	"print activity on node")
+	"print activity on selected nodes")
 
 /**
-	Adds a node to the watch list.  
+	Adds nodes to the watch list.  
 	TODO: watch defined structures!
  */
 int
 Watch::main(State& s, const string_list& a) {
-if (a.size() != 2) {
+if (a.size() < 2) {
 	usage(cerr);
 	return Command::SYNTAX;
 } else {
-	const string& objname(a.back());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		s.watch_node(ni);
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
+	typedef string_list::const_iterator	const_iterator;
+	const_iterator i(++a.begin()), e(a.end());
+	bool badarg = false;
+	for ( ; i!=e; ++i) {
+		const string& objname(*i);
+		const node_index_type ni =
+			parse_node_to_index(objname, s.get_module());
+		if (ni) {
+			s.watch_node(ni);
+		} else {
+			cerr << "No such node found: " << objname << endl;
+			badarg = true;
+		}
 	}
+	return badarg ? Command::BADARG : Command::NORMAL;
 }
 }
 
 void
 Watch::usage(ostream& o) {
-	o << "watch <node>" << endl;
+	o << "watch <nodes>" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatch, "unwatch", view, 
-	"silence activity reporting on node")
+	"silence activity reporting on selected nodes")
 
 /**
 	Removes a node from the watch list.  
  */
 int
 UnWatch::main(State& s, const string_list& a) {
-if (a.size() != 2) {
+if (a.size() < 2) {
 	usage(cerr);
 	return Command::SYNTAX;
 } else {
-	const string& objname(a.back());
-	const node_index_type ni = parse_node_to_index(objname, s.get_module());
-	if (ni) {
-		s.unwatch_node(ni);
-		return Command::NORMAL;
-	} else {
-		cerr << "No such node found." << endl;
-		return Command::BADARG;
+	typedef string_list::const_iterator	const_iterator;
+	const_iterator i(++a.begin()), e(a.end());
+	bool badarg = false;
+	for ( ; i!=e; ++i) {
+		const string& objname(*i);
+		const node_index_type ni =
+			parse_node_to_index(objname, s.get_module());
+		if (ni) {
+			s.unwatch_node(ni);
+		} else {
+			cerr << "No such node found: " << objname << endl;
+			badarg = true;
+		}
 	}
+	return badarg ? Command::BADARG : Command::NORMAL;
 }
 }
 
 void
 UnWatch::usage(ostream& o) {
-	o << "unwatch <node>" << endl;
+	o << "unwatch <nodes>" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

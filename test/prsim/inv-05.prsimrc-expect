@@ -1,0 +1,28 @@
+time: 0
+setting 'a-' and letting propagate 
+	0	a : 0
+	10	b : 1
+	20	c : 0
+introduce a low pulse on 'a' 
+	20	a : 1
+expect instability on b- because of a- 
+WARNING: unstable `b'-
+>> cause: `a' (val: 0)
+	25	a : 0
+WARNING: weak-interference `c'
+	30	b : X
+	40	c : X
+bring back to known states 
+	40	a : 1
+	50	b : 0
+	60	c : 1
+introduce a high pulse on 'a' 
+	60	a : 0
+expect instability on b+ because of a+ 
+BUT GETS INTEFERENCE BECAUSE OF FANOUT EVALUATION ORDERING... 
+WARNING: interference `b'-
+>> cause: `a' (val: 1)
+	65	a : 1
+WARNING: weak-interference `c'
+	70	b : X
+	80	c : X
