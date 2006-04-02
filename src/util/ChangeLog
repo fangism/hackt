@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2006-04-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-14:
+	  Added configure-checks for *rand48 family of stdlib functions.
+	  Implemented rand48 template wrapper in util/numeric/random.*.
+
+
 2006-03-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05-prsim-01-11:

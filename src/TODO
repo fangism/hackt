@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.15.2.5 2006/03/31 23:47:05 fang Exp $
+#	$Id: TODO,v 1.15.2.6 2006/04/02 23:11:04 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -25,6 +25,7 @@ Simulation:
 prsim:
 	Need to pass attributes to nodes/exprs during allocation/construction.
 	delay-up/dn support for rule-expressions
+	cause-tracking
 	interpreter commands:
 		interp key [value]
 			for interpreter mode flags:

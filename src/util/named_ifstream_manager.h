@@ -2,7 +2,7 @@
 	\file "util/ifstream_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: named_ifstream_manager.h,v 1.1.2.1 2006/03/31 06:08:55 fang Exp $
+	$Id: named_ifstream_manager.h,v 1.1.2.2 2006/04/02 23:11:07 fang Exp $
  */
 
 #ifndef	__UTIL_FILE_MANAGER_H__
@@ -254,6 +254,9 @@ private:
 	ostream&
 	reset_and_dump_file_stack(ostream&);
 public:
+	ostream&
+	dump_paths(ostream&) const;
+
 	ostream&
 	dump_file_names(ostream&) const;
 

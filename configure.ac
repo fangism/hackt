@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.49.2.3 2006/03/31 06:08:47 fang Exp $
+#	$Id: configure.ac,v 1.49.2.4 2006/04/02 23:10:59 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -225,7 +225,8 @@ dnl <ctype.h>
 AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
 AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
 AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
-
+AC_CHECK_FUNCS([drand48 erand48 lrand48 nrand48])
+AC_CHECK_FUNCS([mrand48 jrand48 srand48 seed48 lcong48])
 AC_CHECK_FUNCS([system])
 AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
 

@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.5 2006/03/16 23:36:15 fang Exp $
+	$Id: libc.h,v 1.5.4.1 2006/04/02 23:11:06 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -82,6 +82,53 @@ extern int	putenv(const char*);
 #else
 extern void	unsetenv(const char*);
 #endif
+
+/*-------------------- random number generators -----------------------------*/
+#if	defined(HAVE_DRAND48) && HAVE_DRAND48
+#else
+extern	double	drand48(void);
+#endif
+
+#if	defined(HAVE_ERAND48) && HAVE_ERAND48
+#else
+extern	double	erand48(unsigned short[3]);
+#endif
+
+#if	defined(HAVE_LRAND48) && HAVE_LRAND48
+#else
+extern	long	lrand48(void);
+#endif
+
+#if	defined(HAVE_NRAND48) && HAVE_NRAND48
+#else
+extern	long	nrand48(unsigned short[3]);
+#endif
+
+#if	defined(HAVE_MRAND48) && HAVE_MRAND48
+#else
+extern	long	mrand48(void);
+#endif
+
+#if	defined(HAVE_JRAND48) && HAVE_JRAND48
+#else
+extern	long	jrand48(unsigned short[3]);
+#endif
+
+#if	defined(HAVE_SRAND48) && HAVE_SRAND48
+#else
+extern	void	srand48(long sd);
+#endif
+
+#if	defined(HAVE_SEED48) && HAVE_SEED48
+#else
+extern	unsigned short*	seed48(unsigned short xs[3]);
+#endif
+
+#if	defined(HAVE_LCONG48) && HAVE_LCONG48
+#else
+extern	void	lcong(unsigned short p[7]);
+#endif
+
 END_C_DECLS
 
 /*=============================================================================

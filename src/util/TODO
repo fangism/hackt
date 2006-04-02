@@ -1,10 +1,12 @@
 "TODO"
-	$Id: TODO,v 1.12 2006/03/20 02:41:10 fang Exp $
+	$Id: TODO,v 1.12.2.1 2006/04/02 23:11:06 fang Exp $
 
 Nothing really *needs* to be done in here.
 This is more of a wish-list for the util/ directory.  
 
 ===============================================================================
+quickie:
+	remove references to util/obsolete from util/Makefile.inc
 
 ===============================================================================
 
@@ -160,6 +162,10 @@ numeric:
 	primality...
 	compile-time taylor expansion and evaluation of constants...
 	doh, can't pass floats as template arguements... yet
+
+random:
+	rand48 family may not suffice for ILP64 longs, so we need an
+		adequate substitute for higher precision integers.  
 
 -------------------------------------------------------------------------------
 debug utils:

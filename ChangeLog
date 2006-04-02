@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-04-02	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-14:
+	  configure.ac: check for *rand48 family of stdlib C functions.  
+
+
 2006-03-30	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05-prsim-01-11:

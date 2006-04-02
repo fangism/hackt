@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.11 2006/04/02 03:32:07 fang Exp $
+	$Id: State.h,v 1.2.26.12 2006/04/02 23:11:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -150,6 +150,32 @@ private:
 	};
 	typedef	unsigned char			flags_type;
 
+	enum {
+		/**
+			Uses after-delays.  
+			These can be manually annotated or
+			automatically computed by some model, 
+			such as sizing.  
+			TODO: not yet supported.
+			Pending decision on how delays are handled.  
+		 */
+		TIMING_AFTER = 0,
+		/**
+			Uses delay 10 units for all events, 
+			(except on speically marked rules).
+		 */
+		TIMING_UNIFORM = 1,
+		/**
+			Uses random timing for all events, 
+			(except on specially marked rules).  
+		 */
+		TIMING_RANDOM = 2,
+		/**
+			The mode on start-up.  
+		 */
+		TIMING_DEFAULT = TIMING_UNIFORM
+	};
+
 	/**
 		Instead of using circular linked lists with pointers, 
 		we use a map of (cyclic referenced) indices to represent
@@ -192,21 +218,15 @@ private:
 	// mode of operation
 	// operation flags
 	flags_type				flags;
+	/// timing mode
+	char					timing_mode;
+	// loadable random seed?
 	/// set by the SIGINT signal handler
 	/// (is this redundant with the STOP flag?)
 	volatile bool				interrupted;
 	// interpreter state
 	ifstream_manager			ifstreams;
 public:
-	enum {
-		EVENT_VACUOUS = 0x1,
-		EVENT_UNSTABLE = 0x2,
-		EVENT_INTERFERENCE = 0x4,
-		EVENT_WEAK = 0x8
-	};
-	static const	unsigned char		upguard[3][3];
-	static const	unsigned char		dnguard[3][3];
-
 	/**
 		Signal handler class that binds the State reference
 		for the duration of the scope in which it is declared.  
@@ -283,6 +303,12 @@ public:
 
 	const time_type&
 	time(void) const { return current_time; }
+
+	void
+	randomize(void) { timing_mode = TIMING_RANDOM; }
+
+	void
+	norandom(void) { timing_mode = TIMING_UNIFORM; }
 
 	bool
 	pending_events(void) const { return !event_queue.empty(); }
@@ -383,6 +409,9 @@ public:
 	add_source_path(const string& s) {
 		ifstreams.add_path(s);
 	}
+
+	ostream&
+	dump_source_paths(ostream&) const;
 
 private:
 	event_index_type

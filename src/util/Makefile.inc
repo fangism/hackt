@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.6.2.2 2006/03/31 06:08:55 fang Exp $
+#	$Id: Makefile.inc,v 1.6.2.3 2006/04/02 23:11:06 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -12,7 +12,7 @@ util-libs: $(UTILLIBS)
 # SUBDIRS += util/test
 
 # phony program to generate _build/.../.deps directories on distcheck
-PHONYSOURCES += util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
+PHONYSOURCES += util/STL/dummy.cc util/obsolete/dummy.cc \
 	util/lang/lexyacc/dummy.cc
 
 # template definition header files
@@ -134,6 +134,7 @@ UTIL_HEADER_FILES = \
 	util/numeric/integer_traits.h \
 	util/numeric/inttype_traits.h \
 	util/numeric/nibble_tables.h \
+	util/numeric/random.h \
 	util/offset_array.h \
 	util/operators.h \
 	util/packed_array_fwd.h \
@@ -183,7 +184,8 @@ UTIL_CC_FILES = \
 	util/static_trace.cc \
 	util/tokenize.cc \
 	util/memory/thread_lock.cc \
-	util/memory/ref_count_pool.cc
+	util/memory/ref_count_pool.cc \
+	util/numeric/random.cc
 
 libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 

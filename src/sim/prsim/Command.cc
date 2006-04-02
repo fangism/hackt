@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.12 2006/04/02 03:32:07 fang Exp $
+	$Id: Command.cc,v 1.3.8.13 2006/04/02 23:11:05 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -603,6 +603,26 @@ if (a.size() != 2) {
 void
 AddPath::usage(ostream& o) {
 	o << "addpath <path>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Paths, "paths", general,
+	"show search paths for source scripts")
+
+int
+Paths::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	s.dump_source_paths(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+Paths::usage(ostream& o) {
+	o << "paths" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1492,6 +1512,46 @@ if (a.size() != 1) {
 void
 NoWatchAll::usage(ostream& o) {
 	o << "nowatchall" << endl;
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Random, "random", modes, 
+	"use random delays")
+
+int
+Random::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.randomize();
+	return Command::NORMAL;
+}
+}
+
+void
+Random::usage(ostream& o) {
+	o << "random";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoRandom, "norandom", modes, 
+	"use random delays")
+
+int
+NoRandom::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.norandom();
+	return Command::NORMAL;
+}
+}
+
+void
+NoRandom::usage(ostream& o) {
+	o << "norandom";
 }
 
 //=============================================================================

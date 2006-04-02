@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.12 2006/04/02 03:32:07 fang Exp $
+	$Id: State.cc,v 1.4.8.13 2006/04/02 23:11:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@
 #include "sim/prsim/State.h"
 #include "sim/prsim/ExprAlloc.h"
 #include "sim/prsim/Event.tcc"
+#include "sim/random_time.h"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
@@ -81,6 +82,7 @@ State::State(const entity::module& m) :
 		current_time(0), 
 		watch_list(), 
 		flags(FLAGS_DEFAULT),
+		timing_mode(TIMING_DEFAULT),
 		ifstreams() {
 #if 0
 	NEVER_NULL(m);
@@ -173,6 +175,7 @@ State::initialize(void) {
 	flags |= FLAGS_INITIALIZE_SET_MASK;
 	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 	// unwatchall()? no, preserved
+	// timing mode preserved
 	current_time = 0;
 }
 
@@ -194,6 +197,7 @@ State::reset(void) {
 		event_pool.deallocate(next.event_index);
 	}
 	flags = FLAGS_DEFAULT;
+	timing_mode = TIMING_DEFAULT;
 	// unwatchall()? no, preserved
 	current_time = 0;
 }
@@ -499,27 +503,36 @@ State::clear_all_breakpoints(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return absolute time of scheduled pull-up event.
+	TODO: figure out how to get delay of rule (sparse map?).  
  */
+// inline
 State::time_type
 State::get_delay_up(const event_type& e) const {
-#if 0
-	return get_node(e.node).delay ... random ...
-#else
-	return current_time +10;
-#endif
+	typedef	random_time<random_time_limit<time_type>::type>
+				random_generator_type;
+	return current_time +
+		(timing_mode == TIMING_RANDOM ? random_generator_type()() :
+		(timing_mode == TIMING_UNIFORM ? time_type(10) :
+		// timing_mode == TIMING_AFTER
+			time_type(10)
+		));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return absolute time of scheduled pull-down event.
  */
+// inline
 State::time_type
 State::get_delay_dn(const event_type& e) const {
-#if 0
-	return get_node(e.node).delay ... random ...
-#else
-	return current_time +10;
-#endif
+	typedef	random_time<random_time_limit<time_type>::type>
+				random_generator_type;
+	return current_time +
+		(timing_mode == TIMING_RANDOM ? random_generator_type()() :
+		(timing_mode == TIMING_UNIFORM ? time_type(10) :
+		// timing_mode == TIMING_AFTER
+			time_type(10)
+		));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1609,6 +1622,13 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 		o << ')';
 	}
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_source_paths(ostream& o) const {
+	o << "source paths:" << endl;
+	ifstreams.dump_paths(o);
 }
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "lexer/ifstream_manager.cc"
-	$Id: named_ifstream_manager.cc,v 1.1.2.1 2006/03/31 06:08:55 fang Exp $
+	$Id: named_ifstream_manager.cc,v 1.1.2.2 2006/04/02 23:11:07 fang Exp $
  */
 
 #include <iostream>
@@ -285,6 +285,17 @@ ifstream_manager::dump_file_names(ostream& o) const {
 	const const_iterator e(_names.end());
 	for ( ; i!=e; ++i) {
 		o << *i << ", ";
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+ifstream_manager::dump_paths(ostream& o) const {
+	search_paths::const_iterator i(_paths.begin());
+	const search_paths::const_iterator e(_paths.end());
+	for ( ; i!=e; ++i) {
+		o << *i << endl;
 	}
 	return o;
 }
