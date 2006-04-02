@@ -1,0 +1,20 @@
+/**
+	\file "oscillator.hac"
+	A humble ring-oscillator.  
+	$Id: oscillator.hac,v 1.1.2.1 2006/04/02 03:32:09 fang Exp $
+ */
+
+
+template <pint N>
+defproc ring_oscillator(bool x[N]; bool _Reset) {
+prs {
+	(:i:N-1:
+		x[i]		=> x[i+1]-
+	)
+	x[N-1] & _Reset		=> x[0]-
+}
+}
+
+bool _Reset;
+ring_oscillator<13> R( , _Reset);
+

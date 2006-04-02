@@ -1,0 +1,37 @@
+# "oscil-break-01.prsimrc"
+#	$Id: oscil-break-01.prsimrc,v 1.1.2.1 2006/04/02 03:32:08 fang Exp $
+# @haco@ oscillator.haco-a
+# Testing breakpoint features.
+
+watchall
+set _Reset 0
+cycle
+set _Reset 1
+echo breaking on R.x[0]
+breakpt R.x[0]
+cycle
+cycle
+step 20
+step 20
+advance 200
+advance 200
+echo unbreak R.x[0]
+unbreak R.x[0]
+step 20
+advance 200
+echo breaking on R.x[2] and R.x[9]
+breakpt R.x[2]
+breakpt R.x[9]
+cycle
+cycle
+step 10
+step 10
+advance 100
+advance 100
+echo unbreakall
+unbreakall
+step 20
+advance 200
+# "Un-break my heaaaaaaart, say you love me again..." (Toni Braxton)
+
+

@@ -1,0 +1,24 @@
+# "unstable-01.prsimrc"
+#	$Id: unstable-01.prsimrc,v 1.1.2.1 2006/04/02 03:32:09 fang Exp $
+# @haco@ inv.haco-a
+# testing for instabilities
+# With the exception of 'echo' and 'advance' commands, 
+# this script is usable with old prsim
+
+watchall
+time
+
+initialize
+set a 1
+advance 5
+set a 0
+echo expect instability
+step
+
+initialize
+set a 0
+advance 5
+set a 1
+echo expect instability
+step
+

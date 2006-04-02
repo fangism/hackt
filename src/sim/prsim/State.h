@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.2.26.10 2006/03/31 23:47:08 fang Exp $
+	$Id: State.h,v 1.2.26.11 2006/04/02 03:32:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -122,6 +122,8 @@ private:
 		/**
 			Whether or not the simulation was stopped
 			by interrupt or event error/warning.  
+			TODO: This could be redundant with the 
+			interrupted flag. 
 		 */
 		FLAG_STOP_SIMULATION = 0x02,
 		FLAG_ESTIMATE_ENERGY = 0x04,
@@ -146,7 +148,7 @@ private:
 		FLAGS_INITIALIZE_CLEAR_MASK =
 			FLAG_STOP_SIMULATION
 	};
-	typedef	unsigned int			flags_type;
+	typedef	unsigned char			flags_type;
 
 	/**
 		Instead of using circular linked lists with pointers, 
@@ -190,6 +192,9 @@ private:
 	// mode of operation
 	// operation flags
 	flags_type				flags;
+	/// set by the SIGINT signal handler
+	/// (is this redundant with the STOP flag?)
+	volatile bool				interrupted;
 	// interpreter state
 	ifstream_manager			ifstreams;
 public:
@@ -201,6 +206,24 @@ public:
 	};
 	static const	unsigned char		upguard[3][3];
 	static const	unsigned char		dnguard[3][3];
+
+	/**
+		Signal handler class that binds the State reference
+		for the duration of the scope in which it is declared.  
+	 */
+	class signal_handler {
+	private:
+		static State*		_state;
+		static void main(int);
+	private:
+		State*			_prev;
+		void (*_main)(int);
+	public:
+		explicit
+		signal_handler(State*);
+
+		~signal_handler();
+	} __ATTRIBUTE_UNUSED__ ;
 public:
 #if 0
 	explicit
@@ -282,17 +305,38 @@ public:
 		return set_node_time(n, val, this->current_time);
 	}
 
+	void
+	set_node_breakpoint(const node_index_type);
+
+	void
+	clear_node_breakpoint(const node_index_type);
+
+	void
+	clear_all_breakpoints(void);
+
 	node_index_type
 	step(void);
 
 	node_index_type
 	cycle(void);
 
+	void
+	stop(void) {
+		flags |= FLAG_STOP_SIMULATION;
+		interrupted = true;
+	}
+
 	bool
-	stopped(void) const { return flags & FLAG_STOP_SIMULATION; }
+	stopped(void) const {
+		return flags & FLAG_STOP_SIMULATION;
+		// return interrupted;
+	}
 
 	void
-	resume(void) { flags &= ~FLAG_STOP_SIMULATION; }
+	resume(void) {
+		flags &= ~FLAG_STOP_SIMULATION;
+		interrupted = false;
+	}
 
 	void
 	watch_node(const node_index_type);
@@ -333,6 +377,11 @@ public:
 		for ( ; i!=e; ++i) {
 			ifstreams.add_path(*i);
 		}
+	}
+
+	void
+	add_source_path(const string& s) {
+		ifstreams.add_path(s);
 	}
 
 private:

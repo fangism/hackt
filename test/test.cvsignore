@@ -25,6 +25,7 @@ core.*
 *.allocdump
 *.allocdiff
 *.noindex
+*.castprs
 *.prs
 *.prsdiff
 *.prsimexpr

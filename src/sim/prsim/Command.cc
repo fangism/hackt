@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.11 2006/03/31 23:47:06 fang Exp $
+	$Id: Command.cc,v 1.3.8.12 2006/04/02 03:32:07 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -550,7 +550,7 @@ Quit::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Source, "source", simulation,
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Source, "source", general,
 	"execute commands from script file(s)")
 
 /**
@@ -583,6 +583,26 @@ void
 Source::usage(ostream& o) {
 	o << "source <file(s)>: " << brief << endl;
 	o << "sourcing terminates upon first error encountered." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddPath, "addpath", general,
+	"add search paths for source scripts")
+
+int
+AddPath::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	s.add_source_path(a.back());
+	return Command::NORMAL;
+}
+}
+
+void
+AddPath::usage(ostream& o) {
+	o << "addpath <path>" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -627,20 +647,12 @@ public:
 	static CommandCategory&         category;
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
-	// Q: does this need to be static?
-	static int	interrupted;
 private:
 	static const size_t             receipt_id;
 };      // end class Step
 
 INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
 	"step through event")
-
-/**
-	Used in conjunction with signal handler.  
- */
-int
-Step::interrupted = 0;
 
 #if 0
 /**
@@ -675,10 +687,10 @@ if (a.size() > 2) {
 	} else {
 		i = 1;
 	}
-	interrupted = 0;
+	s.resume();
 	time_type tm = s.time();
 	// could check s.pending_events()
-	while (!interrupted && i && (ni = s.step())) {
+	while (!s.stopped() && i && (ni = s.step())) {
 		// if time actually advanced, decrement steps-remaining
 		// NB: may need specialization for real-valued (float) time.  
 		const time_type ct(s.time());
@@ -742,7 +754,6 @@ if (a.size() != 2) {
 } else {
 	typedef	State::time_type		time_type;
 	typedef	State::node_type		node_type;
-	Step::interrupted = 0;
 	time_type add;		// time to add
 	if (string_to_num(a.back(), add)) {
 		cerr << "Error parsing time." << endl;
@@ -753,8 +764,8 @@ if (a.size() != 2) {
 	}
 	const time_type stop_time = s.time() +add;
 	node_index_type ni;
-	// could check s.pending_events()
-	while (!Step::interrupted && s.pending_events() &&
+	s.resume();
+	while (!s.stopped() && s.pending_events() &&
 			(s.next_event_time() < stop_time) && (ni = s.step())) {
 		// NB: may need specialization for real-valued (float) time.  
 
@@ -796,7 +807,7 @@ if (a.size() != 2) {
 			}
 		}
 	}	// end while
-	if (!Step::interrupted && s.time() < stop_time) {
+	if (!s.stopped() && s.time() < stop_time) {
 		s.update_time(stop_time);
 	}
 	// else leave the time at the time as of the last event
@@ -826,9 +837,8 @@ if (a.size() != 1) {
 } else {
 	typedef	State::node_type		node_type;
 	node_index_type ni;
-	Step::interrupted = 0;
 	s.resume();	// clear STOP flag
-	while (!Step::interrupted && (ni = s.step())) {
+	while (!s.stopped() && (ni = s.step())) {
 		if (!ni)	return Command::NORMAL;
 		const node_type& n(s.get_node(ni));
 		/***
@@ -862,7 +872,7 @@ if (a.size() != 1) {
 				// or Command::BREAK; ?
 			}
 		}
-	}	// end while (!interrupted)
+	}	// end while (!s.stopped())
 	return Command::NORMAL;
 }	// end if
 }	// end Cycle::main()
@@ -967,23 +977,126 @@ Set::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation, "set node after random delay")
+// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
+//	"set node after random delay")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setrwhen, "setrwhen", simulation,
 //	"set node with random delay after event")
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Breakpt, "breakpt", simulation,
-//	"set breakpoint on node/vector")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
+	"set breakpoint on node")	// no vector support yet
+
+int
+BreakPt::main(State& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef string_list::const_iterator	const_iterator;
+	const_iterator i(++a.begin()), e(a.end());
+	bool badarg = false;
+	for ( ; i!=e; ++i) {
+		const string& objname(*i);
+		const node_index_type ni =
+			parse_node_to_index(objname, s.get_module());
+		if (ni) {
+			s.set_node_breakpoint(ni);
+		} else {
+			cerr << "No such node found: " << objname << endl;
+			badarg = true;
+		}
+	}
+	return badarg ? Command::BADARG : Command::NORMAL;
+}
+}
+
+void
+BreakPt::usage(ostream& o) {
+	o << "breakpt <nodes>" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakpt, "nobreakpt", simulation,
-//	"remove breakpoint on node/vector")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPt, "nobreakpt", simulation,
+	"remove breakpoint on node")	// no vector support yet
+
+int
+NoBreakPt::main(State& s, const string_list& a) {
+if (a.size() < 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef string_list::const_iterator	const_iterator;
+	const_iterator i(++a.begin()), e(a.end());
+	bool badarg = false;
+	for ( ; i!=e; ++i) {
+		const string& objname(*i);
+		const node_index_type ni =
+			parse_node_to_index(objname, s.get_module());
+		if (ni) {
+			s.clear_node_breakpoint(ni);
+		} else {
+			cerr << "No such node found: " << objname << endl;
+			badarg = true;
+		}
+	}
+	return badarg ? Command::BADARG : Command::NORMAL;
+}
+}
+
+void
+NoBreakPt::usage(ostream& o) {
+	o << "nobreakpt <nodes>" << endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakptAll, "nobreakptall", simulation,
-//	"remove all breakpoints")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreak, "unbreak", simulation,
+	"alias for \'nobreakpt\'")	// no vector support yet
+
+int
+UnBreak::main(State& s, const string_list& a) {
+	return NoBreakPt::main(s, a);
+}
+
+void
+UnBreak::usage(ostream& o) {
+	NoBreakPt::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPtAll, "nobreakptall", simulation,
+	"remove all breakpoints")
+
+int
+NoBreakPtAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	s.clear_all_breakpoints();
+	return Command::NORMAL;
+}
+}
+
+void
+NoBreakPtAll::usage(ostream& o) {
+	o << "nobreakptall" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakAll, "unbreakall", simulation,
+	"alias for \'nobreakptall\'")
+
+int
+UnBreakAll::main(State& s, const string_list& a) {
+	return NoBreakPtAll::main(s, a);
+}
+
+void
+UnBreakAll::usage(ostream& o) {
+	NoBreakPtAll::usage(o);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(What, "what", info,

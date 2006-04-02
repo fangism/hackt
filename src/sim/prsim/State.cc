@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.11 2006/03/31 23:47:07 fang Exp $
+	$Id: State.cc,v 1.4.8.12 2006/04/02 03:32:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -23,6 +23,7 @@
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/attributes.h"
+#include "util/signal.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
 #include "util/memory/index_pool.tcc"
@@ -465,6 +466,34 @@ State::set_node_time(const node_index_type ni, const char val,
 #endif
 	enqueue_event(t, ei);
 	return ENQUEUE_ACCEPT;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If this isn't self-documenting enough, I don't know what is.
+ */
+void
+State::set_node_breakpoint(const node_index_type ni) {
+	get_node(ni).set_breakpoint();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If this isn't self-documenting enough, I don't know what is.
+ */
+void
+State::clear_node_breakpoint(const node_index_type ni) {
+	get_node(ni).clear_breakpoint();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	If this isn't self-documenting enough, I don't know what is.
+ */
+void
+State::clear_all_breakpoints(void) {
+	for_each(node_pool.begin(), node_pool.end(),
+		mem_fun_ref(&node_type::clear_breakpoint));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1580,6 +1609,48 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 		o << ')';
 	}
 	return o;
+}
+
+//=============================================================================
+// class State::signal_handler method definitions
+
+/**
+	Global static initializer for handler's bound State reference.  
+ */
+State*
+State::signal_handler::_state = NULL;
+
+#if 0
+void
+(*State::signal_handler::_current_handler)(int) = NULL;
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Preserves the current State* and handler for restoration.  
+	Swaps the current signal handler out for this one.  
+ */
+State::signal_handler::signal_handler(State* s) :
+		_prev(_state), _main(signal(SIGINT, main)) {
+	_state = s;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Upon destruction, restores the former signal handler.  
+	Swaps the former signal handler back in.  
+ */
+State::signal_handler::~signal_handler() {
+	_state = _prev;
+	signal(SIGINT, _main);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+State::signal_handler::main(int sig) {
+	if (_state) {
+		_state->stop();
+	}
 }
 
 //=============================================================================

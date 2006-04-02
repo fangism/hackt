@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.2.26.3 2006/03/31 06:08:53 fang Exp $
+	$Id: prsim.cc,v 1.2.26.4 2006/04/02 03:32:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -123,6 +123,7 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 
 	// the simulator state object, initialized with the module
 	State sim_state(*the_module);
+	const State::signal_handler int_handler(&sim_state);
 	if (opt.dump_expr_alloc)
 		sim_state.dump_struct(cout) << endl;
 	if (opt.check_structure)
