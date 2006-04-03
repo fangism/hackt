@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.4 2006/04/03 05:30:37 fang Exp $
+	$Id: Reference.cc,v 1.5 2006/04/03 22:11:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -67,8 +67,18 @@ parse_reference(const char* s) {
 		THROW_EXIT;
 	}
 	// TODO: look into setting the file buffer (setvbuf, setlinebuf...)
-	// fputs returns 0 on success, anything else on error
-	if (fputs(s, &*temp)) {
+	/**
+		libc WARNING! (a reminder of why I hate C...)
+		FreeBSD man page:
+		"The fputs() function returns 0 on success and EOF on error"
+		SuSE-linux man page:
+		"..fputs() return a non-negative number on success,
+			or EOF on error."
+		Thus we MUST compare against EOF, and not just check for 0.  
+		TODO: This will be done away with once we emit
+			C++-stream-style scanners and parsers.
+	 */
+	if (fputs(s, &*temp) == EOF) {
 		cerr << "Error writing string to temporary file." << endl;
 		THROW_EXIT;
 	} else {

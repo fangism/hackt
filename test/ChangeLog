@@ -2,6 +2,11 @@
 
 2006-04-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-08:
+	  Added additional filter to filter out random timestamps
+		in test cases that use random timing.  
+
+
 	* HACKT-00-01-04-main-00-78-07-merged-prsim-01-15:
 	  Branch merge, introducing prsim test suite.  
 

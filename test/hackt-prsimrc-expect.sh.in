@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-prsimrc-expect.sh.in"
-#	$Id: hackt-prsimrc-expect.sh.in,v 1.2 2006/04/03 05:30:41 fang Exp $
+#	$Id: hackt-prsimrc-expect.sh.in,v 1.3 2006/04/03 22:11:20 fang Exp $
 # Template test script for comparing prsim outputs against 
 #	expected results.  
 
@@ -8,11 +8,15 @@
 # $1	"hackt prsim" execution command
 # $2	the object file to build (using make) and run
 # $3	the prsim-run-commands script to run (must reside in srcdir!)
+# $4	file-name filter command (pipe)
+# $5	random-time filter command (pipe)
 
 prsim=$1
 obj=$2
 prsimrc=$3
 filter=$4
+timefilt=$5
+
 # strip srcdir path
 bldroot=`@ECHO@ "$prsimrc" | @SED@ 's|.*/||g'`
 
@@ -25,6 +29,15 @@ fi
 
 $prsim $obj < $prsimrc > $bldroot-out 2>&1
 @CAT@ $bldroot-out | $filter > $bldroot-out-filter
+
+# if the word 'random' is in the name, we apply an additional filter
+case $prsimrc in
+*random*)
+	@CAT@ $bldroot-out-filter | $timefilt > $bldroot-out-filter.tmp
+	mv -f $bldroot-out-filter.tmp $bldroot-out-filter
+	break ;;
+*)	break ;;
+esac
 
 if test ! -f $prsimrc-expect
 then

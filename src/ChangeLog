@@ -5,6 +5,15 @@
 
 2006-04-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-08:
+	  Damn libc's fputs gives different return values on different
+		platforms (I hate C), so it is safest to explicitly
+		compare against EOF, than check for non-zero.  
+		(fixes sim/prs/Reference.cc)
+
+
+2006-04-03	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-07-merged-prsim-01-15:
 	  Branch merge of -prsim-01 work.  
 	  With this branch comes a working production rule simulator based

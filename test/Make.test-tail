@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.23 2006/04/03 05:30:41 fang Exp $
+#	$Id: Make.test-tail,v 1.24 2006/04/03 22:11:19 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -42,6 +42,7 @@ ALLOC_FILTER = $(SED) -f $(TEST_SRCDIR)/alloc_filter.sed
 HACKT_OBJ_DIFF_FILTER = $(POM_HEADER_FILTER)
 ANALYZE_DIFF_AWK = $(AWK) -f $(TEST_SRCDIR)/analyze-dump-diff.awk
 PRSIMRC_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-filter.awk
+PRSIMRC_TIME_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-random-time-filter.awk
 
 DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
 
@@ -226,7 +227,8 @@ endif
 	@obj=`$(GREP) ^# $< | $(GREP) @haco@ | $(HEAD) -n1 | \
 		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }' ` ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" \
-		"\"$(PRSIMRC_FILTER_AWK)\"" >> $@
+		"\"$(PRSIMRC_FILTER_AWK)\"" \
+		"\"$(PRSIMRC_TIME_FILTER_AWK)\"" >> $@
 	@$(CHMOD) +x $@
 
 CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \

@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2006/04/03 05:30:41 fang Exp $
+#	$Id: Makefile.am,v 1.26 2006/04/03 22:11:19 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -52,6 +52,7 @@ EXTRA_DIST += ChangeLog README TODO \
 	hackt-parse-expect-filter.awk \
 	analyze-dump-diff.awk \
 	prsimrc-filter.awk \
+	prsimrc-random-time-filter.awk \
 	spacestonewline.awk test.cvsignore
 
 all-local: $(POSTCONFIGURED_TESTSCRIPTS)
