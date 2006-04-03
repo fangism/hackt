@@ -2,7 +2,7 @@
 	\file "util/string.h"
 	Configure-detected string library header.  
 	For now, this is really reserved for C++.
-	$Id: string.h,v 1.2 2006/01/22 06:53:37 fang Exp $
+	$Id: string.h,v 1.3 2006/04/03 05:30:39 fang Exp $
  */
 
 #ifndef	__UTIL_STRING_H__
@@ -16,6 +16,7 @@
 	#if	defined(HAVE_CSTRING) && HAVE_CSTRING
 	#include <cstring>
 	#endif
+	#include "util/string_fwd.h"
 #else
 	#if	defined(HAVE_STRING_H) && HAVE_STRING_H
 	#include <string.h>
@@ -48,6 +49,19 @@ eat_whitespace(C*& s) {
 	return s;
 }
 
+#if 0
+/**
+	Intentionally empty general definition.  
+	Valid definitions only appear in specializations.  
+ */
+template <typename I>
+struct string_to_int_converter { };
+#endif
+
+/// Return false if conversion-assignment to int is successful.  
+template <class I>
+bool
+string_to_num(const std::string&, I&);
 
 }	// end namespace strings
 }	// end namespace util

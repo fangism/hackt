@@ -1,0 +1,106 @@
+# "inv-01.prsimrc"
+# @haco@ inv.haco-a
+#	$Id: inv-01.prsimrc,v 1.2 2006/04/03 05:30:46 fang Exp $
+# testing basic set/get commands
+
+echo time should be 0
+time
+get a
+get b
+get c
+assert a x
+assert b x
+assert c x
+get I.a
+get I.b
+get J.a
+get J.b
+step
+echo time should still be 0
+time
+
+echo setting 'a-' and letting propagate
+set a 0
+echo expect to see a- in queue
+queue
+step
+assert a 0
+assert b 1
+assert c x
+echo expect to see c- in queue, b+ just happened
+queue
+step
+assert c 0
+echo queue should be empty after step
+queue
+echo time should be 20
+time
+
+echo setting 'a+' and letting propagate
+set a 1
+echo expect to see a+ in queue
+queue
+step
+assert a 1
+assert b 0
+assert c 0
+echo expect to see c+ in queue, b- just happened
+queue
+step
+assert c 1
+echo queue should be empty after step
+queue
+echo time should be 40
+time
+
+echo setting 'a' to X and letting propagate
+set a x
+echo expect to see a : X in queue
+queue
+echo expecting weak interference of X vs. X on b, propagating to c
+step
+assert a x
+assert b x
+assert c 1
+echo expect to see c:x in queue, b:x just happened
+queue
+step
+assert c x
+echo queue should be empty after step
+queue
+echo time should be 60
+time
+
+echo now testing cycle commands
+assert a x
+assert b x
+assert c x
+
+set a 0
+cycle
+assert a 0
+assert b 1
+assert c 0
+echo time should be 80, queue should be empty
+time
+queue
+
+set a 1
+cycle
+assert a 1
+assert b 0
+assert c 1
+echo time should be 100, queue should be empty
+time
+queue
+
+set a X
+echo expecting weak interference, of course
+cycle
+assert a X
+assert b X
+assert c X
+echo time should be 120, queue should be empty
+time
+queue
+

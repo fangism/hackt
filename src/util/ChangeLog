@@ -1,5 +1,53 @@
 # "src/util/ChangeLog"
 
+2006-04-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-07-merged-prsim-01-15:
+	  Branch merge of -prsim-01 work.  
+	  This branch brings some library and configure improvements.  
+
+
+	* HACKT-00-01-04-main-00-78-06:
+	  Afternote: no source revisions, only additions to the lib directory. 
+
+
+2006-04-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-15:
+	  Cross-checked against g++-4.1.  
+	  Private copy-ctor in named_ifstream_manager befriends
+		__gnu_cxx::new_allocator, if present
+		(replaces std::_Construct).  
+
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-14:
+	  Added configure-checks for *rand48 family of stdlib functions.
+	  Implemented rand48 template wrapper in util/numeric/random.*.
+
+
+2006-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-11:
+	  Added util/named_ifstream_manager.{h,cc}, spawned from external 
+		lexer/file_manager.{h,cc} with the following differences:
+		Already seen files are also opened, AS LONG AS the are
+		not currently open on the file stack, in other words, 
+		cyclic file references are still caught, but once-only
+		processing is not enabled for this.  
+		Possible TODO: use a flag to decide opening policy.
+		named_ifstream_manager also kept the include-path list
+		for effective file searching.  
+	  util/STL/construct_fwd.h: added some friend function macros
+		for those pesky exceptional cases for std::_Construct.  
+
+
+2006-03-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-07:
+	  Fixed util/string.h: string_to_num's return value, 
+		checking fail or bad-bit from istringstream.
+
+
 2006-03-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-01:

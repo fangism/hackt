@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.6 2006/03/21 21:53:12 fang Exp $
+#	$Id: Makefile.inc,v 1.7 2006/04/03 05:30:38 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -12,7 +12,7 @@ util-libs: $(UTILLIBS)
 # SUBDIRS += util/test
 
 # phony program to generate _build/.../.deps directories on distcheck
-PHONYSOURCES += util/STL/dummy.cc util/numeric/dummy.cc util/obsolete/dummy.cc \
+PHONYSOURCES += util/STL/dummy.cc util/obsolete/dummy.cc \
 	util/lang/lexyacc/dummy.cc
 
 # template definition header files
@@ -43,6 +43,7 @@ UTIL_TCC_FILES = \
 	util/persistent_functor.tcc \
 	util/qmap.tcc \
 	util/ring_node.tcc \
+	util/string.tcc \
 	util/sublist.tcc \
 	util/unique_list.tcc \
 	util/unique_stack.tcc \
@@ -122,6 +123,7 @@ UTIL_HEADER_FILES = \
 	util/multikey_map_fwd.h \
 	util/multikey_qmap_fwd.h \
 	util/multikey_set_fwd.h \
+	util/named_ifstream_manager.h \
 	util/nested_iterator.h \
 	util/new_functor_fwd.h \
 	util/NULL.h \
@@ -132,6 +134,7 @@ UTIL_HEADER_FILES = \
 	util/numeric/integer_traits.h \
 	util/numeric/inttype_traits.h \
 	util/numeric/nibble_tables.h \
+	util/numeric/random.h \
 	util/offset_array.h \
 	util/operators.h \
 	util/packed_array_fwd.h \
@@ -143,12 +146,12 @@ UTIL_HEADER_FILES = \
 	util/readline_wrap.h \
 	util/reserve.h \
 	util/ring_node_fwd.h \
+	util/signal.h \
 	util/size_t.h \
 	util/sstream.h \
 	util/stacktrace.h \
 	util/static_assert.h \
 	util/static_trace.h \
-	util/string.h \
 	util/string_fwd.h \
 	util/template.h \
 	util/tokenize_fwd.h \
@@ -173,6 +176,7 @@ UTIL_CC_FILES = \
 	util/dirent.cc \
 	util/indent.cc \
 	util/libc.c \
+	util/named_ifstream_manager.cc \
 	util/persistent.cc \
 	util/persistent_object_manager.cc \
 	util/readline_wrap.cc \
@@ -180,7 +184,8 @@ UTIL_CC_FILES = \
 	util/static_trace.cc \
 	util/tokenize.cc \
 	util/memory/thread_lock.cc \
-	util/memory/ref_count_pool.cc
+	util/memory/ref_count_pool.cc \
+	util/numeric/random.cc
 
 libfangutil_la_SOURCES = $(UTIL_CC_FILES) $(UTIL_HEADER_FILES) $(UTIL_TCC_FILES)
 

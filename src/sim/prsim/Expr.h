@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.2 2006/01/22 06:53:28 fang Exp $
+	$Id: Expr.h,v 1.3 2006/04/03 05:30:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -27,6 +27,7 @@ using std::pair;
 	Except that this is never used to represent a literal Node.  
 	Because of const non-static members, 
 	Expr is not Assignable, only copy-constructible.  
+	TODO: split up into structural and stateful information.  
  */
 struct Expr {
 	typedef	unsigned char		count_type;
@@ -40,19 +41,13 @@ struct Expr {
 		EXPR_OR = 0x0,
 		EXPR_AND = 0x1,
 		EXPR_NOT = 0x2,	///< could be used to mask for negation
-		EXPR_NAND = 0x2,
-		EXPR_NOR = 0x3,
+		EXPR_NOR = 0x2,
+		EXPR_NAND = 0x3,
 		EXPR_MASK = 0x3, ///< two LSB encode the logic function
 		EXPR_ROOT = 0x4, ///< if the parent expression is a node
 		EXPR_DIR = 0x8	 ///< if parent is node, what direction to pull
 	} type_enum;
-#if 0
-	/**
-		The globally assigned ID of this expression node.
-		May not be needed.  
-	 */
-	expr_index_type			index;
-#endif
+
 	/**
 		Uplink to parent expression (or node).
 		Interpreted as expression index if !(type & EXPR_ROOT), 
@@ -60,7 +55,6 @@ struct Expr {
 	 */
 //	const
 	expr_index_type		parent;
-
 
 	/**
 		Type enumeration.  
@@ -78,15 +72,7 @@ struct Expr {
 	 */
 //	const
 	count_type		size;
-	
-	/**
-		'val'
-	 */
-	count_type			countdown;
-	/**
-		'valx'
-	 */
-	count_type			unknowns;
+
 public:
 	Expr();
 
@@ -97,9 +83,6 @@ public:
 	~Expr();
 
 	void
-	initialize(void);
-
-	void
 	set_root(void) { type |= EXPR_ROOT; }
 
 	void
@@ -107,6 +90,10 @@ public:
 
 	bool
 	is_root(void) const { return type & EXPR_ROOT; }
+
+	bool
+	is_not(void) const { return type & EXPR_NOT; }
+
 
 	/**
 		\pre direction is only meaningful if this expression is 
@@ -155,11 +142,16 @@ public:
 	bool
 	is_or(void) const { return !(type & EXPR_AND) && !(type & EXPR_NOT); }
 
-	ostream&
-	dump_struct(ostream&) const;
+	/// see "Object/lang/PRS_enum.h"
+	bool
+	parenthesize(const char) const;
+
+	/// see "Object/lang/PRS_enum.h"
+	char
+	to_prs_enum(void) const;
 
 	ostream&
-	dump_state(ostream&) const;
+	dump_struct(ostream&) const;
 
 	ostream&
 	dump_type_dot_shape(ostream&) const;
@@ -167,14 +159,106 @@ public:
 	ostream&
 	dump_parent_dot_edge(ostream&) const;
 
-private:
 #if 0
+private:
 	Expr&
 	operator = (const Expr&) {
 		parent = 
 	}
 #endif
 };	// end struct Expr
+
+//=============================================================================
+/**
+	Stateful expression class, derived from expression structure.  
+ */
+struct ExprState : public Expr {
+public:
+	typedef	Expr			parent_type;
+	/**
+		These values are special, they correspond to 
+		LOGIC_LOW, LOGIC_HIGH, LOGIC_OTHER.  
+		Consider re-enumerating so that 2-x can be used
+		to invert.  (Will need to recode some tables in this case.)
+	 */
+	typedef	enum {
+		PULL_OFF = 0,
+		PULL_ON = 1,
+		PULL_WEAK = 2
+	} pull_enum;
+
+public:
+	/**
+		'val' of the old PrsExpr.
+		For OR-expressions, this represents the number of 1's.
+		For AND-expressions, this represents the number of 0's.
+	 */
+	count_type			countdown;
+	/**
+		'valx' of the old PrsExpr.
+	 */
+	count_type			unknowns;
+protected:
+	// consider a redundant pull-state enum (cached) to avoid re-evaluation?
+public:
+	ExprState() : parent_type() { }
+
+	/**
+		Leaves countdown and unknowns uninitialized, 
+		because they shouldn't be set until the structure is finalized
+		by the responsible State object.  
+	 */
+	ExprState(const unsigned char t, const count_type s) :
+		parent_type(t, s) { }
+
+
+	void
+	initialize(void);
+
+	void
+	reset(void) { initialize(); }
+
+	/**
+		\pre this->is_or();
+		countdown represents the number of 1's
+		PULL_ON: countdown != 0
+		PULL_OFF: countdown == 0 && unknowns == 0
+		PULL_WEAK: countdown == 0 && unknowns != 0
+		Negation only affects the ON/OFF states.
+	 */
+	char
+	or_pull_state(void) const {
+		return (countdown ? PULL_ON ^ is_not() :
+			(unknowns ? PULL_WEAK : PULL_OFF ^ is_not()));
+	}
+
+	/**
+		\pre !this->is_or();
+		countdown represents the number of 0's
+		PULL_OFF: countdown != 0
+		PULL_ON: countdown == 0 && unknowns == 0
+		PULL_WEAK: countdown == 0 && unknowns != 0
+		Negation only affects the ON/OFF states.
+	 */
+	char
+	and_pull_state(void) const {
+		return (countdown ? PULL_OFF ^ is_not() :
+			(unknowns ? PULL_WEAK : PULL_ON ^ is_not()));
+	}
+
+	/**
+		See pull_enum enumerations.  
+		\return 0 if off, 1 if on, 2 if weak (X)
+	 */
+	char
+	pull_state(void) const {
+		return is_or() ? or_pull_state() : and_pull_state();
+	}
+
+	ostream&
+	dump_state(ostream&) const;
+
+};	// end struct ExprState
 
 //=============================================================================
 /**

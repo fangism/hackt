@@ -1,6 +1,15 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.5 2005/11/10 02:12:59 fang Exp $
+	$Id: BUGS,v 1.6 2006/04/03 05:30:33 fang Exp $
+
+readline and command-line interpreters: (2006-03-29)
+	readline eats '\t' characters, duh!
+	solution: non-interactive script interpretation should
+		use getline() over readline() to preserve these.  
+	For prsim, explicitly use the -b flag when redirecting a script in.
+	(Program cannot tell difference between redirected and interactive
+		stdin input...)
+	status: FIXED (same day)
 
 Hierarchical connections:
 	Instance aliases with relaxed actuals may have NULL actuals

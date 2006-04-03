@@ -1,0 +1,26 @@
+time: 0
+time should be 100 now 
+time: 100
+setting 'a-' and letting propagate 
+expect to see a- in queue 
+event queue:
+	100	a : 0
+time: 105
+expect to see b+ in queue 
+event queue:
+	110	b : 1
+time: 110
+should stop before b executes (still in queue) 
+event queue:
+	110	b : 1
+time: 115
+'c-' should now be in queue 
+event queue:
+	120	c : 0
+time: 120
+'c-' should still be in queue 
+event queue:
+	120	c : 0
+time: 125
+queue is empty now 
+event queue:

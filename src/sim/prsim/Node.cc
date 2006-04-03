@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.2 2006/01/22 06:53:29 fang Exp $
+	$Id: Node.cc,v 1.3 2006/04/03 05:30:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,24 +24,14 @@ using std::string;
 //=============================================================================
 // class Node method definitions
 
-Node::Node() : pull_up_index(0), pull_dn_index(0), fanout() {
+Node::Node() : pull_up_index(INVALID_EXPR_INDEX),
+	pull_dn_index(INVALID_EXPR_INDEX), fanout(),
+	struct_flags(NODE_DEFAULT_STRUCT_FLAGS) {
 	INVARIANT(!fanout.size());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Node::~Node() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Resets the state of the node.
-	Not expected to be called frequently.  
- */
-void
-Node::initialize(void) {
-	value = LOGIC_OTHER;
-	breakpoint = 0;
-	tcount = 0;
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -98,28 +88,6 @@ Node::dump_struct(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Dumps stateful information about the Node only.  
- */
-ostream&
-Node::dump_value(ostream& o) const {
-	return  (value & LOGIC_OTHER) ?
-		// or do you prefer 'U'?
-		o << 'X' :
-		o << size_t(value & LOGIC_VALUE);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Dumps stateful information about the Node only.  
- */
-ostream&
-Node::dump_state(ostream& o) const {
-	o << "val = ";
-	return dump_value(o);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	Prints a dot-edge from this node to each fanout expression.  
 	\param s is the name of the node corresponding to the tail 
 	of the edge.  
@@ -132,6 +100,81 @@ Node::dump_fanout_dot(ostream& o, const string& s) const {
 		o << s << " -> EXPR_" << *i << ';' << endl;
 	}
 	return o;
+}
+
+//=============================================================================
+// class NodeState method definitions
+
+const char
+NodeState::value_to_char[3] = { '0', '1', 'X' };
+
+const char
+NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This just initializes all nodes with unknown values.  
+	This preserves the watchpoint and breakpoint state of all nodes.  
+ */
+void
+NodeState::initialize(void) {
+	event_index = INVALID_EVENT_INDEX;
+	value = LOGIC_OTHER;
+	state_flags |= NODE_INITIALIZE_SET_MASK;
+	state_flags &= ~NODE_INITIALIZE_CLEAR_MASK;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This initializes the state and also wipes the watch/break flags.  
+ */
+void
+NodeState::reset(void) {
+	event_index = INVALID_EVENT_INDEX;
+	value = LOGIC_OTHER;
+	state_flags = NODE_INITIAL_STATE_FLAGS;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps stateful information about the Node only.  
+ */
+ostream&
+NodeState::dump_value(ostream& o) const {
+	return o << value_to_char[value & LOGIC_MASK];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dumps stateful information about the Node only.  
+ */
+ostream&
+NodeState::dump_state(ostream& o) const {
+	o << "val = ";
+	return dump_value(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Lexes string to node value.  
+	TODO: add synonymous character mappings.  
+	\return 0, 1, 2 (X), or -1 on error.  
+ */
+char
+NodeState::string_to_value(const string& v) {
+	if (v.length() != 1) {
+		return -1;
+	} else {
+		switch (v[0]) {
+		case '0': return LOGIC_LOW;
+		case '1': return LOGIC_HIGH;
+		case 'X':
+		case 'x':
+			return LOGIC_OTHER;
+		default:
+			return -1;
+		}
+	}
 }
 
 //=============================================================================

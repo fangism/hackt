@@ -25,19 +25,19 @@ expr[6]: type: and<4> (parent: 20)
 	children: 8, 10, 12, 14, offset: 4
 expr[7]: type: or<1> (parent: 8)
 	children: #1, offset: 0
-expr[8]: type: nand<1> (parent: 6)
+expr[8]: type: nor<1> (parent: 6)
 	children: 7, offset: 0
 expr[9]: type: or<1> (parent: 10)
 	children: #2, offset: 0
-expr[10]: type: nand<1> (parent: 6)
+expr[10]: type: nor<1> (parent: 6)
 	children: 9, offset: 1
 expr[11]: type: or<1> (parent: 12)
 	children: #3, offset: 0
-expr[12]: type: nand<1> (parent: 6)
+expr[12]: type: nor<1> (parent: 6)
 	children: 11, offset: 2
 expr[13]: type: or<1> (parent: 14)
 	children: #4, offset: 0
-expr[14]: type: nand<1> (parent: 6)
+expr[14]: type: nor<1> (parent: 6)
 	children: 13, offset: 3
 expr[15]: type: and<4> (parent: 1)
 	children: 16, 17, 18, 19, offset: 4
@@ -53,19 +53,19 @@ expr[20]: type: or<6> (pull-up: 5)
 	children: 22, 24, 26, 28, 6, 32, offset: -
 expr[21]: type: or<1> (parent: 22)
 	children: #6, offset: 0
-expr[22]: type: nand<1> (parent: 20)
+expr[22]: type: nor<1> (parent: 20)
 	children: 21, offset: 0
 expr[23]: type: or<1> (parent: 24)
 	children: #7, offset: 0
-expr[24]: type: nand<1> (parent: 20)
+expr[24]: type: nor<1> (parent: 20)
 	children: 23, offset: 1
 expr[25]: type: or<1> (parent: 26)
 	children: #8, offset: 0
-expr[26]: type: nand<1> (parent: 20)
+expr[26]: type: nor<1> (parent: 20)
 	children: 25, offset: 2
 expr[27]: type: or<1> (parent: 28)
 	children: #9, offset: 0
-expr[28]: type: nand<1> (parent: 20)
+expr[28]: type: nor<1> (parent: 20)
 	children: 27, offset: 3
 expr[29]: type: and<2> (parent: 1)
 	children: 30, 31, offset: 5
@@ -77,10 +77,10 @@ expr[32]: type: and<2> (parent: 20)
 	children: 34, 36, offset: 5
 expr[33]: type: or<1> (parent: 34)
 	children: #10, offset: 0
-expr[34]: type: nand<1> (parent: 32)
+expr[34]: type: nor<1> (parent: 32)
 	children: 33, offset: 0
 expr[35]: type: or<1> (parent: 36)
 	children: #11, offset: 0
-expr[36]: type: nand<1> (parent: 32)
+expr[36]: type: nor<1> (parent: 32)
 	children: 35, offset: 1
 

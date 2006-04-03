@@ -17,11 +17,11 @@ expr[4]: type: or<3> (pull-up: 3)
 	children: 6, 8, 15, offset: -
 expr[5]: type: or<1> (parent: 6)
 	children: #1, offset: 0
-expr[6]: type: nand<1> (parent: 4)
+expr[6]: type: nor<1> (parent: 4)
 	children: 5, offset: 0
 expr[7]: type: or<1> (parent: 8)
 	children: #2, offset: 0
-expr[8]: type: nand<1> (parent: 4)
+expr[8]: type: nor<1> (parent: 4)
 	children: 7, offset: 1
 expr[9]: type: and<4> (parent: 14)
 	children: 10, 11, 12, 13, offset: 1
@@ -39,18 +39,18 @@ expr[15]: type: or<4> (parent: 4)
 	children: 17, 19, 21, 23, offset: 2
 expr[16]: type: or<1> (parent: 17)
 	children: #4, offset: 0
-expr[17]: type: nand<1> (parent: 15)
+expr[17]: type: nor<1> (parent: 15)
 	children: 16, offset: 0
 expr[18]: type: or<1> (parent: 19)
 	children: #5, offset: 0
-expr[19]: type: nand<1> (parent: 15)
+expr[19]: type: nor<1> (parent: 15)
 	children: 18, offset: 1
 expr[20]: type: or<1> (parent: 21)
 	children: #6, offset: 0
-expr[21]: type: nand<1> (parent: 15)
+expr[21]: type: nor<1> (parent: 15)
 	children: 20, offset: 2
 expr[22]: type: or<1> (parent: 23)
 	children: #7, offset: 0
-expr[23]: type: nand<1> (parent: 15)
+expr[23]: type: nor<1> (parent: 15)
 	children: 22, offset: 3
 

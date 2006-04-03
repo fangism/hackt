@@ -1,5 +1,32 @@
 "ChangeLog"
 
+2006-04-03	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-07-prsim-01-15:
+	  Branch merge of -prsim-01, also bringing some configure improvements.
+
+
+2006-04-02	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-14:
+	  configure.ac: check for *rand48 family of stdlib C functions.  
+
+
+2006-03-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-11:
+	  Wrote some configure tests for checking usability of standard
+		file descriptors with C++ file streams.  
+		This achieves redirection from inside a program back to
+		stdin and stdout.  
+
+
+2006-03-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-04:
+	  Added configure checks for signal.h headers.  
+
+
 2006-03-19	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-03-merged-nonmeta-02-05:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.2 2006/01/22 06:53:27 fang Exp $
+	$Id: Event.h,v 1.3 2006/04/03 05:30:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -11,7 +11,8 @@
 #include <queue>
 #include <vector>
 #include "sim/common.h"
-#include "sim/time.h"
+// #include "sim/time.h"
+#include "util/macros.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
 
@@ -30,14 +31,35 @@ using util::memory::free_list_release;
 	Based on struct prs_event (PrsEvent).  
  */
 struct Event {
+public:
+	/**
+		Event attribute encoding.  
+	 */
+	typedef	enum {
+		EVENT_VACUOUS = 0x01,		// no visible outcome
+		EVENT_UNSTABLE = 0x02,		// pending event incomplete
+		EVENT_INTERFERENCE = 0x04,	// contention with pending event
+		EVENT_WEAK = 0x08,		// w.r.t. LOGIC_OTHER
+		EVENT_WEAK_UNSTABLE = EVENT_UNSTABLE | EVENT_WEAK,
+		EVENT_WEAK_INTERFERENCE = EVENT_INTERFERENCE | EVENT_WEAK
+	} event_flags_enum;
+public:
+	static const char		upguard[3][3];
+	static const char		dnguard[3][3];
+public:
 	/**
 		The index of the node to switch.
 	 */
 	node_index_type			node;
 	/**
-		The node's new value: 0, 1, X.
+		The node's new value: 0, 1, 2 (X).
 	 */
 	unsigned char			val;
+
+	Event() : node(INVALID_NODE_INDEX) { }
+
+	Event(const node_index_type n, const unsigned char v) :
+		node(n), val(v) { }
 
 };	// end struct Event
 
@@ -46,12 +68,14 @@ struct Event {
 	An ordered placeholder for events.  
 	These will go into the event queue on behalf of the actual event.  
  */
+template <typename T>
 struct EventPlaceholder {
+	typedef	T			time_type;
 	/**
 		The time at which the event should occur.  
 		This is also the Key.  
 	 */
-	real_time			time;
+	time_type			time;
 	/**
 		The index of the corresponding event belonging to the
 		global event pool.  
@@ -59,9 +83,15 @@ struct EventPlaceholder {
 	 */
 	event_index_type		event_index;
 
+	EventPlaceholder(const time_type t, const event_index_type i)
+		: time(t), event_index(i) { }
+
+	/**
+		Smaller (sooner) time gets higher priority.  
+	 */
 	bool
 	operator < (const EventPlaceholder& r) const {
-		return time < r.time;
+		return time > r.time;
 	}
 };	// end struct EventPlaceholder
 
@@ -74,6 +104,7 @@ struct EventPlaceholder {
  */
 class EventPool {
 public:
+	typedef	Event				event_type;
 	typedef	index_pool<vector<Event> >	event_allocator_type;
 	typedef	vector<event_index_type>	free_list_type;
 private:
@@ -85,22 +116,42 @@ public:
 
 	const Event&
 	operator [] (const event_index_type i) const {
+		INVARIANT(i);
 		return event_pool[i];
 	}
 
 	Event&
 	operator [] (const event_index_type i) {
+		INVARIANT(i);
 		return event_pool[i];
 	}
 
+#if 0
 	event_index_type
 	allocate(void) {
 		if (free_indices.empty()) {	// UNLIKELY
 			const event_index_type ret = event_pool.size();
 			event_pool.allocate();	// will realloc
+			INVARIANT(ret);
 			return ret;
 		} else {			// LIKELY
 			return free_list_acquire(free_indices);
+		}
+	}
+#endif
+
+	event_index_type
+	allocate(const event_type& e) {
+		if (free_indices.empty()) {	// UNLIKELY
+			const event_index_type ret = event_pool.size();
+			event_pool.allocate(e);	// will realloc
+			INVARIANT(ret);
+			return ret;
+		} else {			// LIKELY
+			const event_index_type ret =
+				free_list_acquire(free_indices);
+			event_pool[ret] = e;
+			return ret;
 		}
 	}
 
@@ -115,6 +166,8 @@ public:
 };	// end class EventPool
 
 //=============================================================================
+#define	EVENT_QUEUE_TEMPLATE_SIGNATURE		template <class E>
+#define	EVENT_QUEUE_CLASS			EventQueue<E>
 /**
 	For now, hard-coded to one type of event.  
 	TODO: template this to use custom structures.  
@@ -122,17 +175,26 @@ public:
 	TODO: document a consistent interface.  
 	TODO: instead of using pointers, recycle ID numbers.  
 	TODO: use list_vector pool allocation.  
+	\param E is the event-placeholder type.  
  */
+EVENT_QUEUE_TEMPLATE_SIGNATURE
 class EventQueue {
+	typedef	EVENT_QUEUE_CLASS		this_type;
+public:
+	typedef	E				value_type;
+private:
 	/**
 		Heap-like structure. 
+		Also consider trying multimap.  
 	 */
-	typedef	priority_queue<EventPlaceholder, vector<EventPlaceholder> >
+	typedef	priority_queue<value_type, vector<value_type> >
 						queue_type;
+private:
 	queue_type				equeue;
 
 public:
 	EventQueue();
+	// allow default copy-constructor
 	~EventQueue();
 
 	bool
@@ -141,22 +203,43 @@ public:
 	}
 
 	void
-	push(const EventPlaceholder& p) {
+	push(const value_type& p) {
 		equeue.push(p);
 	}
 
 	/**
 		\pre queue is not empty.  
 	 */
-	EventPlaceholder
+	value_type
 	pop(void) {
-		const EventPlaceholder ret(equeue.top());
+		const value_type ret(equeue.top());
 		equeue.pop();
 		return ret;
 	}
 
+	// semantically equivalent variation, but guaranteed to elide copy
+	void
+	pop(value_type& v) {
+		v = equeue.top();
+		equeue.pop();
+	}
+
+	/**
+		\pre This queue must not be empty.  
+		\return the next event time.  
+	 */
+	const value_type&
+	top(void) const {
+		INVARIANT(!empty());
+		return equeue.top();
+	}
+
 	void
 	clear(void);
+
+	template <class S>
+	void
+	copy_to(S&) const;
 
 };	// end struct EventQueue
 

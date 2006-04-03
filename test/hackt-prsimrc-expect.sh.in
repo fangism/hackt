@@ -1,0 +1,44 @@
+#!@SH_PATH@
+# "hackt-prsimrc-expect.sh.in"
+#	$Id: hackt-prsimrc-expect.sh.in,v 1.2 2006/04/03 05:30:41 fang Exp $
+# Template test script for comparing prsim outputs against 
+#	expected results.  
+
+# arguments:
+# $1	"hackt prsim" execution command
+# $2	the object file to build (using make) and run
+# $3	the prsim-run-commands script to run (must reside in srcdir!)
+
+prsim=$1
+obj=$2
+prsimrc=$3
+filter=$4
+# strip srcdir path
+bldroot=`@ECHO@ "$prsimrc" | @SED@ 's|.*/||g'`
+
+@CALLMAKE@ $2 > /dev/null 2>&1
+if test ! -f $obj
+then
+	@ECHO@ Failed to make "$obj"
+	exit 1
+fi
+
+$prsim $obj < $prsimrc > $bldroot-out 2>&1
+@CAT@ $bldroot-out | $filter > $bldroot-out-filter
+
+if test ! -f $prsimrc-expect
+then
+	@ECHO@ "Missing $prsimrc-expect."
+	exit 1
+fi
+
+# difference comparison:
+@DIFF@ -u $prsimrc-expect $bldroot-out-filter > $bldroot-diff 2>&1
+
+if test -s $bldroot-diff
+then
+	@ECHO@ "$bldroot-diff is non-empty!"
+	exit 1
+fi
+
+

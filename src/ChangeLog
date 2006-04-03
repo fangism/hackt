@@ -3,6 +3,175 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-07-merged-prsim-01-15:
+	  Branch merge of -prsim-01 work.  
+	  With this branch comes a working production rule simulator based
+		closely on the behavior (and code) from tools/prsim
+		and other earlier versions of prsim.  
+	  Many commands have been 'ported' over, given some interface 
+		improvements, as well as introducing new commands.  
+	  Much left on the TODO:prsim list. 
+
+
+	* HACKT-00-01-04-main-00-78-06:
+	  Afternote: no source change, only lib additions from Sandra.  
+
+
+2006-04-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-15:
+	  Minor typo fixes, and cross-checked against g++-4.1.  
+	  Ready to merge to trunk.  
+
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-14:
+	  Implemented random timing in prsim -- preliminary.  
+	  Branch is nearly ready for alpha-testing.  
+
+
+2006-04-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-13:
+	  Implemented State::signal_handler helper class for managing
+		the SIGINT interupt handler.  
+	  Preliminary benchmarks show hackt's prsim (-O2) faster than 
+		the original prsim (-O3) but our work is not done yet.
+	  Implemented 'break' family of commands, added test case.  
+
+
+2006-03-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-12:
+	  prsim 'initialize' command does not reset the watch/break point
+		state of the nodes of the simulator, or the modes.  
+	  Added 'reset' command to initialize and clear modes.  
+	  'watch' and 'unwatch' can take arbitrary number of arguments, 
+		and just iterates over each one.  
+	  Fixed cause node value dumping on instability/interference.  
+	  One test case demonstrates potential problem with fanout
+		evaluation ordering and diagnostics (inv-05).  
+
+
+2006-03-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-11:
+	  Added option to prsim to search include paths added by -I <path>.
+	  prsim State now includes a named_ifstream_manager (new in util/)
+		for managing recursively included source scripts.  
+	  Added a few test cases that demonstrate this.  
+
+
+2006-03-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-10:
+	  Non-interactive mode of prsim now avoids using readline
+		completely, which preserves tab characters in scripts.  
+		This is done in CommandRegistry::__source/interpret.
+	  Implemented commands: watch, unwatch, watchall, nowatchall, unwatchall
+		watchall: doesn't alter nodes' breakpoint flag, just
+			uses one State flag to enable printing for all nodes.
+		unwatchall: unwatches every node in watch list
+		nowatchall: just disables watchall, while allowing explicitly
+			watched nodes to still print.  
+	  Watching functionality added to step, cycle, advance commands.  
+
+
+2006-03-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-09:
+	  Fixed ExprState::pull_state() inline methods, properly
+		accounting for is_not().  
+	  'step' command now works as expected, matching with original prsim.
+	  Starting to add test cases in test/prsim.
+
+
+2006-03-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-08:
+	  Debugged 'step' command so simulation execution looks reasonable.
+	  Implemented 'cycle' and 'time' commands.  
+	  EXPR_NAND and EXPR_NOR enumerations betwixt.  
+	  More meaningful comments.  
+	  TODO: tons of tests, trying to cover every corner of prsim
+		execution, every event scenario.  
+
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-07:
+	  Few minor fixes in prsim, as we slowly test the hell out of it.  
+	  Oodles of debugging code added and (temporarily) enabled.
+	  'set' command now takes an optional time argument:
+		time to set at absolute time, or +time to set relative to now.
+		Also improved error messages.  
+	  EventPlaceholder sorting criteria reversed,
+		lower time => higher priority (duh!)
+	  Cleaned code using the pull_state of expressions, 
+		using comprehensible pull-enums rather than overloading
+		the use of node_type::LOGIC_*
+
+
+2006-03-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-06:
+	  Tests: added preliminary support for prsim tests.  
+	  main/prsim.cc: added -b/-i batch-mode/interactive flags.  
+		Batch-mode suppresses prompting, default is interactive.  
+	  TODO: add interpreter modes, where termination conditions
+		depending on error status of command can be set.  
+
+
+2006-03-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-05:
+	  Separated node and expression classes better into structural base
+		classes and stateful derived classes.  The structural classes
+		will be the core foundation for other tools.  
+		The stateful classes (e.g.) can be used for simulators.  
+	  In-class enumerations were moved to more appropriate classes.  
+	  Bit-field accesses have been fused into method calls for clarity.  
+
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-04:
+	  Implemented (untested) prsim:step command.
+	  Copy-ported much code from prsim's prs.c over to State's 
+		member method definitions.  
+	  State has more member structures and queues corresponding
+		to global information kept in prs.h's struct Prs (and more).  
+	  Added more meaningful enumerations and lookup tables.  
+
+
+2006-03-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-03:
+	  Implemented 'what' and 'fanin' commands in prsim.  
+	  Broke up parse_node_to_index into reusable subroutines in
+		"sim/prsim/Reference.cc"
+
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-02:
+	  Added -h option to prsim main module for command help,
+		with optional objfile, equivalent to "help all" in interpreter.
+	  Redefined some command-class macros for "sim/prsim/Command.h".
+	  Implemented 'fanout' 'assert' and 'assertn' commands.  
+	  Added bunch of utility methods to expr/node/state classes.  
+
+
+2006-03-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-05-prsim-01-01:
+	  Branch for resuming prsim development.  
+	  Templated EventQueue and EventPlaceholder classes.  
+	  Implemented 'set' and 'queue' commands in interface.  
+	  EventPool now reserves the 0-indexed (invalid) entry so 
+		it should not be touched.
+	  NodeState class extends Node with stateful information.
+		Ideally, Node should only contain structural information.  
+	  Some generally useful short functions added.  
+	  State class: added current_time, a few methods for
+		event queue changes and printing feedback.  
+
+
 2006-03-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-05:

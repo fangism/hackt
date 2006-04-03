@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.49 2006/03/21 23:37:31 fang Exp $
+#	$Id: configure.ac,v 1.50 2006/04/03 05:30:25 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -83,6 +83,10 @@ AC_CHECK_PROG([XFIG], xfig, xfig)
 AC_CHECK_PROG([TRANSFIG], transfig, transfig)
 dnl only fig2dev is needed for converting xfigs
 AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
+
+AC_CHECK_FILES([/dev/null])
+dnl standard terminal devices for redirection (test doesn't work)
+dnl AC_CHECK_FILES([/dev/stdin /dev/stdout /dev/stderr])
 
 # checking for old CAST tools for regression and backwards compatibility tests
 # no big deal if they don't exist...
@@ -172,6 +176,9 @@ AC_CXX_ATTRIBUTE_ALIGNED_SIZE
 AC_CXX_ATTRIBUTE_EVIL
 
 AC_CXX_STL_REVERSE_ITERATOR_COMPARISONS
+AC_CXX_STD_IFSTREAM_DEV_STDIN
+AC_CXX_STD_OFSTREAM_DEV_STDOUT
+AC_CXX_STD_OFSTREAM_DEV_STDERR
 AC_C_BUILTIN_EXPECT
 
 # additional header checks
@@ -182,6 +189,7 @@ AC_CHECK_HEADERS([malloc.h])
 AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
+AC_CHECK_HEADERS([signal.h sys/signal.h])
 
 dnl checks tons of standard C++ headers in various locations
 dnl from "config/cxx_STL.m4"
@@ -217,7 +225,8 @@ dnl <ctype.h>
 AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
 AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
 AC_CHECK_FUNCS([isspecial isprint ispunct isrune isxdigit tolower toupper])
-
+AC_CHECK_FUNCS([drand48 erand48 lrand48 nrand48])
+AC_CHECK_FUNCS([mrand48 jrand48 srand48 seed48 lcong48])
 AC_CHECK_FUNCS([system])
 AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
 
@@ -242,6 +251,8 @@ AC_CHECK_SIZEOF(void*)
 AC_CHECK_SIZEOF(size_t)
 AC_CHECK_SIZEOF(int64_t)
 AC_CHECK_SIZEOF(uint64_t)
+AC_CHECK_SIZEOF(quad_t)
+AC_CHECK_SIZEOF(u_quad_t)
 
 HACKT_CHECK_SANITY
 
@@ -302,6 +313,7 @@ AC_CONFIG_FILES([
 	test/parser/typedef/Makefile
 	test/parser/connect/Makefile
 	test/parser/flow/Makefile
+	test/prsim/Makefile
 	test/benchmarks/Makefile
 	dox/Makefile
 	dox/mk/Makefile
@@ -341,6 +353,8 @@ AC_CONFIG_FILES([test/hackt-cflat-sprs-expect.sh],
 	[chmod +x test/hackt-cflat-sprs-expect.sh])
 AC_CONFIG_FILES([test/hackt-prsim-expr-alloc-expect.sh],
 	[chmod +x test/hackt-prsim-expr-alloc-expect.sh])
+AC_CONFIG_FILES([test/hackt-prsimrc-expect.sh],
+	[chmod +x test/hackt-prsimrc-expect.sh])
 AC_CONFIG_FILES([test/test-series.sh],
 	[chmod +x test/test-series.sh])
 

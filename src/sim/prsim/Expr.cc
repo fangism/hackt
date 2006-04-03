@@ -1,12 +1,13 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.2 2006/01/22 06:53:28 fang Exp $
+	$Id: Expr.cc,v 1.3 2006/04/03 05:30:36 fang Exp $
  */
 
 #include <iostream>
 #include <algorithm>
 #include "sim/prsim/Expr.h"
+#include "Object/lang/PRS_enum.h"
 #include "util/macros.h"
 
 namespace HAC {
@@ -41,10 +42,25 @@ Expr::Expr(const expr_index_type p, const unsigned char t,
 Expr::~Expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-Expr::initialize(void) {
-	unknowns = size;
-	countdown = 0;
+char
+Expr::to_prs_enum(void) const {
+	if (is_not())
+		return entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
+	else if (is_or())
+		return entity::PRS::PRS_OR_EXPR_TYPE_ENUM;
+	else	return entity::PRS::PRS_AND_EXPR_TYPE_ENUM;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Determine whether or not to parenthesize this subexpression
+	during pretty-printing.  
+	\param ptype is the parent expression type enumeration.
+ */
+bool
+Expr::parenthesize(const char ptype) const {
+	return (ptype != entity::PRS::PRS_LITERAL_TYPE_ENUM) &&
+		(ptype != to_prs_enum()) && (size > 1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -80,13 +96,6 @@ Expr::dump_struct(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-Expr::dump_state(ostream& o) const {
-	o << "ctdn: " << countdown << " X: " << unknowns << "(/" << size << ')';
-	return o;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
 Expr::dump_parent_dot_edge(ostream& o) const {
 	if (is_root()) {
 		o << "NODE_" << parent << "\t[arrowhead=" <<
@@ -113,6 +122,28 @@ Expr::dump_type_dot_shape(ostream& o) const {
 	case EXPR_NOR: o << "invtriangle"; break;
 	default: THROW_EXIT;
 	}
+	return o;
+}
+
+//=============================================================================
+/**
+	Initializes expression state.  
+	Assuming everything is X on startup, the initialization
+	of the countdown depends on whether or not this expression
+	is conjunctive or disjunctive.  
+ */
+void
+ExprState::initialize(void) {
+	unknowns = size;
+	countdown = 0;	// All X's, no 1's or 0's
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+ExprState::dump_state(ostream& o) const {
+	o << "ctdn: " << size_t(countdown) <<
+		" X: " << size_t(unknowns) << "(/" << size_t(size) << ')'
+		<< " pull: " << size_t(pull_state());
 	return o;
 }
 

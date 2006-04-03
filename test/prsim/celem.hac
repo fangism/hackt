@@ -1,0 +1,13 @@
+// "celem.hac"
+// just a single C-element
+
+defproc celem(bool a, b, c) {
+prs {
+	a & b	-> c-
+	~a & ~b	-> c+
+}
+}
+
+bool a, b, c;
+celem C(a, b, c);
+

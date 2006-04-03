@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.108 2006/03/20 02:41:02 fang Exp $
+#	$Id: Makefile.am,v 1.109 2006/04/03 05:30:34 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -77,7 +77,7 @@ BUILT_SOURCES = parser/hackt-parse.output.h \
 	parser/instref-parse.output.h
 
 # phony program to generate _build/*/.deps directories on distcheck
-PHONYSOURCES += dummy.cc sim/dummy.cc
+PHONYSOURCES += dummy.cc
 dirgen_SOURCES = $(PHONYSOURCES) test/header_test.cc
 
 # these two targets cause automake to create the corresponding _build
@@ -502,6 +502,7 @@ PARSER_CC_FILES = \
 
 
 SIM_CC_FILES = \
+	sim/random_time.cc \
 	sim/prsim/Node.cc \
 	sim/prsim/Expr.cc \
 	sim/prsim/ExprAlloc.cc \
@@ -510,9 +511,11 @@ SIM_CC_FILES = \
 	sim/prsim/Command.cc \
 	sim/prsim/Reference.cc
 
-SIM_TCC_FILES =
+SIM_TCC_FILES = \
+	sim/prsim/Event.tcc
 
 SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
+	$(SIM_TCC_FILES:.tcc=.h) \
 	sim/common.h \
 	sim/time.h
 

@@ -1,0 +1,31 @@
+# "inv-03.prsimrc"
+# copy-modified from "inv-01.prsimrc"
+#	$Id: inv-03.prsimrc,v 1.2 2006/04/03 05:30:48 fang Exp $
+# @haco@ inv.haco-a
+# testing watch node facilities
+
+# watching individual nodes here
+watch a b
+watch c
+
+source inv-00.prsimrc
+
+echo re-initializing should preserve the watch point state
+initialize
+
+source inv-00.prsimrc
+
+initialize
+unwatch a
+unwatch b c
+
+echo re-initializing
+initialize
+source inv-00.prsimrc
+
+echo re-initializing and unwatchall
+unwatchall
+initialize
+source inv-00.prsimrc
+
+

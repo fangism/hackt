@@ -25,12 +25,17 @@ core.*
 *.allocdump
 *.allocdiff
 *.noindex
+*.castprs
 *.prs
 *.prsdiff
 *.prsimexpr
 *.prsimexpr-dot
 *.prsimexpr-ps
 *.prsimexprdiff
+*.prsimtest
+*.prsimrc-out
+*.prsimrc-out-filter
+*.prsimrc-diff
 *.sort
 *.sprs
 *.sprsdiff
