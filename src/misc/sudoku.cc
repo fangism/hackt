@@ -1,6 +1,6 @@
 /**
 	\file "sudoku.cc"
-	$Id: sudoku.cc,v 1.2 2006/01/22 06:53:15 fang Exp $
+	$Id: sudoku.cc,v 1.3 2006/04/03 19:36:24 fang Exp $
  */
 
 #include "misc/sudoku.h"
@@ -433,9 +433,11 @@ if (pf.valid()) {
  */
 bool
 board::load(istream& f) {
-	do {
+	while (f.good()) {
 		ushort x, y, z;
 		f >> x >> y >> z;
+		if (!f.good())
+			break;
 		--x, --y, --z;		// normalize to 0-8
 		if (x >=9 || y >= 9 || z >= 9) {
 			cerr << "ERROR: all input numbers must be 1-9." << endl;
@@ -456,7 +458,7 @@ board::load(istream& f) {
 			dump_state(cerr) << endl;
 #endif
 		}
-	} while (f.good());
+	}
 	return false;
 }
 
