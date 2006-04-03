@@ -2,6 +2,13 @@
 
 2006-04-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-05-prsim-01-15:
+	  Cross-checked against g++-4.1.  
+	  Private copy-ctor in named_ifstream_manager befriends
+		__gnu_cxx::new_allocator, if present
+		(replaces std::_Construct).  
+
+
 	* HACKT-00-01-04-main-00-78-05-prsim-01-14:
 	  Added configure-checks for *rand48 family of stdlib functions.
 	  Implemented rand48 template wrapper in util/numeric/random.*.

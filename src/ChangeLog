@@ -5,6 +5,11 @@
 
 2006-04-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-05-prsim-01-15:
+	  Minor typo fixes, and cross-checked against g++-4.1.  
+	  Ready to merge to trunk.  
+
+
 	* HACKT-00-01-04-main-00-78-05-prsim-01-14:
 	  Implemented random timing in prsim -- preliminary.  
 	  Branch is nearly ready for alpha-testing.  

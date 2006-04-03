@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.3.8.13 2006/04/02 23:11:05 fang Exp $
+	$Id: Command.cc,v 1.3.8.14 2006/04/03 04:58:24 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1536,7 +1536,7 @@ Random::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoRandom, "norandom", modes, 
-	"use random delays")
+	"use non-random delays")
 
 int
 NoRandom::main(State& s, const string_list& a) {

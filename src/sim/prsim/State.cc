@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.4.8.13 2006/04/02 23:11:05 fang Exp $
+	$Id: State.cc,v 1.4.8.14 2006/04/03 04:58:24 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1628,7 +1628,7 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 ostream&
 State::dump_source_paths(ostream& o) const {
 	o << "source paths:" << endl;
-	ifstreams.dump_paths(o);
+	return ifstreams.dump_paths(o);
 }
 
 //=============================================================================

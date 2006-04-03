@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.2.6.1 2006/03/31 06:08:50 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.2.6.2 2006/04/03 04:58:20 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -207,6 +207,7 @@ AC_CHECK_HEADERS([ext/stl_hash_fun.h ext/hash_fun.h stl_hash_fun.h])
 AC_CHECK_HEADERS([ext/hash_set hash_set])
 AC_CHECK_HEADERS([ext/hashtable.h tr1/hashtable hashtable.h])
 AC_CHECK_HEADERS([tr1/unordered_map tr1/unordered_set])
+AC_CHECK_HEADERS([ext/new_allocator.h])
 AC_CHECK_HEADERS([ext/functional tr1/functional])
 dnl used in "src/util/string_fwd.h"
 AC_CHECK_HEADERS([bits/stringfwd.h])
