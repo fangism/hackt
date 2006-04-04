@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.3 2006/04/03 05:30:37 fang Exp $
+	$Id: Node.cc,v 1.3.2.1 2006/04/04 07:49:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -156,6 +156,31 @@ NodeState::dump_state(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Lexes char to node value.  
+	NOTE: reserving H/L for weak logic levels.  
+	\return 0, 1, 2 (X), or -1 on error.  
+ */
+char
+NodeState::char_to_value(const char v) {
+	switch (v) {
+	case 'f':	// fall-through
+	case 'F':	// fall-through
+	case '0': return LOGIC_LOW;
+	case 't':	// fall-through
+	case 'T':	// fall-through
+	case '1': return LOGIC_HIGH;
+	case 'X':	// fall-through
+	case 'x':	// fall-through
+	case 'U':	// fall-through
+	case 'u':	// fall-through
+		return LOGIC_OTHER;
+	default:
+		return -1;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Lexes string to node value.  
 	TODO: add synonymous character mappings.  
 	\return 0, 1, 2 (X), or -1 on error.  
@@ -165,17 +190,22 @@ NodeState::string_to_value(const string& v) {
 	if (v.length() != 1) {
 		return -1;
 	} else {
-		switch (v[0]) {
-		case '0': return LOGIC_LOW;
-		case '1': return LOGIC_HIGH;
-		case 'X':
-		case 'x':
-			return LOGIC_OTHER;
-		default:
-			return -1;
-		}
+		return char_to_value(v[0]);
 	}
 }
+
+//=============================================================================
+#if 0
+/**
+	Hmmm... need canonical name.  
+ */
+void
+NodeState::status_dumper::operator () (const NodeState& n) {
+	if (n.current_value() == match_val) {
+		os << ...;
+	}
+}
+#endif
 
 //=============================================================================
 }	// end namespace PRSIM

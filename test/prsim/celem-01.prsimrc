@@ -1,5 +1,7 @@
 # "celem-01.prsimrc"
 # @haco@ celem.haco-a
+#	$Id: celem-01.prsimrc,v 1.2.2.1 2006/04/04 07:49:46 fang Exp $
+# testing get commands
 initialize
 get a
 get b

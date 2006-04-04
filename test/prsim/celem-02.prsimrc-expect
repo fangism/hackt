@@ -1,0 +1,70 @@
+0 nodes:
+
+1 nodes:
+
+X nodes:
+a b c 
+setting a+ 
+0 nodes:
+
+1 nodes:
+a 
+X nodes:
+b c 
+setting b- 
+0 nodes:
+b 
+1 nodes:
+a 
+X nodes:
+c 
+setting a- 
+0 nodes:
+a b 
+1 nodes:
+c 
+X nodes:
+
+setting b+ 
+0 nodes:
+a 
+1 nodes:
+b c 
+X nodes:
+
+setting a+ 
+0 nodes:
+c 
+1 nodes:
+a b 
+X nodes:
+
+setting a- 
+0 nodes:
+a c 
+1 nodes:
+b 
+X nodes:
+
+setting b- 
+0 nodes:
+a b 
+1 nodes:
+c 
+X nodes:
+
+setting b -> X 
+0 nodes:
+a 
+1 nodes:
+c 
+X nodes:
+b 
+setting a -> X 
+WARNING: weak-interference `c'
+0 nodes:
+
+1 nodes:
+
+X nodes:
+a b c 

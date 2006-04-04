@@ -1,0 +1,72 @@
+# "celem-02.prsimrc"
+# @haco@ celem.haco-a
+#	$Id: celem-02.prsimrc,v 1.1.2.1 2006/04/04 07:49:47 fang Exp $
+
+status 0
+status 1
+status X
+
+echo setting a+
+set a 1
+cycle
+status F
+status T
+status x
+
+echo setting b-
+set b 0
+cycle
+status f
+status t
+status u
+
+echo setting a-
+set a 0
+cycle
+status 0
+status 1
+status U
+
+echo setting b+
+set b T
+cycle
+status 0
+status 1
+status U
+
+echo setting a+
+set a t
+cycle
+status 0
+status 1
+status U
+
+echo setting a-
+set a F
+cycle
+status 0
+status 1
+status U
+
+echo setting b-
+set b f
+cycle
+status 0
+status 1
+status U
+
+echo setting b -> X
+set b x
+cycle
+status 0
+status 1
+status U
+
+echo setting a -> X
+set a U
+cycle
+status 0
+status 1
+status U
+
+

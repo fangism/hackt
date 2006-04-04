@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.5 2006/04/03 05:30:37 fang Exp $
+	$Id: State.cc,v 1.5.2.1 2006/04/04 07:49:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -501,6 +501,14 @@ State::clear_all_breakpoints(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+State::time_type
+State::random_delay(void) {
+	typedef	random_time<random_time_limit<time_type>::type>
+				random_generator_type;
+	return random_generator_type()();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return absolute time of scheduled pull-up event.
 	TODO: figure out how to get delay of rule (sparse map?).  
@@ -508,10 +516,8 @@ State::clear_all_breakpoints(void) {
 // inline
 State::time_type
 State::get_delay_up(const event_type& e) const {
-	typedef	random_time<random_time_limit<time_type>::type>
-				random_generator_type;
 	return current_time +
-		(timing_mode == TIMING_RANDOM ? random_generator_type()() :
+		(timing_mode == TIMING_RANDOM ? random_delay() :
 		(timing_mode == TIMING_UNIFORM ? time_type(10) :
 		// timing_mode == TIMING_AFTER
 			time_type(10)
@@ -525,10 +531,8 @@ State::get_delay_up(const event_type& e) const {
 // inline
 State::time_type
 State::get_delay_dn(const event_type& e) const {
-	typedef	random_time<random_time_limit<time_type>::type>
-				random_generator_type;
 	return current_time +
-		(timing_mode == TIMING_RANDOM ? random_generator_type()() :
+		(timing_mode == TIMING_RANDOM ? random_delay() :
 		(timing_mode == TIMING_UNIFORM ? time_type(10) :
 		// timing_mode == TIMING_AFTER
 			time_type(10)
@@ -1351,6 +1355,24 @@ State::unwatch_all_nodes(void) {
 		}
 	}
 	watch_list.clear();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param val node_type::LOGIC_{LOW,HIGH,OTHER}.  
+ */
+ostream&
+State::status_nodes(ostream& o, const char val) const {
+	INVARIANT(node_type::is_valid_value(val));
+	const size_t ns = node_pool.size();
+	size_t i = INVALID_NODE_INDEX +1;
+	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
+	for ( ; i<ns; ++i) {
+		if (node_pool[i].current_value() == val) {
+			o << get_node_canonical_name(i) << ' ';
+		}
+	}
+	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

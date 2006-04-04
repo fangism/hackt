@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.3 2006/04/03 05:30:37 fang Exp $
+	$Id: State.h,v 1.3.2.1 2006/04/04 07:49:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -313,6 +313,10 @@ public:
 	bool
 	pending_events(void) const { return !event_queue.empty(); }
 
+	static
+	time_type
+	random_delay(void);
+
 	time_type
 	next_event_time(void) const;
 
@@ -394,6 +398,9 @@ public:
 	/// for any user-defined structures from the .hac
 	void
 	unwatch_structure(void);
+
+	ostream&
+	status_nodes(ostream&, const char) const;
 
 	template <class L>
 	void

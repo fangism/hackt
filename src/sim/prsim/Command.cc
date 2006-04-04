@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.4 2006/04/03 05:30:36 fang Exp $
+	$Id: Command.cc,v 1.4.2.1 2006/04/04 07:49:44 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -945,7 +945,7 @@ if (asz < 3 || asz > 4) {
 	const string& _val(*ai++);	// node value
 	// valid values are 0, 1, 2(X)
 	const char val = node_type::string_to_value(_val);
-	if (val < 0) {
+	if (!node_type::is_valid_value(val)) {
 		cerr << "Invalid logic value: " << _val << endl;
 		return Command::SYNTAX;
 	}
@@ -985,11 +985,11 @@ if (asz < 3 || asz > 4) {
 		return Command::BADARG;
 	}
 }
-}
+}	// end Set::main
 
 void
 Set::usage(ostream& o) {
-	o << "set <node> <value 0|1|X> [+delay | time]" << endl;
+	o << "set <node> <0|F|1|T|X|U> [+delay | time]" << endl;
 	o <<
 "\tWithout delay, node is set immediately.  Relative delay into future\n"
 "\tis given by +delay, whereas an absolute time is given without \'+\'."
@@ -997,8 +997,52 @@ Set::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
-//	"set node after random delay")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
+	"set node to value after random delay")
+
+/**
+	NOTE: the random delay has the same distribution as the 
+	random delays in the simulator in random mode.  
+ */
+int
+Setr::main(State& s, const string_list& a) {
+	const size_t asz = a.size();
+if (asz != 3) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	typedef	State::event_type		event_type;
+	typedef	State::event_placeholder_type	event_placeholder_type;
+	// now I'm wishing string_list was string_vector... :) can do!
+	string_list::const_iterator ai(++a.begin());
+	const string& objname(*ai++);	// node name
+	const string& _val(*ai++);	// node value
+	// valid values are 0, 1, 2(X)
+	const char val = node_type::string_to_value(_val);
+	if (!node_type::is_valid_value(val)) {
+		cerr << "Invalid logic value: " << _val << endl;
+		return Command::SYNTAX;
+	}
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		const int err = s.set_node_after(ni, val,
+			State::random_delay());
+		return (err < 1) ? Command::NORMAL : Command::BADARG;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}	// end Setr::main
+
+void
+Setr::usage(ostream& o) {
+	o << "setr <node> <0|F|1|T|X|U>" << endl;
+	o << "\tsets node at a random time in the future.\n"
+"\tNodes with already pending events in queue retain their former event."
+	<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setrwhen, "setrwhen", simulation,
@@ -1178,6 +1222,34 @@ Get::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info, 
+	"show all nodes matching a state value")
+
+int
+Status::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	State::node_type		node_type;
+	const char v = node_type::string_to_value(a.back());
+	if (node_type::is_valid_value(v)) {
+		s.status_nodes(cout, v);
+		return Command::NORMAL;
+	} else {
+		cerr << "Bad status value." << endl;
+		usage(cerr);
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Status::usage(ostream& o) {
+	o << "status <[0fF1tTxXuU]>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info, 
 	"print rules that influence a node")
 
@@ -1262,7 +1334,7 @@ if (a.size() != 3) {
 		const string& _val(a.back());	// node value
 		// valid values are 0, 1, 2(X)
 		const char val = node_type::string_to_value(_val);
-		if (val < 0) {
+		if (!node_type::is_valid_value(val)) {
 			cerr << "Invalid logic value: " << _val << endl;
 			return Command::SYNTAX;
 		}
@@ -1310,7 +1382,7 @@ if (a.size() != 3) {
 		const string& _val(a.back());	// node value
 		// valid values are 0, 1, 2(X)
 		const char val = node_type::string_to_value(_val);
-		if (val < 0) {
+		if (!node_type::is_valid_value(val)) {
 			cerr << "Invalid logic value: " << _val << endl;
 			return Command::SYNTAX;
 		}
