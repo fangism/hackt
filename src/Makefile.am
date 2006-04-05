@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.109 2006/04/03 05:30:34 fang Exp $
+#	$Id: Makefile.am,v 1.110 2006/04/05 22:32:19 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -426,6 +426,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/ref/aggregate_meta_value_reference_base.h \
 	Object/ref/aggregate_meta_value_reference.h \
 	Object/ref/member_meta_instance_reference.h \
+	Object/ref/meta_index_list_fwd.h \
 	Object/ref/meta_instance_reference_base.h \
 	Object/ref/meta_instance_reference_subtypes.h \
 	Object/ref/meta_value_reference_base.h \

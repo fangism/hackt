@@ -2,13 +2,14 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.5 2006/02/21 04:48:36 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.6 2006/04/05 22:32:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
 #define	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
 
 #include "Object/ref/meta_instance_reference_base.h"
+#include "Object/ref/meta_index_list_fwd.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/boolean_types.h"
 
@@ -27,10 +28,23 @@ class meta_instance_reference : public meta_instance_reference_base {
 	typedef	META_INSTANCE_REFERENCE_CLASS	this_type;
 public:
 	typedef	class_traits<Tag>		traits_type;
+	typedef typename traits_type::instance_alias_base_type
+						instance_alias_base_type;
+	typedef never_ptr<instance_alias_base_type>
+						instance_alias_base_ptr_type;
+	typedef never_ptr<const instance_alias_base_type>
+					const_instance_alias_base_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	typedef	typename traits_type::alias_connection_type
 						alias_connection_type;
+	/// the instance collection base type
+	typedef typename traits_type::instance_collection_generic_type
+					instance_collection_generic_type;
+
+	/// keep this typedef consistent with 
+	/// simple_meta_indexed_reference_base::index_list_type
+	typedef	meta_index_list_type		index_list_type;
 protected:
 	meta_instance_reference() : meta_instance_reference_base() { }
 public:
@@ -52,6 +66,26 @@ virtual bad_bool
 
 	bool
 	must_be_type_equivalent(const meta_instance_reference_base&) const;
+
+	CONNECT_PORT_PROTO;
+
+protected:
+	/**
+		Helper function.  
+	 */
+	static
+	bad_bool
+	unroll_references_helper(const unroll_context&,
+		const instance_collection_generic_type&,
+		const never_ptr<const index_list_type>,
+		alias_collection_type&);
+
+	static
+	bad_bool
+	unroll_references_helper_no_lookup(const unroll_context&,
+		const instance_collection_generic_type&,
+		const never_ptr<const index_list_type>,
+		alias_collection_type&);
 
 private:
 	excl_ptr<aliases_connection_base>

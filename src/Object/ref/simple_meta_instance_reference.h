@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.11 2006/02/21 23:07:36 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.12 2006/04/05 22:32:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -113,23 +113,9 @@ virtual	ostream&
 	attach_indices(excl_ptr<index_list_type>&);
 
 private:
-	/**
-		Helper function.  
-	 */
-	static
-	bad_bool
-	unroll_references_helper(const unroll_context&, 
-		const instance_collection_generic_type&,
-		const never_ptr<const index_list_type>, 
-		alias_collection_type&);
-
+	using parent_type::unroll_references_helper;
 protected:
-	static
-	bad_bool
-	unroll_references_helper_no_lookup(const unroll_context&, 
-		const instance_collection_generic_type&,
-		const never_ptr<const index_list_type>, 
-		alias_collection_type&);
+	using parent_type::unroll_references_helper_no_lookup;
 
 public:
 	// overridden by member_meta_instance_reference
@@ -140,9 +126,6 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
 virtual	instance_alias_base_ptr_type
 	unroll_generic_scalar_reference(const unroll_context&) const;
-
-	// see comment on why this need not be virtual!
-	CONNECT_PORT_PROTO;
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/simple_meta_indexed_reference_base.h"
 	Base implementation class for meta-indexed references in HAC.  
-	$Id: simple_meta_indexed_reference_base.h,v 1.2 2006/03/20 02:41:07 fang Exp $
+	$Id: simple_meta_indexed_reference_base.h,v 1.3 2006/04/05 22:32:22 fang Exp $
 	This file was "Object/simple_meta_instance_reference_base.h"
 		in a previous life.  
 	Id: simple_meta_instance_reference_base.h,v 1.9 2006/02/21 04:48:38 fang Exp
@@ -17,11 +17,11 @@
 #include "util/boolean_types.h"
 #include "util/memory/excl_ptr.h"
 #include "Object/common/util_types.h"
+#include "Object/ref/meta_index_list_fwd.h"
 
 namespace HAC {
 namespace entity {
 class scopespace;
-class meta_index_list;
 class const_index_list;
 struct footprint_frame;
 class state_manager;
@@ -49,7 +49,7 @@ private:
 	template <bool>
 	struct has_substructure { };
 public:
-	typedef	meta_index_list			index_list_type;
+	typedef	meta_index_list_type		index_list_type;
 protected:
 	/**
 		The indices (optional) for this particular reference.

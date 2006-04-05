@@ -1,15 +1,13 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.6 2006/04/03 05:30:33 fang Exp $
+	$Id: BUGS,v 1.7 2006/04/05 22:32:17 fang Exp $
 
-readline and command-line interpreters: (2006-03-29)
-	readline eats '\t' characters, duh!
-	solution: non-interactive script interpretation should
-		use getline() over readline() to preserve these.  
-	For prsim, explicitly use the -b flag when redirecting a script in.
-	(Program cannot tell difference between redirected and interactive
-		stdin input...)
-	status: FIXED (same day)
+minor detail in type information dumping:
+	parser/connect/130.hac
+	port dump of definition should at least contain dimensionality
+		of collection (type^dim), but is missing.  
+	is probably to be fixed in port_manager's call to 
+		instance_collection::dump or dump_collection_only.
 
 Hierarchical connections:
 	Instance aliases with relaxed actuals may have NULL actuals
@@ -38,4 +36,17 @@ Relaxed actuals:
 	per value.  This will prevent relaxed parameters from leaking
 	to places where their use is forbidden.  
 	(see test cases: template/056,057)
+
+-------------------------------------------------------------------------------
+CLOSED BUGS:
+
+readline and command-line interpreters: (2006-03-29)
+	readline eats '\t' characters, duh!
+	solution: non-interactive script interpretation should
+		use getline() over readline() to preserve these.  
+	For prsim, explicitly use the -b flag when redirecting a script in.
+	(Program cannot tell difference between redirected and interactive
+		stdin input...)
+	status: FIXED (same day)
+
 

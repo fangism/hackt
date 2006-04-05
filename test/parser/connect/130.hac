@@ -1,0 +1,11 @@
+// "130.hac"
+// contributed by Clint Kelly
+// exhibiting bug where aggregate port connections are not unrolled
+
+template <pint N>
+defproc ass(bool l[N], r) { }
+
+bool a, b, c, r;
+
+ass<3> myass({a,b,c}, r);
+

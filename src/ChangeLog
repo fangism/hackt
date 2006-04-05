@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-09:
+	  Bug fix: forgot to enable aggregate references in port connections.
+		Test case: parser/connect/130.hac
+	  Fixed by moving much common code (static functions) from 
+		simple_meta_instance_reference into
+		meta_instance_reference<> base -- no new code!
+
+
 2006-04-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08:

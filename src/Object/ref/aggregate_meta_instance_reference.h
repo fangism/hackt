@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.3 2006/02/21 21:33:02 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.4 2006/04/05 22:32:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -79,8 +79,6 @@ public:
 
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
-	CONNECT_PORT_PROTO;
-
 	LOOKUP_FOOTPRINT_FRAME_PROTO;
 
 	bad_bool
@@ -93,6 +91,9 @@ public:
 	good_bool
 	append_meta_instance_reference(
 		const count_ptr<const parent_type>&);
+private:
+	using parent_type::unroll_references_helper;
+	using parent_type::unroll_references_helper_no_lookup;
 
 private:
 	excl_ptr<port_connection_base>
