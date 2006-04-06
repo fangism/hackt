@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.5 2006/04/03 22:11:18 fang Exp $
+	$Id: Reference.cc,v 1.5.2.1 2006/04/06 18:42:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -152,7 +152,8 @@ check_reference(const parser::inst_ref_expr& ref_tree,
 /**
 	TODO: figure out a way to parse a string without
 		going through a friggin' temp file.  
-		This is really sad. 
+		This is really sad.  
+		Need to convert parser to stream interface.
 	TODO: be able to cache already checked references with a hash.  
 	\param n the string that names the instance reference
 	\param m the compiled module with the top-level namespace

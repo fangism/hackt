@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.4.2.1 2006/04/04 07:49:44 fang Exp $
+	$Id: Command.cc,v 1.4.2.2 2006/04/06 18:42:11 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1182,6 +1182,29 @@ void
 What::usage(ostream& o) {
 	o << "what <name>" << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Aliases, "aliases", info,
+	"print aliases of node or structure")
+
+int
+Aliases::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	if (parse_name_to_aliases(cout, a.back(), s.get_module()))
+		return Command::BADARG;
+	else	return Command::NORMAL;
+}
+}
+
+void
+Aliases::usage(ostream& o) {
+	o << "aliases <name>" << endl;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,

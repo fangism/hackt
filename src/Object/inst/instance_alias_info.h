@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.14 2006/03/15 04:38:17 fang Exp $
+	$Id: instance_alias_info.h,v 1.14.6.1 2006/04/06 18:42:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -14,9 +14,14 @@
 #include "util/memory/count_ptr.h"
 #include "util/union_find.h"
 #include "util/persistent_fwd.h"
+#include "Object/devel_switches.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/internal_aliases_policy_fwd.h"
+
+#if USE_ALIAS_VISITOR
+#include "Object/inst/alias_visitee.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -25,8 +30,13 @@ class footprint;
 class port_collection_context;
 class port_member_context;
 class instance_alias_info_actuals;
+#if USE_ALIAS_VISITOR
+class alias_visitor;
+class alias_printer;
+#else
 struct cflat_args_base;
 struct cflat_aliases_arg_type;
+#endif
 using std::ostream;
 using std::istream;
 using util::memory::never_ptr;
@@ -229,9 +239,17 @@ virtual	ostream&
 	ostream&
 	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
+#if USE_ALIAS_VISITOR
+	void
+	accept(alias_visitor&) const;
+
+	void
+	cflat_aliases(alias_printer&) const;
+#else
 	// top-down traversal of name hierarchy
 	void
 	cflat_aliases(const cflat_aliases_arg_type&) const;
+#endif
 
 	size_t
 	hierarchical_depth(void) const;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.15 2006/03/21 21:53:12 fang Exp $
+	$Id: footprint.cc,v 1.15.4.1 2006/04/06 18:42:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -22,6 +22,9 @@
 #include "Object/common/cflat_args.h"
 #include "Object/common/alias_string_cache.h"
 #include "Object/common/dump_flags.h"
+#if USE_ALIAS_VISITOR
+#include "Object/inst/alias_printer.h"
+#endif
 #include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -543,7 +546,7 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Prefixless wrapper.  
-	Called from top-level only.  
+	Called from top-level only, in module::__cflat().
  */
 void
 footprint::cflat_aliases(ostream& o, const state_manager& sm, 
@@ -555,8 +558,13 @@ footprint::cflat_aliases(ostream& o, const state_manager& sm,
 		// reserve alias slots for all uniquely allocated bools
 		wires.resize(s);
 	}
+#if USE_ALIAS_VISITOR
+	alias_printer v(o, sm, *this, NULL, cf, wires, string());
+	accept(v);
+#else
 	cflat_aliases(cflat_aliases_arg_type(
 		o, sm, *this, NULL, cf, wires, string()));
+#endif
 	if (cf.wire_mode && cf.connect_style && !cf.check_prs) {
 		// style need not be CONNECT_STYLE_WIRE, just not NONE
 		// aliases were suppressed while accumulating
@@ -580,6 +588,31 @@ footprint::cflat_aliases(ostream& o, const state_manager& sm,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_VISITOR
+/**
+	Visits all physical instances in instance_collection_map.  
+ */
+void
+footprint::accept(alias_visitor& v) const {
+#if 0
+	v.visit(*this);
+#else
+	STACKTRACE_VERBOSE;
+	const_instance_map_iterator i(instance_collection_map.begin());
+	const const_instance_map_iterator e(instance_collection_map.end());
+	// cerr << instance_collection_map.size() << " collections." << endl;
+	for ( ; i!=e; i++) {
+		const count_ptr<const physical_instance_collection>
+		coll_ptr(i->second.is_a<const physical_instance_collection>());
+		if (coll_ptr) {
+			coll_ptr->accept(v);
+		}
+		// skip parameters
+	}
+#endif
+}
+
+#else
 /**
 	Prints all cflat aliases in the instance hierarchy,
 	starting from the top-level with this.  
@@ -599,6 +632,7 @@ footprint::cflat_aliases(const cflat_aliases_arg_type& c) const {
 		// skip parameters
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

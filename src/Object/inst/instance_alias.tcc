@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.19 2006/03/15 04:38:17 fang Exp $
+	$Id: instance_alias.tcc,v 1.19.6.1 2006/04/06 18:42:07 fang Exp $
 	TODO: trim includes
  */
 
@@ -52,6 +52,9 @@
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
 #include "Object/common/cflat_args.h"
+#if USE_ALIAS_VISITOR
+#include "Object/inst/alias_printer.h"
+#endif
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -499,6 +502,15 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_ALIAS_VISITOR
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::accept(alias_visitor& v) const {
+	v.visit(*this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Rather than take a footprint argument, passed by the collection, 
 	we get the footprint each time because collections with
@@ -508,14 +520,24 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::cflat_aliases(
-		const cflat_aliases_arg_type& c) const {
+#if USE_ALIAS_VISITOR
+		alias_printer& c
+#else
+		const cflat_aliases_arg_type& c
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->valid());
 	ostringstream os;
 	dump_hierarchical_name(os, dump_flags::no_leading_scope);
 	const string& local_name(os.str());
 	// construct new prefix from os
-	cflat_aliases_arg_type sc(c);
+#if USE_ALIAS_VISITOR
+	alias_printer
+#else
+	cflat_aliases_arg_type
+#endif
+		sc(c);
 	const global_entry_pool<Tag>& gp(c.sm.template get_pool<Tag>());
 	size_t gindex;
 if (c.fpf) {
@@ -537,7 +559,7 @@ if (c.fpf) {
 	const global_entry<Tag>& e(gp[gindex]);
 	__cflat_aliases(sc, e, gindex);
 	// recursion or termination
-}
+}	// end method cflat_aliases
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE

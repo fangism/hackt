@@ -2,13 +2,17 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.12 2006/03/15 04:38:19 fang Exp $
+	$Id: physical_instance_collection.h,v 1.12.6.1 2006/04/06 18:42:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
 
 #include "Object/inst/instance_collection_base.h"
+#include "Object/devel_switches.h"
+#if USE_ALIAS_VISITOR
+#include "Object/inst/alias_visitee.h"
+#endif
 
 namespace HAC {
 class cflat_options;
@@ -27,7 +31,11 @@ struct dump_flags;
 	Base class for physical entity collections, 
 	as opposed to value collections.  
  */
-class physical_instance_collection : public instance_collection_base {
+class physical_instance_collection : public instance_collection_base
+#if USE_ALIAS_VISITOR
+	, public alias_visitee
+#endif
+	{
 private:
 	typedef	physical_instance_collection	this_type;
 	typedef	instance_collection_base	parent_type;
@@ -127,11 +135,16 @@ virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
 
 virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 
+#if USE_ALIAS_VISITOR
+virtual	void
+	accept(alias_visitor&) const = 0;
+#else
 #define	CFLAT_ALIASES_PROTO						\
 	void								\
 	cflat_aliases(const cflat_aliases_arg_type&) const
 
 virtual	CFLAT_ALIASES_PROTO = 0;
+#endif
 
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;

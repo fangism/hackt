@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.tcc"
-	$Id: substructure_alias_base.tcc,v 1.6 2006/02/21 04:48:32 fang Exp $
+	$Id: substructure_alias_base.tcc,v 1.6.10.1 2006/04/06 18:42:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
@@ -13,6 +13,9 @@
 #include "Object/global_entry.h"
 #include "Object/def/footprint.h"
 #include "Object/traits/class_traits_fwd.h"
+#if USE_ALIAS_VISITOR
+#include "Object/inst/alias_printer.h"
+#endif
 #include "main/cflat.h"			// for cflat::print_alias
 #include "main/cflat_options.h"
 #include "util/sstream.h"
@@ -31,13 +34,22 @@ using std::ostringstream;
  */
 template <class Tag>
 void
-substructure_alias_base<true>::__cflat_aliases(cflat_aliases_arg_type& c,
+substructure_alias_base<true>::__cflat_aliases(
+#if USE_ALIAS_VISITOR
+		alias_printer& c, 
+#else
+		cflat_aliases_arg_type& c,
+#endif
 		const global_entry<Tag>& e, const size_t gi) const {
 	STACKTRACE_VERBOSE;
 	c.fpf = &e._frame;
 	NEVER_NULL(c.fpf);
 	NEVER_NULL(c.fpf->_footprint);
+#if USE_ALIAS_VISITOR
+	c.fpf->_footprint->accept(c);
+#else
 	c.fpf->_footprint->cflat_aliases(c);
+#endif
 }
 
 //=============================================================================
@@ -51,7 +63,12 @@ substructure_alias_base<true>::__cflat_aliases(cflat_aliases_arg_type& c,
  */
 template <class Tag>
 void
-substructure_alias_base<false>::__cflat_aliases(cflat_aliases_arg_type& c,
+substructure_alias_base<false>::__cflat_aliases(
+#if USE_ALIAS_VISITOR
+		alias_printer& c, 
+#else
+		cflat_aliases_arg_type& c,
+#endif
 		const global_entry<Tag>& e, const size_t gi) const {
 	typedef	class_traits<Tag>		traits_type;
 	STACKTRACE_VERBOSE;

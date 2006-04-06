@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.13 2006/03/15 04:38:14 fang Exp $
+	$Id: footprint.h,v 1.13.6.1 2006/04/06 18:42:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -21,6 +21,10 @@
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 // #include "Object/lang/CHP_footprint.h"
+#include "Object/devel_switches.h"
+#if USE_ALIAS_VISITOR
+#include "Object/inst/alias_visitee.h"
+#endif
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
@@ -95,6 +99,9 @@ protected:
 	CONSIDER: adding definition/canonical type back reference?
  */
 class footprint :
+#if USE_ALIAS_VISITOR
+	public alias_visitee, 
+#endif
 	private	footprint_base<process_tag>, 
 	private	footprint_base<channel_tag>, 
 	private	footprint_base<datastruct_tag>, 
@@ -278,8 +285,13 @@ public:
 	cflat_aliases(ostream&, const state_manager&,
 		const cflat_options&) const;
 
+#if USE_ALIAS_VISITOR
+	void
+	accept(alias_visitor&) const;
+#else
 	void
 	cflat_aliases(const cflat_aliases_arg_type&) const;
+#endif
 
 public:
 // persistent information management

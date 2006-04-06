@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.14 2006/03/15 04:38:20 fang Exp $
+	$Id: substructure_alias_base.h,v 1.14.6.1 2006/04/06 18:42:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,6 +11,7 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -25,7 +26,11 @@ class port_member_context;
 class state_manager;
 template <class> class global_entry;
 template <class> class state_instance;
+#if USE_ALIAS_VISITOR
+struct alias_printer;
+#else
 struct cflat_aliases_arg_type;
+#endif
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
@@ -124,7 +129,12 @@ protected:
 
 	template <class Tag>
 	void
-	__cflat_aliases(cflat_aliases_arg_type&,
+	__cflat_aliases(
+#if USE_ALIAS_VISITOR
+		alias_printer&,
+#else
+		cflat_aliases_arg_type&,
+#endif
 		const global_entry<Tag>&, const size_t) const;
 
 	good_bool
@@ -215,7 +225,12 @@ protected:
 
 	template <class Tag>
 	void
-	__cflat_aliases(cflat_aliases_arg_type&, 
+	__cflat_aliases(
+#if USE_ALIAS_VISITOR
+		alias_printer&,
+#else
+		cflat_aliases_arg_type&, 
+#endif
 		const global_entry<Tag>&, const size_t) const;
 
 	// has no substructure

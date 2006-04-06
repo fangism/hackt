@@ -1,8 +1,8 @@
 /**
 	\file "sim/prsim/Reference.h"
-	Interface to refrence-parsing.
+	Interface to reference-parsing.
 	Consider making this a general function in main/main_funcs.
-	$Id: Reference.h,v 1.3 2006/04/03 05:30:37 fang Exp $
+	$Id: Reference.h,v 1.3.2.1 2006/04/06 18:42:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_REFERENCE_H__

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.16.2.1 2006/04/04 07:49:44 fang Exp $
+#	$Id: TODO,v 1.16.2.2 2006/04/06 18:42:03 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -39,8 +39,6 @@ prsim:
 			could use smart traversal, conditional recursion
 			*Just walk the alloc footprint frames?*
 		alias command [expanded command]
-		setr <node> <value>
-			set node at random time (not in new prsim...)
 		watch processes and structures?
 		mode run | reset
 		vector support:

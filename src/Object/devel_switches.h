@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.11 2006/03/20 02:41:03 fang Exp $
+	$Id: devel_switches.h,v 1.11.4.1 2006/04/06 18:42:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -22,7 +22,7 @@
 #endif
 
 // leave this error enabled for released code
-#if 1
+#if 0
 #error	Production code should NOT include this header file.  \
 	However, if you are developing, use this file as you see fit.  
 #endif
@@ -33,6 +33,13 @@
 /**
 	TODO: decide policy for handling relaxed type actuals.  
  */
+
+
+/**
+	Define to 1 to use alias walker/visitor pattern, including 
+		for cflattening.  
+ */
+#define	USE_ALIAS_VISITOR			1
 
 //=============================================================================
 

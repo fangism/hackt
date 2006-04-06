@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-02:
+	  Changing hard-coded cflat_aliases traversal into visitor/walker
+		pattern: base is alias_visitor in "Object/inst/alias_visitor.h"
+		and first example is HAC::entity::alias_printer for cflat.  
+		Next: commit devel_switches flag.  
+	  Added half-celem-01 test case to demonstrate where prsim goes awry.  
+	  TODO: print all aliases upon request for prsim:aliases command.  
+
+
 2006-04-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08-prsim-02-01:
