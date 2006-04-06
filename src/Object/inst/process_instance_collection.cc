@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.10.6.1 2006/04/06 18:42:09 fang Exp $
+	$Id: process_instance_collection.cc,v 1.10.6.2 2006/04/06 21:11:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -31,9 +31,7 @@
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
 #include "Object/inst/internal_aliases_policy.tcc"
-#if USE_ALIAS_VISITOR
-#include "Object/inst/alias_empty.h"
-#endif
+#include "Object/inst/alias_empty.h"		// why is this needed?
 #include "Object/unroll/instantiation_statement_type_ref_default.h"
 
 namespace util {

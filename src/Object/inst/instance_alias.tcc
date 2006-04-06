@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.19.6.1 2006/04/06 18:42:07 fang Exp $
+	$Id: instance_alias.tcc,v 1.19.6.2 2006/04/06 21:11:54 fang Exp $
 	TODO: trim includes
  */
 
@@ -52,9 +52,7 @@
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
 #include "Object/common/cflat_args.h"
-#if USE_ALIAS_VISITOR
 #include "Object/inst/alias_printer.h"
-#endif
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
@@ -278,68 +276,6 @@ INSTANCE_ALIAS_INFO_CLASS::trace_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	OBSOLETE.
-	This is retained for historical record of how up-and-down
-	instance alias retracing worked.  
-
-	Follows an identical hierarchy to find the matching corresponding 
-	instance alias.  
-	\param sup will determine when recursion ends.
-	Useful for reproducing internal aliases externally.  
-	NOTE: this is entirely template independent.  
-		Factor this shit out later.  
- */
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-physical_instance_collection&
-INSTANCE_ALIAS_INFO_CLASS::retrace_collection(
-		const substructure_alias& sup) const {
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	this->dump_hierarchical_name(STACKTRACE_INDENT << "this: ") << endl;
-	sup.dump_hierarchical_name(STACKTRACE_INDENT << "arg : ") << endl;
-#endif
-	const instance_collection_base::super_instance_ptr_type
-		thisp(this->container->get_super_instance());
-	const never_ptr<const physical_instance_collection>
-		supc(sup.get_container_base());
-	NEVER_NULL(supc);
-	const instance_collection_base::super_instance_ptr_type
-		supp(supc->get_super_instance());
-	NEVER_NULL(supp);
-	if (thisp) {
-#if ENABLE_STACKTRACE
-		thisp->dump_hierarchical_name(STACKTRACE_INDENT << "parent: ")
-			<< endl;
-#endif
-		// need to lookup parent instance first
-		// p points to a substructured alias
-		const substructure_alias&
-			pp(thisp->__retrace_alias_base(
-				const_cast<RETRACE_ALIAS_BASE_ARG_TYPE>(*supp)));
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "looking up member: " <<
-			this->container->get_name() << endl;
-#endif
-		return *pp.lookup_port_instance(*this->container);
-	} else {
-		// This case cannot be reached when this is 
-		// a subinstanceless type.
-		// then we are at top-most level, terminate recursion
-		// from the type of sup, lookup the member
-		physical_instance_collection&
-			ret(*supp->lookup_port_instance(*this->container));
-#if ENABLE_STACKTRACE
-		ret.dump(STACKTRACE_INDENT << "ret: ") << endl;
-#endif
-		return ret;
-	}
-	// then alias type (indexed or keyless) should lookup
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Much simplified algorithm for assigning unique local instance ids. 
 	Also performs path compression.  
@@ -502,13 +438,14 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_ALIAS_VISITOR
+/**
+	General walker.  
+ */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::accept(alias_visitor& v) const {
 	v.visit(*this);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -519,25 +456,14 @@ INSTANCE_ALIAS_INFO_CLASS::accept(alias_visitor& v) const {
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::cflat_aliases(
-#if USE_ALIAS_VISITOR
-		alias_printer& c
-#else
-		const cflat_aliases_arg_type& c
-#endif
-		) const {
+INSTANCE_ALIAS_INFO_CLASS::cflat_aliases(alias_printer& c) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->valid());
 	ostringstream os;
 	dump_hierarchical_name(os, dump_flags::no_leading_scope);
 	const string& local_name(os.str());
 	// construct new prefix from os
-#if USE_ALIAS_VISITOR
-	alias_printer
-#else
-	cflat_aliases_arg_type
-#endif
-		sc(c);
+	alias_printer sc(c);
 	const global_entry_pool<Tag>& gp(c.sm.template get_pool<Tag>());
 	size_t gindex;
 if (c.fpf) {

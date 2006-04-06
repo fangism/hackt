@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.23.6.1 2006/04/06 18:42:08 fang Exp $
+	$Id: instance_collection.tcc,v 1.23.6.2 2006/04/06 21:11:55 fang Exp $
 	TODO: trim includes
  */
 
@@ -1120,7 +1120,6 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_ALIAS_VISITOR
 /**
 	Visitor.  
  */
@@ -1131,19 +1130,6 @@ INSTANCE_ARRAY_CLASS::accept(alias_visitor& v) const {
 		bind2nd_argval(mem_fun_ref(&element_type::accept), v)
 	);
 }
-#else
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Prints hierarchical aliases for cflat. 
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-void
-INSTANCE_ARRAY_CLASS::cflat_aliases(const cflat_aliases_arg_type& c) const {
-	for_each(this->collection.begin(), this->collection.end(),
-		bind2nd_argval(mem_fun_ref(&element_type::cflat_aliases), c)
-	);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -1565,20 +1551,11 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_ALIAS_VISITOR
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::accept(alias_visitor& v) const {
 	this->the_instance.accept(v);
 }
-
-#else
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-void
-INSTANCE_SCALAR_CLASS::cflat_aliases(const cflat_aliases_arg_type& c) const {
-	this->the_instance.cflat_aliases(c);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

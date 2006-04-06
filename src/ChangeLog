@@ -5,6 +5,14 @@
 
 2006-04-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-08-prsim-02-03:
+	  Just committing the USE_ALIAS_VISITOR devel. switch.  
+		Also footprint and physical_instance_collection don't
+		derive from alias_visitee, but rather, just implement the
+		required accept(alias_visitor&) interface.  
+	  Cleaned up bits of obsolete code.
+
+
 	* HACKT-00-01-04-main-00-78-08-prsim-02-02:
 	  Changing hard-coded cflat_aliases traversal into visitor/walker
 		pattern: base is alias_visitor in "Object/inst/alias_visitor.h"
