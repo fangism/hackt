@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.4 2006/04/05 22:32:22 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.5 2006/04/06 08:34:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -11,8 +11,11 @@
 #include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/unroll/port_connection_base.h"
 #include "Object/unroll/alias_connection.h"
+#include "Object/unroll/unroll_context.h"
+#include "Object/def/footprint.h"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/expr/const_index_list.h"
+#include "Object/expr/const_range_list.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/common/dump_flags.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
