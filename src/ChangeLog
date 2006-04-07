@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-04:
+	  More development of alias_matcher visitor.  
+	  alias_printer improved slightly.  
+	  substructured trait classes given "may_contains" containership
+		attributes (closure), also given rebind member template.  
+	  Refactored out commonly used code in sim/prsim/Reference.cc
+	  Some minor library enhancements in util/ChangeLog.  
+		Most notably, the member-saver class template, and type_traits.
+
+
 2006-04-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08-prsim-02-03:

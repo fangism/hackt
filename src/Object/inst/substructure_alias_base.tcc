@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.tcc"
-	$Id: substructure_alias_base.tcc,v 1.6.10.2 2006/04/06 21:11:58 fang Exp $
+	$Id: substructure_alias_base.tcc,v 1.6.10.3 2006/04/07 22:54:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_TCC__
@@ -35,7 +35,8 @@ void
 substructure_alias_base<true>::__cflat_aliases(alias_printer& c, 
 		const global_entry<Tag>& e, const size_t gi) const {
 	STACKTRACE_VERBOSE;
-	c.fpf = &e._frame;
+	// saves away current footprint frame on stack, and restores on return
+	const alias_printer::save_frame save(c, &e._frame);
 	NEVER_NULL(c.fpf);
 	NEVER_NULL(c.fpf->_footprint);
 	c.fpf->_footprint->accept(c);

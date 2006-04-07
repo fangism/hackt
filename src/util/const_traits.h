@@ -1,7 +1,7 @@
 /**
 	\file "util/const_traits.h"
 	Constification and de-constification traits template.  
-	$Id: const_traits.h,v 1.4 2005/10/08 01:40:03 fang Exp $
+	$Id: const_traits.h,v 1.4.48.1 2006/04/07 22:54:38 fang Exp $
  */
 
 #ifndef	__UTIL_CONST_TRAITS_H__
@@ -9,6 +9,7 @@
 
 namespace util {
 
+#if 0
 /**
 	Traits type to distinguish between const and non-const type.  
  */
@@ -28,6 +29,9 @@ struct const_traits<const T> {
 	typedef	T		non_const_type;
 	typedef	const T		must_be_const;
 };
+#else
+// #error	This file is obsolete, use "util/type_traits.h" instead.  
+#endif
 
 }	// end namespace util
 

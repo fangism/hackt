@@ -2,7 +2,7 @@
 	\file "Object/traits/data_traits.h"
 	Traits and policies for generic data types.  
 	This file used to be "Object/art_object_data_traits.h".
-	$Id: data_traits.h,v 1.6 2006/03/20 02:41:08 fang Exp $
+	$Id: data_traits.h,v 1.6.4.1 2006/04/07 22:54:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_DATA_TRAITS_H__
@@ -20,6 +20,9 @@ namespace entity {
  */
 template <>
 struct class_traits<datatype_tag> {
+	template <class Tag>
+	struct rebind {	typedef	class_traits<Tag>	type; };
+
 	typedef	instantiation_statement_base
 					instantiation_statement_parent_type;
 	typedef	data_instantiation_statement

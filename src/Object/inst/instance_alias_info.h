@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.14.6.2 2006/04/06 21:11:55 fang Exp $
+	$Id: instance_alias_info.h,v 1.14.6.3 2006/04/07 22:54:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -25,8 +25,9 @@ class footprint;
 class port_collection_context;
 class port_member_context;
 class instance_alias_info_actuals;
-class alias_visitor;
-class alias_printer;
+struct alias_visitor;
+struct alias_printer;
+template <class> struct alias_matcher;
 using std::ostream;
 using std::istream;
 using util::memory::never_ptr;
@@ -234,6 +235,11 @@ virtual	ostream&
 
 	void
 	cflat_aliases(alias_printer&) const;
+
+	/// This is defined in "Object/inst/alias_matcher.cc"!
+	template <class Tag2>
+	void
+	match_aliases(alias_matcher<Tag2>&) const;
 
 	size_t
 	hierarchical_depth(void) const;

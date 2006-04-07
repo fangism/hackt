@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.12 2006/03/20 02:41:09 fang Exp $
+	$Id: struct_traits.h,v 1.12.4.1 2006/04/07 22:54:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -17,6 +17,9 @@ template <class> class general_collection_type_manager;
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<datastruct_tag> {
+	template <class Tag>
+	struct rebind {	typedef	class_traits<Tag>	type; };
+
 	typedef	datastruct_tag			tag_type;
 	static const char			tag_name[];
 	enum { type_tag_enum_value = TYPE_STRUCT };
@@ -29,6 +32,13 @@ struct class_traits<datastruct_tag> {
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
+
+	/**
+		The substructures that data types may contain.  
+	 */
+	template <class>
+	struct may_contain;
+
 	/**
 		Update:
 		Datatypes can no longer take relaxed parameters.  
@@ -79,6 +89,23 @@ struct class_traits<datastruct_tag> {
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<datastruct_tag>
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Macro for specialization of may_contains closure. 
+ */
+#define DATASTRUCTS_MAY_CONTAIN(Tag, _val)				\
+template <>								\
+struct struct_traits::may_contain<Tag> { enum { value = _val }; };
+
+DATASTRUCTS_MAY_CONTAIN(bool_tag, true)
+DATASTRUCTS_MAY_CONTAIN(int_tag, true)
+DATASTRUCTS_MAY_CONTAIN(enum_tag, true)
+DATASTRUCTS_MAY_CONTAIN(datastruct_tag, true)
+DATASTRUCTS_MAY_CONTAIN(channel_tag, false)
+DATASTRUCTS_MAY_CONTAIN(process_tag, false)
+
+#undef  DATASTRUCTS_MAY_CONTAIN
 
 //=============================================================================
 }	// end namespace entity

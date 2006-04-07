@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.3 2006/02/21 23:07:36 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.3.10.1 2006/04/07 22:54:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -8,14 +8,18 @@
 
 #include <iostream>
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/unroll/port_connection_base.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/type/fundamental_type_reference.h"
+// #include "Object/inst/alias_matcher.h"
+#include "common/TODO.h"
 #include "util/macros.h"
 
 namespace HAC {
 namespace entity {
+using util::string_list;
 #include "util/using_ostream.h"
 //=============================================================================
 // class meta_instance_reference method definitions
@@ -83,6 +87,30 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 	}
 	// else fall-through handle multidimensional case
 	return true;            // conservatively
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	First resolves canonical globally allocated index.  
+	Accumulates all aliases by traversing instance hierarchy
+	and recording matches.  
+	\param sm the global state manager with globally allocated
+		map of all unique instances.  
+	\param aliases the string container in which to accumulate aliases.  
+	\pre sm is already allocated ('alloc' phase).  
+	\pre this must be a scalar, simple_meta_instance_reference type, 
+		member-references are acceptable.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+META_INSTANCE_REFERENCE_CLASS::collect_aliases(const state_manager& sm, 
+		string_list& aliases) const {
+	// assert dynamic_cast
+	const simple_reference_type&
+		_this(IS_A(const simple_reference_type&, *this));
+	const size_t index = _this.lookup_globally_allocated_index(sm);
+	INVARIANT(index);	// because we already checked reference?
+	FINISH_ME(Fang);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

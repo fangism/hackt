@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.9 2006/02/13 02:48:07 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.9.10.1 2006/04/07 22:54:38 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -61,7 +61,7 @@ TYPELESS_MEMORY_CHUNK_CLASS::contains(void* p) const {
 TYPELESS_MEMORY_CHUNK_TEMPLATE_SIGNATURE
 void*
 TYPELESS_MEMORY_CHUNK_CLASS::__allocate(void) {
-	UTIL_STATIC_ASSERT(is_power_of_2<chunk_size>::value);
+	UTIL_STATIC_ASSERT_DEPENDENT(is_power_of_2<chunk_size>::value);
 	INVARIANT(!this->full());
 #if 0
 	const bit_map_type after_alloc = free_mask | (free_mask +1);

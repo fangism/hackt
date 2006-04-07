@@ -2,7 +2,7 @@
 	\file "sim/prsim/Reference.h"
 	Interface to reference-parsing.
 	Consider making this a general function in main/main_funcs.
-	$Id: Reference.h,v 1.3.2.1 2006/04/06 18:42:11 fang Exp $
+	$Id: Reference.h,v 1.3.2.2 2006/04/07 22:54:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_REFERENCE_H__
@@ -31,6 +31,9 @@ parse_reference(const char*);
 entity::meta_reference_union
 check_reference(const parser::inst_ref_expr&, const entity::module&);
 
+entity::meta_reference_union
+parse_and_check_reference(const char*, const entity::module&);
+
 extern
 node_index_type
 parse_node_to_index(const std::string&, const entity::module&);
@@ -38,6 +41,10 @@ parse_node_to_index(const std::string&, const entity::module&);
 extern
 int
 parse_name_to_what(std::ostream&, const std::string&, const entity::module&);
+
+extern
+int
+parse_name_to_aliases(std::ostream&, const std::string&, const entity::module&);
 
 }	// end namespace PRSIM
 }	// end namespace SIM

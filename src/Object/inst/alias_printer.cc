@@ -1,11 +1,10 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.1.2.1 2006/04/06 18:42:06 fang Exp $
+	$Id: alias_printer.cc,v 1.1.2.2 2006/04/07 22:54:29 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
 #include "Object/inst/instance_alias_info.h"
-// #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/traits/bool_traits.h"

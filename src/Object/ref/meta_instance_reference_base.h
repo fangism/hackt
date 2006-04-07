@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.10 2006/03/20 02:41:07 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.10.4.1 2006/04/07 22:54:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -14,6 +14,7 @@
 #include "util/memory/count_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/boolean_types.h"
+#include "util/tokenize_fwd.h"		// for util::string_list
 
 namespace HAC {
 namespace entity {
@@ -126,6 +127,12 @@ virtual	CONNECT_PORT_PROTO = 0;
 	lookup_footprint_frame(const state_manager&) const
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
+
+#define	COLLECT_ALIASES_PROTO						\
+	void								\
+	collect_aliases(const state_manager&, util::string_list&) const
+
+virtual	COLLECT_ALIASES_PROTO = 0;
 
 private:
 virtual	excl_ptr<aliases_connection_base>

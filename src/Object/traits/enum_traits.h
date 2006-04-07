@@ -2,7 +2,7 @@
 	\file "Object/traits/enum_traits.h"
 	Traits and policies for enum data types.  
 	This file used to be "Object/art_object_enum_traits.h".
-	$Id: enum_traits.h,v 1.10 2006/03/20 02:41:08 fang Exp $
+	$Id: enum_traits.h,v 1.10.4.1 2006/04/07 22:54:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_ENUM_TRAITS_H__
@@ -16,6 +16,9 @@ template <class> class parameterless_collection_type_manager;
 //-----------------------------------------------------------------------------
 template <>
 struct class_traits<enum_tag> {
+	template <class Tag>
+	struct rebind {	typedef	class_traits<Tag>	type; };
+
 	typedef	enum_tag			tag_type;
 	static const char			tag_name[];
 	typedef	enum_instance			instance_type;

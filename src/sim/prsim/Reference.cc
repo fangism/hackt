@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.5.2.1 2006/04/06 18:42:11 fang Exp $
+	$Id: Reference.cc,v 1.5.2.2 2006/04/07 22:54:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,6 +24,7 @@
 #include "Object/ref/meta_reference_union.h"
 #include "util/stacktrace.h"
 #include "util/libc.h"			// for tmpfile, rewind,...
+#include "util/tokenize_fwd.h"		// for string_list
 #include "util/memory/excl_ptr.h"
 #include "util/memory/deallocation_policy.h"
 #include "util/packed_array.h"		// for alias_collection_type
@@ -44,6 +45,7 @@ using entity::simple_bool_meta_instance_reference;
 using entity::substructure_alias;
 using std::string;
 using parser::inst_ref_expr;
+using util::string_list;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::FILE_tag;
@@ -149,6 +151,23 @@ check_reference(const parser::inst_ref_expr& ref_tree,
 }
 
 //=============================================================================
+/** 
+	Composition of parse_reference and check_reference.  
+	Some error message already given.  
+ */
+entity::meta_reference_union
+parse_and_check_reference(const char* s, const module& m) {
+	typedef	entity::meta_reference_union		return_type;
+	STACKTRACE_VERBOSE;
+	typedef	excl_ptr<parser::inst_ref_expr>		lval_ptr_type;
+	const lval_ptr_type ref_tree = parse_reference(s);
+	if (!ref_tree) {
+		return return_type();
+	}
+	return check_reference(*ref_tree, m);
+}
+
+//=============================================================================
 /**
 	TODO: figure out a way to parse a string without
 		going through a friggin' temp file.  
@@ -161,14 +180,9 @@ check_reference(const parser::inst_ref_expr& ref_tree,
  */
 node_index_type
 parse_node_to_index(const string& n, const module& m) {
-	STACKTRACE_VERBOSE;
-	typedef	excl_ptr<parser::inst_ref_expr>		lval_ptr_type;
-	const lval_ptr_type ref_tree = parse_reference(n.c_str());
-	if (!ref_tree) {
-		return INVALID_NODE_INDEX;
-	}
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
-	const checked_ref_type r(check_reference(*ref_tree, m));
+	STACKTRACE_VERBOSE;
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!r) {
 		return INVALID_NODE_INDEX;
 	}
@@ -204,21 +218,36 @@ parse_node_to_index(const string& n, const module& m) {
  */
 int
 parse_name_to_what(ostream& o, const string& n, const module& m) {
-	STACKTRACE_VERBOSE;
-	typedef	excl_ptr<parser::inst_ref_expr>		lval_ptr_type;
-	const lval_ptr_type ref_tree = parse_reference(n.c_str());
-	if (!ref_tree) {
-		// try parsing as other?
-		return 1;
-	}
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
-	const checked_ref_type r(check_reference(*ref_tree, m));
+	STACKTRACE_VERBOSE;
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
 	if (!r) {
 		return 1;
 	} else {
 		o << n << " refers to ";
 		r.inst_ref()->what(o) << " ";
 		r.inst_ref()->dump_type_size(o) << endl;
+		return 0;
+	}
+}
+
+//=============================================================================
+/**
+	Prints reference identity information. 
+	TODO: check non-instance-references:
+		namespaces, definitions, typedefs, value-references.
+	\return 0 upon success, 1 upon error.  
+ */
+int
+parse_name_to_aliases(ostream& o, const string& n, const module& m) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	if (!r) {
+		return 1;
+	} else {
+		string_list aliases;
+		r.inst_ref()->collect_aliases(m.get_state_manager(), aliases);
 		return 0;
 	}
 }

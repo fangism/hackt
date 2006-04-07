@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.19.6.2 2006/04/06 21:11:54 fang Exp $
+	$Id: instance_alias.tcc,v 1.19.6.3 2006/04/07 22:54:29 fang Exp $
 	TODO: trim includes
  */
 
@@ -56,7 +56,6 @@
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
-#include "util/wtf.h"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/sstream.h"
@@ -463,11 +462,11 @@ INSTANCE_ALIAS_INFO_CLASS::cflat_aliases(alias_printer& c) const {
 	dump_hierarchical_name(os, dump_flags::no_leading_scope);
 	const string& local_name(os.str());
 	// construct new prefix from os
-	alias_printer sc(c);
+	const alias_printer::save_prefix save(c);
 	const global_entry_pool<Tag>& gp(c.sm.template get_pool<Tag>());
 	size_t gindex;
 if (c.fpf) {
-	sc.prefix += ".";
+	c.prefix += ".";
 	// this is not a top-level instance (from recursion)
 	const size_t local_offset = this->instance_index -1;
 	const footprint_frame_map_type&
@@ -481,9 +480,9 @@ if (c.fpf) {
 	BOUNDS_CHECK(this->instance_index && this->instance_index < gp.size());
 	gindex = this->instance_index;
 }
-	sc.prefix += local_name;
+	c.prefix += local_name;
 	const global_entry<Tag>& e(gp[gindex]);
-	__cflat_aliases(sc, e, gindex);
+	__cflat_aliases(c, e, gindex);
 	// recursion or termination
 }	// end method cflat_aliases
 

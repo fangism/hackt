@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.11 2006/03/20 02:41:09 fang Exp $
+	$Id: proc_traits.h,v 1.11.4.1 2006/04/07 22:54:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
@@ -20,6 +20,9 @@ template <class> class general_collection_type_manager;
  */
 template <>
 struct class_traits<process_tag> {
+	template <class Tag>
+	struct rebind {	typedef	class_traits<Tag>	type; };
+
 	typedef	process_tag			tag_type;
 	static const char			tag_name[];
 	enum { type_tag_enum_value = TYPE_PROCESS };
@@ -32,6 +35,14 @@ struct class_traits<process_tag> {
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = true;
 	static const bool		has_production_rules = true;
+
+	/**
+		closure for may-contains, defined by specialization only.
+		Unforunately have to define this by hand.  
+	 */
+	template <class>
+	struct may_contain;
+
 	typedef	instance_alias_info_actuals
 					instance_alias_relaxed_actuals_type;
 	typedef	process_instance_alias_info	instance_alias_info_type;
@@ -79,6 +90,28 @@ struct class_traits<process_tag> {
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<process_tag>
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Handy macro for defining closure properties with specialization.  
+	Reminder of standard: 14.7.3/18: can specialize an inner template
+		for a specialized outer template.  
+	note: is equivalent to:
+	template <> template <>
+	struct class_traits<process_tag>::may_contain<bool_tag>
+ */
+#define	PROCESSES_MAY_CONTAIN(Tag, _val)				\
+template <>								\
+struct process_traits::may_contain<Tag> { enum { value = _val }; };
+
+PROCESSES_MAY_CONTAIN(bool_tag, true)
+PROCESSES_MAY_CONTAIN(int_tag, true)
+PROCESSES_MAY_CONTAIN(enum_tag, true)
+PROCESSES_MAY_CONTAIN(datastruct_tag, true)
+PROCESSES_MAY_CONTAIN(channel_tag, true)
+PROCESSES_MAY_CONTAIN(process_tag, true)
+
+#undef	PROCESSES_MAY_CONTAIN
 
 //=============================================================================
 }	// end namespace entity

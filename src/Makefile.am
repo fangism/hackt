@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.109.2.1 2006/04/06 18:42:02 fang Exp $
+#	$Id: Makefile.am,v 1.109.2.2 2006/04/07 22:54:25 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -197,6 +197,7 @@ OBJECT_CC_FILES = \
 	Object/inst/subinstance_manager.cc \
 	Object/inst/port_alias_tracker.cc \
 	Object/inst/alias_actuals.cc \
+	Object/inst/alias_matcher.cc \
 	Object/inst/alias_printer.cc \
 	Object/inst/instance_collection.cc \
 	Object/inst/param_value_collection.cc \

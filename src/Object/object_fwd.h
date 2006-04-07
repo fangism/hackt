@@ -1,7 +1,7 @@
 /**
 	\file "Object/object_fwd.h"
 	Forward declarations for all HAC::entity classes and typedefs.
-	$Id: object_fwd.h,v 1.6 2006/03/20 02:41:03 fang Exp $
+	$Id: object_fwd.h,v 1.6.4.1 2006/04/07 22:54:28 fang Exp $
 	This file used to be:
 	Id: art_object_fwd.h,v 1.18.20.1 2005/12/11 00:45:13 fang Exp
  */
@@ -22,6 +22,7 @@ namespace entity {
 	typedef	class_traits<bool_tag>		bool_traits;
 	typedef	class_traits<int_tag>		int_traits;
 	typedef	class_traits<enum_tag>		enum_traits;
+	typedef	class_traits<datastruct_tag>	struct_traits;
 	typedef	class_traits<process_tag>	process_traits;
 	typedef	class_traits<channel_tag>	channel_traits;
 	typedef	class_traits<pbool_tag>		pbool_traits;
