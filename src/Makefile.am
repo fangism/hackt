@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.111 2006/04/08 18:53:47 fang Exp $
+#	$Id: Makefile.am,v 1.112 2006/04/08 19:39:22 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -598,8 +598,8 @@ libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 # should have explicit dependencies.  
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
-main/version.lo main/version.o: cvstag.h builddate.h buildhost.h cxx_version.h \
-	cxxflags.h am_cxxflags.h parser/yacc_version.h lexer/lex_version.h
+main/version.lo main/version.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
+	parser/yacc_version.h lexer/lex_version.h
 lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.lo \
 	lexer/$(LIBHACKTPARSERS_LA)-$(HACKT_LEX_ROOT)-real.o: \
 	parser/$(HACKT_PARSE_ROOT).h
