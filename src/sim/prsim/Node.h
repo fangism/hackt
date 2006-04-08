@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.3 2006/04/03 05:30:37 fang Exp $
+	$Id: Node.h,v 1.4 2006/04/08 18:36:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -195,6 +195,10 @@ protected:
 	 */
 	size_t					tcount;
 public:
+	NodeState() : parent_type(), value(LOGIC_OTHER), 
+		state_flags(NODE_INITIAL_STATE_FLAGS),
+		event_index(INVALID_EVENT_INDEX) { }
+
 	/// count on compiler to optimize zero comparison
 	bool
 	pending_event(void) const {
