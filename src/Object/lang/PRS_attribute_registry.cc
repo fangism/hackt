@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
-	$Id: PRS_attribute_registry.cc,v 1.5 2006/02/20 20:50:58 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.6 2006/04/08 22:12:58 fang Exp $
  */
 
 #include <iostream>
@@ -124,7 +124,33 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 
 good_bool
 After::check_vals(const values_type& v) {
-	if (v.size() != 1 || !v.at(0).is_a<const pint_const>()) {
+	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
+		cerr << "The \'" << name << "\' attribute requires exactly "
+			"one pint (integer) expression argument." << endl;
+		return good_bool(false);
+	} else	return good_bool(true);
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_PRS_ATTRIBUTE_CLASS(Weak, "weak")
+
+/**
+	Prints out "weak" before a rule in cflat.  
+ */
+void
+Weak::main(cflat_prs_printer& p, const values_type& v) {
+if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
+	const pint_const& pi(*v[0].is_a<const pint_const>());
+	if (pi.static_constant_value()) {
+		ostream& o(p.os);
+		o << "weak\t";
+	}
+}
+}
+
+good_bool
+Weak::check_vals(const values_type& v) {
+	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
 		cerr << "The \'" << name << "\' attribute requires exactly "
 			"one pint (integer) expression argument." << endl;
 		return good_bool(false);

@@ -5,6 +5,12 @@
 
 2006-04-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-11:
+	  Added cflat 'weak' rule-attribute to 
+		"Object/lang/PRS_attribute_registry.cc" and included a few
+		test cases in parser/prs/weak-{01,02}.hac.  
+
+
 	* HACKT-00-01-04-main-00-78-10:
 	  Configure improvements only, added config-params line to
 		main/version.cc.  

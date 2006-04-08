@@ -1,0 +1,4 @@
+weak	"xyz.a" -> "xyz.b"-
+weak	~"xyz.a" -> "xyz.b"+
+"xyz.c" -> "xyz.d"-
+~"xyz.c" -> "xyz.d"+

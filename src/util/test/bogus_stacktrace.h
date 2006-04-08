@@ -1,7 +1,7 @@
 /**
 	\file "bogus_stacktrace.h"
-	Striped down fake bogus_stacktrace for link test.
-	$Id: bogus_stacktrace.h,v 1.2 2005/03/01 21:26:48 fang Exp $
+	Stripped down fake bogus_stacktrace for link test.
+	$Id: bogus_stacktrace.h,v 1.3 2006/04/08 22:12:58 fang Exp $
  */
 
 #ifndef	__BOGUS_STACKTRACE_H__

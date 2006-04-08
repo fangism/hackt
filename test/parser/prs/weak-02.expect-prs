@@ -1,0 +1,4 @@
+weak	after 10	"xyz.a" -> "xyz.b"-
+weak	after 10	~"xyz.a" -> "xyz.b"+
+after 20	weak	"xyz.c" -> "xyz.d"-
+after 20	weak	~"xyz.c" -> "xyz.d"+

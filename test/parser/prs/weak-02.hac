@@ -1,0 +1,15 @@
+// "weak-02.hac"
+// copy-modified from "weak-01.hac"
+// testing mixing of multiple attributes and ordering
+// should pass
+
+defproc weakness(bool a, b) {
+bool c, d;
+prs {
+[weak=1;after=10]	a => b-
+[after=20;weak=1]	c => d-
+}
+}
+
+weakness xyz;
+

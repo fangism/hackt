@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2006-04-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11:
+	  hackt-expect-prs.sh.in: Exclude "weak" pattern from prsim tests 
+		because new attribute not supported by the legacy tool-chain.
+
+
 2006-04-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08:
