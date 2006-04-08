@@ -1,5 +1,5 @@
 dnl "config/rl_el.m4"
-dnl	$Id: rl_el.m4,v 1.2 2006/02/25 04:55:00 fang Exp $
+dnl	$Id: rl_el.m4,v 1.3 2006/04/08 18:53:44 fang Exp $
 dnl Readline and Editline support for the utility library used by hackt.
 dnl This is not only specific to hackt, so we place these macros here.  
 dnl
@@ -131,7 +131,7 @@ saved_LDFLAGS="$LDFLAGS"
 CPPFLAGS="$CPPFLAGS $el_include"
 LDFLAGS="$LDFLAGS $el_ldpath"
 	AC_MSG_RESULT(Checking for editline:)
-	AC_CHECK_HEADERS([editline/readline.h],
+	AC_CHECK_HEADERS([editline/readline.h histedit.h],
 		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
 			[Define to enable BSD editline])
 		dnl saved_CPPFLAGS="$CPPFLAGS"
@@ -146,14 +146,28 @@ LDFLAGS="$LDFLAGS $el_ldpath"
 	AC_MSG_ERROR([Found neither ncurses or termcap, needed by editline])
 	fi
 	AC_CHECK_LIB(edit, readline,
-		[
+		[AC_DEFINE(EDITLINE_HAS_READLINE_INTERFACE, [],
+			[Define if editline is wrapper with readline interface])
 		dnl LIBS="-ledit $LIBS"
 		dnl saved_LDFLAGS="$LDFLAGS"
-		EL_LDPATH="$el_ldpath"
-		EL_LIB="-ledit"],
-		[AC_MSG_ERROR(Couldn't find editline libraries in LDFLAGS paths.)],
+		], [], 
 	dnl extra library argument to link during link test
 	$NCURSES_LIB )
+	AC_CHECK_LIB(edit, el_gets,
+		[AC_DEFINE(EDITLINE_HAS_HISTEDIT_INTERFACE, [],
+			[Define if editline is not wrapper, but is EditLine])
+		dnl LIBS="-ledit $LIBS"
+		dnl saved_LDFLAGS="$LDFLAGS"
+		], [],
+	dnl extra library argument to link during link test
+	$NCURSES_LIB )
+	if test x"$ac_cv_lib_edit_readline" = xyes || test x"$ac_cv_lib_edit_el_gets" = xyes
+	then
+		EL_LDPATH="$el_ldpath"
+		EL_LIB="-ledit"
+	else
+		AC_MSG_ERROR(Couldn't find editline libraries in LDFLAGS paths.)
+	fi
 LDFLAGS="$saved_LDFLAGS"
 CPPFLAGS="$saved_CPPFLAGS"
 fi

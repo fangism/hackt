@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.110 2006/04/05 22:32:19 fang Exp $
+#	$Id: Makefile.am,v 1.111 2006/04/08 18:53:47 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -90,14 +90,23 @@ cvstag.h: ChangeLog
 	tag=`$(HEAD) -n 10 $? | $(GREP) "^	[*].*:" | \
 		$(HEAD) -n 1 | $(SED) 's/:.*$$//g' | $(CUT) -d\  -f 2` ; \
 		$(ECHO) "#define	CVSTAG		\"$$tag\"" >> $@
-	@$(ECHO) "#endif	// CVSTAG" >> $@
+	@$(ECHO) "#endif	/* CVSTAG */" >> $@
+
+# we assume the config-params string is wrapped in quotes, and we strip them
+config_params.h: $(top_builddir)/config.status
+	@$(ECHO) "#ifndef	CONFIG_PARAMS" > $@
+	@value=`cd $(top_builddir) && $(SHELL) ./config.status --version | \
+		$(GREP) options | \
+		$(SED) 's/^[^"]*["]//g' | $(SED) 's/["]$$//g'` ; \
+	$(ECHO) "#define	CONFIG_PARAMS	\"$$value\"" >> $@
+	@$(ECHO) "#endif	/* CONFIG_PARAMS */" >> $@
 
 # can't include libhacktexec.la because of circular dependence
 # builddate.h:
 builddate.h: libhackt.la $(LIBFANGUTIL)
 	@$(ECHO) "#ifndef	BUILDDATE" > $@
 	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" >> $@
-	@$(ECHO) "#endif	// BUILDDATE" >> $@
+	@$(ECHO) "#endif	/* BUILDDATE */" >> $@
 
 # most of these should really be generated at configure-time...
 
@@ -110,7 +119,7 @@ parser/yacc_version.h: $(top_builddir)/config.status
 
 
 # should include make-generated headers only, no configure-generated headers
-AUTOHEADERS = cvstag.h builddate.h am_cxxflags.h
+AUTOHEADERS = cvstag.h builddate.h am_cxxflags.h config_params.h
 # parser/yacc_version.h
 # lexer/lex_version.h
 # cxx_version.h
@@ -119,7 +128,8 @@ AUTOHEADERS = cvstag.h builddate.h am_cxxflags.h
 VERSIONHEADERS = buildhost.h cxxflags.h cxx_version.h
 
 # these headers are additional dependencies for configure-dependent parser files
-CONFIGHEADERS = config.h ../config.h
+CONFIGHEADERS = config.h __config__.h
+IGNOREHEADERS = __config__.h __config__.h.in
 
 HACKT_PARSE_ROOT = hackt-parse
 HACKT_LEX_ROOT = hackt-lex
@@ -905,13 +915,13 @@ AM_LDFLAGS = @AUTO_LDFLAGS@
 am_cxxflags.h: $(srcdir)/Makefile.am
 	@$(ECHO) "#ifndef	AM_CPPFLAGS" > $@
 	@$(ECHO) "#define	AM_CPPFLAGS \"$(AM_CPPFLAGS)\"" >> $@
-	@$(ECHO) "#endif	// AM_CPPFLAGS" >> $@
+	@$(ECHO) "#endif	/* AM_CPPFLAGS */" >> $@
 	@$(ECHO) "#ifndef	AM_CXXFLAGS" >> $@
 	@$(ECHO) "#define	AM_CXXFLAGS \"$(AM_CXXFLAGS)\"" >> $@
-	@$(ECHO) "#endif	// AM_CXXFLAGS" >> $@
+	@$(ECHO) "#endif	/* AM_CXXFLAGS */" >> $@
 	@$(ECHO) "#ifndef	AM_LDFLAGS" >> $@
 	@$(ECHO) "#define	AM_LDFLAGS \"$(AM_LDFLAGS)\"" >> $@
-	@$(ECHO) "#endif	// AM_LDFLAGS" >> $@
+	@$(ECHO) "#endif	/* AM_LDFLAGS */" >> $@
 
 # flags needed to produce .output from yacc/bison
 AM_YFLAGS = -d -t -v
@@ -969,8 +979,8 @@ common/devel_switches.hchk:
 Object/devel_switches.hchk:
 	@$(TOUCH) $@
 
-../config.hchk:
-	@$(TOUCH) $@
+# __config__.hchk:
+#	@$(TOUCH) $@
 
 EXTRA_DIST += local.cvsignore \
 	parser/local.cvsignore \
@@ -1040,9 +1050,10 @@ installcheck-local:
 	@$(ECHO) "======== end of installcheck ========"
 
 # test/getopt_test.test
-CLEANFILES += $(AUTOHEADERS)
+CLEANFILES += $(AUTOHEADERS) config.log
 DISTCLEANFILES += hackt_persistent_table.sh $(VERSIONHEADERS)
-AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(CONFIG_PARSERS)
+AUTO_IGNORE += $(TESTS) $(PROGRAMS) $(LTLIBRARIES) $(CONFIG_PARSERS) \
+	$(IGNOREHEADERS) config.log
 
 test/getopt_test.test: getopt_test test/getopt_test.sh
 	@$(ECHO) "#!$(SHELL)" > $@

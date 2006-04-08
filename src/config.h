@@ -2,7 +2,7 @@
 	\file "config.h"
 	Convenient wrapper for the one automatically generated
 	by configure.
-	$Id: config.h,v 1.4 2005/12/10 03:56:51 fang Exp $
+	$Id: config.h,v 1.5 2006/04/08 18:53:48 fang Exp $
  */
 
 #ifndef	__CONFIG_H__
@@ -16,7 +16,7 @@
 ***/
 
 #if	defined(HAVE_CONFIG_H) && !defined(IGNORE_CONFIG_H)
-#include "../config.h"
+#include "__config__.h"
 #endif
 
 #ifdef	const

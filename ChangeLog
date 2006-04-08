@@ -1,5 +1,18 @@
 "ChangeLog"
 
+2006-04-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-10:
+	  configure improvements: pushed generated config.h to src/__config__.h
+		to eliminate super-directory references.  
+	  configure.ac: AM_CONFIG_HEADER (obsolete) replaced with
+		AC_CONFIG_HEADERS([src/__config__.h])
+	  Make.global: echo-config target to show configure params, 
+		by invoking (top_builddir)'s ocnfig.status --version
+	  config/rl_el.m4: preliminary support for non-wrapped editline
+		usage (without the readline symbol interface).  
+
+
 2006-04-03	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-07-prsim-01-15:

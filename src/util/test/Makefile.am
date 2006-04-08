@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.42 2006/03/15 04:38:26 fang Exp $
+#	$Id: Makefile.am,v 1.43 2006/04/08 18:53:53 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -187,8 +187,6 @@ multikey_set_derived_test.stderr: multikey_set_test.stderr
 
 # the util/ source directory
 AM_CPPFLAGS = -I$(srcdir)/../..
-# excluding .. from now on
-# AM_CPPFLAGS = -I$(srcdir)/.. -I$(srcdir)/../..
 
 if HAVE_GXX
 # some of these flags are deadly...

@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.15 2006/03/21 21:53:07 fang Exp $
+#	$Id: Make.global,v 1.16 2006/04/08 18:53:44 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -73,6 +73,9 @@ echo-distcleanfiles: force
 
 echo-auto-ignore: force
 	@$(ECHO) $(AUTO_IGNORE)
+
+echo-config: force
+	cd $(top_builddir) && ./config.status --version
 
 echo-srcdir: force
 	@$(ECHO) $(srcdir)
@@ -201,6 +204,7 @@ help-global:
 	@$(ECHO) "    info: builds texinfo files (recursive)"
 	@$(ECHO) "    html: builds HTML files (recursive)"
 	@$(ECHO) "    echo-*:"
+	@$(ECHO) "	config: configure invocation (config.status --version)"
 	@$(ECHO) "	cleanfiles: list of cleaned files"
 	@$(ECHO) "	distcleanfiles: list of distcleaned files"
 	@$(ECHO) "	extra-dist: list of EXTRA_DIST files"

@@ -2,7 +2,7 @@
 	\file "main/version.cc"
 	Prints configuration information, everything a maintainer
 	would want to know about another's installation configuration.  
-	$Id: version.cc,v 1.6 2006/02/25 04:55:02 fang Exp $
+	$Id: version.cc,v 1.7 2006/04/08 18:53:50 fang Exp $
  */
 
 #include <iostream>
@@ -20,6 +20,7 @@
 #include "lexer/lex_version.h"
 #include "parser/yacc_version.h"
 #include "buildhost.h"
+#include "config_params.h"
 #include "util/readline_wrap.h"
 
 // #include "util/getopt_portable.h"
@@ -65,6 +66,7 @@ version::main(const int argc, char* argv[], const global_options&) {
 	ostream& o(cout);
 	package(o) << endl;
 	cvs(o) << endl;
+	config(o) << endl;
 	buildhost(o) << endl;
 	cxx(o) << endl;
 	cxxflags(o) << endl;
@@ -109,6 +111,12 @@ version::cxxflags(ostream& o) {
 	o << endl << "config-LDFLAGS: " CONFIG_LDFLAGS;
 	o << endl << "config-LIBS: " CONFIG_LIBS;
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+version::config(ostream& o) {
+	return o << "Configured with: " CONFIG_PARAMS;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
