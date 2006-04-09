@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.14.6.3 2006/04/09 04:34:01 fang Exp $
+	$Id: substructure_alias_base.h,v 1.14.6.4 2006/04/09 21:24:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -123,18 +123,6 @@ protected:
 	__construct_port_context(port_member_context&,
 		const footprint_frame&) const;
 
-	template <class Tag>
-	void
-	__cflat_aliases(alias_printer&,
-		const global_entry<Tag>&, const size_t) const;
-
-public:
-	template <class Tag>
-	void
-	__match_aliases(alias_matcher_base&,
-		const global_entry<Tag>&, const size_t) const;
-
-protected:
 	good_bool
 	connect_port_aliases_recursive(this_type& r) {
 		return subinstances.connect_port_aliases_recursive(
@@ -221,18 +209,6 @@ protected:
 		// No-op.
 	}
 
-	template <class Tag>
-	void
-	__cflat_aliases(alias_printer&,
-		const global_entry<Tag>&, const size_t) const;
-
-public:
-	template <class Tag>
-	void
-	__match_aliases(alias_matcher_base&,
-		const global_entry<Tag>&, const size_t) const;
-
-protected:
 	// has no substructure
 	good_bool
 	connect_port_aliases_recursive(this_type& r) {

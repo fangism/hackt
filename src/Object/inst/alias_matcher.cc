@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.1.2.2 2006/04/09 04:34:01 fang Exp $
+	$Id: alias_matcher.cc,v 1.1.2.3 2006/04/09 21:24:27 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -14,9 +14,11 @@
 #include "Object/traits/struct_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/traits/proc_traits.h"
+#include "Object/def/footprint.h"
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
 #include "Object/common/dump_flags.h"
+#include "util/macros.h"
 #include "util/sstream.h"
 #include "util/stacktrace.h"
 #include "util/type_traits.h"
@@ -27,6 +29,38 @@ namespace entity {
 using std::ostringstream;
 using util::is_same;
 //=============================================================================
+template <bool B>
+struct alias_matcher_recursion_policy;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Has no substructure, does nothing.  
+ */
+template <>
+struct __VISIBILITY_HIDDEN__ alias_matcher_recursion_policy<false> {
+	template <class Tag>
+	static
+	void
+	accept(alias_matcher_base&, const global_entry<Tag>&) { }
+};	// end struct alias_matcher_recursion_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Has substructure, checks containership policy.  
+	TODO: check containership policy.  
+ */
+template <>
+struct __VISIBILITY_HIDDEN__ alias_matcher_recursion_policy<true> {
+	template <class Tag>
+	static
+	void
+	accept(alias_matcher_base& c, const global_entry<Tag>& e) {
+		const alias_matcher_base::save_frame save(c, &e._frame);
+		NEVER_NULL(c.fpf);
+		NEVER_NULL(c.fpf->_footprint);
+		c.fpf->_footprint->accept(c);
+	}
+};	// end struct alias_matcher_recursion_policy
 
 //=============================================================================
 /**
@@ -43,9 +77,11 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 		Conditional recursion.  
 	 */
 	template <class AliasType, class MatcherType>
+	static
 	void
-	operator () (const AliasType& a, MatcherType& v) const {
-		typedef	typename AliasType::traits_type::tag_type	Tag;
+	accept(const AliasType& a, MatcherType& v) {
+		typedef	typename AliasType::traits_type		traits_type;
+		typedef	typename traits_type::tag_type		Tag;
 		STACKTRACE_VERBOSE;
 		INVARIANT(a.valid());
 		ostringstream os;
@@ -71,14 +107,14 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 		gindex = a.instance_index;
 	}
 	v.prefix += local_name;
-	// TODO: use fact: whether or not this type may contain that type
-	// TODO: rename to __accept
 	const global_entry<Tag>& e(gp[gindex]);
-	a.__match_aliases(v, e, gindex);
+	alias_matcher_recursion_policy<traits_type::has_substructure>
+		::accept(v, e);
 	// recursion or termination
 	}
-};
+};	// end struct match_aliases_implementation_policy
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 	/**
@@ -94,9 +130,11 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 		as a subinstance.  
 	 */
 	template <class AliasType, class MatcherType>
+	static
 	void
-	operator () (const AliasType& a, MatcherType& v) const {
-		typedef	typename AliasType::traits_type::tag_type	Tag;
+	accept(const AliasType& a, MatcherType& v) {
+		typedef	typename AliasType::traits_type		traits_type;
+		typedef	typename traits_type::tag_type		Tag;
 		STACKTRACE_VERBOSE;
 		INVARIANT(a.valid());
 		ostringstream os;
@@ -130,40 +168,29 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 		// not matched... conditionally recurse
 		v.prefix += local_name;
 		const global_entry<Tag>& e(gp[gindex]);
-		// TODO: rename to __accept
-		a.__match_aliases(v, e, gindex);
+		alias_matcher_recursion_policy<traits_type::has_substructure>
+			::accept(v, e);
 		// recursion or termination
 	}
 	}
 };	// end struct match_aliases_implementation_policy
 
 //=============================================================================
+// class alias_matcher method definitions
+
 /**
 	Aggregates aliases for a particular canonical instance reference.  
 	\param Tag is the type of reference we're trying to find, 
 	so we only recurse if 1) this has substructure, and
 	2) Tag's meta-class type can possibly contain Tag2's type.  
  */
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-template <class Tag2>
-void
-INSTANCE_ALIAS_INFO_CLASS::match_aliases(alias_matcher<Tag2>& m) const {
-	typedef	match_aliases_implementation_policy<is_same<Tag,Tag2>::value>
-					implementation_policy;
-	implementation_policy()(*this, m);
-}
-
-//=============================================================================
-// class alias_matcher method definitions
-
-/**
-	Wrapped dispatcher to instance_alias_info::match_aliases. 
- */
 template <class Tag>
 template <class Tag2>
 void
 alias_matcher<Tag>::__visit(const instance_alias_info<Tag2>& a) {
-	a.match_aliases(*this);
+	typedef	match_aliases_implementation_policy<is_same<Tag,Tag2>::value>
+					implementation_policy;
+	implementation_policy::accept(a, *this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

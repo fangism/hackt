@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.19.6.3 2006/04/07 22:54:29 fang Exp $
+	$Id: instance_alias.tcc,v 1.19.6.4 2006/04/09 21:24:27 fang Exp $
 	TODO: trim includes
  */
 
@@ -445,46 +445,6 @@ void
 INSTANCE_ALIAS_INFO_CLASS::accept(alias_visitor& v) const {
 	v.visit(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Rather than take a footprint argument, passed by the collection, 
-	we get the footprint each time because collections with
-	relaxed types may have different types per element.  
-	This executes in a top-down traversal of the hierarchy.  
- */
-INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_INFO_CLASS::cflat_aliases(alias_printer& c) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(this->valid());
-	ostringstream os;
-	dump_hierarchical_name(os, dump_flags::no_leading_scope);
-	const string& local_name(os.str());
-	// construct new prefix from os
-	const alias_printer::save_prefix save(c);
-	const global_entry_pool<Tag>& gp(c.sm.template get_pool<Tag>());
-	size_t gindex;
-if (c.fpf) {
-	c.prefix += ".";
-	// this is not a top-level instance (from recursion)
-	const size_t local_offset = this->instance_index -1;
-	const footprint_frame_map_type&
-		fm(c.fpf->template get_frame_map<Tag>());
-	// footprint_frame yields the global offset
-	gindex = fm[local_offset];
-} else {
-	// footprint_frame is null, this is a top-level instance
-	// the instance_index can be used directly as the offset into
-	// the state_manager's member arrays
-	BOUNDS_CHECK(this->instance_index && this->instance_index < gp.size());
-	gindex = this->instance_index;
-}
-	c.prefix += local_name;
-	const global_entry<Tag>& e(gp[gindex]);
-	__cflat_aliases(c, e, gindex);
-	// recursion or termination
-}	// end method cflat_aliases
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE

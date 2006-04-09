@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-06:
+	  Moved __cflat_aliases and __match_aliases outside of
+		substructure_alias_base<> class, and into respective
+		alias_visitor sub-classes.  
+
+
 2006-04-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08-prsim-02-05:
