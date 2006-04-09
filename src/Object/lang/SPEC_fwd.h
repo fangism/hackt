@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_fwd.h"
 	Useful forward declarations for SPEC headers.  
-	$Id: SPEC_fwd.h,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: SPEC_fwd.h,v 1.3.16.1 2006/04/09 04:08:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FWD_H__
@@ -27,7 +27,14 @@ typedef	std::default_vector<bool_literal>::type
 typedef	std::default_vector<util::memory::count_ptr<const param_expr> >::type	
 						directive_source_params_type;
 // unrolled types (resolved parameters)
+#if 0
+/**
+	Vector of vectors is needed for support for grouped nodes.  
+ */
+typedef	std::default_vector<std::default_vector<size_t>::type>::type	
+#else
 typedef	std::default_vector<size_t>::type	
+#endif
 						directive_base_nodes_type;
 typedef	std::default_vector<util::memory::count_ptr<const const_param> >::type	
 						directive_base_params_type;

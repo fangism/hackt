@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.9 2006/03/16 03:40:22 fang Exp $
+	$Id: expr.cc,v 1.9.8.1 2006/04/09 04:08:09 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -437,7 +437,7 @@ inst_ref_expr_list::~inst_ref_expr_list() { }
  */
 void
 inst_ref_expr_list::postorder_check_bool_refs(
-		checked_bool_refs_type& temp, context& c) const {
+		checked_bool_refs_type& temp, const context& c) const {
 	STACKTRACE("inst_ref_expr_list::postorder_check_bool_refs()");
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
@@ -448,9 +448,24 @@ inst_ref_expr_list::postorder_check_bool_refs(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+void
+inst_ref_expr_list::postorder_check_grouped_bool_refs(
+		checked_bool_refs_type& temp, const context& c) const {
+	STACKTRACE("inst_ref_expr_list::postorder_check_bool_refs()");
+	INVARIANT(temp.empty());
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		temp.push_back((*i)->check_spec_group_reference(c));
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 inst_ref_expr_list::postorder_check_meta_refs(
-		checked_meta_refs_type& temp, context& c) const {
+		checked_meta_refs_type& temp, const context& c) const {
 	STACKTRACE("inst_ref_expr_list::postorder_check_meta_refs()");
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
@@ -2029,22 +2044,21 @@ loop_concatenation::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::meta_return_type
 loop_concatenation::check_meta_expr(const context& c) const {
-	cerr << "Fang, finish loop_concatenation::check_meta_expr()!" << endl;
+	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
 loop_concatenation::check_nonmeta_expr(const context& c) const {
-	cerr << "Fang, finish loop_concatenation::check_nonmeta_expr()!"
-		<< endl;
+	FINISH_ME(Fang);
 	return nonmeta_expr_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::generic_meta_return_type
 loop_concatenation::check_meta_generic(const context& c) const {
-	cerr << "Fang, finish loop_concatenation::check_meta_generic()!" << endl;
+	FINISH_ME(Fang);
 	return expr::generic_meta_return_type();
 }
 
@@ -2152,6 +2166,67 @@ array_construction::check_meta_generic(const context& c) const {
 		return return_type(meta_expr_return_type(NULL), ret);
 	}
 	return return_type();
+}
+
+//=============================================================================
+// class reference_group_construction method definitions
+
+reference_group_construction::reference_group_construction(
+		const char_punctuation_type* l,
+		const inst_ref_expr_list* e,
+		const char_punctuation_type* r) : 
+		inst_ref_expr(), lb(l), ex(e), rb(r) {
+	NEVER_NULL(ex);
+}
+
+reference_group_construction::~reference_group_construction() {
+}
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(reference_group_construction)
+
+line_position
+reference_group_construction::leftmost(void) const {
+	if (lb)		return lb->leftmost();
+	else		return ex->leftmost();
+}
+
+line_position
+reference_group_construction::rightmost(void) const {
+	if (rb)		return rb->rightmost();
+	else		return ex->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We may not allow aggregates in the non-meta language.  
+ */
+inst_ref_expr::nonmeta_return_type
+reference_group_construction::check_nonmeta_reference(const context& c) const {
+	FINISH_ME(Fang);
+	return nonmeta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We statically know to construct an instance_reference.  
+	Same base code as 2nd part of array_construction::check_meta_expr().
+ */
+inst_ref_expr::meta_return_type
+reference_group_construction::check_meta_reference(const context& c) const {
+	typedef	inst_ref_expr::meta_return_type	return_type;
+	typedef	inst_ref_expr_list::checked_meta_refs_type
+						checked_array_type;
+	checked_array_type	checked_refs;
+	ex->postorder_check_meta_refs(checked_refs, c);
+	// pass 'false' to indicate construction, not concatenation
+	const inst_ref_meta_return_type
+		ret(inst_ref_expr_list::make_aggregate_instance_reference(
+			checked_refs, false));
+	if (!ret) {
+		cerr << "Error building aggregate instance reference.  "
+			<< where(*ex) << endl;
+	}
+	return ret;
 }
 
 //=============================================================================

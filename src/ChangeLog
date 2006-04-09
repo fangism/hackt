@@ -5,6 +5,23 @@
 
 2006-04-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-11-spec-02-01:
+	  Branch for extending spec directives: allowing arguments to 
+		take groups of nodes (dimension-independent).  
+	  AST/expr.h: new reference_group_construction class derived
+		from inst_ref_expr instead of expr.  Useful when
+		argument is restricted to references.  
+	  parser::inst_ref_expr_list::postorder_* methods now take
+		const context& argument (should have long ago...)
+	  parser/hackt-parse.yy.in: spec-directive grammar update:
+		can now take groups of node as single arguments.  
+	  TODO: a sloppy type-check for grouping references into 
+		sets of scalars.
+	  TODO: example of use: min_sep layout spec-directive.  
+
+
+2006-04-08	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-11:
 	  Added cflat 'weak' rule-attribute to 
 		"Object/lang/PRS_attribute_registry.cc" and included a few

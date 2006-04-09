@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.4 2006/02/20 20:50:58 fang Exp $
+	$Id: SPEC.cc,v 1.4.12.1 2006/04/09 04:08:09 fang Exp $
  */
 
 #include <iostream>
@@ -119,7 +119,7 @@ if (params) {
 	copy(i, e, back_inserter(ret->get_nodes()));
 }
 	return ret;
-}
+}	// end method directive::check_spec
 
 //=============================================================================
 // class body method definitions

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.7 2006/02/20 20:50:58 fang Exp $
+	$Id: SPEC_registry.cc,v 1.7.12.1 2006/04/09 04:08:10 fang Exp $
  */
 
 #include <iostream>
@@ -166,7 +166,20 @@ good_bool
 __takes_no_params(const string& name, const size_t args) {
 	if (args) {
 		cerr << "The \'" << name <<
-			"\' directive takes no parameters arguments." << endl;
+			"\' directive takes no parameter arguments." << endl;
+		return good_bool(false);
+	} else	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reusable function for specifying the exact number of arguments.  
+ */
+good_bool
+exact_num_params(const string& name, const size_t req, const size_t args) {
+	if (args != req) {
+		cerr << "The \'" << name << "\' directive requires exactly " <<
+			req << " parameters." << endl;
 		return good_bool(false);
 	} else	return good_bool(true);
 }
@@ -445,6 +458,39 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(SIM_force_excllo)
 // make sure node arguments aren't actually aliased?
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(SIM_force_excllo)
 
+//-----------------------------------------------------------------------------
+/**
+	Namespace for layout directives.  
+ */
+namespace layout {
+
+DECLARE_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
+
+/**
+	\param a node arguments are processed in groups, so e.g.
+		min_sep({a,b},{c,d})
+		groups are {a,b} and {c,d}.  
+ */
+void
+layout_min_sep::main(cflat_prs_printer& p, const param_args_type& v, 
+		const node_args_type& a) {
+}
+
+good_bool
+layout_min_sep::check_num_params(const size_t s) {
+	return exact_num_params(name, 1, s);
+}
+
+good_bool
+layout_min_sep::check_num_nodes(const size_t s) {
+//	return min_num_nodes(name, 2, s);
+	return exact_num_nodes(name, 2, s);
+}
+
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(layout_min_sep)
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(layout_min_sep)
+
+}	// end namespace layout
 //-----------------------------------------------------------------------------
 #undef	DECLARE_SPEC_DIRECTIVE_CLASS
 }	// end namespace __specs__
