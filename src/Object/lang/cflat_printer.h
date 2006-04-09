@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.4 2006/02/04 06:43:21 fang Exp $
+	$Id: cflat_printer.h,v 1.4.18.1 2006/04/09 04:34:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -9,6 +9,7 @@
 
 #include "Object/lang/cflat_visitor.h"
 #include "Object/cflat_context.h"
+#include "util/member_saver_fwd.h"
 
 namespace HAC {
 class cflat_options;
@@ -44,7 +45,9 @@ protected:
 	 */
 	char					parent_expr_type;
 
-	struct expr_type_setter;
+	typedef	util::member_saver<cflat_prs_printer, char,
+			&cflat_prs_printer::parent_expr_type>
+						expr_type_setter;
 
 public:
 	cflat_prs_printer(ostream& _os, const cflat_options& _cfo) :

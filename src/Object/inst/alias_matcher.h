@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.h"
-	$Id: alias_matcher.h,v 1.1.2.1 2006/04/07 22:54:29 fang Exp $
+	$Id: alias_matcher.h,v 1.1.2.2 2006/04/09 04:34:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_MATCHER_H__
@@ -25,6 +25,7 @@ struct alias_matcher_base : public alias_visitor, public cflat_args_base {
 	const size_t				index;
 	string					prefix;
 
+protected:
 	alias_matcher_base(const state_manager& _sm, const footprint& _f, 
 		const footprint_frame* const _fpf, 
 		util::string_list& _al, 
@@ -34,6 +35,9 @@ struct alias_matcher_base : public alias_visitor, public cflat_args_base {
 		index(_i), prefix(_p) {
 	}
 
+	~alias_matcher_base() { }
+
+public:
 	typedef	util::member_saver<alias_matcher_base, string, 
 			&alias_matcher_base::prefix>
 						save_prefix;
@@ -66,6 +70,10 @@ private:
 	template <class Tag2>
 	void
 	__visit(const instance_alias_info<Tag2>&);
+
+	// non-copyable
+	explicit
+	alias_matcher(const alias_matcher&);
 
 };	// end class alias_matcher
 

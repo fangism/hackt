@@ -5,6 +5,13 @@
 
 2006-04-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-08-prsim-02-05:
+	  More development of alias_matcher (draft written, but untested).  
+	  Some more util library additions: value_saver.
+
+
+2006-04-07	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-08-prsim-02-04:
 	  More development of alias_matcher visitor.  
 	  alias_printer improved slightly.  

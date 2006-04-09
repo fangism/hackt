@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.3 2006/04/03 05:30:36 fang Exp $
+	$Id: Command.h,v 1.3.2.1 2006/04/09 04:34:02 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__
@@ -13,6 +13,7 @@
 #include "util/macros.h"
 #include "util/qmap.h"
 #include "util/tokenize_fwd.h"
+#include "util/member_saver_fwd.h"
 
 namespace HAC {
 namespace SIM {

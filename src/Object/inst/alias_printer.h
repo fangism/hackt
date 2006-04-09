@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.h"
-	$Id: alias_printer.h,v 1.1.2.2 2006/04/07 22:54:29 fang Exp $
+	$Id: alias_printer.h,v 1.1.2.3 2006/04/09 04:34:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_PRINTER_H__
@@ -36,6 +36,10 @@ private:
 	template <class Tag>
 	void
 	__visit(const instance_alias_info<Tag>&);
+
+	// non-copyable
+	explicit
+	alias_printer(const alias_printer&);
 
 };	// end class alias_printer
 

@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
 
+2006-04-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-05:
+	  Added "util/value_saver.h" in the spirit of "util/member_saver.h".
+
+
 2006-04-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08-prsim-02-04:

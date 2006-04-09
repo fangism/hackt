@@ -1,10 +1,11 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.1.2.1 2006/04/07 22:54:29 fang Exp $
+	$Id: alias_matcher.cc,v 1.1.2.2 2006/04/09 04:34:01 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
 #include "Object/inst/instance_alias_info.h"
+#include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/inst/alias_empty.h"
 #include "Object/traits/bool_traits.h"
@@ -43,7 +44,38 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 	 */
 	template <class AliasType, class MatcherType>
 	void
-	operator () (const AliasType& a, MatcherType& m) const {
+	operator () (const AliasType& a, MatcherType& v) const {
+		typedef	typename AliasType::traits_type::tag_type	Tag;
+		STACKTRACE_VERBOSE;
+		INVARIANT(a.valid());
+		ostringstream os;
+		a.dump_hierarchical_name(os, dump_flags::no_leading_scope);
+		const string& local_name(os.str());
+		// construct new prefix from os
+		const typename MatcherType::save_prefix save(v);
+		const global_entry_pool<Tag>& gp(v.sm.template get_pool<Tag>());
+		size_t gindex;
+	if (v.fpf) {
+		v.prefix += ".";
+		// this is not a top-level instance (from recursion)
+		const size_t local_offset = a.instance_index -1;
+		const footprint_frame_map_type&
+			fm(v.fpf->template get_frame_map<Tag>());
+		// footprint_frame yields the global offset
+		gindex = fm[local_offset];
+	} else {
+		// footprint_frame is null, this is a top-level instance
+		// the instance_index can be used directly as the offset into
+		// the state_manager's member arrays
+		BOUNDS_CHECK(a.instance_index && a.instance_index < gp.size());
+		gindex = a.instance_index;
+	}
+	v.prefix += local_name;
+	// TODO: use fact: whether or not this type may contain that type
+	// TODO: rename to __accept
+	const global_entry<Tag>& e(gp[gindex]);
+	a.__match_aliases(v, e, gindex);
+	// recursion or termination
 	}
 };
 
@@ -96,11 +128,10 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 		// a subinstance of its own type, just return.
 	} else {
 		// not matched... conditionally recurse
-#if 0
 		v.prefix += local_name;
 		const global_entry<Tag>& e(gp[gindex]);
+		// TODO: rename to __accept
 		a.__match_aliases(v, e, gindex);
-#endif
 		// recursion or termination
 	}
 	}
