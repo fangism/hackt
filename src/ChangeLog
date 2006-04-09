@@ -8,7 +8,7 @@
 	* HACKT-00-01-04-main-00-78-08-prsim-02-06:
 	  Moved __cflat_aliases and __match_aliases outside of
 		substructure_alias_base<> class, and into respective
-		alias_visitor sub-classes.  
+		alias_visitor sub-classes.  (cleaner, more organized)
 
 
 2006-04-07	David Fang		<fangism@users.sourceforge.net>
