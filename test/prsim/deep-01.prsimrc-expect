@@ -1,0 +1,50 @@
+poo refers to process-inst-ref ick<>
+aliases of "poo":
+poo 
+Oh, poop. 
+instances of type bar 
+poo.p refers to process-member-inst-ref bar<>
+aliases of "poo.p":
+poo.p poo.q 
+poo.q refers to process-member-inst-ref bar<>
+aliases of "poo.q":
+poo.p poo.q 
+instances of type foo 
+poo.p.x refers to process-member-inst-ref foo<>
+aliases of "poo.p.x":
+poo.p.x poo.p.y poo.q.x poo.q.y 
+poo.p.y refers to process-member-inst-ref foo<>
+aliases of "poo.p.y":
+poo.p.x poo.p.y poo.q.x poo.q.y 
+poo.q.x refers to process-member-inst-ref foo<>
+aliases of "poo.q.x":
+poo.p.x poo.p.y poo.q.x poo.q.y 
+poo.q.y refers to process-member-inst-ref foo<>
+aliases of "poo.q.y":
+poo.p.x poo.p.y poo.q.x poo.q.y 
+instance of type bool 
+poo.p.x.a refers to bool-member-inst-ref bool<>
+aliases of "poo.p.x.a":
+poo.p.x.a poo.p.x.b poo.p.y.a poo.p.y.b poo.q.x.a poo.q.x.b poo.q.y.a poo.q.y.b 
+poo.p.x.b refers to bool-member-inst-ref bool<>
+aliases of "poo.p.x.b":
+poo.p.x.a poo.p.x.b poo.p.y.a poo.p.y.b poo.q.x.a poo.q.x.b poo.q.y.a poo.q.y.b 
+poo.p.y.a refers to bool-member-inst-ref bool<>
+aliases of "poo.p.y.a":
+poo.p.x.a poo.p.x.b poo.p.y.a poo.p.y.b poo.q.x.a poo.q.x.b poo.q.y.a poo.q.y.b 
+poo.p.y.b refers to bool-member-inst-ref bool<>
+aliases of "poo.p.y.b":
+poo.p.x.a poo.p.x.b poo.p.y.a poo.p.y.b poo.q.x.a poo.q.x.b poo.q.y.a poo.q.y.b 
+poo.q.x.a refers to bool-member-inst-ref bool<>
+aliases of "poo.q.x.a":
+poo.p.x.a poo.p.x.b poo.p.y.a poo.p.y.b poo.q.x.a poo.q.x.b poo.q.y.a poo.q.y.b 
+poo.q.x.b refers to bool-member-inst-ref bool<>
+aliases of "poo.q.x.b":
+poo.p.x.a poo.p.x.b poo.p.y.a poo.p.y.b poo.q.x.a poo.q.x.b poo.q.y.a poo.q.y.b 
+poo.q.y.a refers to bool-member-inst-ref bool<>
+aliases of "poo.q.y.a":
+poo.p.x.a poo.p.x.b poo.p.y.a poo.p.y.b poo.q.x.a poo.q.x.b poo.q.y.a poo.q.y.b 
+poo.q.y.b refers to bool-member-inst-ref bool<>
+aliases of "poo.q.y.b":
+poo.p.x.a poo.p.x.b poo.p.y.a poo.p.y.b poo.q.x.a poo.q.x.b poo.q.y.a poo.q.y.b 
+that's a lot of aliases... 

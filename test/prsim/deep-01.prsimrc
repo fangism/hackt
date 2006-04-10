@@ -1,0 +1,56 @@
+# "deep-01.prsimrc"
+#	$Id: deep-01.prsimrc,v 1.1.2.1 2006/04/10 04:42:55 fang Exp $
+# @haco@ deep.haco-a
+# Testing info commands on deep hierarchies.
+
+what poo
+who poo
+
+echo Oh, poop.  
+echo instances of type bar
+what poo.p
+who poo.p
+
+what poo.q
+who poo.q
+
+echo instances of type foo
+what poo.p.x
+who poo.p.x
+
+what poo.p.y
+who poo.p.y
+
+what poo.q.x
+who poo.q.x
+
+what poo.q.y
+who poo.q.y
+
+echo instance of type bool
+what poo.p.x.a
+who poo.p.x.a
+
+what poo.p.x.b
+who poo.p.x.b
+
+what poo.p.y.a
+who poo.p.y.a
+
+what poo.p.y.b
+who poo.p.y.b
+
+what poo.q.x.a
+who poo.q.x.a
+
+what poo.q.x.b
+who poo.q.x.b
+
+what poo.q.y.a
+who poo.q.y.a
+
+what poo.q.y.b
+who poo.q.y.b
+
+echo that's a lot of aliases...
+
