@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.10.4.1 2006/04/07 22:54:30 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.10.4.2 2006/04/10 01:52:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -22,6 +22,7 @@ class scopespace;
 struct footprint_frame;
 struct expr_dump_context;
 class state_manager;
+class module;
 class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
@@ -130,7 +131,7 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 
 #define	COLLECT_ALIASES_PROTO						\
 	void								\
-	collect_aliases(const state_manager&, util::string_list&) const
+	collect_aliases(const module&, util::string_list&) const
 
 virtual	COLLECT_ALIASES_PROTO = 0;
 

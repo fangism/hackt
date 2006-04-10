@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.9 2006/01/22 06:52:56 fang Exp $
+	$Id: module.h,v 1.9.28.1 2006/04/10 01:52:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -13,6 +13,8 @@
 #include "util/persistent.h"
 #include "Object/def/footprint.h"
 #include "Object/state_manager.h"
+#include "util/tokenize_fwd.h"
+#include "util/attributes.h"
 
 namespace HAC {
 class cflat_options;
@@ -32,12 +34,24 @@ using util::persistent_object_manager;
  */
 class module : public persistent, public sequential_scope {
 	typedef	module				this_type;
+private:
 	/**
 		Local footprint manager for temporary expansion of the 
 		top-level footprint.
+		Helper class for a hack that temporarily loads namespaces'
+		instance collections into the module's top-level footprint.  
+		TODO: redesign module to be a definition to eliminate this 
+		hackery.  
 		Should be given visibility("hidden")
 	 */
-	class top_level_footprint_importer;
+	class top_level_footprint_importer {
+		footprint&			fp;
+	public:
+		explicit
+		top_level_footprint_importer(const module&);
+
+		~top_level_footprint_importer();
+	} __ATTRIBUTE_UNUSED__ ; // end class top_level_footprint_importer
 protected:
 	/**
 		Name of the file.
@@ -138,6 +152,10 @@ public:
 
 	good_bool
 	cflat(ostream&, const cflat_options&);
+
+	template <class Tag>
+	void
+	match_aliases(util::string_list&, const size_t) const;
 
 private:
 	good_bool

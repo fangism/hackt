@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.15 2006/03/15 04:38:12 fang Exp $
+ 	$Id: module.cc,v 1.15.6.1 2006/04/10 01:52:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -42,47 +42,36 @@ using util::read_string;
 using util::persistent_traits;
 
 //=============================================================================
-// class module::top_level_footprint_importer definition
+// class module::top_level_footprint_importer method definitions
 
 /**
-	Helper class for a hack that temporarily loads namespaces'
-	instance collections into the module's top-level footprint.  
-	TODO: redesign module to be a definition to eliminate this hackery.  
+	Temporarily expands the footprint collection map
+	by visiting all namespaces and collecting their
+	top-level instance collections.  
  */
-class module::top_level_footprint_importer {
-private:
-	footprint&			fp;
-public:
-	/**
-		Temporarily expands the footprint collection map
-		by visiting all namespaces and collecting their
-		top-level instance collections.  
-	 */
-	explicit
-	top_level_footprint_importer(const module& m) :
-			fp(const_cast<footprint&>(m._footprint)) {
-		namespace_collection_type nsl;
-		m.collect_namespaces(nsl);
-		namespace_collection_type::const_iterator i(nsl.begin());
-		const namespace_collection_type::const_iterator e(nsl.end());
-		for ( ; i!=e; i++) {
-			fp.import_hierarchical_scopespace(**i);
-		}
+module::top_level_footprint_importer::top_level_footprint_importer(
+		const module& m) : fp(const_cast<footprint&>(m._footprint)) {
+	namespace_collection_type nsl;
+	m.collect_namespaces(nsl);
+	namespace_collection_type::const_iterator i(nsl.begin());
+	const namespace_collection_type::const_iterator e(nsl.end());
+	for ( ; i!=e; i++) {
+		fp.import_hierarchical_scopespace(**i);
 	}
+}
 
-	/**
-		Restores the previous state of the footprint's instance
-		collection map.  
-		Is necessary for the top-level footprint because
-		it temporarily violates an invariant with 
-		object ownership.  
-		See comment where this class is used.  
-	 */
-	~top_level_footprint_importer() {
-		fp.clear_instance_collection_map();
-	}
-
-} __ATTRIBUTE_UNUSED__;	// end class module::top_level_footprint_importer
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Restores the previous state of the footprint's instance
+	collection map.  
+	Is necessary for the top-level footprint because
+	it temporarily violates an invariant with 
+	object ownership.  
+	See comment where this class is used.  
+ */
+module::top_level_footprint_importer::~top_level_footprint_importer() {
+	fp.clear_instance_collection_map();
+}
 
 //=============================================================================
 // class module method definitions
@@ -341,8 +330,7 @@ module::__cflat(ostream& o, const cflat_options& cf) const {
 		// we promise to clean it up after we're done.
 		// This is now handled by the helper class:
 		const top_level_footprint_importer foo(*this);
-		footprint& _fp(const_cast<footprint&>(_footprint));
-		_fp.cflat_aliases(o, global_state, cf);
+		_footprint.cflat_aliases(o, global_state, cf);
 	}
 	return good_bool(true);
 }

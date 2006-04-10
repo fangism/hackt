@@ -1,11 +1,13 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.5.2.2 2006/04/07 22:54:36 fang Exp $
+	$Id: Reference.cc,v 1.5.2.3 2006/04/10 01:52:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <iterator>
+#include <algorithm>
 #include <cstdio>
 #include <string>
 #include "sim/prsim/Reference.h"
@@ -43,7 +45,9 @@ using entity::expr_dump_context;
 using entity::module;
 using entity::simple_bool_meta_instance_reference;
 using entity::substructure_alias;
+using std::copy;
 using std::string;
+using std::ostream_iterator;
 using parser::inst_ref_expr;
 using util::string_list;
 using util::memory::excl_ptr;
@@ -247,7 +251,9 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m) {
 		return 1;
 	} else {
 		string_list aliases;
-		r.inst_ref()->collect_aliases(m.get_state_manager(), aliases);
+		r.inst_ref()->collect_aliases(m, aliases);
+		ostream_iterator<string> osi(o, " ");
+		copy(aliases.begin(), aliases.end(), osi);
 		return 0;
 	}
 }

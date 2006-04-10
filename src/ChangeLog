@@ -5,6 +5,14 @@
 
 2006-04-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-08-prsim-02-07:
+	  Finished implementing alias_matcher visiting.  
+	  prsim 'aliases' command renamed to 'who' because there is already
+		a category for user-defined 'aliases'.  
+	  Basic testing works, but we should add some rigorous test cases, 
+		using some of the examples in the test/parser/connect dir.  
+
+
 	* HACKT-00-01-04-main-00-78-08-prsim-02-06:
 	  Moved __cflat_aliases and __match_aliases outside of
 		substructure_alias_base<> class, and into respective

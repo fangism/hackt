@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.tcc"
 	Template method definitions for the module class.
-	$Id: module.tcc,v 1.4 2005/12/13 04:15:16 fang Exp $
+	$Id: module.tcc,v 1.4.34.1 2006/04/10 01:52:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_TCC__
@@ -9,6 +9,7 @@
 
 #include "Object/common/namespace.tcc"
 #include "Object/module.h"
+#include "Object/inst/alias_matcher.h"
 
 namespace HAC {
 namespace entity {
@@ -29,6 +30,21 @@ module::collect(L& l) const {
 		NEVER_NULL(*i);
 		(*i)->collect(l);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param a the list of aliases to accumulate matches.
+	\param i the globally allocated (canonical) index to match.  
+ */
+template <class Tag>
+void
+module::match_aliases(util::string_list& a, const size_t i) const {
+	INVARIANT(this->is_allocated());
+	typedef	alias_matcher<Tag>		matcher_type;
+	matcher_type m(this->global_state, this->_footprint, NULL, a, i);
+	const top_level_footprint_importer temp(*this);
+	_footprint.accept(m);
 }
 
 //=============================================================================

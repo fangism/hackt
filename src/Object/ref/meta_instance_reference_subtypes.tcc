@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.3.10.1 2006/04/07 22:54:31 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.3.10.2 2006/04/10 01:52:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -13,7 +13,8 @@
 #include "Object/unroll/port_connection_base.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/type/fundamental_type_reference.h"
-// #include "Object/inst/alias_matcher.h"
+#include "Object/inst/alias_matcher.h"
+#include "Object/module.tcc"
 #include "common/TODO.h"
 #include "util/macros.h"
 
@@ -97,20 +98,21 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 	\param sm the global state manager with globally allocated
 		map of all unique instances.  
 	\param aliases the string container in which to accumulate aliases.  
-	\pre sm is already allocated ('alloc' phase).  
+	\pre m module is already allocated ('alloc' phase).  
 	\pre this must be a scalar, simple_meta_instance_reference type, 
 		member-references are acceptable.  
  */
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
-META_INSTANCE_REFERENCE_CLASS::collect_aliases(const state_manager& sm, 
+META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod, 
 		string_list& aliases) const {
 	// assert dynamic_cast
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
-	const size_t index = _this.lookup_globally_allocated_index(sm);
+	const size_t index = _this.lookup_globally_allocated_index(
+		mod.get_state_manager());
 	INVARIANT(index);	// because we already checked reference?
-	FINISH_ME(Fang);
+	mod.template match_aliases<Tag>(aliases, index);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
