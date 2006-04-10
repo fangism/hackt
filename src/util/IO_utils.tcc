@@ -2,7 +2,7 @@
 	\file "util/IO_utils.tcc"
 	Template function definitions from "IO_utils.h".
 	Consider renaming this file to value_read/writer...
-	$Id: IO_utils.tcc,v 1.15 2006/02/20 20:50:59 fang Exp $
+	$Id: IO_utils.tcc,v 1.15.12.1 2006/04/10 23:21:36 fang Exp $
  */
 
 #ifndef __UTIL_IO_UTILS_TCC__
@@ -279,6 +279,34 @@ read_sequence_back_insert(istream& f, S& l) {
 		r(t);
 		// read_value(f, t);
 		l.push_back(t);
+	}
+	// any way to std::copy directly?
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generic function for loading sequence of values
+	of a set from input stream, inserting into set.
+	For pointers, you will need a persistent object manager 
+	for memory reconstruction: see "persistent_object_manager.h".
+	\param S a sequence that has concepts: size.
+	\param f the input stream.
+	\param l the set of data values to which to insert values.
+ */
+template <class S>
+void
+read_sequence_set_insert(istream& f, S& l) {
+	typedef S		sequence_type;
+	typedef	typename sequence_type::value_type	value_type;
+	size_t size;
+	read_value(f, size);
+	size_t i = 0;
+	value_reader<value_type> r(f);
+	for ( ; i < size; i++) {
+		value_type t;
+		r(t);
+		// read_value(f, t);
+		l.insert(t);
 	}
 	// any way to std::copy directly?
 }

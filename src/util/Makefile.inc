@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.7 2006/04/03 05:30:38 fang Exp $
+#	$Id: Makefile.inc,v 1.7.4.1 2006/04/10 23:21:37 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -53,6 +53,7 @@ UTIL_TCC_FILES = \
 # but the _fwd.h file is optional.  
 UTIL_HEADER_FILES = \
 	$(UTIL_TCC_FILES:.tcc=.h) \
+	util/STL/algorithm_fwd.h \
 	util/STL/allocator_fwd.h \
 	util/STL/construct_fwd.h \
 	util/STL/deque_fwd.h \
@@ -60,6 +61,7 @@ UTIL_HEADER_FILES = \
 	util/STL/hash_map_fwd.h \
 	util/STL/hash_map.h \
 	util/STL/hash_map_utils.h \
+	util/STL/iterator_fwd.h \
 	util/STL/list_fwd.h \
 	util/STL/map_fwd.h \
 	util/STL/namespace.h \

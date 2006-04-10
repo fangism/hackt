@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_functor.tcc"
 	This is a terrible name for a file...
-	$Id: persistent_functor.tcc,v 1.4 2006/02/04 06:43:23 fang Exp $
+	$Id: persistent_functor.tcc,v 1.4.20.1 2006/04/10 23:21:37 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_TCC__
@@ -111,6 +111,9 @@ read_persistent_sequence_resize(const persistent_object_manager& m,
 }
 
 //-----------------------------------------------------------------------------
+/**
+	Creates a default element at the back, and then loads object in place.  
+ */
 template <class T>
 void
 read_persistent_sequence_back_insert(const persistent_object_manager& m, 
@@ -123,6 +126,25 @@ read_persistent_sequence_back_insert(const persistent_object_manager& m,
 		value_type v;
 		t.push_back(v);
 		persistent_loader_ref(m, i)(t.back());
+	}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Inserts elements into a set.  
+ */
+template <class T>
+void
+read_persistent_set_insert(const persistent_object_manager& m, 
+		istream& i, T& t) {
+	typedef	typename T::value_type		value_type;
+	size_t s;
+	read_value(i, s);
+	size_t k = 0;
+	for ( ; k < s; ++k) {
+		value_type v;
+		persistent_loader_ref(m, i)(v);
+		t.insert(v);
 	}
 }
 

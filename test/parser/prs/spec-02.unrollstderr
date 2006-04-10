@@ -16,11 +16,11 @@ Persistent Object Manager text dump:
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	41
+	15	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	53
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	37
+	19	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	45
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30

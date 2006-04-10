@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-02:
+	  devel_switch: GROUPED_DIRECTIVE_ARGUMENTS enables grouped 
+		spec/prs-macro arguments throughout the entire code-base.  
+		Affects: AST/{PRS,SPEC/expr}.cc
+	  Implemented type-checkers to aggregate grouped bool references
+		amorphously for checking spec directives' arguments.  
+	  Moved most forward declarations in Object/object_fwd.h
+		into subdirectories' new forward declaration headers.  
+	  Object binary sizes grew as a result, but no output regressions.  
+		Test cases updated.  
+	  Bunch of minor library additions in util/, see util/ChangeLog.  
+	  TODO: update default macro/spec directive argument checking funcs.  
+	  TODO: finish min_sep directive
+
+
 2006-04-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-11-spec-02-01:

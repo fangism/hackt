@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.h"
-	$Id: PRS_attribute_registry.h,v 1.2 2006/02/02 06:30:04 fang Exp $
+	$Id: PRS_attribute_registry.h,v 1.2.22.1 2006/04/10 23:21:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
@@ -11,7 +11,6 @@
 #include "util/size_t.h"
 #include "util/boolean_types.h"
 #include "util/qmap.h"
-#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {

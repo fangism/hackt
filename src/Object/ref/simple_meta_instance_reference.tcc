@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.18 2006/04/06 08:34:34 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.18.2.1 2006/04/10 23:21:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -261,7 +261,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 			<< endl;
 		return return_type(NULL);
 	} else {
-		// util::wtf_is(aliases.front());
 		return aliases.front();
 	}
 }

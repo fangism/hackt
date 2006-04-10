@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.6 2006/02/10 21:50:40 fang Exp $
+	$Id: cflat_printer.cc,v 1.6.16.1 2006/04/10 23:21:31 fang Exp $
  */
 
 #include <iostream>
@@ -20,6 +20,9 @@
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/offset_array.h"
+#if GROUPED_DIRECTIVE_ARGUMENTS
+#include <set>
+#endif
 
 namespace HAC {
 namespace entity {
@@ -109,6 +112,35 @@ cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
 		.dump_canonical_name(os, *fp, *sm);
 	if (cfopts.enquote_names) { os << '\"'; }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if GROUPED_DIRECTIVE_ARGUMENTS
+/**
+	Prints a group of nodes.  
+	By default, single nodes are not wrapped in braces, 
+	and commas are used as delimiters.  
+ */
+void
+cflat_prs_printer::__dump_canonical_literal_group(
+		const directive_node_group_type& g) const {
+	if (g.size() > 1) {
+		typedef	directive_node_group_type::const_iterator
+						const_iterator;
+		const_iterator i(g.begin()), e(g.end());
+		os << '{';
+		__dump_canonical_literal(*i);
+		for (++i; i!=e; ++i) {
+			os << ',';
+			__dump_canonical_literal(*i);
+		}
+		os << '}';
+	} else {
+		// only one element
+		INVARIANT(!g.empty());
+		__dump_canonical_literal(*g.begin());
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.4.12.1 2006/04/09 04:08:09 fang Exp $
+	$Id: SPEC.cc,v 1.4.12.2 2006/04/10 23:21:23 fang Exp $
  */
 
 #include <iostream>
@@ -24,6 +24,10 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 
+#if GROUPED_DIRECTIVE_ARGUMENTS
+#include <functional>
+#endif
+
 namespace HAC {
 namespace parser {
 namespace SPEC {
@@ -33,6 +37,10 @@ using std::copy;
 using std::back_inserter;
 using entity::definition_base;
 using entity::process_definition;
+#if GROUPED_DIRECTIVE_ARGUMENTS
+using std::mem_fun_ref;
+using std::find_if;
+#endif
 
 //=============================================================================
 // class directive method definitions
@@ -65,10 +73,6 @@ directive::rightmost(void) const { return args->rightmost(); }
  */
 directive::return_type
 directive::check_spec(context& c) const {
-	typedef	inst_ref_expr_list::checked_bool_refs_type
-						checked_bools_type;
-	typedef	checked_bools_type::const_iterator	const_iterator;
-	typedef	checked_bools_type::value_type		value_type;
 	const entity::SPEC::spec_definition_entry
 		sde(entity::SPEC::spec_registry[*name]);
 	if (!sde) {
@@ -98,8 +102,20 @@ if (params) {
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
+} else if (!sde.check_num_params(0).good) {
+	// no params given where required, already have error message
+	cerr << "\tat " << where(*params) << endl;
+	return return_type(NULL);
 }
 {
+#if GROUPED_DIRECTIVE_ARGUMENTS
+	typedef	inst_ref_expr_list::checked_bool_groups_type
+#else
+	typedef	inst_ref_expr_list::checked_bool_refs_type
+#endif
+						checked_bools_type;
+	typedef	checked_bools_type::const_iterator	const_iterator;
+	typedef	checked_bools_type::value_type		value_type;
 	NEVER_NULL(args);
 	if (!sde.check_num_nodes(args->size()).good) {
 		// already have error message
@@ -107,9 +123,18 @@ if (params) {
 		return return_type(NULL);
 	}
 	checked_bools_type temp;
+#if GROUPED_DIRECTIVE_ARGUMENTS
+	args->postorder_check_grouped_bool_refs(temp, c);
+#else
 	args->postorder_check_bool_refs(temp, c);
+#endif
 	const const_iterator i(temp.begin()), e(temp.end());
-	if (find(i, e, value_type(NULL)) != e) {
+#if GROUPED_DIRECTIVE_ARGUMENTS
+	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e)
+#else
+	if (find(i, e, value_type(NULL)) != e)
+#endif
+	{
 		cerr << "Error checking spec arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);

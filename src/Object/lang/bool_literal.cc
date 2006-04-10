@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.4 2006/02/21 04:48:33 fang Exp $
+	$Id: bool_literal.cc,v 1.4.12.1 2006/04/10 23:21:30 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -73,6 +73,37 @@ bool_literal::unroll_base(const unroll_context& c) const {
 	INVARIANT(node_index);
 	return node_index;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if GROUPED_DIRECTIVE_ARGUMENTS
+/**
+	Unroll resolves a collection of bool references (group) into
+	an array/set.  
+	\param g the resulting array/set.  
+	\return bad to signal an error.
+ */
+good_bool
+bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
+	typedef bool_literal_base_ptr_type::element_type::alias_collection_type
+			bool_instance_alias_collection_type;
+	STACKTRACE_VERBOSE;
+	bool_instance_alias_collection_type bc;
+	if (var->unroll_references(c, bc).bad) {
+		return good_bool(false);
+	}
+	typedef	bool_instance_alias_collection_type::const_iterator
+					const_iterator;
+	const_iterator i(bc.begin()), e(bc.end());
+	// could reserve...
+	for ( ; i!=e; ++i) {
+		const instance_alias_info<bool_tag>& bi(**i);
+		const size_t node_index = bi.instance_index;
+		INVARIANT(node_index);
+		g.push_back(node_index);
+	}
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

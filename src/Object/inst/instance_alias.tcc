@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.19 2006/03/15 04:38:17 fang Exp $
+	$Id: instance_alias.tcc,v 1.19.8.1 2006/04/10 23:21:27 fang Exp $
 	TODO: trim includes
  */
 
@@ -55,7 +55,6 @@
 #include "common/ICE.h"
 
 #include "util/multikey_set.tcc"
-#include "util/wtf.h"
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/sstream.h"

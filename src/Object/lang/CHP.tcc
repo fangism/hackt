@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.6 2006/03/20 02:41:06 fang Exp $
+	$Id: CHP.tcc,v 1.6.6.1 2006/04/10 23:21:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -18,7 +18,6 @@
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/expr/expr_dump_context.h"
-#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {

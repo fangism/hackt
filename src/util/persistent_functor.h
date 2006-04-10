@@ -1,12 +1,13 @@
 /**
 	\file "util/persistent_functor.h"
-	$Id: persistent_functor.h,v 1.3 2006/02/04 06:43:23 fang Exp $
+	$Id: persistent_functor.h,v 1.3.20.1 2006/04/10 23:21:37 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_FUNCTOR_H__
 #define	__UTIL_PERSISTENT_FUNCTOR_H__
 
 #include <iosfwd>
+#include "util/STL/algorithm_fwd.h"
 
 namespace util {
 // forward declaration is all that is needed
@@ -46,7 +47,28 @@ struct persistent_collector_ref : public persistent_visitor_base {
 	operator () (const T& t) {
 		t.collect_transient_info_base(pom);
 	}
-};
+};	// end struct persistent_collector_ref
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor for when the elements of a collection are, themselves, 
+	containers, such as 2D containers.  
+	This works for lists and vectors and sets, but not maps.
+ */
+struct persistent_sequence_collector_ref : public persistent_visitor_base {
+	explicit
+	persistent_sequence_collector_ref(persistent_object_manager& m)
+		: persistent_visitor_base(m) { }
+
+	template <class T>
+	void
+	operator () (const T& t) {
+		std::for_each(t.begin(), t.end(), 
+			persistent_collector_ref(pom)
+		);
+	}
+
+};	// end struct persistent_sequence_collector_ref
 
 //-----------------------------------------------------------------------------
 /**
@@ -65,7 +87,28 @@ struct persistent_collector_ptr : public persistent_visitor_base {
 	operator () (const T& t) {
 		if (t) t->collect_transient_info(pom);
 	}
-};
+};	// end struct persistent_collector_ptr
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Functor for when the elements of a collection are, themselves, 
+	containers, such as 2D containers.  
+	This works for lists and vectors and sets, but not maps.
+ */
+struct persistent_sequence_collector_ptr : public persistent_visitor_base {
+	explicit
+	persistent_sequence_collector_ptr(persistent_object_manager& m)
+		: persistent_visitor_base(m) { }
+
+	template <class T>
+	void
+	operator () (const T& t) {
+		std::for_each(t.begin(), t.end(), 
+			persistent_collector_ptr(pom)
+		);
+	}
+
+};	// end struct persistent_sequence_collector_ptr
 
 //=============================================================================
 struct persistent_writer_ref : public persistent_const_visitor_base {
@@ -179,6 +222,11 @@ void
 read_persistent_sequence_back_insert(const persistent_object_manager&, 
 		std::istream&, S&);
 
+
+template <class S>
+void
+read_persistent_set_insert(const persistent_object_manager&, 
+		std::istream&, S&);
 
 //=============================================================================
 }	// end namespace util

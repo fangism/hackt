@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: SPEC.h,v 1.3.16.1 2006/04/10 23:21:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -10,7 +10,6 @@
 #include <string>
 #include <vector>
 #include "Object/lang/directive_source.h"
-#include "Object/object_fwd.h"
 #include "Object/lang/bool_literal.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"

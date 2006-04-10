@@ -1,13 +1,13 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.12 2006/02/10 21:50:39 fang Exp $
+	$Id: PRS.h,v 1.12.16.1 2006/04/10 23:21:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
 #define	__HAC_OBJECT_LANG_PRS_H__
 
-#include "Object/object_fwd.h"
+#include "Object/ref/references_fwd.h"
 #include "Object/lang/PRS_base.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/bool_literal.h"

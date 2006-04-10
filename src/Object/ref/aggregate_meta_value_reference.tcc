@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.3 2006/02/21 21:33:02 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.3.12.1 2006/04/10 23:21:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -35,7 +35,6 @@
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
-#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {

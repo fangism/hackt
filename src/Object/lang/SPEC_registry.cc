@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.7.12.1 2006/04/09 04:08:10 fang Exp $
+	$Id: SPEC_registry.cc,v 1.7.12.2 2006/04/10 23:21:30 fang Exp $
  */
 
 #include <iostream>
@@ -12,6 +12,9 @@
 #include "main/cflat_options.h"
 #include "common/TODO.h"
 #include "util/qmap.tcc"
+#if GROUPED_DIRECTIVE_ARGUMENTS
+#include <set>
+#endif
 
 namespace util {
 //=============================================================================
@@ -150,11 +153,19 @@ print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
+#if GROUPED_DIRECTIVE_ARGUMENTS
+	p.__dump_canonical_literal_group(*i);
+	for (++i; i!=e; ++i) {
+		o << delim;
+		p.__dump_canonical_literal_group(*i);
+	}
+#else
 	p.__dump_canonical_literal(*i);
 	for (++i; i!=e; ++i) {
 		o << delim;
 		p.__dump_canonical_literal(*i);
 	}
+#endif
 	return o;
 }
 
@@ -242,7 +253,11 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 	const const_iterator e(a.end());
 	for ( ; i!=e; ++i) {
 		o << T::name << '(';
+#if GROUPED_DIRECTIVE_ARGUMENTS
+		p.__dump_canonical_literal_group(*i);
+#else
 		p.__dump_canonical_literal(*i);
+#endif
 		o << ')' << endl;
 	}
 	return o;

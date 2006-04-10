@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.7 2006/03/15 04:38:14 fang Exp $
+	$Id: footprint_manager.cc,v 1.7.8.1 2006/04/10 23:21:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -16,6 +16,10 @@
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
+
+#if GROUPED_DIRECTIVE_ARGUMENTS
+#include <set>
+#endif
 
 namespace HAC {
 namespace entity {

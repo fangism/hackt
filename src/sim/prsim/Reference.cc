@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.5 2006/04/03 22:11:18 fang Exp $
+	$Id: Reference.cc,v 1.5.4.1 2006/04/10 23:21:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,7 +13,6 @@
 #include "AST/expr.h"
 #include "AST/parse_context.h"
 #include "Object/module.h"
-#include "Object/object_fwd.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/expr/expr_dump_context.h"
