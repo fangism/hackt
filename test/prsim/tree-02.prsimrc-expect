@@ -1,0 +1,94 @@
+All subnodes of 'poo':
+poo.p.x.a : X
+poo.p.x.b : X
+poo.p.y.a : X
+poo.p.y.b : X
+poo.q.x.a : X
+poo.q.x.b : X
+poo.q.y.a : X
+poo.q.y.b : X
+All subnodes of 'poo.p':
+poo.p.x.a : X
+poo.p.x.b : X
+poo.p.y.a : X
+poo.p.y.b : X
+All subnodes of 'poo.q':
+poo.q.x.a : X
+poo.q.x.b : X
+poo.q.y.a : X
+poo.q.y.b : X
+All subnodes of 'poo.p.x':
+poo.p.x.a : X
+poo.p.x.b : X
+All subnodes of 'poo.p.y':
+poo.p.y.a : X
+poo.p.y.b : X
+All subnodes of 'poo.q.x':
+poo.q.x.a : X
+poo.q.x.b : X
+All subnodes of 'poo.q.y':
+poo.q.y.a : X
+poo.q.y.b : X
+All subnodes of 'poo.p.x.a':
+poo.p.x.a : X
+All subnodes of 'poo.p.x.b':
+poo.p.x.b : X
+All subnodes of 'poo.p.y.a':
+poo.p.y.a : X
+All subnodes of 'poo.p.y.b':
+poo.p.y.b : X
+All subnodes of 'poo.q.x.a':
+poo.q.x.a : X
+All subnodes of 'poo.q.x.b':
+poo.q.x.b : X
+All subnodes of 'poo.q.y.a':
+poo.q.y.a : X
+All subnodes of 'poo.q.y.b':
+poo.q.y.b : X
+All subnodes of 'poo':
+poo.p.x.a : 0
+poo.p.x.b : X
+poo.p.y.a : X
+poo.p.y.b : 0
+poo.q.x.a : 1
+poo.q.x.b : X
+poo.q.y.a : X
+poo.q.y.b : 1
+All subnodes of 'poo.p':
+poo.p.x.a : 0
+poo.p.x.b : X
+poo.p.y.a : X
+poo.p.y.b : 0
+All subnodes of 'poo.q':
+poo.q.x.a : 1
+poo.q.x.b : X
+poo.q.y.a : X
+poo.q.y.b : 1
+All subnodes of 'poo.p.x':
+poo.p.x.a : 0
+poo.p.x.b : X
+All subnodes of 'poo.p.y':
+poo.p.y.a : X
+poo.p.y.b : 0
+All subnodes of 'poo.q.x':
+poo.q.x.a : 1
+poo.q.x.b : X
+All subnodes of 'poo.q.y':
+poo.q.y.a : X
+poo.q.y.b : 1
+All subnodes of 'poo.p.x.a':
+poo.p.x.a : 0
+All subnodes of 'poo.p.x.b':
+poo.p.x.b : X
+All subnodes of 'poo.p.y.a':
+poo.p.y.a : X
+All subnodes of 'poo.p.y.b':
+poo.p.y.b : 0
+All subnodes of 'poo.q.x.a':
+poo.q.x.a : 1
+All subnodes of 'poo.q.x.b':
+poo.q.x.b : X
+All subnodes of 'poo.q.y.a':
+poo.q.y.a : X
+All subnodes of 'poo.q.y.b':
+poo.q.y.b : 1

@@ -1,0 +1,26 @@
+# "celem-03.prsimrc"
+#	$Id: celem-03.prsimrc,v 1.2 2006/04/11 07:54:50 fang Exp $
+# @haco@ celem.haco-a
+# Testing 'what' and 'who' on C-element
+
+what a
+who a
+
+what b
+who b
+
+what c
+who c
+
+what C
+who C
+
+what C.a
+who C.a
+
+what C.b
+who C.b
+
+what C.c
+who C.c
+

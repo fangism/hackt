@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.15 2006/03/20 02:41:06 fang Exp $
+ 	$Id: instance_reference.cc,v 1.16 2006/04/11 07:54:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -13,6 +13,11 @@
 #include <iostream>
 #include <list>
 
+#include "Object/ref/meta_instance_reference_subtypes.tcc"
+#include "Object/ref/simple_meta_instance_reference.tcc"
+#include "Object/ref/simple_nonmeta_instance_reference.tcc"
+#include "Object/ref/member_meta_instance_reference.tcc"
+#include "Object/ref/aggregate_meta_instance_reference.tcc"
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/type/canonical_type.h"
 #include "Object/inst/physical_instance_collection.h"
@@ -20,10 +25,6 @@
 #include "Object/inst/param_value_collection.h"
 #include "Object/common/namespace.h"
 #include "Object/common/dump_flags.h"
-#include "Object/ref/simple_meta_instance_reference.tcc"
-#include "Object/ref/simple_nonmeta_instance_reference.tcc"
-#include "Object/ref/member_meta_instance_reference.tcc"
-#include "Object/ref/aggregate_meta_instance_reference.tcc"
 #include "Object/expr/const_range.h"
 #include "Object/expr/dynamic_meta_index_list.h"
 #include "Object/expr/dynamic_meta_range_list.h"
@@ -36,7 +37,6 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/general_collection_type_manager.h"
-#include "Object/ref/meta_instance_reference_subtypes.tcc"
 #include "Object/unroll/port_connection_base.h"
 
 // introduced by using canonical_types

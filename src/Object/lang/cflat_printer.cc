@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.6 2006/02/10 21:50:40 fang Exp $
+	$Id: cflat_printer.cc,v 1.7 2006/04/11 07:54:43 fang Exp $
  */
 
 #include <iostream>
@@ -20,32 +20,12 @@
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/offset_array.h"
+#include "util/member_saver.h"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
 #include "util/using_ostream.h"
-//=============================================================================
-// class cflat_prs_printer::expr_type_setter definition
-
-class cflat_prs_printer::expr_type_setter {
-private:
-	cflat_prs_printer&		cpp;
-	const char			ppt;
-public:
-	/// save away the previous value on stack
-	expr_type_setter(cflat_prs_printer& _cpp, const char _pt) :
-			cpp(_cpp), ppt(cpp.parent_expr_type) {
-		cpp.parent_expr_type = _pt;
-	}
-
-	/// restore previous expr type from stack
-	~expr_type_setter() {
-		cpp.parent_expr_type = ppt;
-	}
-
-};	// end class cflat_prs_printer::expr_type_setter
-
 //=============================================================================
 // class cflat_prs_printer method definitions
 

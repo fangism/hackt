@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.4 2006/04/08 18:36:07 fang Exp $
+	$Id: Node.h,v 1.5 2006/04/11 07:54:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -250,6 +250,35 @@ public:
 
 	ostream&
 	dump_state(ostream&) const;
+
+	/**
+		Predicated functor helper for printing nodes with
+		a given status.  
+	 */
+	struct status_dumper {
+		ostream&		os;
+		const char		match_val;
+
+		status_dumper(ostream& o, const char v) :
+			os(o), match_val(v) { }
+
+		// no copy-ctor
+		// default destructor
+
+		void
+		operator () (const NodeState&);
+
+	};	// end struct status_dumper
+
+	static
+	bool
+	is_valid_value(const char c) {
+		return c >= LOGIC_LOW && c <= LOGIC_OTHER;
+	}
+
+	static
+	char
+	char_to_value(const char);
 
 	/// \return < 0 on error, else returns 0, 1, 2
 	static

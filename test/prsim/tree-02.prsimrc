@@ -1,0 +1,46 @@
+# "tree-02.prsimrc"
+#	$Id: tree-02.prsimrc,v 1.2 2006/04/11 07:54:56 fang Exp $
+# @haco@ tree.haco-a
+# Testing info commands on deep hierarchies.
+
+getall poo
+getall poo.p
+getall poo.q
+getall poo.p.x
+getall poo.p.y
+getall poo.q.x
+getall poo.q.y
+# all the following are aliases
+getall poo.p.x.a
+getall poo.p.x.b
+getall poo.p.y.a
+getall poo.p.y.b
+getall poo.q.x.a
+getall poo.q.x.b
+getall poo.q.y.a
+getall poo.q.y.b
+
+set poo.p.x.a 0
+set poo.p.y.b 0
+set poo.q.x.a 1
+set poo.q.y.b 1
+cycle
+
+getall poo
+getall poo.p
+getall poo.q
+getall poo.p.x
+getall poo.p.y
+getall poo.q.x
+getall poo.q.y
+getall poo.p.x.a
+getall poo.p.x.b
+getall poo.p.y.a
+getall poo.p.y.b
+getall poo.q.x.a
+getall poo.q.x.b
+getall poo.q.y.a
+getall poo.q.y.b
+
+
+

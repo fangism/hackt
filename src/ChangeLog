@@ -3,6 +3,47 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-12-merged-prsim-02-08:
+	  Merge of prsim features branch.  Featuring new commands:
+		'who' prints all aliases of a structure or node
+		'getall' prints value of all nodes reachable from 
+			the named instance.  
+		'setr' set node at random time in future
+		'status' print all nodes with given value
+	  Also significant cleanup in instance_alias visitation, 
+		using alias_visitor visitor hierarchy.  
+	  Some library additions, such as member_saver and value_saver.
+
+
+2006-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-08:
+	  Implemented and tested prsim's 'getall' command, which reports
+		values of all subnodes of a reference (canonically named).  
+		Used trivial recursion over footprint frames, accumulating
+		sub-entries' indices in an entry_collection structure (new).  
+	  Added test cases in test/prsim.
+	  After some maintainence checks, calling this end-of-branch.
+
+
+2006-04-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-07:
+	  Finished implementing alias_matcher visiting.  
+	  prsim 'aliases' command renamed to 'who' because there is already
+		a category for user-defined 'aliases'.  
+	  Basic testing works, but we should add some rigorous test cases, 
+		using some of the examples in the test/parser/connect dir.  
+
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-06:
+	  Moved __cflat_aliases and __match_aliases outside of
+		substructure_alias_base<> class, and into respective
+		alias_visitor sub-classes.  (cleaner, more organized)
+
+
 2006-04-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-11:
@@ -18,6 +59,44 @@
 	  config.h: now references configure-generated "__config__.h"
 
 
+2006-04-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-05:
+	  More development of alias_matcher (draft written, but untested).  
+	  Some more util library additions: value_saver.
+
+
+2006-04-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-04:
+	  More development of alias_matcher visitor.  
+	  alias_printer improved slightly.  
+	  substructured trait classes given "may_contains" containership
+		attributes (closure), also given rebind member template.  
+	  Refactored out commonly used code in sim/prsim/Reference.cc
+	  Some minor library enhancements in util/ChangeLog.  
+		Most notably, the member-saver class template, and type_traits.
+
+
+2006-04-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-03:
+	  Just committing the USE_ALIAS_VISITOR devel. switch.  
+		Also footprint and physical_instance_collection don't
+		derive from alias_visitee, but rather, just implement the
+		required accept(alias_visitor&) interface.  
+	  Cleaned up bits of obsolete code.
+
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-02:
+	  Changing hard-coded cflat_aliases traversal into visitor/walker
+		pattern: base is alias_visitor in "Object/inst/alias_visitor.h"
+		and first example is HAC::entity::alias_printer for cflat.  
+		Next: commit devel_switches flag.  
+	  Added half-celem-01 test case to demonstrate where prsim goes awry.  
+	  TODO: print all aliases upon request for prsim:aliases command.  
+
+
 2006-04-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-09:
@@ -26,6 +105,16 @@
 	  Fixed by moving much common code (static functions) from 
 		simple_meta_instance_reference into
 		meta_instance_reference<> base -- no new code!
+
+
+2006-04-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-01:
+	  Branch for continued development of core prsim features.
+	  Implemented 'setr' command (set node after random delay).
+	  Implemented 'status' command.  
+	  Node value arguments now can accept [TtFfUu] as well as [01Xx].
+	  A few more prsim tests in test suite.  
 
 
 2006-04-03	David Fang		<fangism@users.sourceforge.net>

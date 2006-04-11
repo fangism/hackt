@@ -1,5 +1,22 @@
 # "src/util/ChangeLog"
 
+2006-04-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-05:
+	  Added "util/value_saver.h" in the spirit of "util/member_saver.h".
+
+
+2006-04-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-04:
+	  util/static_assert.h: seperated into dependent and non-dependent
+		macro for static_assert because of underlying typedef. 
+	  util/const_traits.h: considering obsoleting, in favor of
+		unified util/type_traits.h.  Emptied out for now.  
+	  Added util/member_saver.h template class for temporarily
+		saving away a member value and restoring upon destruction.  
+
+
 2006-04-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-07-merged-prsim-01-15:

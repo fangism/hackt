@@ -1,0 +1,21 @@
+a refers to bool-inst-ref bool<>
+aliases of "a":
+C.a a 
+b refers to bool-inst-ref bool<>
+aliases of "b":
+C.b b 
+c refers to bool-inst-ref bool<>
+aliases of "c":
+C.c c 
+C refers to process-inst-ref celem<>
+aliases of "C":
+C 
+C.a refers to bool-member-inst-ref bool<>
+aliases of "C.a":
+C.a a 
+C.b refers to bool-member-inst-ref bool<>
+aliases of "C.b":
+C.b b 
+C.c refers to bool-member-inst-ref bool<>
+aliases of "C.c":
+C.c c 

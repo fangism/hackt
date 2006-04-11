@@ -1,7 +1,7 @@
 /**
 	"Object/common/cflat_args.h"
 	Common aggregate argument types for various cflat methods.  
-	$Id: cflat_args.h,v 1.6 2006/01/22 18:19:16 fang Exp $
+	$Id: cflat_args.h,v 1.7 2006/04/11 07:54:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_CFLAT_ARGS_H__
@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include <string>
+#include "util/member_saver.h"
 
 namespace HAC {
 class cflat_options;
@@ -51,6 +52,9 @@ public:
 			const footprint_frame* const _fpf) : 
 			sm(_sm), topfp(_f), fpf(_fpf) { }
 
+	typedef	util::member_saver<cflat_args_base, const footprint_frame*, 
+				&cflat_args_base::fpf>
+					save_frame;
 
 };	// end struct cflat_args_base
 
@@ -90,6 +94,10 @@ public:
 	}
 	// default copy-constructor
 	// default destructor
+
+	typedef	util::member_saver<cflat_aliases_arg_type, string, 
+			&cflat_aliases_arg_type::prefix>
+				save_prefix;
 
 };	// end struct cflat_aliases_arg_type
 

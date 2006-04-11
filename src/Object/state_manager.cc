@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.11 2006/02/06 01:30:47 fang Exp $
+	$Id: state_manager.cc,v 1.12 2006/04/11 07:54:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +18,7 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/entry_collection.h"
 #include "main/cflat_options.h"
 #include "util/stacktrace.h"
 #include "util/list_vector.tcc"
@@ -226,6 +227,42 @@ state_manager::allocate_test(void) {
 	__allocate_test<enum_tag>();
 	__allocate_test<int_tag>();
 	__allocate_test<bool_tag>();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For now, quick and recursive implementation, 
+	could do this in a worklist fashion if performance really mattered.  
+ */
+template <class Tag>
+void
+state_manager::collect_subentries(entry_collection& e, const size_t i) const {
+	const global_entry_pool<Tag>& p(get_pool<Tag>());
+	// already bounds checked?
+	INVARIANT(i);
+	const global_entry<Tag>& g(p[i]);
+	index_set_type& v(e.template get_index_set<Tag>());
+	// insert returns .second=true if new element was inserted
+	// otherwise, we've already visited this substructure.  
+	if (v.insert(i).second) {
+		g.collect_subentries(e, *this);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This is just nonsense code for the sake of instantiating template
+	methods.  
+ */
+void
+state_manager::__collect_subentries_test(void) const {
+	entry_collection foo;
+	collect_subentries<process_tag>(foo, 1);
+	collect_subentries<channel_tag>(foo, 1);
+	collect_subentries<datastruct_tag>(foo, 1);
+	collect_subentries<enum_tag>(foo, 1);
+	collect_subentries<int_tag>(foo, 1);
+	collect_subentries<bool_tag>(foo, 1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.14 2006/03/15 04:38:20 fang Exp $
+	$Id: substructure_alias_base.h,v 1.15 2006/04/11 07:54:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -25,7 +25,8 @@ class port_member_context;
 class state_manager;
 template <class> class global_entry;
 template <class> class state_instance;
-struct cflat_aliases_arg_type;
+struct alias_printer;
+struct alias_matcher_base;
 using std::istream;
 using std::ostream;
 using util::persistent_object_manager;
@@ -122,11 +123,6 @@ protected:
 	__construct_port_context(port_member_context&,
 		const footprint_frame&) const;
 
-	template <class Tag>
-	void
-	__cflat_aliases(cflat_aliases_arg_type&,
-		const global_entry<Tag>&, const size_t) const;
-
 	good_bool
 	connect_port_aliases_recursive(this_type& r) {
 		return subinstances.connect_port_aliases_recursive(
@@ -212,11 +208,6 @@ protected:
 			const footprint_frame&) const {
 		// No-op.
 	}
-
-	template <class Tag>
-	void
-	__cflat_aliases(cflat_aliases_arg_type&, 
-		const global_entry<Tag>&, const size_t) const;
 
 	// has no substructure
 	good_bool

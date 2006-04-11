@@ -1,0 +1,29 @@
+Fanins of node `c':
+~a & ~b -> c+
+a -> c-
+	0	b : 1
+	0	a : 1
+	10	c : 0
+time: 10
+	10	a : 0
+b- should enqueue c+ 
+	10	b : 0
+event queue:
+	20	c : 1
+time: 15
+introduce high-glitch on b, should cause instability 
+WARNING: unstable `c'+
+>> cause: `b' (val: 1)
+	15	b : 1
+event queue:
+	20	c : X
+	16	b : 0
+	20	c : X
+X nodes:
+c 
+0 nodes:
+a b 
+1 nodes:
+
+event queue:
+in a state where c should be 1, but remains X while pull-up guard true! 

@@ -1,5 +1,5 @@
 # "DevelopmentPlan.dot"
-#	$Id: DevelopmentPlan.dot,v 1.9 2005/12/10 03:55:37 fang Exp $
+#	$Id: DevelopmentPlan.dot,v 1.10 2006/04/11 07:54:32 fang Exp $
 
 digraph G {
 size="7,10";
@@ -98,10 +98,12 @@ CHP_00_01_05		[shape=ellipse, style=filled, fillcolor=yellow,
 				label="CHP type-check"];
 CHPSYNTH_00_01_05	[shape=ellipse, label="CHP synthesis"];
 CHPSIM_00_01_05		[shape=ellipse, label="CHP simulation"];
-VTPRSIM_00_01_05	[shape=ellipse, label="VTPRSIM\nsimulation f.w."];
+PRSIM_00_01_05		[shape=ellipse, label="PRSIM\nsimulation f.w.", 
+				style=filled, fillcolor=yellow];
 MIXSIM_00_01_05		[shape=ellipse, label="mixed simulation"];
 
-PRS_ATTR		[label="PRS attributes", shape=ellipse];
+PRS_ATTR		[label="PRS attributes", shape=ellipse,
+				style=filled, fillcolor=gray];
 CHP_ST			[label="static token", shape=ellipse];
 CHP_DFA			[label="dataflow analysis", shape=ellipse];
 XLAT_LIB		[label="translation\ntemplate library", shape=ellipse];
@@ -118,12 +120,12 @@ DSPACE_DB		[label="design-space\ndatabase", shape=ellipse];
 HACKT_00_01_05 -> CHP_00_01_05;
 CHP_00_01_05 -> CHPSYNTH_00_01_05;
 CHP_00_01_05 -> CHPSIM_00_01_05;
-PRS_00_01_04 -> VTPRSIM_00_01_05;
-HACKT_00_01_05 -> VTPRSIM_00_01_05;
-VTPRSIM_00_01_05 -> MIXSIM_00_01_05;
-VTPRSIM_00_01_05 -> SIMPROF;
+PRS_00_01_04 -> PRSIM_00_01_05;
+HACKT_00_01_05 -> PRSIM_00_01_05;
+PRSIM_00_01_05 -> MIXSIM_00_01_05;
+PRSIM_00_01_05 -> SIMPROF;
 CHPSIM_00_01_05 -> MIXSIM_00_01_05;
-PRS_ATTR -> VTPRSIM_00_01_05;
+PRS_ATTR -> PRSIM_00_01_05;
 CHPSYNTH_00_01_05 -> CHP_ST;
 CHPSYNTH_00_01_05 -> CHP_DFA;
 CHPSYNTH_00_01_05 -> CHP_SDT;

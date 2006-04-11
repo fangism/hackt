@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.23 2006/03/16 03:40:24 fang Exp $
+	$Id: instance_collection.tcc,v 1.24 2006/04/11 07:54:42 fang Exp $
 	TODO: trim includes
  */
 
@@ -336,8 +336,8 @@ count_ptr<meta_instance_reference_base>
 INSTANCE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//      check array dimensions -- when attach_indices() invoked
-	typedef	count_ptr<meta_instance_reference_base>	return_type;
-	return return_type(new simple_meta_instance_reference_type(
+	typedef	count_ptr<meta_instance_reference_base>	ptr_return_type;
+	return ptr_return_type(new simple_meta_instance_reference_type(
 			never_ptr<const this_type>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
@@ -352,8 +352,8 @@ count_ptr<nonmeta_instance_reference_base>
 INSTANCE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
 	// depends on whether this instance is collective, 
 	//      check array dimensions -- when attach_indices() invoked
-	typedef	count_ptr<nonmeta_instance_reference_base>	return_type;
-	return return_type(new simple_nonmeta_instance_reference_type(
+	typedef	count_ptr<nonmeta_instance_reference_base>	ptr_return_type;
+	return ptr_return_type(new simple_nonmeta_instance_reference_type(
 			never_ptr<const this_type>(this)));
 		// omitting index argument, set it later...
 		// done by parser::instance_array::check_build()
@@ -709,20 +709,20 @@ INSTANCE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 never_ptr<typename INSTANCE_ARRAY_CLASS::element_type>
 INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
-	typedef	never_ptr<element_type>		return_type;
+	typedef	never_ptr<element_type>		ptr_return_type;
 	const const_iterator it(this->collection.find(index));
 	if (it == this->collection.end()) {
 		this->type_dump(
 			cerr << "ERROR: reference to uninstantiated ") <<
 			" " << this->get_qualified_name() << " at index: " <<
 			index << endl;
-		return return_type(NULL);
+		return ptr_return_type(NULL);
 	}
 	const element_type& b(*it);
 	if (b.valid()) {
 		// unfortunately, this cast is necessary
 		// safe because we know b is not a reference to a temporary
-		return return_type(const_cast<element_type*>(&b));
+		return ptr_return_type(const_cast<element_type*>(&b));
 	} else {
 		// remove the blank we added?
 		// not necessary, but could keep the collection "clean"
@@ -730,7 +730,7 @@ INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
 			cerr << "ERROR: reference to uninstantiated ") <<
 			" " << this->get_qualified_name() << " at index: " <<
 			index << endl;
-		return return_type(NULL);
+		return ptr_return_type(NULL);
 	}
 }
 
@@ -742,7 +742,6 @@ INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 typename INSTANCE_ARRAY_CLASS::instance_alias_base_ptr_type
 INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
-	typedef	instance_alias_base_ptr_type	return_type;
 	INVARIANT(D == i.dimensions());
 	const key_type index(i);
 #if ENABLE_STACKTRACE
@@ -1122,13 +1121,13 @@ INSTANCE_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prints hierarchical aliases for cflat. 
+	Visitor.  
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::cflat_aliases(const cflat_aliases_arg_type& c) const {
+INSTANCE_ARRAY_CLASS::accept(alias_visitor& v) const {
 	for_each(this->collection.begin(), this->collection.end(),
-		bind2nd_argval(mem_fun_ref(&element_type::cflat_aliases), c)
+		bind2nd_argval(mem_fun_ref(&element_type::accept), v)
 	);
 }
 
@@ -1386,12 +1385,12 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
 INSTANCE_SCALAR_CLASS::lookup_instance(const multikey_index_type& i) const {
 	typedef	typename INSTANCE_SCALAR_CLASS::instance_alias_base_ptr_type
-						return_type;
+						ptr_return_type;
 	if (!this->the_instance.valid()) {
 		this->type_dump(cerr << "ERROR: Reference to uninstantiated ")
 			<< "!" << endl;
-		return return_type(NULL);
-	} else	return return_type(
+		return ptr_return_type(NULL);
+	} else	return ptr_return_type(
 		const_cast<instance_alias_base_type*>(
 			&static_cast<const instance_alias_base_type&>(
 				this->the_instance)));
@@ -1554,8 +1553,8 @@ INSTANCE_SCALAR_CLASS::assign_footprint_frame(footprint_frame& ff,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
-INSTANCE_SCALAR_CLASS::cflat_aliases(const cflat_aliases_arg_type& c) const {
-	this->the_instance.cflat_aliases(c);
+INSTANCE_SCALAR_CLASS::accept(alias_visitor& v) const {
+	this->the_instance.accept(v);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

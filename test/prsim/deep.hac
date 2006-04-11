@@ -1,0 +1,21 @@
+// "deep.hac"
+// copied straight from "test/parser/process/111.hac"
+// for the purpose of testing prsim's info commands.  
+
+defproc foo() {
+	bool a, b;
+	a = b;
+}
+
+defproc bar() {
+	foo x, y;
+	x = y;
+}
+
+defproc ick() {
+	bar p, q;
+	p = q;
+}
+
+ick poo;
+

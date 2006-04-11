@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.6 2006/04/05 22:32:22 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.7 2006/04/11 07:54:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -16,6 +16,10 @@
 namespace HAC {
 namespace entity {
 class unroll_context;
+template <class>
+class simple_meta_instance_reference;
+template <class>
+class aggregate_meta_instance_reference;
 using util::bad_bool;
 
 //=============================================================================
@@ -45,6 +49,10 @@ public:
 	/// keep this typedef consistent with 
 	/// simple_meta_indexed_reference_base::index_list_type
 	typedef	meta_index_list_type		index_list_type;
+	typedef	simple_meta_instance_reference<Tag>
+						simple_reference_type;
+	typedef	aggregate_meta_instance_reference<Tag>
+						aggregate_reference_type;
 protected:
 	meta_instance_reference() : meta_instance_reference_base() { }
 public:
@@ -86,6 +94,9 @@ protected:
 		const instance_collection_generic_type&,
 		const never_ptr<const index_list_type>,
 		alias_collection_type&);
+
+	COLLECT_ALIASES_PROTO;
+	COLLECT_SUBENTRIES_PROTO;
 
 private:
 	excl_ptr<aliases_connection_base>

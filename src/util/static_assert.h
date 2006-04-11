@@ -3,7 +3,7 @@
 	Compile-time assertion, implemented with template struct.
 	Is like a concept/constraint check.  
 	Ah, the wonders of template meta-programming.  
-	$Id: static_assert.h,v 1.3 2005/09/04 21:15:08 fang Exp $
+	$Id: static_assert.h,v 1.4 2006/04/11 07:54:48 fang Exp $
  */
 
 #ifndef	__UTIL_STATIC_ASSERT_H__
@@ -25,8 +25,7 @@ struct must_be_true;
  */
 template <>
 struct must_be_true<true> {
-	// enum { value = 1};
-	typedef	void		type;
+	typedef	must_be_true		type;
 };
 
 }	// end namespace util
@@ -35,16 +34,14 @@ struct must_be_true<true> {
 	Static assertion will pass only if x is true because
 	must_be_true<false> has no type member.  
  */
-#if 0
-// old crappy definition
 #define	UTIL_STATIC_ASSERT(x)						\
-	static const int						\
-		UNIQUIFY(__check_) __ATTRIBUTE_UNUSED__ =		\
-		util::must_be_true<x >::value
-#else
-#define	UTIL_STATIC_ASSERT(x)						\
+	typedef	util::must_be_true<x >::type UNIQUIFY(__check_type_)
+
+/**
+	Template-dependent version.  
+ */
+#define	UTIL_STATIC_ASSERT_DEPENDENT(x)					\
 	typedef	typename util::must_be_true<x >::type UNIQUIFY(__check_type_)
-#endif
 
 #endif	// __UTIL_STATIC_ASSERT_H__
 

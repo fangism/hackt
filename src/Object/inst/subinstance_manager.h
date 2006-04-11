@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.12 2006/03/15 04:38:19 fang Exp $
+	$Id: subinstance_manager.h,v 1.13 2006/04/11 07:54:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -10,6 +10,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/inst/alias_visitee.h"
 
 namespace HAC {
 class cflat_options;
@@ -25,7 +26,7 @@ class port_member_context;
 class state_manager;
 class footprint_frame;
 template <class> class instance_collection;
-struct cflat_aliases_arg_type;
+class cflat_visitor;
 struct dump_flags;
 using std::ostream;
 using std::istream;
@@ -129,7 +130,7 @@ public:
 		const port_member_context&) const;
 
 	void
-	cflat_aliases(const cflat_aliases_arg_type&) const;
+	accept(alias_visitor&) const;
 
 	// for each entry, re-link
 	void

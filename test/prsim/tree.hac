@@ -1,0 +1,18 @@
+// "tree.hac"
+// copied from "test/parser/process/something.hac"
+// for the purpose of testing prsim's info commands.  
+
+defproc foo() {
+	bool a, b;
+}
+
+defproc bar() {
+	foo x, y;
+}
+
+defproc ick() {
+	bar p, q;
+}
+
+ick poo;
+

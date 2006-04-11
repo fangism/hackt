@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.cc"
-	$Id: global_entry.cc,v 1.6 2006/02/06 01:30:45 fang Exp $
+	$Id: global_entry.cc,v 1.7 2006/04/11 07:54:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -114,6 +114,18 @@ footprint_frame_map<Tag>::__expand_subinstances(const footprint& fp,
 				frame, sm, pmc, j).good) {
 			THROW_EXIT;
 		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class Tag>
+void
+footprint_frame_map<Tag>::__collect_subentries(entry_collection& e, 
+		const state_manager& sm) const {
+	footprint_frame_map_type::const_iterator
+		mi(id_map.begin()), me(id_map.end());
+	for ( ; mi!=me; ++mi) {
+		sm.template collect_subentries<Tag>(e, *mi);
 	}
 }
 
@@ -272,6 +284,22 @@ footprint_frame::allocate_remaining_subinstances(const footprint& fp,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Visits each frame map and collects all reachable subinstances'
+	ID numbers into the entry collection.  
+ */
+void
+footprint_frame::collect_subentries(entry_collection& e,
+		const state_manager& sm) const {
+	footprint_frame_map<process_tag>::__collect_subentries(e, sm);
+	footprint_frame_map<channel_tag>::__collect_subentries(e, sm);
+	footprint_frame_map<datastruct_tag>::__collect_subentries(e, sm);
+	footprint_frame_map<enum_tag>::__collect_subentries(e, sm);
+	footprint_frame_map<int_tag>::__collect_subentries(e, sm);
+	footprint_frame_map<bool_tag>::__collect_subentries(e, sm);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 footprint_frame::collect_transient_info_base(
 		persistent_object_manager& m) const {
@@ -341,22 +369,6 @@ footprint_frame::get_frame_map_test(void) const {
 
 //=============================================================================
 // class global_entry_base method definitions
-
-#if 0
-void
-global_entry_base<true>::cache_process_parent_refs(
-		const state_manager& sm) const {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-void
-global_entry_base<true>::collect_transient_info_base(
-		persistent_object_manager& m) const {
-	_frame.collect_transient_info_base(m);
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

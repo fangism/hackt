@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.5 2006/04/06 08:34:33 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.6 2006/04/11 07:54:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -8,7 +8,9 @@
 
 #include <iostream>
 #include "Object/ref/meta_instance_reference_subtypes.h"
+#include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/aggregate_meta_instance_reference.h"
+#include "Object/module.tcc"
 #include "Object/unroll/port_connection_base.h"
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/unroll_context.h"
@@ -20,10 +22,13 @@
 #include "Object/common/dump_flags.h"
 #include "util/packed_array.tcc"	// for packed_array_generic<>::resize()
 #include "util/stacktrace.h"
+#include "Object/inst/alias_matcher.h"
+#include "common/TODO.h"
 #include "util/macros.h"
 
 namespace HAC {
 namespace entity {
+using util::string_list;
 #include "util/using_ostream.h"
 //=============================================================================
 // class meta_instance_reference method definitions
@@ -76,6 +81,47 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 	}
 	// else fall-through handle multidimensional case
 	return true;            // conservatively
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	First resolves canonical globally allocated index.  
+	Accumulates all aliases by traversing instance hierarchy
+	and recording matches.  
+	\param sm the global state manager with globally allocated
+		map of all unique instances.  
+	\param aliases the string container in which to accumulate aliases.  
+	\pre m module is already allocated ('alloc' phase).  
+	\pre this must be a scalar, simple_meta_instance_reference type, 
+		member-references are acceptable.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod, 
+		string_list& aliases) const {
+	// assert dynamic_cast
+	const simple_reference_type&
+		_this(IS_A(const simple_reference_type&, *this));
+	const size_t index = _this.lookup_globally_allocated_index(
+		mod.get_state_manager());
+	INVARIANT(index);	// because we already checked reference?
+	mod.template match_aliases<Tag>(aliases, index);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects all subnodes of this reference.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod, 
+		entry_collection& v) const {
+	const simple_reference_type&
+		_this(IS_A(const simple_reference_type&, *this));
+	const state_manager& sm(mod.get_state_manager());
+	const size_t index = _this.lookup_globally_allocated_index(sm);
+	INVARIANT(index);	// because we already checked reference?
+	sm.template collect_subentries<Tag>(v, index);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

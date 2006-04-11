@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.13 2006/03/15 04:38:14 fang Exp $
+	$Id: footprint.h,v 1.14 2006/04/11 07:54:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -21,7 +21,7 @@
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 // #include "Object/lang/CHP_footprint.h"
-
+// #include "Object/inst/alias_visitee.h"
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/string_fwd.h"
@@ -36,7 +36,7 @@ class scopespace;
 class state_manager;
 class footprint_frame;
 class port_member_context;
-struct cflat_aliases_arg_type;
+struct alias_visitor;
 struct dump_flags;
 
 using std::string;
@@ -92,9 +92,13 @@ protected:
 	may want a back-reference pointer to the referenced 
 	specialization definition.  (FAR far future)
 
+	We implement the alias_visitee accept() interface without
+	having to derive from it because the traversal is not polymorphic.  
+
 	CONSIDER: adding definition/canonical type back reference?
  */
 class footprint :
+	// public alias_visitee, 	// not needed
 	private	footprint_base<process_tag>, 
 	private	footprint_base<channel_tag>, 
 	private	footprint_base<datastruct_tag>, 
@@ -279,7 +283,7 @@ public:
 		const cflat_options&) const;
 
 	void
-	cflat_aliases(const cflat_aliases_arg_type&) const;
+	accept(alias_visitor&) const;
 
 public:
 // persistent information management

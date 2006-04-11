@@ -1,0 +1,40 @@
+# "half-celem-01.prsimrc"
+#	$Id: half-celem-01.prsimrc,v 1.2 2006/04/11 07:54:53 fang Exp $
+# @haco@ half-celem.haco-a
+# testing instability scenario
+
+# reminder: b is only in the pull-up guard for c
+
+fanin c
+
+watchall
+set b 1
+set a 1
+cycle
+time
+
+set a 0
+step
+echo b- should enqueue c+
+set b 0
+advance 5
+queue
+time
+
+echo introduce high-glitch on b, should cause instability
+set b 1
+advance 1
+queue
+
+set b 0
+advance 1
+
+cycle
+status X
+status 0
+status 1
+queue
+echo in a state where c should be 1, but remains X while pull-up guard true!
+# We'd like a mode where this is 'fixed'
+
+

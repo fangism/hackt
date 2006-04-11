@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.h"
-	$Id: global_entry.h,v 1.10 2006/02/06 01:30:46 fang Exp $
+	$Id: global_entry.h,v 1.11 2006/04/11 07:54:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_H__
@@ -32,6 +32,7 @@ struct global_entry_dumper;
 class alias_string_set;
 class footprint;
 class state_manager;
+class entry_collection;		// defined in "Object/entry_collection.h"
 class port_member_context;
 
 template <class Tag>
@@ -84,6 +85,9 @@ protected:
 	void
 	__expand_subinstances(const footprint&, state_manager&,
 		const size_t, const size_t);
+
+	void
+	__collect_subentries(entry_collection&, const state_manager&) const;
 
 };	// end struct footprint_frame_map
 
@@ -159,6 +163,9 @@ struct footprint_frame :
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
+	void
+	collect_subentries(entry_collection&, const state_manager&) const;
+
 private:
 	static
 	ostream&
@@ -197,6 +204,9 @@ struct global_entry_base<false> {
 	ostream&
 	dump(global_entry_dumper&) const;
 
+	void
+	collect_subentries(entry_collection&, const state_manager&) const { }
+
 	template <class Tag>
 	void
 	collect_transient_info_base(const persistent_object_manager&, 
@@ -225,6 +235,11 @@ struct global_entry_base<true> {
 	template <class Tag>
 	ostream&
 	dump(global_entry_dumper&) const;
+
+	void
+	collect_subentries(entry_collection& e, const state_manager& sm) const {
+		_frame.collect_subentries(e, sm);
+	}
 
 	// some footprint (in frame) may contain relaxed template arguments.  
 	template <class Tag>
@@ -339,6 +354,7 @@ public:
 	__dump_canonical_name(ostream&, const dump_flags&,
 		const footprint&, const state_manager&) const;
 
+	using parent_type::collect_subentries;
 	using parent_type::collect_transient_info_base;
 
 	void

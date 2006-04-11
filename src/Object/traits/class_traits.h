@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.6 2006/03/15 04:38:21 fang Exp $
+	$Id: class_traits.h,v 1.7 2006/04/11 07:54:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -47,6 +47,9 @@ class instance_alias_info_actuals;
  */
 template <class Tag>
 struct class_traits {
+	template <class Tag2>
+	struct rebind {	typedef	class_traits<Tag2>	type; };
+
 	typedef	Tag				tag_type;
 	/**
 		The type of uniquely created object with possible aliases

@@ -1,7 +1,7 @@
 /**
 	\file "Object/state_manager.h"
 	Declaration for the creation state management facilities.  
-	$Id: state_manager.h,v 1.9 2006/02/06 01:30:48 fang Exp $
+	$Id: state_manager.h,v 1.10 2006/04/11 07:54:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_STATE_MANAGER_H__
@@ -20,6 +20,7 @@ class cflat_options;
 namespace entity {
 class footprint;
 class state_manager;
+class entry_collection;	// defined in "Object/entry_collection.h"
 using std::istream;
 using std::ostream;
 using util::good_bool;
@@ -135,11 +136,6 @@ public:
 	ostream&
 	dump(ostream&, const footprint&) const;
 
-#if 0
-	good_bool
-	cflat_prs(ostream&, const footprint&, const cflat_options&) const;
-#endif
-
 	void
 	collect_transient_info_base(persistent_object_manager&, 
 		const footprint&) const;
@@ -156,6 +152,10 @@ public:
 	void
 	accept(PRS::cflat_visitor&) const;
 
+	template <class Tag>
+	void
+	collect_subentries(entry_collection&, const size_t) const;
+
 private:
 	explicit
 	state_manager(const this_type&);
@@ -168,6 +168,10 @@ private:
 	/// never actually called
 	void
 	allocate_test(void);
+
+	void
+	__collect_subentries_test(void) const;
+
 };	// end class state_manager
 
 //=============================================================================

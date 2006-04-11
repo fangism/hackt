@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.11 2006/03/20 02:41:08 fang Exp $
+	$Id: chan_traits.h,v 1.12 2006/04/11 07:54:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -23,6 +23,9 @@ template <class> class general_collection_type_manager;
  */
 template <>
 struct class_traits<channel_tag> {
+	template <class Tag>
+	struct rebind {	typedef	class_traits<Tag>	type; };
+
 	typedef	channel_tag			tag_type;
 	static const char			tag_name[];
 	enum { type_tag_enum_value = TYPE_CHANNEL };
@@ -36,6 +39,13 @@ struct class_traits<channel_tag> {
 	static const bool		has_substructure = true;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
+
+	/**
+		Closure for containership, defined by specializations only.  
+	 */
+	template <class>
+	struct may_contain;
+
 	/**
 		UPDATE: 
 		Channels no longer can take relaxed parameters. 
@@ -97,6 +107,20 @@ struct class_traits<channel_tag> {
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 };	// end struct class_traits<channel_tag>
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define CHANNELS_MAY_CONTAIN(Tag, _val)					\
+template <>								\
+struct channel_traits::may_contain<Tag> { enum { value = _val }; };
+
+CHANNELS_MAY_CONTAIN(bool_tag, true)
+CHANNELS_MAY_CONTAIN(int_tag, true)
+CHANNELS_MAY_CONTAIN(enum_tag, true)
+CHANNELS_MAY_CONTAIN(datastruct_tag, true)
+CHANNELS_MAY_CONTAIN(channel_tag, true)
+CHANNELS_MAY_CONTAIN(process_tag, false)
+
+#undef  CHANNELS_MAY_CONTAIN
 
 //=============================================================================
 }	// end namespace entity

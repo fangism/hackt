@@ -1,0 +1,31 @@
+help what: 
+what <name>
+help who: 
+who <name>
+I refers to process-inst-ref inv<>
+aliases of "I":
+I 
+J refers to process-inst-ref inv<>
+aliases of "J":
+J 
+a refers to bool-inst-ref bool<>
+aliases of "a":
+I.a a 
+b refers to bool-inst-ref bool<>
+aliases of "b":
+I.b J.a b 
+c refers to bool-inst-ref bool<>
+aliases of "c":
+J.b c 
+I.a refers to bool-member-inst-ref bool<>
+aliases of "I.a":
+I.a a 
+I.b refers to bool-member-inst-ref bool<>
+aliases of "I.b":
+I.b J.a b 
+J.a refers to bool-member-inst-ref bool<>
+aliases of "J.a":
+I.b J.a b 
+J.b refers to bool-member-inst-ref bool<>
+aliases of "J.b":
+J.b c 

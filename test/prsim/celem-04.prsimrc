@@ -1,0 +1,27 @@
+# "celem-04.prsimrc"
+#	$Id: celem-04.prsimrc,v 1.2 2006/04/11 07:54:51 fang Exp $
+# @haco@ celem.haco-a
+# Testing 'getall' on C-element
+
+set a 0
+set b 1
+cycle
+assert c x
+
+getall a
+getall b
+getall c
+getall C
+getall C.a
+getall C.b
+getall C.c
+
+set a 1
+cycle
+getall C
+
+set b 0
+set a 0
+cycle
+getall C
+

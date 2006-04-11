@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.10 2006/03/20 02:41:07 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.11 2006/04/11 07:54:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -14,6 +14,8 @@
 #include "util/memory/count_ptr.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/boolean_types.h"
+#include "util/tokenize_fwd.h"		// for util::string_list
+// #include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -21,6 +23,8 @@ class scopespace;
 struct footprint_frame;
 struct expr_dump_context;
 class state_manager;
+class entry_collection;
+class module;
 class definition_base;
 class fundamental_type_reference;
 class instance_collection_base;
@@ -34,6 +38,7 @@ using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
+// using std::default_vector;
 using std::istream;
 using std::ostream;
 using util::persistent;
@@ -126,6 +131,18 @@ virtual	CONNECT_PORT_PROTO = 0;
 	lookup_footprint_frame(const state_manager&) const
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
+
+#define	COLLECT_ALIASES_PROTO						\
+	void								\
+	collect_aliases(const module&, util::string_list&) const
+
+virtual	COLLECT_ALIASES_PROTO = 0;
+
+#define	COLLECT_SUBENTRIES_PROTO					\
+	void								\
+	collect_subentries(const module&, entry_collection&) const
+
+virtual	COLLECT_SUBENTRIES_PROTO = 0;
 
 private:
 virtual	excl_ptr<aliases_connection_base>

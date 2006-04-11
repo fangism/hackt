@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.15 2006/03/15 04:38:19 fang Exp $
+	$Id: subinstance_manager.cc,v 1.16 2006/04/11 07:54:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -295,15 +295,16 @@ subinstance_manager::assign_footprint_frame(footprint_frame& ff,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	new footprint?
+	NOTE: this doesn't use the visitee's accept method.  
+	This forwards the calls to physical_instance_collection::accept.
  */
 void
-subinstance_manager::cflat_aliases(const cflat_aliases_arg_type& c) const {
+subinstance_manager::accept(alias_visitor& v) const {
 	const_iterator i(subinstance_array.begin());
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		const count_ptr<physical_instance_collection>& pi(*i);
-		pi->cflat_aliases(c);
+		pi->accept(v);
 	}
 }
 

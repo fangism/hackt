@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.112 2006/04/08 19:39:22 fang Exp $
+#	$Id: Makefile.am,v 1.113 2006/04/11 07:54:36 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -207,6 +207,8 @@ OBJECT_CC_FILES = \
 	Object/inst/subinstance_manager.cc \
 	Object/inst/port_alias_tracker.cc \
 	Object/inst/alias_actuals.cc \
+	Object/inst/alias_matcher.cc \
+	Object/inst/alias_printer.cc \
 	Object/inst/instance_collection.cc \
 	Object/inst/param_value_collection.cc \
 	Object/inst/pbool_value_collection.cc \
@@ -314,6 +316,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/object_fwd.h \
 	Object/persistent_type_hash.h \
 	Object/cflat_context.h \
+	Object/entry_collection.h \
 	Object/common/alias_string_cache.h \
 	Object/common/cflat_args.h \
 	Object/common/multikey_index.h \
@@ -398,6 +401,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/preal_unary_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
+	Object/inst/alias_visitee.h \
+	Object/inst/alias_visitor.h \
 	Object/inst/substructure_alias_fwd.h \
 	Object/inst/general_collection_type_manager.h \
 	Object/inst/null_collection_type_manager.h \
