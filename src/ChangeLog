@@ -3,6 +3,28 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-03:
+	  cflat has new boolean tool-option for SEU (single-event-upset)
+		modes of tools, e.g. prsim will emit min_sep directives.  
+	  main/cflat minor fix in command-line arg. processing.  
+	  PRS-macro default node argument checking now rejects
+		grouped arguments because we havee no macros that use them yet.
+	  SPEC-directive check_node_args's default also rejects grouped 
+		arguments, but now we have one 'min_sep' directive that
+		accepts them (still uncommon).  
+	  module::cflat now catches exceptions thrown as a result of
+		cflat-time errors.  
+	  cflat_prs_printer supports pretty printing of grouped arguments, 
+		and even unique-ifies their sets.  
+	  Minor bug fix in parser error reporting checking spec num_params.  
+	  Minor printing fix in parameterized source directives.  
+	  TODO: yacc stderr outputs for a few new test cases.
+	  TODO: support generalized pretty-printing of spec-directives
+		and possibly PRS macros.  
+
+
 2006-04-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-11-spec-02-02:

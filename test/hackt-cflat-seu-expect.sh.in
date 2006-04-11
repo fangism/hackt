@@ -1,0 +1,75 @@
+#!@SH_PATH@
+# "hackt-cflat-seu-expect.sh.in"
+#	$Id: hackt-cflat-seu-expect.sh.in,v 1.1.2.1 2006/04/11 22:54:13 fang Exp $
+# copy-modified from "hackt-cflat-expect.sh.in"
+
+# NOTE: temporarily just uses stdout dump during execution
+# will updated later...
+
+# $1 is the executable for the creator (hackt alloc), expecting 2 arguments
+# $2 is the path to the source directory, which is not necessarily ./
+#	during distcheck uses _build
+# $3 is the input file name WITHOUT the .in extension
+# other subsequent arguments are ignored
+
+# if test $# -lt 3 ; then exit 1 ; fi
+
+cflat=$1
+srcroot=$2/$3
+bldroot=$3
+
+# a pre-created (already created) object file must already exist
+if test ! -s $bldroot.haco-a
+then
+	@ECHO@ "$bldroot.haco-a doesn't exist or is empty."
+	exit 1
+fi
+
+# see if it crashes first
+$cflat $bldroot.haco-a > $bldroot.prsseu 2>&1
+err=$?
+# depending on exit status, take action
+# we now handle errors during cflat
+case $err in
+	0) break ;;
+	1) break ;;
+	*) exit 1 ;;
+esac
+
+# .allocstderr comparison file must exist
+if test ! -f $srcroot.expect-prsseu && test ! -f $bldroot.expect-prsseu
+then
+	@ECHO@ "Missing $srcroot.expect-prsseu"
+	exit 1
+fi
+
+# some PRS may be empty (auto-generated)
+if test -s $srcroot.expect-prsseu
+then
+	@DIFF@ -u $srcroot.expect-prsseu $bldroot.prsseu > $bldroot.prsseu-diff
+else
+	@DIFF@ -u $bldroot.expect-prsseu $bldroot.prsseu > $bldroot.prsseu-diff
+fi
+
+if test -s $bldroot.prsseu-diff
+then
+	@ECHO@ "$bldroot.prsseu-diff is non-empty!"
+	if test "$err" != 0
+	then
+		exit 1
+	fi
+	# additional analysis to see if is just re-ordering difference
+	if test -s $srcroot.expect-prsseu && test -s $bldroot.prsseu
+	then
+		@SORT@ $srcroot.expect-prsseu > $bldroot.expect-prsseu.sort
+		@SORT@ $bldroot.prsseu > $bldroot.prsseu.sort
+		@DIFF@ -u $bldroot.expect-prsseu.sort $bldroot.prsseu.sort \
+			> $bldroot.prsseu-diff.sort
+		if test ! -s $bldroot.prsseu-diff.sort
+		then
+			@ECHO@ "Only re-ordering differencies found.  (OK)"
+		fi
+	fi
+	exit 1
+fi
+

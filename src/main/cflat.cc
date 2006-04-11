@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.9 2006/02/10 21:50:44 fang Exp $
+	$Id: cflat.cc,v 1.9.16.1 2006/04/11 22:54:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -91,6 +91,7 @@ static
 void
 __cflat_prsim(cflat::options& cf) {
 	cf.primary_tool = cflat::options::TOOL_PRSIM;
+	cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_EQUAL;
 	cf.include_prs = true;
 	cf.dump_self_connect = false;
@@ -109,6 +110,7 @@ static
 void
 __cflat_prlint(cflat::options& cf) {
 	cf.primary_tool = cflat::options::TOOL_PRLINT;
+	cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_NONE;
 	cf.include_prs = true;
 	cf.dump_self_connect = false;
@@ -127,6 +129,7 @@ static
 void
 __cflat_connect(cflat::options& cf) {
 	// cf.primary_tool = ?
+	// cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_CONNECT;
 	cf.include_prs = false;
 	cf.dump_self_connect = false;
@@ -152,6 +155,7 @@ static
 void
 __cflat_lvs(cflat::options& cf) {
 	cf.primary_tool = cflat::options::TOOL_LVS;
+	cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_CONNECT;
 	cf.include_prs = true;
 	cf.dump_self_connect = false;
@@ -191,6 +195,7 @@ static
 void
 __cflat_ADspice(cflat::options& cf) {
 	// cf.primary_tool = ?
+	// cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_WIRE;
 	cf.include_prs = true;
 	cf.dump_self_connect = false;
@@ -212,6 +217,7 @@ static
 void
 __cflat_check(cflat::options& cf) {
 	// cf.primary_tool = ?
+	// cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_NONE;
 	cf.include_prs = true;
 	cf.check_prs = true;
@@ -271,6 +277,9 @@ const cflat::register_options_modifier
 
 //-----------------------------------------------------------------------------
 // for setting/unsetting individual flags
+
+// TODO: reperitive code should be templated or macro'd
+// define for common patterns to reduce clutter.
 
 static
 void
@@ -370,6 +379,25 @@ __cflat_no_quote_names(cflat::options& cf) {
 const cflat::register_options_modifier
 	cflat::_no_quote_names("no-quote-names", &__cflat_no_quote_names, 
 		"no quote around node names");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+void
+__cflat_SEU(cflat::options& cf) {
+	cf.tool_options |= cflat::options::TOOL_OPTIONS_SEU;
+}
+const cflat::register_options_modifier
+	cflat::_SEU("SEU", &__cflat_SEU,
+		"enable single-event-upset mode for tool");
+
+static
+void
+__cflat_no_SEU(cflat::options& cf) {
+	cf.tool_options &= ~cflat::options::TOOL_OPTIONS_SEU;
+}
+const cflat::register_options_modifier
+	cflat::_no_SEU("no-SEU", &__cflat_no_SEU, 
+		"disable single-event-upset mode");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	cf.dump_non_bools = false;
@@ -491,9 +519,9 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 		return 1;
 	}
 	// cerr << "optind = " << optind << endl;
-	INVARIANT(optind+1 < argc);
-	if (optind+2 < argc) {
-		cerr << "Only one non-option argument allowed." << endl;
+	if (optind+1 >= argc || optind+2 < argc) {
+		cerr << "Exactly one non-option argument <objfile> required."
+			<< endl;
 		usage();
 		return 1;
 	}

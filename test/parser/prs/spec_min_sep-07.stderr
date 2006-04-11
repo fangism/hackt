@@ -1,0 +1,22 @@
+At: "-stdin-":9:
+parse error: syntax error
+parser stacks:
+state	value
+#STATE#	(null) 
+#STATE#	(null) 
+#STATE#	keyword: defproc [6:1..7]
+#STATE#	identifier: groupie [6:9..15]
+#STATE#	list<(port-formal-decl)>: (port-formal-decl) ... [6:17..30]
+#STATE#	{ [6:32]
+#STATE#	keyword: spec [7:1..4]
+#STATE#	{ [7:6]
+#STATE#	identifier: min_sep [9:2..8]
+#STATE#	list<(expr)>: int: 13 ... [9:9..12]
+#STATE#	( [9:13]
+#STATE#	{ [9:14]
+#STATE#	{ [9:15]
+in state #STATE#, possible rules are:
+	grouped_reference: '{' . mandatory_member_index_expr_list '}'  (#RULE#)
+acceptable tokens are: 
+	ID (shift)
+	SCOPE (shift)

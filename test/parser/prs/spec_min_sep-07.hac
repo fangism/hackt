@@ -1,0 +1,14 @@
+// "spec_min_sep-07.hac"
+// copy-modified from "spec_min_sep-04.hac"
+// testing grouped node arguments in spec directives
+// should fail on syntax error
+
+defproc groupie (bool p, q, r) {
+spec {
+	// no nesting of groups, groups are dimensionless sets
+	min_sep<13>({{p}}, q)
+}
+}
+
+groupie g;
+

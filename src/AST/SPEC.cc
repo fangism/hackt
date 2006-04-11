@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.4.12.2 2006/04/10 23:21:23 fang Exp $
+	$Id: SPEC.cc,v 1.4.12.3 2006/04/11 22:54:07 fang Exp $
  */
 
 #include <iostream>
@@ -104,7 +104,7 @@ if (params) {
 	copy(i, e, back_inserter(ret->get_params()));
 } else if (!sde.check_num_params(0).good) {
 	// no params given where required, already have error message
-	cerr << "\tat " << where(*params) << endl;
+	cerr << "\tat " << where(*this) << endl;
 	return return_type(NULL);
 }
 {

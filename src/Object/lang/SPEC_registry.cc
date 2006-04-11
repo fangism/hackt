@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.7.12.2 2006/04/10 23:21:30 fang Exp $
+	$Id: SPEC_registry.cc,v 1.7.12.3 2006/04/11 22:54:09 fang Exp $
  */
 
 #include <iostream>
@@ -132,8 +132,8 @@ class_name::check_param_args(const param_args_type&) {			\
 
 #define	DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(class_name)	\
 good_bool								\
-class_name::check_node_args(const node_args_type&) {			\
-	return good_bool(true);						\
+class_name::check_node_args(const node_args_type& a) {			\
+	return __no_grouped_node_args(name, a);				\
 }
 
 //-----------------------------------------------------------------------------
@@ -173,6 +173,7 @@ print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 /**
 	Reusable function for specifying the minimum number of arguments.  
  */
+static
 good_bool
 __takes_no_params(const string& name, const size_t args) {
 	if (args) {
@@ -186,6 +187,7 @@ __takes_no_params(const string& name, const size_t args) {
 /**
 	Reusable function for specifying the exact number of arguments.  
  */
+static
 good_bool
 exact_num_params(const string& name, const size_t req, const size_t args) {
 	if (args != req) {
@@ -199,6 +201,7 @@ exact_num_params(const string& name, const size_t req, const size_t args) {
 /**
 	Reusable function for specifying the minimum number of arguments.  
  */
+static
 good_bool
 min_num_nodes(const string& name, const size_t min, const size_t args) {
 	if (args < min) {
@@ -212,6 +215,7 @@ min_num_nodes(const string& name, const size_t min, const size_t args) {
 /**
 	Reusable function for specifying the exact number of arguments.  
  */
+static
 good_bool
 exact_num_nodes(const string& name, const size_t req, const size_t args) {
 	if (args != req) {
@@ -222,10 +226,37 @@ exact_num_nodes(const string& name, const size_t req, const size_t args) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**     
+	Most spec directives expect only single nodes, even in grouped 
+	arguments.  
+ */
+static
+good_bool
+__no_grouped_node_args(const char* name,
+		const spec_definition_entry::node_args_type& a) {
+	typedef spec_definition_entry::node_args_type	node_args_type;
+	typedef node_args_type::const_iterator		const_iterator;
+	const_iterator i(a.begin()), e(a.end());
+	for ( ; i!=e; ++i) {
+		const size_t s = i->size();
+		if (s > 1) {
+			cerr << "SPEC directive \'" << name <<
+				"\' takes no grouped arguments." << endl;
+			cerr << "\tgot: " << s <<
+				" nodes in argument position " <<
+				distance(a.begin(), i) +1 << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true); 
+}       
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This is the default thing to do, much too common and reusable.  
  */
 template <class T>
+static
 ostream&
 default_spec_output(cflat_prs_printer& p, const param_args_type& params, 
 		const node_args_type& a) {
@@ -244,6 +275,7 @@ default_spec_output(cflat_prs_printer& p, const param_args_type& params,
 	NOTE: doesn't take any parameters.  
  */
 template <class T>
+static
 ostream&
 default_expand_into_singles_output(cflat_prs_printer& p, 
 		const node_args_type& a) {
@@ -489,6 +521,19 @@ DECLARE_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
 void
 layout_min_sep::main(cflat_prs_printer& p, const param_args_type& v, 
 		const node_args_type& a) {
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_LAYOUT:
+		default_spec_output<this_type>(p, v, a) << endl;
+		break;
+	case cflat_options::TOOL_PRSIM:
+		// but not for old plain prsim
+		if (p.cfopts.with_SEU()) {
+			default_spec_output<this_type>(p, v, a) << endl;
+		}
+		break;
+	default:
+		break;
+	}
 }
 
 good_bool
@@ -503,7 +548,14 @@ layout_min_sep::check_num_nodes(const size_t s) {
 }
 
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(layout_min_sep)
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(layout_min_sep)
+
+/**
+	Grouped arguments ARE allowed here.  
+ */
+good_bool
+layout_min_sep::check_node_args(const node_args_type& a) {
+	return good_bool(true);
+}
 
 }	// end namespace layout
 //-----------------------------------------------------------------------------

@@ -1,0 +1,4 @@
+min_sep<15>("b", "g.r")
+min_sep<15>({"h.p","h.q"}, "h.r")
+= "b" "g.p"
+= "b" "g.q"

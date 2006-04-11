@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-expect.sh.in,v 1.12 2006/04/08 22:12:59 fang Exp $
+#	$Id: hackt-cflat-expect.sh.in,v 1.12.2.1 2006/04/11 22:54:12 fang Exp $
 
 # NOTE: temporarily just uses stdout dump during execution
 # will updated later...
@@ -25,11 +25,13 @@ then
 fi
 
 # see if it crashes first
-$cflat $bldroot.haco-a > $bldroot.prs
-
+$cflat $bldroot.haco-a > $bldroot.prs 2>&1
+err=$?
 # depending on exit status, take action
-case $? in
+# we now handle errors during cflat
+case $err in
 	0) break ;;
+	1) break ;;
 	*) exit 1 ;;
 esac
 
@@ -40,7 +42,7 @@ then
 	exit 1
 fi
 
-# some PRS may be empty
+# some PRS may be empty (auto-generated)
 if test -s $srcroot.expect-prs
 then
 	@DIFF@ -u $srcroot.expect-prs $bldroot.prs > $bldroot.prsdiff
@@ -51,6 +53,10 @@ fi
 if test -s $bldroot.prsdiff
 then
 	@ECHO@ "$bldroot.prsdiff is non-empty!"
+	if test "$err" != 0
+	then
+		exit 1
+	fi
 	# additional analysis to see if is just re-ordering difference
 	if test -s $srcroot.expect-prs && test -s $bldroot.prs
 	then

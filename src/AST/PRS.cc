@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.9.12.1 2006/04/10 23:21:23 fang Exp $
+	$Id: PRS.cc,v 1.9.12.2 2006/04/11 22:54:06 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -610,7 +610,7 @@ if (params) {
 	copy(i, e, back_inserter(ret->get_params()));
 } else if (!mde.check_num_params(0).good) {
 	// no params given where required and already have error message
-	cerr << "\tat " << where(*params) << endl;
+	cerr << "\tat " << where(*this) << endl;
 	return return_type(NULL);
 }
 {

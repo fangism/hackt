@@ -1,0 +1,20 @@
+// "spec_min_sep-05.hac"
+// copy-modified from "spec_min_sep-03.hac"
+// testing grouped node arguments in spec directives, using arrays
+// should pass
+
+defproc groupie (bool p, q, r) {
+bool x[3];
+spec {
+	// should accept grouped and non-grouped arguments
+	min_sep<15>(x, q)
+	min_sep<10>(p, x[0..1])
+	min_sep<20>({x}, {r})
+	min_sep<25>({q}, {x[0..1]})
+	min_sep<30>(x[0], x[1..2])
+	min_sep<40>({x[0], x[1]}, x[2])
+}
+}
+
+groupie g;
+

@@ -1,0 +1,16 @@
+// "spec_min_sep-10.hac"
+// copy-modified from "spec_min_sep-06.hac"
+// testing grouped node arguments in spec directives
+// testing with aliased nodes
+// should pass
+
+defproc groupie (bool p, q, r) {
+spec {
+	min_sep<15>({p, q}, r)
+}
+}
+
+bool b;
+groupie g(b, b, ),	// should result in g.p, g.q aliasing in group
+	h;		// should keep h.p, h.q distinct
+

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.6.16.1 2006/04/10 23:21:31 fang Exp $
+	$Id: cflat_printer.cc,v 1.6.16.2 2006/04/11 22:54:09 fang Exp $
  */
 
 #include <iostream>
@@ -103,41 +103,81 @@ cflat_prs_printer::__lookup_global_bool_id(const size_t lni) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param ni the global node ID.  
+ */
+void
+cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
+	if (cfopts.enquote_names) { os << '\"'; }
+	sm->get_pool<bool_tag>()[ni].dump_canonical_name(os, *fp, *sm);
+	if (cfopts.enquote_names) { os << '\"'; }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Translates local node reference to its canonical name.
+	\param lni is the local node id, which needs to be resolved
+		into the globally allocated id.  
  */
 void
 cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
+#if 0
 	if (cfopts.enquote_names) { os << '\"'; }
 	sm->get_pool<bool_tag>()[__lookup_global_bool_id(lni)]
 		.dump_canonical_name(os, *fp, *sm);
 	if (cfopts.enquote_names) { os << '\"'; }
+#else
+	__dump_resolved_canonical_literal(__lookup_global_bool_id(lni));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if GROUPED_DIRECTIVE_ARGUMENTS
 /**
+	Translates set of local node IDs into unique set of 
+	global IDs which may result in fewer nodes because duplicate
+	aliases are dropped.  
+ */
+void
+cflat_prs_printer::__resolve_unique_literal_group(
+		const directive_node_group_type& s,
+		directive_node_group_type& d) const {
+	typedef	directive_node_group_type::const_iterator
+					const_iterator;
+	const_iterator i(s.begin()), e(s.end());
+	for ( ; i!=e; ++i) {
+		d.insert(__lookup_global_bool_id(*i));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints a group of nodes.  
 	By default, single nodes are not wrapped in braces, 
 	and commas are used as delimiters.  
+	Duplicate nodes are also eliminated.  
+	TODO: take wrapper and delimiters as arguments.  
  */
 void
 cflat_prs_printer::__dump_canonical_literal_group(
 		const directive_node_group_type& g) const {
-	if (g.size() > 1) {
-		typedef	directive_node_group_type::const_iterator
-						const_iterator;
-		const_iterator i(g.begin()), e(g.end());
+	typedef	directive_node_group_type::const_iterator
+					const_iterator;
+	// collect resolved (unique) node IDs here:
+	directive_node_group_type s;
+	__resolve_unique_literal_group(g, s);
+	if (s.size() > 1) {
+		const_iterator i(s.begin()), e(s.end());
 		os << '{';
-		__dump_canonical_literal(*i);
+		__dump_resolved_canonical_literal(*i);
 		for (++i; i!=e; ++i) {
 			os << ',';
-			__dump_canonical_literal(*i);
+			__dump_resolved_canonical_literal(*i);
 		}
 		os << '}';
 	} else {
 		// only one element
-		INVARIANT(!g.empty());
-		__dump_canonical_literal(*g.begin());
+		INVARIANT(!s.empty());
+		__dump_resolved_canonical_literal(*s.begin());
 	}
 }
 #endif

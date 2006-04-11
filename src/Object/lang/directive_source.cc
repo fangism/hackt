@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.3.16.1 2006/04/10 23:21:31 fang Exp $
+	$Id: directive_source.cc,v 1.3.16.2 2006/04/11 22:54:10 fang Exp $
  */
 
 #include <iostream>
@@ -126,11 +126,11 @@ if (n.size() > 1) {
 ostream&
 directive_source::dump(ostream& o, const PRS::rule_dump_context& c) const {
 	o << name;
-	o << '(';
 {
 	const entity::expr_dump_context edc(c);
 	dump_params(params, o, edc);
 }
+	o << '(';
 {
 	typedef nodes_type::const_iterator	const_iterator;
 	INVARIANT(nodes.size());

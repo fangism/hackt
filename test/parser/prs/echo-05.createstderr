@@ -102,8 +102,8 @@ In namespace "", we have: {
         bool<> s
         bool<> z
       prs:
-        echo(<3,2,1>p,q)
-        echo(<99.99>r,s)
+        echo<3,2,1>(p,q)
+        echo<99.99>(r,s)
         (p & q) | (r & s) -> z-
         ~((p & q) | (r & s)) -> z+
       footprint: {

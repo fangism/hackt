@@ -1,0 +1,77 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	305
+	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	57
+	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    testing = process-definition (defined) testing(
+      )
+      In definition "testing", we have: {
+      Instances:
+        p = bool<> p
+        q = bool<> q
+        r = bool<> r
+        s = bool<> s
+      unroll sequence: 
+        bool<> p
+        bool<> q
+        bool<> r
+        bool<> s
+      spec:
+        mk_exclhi(p,q,{r,s})
+      footprint: {
+        bool^0 p (instantiated) = ::testing::p (1) 
+        bool^0 q (instantiated) = ::testing::q (2) 
+        bool^0 r (instantiated) = ::testing::r (3) 
+        bool^0 s (instantiated) = ::testing::s (4) 
+        bool instance pool:
+        1	::testing::p
+        2	::testing::q
+        3	::testing::r
+        4	::testing::s
+        resolved specs:
+        mk_exclhi(p,q,{r,s})
+      }
+      }
+
+  Instances:
+    t = process testing<>^0 t (instantiated) = ::t (1) 
+}
+
+Created state:
+process instance pool:
+1	::t
+

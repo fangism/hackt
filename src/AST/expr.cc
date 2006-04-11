@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.9.8.2 2006/04/10 23:21:23 fang Exp $
+	$Id: expr.cc,v 1.9.8.3 2006/04/11 22:54:07 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -85,6 +85,7 @@
 // for specializing util::what
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::expr, "(expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::inst_ref_expr, "(inst-ref-expr)")
 // SPECIALIZE_UTIL_WHAT(HAC::parser::expr_list, "(expr-list)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::qualified_id, "(qualified-id)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::id_expr, "(id-expr)")

@@ -1,0 +1,12 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	g	groupie<>
+	bool: 1,1,2
+2	(top)	-	2	h	groupie<>
+	bool: 3,4,5
+[global bool entries]
+1	(top)	-	1	b	
+2	(top)	-	2	g.r	
+3	(top)	-	3	h.p	
+4	(top)	-	4	h.q	
+5	(top)	-	5	h.r	

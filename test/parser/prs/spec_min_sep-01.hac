@@ -1,0 +1,14 @@
+// "spec_min_sep-01.hac"
+// testing grouped node arguments in spec directives
+// this test case has no grouped nodes
+
+defproc groupie (bool p, q, r) {
+spec {
+	min_sep<15>(p, q)
+	min_sep<10>(p, r)
+	min_sep<20>(q, r)
+}
+}
+
+groupie g;
+

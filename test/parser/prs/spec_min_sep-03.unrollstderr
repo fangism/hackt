@@ -1,0 +1,83 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	224
+	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	51
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	51
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	55
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    groupie = process-definition (defined) groupie(
+        bool<> p
+        bool<> q
+        bool<> r
+      )
+      In definition "groupie", we have: {
+      Instances:
+        p = bool<> p
+        q = bool<> q
+        r = bool<> r
+      unroll sequence: 
+        bool<> p
+        bool<> q
+        bool<> r
+      spec:
+        min_sep<15>({p,r},q)
+        min_sep<10>(p,{q,r})
+        min_sep<20>({q,q},{r,r})
+      footprint: {
+        bool^0 p (instantiated) = ::groupie::p 
+        bool^0 q (instantiated) = ::groupie::q 
+        bool^0 r (instantiated) = ::groupie::r 
+      }
+      }
+
+  Instances:
+    g = process groupie<>^0 g (instantiated) = ::g (
+      bool^0 p (instantiated) = ::g.p 
+      bool^0 q (instantiated) = ::g.q 
+      bool^0 r (instantiated) = ::g.r 
+    )
+}
+

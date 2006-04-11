@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.5.12.1 2006/04/10 23:21:30 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.5.12.2 2006/04/11 22:54:09 fang Exp $
  */
 
 #include <iostream>
@@ -131,8 +131,33 @@ class_name::check_param_args(const param_args_type&) {			\
 
 #define	DEFINE_DEFAULT_PRS_MACRO_CLASS_CHECK_NODES(class_name)		\
 good_bool								\
-class_name::check_node_args(const node_args_type&) {			\
-	return good_bool(true);						\
+class_name::check_node_args(const node_args_type& a) {			\
+	return __no_grouped_node_args(name, a);				\
+}
+
+/**
+	Currently no macros are allowed to take grouped arguments
+	that result in more than one node.  
+ */
+static
+good_bool
+__no_grouped_node_args(const char* name,
+		const macro_definition_entry::node_args_type& a) {
+	typedef	macro_definition_entry::node_args_type	node_args_type;
+	typedef	node_args_type::const_iterator	const_iterator;
+	const_iterator i(a.begin()), e(a.end());
+	for ( ; i!=e; ++i) {
+		const size_t s = i->size();
+		if (s > 1) {
+			cerr << "PRS macro \'" << name <<
+				"\' takes no grouped arguments." << endl;
+			cerr << "\tgot: " << s <<
+				" nodes in argument position " <<
+				distance(a.begin(), i) +1 << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
 }
 
 //-----------------------------------------------------------------------------
