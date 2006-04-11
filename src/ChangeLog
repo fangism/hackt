@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-08-prsim-02-08:
+	  Implemented and tested prsim's 'getall' command, which reports
+		values of all subnodes of a reference (canonically named).  
+		Used trivial recursion over footprint frames, accumulating
+		sub-entries' indices in an entry_collection structure (new).  
+	  Added test cases in test/prsim.
+	  After some maintainence checks, calling this end-of-branch.
+
+
 2006-04-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08-prsim-02-07:

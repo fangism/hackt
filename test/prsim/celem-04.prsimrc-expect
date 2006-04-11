@@ -1,0 +1,24 @@
+All subnodes of 'a':
+a : 0
+All subnodes of 'b':
+b : 1
+All subnodes of 'c':
+c : X
+All subnodes of 'C':
+a : 0
+b : 1
+c : X
+All subnodes of 'C.a':
+a : 0
+All subnodes of 'C.b':
+b : 1
+All subnodes of 'C.c':
+c : X
+All subnodes of 'C':
+a : 1
+b : 1
+c : 0
+All subnodes of 'C':
+a : 0
+b : 0
+c : 1

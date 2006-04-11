@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.4.2.3 2006/04/10 01:52:11 fang Exp $
+	$Id: Command.cc,v 1.4.2.4 2006/04/11 05:33:45 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1244,6 +1244,39 @@ if (a.size() != 2) {
 void
 Get::usage(ostream& o) {
 	o << "get <node>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetAll, "getall", info,
+	"print values of all subnodes")
+
+int
+GetAll::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	vector<node_index_type>		nodes_id_list_type;
+	const string& objname(a.back());
+	nodes_id_list_type nodes;
+	if (parse_name_to_get_subnodes(cout, objname, s.get_module(), nodes)) {
+		// already got error message?
+		return Command::BADARG;
+	} else {
+		typedef	nodes_id_list_type::const_iterator	const_iterator;
+		cout << "All subnodes of \'" << objname << "\':" << endl;
+		const_iterator i(nodes.begin()), e(nodes.end());
+		for ( ; i!=e; ++i) {
+			s.dump_node_value(cout, *i) << endl;
+		}
+		return Command::NORMAL;
+	}
+}
+}
+
+void
+GetAll::usage(ostream& o) {
+	o << "getall <name>" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

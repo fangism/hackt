@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.10.4.2 2006/04/10 01:52:11 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.10.4.3 2006/04/11 05:33:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -15,6 +15,7 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
+// #include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -22,6 +23,7 @@ class scopespace;
 struct footprint_frame;
 struct expr_dump_context;
 class state_manager;
+class entry_collection;
 class module;
 class definition_base;
 class fundamental_type_reference;
@@ -36,6 +38,7 @@ using util::bad_bool;
 using util::memory::excl_ptr;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
+// using std::default_vector;
 using std::istream;
 using std::ostream;
 using util::persistent;
@@ -134,6 +137,12 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 	collect_aliases(const module&, util::string_list&) const
 
 virtual	COLLECT_ALIASES_PROTO = 0;
+
+#define	COLLECT_SUBENTRIES_PROTO					\
+	void								\
+	collect_subentries(const module&, entry_collection&) const
+
+virtual	COLLECT_SUBENTRIES_PROTO = 0;
 
 private:
 virtual	excl_ptr<aliases_connection_base>

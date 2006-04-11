@@ -1,0 +1,30 @@
+# "inv-08.prsimrc"
+# @haco@ inv.haco-a
+#	$Id: inv-08.prsimrc,v 1.1.2.1 2006/04/11 05:33:48 fang Exp $
+# just testing the getall command
+
+set a 0
+cycle
+getall I
+getall J
+getall a
+getall b
+getall c
+getall I.a
+getall I.b
+getall J.a
+getall J.b
+
+set a 1
+cycle
+getall I
+getall J
+getall a
+getall b
+getall c
+getall I.a
+getall I.b
+getall J.a
+getall J.b
+
+

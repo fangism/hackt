@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.5.2.1 2006/04/04 07:49:45 fang Exp $
+	$Id: State.cc,v 1.5.2.2 2006/04/11 05:33:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1522,6 +1522,17 @@ State::dump_event_queue(ostream& o) const {
 		o << get_node_canonical_name(ev.node) << " : " <<
 			node_type::value_to_char[ev.val] << endl;
 	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: this uses the node's canonical name.  
+ */
+ostream&
+State::dump_node_value(ostream& o, const node_index_type ni) const {
+	const node_type& n(get_node(ni));
+	n.dump_value(o << get_node_canonical_name(ni) << " : ");
 	return o;
 }
 

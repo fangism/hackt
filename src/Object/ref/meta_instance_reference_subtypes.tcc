@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.3.10.2 2006/04/10 01:52:11 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.3.10.3 2006/04/11 05:33:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -113,6 +113,22 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 		mod.get_state_manager());
 	INVARIANT(index);	// because we already checked reference?
 	mod.template match_aliases<Tag>(aliases, index);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects all subnodes of this reference.  
+ */
+META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+void
+META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod, 
+		entry_collection& v) const {
+	const simple_reference_type&
+		_this(IS_A(const simple_reference_type&, *this));
+	const state_manager& sm(mod.get_state_manager());
+	const size_t index = _this.lookup_globally_allocated_index(sm);
+	INVARIANT(index);	// because we already checked reference?
+	sm.template collect_subentries<Tag>(v, index);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.5.2.3 2006/04/10 01:52:12 fang Exp $
+	$Id: Reference.cc,v 1.5.2.4 2006/04/11 05:33:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -24,6 +24,8 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/ref/meta_reference_union.h"
+#include "Object/entry_collection.h"
+#include "common/TODO.h"
 #include "util/stacktrace.h"
 #include "util/libc.h"			// for tmpfile, rewind,...
 #include "util/tokenize_fwd.h"		// for string_list
@@ -39,12 +41,16 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using parser::context;
+using entity::bool_tag;
 using entity::state_manager;
 using entity::unroll_context;
 using entity::expr_dump_context;
 using entity::module;
 using entity::simple_bool_meta_instance_reference;
 using entity::substructure_alias;
+using entity::entry_collection;
+using entity::index_set_type;
+using std::vector;
 using std::copy;
 using std::string;
 using std::ostream_iterator;
@@ -231,6 +237,29 @@ parse_name_to_what(ostream& o, const string& n, const module& m) {
 		o << n << " refers to ";
 		r.inst_ref()->what(o) << " ";
 		r.inst_ref()->dump_type_size(o) << endl;
+		return 0;
+	}
+}
+
+//=============================================================================
+/**
+	Accumlates a sequence of sub-nodes reachable from instance.  
+	\return 0 upon success, 1 upon error.  
+ */
+int
+parse_name_to_get_subnodes(ostream& o, const string& n, const module& m, 
+		vector<node_index_type>& v) {
+	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
+	STACKTRACE_VERBOSE;
+	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
+	if (!r) {
+		return 1;
+	} else {
+		entry_collection e;
+		r.inst_ref()->collect_subentries(m, e);
+		const index_set_type& b(e.get_index_set<bool_tag>());
+		v.resize(b.size());
+		copy(b.begin(), b.end(), v.begin());
 		return 0;
 	}
 }

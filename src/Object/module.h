@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.9.28.1 2006/04/10 01:52:09 fang Exp $
+	$Id: module.h,v 1.9.28.2 2006/04/11 05:33:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -15,11 +15,13 @@
 #include "Object/state_manager.h"
 #include "util/tokenize_fwd.h"
 #include "util/attributes.h"
+#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 class cflat_options;
 
 namespace entity {
+using std::default_vector;
 using std::string;
 using std::ostream;
 using util::persistent;

@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.5.10.1 2006/04/07 22:54:31 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.5.10.2 2006/04/11 05:33:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -62,6 +62,7 @@ virtual bad_bool
 	must_be_type_equivalent(const meta_instance_reference_base&) const;
 
 	COLLECT_ALIASES_PROTO;
+	COLLECT_SUBENTRIES_PROTO;
 
 private:
 	excl_ptr<aliases_connection_base>
