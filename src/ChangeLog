@@ -9,8 +9,7 @@
 	  Output format (cflat) of min_sep directive updated to 
 		reflect the requested feature.  
 	  yacc stderr check done (updated a few new tests).  
-	  distchecked, and checked against g++-4.1 -- except for a strange
-		undefined reference to std::__default_allocator_template
+	  distchecked, and checked against g++-4.1
 	  cleaned/committed GROUPED_DIRECTIVE_ARGUMENTS devel-switch.
 	  Status: almost ready to merge to trunk
 
