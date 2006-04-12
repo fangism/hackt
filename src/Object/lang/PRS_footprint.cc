@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.13.8.1 2006/04/10 23:21:29 fang Exp $
+	$Id: PRS_footprint.cc,v 1.13.8.2 2006/04/12 06:35:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,11 +20,8 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_param.h"
 #include "Object/lang/cflat_visitor.h"
-#include "main/cflat_options.h"
-#if GROUPED_DIRECTIVE_ARGUMENTS
-// #include <set>
 #include "Object/lang/directive_base.h"
-#endif
+#include "main/cflat_options.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
 #include "util/list_vector.tcc"
@@ -204,6 +201,7 @@ if (r.attributes.size()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Macro must have at least one argument.  
+	TODO: dump_node_group to support wrapper/delimiter string arguments.  
  */
 ostream&
 footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
@@ -214,19 +212,10 @@ footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
 	const_iterator i(m.nodes.begin());
 	const const_iterator e(m.nodes.end());
 	INVARIANT(i!=e);
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	directive_base::dump_node_group(*i, o, np);
 	for (++i; i!=e; ++i) {
 		directive_base::dump_node_group(*i, o << ',', np);
 	}
-#else
-	np[*i].get_back_ref()->dump_hierarchical_name(o,
-		dump_flags::no_definition_owner);
-	for (++i; i!=e; ++i) {
-		np[*i].get_back_ref()->dump_hierarchical_name(
-			o << ',', dump_flags::no_definition_owner);
-	}
-#endif
 	return o << ')';
 }
 

@@ -1,20 +1,18 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.7.12.3 2006/04/11 22:54:09 fang Exp $
+	$Id: SPEC_registry.cc,v 1.7.12.4 2006/04/12 06:35:04 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
+#include <set>
 #include "Object/lang/SPEC_registry.h"
 #include "Object/lang/directive_base.h"
 #include "Object/lang/cflat_printer.h"
 #include "main/cflat_options.h"
 #include "common/TODO.h"
 #include "util/qmap.tcc"
-#if GROUPED_DIRECTIVE_ARGUMENTS
-#include <set>
-#endif
 
 namespace util {
 //=============================================================================
@@ -142,31 +140,35 @@ typedef	spec_definition_entry::param_args_type		param_args_type;
 
 /**
 	Blatantly copied from PRS_macro_registry.cc.
+	\param delim the delimiter between groups
+	\param gl group's left wrapper
+	\param gd group's inner delimiter
+	\param gr group's right wrapper
  */
 static
 ostream&
 print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
-		const char* delim) {
+		const char* delim,
+		const char* gl, const char* gd, const char* gr) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	NEVER_NULL(delim);
 	ostream& o(p.os);
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-#if GROUPED_DIRECTIVE_ARGUMENTS
-	p.__dump_canonical_literal_group(*i);
+	p.__dump_canonical_literal_group(*i, gl, gd, gr);
 	for (++i; i!=e; ++i) {
 		o << delim;
-		p.__dump_canonical_literal_group(*i);
+		p.__dump_canonical_literal_group(*i, gl, gd, gr);
 	}
-#else
-	p.__dump_canonical_literal(*i);
-	for (++i; i!=e; ++i) {
-		o << delim;
-		p.__dump_canonical_literal(*i);
-	}
-#endif
 	return o;
+}
+
+static
+ostream&
+print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes, 
+		const char* delim) {
+	return print_node_args_list(p, nodes, delim, "{", ",", "}");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -285,11 +287,7 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 	const const_iterator e(a.end());
 	for ( ; i!=e; ++i) {
 		o << T::name << '(';
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		p.__dump_canonical_literal_group(*i);
-#else
-		p.__dump_canonical_literal(*i);
-#endif
 		o << ')' << endl;
 	}
 	return o;
@@ -511,6 +509,23 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(SIM_force_excllo)
  */
 namespace layout {
 
+/**
+	Default output formatting for layout directives.  
+ */
+template <class T>
+static
+ostream&
+default_layout_spec_output(cflat_prs_printer& p, const param_args_type& params, 
+		const node_args_type& nodes) {
+	ostream& o(p.os);
+	o << T::name;
+	directive_base::dump_params(params, o);
+	o << '(';
+	print_node_args_list(p, nodes, "; ", NULL, ",", NULL);
+	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
 
 /**
@@ -523,12 +538,12 @@ layout_min_sep::main(cflat_prs_printer& p, const param_args_type& v,
 		const node_args_type& a) {
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LAYOUT:
-		default_spec_output<this_type>(p, v, a) << endl;
+		default_layout_spec_output<this_type>(p, v, a) << endl;
 		break;
 	case cflat_options::TOOL_PRSIM:
 		// but not for old plain prsim
 		if (p.cfopts.with_SEU()) {
-			default_spec_output<this_type>(p, v, a) << endl;
+			default_layout_spec_output<this_type>(p, v, a) << endl;
 		}
 		break;
 	default:
@@ -551,6 +566,7 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(layout_min_sep)
 
 /**
 	Grouped arguments ARE allowed here.  
+	TODO: could check that same node doesn't appear in different groups...
  */
 good_bool
 layout_min_sep::check_node_args(const node_args_type& a) {

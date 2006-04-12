@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.6.6.1 2006/04/10 23:21:24 fang Exp $
+	$Id: expr_base.h,v 1.6.6.2 2006/04/12 06:35:00 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -11,11 +11,8 @@
 
 #include "AST/common.h"
 #include "util/STL/pair_fwd.h"
-#include "Object/devel_switches.h"
-#if GROUPED_DIRECTIVE_ARGUMENTS
 #include "Object/ref/references_fwd.h"
 #include "util/STL/vector_fwd.h"
-#endif
 
 namespace HAC {
 //=============================================================================
@@ -152,13 +149,9 @@ public:
 	typedef inst_ref_meta_return_type		meta_return_type;
 	typedef inst_ref_nonmeta_return_type		nonmeta_return_type;
 	typedef data_ref_nonmeta_return_type	nonmeta_data_return_type;
-#if GROUPED_DIRECTIVE_ARGUMENTS
-	// typedef	count_ptr<simple_bool_meta_instance_reference>
-	typedef	entity::bool_literal
-						simple_meta_return_type;
+	typedef	entity::bool_literal		simple_meta_return_type;
 	typedef	std::default_vector<simple_meta_return_type>::type
 					checked_bool_group_type;
-#endif
 
 	inst_ref_expr() : parent_type() { }
 virtual ~inst_ref_expr() { }
@@ -189,11 +182,9 @@ virtual CHECK_NONMETA_REFERENCE_PROTO = 0;
 virtual	prs_literal_ptr_type
 	check_prs_literal(const context&) const;
 
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	// overridden only by reference_group_construction
 virtual	bool
 	check_grouped_literals(checked_bool_group_type&, const context&) const;
-#endif
 
 	CHECK_PRS_EXPR_PROTO;
 	

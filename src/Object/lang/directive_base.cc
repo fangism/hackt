@@ -1,12 +1,15 @@
 /**
 	\file "Object/lang/directive_base.cc"
-	$Id: directive_base.cc,v 1.2.16.1 2006/04/10 23:21:31 fang Exp $
+	$Id: directive_base.cc,v 1.2.16.2 2006/04/12 06:35:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
 #include <algorithm>
+#include <set>
+#include <functional>
+
 #include "Object/lang/directive_base.h"
 #include "Object/expr/const_param.h"
 #include "Object/common/dump_flags.h"
@@ -14,15 +17,11 @@
 #include "Object/inst/bool_instance.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/inst/alias_empty.h"
-#include "util/IO_utils.h"
+
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
-#if GROUPED_DIRECTIVE_ARGUMENTS
-#include <set>
-#include <functional>
 #include "util/IO_utils.tcc"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -79,13 +78,9 @@ directive_base::first_node_error(void) const {
 		typedef	nodes_type::const_iterator	const_iterator;
 		typedef	nodes_type::value_type		value_type;
 		const const_iterator i(nodes.begin()), e(nodes.end());
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		// when an error occurs, we empty the group/set
 		const const_iterator z(find_if(i, e,
 			mem_fun_ref(&value_type::empty)));
-#else
-		const const_iterator z(find(i, e, value_type(NULL)));
-#endif
 		if (z != e) {
 			const size_t d = distance(i, z) +1;
 			cerr << "Error resolving literal " << d <<
@@ -122,7 +117,6 @@ directive_base::dump_params(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if GROUPED_DIRECTIVE_ARGUMENTS
 ostream&
 directive_base::dump_node_group(const directive_node_group_type& g,
 		ostream& o, const node_pool_type& np) {
@@ -146,7 +140,6 @@ directive_base::dump_node_group(const directive_node_group_type& g,
 	}
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -162,7 +155,6 @@ directive_base::write_object_base(const persistent_object_manager& m,
 	INVARIANT(name.length());
 	write_value(o, name);
 	m.write_pointer_list(o, params);
-#if GROUPED_DIRECTIVE_ARGUMENTS
 {
 	write_value(o, nodes.size());
 	typedef	nodes_type::const_iterator	const_iterator;
@@ -171,9 +163,6 @@ directive_base::write_object_base(const persistent_object_manager& m,
 		util::write_sequence(o, *i);	// works for sets
 	}
 }
-#else
-	util::write_sequence(o, nodes);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -183,7 +172,6 @@ directive_base::load_object_base(const persistent_object_manager& m,
 	read_value(i, name);
 	INVARIANT(name.length());
 	m.read_pointer_list(i, params);
-#if GROUPED_DIRECTIVE_ARGUMENTS
 {
 	size_t s;
 	read_value(i, s);
@@ -194,9 +182,6 @@ directive_base::load_object_base(const persistent_object_manager& m,
 		util::read_sequence_set_insert(i, *j);
 	}
 }
-#else
-	util::read_sequence_resize(i, nodes);
-#endif
 }
 
 //=============================================================================

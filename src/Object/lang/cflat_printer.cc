@@ -1,9 +1,10 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.6.16.2 2006/04/11 22:54:09 fang Exp $
+	$Id: cflat_printer.cc,v 1.6.16.3 2006/04/12 06:35:04 fang Exp $
  */
 
 #include <iostream>
+#include <set>
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint_expr.h"
@@ -20,9 +21,6 @@
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/offset_array.h"
-#if GROUPED_DIRECTIVE_ARGUMENTS
-#include <set>
-#endif
 
 namespace HAC {
 namespace entity {
@@ -120,18 +118,10 @@ cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
  */
 void
 cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
-#if 0
-	if (cfopts.enquote_names) { os << '\"'; }
-	sm->get_pool<bool_tag>()[__lookup_global_bool_id(lni)]
-		.dump_canonical_name(os, *fp, *sm);
-	if (cfopts.enquote_names) { os << '\"'; }
-#else
 	__dump_resolved_canonical_literal(__lookup_global_bool_id(lni));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if GROUPED_DIRECTIVE_ARGUMENTS
 /**
 	Translates set of local node IDs into unique set of 
 	global IDs which may result in fewer nodes because duplicate
@@ -151,36 +141,50 @@ cflat_prs_printer::__resolve_unique_literal_group(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prints a group of nodes.  
-	By default, single nodes are not wrapped in braces, 
-	and commas are used as delimiters.  
-	Duplicate nodes are also eliminated.  
-	TODO: take wrapper and delimiters as arguments.  
+	Print using default wrapper and delimiter.  
  */
 void
 cflat_prs_printer::__dump_canonical_literal_group(
 		const directive_node_group_type& g) const {
+	__dump_canonical_literal_group(g, "{", ",", "}");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints a group of nodes.  
+	By default, single nodes are not wrapped in braces, 
+	and commas are used as delimiters.  
+	Duplicate nodes are also eliminated.  
+	\param g group argument
+	\param l left wrapper, optional
+	\param r right group wrapper, optional
+	\param d group element delimiter
+ */
+void
+cflat_prs_printer::__dump_canonical_literal_group(
+		const directive_node_group_type& g, 
+		const char* l, const char* d, const char* r) const {
 	typedef	directive_node_group_type::const_iterator
 					const_iterator;
+	NEVER_NULL(d);
 	// collect resolved (unique) node IDs here:
 	directive_node_group_type s;
 	__resolve_unique_literal_group(g, s);
 	if (s.size() > 1) {
 		const_iterator i(s.begin()), e(s.end());
-		os << '{';
+		if (l)	os << l;
 		__dump_resolved_canonical_literal(*i);
 		for (++i; i!=e; ++i) {
-			os << ',';
+			os << d;
 			__dump_resolved_canonical_literal(*i);
 		}
-		os << '}';
+		if (r)	os << r;
 	} else {
 		// only one element
 		INVARIANT(!s.empty());
 		__dump_resolved_canonical_literal(*s.begin());
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -1,17 +1,20 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.4.12.3 2006/04/11 22:54:07 fang Exp $
+	$Id: SPEC.cc,v 1.4.12.4 2006/04/12 06:34:59 fang Exp $
  */
 
 #include <iostream>
 #include <algorithm>
+#include <functional>
 #include <vector>
 #include <iterator>
+
 #include "AST/SPEC.h"
 #include "AST/node_list.tcc"
 #include "AST/token_string.h"
 #include "AST/expr_list.h"
 #include "AST/parse_context.h"
+
 #include "Object/def/process_definition.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -24,9 +27,6 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 
-#if GROUPED_DIRECTIVE_ARGUMENTS
-#include <functional>
-#endif
 
 namespace HAC {
 namespace parser {
@@ -37,10 +37,8 @@ using std::copy;
 using std::back_inserter;
 using entity::definition_base;
 using entity::process_definition;
-#if GROUPED_DIRECTIVE_ARGUMENTS
 using std::mem_fun_ref;
 using std::find_if;
-#endif
 
 //=============================================================================
 // class directive method definitions
@@ -69,7 +67,6 @@ directive::rightmost(void) const { return args->rightmost(); }
 /**
 	Mostly ripped off of PRS::macro::check_rule.
 	Consider factoring out into common code for maintainability.  
-	TODO: check expr_list params.
  */
 directive::return_type
 directive::check_spec(context& c) const {
@@ -108,11 +105,7 @@ if (params) {
 	return return_type(NULL);
 }
 {
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	typedef	inst_ref_expr_list::checked_bool_groups_type
-#else
-	typedef	inst_ref_expr_list::checked_bool_refs_type
-#endif
 						checked_bools_type;
 	typedef	checked_bools_type::const_iterator	const_iterator;
 	typedef	checked_bools_type::value_type		value_type;
@@ -123,18 +116,9 @@ if (params) {
 		return return_type(NULL);
 	}
 	checked_bools_type temp;
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	args->postorder_check_grouped_bool_refs(temp, c);
-#else
-	args->postorder_check_bool_refs(temp, c);
-#endif
 	const const_iterator i(temp.begin()), e(temp.end());
-#if GROUPED_DIRECTIVE_ARGUMENTS
-	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e)
-#else
-	if (find(i, e, value_type(NULL)) != e)
-#endif
-	{
+	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
 		cerr << "Error checking spec arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);

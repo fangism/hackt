@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.h"
-	$Id: directive_base.h,v 1.2.16.1 2006/04/10 23:21:31 fang Exp $
+	$Id: directive_base.h,v 1.2.16.2 2006/04/12 06:35:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_BASE_H__
@@ -63,12 +63,10 @@ public:
 	ostream&
 	dump_params(ostream&) const;
 
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	static
 	ostream&
 	dump_node_group(const directive_node_group_type&, ostream&, 
 		const node_pool_type&);
-#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

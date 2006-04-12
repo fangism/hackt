@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.9.12.2 2006/04/11 22:54:06 fang Exp $
+	$Id: PRS.cc,v 1.9.12.3 2006/04/12 06:34:59 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -13,6 +13,8 @@
 
 #include <iostream>
 #include <iterator>
+#include <algorithm>
+#include <functional>
 
 #include "AST/PRS.h"
 #include "AST/expr.h"		// for id_expr
@@ -39,11 +41,6 @@
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"	// for conversion
 #include "Object/ref/meta_reference_union.h"
-
-#if GROUPED_DIRECTIVE_ARGUMENTS
-#include <algorithm>
-#include <functional>
-#endif
 
 #include "common/TODO.h"
 
@@ -72,10 +69,8 @@ using entity::definition_base;
 using entity::process_definition;
 using entity::pint_scalar;
 using entity::meta_range_expr;
-#if GROUPED_DIRECTIVE_ARGUMENTS
 using std::find_if;
 using std::mem_fun_ref;
-#endif
 
 //=============================================================================
 // class body_item method definitions
@@ -614,11 +609,7 @@ if (params) {
 	return return_type(NULL);
 }
 {
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	typedef	inst_ref_expr_list::checked_bool_groups_type
-#else
-	typedef	inst_ref_expr_list::checked_bool_refs_type
-#endif
 							checked_bools_type;
 	NEVER_NULL(args);
 	if (!mde.check_num_nodes(args->size()).good) {
@@ -630,18 +621,9 @@ if (params) {
 	typedef checked_bools_type::value_type		value_type;
 	checked_bools_type temp;
 	INVARIANT(args->size());
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	args->postorder_check_grouped_bool_refs(temp, c);
-#else
-	args->postorder_check_bool_refs(temp, c);
-#endif
 	const const_iterator i(temp.begin()), e(temp.end());
-#if GROUPED_DIRECTIVE_ARGUMENTS
-	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e)
-#else
-	if (find(i, e, value_type(NULL)) != e)
-#endif
-	{
+	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
 		cerr << "Error checking macro arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);

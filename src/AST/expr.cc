@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.9.8.3 2006/04/11 22:54:07 fang Exp $
+	$Id: expr.cc,v 1.9.8.4 2006/04/12 06:34:59 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -258,7 +258,6 @@ inst_ref_expr::check_prs_literal(const context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if GROUPED_DIRECTIVE_ARGUMENTS
 /**
 	A more relaxed version of check_prs_literal where the result is
 	allowed to reference a group of bools, which need not be a 
@@ -288,7 +287,6 @@ inst_ref_expr::check_grouped_literals(checked_bool_group_type& g,
 		return true;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -482,7 +480,6 @@ inst_ref_expr_list::postorder_check_bool_refs(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if GROUPED_DIRECTIVE_ARGUMENTS
 /**
 	Even more specialized: checks amorphous groups of references, 
 	relaxing all dimension and packedness requirements.  
@@ -532,7 +529,6 @@ inst_ref_expr_list::postorder_check_grouped_bool_refs(
 	}
 	return false;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2302,7 +2298,6 @@ reference_group_construction::check_meta_reference(const context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if GROUPED_DIRECTIVE_ARGUMENTS
 /**
 	Accumulates multiple references into a shapeless collection.  
 	NOTE: this can be recursive, but results in a flat sequence of
@@ -2315,7 +2310,6 @@ reference_group_construction::check_grouped_literals(
 		checked_bool_group_type& g, const context& c) const {
 	return ex->postorder_check_grouped_bool_refs(g, c);
 }
-#endif
 
 //=============================================================================
 // EXPLICIT TEMPLATE INSTANTIATIONS

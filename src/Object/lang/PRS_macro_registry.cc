@@ -1,20 +1,18 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.5.12.2 2006/04/11 22:54:09 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.5.12.3 2006/04/12 06:35:04 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
+#include <set>
 #include "Object/lang/PRS_macro_registry.h"
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/directive_base.h"
 #include "main/cflat_options.h"
 #include "util/qmap.tcc"
 #include "common/TODO.h"
-#if GROUPED_DIRECTIVE_ARGUMENTS
-#include <set>
-#endif
 
 namespace util {
 //=============================================================================
@@ -207,54 +205,43 @@ print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	p.__dump_canonical_literal_group(*i);
 	for (++i; i!=e; ++i) {
 		o << delim;
 		p.__dump_canonical_literal_group(*i);
 	}
-#else
-	p.__dump_canonical_literal(*i);
-	for (++i; i!=e; ++i) {
-		o << delim;
-		p.__dump_canonical_literal(*i);
-	}
-#endif
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+// uncomment when we want to use it
 /**
 	Prints (in grouped form) canonical names list of nodes, 
 	delimited by whatever.  
 	Potentially useful utility function for some (?) PRS macros.  
 	Each node group/set may have multiple members.  
 	\param delim the delimiter string between groups.  
-	\param l the open-group string, such as "{"
-	\param r the close-group string, such as "}"
+	\param gl the open-group string, such as "{"
+	\param gr the close-group string, such as "}"
 	\param gd the delimiter within each group.  
  */
 static
 ostream&
 print_grouped_node_args_list(cflat_prs_printer& p, const node_args_type& nodes, 
-	const char* l, const char* delim, const char* r, const char* gd) {
-#if 0
+	const char* delim, const char* gl, const char* gd, const char* gr) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	NEVER_NULL(delim);
 	ostream& o(p.os);
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-	p.__dump_canonical_literal(*i);
+	p.__dump_canonical_literal_group(*i, gl, gd, gr);
 	for (++i; i!=e; ++i) {
 		o << delim;
-		p.__dump_canonical_literal(*i);
+		p.__dump_canonical_literal_group(*i, gl, gd, gr);
 	}
 	return o;
-#else
-	FINISH_ME(Fang);
-#endif
 }
 #endif
 
@@ -328,23 +315,11 @@ PassN::main(cflat_prs_printer& p, const param_args_type&,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		o << "after 0\t";
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		p.__dump_canonical_literal(*nodes[0].begin());
-#else
-		p.__dump_canonical_literal(nodes[0]);
-#endif
 		o << " & ~";
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		p.__dump_canonical_literal(*nodes[1].begin());
-#else
-		p.__dump_canonical_literal(nodes[1]);
-#endif
 		o << " -> ";
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		p.__dump_canonical_literal(*nodes[2].begin());
-#else
-		p.__dump_canonical_literal(nodes[2]);
-#endif
 		o << '-' << endl;
 		break;
 	case cflat_options::TOOL_LVS:
@@ -365,23 +340,11 @@ PassP::main(cflat_prs_printer& p, const param_args_type&,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		o << "after 0\t~";
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		p.__dump_canonical_literal(*nodes[0].begin());
-#else
-		p.__dump_canonical_literal(nodes[0]);
-#endif
 		o << " & ";
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		p.__dump_canonical_literal(*nodes[1].begin());
-#else
-		p.__dump_canonical_literal(nodes[1]);
-#endif
 		o << " -> ";
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		p.__dump_canonical_literal(*nodes[2].begin());
-#else
-		p.__dump_canonical_literal(nodes[2]);
-#endif
 		o << '+' << endl;
 		break;
 	case cflat_options::TOOL_LVS:

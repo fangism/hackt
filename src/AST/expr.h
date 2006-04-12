@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.5.12.2 2006/04/10 23:21:24 fang Exp $
+	$Id: expr.h,v 1.5.12.3 2006/04/12 06:35:00 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -418,11 +418,9 @@ public:
 	CHECK_META_REFERENCE_PROTO;
 	CHECK_NONMETA_REFERENCE_PROTO;		// unimplemented
 
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	// overrides inst_ref_expr::check_grouped_literals
 	bool
 	check_grouped_literals(checked_bool_group_type&, const context&) const;
-#endif
 
 };	// end class reference_group_construction
 

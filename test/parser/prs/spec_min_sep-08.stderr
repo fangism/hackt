@@ -18,7 +18,7 @@ state	value
 #STATE#	{ [9:17]
 #STATE#	{ [9:18]
 in state #STATE#, possible rules are:
-	grouped_reference: '{' . mandatory_member_index_expr_list '}'  (#RULE#)
+	grouped_reference : '{' . mandatory_member_index_expr_list '}'  (#RULE#)
 acceptable tokens are: 
 	ID (shift)
 	SCOPE (shift)

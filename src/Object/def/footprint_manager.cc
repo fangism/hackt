@@ -1,13 +1,14 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.7.8.1 2006/04/10 23:21:25 fang Exp $
+	$Id: footprint_manager.cc,v 1.7.8.2 2006/04/12 06:35:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
 #define	STACKTRACE_PERSISTENTS			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
+#include <set>
 #include "util/macros.h"
 #include "Object/def/footprint_manager.h"
 #include "Object/expr/expr_dump_context.h"
@@ -17,9 +18,6 @@
 #include "util/IO_utils.h"
 #include "util/indent.h"
 
-#if GROUPED_DIRECTIVE_ARGUMENTS
-#include <set>
-#endif
 
 namespace HAC {
 namespace entity {

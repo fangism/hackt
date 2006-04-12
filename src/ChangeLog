@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-04:
+	  Output format (cflat) of min_sep directive updated to 
+		reflect the requested feature.  
+	  yacc stderr check done (updated a few new tests).  
+	  distchecked, and checked against g++-4.1 -- except for a strange
+		undefined reference to std::__default_allocator_template
+	  cleaned/committed GROUPED_DIRECTIVE_ARGUMENTS devel-switch.
+	  Status: almost ready to merge to trunk
+
+
 2006-04-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-11-spec-02-03:

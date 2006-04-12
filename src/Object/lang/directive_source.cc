@@ -1,11 +1,14 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.3.16.2 2006/04/11 22:54:10 fang Exp $
+	$Id: directive_source.cc,v 1.3.16.3 2006/04/12 06:35:05 fang Exp $
  */
 
 #include <iostream>
 #include <algorithm>
 #include <iterator>
+#include <set>
+#include <functional>
+
 #include "Object/lang/directive_source.h"
 #include "Object/lang/PRS_literal_unroller.h"	// for PRS::literal
 #include "Object/expr/param_expr_functor.h"
@@ -15,6 +18,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
+
 #include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -24,10 +28,6 @@
 #include "util/what.h"
 #include "util/stacktrace.h"
 #include "util/IO_utils.h"
-#if GROUPED_DIRECTIVE_ARGUMENTS
-#include <set>
-#include <functional>
-#endif
 
 namespace HAC {
 namespace entity {
@@ -39,10 +39,8 @@ using util::auto_indent;
 using PRS::rule_dump_context;
 using util::read_value;
 using util::write_value;
-#if GROUPED_DIRECTIVE_ARGUMENTS
 using std::find_if;
 using std::mem_fun_ref;
-#endif
 
 //=============================================================================
 // helper class definitions
@@ -97,7 +95,6 @@ if (!params.empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if GROUPED_DIRECTIVE_ARGUMENTS
 ostream&
 directive_source::dump_group(const nodes_type::value_type& n, ostream& o, 
 		const PRS::rule_dump_context& c) {
@@ -116,7 +113,6 @@ if (n.size() > 1) {
 }
 	return o;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -136,17 +132,10 @@ directive_source::dump(ostream& o, const PRS::rule_dump_context& c) const {
 	INVARIANT(nodes.size());
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	dump_group(*i, o, c);
 	for (++i; i!=e; ++i) {
 		dump_group(*i, o << ',', c);
 	}
-#else
-	i->dump(o, c);
-	for (++i; i!=e; ++i) {
-		i->dump(o << ',', c);
-	}
-#endif
 }
 	return o << ')';
 }
@@ -188,7 +177,10 @@ size_t
 directive_source::unroll_nodes(const nodes_type& s, const unroll_context& c, 
 		unrolled_nodes_type& p) {
 	STACKTRACE_VERBOSE;
-#if GROUPED_DIRECTIVE_ARGUMENTS
+#if 0
+	transform(s.begin(), s.end(),
+		back_inserter(p), bool_literal::unroller(c));
+#else
 {
 	// not a clean transform algorithm
 	// TODO: cleaner error handling
@@ -219,19 +211,12 @@ directive_source::unroll_nodes(const nodes_type& s, const unroll_context& c,
 		}
 	}
 }
-#else
-	transform(s.begin(), s.end(),
-		back_inserter(p), bool_literal::unroller(c));
 #endif
 	typedef	unrolled_nodes_type::const_iterator	const_iterator;
 	typedef	unrolled_nodes_type::value_type	value_type;
 	// look for error
 	const const_iterator b(p.begin()), e(p.end());
-#if GROUPED_DIRECTIVE_ARGUMENTS
 	const const_iterator n(find_if(b, e, mem_fun_ref(&value_type::empty)));
-#else
-	const const_iterator n(find(b, e, value_type(NULL)));
-#endif
 	if (n != e)
 		return distance(b, n) +1;
 	else	return 0;
@@ -256,11 +241,7 @@ directive_source::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	m.collect_pointer_list(params);
 	for_each(nodes.begin(), nodes.end(),
-#if GROUPED_DIRECTIVE_ARGUMENTS
 		util::persistent_sequence_collector_ref(m)
-#else
-		util::persistent_collector_ref(m)
-#endif
 	);
 }
 
@@ -273,7 +254,6 @@ directive_source::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	write_value(o, name);
 	m.write_pointer_list(o, params);
-#if GROUPED_DIRECTIVE_ARGUMENTS
 {
 	typedef	nodes_type::const_iterator	const_iterator;
 	write_value(o, nodes.size());
@@ -282,9 +262,6 @@ directive_source::write_object_base(const persistent_object_manager& m,
 		util::write_persistent_sequence(m, o, *i);
 	}
 }
-#else
-	util::write_persistent_sequence(m, o, nodes);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -293,7 +270,6 @@ directive_source::load_object_base(const persistent_object_manager& m,
 		istream& i) {
 	read_value(i, name);
 	m.read_pointer_list(i, params);
-#if GROUPED_DIRECTIVE_ARGUMENTS
 {
 	size_t s;
 	read_value(i, s);
@@ -303,9 +279,6 @@ directive_source::load_object_base(const persistent_object_manager& m,
 		util::read_persistent_sequence_resize(m, i, nodes.back());
 	}
 }
-#else
-	util::read_persistent_sequence_resize(m, i, nodes);
-#endif
 }
 
 //=============================================================================

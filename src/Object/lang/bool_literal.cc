@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.4.12.1 2006/04/10 23:21:30 fang Exp $
+	$Id: bool_literal.cc,v 1.4.12.2 2006/04/12 06:35:04 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -75,7 +75,6 @@ bool_literal::unroll_base(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if GROUPED_DIRECTIVE_ARGUMENTS
 /**
 	Unroll resolves a collection of bool references (group) into
 	an array/set.  
@@ -103,7 +102,6 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 	}
 	return good_bool(true);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

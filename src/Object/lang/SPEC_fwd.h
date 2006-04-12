@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_fwd.h"
 	Useful forward declarations for SPEC headers.  
-	$Id: SPEC_fwd.h,v 1.3.16.2 2006/04/10 23:21:30 fang Exp $
+	$Id: SPEC_fwd.h,v 1.3.16.3 2006/04/12 06:35:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FWD_H__
@@ -12,7 +12,6 @@
 #include "util/STL/set_fwd.h"
 #include "Object/inst/instance_pool_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -24,26 +23,17 @@ class bool_literal;
 template <class> class state_instance;
 
 // source types
-#if GROUPED_DIRECTIVE_ARGUMENTS
 typedef	std::default_vector<bool_literal>::type	directive_source_group_type;
 typedef std::default_vector<directive_source_group_type>::type
-#else
-typedef	std::default_vector<bool_literal>::type	
-#endif
 						directive_source_nodes_type;
 typedef	std::default_vector<util::memory::count_ptr<const param_expr> >::type	
 						directive_source_params_type;
 // unrolled types (resolved parameters)
-#if GROUPED_DIRECTIVE_ARGUMENTS
 typedef	std::default_set<size_t>::type		directive_node_group_type;
 /**
 	Vector of sets is needed for support for grouped nodes.  
  */
 typedef	std::default_vector<directive_node_group_type>::type	
-#else
-// this was used before we allowed grouped nodes in spec arguments
-typedef	std::default_vector<size_t>::type	
-#endif
 						directive_base_nodes_type;
 typedef	std::default_vector<util::memory::count_ptr<const const_param> >::type	
 						directive_base_params_type;

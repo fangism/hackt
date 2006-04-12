@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.11.6.1 2006/04/10 23:21:24 fang Exp $
+	$Id: devel_switches.h,v 1.11.6.2 2006/04/12 06:35:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -22,7 +22,7 @@
 #endif
 
 // leave this error enabled for released code
-#if 0
+#if 1
 #error	Production code should NOT include this header file.  \
 	However, if you are developing, use this file as you see fit.  
 #endif
@@ -33,12 +33,6 @@
 /**
 	TODO: decide policy for handling relaxed type actuals.  
  */
-
-/**
-	Define to 1 if we want grouped directive arguments.  
-	Motivated by spec directives.  
- */
-#define	GROUPED_DIRECTIVE_ARGUMENTS		1
 
 //=============================================================================
 

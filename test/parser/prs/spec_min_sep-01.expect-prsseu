@@ -1,3 +1,3 @@
-min_sep<15>("g.p", "g.q")
-min_sep<10>("g.p", "g.r")
-min_sep<20>("g.q", "g.r")
+min_sep<15>("g.p"; "g.q")
+min_sep<10>("g.p"; "g.r")
+min_sep<20>("g.q"; "g.r")
