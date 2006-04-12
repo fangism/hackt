@@ -1,6 +1,7 @@
 /**
 	\file "sim/prsim/Reference.cc"
-	$Id: Reference.cc,v 1.6 2006/04/11 07:54:46 fang Exp $
+	Handy functions for using compiler functions in other tools.  
+	$Id: Reference.cc,v 1.7 2006/04/12 08:53:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,7 +16,6 @@
 #include "AST/expr.h"
 #include "AST/parse_context.h"
 #include "Object/module.h"
-#include "Object/object_fwd.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/expr/expr_dump_context.h"

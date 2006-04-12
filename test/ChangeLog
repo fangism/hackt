@@ -1,5 +1,18 @@
 # "test/ChangeLog"
 
+2006-04-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-13-merged-spec-02-04:
+	  Branch merge.  
+
+
+2006-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-03:
+	  Added support for testing SEU mode of cflatting to test
+		new special spec directives.  
+
+
 2006-04-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-11:

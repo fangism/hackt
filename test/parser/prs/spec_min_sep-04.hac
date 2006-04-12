@@ -1,0 +1,18 @@
+// "spec_min_sep-04.hac"
+// copy-modified from "spec_min_sep-03.hac"
+// testing grouped node arguments in spec directives
+// should pass
+
+defproc groupie (bool p, q, r) {
+spec {
+	// should accept grouped and non-grouped arguments
+	// single membered groups are equivalent to non-grouped references
+	// in otherwords, braces around single argument are unnecessary
+	min_sep<15>({p}, q)
+	min_sep<10>(p, {r})
+	min_sep<20>({q}, {r})
+}
+}
+
+groupie g;
+

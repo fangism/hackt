@@ -1,5 +1,21 @@
 # "src/util/ChangeLog"
 
+2006-04-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-13-merged-spec-02-04:
+	  Branch merge.  
+
+
+2006-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-02:
+	  util/STL: added forward declaration headers:
+		algorithm_fwd.h and iterator_fwd.h
+	  util/persistent_functor.h: added a few basic
+		container-of-container functors.  
+	  util/IO_utils.{h,tcc}: implemented read_sequence_set_insert.
+
+
 2006-04-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08-prsim-02-05:

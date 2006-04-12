@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.24 2006/04/03 22:11:19 fang Exp $
+#	$Id: Make.test-tail,v 1.25 2006/04/12 08:53:23 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -13,6 +13,7 @@ HACKT_CREATE_EXE = $(HACKT_EXE) create
 HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
 HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
 HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
+HACKT_CFLAT_PRSIM_SEU_EXE = $(HACKT_CFLAT_PRSIM_EXE) -f SEU
 HACKT_CFLAT_SPRS_EXE = $(HACKT_CFLAT_PRSIM_EXE) -fsizes
 HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
@@ -27,6 +28,7 @@ HACKT_CREATE_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-create-consistency.sh
 HACKT_ALLOC_TEST_SH = $(TEST_BUILDDIR)/hackt-alloc-expect.sh
 HACKT_ALLOC_FROM_HACO_TEST_SH = $(TEST_BUILDDIR)/check-alloc-consistency.sh
 HACKT_CFLAT_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-expect.sh
+HACKT_CFLAT_SEU_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-seu-expect.sh
 HACKT_CFLAT_SPRS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-sprs-expect.sh
 HACKT_PRSIMEXPR_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-expr-alloc-expect.sh
 HACKT_PRSIMRC_TEST_SH = $(TEST_BUILDDIR)/hackt-prsimrc-expect.sh
@@ -46,9 +48,6 @@ PRSIMRC_TIME_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-random-time-filter.aw
 
 DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
 
-# These needs to be specified in Makefile.am to take effect
-# SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest
-#	.hacktcreatetest .hacktalloctest .hacktcflattest
 
 .hac.stderr:
 	@$(TOUCH) $@
@@ -182,6 +181,16 @@ DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
 		$(srcdir) $* >> $@
 	@$(CHMOD) +x $@
 
+.haco-a.prsseu:
+	$(HACKT_CFLAT_PRSIM_SEU_EXE) $< > $@
+
+.hac.hacktcflatseutest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@$(ECHO) $(HACKT_CFLAT_SEU_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_SEU_EXE)\"" \
+		$(srcdir) $* >> $@
+	@$(CHMOD) +x $@
+
 .haco-a.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@
 
@@ -234,7 +243,7 @@ endif
 CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
 	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \
 	prsdiffs prsdiffs.sort prsimexprdiffs \
-	sprsdiffs sprsdiffs.sort \
+	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort \
 	createfromhacodiffs allocfromhacodiffs \
 	prsimrcdiffs
 # need prs summaries? nah...
@@ -265,6 +274,9 @@ allocdiffs: force
 prsdiffs: force
 	-$(CAT) *.prsdiff > $@
 
+prsseudiffs: force
+	-$(CAT) *.prsseu-diff > $@
+
 sprsdiffs: force
 	-$(CAT) *.sprsdiff > $@
 
@@ -279,6 +291,9 @@ allocdiffs.noindex: force
 
 prsdiffs.sort: force
 	-$(CAT) *.prsdiff.sort > $@
+
+prsseudiffs.sort: force
+	-$(CAT) *.prsseu-diff.sort > $@
 
 prsimrcdiffs: force
 	-$(CAT) *.prsimrc-diff > $@
@@ -301,6 +316,7 @@ EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.createstderr) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocstderr) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.expect-prs) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.expect-prsseu) \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.expect-sprs) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.expect-prsimexpr) \
 	$(HACKT_PRSIMRC_TEST_SUBJECTS:=.hac) \
@@ -315,6 +331,7 @@ TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktallocfromhacotest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest)
@@ -324,7 +341,7 @@ EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 clean-empty-cflat-prs:
 	-test -z "$(EMPTY_CFLAT_PRS)" || $(RM) $(EMPTY_CFLAT_PRS)
 
-# need a bogus dependency to make it work...
+# need a bogus dependency to make it work... ?
 $(EMPTY_CFLAT_PRS): Makefile
 	@$(TOUCH) $@
 
@@ -429,6 +446,7 @@ AUTO_IGNORE += local.cvsignore \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
+	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktcflattest) \
 	$(EMPTY_CFLAT_PRS) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
@@ -468,7 +486,7 @@ clean-local: clean-summaries
 	-$(RM) *.filter *.diff *.sort *.noindex
 	-$(RM) *.hacktcmpltest *.hacktobjtest *.hacktunrolltest
 	-$(RM) *.hacktcreatetest *.hacktalloctest *.hacktcflattest
-	-$(RM) *.hacktsprstest
+	-$(RM) *.hacktsprstest *.hacktcflatseutest
 	-$(RM) *.hacktcreatefromhacotest
 	-$(RM) *.hacktprsimexprtest
 	-$(RM) *.indump *.outdump *.objdiff

@@ -1,17 +1,20 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.4 2006/02/20 20:50:58 fang Exp $
+	$Id: SPEC.cc,v 1.5 2006/04/12 08:53:11 fang Exp $
  */
 
 #include <iostream>
 #include <algorithm>
+#include <functional>
 #include <vector>
 #include <iterator>
+
 #include "AST/SPEC.h"
 #include "AST/node_list.tcc"
 #include "AST/token_string.h"
 #include "AST/expr_list.h"
 #include "AST/parse_context.h"
+
 #include "Object/def/process_definition.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -24,6 +27,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/stacktrace.h"
 
+
 namespace HAC {
 namespace parser {
 namespace SPEC {
@@ -33,6 +37,8 @@ using std::copy;
 using std::back_inserter;
 using entity::definition_base;
 using entity::process_definition;
+using std::mem_fun_ref;
+using std::find_if;
 
 //=============================================================================
 // class directive method definitions
@@ -61,14 +67,9 @@ directive::rightmost(void) const { return args->rightmost(); }
 /**
 	Mostly ripped off of PRS::macro::check_rule.
 	Consider factoring out into common code for maintainability.  
-	TODO: check expr_list params.
  */
 directive::return_type
 directive::check_spec(context& c) const {
-	typedef	inst_ref_expr_list::checked_bool_refs_type
-						checked_bools_type;
-	typedef	checked_bools_type::const_iterator	const_iterator;
-	typedef	checked_bools_type::value_type		value_type;
 	const entity::SPEC::spec_definition_entry
 		sde(entity::SPEC::spec_registry[*name]);
 	if (!sde) {
@@ -98,8 +99,16 @@ if (params) {
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
+} else if (!sde.check_num_params(0).good) {
+	// no params given where required, already have error message
+	cerr << "\tat " << where(*this) << endl;
+	return return_type(NULL);
 }
 {
+	typedef	inst_ref_expr_list::checked_bool_groups_type
+						checked_bools_type;
+	typedef	checked_bools_type::const_iterator	const_iterator;
+	typedef	checked_bools_type::value_type		value_type;
 	NEVER_NULL(args);
 	if (!sde.check_num_nodes(args->size()).good) {
 		// already have error message
@@ -107,9 +116,9 @@ if (params) {
 		return return_type(NULL);
 	}
 	checked_bools_type temp;
-	args->postorder_check_bool_refs(temp, c);
+	args->postorder_check_grouped_bool_refs(temp, c);
 	const const_iterator i(temp.begin()), e(temp.end());
-	if (find(i, e, value_type(NULL)) != e) {
+	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
 		cerr << "Error checking spec arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);
@@ -119,7 +128,7 @@ if (params) {
 	copy(i, e, back_inserter(ret->get_nodes()));
 }
 	return ret;
-}
+}	// end method directive::check_spec
 
 //=============================================================================
 // class body method definitions

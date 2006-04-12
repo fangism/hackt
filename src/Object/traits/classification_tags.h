@@ -4,11 +4,13 @@
 	These type tags may be used for specialization of many
 	features of the language.  
 	This file used to be "Object/art_object_classification_tags.h".
-	$Id: classification_tags.h,v 1.6 2006/02/10 21:50:42 fang Exp $
+	$Id: classification_tags.h,v 1.7 2006/04/12 08:53:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
 #define	__HAC_OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
+
+#include "Object/traits/classification_tags_fwd.h"
 
 namespace HAC {
 namespace entity {

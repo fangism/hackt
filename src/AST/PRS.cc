@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.9 2006/02/21 04:48:18 fang Exp $
+	$Id: PRS.cc,v 1.10 2006/04/12 08:53:11 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -13,6 +13,8 @@
 
 #include <iostream>
 #include <iterator>
+#include <algorithm>
+#include <functional>
 
 #include "AST/PRS.h"
 #include "AST/expr.h"		// for id_expr
@@ -67,6 +69,8 @@ using entity::definition_base;
 using entity::process_definition;
 using entity::pint_scalar;
 using entity::meta_range_expr;
+using std::find_if;
+using std::mem_fun_ref;
 
 //=============================================================================
 // class body_item method definitions
@@ -564,8 +568,6 @@ macro::rightmost(void) const {
  */
 body_item::return_type
 macro::check_rule(context& c) const {
-	typedef	inst_ref_expr_list::checked_bool_refs_type
-							checked_bools_type;
 	if (!name) {
 		cerr << "Error parsing macro name before " << where(*args)
 			<< endl;
@@ -601,8 +603,14 @@ if (params) {
 	INVARIANT(temp.size());
 	NEVER_NULL(ret);
 	copy(i, e, back_inserter(ret->get_params()));
+} else if (!mde.check_num_params(0).good) {
+	// no params given where required and already have error message
+	cerr << "\tat " << where(*this) << endl;
+	return return_type(NULL);
 }
 {
+	typedef	inst_ref_expr_list::checked_bool_groups_type
+							checked_bools_type;
 	NEVER_NULL(args);
 	if (!mde.check_num_nodes(args->size()).good) {
 		// already have error message
@@ -613,9 +621,9 @@ if (params) {
 	typedef checked_bools_type::value_type		value_type;
 	checked_bools_type temp;
 	INVARIANT(args->size());
-	args->postorder_check_bool_refs(temp, c);
+	args->postorder_check_grouped_bool_refs(temp, c);
 	const const_iterator i(temp.begin()), e(temp.end());
-	if (find(i, e, value_type(NULL)) != e) {
+	if (find_if(i, e, mem_fun_ref(&value_type::empty)) != e) {
 		cerr << "Error checking macro arguments in " << where(*args)
 			<< endl;
 		return return_type(NULL);
@@ -625,7 +633,7 @@ if (params) {
 	copy(i, e, back_inserter(ret->get_nodes()));
 }
 	return ret;
-}
+}	// end macro::check_rule
 
 //=============================================================================
 // class attribute method definitions

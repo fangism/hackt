@@ -1,0 +1,5 @@
+SPEC directive 'mk_exclhi' takes no grouped arguments.
+	got: 2 nodes in argument position 3
+Error with spec directive.
+Caught exception during cflat PRS.
+Error during cflat.

@@ -18,10 +18,10 @@ Persistent Object Manager text dump:
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	32
+	17	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	40
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	32
+	20	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	40
 	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21

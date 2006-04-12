@@ -1,0 +1,20 @@
+// "spec-07.hac"
+// copy-modified from "spec-06.hac"
+// should fail, this macro doesn't take (non-singular) grouped arguments
+// possible enhancement request: 
+// This test case does not die until cflatting when all nodes have
+// been globally allocated.  Only then is check_node_args called
+// to allow for cases where relationships between the argument nodes
+// must be checked.  Hence, the delay in error.  
+
+defproc testing () {
+bool p, q, r, s;
+
+spec {
+	mk_exclhi({p}, q, {r, s})	// this macro rejects 'groups'
+}
+
+}
+
+testing t;
+

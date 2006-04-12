@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.113 2006/04/11 07:54:36 fang Exp $
+#	$Id: Makefile.am,v 1.114 2006/04/12 08:53:10 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -323,6 +323,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/common/util_types.h \
 	Object/common/scopespace.h \
 	Object/traits/class_traits_fwd.h \
+	Object/traits/classification_tags_fwd.h \
 	Object/traits/classification_tags.h \
 	Object/traits/chan_traits.h \
 	Object/traits/data_traits.h \
@@ -336,6 +337,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/traits/enum_traits.h \
 	Object/traits/struct_traits.h \
 	Object/traits/type_tag_enum.h \
+	Object/def/definition_fwd.h \
 	Object/def/built_in_datatype_def.h \
 	Object/def/channel_definition_alias.h \
 	Object/def/channel_definition_base.h \
@@ -350,6 +352,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/def/typedef_base.h \
 	Object/def/user_def_chan.h \
 	Object/def/user_def_datatype.h \
+	Object/expr/expr_fwd.h \
 	Object/expr/bool_expr.h \
 	Object/expr/bool_logical_expr.h \
 	Object/expr/bool_negation_expr.h \
@@ -403,6 +406,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/types.h \
 	Object/inst/alias_visitee.h \
 	Object/inst/alias_visitor.h \
+	Object/inst/collection_fwd.h \
+	Object/inst/instance_fwd.h \
 	Object/inst/substructure_alias_fwd.h \
 	Object/inst/general_collection_type_manager.h \
 	Object/inst/null_collection_type_manager.h \
@@ -435,6 +440,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/lang/PRS_footprint_expr_pool_fwd.h \
 	Object/lang/PRS_footprint_macro.h \
 	Object/lang/PRS_footprint_rule.h \
+	Object/ref/references_fwd.h \
 	Object/ref/meta_reference_union.h \
 	Object/ref/aggregate_meta_instance_reference_base.h \
 	Object/ref/aggregate_meta_instance_reference.h \
@@ -457,6 +463,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/ref/simple_nonmeta_value_reference.h \
 	Object/ref/inst_ref_implementation_fwd.h \
 	Object/ref/inst_ref_implementation.h \
+	Object/type/type_fwd.h \
 	Object/type/builtin_channel_type_reference.h \
 	Object/type/channel_type_reference.h \
 	Object/type/channel_type_reference_base.h \
@@ -466,6 +473,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/process_type_reference.h \
 	Object/type/type_reference_base.h \
 	Object/type/canonical_type_fwd.h \
+	Object/unroll/unroll_fwd.h \
 	Object/unroll/alias_connection.h \
 	Object/unroll/aliases_connection_base.h \
 	Object/unroll/channel_instantiation_statement.h \

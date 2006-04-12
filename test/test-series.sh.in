@@ -1,10 +1,10 @@
 #!@SH_PATH@
 # "test-series.sh.in"
 # convenience script for running a sequence of tests on one input file.
-#	$Id: test-series.sh.in,v 1.6 2005/12/13 04:15:52 fang Exp $
+#	$Id: test-series.sh.in,v 1.7 2006/04/12 08:53:24 fang Exp $
 # This file originally came from "test-series.sh" in revision prehistory.  
 
-# usage: pass in the root names of the test cases (without the .in extension)
+# usage: pass in the root names of the test cases (without the .hac extension)
 
 for t in $@
 do
@@ -13,7 +13,7 @@ do
 		@CALLMAKE@ $t.hacktcmpltest
 	fi
 	@ECHO@ $t.hacktcmpltest
-	$t.hacktcmpltest
+	./$t.hacktcmpltest
 	if test ! -s $t.test
 	then
 		if test ! -f $t.hacktobjtest
@@ -21,7 +21,7 @@ do
 			@CALLMAKE@ $t.hacktobjtest
 		fi
 		@ECHO@ $t.hacktobjtest
-		$t.hacktobjtest
+		./$t.hacktobjtest
 		if test -s $t.haco
 		then
 			if test ! -f $t.hacktunrolltest
@@ -29,7 +29,7 @@ do
 				@CALLMAKE@ $t.hacktunrolltest
 			fi
 			@ECHO@ $t.hacktunrolltest
-			$t.hacktunrolltest
+			./$t.hacktunrolltest
 		fi
 		if test -s $t.haco-u
 		then
@@ -37,8 +37,14 @@ do
 			then
 				@CALLMAKE@ $t.hacktcreatetest
 			fi
+			if test ! -f $t.hacktcreatefromhacotest
+			then
+				@CALLMAKE@ $t.hacktcreatefromhacotest
+			fi
 			@ECHO@ $t.hacktcreatetest
-			$t.hacktcreatetest
+			./$t.hacktcreatetest
+			@ECHO@ $t.hacktcreatefromhacotest
+			./$t.hacktcreatefromhacotest
 		fi
 		if test -s $t.haco-c
 		then
@@ -46,8 +52,23 @@ do
 			then
 				@CALLMAKE@ $t.hacktalloctest
 			fi
+			if test ! -f $t.hacktallocfromhacotest
+			then
+				@CALLMAKE@ $t.hacktallocfromhacotest
+			fi
 			@ECHO@ $t.hacktalloctest
-			$t.hacktalloctest
+			./$t.hacktalloctest
+			@ECHO@ $t.hacktallocfromhacotest
+			./$t.hacktallocfromhacotest
+		fi
+		if test -s $t.haco-a
+		then
+			if test ! -f $t.hacktcflattest
+			then
+				@CALLMAKE@ $t.hacktcflattest
+			fi
+			@ECHO@ $t.hacktcflattest
+			./$t.hacktcflattest
 		fi
 	fi
 done

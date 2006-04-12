@@ -1,0 +1,19 @@
+// "spec_min_sep-03.hac"
+// copy-modified from "spec_min_sep-01.hac"
+// testing grouped node arguments in spec directives
+// should pass
+
+defproc groupie (bool p, q, r) {
+spec {
+	// should accept grouped and non-grouped arguments
+	min_sep<15>({p, r}, q)
+	min_sep<10>(p, {q, r})
+
+	// redundant aliases within group are OK
+	min_sep<20>({q, q}, {r, r})
+	// cflat output will drop redundant names
+}
+}
+
+groupie g;
+

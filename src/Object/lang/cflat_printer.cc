@@ -1,9 +1,11 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
-	$Id: cflat_printer.cc,v 1.7 2006/04/11 07:54:43 fang Exp $
+	Implementation of cflattening visitor.
+	$Id: cflat_printer.cc,v 1.8 2006/04/12 08:53:16 fang Exp $
  */
 
 #include <iostream>
+#include <set>
 #include "Object/lang/cflat_printer.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint_expr.h"
@@ -80,14 +82,89 @@ cflat_prs_printer::__lookup_global_bool_id(const size_t lni) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\param ni the global node ID.  
+ */
+void
+cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
+	if (cfopts.enquote_names) { os << '\"'; }
+	sm->get_pool<bool_tag>()[ni].dump_canonical_name(os, *fp, *sm);
+	if (cfopts.enquote_names) { os << '\"'; }
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Translates local node reference to its canonical name.
+	\param lni is the local node id, which needs to be resolved
+		into the globally allocated id.  
  */
 void
 cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
-	if (cfopts.enquote_names) { os << '\"'; }
-	sm->get_pool<bool_tag>()[__lookup_global_bool_id(lni)]
-		.dump_canonical_name(os, *fp, *sm);
-	if (cfopts.enquote_names) { os << '\"'; }
+	__dump_resolved_canonical_literal(__lookup_global_bool_id(lni));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates set of local node IDs into unique set of 
+	global IDs which may result in fewer nodes because duplicate
+	aliases are dropped.  
+ */
+void
+cflat_prs_printer::__resolve_unique_literal_group(
+		const directive_node_group_type& s,
+		directive_node_group_type& d) const {
+	typedef	directive_node_group_type::const_iterator
+					const_iterator;
+	const_iterator i(s.begin()), e(s.end());
+	for ( ; i!=e; ++i) {
+		d.insert(__lookup_global_bool_id(*i));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Print using default wrapper and delimiter.  
+ */
+void
+cflat_prs_printer::__dump_canonical_literal_group(
+		const directive_node_group_type& g) const {
+	__dump_canonical_literal_group(g, "{", ",", "}");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints a group of nodes.  
+	By default, single nodes are not wrapped in braces, 
+	and commas are used as delimiters.  
+	Duplicate nodes are also eliminated.  
+	\param g group argument
+	\param l left wrapper, optional
+	\param r right group wrapper, optional
+	\param d group element delimiter
+ */
+void
+cflat_prs_printer::__dump_canonical_literal_group(
+		const directive_node_group_type& g, 
+		const char* l, const char* d, const char* r) const {
+	typedef	directive_node_group_type::const_iterator
+					const_iterator;
+	NEVER_NULL(d);
+	// collect resolved (unique) node IDs here:
+	directive_node_group_type s;
+	__resolve_unique_literal_group(g, s);
+	if (s.size() > 1) {
+		const_iterator i(s.begin()), e(s.end());
+		if (l)	os << l;
+		__dump_resolved_canonical_literal(*i);
+		for (++i; i!=e; ++i) {
+			os << d;
+			__dump_resolved_canonical_literal(*i);
+		}
+		if (r)	os << r;
+	} else {
+		// only one element
+		INVARIANT(!s.empty());
+		__dump_resolved_canonical_literal(*s.begin());
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

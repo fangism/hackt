@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.10 2006/02/21 23:07:35 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.11 2006/04/12 08:53:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -21,7 +21,6 @@
 #include "util/packed_array.h"
 #include "util/memory/excl_ptr.h"
 #include "util/boolean_types.h"
-#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_base.h"
-	$Id: directive_base.h,v 1.2 2006/02/10 21:50:41 fang Exp $
+	$Id: directive_base.h,v 1.3 2006/04/12 08:53:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_BASE_H__
@@ -25,6 +25,7 @@ using util::persistent_object_manager;
 /**
 	A common base class, for macros and directives, since they're
 	practically identical.  
+	This represents directives that are already unrolled and resolved.  
  */
 class directive_base {
 public:
@@ -33,7 +34,7 @@ public:
 	 */
 	typedef	directive_base_nodes_type		nodes_type;
 	typedef	directive_base_params_type		params_type;
-
+	typedef	SPEC::node_pool_type			node_pool_type;
 // too lazy to privatize for now...
 public:
 	string				name;
@@ -61,6 +62,11 @@ public:
 
 	ostream&
 	dump_params(ostream&) const;
+
+	static
+	ostream&
+	dump_node_group(const directive_node_group_type&, ostream&, 
+		const node_pool_type&);
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

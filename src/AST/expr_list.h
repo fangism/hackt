@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_list.h"
 	Base set of classes parser expression lists.  
-	$Id: expr_list.h,v 1.4 2006/02/21 04:48:19 fang Exp $
+	$Id: expr_list.h,v 1.5 2006/04/12 08:53:12 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_list.h,v 1.8.34.1 2005/12/11 00:45:06 fang Exp
  */
@@ -110,6 +110,11 @@ public:
 						checked_nonmeta_refs_type;
 	typedef	default_vector<data_ref_nonmeta_return_type>::type
 						checked_nonmeta_data_refs_type;
+	/// note the pluralization of groups
+	typedef	inst_ref_expr::checked_bool_group_type
+					checked_bool_group_type;
+	typedef	default_vector<inst_ref_expr::checked_bool_group_type>::type
+					checked_bool_groups_type;
 public:
 	explicit
 	inst_ref_expr_list(const inst_ref_expr*);
@@ -123,11 +128,21 @@ public:
 //	check_meta_references...
 	void
 	postorder_check_bool_refs(checked_bool_refs_type&, 
-		context&) const;
+		const context&) const;
+
+	// results in a collection of groups
+	bool
+	postorder_check_grouped_bool_refs(checked_bool_groups_type&, 
+		const context&) const;
+
+	// results in a single amorphous group
+	bool
+	postorder_check_grouped_bool_refs(checked_bool_group_type&, 
+		const context&) const;
 
 	void
 	postorder_check_meta_refs(checked_meta_refs_type&, 
-		context&) const;
+		const context&) const;
 
 //	check_nonmeta_references...
 	void

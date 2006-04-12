@@ -1,0 +1,89 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	311
+	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	51
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    groupie = process-definition (defined) groupie(
+        bool<> p
+        bool<> q
+        bool<> r
+      )
+      In definition "groupie", we have: {
+      Instances:
+        p = bool<> p
+        q = bool<> q
+        r = bool<> r
+      unroll sequence: 
+        bool<> p
+        bool<> q
+        bool<> r
+        p = q;
+      spec:
+        min_sep<15>({p,q},r)
+      footprint: {
+        bool^0 p (instantiated) = ::groupie::q (1) 
+        bool^0 q (instantiated) = ::groupie::q (1) 
+        bool^0 r (instantiated) = ::groupie::r (2) 
+        bool instance pool:
+        1	::groupie::p
+        2	::groupie::r
+        bool port aliases:
+        1: ::groupie::p = ::groupie::q
+        resolved specs:
+        min_sep<15>(p,r)
+      }
+      }
+
+  Instances:
+    g = process groupie<>^0 g (instantiated) = ::g (1) (
+      bool^0 p (instantiated) = ::g.q (1) 
+      bool^0 q (instantiated) = ::g.q (1) 
+      bool^0 r (instantiated) = ::g.r (2) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::g
+bool instance pool:
+1	::g.p
+2	::g.r
+

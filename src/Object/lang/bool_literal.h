@@ -1,17 +1,19 @@
 /**
 	\file "Object/lang/bool_literal.h"
 	Reusable boolean literal wrapper class.  
-	$Id: bool_literal.h,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: bool_literal.h,v 1.4 2006/04/12 08:53:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
 #define	__HAC_OBJECT_LANG_BOOL_LITERAL_H__
 
 #include <iosfwd>
-#include "Object/object_fwd.h"
+#include "Object/ref/references_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent_fwd.h"
 #include "util/size_t.h"
+#include "util/boolean_types.h"
+#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -19,6 +21,7 @@ using std::ostream;
 using std::istream;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+using util::good_bool;
 class unroll_context;
 struct expr_dump_context;
 
@@ -37,6 +40,8 @@ typedef	count_ptr<simple_bool_meta_instance_reference>
 	Base class with minimal functionality for boolean literal reference.  
  */
 struct bool_literal {
+public:
+	typedef	std::default_vector<size_t>::type	group_type;
 protected:
 	bool_literal_base_ptr_type				var;
 
@@ -63,6 +68,9 @@ public:
 
 	size_t
 	unroll_base(const unroll_context&) const;
+
+	good_bool
+	unroll_group(const unroll_context&, group_type&) const;
 
 	void
 	collect_transient_info_base(persistent_object_manager&) const;

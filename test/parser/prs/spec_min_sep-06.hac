@@ -1,0 +1,16 @@
+// "spec_min_sep-06.hac"
+// copy-modified from "spec_min_sep-04.hac"
+// testing grouped node arguments in spec directives
+// testing with aliased nodes
+// should pass
+
+defproc groupie (bool p, q, r) {
+p = q;
+spec {
+	// should result in one node in first group
+	min_sep<15>({p, q}, r)
+}
+}
+
+groupie g;
+

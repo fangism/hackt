@@ -23,7 +23,7 @@ Persistent Object Manager text dump:
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	37
+	22	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -41,7 +41,7 @@ Persistent Object Manager text dump:
 	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	37
+	40	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
 	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16

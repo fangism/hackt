@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.12 2006/04/03 05:30:41 fang Exp $
+#	$Id: Make.test-head,v 1.13 2006/04/12 08:53:23 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -8,7 +8,8 @@ include $(top_srcdir)/Make.stddef
 # automake will convert these into .SUFFIXES:
 SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest .hacktsprstest \
-	.haco .haco-u .haco-c .haco-a .prs .sprs \
+	.hacktcflatseutest \
+	.haco .haco-u .haco-c .haco-a .prs .sprs .prsseu \
 	.prsimexpr .prsimexpr-dot .prsimexpr-ps \
 	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \
 	.outdump .indump .unrolldump .createdump .allocdump \

@@ -3,6 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-13-merged-spec-02-04:
+	  Branch merge: added support for grouped spec directive 
+		arguments, e.g. the new min_sep SEU/layout directive.  
+
+
+2006-04-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-04:
+	  Output format (cflat) of min_sep directive updated to 
+		reflect the requested feature.  
+	  yacc stderr check done (updated a few new tests).  
+	  distchecked, and checked against g++-4.1
+	  cleaned/committed GROUPED_DIRECTIVE_ARGUMENTS devel-switch.
+	  Status: almost ready to merge to trunk
+
+
 2006-04-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-12-merged-prsim-02-08:
@@ -17,6 +35,28 @@
 	  Some library additions, such as member_saver and value_saver.
 
 
+2006-04-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-03:
+	  cflat has new boolean tool-option for SEU (single-event-upset)
+		modes of tools, e.g. prsim will emit min_sep directives.  
+	  main/cflat minor fix in command-line arg. processing.  
+	  PRS-macro default node argument checking now rejects
+		grouped arguments because we havee no macros that use them yet.
+	  SPEC-directive check_node_args's default also rejects grouped 
+		arguments, but now we have one 'min_sep' directive that
+		accepts them (still uncommon).  
+	  module::cflat now catches exceptions thrown as a result of
+		cflat-time errors.  
+	  cflat_prs_printer supports pretty printing of grouped arguments, 
+		and even unique-ifies their sets.  
+	  Minor bug fix in parser error reporting checking spec num_params.  
+	  Minor printing fix in parameterized source directives.  
+	  TODO: yacc stderr outputs for a few new test cases.
+	  TODO: support generalized pretty-printing of spec-directives
+		and possibly PRS macros.  
+
+
 2006-04-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-08-prsim-02-08:
@@ -26,6 +66,23 @@
 		sub-entries' indices in an entry_collection structure (new).  
 	  Added test cases in test/prsim.
 	  After some maintainence checks, calling this end-of-branch.
+
+
+2006-04-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-02:
+	  devel_switch: GROUPED_DIRECTIVE_ARGUMENTS enables grouped 
+		spec/prs-macro arguments throughout the entire code-base.  
+		Affects: AST/{PRS,SPEC/expr}.cc
+	  Implemented type-checkers to aggregate grouped bool references
+		amorphously for checking spec directives' arguments.  
+	  Moved most forward declarations in Object/object_fwd.h
+		into subdirectories' new forward declaration headers.  
+	  Object binary sizes grew as a result, but no output regressions.  
+		Test cases updated.  
+	  Bunch of minor library additions in util/, see util/ChangeLog.  
+	  TODO: update default macro/spec directive argument checking funcs.  
+	  TODO: finish min_sep directive
 
 
 2006-04-09	David Fang		<fangism@users.sourceforge.net>
@@ -42,6 +99,23 @@
 	  Moved __cflat_aliases and __match_aliases outside of
 		substructure_alias_base<> class, and into respective
 		alias_visitor sub-classes.  (cleaner, more organized)
+
+
+2006-04-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-11-spec-02-01:
+	  Branch for extending spec directives: allowing arguments to 
+		take groups of nodes (dimension-independent).  
+	  AST/expr.h: new reference_group_construction class derived
+		from inst_ref_expr instead of expr.  Useful when
+		argument is restricted to references.  
+	  parser::inst_ref_expr_list::postorder_* methods now take
+		const context& argument (should have long ago...)
+	  parser/hackt-parse.yy.in: spec-directive grammar update:
+		can now take groups of node as single arguments.  
+	  TODO: a sloppy type-check for grouping references into 
+		sets of scalars.
+	  TODO: example of use: min_sep layout spec-directive.  
 
 
 2006-04-08	David Fang		<fangism@users.sourceforge.net>

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.9 2006/03/16 03:40:22 fang Exp $
+	$Id: expr.cc,v 1.10 2006/04/12 08:53:11 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -85,6 +85,7 @@
 // for specializing util::what
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::expr, "(expr)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::inst_ref_expr, "(inst-ref-expr)")
 // SPECIALIZE_UTIL_WHAT(HAC::parser::expr_list, "(expr-list)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::qualified_id, "(qualified-id)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::id_expr, "(id-expr)")
@@ -236,7 +237,7 @@ inst_ref_expr::check_prs_literal(const context& c) const {
 	count_ptr<simple_bool_meta_instance_reference>
 		bool_ref(ref.inst_ref().is_a<simple_bool_meta_instance_reference>());
 	if (bool_ref) {
-		ref.inst_ref().abandon();
+		ref.inst_ref().abandon();	// reduce ref-count to 1
 		INVARIANT(bool_ref.refs() == 1);
 		if (bool_ref->dimensions()) {
 			cerr << "ERROR: bool reference at " << where(*this) <<
@@ -253,6 +254,37 @@ inst_ref_expr::check_prs_literal(const context& c) const {
 		cerr << "ERROR: expression at " << where(*this) <<
 			" does not reference a bool." << endl;
 		return prs_literal_ptr_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	A more relaxed version of check_prs_literal where the result is
+	allowed to reference a group of bools, which need not be a 
+	scalar reference.  
+	Most of the code is copied from ::check_prs_literal(), above.  
+	\return true upon error, else false.
+ */
+bool
+inst_ref_expr::check_grouped_literals(checked_bool_group_type& g, 
+		const context& c) const {
+	meta_return_type ref(check_meta_reference(c));
+	count_ptr<simple_bool_meta_instance_reference>
+		bool_ref(ref.inst_ref().is_a<simple_bool_meta_instance_reference>());
+	if (bool_ref) {
+		ref.inst_ref().abandon();	// reduce ref-count to 1
+		INVARIANT(bool_ref.refs() == 1);
+		// skip dimensions check
+		// shared to exclusive ownership
+		entity::PRS::literal_base_ptr_type
+			lit(bool_ref.exclusive_release());
+		g.push_back(prs_literal_ptr_type(
+			new entity::PRS::literal(lit)));
+		return false;
+	} else {
+		cerr << "ERROR: expression at " << where(*this) <<
+			" does not reference a bool." << endl;
+		return true;
 	}
 }
 
@@ -437,7 +469,7 @@ inst_ref_expr_list::~inst_ref_expr_list() { }
  */
 void
 inst_ref_expr_list::postorder_check_bool_refs(
-		checked_bool_refs_type& temp, context& c) const {
+		checked_bool_refs_type& temp, const context& c) const {
 	STACKTRACE("inst_ref_expr_list::postorder_check_bool_refs()");
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
@@ -448,9 +480,60 @@ inst_ref_expr_list::postorder_check_bool_refs(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Even more specialized: checks amorphous groups of references, 
+	relaxing all dimension and packedness requirements.  
+	Each element of this list is treated as a group.  
+	\return true on first error.  
+ */
+bool
+inst_ref_expr_list::postorder_check_grouped_bool_refs(
+		checked_bool_groups_type& temp, const context& c) const {
+	STACKTRACE("inst_ref_expr_list::postorder_check_grouped_bool_refs()");
+	INVARIANT(temp.empty());
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		typedef	checked_bool_groups_type::value_type	group_type;
+		temp.push_back(group_type());	// create empty
+		// then append in-place (beats creating and copying)
+		if ((*i)->check_grouped_literals(temp.back(), c)) {
+			// TODO: more specific error message, use std::distance
+			cerr << "Error in bool group reference list in "
+				<< where(*this) << endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant collects all constituent references into a single 
+	group, not a list of groups.  
+	\return true on first error.
+ */
+bool
+inst_ref_expr_list::postorder_check_grouped_bool_refs(
+		checked_bool_group_type& temp, const context& c) const {
+	STACKTRACE("inst_ref_expr_list::postorder_check_grouped_bool_refs()");
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		if ((*i)->check_grouped_literals(temp, c)) {
+			// TODO: more specific error message, use std::distance
+			cerr << "Error in bool group reference list in "
+				<< where(*this) << endl;
+			return true;
+		}
+	}
+	return false;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 inst_ref_expr_list::postorder_check_meta_refs(
-		checked_meta_refs_type& temp, context& c) const {
+		checked_meta_refs_type& temp, const context& c) const {
 	STACKTRACE("inst_ref_expr_list::postorder_check_meta_refs()");
 	INVARIANT(temp.empty());
 	const_iterator i(begin());
@@ -2029,22 +2112,21 @@ loop_concatenation::rightmost(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::meta_return_type
 loop_concatenation::check_meta_expr(const context& c) const {
-	cerr << "Fang, finish loop_concatenation::check_meta_expr()!" << endl;
+	FINISH_ME(Fang);
 	return expr::meta_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 nonmeta_expr_return_type
 loop_concatenation::check_nonmeta_expr(const context& c) const {
-	cerr << "Fang, finish loop_concatenation::check_nonmeta_expr()!"
-		<< endl;
+	FINISH_ME(Fang);
 	return nonmeta_expr_return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 expr::generic_meta_return_type
 loop_concatenation::check_meta_generic(const context& c) const {
-	cerr << "Fang, finish loop_concatenation::check_meta_generic()!" << endl;
+	FINISH_ME(Fang);
 	return expr::generic_meta_return_type();
 }
 
@@ -2152,6 +2234,81 @@ array_construction::check_meta_generic(const context& c) const {
 		return return_type(meta_expr_return_type(NULL), ret);
 	}
 	return return_type();
+}
+
+//=============================================================================
+// class reference_group_construction method definitions
+
+reference_group_construction::reference_group_construction(
+		const char_punctuation_type* l,
+		const inst_ref_expr_list* e,
+		const char_punctuation_type* r) : 
+		inst_ref_expr(), lb(l), ex(e), rb(r) {
+	NEVER_NULL(ex);
+}
+
+reference_group_construction::~reference_group_construction() {
+}
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(reference_group_construction)
+
+line_position
+reference_group_construction::leftmost(void) const {
+	if (lb)		return lb->leftmost();
+	else		return ex->leftmost();
+}
+
+line_position
+reference_group_construction::rightmost(void) const {
+	if (rb)		return rb->rightmost();
+	else		return ex->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We may not allow aggregates in the non-meta language.  
+ */
+inst_ref_expr::nonmeta_return_type
+reference_group_construction::check_nonmeta_reference(const context& c) const {
+	FINISH_ME(Fang);
+	return nonmeta_return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We statically know to construct an instance_reference.  
+	Same base code as 2nd part of array_construction::check_meta_expr().
+ */
+inst_ref_expr::meta_return_type
+reference_group_construction::check_meta_reference(const context& c) const {
+	typedef	inst_ref_expr::meta_return_type	return_type;
+	typedef	inst_ref_expr_list::checked_meta_refs_type
+						checked_array_type;
+	checked_array_type	checked_refs;
+	ex->postorder_check_meta_refs(checked_refs, c);
+	// pass 'false' to indicate construction, not concatenation
+	const inst_ref_meta_return_type
+		ret(inst_ref_expr_list::make_aggregate_instance_reference(
+			checked_refs, false));
+	if (!ret) {
+		cerr << "Error building aggregate instance reference.  "
+			<< where(*ex) << endl;
+	}
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Accumulates multiple references into a shapeless collection.  
+	NOTE: this can be recursive, but results in a flat sequence of
+	references in any case.  (Grammar doesn't allow nested groups anyhow.)
+	\param g the collection of references to aggregate.  
+	\return true on error.  
+ */
+bool
+reference_group_construction::check_grouped_literals(
+		checked_bool_group_type& g, const context& c) const {
+	return ex->postorder_check_grouped_bool_refs(g, c);
 }
 
 //=============================================================================

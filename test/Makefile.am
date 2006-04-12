@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.26 2006/04/03 22:11:19 fang Exp $
+#	$Id: Makefile.am,v 1.27 2006/04/12 08:53:24 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -19,6 +19,7 @@ PRECONFIGURED_TESTSCRIPTS = \
 	check-alloc-consistency.sh.in \
 	hackt-alloc-expect.sh.in \
 	hackt-cflat-expect.sh.in \
+	hackt-cflat-seu-expect.sh.in \
 	hackt-cflat-sprs-expect.sh.in \
 	hackt-prsim-expr-alloc-expect.sh.in \
 	hackt-prsimrc-expect.sh.in \
@@ -34,6 +35,7 @@ NONCONFIGURED_UPDATESCRIPTS = \
 	update-createstderr.sh \
 	update-allocstderr.sh \
 	update-expectprs.sh \
+	update-expectprsseu.sh \
 	update-expectprsimexpr.sh \
 	update-expectsprs.sh \
 	update-expect-prsimrc.sh

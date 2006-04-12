@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.8 2006/02/10 21:50:45 fang Exp $
+	$Id: cflat.h,v 1.9 2006/04/12 08:53:20 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_H__
@@ -75,7 +75,8 @@ private:
 		_check_mode, _no_check_mode,
 		_wire_mode, _no_wire_mode,
 		_dsim_prs, _no_dsim_prs,
-		_size_prs, _no_size_prs;
+		_size_prs, _no_size_prs, 
+		_SEU, _no_SEU;
 
 };	// end class cflat
 

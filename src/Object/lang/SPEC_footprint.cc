@@ -1,11 +1,13 @@
 /**
 	\file "Object/lang/SPEC_footprint.cc"
-	$Id: SPEC_footprint.cc,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: SPEC_footprint.cc,v 1.4 2006/04/12 08:53:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <set>
+
 #include "Object/def/footprint.h"
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/lang/cflat_visitor.h"
@@ -13,6 +15,7 @@
 #include "Object/inst/alias_empty.h"
 #include "Object/inst/instance_alias_info.h"
 #include "Object/common/dump_flags.h"
+
 #include "util/indent.h"
 #include "util/IO_utils.h"
 #include "util/persistent_object_manager.tcc"
@@ -90,11 +93,9 @@ footprint::dump_directive(const footprint_directive& d, ostream& o,
 	const_iterator i(d.nodes.begin());
 	const const_iterator e(d.nodes.end());
 	INVARIANT(i!=e);
-	np[*i].get_back_ref()->dump_hierarchical_name(o, 
-		dump_flags::no_definition_owner);
+	directive_base::dump_node_group(*i, o, np);
 	for (++i; i!=e; ++i) {
-		np[*i].get_back_ref()->dump_hierarchical_name(o << ',', 
-			dump_flags::no_definition_owner);
+		directive_base::dump_node_group(*i, o << ',', np);
 	}
 	return o << ')';
 }

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.17 2006/04/11 07:54:37 fang Exp $
+#	$Id: TODO,v 1.18 2006/04/12 08:53:11 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -32,12 +32,6 @@ prsim:
 			termination conditions: assert, syntax error, 
 				bad-argument,...
 			echo on, echo off (only heeded in batch mode)
-		aliases <name>
-			print all aliases of a node (can be slow)
-			might walk entire hierarchy, or cache results?
-			(not expected to be used often)
-			could use smart traversal, conditional recursion
-			*Just walk the alloc footprint frames?*
 		alias command [expanded command]
 		watch processes and structures?
 		mode run | reset

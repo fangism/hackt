@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.13 2006/04/11 07:54:46 fang Exp $
+	$Id: struct_traits.h,v 1.14 2006/04/12 08:53:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -10,6 +10,7 @@
 
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
+#include "Object/traits/classification_tags_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -96,7 +97,9 @@ struct class_traits<datastruct_tag> {
  */
 #define DATASTRUCTS_MAY_CONTAIN(Tag, _val)				\
 template <>								\
-struct struct_traits::may_contain<Tag> { enum { value = _val }; };
+struct class_traits<datastruct_tag>::may_contain<Tag> {			\
+	enum { value = _val };						\
+};
 
 DATASTRUCTS_MAY_CONTAIN(bool_tag, true)
 DATASTRUCTS_MAY_CONTAIN(int_tag, true)

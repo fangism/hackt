@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.13 2006/03/15 04:38:20 fang Exp $
+	$Id: PRS_footprint.cc,v 1.14 2006/04/12 08:53:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,6 +20,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_param.h"
 #include "Object/lang/cflat_visitor.h"
+#include "Object/lang/directive_base.h"
 #include "main/cflat_options.h"
 #include "util/IO_utils.h"
 #include "util/indent.h"
@@ -200,6 +201,7 @@ if (r.attributes.size()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Macro must have at least one argument.  
+	TODO: dump_node_group to support wrapper/delimiter string arguments.  
  */
 ostream&
 footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
@@ -210,11 +212,9 @@ footprint::dump_macro(const macro& m, ostream& o, const node_pool_type& np) {
 	const_iterator i(m.nodes.begin());
 	const const_iterator e(m.nodes.end());
 	INVARIANT(i!=e);
-	np[*i].get_back_ref()->dump_hierarchical_name(o,
-		dump_flags::no_definition_owner);
+	directive_base::dump_node_group(*i, o, np);
 	for (++i; i!=e; ++i) {
-		np[*i].get_back_ref()->dump_hierarchical_name(
-			o << ',', dump_flags::no_definition_owner);
+		directive_base::dump_node_group(*i, o << ',', np);
 	}
 	return o << ')';
 }

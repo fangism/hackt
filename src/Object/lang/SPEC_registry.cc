@@ -1,11 +1,12 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.7 2006/02/20 20:50:58 fang Exp $
+	$Id: SPEC_registry.cc,v 1.8 2006/04/12 08:53:16 fang Exp $
  */
 
 #include <iostream>
 #include <vector>
+#include <set>
 #include "Object/lang/SPEC_registry.h"
 #include "Object/lang/directive_base.h"
 #include "Object/lang/cflat_printer.h"
@@ -129,8 +130,8 @@ class_name::check_param_args(const param_args_type&) {			\
 
 #define	DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(class_name)	\
 good_bool								\
-class_name::check_node_args(const node_args_type&) {			\
-	return good_bool(true);						\
+class_name::check_node_args(const node_args_type& a) {			\
+	return __no_grouped_node_args(name, a);				\
 }
 
 //-----------------------------------------------------------------------------
@@ -139,34 +140,61 @@ typedef	spec_definition_entry::param_args_type		param_args_type;
 
 /**
 	Blatantly copied from PRS_macro_registry.cc.
+	\param delim the delimiter between groups
+	\param gl group's left wrapper
+	\param gd group's inner delimiter
+	\param gr group's right wrapper
  */
 static
 ostream&
 print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
-		const char* delim) {
+		const char* delim,
+		const char* gl, const char* gd, const char* gr) {
 	typedef	node_args_type::const_iterator		const_iterator;
 	NEVER_NULL(delim);
 	ostream& o(p.os);
 	const_iterator i(nodes.begin());
 	const const_iterator e(nodes.end());
 	INVARIANT(i!=e);
-	p.__dump_canonical_literal(*i);
+	p.__dump_canonical_literal_group(*i, gl, gd, gr);
 	for (++i; i!=e; ++i) {
 		o << delim;
-		p.__dump_canonical_literal(*i);
+		p.__dump_canonical_literal_group(*i, gl, gd, gr);
 	}
 	return o;
+}
+
+static
+ostream&
+print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes, 
+		const char* delim) {
+	return print_node_args_list(p, nodes, delim, "{", ",", "}");
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Reusable function for specifying the minimum number of arguments.  
  */
+static
 good_bool
 __takes_no_params(const string& name, const size_t args) {
 	if (args) {
 		cerr << "The \'" << name <<
-			"\' directive takes no parameters arguments." << endl;
+			"\' directive takes no parameter arguments." << endl;
+		return good_bool(false);
+	} else	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Reusable function for specifying the exact number of arguments.  
+ */
+static
+good_bool
+exact_num_params(const string& name, const size_t req, const size_t args) {
+	if (args != req) {
+		cerr << "The \'" << name << "\' directive requires exactly " <<
+			req << " parameters." << endl;
 		return good_bool(false);
 	} else	return good_bool(true);
 }
@@ -175,6 +203,7 @@ __takes_no_params(const string& name, const size_t args) {
 /**
 	Reusable function for specifying the minimum number of arguments.  
  */
+static
 good_bool
 min_num_nodes(const string& name, const size_t min, const size_t args) {
 	if (args < min) {
@@ -188,6 +217,7 @@ min_num_nodes(const string& name, const size_t min, const size_t args) {
 /**
 	Reusable function for specifying the exact number of arguments.  
  */
+static
 good_bool
 exact_num_nodes(const string& name, const size_t req, const size_t args) {
 	if (args != req) {
@@ -198,10 +228,37 @@ exact_num_nodes(const string& name, const size_t req, const size_t args) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**     
+	Most spec directives expect only single nodes, even in grouped 
+	arguments.  
+ */
+static
+good_bool
+__no_grouped_node_args(const char* name,
+		const spec_definition_entry::node_args_type& a) {
+	typedef spec_definition_entry::node_args_type	node_args_type;
+	typedef node_args_type::const_iterator		const_iterator;
+	const_iterator i(a.begin()), e(a.end());
+	for ( ; i!=e; ++i) {
+		const size_t s = i->size();
+		if (s > 1) {
+			cerr << "SPEC directive \'" << name <<
+				"\' takes no grouped arguments." << endl;
+			cerr << "\tgot: " << s <<
+				" nodes in argument position " <<
+				distance(a.begin(), i) +1 << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true); 
+}       
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This is the default thing to do, much too common and reusable.  
  */
 template <class T>
+static
 ostream&
 default_spec_output(cflat_prs_printer& p, const param_args_type& params, 
 		const node_args_type& a) {
@@ -220,6 +277,7 @@ default_spec_output(cflat_prs_printer& p, const param_args_type& params,
 	NOTE: doesn't take any parameters.  
  */
 template <class T>
+static
 ostream&
 default_expand_into_singles_output(cflat_prs_printer& p, 
 		const node_args_type& a) {
@@ -229,7 +287,7 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 	const const_iterator e(a.end());
 	for ( ; i!=e; ++i) {
 		o << T::name << '(';
-		p.__dump_canonical_literal(*i);
+		p.__dump_canonical_literal_group(*i);
 		o << ')' << endl;
 	}
 	return o;
@@ -445,6 +503,77 @@ DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(SIM_force_excllo)
 // make sure node arguments aren't actually aliased?
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(SIM_force_excllo)
 
+//-----------------------------------------------------------------------------
+/**
+	Namespace for layout directives.  
+ */
+namespace layout {
+
+/**
+	Default output formatting for layout directives.  
+ */
+template <class T>
+static
+ostream&
+default_layout_spec_output(cflat_prs_printer& p, const param_args_type& params, 
+		const node_args_type& nodes) {
+	ostream& o(p.os);
+	o << T::name;
+	directive_base::dump_params(params, o);
+	o << '(';
+	print_node_args_list(p, nodes, "; ", NULL, ",", NULL);
+	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
+
+/**
+	\param a node arguments are processed in groups, so e.g.
+		min_sep({a,b},{c,d})
+		groups are {a,b} and {c,d}.  
+ */
+void
+layout_min_sep::main(cflat_prs_printer& p, const param_args_type& v, 
+		const node_args_type& a) {
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_LAYOUT:
+		default_layout_spec_output<this_type>(p, v, a) << endl;
+		break;
+	case cflat_options::TOOL_PRSIM:
+		// but not for old plain prsim
+		if (p.cfopts.with_SEU()) {
+			default_layout_spec_output<this_type>(p, v, a) << endl;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+good_bool
+layout_min_sep::check_num_params(const size_t s) {
+	return exact_num_params(name, 1, s);
+}
+
+good_bool
+layout_min_sep::check_num_nodes(const size_t s) {
+//	return min_num_nodes(name, 2, s);
+	return exact_num_nodes(name, 2, s);
+}
+
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(layout_min_sep)
+
+/**
+	Grouped arguments ARE allowed here.  
+	TODO: could check that same node doesn't appear in different groups...
+ */
+good_bool
+layout_min_sep::check_node_args(const node_args_type& a) {
+	return good_bool(true);
+}
+
+}	// end namespace layout
 //-----------------------------------------------------------------------------
 #undef	DECLARE_SPEC_DIRECTIVE_CLASS
 }	// end namespace __specs__

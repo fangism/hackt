@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr_base.h"
 	Base set of classes for the HAC parser.  
-	$Id: expr_base.h,v 1.6 2006/03/20 02:41:03 fang Exp $
+	$Id: expr_base.h,v 1.7 2006/04/12 08:53:12 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr_base.h,v 1.7.32.1 2005/12/11 00:45:06 fang Exp
  */
@@ -11,6 +11,8 @@
 
 #include "AST/common.h"
 #include "util/STL/pair_fwd.h"
+#include "Object/ref/references_fwd.h"
+#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 //=============================================================================
@@ -29,6 +31,7 @@ namespace entity {
 	// from "Object/ref/meta_reference_union.h"
 	class meta_reference_union;
 	class const_meta_reference_union;
+	class bool_literal;
 namespace PRS {
 	class prs_expr;
 	class literal;
@@ -38,6 +41,7 @@ namespace PRS {
 using std::ostream;
 using std::pair;
 using entity::object;
+using entity::simple_bool_meta_instance_reference;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
 
@@ -145,6 +149,9 @@ public:
 	typedef inst_ref_meta_return_type		meta_return_type;
 	typedef inst_ref_nonmeta_return_type		nonmeta_return_type;
 	typedef data_ref_nonmeta_return_type	nonmeta_data_return_type;
+	typedef	entity::bool_literal		simple_meta_return_type;
+	typedef	std::default_vector<simple_meta_return_type>::type
+					checked_bool_group_type;
 
 	inst_ref_expr() : parent_type() { }
 virtual ~inst_ref_expr() { }
@@ -174,6 +181,10 @@ virtual CHECK_NONMETA_REFERENCE_PROTO = 0;
 	// overridden only by PRS::literal
 virtual	prs_literal_ptr_type
 	check_prs_literal(const context&) const;
+
+	// overridden only by reference_group_construction
+virtual	bool
+	check_grouped_literals(checked_bool_group_type&, const context&) const;
 
 	CHECK_PRS_EXPR_PROTO;
 	

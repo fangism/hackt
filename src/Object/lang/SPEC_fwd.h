@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_fwd.h"
 	Useful forward declarations for SPEC headers.  
-	$Id: SPEC_fwd.h,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: SPEC_fwd.h,v 1.4 2006/04/12 08:53:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_FWD_H__
@@ -9,6 +9,7 @@
 
 #include "util/size_t.h"
 #include "util/STL/vector_fwd.h"
+#include "util/STL/set_fwd.h"
 #include "Object/inst/instance_pool_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 
@@ -22,12 +23,17 @@ class bool_literal;
 template <class> class state_instance;
 
 // source types
-typedef	std::default_vector<bool_literal>::type	
+typedef	std::default_vector<bool_literal>::type	directive_source_group_type;
+typedef std::default_vector<directive_source_group_type>::type
 						directive_source_nodes_type;
 typedef	std::default_vector<util::memory::count_ptr<const param_expr> >::type	
 						directive_source_params_type;
 // unrolled types (resolved parameters)
-typedef	std::default_vector<size_t>::type	
+typedef	std::default_set<size_t>::type		directive_node_group_type;
+/**
+	Vector of sets is needed for support for grouped nodes.  
+ */
+typedef	std::default_vector<directive_node_group_type>::type	
 						directive_base_nodes_type;
 typedef	std::default_vector<util::memory::count_ptr<const const_param> >::type	
 						directive_base_params_type;

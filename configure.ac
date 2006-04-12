@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.54 2006/04/11 07:54:33 fang Exp $
+#	$Id: configure.ac,v 1.55 2006/04/12 08:53:07 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060410, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060412, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -352,6 +352,8 @@ AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
 	[chmod +x test/hackt-alloc-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
 	[chmod +x test/hackt-cflat-expect.sh])
+AC_CONFIG_FILES([test/hackt-cflat-seu-expect.sh],
+	[chmod +x test/hackt-cflat-seu-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-sprs-expect.sh],
 	[chmod +x test/hackt-cflat-sprs-expect.sh])
 AC_CONFIG_FILES([test/hackt-prsim-expr-alloc-expect.sh],

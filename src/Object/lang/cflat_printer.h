@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.5 2006/04/11 07:54:43 fang Exp $
+	$Id: cflat_printer.h,v 1.6 2006/04/12 08:53:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -10,6 +10,7 @@
 #include "Object/lang/cflat_visitor.h"
 #include "Object/cflat_context.h"
 #include "util/member_saver_fwd.h"
+#include "Object/lang/SPEC_fwd.h"
 
 namespace HAC {
 class cflat_options;
@@ -60,6 +61,20 @@ public:
 
 	void
 	__dump_canonical_literal(const size_t) const;
+
+	void
+	__dump_resolved_canonical_literal(const size_t) const;
+
+	void
+	__resolve_unique_literal_group(const directive_node_group_type&, 
+		directive_node_group_type&) const;
+
+	void
+	__dump_canonical_literal_group(const directive_node_group_type&) const;
+
+	void
+	__dump_canonical_literal_group(const directive_node_group_type&, 
+		const char* l, const char* d, const char* r) const;
 
 	void
 	visit(const footprint_rule&);

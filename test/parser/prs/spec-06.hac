@@ -1,0 +1,15 @@
+// "spec-06.hac"
+// copy-modified from "spec-05.hac"
+// should pass, grouping of arguments does not change the meaning
+
+defproc testing () {
+bool p, q, r, s;
+
+spec {
+	mk_exclhi({p}, q, {r})
+}
+
+}
+
+testing t;
+

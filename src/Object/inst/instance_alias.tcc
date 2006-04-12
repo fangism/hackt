@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.20 2006/04/11 07:54:41 fang Exp $
+	$Id: instance_alias.tcc,v 1.21 2006/04/12 08:53:14 fang Exp $
 	TODO: trim includes
  */
 

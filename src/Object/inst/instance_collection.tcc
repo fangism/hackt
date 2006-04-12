@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.24 2006/04/11 07:54:42 fang Exp $
+	$Id: instance_collection.tcc,v 1.25 2006/04/12 08:53:14 fang Exp $
 	TODO: trim includes
  */
 
@@ -61,7 +61,6 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
 #include "util/what.h"
-#include "util/wtf.h"
 #include "util/stacktrace.h"
 #include "util/static_trace.h"
 #include "util/compose.h"

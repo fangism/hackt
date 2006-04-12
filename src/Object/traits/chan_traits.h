@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.12 2006/04/11 07:54:45 fang Exp $
+	$Id: chan_traits.h,v 1.13 2006/04/12 08:53:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -10,6 +10,7 @@
 
 #include "Object/traits/class_traits.h"
 #include "Object/traits/type_tag_enum.h"
+#include "Object/traits/classification_tags_fwd.h"
 
 namespace HAC {
 namespace entity {

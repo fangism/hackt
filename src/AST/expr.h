@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.5 2006/02/21 04:48:19 fang Exp $
+	$Id: expr.h,v 1.6 2006/04/12 08:53:12 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -389,6 +389,40 @@ public:
 	// have to do something different (see array_concatenation explanation)
 	CHECK_GENERIC_PROTO;
 };	// end class array_construction
+
+//-----------------------------------------------------------------------------
+/**
+	A collection of references (may be recursive).  
+	This is used by spec-directives, that can take group arguments.  
+ */
+class reference_group_construction : public inst_ref_expr {
+protected:
+	const excl_ptr<const char_punctuation_type>	lb;
+	const excl_ptr<const inst_ref_expr_list>	ex;
+	const excl_ptr<const char_punctuation_type>	rb;
+public:
+	reference_group_construction(const char_punctuation_type* l, 
+		const inst_ref_expr_list* e, const char_punctuation_type* r);
+
+	~reference_group_construction();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	CHECK_META_REFERENCE_PROTO;
+	CHECK_NONMETA_REFERENCE_PROTO;		// unimplemented
+
+	// overrides inst_ref_expr::check_grouped_literals
+	bool
+	check_grouped_literals(checked_bool_group_type&, const context&) const;
+
+};	// end class reference_group_construction
 
 //=============================================================================
 

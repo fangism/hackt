@@ -1,6 +1,6 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.8 2006/02/10 21:50:45 fang Exp $
+	$Id: cflat_options.h,v 1.9 2006/04/12 08:53:20 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
@@ -19,18 +19,44 @@ public:
 		to one of these values.  
 		These values will be used to determine
 		the output behavior w.r.t. macros and attributes.  
+		Another mode would be to use bitfields.  
 	 */
 	typedef	enum {
 		TOOL_NONE = 0,
+		/**
+			prsim that reads in cflattened output
+		 */
 		TOOL_PRSIM,
+		/**
+			production rule QDI checker
+		 */
 		TOOL_PRLINT,
-		TOOL_LVS
+		/**
+			layout vs. schematic checking
+		 */
+		TOOL_LVS,
+		/**
+			hierarchical semi-procedural layout directives
+		 */
+		TOOL_LAYOUT
 		// add more tools as they are needed
 	}				primary_tool_enum;
 	/**
 		These enumerations dictate the connection-style
 		to print.  
 	 */
+	typedef	enum {
+		/**
+			default value.  
+		 */
+		TOOL_OPTIONS_DEFAULT = 0x00,
+		/**
+			single-event-upset modeling for tools.  
+			This case should always include baseline cases.  
+			Current relevant tools affected: PRSIM, LAYOUT.  
+		 */
+		TOOL_OPTIONS_SEU = 0x01
+	}				tool_options_enum;
 	typedef	enum {
 		CONNECT_STYLE_NONE = 0,
 		CONNECT_STYLE_CONNECT,
@@ -39,6 +65,11 @@ public:
 	}				connect_style_enum;
 public:
 	unsigned char			primary_tool;
+	/**
+		Bitfields for special modes of tools.  
+		Use tool_option_enum values as masks.  
+	 */
+	unsigned char			tool_options;
 	/**
 		-connect style: connect "a" "b"
 		-prsim style: = "a" "b"
@@ -112,6 +143,7 @@ public:
 		Default values in constructor.  
 	 */
 	cflat_options() : primary_tool(TOOL_NONE), 
+		tool_options(TOOL_OPTIONS_DEFAULT), 
 		connect_style(CONNECT_STYLE_EQUAL), 
 		include_prs(true), dump_self_connect(false), 
 		enquote_names(true), dump_non_bools(false), 
@@ -122,6 +154,9 @@ public:
 	}
 
 	~cflat_options() { }
+
+	bool
+	with_SEU(void) const { return tool_options & TOOL_OPTIONS_SEU; }
 
 };	// end class cflat::options
 // __attribute__(packed) ? (no one cares...)
