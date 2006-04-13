@@ -1,0 +1,5 @@
+alias <name> <command> [args...]
+aliases
+unalias <name>
+should fail: can't override existing command 
+'alias' is already a command, cannot be used to register an alias.

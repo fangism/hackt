@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.26 2006/04/12 17:45:36 fang Exp $
+#	$Id: Make.test-tail,v 1.27 2006/04/13 19:10:22 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -233,7 +233,7 @@ endif
 .prsimrc.prsimtest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
-	@obj=`$(GREP) ^# $< | $(GREP) @haco@ | $(HEAD) -n1 | \
+	@obj=`$(GREP) "^#" $< | $(GREP) "@haco@" | $(HEAD) -n1 | \
 		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }' ` ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" \
 		"\"$(PRSIMRC_FILTER_AWK)\"" \

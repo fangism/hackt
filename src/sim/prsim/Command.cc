@@ -8,20 +8,23 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.5 2006/04/11 07:54:46 fang Exp $
+	$Id: Command.cc,v 1.6 2006/04/13 19:10:21 fang Exp $
  */
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
-#include "sim/prsim/Command.h"
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <algorithm>
 #include <iterator>
+#include <set>
+
+#include "sim/prsim/Command.h"
 #include "sim/prsim/State.h"
 #include "sim/prsim/Reference.h"
+
 #include "common/TODO.h"
 #include "util/qmap.tcc"
 #include "util/readline_wrap.h"
@@ -36,13 +39,17 @@ namespace SIM {
 namespace PRSIM {
 #include "util/using_istream.h"
 #include "util/using_ostream.h"
+using std::set;
 using std::ifstream;
 using std::copy;
+using std::reverse_copy;
 using std::ostream_iterator;
+using std::front_inserter;
 using util::readline_wrapper;
 using util::tokenize;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
+using util::strings::eat_whitespace;
 
 //=============================================================================
 // class Command method definitions
@@ -200,6 +207,125 @@ public:
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Make sure name isn't already registered as a category, 
+	standard command, or existing alias.  
+ */
+int
+CommandRegistry::add_alias(const string& a, const string_list& c) {
+	if (command_map.find(a) != command_map.end()) {
+		cerr << "\'" << a << "\' is already a command, "
+			"cannot be used to register an alias." << endl;
+		return Command::BADARG;
+	} else if (category_map.find(a) != category_map.end()) {
+		cerr << "\'" << a << "\' is already a category, "
+			"cannot be used to register an alias." << endl;
+		return Command::BADARG;
+	} else if (aliases.find(a) != aliases.end()) {
+		cerr << "\'" << a << "\' is already an alias; "
+			"you must unalias it before redefining it." << endl;
+		return Command::BADARG;
+	} else {
+		aliases[a] = c;
+		return Command::NORMAL;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unregisters an alias.  
+	Doesn't check for former existence.  
+ */
+int
+CommandRegistry::unalias(const string& a) {
+	aliases.erase(a);
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unregisters all aliases.  
+ */
+int
+CommandRegistry::unalias_all(void) {
+	aliases.clear();
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+CommandRegistry::list_aliases(ostream& o) {
+	o << "Command aliases:" << endl;
+	alias_iterator i(aliases.begin()), e(aliases.end());
+	for ( ; i!=e; ++i) {
+		o << "\t" << i->first << " -> ";
+		ostream_iterator<string> osi(o, " ");
+		copy(i->second.begin(), i->second.end(), osi);
+		o << endl;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Expands prefix aliases, just like sh.  
+	\pre there exist no cyclic aliases.  
+	\pre no existing commands are overridden by aliases.  
+ */
+int
+CommandRegistry::expand_aliases(string_list& c) {
+if (c.size()) {
+	set<string> seen;
+	alias_iterator a(aliases.find(c.front()));
+	while (a != aliases.end()) {
+		const string_list& x(a->second);
+		if (!seen.insert(a->first).second) {
+			cerr << "Error: detected cyclic alias during expansion!"
+				<< endl;
+			return Command::BADARG;
+		}
+		c.pop_front();
+		reverse_copy(x.begin(), x.end(), front_inserter(c));
+		a = aliases.find(c.front());
+	}
+	// stops expanding as soon as non-alias is found.  
+}
+// else nothing to expand
+	return Command::NORMAL;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Interprets a single command line.  
+	Capable of executing shell commands with '!' prefix.  
+	Now capable of expanding alias commands.  
+	\pre there are no cyclic aliases.  
+ */
+int
+CommandRegistry::interpret_line(State& s, const string& line) {
+	const char* cursor = line.c_str();
+	if (*cursor == '!') {
+		++cursor;
+		eat_whitespace(cursor);
+		const int es = system(cursor);
+		// let status remain as is, for now
+		// TODO: determine exit behavior
+		if (es) {
+			cerr << "*** Exit " << es << endl;
+		}
+		return Command::NORMAL;
+	} else {
+		string_list toks;
+		tokenize(line, toks);
+		// check if command is aliased :)
+		if (expand_aliases(toks) != Command::NORMAL) {
+			return Command::BADARG;
+		} else {
+			return execute(s, toks);
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reads commands from stdin/cin.
 	Input terminate on end-of-file.  
 	Non-interactive errors should result in termination.  
@@ -229,9 +355,7 @@ if (interactive) {
 #if 0
 		cout << "echo: " << line << endl;
 #endif
-		string_list toks;
-		tokenize(line, toks);
-		status = execute(s, toks);
+		status = interpret_line(s, line);
 		++lineno;
 	}
 	} while (line && continue_interpreter(status, interactive));
@@ -267,9 +391,7 @@ CommandRegistry::__source(istream& i, State& s) {
 #if 0
 		cout << "echo: " << line << endl;
 #endif
-		string_list toks;
-		tokenize(line, toks);
-		status = execute(s, toks);
+		status = interpret_line(s, line);
 	}	// end if
 	} while (i && continue_interpreter(status, false));
 	return status;
@@ -300,6 +422,10 @@ if (p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this does not work with alias commands, aliases
+	should be pre-expanded before passing to execute.  
+ */
 int
 CommandRegistry::execute(State& st, const string_list& args) {
 	const size_t s = args.size();
@@ -398,12 +524,33 @@ CommandCategory::list(ostream& o) const {
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up a command.  
+	Pretty much only used by alias lookups.  
+ */
+CommandCategory::const_iterator
+CommandCategory::lookup_command(const string& c) const {
+	return command_map.find(c);
+}
+
 //=============================================================================
 // local static CommandCategories
 // feel free to add categories here
 
+#if 0
+CommandCategory
+	CommandRegistry::aliases("aliases", "user-defined alias commands");
+#else
+/**
+	Global static initialization of aliases.  
+	Or should we have one per interpreter?
+ */
+CommandRegistry::aliases_map_type
+CommandRegistry::aliases;
+#endif
+
 static CommandCategory
-	aliases("aliases", "user-defined alias commands"),
 	builtin("builtin", "built-in commands"),
 	general("general", "general commands"),
 	simulation("simulation", "simulation commands"),
@@ -411,7 +558,6 @@ static CommandCategory
 	info("info", "information about simulated circuit"),
 	view("view", "instance to watch"),
 	modes("modes", "timing model, error handling");
-
 
 //=============================================================================
 // local Command classes
@@ -547,6 +693,98 @@ Quit::main(State& s, const string_list& a) {
 void
 Quit::usage(ostream& o) {
 	Exit::usage(o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Alias, "alias", builtin,
+	"defines alias to auto-expand by the interpreter")
+
+/**
+	TODO: Consider storing interpreter aliases in the State object, 
+	instead of global registration.  
+ */
+int
+Alias::main(State&, const string_list& a) {
+if (a.size() < 3) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	typedef	string_list::const_iterator	const_iterator;
+	string_list ac(a);
+	ac.pop_front();		// drop the command
+	const string al(ac.front());
+	ac.pop_front();		// extract alias name, use the rest
+	return CommandRegistry::add_alias(al, ac);
+}
+}
+
+void
+Alias::usage(ostream& o) {
+	o << "alias <name> <command> [args...]" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnAlias, "unalias", builtin,
+	"undefines an alias command")
+
+/**
+	Un-aliases one command at a time.  
+ */
+int
+UnAlias::main(State&, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	return CommandRegistry::unalias(a.back());
+}
+}
+
+void
+UnAlias::usage(ostream& o) {
+	o << "unalias <name>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnAliasAll, "unaliasall", builtin,
+	"undefines all alias commands")
+
+/**
+	Un-aliases all alias commands.  
+ */
+int
+UnAliasAll::main(State&, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr);
+	return Command::SYNTAX;
+} else {
+	return CommandRegistry::unalias_all();
+}
+}
+
+void
+UnAliasAll::usage(ostream& o) {
+	o << "unaliasall" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Aliases, "aliases", builtin,
+	"show all registered command aliases")
+
+int
+Aliases::main(State&, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	CommandRegistry::list_aliases(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+Aliases::usage(ostream& o) {
+	o << "aliases" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

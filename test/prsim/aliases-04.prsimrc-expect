@@ -1,0 +1,5 @@
+Command aliases:
+	foo -> echo 
+hello, world! 
+unaliased foo 
+Command aliases:

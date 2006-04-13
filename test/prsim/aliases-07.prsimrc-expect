@@ -1,0 +1,9 @@
+Command aliases:
+	bar -> none 
+	foo -> bar 
+	none -> foo 
+Command aliases:
+	bar -> none 
+	foo -> q 
+	none -> foo 
+	q -> quit 

@@ -1,13 +1,11 @@
 "TODO"
-#	$Id: TODO,v 1.18 2006/04/12 08:53:11 fang Exp $
+#	$Id: TODO,v 1.19 2006/04/13 19:10:20 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
 ===============================================================================
 Simulation:
 
-	Write PRS rule and express walkers, and visitor functors!!!
-	Model rule-walker after cflat_prs.
 	In general, write walkers for everything, it's about time...
 	Make walkers 'friendly'...
 
@@ -40,7 +38,6 @@ prsim:
 				current state of old prsims cannot.
 		use getopt-style interpretation?
 		sh syntax?
-	enable escape to shell commands via system?
 	concept of environment variables?
 	far future: expression evaluation! variable expansion!
 	checkpoint generation and restoration

@@ -1,0 +1,6 @@
+Command aliases:
+	bar -> none 
+	foo -> bar 
+	none -> foo 
+any of these alias commands should fail with cyclic detection 
+Error: detected cyclic alias during expansion!

@@ -1,0 +1,2 @@
+should fail: can't override existing category 
+'builtin' is already a category, cannot be used to register an alias.

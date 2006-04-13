@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.4 2006/04/11 07:54:46 fang Exp $
+	$Id: Command.h,v 1.5 2006/04/13 19:10:22 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__
@@ -132,9 +132,16 @@ private:
 public:
 	typedef	Command::main_ptr_type	main_ptr_type;
 	typedef	Command::usage_ptr_type	usage_ptr_type;
+	/**
+		An alias is just a string_list, the key string
+		will expand into the value strings.  
+	 */
+	typedef	qmap<string, string_list>		aliases_map_type;
+	typedef	aliases_map_type::const_iterator	alias_iterator;
 private:
 	static command_map_type		command_map;
 	static category_map_type	category_map;
+	static aliases_map_type		aliases;
 public:
 	template <class C>
 	static
@@ -159,6 +166,14 @@ public:
 
 	static
 	int
+	interpret_line(State&, const string&);
+
+	static
+	int
+	expand_aliases(string_list&);
+
+	static
+	int
 	source(State&, const string&);
 
 	static
@@ -176,6 +191,22 @@ public:
 	static
 	bool
 	help_category(ostream&, const string&);
+
+	static
+	int
+	add_alias(const string&, const string_list&);
+
+	static
+	int
+	unalias(const string&);
+
+	static
+	int
+	unalias_all(void);
+
+	static
+	void
+	list_aliases(ostream&);
 
 private:
 	class interactive_mode;
@@ -223,9 +254,18 @@ public:
 	void
 	list(ostream&) const;
 
+	const_iterator
+	lookup_command(const string&) const;
+
+	bool
+	is_valid(const const_iterator i) const {
+		return i != command_map.end();
+	}
+
 };	// end class CommandCategory
 
 //=============================================================================
+#if 0
 /**
 	The user may define custom alias commands at run time.  
 	Aliasing just performs string substitution.  
@@ -234,6 +274,7 @@ public:
  */
 class CommandAlias {
 };	// end class command
+#endif
 
 //=============================================================================
 
