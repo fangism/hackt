@@ -5,6 +5,16 @@
 
 2006-04-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-15:
+	  All configuration improvements.  
+	  Most revisions in util/ library, noted in util/ChangeLog. 
+	  chunk_map_pool-allocated classes that wish to use chunk size 64
+		should verify that an unsigned 64 integer type exists.  
+		If not, then fall back to size 32 chunk.  
+
+
+2006-04-13	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-14:
 	  prsim: Implemented command aliases in the interpreter.  Now all 
 		commands consistently go through CommandRegistry::interpret().

@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.2 2006/02/25 04:54:58 fang Exp $
+dnl	$Id: cxx.m4,v 1.3 2006/04/13 21:44:40 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -20,12 +20,25 @@ dnl TODO: workaround variations from other compilers.
 dnl Some tests in the other macros in this project require that
 dnl warnings be converted to errors.  
 dnl Could rewrite this using AC_TRY_COMPILE.
+dnl Once -ansi is enabled there's no other option to cancel it out
+dnl thus we introduce a configure switch to disable it.  
+dnl All other warning options can be cancelled with CFLAGS/CXXFLAGS
+dnl e.g. -w camcels all warnings, and -Wno-error cancel error-promotion.  
 dnl
 AC_DEFUN([FANG_ANAL_COMPILE_FLAGS],
 [AC_REQUIRE([AC_PROG_CC])
 AC_REQUIRE([AC_PROG_CXX])
+AC_ARG_ENABLE(strict-dialect,
+	AS_HELP_STRING([--disable-strict-dialect],
+	[Disables -ansi -pedantic-errors compile flags (default=enabled)
+	This is sometimes necessary to allow 64b builds.])
+)
+if test x"$enable_strict_dialect" != xno ; then
+	TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
+fi
+
 AC_MSG_CHECKING([whether C/C++ compilers accept fangism's anal-retentive flags])
-ANAL_FLAGS="-W -Wall -ansi -pedantic-errors -Werror"
+ANAL_FLAGS="$TRY_DIALECT_FLAGS -W -Wall -Werror"
 dnl cat > conftest.c <<CEOF
 dnl extern int main(int, char**);
 dnl CEOF
@@ -70,17 +83,25 @@ dnl Results in AC_SUBST variables:
 dnl	FANG_WARN_FLAGS, FANG_WARN_CFLAGS, FANG_WARN_CXXFLAGS
 dnl
 AC_DEFUN([FANG_AM_FLAGS],
-[
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+dnl for TRY_DIALECT_FLAGS
 TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
 TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual -Wcast-align"
 TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wconversion -Werror"
 TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
 TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
 TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
-TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
+TRY_NOWARN_FLAGS="-Wno-unused -Wno-missing-prototypes"
+TRY_NOWARN_FLAGS="$TRY_NOWARN_FLAGS -Wno-shadow -Wno-cast-qual -Wno-long-double"
+TRY_NOWARN_CFLAGS="-Wno-strict-prototypes"
+TRY_NOWARN_CXXFLAGS="-Wno-overloaded-virtual"
+dnl TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
 FANG_WARN_FLAGS=""
 FANG_WARN_CFLAGS=""
 FANG_WARN_CXXFLAGS=""
+CONFTEST_NOWARN_FLAGS=""
+CONFTEST_NOWARN_CFLAGS=""
+CONFTEST_NOWARN_CXXFLAGS=""
 FANG_DIALECT_FLAGS=""
 dnl default to C in language tests
 AC_LANG_PUSH(C)
@@ -102,6 +123,28 @@ do
 	AC_LANG_POP(C++)
 	],[AC_MSG_RESULT([no])
 	AC_MSG_WARN([Your C compiler doesn't like flag: $f])]
+	)
+	CFLAGS=$saved_CFLAGS
+	CXXFLAGS=$saved_CXXFLAGS
+done
+for f in $TRY_NOWARN_FLAGS
+do
+	saved_CFLAGS=$CFLAGS
+	saved_CXXFLAGS=$CXXFLAGS
+	CFLAGS=$f
+	CXXFLAGS=$f
+	AC_MSG_CHECKING([whether C and C++ compilers accept un-flag $f])
+	AC_COMPILE_IFELSE([_TRIVIAL_SOURCE_],
+	[AC_LANG_PUSH(C++)
+	AC_COMPILE_IFELSE([_TRIVIAL_SOURCE_],
+		[AC_MSG_RESULT([yes])
+		CONFTEST_NOWARN_FLAGS="$CONFTEST_NOWARN_FLAGS $f"],
+		[AC_MSG_RESULT([no])
+		AC_MSG_WARN([Your C++ compiler doesn't like un-flag: $f])]
+	)
+	AC_LANG_POP(C++)
+	],[AC_MSG_RESULT([no])
+	AC_MSG_WARN([Your C compiler doesn't like un-flag: $f])]
 	)
 	CFLAGS=$saved_CFLAGS
 	CXXFLAGS=$saved_CXXFLAGS
@@ -141,6 +184,19 @@ do
 	)
 	CFLAGS=$saved_CFLAGS
 done
+for f in $TRY_NOWARN_CFLAGS
+do
+	saved_CFLAGS=$CFLAGS
+	CFLAGS=$f
+	AC_MSG_CHECKING([whether C compiler accepts un-flag $f])
+	AC_COMPILE_IFELSE([_TRIVIAL_SOURCE_],
+	[AC_MSG_RESULT([yes])
+	CONFTEST_NOWARN_CFLAGS="$CONFTEST_NOWARN_CFLAGS $f"],
+	[AC_MSG_RESULT([no])
+	AC_MSG_WARN([Your C compiler doesn't like un-flag: $f])]
+	)
+	CFLAGS=$saved_CFLAGS
+done
 AC_LANG_POP(C)
 AC_LANG_PUSH(C++)
 for f in $TRY_WARN_CXXFLAGS
@@ -153,6 +209,19 @@ do
 	FANG_WARN_CXXFLAGS="$FANG_WARN_CXXFLAGS $f"],
 	[AC_MSG_RESULT([no])
 	AC_MSG_WARN([Your C++ compiler doesn't like flag: $f])]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+done
+for f in $TRY_NOWARN_CXXFLAGS
+do
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS=$f
+	AC_MSG_CHECKING([whether C++ compiler accepts un-flag $f])
+	AC_COMPILE_IFELSE([_TRIVIAL_SOURCE_],
+	[AC_MSG_RESULT([yes])
+	CONFTEST_NOWARN_CXXFLAGS="$CONFTEST_NOWARN_CXXFLAGS $f"],
+	[AC_MSG_RESULT([no])
+	AC_MSG_WARN([Your C++ compiler doesn't like un-flag: $f])]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 done

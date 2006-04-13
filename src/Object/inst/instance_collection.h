@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.18 2006/04/11 07:54:42 fang Exp $
+	$Id: instance_collection.h,v 1.19 2006/04/13 21:45:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -23,6 +23,7 @@
 #include "util/multikey_set.h"
 #include "util/boolean_types.h"
 #include "util/memory/chunk_map_pool_fwd.h"
+#include "util/inttypes.h"
 
 /**
 	Define to 1 if you want instance_arrays and scalars pool-allocated.  
@@ -416,7 +417,14 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
+	enum {
+#ifdef	HAVE_UINT64_TYPE
+		pool_chunk_size = 64
+#else
+		pool_chunk_size = 32
+#endif
+	};
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
 #endif
 };	// end class instance_array
 
@@ -517,7 +525,14 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
 #if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
+	enum {
+#ifdef	HAVE_UINT64_TYPE
+		pool_chunk_size = 64
+#else
+		pool_chunk_size = 32
+#endif
+	};
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
 #endif
 };	// end class instance_array (specialized)
 

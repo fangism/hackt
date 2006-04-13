@@ -1,5 +1,17 @@
 # "src/util/ChangeLog"
 
+2006-04-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-15:
+	  Significant configure improvements, mostly dealing with
+		defined integer types and library functions.
+	  util/operator.h now checks for fmod and fmodf.  
+	  chunk_map_pool's policy now checks for availability of 64b int type.  
+	  util/FILE_fwd.h: now checks to see if forward declaration is
+		already present from _FILEDEFED (defined for Solaris)
+		before typedef-ing.  
+
+
 2006-04-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-13-merged-spec-02-04:

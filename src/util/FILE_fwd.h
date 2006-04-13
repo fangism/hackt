@@ -2,7 +2,7 @@
 	\file "util/FILE_fwd.h"
 	Forward declaration of FILE type, to avoid including
 	<stdio.h> when complete type is not needed.  
-	$Id: FILE_fwd.h,v 1.2 2006/01/22 06:53:32 fang Exp $
+	$Id: FILE_fwd.h,v 1.3 2006/04/13 21:45:06 fang Exp $
  */
 
 #ifndef	__UTIL_FILE_FWD_H__
@@ -10,7 +10,14 @@
 
 #include "config.h"
 
-#if defined(HAVE_STRUCT__IO_FILE) && HAVE_STRUCT__IO_FILE
+/**
+	known case for Solaris-gcc-3.3,
+	some header also conditionally forward-declares the typedef
+ */
+#ifndef	_FILEDEFED
+#define	_FILEDEFED
+
+#if	defined(HAVE_STRUCT__IO_FILE) && HAVE_STRUCT__IO_FILE
 struct _IO_FILE;
 typedef struct _IO_FILE	FILE;
 #elif defined(HAVE_STRUCT___SFILE) && HAVE_STRUCT___SFILE
@@ -37,6 +44,8 @@ typedef	__FILE		FILE;
 #else
 #include <stdio.h>
 #endif
+
+#endif	/* _FILEDEFED */
 
 #endif	/* __UTIL_FILE_FWD_H__ */
 

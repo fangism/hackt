@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.55 2006/04/12 08:53:07 fang Exp $
+#	$Id: configure.ac,v 1.56 2006/04/13 21:44:37 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -151,6 +151,9 @@ AC_PROG_CXX
 dnl from "config/cxx.m4"
 AC_CXX_VERSION
 
+dnl checkpoint
+AC_CACHE_SAVE
+
 dnl we need these anal flags for checking for certain charateristics
 dnl TODO: what are the equivalent flags for other compilers?
 dnl from "config/cxx.m4"
@@ -184,6 +187,8 @@ AC_CXX_STD_OFSTREAM_DEV_STDOUT
 AC_CXX_STD_OFSTREAM_DEV_STDERR
 AC_C_BUILTIN_EXPECT
 
+AC_CACHE_SAVE
+
 # additional header checks
 AC_HEADER_STDC
 AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
@@ -196,8 +201,14 @@ AC_CHECK_HEADERS([signal.h sys/signal.h])
 
 dnl checks tons of standard C++ headers in various locations
 dnl from "config/cxx_STL.m4"
+dnl from this point to the end, we also apply ANAL_FLAGS before CFLAGS
+dnl and CXXFLAGS to reflect what will be used during the build process.  
 AC_HEADER_STDCXX
+dnl AC_MSG_NOTIFY([Checking library functions and types with $ANAL_FLAGS])
 
+AC_CACHE_SAVE
+
+dnl we deliberaly spare these basic check from Fang's anal compile flags
 dnl suggestions from autoscan
 AC_FUNC_ALLOCA			dnl wanted by the y.tab.c generated
 AC_FUNC_CLOSEDIR_VOID		dnl wanted by src/util/dirent.cc
@@ -211,8 +222,31 @@ AC_C_RESTRICT
 AC_TYPE_SIZE_T
 AC_C_VOLATILE
 AC_TYPEDEF_FILE			dnl defined in "config/cc.m4"
+
+# library functions
+AC_FUNC_ERROR_AT_LINE
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+AC_CHECK_FUNCS([calloc free])
+AC_MSG_CHECKING([for free food])
+AC_MSG_RESULT([YES]);
+AC_FUNC_SETVBUF_REVERSED
+
+top_saved_CFLAGS="$CFLAGS"
+top_saved_CXXFLAGS="$CXXFLAGS"
+CONFTEST_CFLAGS="$FANG_DIALECT_FLAGS $FANG_WARN_FLAGS $FANG_WARN_CFLAGS $CONFTEST_NOWARN_FLAGS $CONFTEST_NOWARN_CFLAGS $CFLAGS"
+CONFTEST_CXXFLAGS="$FANG_DIALECT_FLAGS $FANG_WARN_FLAGS $FANG_WARN_CXX_FLAGS $CONFTEST_NOWARN_FLAGS $CONFTEST_NOWARN_CXXFLAGS $CXXFLAGS"
+
+dnl ignore warnings for function checks
+CFLAGS="$CONFTEST_CFLAGS -Wno-error"
+CXXFLAGS="$CONFTEST_CXXFLAGS -Wno-error"
+
 AC_CHECK_TYPES([ptrdiff_t])
 dnl AC_CHECK_FUNCS([sqrt])
+dnl AC_FUNC_SQRT
+dnl AC_CHECK_FUNCS([fmod fmodf])
+AC_FUNC_FMOD
+AC_FUNC_FMODF
 AC_CHECK_FUNCS([getopt])
 AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
 AC_CHECK_FUNCS([strdup])
@@ -223,7 +257,6 @@ AC_CHECK_FUNCS([fseek ftell rewind fgetpos fsetpos])
 AC_CHECK_FUNCS([tmpfile tmpnam tempnam])
 AC_CHECK_FUNCS([remove rename])
 AC_CHECK_FUNCS([setbuf setbuffer setlinebuf setvbuf])
-AC_FUNC_SETVBUF_REVERSED
 dnl <ctype.h>
 AC_CHECK_FUNCS([isascii isspace isdigit isalpha isalnum islower isupper])
 AC_CHECK_FUNCS([iscntrl isgraph ishexnumber isideogram isnumber isphonogram])
@@ -233,13 +266,9 @@ AC_CHECK_FUNCS([mrand48 jrand48 srand48 seed48 lcong48])
 AC_CHECK_FUNCS([system])
 AC_CHECK_FUNCS([getenv setenv putenv unsetenv])
 
-# library functions
-AC_FUNC_ERROR_AT_LINE
-AC_FUNC_MALLOC
-AC_FUNC_REALLOC
-AC_CHECK_FUNCS([calloc free])
-AC_MSG_CHECKING([for free food])
-AC_MSG_RESULT([YES]);
+dnl but keep errors for type checks.  
+CFLAGS="$CONFTEST_CFLAGS"
+CXXFLAGS="$CONFTEST_CXXFLAGS"
 
 # sizeof checks, useful for checking ILP model
 AC_CHECK_SIZEOF(char)
@@ -252,10 +281,19 @@ AC_CHECK_SIZEOF(double)
 AC_CHECK_SIZEOF(long double)
 AC_CHECK_SIZEOF(void*)
 AC_CHECK_SIZEOF(size_t)
+AC_CHECK_SIZEOF(int64)
+AC_CHECK_SIZEOF(uint64)
 AC_CHECK_SIZEOF(int64_t)
 AC_CHECK_SIZEOF(uint64_t)
-AC_CHECK_SIZEOF(quad_t)
-AC_CHECK_SIZEOF(u_quad_t)
+dnl AC_CHECK_SIZEOF(quad_t)
+dnl AC_CHECK_SIZEOF(u_quad_t)
+AC_TYPE_QUAD_T_ARITHMETIC
+AC_TYPE_U_QUAD_T_ARITHMETIC
+
+CFLAGS="$top_saved_CFLAGS"
+CXXFLAGS="$top_saved_CXXFLAGS"
+
+AC_CACHE_SAVE
 
 HACKT_CHECK_SANITY
 

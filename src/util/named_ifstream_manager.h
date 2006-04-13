@@ -1,12 +1,12 @@
 /**
-	\file "util/ifstream_manager.h"
+	\file "util/named_ifstream_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: named_ifstream_manager.h,v 1.2 2006/04/03 05:30:38 fang Exp $
+	$Id: named_ifstream_manager.h,v 1.3 2006/04/13 21:45:07 fang Exp $
  */
 
-#ifndef	__UTIL_FILE_MANAGER_H__
-#define	__UTIL_FILE_MANAGER_H__
+#ifndef	__UTIL_NAMED_IFSTREAM_MANAGER_H__
+#define	__UTIL_NAMED_IFSTREAM_MANAGER_H__
 
 #include <iosfwd>
 #include <fstream>
@@ -104,6 +104,8 @@ private:
 	Has a pure stack interface.  
 	Strings are expanded file path names.  
 	Keep track of token_position?
+	KNOWN PROBLEM: on solaris-2.9, gcc-3.3, 
+		list<named_ifstream> triggers a cast-align warning.  :(
  */
 class named_ifstream_stack {
 public:
@@ -280,5 +282,5 @@ public:
 //=============================================================================
 }	// end namespace util
 
-#endif	// __UTIL_FILE_MANAGER_H__
+#endif	// __UTIL_NAMED_IFSTREAM_MANAGER_H__
 

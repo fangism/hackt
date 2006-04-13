@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.9 2006/03/16 03:40:30 fang Exp $
+	$Id: chunk_map_pool.h,v 1.10 2006/04/13 21:45:07 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -211,6 +211,8 @@ namespace util {
 namespace memory {
 using std::ostream;
 
+#if 0
+// OBSOLETE
 /**
 	Chunk size must be some power-of-2.
 	Currently, we only provide specializations for 8, 16, 32.  
@@ -245,12 +247,16 @@ template <>
 struct chunk_size_traits<64> {
 //	enum { size = 64 };
 //	typedef	uint64			bit_map_type;
-#if SIZEOF_UINT64_T
+#if	defined(HAVE_UINT64_TYPE)
 	typedef	uint64			print_type;
+#elif	defined(HAVE_INT64_TYPE)
+	// signed type will also do
+	typedef	int64			print_type;
 #else
-	// ...
+#error	"Missing 64b type, need some help."
 #endif
 };
+#endif
 
 //=============================================================================
 #define	TYPELESS_MEMORY_CHUNK_TEMPLATE_SIGNATURE			\
@@ -272,6 +278,9 @@ class typeless_memory_chunk {
 protected:
 	typedef	char				storage_type[S];
 public:
+	/**
+		Bit mask type signedness matter if we ever shift right.  
+	 */
 #if 0
 	typedef	typename chunk_size_traits<C>::bit_map_type
 #else

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: preal_const.h,v 1.4 2006/03/16 03:40:24 fang Exp $
+	$Id: preal_const.h,v 1.5 2006/04/13 21:45:04 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
@@ -12,6 +12,7 @@
 #include "Object/expr/preal_expr.h"
 #include "Object/expr/const_param.h"
 #include "util/memory/chunk_map_pool_fwd.h"
+#include "util/inttypes.h"
 
 //=============================================================================
 namespace HAC {
@@ -101,8 +102,16 @@ public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
 
-	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS(64)
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(64)
+	enum {
+#ifdef	HAVE_UINT64_TYPE
+		pool_chunk_size = 64
+#else
+		pool_chunk_size = 32
+#endif
+	};
+
+	CHUNK_MAP_POOL_ESSENTIAL_FRIENDS(pool_chunk_size)
+	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
 };	// end class preal_const
 
 //=============================================================================

@@ -1,5 +1,24 @@
 "ChangeLog"
 
+2006-04-13	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-15:
+	  Bunch of configuration improvements, motivated by trying to get this
+		damn thing to build again on a legacy sparc-sun-solaris2.9 box.
+	  configure.ac: use new tests, check for int64 and uint64 before
+		typedef-ing them ourselves in util/inttypes.h.
+		Most notably, the anal-warning flags are applied during
+		conftests so the build matches the results more properly.  
+		In general, check config.log for anomalies.  
+		Also inserted AC_CACHE_SAVE for checkpointing.
+	  Added option to disable the default -ansi -pedantic-error flags.  
+	  config/cxx.m4: improved handling and binning of warning flags, 
+		and added set of tests for un-flags during AC_CHECK_ conftests.
+	  config/cc.m4: special function checks for fmod and fmodf, because
+		they may need libm to link properly (solaris).  
+	  General configure-improvements in source tree.  
+
+
 2006-04-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-13-merged-spec-02-04:

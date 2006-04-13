@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.29 2006/02/25 04:54:56 fang Exp $
+#	$Id: Makefile.am,v 1.30 2006/04/13 21:44:37 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -48,6 +48,7 @@ doc_DATA = AUTHORS BOUNTY COPYING NEWS README TODO
 EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	bootstrap \
 	BOUNTY \
+	BUILDS \
 	$(DOXYGEN_CONFIG).in \
 	config/macro-value.h.in \
 	config/config_subst.awk \

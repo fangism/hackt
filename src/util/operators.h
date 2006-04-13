@@ -1,12 +1,13 @@
 /**
 	\file "util/operators.h"
 	Functors but with virtual resolution.
-	$Id: operators.h,v 1.7 2006/02/10 21:50:46 fang Exp $
+	$Id: operators.h,v 1.8 2006/04/13 21:45:07 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__
 #define __UTIL_OPERATORS_H__
 
+#include "config.h"
 #include <functional>
 #include <cmath>
 
@@ -40,7 +41,15 @@ template <>
 struct modulus<float> : public binary_function<float,float,float> {
 	float
 	operator () (const float& x, const float& y) const {
+#if	defined(HAVE_FMODF)
+		// preferred single-precision library function
 		return fmodf(x, y);
+#elif	defined(HAVE_FMOD)
+		// fall back to double precision
+		return fmod(x, y);
+#else
+#error	"I don't know what to do without fmod or fmodf."
+#endif
 	}
 };	// end struct modulus
 
@@ -53,7 +62,11 @@ template <>
 struct modulus<double> : public binary_function<double,double,double> {
 	double
 	operator () (const double& x, const double& y) const {
+#if	defined(HAVE_FMOD)
 		return fmod(x, y);
+#else
+#error	"I don't know what to do without fmod."
+#endif
 	}
 };	// end struct modulus
 
