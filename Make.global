@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.16 2006/04/08 18:53:44 fang Exp $
+#	$Id: Make.global,v 1.17 2006/04/14 20:10:39 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -162,7 +162,7 @@ check.log: force
 	-$(MAKE) -k check >> $@.tmp 2>&1
 	-$(MV) $@.tmp $@
 # dump failures
-	-$(GREP) -v ^PASS $@
+	-$(GREP) -v "^PASS" $@
 #	@$(ECHO) `$(GREP) "Abort trap" $@ | wc -l` cases crashed.
 #	@$(ECHO) Total of `$(GREP) ^FAIL $@ | wc -l` failures encountered.
 	$(AWK) -f $(top_srcdir)/scripts/tally_tests.awk $@
