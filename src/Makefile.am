@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.114 2006/04/12 08:53:10 fang Exp $
+#	$Id: Makefile.am,v 1.115 2006/04/14 20:10:52 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1222,6 +1222,8 @@ clean-libs:
 
 DISTCLEANFILES += $(SUBDIR_CVSIGNORE) $(CONFIG_PARSERS)
 DISTCLEANDIRS += $(DEPDIR)
+
+distclean-local: clean-parser clean-lexer
 
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
