@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.8 2006/02/21 04:48:22 fang Exp $
+	$Id: const_collection.h,v 1.9 2006/04/16 18:36:17 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -108,6 +108,9 @@ public:
 
 	size_t
 	dimensions(void) const;
+
+	bool
+	is_true(void) const;
 
 	bool
 	is_static_constant(void) const { return true; }

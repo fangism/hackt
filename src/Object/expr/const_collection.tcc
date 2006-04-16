@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.10 2006/02/21 04:48:22 fang Exp $
+ 	$Id: const_collection.tcc,v 1.11 2006/04/16 18:36:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -161,6 +161,20 @@ CONST_COLLECTION_TEMPLATE_SIGNATURE
 size_t
 CONST_COLLECTION_CLASS::dimensions(void) const {
 	return values.dimensions();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	We defer the constant is_true to the scalar const expression
+	type's policy.  
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+bool
+CONST_COLLECTION_CLASS::is_true(void) const {
+	if (!values.dimensions()) {
+		const const_expr_type temp(values.front());
+		return temp.is_true();
+	}	else return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

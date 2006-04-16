@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.14 2006/03/15 04:38:15 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.15 2006/04/16 18:36:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -139,6 +139,28 @@ count_ptr<const param_expr>
 const_param_expr_list::operator [] (const size_t i) const {
 	INVARIANT(i < size());
 	return parent_type::operator[](i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Arguments must be scalar and non-zero.  
+	\pre all arguments must be non-NULL.  
+ */
+bool
+const_param_expr_list::is_all_true(const parent_type& p) {
+	parent_type::const_iterator i(p.begin()), e(p.end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+		if (!(*i)->is_true())
+			return false;
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+const_param_expr_list::is_all_true(void) const {
+	return is_all_true(*this);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

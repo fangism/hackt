@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.4 2006/02/04 06:43:22 fang Exp $
+	$Id: ExprAlloc.h,v 1.5 2006/04/16 18:36:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -40,6 +40,12 @@ public:
 	ExprAlloc(State&);
 
 	// default empty destructor
+
+	State&
+	get_state(void) { return state; }
+
+	const State&
+	get_state(void) const { return state; }
 
 	using cflat_visitor::visit;
 

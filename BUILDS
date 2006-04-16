@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.2 2006/04/14 20:12:22 fang Exp $
+	$Id: BUILDS,v 1.3 2006/04/16 18:36:13 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -38,7 +38,25 @@ config-LIBS:   -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
 readline: none
-build-date: Thu Apr 13 21:20:33 EDT 2006
+
+===============================================================================
+x86_64-suse-linux
+(Virantha Ekanayake)
+
+NOTE: Many subjects in the regression test suite are reported as FAIL, 
+due to size difference in the binary objects as a result of 64b native
+integers.  However, in all cases, the tests work as expected and the tools
+are thus usable.  
+
+Version: hackt 0.1.4-devel-20060412
+CVS Tag: HACKT-00-01-04-main-00-78-15
+Configured with: '--prefix=/tools'
+build-triplet: x86_64-suse-linux
+c++: g++ (GCC) 3.3.5 20050117 (prerelease) (SUSE Linux)
+config-LIBS: -lncurses
+lex: flex version 2.5.4
+yacc: bison (GNU Bison) 1.875
+readline: none
 
 ===============================================================================
 i386-freebsd-unknown
@@ -59,7 +77,7 @@ gcc-3.3: problem with std::list casting some node types causes increase
 	in alignment requirement, warning converted to error.
 	Workaround: add -Wno-cast-align to CFLAGS/CXXFLAGS at configure-time.
 
-(This particular test needed -g0 because of disk/memory limitations.)
+(This particular configuration needed -g0 because of disk/memory limitations.)
 
 Version: hackt 0.1.4-devel-20060412
 CVS Tag: HACKT-00-01-04-main-00-78-15

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.19 2006/04/13 19:10:20 fang Exp $
+#	$Id: TODO,v 1.20 2006/04/16 18:36:16 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -22,6 +22,11 @@ Simulation:
 
 prsim:
 	Need to pass attributes to nodes/exprs during allocation/construction.
+		ExprAlloc: PRS macros/spec directives, should use a
+			dictionary of strings to avoid repetition, save memory.
+		SPEC directives need tool-mode support, aside from cflat
+		Perhaps factor out tool-independent checking functionality!
+		In general, cflat-specifics should be factored out.  
 	delay-up/dn support for rule-expressions
 	cause-tracking
 	interpreter commands:

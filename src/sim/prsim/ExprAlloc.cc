@@ -1,33 +1,74 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.5 2006/04/03 05:30:37 fang Exp $
+	$Id: ExprAlloc.cc,v 1.6 2006/04/16 18:36:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
+#include <iostream>
 #include "sim/prsim/ExprAlloc.h"
 #include "sim/prsim/Expr.h"
 #include "sim/prsim/State.h"
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/lang/PRS_footprint_expr.h"
+#include "Object/lang/PRS_attribute_registry.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
 #include "util/offset_array.h"
 #include "util/stacktrace.h"
+#include "util/qmap.tcc"
 #include "common/TODO.h"
-
-#if	ENABLE_STACKTRACE
-#include <iostream>
-#endif
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using entity::bool_tag;
-#if	ENABLE_STACKTRACE
+using util::good_bool;
 #include "util/using_ostream.h"
+
+//=============================================================================
+typedef	entity::PRS::attribute_visitor_entry<ExprAlloc>
+					ExprAlloc_attribute_definition_entry;
+
+typedef	util::qmap<string, ExprAlloc_attribute_definition_entry>
+					ExprAlloc_attribute_registry_type;
+
+static
+ExprAlloc_attribute_registry_type
+ExprAlloc_attribute_registry;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+        Utility function for registering an attribute class.  
+ */
+template <class T>
+static
+size_t
+register_ExprAlloc_attribute_class(void) {
+	typedef	ExprAlloc_attribute_registry_type	registry_type;
+	typedef	registry_type::iterator			iterator;
+	typedef	registry_type::mapped_type		mapped_type;
+	const string k(T::name);
+	mapped_type& m(ExprAlloc_attribute_registry[k]);
+	if (m) {
+		cerr << "Error: PRS attribute by the name \'" << k <<
+			"\' has already been registered!" << endl;
+		THROW_EXIT;
+	}
+#if 0
+	m = ExprAlloc_attribute_definition_entry(k, &T::main, &T::check_vals);
+#else
+	m = ExprAlloc_attribute_definition_entry(k, &T::main, NULL);
 #endif
+	// oddly, this is needed to force instantiation of the [] const operator
+	const mapped_type& n
+		__ATTRIBUTE_UNUSED_CTOR__((ExprAlloc_attribute_registry[k]));
+	INVARIANT(n);
+	return ExprAlloc_attribute_registry.size();
+}
+
 //=============================================================================
 // class ExprAlloc method definitions
 
@@ -41,6 +82,7 @@ ExprAlloc::ExprAlloc(State& _s) : state(_s), ret_ex_index(INVALID_EXPR_INDEX) {
 /**
 	Update node fanin, and keep it consistent.  
 	\pre state's node_array is already allocated.  
+	TODO: rule-attributes!
  */
 void
 ExprAlloc::visit(const footprint_rule& r) {
@@ -188,13 +230,13 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-ExprAlloc::visit(const footprint_macro&) {
+ExprAlloc::visit(const footprint_macro& m) {
 	FINISH_ME(Fang);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-ExprAlloc::visit(const footprint_directive&) {
+ExprAlloc::visit(const footprint_directive& d) {
 	FINISH_ME(Fang);
 }
 
@@ -287,6 +329,57 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 		ne.pull(ni, dir);
 	}
 }	// end ExprAlloc::link_node_to_root_expr(...)
+
+//=============================================================================
+
+/**
+	Macro for declaring attribute classes.  
+	Here, the vistor_type is prsim's ExprAlloc.
+	NOTE: these classes should have hidden visibility.  
+ */
+#define DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS(class_name, att_name)	\
+struct class_name {							\
+	typedef	ExprAlloc_attribute_definition_entry	entry_type;	\
+	typedef	entry_type::visitor_type		visitor_type;	\
+	typedef entry_type::values_type			values_type;	\
+	typedef values_type::value_type			value_type;	\
+public:									\
+	static const char				name[];		\
+	static void main(visitor_type&, const values_type&);		\
+	/* static good_bool check_vals(const values_type&); */		\
+private:								\
+	static const size_t				id;		\
+};									\
+const char class_name::name[] = att_name;				\
+const size_t class_name::id = register_ExprAlloc_attribute_class<class_name>();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Local namespace for prsim rule attributes.  
+ */
+namespace __attributes__ {
+
+DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS(After, "after")
+
+void
+After::main(visitor_type& v, const values_type& a) {
+#if 0
+	State& s(v.get_state());
+#else
+	FINISH_ME(Fang);
+#endif
+}
+
+#if 0
+good_bool
+After::check_vals(const values_type& v) {
+	return entity::PRS::cflat_attribute_registry_type[name].check_values(v);
+}
+#endif
+
+}	// end namespace __attributes__
+
+#undef	DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS
 
 //=============================================================================
 }	// end namespace PRSIM

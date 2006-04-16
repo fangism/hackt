@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16:
+	  Added parameter assert 'Assert' spec directive.
+		Implemented const_param::is_true for this.  
+	  Templated definition of PRS macro definition entry, to facilitate
+		re-use with other passes besides cflat.  
+	  Minor renaming of attribute registry symbols for clarity and
+		disambiguation with future uses.  
+	  Started prsim attribute skeleton implementations.  
+
+
 2006-04-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-15:

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.13 2006/02/21 04:48:33 fang Exp $
+	$Id: PRS.cc,v 1.14 2006/04/16 18:36:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -431,7 +431,10 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	for ( ; i!=e; ++i) {
 		const string& key(i->get_key());
 		// check whether or not named attribute is registered
-		const attribute_definition_entry att(attribute_registry[key]);
+		// NOTE: every directive should at least be registered
+		// as a cflat directive, the master set of all directives.  
+		const cflat_attribute_definition_entry
+			att(cflat_attribute_registry[key]);
 		if (!att) {
 			cerr << "Error: unrecognized attribute \'" << key <<
 				"\'." << endl;

@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.14 2006/03/20 02:41:04 fang Exp $
+ 	$Id: basic_param.cc,v 1.15 2006/04/16 18:36:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -515,6 +515,12 @@ pint_const::static_constant_param(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
+pint_const::is_true(void) const {
+	return val;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
 pint_const::operator == (const const_range& c) const {
 	return (val == c.first) && (val == c.second);
 }
@@ -666,6 +672,12 @@ pbool_const::dump(ostream& o, const expr_dump_context&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+pbool_const::is_true(void) const {
+	return val;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Precondition: must satisfy is_static_constant.  
 	For use with const_param_expr_list.  
@@ -791,6 +803,16 @@ preal_const::preal_const() { }
 ostream&
 preal_const::dump(ostream& o, const expr_dump_context&) const {
 	return o << val;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return false always because we treat this semantically as a 
+	comparison with 0.0 which is technically, only ever an approximation.  
+ */
+bool
+preal_const::is_true(void) const {
+	return false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.8 2006/04/12 08:53:16 fang Exp $
+	$Id: SPEC_registry.cc,v 1.9 2006/04/16 18:36:19 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,8 @@
 #include "Object/lang/SPEC_registry.h"
 #include "Object/lang/directive_base.h"
 #include "Object/lang/cflat_printer.h"
+#include "Object/expr/const_param.h"
+#include "Object/expr/const_param_expr_list.h"
 #include "main/cflat_options.h"
 #include "common/TODO.h"
 #include "util/qmap.tcc"
@@ -187,6 +189,20 @@ __takes_no_params(const string& name, const size_t args) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Reusable function for specifying the minimum number of arguments.  
+ */
+static
+good_bool
+min_num_params(const string& name, const size_t min, const size_t args) {
+	if (args < min) {
+		cerr << "The \'" << name << "\' directive requires at least " <<
+			min << " parameters." << endl;
+		return good_bool(false);
+	} else	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Reusable function for specifying the exact number of arguments.  
  */
 static
@@ -299,6 +315,117 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 //
 //-----------------------------------------------------------------------------
 
+/**
+	Possibly think of a better name for this directive:
+	'distinct', 'disjoint', 'unconnected'
+ */
+DECLARE_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
+
+/**
+	Does nothing, the sole purpose of this directive is to issue
+	an error if any nodes in different group arguments 
+	are aliased to each other.  
+	TODO: put this along with other checking functions into a base class.  
+	\throw generic exception if there is an alias violation.  
+ */
+void
+UnAliased::main(cflat_prs_printer& p, const param_args_type& a,
+		const node_args_type& n) {
+	// does nothing but checks
+	typedef	node_args_type::value_type	node_group_type;
+	typedef	node_args_type::const_iterator	source_iterator;
+	typedef	node_args_type::iterator	dest_iterator;
+	node_args_type resolved_node_groups(a.size());
+{
+	source_iterator i(n.begin()), e(n.end());
+	dest_iterator j(resolved_node_groups.begin());
+	// std::transform pattern
+	for ( ; i!=e; ++i, ++j) {
+		p.__resolve_unique_literal_group(*i, *j);
+	}
+}
+{
+	source_iterator i(resolved_node_groups.begin()),
+		e(resolved_node_groups.end());
+	// accumulate all nodes in this set
+	node_group_type temp(*i);
+	for (++i; i!=e; ++i) {
+		typedef	node_group_type::const_iterator	set_iterator;
+		set_iterator ii(i->begin()), ie(i->end());
+		for ( ; ii!=ie; ++ii) {
+			if (temp.insert(*ii).second) {
+				cerr << "Error: detected aliased nodes during "
+					"processing of \'unaliased\' directive."
+					<< endl;
+				THROW_EXIT;
+			}
+		}
+	}
+}
+}
+
+good_bool
+UnAliased::check_num_params(const size_t s) {
+	return __takes_no_params(name, s);
+}
+
+good_bool
+UnAliased::check_num_nodes(const size_t s) {
+	return min_num_nodes(name, 2, s);
+}
+
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(UnAliased)
+
+/**
+	Allowed to take grouped arguments.  
+	\return bad if any nodes in different groups are aliased.  
+ */
+good_bool
+UnAliased::check_node_args(const node_args_type& a) {
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_SPEC_DIRECTIVE_CLASS(Assert, "assert")
+
+void
+Assert::main(cflat_prs_printer& p, const param_args_type& a, 
+		const node_args_type&) {
+	// does nothing
+}
+
+/**
+	Takes any number of parameters, checks that they are all true later.  
+ */
+good_bool
+Assert::check_num_params(const size_t s) {
+	return min_num_params(name, 1, s);
+}
+
+/**
+	This spec directive in unique in that it takes no node arguments.  
+ */
+good_bool
+Assert::check_num_nodes(const size_t s) {
+	return exact_num_nodes(name, 0, s);
+}
+
+/**
+	For boolean expressions, makes sure that value is 'true'.
+	For integer expessions, makes sure that value is non-zero.
+	Does not accept preal-const, floating point arguments.  
+ */
+good_bool
+Assert::check_param_args(const param_args_type& a) {
+	return good_bool(const_param_expr_list::is_all_true(a));
+}
+
+good_bool
+Assert::check_node_args(const node_args_type&) {
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
 DECLARE_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 

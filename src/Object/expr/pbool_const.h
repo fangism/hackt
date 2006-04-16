@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.10 2006/04/13 21:45:03 fang Exp $
+	$Id: pbool_const.h,v 1.11 2006/04/16 18:36:18 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
@@ -51,6 +51,9 @@ public:
 
 	size_t
 	dimensions(void) const { return 0; }
+
+	bool
+	is_true(void) const;
 
 	bool
 	has_static_constant_dimensions(void) const { return true; }

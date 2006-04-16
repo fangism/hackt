@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.10 2006/04/12 08:53:11 fang Exp $
+	$Id: PRS.cc,v 1.11 2006/04/16 18:36:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -663,7 +663,8 @@ attribute::check(context& c) const {
 	typedef	expr_list::checked_meta_exprs_type vals_type;
 	typedef	vals_type::const_iterator	const_iterator;
 	typedef	vals_type::value_type		val_type;
-	if (!entity::PRS::attribute_registry[*key]) {
+	// all macros must be registered with the master registry list (cflat)
+	if (!entity::PRS::cflat_attribute_registry[*key]) {
 		cerr << "Error: unrecognized PRS rule attribute \"" << *key <<
 			"\" at " << where(*key) << endl;
 		return return_type();

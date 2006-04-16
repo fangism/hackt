@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.8 2006/04/12 08:53:16 fang Exp $
+	$Id: cflat_printer.cc,v 1.9 2006/04/16 18:36:19 fang Exp $
  */
 
 #include <iostream>
@@ -48,7 +48,7 @@ if (!cfopts.check_prs) {
 		const_iterator i(r.attributes.begin());
 		const const_iterator e(r.attributes.end());
 		for ( ; i!=e; ++i) {
-			attribute_registry[i->key].main(*this, *i->values);
+			cflat_attribute_registry[i->key].main(*this, *i->values);
 		}
 	}
 	(*expr_pool)[r.expr_index].accept(*this);
