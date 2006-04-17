@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.6 2006/04/12 08:53:15 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.6.2.1 2006/04/17 03:04:07 fang Exp $
  */
 
 #include <iostream>
@@ -176,16 +176,12 @@ __no_grouped_node_args(const char* name,
 typedef	macro_definition_entry::node_args_type	node_args_type;
 typedef	macro_definition_entry::param_args_type	param_args_type;
 
-#if 0
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 ostream&
 print_param_args_list(cflat_prs_printer& p, const param_args_type& params) {
-	typedef	node_args_type::const_iterator		const_iterator;
-	NEVER_NULL(delim);
-	ostream& o(p.os);
-	return directive_base::dump_params(params, o);
+	return directive_base::dump_params(params, p.os);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -278,7 +274,7 @@ Echo::main(cflat_prs_printer& p, const param_args_type& params,
 	typedef	node_args_type::const_iterator	const_iterator;
 	ostream& o(p.os);
 	o << name;
-	directive_base::dump_params(params, o);
+	print_param_args_list(p, params);
 	o << '(';
 	print_node_args_list(p, nodes, ", ");
 	o << ')' << endl;

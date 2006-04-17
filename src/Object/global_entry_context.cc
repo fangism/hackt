@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry_context.cc"
-	$Id: global_entry_context.cc,v 1.2 2006/01/30 07:41:58 fang Exp $
+	$Id: global_entry_context.cc,v 1.2.26.1 2006/04/17 03:04:07 fang Exp $
  */
 
 #include "Object/global_entry_context.h"
@@ -16,16 +16,13 @@ namespace entity {
 
 global_entry_context_base::module_setter::module_setter(
 		global_entry_context_base& _ccb, 
-		const module& m) : ccb(_ccb) {
-	ccb.sm = &m.get_state_manager();
-	ccb.fp = &m.get_footprint();
+		const module& m) :
+		manager_saver_type(_ccb, &m.get_state_manager()),
+		footprint_saver_type(_ccb, &m.get_footprint()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-global_entry_context_base::module_setter::~module_setter() {
-	ccb.sm = NULL;
-	ccb.fp = NULL;
-}
+global_entry_context_base::module_setter::~module_setter() { }
 
 //=============================================================================
 // class global_entry_context method definitions
@@ -35,14 +32,11 @@ global_entry_context_base::module_setter::~module_setter() {
 
 global_entry_context::footprint_frame_setter::footprint_frame_setter(
 		global_entry_context& _cc, const footprint_frame& _ff) :
-		cc(_cc) {
-	cc.fpf = &_ff;
+		frame_saver_type(_cc, &_ff) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-global_entry_context::footprint_frame_setter::~footprint_frame_setter() {
-	cc.fpf = NULL;
-}
+global_entry_context::footprint_frame_setter::~footprint_frame_setter() { }
 
 //=============================================================================
 }	// end namespace entity

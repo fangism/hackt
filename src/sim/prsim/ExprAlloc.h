@@ -1,14 +1,13 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.5 2006/04/16 18:36:19 fang Exp $
+	$Id: ExprAlloc.h,v 1.5.2.1 2006/04/17 03:04:08 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
 #define	__HAC_SIM_PRSIM_EXPRALLOC_H__
 
 #include <stack>
-#include "Object/lang/cflat_visitor.h"
-#include "Object/cflat_context.h"
+#include "Object/lang/cflat_context_visitor.h"
 #include "sim/common.h"
 
 namespace HAC {
@@ -18,18 +17,19 @@ class State;
 class Node;
 class Expr;
 class ExprGraphNode;
-using entity::PRS::cflat_visitor;
 using entity::PRS::footprint_rule;
 using entity::PRS::footprint_expr_node;
 using entity::PRS::footprint_macro;
 using entity::SPEC::footprint_directive;
-using entity::cflat_context;
+using entity::cflat_context_visitor;
+
 //=============================================================================
 
 /**
-	Visits all PRS expressions and allocates them.  
+	Visits all PRS expressions and allocates them for use with 
+	the prsim simulator.  
  */
-class ExprAlloc : public cflat_visitor, public cflat_context {
+class ExprAlloc : public cflat_context_visitor {
 protected:
 	typedef	std::stack<expr_index_type>	build_stack_type;
 	State&					state;
@@ -47,6 +47,7 @@ public:
 	const State&
 	get_state(void) const { return state; }
 
+protected:
 	using cflat_visitor::visit;
 
 	void

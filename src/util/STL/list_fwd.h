@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/list_fwd.h"
 	Forward declaration of std::list wrapper class.  
-	$Id: list_fwd.h,v 1.3 2006/01/22 06:53:39 fang Exp $
+	$Id: list_fwd.h,v 1.3.32.1 2006/04/17 03:04:10 fang Exp $
  */
 
 #ifndef	__UTIL_STL_LIST_FWD_H__
@@ -16,12 +16,6 @@
 #include "util/STL/allocator_fwd.h"
 
 #if USE_STD_LIST
-#if 0
-	#include <list>
-	#define LIST_NAMESPACE	std
-	/// use this macro to select which list to use
-	// in this case, just ignore the wrapper class entirely
-#else
 namespace std {
 
 template <class T, class Alloc>
@@ -33,7 +27,6 @@ struct default_list {
 };
 
 }
-#endif
 #else	// USE_STD_LIST
 	#include "util/STL/namespace.h"
 	#define LIST_NAMESPACE	util::STL

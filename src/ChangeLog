@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-01:
+	  Factored out parent classes cflat_visitor and cflat_context
+		into cflat_context_visitor, inherited by SIM::PRSIM::ExprAlloc, 
+		and entity::PRS::cflat_prs_printer.  Much common functionality
+		shared between these two visitors.  
+	  Object/global_entry_context_base: member savers defined
+		in terms of util::member_saver.
+	  other util library header cleanups, summarized in util/ChangeLog.
+
+
 2006-04-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-16:

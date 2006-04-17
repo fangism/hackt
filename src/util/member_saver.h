@@ -3,14 +3,14 @@
 	Useful class for temporarily saving away a modifying a member
 	value for the duration of a scope.  
 	See also "util/value_saver.h".
-	$Id: member_saver.h,v 1.2 2006/04/11 07:54:48 fang Exp $
+	$Id: member_saver.h,v 1.2.2.1 2006/04/17 03:04:09 fang Exp $
  */
 
 #ifndef	__UTIL_MEMBER_SAVER_H__
 #define	__UTIL_MEMBER_SAVER_H__
 
 #include "util/member_saver_fwd.h"
-#include "util/attributes.h"
+#include "util/value_saver.h"
 
 namespace util {
 //=============================================================================
@@ -21,24 +21,20 @@ namespace util {
 	Bonus: self-balancing behavior is exception safe.  
  */
 template <class T, class MT, MT T::*Member>
-class member_saver {
+class member_saver : public value_saver<MT> {
 public:
+	typedef	value_saver<MT>	parent_type;
 	typedef	T		object_type;
 	typedef	MT		member_type;
-private:
-	object_type&		object;
-	const member_type	saved_member;
 public:
 	explicit
-	member_saver(T& t) : object(t), saved_member(t.*Member) { }
+	member_saver(T& t) :
+		parent_type(t.*Member) { }
 
 	explicit
-	member_saver(T& t, const member_type& m) :
-		object(t), saved_member(object.*Member) {
-		this->object.*Member = m;
-	}
+	member_saver(T& t, const member_type& m) : parent_type(t.*Member, m) { }
 
-	~member_saver() { this->object.*Member = this->saved_member; }
+	~member_saver() { }
 
 private:
 	// undefined copy-constructing

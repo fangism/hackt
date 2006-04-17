@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_fwd.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
 	\todo Make this configuration dependent on ac_cxx_ext_hash_map.
-	$Id: hash_map_fwd.h,v 1.7 2006/03/21 21:53:13 fang Exp $
+	$Id: hash_map_fwd.h,v 1.7.8.1 2006/04/17 03:04:10 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_FWD_H__
@@ -46,15 +46,6 @@ template <class K, class T, class H, class E, class A>
 
 HASH_MAP_TEMPLATE_SIGNATURE
 class hash_map;
-
-#if 0
-// gcc doesn't accept this re-declaration as equivalent to STL header's :(
-template <class K, class T,
-	class H = hash<K>,
-	class E = std::equal_to<K>,
-	class A = std::allocator<T> >
-class hash_map;
-#endif
 
 DEFAULT_HASH_MAP_TEMPLATE_SIGNATURE
 struct default_hash_map {

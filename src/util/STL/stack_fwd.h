@@ -2,7 +2,7 @@
 	\file "util/STL/stack_fwd.h"
 	Forward declaration of std::stack.
 	No wrapping.  
-	$Id: stack_fwd.h,v 1.4 2006/01/22 06:53:39 fang Exp $
+	$Id: stack_fwd.h,v 1.4.32.1 2006/04/17 03:04:10 fang Exp $
  */
 
 #ifndef	__UTIL_STL_STACK_FWD_H__
@@ -23,12 +23,6 @@ struct default_stack {
 };
 
 }
-
-#if 0
-#define	USING_STACK		using std::stack;
-#define	DEFAULT_STACK(T)	std::stack<T, DEFAULT_DEQUE(T) >
-#endif
-
 
 #endif	// __UTIL_STL_STACK_FWD_H__
 

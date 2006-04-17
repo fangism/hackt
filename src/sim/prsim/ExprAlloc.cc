@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.6 2006/04/16 18:36:19 fang Exp $
+	$Id: ExprAlloc.cc,v 1.6.2.1 2006/04/17 03:04:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -75,7 +75,10 @@ register_ExprAlloc_attribute_class(void) {
 /**
 	NOTE: 0 is an invalid index to the State's expr_pool.  
  */
-ExprAlloc::ExprAlloc(State& _s) : state(_s), ret_ex_index(INVALID_EXPR_INDEX) {
+ExprAlloc::ExprAlloc(State& _s) :
+		cflat_context_visitor(), 
+		state(_s),
+		ret_ex_index(INVALID_EXPR_INDEX) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -152,10 +155,6 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 				fpf->get_frame_map<bool_tag>()[e.only()-1];
 			// NOTE: Expr's parent and ExprGraphNode's offset
 			// fields are not set until returned to caller!
-#if 0
-			STACKTRACE_INDENT << "FOO" << endl;
-			st_node_pool[ni].dump_struct(STACKTRACE_INDENT) << endl;
-#endif
 			st_node_pool[ni].push_back_fanout(st_expr_pool.size());
 			st_expr_pool.push_back(
 				expr_type(expr_type::EXPR_NODE,1));

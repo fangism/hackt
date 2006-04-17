@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.115 2006/04/14 20:10:52 fang Exp $
+#	$Id: Makefile.am,v 1.115.2.1 2006/04/17 03:04:04 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -243,6 +243,7 @@ OBJECT_CC_FILES = \
 	Object/def/footprint.cc \
 	Object/def/footprint_manager.cc \
 	Object/lang/cflat_visitor.cc \
+	Object/lang/cflat_context_visitor.cc \
 	Object/lang/cflat_printer.cc \
 	Object/lang/bool_literal.cc \
 	Object/lang/directive_base.cc \

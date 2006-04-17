@@ -2,7 +2,7 @@
 	\file "Object/global_entry_context.h"
 	Structure containing all the minimal information
 	needed for a global_entry traversal over instances.  
-	$Id: global_entry_context.h,v 1.2 2006/01/30 07:41:58 fang Exp $
+	$Id: global_entry_context.h,v 1.2.26.1 2006/04/17 03:04:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_CONTEXT_H__
@@ -11,6 +11,7 @@
 #include <iosfwd>
 #include "util/NULL.h"
 #include "util/size_t.h"
+#include "util/member_saver.h"
 
 namespace HAC {
 namespace entity {
@@ -21,14 +22,16 @@ class state_manager;
 struct bool_tag;
 template <class> class footprint_frame_map;
 using std::ostream;
+using util::member_saver;
 
 //=============================================================================
 /**
 	This structure contains references to the structures required
 	to perform a meaninful traversal of the instance hierarchy, 
-	such as for global_entryting, or allocating global expressions.  
+	such as for cflatting, or allocating global expressions.  
  */
 class global_entry_context_base {
+	typedef	global_entry_context_base	this_type;
 protected:
 	const state_manager*			sm;
 	const footprint*			fp;
@@ -38,12 +41,22 @@ public:
 		Sets the footprint and state_manager pointers of the 
 		global_entry_context_base for the duration of the scope.  
 	 */
-	class module_setter {
-		global_entry_context_base&		ccb;
+	class module_setter :
+		public member_saver<this_type, 
+			const state_manager*, &global_entry_context_base::sm>,
+		public member_saver<this_type, 
+			const footprint*, &global_entry_context_base::fp> {
+		// global_entry_context_base&		ccb;
+		typedef	member_saver<this_type, 
+			const state_manager*, &global_entry_context_base::sm>
+				manager_saver_type;
+		typedef member_saver<this_type, 
+			const footprint*, &global_entry_context_base::fp>
+				footprint_saver_type;
 	public:
 		module_setter(global_entry_context_base&, const module&);
 		~module_setter();
-	};	// end class module setter
+	} __ATTRIBUTE_UNUSED__ ;	// end class module setter
 
 public:
 	global_entry_context_base() : sm(NULL), fp(NULL) { }
@@ -59,6 +72,7 @@ public:
 	such as processes.  
  */
 class global_entry_context : public global_entry_context_base {
+	typedef	global_entry_context		this_type;
 protected:
 	const footprint_frame*			fpf;
 
@@ -66,16 +80,21 @@ public:
 	/**
 		Sets the footprint_frame for the duration of the scope.  
 	 */
-	class footprint_frame_setter {
-		global_entry_context&			cc;
+	class footprint_frame_setter :
+		public member_saver<this_type,
+			const footprint_frame*, &global_entry_context::fpf> {
+		// global_entry_context&			cc;
+		typedef member_saver<this_type,
+			const footprint_frame*, &global_entry_context::fpf>
+						frame_saver_type;
 	public:
 		footprint_frame_setter(global_entry_context&,
 			const footprint_frame&);
 		~footprint_frame_setter();
-	};	// end class footprint_frame_setter
+	} __ATTRIBUTE_UNUSED__ ;	// end class footprint_frame_setter
 
 public:
-	global_entry_context() : fpf(NULL) { }
+	global_entry_context() : global_entry_context_base(), fpf(NULL) { }
 
 	template <class Tag>
 	const footprint_frame_map<Tag>&
