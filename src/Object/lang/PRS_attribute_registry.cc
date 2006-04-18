@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.7 2006/04/16 18:36:19 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.7.2.1 2006/04/18 05:57:21 fang Exp $
  */
 
 #include <iostream>
@@ -10,6 +10,7 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/lang/PRS_attribute_common.h"
 #include "main/cflat_options.h"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -74,15 +75,18 @@ register_cflat_attribute_class(void) {
 	Convenient home namespace for user-defined PRS rule attributes.  
 	Each class in this namespace represents an attribute.  
  */
-namespace __attributes__ {
+namespace cflat_rule_attributes {
 
 /**
 	Macro for declaring attribute classes.  
 	Here, the vistor_type is cflat_prs_printer.
 	TODO: These classes should have hidden visibility.  
+	TODO: could also push name[] into the base class, but would we be 
+		creating an initialization order dependence?
  */
 #define	DECLARE_PRS_ATTRIBUTE_CLASS(class_name, att_name)		\
-struct class_name {							\
+struct class_name : public rule_attributes::class_name {		\
+	typedef	rule_attributes::class_name		parent_type;	\
 	typedef	cflat_attribute_definition_entry::visitor_type		\
 							visitor_type;	\
 	typedef	cflat_attribute_definition_entry::values_type		\
@@ -96,6 +100,10 @@ private:								\
 	static const size_t				id;		\
 };									\
 const char class_name::name[] = att_name;				\
+good_bool								\
+class_name::check_vals(const values_type& v) {				\
+	return parent_type::__check_vals(name, v);			\
+}									\
 const size_t class_name::id = register_cflat_attribute_class<class_name>();
 
 //-----------------------------------------------------------------------------
@@ -112,15 +120,6 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 	v.at(0).is_a<const pint_const>()->dump(o,
 		entity::expr_dump_context::default_value) << '\t';
 }
-}
-
-good_bool
-After::check_vals(const values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
-		cerr << "The \'" << name << "\' attribute requires exactly "
-			"one pint (integer) expression argument." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -140,17 +139,8 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 }
 }
 
-good_bool
-Weak::check_vals(const values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
-		cerr << "The \'" << name << "\' attribute requires exactly "
-			"one pint (integer) expression argument." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
-}
-
 //=============================================================================
-}	// end namespace __attributes__
+}	// end namespace cflat_rule_attributes
 
 #undef	DECLARE_PRS_ATTRIBUTE_CLASS
 

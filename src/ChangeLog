@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-02:
+	  Started to factor out common tool-independent functions of
+		PRS rule attributes.  Tool-dependent passes, such as cflat
+		and prsim expression allocation can (and should) derive
+		from these to leverage code-reuse.  
+	  sim/time.{h,cc}: added new delay_policy traits class, 
+		with members such as invalid_delay, default_delay.  
+	  sim/prsim/Rule.h: new structure for rule attributes.  
+	  Implemented ExprAlloc rule attribute registry (After, Weak), 
+		but their results aren't visible yet in the simulator.  
+		footprint_rule visitation now traverses attributes list.  
+	  PRSIM::State: added new rule_map to store/encode rule attributes.  
+	  TODO: print out (and use) rule attributes in prsim.  
+
+
 2006-04-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-16-prsim-03-01:

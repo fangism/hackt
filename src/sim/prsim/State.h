@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.4 2006/04/11 07:54:47 fang Exp $
+	$Id: State.h,v 1.4.2.1 2006/04/18 05:57:24 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -9,10 +9,12 @@
 
 #include <iosfwd>
 #include <map>
+#include "util/STL/hash_map.h"
 #include "sim/time.h"
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
+#include "sim/prsim/Rule.h"
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/list_vector.h"
@@ -31,7 +33,7 @@ using entity::module;
 using util::list_vector;
 using std::ostream;
 using util::ifstream_manager;
-// using util::memory::count_ptr;
+using HASH_MAP_NAMESPACE::hash_map;
 //=============================================================================
 /**
 	The prsim simulation state.
@@ -60,9 +62,10 @@ public:
 	typedef	EventPool			event_pool_type;
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
-
 	typedef	vector<node_type>		node_pool_type;
 	typedef	vector<expr_type>		expr_pool_type;
+	typedef	RuleState<time_type>		rule_type;
+	typedef	hash_map<expr_index_type, rule_type>	rule_map_type;
 	/**
 		Watch list entry.  
 		Node index not included because it will be the first
@@ -76,7 +79,7 @@ public:
 		short	__padding2__;
 		watch_entry() : breakpoint(0) { }
 	};
-	typedef	std::map<node_index_type,watch_entry>	watch_list_type;
+	typedef	std::map<node_index_type, watch_entry>	watch_list_type;
 private:
 	/**
 		A fast, realloc-free vector-like structure
@@ -201,6 +204,8 @@ private:
 	expr_graph_node_pool_type		expr_graph_node_pool;
 	event_pool_type				event_pool;
 	event_queue_type			event_queue;
+	// rule state and structural information (sparse map)
+	rule_map_type				rule_map;
 	// exclusive rings
 	excl_ring_map_type			exhi;
 	excl_ring_map_type			exlo;
@@ -290,6 +295,12 @@ public:
 
 	string
 	get_node_canonical_name(const node_index_type) const;
+
+	rule_map_type&
+	get_rule_map(void) { return rule_map; }
+
+	const rule_map_type&
+	get_rule_map(void) const { return rule_map; }
 
 	void
 	update_time(const time_type t) {

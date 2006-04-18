@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.6.2.1 2006/04/17 03:04:08 fang Exp $
+	$Id: ExprAlloc.cc,v 1.6.2.2 2006/04/18 05:57:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,8 +12,10 @@
 #include "Object/lang/PRS_enum.h"
 #include "Object/lang/PRS_footprint_rule.h"
 #include "Object/lang/PRS_footprint_expr.h"
+#include "Object/lang/PRS_attribute_common.h"
 #include "Object/lang/PRS_attribute_registry.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/expr/pint_const.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
 #include "util/offset_array.h"
@@ -25,6 +27,7 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using entity::bool_tag;
+using entity::pint_const;
 using util::good_bool;
 #include "util/using_ostream.h"
 
@@ -36,7 +39,7 @@ typedef	util::qmap<string, ExprAlloc_attribute_definition_entry>
 					ExprAlloc_attribute_registry_type;
 
 static
-ExprAlloc_attribute_registry_type
+const ExprAlloc_attribute_registry_type
 ExprAlloc_attribute_registry;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -50,21 +53,20 @@ register_ExprAlloc_attribute_class(void) {
 	typedef	ExprAlloc_attribute_registry_type	registry_type;
 	typedef	registry_type::iterator			iterator;
 	typedef	registry_type::mapped_type		mapped_type;
+	ExprAlloc_attribute_registry_type&
+		__init_registry(const_cast<ExprAlloc_attribute_registry_type&>(
+				ExprAlloc_attribute_registry));
 	const string k(T::name);
-	mapped_type& m(ExprAlloc_attribute_registry[k]);
+	mapped_type& m(__init_registry[k]);
 	if (m) {
 		cerr << "Error: PRS attribute by the name \'" << k <<
 			"\' has already been registered!" << endl;
 		THROW_EXIT;
 	}
-#if 0
 	m = ExprAlloc_attribute_definition_entry(k, &T::main, &T::check_vals);
-#else
-	m = ExprAlloc_attribute_definition_entry(k, &T::main, NULL);
-#endif
 	// oddly, this is needed to force instantiation of the [] const operator
 	const mapped_type& n
-		__ATTRIBUTE_UNUSED_CTOR__((ExprAlloc_attribute_registry[k]));
+		__ATTRIBUTE_UNUSED_CTOR__((__init_registry[k]));
 	INVARIANT(n);
 	return ExprAlloc_attribute_registry.size();
 }
@@ -85,12 +87,10 @@ ExprAlloc::ExprAlloc(State& _s) :
 /**
 	Update node fanin, and keep it consistent.  
 	\pre state's node_array is already allocated.  
-	TODO: rule-attributes!
  */
 void
 ExprAlloc::visit(const footprint_rule& r) {
-	typedef	State::expr_type		expr_type;
-	typedef	State::graph_node_type		graph_node_type;
+{
 	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
 	(*expr_pool)[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
@@ -121,6 +121,21 @@ ExprAlloc::visit(const footprint_rule& r) {
 #if ENABLE_STACKTRACE
 	state.dump_struct(cerr) << endl;
 #endif
+	INVARIANT(top_ex_index == ret_ex_index);	// sanity check
+}
+{
+	// first, unconditionally create a rule entry in the state's rule
+	// map for every top-level (root) expression that affects a node.  
+	rule_map_type& rmap(state.get_rule_map());
+	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((rmap[ret_ex_index]));
+	// now iterate over attributes to apply changes
+	typedef footprint_rule::attributes_list_type	attr_list_type;
+	typedef	attr_list_type::const_iterator		const_iterator;
+	const_iterator i(r.attributes.begin()), e(r.attributes.end());
+	for ( ; i!=e; ++i) {
+		ExprAlloc_attribute_registry[i->key].main(*this, *i->values);
+	}
+}
 }	// end method visit(const footprint_rule&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -132,8 +147,6 @@ ExprAlloc::visit(const footprint_rule& r) {
  */
 void
 ExprAlloc::visit(const footprint_expr_node& e) {
-	typedef	State::expr_type		expr_type;
-	typedef	State::graph_node_type		graph_node_type;
 	STACKTRACE("ExprAlloc::visit(footprint_expr_node&)");
 	const size_t sz = e.size();
 	const char type = e.get_type();
@@ -250,8 +263,6 @@ void
 ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 		Expr& ne, ExprGraphNode& ng, 
 		const expr_index_type top_ex_index, const bool dir) {
-	typedef	State::expr_type		expr_type;
-	typedef	State::graph_node_type		graph_node_type;
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
 	// prepare to take OR-combination?
 	// or can we get away with multiple pull-up/dn roots?
@@ -337,7 +348,8 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 	NOTE: these classes should have hidden visibility.  
  */
 #define DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS(class_name, att_name)	\
-struct class_name {							\
+struct class_name : public entity::PRS::rule_attributes::class_name {	\
+	typedef	entity::PRS::rule_attributes::class_name parent_type;	\
 	typedef	ExprAlloc_attribute_definition_entry	entry_type;	\
 	typedef	entry_type::visitor_type		visitor_type;	\
 	typedef entry_type::values_type			values_type;	\
@@ -345,38 +357,61 @@ struct class_name {							\
 public:									\
 	static const char				name[];		\
 	static void main(visitor_type&, const values_type&);		\
-	/* static good_bool check_vals(const values_type&); */		\
+	static good_bool check_vals(const values_type&);		\
 private:								\
 	static const size_t				id;		\
 };									\
 const char class_name::name[] = att_name;				\
+good_bool								\
+class_name::check_vals(const values_type& v) {				\
+	return parent_type::__check_vals(name, v);			\
+}									\
 const size_t class_name::id = register_ExprAlloc_attribute_class<class_name>();
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Local namespace for prsim rule attributes.  
  */
-namespace __attributes__ {
+namespace prsim_rule_attributes {
 
 DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS(After, "after")
 
+/**
+	Delay values real or floating or both?
+ */
 void
 After::main(visitor_type& v, const values_type& a) {
-#if 0
 	State& s(v.get_state());
-#else
-	FINISH_ME(Fang);
-#endif
+	typedef	State::rule_type	rule_type;
+	typedef	State::rule_map_type	rule_map_type;
+	rule_map_type& rmap(s.get_rule_map());
+	rule_type& r(rmap[v.last_expr_index()]);
+	const values_type::value_type& d(a.front());
+	// assert type cast, b/c already checked
+	r.set_delay(d.is_a<const pint_const>()->static_constant_value());
 }
 
-#if 0
-good_bool
-After::check_vals(const values_type& v) {
-	return entity::PRS::cflat_attribute_registry_type[name].check_values(v);
-}
-#endif
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS(Weak, "weak")
 
-}	// end namespace __attributes__
+/**
+	Sets or clears weak flag on a rule.  
+ */
+void
+Weak::main(visitor_type& v, const values_type& a) {
+	State& s(v.get_state());
+	typedef	State::rule_type	rule_type;
+	typedef	State::rule_map_type	rule_map_type;
+	rule_map_type& rmap(s.get_rule_map());
+	rule_type& r(rmap[v.last_expr_index()]);
+	const values_type::value_type& w(a.front());
+	if (w.is_a<const pint_const>()->static_constant_value())
+		r.set_weak();
+	else	r.clear_weak();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+}	// end namespace prsim_rule_attributes
 
 #undef	DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS
 

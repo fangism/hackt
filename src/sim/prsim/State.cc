@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.6 2006/04/11 07:54:47 fang Exp $
+	$Id: State.cc,v 1.6.2.1 2006/04/18 05:57:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -76,6 +76,7 @@ State::State(const entity::module& m) :
 		mod(m), 
 		node_pool(), expr_pool(), expr_graph_node_pool(),
 		event_pool(), event_queue(), 
+		rule_map(), 
 		exhi(), exlo(), 
 		exclhi_queue(), excllo_queue(), 
 		pending_queue(), 

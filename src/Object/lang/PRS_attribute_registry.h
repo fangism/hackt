@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.h"
-	$Id: PRS_attribute_registry.h,v 1.4 2006/04/16 18:36:19 fang Exp $
+	$Id: PRS_attribute_registry.h,v 1.4.2.1 2006/04/18 05:57:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
@@ -11,10 +11,10 @@
 #include "util/size_t.h"
 #include "util/boolean_types.h"
 #include "util/qmap.h"
+#include "Object/lang/PRS_fwd.h"
 
 namespace HAC {
 namespace entity {
-class const_param_expr_list;
 namespace PRS {
 using std::string;
 using util::good_bool;
@@ -30,7 +30,7 @@ template <class VisitorType>
 class attribute_visitor_entry {
 public:
 	typedef	VisitorType			visitor_type;
-	typedef	const_param_expr_list		values_type;
+	typedef	rule_attribute_values_type	values_type;
 	typedef void (main_type)(visitor_type&, const values_type&);
 	typedef	main_type*			main_ptr_type;
 	typedef	good_bool (check_values_type)(const values_type&);

@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.115.2.1 2006/04/17 03:04:04 fang Exp $
+#	$Id: Makefile.am,v 1.115.2.2 2006/04/18 05:57:18 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -251,6 +251,7 @@ OBJECT_CC_FILES = \
 	Object/lang/directive_source.cc \
 	Object/lang/PRS.cc \
 	Object/lang/PRS_footprint.cc \
+	Object/lang/PRS_attribute_common.cc \
 	Object/lang/PRS_attribute_registry.cc \
 	Object/lang/PRS_macro_registry.cc \
 	Object/lang/CHP.cc \
@@ -492,6 +493,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/process_instantiation_statement.h \
 	Object/unroll/sequential_scope.h \
 	Object/unroll/unroll_context_value_resolver.h \
+	Object/lang/PRS_fwd.h \
 	Object/lang/PRS_base.h \
 	Object/lang/PRS_literal_unroller.h \
 	Object/lang/CHP_base.h \
@@ -527,6 +529,7 @@ PARSER_CC_FILES = \
 
 
 SIM_CC_FILES = \
+	sim/time.cc \
 	sim/random_time.cc \
 	sim/prsim/Node.cc \
 	sim/prsim/Expr.cc \
@@ -542,7 +545,7 @@ SIM_TCC_FILES = \
 SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	$(SIM_TCC_FILES:.tcc=.h) \
 	sim/common.h \
-	sim/time.h
+	sim/prsim/Rule.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \

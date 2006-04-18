@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.5.2.1 2006/04/17 03:04:08 fang Exp $
+	$Id: ExprAlloc.h,v 1.5.2.2 2006/04/18 05:57:23 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
@@ -8,7 +8,9 @@
 
 #include <stack>
 #include "Object/lang/cflat_context_visitor.h"
+#include "sim/prsim/State.h"		// for nested typedefs
 #include "sim/common.h"
+#include "util/member_saver.h"
 
 namespace HAC {
 namespace SIM {
@@ -32,7 +34,13 @@ using entity::cflat_context_visitor;
 class ExprAlloc : public cflat_context_visitor {
 protected:
 	typedef	std::stack<expr_index_type>	build_stack_type;
-	State&					state;
+	typedef	State				state_type;
+	typedef	State::expr_type		expr_type;
+	typedef	State::graph_node_type		graph_node_type;
+	typedef	State::rule_map_type		rule_map_type;
+	typedef	State::rule_type		rule_type;
+protected:
+	state_type&				state;
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
 public:
@@ -40,6 +48,9 @@ public:
 	ExprAlloc(State&);
 
 	// default empty destructor
+
+	expr_index_type
+	last_expr_index(void) const { return ret_ex_index; }
 
 	State&
 	get_state(void) { return state; }
