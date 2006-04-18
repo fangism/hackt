@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_qmap_test.cc"
  	Test for multidimensional, queryable map.
-	$Id: multidimensional_qmap_test.cc,v 1.8 2006/02/26 02:28:05 fang Exp $
+	$Id: multidimensional_qmap_test.cc,v 1.9 2006/04/18 18:42:47 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -23,9 +23,10 @@ using std::string;
 #include "util/multidimensional_qmap.tcc"
 
 using util::multidimensional_qmap;
+using util::default_multidimensional_qmap;
 using util::make_iter_range;
 
-typedef	multidimensional_qmap<3, int, string>	test_map3d_type;
+typedef	default_multidimensional_qmap<3, int, string>::type	test_map3d_type;
 
 int
 main(int, char*[]) {

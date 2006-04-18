@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.9 2006/01/22 06:53:41 fang Exp $
+	$Id: count_ptr.h,v 1.10 2006/04/18 18:42:46 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_H__
@@ -376,6 +376,11 @@ public:
 	operator != (const P& p) const {
 		return pointer_manipulator::compare_pointers_unequal(ptr, p);
 	}
+
+	template <class S>
+	struct rebind {
+		typedef	count_ptr<S, deallocation_policy>	type;
+	};
 
 };	// end class count_ptr
 

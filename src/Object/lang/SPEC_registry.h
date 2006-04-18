@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_registry.h"
-	$Id: SPEC_registry.h,v 1.3 2006/02/10 21:50:40 fang Exp $
+	$Id: SPEC_registry.h,v 1.4 2006/04/18 18:42:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
@@ -39,7 +39,8 @@ public:
 };	// end class spec_definition_entry
 
 //=============================================================================
-typedef	util::qmap<string, spec_definition_entry>	spec_registry_type;
+typedef	util::default_qmap<string, spec_definition_entry>::type
+							spec_registry_type;
 
 extern const spec_registry_type				spec_registry;
 

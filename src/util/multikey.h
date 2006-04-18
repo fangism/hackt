@@ -2,7 +2,7 @@
 	\file "util/multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.22 2005/07/20 21:01:00 fang Exp $
+	$Id: multikey.h,v 1.23 2006/04/18 18:42:43 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -346,9 +346,10 @@ public:
 		\param S is sequence type container.
 		\param s is const reference to sequence object.
 	 */
-	template <template <class> class S>
+	template <class S>
 	explicit
-	multikey(const S<K>& s, const K i = K());
+	multikey(const S& s, const typename S::value_type i =
+		typename S::value_type());
 
 	const self_key_type&
 	self_key(void) const { return *this; }

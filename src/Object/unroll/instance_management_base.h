@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: instance_management_base.h,v 1.9 2006/03/15 04:38:23 fang Exp $
+	$Id: instance_management_base.h,v 1.10 2006/04/18 18:42:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_H__
@@ -42,9 +42,9 @@ public:
 	public:
 		dumper(ostream&, const expr_dump_context&);
 
-		template <template <class> class P>
+		template <class P>
 		ostream&
-		operator () (const P<const instance_management_base>& i) const;
+		operator () (const P& i) const;
 	};      // end class dumper
 
 public:

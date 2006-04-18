@@ -1,7 +1,7 @@
 /**
 	\file "multidimensional_sparse_set_test.cc"
 	Test for multidimensional sparse set.
-	$Id: multidimensional_sparse_set_test.cc,v 1.8 2006/02/13 02:48:08 fang Exp $
+	$Id: multidimensional_sparse_set_test.cc,v 1.9 2006/04/18 18:42:47 fang Exp $
  */
 
 // always enable assertions
@@ -23,21 +23,23 @@ using std::pair;
 using namespace util::memory;
 using util::multidimensional_sparse_set;
 
-template <class T, class R, template <class> class L>
+#define	TEST_TEMPLATE_SIGNATURE						\
+	template <class T, class R, class L>
+
+TEST_TEMPLATE_SIGNATURE
 int
 test(void);
 
 int
 main(int, char*[]) {
-	test<int, pair<int,int>, list>();
+	test<int, pair<int,int>, list<pair<int, int> > >();
 //	test<int, pair<int,int>, sublist>();
 //	test<const int, pair<const int, const int>, list>();	// nonsense
 	return 0;
 }
 
 
-
-template <class T, class R, template <class> class L>
+TEST_TEMPLATE_SIGNATURE
 int
 test(void) {
 	typedef	multidimensional_sparse_set<1,T,R,L>	set_1d_type;
@@ -167,4 +169,6 @@ test(void) {
 
 	return 0;
 }
+
+#undef	TEST_TEMPLATE_SIGNATURE
 

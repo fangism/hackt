@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.3 2006/04/13 21:44:40 fang Exp $
+dnl	$Id: cxx.m4,v 1.4 2006/04/18 18:42:36 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -247,6 +247,11 @@ if ( echo "$CXX_VERSION" | grep -i prerelease )
 then
 	AC_MSG_WARN([
 	Detected prerelease version of compiler.  No PRERELEASE compilers
+	are officially supported.  Use at your own risk.])
+elif ( echo "$CXX_VERSION" | grep -i experiment )
+then
+	AC_MSG_WARN([
+	Detected experimental version of compiler.  No EXPERIMENTAL compilers
 	are officially supported.  Use at your own risk.])
 fi
 AC_SUBST(CXX_VERSION)
@@ -637,6 +642,43 @@ AC_LANG_POP(C++)
 if test "$ac_cv_cxx_attribute_aligned_size" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_ALIGNED_SIZE, [],
         [True if compiler supports __attribute__((aligned(size))) ])
+fi
+])
+
+
+dnl
+dnl Checking for extension that allows binding of templates with
+dnl fewer arguments to template with more parameters and sufficient
+dnl trailing default parameters.  
+dnl See: http://gcc.gnu.org/gcc-4.2/changes.html
+dnl	which is where test case is stolen from.  
+dnl gcc-4.2 is the first branch series that rejects this.  
+dnl
+AC_DEFUN([AC_CXX_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING],
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_CACHE_CHECK(
+[whether templates with default parameters can bind to template template parameters with fewer parameters],
+[ac_cv_cxx_template_template_parameter_default_binding],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM(
+		[[template <template <typename> class C>
+		void f(C<double>) {}
+		template <typename T, typename U = int>
+		struct S {};
+		template void f(S<double>);
+		]], []),
+		[ac_cv_cxx_template_template_parameter_default_binding=yes],
+		[ac_cv_cxx_template_template_parameter_default_binding=no]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+if test "$ac_cv_cxx_template_template_parameter_default_binding" = "yes"; then
+AC_DEFINE(HAVE_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING, [],
+        [Define if templates with default arguments can bind to template template parameters with fewer parameters.])
 fi
 ])
 

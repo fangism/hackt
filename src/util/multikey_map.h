@@ -2,7 +2,7 @@
 	\file "util/multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.17 2006/01/22 06:53:34 fang Exp $
+	$Id: multikey_map.h,v 1.18 2006/04/18 18:42:44 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_H__
@@ -16,6 +16,8 @@
 #include "util/multikey_map_fwd.h"
 #include "util/array_traits.h"
 #include "util/multikey_assoc.h"
+#include "util/type_traits.h"
+#include "util/static_assert.h"
 
 namespace util {
 using std::ostream;
@@ -37,15 +39,12 @@ using util::multikey;
 	\example multikey_qmap_test.cc
  */
 MULTIKEY_MAP_TEMPLATE_SIGNATURE
-class multikey_map :
-	public multikey_assoc<D, M<typename multikey<D,K>::simple_type, T> >
-{
+class multikey_map : public multikey_assoc<D, M> {
 private:
 	typedef	multikey_map<D,K,T,M>			this_type;
 protected:
 	/** this is the representation-type */
-	typedef	multikey_assoc<D, M<typename multikey<D,K>::simple_type, T> >
-							map_type;
+	typedef	multikey_assoc<D, M>			map_type;
 	typedef	map_type				mt;
 public:
 	typedef	typename mt::key_type			key_type;

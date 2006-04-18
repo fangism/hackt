@@ -3,7 +3,7 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.6 2006/03/20 02:41:04 fang Exp $
+	$Id: bool_logical_expr.h,v 1.7 2006/04/18 18:42:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
@@ -19,7 +19,7 @@
 namespace HAC {
 namespace entity {
 using std::string;
-using util::qmap;
+using util::default_qmap;
 USING_UTIL_OPERATIONS
 using util::persistent_object_manager;
 //=============================================================================
@@ -38,8 +38,10 @@ public:
 	static const util::logical_xor<value_type, arg_type>	op_xor;
 private:
 	// safe to use naked (never-delete) pointers on static objects
-	typedef qmap<string, const op_type*>	op_map_type;
-	typedef qmap<const op_type*, string>	reverse_op_map_type;
+	typedef default_qmap<string, const op_type*>::type
+							op_map_type;
+	typedef default_qmap<const op_type*, string>::type
+							reverse_op_map_type;
 public:
 	static const op_map_type		op_map;
 private:

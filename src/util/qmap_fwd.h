@@ -2,7 +2,7 @@
 	\file "util/qmap_fwd.h"
 	Forward declarations for queryable map.  
 	Full description in "qmap.h".
-	$Id: qmap_fwd.h,v 1.9 2005/05/10 04:51:29 fang Exp $
+	$Id: qmap_fwd.h,v 1.10 2006/04/18 18:42:44 fang Exp $
  */
 
 #ifndef	__UTIL_QMAP_FWD_H__
@@ -24,6 +24,19 @@ template <class K, class T,
 	typename C = std::less<K>,
 	typename A = std::allocator<std::pair<const K, T> > >
 class qmap;
+
+/**
+	Template typedef.  
+ */
+template <class K, class T>
+struct default_qmap {
+	typedef	qmap<K, T, std::less<K>,
+		std::allocator<std::pair<const K, T> > >
+					type;
+
+	template <class K2, class T2>
+	struct rebind : public default_qmap<K2, T2> { };
+};	// end struct default_qmap
 
 }	// end namespace util
 

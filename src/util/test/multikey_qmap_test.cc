@@ -2,7 +2,7 @@
 	\file "multikey_qmap_test.cc"
 	Test for multidimensional, queryable map with multidimensional keys.  
 	Copied from "multidimensional_qmap_test.cc" with a few lines changes
-	$Id: multikey_qmap_test.cc,v 1.10 2006/02/13 02:48:08 fang Exp $
+	$Id: multikey_qmap_test.cc,v 1.11 2006/04/18 18:42:47 fang Exp $
  */
 
 // always debug, these are critical tests
@@ -23,16 +23,20 @@ using std::string;
 using std::ostringstream;
 using util::qmap;
 using util::multikey_map;
+using util::default_multikey_map;
 
-#if 0
-typedef	multikey_qmap<1, int, string>	test_map1d_type;
-typedef	multikey_qmap<2, int, string>	test_map2d_type;
-typedef	multikey_qmap<3, int, string>	test_map3d_type;
-#else
-typedef	multikey_map<1, int, string, qmap>	test_map1d_type;
-typedef	multikey_map<2, int, string, qmap>	test_map2d_type;
-typedef	multikey_map<3, int, string, qmap>	test_map3d_type;
-#endif
+template <size_t D>
+struct __helper_mk_map_type {
+	typedef	default_multikey_map<D, int, string>	__helper_type;
+	typedef typename __helper_type::
+		template rebind_default_map_type<util::default_qmap>::type
+							__qmap_type;
+	typedef	multikey_map<D, int, string, __qmap_type>	type;
+};
+
+typedef	__helper_mk_map_type<1>::type		test_map1d_type;
+typedef	__helper_mk_map_type<2>::type		test_map2d_type;
+typedef	__helper_mk_map_type<3>::type		test_map3d_type;
 
 int
 main(int, char*[]) {

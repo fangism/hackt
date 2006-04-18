@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_relational_expr.h"
 	Boolean relations between real-valued parameters.  
-	$Id: preal_relational_expr.h,v 1.3 2006/02/21 04:48:27 fang Exp $
+	$Id: preal_relational_expr.h,v 1.4 2006/04/18 18:42:39 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_RELATIONAL_EXPR_H__
@@ -18,7 +18,7 @@ namespace entity {
 class preal_expr;
 using std::string;
 USING_UTIL_OPERATIONS
-using util::qmap;
+using util::default_qmap;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -42,8 +42,10 @@ public:
 							op_greater_equal;
 private:
 	// safe to use naked (never-delete) pointers on static objects
-	typedef	qmap<string, const op_type*>	op_map_type;
-	typedef	qmap<const op_type*, string>	reverse_op_map_type;
+	typedef	default_qmap<string, const op_type*>::type
+						op_map_type;
+	typedef	default_qmap<const op_type*, string>::type
+						reverse_op_map_type;
 public:
 	static const op_map_type		op_map;
 private:

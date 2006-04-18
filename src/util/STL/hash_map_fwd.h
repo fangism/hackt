@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_fwd.h"
 	Header-wrapper for gcc-version-specific placement of <hash_map>.
 	\todo Make this configuration dependent on ac_cxx_ext_hash_map.
-	$Id: hash_map_fwd.h,v 1.7 2006/03/21 21:53:13 fang Exp $
+	$Id: hash_map_fwd.h,v 1.8 2006/04/18 18:42:45 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_FWD_H__
@@ -60,6 +60,8 @@ DEFAULT_HASH_MAP_TEMPLATE_SIGNATURE
 struct default_hash_map {
 	typedef	hash_map<K, T, hash<K>, std::equal_to<K>, std::allocator<T> >
 					type;
+	template <class K2, class T2>
+	struct rebind : public default_hash_map<K2, T2> { };
 };
 
 }	// end namespace HASH_MAP_NAMESPACE

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_macro_registry.h"
-	$Id: PRS_macro_registry.h,v 1.4 2006/02/10 21:50:40 fang Exp $
+	$Id: PRS_macro_registry.h,v 1.5 2006/04/18 18:42:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_H__
@@ -33,7 +33,8 @@ public:
 };	// end class macro_definition_entry
 
 //=============================================================================
-typedef	util::qmap<string, macro_definition_entry>	macro_registry_type;
+typedef	util::default_qmap<string, macro_definition_entry>::type
+							macro_registry_type;
 
 extern const macro_registry_type			macro_registry;
 

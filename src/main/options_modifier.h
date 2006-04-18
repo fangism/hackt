@@ -1,7 +1,7 @@
 /**
 	\file "main/options_modifier.h"
 	Utility class for modifying options, using a map and registry.  
-	$Id: options_modifier.h,v 1.2 2006/01/22 06:53:11 fang Exp $
+	$Id: options_modifier.h,v 1.3 2006/04/18 18:42:41 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_OPTIONS_MODIFIER_H__
@@ -31,7 +31,8 @@ struct options_modifier_policy {
 	typedef	OptionsType			options_type;
 	typedef Modifier			modifier_type;
 	struct options_modifier_info;
-	typedef	util::qmap<std::string, options_modifier_info>
+	typedef	typename util::default_qmap<std::string,
+			options_modifier_info>::type
 					options_modifier_map_type;
 	class register_options_modifier_base;
 protected:

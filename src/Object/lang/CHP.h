@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.8 2006/04/12 08:53:15 fang Exp $
+	$Id: CHP.h,v 1.9 2006/04/18 18:42:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -14,6 +14,8 @@
 #include "Object/expr/expr_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
+#include "util/static_assert.h"
+#include "util/type_traits.h"
 
 namespace HAC {
 namespace entity {
@@ -370,13 +372,20 @@ public:
 public:
 	/**
 		Substitute for mem_fun_ref predicate functor...
+		\param P pointer class whose element type is 'action'
+			should probably be a count_ptr, since we're not
+			doing exclusive transfers.  
 	 */
-	template <template <class> class P>
+	template <class P>
 	struct detector {
-		typedef	P<const do_forever_loop>	ptr_type;
+		typedef	typename P::template rebind<const do_forever_loop>::type
+							ptr_type;
 
 		ptr_type
-		operator () (const P<action>& p) const {
+		operator () (const P& p) const {
+			typedef	util::is_same<action, typename P::element_type>
+					__type_constraint1;
+			UTIL_STATIC_ASSERT_DEPENDENT(__type_constraint1::value);
 			return p.template is_a<const do_forever_loop>();
 		}
 	};	// end struct detector

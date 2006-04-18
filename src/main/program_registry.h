@@ -1,7 +1,7 @@
 /**
 	\file "main/program_registry.h"
 	Header for the interface to the main program.  
-	$Id: program_registry.h,v 1.5 2006/01/27 08:07:21 fang Exp $
+	$Id: program_registry.h,v 1.6 2006/04/18 18:42:41 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_PROGRAM_REGISTRY_H__
@@ -29,7 +29,7 @@ namespace HAC {
 using std::string;
 using std::ostream;
 using util::memory::count_ptr;
-using util::qmap;
+using util::default_qmap;
 
 //=============================================================================
 /**
@@ -95,7 +95,8 @@ public:
 			whereas hash_map performs a proper 
 			hash on const char*.  
 	 */
-	typedef	qmap<string, program_entry>	program_registry_type;
+	typedef	default_qmap<string, program_entry>::type
+						program_registry_type;
 
 	typedef	count_ptr<program_registry_type>
 						program_registry_ptr_type;

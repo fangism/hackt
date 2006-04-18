@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-17:
+	  gcc-4.2 check!  sources brought to even tighter standard conformance.
+	  See http://gcc.gnu.org/gcc-4.2/changes.html.
+		Since template types with default parameters can no longer
+		automatically bind to templates with more parameters
+		and trailing defaults, we've added default wrappers
+		template typedefs in most library structures.  
+	  Explicit instantiations in sim / PRS registry units is 
+		no longer required.  
+
+
 2006-04-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-16:

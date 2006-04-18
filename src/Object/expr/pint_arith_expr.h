@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.7 2006/02/21 04:48:26 fang Exp $
+	$Id: pint_arith_expr.h,v 1.8 2006/04/18 18:42:39 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -19,7 +19,7 @@ namespace HAC {
 namespace entity {
 using std::ostream;
 USING_UTIL_OPERATIONS
-using util::qmap;
+using util::default_qmap;
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -43,8 +43,10 @@ public:
 private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	expr_detail::op_info		op_info;
-	typedef	qmap<char, const op_type*>	op_map_type;
-	typedef	qmap<const op_type*, op_info>	reverse_op_map_type;
+	typedef	default_qmap<char, const op_type*>::type
+						op_map_type;
+	typedef	default_qmap<const op_type*, op_info>::type
+						reverse_op_map_type;
 	static const op_map_type		op_map;
 	static const reverse_op_map_type	reverse_op_map;
 	static const size_t			op_map_size;

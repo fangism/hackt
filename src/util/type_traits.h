@@ -8,7 +8,7 @@
 		Kludge: template typedefs.  
 	See also "util/memory/pointer_traits.h"
 	Add more traits as needed.  
-	$Id: type_traits.h,v 1.4 2006/04/11 07:54:48 fang Exp $
+	$Id: type_traits.h,v 1.5 2006/04/18 18:42:44 fang Exp $
  */
 
 #ifndef	__UTIL_TYPE_TRAITS_H__
@@ -18,6 +18,8 @@
 #include "util/cppcat.h"
 // #include "util/static_assert.h"
 
+#if 0
+// include these once we need them
 #if	defined(HAVE_TYPE_TRAITS_H)
 #include <type_traits.h>
 #endif
@@ -26,12 +28,13 @@
 #include <bits/type_traits.h>
 #endif
 
-#if	defined(HAVE_TR1_TYPE_TRAITS_H)
-#include <tr1/type_traits.h>
+#if	defined(HAVE_TR1_TYPE_TRAITS)
+#include <tr1/type_traits>
 #endif
 
 #if	defined(HAVE_BOOST_TYPE_TRAITS_HPP)
 #include "boost/type_traits.hpp"
+#endif
 #endif
 
 namespace util {

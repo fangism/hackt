@@ -1,7 +1,7 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
-	$Id: cube_slice.h,v 1.9 2006/02/01 06:11:47 fang Exp $
+	$Id: cube_slice.h,v 1.10 2006/04/18 18:42:47 fang Exp $
  */
 
 #include "util/macros.h"
@@ -12,6 +12,7 @@
 #include <numeric>
 #include "util/sstream.h"
 #include "util/multikey_qmap.tcc"
+#include "multikey_qmap_type_helper.h"
 
 namespace testing {
 using std::list;
@@ -24,6 +25,7 @@ using std::ostream_iterator;
 using util::multikey;
 using util::multikey_generator;
 using util::multikey_map;
+using util::default_multikey_map;
 using util::qmap;
 
 #if 0
@@ -31,9 +33,10 @@ typedef multikey_qmap<1,int,string>	map_1d_type;
 typedef multikey_qmap<2,int,string>	map_2d_type;
 typedef multikey_qmap<3,int,string>	map_3d_type;
 #else
-// typedef multikey_map<1,int,string,qmap>	map_1d_type;
-// typedef multikey_map<2,int,string,qmap>	map_2d_type;
-typedef multikey_map<3,int,string,qmap>	map_3d_type;
+
+// typedef __helper_mk_map_type<1>::type		map_1d_type;
+// typedef __helper_mk_map_type<2>::type		map_2d_type;
+typedef __helper_mk_map_type<3>::type		map_3d_type;
 #endif
 // typedef multikey_generator<1,int>	generator_1d_type;
 // typedef multikey_generator<2,int>	generator_2d_type;
@@ -148,8 +151,8 @@ public:
 
 	void
 	slice_test_1d(void) const {
-		map_3d_type::const_iterator start = str_map.begin();
-		map_3d_type::const_iterator end = --str_map.end();
+		map_3d_type::const_iterator start(str_map.begin());
+		map_3d_type::const_iterator end(--str_map.end());
 		assert(start != str_map.end());
 		int min = start->first.front();
 		int max = end->first.front();
@@ -159,7 +162,7 @@ public:
 			list<int> u(l);
 			for ( ; u.front() <= max; u.front()++) {
 				const pair<list<int>, list<int> >
-					probe = str_map.is_compact_slice(l, u);
+					probe(str_map.is_compact_slice(l, u));
 				cout << "slice [" << l.front() << ".."
 					<< u.front() << "] is ";
 				report_compaction(probe);
@@ -170,8 +173,8 @@ public:
 
 	void
 	slice_test_2d(void) const {
-		map_3d_type::const_iterator start = str_map.begin();
-		map_3d_type::const_iterator end = --str_map.end();
+		map_3d_type::const_iterator start(str_map.begin());
+		map_3d_type::const_iterator end(--str_map.end());
 		assert(start != str_map.end());
 		map_3d_type::key_list_pair_type ext(str_map.index_extremities());
 		int min1 = ext.first.front();
@@ -202,8 +205,8 @@ public:
 
 	void
 	slice_test_3d(void) const {
-		map_3d_type::const_iterator start = str_map.begin();
-		map_3d_type::const_iterator end = --str_map.end();
+		map_3d_type::const_iterator start(str_map.begin());
+		map_3d_type::const_iterator end(--str_map.end());
 		assert(start != str_map.end());
 		map_3d_type::key_list_pair_type ext(str_map.index_extremities());
 		int min1 = ext.first.front();

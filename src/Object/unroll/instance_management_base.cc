@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.13 2006/03/15 04:38:23 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.14 2006/04/18 18:42:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -20,12 +20,14 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <list>
 
+#include "Object/unroll/instance_management_base.h"
+#include "Object/unroll/sequential_scope.h"
+
 #include "util/dereference.h"
 #include "util/compose.h"
 #include "util/binders.h"
-
-#include "Object/unroll/instance_management_base.h"
-#include "Object/unroll/sequential_scope.h"
+#include "util/static_assert.h"
+#include "util/type_traits.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
 #include "util/indent.h"
@@ -33,9 +35,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 namespace HAC {
 namespace entity {
+using util::is_same;
 using util::dereference;
 using util::auto_indent;
 using std::istream;
+using std::for_each;
 #include "util/using_ostream.h"
 USING_UTIL_COMPOSE
 
@@ -170,10 +174,13 @@ instance_management_base::dumper::dumper(ostream& o,
 	\param P pointer class template for the instance management object.
 	\param i pointer to the instance management object to dump.
  */
-template <template <class> class P>
+template <class P>
 ostream&
-instance_management_base::dumper::operator () (
-		const P<const instance_management_base>& i) const {
+instance_management_base::dumper::operator () (const P& i) const {
+	typedef	is_same<typename P::element_type,
+			const instance_management_base>
+					__type_constraint1;
+	UTIL_STATIC_ASSERT_DEPENDENT(__type_constraint1::value);
 	return i->dump(os << auto_indent, edc) << endl;
 }
 

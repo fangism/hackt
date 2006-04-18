@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.19 2006/04/13 21:45:05 fang Exp $
+	$Id: instance_collection.h,v 1.20 2006/04/18 18:42:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -43,7 +43,7 @@ using util::memory::count_ptr;
 using util::memory::never_ptr;
 using util::good_bool;
 using util::bad_bool;
-using util::multikey_set;
+using util::default_multikey_set;
 using util::multikey_set_element_derived;
 using util::persistent;
 using util::persistent_object_manager;
@@ -329,7 +329,8 @@ public:
 	/**
 		This is the data structure used to implement the collection.  
 	 */
-	typedef	multikey_set<D, element_type>		collection_type;
+	typedef	typename default_multikey_set<D, element_type>::type
+							collection_type;
 	typedef	typename element_type::key_type		key_type;
 	typedef	typename collection_type::value_type	value_type;
 	typedef	typename parent_type::collection_type_manager_parent_type

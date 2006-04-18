@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.43 2006/04/08 18:53:53 fang Exp $
+#	$Id: Makefile.am,v 1.44 2006/04/18 18:42:47 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -61,6 +61,8 @@ noinst_PROGRAMS = \
 
 noinst_LTLIBRARIES = libfangutil.la libpooled.la \
 	liblinktest.la libbogusutil.la
+
+noinst_HEADERS = multikey_qmap_type_helper.h
 
 # No external libraries! see comment at top of this Makefile.am
 LIBS = 

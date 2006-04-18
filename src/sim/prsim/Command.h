@@ -2,7 +2,7 @@
 	\file "sim/prsim/Command.h"
 	TODO: not only modify simulator state but possibly
 		control interpreter state as well (modes).
-	$Id: Command.h,v 1.5 2006/04/13 19:10:22 fang Exp $
+	$Id: Command.h,v 1.6 2006/04/18 18:42:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_COMMAND_H__
@@ -20,7 +20,7 @@ namespace SIM {
 namespace PRSIM {
 class State;
 using std::string;
-using util::qmap;
+using util::default_qmap;
 using util::string_list;
 using std::string;
 using std::ostream;
@@ -124,9 +124,10 @@ private:
  */
 class CommandRegistry {
 private:
-	typedef	qmap<string, Command>		command_map_type;
+	typedef	default_qmap<string, Command>::type	command_map_type;
 	// consider using never_ptr to guarantee NULL initialization
-	typedef	qmap<string, CommandCategory*>	category_map_type;
+	typedef	default_qmap<string, CommandCategory*>::type
+							category_map_type;
 	typedef	command_map_type::const_iterator	command_iterator;
 	typedef	category_map_type::const_iterator	category_iterator;
 public:
@@ -136,7 +137,7 @@ public:
 		An alias is just a string_list, the key string
 		will expand into the value strings.  
 	 */
-	typedef	qmap<string, string_list>		aliases_map_type;
+	typedef	default_qmap<string, string_list>::type	aliases_map_type;
 	typedef	aliases_map_type::const_iterator	alias_iterator;
 private:
 	static command_map_type		command_map;
@@ -223,7 +224,7 @@ private:
  */
 class CommandCategory {
 private:
-	typedef	qmap<string, Command>		command_map_type;
+	typedef	default_qmap<string, Command>::type	command_map_type;
 	typedef	Command::main_ptr_type		main_ptr_type;
 	typedef	Command::usage_ptr_type		usage_ptr_type;
 	typedef	command_map_type::const_iterator	const_iterator;

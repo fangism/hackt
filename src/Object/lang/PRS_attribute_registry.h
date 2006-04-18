@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.h"
-	$Id: PRS_attribute_registry.h,v 1.4 2006/04/16 18:36:19 fang Exp $
+	$Id: PRS_attribute_registry.h,v 1.5 2006/04/18 18:42:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
@@ -71,7 +71,7 @@ typedef	attribute_visitor_entry<cflat_prs_printer>
 /**
 	The global map type for attributes.
  */
-typedef	util::qmap<string, cflat_attribute_definition_entry>
+typedef	util::default_qmap<string, cflat_attribute_definition_entry>::type
 						cflat_attribute_registry_type;
 
 /**

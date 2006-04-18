@@ -1,7 +1,7 @@
 /**
 	\file "list_vector_pool_test.cc"
 	Test for list-vector based allocator.  
-	$Id: list_vector_pool_test.cc,v 1.10 2006/02/26 02:28:04 fang Exp $
+	$Id: list_vector_pool_test.cc,v 1.11 2006/04/18 18:42:47 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -20,7 +20,7 @@
 #include "util/using_ostream.h"
 using std::string;
 using util::memory::list_vector_pool;
-using util::qmap;
+using util::default_qmap;
 using std::next_permutation;
 
 namespace util {
@@ -31,7 +31,7 @@ namespace util {
 // bogus test class
 class string_manager {
 public:
-	typedef	qmap<int, string*>		string_map_type;
+	typedef	default_qmap<int, string*>::type	string_map_type;
 	typedef list_vector_pool<string>	string_pool_type;
 private:
 	string_pool_type			string_pool;

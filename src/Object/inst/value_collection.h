@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.12 2006/04/13 21:45:06 fang Exp $
+	$Id: value_collection.h,v 1.13 2006/04/18 18:42:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -54,7 +54,7 @@ using std::ostream;
 using std::string;
 using util::memory::count_ptr;	// for experimental pointer classes
 using util::qmap;
-using util::multikey_map;
+using util::default_multikey_map;
 using util::bad_bool;
 using util::good_bool;
 using util::persistent;
@@ -261,7 +261,14 @@ public:
 
 	// later change this to multikey_set or not?
 	/// Type for actual values, including validity and status.
-	typedef	multikey_map<D, pint_value_type, element_type, qmap>
+private:
+	typedef	default_multikey_map<D, pint_value_type, element_type>
+							__helper_map_type;
+	typedef	typename __helper_map_type::template rebind_default_map_type<
+				util::default_qmap>::type
+							qmap_type;
+public:
+	typedef	util::multikey_map<D, pint_value_type, element_type, qmap_type>
 							collection_type;
 	typedef	typename collection_type::key_type	key_type;
 	typedef	typename traits_type::const_collection_type

@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.10 2005/07/20 21:01:00 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.11 2006/04/18 18:42:43 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -14,10 +14,10 @@
 #include "util/array_traits.h"
 #include "util/multidimensional_sparse_set_fwd.h"	// forward declarations
 #include "util/discrete_interval_set.h"
-// includes <map> and <iostream>
-
 #include "util/qmap.h"		// queryable maps
 #include "util/memory/count_ptr.h"
+#include "util/static_assert.h"
+#include "util/type_traits.h"
 
 #define	MULTIDIMENSIONAL_SPARSE_SET_CLASS				\
 multidimensional_sparse_set<D,T,R,L>
@@ -33,7 +33,7 @@ namespace util {
 using std::ostream;
 using std::string;
 using util::discrete_interval_set;
-using util::qmap;
+using util::default_qmap;
 
 //=============================================================================
 // forward declarations in "multidimensional_sparse_set_fwd.h"
@@ -42,7 +42,12 @@ SPECIALIZED_MULTIDIMENSIONAL_SPARSE_SET_TEMPLATE_SIGNATURE
 struct multidimensional_sparse_set_traits {
 	typedef	R				range_type;
 	/** format for a list of ranges to be added, list is also acceptable */
-	typedef	L<range_type>			range_list_type;
+	typedef	L				range_list_type;
+private:
+	typedef	is_same<R, typename range_list_type::value_type>
+						__constraint_type1;
+	UTIL_STATIC_ASSERT_DEPENDENT(__constraint_type1::value);
+public:
 
 	static
 	bool
@@ -89,7 +94,7 @@ protected:
 	typedef multidimensional_sparse_set<D-1,T,R,L>	child_type;
 	/** need count_ptr to be copy-constructable */
 	typedef	memory::count_ptr<child_type>		map_value_type;
-	typedef	qmap<T, map_value_type>			map_type;
+	typedef	typename default_qmap<T, map_value_type>::type	map_type;
 	typedef	multidimensional_sparse_set_traits<T,R,L>	traits_type;
 public:
 	typedef	typename traits_type::range_type	range_type;

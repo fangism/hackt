@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-04-18	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-17:
+	  Major standard conformance updates, tested against gcc-4.2 (pre).
+	  Most affected are the util libraries.  
+
+
 2006-04-13	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-15:

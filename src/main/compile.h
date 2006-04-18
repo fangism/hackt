@@ -1,7 +1,7 @@
 /**
 	\file "main/compile.h"
 	Interface header for compile module.  
-	$Id: compile.h,v 1.5 2006/01/27 08:07:21 fang Exp $
+	$Id: compile.h,v 1.6 2006/04/18 18:42:41 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_COMPILE_H__
@@ -26,7 +26,7 @@ public:
 	typedef	util::good_bool (*options_modifier)(options&);
 private:
 	struct options_modifier_info;
-	typedef	util::qmap<std::string, options_modifier_info>
+	typedef	util::default_qmap<std::string, options_modifier_info>::type
 						options_modifier_map_type;
 	static const options_modifier_map_type	options_modifier_map;
 public:

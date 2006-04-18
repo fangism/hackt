@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.7 2006/04/16 18:36:19 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.8 2006/04/18 18:42:40 fang Exp $
  */
 
 #include <iostream>
@@ -13,16 +13,6 @@
 #include "main/cflat_options.h"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
-
-namespace util {
-//=============================================================================
-// explicit template instantiations
-template class qmap<std::string,
-	HAC::entity::PRS::cflat_attribute_definition_entry>;
-// template cflat_attribute_registry_type;
-
-//=============================================================================
-}	// end namespace util
 
 namespace HAC {
 namespace entity {

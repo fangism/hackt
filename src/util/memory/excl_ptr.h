@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.9 2006/01/22 06:53:43 fang Exp $
+	$Id: excl_ptr.h,v 1.10 2006/04/18 18:42:46 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -410,6 +410,14 @@ public:
 
 // non-member functions
 
+	/**
+		We tentatively disallow rebinding of the allocator policy.
+	 */
+	template <class S>
+	struct rebind {
+		typedef	excl_ptr<S, deallocation_policy>	type;
+	};
+
 };	// end class excl_ptr
 
 //=============================================================================
@@ -549,6 +557,14 @@ template <class _T1, class _T2, class _DA >
 friend
 void
 std::_Construct(sticky_ptr<_T1, _DA>*, const sticky_ptr<_T2, _DA>& );
+
+	/**
+		We tentatively disallow rebinding of the allocator policy.
+	 */
+	template <class S>
+	struct rebind {
+		typedef	sticky_ptr<S, deallocation_policy>	type;
+	};
 
 };	// end class sticky_ptr
 
@@ -766,7 +782,14 @@ WRONG! cannot create an excl_ptr from a never_ptr!!!
 		return pointer_manipulator::compare_pointers_unequal(ptr, p);
 	}
 
-// non-member functions
+	/**
+		We tentatively disallow rebinding of the allocator policy.
+	 */
+	template <class S>
+	struct rebind {
+		typedef	never_ptr<S>		type;
+	};
+
 };	// end class never_ptr
 
 //=============================================================================
@@ -1039,6 +1062,14 @@ public:
 	operator != (const P& p) const {
 		return pointer_manipulator::compare_pointers_unequal(ptr, p);
 	}
+
+	/**
+		We tentatively disallow rebinding of the allocator policy.
+	 */
+	template <class S>
+	struct rebind {
+		typedef	some_ptr<S, deallocation_policy>	type;
+	};
 
 };	// end class some_ptr
 

@@ -1,5 +1,20 @@
 # "src/util/ChangeLog"
 
+2006-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-17:
+	  Checking against g++-4.2 (prerelease) which has removed the
+		undocumented extension of binding template types to 
+		those with greater number of template parameter, with
+		trailing parameters bound to their default arguments.  
+		See http://gcc.gnu.org/gcc-4.2/changes.html
+	  So we've gone through the entire util library and fixed 
+		the affected headers.  
+	  Added a bunch of rebind helpers to the default template wrappers.  
+	  Also some general cleanups of STL fwd. headers.  
+	  Test case sources updated accordingly.  
+
+
 2006-04-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-15:

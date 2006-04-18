@@ -3,7 +3,7 @@
 	Class definitions for arithmetic int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_arith_expr.h,v 1.6 2006/03/20 02:41:04 fang Exp $
+	$Id: int_arith_expr.h,v 1.7 2006/04/18 18:42:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_ARITH_EXPR_H__
@@ -18,7 +18,7 @@
 
 namespace HAC {
 namespace entity {
-using util::qmap;
+using util::default_qmap;
 USING_UTIL_OPERATIONS
 using util::persistent_object_manager;
 //=============================================================================
@@ -45,8 +45,10 @@ public:
         static const modulus<value_type, arg_type>	remainder;
 private:
 	typedef	expr_detail::op_info			op_info;
-	typedef	qmap<char, const op_type*>		op_map_type;
-	typedef	qmap<const op_type*, op_info>		reverse_op_map_type;
+	typedef	default_qmap<char, const op_type*>::type
+							op_map_type;
+	typedef	default_qmap<const op_type*, op_info>::type
+							reverse_op_map_type;
 	static const op_map_type			op_map;
 	static const reverse_op_map_type		reverse_op_map;
 	static const size_t				op_map_size;

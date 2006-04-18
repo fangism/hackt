@@ -1,7 +1,7 @@
 /**
 	\file "util/hash_qmap_fwd.h"
 	Forward declarations for queryable hash_map, defined in "hash_qmap.h"
-	$Id: hash_qmap_fwd.h,v 1.9 2006/03/21 21:53:13 fang Exp $
+	$Id: hash_qmap_fwd.h,v 1.10 2006/04/18 18:42:42 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_QMAP_FWD_H__
@@ -28,6 +28,19 @@ template <class K, class T,
           class E = std::equal_to<K>,
           class A = std::allocator<T> >
 class hash_qmap;
+
+/**
+        Template typedef.  
+ */
+template <class K, class T>
+struct default_hash_qmap {
+	typedef hash_qmap<K, T, HASH_MAP_NAMESPACE::hash<K>,
+		std::equal_to<K>, std::allocator<T> >
+					type;
+
+	template <class K2, class T2>
+	struct rebind : public default_hash_qmap<K2, T2> { };
+};      // end struct default_qmap
 
 }	// end namespace util
 

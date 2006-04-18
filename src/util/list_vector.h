@@ -3,7 +3,7 @@
 	Really long extendable vector implemented as a list of vectors.  
 	Give the abstraction of a continuous array.  
 
-	$Id: list_vector.h,v 1.12 2006/01/22 06:53:33 fang Exp $
+	$Id: list_vector.h,v 1.13 2006/04/18 18:42:42 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_H__
@@ -26,7 +26,7 @@ namespace util {
 using std::list;
 using std::vector;
 using std::ostream;
-using util::qmap;
+using util::default_qmap;
 
 //=============================================================================
 /**
@@ -128,7 +128,8 @@ private:
 		Note that since the key type is size_type, 
 		it cannot be negative, thus 0 is the absolute lowest bound.  
 	 */
-	typedef	qmap<size_type, vector_type*>	vec_map_type;
+	typedef	typename default_qmap<size_type, vector_type*>::type
+							vec_map_type;
 	typedef	typename vec_map_type::iterator		vec_map_iterator;
 	typedef	typename vec_map_type::const_iterator	const_vec_map_iterator;
 private:

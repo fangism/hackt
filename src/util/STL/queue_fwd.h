@@ -2,7 +2,7 @@
 	\file "util/STL/queue_fwd.h"
 	Forward declarations for default queue types.  
 	Also includes a default reverse priority_queue.  
-	$Id: queue_fwd.h,v 1.1 2006/02/05 19:45:09 fang Exp $
+	$Id: queue_fwd.h,v 1.2 2006/04/18 18:42:45 fang Exp $
  */
 
 #ifndef	__UTIL_STL_QUEUE_FWD_H__
@@ -30,6 +30,9 @@ template <typename _Tp>
 struct default_queue {
 	typedef	typename default_deque<_Tp>::type	default_sequence_type;
 	typedef	queue<_Tp, default_sequence_type>	type;
+
+	template <class T2>
+	struct rebind : public default_queue<T2> { };
 };	// end struct default_queue
 
 template <typename, typename, typename>
@@ -48,6 +51,9 @@ struct default_priority_queue {
 							type;
 	typedef	priority_queue<_Tp, default_sequence_type, greater<value_type> >
 							reverse_type;
+
+	template <class T2>
+	struct rebind : public default_priority_queue<T2> { };
 };	// end struct default_priority_queue
 
 }	// end namespace std

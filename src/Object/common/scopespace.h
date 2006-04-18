@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.10 2006/03/21 21:53:11 fang Exp $
+	$Id: scopespace.h,v 1.11 2006/04/18 18:42:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -48,7 +48,7 @@ using parser::qualified_id;
 using util::memory::never_ptr;
 using util::memory::some_ptr;
 using util::memory::excl_ptr;
-using util::qmap;
+using util::default_qmap;
 using util::good_bool;
 using util::bad_bool;
 
@@ -69,7 +69,8 @@ protected:	// typedefs -- keep these here for re-use
 		Aliased namespaces, which are not owned, 
 		cannot be modified.  
 	 */
-	typedef	qmap<string, never_ptr<const name_space> >	alias_map_type;
+	typedef	default_qmap<string, never_ptr<const name_space> >::type
+							alias_map_type;
 
 	/**
 		Container for open namespaces with optional aliases.  
@@ -119,15 +120,20 @@ protected:
 	class bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
 	public:
-		typedef qmap<string, never_ptr<name_space> >
+		typedef default_qmap<string,
+				never_ptr<name_space> >::type
 							ns_bin_type;
-		typedef qmap<string, never_ptr<definition_base> >
+		typedef default_qmap<string,
+				never_ptr<definition_base> >::type
 							def_bin_type;
-		typedef qmap<string, never_ptr<typedef_base> >
+		typedef default_qmap<string,
+				never_ptr<typedef_base> >::type
 							alias_bin_type;
-		typedef qmap<string, never_ptr<instance_collection_base> >
+		typedef default_qmap<string,
+				never_ptr<instance_collection_base> >::type
 							inst_bin_type;
-		typedef qmap<string, never_ptr<param_value_collection> >
+		typedef default_qmap<string,
+				never_ptr<param_value_collection> >::type
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -149,15 +155,20 @@ protected:
 	class const_bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
 	public:
-		typedef qmap<string, never_ptr<const name_space> >
+		typedef default_qmap<string,
+				never_ptr<const name_space> >::type
 							ns_bin_type;
-		typedef qmap<string, never_ptr<const definition_base> >
+		typedef default_qmap<string,
+				never_ptr<const definition_base> >::type
 							def_bin_type;
-		typedef qmap<string, never_ptr<const typedef_base> >
+		typedef default_qmap<string,
+				never_ptr<const typedef_base> >::type
 							alias_bin_type;
-		typedef qmap<string, never_ptr<const instance_collection_base> >
+		typedef default_qmap<string,
+				never_ptr<const instance_collection_base> >::type
 							inst_bin_type;
-		typedef qmap<string, never_ptr<const param_value_collection> >
+		typedef default_qmap<string,
+				never_ptr<const param_value_collection> >::type
 							param_bin_type;
 
 		ns_bin_type		ns_bin;

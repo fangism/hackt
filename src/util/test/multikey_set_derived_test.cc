@@ -1,7 +1,7 @@
 /**
 	\file "multikey_set_derived_test.cc"
 	Test for multikey_set template class, using derived elements.  
-	$Id: multikey_set_derived_test.cc,v 1.4 2006/02/13 02:48:08 fang Exp $
+	$Id: multikey_set_derived_test.cc,v 1.5 2006/04/18 18:42:48 fang Exp $
  */
 
 // always enable assertions for these tests
@@ -21,6 +21,7 @@
 using std::string;
 using util::multikey;
 using util::multikey_set;
+using util::default_multikey_set;
 using util::multikey_set_element_derived;
 using std::ostringstream;
 
@@ -28,12 +29,12 @@ typedef	multikey_set_element_derived<3, int, string>	string_element_3d;
 typedef	multikey_set_element_derived<2, int, string>	string_element_2d;
 typedef	multikey_set_element_derived<1, int, string>	string_element_1d;
 
-typedef	multikey_set<3, string_element_3d>	string_set_3d_type;
-typedef	multikey_set<2, string_element_2d>	string_set_2d_type;
-typedef	multikey_set<1, string_element_1d>	string_set_1d_type;
+typedef	default_multikey_set<3, string_element_3d>::type string_set_3d_type;
+typedef	default_multikey_set<2, string_element_2d>::type string_set_2d_type;
+typedef	default_multikey_set<1, string_element_1d>::type string_set_1d_type;
 
 // explicit instantiation
-template class multikey_set<3, string_element_3d>;
+// template class multikey_set<3, string_element_3d>;
 
 int
 main(int, char*[]) {

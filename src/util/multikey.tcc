@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.11 2006/01/30 20:57:21 fang Exp $
+	$Id: multikey.tcc,v 1.12 2006/04/18 18:42:43 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -14,6 +14,8 @@
 #include <iostream>
 #include <algorithm>		// for transform
 #include <functional>
+#include "util/static_assert.h"
+#include "util/type_traits.h"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_MULTIKEY
 #define	EXTERN_TEMPLATE_UTIL_IO_UTILS
@@ -85,12 +87,14 @@ MULTIKEY_CLASS::multikey(const multikey<D2,K>& k, const K i) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
-template <template <class> class S>
-MULTIKEY_CLASS::multikey(const S<K>& s, const K i) {
+template <class S>
+MULTIKEY_CLASS::multikey(const S& s, const typename S::value_type i) {
+	typedef	is_same<K, typename S::value_type>	__type_constraint1;
+	UTIL_STATIC_ASSERT_DEPENDENT(__type_constraint1::value);
 	const size_t sz = s.size();
 	if (D < sz) {
 		size_t j = 0;
-		typename S<K>::const_iterator iter(s.begin());
+		typename S::const_iterator iter(s.begin());
 		for ( ; j<sz; j++)
 			(*this)[j] = *iter;
 	} else {
@@ -98,46 +102,6 @@ MULTIKEY_CLASS::multikey(const S<K>& s, const K i) {
 		fill(&(*this)[sz-1] +1, this->end(), i);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-	size_t
-	dimensions(void) const { return D; }
-
-	K
-	default_value(void) const { return init; }
-
-	iterator
-	begin(void) { return &indices[0]; }
-
-	const_iterator
-	begin(void) const { return &indices[0]; }
-
-	iterator
-	end(void) { return &indices[D]; }
-
-	const_iterator
-	end(void) const { return &indices[D]; }
-
-	/**
-		Safe indexing with array-bound check.  
-		indices is public, so one can always access it directly...
-	 */
-	reference
-	operator [] (const size_t i) {
-		INVARIANT(i < D);
-		return indices[i];
-	}
-
-	/**
-		Const version of array indexing.  
-	 */
-	const_reference
-	operator [] (const size_t i) const {
-		INVARIANT(i < D);
-		return indices[i];
-	}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 MULTIKEY_TEMPLATE_SIGNATURE
@@ -232,28 +196,6 @@ MULTIKEY_CLASS::accumulate_extremities::operator () (
 		ret.second.begin(), ptr_fun(mymax));
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// inlined in declaration
-
-MULTIKEY_TEMPLATE_SIGNATURE
-template <class T>
-void
-MULTIKEY_CLASS::accumulate_extremities::operator () (
-		const pair<const MULTIKEY_CLASS, T>& p) {
-	this->operator()(p.first);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-MULTIKEY_TEMPLATE_SIGNATURE
-template <class T>
-key_pair
-MULTIKEY_CLASS::accumulate_extremities::operator () (
-		const key_pair& a, const pair<const MULTIKEY_CLASS, T>& p) {
-	return this->operator()(a, p.first);
-}
-#endif
 
 //-----------------------------------------------------------------------------
 #if 0
@@ -504,35 +446,6 @@ MULTIKEY_GENERATOR_CLASS::initialize(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-	size_t
-	size(void) const { return base_type::dimensions(); }
-
-	iterator
-	begin(void) { return base_type::begin(); }
-
-	const_iterator
-	begin(void) const { return base_type::begin(); }
-
-	iterator
-	end(void) { return base_type::end(); }
-
-	const_iterator
-	end(void) const { return base_type::end(); }
-
-	corner_type&
-	get_lower_corner(void) { return lower_corner; }
-
-	const corner_type&
-	get_lower_corner(void) const { return lower_corner; }
-
-	corner_type&
-	get_upper_corner(void) { return upper_corner; }
-
-	const corner_type&
-	get_upper_corner(void) const { return upper_corner; }
-#endif
-
 /**
 	Postfix increment, advances the multikey to the next key in the
 	slice's lexicographical ordering.  

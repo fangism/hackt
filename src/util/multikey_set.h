@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_set.h"
 	Multidimensional set class, using multikey_assoc as base interface. 
-	$Id: multikey_set.h,v 1.3 2005/05/10 04:51:27 fang Exp $
+	$Id: multikey_set.h,v 1.4 2006/04/18 18:42:44 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_SET_H__
@@ -12,6 +12,8 @@
 #include "util/maplikeset.h"
 #include "util/multikey_assoc.h"
 #include "util/multikey.h"
+#include "util/type_traits.h"
+#include "util/static_assert.h"
 
 namespace util {
 //=============================================================================
@@ -24,13 +26,15 @@ namespace util {
 		of multikey (or at least it's interface).
 		The type of object must contain some multidimensional key, 
 		which is defined with StrictWeakOrdering (less).  
-	\param S the underlying set type, like std::set.
+	\param S the underlying set<T> type, like std::set<T>.
  */
 MULTIKEY_SET_TEMPLATE_SIGNATURE
-class multikey_set : public multikey_assoc<D, maplikeset<S<T> > > {
+class multikey_set : public multikey_assoc<D, maplikeset<S> > {
 private:
 	typedef	multikey_set<D, T, S>			this_type;
-	typedef	maplikeset<S<T> >			maplikeset_type;
+	typedef	maplikeset<S>				maplikeset_type;
+	typedef	is_same<T, typename S::value_type>	__type_constraint1;
+	UTIL_STATIC_ASSERT_DEPENDENT(__type_constraint1::value);
 protected:
 	typedef	multikey_assoc<D, maplikeset_type>	set_type;
 	typedef	T					element_type;

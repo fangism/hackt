@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_qmap.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_qmap.h,v 1.12 2005/05/22 06:24:20 fang Exp $
+	$Id: multidimensional_qmap.h,v 1.13 2006/04/18 18:42:43 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -17,6 +17,8 @@
 	// includes <list>
 #include "util/array_traits.h"
 #include "util/qmap.h"
+#include "util/static_assert.h"
+#include "util/type_traits.h"
 
 #define MULTIDIMENSIONAL_QMAP_CLASS	multidimensional_qmap<D,K,T,L>
 
@@ -38,6 +40,7 @@ namespace util {
 using std::pair;
 using std::string;
 using util::qmap;
+using util::default_qmap;
 using std::ostream;
 
 //=============================================================================
@@ -48,11 +51,11 @@ using std::ostream;
 	the first pointing to begin(), the second pointing to the last
 	element, one before end().  
  */
-template <template <class> class L, class T>
+template <class L>
 inline
-pair<typename L<T>::const_iterator, typename L<T>::const_iterator>
-make_iter_range(const L<T>& l) {
-	typename L<T>::const_iterator e = l.end();
+pair<typename L::const_iterator, typename L::const_iterator>
+make_iter_range(const L& l) {
+	typename L::const_iterator e(l.end());
 	e--;
 	return make_pair(l.begin(), e);
 }
@@ -129,11 +132,17 @@ protected:
 	typedef multidimensional_qmap<D-1, K, T, L>	child_type;
 	typedef	child_type				map_value_type;
 public:
-	typedef	L<K>					key_list_type;
+	typedef	L					key_list_type;
+private:
+	typedef	is_same<K, typename key_list_type::value_type>
+							__constraint_type1;
+	UTIL_STATIC_ASSERT_DEPENDENT(__constraint_type1::value);
+public:
 	typedef	typename key_list_type::const_iterator	const_list_iterator;
 	typedef	pair<const_list_iterator, const_list_iterator>
 							index_arg_type;
-	typedef	qmap<K, map_value_type>			map_type;
+	typedef	typename default_qmap<K, map_value_type>::type
+							map_type;
 	typedef	typename map_type::size_type		size_type;
 	typedef	typename map_type::iterator		map_iterator;
 	typedef	typename map_type::const_iterator	const_map_iterator;
@@ -249,11 +258,16 @@ friend class multidimensional_qmap<2,K,T,L>;
 protected:
 	typedef	multidimensional_qmap<1,K,T,L>		this_type;
 public:
-	typedef	L<K>					key_list_type;
+	typedef	L					key_list_type;
+private:
+	typedef	is_same<K, typename key_list_type::value_type>
+							__constraint_type1;
+	UTIL_STATIC_ASSERT_DEPENDENT(__constraint_type1::value);
+public:
 	typedef	typename key_list_type::const_iterator	const_list_iterator;
 	typedef	pair<const_list_iterator, const_list_iterator>
 							index_arg_type;
-	typedef	qmap<K,T>				map_type;
+	typedef	typename default_qmap<K,T>::type	map_type;
 	typedef	typename map_type::size_type		size_type;
 	typedef	typename map_type::iterator		map_iterator;
 	typedef	typename map_type::const_iterator	const_map_iterator;

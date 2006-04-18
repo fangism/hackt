@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.6 2006/04/12 08:53:15 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.7 2006/04/18 18:42:40 fang Exp $
  */
 
 #include <iostream>
@@ -13,19 +13,6 @@
 #include "main/cflat_options.h"
 #include "util/qmap.tcc"
 #include "common/TODO.h"
-
-namespace util {
-//=============================================================================
-// explicit template instantiations
-#if 1
-template class qmap<std::string, HAC::entity::PRS::macro_definition_entry>;
-// template macro_definition_entry
-//	qmap<string, macro_definition_entry>::operator[](const string&) const;
-#else
-template macro_registry_type;
-#endif
-//=============================================================================
-}	// end namespace util
 
 namespace HAC {
 namespace entity {

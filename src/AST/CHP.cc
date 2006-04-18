@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.4 2006/03/20 02:41:03 fang Exp $
+	$Id: CHP.cc,v 1.5 2006/04/18 18:42:37 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -259,7 +259,8 @@ body::check_build(context& c) const {
 		while (loop_iter != e) {
 			const const_checked_iterator start(loop_iter);
 			loop_iter = find_if(loop_iter, e, 
-				entity::CHP::do_forever_loop::detector<count_ptr>());
+				entity::CHP::do_forever_loop::detector<
+					const_checked_iterator::value_type>());
 			if (loop_iter != e) loop_iter++;
 			// need if-guard, else will loop infintely!
 			if (distance(start, loop_iter) == 1) {
