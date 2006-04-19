@@ -1,0 +1,14 @@
+// "celem-share.hac"
+// just a pair of C-elements sharing same output node
+
+defproc celem(bool a, b, c) {
+prs {
+	a & b	-> c-
+	~a & ~b	-> c+
+}
+}
+
+bool a, b, c, d, e;
+celem	C(a, b, e),
+	D(c, d, e);
+

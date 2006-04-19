@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.6 2006/04/13 19:10:21 fang Exp $
+	$Id: Command.cc,v 1.6.2.1 2006/04/19 05:03:41 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1912,7 +1912,7 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.norandom();
+	s.norandom();		// is this "uniform" or "after"
 	return Command::NORMAL;
 }
 }
@@ -1920,6 +1920,35 @@ if (a.size() != 1) {
 void
 NoRandom::usage(ostream& o) {
 	o << "norandom";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 
+	"set timings modes")
+
+int
+Timing::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	s.dump_timing(cout);
+	return Command::NORMAL;
+} else {
+	string_list b(a);
+	b.pop_front();
+	const string m(b.front());
+	b.pop_front();
+	if (s.set_timing(m, b)) {
+		usage(cerr);
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+Timing::usage(ostream& o) {
+	o << "timing [mode [args]]" << endl;
+	o << "if no mode is given, just reports the current mode." << endl;
+	State::help_timing(o);
 }
 
 //=============================================================================

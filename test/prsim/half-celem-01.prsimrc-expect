@@ -1,6 +1,6 @@
 Fanins of node `c':
-~a & ~b -> c+
-a -> c-
+[after 10]	~a & ~b -> c+
+[after 10]	a -> c-
 	0	b : 1
 	0	a : 1
 	10	c : 0

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.6.2.1 2006/04/18 05:57:23 fang Exp $
+	$Id: State.cc,v 1.6.2.2 2006/04/19 05:03:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -15,6 +15,7 @@
 #include "sim/prsim/State.h"
 #include "sim/prsim/ExprAlloc.h"
 #include "sim/prsim/Event.tcc"
+#include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
@@ -81,6 +82,7 @@ State::State(const entity::module& m) :
 		exclhi_queue(), excllo_queue(), 
 		pending_queue(), 
 		current_time(0), 
+		uniform_delay(delay_policy<time_type>::default_delay), 
 		watch_list(), 
 		flags(FLAGS_DEFAULT),
 		timing_mode(TIMING_DEFAULT),
@@ -311,15 +313,26 @@ State::check_expr(const expr_index_type i) const {
 	Should be inline only.  
 	\param n the reference to the node.
 	\param ni the referenced node's index.
+	\param ri the index rule/expression that caused this event to fire.
 	\param val the future value of the node.
 	\pre n must not already have a pending event.
 	\pre n must be the node corresponding to node index ni
  */
 event_index_type
 State::__allocate_event(node_type& n,
-		const node_index_type ni, const char val) {
+		const node_index_type ni,
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		const rule_index_type ri,
+#endif
+		const char val) {
 	INVARIANT(!n.pending_event());
-	n.set_event(event_pool.allocate(event_type(ni, val)));
+	n.set_event(event_pool.allocate(
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		event_type(ni, ri, val)
+#else
+		event_type(ni, val)
+#endif
+		));
 	return n.get_event();
 }
 
@@ -464,7 +477,12 @@ State::set_node_time(const node_index_type ni, const char val,
 		return ENQUEUE_WARNING;
 	}
 // otherwise, enqueue the event.  
-	const event_index_type ei = __allocate_event(n, ni, val);
+	const event_index_type ei =
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		__allocate_event(n, ni, INVALID_RULE_INDEX, val);
+#else
+		__allocate_event(n, ni, val);
+#endif
 #if 0
 	const event_type& e(get_event(ei));
 	STACKTRACE_INDENT << "new event: (node,val)" << endl;
@@ -502,6 +520,58 @@ State::clear_all_breakpoints(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_timing(ostream& o) const {
+	o << "timing: ";
+switch (timing_mode) {
+	case TIMING_RANDOM:	o << "random";	break;
+	case TIMING_UNIFORM:
+		o << "uniform (" << delay_policy<time_type>::default_delay
+			<< ")";
+		break;
+	case TIMING_AFTER:	o << "after";	break;
+	default:		o << "unknown";
+}
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if there is a syntax error.  
+	TODO: use a map to parsers.  
+	TODO: use random seed.  
+ */
+bool
+State::set_timing(const string& m, const string_list& a) {
+	static const string __random("random");
+	static const string __uniform("uniform");
+	static const string __after("after");
+	if (m == __random) {
+		timing_mode = TIMING_RANDOM;
+		// TODO: use random seed
+		return (a.size() > 1);
+	} else if (m == __uniform) {
+		timing_mode = TIMING_UNIFORM;
+		// TODO: use delay argument
+		return (a.size() > 1);
+	} else if (m == __after) {
+		timing_mode = TIMING_AFTER;
+		return a.size();
+	} else {
+		return true;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::help_timing(ostream& o) {
+	o << "available timing modes:" << endl;
+	o << "\trandom [seed]" << endl;
+	o << "\tuniform [delay]" << endl;
+	o << "\tafter" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 State::time_type
 State::random_delay(void) {
 	typedef	random_time<random_time_limit<time_type>::type>
@@ -519,9 +589,14 @@ State::time_type
 State::get_delay_up(const event_type& e) const {
 	return current_time +
 		(timing_mode == TIMING_RANDOM ? random_delay() :
-		(timing_mode == TIMING_UNIFORM ? time_type(10) :
+		(timing_mode == TIMING_UNIFORM ? uniform_delay :
 		// timing_mode == TIMING_AFTER
-			time_type(10)
+#if ENABLE_PRSIM_CAUSE_TRACKING
+			(e.cause_rule ?
+				rule_map.find(e.cause_rule)->second.after : 0)
+#else
+			delay_policy<time_type>::default_delay
+#endif
 		));
 }
 
@@ -534,9 +609,14 @@ State::time_type
 State::get_delay_dn(const event_type& e) const {
 	return current_time +
 		(timing_mode == TIMING_RANDOM ? random_delay() :
-		(timing_mode == TIMING_UNIFORM ? time_type(10) :
+		(timing_mode == TIMING_UNIFORM ? uniform_delay :
 		// timing_mode == TIMING_AFTER
-			time_type(10)
+#if ENABLE_PRSIM_CAUSE_TRACKING
+			(e.cause_rule ?
+				rule_map.find(e.cause_rule)->second.after : 0)
+#else
+			delay_policy<time_type>::default_delay
+#endif
 		));
 }
 
@@ -788,8 +868,18 @@ for ( ; i!=e; ++i) {
 				expr_pool[er.pull_up_index].pull_state()
 					== expr_type::PULL_ON) {
 				const event_index_type ne =
+#if ENABLE_PRSIM_CAUSE_TRACKING
+					// the pull-up index may not necessarily
+					// correspond to the causing expression!
+					__allocate_event(er, eri,
+						// not sure...
+						// er.pull_up_index, 
+						INVALID_RULE_INDEX, 
+						node_type::LOGIC_HIGH);
+#else
 					__allocate_event(er, eri,
 						node_type::LOGIC_HIGH);
+#endif
 				// ne->cause = ni
 				enqueue_exclhi(get_delay_up(get_event(ne)), ne);
 			}
@@ -839,8 +929,16 @@ for ( ; i!=e; ++i) {
 				expr_pool[er.pull_dn_index].pull_state()
 					== expr_type::PULL_ON) {
 				const event_index_type ne =
+#if ENABLE_PRSIM_CAUSE_TRACKING
+					// same comment as enforce_exclhi
+					__allocate_event(er, eri,
+						// er.pull_dn_index, 
+						INVALID_RULE_INDEX,
+						node_type::LOGIC_LOW);
+#else
 					__allocate_event(er, eri,
 						node_type::LOGIC_LOW);
+#endif
 				// ne->cause = ni
 				enqueue_excllo(get_delay_dn(get_event(ne)), ne);
 			}
@@ -972,9 +1070,18 @@ State::propagate_evaluation(const node_index_type ni, expr_index_type ui,
 		node_type::value_to_char[size_t(next)] << endl;
 #endif
 	expr_type* u;
+#if ENABLE_PRSIM_CAUSE_TRACKING
+	rule_index_type root_rule = INVALID_RULE_INDEX;
+#endif
 do {
 	char old_pull, new_pull;	// pulling state of the subexpression
 	u = &expr_pool[ui];
+#if ENABLE_PRSIM_CAUSE_TRACKING
+	if (rule_map.find(ui) != rule_map.end()) {
+		INVARIANT(!root_rule);
+		root_rule = ui;
+	}
+#endif
 #if DEBUG_STEP
 	STACKTRACE_INDENT << "examining expression ID: " << ui << endl;
 	u->dump_struct(STACKTRACE_INDENT) << endl;
@@ -1008,25 +1115,14 @@ do {
 #endif
 		return;
 	}
-#if 0
-	// whether we're inverting the result (e.g. NOT, NAND, NOR)
-	if (u->is_not()) {
-#if DEBUG_STEP
-		STACKTRACE_INDENT << "negated..." << endl;
-#endif
-		prev = node_type::invert_value[size_t(old_pull)];
-		next = node_type::invert_value[size_t(new_pull)];
-	} else {
-		prev = old_pull;
-		next = new_pull;
-	}
-#else
 	// already accounted for negation in pull_state()
 	prev = old_pull;
 	next = new_pull;
-#endif
 	ui = u->parent;
 } while (!u->is_root());
+#if ENABLE_PRSIM_CAUSE_TRACKING
+	INVARIANT(root_rule);
+#endif
 // propagation made it to the root node, indexed by ui (now node_index_type)
 	node_type& n(get_node(ui));
 #if DEBUG_STEP
@@ -1054,7 +1150,12 @@ if (!n.pending_event()) {
 #if DEBUG_STEP
 		STACKTRACE_INDENT << "pulling up (on or weak)" << endl;
 #endif
-		const event_index_type pe = __allocate_event(n, ui, next);
+		const event_index_type pe =
+#if ENABLE_PRSIM_CAUSE_TRACKING
+			__allocate_event(n, ui, root_rule, next);
+#else
+			__allocate_event(n, ui, next);
+#endif
 		const event_type& e(get_event(pe));
 		// pe->cause = root
 		if (n.has_exclhi()) {
@@ -1083,7 +1184,11 @@ if (!n.pending_event()) {
 			<< endl;
 #endif
 		const event_index_type pe =
+#if ENABLE_PRSIM_CAUSE_TRACKING
+			__allocate_event(n, ui, root_rule, node_type::LOGIC_LOW);
+#else
 			__allocate_event(n, ui, node_type::LOGIC_LOW);
+#endif
 		// pe->cause = root
 		if (n.has_excllo()) {
 			const event_type& e(get_event(pe));
@@ -1178,6 +1283,9 @@ if (!n.pending_event()) {
 		STACKTRACE_INDENT << "pulling down (on or weak)" << endl;
 #endif
 		const event_index_type pe = __allocate_event(n, ui,
+#if ENABLE_PRSIM_CAUSE_TRACKING
+			root_rule, 
+#endif
 			node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
@@ -1207,7 +1315,11 @@ if (!n.pending_event()) {
 			<< endl;
 #endif
 		const event_index_type pe =
+#if ENABLE_PRSIM_CAUSE_TRACKING
+			__allocate_event(n, ui, root_rule, node_type::LOGIC_HIGH);
+#else
 			__allocate_event(n, ui, node_type::LOGIC_HIGH);
+#endif
 		// pe->cause = root
 		if (n.has_exclhi()) {
 			const event_type& e(get_event(pe));
@@ -1627,6 +1739,15 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	// can elaborate more on when parens are needed
 	const bool need_parens = e.parenthesize(ptype);
 	const char _type = e.to_prs_enum();
+	// check if this sub-expression is a root expression by looking
+	// up the expression index in the rule_map.  
+	typedef	rule_map_type::const_iterator	rule_iterator;
+	const rule_iterator ri(rule_map.find(ei));
+	const bool is_rule (ri != rule_map.end());
+	if (is_rule) {
+		// then we can print out its attributes
+		ri->second.dump(o << '[') << "]\t";
+	}
 	if (e.is_not()) {
 		o << '~';
 	}
@@ -1648,6 +1769,11 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 		if (ci->first) {
 			o << get_node_canonical_name(ci->second);
 		} else {
+			if (e.is_or() &&
+				rule_map.find(ci->second) != rule_map.end()) {
+				// to place each 'rule' on its own line
+				o << endl;
+			}
 			dump_subexpr(o, ci->second, _type);
 		}
 	}

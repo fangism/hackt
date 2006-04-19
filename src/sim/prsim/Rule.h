@@ -1,16 +1,18 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.1.2.1 2006/04/18 05:57:23 fang Exp $
+	$Id: Rule.h,v 1.1.2.2 2006/04/19 05:03:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
 #define	__HAC_SIM_PRSIM_RULE_H__
 
+#include <iosfwd>
 #include "sim/time.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using std::ostream;
 
 //-----------------------------------------------------------------------------
 /**
@@ -37,6 +39,9 @@ public:
 	Rule() : after(delay_policy<time_type>::default_delay), 
 		rule_flags(RULE_DEFAULT_FLAGS) { }
 
+	bool
+	is_weak(void) const { return this->rule_flags & RULE_WEAK; }
+
 	void
 	set_weak(void) { this->rule_flags |= RULE_WEAK; }
 
@@ -45,6 +50,9 @@ public:
 
 	void
 	set_delay(const time_type t) { this->after = t; }
+
+	ostream&
+	dump(ostream&) const;
 
 };	// end struct Rule
 

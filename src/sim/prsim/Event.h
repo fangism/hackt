@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.3 2006/04/03 05:30:36 fang Exp $
+	$Id: Event.h,v 1.3.6.1 2006/04/19 05:03:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -11,10 +11,11 @@
 #include <queue>
 #include <vector>
 #include "sim/common.h"
-// #include "sim/time.h"
+#include "util/likely.h"
 #include "util/macros.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
+#include "sim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
@@ -51,15 +52,38 @@ public:
 		The index of the node to switch.
 	 */
 	node_index_type			node;
+#if ENABLE_PRSIM_CAUSE_TRACKING
+	/**
+		The index of the rule expression that caused this to fire, 
+		also the source of the delay value.  
+	 */
+	rule_index_type			cause_rule;
+#endif
 	/**
 		The node's new value: 0, 1, 2 (X).
 	 */
 	unsigned char			val;
 
-	Event() : node(INVALID_NODE_INDEX) { }
+	Event() : node(INVALID_NODE_INDEX)
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		, cause_rule(INVALID_RULE_INDEX)
+#endif
+		{ }
 
-	Event(const node_index_type n, const unsigned char v) :
-		node(n), val(v) { }
+	/**
+		The rule index is allowed to be NULL (invalid), 
+		to indicate an external (perhaps user) cause.  
+	 */
+	Event(const node_index_type n,
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		const rule_index_type r, 
+#endif
+		const unsigned char v) :
+		node(n),
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		cause_rule(r),
+#endif
+		val(v) { }
 
 };	// end struct Event
 
@@ -126,23 +150,9 @@ public:
 		return event_pool[i];
 	}
 
-#if 0
-	event_index_type
-	allocate(void) {
-		if (free_indices.empty()) {	// UNLIKELY
-			const event_index_type ret = event_pool.size();
-			event_pool.allocate();	// will realloc
-			INVARIANT(ret);
-			return ret;
-		} else {			// LIKELY
-			return free_list_acquire(free_indices);
-		}
-	}
-#endif
-
 	event_index_type
 	allocate(const event_type& e) {
-		if (free_indices.empty()) {	// UNLIKELY
+		if (UNLIKELY(free_indices.empty())) {	// UNLIKELY
 			const event_index_type ret = event_pool.size();
 			event_pool.allocate(e);	// will realloc
 			INVARIANT(ret);

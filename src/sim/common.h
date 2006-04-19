@@ -1,7 +1,7 @@
 /**
 	\file "sim/common.h"
 	Definitions useful for ALL simulations.  
-	$Id: common.h,v 1.3 2006/04/03 05:30:35 fang Exp $
+	$Id: common.h,v 1.3.6.1 2006/04/19 05:03:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_COMMON_H__
@@ -14,17 +14,23 @@ namespace SIM {
 //=============================================================================
 /**
 	This is the integer type used to identify unique objects.  
+	This may change depending on native machine integer size!
  */
 typedef	size_t		index_type;
 typedef	index_type	node_index_type;
 typedef	index_type	expr_index_type;
 typedef	index_type	event_index_type;
+/**
+	The set of rules is just a subset of the set of expressions.  
+ */
+typedef	expr_index_type	rule_index_type;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 enum {
 	INVALID_NODE_INDEX = 0,
 	INVALID_EXPR_INDEX = 0,
-	INVALID_EVENT_INDEX = 0
+	INVALID_EVENT_INDEX = 0,
+	INVALID_RULE_INDEX = INVALID_EXPR_INDEX
 };
 
 //-----------------------------------------------------------------------------

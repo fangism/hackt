@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-03:
+	  Provisional implementation of rule-cause tracking, to trace which
+		rule fired for the purpose of using per-rule attribute info.
+		Currently enabled by ENABLE_PRSIM_CAUSE_TRACKING flag
+		in "sim/devel_switches.h" (new).
+	  prsim: new 'timing' command to replace 'random'/'norandom'.
+		There are two non-random modes: uniform and after.
+		'uniform' is useful for transition counts,
+		'after' is useful for delay estimation, more to come...
+	  TODO: timing mode test cases, use of after-delay rule attributes.
+	  TODO: test for new invariants involving rule-cause assignment.  
+
+
 2006-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-16-prsim-03-02:

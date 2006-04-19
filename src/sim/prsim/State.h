@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.4.2.1 2006/04/18 05:57:24 fang Exp $
+	$Id: State.h,v 1.4.2.2 2006/04/19 05:03:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -19,6 +19,7 @@
 #include "util/string_fwd.h"
 #include "util/list_vector.h"
 #include "util/named_ifstream_manager.h"
+#include "util/tokenize_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -33,6 +34,7 @@ using entity::module;
 using util::list_vector;
 using std::ostream;
 using util::ifstream_manager;
+using util::string_list;
 using HASH_MAP_NAMESPACE::hash_map;
 //=============================================================================
 /**
@@ -165,7 +167,7 @@ private:
 		TIMING_AFTER = 0,
 		/**
 			Uses delay 10 units for all events, 
-			(except on speically marked rules).
+			(except on specially marked rules).
 		 */
 		TIMING_UNIFORM = 1,
 		/**
@@ -216,6 +218,7 @@ private:
 	pending_queue_type			pending_queue;
 	// current time, etc...
 	time_type				current_time;
+	time_type				uniform_delay;
 	// watched nodes
 	watch_list_type				watch_list;
 	// vectors
@@ -314,6 +317,16 @@ public:
 
 	const time_type&
 	time(void) const { return current_time; }
+
+	ostream&
+	dump_timing(ostream&) const;
+
+	bool
+	set_timing(const string&, const string_list&);
+
+	static
+	ostream&
+	help_timing(ostream&);
 
 	void
 	randomize(void) { timing_mode = TIMING_RANDOM; }
@@ -433,7 +446,11 @@ public:
 
 private:
 	event_index_type
-	__allocate_event(node_type&, const node_index_type, const char);
+	__allocate_event(node_type&, const node_index_type,
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		const rule_index_type, 
+#endif
+		const char);
 
 	void
 	__deallocate_event(node_type&, const event_index_type);
