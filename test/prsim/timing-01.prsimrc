@@ -1,0 +1,47 @@
+# "timing-01.prsimrc"
+#	$Id: timing-01.prsimrc,v 1.1.2.1 2006/04/19 20:23:38 fang Exp $
+# @haco@ inv.haco-a
+# testing timing commands
+# note: not using random/norandom anymore
+
+watchall
+help timing
+timing
+
+set a 1
+cycle
+
+echo timing random
+timing random
+timing
+
+echo timing after
+timing after
+timing
+
+set a 0
+cycle
+
+echo timing uniform
+timing uniform
+timing
+
+# echo invalid args:
+# timing after 20
+# timing
+
+set a 1
+cycle
+
+echo timing uniform
+timing uniform 30
+timing
+
+set a 0
+cycle
+
+echo timing random
+timing random
+timing
+
+

@@ -1,0 +1,32 @@
+# "after-celem-base.prsimrc"
+#	$Id: after-celem-base.prsimrc,v 1.1.2.1 2006/04/19 20:23:37 fang Exp $
+# @haco@ after-celem.haco-a
+# testing different delays on rules
+
+# this script should run silently by itself
+# This is called by other scripts
+
+# exercising ~a & ~b
+set a 0
+set b 0
+set c 0
+set d 1
+cycle
+
+# exercising c & d
+set b 1
+cycle
+set c 1
+cycle
+
+# exercising ~c & ~d
+set c 0
+set d 0
+cycle
+
+# exercising a & b
+set c 1
+cycle
+set a 1
+cycle
+

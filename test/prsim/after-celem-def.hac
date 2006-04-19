@@ -1,0 +1,11 @@
+// "after-celem-def.hac"
+// just a single C-element, parameterized by delay
+
+template <pint D>
+defproc after_celem(bool a, b, c) {
+prs {
+[after=2*D]	a & b	-> c-
+[after=3*D]	~a & ~b	-> c+
+}
+}
+

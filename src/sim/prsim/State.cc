@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.6.2.2 2006/04/19 05:03:42 fang Exp $
+	$Id: State.cc,v 1.6.2.3 2006/04/19 20:23:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -31,6 +31,7 @@
 #include "util/memory/index_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/likely.h"
+#include "util/string.tcc"
 
 namespace HAC {
 namespace entity { }
@@ -41,6 +42,7 @@ using std::string;
 using std::ostringstream;
 using std::for_each;
 using std::mem_fun_ref;
+using util::strings::string_to_num;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -187,6 +189,7 @@ State::initialize(void) {
 	Resets the state of simulation, as if it had just started up.  
 	Preserve the watch/break point state.
 	\pre expressions are already properly sized.  
+	TODO: this unfortunately still preserves interpreter aliases.  
  */
 void
 State::reset(void) {
@@ -201,7 +204,8 @@ State::reset(void) {
 	}
 	flags = FLAGS_DEFAULT;
 	timing_mode = TIMING_DEFAULT;
-	// unwatchall()? no, preserved
+	unwatch_all_nodes();
+	uniform_delay = delay_policy<time_type>::default_delay;
 	current_time = 0;
 }
 
@@ -526,8 +530,7 @@ State::dump_timing(ostream& o) const {
 switch (timing_mode) {
 	case TIMING_RANDOM:	o << "random";	break;
 	case TIMING_UNIFORM:
-		o << "uniform (" << delay_policy<time_type>::default_delay
-			<< ")";
+		o << "uniform (" << uniform_delay << ")";
 		break;
 	case TIMING_AFTER:	o << "after";	break;
 	default:		o << "unknown";
@@ -549,11 +552,23 @@ State::set_timing(const string& m, const string_list& a) {
 	if (m == __random) {
 		timing_mode = TIMING_RANDOM;
 		// TODO: use random seed
-		return (a.size() > 1);
+		switch (a.size()) {
+		case 0:	return false;
+		case 1:	FINISH_ME(Fang);
+			cerr << "TODO: plant random seed." << endl;
+			return false;
+		default:	return true;
+		}
 	} else if (m == __uniform) {
 		timing_mode = TIMING_UNIFORM;
-		// TODO: use delay argument
-		return (a.size() > 1);
+		switch (a.size()) {
+		case 0: return false;
+		case 1: {
+			return string_to_num(a.front(), uniform_delay);
+		}
+		default:
+			return true;
+		}
 	} else if (m == __after) {
 		timing_mode = TIMING_AFTER;
 		return a.size();

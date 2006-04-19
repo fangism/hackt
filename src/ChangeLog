@@ -5,6 +5,15 @@
 
 2006-04-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-16-prsim-03-04:
+	  Tiny changes, mostly adding of new tests in test/prsim.  
+	  prsim: 'random' and 'norandom' are deprecated and give warnings.  
+	  updated State::reset() to unwatchall nodes.  
+	  'timing uniform' now uses optional argument.  
+
+
+2006-04-19	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-16-prsim-03-03:
 	  Provisional implementation of rule-cause tracking, to trace which
 		rule fired for the purpose of using per-rule attribute info.

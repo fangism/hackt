@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.6.2.1 2006/04/19 05:03:41 fang Exp $
+	$Id: Command.cc,v 1.6.2.2 2006/04/19 20:23:34 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -33,6 +33,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/tokenize.h"
 #include "util/attributes.h"
+
+/**
+	These commands are deprecated, but provided for backwards compatibility.
+ */
+#define	WANT_OLD_RANDOM_COMMANDS			1
 
 namespace HAC {
 namespace SIM {
@@ -1883,11 +1888,14 @@ NoWatchAll::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
+#if WANT_OLD_RANDOM_COMMANDS
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Random, "random", modes, 
 	"use random delays")
 
 int
 Random::main(State& s, const string_list& a) {
+cerr << "WARNING: this command is deprecated, use \"timing random\" instead."
+	<< endl;
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1908,6 +1916,8 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoRandom, "norandom", modes,
 
 int
 NoRandom::main(State& s, const string_list& a) {
+cerr << "WARNING: this command is deprecated, use \"timing ...\" instead."
+	<< endl;
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1921,6 +1931,8 @@ void
 NoRandom::usage(ostream& o) {
 	o << "norandom";
 }
+
+#endif	// WANT_OLD_RANDOM_COMMANDS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 
