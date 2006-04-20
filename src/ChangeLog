@@ -5,6 +5,23 @@
 
 2006-04-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-16-prsim-03-05:
+	  Factored out tool-independent portions of PRS-macro and 
+		SPEC-registry code into lang/PRS_macro_common.{h,cc}
+		and lang/SPEC_common.{h,cc}, respectively.  
+		Mostly affected are the checking functions associated
+		with each directive, for sake of consistency.  
+	  Templated definition of macro and spec definition entries, 
+		to facilitate re-use with other tools and passes.  
+	  Next: finish defining tool directives for ExprAlloc.cc
+	  TODO: tool name disambiguation, 
+		e.g. cflat, perhaps after trunk merge.  
+	  TODO: universal macro name registry? to call checks
+		using through tool-independent interface.  
+
+
+2006-04-19	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-16-prsim-03-04:
 	  Tiny changes, mostly adding of new tests in test/prsim.  
 	  prsim: 'random' and 'norandom' are deprecated and give warnings.  

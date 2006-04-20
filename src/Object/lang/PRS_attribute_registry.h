@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.h"
-	$Id: PRS_attribute_registry.h,v 1.4.2.1 2006/04/18 05:57:22 fang Exp $
+	$Id: PRS_attribute_registry.h,v 1.4.2.2 2006/04/20 03:34:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
@@ -66,6 +66,8 @@ public:
 };	// end attribute_visitor_entry
 
 //=============================================================================
+// TODO: factor these tool-dependent typedefs out to another header
+
 typedef	attribute_visitor_entry<cflat_prs_printer>
 					cflat_attribute_definition_entry;
 /**

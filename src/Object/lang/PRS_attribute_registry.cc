@@ -1,8 +1,11 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.7.2.1 2006/04/18 05:57:21 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.7.2.2 2006/04/20 03:34:49 fang Exp $
  */
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include "Object/lang/PRS_attribute_registry.h"
@@ -148,4 +151,6 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 }	// end namespace PRS
 }	// end namespace entity
 }	// end namespace HAC
+
+DEFAULT_STATIC_TRACE_END
 

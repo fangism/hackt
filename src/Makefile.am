@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.115.2.3 2006/04/19 05:03:37 fang Exp $
+#	$Id: Makefile.am,v 1.115.2.4 2006/04/20 03:34:45 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -253,9 +253,11 @@ OBJECT_CC_FILES = \
 	Object/lang/PRS_footprint.cc \
 	Object/lang/PRS_attribute_common.cc \
 	Object/lang/PRS_attribute_registry.cc \
+	Object/lang/PRS_macro_common.cc \
 	Object/lang/PRS_macro_registry.cc \
 	Object/lang/CHP.cc \
 	Object/lang/SPEC.cc \
+	Object/lang/SPEC_common.cc \
 	Object/lang/SPEC_footprint.cc \
 	Object/lang/SPEC_registry.cc
 
@@ -308,6 +310,8 @@ OBJECT_TCC_FILES = \
 	Object/unroll/instantiation_statement.tcc \
 	Object/unroll/port_connection.tcc \
 	Object/unroll/unroll_context.tcc \
+	Object/lang/PRS_macro_registry.tcc \
+	Object/lang/SPEC_registry.tcc \
 	Object/module.tcc \
 	Object/global_entry.tcc \
 	Object/common/namespace.tcc \

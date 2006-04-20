@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.9.2.1 2006/04/17 03:04:08 fang Exp $
+	$Id: cflat_printer.cc,v 1.9.2.2 2006/04/20 03:34:52 fang Exp $
  */
 
 #include <iostream>
@@ -198,7 +198,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
  */
 void
 cflat_prs_printer::visit(const footprint_macro& m) {
-	const macro_definition_entry& d(macro_registry[m.name]);
+	const cflat_macro_definition_entry& d(cflat_macro_registry[m.name]);
 	INVARIANT(d);		// was already checked during unroll
 	if (!d.check_param_args(m.params).good
 			|| !d.check_node_args(m.nodes).good) {
@@ -213,7 +213,8 @@ cflat_prs_printer::visit(const footprint_macro& m) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
-	const SPEC::spec_definition_entry& s(SPEC::spec_registry[d.name]);
+	const SPEC::cflat_spec_definition_entry&
+		s(SPEC::cflat_spec_registry[d.name]);
 	INVARIANT(s);		// was already checked during unroll
 	if (!s.check_param_args(d.params).good
 			|| !s.check_node_args(d.nodes).good) {

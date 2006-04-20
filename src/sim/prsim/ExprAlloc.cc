@@ -1,9 +1,12 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.6.2.2 2006/04/18 05:57:23 fang Exp $
+	$Id: ExprAlloc.cc,v 1.6.2.3 2006/04/20 03:34:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include "sim/prsim/ExprAlloc.h"
@@ -14,6 +17,7 @@
 #include "Object/lang/PRS_footprint_expr.h"
 #include "Object/lang/PRS_attribute_common.h"
 #include "Object/lang/PRS_attribute_registry.h"
+#include "Object/lang/PRS_macro_common.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
 #include "Object/traits/classification_tags.h"
@@ -65,8 +69,7 @@ register_ExprAlloc_attribute_class(void) {
 	}
 	m = ExprAlloc_attribute_definition_entry(k, &T::main, &T::check_vals);
 	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n
-		__ATTRIBUTE_UNUSED_CTOR__((__init_registry[k]));
+	const mapped_type& n __ATTRIBUTE_UNUSED_CTOR__((__init_registry[k]));
 	INVARIANT(n);
 	return ExprAlloc_attribute_registry.size();
 }
@@ -341,13 +344,12 @@ ExprAlloc::link_node_to_root_expr(Node& output, const node_index_type ni,
 }	// end ExprAlloc::link_node_to_root_expr(...)
 
 //=============================================================================
-
 /**
 	Macro for declaring attribute classes.  
 	Here, the vistor_type is prsim's ExprAlloc.
 	NOTE: these classes should have hidden visibility.  
  */
-#define DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS(class_name, att_name)	\
+#define DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(class_name, att_name) \
 struct class_name : public entity::PRS::rule_attributes::class_name {	\
 	typedef	entity::PRS::rule_attributes::class_name parent_type;	\
 	typedef	ExprAlloc_attribute_definition_entry	entry_type;	\
@@ -374,7 +376,7 @@ const size_t class_name::id = register_ExprAlloc_attribute_class<class_name>();
  */
 namespace prsim_rule_attributes {
 
-DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS(After, "after")
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(After, "after")
 
 /**
 	Delay values real or floating or both?
@@ -392,7 +394,7 @@ After::main(visitor_type& v, const values_type& a) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS(Weak, "weak")
+DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS(Weak, "weak")
 
 /**
 	Sets or clears weak flag on a rule.  
@@ -413,10 +415,21 @@ Weak::main(visitor_type& v, const values_type& a) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 }	// end namespace prsim_rule_attributes
 
-#undef	DECLARE_PRSIM_RULE_ATTRIBUTE_CLASS
+#undef	DECLARE_AND_DEFINE_PRSIM_RULE_ATTRIBUTE_CLASS
+
+//=============================================================================
+
+/**
+	Namespace for macro implementations specific to prsim.  
+ */
+namespace prsim_macros {
+
+}	// end namespace prsim_macros
 
 //=============================================================================
 }	// end namespace PRSIM
 }	// end namespace SIM
 }	// end namespace HAC
+
+DEFAULT_STATIC_TRACE_END
 

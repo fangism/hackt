@@ -1,6 +1,6 @@
 /**
 	\file "AST/SPEC.cc"
-	$Id: SPEC.cc,v 1.5 2006/04/12 08:53:11 fang Exp $
+	$Id: SPEC.cc,v 1.5.2.1 2006/04/20 03:34:48 fang Exp $
  */
 
 #include <iostream>
@@ -70,8 +70,8 @@ directive::rightmost(void) const { return args->rightmost(); }
  */
 directive::return_type
 directive::check_spec(context& c) const {
-	const entity::SPEC::spec_definition_entry
-		sde(entity::SPEC::spec_registry[*name]);
+	const entity::SPEC::cflat_spec_definition_entry
+		sde(entity::SPEC::cflat_spec_registry[*name]);
 	if (!sde) {
 		cerr << "Error: unrecognized spec directive \"" << *name <<
 			"\" at " << where(*name) << endl;
