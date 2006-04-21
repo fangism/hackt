@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_registry.h"
-	$Id: SPEC_registry.h,v 1.3.18.1 2006/04/20 03:34:52 fang Exp $
+	$Id: SPEC_registry.h,v 1.3.18.2 2006/04/21 02:45:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
@@ -74,6 +74,51 @@ typedef	util::qmap<string, cflat_spec_definition_entry>
 
 extern const cflat_spec_registry_type		cflat_spec_registry;
 
+//=============================================================================
+/**
+	Convenient spec for declaring spec classes.
+	TODO: consider adding a description string.  
+ */
+#define	DECLARE_SPEC_DIRECTIVE_CLASS(class_name, visitor)		\
+struct class_name : public SPEC::directives::class_name {		\
+	typedef	SPEC::directives::class_name		parent_type;	\
+	typedef	class_name				this_type;	\
+public:									\
+	static const char			name[];			\
+	static void main(cflat_prs_printer&, const param_args_type&,	\
+		const node_args_type&);					\
+	static good_bool check_num_params(const size_t);		\
+	static good_bool check_num_nodes(const size_t);			\
+	static good_bool check_param_args(const param_args_type&);	\
+	static good_bool check_node_args(const node_args_type&);	\
+private:								\
+	static const size_t			id;			\
+};									\
+
+/**
+	\param registrar the class registration function for initialization.  
+ */
+#define	DEFINE_SPEC_DIRECTIVE_CLASS(class_name, spec_name, registrar)	\
+const char class_name::name[] = spec_name;				\
+const size_t class_name::id = registrar<class_name>();			\
+good_bool								\
+class_name::check_num_params(const size_t s) {				\
+	return parent_type::__check_num_params(name, s);		\
+}									\
+good_bool								\
+class_name::check_num_nodes(const size_t s) {				\
+	return parent_type::__check_num_nodes(name, s);			\
+}									\
+good_bool								\
+class_name::check_param_args(const param_args_type& p) {		\
+	return parent_type::__check_param_args(name, p);		\
+}									\
+good_bool								\
+class_name::check_node_args(const node_args_type& n) {			\
+	return parent_type::__check_node_args(name, n);			\
+}
+
+//-----------------------------------------------------------------------------
 //=============================================================================
 }	// end namespace SPEC
 }	// end namespace entity

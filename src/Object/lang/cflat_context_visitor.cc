@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.1.2.1 2006/04/17 03:04:07 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.1.2.2 2006/04/21 02:45:57 fang Exp $
  */
 
 #include <iostream>
@@ -19,6 +19,7 @@ namespace entity {
 // class cflat_context_visitor method definitions
 
 /**
+	Frequently used, consider inlining.  
 	\param lni is the *local* node index referenced by this
 		literal reference in this process.
 	\return The local node index is translated into a globally 

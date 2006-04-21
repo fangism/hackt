@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_macro_registry.h"
-	$Id: PRS_macro_registry.h,v 1.4.18.1 2006/04/20 03:34:50 fang Exp $
+	$Id: PRS_macro_registry.h,v 1.4.18.2 2006/04/21 02:45:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_MACRO_REGISTRY_H__
@@ -65,6 +65,53 @@ typedef	util::qmap<string, cflat_macro_definition_entry>
 						cflat_macro_registry_type;
 
 extern const cflat_macro_registry_type		cflat_macro_registry;
+
+//=============================================================================
+/**
+	Convenient macro for declaring macro classes.
+	TODO: consider adding a description string.  
+ */
+#define	DECLARE_PRS_MACRO_CLASS(class_name, visitor)			\
+struct class_name : public entity::PRS::macros::class_name {		\
+	typedef	entity::PRS::macros::class_name		parent_type;	\
+	typedef	class_name				this_type;	\
+	typedef	visitor					visitor_type;	\
+	typedef	entity::PRS::macros::node_args_type	node_args_type;	\
+	typedef	entity::PRS::macros::param_args_type	param_args_type; \
+public:									\
+	static const char			name[];			\
+	static void main(visitor_type&, const param_args_type&,		\
+		const node_args_type&);					\
+	static good_bool check_num_params(const size_t);		\
+	static good_bool check_num_nodes(const size_t);			\
+	static good_bool check_param_args(const param_args_type&);	\
+	static good_bool check_node_args(const node_args_type&);	\
+private:								\
+	static const size_t			id;			\
+};	// end class class_name
+
+/**
+	Convenient macro for declaring and initializing macro class.
+ */
+#define	DEFINE_PRS_MACRO_CLASS(class_name, macro_name, registrar)	\
+const char class_name::name[] = macro_name;				\
+const size_t class_name::id = registrar<class_name>();			\
+good_bool								\
+class_name::check_num_params(const size_t s) {				\
+	return parent_type::__check_num_params(name, s);		\
+}									\
+good_bool								\
+class_name::check_num_nodes(const size_t s) {				\
+	return parent_type::__check_num_nodes(name, s);			\
+}									\
+good_bool								\
+class_name::check_param_args(const param_args_type& p) {		\
+	return parent_type::__check_param_args(name, p);		\
+}									\
+good_bool								\
+class_name::check_node_args(const node_args_type& n) {			\
+	return parent_type::__check_node_args(name, n);			\
+}
 
 //=============================================================================
 }	// end namespace PRS

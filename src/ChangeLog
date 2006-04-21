@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-06:
+	  Relocated some macro/attribute/spec class declaration macros
+		into respective *_registry.h header files.  
+	  main/prsim.cc: now catches exceptions, thrown when there is
+		violation of macro/directive input constraints during
+		expression allocation of State initialization.  
+	  sim/prsim/ExprAlloc.cc: refactored out common subroutines, 
+		implemented 'passn' and 'passp' macros, and visitation of
+		PRS macros and SPEC directives (untested).  
+	  TODO: respect "after 0"
+	  TODO: test cases using pass-gates.
+
+
 2006-04-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-16-prsim-03-05:

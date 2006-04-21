@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.7.2.2 2006/04/20 03:34:49 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.7.2.3 2006/04/21 02:45:56 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -81,36 +81,19 @@ register_cflat_attribute_class(void) {
 namespace cflat_rule_attributes {
 
 /**
-	Macro for declaring attribute classes.  
+	Macro for declaring and defining attribute classes.  
 	Here, the vistor_type is cflat_prs_printer.
 	TODO: These classes should have hidden visibility.  
 	TODO: could also push name[] into the base class, but would we be 
 		creating an initialization order dependence?
  */
-#define	DECLARE_PRS_ATTRIBUTE_CLASS(class_name, att_name)		\
-struct class_name : public rule_attributes::class_name {		\
-	typedef	rule_attributes::class_name		parent_type;	\
-	typedef	cflat_attribute_definition_entry::visitor_type		\
-							visitor_type;	\
-	typedef	cflat_attribute_definition_entry::values_type		\
-							values_type;	\
-	typedef	values_type::value_type			value_type;	\
-public:									\
-	static const char				name[];		\
-	static void main(visitor_type&, const values_type&);		\
-	static good_bool check_vals(const values_type&);		\
-private:								\
-	static const size_t				id;		\
-};									\
-const char class_name::name[] = att_name;				\
-good_bool								\
-class_name::check_vals(const values_type& v) {				\
-	return parent_type::__check_vals(name, v);			\
-}									\
-const size_t class_name::id = register_cflat_attribute_class<class_name>();
+#define	DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(class_name, att_name) \
+	DECLARE_PRS_RULE_ATTRIBUTE_CLASS(class_name, cflat_prs_printer)	\
+	DEFINE_PRS_RULE_ATTRIBUTE_CLASS(class_name, att_name,		\
+		register_cflat_attribute_class)
 
 //-----------------------------------------------------------------------------
-DECLARE_PRS_ATTRIBUTE_CLASS(After, "after")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(After, "after")
 
 /**
 	Prints out "after x" before a rule in cflat.  
@@ -126,7 +109,7 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 }
 
 //-----------------------------------------------------------------------------
-DECLARE_PRS_ATTRIBUTE_CLASS(Weak, "weak")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Weak, "weak")
 
 /**
 	Prints out "weak" before a rule in cflat.  
@@ -142,10 +125,9 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 }
 }
 
+#undef	DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS
 //=============================================================================
 }	// end namespace cflat_rule_attributes
-
-#undef	DECLARE_PRS_ATTRIBUTE_CLASS
 
 //=============================================================================
 }	// end namespace PRS

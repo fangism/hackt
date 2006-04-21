@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.9.2.1 2006/04/20 03:34:52 fang Exp $
+	$Id: SPEC_registry.cc,v 1.9.2.2 2006/04/21 02:45:57 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -100,39 +100,10 @@ typedef	cflat_spec_definition_entry::param_args_type	param_args_type;
 	Convenient spec for declaring spec classes.
 	TODO: consider adding a description string.  
  */
-#define	DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(class_name, spec_name)		\
-struct class_name : public SPEC::directives::class_name {		\
-	typedef	SPEC::directives::class_name		parent_type;	\
-	typedef	class_name				this_type;	\
-public:									\
-	static const char			name[];			\
-	static void main(cflat_prs_printer&, const param_args_type&,	\
-		const node_args_type&);					\
-	static good_bool check_num_params(const size_t);		\
-	static good_bool check_num_nodes(const size_t);			\
-	static good_bool check_param_args(const param_args_type&);	\
-	static good_bool check_node_args(const node_args_type&);	\
-private:								\
-	static const size_t			id;			\
-};									\
-const char class_name::name[] = spec_name;				\
-const size_t class_name::id = register_cflat_spec_class<class_name>();	\
-good_bool								\
-class_name::check_num_params(const size_t s) {				\
-	return parent_type::__check_num_params(name, s);		\
-}									\
-good_bool								\
-class_name::check_num_nodes(const size_t s) {				\
-	return parent_type::__check_num_nodes(name, s);			\
-}									\
-good_bool								\
-class_name::check_param_args(const param_args_type& p) {		\
-	return parent_type::__check_param_args(name, p);		\
-}									\
-good_bool								\
-class_name::check_node_args(const node_args_type& n) {			\
-	return parent_type::__check_node_args(name, n);			\
-}
+#define	DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(class_name, spec_name) \
+	DECLARE_SPEC_DIRECTIVE_CLASS(class_name, cflat_prs_printer)	\
+	DEFINE_SPEC_DIRECTIVE_CLASS(class_name, spec_name, 		\
+		register_cflat_spec_class)
 
 //-----------------------------------------------------------------------------
 
@@ -218,7 +189,7 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 	Possibly think of a better name for this directive:
 	'distinct', 'disjoint', 'unconnected'
  */
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
 
 /**
 	Does nothing, the sole purpose of this directive is to issue
@@ -264,7 +235,7 @@ UnAliased::main(cflat_prs_printer& p, const param_args_type& a,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(Assert, "assert")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(Assert, "assert")
 
 void
 Assert::main(cflat_prs_printer& p, const param_args_type& a, 
@@ -273,8 +244,8 @@ Assert::main(cflat_prs_printer& p, const param_args_type& a,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 
 /**
 	exclhi -- for LVS: asserts that a set of nodes may only
@@ -313,7 +284,7 @@ LVS_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 }
 
 //-----------------------------------------------------------------------------
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(LVS_BDD_order, "order")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_BDD_order, "order")
 
 /**
 	order -- for LVS: binary decision diagram ordering for 
@@ -333,7 +304,7 @@ LVS_BDD_order::main(cflat_prs_printer& p, const param_args_type& v,
 }
 
 //-----------------------------------------------------------------------------
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(LVS_unstaticized, "unstaticized")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_unstaticized, "unstaticized")
 
 /**
 	unstaticized -- for LVS: asserts that a set of nodes may only
@@ -356,8 +327,8 @@ LVS_unstaticized::main(cflat_prs_printer& p, const param_args_type& v,
 }
 
 //-----------------------------------------------------------------------------
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
 
 /**
 	mk_exclhi -- for simulations only, 
@@ -417,7 +388,7 @@ default_layout_spec_output(cflat_prs_printer& p, const param_args_type& params,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
 
 /**
 	\param a node arguments are processed in groups, so e.g.
@@ -444,7 +415,7 @@ layout_min_sep::main(cflat_prs_printer& p, const param_args_type& v,
 
 }	// end namespace layout
 //-----------------------------------------------------------------------------
-#undef	DECLARE_AND_DEFINE_SPEC_DIRECTIVE_CLASS
+#undef	DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS
 }	// end namespace cflat_specs
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.6.2.2 2006/04/20 03:34:50 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.6.2.3 2006/04/21 02:45:56 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -97,39 +97,10 @@ typedef	cflat_macro_definition_entry::param_args_type	param_args_type;
 	Convenient macro for declaring macro classes.
 	TODO: consider adding a description string.  
  */
-#define	DECLARE_AND_DEFINE_PRS_MACRO_CLASS(class_name, macro_name)	\
-struct class_name : public PRS::macros::class_name {			\
-	typedef	PRS::macros::class_name			parent_type;	\
-	typedef	class_name				this_type;	\
-public:									\
-	static const char			name[];			\
-	static void main(cflat_prs_printer&, const param_args_type&,	\
-		const node_args_type&);					\
-	static good_bool check_num_params(const size_t);		\
-	static good_bool check_num_nodes(const size_t);			\
-	static good_bool check_param_args(const param_args_type&);	\
-	static good_bool check_node_args(const node_args_type&);	\
-private:								\
-	static const size_t			id;			\
-};									\
-const char class_name::name[] = macro_name;				\
-const size_t class_name::id = register_cflat_macro_class<class_name>();	\
-good_bool								\
-class_name::check_num_params(const size_t s) {				\
-	return parent_type::__check_num_params(name, s);		\
-}									\
-good_bool								\
-class_name::check_num_nodes(const size_t s) {				\
-	return parent_type::__check_num_nodes(name, s);			\
-}									\
-good_bool								\
-class_name::check_param_args(const param_args_type& p) {		\
-	return parent_type::__check_param_args(name, p);		\
-}									\
-good_bool								\
-class_name::check_node_args(const node_args_type& n) {			\
-	return parent_type::__check_node_args(name, n);			\
-}
+#define	DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS(class_name, macro_name)\
+	DECLARE_PRS_MACRO_CLASS(class_name, cflat_prs_printer)		\
+	DEFINE_PRS_MACRO_CLASS(class_name, macro_name, 			\
+		register_cflat_macro_class)
 
 //-----------------------------------------------------------------------------
 /***
@@ -206,7 +177,7 @@ print_grouped_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 }
 
 //-----------------------------------------------------------------------------
-DECLARE_AND_DEFINE_PRS_MACRO_CLASS(Echo, "echo")
+DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS(Echo, "echo")
 
 /**
 	Pretty much a diagnostic tool only.
@@ -227,8 +198,8 @@ Echo::main(cflat_prs_printer& p, const param_args_type& params,
 }
 
 //-----------------------------------------------------------------------------
-DECLARE_AND_DEFINE_PRS_MACRO_CLASS(PassN, "passn")
-DECLARE_AND_DEFINE_PRS_MACRO_CLASS(PassP, "passp")
+DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS(PassN, "passn")
+DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS(PassP, "passp")
 
 /**
 	cflat modes: lvs and prsim
@@ -295,7 +266,7 @@ PassP::main(cflat_prs_printer& p, const param_args_type&,
 }
 
 //-----------------------------------------------------------------------------
-#undef	DECLARE_AND_DEFINE_PRS_MACRO_CLASS
+#undef	DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS
 }	// end namespace cflat_macros
 
 //=============================================================================
