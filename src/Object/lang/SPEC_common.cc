@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.1.2.1 2006/04/20 03:34:51 fang Exp $
+	$Id: SPEC_common.cc,v 1.1.2.2 2006/04/21 20:10:11 fang Exp $
  */
 
 #include <iostream>
@@ -9,6 +9,7 @@
 #include <set>
 #include "Object/lang/SPEC_common.h"
 #include "Object/expr/const_param_expr_list.h"
+#include "Object/lang/cflat_context_visitor.h"
 
 namespace HAC {
 namespace entity {
@@ -144,23 +145,61 @@ __no_grouped_node_args(const char* name, const node_args_type& a) {
 //-----------------------------------------------------------------------------
 
 good_bool
-UnAliased::__check_num_params(const char* name, const size_t s) {
+UnAliased_base::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
 }
 
 good_bool
-UnAliased::__check_num_nodes(const char* name, const size_t s) {
+UnAliased_base::__check_num_nodes(const char* name, const size_t s) {
 	return min_num_nodes(name, 2, s);
 }
 
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(UnAliased)
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(UnAliased_base)
 
 /**
 	Allowed to take grouped arguments.  
 	\return bad if any nodes in different groups are aliased.  
  */
 good_bool
-UnAliased::__check_node_args(const char* name, const node_args_type& a) {
+UnAliased_base::__check_node_args(const char* name, const node_args_type& a) {
+	return good_bool(true);
+}
+
+/**
+	Checks to make sure that no nodes in different group arguments
+	are aliased to each other.  
+	This may be called from any other function.  
+ */
+good_bool
+UnAliased::__main(cflat_context_visitor& v, const node_args_type& n) {
+	// does nothing but checks
+	typedef	node_args_type::value_type	node_group_type;
+	typedef	node_args_type::const_iterator	source_iterator;
+	typedef	node_args_type::iterator	dest_iterator;
+	node_args_type resolved_node_groups(n.size());
+{
+	source_iterator i(n.begin()), e(n.end());
+	dest_iterator j(resolved_node_groups.begin());
+	// std::transform pattern
+	for ( ; i!=e; ++i, ++j) {
+		v.__resolve_unique_literal_group(*i, *j);
+	}
+}
+{
+	source_iterator i(resolved_node_groups.begin()),
+		e(resolved_node_groups.end());
+	// accumulate all nodes in this set
+	node_group_type temp(*i);
+	for (++i; i!=e; ++i) {
+		typedef node_group_type::const_iterator set_iterator;
+		set_iterator ii(i->begin()), ie(i->end());
+		for ( ; ii!=ie; ++ii) {
+			if (temp.insert(*ii).second) {
+				return good_bool(false);
+			}
+		}
+	}
+}
 	return good_bool(true);
 }
 

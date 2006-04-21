@@ -3,11 +3,13 @@
 	Useful time typedefs and structures.  
 	Also contains some time macros and inline functions.  
 	TODO: use mpz_t for really long integers.  
-	$Id: time.h,v 1.3.6.2 2006/04/21 02:45:58 fang Exp $
+	$Id: time.h,v 1.3.6.3 2006/04/21 20:10:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_TIME_H__
 #define	__HAC_SIM_TIME_H__
+
+#include <limits>
 
 namespace HAC {
 namespace SIM {
@@ -38,6 +40,15 @@ struct delay_policy<real_time> {
 	 */
 	static const real_time	default_delay;
 	static const real_time	zero;
+
+	/**
+		Don't use floating point equality, use < threshold comparison.
+	 */
+	static
+	bool
+	is_zero(const real_time& t) {
+		return (t < std::numeric_limits<real_time>::epsilon());
+	}
 };	// end struct delay_policy
 
 template <>
@@ -45,6 +56,12 @@ struct delay_policy<discrete_time> {
 	enum {	invalid_value = -1 };
 	enum {	default_delay = 10 };
 	enum {	zero = 0 };
+
+	static
+	bool
+	is_zero(const discrete_time t) {
+		return t;
+	}
 };	// end struct delay_policy
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_common.h"
 	Tool independent base-classes for macro definitions.  
-	$Id: SPEC_common.h,v 1.1.2.1 2006/04/20 03:34:51 fang Exp $
+	$Id: SPEC_common.h,v 1.1.2.2 2006/04/21 20:10:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_COMMON_H__
@@ -13,6 +13,8 @@
 
 namespace HAC {
 namespace entity {
+class cflat_context_visitor;
+
 namespace SPEC {
 /**
 	Parent namespace for tool-independent macro classes.  
@@ -26,6 +28,7 @@ typedef directive_definition::param_args_type	param_args_type;
 //=============================================================================
 /**
 	Macro for declaring tool-independent PRS-macro classes.  
+	Only used in this header.  
  */
 #define	DECLARE_SPEC_COMMON_STRUCT(class_name)				\
 struct class_name {							\
@@ -40,8 +43,19 @@ public:									\
 };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_SPEC_COMMON_STRUCT(UnAliased)
+DECLARE_SPEC_COMMON_STRUCT(UnAliased_base)
 DECLARE_SPEC_COMMON_STRUCT(Assert)
+
+/**
+	The main() function for this directive is tool-independent
+	so we implement the common method here.  
+ */
+struct UnAliased : public UnAliased_base {
+	static
+	good_bool
+	__main(cflat_context_visitor&, const node_args_type&);
+};	// end struct UnAliased
+
 DECLARE_SPEC_COMMON_STRUCT(LVS_exclhi)
 DECLARE_SPEC_COMMON_STRUCT(LVS_excllo)
 DECLARE_SPEC_COMMON_STRUCT(LVS_BDD_order)
@@ -49,6 +63,8 @@ DECLARE_SPEC_COMMON_STRUCT(LVS_unstaticized)
 DECLARE_SPEC_COMMON_STRUCT(SIM_force_exclhi)
 DECLARE_SPEC_COMMON_STRUCT(SIM_force_excllo)
 DECLARE_SPEC_COMMON_STRUCT(layout_min_sep)
+
+#undef	DECLARE_SPEC_COMMON_STRUCT
 
 //=============================================================================
 }	// end namespace directives

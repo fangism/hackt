@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_common.cc"
-	$Id: PRS_attribute_common.cc,v 1.1.2.1 2006/04/18 05:57:21 fang Exp $
+	$Id: PRS_attribute_common.cc,v 1.1.2.2 2006/04/21 20:10:11 fang Exp $
  */
 
 #include <iostream>
@@ -26,7 +26,17 @@ After::__check_vals(const char* name, const values_type& v) {
 		cerr << "The \'" << name << "\' attribute requires exactly "
 			"one pint (integer) expression argument." << endl;
 		return good_bool(false);
-	} else  return good_bool(true);
+	} else {
+		const pint_value_type d =
+			v[0].is_a<const pint_const>()->static_constant_value();
+		if (d < 0) {
+			cerr << "Delay value must be >= 0, but got: " << d
+				<< endl;
+			return good_bool(false);
+		} else {
+			return good_bool(true);
+		}
+	}
 }
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.6.2.4 2006/04/21 02:45:58 fang Exp $
+	$Id: ExprAlloc.cc,v 1.6.2.5 2006/04/21 20:10:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -276,7 +276,8 @@ ExprAlloc::allocate_new_not_expr(const expr_index_type ei) {
 void
 ExprAlloc::link_child_expr(const expr_index_type parent,
 		const expr_index_type child, const size_t offset) {
-	st_expr_pool[child].parent = parent;
+	// st_expr_pool[child].parent = parent;
+	st_expr_pool[child].set_parent_expr(parent);
 	graph_node_type& child_node(st_graph_node_pool[child]);
 	child_node.offset = offset;
 	st_graph_node_pool[parent].push_back_expr(child);
@@ -401,13 +402,15 @@ ExprAlloc::visit(const footprint_directive& s) {
 	its root pull-up or pull-down expression.  
 	This automatically takes care of OR-combination by allocating
 	new root expressions when necessary.  
-	TODO: check after delay of root expressions! need to keep consistent!
-		should be OK because rule-expressions are hash_mapped in state.
  */
 void
 ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		const expr_index_type top_ex_index, const bool dir) {
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT << "linking expr " << top_ex_index << " to node " <<
+		ni << (dir ? '+' : '-') << endl;
+#endif
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
 	expr_type& ne(st_expr_pool[top_ex_index]);
@@ -428,8 +431,12 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		expr_type& pe(st_expr_pool[dir_index]);
 		graph_node_type& pg(st_graph_node_pool[dir_index]);
 		// see if either previous pull-up expr is OR-type already
-		// may also work with NAND!
-		if (pe.is_or()) {
+		// may also work with NAND! (UNTESTED)
+
+		// we don't OR-combine if the expression being examined
+		// is already a top-level root-expression.  
+		if ((pe.is_or() || pe.is_nand()) &&
+				!state.is_rule_expr(top_ex_index)) {
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT << "prev. root expr is OR" << endl;
 #endif
@@ -442,7 +449,8 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			ne.set_parent_expr(dir_index);
 			ng.offset = pe.size;
 			++pe.size;
-		} else if (ne.is_or()) {
+		} else if ((ne.is_or() || ne.is_nand()) &&
+				!state.is_rule_expr(dir_index)) {
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT << "new expr is OR" << endl;
 #endif
@@ -457,21 +465,14 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			STACKTRACE_INDENT << "neither expr is OR" << endl;
 #endif
 			// then need to allocate new root-expression
-			const expr_index_type root_ex_id = st_expr_pool.size();
-			// TODO: check for NAND, which is OR-like
-			st_expr_pool.push_back(
-				expr_type(expr_type::EXPR_OR, 2));
-			st_graph_node_pool.push_back(graph_node_type());
+			// and old expressions are no longer root!
+			const expr_index_type root_ex_id =
+				allocate_new_Nary_expr(
+					entity::PRS::PRS_OR_EXPR_TYPE_ENUM, 2);
 			expr_type& new_ex(st_expr_pool.back());
-			graph_node_type& new_g(st_graph_node_pool.back());
 			new_ex.pull(ni, dir);
-			// link sub-expressions to new root expression
-			new_g.push_back_expr(dir_index);
-			new_g.push_back_expr(top_ex_index);
-			pg.offset = 0;
-			ng.offset = 1;
-			pe.set_parent_expr(root_ex_id);
-			ne.set_parent_expr(root_ex_id);
+			link_child_expr(root_ex_id, dir_index, 0);
+			link_child_expr(root_ex_id, top_ex_index, 1);
 			// update the pull-up/dn root expression for the node
 			dir_index = root_ex_id;
 		}
@@ -616,6 +617,93 @@ PassP::main(visitor_type& v, const param_args_type& params,
 }	// end namespace prsim_macros
 
 //=============================================================================
+/**
+	Namespace for prsim-specific implementations of spec directives.  
+ */
+namespace prsim_spec_directives {
+
+/**
+	Convenient macro for declaring prsim SPEC directives.  
+ */
+#define	DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(class_name, spec_name) \
+	DECLARE_SPEC_DIRECTIVE_CLASS(class_name, ExprAlloc)		\
+	DEFINE_SPEC_DIRECTIVE_CLASS(class_name, spec_name, 		\
+		register_ExprAlloc_spec_class)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
+
+void
+UnAliased::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	if (!__main(v, nodes).good) {
+		cerr << "Error: detected aliased nodes during "
+			"processing of \'unaliased\' directive."
+			<< endl;
+		THROW_EXIT;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(Assert, "assert")
+
+void
+Assert::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	// does absolutely nothing
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
+
+/**
+	Implementation ripped off of original prsim's parse_excl function.  
+	Just appends each node into excl ring list and sets exclhi flag.  
+	\param params unused.  
+	TODO: is there any way of checking uniqueness of nodes?
+		only if State's excl_ring_map_type is a map/set.  
+ */
+void
+SIM_force_exclhi::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	typedef	node_args_type::const_iterator	const_iterator;
+	const_iterator i(nodes.begin()), e(nodes.end());
+	for ( ; i!=e; ++i) {
+		INVARIANT(i->size() == 1);
+		const node_index_type ni =
+			v.__lookup_global_bool_id(*i->begin());
+		v.state.append_exclhi_ring(ni);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
+
+/**
+	Implementation ripped off of original prsim's parse_excl function.  
+	Just appends each node into excl ring list and sets excllo flag.  
+	\param params unused.  
+	TODO: is there any way of checking uniqueness of nodes?
+		only if State's excl_ring_map_type is a map/set.  
+ */
+void
+SIM_force_excllo::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	typedef	node_args_type::const_iterator	const_iterator;
+	const_iterator i(nodes.begin()), e(nodes.end());
+	for ( ; i!=e; ++i) {
+		INVARIANT(i->size() == 1);
+		const node_index_type ni =
+			v.__lookup_global_bool_id(*i->begin());
+		v.state.append_excllo_ring(ni);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// layout_min_sep -- reserved for SEU prsim... later
+
+#undef	DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS
+}	// end namespace prsim_spec_directives
 
 //=============================================================================
 }	// end namespace PRSIM

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.9.2.2 2006/04/21 02:45:57 fang Exp $
+	$Id: SPEC_registry.cc,v 1.9.2.3 2006/04/21 20:10:11 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -199,39 +199,14 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
 	\throw generic exception if there is an alias violation.  
  */
 void
-UnAliased::main(cflat_prs_printer& p, const param_args_type& a,
+UnAliased::main(cflat_prs_printer& p, const param_args_type&,
 		const node_args_type& n) {
-	// does nothing but checks
-	typedef	node_args_type::value_type	node_group_type;
-	typedef	node_args_type::const_iterator	source_iterator;
-	typedef	node_args_type::iterator	dest_iterator;
-	node_args_type resolved_node_groups(a.size());
-{
-	source_iterator i(n.begin()), e(n.end());
-	dest_iterator j(resolved_node_groups.begin());
-	// std::transform pattern
-	for ( ; i!=e; ++i, ++j) {
-		p.__resolve_unique_literal_group(*i, *j);
+	if (!__main(p, n).good) {
+		cerr << "Error: detected aliased nodes during "
+			"processing of \'unaliased\' directive."
+			<< endl;
+		THROW_EXIT;
 	}
-}
-{
-	source_iterator i(resolved_node_groups.begin()),
-		e(resolved_node_groups.end());
-	// accumulate all nodes in this set
-	node_group_type temp(*i);
-	for (++i; i!=e; ++i) {
-		typedef	node_group_type::const_iterator	set_iterator;
-		set_iterator ii(i->begin()), ie(i->end());
-		for ( ; ii!=ie; ++ii) {
-			if (temp.insert(*ii).second) {
-				cerr << "Error: detected aliased nodes during "
-					"processing of \'unaliased\' directive."
-					<< endl;
-				THROW_EXIT;
-			}
-		}
-	}
-}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -239,7 +214,7 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(Assert, "assert")
 
 void
 Assert::main(cflat_prs_printer& p, const param_args_type& a, 
-		const node_args_type&) {
+		const node_args_type& n) {
 	// does nothing
 }
 

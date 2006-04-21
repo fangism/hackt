@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC_registry.h"
-	$Id: SPEC_registry.h,v 1.3.18.2 2006/04/21 02:45:57 fang Exp $
+	$Id: SPEC_registry.h,v 1.3.18.3 2006/04/21 20:10:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_REGISTRY_H__
@@ -80,12 +80,17 @@ extern const cflat_spec_registry_type		cflat_spec_registry;
 	TODO: consider adding a description string.  
  */
 #define	DECLARE_SPEC_DIRECTIVE_CLASS(class_name, visitor)		\
-struct class_name : public SPEC::directives::class_name {		\
-	typedef	SPEC::directives::class_name		parent_type;	\
+struct class_name : public entity::SPEC::directives::class_name {	\
+	typedef	entity::SPEC::directives::class_name	parent_type;	\
 	typedef	class_name				this_type;	\
+	typedef	visitor					visitor_type;	\
+	typedef	entity::SPEC::directives::node_args_type		\
+							node_args_type;	\
+	typedef	entity::SPEC::directives::param_args_type		\
+							param_args_type;\
 public:									\
 	static const char			name[];			\
-	static void main(cflat_prs_printer&, const param_args_type&,	\
+	static void main(visitor_type&, const param_args_type&,		\
 		const node_args_type&);					\
 	static good_bool check_num_params(const size_t);		\
 	static good_bool check_num_nodes(const size_t);			\

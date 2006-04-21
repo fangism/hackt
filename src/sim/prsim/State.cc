@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.6.2.4 2006/04/21 02:45:59 fang Exp $
+	$Id: State.cc,v 1.6.2.5 2006/04/21 20:10:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -84,11 +84,12 @@ State::State(const entity::module& m) :
 		exclhi_queue(), excllo_queue(), 
 		pending_queue(), 
 		current_time(0), 
-		uniform_delay(delay_policy<time_type>::default_delay), 
+		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
 		flags(FLAGS_DEFAULT),
 		timing_mode(TIMING_DEFAULT),
-		ifstreams() {
+		ifstreams(), 
+		__scratch_expr_trace() {
 #if 0
 	NEVER_NULL(m);
 	const state_manager& sm(m->get_state_manager());
@@ -107,6 +108,9 @@ State::State(const entity::module& m) :
 	// only if these are vectors, not if they are maps (template policy!)
 	exhi.resize(s);
 	exlo.resize(s);
+
+	// not expect expression-trees deeper than 8, but is growable
+	__scratch_expr_trace.reserve(8);
 	// then go through all processes to generate expressions
 #if 0
 	const global_entry_pool<process_tag>&
@@ -125,6 +129,7 @@ State::State(const entity::module& m) :
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
 	ExprAlloc v(*this);
+
 
 	// this may throw an exception!
 	sm.accept(v);
@@ -206,7 +211,7 @@ State::reset(void) {
 	flags = FLAGS_DEFAULT;
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
-	uniform_delay = delay_policy<time_type>::default_delay;
+	uniform_delay = time_traits::default_delay;
 	current_time = 0;
 }
 
@@ -310,6 +315,26 @@ State::check_expr(const expr_index_type i) const {
 			assert(expr_graph_node_pool[c.second].offset == j);
 		}
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds a node to the exclhi ring and flags the node as exclhi.  
+ */
+void
+State::append_exclhi_ring(const node_index_type ni) {
+	exhi.push_back(ni);
+	get_node(ni).make_exclhi();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Adds a node to the excllo ring and flags the node as excllo.  
+ */
+void
+State::append_excllo_ring(const node_index_type ni) {
+	exlo.push_back(ni);
+	get_node(ni).make_excllo();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -598,22 +623,31 @@ State::random_delay(void) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return absolute time of scheduled pull-up event.
-	TODO: figure out how to get delay of rule (sparse map?).  
+	NOTE: possible reasons for null e.cause_rule:
+		due to exclhi/exclo ring enforcement?
  */
 // inline
 State::time_type
 State::get_delay_up(const event_type& e) const {
-	return current_time +
-		(timing_mode == TIMING_RANDOM ? random_delay() :
-		(timing_mode == TIMING_UNIFORM ? uniform_delay :
-		// timing_mode == TIMING_AFTER
+return current_time +
+	(timing_mode == TIMING_RANDOM ?
 #if ENABLE_PRSIM_CAUSE_TRACKING
-			(e.cause_rule ?
-				rule_map.find(e.cause_rule)->second.after : 0)
+		(e.cause_rule && time_traits::is_zero(
+				rule_map.find(e.cause_rule)->second.after) ?
+			time_traits::zero : random_delay())
 #else
-			delay_policy<time_type>::default_delay
+		random_delay()
 #endif
-		));
+		:
+	(timing_mode == TIMING_UNIFORM ? uniform_delay :
+	// timing_mode == TIMING_AFTER
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		(e.cause_rule ?
+			rule_map.find(e.cause_rule)->second.after : 0)
+#else
+		time_traits::default_delay
+#endif
+	));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -624,16 +658,34 @@ State::get_delay_up(const event_type& e) const {
 State::time_type
 State::get_delay_dn(const event_type& e) const {
 	return current_time +
-		(timing_mode == TIMING_RANDOM ? random_delay() :
+		(timing_mode == TIMING_RANDOM ?
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		(e.cause_rule && time_traits::is_zero(
+				rule_map.find(e.cause_rule)->second.after) ?
+			time_traits::zero : random_delay())
+#else
+			random_delay()
+#endif
+			:
 		(timing_mode == TIMING_UNIFORM ? uniform_delay :
 		// timing_mode == TIMING_AFTER
 #if ENABLE_PRSIM_CAUSE_TRACKING
 			(e.cause_rule ?
 				rule_map.find(e.cause_rule)->second.after : 0)
 #else
-			delay_policy<time_type>::default_delay
+			time_traits::default_delay
 #endif
 		));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if expression is a root-level expression
+	(and hence, has attributes)
+ */
+bool
+State::is_rule_expr(const expr_index_type ei) const {
+	return rule_map.find(ei) != rule_map.end();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1087,16 +1139,13 @@ State::propagate_evaluation(const node_index_type ni, expr_index_type ui,
 #endif
 	expr_type* u;
 #if ENABLE_PRSIM_CAUSE_TRACKING
-	rule_index_type root_rule = INVALID_RULE_INDEX;
+	__scratch_expr_trace.clear();
 #endif
 do {
 	char old_pull, new_pull;	// pulling state of the subexpression
 	u = &expr_pool[ui];
 #if ENABLE_PRSIM_CAUSE_TRACKING
-	if (rule_map.find(ui) != rule_map.end()) {
-		INVARIANT(!root_rule);
-		root_rule = ui;
-	}
+	__scratch_expr_trace.push_back(ui);
 #endif
 #if DEBUG_STEP
 	STACKTRACE_INDENT << "examining expression ID: " << ui << endl;
@@ -1137,6 +1186,17 @@ do {
 	ui = u->parent;
 } while (!u->is_root());
 #if ENABLE_PRSIM_CAUSE_TRACKING
+	// we delay the root rule search until here to reduce the amount
+	// of searching required to find the responsible rule expression.  
+	rule_index_type root_rule;
+{
+	typedef	expr_trace_type::const_reverse_iterator	trace_iterator;
+	trace_iterator ri(__scratch_expr_trace.rbegin()),
+		re(__scratch_expr_trace.rend());
+	// search from root down, find the first valid rule expr visited
+	while (ri!=re && (rule_map.find(*ri) == rule_map.end())) { ++ri; }
+	root_rule = *ri;
+}
 	INVARIANT(root_rule);
 #endif
 // propagation made it to the root node, indexed by ui (now node_index_type)

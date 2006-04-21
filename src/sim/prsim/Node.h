@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.5 2006/04/11 07:54:46 fang Exp $
+	$Id: Node.h,v 1.5.2.1 2006/04/21 20:10:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -116,6 +116,12 @@ public:
 
 	bool
 	has_excllo(void) const { return struct_flags & NODE_EXCLLO; }
+
+	void
+	make_exclhi(void) { struct_flags |= NODE_EXCLHI; }
+
+	void
+	make_excllo(void) { struct_flags |= NODE_EXCLLO; }
 
 	ostream&
 	dump_fanout_dot(ostream&, const std::string&) const;

@@ -3,6 +3,28 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-07:
+	  'after' rule attribute checks that delay expression is non-negative.
+	  Factored out 'unaliased' functionality into base class, shared
+		by tool-dependent implementations.  
+	  Added simulator delay_policy<time_type>::zero.
+	  sim/prsim/ExprAlloc.cc: cleaned up much code, preferring calling
+		high-level functions over structure member manipulations.  
+		OR-rule combination now checks for root-ness of expression
+		before combining, to preserve rule-attribute distinctions.  
+		A few test cases were updated in parser/prs/short-*
+		Implemented SPEC directives for prsim: unaliased, assert, 
+			mk_exclhi, and mk_excllo.  
+		State is now capable of loading excl rings (untested).  
+	  State::get_delay*() now checks for 'after 0' delay before 
+		adding random delay value.  
+	  State::propagate_evaluate() now delays search for root rule
+		expressions until after propagation loop, for efficiency.  
+	  TODO: test excl-rings, OR-combinations, after 0, pass-gate macros...
+
+
 2006-04-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-16-prsim-03-06:

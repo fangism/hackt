@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.4.2.2 2006/04/19 05:03:42 fang Exp $
+	$Id: State.h,v 1.4.2.3 2006/04/21 20:10:14 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -57,6 +57,7 @@ public:
 	/// can switch between integer and real-valued time
 	// typedef	discrete_time			time_type;
 	typedef	real_time			time_type;
+	typedef	delay_policy<time_type>		time_traits;
 	typedef	NodeState			node_type;
 	typedef	ExprState			expr_type;
 	typedef	ExprGraphNode			graph_node_type;
@@ -234,6 +235,11 @@ private:
 	volatile bool				interrupted;
 	// interpreter state
 	ifstream_manager			ifstreams;
+	typedef	vector<expr_index_type>		expr_trace_type;
+	/**
+		For efficient tracing and lookup of root rule expressions.  
+	 */
+	expr_trace_type				__scratch_expr_trace;
 public:
 	/**
 		Signal handler class that binds the State reference
@@ -304,6 +310,9 @@ public:
 
 	const rule_map_type&
 	get_rule_map(void) const { return rule_map; }
+
+	bool
+	is_rule_expr(const expr_index_type) const;
 
 	void
 	update_time(const time_type t) {
@@ -443,6 +452,12 @@ public:
 
 	ostream&
 	dump_source_paths(ostream&) const;
+
+	void
+	append_exclhi_ring(const node_index_type);
+
+	void
+	append_excllo_ring(const node_index_type);
 
 private:
 	event_index_type
