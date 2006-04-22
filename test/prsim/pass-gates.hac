@@ -1,0 +1,10 @@
+// "pass-gates.hac"
+// testing prsim handling of pass gates
+
+import "pass-gates-def.hac";
+
+bool g, _g, s, d;
+
+passn n(g, s, d);
+passp p(_g, s, d);
+

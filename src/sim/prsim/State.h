@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.4.2.3 2006/04/21 20:10:14 fang Exp $
+	$Id: State.h,v 1.4.2.4 2006/04/22 04:40:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -9,6 +9,7 @@
 
 #include <iosfwd>
 #include <map>
+#include <set>
 #include "util/STL/hash_map.h"
 #include "sim/time.h"
 #include "sim/prsim/Event.h"
@@ -191,11 +192,10 @@ private:
 			Node structure.  
 		Alternative: use map for sparser exclusive rings.  
 	 */
-#if 0
-	typedef	map<node_index_type, node_index_type>
-#else
-	typedef	vector<node_index_type>
-#endif
+public:
+	typedef	std::set<node_index_type>	ring_set_type;
+protected:
+	typedef	vector<ring_set_type>
 						excl_ring_map_type;
 	typedef	vector<event_placeholder_type>	excl_queue_type;
 	typedef	vector<event_index_type>	pending_queue_type;
@@ -259,13 +259,8 @@ public:
 		~signal_handler();
 	} __ATTRIBUTE_UNUSED__ ;
 public:
-#if 0
-	explicit
-	State(const count_ptr<const module>&);
-#else
 	explicit
 	State(const module&);
-#endif
 private:
 	// inaccessible undefined copy-constructor ... for now
 	State(const State&);
@@ -454,10 +449,22 @@ public:
 	dump_source_paths(ostream&) const;
 
 	void
-	append_exclhi_ring(const node_index_type);
+	append_exclhi_ring(ring_set_type&);
 
 	void
-	append_excllo_ring(const node_index_type);
+	append_excllo_ring(ring_set_type&);
+
+	ostream&
+	dump_ring(ostream&, const ring_set_type&) const;
+
+	ostream&
+	dump_exclhi_rings(ostream&) const;
+
+	ostream&
+	dump_excllo_rings(ostream&) const;
+
+	ostream&
+	dump_node_excl_rings(ostream&, const node_index_type) const;
 
 private:
 	event_index_type

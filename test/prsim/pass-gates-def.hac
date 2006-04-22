@@ -1,0 +1,15 @@
+// "pass-gates-def.hac"
+// definitions that use pass gates
+
+defproc passn(bool g, s, d) {
+prs {
+	passn(g, s, d)
+}
+}
+
+defproc passp(bool _g, s, d) {
+prs {
+	passp(_g, s, d)
+}
+}
+

@@ -1,0 +1,25 @@
+Fanins of node `d':
+[after 0]	~_g & s -> d+
+[after 0]	g & ~s -> d-
+Fanouts of node `s':
+[after 0]	g & ~s -> d-
+[after 0]	~_g & s -> d+
+Fanouts of node `g':
+[after 0]	g & ~s -> d-
+Fanouts of node `_g':
+[after 0]	~_g & s -> d+
+	0	s : 0
+	0	g : 0
+	0	_g : 1
+	0	_g : 0
+	0	_g : 1
+	0	s : 1
+	0	g : 1
+	0	s : 0
+	0	d : 0
+	0	s : 1
+	0	g : 0
+	0	_g : 0
+	0	d : 1
+	0	_g : 1
+	0	s : 0

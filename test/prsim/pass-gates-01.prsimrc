@@ -1,0 +1,59 @@
+# "pass-gates-01.prsimrc"
+#	$Id: pass-gates-01.prsimrc,v 1.1.2.1 2006/04/22 04:40:42 fang Exp $
+# @haco@ pass-gates.haco-a
+# testing what pass-gates look like in prsim
+
+set s 0
+set g 0
+set _g 1
+cycle
+
+assert d X
+
+set _g 0
+cycle
+
+assert d X
+
+set _g 1
+cycle
+
+set s 1
+cycle
+
+assert d X
+
+set g 1
+cycle
+
+assert d X
+
+set s 0
+cycle
+
+assert d 0
+
+set s 1
+cycle
+assert d 0
+
+set g 0
+cycle
+assert d 0
+
+set _g 0
+cycle
+
+assert d 1
+
+set _g 1
+cycle
+
+assert d 1
+set s 0
+cycle
+
+assert d 1
+
+
+

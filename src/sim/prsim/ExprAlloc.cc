@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.6.2.5 2006/04/21 20:10:13 fang Exp $
+	$Id: ExprAlloc.cc,v 1.6.2.6 2006/04/22 04:40:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -564,9 +564,11 @@ void
 PassN::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
 	const expr_index_type g =
-		v.allocate_new_literal_expr(*nodes[0].begin());
+		v.allocate_new_literal_expr(
+			v.__lookup_global_bool_id(*nodes[0].begin()));
 	const expr_index_type s =
-		v.allocate_new_literal_expr(*nodes[1].begin());
+		v.allocate_new_literal_expr(
+			v.__lookup_global_bool_id(*nodes[1].begin()));
 	const node_index_type d = v.__lookup_global_bool_id(*nodes[2].begin());
 	INVARIANT(g && s && d);
 	// construct and allocate rule
@@ -579,7 +581,7 @@ PassN::main(visitor_type& v, const param_args_type& params,
 
 	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(v.st_rule_map[pe]);
-	r.set_delay(delay_policy<visitor_type::state_type::time_type>::zero);
+	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -595,9 +597,11 @@ void
 PassP::main(visitor_type& v, const param_args_type& params,
 		const node_args_type& nodes) {
 	const expr_index_type g =
-		v.allocate_new_literal_expr(*nodes[0].begin());
+		v.allocate_new_literal_expr(
+			v.__lookup_global_bool_id(*nodes[0].begin()));
 	const expr_index_type s =
-		v.allocate_new_literal_expr(*nodes[1].begin());
+		v.allocate_new_literal_expr(
+			v.__lookup_global_bool_id(*nodes[1].begin()));
 	const node_index_type d = v.__lookup_global_bool_id(*nodes[2].begin());
 	INVARIANT(g && s && d);
 	// construct and allocate rule
@@ -610,7 +614,7 @@ PassP::main(visitor_type& v, const param_args_type& params,
 
 	typedef	visitor_type::rule_type	rule_type;
 	rule_type& r(v.st_rule_map[pe]);
-	r.set_delay(delay_policy<visitor_type::state_type::time_type>::zero);
+	r.set_delay(visitor_type::state_type::time_traits::zero);
 }
 
 #undef	DECLARE_AND_DEFINE_PRSIM_MACRO_CLASS
@@ -666,14 +670,17 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
 void
 SIM_force_exclhi::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
-	typedef	node_args_type::const_iterator	const_iterator;
+	typedef	node_args_type::const_iterator		const_iterator;
+	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	const_iterator i(nodes.begin()), e(nodes.end());
+	ring_set_type r;
 	for ( ; i!=e; ++i) {
 		INVARIANT(i->size() == 1);
 		const node_index_type ni =
 			v.__lookup_global_bool_id(*i->begin());
-		v.state.append_exclhi_ring(ni);
+		r.insert(ni);
 	}
+	v.state.append_exclhi_ring(r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -689,14 +696,17 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
 void
 SIM_force_excllo::main(visitor_type& v, const param_args_type& params, 
 		const node_args_type& nodes) {
-	typedef	node_args_type::const_iterator	const_iterator;
+	typedef	node_args_type::const_iterator		const_iterator;
+	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
+	ring_set_type r;
 	const_iterator i(nodes.begin()), e(nodes.end());
 	for ( ; i!=e; ++i) {
 		INVARIANT(i->size() == 1);
 		const node_index_type ni =
 			v.__lookup_global_bool_id(*i->begin());
-		v.state.append_excllo_ring(ni);
+		r.insert(ni);
 	}
+	v.state.append_excllo_ring(r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -5,6 +5,21 @@
 
 2006-04-21	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-16-prsim-03-08:
+	  Added 'rings' command to dump all rings of which a node is a member,
+		useful for near future debugging.  Also 'allrings' command
+		dumps all exclhi/lo rings.  
+	  sim/prsim/ExprAlloc.cc: fixed bug -- forgot to resolve canonical
+		node ID before passing to allocate_new_literal_expr.  
+	  Corrected implementation of excl-rings to use a vector of 
+		sets of node indices (per ring).  
+	  Added bunch of test-cases as promised.  
+	  TODO: test excl-rings.  
+	  Status: after excl-rings are basically tested, branch is mature.  
+
+
+2006-04-21	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-16-prsim-03-07:
 	  'after' rule attribute checks that delay expression is non-negative.
 	  Factored out 'unaliased' functionality into base class, shared
