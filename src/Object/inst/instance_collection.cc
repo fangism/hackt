@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.17 2006/03/15 04:38:17 fang Exp $
+ 	$Id: instance_collection.cc,v 1.18 2006/04/23 07:37:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -59,7 +59,6 @@
 #include "util/dereference.h"
 #include "util/indent.h"
 #include "util/stacktrace.h"
-#include "util/wtf.h"
 
 
 //=============================================================================

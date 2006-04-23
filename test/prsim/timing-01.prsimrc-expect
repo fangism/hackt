@@ -1,0 +1,29 @@
+timing [mode [args]]
+if no mode is given, just reports the current mode.
+available timing modes:
+	random [seed]
+	uniform [delay]
+	after
+timing: uniform (10)
+	0	a : 1
+	10	b : 0
+	20	c : 1
+timing random 
+timing: random
+timing after 
+timing: after
+	20	a : 0
+	30	b : 1
+	40	c : 0
+timing uniform 
+timing: uniform (10)
+	40	a : 1
+	50	b : 0
+	60	c : 1
+timing uniform 
+timing: uniform (30)
+	60	a : 0
+	90	b : 1
+	120	c : 0
+timing random 
+timing: random

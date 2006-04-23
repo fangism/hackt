@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.6 2006/04/13 19:10:21 fang Exp $
+	$Id: Command.cc,v 1.7 2006/04/23 07:37:25 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -33,6 +33,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/tokenize.h"
 #include "util/attributes.h"
+
+/**
+	These commands are deprecated, but provided for backwards compatibility.
+ */
+#define	WANT_OLD_RANDOM_COMMANDS			1
 
 namespace HAC {
 namespace SIM {
@@ -640,8 +645,10 @@ Help::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(CommentPound, "#", builtin, "comment")
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(CommentComment, "comment", builtin, "comment")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CommentPound, "#", builtin,
+	"comments are ignored")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CommentComment, "comment", builtin,
+	"comments are ignored")
 
 int
 CommentPound::main(State&, const string_list&) { return Command::NORMAL; }
@@ -706,7 +713,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Alias, "alias", builtin,
 int
 Alias::main(State&, const string_list& a) {
 if (a.size() < 3) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	string_list::const_iterator	const_iterator;
@@ -733,7 +740,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnAlias, "unalias", builtin,
 int
 UnAlias::main(State&, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	return CommandRegistry::unalias(a.back());
@@ -755,7 +762,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnAliasAll, "unaliasall", builtin,
 int
 UnAliasAll::main(State&, const string_list& a) {
 if (a.size() != 1) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	return CommandRegistry::unalias_all();
@@ -798,7 +805,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Source, "source", general,
 int
 Source::main(State& s, const string_list& a) {
 if (a.size() < 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	string_list::const_iterator i(++a.begin());
@@ -830,7 +837,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AddPath, "addpath", general,
 int
 AddPath::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	s.add_source_path(a.back());
@@ -850,7 +857,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Paths, "paths", general,
 int
 Paths::main(State& s, const string_list& a) {
 if (a.size() != 1) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	s.dump_source_paths(cout);
@@ -929,7 +936,7 @@ Step::main(State& s) {
 int
 Step::main(State& s, const string_list& a) {
 if (a.size() > 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	State::time_type		time_type;
@@ -1007,7 +1014,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Advance, "advance", simulation,
 int
 Advance::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	State::time_type		time_type;
@@ -1090,7 +1097,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
 int
 Cycle::main(State& s, const string_list & a) {
 if (a.size() != 1) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
@@ -1147,7 +1154,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Queue, "queue", simulation,
 int
 Queue::main(State& s, const string_list& a) {
 if (a.size() != 1) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	s.dump_event_queue(cout);
@@ -1171,7 +1178,7 @@ int
 Set::main(State& s, const string_list& a) {
 	const size_t asz = a.size();
 if (asz < 3 || asz > 4) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
@@ -1246,7 +1253,7 @@ int
 Setr::main(State& s, const string_list& a) {
 	const size_t asz = a.size();
 if (asz != 3) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
@@ -1293,7 +1300,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(BreakPt, "breakpt", simulation,
 int
 BreakPt::main(State& s, const string_list& a) {
 if (a.size() < 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef string_list::const_iterator	const_iterator;
@@ -1326,7 +1333,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPt, "nobreakpt", simulation,
 int
 NoBreakPt::main(State& s, const string_list& a) {
 if (a.size() < 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef string_list::const_iterator	const_iterator;
@@ -1373,7 +1380,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoBreakPtAll, "nobreakptall", simulation,
 int
 NoBreakPtAll::main(State& s, const string_list& a) {
 if (a.size() != 1) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	s.clear_all_breakpoints();
@@ -1407,7 +1414,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(What, "what", info,
 int
 What::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	if (parse_name_to_what(cout, a.back(), s.get_module()))
@@ -1428,7 +1435,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Who, "who", info,
 int
 Who::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	cout << "aliases of \"" << a.back() << "\":" << endl;
@@ -1460,7 +1467,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
 int
 Get::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
@@ -1491,7 +1498,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(GetAll, "getall", info,
 int
 GetAll::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	vector<node_index_type>		nodes_id_list_type;
@@ -1524,7 +1531,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Status, "status", info,
 int
 Status::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
@@ -1552,7 +1559,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanin, "fanin", info,
 int
 Fanin::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
@@ -1581,7 +1588,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Fanout, "fanout", info,
 int
 Fanout::main(State& s, const string_list& a) {
 if (a.size() != 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	const string& objname(a.back());
@@ -1604,6 +1611,55 @@ Fanout::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Rings, "rings", info, 
+	"print exclusive rings of which a node is a member")
+
+int
+Rings::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_excl_rings(cout, ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+Rings::usage(ostream& o) {
+	o << "rings <node>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRings, "allrings", info, 
+	"dump all exclusive hi/lo rings")
+
+int
+AllRings::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_exclhi_rings(cout);
+	s.dump_excllo_rings(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+AllRings::usage(ostream& o) {
+	o << "allrings" << endl;
+}
+
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // will category conflict with command?
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(Info, "info", info, 
 //	"print information about a node/vector")
@@ -1619,7 +1675,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Assert, "assert", info,
 int
 Assert::main(State& s, const string_list& a) {
 if (a.size() != 3) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
@@ -1667,7 +1723,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertN, "assertn", info,
 int
 AssertN::main(State& s, const string_list& a) {
 if (a.size() != 3) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
@@ -1718,7 +1774,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Time, "time", info,
 int
 Time::main(State& s, const string_list& a) {
 if (a.size() != 1) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	cout << "time: " << s.time() << endl;
@@ -1750,7 +1806,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view,
 int
 Watch::main(State& s, const string_list& a) {
 if (a.size() < 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef string_list::const_iterator	const_iterator;
@@ -1786,7 +1842,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnWatch, "unwatch", view,
 int
 UnWatch::main(State& s, const string_list& a) {
 if (a.size() < 2) {
-	usage(cerr);
+	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
 	typedef string_list::const_iterator	const_iterator;
@@ -1883,11 +1939,14 @@ NoWatchAll::usage(ostream& o) {
 }
 
 //-----------------------------------------------------------------------------
+#if WANT_OLD_RANDOM_COMMANDS
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Random, "random", modes, 
-	"use random delays")
+	"use random delays (deprecated)")
 
 int
 Random::main(State& s, const string_list& a) {
+cerr << "WARNING: this command is deprecated, use \"timing random\" instead."
+	<< endl;
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1904,15 +1963,17 @@ Random::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoRandom, "norandom", modes, 
-	"use non-random delays")
+	"use non-random delays (deprecated)")
 
 int
 NoRandom::main(State& s, const string_list& a) {
+cerr << "WARNING: this command is deprecated, use \"timing ...\" instead."
+	<< endl;
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.norandom();
+	s.norandom();		// is this "uniform" or "after"
 	return Command::NORMAL;
 }
 }
@@ -1920,6 +1981,37 @@ if (a.size() != 1) {
 void
 NoRandom::usage(ostream& o) {
 	o << "norandom";
+}
+
+#endif	// WANT_OLD_RANDOM_COMMANDS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 
+	"set/get timing mode")
+
+int
+Timing::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	s.dump_timing(cout);
+	return Command::NORMAL;
+} else {
+	string_list b(a);
+	b.pop_front();
+	const string m(b.front());
+	b.pop_front();
+	if (s.set_timing(m, b)) {
+		usage(cerr << "usage: ");
+		return Command::BADARG;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+Timing::usage(ostream& o) {
+	o << "timing [mode [args]]" << endl;
+	o << "if no mode is given, just reports the current mode." << endl;
+	State::help_timing(o);
 }
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.4 2006/04/05 22:32:21 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.5 2006/04/23 07:37:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -165,7 +165,6 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 	const_iterator i(b);
 	// std::transform pattern
 	for ( ; i!=e; ++i, ++ci) {
-		// util::wtf_is(*i);
 		const count_ptr<const parent_type>& lv(*i);
 		if (lv->unroll_references(c, *ci).bad) {
 			cerr << "Error unrolling subreference " <<

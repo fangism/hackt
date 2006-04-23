@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.9 2006/04/16 18:36:19 fang Exp $
+	$Id: cflat_printer.cc,v 1.10 2006/04/23 07:37:23 fang Exp $
  */
 
 #include <iostream>
@@ -68,26 +68,12 @@ if (!cfopts.check_prs) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	\param lni is the *local* node index referenced by this
-		literal reference in this process.
-	\return The local node index is translated into a globally 
-		allocated (bool) node index, using the 
-		footprint_frame_map.  
- */
-size_t
-cflat_prs_printer::__lookup_global_bool_id(const size_t lni) const {
-	INVARIANT(lni);
-	return fpf->get_frame_map<bool_tag>()[lni-1];
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
 	\param ni the global node ID.  
  */
 void
 cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
 	if (cfopts.enquote_names) { os << '\"'; }
-	sm->get_pool<bool_tag>()[ni].dump_canonical_name(os, *fp, *sm);
+	parent_type::__dump_resolved_canonical_literal(os, ni);
 	if (cfopts.enquote_names) { os << '\"'; }
 }
 
@@ -99,25 +85,8 @@ cflat_prs_printer::__dump_resolved_canonical_literal(const size_t ni) const {
  */
 void
 cflat_prs_printer::__dump_canonical_literal(const size_t lni) const {
-	__dump_resolved_canonical_literal(__lookup_global_bool_id(lni));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Translates set of local node IDs into unique set of 
-	global IDs which may result in fewer nodes because duplicate
-	aliases are dropped.  
- */
-void
-cflat_prs_printer::__resolve_unique_literal_group(
-		const directive_node_group_type& s,
-		directive_node_group_type& d) const {
-	typedef	directive_node_group_type::const_iterator
-					const_iterator;
-	const_iterator i(s.begin()), e(s.end());
-	for ( ; i!=e; ++i) {
-		d.insert(__lookup_global_bool_id(*i));
-	}
+	__dump_resolved_canonical_literal(
+		parent_type::__lookup_global_bool_id(lni));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -229,7 +198,7 @@ cflat_prs_printer::visit(const footprint_expr_node& e) {
  */
 void
 cflat_prs_printer::visit(const footprint_macro& m) {
-	const macro_definition_entry& d(macro_registry[m.name]);
+	const cflat_macro_definition_entry& d(cflat_macro_registry[m.name]);
 	INVARIANT(d);		// was already checked during unroll
 	if (!d.check_param_args(m.params).good
 			|| !d.check_node_args(m.nodes).good) {
@@ -244,7 +213,8 @@ cflat_prs_printer::visit(const footprint_macro& m) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 cflat_prs_printer::visit(const SPEC::footprint_directive& d) {
-	const SPEC::spec_definition_entry& s(SPEC::spec_registry[d.name]);
+	const SPEC::cflat_spec_definition_entry&
+		s(SPEC::cflat_spec_registry[d.name]);
 	INVARIANT(s);		// was already checked during unroll
 	if (!s.check_param_args(d.params).good
 			|| !s.check_node_args(d.nodes).good) {

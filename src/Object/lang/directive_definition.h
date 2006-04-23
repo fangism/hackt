@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_definition.h"
-	$Id: directive_definition.h,v 1.2 2006/02/10 21:50:41 fang Exp $
+	$Id: directive_definition.h,v 1.3 2006/04/23 07:37:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_DIRECTIVE_DEFINITION_H__
@@ -29,14 +29,6 @@ public:
 	typedef	directive_base_nodes_type	node_args_type;
 	typedef	directive_base_params_type	param_args_type;
 	/**
-		The primary execution function should take a sequence
-		of node_id's and a global state_manager as arguments.  
-		This is what is executed during cflat.  
-	 */
-	typedef	void (main_type)(PRS::cflat_prs_printer&, 
-		const param_args_type&, const node_args_type&);
-	typedef	main_type*			main_ptr_type;
-	/**
 		Function type for verifying macro arguments.  
 	 */
 	typedef	good_bool (check_node_args_type)(const node_args_type&);
@@ -56,36 +48,26 @@ public:
 protected:
 	/// the name of the macro
 	string					_key;
-	main_ptr_type				_main;
 	check_num_args_ptr_type			_check_num_params;
 	check_num_args_ptr_type			_check_num_nodes;
 	check_param_args_ptr_type		_check_param_args;
 	check_node_args_ptr_type		_check_node_args;
 public:
-	directive_definition() : _key(), _main(NULL),
+	directive_definition() : _key(),
 		_check_num_params(NULL), _check_num_nodes(NULL), 
 		_check_param_args(NULL), _check_node_args(NULL) { }
 
-	directive_definition(const string& k, const main_ptr_type m, 
+	directive_definition(const string& k,
 		const check_num_args_ptr_type np = NULL,
 		const check_num_args_ptr_type nn = NULL,
 		const check_param_args_ptr_type p = NULL, 
 		const check_node_args_ptr_type c = NULL) :
-		_key(k), _main(m),
+		_key(k),
 		_check_num_params(np), _check_num_nodes(nn), 
 		_check_param_args(p), _check_node_args(c)
 		{ }
 
 	// default destructor
-
-	operator bool () const { return _main; }
-
-	void
-	main(PRS::cflat_prs_printer&, const param_args_type&, 
-		const node_args_type&) const;
-
-	void
-	main(PRS::cflat_prs_printer&, const node_args_type&) const;
 
 	good_bool
 	check_num_params(const size_t) const;

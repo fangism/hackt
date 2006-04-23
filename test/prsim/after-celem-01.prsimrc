@@ -1,0 +1,23 @@
+# "after-celem-01.prsimrc"
+#	$Id: after-celem-01.prsimrc,v 1.2 2006/04/23 07:37:31 fang Exp $
+# @haco@ after-celem.haco-a
+# testing different delays on rules
+
+watchall
+timing
+
+fanin e
+
+echo all events should have default uniform delay
+source after-celem-base.prsimrc
+
+echo all events should have default uniform delay
+initialize
+timing uniform 20
+source after-celem-base.prsimrc
+
+echo all events should have their own delays
+initialize
+timing after
+source after-celem-base.prsimrc
+

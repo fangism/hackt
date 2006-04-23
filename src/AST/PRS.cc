@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.11 2006/04/16 18:36:16 fang Exp $
+	$Id: PRS.cc,v 1.12 2006/04/23 07:37:17 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -574,8 +574,8 @@ macro::check_rule(context& c) const {
 		cerr << "Expected: prs_macro : ID . [ \'<\' shift_exprs \'>\' ] \'(\' inst_ref_exprs \')\'" << endl;
 		return return_type(NULL);
 	}
-	const entity::PRS::macro_definition_entry
-		mde(entity::PRS::macro_registry[*name]);
+	const entity::PRS::cflat_macro_definition_entry
+		mde(entity::PRS::cflat_macro_registry[*name]);
 	if (!mde) {
 		cerr << "Error: unrecognized PRS macro \"" << *name << "\" at "
 			<< where(*name) << endl;

@@ -1,8 +1,11 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.cc"
 	This defines the attribute actions for the cflat visitor.  
-	$Id: PRS_attribute_registry.cc,v 1.8 2006/04/18 18:42:40 fang Exp $
+	$Id: PRS_attribute_registry.cc,v 1.9 2006/04/23 07:37:21 fang Exp $
  */
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include "Object/lang/PRS_attribute_registry.h"
@@ -10,6 +13,7 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/pint_const.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/lang/PRS_attribute_common.h"
 #include "main/cflat_options.h"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -64,32 +68,22 @@ register_cflat_attribute_class(void) {
 	Convenient home namespace for user-defined PRS rule attributes.  
 	Each class in this namespace represents an attribute.  
  */
-namespace __attributes__ {
+namespace cflat_rule_attributes {
 
 /**
-	Macro for declaring attribute classes.  
+	Macro for declaring and defining attribute classes.  
 	Here, the vistor_type is cflat_prs_printer.
 	TODO: These classes should have hidden visibility.  
+	TODO: could also push name[] into the base class, but would we be 
+		creating an initialization order dependence?
  */
-#define	DECLARE_PRS_ATTRIBUTE_CLASS(class_name, att_name)		\
-struct class_name {							\
-	typedef	cflat_attribute_definition_entry::visitor_type		\
-							visitor_type;	\
-	typedef	cflat_attribute_definition_entry::values_type		\
-							values_type;	\
-	typedef	values_type::value_type			value_type;	\
-public:									\
-	static const char				name[];		\
-	static void main(visitor_type&, const values_type&);		\
-	static good_bool check_vals(const values_type&);		\
-private:								\
-	static const size_t				id;		\
-};									\
-const char class_name::name[] = att_name;				\
-const size_t class_name::id = register_cflat_attribute_class<class_name>();
+#define	DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(class_name, att_name) \
+	DECLARE_PRS_RULE_ATTRIBUTE_CLASS(class_name, cflat_prs_printer)	\
+	DEFINE_PRS_RULE_ATTRIBUTE_CLASS(class_name, att_name,		\
+		register_cflat_attribute_class)
 
 //-----------------------------------------------------------------------------
-DECLARE_PRS_ATTRIBUTE_CLASS(After, "after")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(After, "after")
 
 /**
 	Prints out "after x" before a rule in cflat.  
@@ -104,17 +98,8 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 }
 }
 
-good_bool
-After::check_vals(const values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
-		cerr << "The \'" << name << "\' attribute requires exactly "
-			"one pint (integer) expression argument." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
-}
-
 //-----------------------------------------------------------------------------
-DECLARE_PRS_ATTRIBUTE_CLASS(Weak, "weak")
+DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS(Weak, "weak")
 
 /**
 	Prints out "weak" before a rule in cflat.  
@@ -130,22 +115,14 @@ if (p.cfopts.primary_tool == cflat_options::TOOL_PRSIM) {
 }
 }
 
-good_bool
-Weak::check_vals(const values_type& v) {
-	if (v.size() != 1 || !v[0].is_a<const pint_const>()) {
-		cerr << "The \'" << name << "\' attribute requires exactly "
-			"one pint (integer) expression argument." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
-}
-
+#undef	DECLARE_AND_DEFINE_CFLAT_PRS_ATTRIBUTE_CLASS
 //=============================================================================
-}	// end namespace __attributes__
-
-#undef	DECLARE_PRS_ATTRIBUTE_CLASS
+}	// end namespace cflat_rule_attributes
 
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace entity
 }	// end namespace HAC
+
+DEFAULT_STATIC_TRACE_END
 

@@ -1,0 +1,9 @@
+// "after-celem.hac"
+
+import "after-celem-def.hac";
+
+bool a, b, c, d, e;
+
+after_celem<10> x(a, b, e);
+after_celem<50> y(c, d, e);
+

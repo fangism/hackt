@@ -2,7 +2,7 @@
 	\file "util/STL/deque_fwd.h"
 	Forward declaration of std::deque.
 	No wrapping.  
-	$Id: deque_fwd.h,v 1.5 2006/04/18 18:42:45 fang Exp $
+	$Id: deque_fwd.h,v 1.6 2006/04/23 07:37:29 fang Exp $
  */
 
 #ifndef	__UTIL_STL_DEQUE_FWD_H__
@@ -25,11 +25,7 @@ struct default_deque {
 	struct rebind : public default_deque<T2> { };
 };
 
-}
-
-#define	USING_DEQUE		using std::deque;
-#define	DEFAULT_DEQUE(T)	std::deque<T, std::allocator<T> >
-
+}	// end namespace std
 
 #endif	// __UTIL_STL_DEQUE_FWD_H__
 

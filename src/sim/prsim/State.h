@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.4 2006/04/11 07:54:47 fang Exp $
+	$Id: State.h,v 1.5 2006/04/23 07:37:27 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -9,14 +9,18 @@
 
 #include <iosfwd>
 #include <map>
+#include <set>
+#include "util/STL/hash_map.h"
 #include "sim/time.h"
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Node.h"
 #include "sim/prsim/Expr.h"
+#include "sim/prsim/Rule.h"
 #include "Object/lang/PRS_enum.h"	// for expression parenthesization
 #include "util/string_fwd.h"
 #include "util/list_vector.h"
 #include "util/named_ifstream_manager.h"
+#include "util/tokenize_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -31,7 +35,8 @@ using entity::module;
 using util::list_vector;
 using std::ostream;
 using util::ifstream_manager;
-// using util::memory::count_ptr;
+using util::string_list;
+using HASH_MAP_NAMESPACE::hash_map;
 //=============================================================================
 /**
 	The prsim simulation state.
@@ -53,6 +58,7 @@ public:
 	/// can switch between integer and real-valued time
 	// typedef	discrete_time			time_type;
 	typedef	real_time			time_type;
+	typedef	delay_policy<time_type>		time_traits;
 	typedef	NodeState			node_type;
 	typedef	ExprState			expr_type;
 	typedef	ExprGraphNode			graph_node_type;
@@ -60,9 +66,10 @@ public:
 	typedef	EventPool			event_pool_type;
 	typedef	EventPlaceholder<time_type>	event_placeholder_type;
 	typedef	EventQueue<event_placeholder_type>	event_queue_type;
-
 	typedef	vector<node_type>		node_pool_type;
 	typedef	vector<expr_type>		expr_pool_type;
+	typedef	RuleState<time_type>		rule_type;
+	typedef	hash_map<expr_index_type, rule_type>	rule_map_type;
 	/**
 		Watch list entry.  
 		Node index not included because it will be the first
@@ -76,7 +83,7 @@ public:
 		short	__padding2__;
 		watch_entry() : breakpoint(0) { }
 	};
-	typedef	std::map<node_index_type,watch_entry>	watch_list_type;
+	typedef	std::map<node_index_type, watch_entry>	watch_list_type;
 private:
 	/**
 		A fast, realloc-free vector-like structure
@@ -162,7 +169,7 @@ private:
 		TIMING_AFTER = 0,
 		/**
 			Uses delay 10 units for all events, 
-			(except on speically marked rules).
+			(except on specially marked rules).
 		 */
 		TIMING_UNIFORM = 1,
 		/**
@@ -185,11 +192,10 @@ private:
 			Node structure.  
 		Alternative: use map for sparser exclusive rings.  
 	 */
-#if 0
-	typedef	map<node_index_type, node_index_type>
-#else
-	typedef	vector<node_index_type>
-#endif
+public:
+	typedef	std::set<node_index_type>	ring_set_type;
+protected:
+	typedef	vector<ring_set_type>
 						excl_ring_map_type;
 	typedef	vector<event_placeholder_type>	excl_queue_type;
 	typedef	vector<event_index_type>	pending_queue_type;
@@ -201,6 +207,8 @@ private:
 	expr_graph_node_pool_type		expr_graph_node_pool;
 	event_pool_type				event_pool;
 	event_queue_type			event_queue;
+	// rule state and structural information (sparse map)
+	rule_map_type				rule_map;
 	// exclusive rings
 	excl_ring_map_type			exhi;
 	excl_ring_map_type			exlo;
@@ -211,6 +219,7 @@ private:
 	pending_queue_type			pending_queue;
 	// current time, etc...
 	time_type				current_time;
+	time_type				uniform_delay;
 	// watched nodes
 	watch_list_type				watch_list;
 	// vectors
@@ -226,6 +235,11 @@ private:
 	volatile bool				interrupted;
 	// interpreter state
 	ifstream_manager			ifstreams;
+	typedef	vector<expr_index_type>		expr_trace_type;
+	/**
+		For efficient tracing and lookup of root rule expressions.  
+	 */
+	expr_trace_type				__scratch_expr_trace;
 public:
 	/**
 		Signal handler class that binds the State reference
@@ -245,13 +259,8 @@ public:
 		~signal_handler();
 	} __ATTRIBUTE_UNUSED__ ;
 public:
-#if 0
-	explicit
-	State(const count_ptr<const module>&);
-#else
 	explicit
 	State(const module&);
-#endif
 private:
 	// inaccessible undefined copy-constructor ... for now
 	State(const State&);
@@ -291,6 +300,15 @@ public:
 	string
 	get_node_canonical_name(const node_index_type) const;
 
+	rule_map_type&
+	get_rule_map(void) { return rule_map; }
+
+	const rule_map_type&
+	get_rule_map(void) const { return rule_map; }
+
+	bool
+	is_rule_expr(const expr_index_type) const;
+
 	void
 	update_time(const time_type t) {
 		current_time = t;
@@ -303,6 +321,16 @@ public:
 
 	const time_type&
 	time(void) const { return current_time; }
+
+	ostream&
+	dump_timing(ostream&) const;
+
+	bool
+	set_timing(const string&, const string_list&);
+
+	static
+	ostream&
+	help_timing(ostream&);
 
 	void
 	randomize(void) { timing_mode = TIMING_RANDOM; }
@@ -420,9 +448,31 @@ public:
 	ostream&
 	dump_source_paths(ostream&) const;
 
+	void
+	append_exclhi_ring(ring_set_type&);
+
+	void
+	append_excllo_ring(ring_set_type&);
+
+	ostream&
+	dump_ring(ostream&, const ring_set_type&) const;
+
+	ostream&
+	dump_exclhi_rings(ostream&) const;
+
+	ostream&
+	dump_excllo_rings(ostream&) const;
+
+	ostream&
+	dump_node_excl_rings(ostream&, const node_index_type) const;
+
 private:
 	event_index_type
-	__allocate_event(node_type&, const node_index_type, const char);
+	__allocate_event(node_type&, const node_index_type,
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		const rule_index_type, 
+#endif
+		const char);
 
 	void
 	__deallocate_event(node_type&, const event_index_type);

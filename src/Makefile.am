@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.115 2006/04/14 20:10:52 fang Exp $
+#	$Id: Makefile.am,v 1.116 2006/04/23 07:37:16 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -243,6 +243,7 @@ OBJECT_CC_FILES = \
 	Object/def/footprint.cc \
 	Object/def/footprint_manager.cc \
 	Object/lang/cflat_visitor.cc \
+	Object/lang/cflat_context_visitor.cc \
 	Object/lang/cflat_printer.cc \
 	Object/lang/bool_literal.cc \
 	Object/lang/directive_base.cc \
@@ -250,10 +251,13 @@ OBJECT_CC_FILES = \
 	Object/lang/directive_source.cc \
 	Object/lang/PRS.cc \
 	Object/lang/PRS_footprint.cc \
+	Object/lang/PRS_attribute_common.cc \
 	Object/lang/PRS_attribute_registry.cc \
+	Object/lang/PRS_macro_common.cc \
 	Object/lang/PRS_macro_registry.cc \
 	Object/lang/CHP.cc \
 	Object/lang/SPEC.cc \
+	Object/lang/SPEC_common.cc \
 	Object/lang/SPEC_footprint.cc \
 	Object/lang/SPEC_registry.cc
 
@@ -306,6 +310,8 @@ OBJECT_TCC_FILES = \
 	Object/unroll/instantiation_statement.tcc \
 	Object/unroll/port_connection.tcc \
 	Object/unroll/unroll_context.tcc \
+	Object/lang/PRS_macro_registry.tcc \
+	Object/lang/SPEC_registry.tcc \
 	Object/module.tcc \
 	Object/global_entry.tcc \
 	Object/common/namespace.tcc \
@@ -491,6 +497,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/process_instantiation_statement.h \
 	Object/unroll/sequential_scope.h \
 	Object/unroll/unroll_context_value_resolver.h \
+	Object/lang/PRS_fwd.h \
 	Object/lang/PRS_base.h \
 	Object/lang/PRS_literal_unroller.h \
 	Object/lang/CHP_base.h \
@@ -526,6 +533,7 @@ PARSER_CC_FILES = \
 
 
 SIM_CC_FILES = \
+	sim/time.cc \
 	sim/random_time.cc \
 	sim/prsim/Node.cc \
 	sim/prsim/Expr.cc \
@@ -536,12 +544,13 @@ SIM_CC_FILES = \
 	sim/prsim/Reference.cc
 
 SIM_TCC_FILES = \
-	sim/prsim/Event.tcc
+	sim/prsim/Event.tcc \
+	sim/prsim/Rule.tcc
 
 SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	$(SIM_TCC_FILES:.tcc=.h) \
 	sim/common.h \
-	sim/time.h
+	sim/devel_switches.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \

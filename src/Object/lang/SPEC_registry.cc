@@ -1,13 +1,17 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.10 2006/04/18 18:42:40 fang Exp $
+	$Id: SPEC_registry.cc,v 1.11 2006/04/23 07:37:22 fang Exp $
  */
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #include <iostream>
 #include <vector>
 #include <set>
-#include "Object/lang/SPEC_registry.h"
+#include "Object/lang/SPEC_registry.tcc"
+#include "Object/lang/SPEC_common.h"
 #include "Object/lang/directive_base.h"
 #include "Object/lang/cflat_printer.h"
 #include "Object/expr/const_param.h"
@@ -22,25 +26,28 @@ namespace SPEC {
 using util::qmap;
 #include "util/using_ostream.h"
 
+// explicit template instantiation
+template class spec_visitor_entry<cflat_prs_printer>;
+
 //=============================================================================
 /**
 	Global static initialization.
 	This must appear first before any registrations take place in this 
 	translation unit.
  */
-const spec_registry_type
-spec_registry;
+const cflat_spec_registry_type
+cflat_spec_registry;
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Local static modifiable reference to use with registration.  
  */
 static
-spec_registry_type&
-__spec_registry(const_cast<spec_registry_type&>(spec_registry));
+cflat_spec_registry_type& __cflat_spec_registry(
+	const_cast<cflat_spec_registry_type&>(cflat_spec_registry));
 
 //=============================================================================
-// class spec_definition_entry method definitions
+// class cflat_spec_definition_entry method definitions
 
 //=============================================================================
 /**
@@ -49,23 +56,24 @@ __spec_registry(const_cast<spec_registry_type&>(spec_registry));
 template <class T>
 static
 size_t
-register_spec_class(void) {
-	typedef	spec_registry_type::iterator		iterator;
-	typedef	spec_registry_type::mapped_type	mapped_type;
+register_cflat_spec_class(void) {
+	typedef	cflat_spec_registry_type::iterator	iterator;
+	typedef	cflat_spec_registry_type::mapped_type	mapped_type;
 	const string k(T::name);
-	mapped_type& m = __spec_registry[k];
+	mapped_type& m(__cflat_spec_registry[k]);
 	if (m) {
 		cerr << "Error: spec directive by the name \'" << k <<
 			"\' has already been registered!" << endl;
 		THROW_EXIT;
 	}
-	m = spec_definition_entry(k, &T::main,
+	m = cflat_spec_definition_entry(k, &T::main,
 		&T::check_num_params, &T::check_num_nodes,
 		&T::check_param_args, &T::check_node_args);
 	// oddly, this is needed to force instantiation of the [] const operator
-	const mapped_type& n __ATTRIBUTE_UNUSED__ = spec_registry[k];
+	const mapped_type& n
+		__ATTRIBUTE_UNUSED_CTOR__((cflat_spec_registry[k]));
 	INVARIANT(n);
-	return spec_registry.size();
+	return cflat_spec_registry.size();
 }
 
 //=============================================================================
@@ -73,61 +81,20 @@ register_spec_class(void) {
 	Convenient home for user-defined spec classes.  
 	Could make this namespace anonymous...
  */
-namespace __specs__ {
+namespace cflat_specs {
+typedef	cflat_spec_definition_entry::node_args_type	node_args_type;
+typedef	cflat_spec_definition_entry::param_args_type	param_args_type;
 
 /**
 	Convenient spec for declaring spec classes.
 	TODO: consider adding a description string.  
  */
-#define	DECLARE_SPEC_DIRECTIVE_CLASS(class_name, spec_name)		\
-struct class_name {							\
-	typedef	class_name				this_type;	\
-	typedef	spec_definition_entry::node_args_type	node_args_type;	\
-	typedef	spec_definition_entry::param_args_type	param_args_type;\
-public:									\
-	static const char			name[];			\
-	static void main(cflat_prs_printer&, const param_args_type&,	\
-		const node_args_type&);					\
-	static good_bool check_num_params(const size_t);		\
-	static good_bool check_num_nodes(const size_t);			\
-	static good_bool check_param_args(const param_args_type&);	\
-	static good_bool check_node_args(const node_args_type&);	\
-private:								\
-	static const size_t			id;			\
-};									\
-const char class_name::name[] = spec_name;				\
-const size_t class_name::id = register_spec_class<class_name>();
-
-/**
-	Default check for number of arguments.  
- */
-#define	DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NUM_PARAMS(class_name)\
-good_bool								\
-class_name::check_num_params(const size_t) {				\
-	return good_bool(true);						\
-}
-
-#define	DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NUM_NODES(class_name)	\
-good_bool								\
-class_name::check_num_nodes(const size_t) {				\
-	return good_bool(true);						\
-}
-
-#define	DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(class_name)	\
-good_bool								\
-class_name::check_param_args(const param_args_type&) {			\
-	return good_bool(true);						\
-}
-
-#define	DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(class_name)	\
-good_bool								\
-class_name::check_node_args(const node_args_type& a) {			\
-	return __no_grouped_node_args(name, a);				\
-}
+#define	DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(class_name, spec_name) \
+	DECLARE_SPEC_DIRECTIVE_CLASS(class_name, cflat_prs_printer)	\
+	DEFINE_SPEC_DIRECTIVE_CLASS(class_name, spec_name, 		\
+		register_cflat_spec_class)
 
 //-----------------------------------------------------------------------------
-typedef	spec_definition_entry::node_args_type		node_args_type;
-typedef	spec_definition_entry::param_args_type		param_args_type;
 
 /**
 	Blatantly copied from PRS_macro_registry.cc.
@@ -161,102 +128,6 @@ print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 		const char* delim) {
 	return print_node_args_list(p, nodes, delim, "{", ",", "}");
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Reusable function for specifying the minimum number of arguments.  
- */
-static
-good_bool
-__takes_no_params(const string& name, const size_t args) {
-	if (args) {
-		cerr << "The \'" << name <<
-			"\' directive takes no parameter arguments." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Reusable function for specifying the minimum number of arguments.  
- */
-static
-good_bool
-min_num_params(const string& name, const size_t min, const size_t args) {
-	if (args < min) {
-		cerr << "The \'" << name << "\' directive requires at least " <<
-			min << " parameters." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Reusable function for specifying the exact number of arguments.  
- */
-static
-good_bool
-exact_num_params(const string& name, const size_t req, const size_t args) {
-	if (args != req) {
-		cerr << "The \'" << name << "\' directive requires exactly " <<
-			req << " parameters." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Reusable function for specifying the minimum number of arguments.  
- */
-static
-good_bool
-min_num_nodes(const string& name, const size_t min, const size_t args) {
-	if (args < min) {
-		cerr << "The \'" << name << "\' directive requires at least " <<
-			min << " arguments." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Reusable function for specifying the exact number of arguments.  
- */
-static
-good_bool
-exact_num_nodes(const string& name, const size_t req, const size_t args) {
-	if (args != req) {
-		cerr << "The \'" << name << "\' directive requires exactly " <<
-			req << " arguments." << endl;
-		return good_bool(false);
-	} else	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**     
-	Most spec directives expect only single nodes, even in grouped 
-	arguments.  
- */
-static
-good_bool
-__no_grouped_node_args(const char* name,
-		const spec_definition_entry::node_args_type& a) {
-	typedef spec_definition_entry::node_args_type	node_args_type;
-	typedef node_args_type::const_iterator		const_iterator;
-	const_iterator i(a.begin()), e(a.end());
-	for ( ; i!=e; ++i) {
-		const size_t s = i->size();
-		if (s > 1) {
-			cerr << "SPEC directive \'" << name <<
-				"\' takes no grouped arguments." << endl;
-			cerr << "\tgot: " << s <<
-				" nodes in argument position " <<
-				distance(a.begin(), i) +1 << endl;
-			return good_bool(false);
-		}
-	}
-	return good_bool(true); 
-}       
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -303,12 +174,11 @@ default_expand_into_singles_output(cflat_prs_printer& p,
 //	Define spec directives HERE.  
 //
 //-----------------------------------------------------------------------------
-
 /**
 	Possibly think of a better name for this directive:
 	'distinct', 'disjoint', 'unconnected'
  */
-DECLARE_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
 
 /**
 	Does nothing, the sole purpose of this directive is to issue
@@ -318,105 +188,28 @@ DECLARE_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
 	\throw generic exception if there is an alias violation.  
  */
 void
-UnAliased::main(cflat_prs_printer& p, const param_args_type& a,
+UnAliased::main(cflat_prs_printer& p, const param_args_type&,
 		const node_args_type& n) {
-	// does nothing but checks
-	typedef	node_args_type::value_type	node_group_type;
-	typedef	node_args_type::const_iterator	source_iterator;
-	typedef	node_args_type::iterator	dest_iterator;
-	node_args_type resolved_node_groups(a.size());
-{
-	source_iterator i(n.begin()), e(n.end());
-	dest_iterator j(resolved_node_groups.begin());
-	// std::transform pattern
-	for ( ; i!=e; ++i, ++j) {
-		p.__resolve_unique_literal_group(*i, *j);
+	if (!__main(p, n).good) {
+		cerr << "Error: detected aliased nodes during "
+			"processing of \'unaliased\' directive."
+			<< endl;
+		THROW_EXIT;
 	}
-}
-{
-	source_iterator i(resolved_node_groups.begin()),
-		e(resolved_node_groups.end());
-	// accumulate all nodes in this set
-	node_group_type temp(*i);
-	for (++i; i!=e; ++i) {
-		typedef	node_group_type::const_iterator	set_iterator;
-		set_iterator ii(i->begin()), ie(i->end());
-		for ( ; ii!=ie; ++ii) {
-			if (temp.insert(*ii).second) {
-				cerr << "Error: detected aliased nodes during "
-					"processing of \'unaliased\' directive."
-					<< endl;
-				THROW_EXIT;
-			}
-		}
-	}
-}
-}
-
-good_bool
-UnAliased::check_num_params(const size_t s) {
-	return __takes_no_params(name, s);
-}
-
-good_bool
-UnAliased::check_num_nodes(const size_t s) {
-	return min_num_nodes(name, 2, s);
-}
-
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(UnAliased)
-
-/**
-	Allowed to take grouped arguments.  
-	\return bad if any nodes in different groups are aliased.  
- */
-good_bool
-UnAliased::check_node_args(const node_args_type& a) {
-	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_SPEC_DIRECTIVE_CLASS(Assert, "assert")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(Assert, "assert")
 
 void
 Assert::main(cflat_prs_printer& p, const param_args_type& a, 
-		const node_args_type&) {
+		const node_args_type& n) {
 	// does nothing
 }
 
-/**
-	Takes any number of parameters, checks that they are all true later.  
- */
-good_bool
-Assert::check_num_params(const size_t s) {
-	return min_num_params(name, 1, s);
-}
-
-/**
-	This spec directive in unique in that it takes no node arguments.  
- */
-good_bool
-Assert::check_num_nodes(const size_t s) {
-	return exact_num_nodes(name, 0, s);
-}
-
-/**
-	For boolean expressions, makes sure that value is 'true'.
-	For integer expessions, makes sure that value is non-zero.
-	Does not accept preal-const, floating point arguments.  
- */
-good_bool
-Assert::check_param_args(const param_args_type& a) {
-	return good_bool(const_param_expr_list::is_all_true(a));
-}
-
-good_bool
-Assert::check_node_args(const node_args_type&) {
-	return good_bool(true);
-}
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
-DECLARE_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 
 /**
 	exclhi -- for LVS: asserts that a set of nodes may only
@@ -436,20 +229,6 @@ LVS_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 	}
 }
 
-good_bool
-LVS_exclhi::check_num_params(const size_t s) {
-	return __takes_no_params(name, s);
-}
-
-good_bool
-LVS_exclhi::check_num_nodes(const size_t s) {
-	return min_num_nodes(name, 2, s);
-}
-
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(LVS_exclhi)
-// make sure nodes aren't aliased accidentally?
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(LVS_exclhi)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	excllo -- for LVS: asserts that a set of nodes may only
@@ -468,22 +247,8 @@ LVS_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 	}
 }
 
-good_bool
-LVS_excllo::check_num_params(const size_t s) {
-	return __takes_no_params(name, s);
-}
-
-good_bool
-LVS_excllo::check_num_nodes(const size_t s) {
-	return min_num_nodes(name, 2, s);
-}
-
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(LVS_excllo)
-// make sure nodes aren't aliased accidentally?
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(LVS_excllo)
-
 //-----------------------------------------------------------------------------
-DECLARE_SPEC_DIRECTIVE_CLASS(LVS_BDD_order, "order")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_BDD_order, "order")
 
 /**
 	order -- for LVS: binary decision diagram ordering for 
@@ -502,22 +267,8 @@ LVS_BDD_order::main(cflat_prs_printer& p, const param_args_type& v,
 	}
 }
 
-good_bool
-LVS_BDD_order::check_num_params(const size_t s) {
-	return __takes_no_params(name, s);
-}
-
-good_bool
-LVS_BDD_order::check_num_nodes(const size_t s) {
-	return min_num_nodes(name, 2, s);
-}
-
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(LVS_BDD_order)
-// make sure nodes aren't aliased accidentally?
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(LVS_BDD_order)
-
 //-----------------------------------------------------------------------------
-DECLARE_SPEC_DIRECTIVE_CLASS(LVS_unstaticized, "unstaticized")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_unstaticized, "unstaticized")
 
 /**
 	unstaticized -- for LVS: asserts that a set of nodes may only
@@ -539,22 +290,9 @@ LVS_unstaticized::main(cflat_prs_printer& p, const param_args_type& v,
 	}
 }
 
-good_bool
-LVS_unstaticized::check_num_params(const size_t s) {
-	return __takes_no_params(name, s);
-}
-
-good_bool
-LVS_unstaticized::check_num_nodes(const size_t s) {
-	return min_num_nodes(name, 1, s);
-}
-
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(LVS_unstaticized)
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(LVS_unstaticized)
-
 //-----------------------------------------------------------------------------
-DECLARE_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
-DECLARE_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
 
 /**
 	mk_exclhi -- for simulations only, 
@@ -573,20 +311,6 @@ SIM_force_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 	}
 }
 
-good_bool
-SIM_force_exclhi::check_num_params(const size_t s) {
-	return __takes_no_params(name, s);
-}
-
-good_bool
-SIM_force_exclhi::check_num_nodes(const size_t s) {
-	return min_num_nodes(name, 2, s);
-}
-
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(SIM_force_exclhi)
-// make sure node arguments aren't actually aliased?
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(SIM_force_exclhi)
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	mk_excllo -- for simulations only, 
@@ -604,20 +328,6 @@ SIM_force_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 		break;
 	}
 }
-
-good_bool
-SIM_force_excllo::check_num_params(const size_t s) {
-	return __takes_no_params(name, s);
-}
-
-good_bool
-SIM_force_excllo::check_num_nodes(const size_t s) {
-	return min_num_nodes(name, 2, s);
-}
-
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(SIM_force_excllo)
-// make sure node arguments aren't actually aliased?
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_NODES(SIM_force_excllo)
 
 //-----------------------------------------------------------------------------
 /**
@@ -642,7 +352,7 @@ default_layout_spec_output(cflat_prs_printer& p, const param_args_type& params,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
 
 /**
 	\param a node arguments are processed in groups, so e.g.
@@ -667,35 +377,15 @@ layout_min_sep::main(cflat_prs_printer& p, const param_args_type& v,
 	}
 }
 
-good_bool
-layout_min_sep::check_num_params(const size_t s) {
-	return exact_num_params(name, 1, s);
-}
-
-good_bool
-layout_min_sep::check_num_nodes(const size_t s) {
-//	return min_num_nodes(name, 2, s);
-	return exact_num_nodes(name, 2, s);
-}
-
-DEFINE_DEFAULT_SPEC_DIRECTIVE_CLASS_CHECK_PARAMS(layout_min_sep)
-
-/**
-	Grouped arguments ARE allowed here.  
-	TODO: could check that same node doesn't appear in different groups...
- */
-good_bool
-layout_min_sep::check_node_args(const node_args_type& a) {
-	return good_bool(true);
-}
-
 }	// end namespace layout
 //-----------------------------------------------------------------------------
-#undef	DECLARE_SPEC_DIRECTIVE_CLASS
-}	// end namespace __specs__
+#undef	DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS
+}	// end namespace cflat_specs
 
 //=============================================================================
 }	// end namespace PRS
 }	// end namespace entity
 }	// end namespace HAC
+
+DEFAULT_STATIC_TRACE_END
 

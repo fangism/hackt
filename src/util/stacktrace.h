@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.13 2006/01/22 06:53:37 fang Exp $
+	$Id: stacktrace.h,v 1.14 2006/04/23 07:37:28 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -17,12 +17,63 @@
 #define	ENABLE_STACKTRACE	0	// on (1) or off (0) by default
 #endif
 
+#include "config.h"
 
 #if defined(__cplusplus) && defined(HAVE_CASSERT) && HAVE_CASSERT
 #include <cassert>
 #else
 #include <assert.h>
 #endif
+
+#include <iosfwd>		// needed for std::ostream forward declaration
+
+#define	NULL_STACKTRACE_STREAM		util::null_stacktrace_stream
+
+namespace util {
+/**
+	This definition is always available regardless of ENALBLE_STACKTRACE.  
+	Fake stream object for sake of disabling STACKTRACE_STREAM.  
+ */
+struct null_stacktrace_stream_type {
+	typedef	null_stacktrace_stream_type		this_type;
+
+	template <class T>
+	const null_stacktrace_stream_type&
+	operator << (const T&) const { return *this; }
+
+#if 0
+	/**
+		Failed attempt to generalize for all
+		manipulators.  
+	 */
+	template <class stream_type>
+	const this_type&
+	operator << (stream_type& (*__pf)(stream_type&)) const {
+		return *this;
+	}
+#endif
+
+	/**
+		Ugly kludge needed to handle case where RHS is
+		an iomanip function, such as flush, endl, ends.  
+	 */
+	const this_type&
+	operator << (std::ostream& (*__pf)(std::ostream&)) const {
+		return *this;
+	}
+
+};	// end struct null_stacktrace_stream_type
+
+
+/**
+	Private null-stream object.  
+	No linking required.  
+ */
+static
+const null_stacktrace_stream_type
+null_stacktrace_stream = null_stacktrace_stream_type();
+
+}	// end namespace util
 
 //=============================================================================
 // This is the macro interface intended for the programmer.  
@@ -61,6 +112,13 @@
  */
 #define STACKTRACE_INDENT						\
 		STACKTRACE_STREAM << util::stacktrace_auto_indent
+/**
+	ostream << style printing.  
+	This interface is preferable when compiler isn't smart enough
+	to optimize away no-ops with the null_stacktrace_stream.  
+	\param x may be a set of <<-cascaded arguments.  
+ */
+#define	STACKTRACE_INDENT_PRINT(x)	STACKTRACE_INDENT << x
 #define REDIRECT_STACKTRACE(os)						\
 	const util::stacktrace::redirect UNIQUIFY(__redir_stacktrace__) (os)
 #define	ASSERT_STACKTRACE(expr)						\
@@ -76,8 +134,9 @@
 #define	STACKTRACE_VERBOSE
 #define STACKTRACE_ECHO_ON
 #define STACKTRACE_ECHO_OFF
-#define	STACKTRACE_STREAM		std::cerr
-#define STACKTRACE_INDENT		STACKTRACE_STREAM << ""
+#define	STACKTRACE_STREAM		NULL_STACKTRACE_STREAM
+#define STACKTRACE_INDENT		NULL_STACKTRACE_STREAM
+#define	STACKTRACE_INDENT_PRINT(x)
 #define REDIRECT_STACKTRACE(os)
 #define	ASSERT_STACKTRACE(expr)		assert(expr)
 #define	REQUIRES_STACKTRACE_STATIC_INIT	

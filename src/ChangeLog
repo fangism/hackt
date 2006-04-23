@@ -3,6 +3,134 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+
+2006-04-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-18-merged-prsim-03-09:
+	  Branch merge of prsim fixes and features.  
+	  Summary: reorganized SPEC, PRS macros, and rule-attributes into
+		tool-independent checking functions, and tool-specific
+		main() implementations.  
+		ExprAlloc pass now handles macros, directives, attributes...
+			importantly "after delays" and pass-gates, 
+			and mk_exclhi/lo directives.  
+		prsim now has support for per-rule attributes, 
+			such as after delay, also support for excl rings.  
+		Delay is introduced with cause-tracking during 
+			propagate_evaluate.  NOTE: not the same as
+			original prsim's per-node up/dn delay!
+			Claim: this is better.  
+		new commands: 'timing', 'rings', 'allrings'
+		deprecated commands: 'random', 'norandom'
+
+
+2006-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-09:
+	  Minor bug fixes from testing excl-ring support.  
+		Removed initial presizing of excl rings.  
+		Tagged nodes as exclhi/exchlo upon appending to rings.  
+		Set the excl_queue flag on nodes affected by events in the
+			exclhi and excllo queues.  
+	  ExprAlloc.cc: removed is_nand from OR-combination case (not sound).
+	  sim/prsim/State.cc: tons of debug printing macros scattered.  
+	  Improvements to stacktrace interface described in util/ChangeLog.  
+	  Added few simple test cases.  
+
+
+2006-04-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-08:
+	  Added 'rings' command to dump all rings of which a node is a member,
+		useful for near future debugging.  Also 'allrings' command
+		dumps all exclhi/lo rings.  
+	  sim/prsim/ExprAlloc.cc: fixed bug -- forgot to resolve canonical
+		node ID before passing to allocate_new_literal_expr.  
+	  Corrected implementation of excl-rings to use a vector of 
+		sets of node indices (per ring).  
+	  Added bunch of test-cases as promised.  
+	  TODO: test excl-rings.  
+	  Status: after excl-rings are basically tested, branch is mature.  
+
+
+2006-04-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-07:
+	  'after' rule attribute checks that delay expression is non-negative.
+	  Factored out 'unaliased' functionality into base class, shared
+		by tool-dependent implementations.  
+	  Added simulator delay_policy<time_type>::zero.
+	  sim/prsim/ExprAlloc.cc: cleaned up much code, preferring calling
+		high-level functions over structure member manipulations.  
+		OR-rule combination now checks for root-ness of expression
+		before combining, to preserve rule-attribute distinctions.  
+		A few test cases were updated in parser/prs/short-*
+		Implemented SPEC directives for prsim: unaliased, assert, 
+			mk_exclhi, and mk_excllo.  
+		State is now capable of loading excl rings (untested).  
+	  State::get_delay*() now checks for 'after 0' delay before 
+		adding random delay value.  
+	  State::propagate_evaluate() now delays search for root rule
+		expressions until after propagation loop, for efficiency.  
+	  TODO: test excl-rings, OR-combinations, after 0, pass-gate macros...
+
+
+2006-04-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-06:
+	  Relocated some macro/attribute/spec class declaration macros
+		into respective *_registry.h header files.  
+	  main/prsim.cc: now catches exceptions, thrown when there is
+		violation of macro/directive input constraints during
+		expression allocation of State initialization.  
+	  sim/prsim/ExprAlloc.cc: refactored out common subroutines, 
+		implemented 'passn' and 'passp' macros, and visitation of
+		PRS macros and SPEC directives (untested).  
+	  TODO: respect "after 0"
+	  TODO: test cases using pass-gates.
+
+
+2006-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-05:
+	  Factored out tool-independent portions of PRS-macro and 
+		SPEC-registry code into lang/PRS_macro_common.{h,cc}
+		and lang/SPEC_common.{h,cc}, respectively.  
+		Mostly affected are the checking functions associated
+		with each directive, for sake of consistency.  
+	  Templated definition of macro and spec definition entries, 
+		to facilitate re-use with other tools and passes.  
+	  Next: finish defining tool directives for ExprAlloc.cc
+	  TODO: tool name disambiguation, 
+		e.g. cflat, perhaps after trunk merge.  
+	  TODO: universal macro name registry? to call checks
+		using through tool-independent interface.  
+
+
+2006-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-04:
+	  Tiny changes, mostly adding of new tests in test/prsim.  
+	  prsim: 'random' and 'norandom' are deprecated and give warnings.  
+	  updated State::reset() to unwatchall nodes.  
+	  'timing uniform' now uses optional argument.  
+
+
+2006-04-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-03:
+	  Provisional implementation of rule-cause tracking, to trace which
+		rule fired for the purpose of using per-rule attribute info.
+		Currently enabled by ENABLE_PRSIM_CAUSE_TRACKING flag
+		in "sim/devel_switches.h" (new).
+	  prsim: new 'timing' command to replace 'random'/'norandom'.
+		There are two non-random modes: uniform and after.
+		'uniform' is useful for transition counts,
+		'after' is useful for delay estimation, more to come...
+	  TODO: timing mode test cases, use of after-delay rule attributes.
+	  TODO: test for new invariants involving rule-cause assignment.  
+
+
 2006-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-17:
@@ -14,6 +142,35 @@
 		template typedefs in most library structures.  
 	  Explicit instantiations in sim / PRS registry units is 
 		no longer required.  
+
+
+2006-04-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-02:
+	  Started to factor out common tool-independent functions of
+		PRS rule attributes.  Tool-dependent passes, such as cflat
+		and prsim expression allocation can (and should) derive
+		from these to leverage code-reuse.  
+	  sim/time.{h,cc}: added new delay_policy traits class, 
+		with members such as invalid_delay, default_delay.  
+	  sim/prsim/Rule.h: new structure for rule attributes.  
+	  Implemented ExprAlloc rule attribute registry (After, Weak), 
+		but their results aren't visible yet in the simulator.  
+		footprint_rule visitation now traverses attributes list.  
+	  PRSIM::State: added new rule_map to store/encode rule attributes.  
+	  TODO: print out (and use) rule attributes in prsim.  
+
+
+2006-04-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-01:
+	  Factored out parent classes cflat_visitor and cflat_context
+		into cflat_context_visitor, inherited by SIM::PRSIM::ExprAlloc, 
+		and entity::PRS::cflat_prs_printer.  Much common functionality
+		shared between these two visitors.  
+	  Object/global_entry_context_base: member savers defined
+		in terms of util::member_saver.
+	  other util library header cleanups, summarized in util/ChangeLog.
 
 
 2006-04-15	David Fang		<fangism@users.sourceforge.net>

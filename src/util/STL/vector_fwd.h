@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/vector_fwd.h"
 	Forward declaration for std::vector.
-	$Id: vector_fwd.h,v 1.5 2006/04/18 18:42:45 fang Exp $
+	$Id: vector_fwd.h,v 1.6 2006/04/23 07:37:29 fang Exp $
  */
 
 #ifndef	__UTIL_STL_VECTOR_FWD_H__
@@ -20,7 +20,7 @@ struct default_vector {
 
 	template <class S>
 	struct rebind : public default_vector<S> { };
-};
+};	// end struct default_vector
 
 }	// end namespace std
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_defintion.cc"
-	$Id: directive_definition.cc,v 1.2 2006/02/10 21:50:41 fang Exp $
+	$Id: directive_definition.cc,v 1.3 2006/04/23 07:37:24 fang Exp $
  */
 
 #include <vector>
@@ -10,26 +10,9 @@
 
 namespace HAC {
 namespace entity {
-using PRS::cflat_prs_printer;
+// using PRS::cflat_prs_printer;
 //=============================================================================
-
 // class directive_definition method definitions
-
-void
-directive_definition::main(cflat_prs_printer& c, const param_args_type& p, 
-		const node_args_type& n) const {
-	NEVER_NULL(_main);
-	(*_main)(c, p, n);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-void
-directive_definition::main(cflat_prs_printer& c,
-		const node_args_type& n) const {
-	NEVER_NULL(_main);
-	const param_args_type empty;
-	(*_main)(c, empty, n);
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool

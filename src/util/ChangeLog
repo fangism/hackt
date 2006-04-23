@@ -1,5 +1,24 @@
 # "src/util/ChangeLog"
 
+2006-04-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-18-merged-prsim-03-09:
+	  Branch merge.  Only minor revisions and clean ups from branch.
+
+
+2006-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-09:
+	  Improved macro interface for stacktrace indentation.  
+		STACKTRACE_INDENT_PRINT(x << y << z)
+		Wrote null_stacktrace_stream_type class that works
+		like an ostream, but does nothing, and always returns
+		itself.  Even handles case of ostream manipulators.  
+		Unforunately compiler isn't always smart enough to
+		optimize-away these no-ops, so STACKTRACE_INDENT_PRINT
+		is still preferred. 
+
+
 2006-04-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-17:
@@ -13,6 +32,13 @@
 	  Added a bunch of rebind helpers to the default template wrappers.  
 	  Also some general cleanups of STL fwd. headers.  
 	  Test case sources updated accordingly.  
+
+
+2006-04-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-01:
+	  member_saver defined as derivative of value_saver.  
+	  Minor common cleanups in util/STL/*_fwd.h
 
 
 2006-04-13	David Fang		<fangism@users.sourceforge.net>

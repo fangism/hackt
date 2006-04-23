@@ -1,0 +1,12 @@
+// "after-celem-more.hac"
+// testing larger OR-combinations
+
+import "after-celem-def.hac";
+
+bool a[4], b[4], c;
+
+after_celem<10> w(a[0], b[0], c);
+after_celem<15> x(a[1], b[1], c);
+after_celem<35> y(a[2], b[2], c);
+after_celem<50> z(a[3], b[3], c);
+

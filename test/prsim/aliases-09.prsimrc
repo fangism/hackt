@@ -1,0 +1,23 @@
+# "aliases-09.hac"
+#	$Id: aliases-09.prsimrc,v 1.2 2006/04/23 07:37:33 fang Exp $
+# @haco@ inv.haco-a
+# testing aliases for creating comments
+
+aliases
+alias // #
+aliases
+
+// now // can be used as a comment!
+// I love C++ endline comments, don't you?
+
+alias dnl //
+alias ignore //
+
+aliases
+
+dnl I love m4 endline comments!
+ignore me
+
+unaliasall
+aliases
+

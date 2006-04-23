@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.14 2006/04/16 18:36:18 fang Exp $
+	$Id: PRS.cc,v 1.15 2006/04/23 07:37:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -1742,7 +1742,7 @@ macro::check(void) const {
 	assert(name.length());
 	assert(nodes.size());
 	// probe existence of macro
-	const macro_definition_entry m(macro_registry[name]);
+	const cflat_macro_definition_entry m(cflat_macro_registry[name]);
 	// should've already been checked in the parser
 	if (!m) {
 		cerr << "Error: unknown PRS macro \'" << name << "\'." << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/list_fwd.h"
 	Forward declaration of std::list wrapper class.  
-	$Id: list_fwd.h,v 1.4 2006/04/18 18:42:45 fang Exp $
+	$Id: list_fwd.h,v 1.5 2006/04/23 07:37:29 fang Exp $
  */
 
 #ifndef	__UTIL_STL_LIST_FWD_H__
@@ -25,7 +25,7 @@ struct default_list {
 	struct rebind : public default_list<T2> { };
 };
 
-}
+}	// end namespace std
 
 #endif	// __UTIL_STL_LIST_FWD_H__
 

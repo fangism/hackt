@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.16 2006/04/11 07:54:39 fang Exp $
+	$Id: footprint.cc,v 1.17 2006/04/23 07:37:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -31,7 +31,6 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
-#include "util/wtf.h"
 
 namespace HAC {
 namespace entity {

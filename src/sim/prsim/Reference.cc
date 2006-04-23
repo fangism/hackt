@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Reference.cc"
 	Handy functions for using compiler functions in other tools.  
-	$Id: Reference.cc,v 1.7 2006/04/12 08:53:21 fang Exp $
+	$Id: Reference.cc,v 1.8 2006/04/23 07:37:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -33,7 +33,6 @@
 #include "util/memory/deallocation_policy.h"
 #include "util/packed_array.h"		// for alias_collection_type
 #include "util/ring_node.h"
-#include "util/wtf.h"
 
 extern	int instref_parse(void*, YYSTYPE&, FILE*);
 

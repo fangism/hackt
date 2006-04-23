@@ -2,7 +2,7 @@
 	\file "util/qmap_fwd.h"
 	Forward declarations for std::map wrapper.  
 	Full description in "STL/map.h".
-	$Id: map_fwd.h,v 1.4 2006/04/18 18:42:45 fang Exp $
+	$Id: map_fwd.h,v 1.5 2006/04/23 07:37:29 fang Exp $
  */
 
 #ifndef	__UTIL_STL_MAP_FWD_H__
@@ -30,7 +30,7 @@ struct default_map {
 	 */
 	template <class K2, class T2>
 	struct rebind : public default_map<K2, T2> { };
-};
+};	// end struct default_map
 
 }	// end namespace std
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_attribute_registry.h"
-	$Id: PRS_attribute_registry.h,v 1.5 2006/04/18 18:42:40 fang Exp $
+	$Id: PRS_attribute_registry.h,v 1.6 2006/04/23 07:37:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_ATTRIBUTE_REGISTRY_H__
@@ -11,10 +11,10 @@
 #include "util/size_t.h"
 #include "util/boolean_types.h"
 #include "util/qmap.h"
+#include "Object/lang/PRS_fwd.h"
 
 namespace HAC {
 namespace entity {
-class const_param_expr_list;
 namespace PRS {
 using std::string;
 using util::good_bool;
@@ -30,7 +30,7 @@ template <class VisitorType>
 class attribute_visitor_entry {
 public:
 	typedef	VisitorType			visitor_type;
-	typedef	const_param_expr_list		values_type;
+	typedef	rule_attribute_values_type	values_type;
 	typedef void (main_type)(visitor_type&, const values_type&);
 	typedef	main_type*			main_ptr_type;
 	typedef	good_bool (check_values_type)(const values_type&);
@@ -66,6 +66,8 @@ public:
 };	// end attribute_visitor_entry
 
 //=============================================================================
+// TODO: factor these tool-dependent typedefs out to another header
+
 typedef	attribute_visitor_entry<cflat_prs_printer>
 					cflat_attribute_definition_entry;
 /**
@@ -79,6 +81,43 @@ typedef	util::default_qmap<string, cflat_attribute_definition_entry>::type
 	This is globally/statically initialized in this corresponding .cc file. 
  */
 extern const cflat_attribute_registry_type	cflat_attribute_registry;
+
+//=============================================================================
+/**
+	Macro for declaring attribute classes.  
+	The base classes are declared in "Object/lang/PRS_attribute_common.h".
+	Here, the vistor_type is cflat_prs_printer.
+	TODO: These classes should have hidden visibility.  
+	TODO: could also push name[] into the base class, but would we be 
+		creating an initialization order dependence?
+ */
+#define DECLARE_PRS_RULE_ATTRIBUTE_CLASS(class_name, visitor)		\
+struct class_name : public entity::PRS::rule_attributes::class_name {	\
+	typedef	entity::PRS::rule_attributes::class_name parent_type;	\
+	typedef	visitor					visitor_type;	\
+	typedef	entity::PRS::attribute_visitor_entry<visitor_type>	\
+					definition_entry_type;		\
+	typedef	definition_entry_type::values_type	values_type;	\
+	typedef	values_type::value_type			value_type;	\
+public:									\
+	static const char				name[];		\
+	static void main(visitor_type&, const values_type&);		\
+	static good_bool check_vals(const values_type&);		\
+private:								\
+	static const size_t				id;		\
+};	// end class class_name
+
+/**
+	\param registrar is the name of the template function used to register
+		the class for a specific tool.  
+ */
+#define DEFINE_PRS_RULE_ATTRIBUTE_CLASS(class_name, att_name, registrar) \
+const char class_name::name[] = att_name;				\
+good_bool								\
+class_name::check_vals(const values_type& v) {				\
+	return parent_type::__check_vals(name, v);			\
+}									\
+const size_t class_name::id = registrar<class_name>();
 
 //=============================================================================
 }	// end namespace PRS
