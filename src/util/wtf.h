@@ -2,7 +2,9 @@
 	\file "util/wtf.h"
 	Intentionally undefined struct for the sake of seeing
 	the name of a resolved type.  
-	$Id: wtf.h,v 1.4 2006/04/12 08:53:22 fang Exp $
+	TODO: extend this to work with function, member functions, 
+		and their pointers.  
+	$Id: wtf.h,v 1.4.2.1 2006/04/23 04:42:59 fang Exp $
  */
 
 #ifndef	__UTIL_WTF_H__

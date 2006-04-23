@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.6.2.6 2006/04/22 04:40:40 fang Exp $
+	$Id: ExprAlloc.cc,v 1.6.2.7 2006/04/23 04:42:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -431,12 +431,12 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		expr_type& pe(st_expr_pool[dir_index]);
 		graph_node_type& pg(st_graph_node_pool[dir_index]);
 		// see if either previous pull-up expr is OR-type already
-		// may also work with NAND! (UNTESTED)
+		// may also work with NAND! in the case of NAND, need to 
+		// make sure appending expression is negated...
 
 		// we don't OR-combine if the expression being examined
 		// is already a top-level root-expression.  
-		if ((pe.is_or() || pe.is_nand()) &&
-				!state.is_rule_expr(top_ex_index)) {
+		if (pe.is_or() && !state.is_rule_expr(top_ex_index)) {
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT << "prev. root expr is OR" << endl;
 #endif
@@ -449,8 +449,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			ne.set_parent_expr(dir_index);
 			ng.offset = pe.size;
 			++pe.size;
-		} else if ((ne.is_or() || ne.is_nand()) &&
-				!state.is_rule_expr(dir_index)) {
+		} else if (ne.is_or() && !state.is_rule_expr(dir_index)) {
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT << "new expr is OR" << endl;
 #endif
@@ -680,7 +679,9 @@ SIM_force_exclhi::main(visitor_type& v, const param_args_type& params,
 			v.__lookup_global_bool_id(*i->begin());
 		r.insert(ni);
 	}
+	INVARIANT(r.size() > 1);
 	v.state.append_exclhi_ring(r);
+	INVARIANT(r.empty());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -706,7 +707,9 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 			v.__lookup_global_bool_id(*i->begin());
 		r.insert(ni);
 	}
+	INVARIANT(r.size() > 1);
 	v.state.append_excllo_ring(r);
+	INVARIANT(r.empty());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

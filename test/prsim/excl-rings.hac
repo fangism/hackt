@@ -1,0 +1,7 @@
+// "excl-rings.hac"
+
+import "excl-rings-def.hac";
+
+bool a, b, x, y;
+arb_invs foo(a, b, x, y);
+

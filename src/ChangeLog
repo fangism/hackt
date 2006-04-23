@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-16-prsim-03-09:
+	  Minor bug fixes from testing excl-ring support.  
+		Removed initial presizing of excl rings.  
+		Tagged nodes as exclhi/exchlo upon appending to rings.  
+		Set the excl_queue flag on nodes affected by events in the
+			exclhi and excllo queues.  
+	  ExprAlloc.cc: removed is_nand from OR-combination case (not sound).
+	  sim/prsim/State.cc: tons of debug printing macros scattered.  
+	  Improvements to stacktrace interface described in util/ChangeLog.  
+	  Added few simple test cases.  
+
+
 2006-04-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-16-prsim-03-08:
