@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.6.2.7 2006/04/23 04:42:58 fang Exp $
+	$Id: State.cc,v 1.6.2.8 2006/04/23 05:25:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -607,6 +607,7 @@ State::help_timing(ostream& o) {
 	o << "\trandom [seed]" << endl;
 	o << "\tuniform [delay]" << endl;
 	o << "\tafter" << endl;
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
