@@ -2,7 +2,7 @@
 	\file "Object/traits/pint_traits.h"
 	Traits and policies for parameter integers.  
 	This file used to be "Object/art_object_pint_traits.h".
-	$Id: pint_traits.h,v 1.10 2006/04/11 07:54:45 fang Exp $
+	$Id: pint_traits.h,v 1.10.4.1 2006/04/24 05:42:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PINT_TRAITS_H__
@@ -66,8 +66,6 @@ struct class_traits<pint_tag> {
 
 	typedef	void			value_collection_parameter_type;
 	typedef	null_parameter_type	instance_collection_parameter_type;
-
-	class instantiation_statement_type_ref_base;
 
 	typedef	param_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
