@@ -2,6 +2,12 @@
 
 2006-04-24	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-19-icc-01-02:
+	  Tons of configurisms for SGI vs. Intel hash_map.
+		Checking for namespace and template argument style.  
+	  Forward declaration headers fixed accordingly.  
+
+
 	* HACKT-00-01-04-main-00-78-19-icc-01-01:
 	  Another crack at getting icc to compile hackt.  
 	  configure.ac: moved AC_HEADER_STDCXX test earlier

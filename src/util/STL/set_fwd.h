@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/set_fwd.h"
 	Forward declarations of std::set.
-	$Id: set_fwd.h,v 1.6 2006/04/18 18:42:45 fang Exp $
+	$Id: set_fwd.h,v 1.6.2.1 2006/04/24 20:15:36 fang Exp $
  */
 
 #ifndef	__UTIL_STL_SET_FWD_H__
@@ -14,8 +14,12 @@ namespace std {
 template <class K>
 struct less;
 
-template <class K, class C, class A>
+#define	STD_SET_TEMPLATE_SIGNATURE	template <class K, class C, class A>
+
+STD_SET_TEMPLATE_SIGNATURE
 class set;
+
+#define	STD_SET_CLASS		std::set<K, C, A >
 
 /**
 	Template typedef for default std::set.  

@@ -1,7 +1,7 @@
 /**
 	\file "util/hash_qmap.h"
 	Queryable hash_map that doesn't add empty elements on lookup.  
-	$Id: hash_qmap.h,v 1.9 2005/05/10 04:51:23 fang Exp $
+	$Id: hash_qmap.h,v 1.9.92.1 2006/04/24 20:15:35 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_QMAP_H__
@@ -13,7 +13,6 @@
 #include "util/const_assoc_query.h"
 
 namespace util {
-using HASH_MAP_NAMESPACE::hash_map;
 using std::pair;
 
 //-----------------------------------------------------------------------------
@@ -29,7 +28,8 @@ using std::pair;
 	\param A the allocator.  
  */
 HASH_QMAP_TEMPLATE_SIGNATURE
-class hash_qmap : public const_assoc_query<hash_map<K,T,H,E,A> > {
+class hash_qmap :
+	public const_assoc_query<HASH_MAP_NAMESPACE::HASH_MAP_CLASS > {
 	// EVERYTHING inherited
 };
 

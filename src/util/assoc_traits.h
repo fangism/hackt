@@ -4,7 +4,7 @@
 	container values such as set, map, hash_map.  
 
 	Incidentally, this is used by "const_assoc_query.h".
-	$Id: assoc_traits.h,v 1.3 2005/05/10 04:51:22 fang Exp $
+	$Id: assoc_traits.h,v 1.3.92.1 2006/04/24 20:15:35 fang Exp $
  */
 
 #ifndef	__UTIL_ASSOC_TRAITS_H__
@@ -37,9 +37,9 @@ namespace util {
 // partial specializations here
 
 // STL_MAP_TEMPLATE_SIGNATURE
-template <class K, class T, class C, class A>
-struct assoc_traits<std::map<K,T,C,A> > {
-	typedef	std::map<K,T,C,A>			container_type;
+STD_MAP_TEMPLATE_SIGNATURE
+struct assoc_traits<STD_MAP_CLASS > {
+	typedef	STD_MAP_CLASS				container_type;
 	typedef	typename container_type::key_type	key_type;
 	typedef	typename container_type::value_type	value_type;
 	typedef	std::_Select1st<value_type>		key_selector;
@@ -48,9 +48,9 @@ struct assoc_traits<std::map<K,T,C,A> > {
 
 //-----------------------------------------------------------------------------
 // STL_HASH_MAP_TEMPLATE_SIGNATURE
-template <class K, class T, class H, class E, class A>
-struct assoc_traits<HASH_MAP_NAMESPACE::hash_map<K,T,H,E,A> > {
-	typedef	HASH_MAP_NAMESPACE::hash_map<K,T,H,E,A>	container_type;
+HASH_MAP_TEMPLATE_SIGNATURE
+struct assoc_traits<HASH_MAP_NAMESPACE::HASH_MAP_CLASS > {
+	typedef	HASH_MAP_NAMESPACE::HASH_MAP_CLASS	container_type;
 	typedef	typename container_type::key_type	key_type;
 	typedef	typename container_type::value_type	value_type;
 	typedef	std::_Select1st<value_type>		key_selector;
@@ -59,9 +59,9 @@ struct assoc_traits<HASH_MAP_NAMESPACE::hash_map<K,T,H,E,A> > {
 
 //-----------------------------------------------------------------------------
 // STL_SET_TEMPLATE_SIGNATURE
-template <class K, class C, class A>
-struct assoc_traits<std::set<K,C,A> > {
-	typedef	std::set<K,C,A>				container_type;
+STD_SET_TEMPLATE_SIGNATURE
+struct assoc_traits<STD_SET_CLASS > {
+	typedef	STD_SET_CLASS				container_type;
 	typedef	typename container_type::key_type	key_type;
 	typedef	typename container_type::value_type	value_type;
 	typedef	std::_Identity<value_type>		key_selector;

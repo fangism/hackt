@@ -1,7 +1,7 @@
 /**
 	\file "util/conditional.h"
 	Functor compositions for conditional or predicated execution.  
-	$Id: conditional.h,v 1.8 2005/06/21 21:26:36 fang Exp $
+	$Id: conditional.h,v 1.8.80.1 2006/04/24 20:15:35 fang Exp $
  */
 
 #ifndef	__UTIL_CONDITIONAL_H__
@@ -32,6 +32,10 @@ public:
 #endif
 
 //-----------------------------------------------------------------------------
+template <class In, class Pred, class Op>
+Op&
+for_each_if (In, In, Pred, Op&);
+
 /**
 	Predicates the execution of each iteration of a for-loop with
 	a conditional whose argument type is the same as the function's.  
@@ -77,6 +81,10 @@ for_each_if<In, Pred, Op&> (In first, In last, Pred p, Op& f) {
 **/
 
 //=============================================================================
+template <class In1, class In2, class Pred1, class Pred2, class Comp>
+bool
+compare_if(In1, In1, In2, In2, Pred1, Pred2, Comp);
+
 /**
 	Compare, in order, the elements of two sequences that meet 
 	certain criteria, predicates.  

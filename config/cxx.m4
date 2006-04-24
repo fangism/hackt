@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.5.2.1 2006/04/24 05:42:14 fang Exp $
+dnl	$Id: cxx.m4,v 1.5.2.2 2006/04/24 20:15:30 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -143,10 +143,8 @@ AC_LANG_POP(C++)
 ])
 dnl AC_MSG_RESULT([$fang_cv_cxx_strict_anal_headers])
 if test "$fang_cv_cxx_strict_anal_headers" = no ; then
-	AC_MSG_RESULT(no)
-	AC_MSG_ERROR([You're in big trouble!])
-else
-	AC_MSG_RESULT(yes)
+	echo "CONFTEST_CXXFLAGS: $CONFTEST_CXXFLAGS"
+	AC_MSG_ERROR([You're in big trouble if the standard headers don't pass with the given warnings flags!])
 fi
 ])
 
@@ -187,9 +185,8 @@ elif test "$ac_cv_cxx_compiler_gnu" = yes ; then
 	TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
 	TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
 	TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
-	TRY_NOWARN_FLAGS="-Wno-unused -Wno-missing-prototypes -Wno-shadow"
-	TRY_NOWARN_FLAGS="$TRY_NOWARN_FLAGS -Wno-cast-qual -Wno-long-double"
-	TRY_NOWARN_CFLAGS="-Wno-strict-prototypes"
+	TRY_NOWARN_FLAGS="-Wno-unused -Wno-shadow -Wno-cast-qual -Wno-long-double"
+	TRY_NOWARN_CFLAGS="-Wno-strict-prototypes -Wno-missing-prototypes"
 	TRY_NOWARN_CXXFLAGS="-Wno-overloaded-virtual"
 else
 	TRY_WARN_FLAGS="-Whatever"

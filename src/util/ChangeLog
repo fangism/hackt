@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2006-04-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-02:
+	  Significant configuration improvements regarding standard
+		hash_map and friends.  
+
+
 2006-04-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-19-icc-01-01:
