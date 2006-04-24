@@ -1,7 +1,7 @@
 /**
 	\file "util/union_find.h"
 	Classic union-find data structure.
-	$Id: union_find.h,v 1.4 2006/03/15 04:38:26 fang Exp $
+	$Id: union_find.h,v 1.4.12.1 2006/04/24 05:43:07 fang Exp $
  */
 
 #ifndef	__UTIL_UNION_FIND_H__
@@ -310,7 +310,7 @@ public:
 	operator * () { return this->_value; }
 
 	const_reference
-	operator * () const { return this->value; }
+	operator * () const { return this->_value; }
 
 	pointer
 	operator -> () { return &this->_value; }

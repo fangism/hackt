@@ -1,7 +1,7 @@
 /**
 	\file "util/multidimensional_sparse_set.h"
 	Fixed depth/dimension tree representing sparsely instantiated indices.
-	$Id: multidimensional_sparse_set.h,v 1.11 2006/04/18 18:42:43 fang Exp $
+	$Id: multidimensional_sparse_set.h,v 1.11.2.1 2006/04/24 05:43:03 fang Exp $
  */
 // David Fang, Cornell University, 2004
 
@@ -32,8 +32,6 @@ namespace util {
 //=============================================================================
 using std::ostream;
 using std::string;
-using util::discrete_interval_set;
-using util::default_qmap;
 
 //=============================================================================
 // forward declarations in "multidimensional_sparse_set_fwd.h"

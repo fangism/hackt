@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.10 2006/04/18 18:42:46 fang Exp $
+	$Id: excl_ptr.h,v 1.10.2.1 2006/04/24 05:43:10 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -1184,6 +1184,11 @@ SPECIALIZE_ALL_POINTER_TRAITS_2(sticky_ptr)
 //=============================================================================
 namespace std {
 using util::memory::sticky_ptr;
+
+// just a declaration before definition
+template <class _T1, class _T2, class Dealloc>
+void
+_Construct(sticky_ptr<_T1,Dealloc>*, const sticky_ptr<_T2,Dealloc>&);
 
 /**
 	Attempt to specialize/overload std::_Construct for special-case

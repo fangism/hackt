@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey.tcc"
 	Multidimensional key class method definitions.
-	$Id: multikey.tcc,v 1.12 2006/04/18 18:42:43 fang Exp $
+	$Id: multikey.tcc,v 1.12.2.1 2006/04/24 05:43:04 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_TCC__
@@ -44,8 +44,8 @@ template class multikey_generator<D, K >;
 template multikey_generic<K >::multikey_generic(const multikey<D,K >&);
 
 namespace util {
-using util::write_value;
-using util::read_value;
+// using util::write_value;
+// using util::read_value;
 #include "util/using_ostream.h"
 using std::copy;
 using std::fill;

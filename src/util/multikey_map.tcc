@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_map.tcc"
 	Template method definitions for multikey_map class.  
-	$Id: multikey_map.tcc,v 1.8 2006/01/22 06:53:34 fang Exp $
+	$Id: multikey_map.tcc,v 1.8.34.1 2006/04/24 05:43:04 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_TCC__
@@ -33,11 +33,13 @@ using std::istream;
 using std::pair;
 using std::numeric_limits;
 using std::list;
+#if 0
 using util::write_value;
 using util::read_value;
 using util::write_map;
 using util::read_map;
 using util::multikey_generator;
+#endif
 
 //=============================================================================
 // class multikey_map method definitions

@@ -3,7 +3,7 @@
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
-	$Id: hash_specializations.h,v 1.8 2005/09/04 21:15:07 fang Exp $
+	$Id: hash_specializations.h,v 1.8.60.1 2006/04/24 05:43:02 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_SPECIALIZATIONS_H__
@@ -57,8 +57,13 @@ template <class T>
 struct hash<const T*> {
 	size_t operator() (const T* x) const {
 		// need something with same size as raw pointer
-		register const long y = long(x);
-		return hash<long>()(y ^ (y >> 7));
+#if	SIZEOF_VOIDP == SIZEOF_SIZE_T
+		typedef	size_t		__type;
+#else
+#error	"I need an integer type with same size as pointer."
+#endif
+		register const __type y = reinterpret_cast<const __type&>(x);
+		return hash<__type>()(y ^ (y >> 7));
 	}
 };	// end hash<>
 

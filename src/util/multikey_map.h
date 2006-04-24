@@ -2,7 +2,7 @@
 	\file "util/multikey_map.h"
 	Multidimensional map implemented as plain map with 
 	multidimensional key.  
-	$Id: multikey_map.h,v 1.18 2006/04/18 18:42:44 fang Exp $
+	$Id: multikey_map.h,v 1.18.2.1 2006/04/24 05:43:04 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_MAP_H__
@@ -24,7 +24,6 @@ using std::ostream;
 using std::istream;
 using std::pair;
 using std::list;
-using util::multikey;
 
 //=============================================================================
 /**

@@ -2,6 +2,22 @@
 
 2006-04-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-19-icc-01-01:
+	  Batch of minor header adjustments for icc's sake. 
+	  util/hash_specializations.h: using reinterpret_cast for pointer.
+	  util/inttypes.h: conditional definition re-written without
+		assuming short-circuit conditional evaluation.  
+	  util/union_find.h: typo fix.
+	  general: removed redundant using declarations in same namespace.  
+		Added declaration prototypes for some template functions.  
+	  TODO: hash_qmap and qmap are causing some problems with
+		incomplete types from const_assoc_query.h.
+		Now might be a good time to migrate to the original
+		STL associative containers.  Proceed with caution.  
+
+
+2006-04-23	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-18-merged-prsim-03-09:
 	  Branch merge.  Only minor revisions and clean ups from branch.
 

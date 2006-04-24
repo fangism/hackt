@@ -1,7 +1,7 @@
 /**
 	\file "util/inttypes.h"
 	Configured wrapper around standard integer type headers.  
-	$Id: inttypes.h,v 1.5 2006/04/13 21:45:07 fang Exp $
+	$Id: inttypes.h,v 1.5.4.1 2006/04/24 05:43:03 fang Exp $
  */
 
 #ifndef	__UTIL_INTTYPES_H__
@@ -21,16 +21,26 @@
 	Define to true if we are able to use or define int64.  
 	It must also be of integer type that is arithmetically operable.  
  */
-#if	(SIZEOF_INT64_T || SIZEOF_INT64 || (SIZEOF_QUAD_T == 8 && QUAD_T_IS_ARITHMETIC))
-#define	HAVE_INT64_TYPE
+#if	(SIZEOF_INT64_T || SIZEOF_INT64)
+	#define	HAVE_INT64_TYPE
+#elif	defined(QUAD_T_IS_ARITHMETIC)
+	#if	(SIZEOF_QUAD_T == 8 && QUAD_T_IS_ARITHMETIC)
+	#define	HAVE_INT64_TYPE
+	#endif
+// else leave undefined
 #endif
 
 /**
 	Define to true if we are able to use or define uint64.  
 	It must also be of integer type that is arithmetically operable.  
  */
-#if	(SIZEOF_UINT64_T || SIZEOF_UINT64 || (SIZEOF_U_QUAD_T == 8 && U_QUAD_T_IS_ARITHMETIC))
-#define	HAVE_UINT64_TYPE
+#if	(SIZEOF_UINT64_T || SIZEOF_UINT64)
+	#define	HAVE_UINT64_TYPE
+#elif	defined(U_QUAD_T_IS_ARITHMETIC)
+	#if	(SIZEOF_U_QUAD_T == 8 && U_QUAD_T_IS_ARITHMETIC)
+	#define	HAVE_UINT64_TYPE
+	#endif
+// else leave undefined
 #endif
 
 // yes, in the global namespace
