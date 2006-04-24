@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.7 2006/02/06 01:30:52 fang Exp $
+	$Id: canonical_type.tcc,v 1.8 2006/04/24 00:28:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -317,10 +317,8 @@ CANONICAL_TYPE_CLASS::collect_transient_info_base(
 		canonical_definition_ptr->collect_transient_info(m);
 	}
 	if (param_list_ptr) {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "param_list_ptr = " <<
-			&*param_list_ptr << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("param_list_ptr = " <<
+			&*param_list_ptr << endl);
 		param_list_ptr->collect_transient_info(m);
 	}
 }
@@ -331,16 +329,6 @@ void
 CANONICAL_TYPE_CLASS::write_object_base(const persistent_object_manager& m, 
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if 0
-	if (param_list_ptr) {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "param_list_ptr = " <<
-			&*param_list_ptr << endl;
-#endif
-		param_list_ptr->collect_transient_info(
-			const_cast<persistent_object_manager&>(m));
-	}
-#endif
 	m.write_pointer(o, canonical_definition_ptr);
 	m.write_pointer(o, param_list_ptr);
 }

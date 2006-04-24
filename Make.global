@@ -6,18 +6,20 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.17 2006/04/14 20:10:39 fang Exp $
+#	$Id: Make.global,v 1.18 2006/04/24 00:27:59 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
 	autoreconf
 
+ALL_CVSIGNORE =
+if NO_VPATH
 # .cvsignore for this project will always be semi-automatically generated
 .cvsignore: $(srcdir)/Makefile.am Makefile.in $(top_srcdir)/Make.global
 
 # make cvsignore by default
-all: cvsignore
+ALL_CVSIGNORE += cvsignore
 
 # phony recursive target
 cvsignore: .cvsignore force
@@ -45,7 +47,11 @@ clean-cvsignore-recursive:
 		fi ; \
 	done
 
-DISTCLEANFILES += .cvsignore check.log cvsdiffs
+DISTCLEANFILES += .cvsignore
+endif
+all: $(ALL_CVSIGNORE)
+
+DISTCLEANFILES += check.log cvsdiffs
 
 distcleandirs:
 	-$(RM) -r $(DISTCLEANDIRS)
@@ -113,6 +119,9 @@ echo-package-bugreport: force
 echo-package-version: force
 	@$(ECHO) $(PACKAGE_VERSION)
 
+echo-SUFFIXES: force
+	@$(ECHO) $(SUFFIXES)
+
 echo-LEX: force
 	@$(ECHO) $(LEX)
 
@@ -150,10 +159,12 @@ echo-LIBS: force
 # again, can't append to file with cat redirection because distclean
 # sets permissions of new files as read-only
 # NOTE: local.cvsignore may be normal or automatically generated
+if NO_VPATH
 .cvsignore: local.cvsignore
 	@$(ECHO) $(AUTO_IGNORE) | $(SPACES_TO_NEWLINE) > $@.temp
 	-$(CAT) $< $@.temp > $@
 	-$(RM) $@.temp
+endif
 
 # -k option allows continuation past directories with failed tests
 check.log: force
@@ -195,8 +206,10 @@ help-global:
 	@$(ECHO) "    all: builds everything (recursive)"
 	@$(ECHO) "    clean: removes make targets (recursive)"
 	@$(ECHO) "    cvsdiffs: creates difference patch from CVS"
+if NO_VPATH
 	@$(ECHO) "    cvsignore: generates .cvsignore (recursive)"
 	@$(ECHO) "    clean-cvsignore: cleans .cvsignore (recursive)"
+endif
 	@$(ECHO) "    check: runs tests (recursive)"
 	@$(ECHO) "    check.log: logs make check -k"
 	@$(ECHO) "    pdf: builds PDFs (recursive)"
@@ -207,6 +220,7 @@ help-global:
 	@$(ECHO) "	config: configure invocation (config.status --version)"
 	@$(ECHO) "	cleanfiles: list of cleaned files"
 	@$(ECHO) "	distcleanfiles: list of distcleaned files"
+	@$(ECHO) "	SUFFIXES: list of Makefile suffixes"
 	@$(ECHO) "	extra-dist: list of EXTRA_DIST files"
 	@$(ECHO) "	dist-common: list automatic DIST_COMMON files"
 	@$(ECHO) "	auto-ignore: list of automatic cvsignored files"

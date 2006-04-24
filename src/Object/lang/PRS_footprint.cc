@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/PRS_footprint.cc"
-	$Id: PRS_footprint.cc,v 1.14 2006/04/12 08:53:15 fang Exp $
+	$Id: PRS_footprint.cc,v 1.15 2006/04/24 00:28:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -30,6 +30,12 @@
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "common/ICE.h"
+
+#if STACKTRACE_DUMPS
+#define	STACKTRACE_DUMP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
+#else
+#define	STACKTRACE_DUMP_PRINT(x)
+#endif
 
 namespace HAC {
 namespace entity {
@@ -106,17 +112,13 @@ ostream&
 footprint::dump_expr(const expr_node& e, ostream& o, 
 		const node_pool_type& np, const expr_pool_type& ep, 
 		const char ps) {
-#if STACKTRACE_DUMPS
 	STACKTRACE("PRS::footprint::dump_expr()");
-	STACKTRACE_INDENT << " at " << &e << ":" << endl;
-#endif
+	STACKTRACE_INDENT_PRINT(" at " << &e << ":" << endl);
 	const size_t one __ATTRIBUTE_UNUSED__ = e.size();
 	const char type = e.get_type();
 	switch (type) {
 		case PRS_LITERAL_TYPE_ENUM:
-#if STACKTRACE_DUMPS
-			STACKTRACE_INDENT << "Literal ";
-#endif
+			STACKTRACE_DUMP_PRINT("Literal ");
 #if 0
 			if (one != 1) {
 				cerr << "size is " << one << endl;
@@ -129,18 +131,14 @@ footprint::dump_expr(const expr_node& e, ostream& o,
 			directive_base::dump_params(e.get_params(), o);
 			break;
 		case PRS_NOT_EXPR_TYPE_ENUM:
-#if STACKTRACE_DUMPS
-			STACKTRACE_INDENT << "Not ";
-#endif
+			STACKTRACE_DUMP_PRINT("Not ");
 			INVARIANT(one == 1);
 			dump_expr(ep[e.only()], o << '~', np, ep, type);
 			break;
 		case PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
 		case PRS_OR_EXPR_TYPE_ENUM: {
-#if STACKTRACE_DUMPS
-			STACKTRACE_INDENT << "Or/And ";
-#endif
+			STACKTRACE_DUMP_PRINT("Or/And ");
 			const bool paren = ps && (type != ps);
 			if (paren) o << '(';
 			if (e.size()) {
@@ -453,10 +451,8 @@ footprint_expr_node::load_object_base(const persistent_object_manager& m,
 	STACKTRACE_PERSISTENT("expr_node::load_object_base()");
 	read_value(i, type);
 	read_sequence_prealloc(i, nodes);
-#if STACKTRACE_PERSISTENTS
-	STACKTRACE_INDENT << "at " << this << ":" << endl;
-	STACKTRACE_INDENT << "nodes size = " << nodes.size() << endl;
-#endif
+	STACKTRACE_PERSISTENT_PRINT("at " << this << ":" << endl);
+	STACKTRACE_PERSISTENT_PRINT("nodes size = " << nodes.size() << endl);
 	if (type == PRS_LITERAL_TYPE_ENUM) {
 		m.read_pointer_list(i, params);
 	}

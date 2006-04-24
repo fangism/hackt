@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.6 2006/04/11 07:54:44 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.7 2006/04/24 00:28:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -253,15 +253,13 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 	const footprint* const f(c.get_target_footprint());
 	const string& inst_name(_inst.get_name());
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "looking up instance name: " << inst_name << endl;
-	cerr << "unroll_context c:" << endl;
-	c.dump(cerr) << endl;
+	STACKTRACE_INDENT_PRINT("looking up instance name: "
+		<< inst_name << endl);
+	c.dump(cerr << "unroll_context c:" << endl) << endl;
 #endif
-#if 1
 	if (f) {
 		INVARIANT((*f)[_inst.get_name()]);
 	}
-#endif
 	// assert not-NULL and dynamic_cast!
 	const instance_collection_generic_type&
 		inst(f ? IS_A(const instance_collection_generic_type&,

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.11 2006/04/12 08:53:17 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.12 2006/04/24 00:28:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -109,9 +109,7 @@ simple_lookup_footprint_frame(
 		return NULL;
 	}
 	const size_t id = alias->instance_index;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "id = " << id << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	INVARIANT(id);
 	// TODO: bounds checking...
 	return &sm.template get_pool<Tag>()[id]._frame;
@@ -126,9 +124,7 @@ member_lookup_footprint_frame(
 		const state_manager& sm) {
 	STACKTRACE_VERBOSE;
 	const size_t id = _this.lookup_globally_allocated_index(sm);
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "id = " << id << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	if (!id) {
 		// already have error message
 		return NULL;

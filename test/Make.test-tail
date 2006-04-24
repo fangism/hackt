@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.27 2006/04/13 19:10:22 fang Exp $
+#	$Id: Make.test-tail,v 1.28 2006/04/24 00:28:10 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -437,7 +437,12 @@ CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 
 DISTCLEANFILES += local.cvsignore
 
-all-local: .cvsignore \
+ALL_LOCAL =
+if NO_VPATH
+ALL_LOCAL += .cvsignore
+endif
+
+all-local: $(ALL_LOCAL) \
 	$(HACKT_PARSE_TEST_PASSES:=.stderr) $(TESTS) \
 	$(EMPTY_CFLAT_PRS)
 
@@ -455,12 +460,14 @@ AUTO_IGNORE += local.cvsignore \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
 	$(CHECK_SUMMARIES)
 
+if NO_VPATH
 # we generate all the local.cvsignore's in the test directories
 local.cvsignore: $(TEST_SRCDIR)/test.cvsignore
 	$(CP) $? $@
 
 # additional dependence
 .cvsignore: $(TEST_SRCDIR)/Make.test-tail
+endif
 
 # clean tests only
 clean-tests: clean-tests-recursive
@@ -547,6 +554,7 @@ help-test:
 	@$(ECHO) "    check-summaries: summaries of test difference into patch file"
 	@$(ECHO) "	(produces: $(CHECK_SUMMARIES))"
 	@$(ECHO) "    echo-*:"
+	@$(ECHO) "	hackt: path to the built hackt executable"
 	@$(ECHO) "	tests: lists TESTS"
 	@$(ECHO) "	parse-tests: lists HACKT_PARSE_TEST_SUBJECTS"
 	@$(ECHO) "	unroll-tests: lists HACKT_UNROLL_TEST_SUBJECTS"

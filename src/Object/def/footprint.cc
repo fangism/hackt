@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.17 2006/04/23 07:37:18 fang Exp $
+	$Id: footprint.cc,v 1.18 2006/04/24 00:28:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -273,9 +273,7 @@ footprint::operator [] (const string& k) const {
 void
 footprint::import_scopespace(const scopespace& s) {
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "at: " << this << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("at: " << this << endl);
 if (instance_collection_map.empty()) {
 	typedef	scopespace::const_map_iterator	const_map_iterator;
 	const_map_iterator si(s.id_map_begin());
@@ -307,9 +305,7 @@ if (instance_collection_map.empty()) {
 void
 footprint::import_hierarchical_scopespace(const scopespace& s) {
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "at: " << this << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("at: " << this << endl);
 if (instance_collection_map.empty()) {
 	typedef	scopespace::const_map_iterator	const_map_iterator;
 	const_map_iterator si(s.id_map_begin());
@@ -366,8 +362,8 @@ footprint::create_dependent_types(void) {
 		b(instance_collection_map.begin()),
 		e(instance_collection_map.end());
 #if 0 && ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "instance_collection_map.size() = " <<
-		instance_collection_map.size() << endl;
+	STACKTRACE_INDENT("instance_collection_map.size() = " <<
+		instance_collection_map.size() << endl);
 #endif
 {
 	// Apple's g++-3.3 -O2 breaks this!
@@ -416,10 +412,8 @@ footprint::create_dependent_types(void) {
 void
 footprint::evaluate_scope_aliases(void) {
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "got " << instance_collection_map.size()
-		<< " entries." << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("got " << instance_collection_map.size()
+		<< " entries." << endl);
 	const_instance_map_iterator i(instance_collection_map.begin());
 	const const_instance_map_iterator e(instance_collection_map.end());
 	for ( ; i!=e; i++) {

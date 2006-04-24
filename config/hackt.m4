@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.2 2006/02/25 04:54:59 fang Exp $
+dnl	$Id: hackt.m4,v 1.3 2006/04/24 00:28:01 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -21,6 +21,14 @@ if test x"$enable_libtool_verbose" != "xyes" ; then
 	LIBTOOL="$LIBTOOL --silent"
 fi
 ])
+
+dnl
+dnl Define an AM_CONDITIONAL flag for VPATH-specific options.
+dnl For example, don't bother generating .cvsignore.
+dnl
+AC_DEFUN([HACKT_AUTO_CVSIGNORE],
+[AM_CONDITIONAL(NO_VPATH, test "$srcdir" = ".")]
+)
 
 dnl
 dnl Chec for xdr header and library.

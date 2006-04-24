@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.16 2006/04/11 07:54:43 fang Exp $
+	$Id: subinstance_manager.cc,v 1.17 2006/04/24 00:28:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -313,10 +313,8 @@ void
 subinstance_manager::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if STACKTRACE_PERSISTENTS
-	STACKTRACE_INDENT << "collected " << subinstance_array.size() <<
-		" subinstances." << endl;
-#endif
+	STACKTRACE_PERSISTENT_PRINT("collected " << subinstance_array.size() <<
+		" subinstances." << endl);
 	m.collect_pointer_list(subinstance_array);
 }
 
@@ -326,10 +324,8 @@ subinstance_manager::write_object_base(const persistent_object_manager& m,
 		ostream& o) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	m.write_pointer_list(o, subinstance_array);
-#if STACKTRACE_PERSISTENTS
-	STACKTRACE_INDENT << "wrote " << subinstance_array.size() <<
-		" subinstances." << endl;
-#endif
+	STACKTRACE_PERSISTENT_PRINT("wrote " << subinstance_array.size() <<
+		" subinstances." << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -338,10 +334,8 @@ subinstance_manager::load_object_base(const persistent_object_manager& m,
 		istream& i) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	m.read_pointer_list(i, subinstance_array);
-#if STACKTRACE_PERSISTENTS
-	STACKTRACE_INDENT << "loaded " << subinstance_array.size() <<
-		" subinstances." << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("loaded " << subinstance_array.size() <<
+		" subinstances." << endl);
 }
 
 //=============================================================================

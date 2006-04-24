@@ -2,6 +2,16 @@
 
 2006-04-23	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-19:
+	  Reasonable initial attempt to accommodates icc-9.0.
+	  To be configured...
+		Started to rewrite some config/cxx.m4 macros to account
+		for icc differences, in particular compile flags.  
+	  Global cvsignore generation is now disabled during VPATH builds.  
+
+
+2006-04-23	David Fang	<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-18-merged-prsim-03-09:
 	  Branch merge.  
 

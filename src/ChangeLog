@@ -6,6 +6,13 @@
 
 2006-04-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-19:
+	  stacktrace directive clean-ups.  (trivial source edits)
+	  automatic cvsignore generation dropped for VPATH builds (irrelevant)
+
+
+2006-04-23	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-18-merged-prsim-03-09:
 	  Branch merge of prsim fixes and features.  
 	  Summary: reorganized SPEC, PRS macros, and rule-attributes into

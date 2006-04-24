@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.7 2006/04/23 07:37:27 fang Exp $
+	$Id: State.cc,v 1.8 2006/04/24 00:28:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -475,9 +475,9 @@ int
 State::set_node_time(const node_index_type ni, const char val,
 		const time_type t) {
 	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT << "setting " << get_node_canonical_name(ni) <<
+	STACKTRACE_INDENT_PRINT("setting " << get_node_canonical_name(ni) <<
 		" to " << node_type::value_to_char[size_t(val)] <<
-		" at " << t << endl;
+		" at " << t << endl);
 	// we have ni = the canonically allocated index of the bool node
 	// just look it up in the node_pool
 	node_type& n(get_node(ni));
@@ -512,7 +512,7 @@ State::set_node_time(const node_index_type ni, const char val,
 #endif
 #if 0
 	const event_type& e(get_event(ei));
-	STACKTRACE_INDENT << "new event: (node,val)" << endl;
+	STACKTRACE_INDENT_PRINT("new event: (node,val)" << endl);
 #endif
 	enqueue_event(t, ei);
 	return ENQUEUE_ACCEPT;
@@ -1540,9 +1540,7 @@ State::check_structure(void) const {
 	INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "checking Expr " << i << ":" << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("checking Expr " << i << ":" << endl);
 		check_expr(i);
 	}
 }
@@ -1550,9 +1548,7 @@ State::check_structure(void) const {
 	const node_index_type nodes = node_pool.size();
 	node_index_type j = FIRST_VALID_NODE;
 	for ( ; j<nodes; ++j) {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "checking Node " << j << ":" << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("checking Node " << j << ":" << endl);
 		check_node(j);
 	}
 }

@@ -1,10 +1,11 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.4 2006/04/18 18:42:36 fang Exp $
+dnl	$Id: cxx.m4,v 1.5 2006/04/24 00:28:01 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
 dnl
 dnl dummy source file for trivial compiler tests
+dnl This is only useful for AC_COMPILE_IFLSE because it doesn't link.  
 dnl
 AC_DEFUN([_TRIVIAL_SOURCE_],
 [AC_LANG_PROGRAM([extern int __foo__;])]
@@ -27,32 +28,31 @@ dnl e.g. -w camcels all warnings, and -Wno-error cancel error-promotion.
 dnl
 AC_DEFUN([FANG_ANAL_COMPILE_FLAGS],
 [AC_REQUIRE([AC_PROG_CC])
-AC_REQUIRE([AC_PROG_CXX])
+AC_REQUIRE([FANG_CXX_COMPILER])
 AC_ARG_ENABLE(strict-dialect,
 	AS_HELP_STRING([--disable-strict-dialect],
 	[Disables -ansi -pedantic-errors compile flags (default=enabled)
 	This is sometimes necessary to allow 64b builds.])
 )
 if test x"$enable_strict_dialect" != xno ; then
-	TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
+	if test "$ac_cv_cxx_compiler_gnu" = yes ; then
+		TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
+	elif test "$hackt_cxx_compiler_intel" = yes ; then
+		TRY_DIALECT_FLAGS="-strict-ansi"
+	else
+		TRY_DIALECT_FLAGS="-ansi"
+	fi
 fi
 
 AC_MSG_CHECKING([whether C/C++ compilers accept fangism's anal-retentive flags])
-ANAL_FLAGS="$TRY_DIALECT_FLAGS -W -Wall -Werror"
-dnl cat > conftest.c <<CEOF
-dnl extern int main(int, char**);
-dnl CEOF
-dnl cp conftest.c conftest.cc
-dnl if $CC $ANAL_FLAGS -c conftest.c
-dnl then :
-dnl else	AC_MSG_ERROR([Your C compiler doesn't like flags: $ANAL_FLAGS
-dnl	Bug fangism about supporting your compiler.])
-dnl fi
-dnl if $CXX $ANAL_FLAGS -c conftest.cc
-dnl then :
-dnl else	AC_MSG_ERROR([Your C++ compiler doesn't like flags: $ANAL_FLAGS
-dnl 	Bug fangism about supporting your compiler.])
-dnl fi
+if test "$ac_cv_cxx_compiler_gnu" = yes ; then
+	ANAL_FLAGS="$TRY_DIALECT_FLAGS -W -Wall -Werror"
+elif test "$hackt_cxx_compiler_intel" = yes ; then
+	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror"
+else
+	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror"
+fi
+
 AC_LANG_PUSH(C)
 saved_CFLAGS="$CFLAGS"
 CFLAGS="$ANAL_FLAGS"
@@ -81,21 +81,47 @@ dnl TODO: learn m4
 dnl TODO: cache values!
 dnl Results in AC_SUBST variables:
 dnl	FANG_WARN_FLAGS, FANG_WARN_CFLAGS, FANG_WARN_CXXFLAGS
+dnl the NOWARN_FLAGS are applied only during configuration tests
+dnl it is often necessary to disable some strict warnings that affect the
+dnl outcome of configure tests
 dnl
 AC_DEFUN([FANG_AM_FLAGS],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
-dnl for TRY_DIALECT_FLAGS
-TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
-TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual -Wcast-align"
-TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wconversion -Werror"
-TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
-TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
-TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
-TRY_NOWARN_FLAGS="-Wno-unused -Wno-missing-prototypes"
-TRY_NOWARN_FLAGS="$TRY_NOWARN_FLAGS -Wno-shadow -Wno-cast-qual -Wno-long-double"
-TRY_NOWARN_CFLAGS="-Wno-strict-prototypes"
-TRY_NOWARN_CXXFLAGS="-Wno-overloaded-virtual"
-dnl TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
+dnl setup the list of flags to try
+if test "$ac_cv_cxx_compiler_gnu" = yes ; then
+	TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
+	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual"
+	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wcast-align -Wconversion -Werror"
+	TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
+	TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
+	TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
+	TRY_NOWARN_FLAGS="-Wno-unused -Wno-missing-prototypes -Wno-shadow"
+	TRY_NOWARN_FLAGS="$TRY_NOWARN_FLAGS -Wno-cast-qual -Wno-long-double"
+	TRY_NOWARN_CFLAGS="-Wno-strict-prototypes"
+	TRY_NOWARN_CXXFLAGS="-Wno-overloaded-virtual"
+elif test "$hackt_cxx_compiler_intel" = yes ; then
+	TRY_WARN_FLAGS="-Wall -Wshadow -Wmain -Wpointer-arith -Wdeprecated -Werror"
+dnl -wd is icc's equivalent of -Wno
+dnl 111: unreachable statement
+dnl 279: constant controlling expression
+dnl 383: value copied to temporary, reference to temporary used
+dnl 444: base class non-virtual destructor
+dnl 981: operands evaluated in unspecified order
+	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -wd111 -wd279 -wd981"
+	TRY_WARN_CFLAGS="-Wmissing-prototypes"
+	TRY_WARN_CXXFLAGS="-Wabi -wd383 -wd444"
+	TRY_NOWARN_FLAGS="-Wno-shadow"
+	TRY_NOWARN_CFLAGS="-Wno-missing-prototypes"
+	TRY_NOWARN_CXXFLAGS=""
+else
+	TRY_WARN_FLAGS="-Whatever"
+	TRY_WARN_CFLAGS=""
+	TRY_WARN_CXXFLAGS=""
+	TRY_NOWARN_FLAGS=""
+	TRY_NOWARN_CFLAGS=""
+	TRY_NOWARN_CXXFLAGS=""
+fi
+
 FANG_WARN_FLAGS=""
 FANG_WARN_CFLAGS=""
 FANG_WARN_CXXFLAGS=""
@@ -240,7 +266,7 @@ AC_SUBST(FANG_DIALECT_FLAGS)
 dnl
 dnl Produces an AC_SUBST-itutable string for the compiler version.
 dnl
-AC_DEFUN([AC_CXX_VERSION],
+AC_DEFUN([FANG_CXX_VERSION],
 [AC_REQUIRE([AC_PROG_CXX])
 CXX_VERSION=`$CXX --version | head -n 1`
 if ( echo "$CXX_VERSION" | grep -i prerelease )
@@ -260,10 +286,21 @@ AC_SUBST(CXX_VERSION)
 dnl
 dnl Detects GNU C++ compiler.  
 dnl Produces AM_CONDITIONAL variable HAVE_GXX
+dnl Detects Intel C++ compiler.  
+dnl Produces AM_CONDITIONAL variable HAVE_ICC
+dnl and defined shell variable ac_cv_cxx_compiler_intel
+dnl TODO: use AC_CACHE_CHECK
 dnl
-AC_DEFUN([AM_CONDITIONAL_HAVE_GXX],
-[AC_REQUIRE([AC_PROG_CXX])
+AC_DEFUN([FANG_CXX_COMPILER],
+[AC_REQUIRE([FANG_CXX_VERSION])
 AM_CONDITIONAL(HAVE_GXX, test x"$ac_cv_cxx_compiler_gnu" = "xyes")
+if ( echo "$CXX_VERSION" | grep -i ICC )
+then
+	hackt_cxx_compiler_intel=yes
+else
+	hackt_cxx_compiler_intel=no
+fi
+AM_CONDITIONAL(HAVE_ICC, echo "$CXX_VERSION" | grep ICC)
 ])
 
 
@@ -417,6 +454,34 @@ dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_holy])
 if test "$ac_cv_cxx_attribute_holy" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_HOLY, [],
 	[True if compiler supports __attribute__((holy)) ])
+fi
+])
+
+dnl
+dnl Check for __attribute__ ((precious))
+dnl
+AC_DEFUN([AC_CXX_ATTRIBUTE_PRECIOUS],
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_CACHE_CHECK([whether compiler accepts __attribute__((precious))],
+[ac_cv_cxx_attribute_precious],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([#include <cstdlib>
+		void precious_func (void) __attribute__ ((precious));
+		void precious_func (void) { exit (1); }
+		],[precious_func();]),
+		[ac_cv_cxx_attribute_precious=yes],
+		[ac_cv_cxx_attribute_precious=no]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_precious])
+if test "$ac_cv_cxx_attribute_precious" = "yes"; then
+AC_DEFINE(HAVE_ATTRIBUTE_PRECIOUS, [],
+	[True if compiler supports __attribute__((precious)) ])
 fi
 ])
 

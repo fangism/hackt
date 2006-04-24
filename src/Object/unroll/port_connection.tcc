@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/port_connection.tcc"
- 	$Id: port_connection.tcc,v 1.2 2006/02/21 04:48:45 fang Exp $
+ 	$Id: port_connection.tcc,v 1.3 2006/04/24 00:28:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PORT_CONNECTION_TCC__
@@ -80,7 +80,7 @@ good_bool
 PORT_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "context c @ " << &c << endl;
+	STACKTRACE_INDENT_PRINT("context c @ " << &c << endl);
 	c.dump(cerr) << endl;
 #endif
 	NEVER_NULL(ported_inst);

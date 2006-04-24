@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.15 2006/03/16 03:40:27 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.16 2006/04/24 00:28:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -336,7 +336,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		// what if is pbool_const or pint_const?
 		const value_scalar_type&
 			scalar_inst(IS_A(const value_scalar_type&, _vals));
-		// c.dump(STACKTRACE_INDENT) << endl;
 		return scalar_inst.lookup_value(i, c);
 	}
 }

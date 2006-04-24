@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.22 2006/01/22 06:53:36 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.23 2006/04/24 00:28:09 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -51,10 +51,12 @@
 	#define	STACKTRACE_PERSISTENT(x)	STACKTRACE(x)
 	#define	STACKTRACE_PERSISTENT_BRIEF	STACKTRACE_BRIEF
 	#define	STACKTRACE_PERSISTENT_VERBOSE	STACKTRACE_VERBOSE
+	#define	STACKTRACE_PERSISTENT_PRINT(x)	STACKTRACE_INDENT_PRINT(x)
 #else
 	#define	STACKTRACE_PERSISTENT(x)
 	#define	STACKTRACE_PERSISTENT_BRIEF
 	#define	STACKTRACE_PERSISTENT_VERBOSE
+	#define	STACKTRACE_PERSISTENT_PRINT(x)
 #endif
 #endif
 

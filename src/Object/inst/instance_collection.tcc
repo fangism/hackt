@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.25 2006/04/12 08:53:14 fang Exp $
+	$Id: instance_collection.tcc,v 1.26 2006/04/24 00:28:05 fang Exp $
 	TODO: trim includes
  */
 
@@ -583,9 +583,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		const instance_relaxed_actuals_type& actuals, 
 		const unroll_context& c) {
 	STACKTRACE("instance_array<Tag,D>::instantiate_indices()");
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "this = " << this << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 	if (!ranges.is_valid()) {
 		ranges.dump(cerr << "ERROR: invalid instantiation range list: ",
 			expr_dump_context::default_value) << endl;
@@ -743,10 +741,8 @@ typename INSTANCE_ARRAY_CLASS::instance_alias_base_ptr_type
 INSTANCE_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 	INVARIANT(D == i.dimensions());
 	const key_type index(i);
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "i = " << i << endl;
-	STACKTRACE_INDENT << "index = " << index << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("i = " << i << endl);
+	STACKTRACE_INDENT_PRINT("index = " << index << endl);
 	return (*this)[index];
 }
 
@@ -850,9 +846,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "this = " << this << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 	const count_ptr<this_type> ret(new this_type(*this));
 	NEVER_NULL(ret);
 	// Is this really copy-constructible?
@@ -1324,9 +1318,7 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const instance_relaxed_actuals_type& actuals, 
 		const unroll_context& c) {
 	STACKTRACE("instance_array<Tag,0>::instantiate_indices()");
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "this = " << this << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 	INVARIANT(r.empty());
 	if (this->the_instance.valid()) {
 		// should never happen, but just in case...
@@ -1444,9 +1436,7 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "this = " << this << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 	const count_ptr<this_type> ret(new this_type(*this));
 	NEVER_NULL(ret);
 	INVARIANT(this->initial_instantiation_statement_ptr);

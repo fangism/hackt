@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.21 2006/04/12 08:53:14 fang Exp $
+	$Id: instance_alias.tcc,v 1.22 2006/04/24 00:28:05 fang Exp $
 	TODO: trim includes
  */
 
@@ -103,9 +103,7 @@ INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 // inline
 INSTANCE_ALIAS_INFO_CLASS::~instance_alias_info() {
 	STACKTRACE_DTOR_VERBOSE;
-#if STACKTRACE_DESTRUCTORS
-	STACKTRACE_INDENT << "destroying " << this << endl;
-#endif
+	STACKTRACE_DTOR_PRINT("destroying " << this << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -139,14 +137,14 @@ INSTANCE_ALIAS_INFO_CLASS::instantiate(const container_ptr_type p,
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
 	INVARIANT(!this->container);
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "this->container (old) = " << &*this->container << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("this->container (old) = " <<
+		&*this->container << endl);
 	this->container = p;
 	substructure_parent_type::unroll_port_instances(*this->container, c);
 	// do we ever want to instantiate more than the ports?
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "this->container (new) = " << &*this->container << endl;
+	STACKTRACE_INDENT_PRINT("this->container (new) = " <<
+		&*this->container << endl);
 	this->dump_hierarchical_name(STACKTRACE_INDENT << "instantiate: ")
 		<< endl;
 #endif
@@ -253,10 +251,8 @@ INSTANCE_ALIAS_INFO_CLASS::trace_collection(
 		// p points to a substructured alias
 		const substructure_alias&
 			pp(thisp->__trace_alias_base(sup));
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "looking up member: " <<
-			this->container->get_name() << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("looking up member: " <<
+			this->container->get_name() << endl);
 		return *pp.lookup_port_instance(*this->container);
 	} else {
 		// This case cannot be reached when this is 
@@ -421,10 +417,8 @@ INSTANCE_ALIAS_INFO_CLASS::assign_footprint_frame(footprint_frame& ff,
 		const port_collection_context& pcc, const size_t ind) const {
 	STACKTRACE_VERBOSE;
 	const size_t local_offset = this->instance_index -1;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "local_offset = " << local_offset << endl;
-	STACKTRACE_INDENT << "global_id = " << pcc.id_map[ind] << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("local_offset = " << local_offset << endl);
+	STACKTRACE_INDENT_PRINT("global_id = " << pcc.id_map[ind] << endl);
 	footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
 	INVARIANT(ind < pcc.size());
 	INVARIANT(local_offset < fm.size());
@@ -571,10 +565,9 @@ INSTANCE_ALIAS_INFO_CLASS::construct_port_context(
 	STACKTRACE_VERBOSE;
 	const size_t local_placeholder_id = this->instance_index -1;
 	const footprint_frame_map_type& fm(ff.template get_frame_map<Tag>());
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "local_id = " << local_placeholder_id << endl;
-	STACKTRACE_INDENT << "global_id = " << fm[local_placeholder_id] << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("local_id = " << local_placeholder_id << endl);
+	STACKTRACE_INDENT_PRINT("global_id = " << fm[local_placeholder_id]
+		<< endl);
 	pcc.id_map[ind] = fm[local_placeholder_id];
 	this->__construct_port_context(pcc.substructure_array[ind], ff);
 }
@@ -737,7 +730,7 @@ INSTANCE_ALIAS_CLASS::trace_alias(const substructure_alias& a) const {
 #if ENABLE_STACKTRACE
 	pp.dump(STACKTRACE_INDENT << "got: ",
 		dump_flags::default_value) << endl;
-	STACKTRACE_INDENT << "key: " << this->key << endl;
+	STACKTRACE_INDENT_PRINT("key: " << this->key << endl);
 #endif
 	// this seems wasteful but is required for correctness, 
 	// as explained in the comments.  

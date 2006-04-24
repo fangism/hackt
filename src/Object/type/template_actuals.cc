@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.8 2006/03/15 04:38:21 fang Exp $
+	$Id: template_actuals.cc,v 1.9 2006/04/24 00:28:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -36,6 +36,18 @@
 #define	CHECK_ARG_ADDRESSES
 #endif
 
+#if STACKTRACE_CONSTRUCTORS
+#define	CHECK_CTOR_ARG_ADDRESSES		CHECK_ARG_ADDRESSES
+#else
+#define	CHECK_CTOR_ARG_ADDRESSES
+#endif
+
+#if STACKTRACE_DESTRUCTORS
+#define	CHECK_DTOR_ARG_ADDRESSES		CHECK_ARG_ADDRESSES
+#else
+#define	CHECK_DTOR_ARG_ADDRESSES
+#endif
+
 namespace HAC {
 namespace entity {
 using std::copy;
@@ -47,10 +59,8 @@ using std::back_inserter;
 
 template_actuals::template_actuals() :
 		strict_template_args(), relaxed_template_args() {
-#if STACKTRACE_CONSTRUCTORS
-	STACKTRACE_INDENT << "ctor ";
-	CHECK_ARG_ADDRESSES
-#endif
+	STACKTRACE_CTOR_VERBOSE;
+	CHECK_CTOR_ARG_ADDRESSES
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -62,10 +72,8 @@ template_actuals::template_actuals() :
 template_actuals::template_actuals(const arg_list_ptr_type& s, 
 		const const_arg_list_ptr_type& r) :
 		strict_template_args(s), relaxed_template_args(r) {
-#if STACKTRACE_CONSTRUCTORS
-	STACKTRACE_INDENT << "ctor ";
-	CHECK_ARG_ADDRESSES
-#endif
+	STACKTRACE_CTOR_VERBOSE;
+	CHECK_CTOR_ARG_ADDRESSES
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,20 +89,16 @@ template_actuals::template_actuals(const template_actuals& t,
 		const const_arg_list_ptr_type& a) :
 		strict_template_args(t.strict_template_args), 
 		relaxed_template_args(a) {
+	STACKTRACE_CTOR_VERBOSE;
 	NEVER_NULL(a);
 	INVARIANT(!t.relaxed_template_args);
-#if STACKTRACE_CONSTRUCTORS
-	STACKTRACE_INDENT << "ctor ";
-	CHECK_ARG_ADDRESSES
-#endif
+	CHECK_CTOR_ARG_ADDRESSES
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_actuals::~template_actuals() {
-#if STACKTRACE_DESTRUCTORS
-	STACKTRACE_INDENT << "dtor ";
-	CHECK_ARG_ADDRESSES
-#endif
+	STACKTRACE_DTOR_VERBOSE;
+	CHECK_DTOR_ARG_ADDRESSES
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -165,10 +169,8 @@ count_ptr<const param_expr>
 template_actuals::operator [] (const size_t i) const {
 	STACKTRACE_VERBOSE;
 	if (strict_template_args) {
-#if ENABLE_STACKTRACE
 		CHECK_ARG_ADDRESSES
 //		strict_template_args->what(cerr) << endl;
-#endif
 		const size_t s = strict_template_args->size();
 		if (i < s) {
 			return (*strict_template_args)[i];

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.8 2006/03/15 04:38:19 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.9 2006/04/24 00:28:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -300,9 +300,7 @@ void
 port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 		instance_pool<state_instance<Tag> >& p) {
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "p.size() = " << p.size() << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("p.size() = " << p.size() << endl);
 	iterator i(_ids.begin());
 	const iterator e(_ids.end());
 	for ( ; i!=e; i++) {
@@ -310,9 +308,7 @@ port_alias_tracker_base<Tag>::__shorten_canonical_aliases(
 						const_alias_ptr_type;
 		const const_alias_ptr_type al(i->second.shortest_alias());
 		INVARIANT(i->first);	// non-zero
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "i->first = " << i->first << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("i->first = " << i->first << endl);
 		BOUNDS_CHECK(i->first < p.size());
 		p[i->first].set_back_ref(al);
 	}

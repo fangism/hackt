@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.h"
 	Utility macros and header for convenient stack-trace debugging.
-	$Id: stacktrace.h,v 1.14 2006/04/23 07:37:28 fang Exp $
+	$Id: stacktrace.h,v 1.15 2006/04/24 00:28:10 fang Exp $
  */
 
 #ifndef	__UTIL_STACKTRACE_H__
@@ -163,10 +163,12 @@ null_stacktrace_stream = null_stacktrace_stream_type();
 	#define	STACKTRACE_DTOR(x)	STACKTRACE(x)
 	#define	STACKTRACE_DTOR_BRIEF	STACKTRACE_BRIEF
 	#define	STACKTRACE_DTOR_VERBOSE	STACKTRACE_VERBOSE
+	#define	STACKTRACE_DTOR_PRINT(x)	STACKTRACE_INDENT_PRINT(x)
 #else
 	#define	STACKTRACE_DTOR(x)
 	#define	STACKTRACE_DTOR_BRIEF
 	#define	STACKTRACE_DTOR_VERBOSE
+	#define	STACKTRACE_DTOR_PRINT(x)
 #endif	// STACKTRACE_DESTRUCTORS
 #endif	// STACKTRACE_DTOR
 
@@ -179,10 +181,12 @@ null_stacktrace_stream = null_stacktrace_stream_type();
 	#define	STACKTRACE_CTOR(x)	STACKTRACE(x)
 	#define	STACKTRACE_CTOR_BRIEF	STACKTRACE_BRIEF
 	#define	STACKTRACE_CTOR_VERBOSE	STACKTRACE_VERBOSE
+	#define	STACKTRACE_CTOR_PRINT(x)	STACKTRACE_INDENT_PRINT(x)
 #else
 	#define	STACKTRACE_CTOR(x)
 	#define	STACKTRACE_CTOR_BRIEF
 	#define	STACKTRACE_CTOR_VERBOSE
+	#define	STACKTRACE_CTOR_PRINT(x)
 #endif	// STACKTRACE_CONSTRUCTORS
 #endif	// STACKTRACE_CTOR
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.tcc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_connect.tcc".
- 	$Id: alias_connection.tcc,v 1.12 2006/03/15 04:38:22 fang Exp $
+ 	$Id: alias_connection.tcc,v 1.13 2006/04/24 00:28:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_TCC__
@@ -136,9 +136,7 @@ ALIAS_CONNECTION_CLASS::unroll(const unroll_context& c) const {
 	typedef	vector<typename alias_collection_type::const_iterator>
 				alias_collection_const_iterator_array_type;
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "&c = " << &c << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("&c = " << &c << endl);
 /***
 	We're connecting a series of references x = y = z = ...
 	(where each reference may be collective.)

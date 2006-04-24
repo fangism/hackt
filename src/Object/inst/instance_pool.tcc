@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/instance_pool.tcc"
 	Implementation of instance pool.
-	$Id: instance_pool.tcc,v 1.11 2006/03/15 04:38:18 fang Exp $
+	$Id: instance_pool.tcc,v 1.12 2006/04/24 00:28:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_POOL_TCC__
@@ -35,9 +35,7 @@ using util::auto_indent;
 template <class T>
 instance_pool<T>::instance_pool(const size_type s) : parent_type() {
 	STACKTRACE_CTOR_VERBOSE;
-#if STACKTRACE_CONSTRUCTORS
-	STACKTRACE_INDENT << "at: " << this << endl;
-#endif
+	STACKTRACE_CTOR_PRINT("at: " << this << endl);
 	this->set_chunk_size(s);
 	allocate();
 	INVARIANT(this->size());
@@ -50,9 +48,7 @@ instance_pool<T>::instance_pool(const size_type s) : parent_type() {
 template <class T>
 instance_pool<T>::instance_pool() : parent_type() {
 	STACKTRACE_CTOR_VERBOSE;
-#if STACKTRACE_CONSTRUCTORS
-	STACKTRACE_INDENT << "at: " << this << endl;
-#endif
+	STACKTRACE_CTOR_PRINT("at: " << this << endl);
 	this->set_chunk_size(default_chunk_size);
 	allocate();
 	INVARIANT(this->size());
@@ -62,9 +58,7 @@ instance_pool<T>::instance_pool() : parent_type() {
 template <class T>
 instance_pool<T>::instance_pool(const this_type& t) : parent_type(t) {
 	STACKTRACE_CTOR_VERBOSE;
-#if STACKTRACE_CONSTRUCTORS
-	STACKTRACE_INDENT << "at: " << this << endl;
-#endif
+	STACKTRACE_CTOR_PRINT("at: " << this << endl);
 	INVARIANT(this->size());
 }
 
@@ -72,9 +66,7 @@ instance_pool<T>::instance_pool(const this_type& t) : parent_type(t) {
 template <class T>
 instance_pool<T>::~instance_pool() {
 	STACKTRACE_DTOR_VERBOSE;
-#if STACKTRACE_DESTRUCTORS
-	STACKTRACE_INDENT << "at: " << this << endl;
-#endif
+	STACKTRACE_DTOR_PRINT("at: " << this << endl);
 }
 
 //-----------------------------------------------------------------------------
@@ -110,9 +102,7 @@ void
 instance_pool<T>::collect_transient_info_base(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
-#if STACKTRACE_PERSISTENTS
-	STACKTRACE_INDENT << "at: " << this << endl;
-#endif
+	STACKTRACE_PERSISTENT_PRINT("at: " << this << endl);
 	INVARIANT(this->size());
 	const_iterator i(++this->begin());
 	const const_iterator e(this->end());

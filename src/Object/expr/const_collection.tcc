@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.11 2006/04/16 18:36:17 fang Exp $
+ 	$Id: const_collection.tcc,v 1.12 2006/04/24 00:28:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -420,10 +420,8 @@ if (il.empty()) {
 	generic_index_generator_type key_gen(il.size());
 	const key_type l(il.lower_multikey());
 	const key_type u(il.upper_multikey());
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "l = " << l << endl;
-	STACKTRACE_INDENT << "u = " << u << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("l = " << l << endl);
+	STACKTRACE_INDENT_PRINT("u = " << u << endl);
 	if (!this->values.range_check(l) || !this->values.range_check(u)) {
 		// can't return it, drat...
 		std::__throw_out_of_range(

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.13 2006/03/15 04:38:24 fang Exp $
+	$Id: unroll_context.cc,v 1.14 2006/04/24 00:28:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -221,7 +221,7 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 	typedef	count_ptr<const const_param>	return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "looking up: " << p.get_name() << endl;
+	STACKTRACE_INDENT_PRINT("looking up: " << p.get_name() << endl);
 	dump(cerr << "with: ") << endl;
 #endif
 	INVARIANT(!empty());

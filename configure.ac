@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.58 2006/04/18 18:42:34 fang Exp $
+#	$Id: configure.ac,v 1.59 2006/04/24 00:28:00 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060418, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060423, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -30,7 +30,7 @@ AM_INIT_AUTOMAKE([1.9 -Wall -Werror])
 # AC_DISABLE_SHARED
 
 AC_CANONICAL_HOST
-
+HACKT_AUTO_CVSIGNORE
 
 AC_CHECK_PROG([SH], sh, sh)
 AC_PATH_PROG(SH_PATH, sh)
@@ -149,7 +149,7 @@ AC_C_BIGENDIAN
 AC_PROG_CXX
 
 dnl from "config/cxx.m4"
-AC_CXX_VERSION
+FANG_CXX_VERSION
 
 dnl checkpoint
 AC_CACHE_SAVE
@@ -161,7 +161,7 @@ FANG_ANAL_COMPILE_FLAGS
 FANG_AM_FLAGS
 
 dnl which set of pre-determined compiler flags to apply?
-AM_CONDITIONAL_HAVE_GXX
+FANG_CXX_COMPILER
 dnl TODO: add other conditionals for other common compilers
 dnl XLC++, ICC, HPCC, etc...
 
@@ -175,6 +175,7 @@ AC_CXX_ATTRIBUTE_PURE
 AC_CXX_ATTRIBUTE_HOLY
 AC_CXX_ATTRIBUTE_NORETURN
 AC_CXX_ATTRIBUTE_MALLOC
+AC_CXX_ATTRIBUTE_PRECIOUS
 AC_CXX_ATTRIBUTE_VISIBILITY
 AC_CXX_ATTRIBUTE_PACKED
 AC_CXX_ATTRIBUTE_ALIGNED

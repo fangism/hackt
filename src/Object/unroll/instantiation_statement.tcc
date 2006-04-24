@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.13 2006/03/15 04:38:23 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.14 2006/04/24 00:28:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -247,9 +247,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	// indices can be resolved to constants with unroll context.  
 	// still implicit until expanded by the collection itself.  
 	const_range_list crl;
-#if 0
-	c.dump(STACKTRACE_INDENT) << endl;
-#endif
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		// passing in relaxed arguments from final_type_ref!
@@ -271,9 +268,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		// actuals are allowed to be NULL, and in some cases,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "&_inst = " << &_inst << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("&_inst = " << &_inst << endl);
 		return type_ref_parent_type::instantiate_indices_with_actuals(
 				_inst, crl, 
 				final_type_ref.make_unroll_context(), 

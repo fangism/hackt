@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.116 2006/04/23 07:37:16 fang Exp $
+#	$Id: Makefile.am,v 1.117 2006/04/24 00:28:03 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1167,6 +1167,7 @@ clean-local: clean-AST clean-Object clean-lexer clean-parser clean-sim \
 	done
 
 # cvsignore targets
+if NO_VPATH
 lexer/.cvsignore: .cvsignore lexer/local.cvsignore
 	$(CAT) .cvsignore $(srcdir)/lexer/local.cvsignore > $@
 parser/.cvsignore: .cvsignore parser/local.cvsignore
@@ -1217,14 +1218,15 @@ SUBDIR_CVSIGNORE += lexer/.cvsignore parser/.cvsignore \
 	sim/.cvsignore sim/prsim/.cvsignore \
 	test/.cvsignore
 
-all: cvsignore
-
 cvsignore: $(SUBDIR_CVSIGNORE)
 
 clean-cvsignore: clean-cvsignore-subdirs
 
 clean-cvsignore-subdirs:
 	-$(RM) $(SUBDIR_CVSIGNORE)
+endif
+# Make.global already has:
+# all: cvsignore
 
 clean-libs:
 	-$(RM) $(noinst_LTLIBRARIES)

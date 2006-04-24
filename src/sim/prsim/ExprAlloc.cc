@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.7 2006/04/23 07:37:26 fang Exp $
+	$Id: ExprAlloc.cc,v 1.8 2006/04/24 00:28:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -197,10 +197,8 @@ ExprAlloc::visit(const footprint_rule& r) {
 	// ignored: state.expr_graph_node_pool[top_ex_index].offset
 	// not computing node fanin?  this would be the place to do it...
 	// can always compute it (cacheable) offline
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "expr " << top_ex_index << " pulls node " <<
-		ni << (r.dir ? " up" : " down") << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("expr " << top_ex_index << " pulls node " <<
+		ni << (r.dir ? " up" : " down") << endl);
 	link_node_to_root_expr(ni, top_ex_index, r.dir);
 #if ENABLE_STACKTRACE
 	state.dump_struct(cerr) << endl;
@@ -251,9 +249,7 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
  */
 expr_index_type
 ExprAlloc::allocate_new_not_expr(const expr_index_type ei) {
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "sub_ex_index = " << ei << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("sub_ex_index = " << ei << endl);
 	st_expr_pool.push_back(
 		expr_type(expr_type::EXPR_NOT,1));
 	st_graph_node_pool.push_back(graph_node_type());
@@ -316,9 +312,7 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 	switch (type) {
 		// enumerations from "Object/lang/PRS_enum.h"
 		case entity::PRS::PRS_LITERAL_TYPE_ENUM: {
-#if ENABLE_STACKTRACE
-			STACKTRACE_INDENT << "literal" << endl;
-#endif
+			STACKTRACE_INDENT_PRINT("literal" << endl);
 			// leaf node
 			INVARIANT(sz == 1);
 			// lookup global bool ID
@@ -328,9 +322,7 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 			break;
 		}
 		case entity::PRS::PRS_NOT_EXPR_TYPE_ENUM: {
-#if ENABLE_STACKTRACE
-			STACKTRACE_INDENT << "not" << endl;
-#endif
+			STACKTRACE_INDENT_PRINT("not" << endl);
 			INVARIANT(sz == 1);
 			(*expr_pool)[e.only()].accept(*this);
 			const size_t sub_ex_index = ret_ex_index;
@@ -340,9 +332,7 @@ ExprAlloc::visit(const footprint_expr_node& e) {
 		case entity::PRS::PRS_AND_EXPR_TYPE_ENUM:
 			// yes, fall-through
 		case entity::PRS::PRS_OR_EXPR_TYPE_ENUM: {
-#if ENABLE_STACKTRACE
-			STACKTRACE_INDENT << "or/and" << endl;
-#endif
+			STACKTRACE_INDENT_PRINT("or/and" << endl);
 			const expr_index_type last =
 				allocate_new_Nary_expr(type, sz);
 			size_t i = 1;
@@ -407,10 +397,8 @@ void
 ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		const expr_index_type top_ex_index, const bool dir) {
 	STACKTRACE("ExprAlloc::link_node_to_root_expr(...)");
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "linking expr " << top_ex_index << " to node " <<
-		ni << (dir ? '+' : '-') << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("linking expr " << top_ex_index <<
+		" to node " << ni << (dir ? '+' : '-') << endl);
 	node_type& output(st_node_pool[ni]);
 	// now link root expression to node
 	expr_type& ne(st_expr_pool[top_ex_index]);
@@ -424,9 +412,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 	// be careful to keep root expr consistent
 	expr_index_type& dir_index(output.get_pull_expr(dir));
 	if (dir_index) {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "pull-up/dn already set" << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("pull-up/dn already set" << endl);
 		// already set, need OR-combination
 		expr_type& pe(st_expr_pool[dir_index]);
 		graph_node_type& pg(st_graph_node_pool[dir_index]);
@@ -437,9 +423,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 		// we don't OR-combine if the expression being examined
 		// is already a top-level root-expression.  
 		if (pe.is_or() && !state.is_rule_expr(top_ex_index)) {
-#if ENABLE_STACKTRACE
-			STACKTRACE_INDENT << "prev. root expr is OR" << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("prev. root expr is OR" << endl);
 			// then simply extend the previous expr's children
 			INVARIANT(dir == pe.direction());
 			pg.push_back_expr(top_ex_index);
@@ -450,9 +434,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			ng.offset = pe.size;
 			++pe.size;
 		} else if (ne.is_or() && !state.is_rule_expr(dir_index)) {
-#if ENABLE_STACKTRACE
-			STACKTRACE_INDENT << "new expr is OR" << endl;
-#endif
+			STACKTRACE_INDENT_PRINT("new expr is OR" << endl);
 			ng.push_back_expr(dir_index);
 			dir_index = top_ex_index;
 			ne.pull(ni, dir);
@@ -460,9 +442,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			pg.offset = ne.size;
 			++ne.size;
 		} else {
-#if ENABLE_STACKTRACE
-			STACKTRACE_INDENT << "neither expr is OR" << endl;
-#endif
+			STACKTRACE_INDENT_PRINT("neither expr is OR" << endl);
 			// then need to allocate new root-expression
 			// and old expressions are no longer root!
 			const expr_index_type root_ex_id =
@@ -476,9 +456,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			dir_index = root_ex_id;
 		}
 	} else {
-#if ENABLE_STACKTRACE
-		STACKTRACE_INDENT << "pull-up/dn not yet set" << endl;
-#endif
+		STACKTRACE_INDENT_PRINT("pull-up/dn not yet set" << endl);
 		// easy: not already set, just link the new root expr.  
 		dir_index = top_ex_index;
 		ne.pull(ni, dir);

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.4 2006/04/11 07:54:46 fang Exp $
+	$Id: Node.cc,v 1.5 2006/04/24 00:28:09 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -48,10 +48,8 @@ Node::push_back_fanout(const expr_index_type ei) {
 #else
 	fanout.push_back(ei);	// automatically resizes and reallocs
 #endif
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "fanout[" << fanout.size() -1
-		<< "]=" << fanout.back() << endl;
-#endif
+	STACKTRACE_INDENT_PRINT("fanout[" << fanout.size() -1
+		<< "]=" << fanout.back() << endl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

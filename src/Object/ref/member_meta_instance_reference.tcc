@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.13 2006/02/21 04:48:36 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.14 2006/04/24 00:28:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -93,7 +93,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_INDENT << "ref: ",
 		expr_dump_context::default_value) << endl;
-	STACKTRACE_INDENT << "c\'s target footprint:" << endl;
+	STACKTRACE_INDENT_PRINT("c\'s target footprint:" << endl);
 	c.get_target_footprint()->dump_with_collections(cerr, 
 		dump_flags::default_value) << endl;
 #endif
@@ -235,21 +235,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
 	// only the ultimate parent of the reference should use the footprint
 	// copy the unroll_context *except* for the footprint pointer
 	const unroll_context cc(c.make_member_context());
-#if 0 && ENABLE_STACKTRACE
-	STACKTRACE_INDENT << "cc\'s target footprint:" << endl;
-	// not useful, could be NULL
-	cc.get_target_footprint()->dump_with_collections(cerr) << endl;
-#endif
+
 	// DO NOT CALL simple_meta_instance_reference::unroll_references_helper
 	// because that performs an additional lookup in the context
 	// which is NOT necessary, because the member was already resolved.  
 	// instead, call unroll_references_helper_no_lookup(...)
-#if 0
-	return unroll_references_helper(cc, *inst_base, this->array_indices, a);
-#else
 	return unroll_references_helper_no_lookup(
 		cc, *inst_base, this->array_indices, a);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
