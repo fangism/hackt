@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.3 2006/04/03 05:30:33 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.3.8.1 2006/04/24 05:42:14 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -201,10 +201,11 @@ dnl spanning versions gcc-2.95 to 4.x
 dnl I bet you didn't know some of these locations were ever used!
 dnl However, you're not supposed to use anything older than gcc-3.3 anyways...
 dnl where is that damn hash_map?
-AC_CHECK_HEADERS([ext/hash_map hash_map])
+AC_CHECK_HEADERS([ext/hash_map hash_map alt/hash_map])
 dnl used mainly in "src/util/hash_specializations.h"
 AC_CHECK_HEADERS([ext/stl_hash_fun.h ext/hash_fun.h stl_hash_fun.h])
-AC_CHECK_HEADERS([ext/hash_set hash_set])
+AC_CHECK_HEADERS([ext/hash_set hash_set alt/hash_set])
+AC_CHECK_HEADERS([ext/slist slist alt/slist])
 AC_CHECK_HEADERS([ext/hashtable.h tr1/hashtable hashtable.h])
 AC_CHECK_HEADERS([tr1/unordered_map tr1/unordered_set])
 AC_CHECK_HEADERS([ext/new_allocator.h])

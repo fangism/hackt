@@ -1,5 +1,5 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.3 2006/04/24 00:28:01 fang Exp $
+dnl	$Id: hackt.m4,v 1.3.2.1 2006/04/24 05:42:15 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
@@ -29,6 +29,18 @@ dnl
 AC_DEFUN([HACKT_AUTO_CVSIGNORE],
 [AM_CONDITIONAL(NO_VPATH, test "$srcdir" = ".")]
 )
+
+dnl
+dnl Defines the set of flags we want to use for configure-testing.
+dnl This includes some flags to disable warnings that otherwise break
+dnl some configure-tests.
+dnl This defines shell variables: CONFTEST_CFLAGS and CONFTEST_CXXFLAGS.
+dnl
+AC_DEFUN([FANG_CONFTEST_FLAGS],
+[AC_REQUIRE([FANG_AM_FLAGS])
+CONFTEST_CFLAGS="$FANG_DIALECT_FLAGS $FANG_WARN_FLAGS $FANG_WARN_CFLAGS $CONFTEST_NOWARN_FLAGS $CONFTEST_NOWARN_CFLAGS $CFLAGS"
+CONFTEST_CXXFLAGS="$FANG_DIALECT_FLAGS $FANG_WARN_FLAGS $FANG_WARN_CXX_FLAGS $CONFTEST_NOWARN_FLAGS $CONFTEST_NOWARN_CXXFLAGS $CXXFLAGS"
+])
 
 dnl
 dnl Chec for xdr header and library.

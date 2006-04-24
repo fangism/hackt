@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.59 2006/04/24 00:28:00 fang Exp $
+#	$Id: configure.ac,v 1.59.2.1 2006/04/24 05:42:11 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -168,6 +168,13 @@ dnl XLC++, ICC, HPCC, etc...
 AM_PROG_CC_C_O
 AC_ISC_POSIX
 
+dnl checks tons of standard C++ headers in various locations
+dnl from "config/cxx_STL.m4"
+dnl from this point to the end, we also apply ANAL_FLAGS before CFLAGS
+dnl and CXXFLAGS to reflect what will be used during the build process.  
+AC_HEADER_STDCXX
+dnl AC_MSG_NOTIFY([Checking library functions and types with $ANAL_FLAGS])
+
 AC_CXX_ATTRIBUTE_UNUSED
 AC_CXX_ATTRIBUTE_UNUSED_CTOR
 AC_CXX_ATTRIBUTE_CONST
@@ -182,6 +189,7 @@ AC_CXX_ATTRIBUTE_ALIGNED
 AC_CXX_ATTRIBUTE_ALIGNED_SIZE
 AC_CXX_ATTRIBUTE_EVIL
 AC_CXX_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING
+AC_CXX_TEMPLATE_FORMAL_BASE_CLASS
 
 AC_CXX_STL_REVERSE_ITERATOR_COMPARISONS
 AC_CXX_STD_IFSTREAM_DEV_STDIN
@@ -200,13 +208,6 @@ AC_CHECK_HEADERS([ctype.h])
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS([dirent.h sys/dirent.h])
 AC_CHECK_HEADERS([signal.h sys/signal.h])
-
-dnl checks tons of standard C++ headers in various locations
-dnl from "config/cxx_STL.m4"
-dnl from this point to the end, we also apply ANAL_FLAGS before CFLAGS
-dnl and CXXFLAGS to reflect what will be used during the build process.  
-AC_HEADER_STDCXX
-dnl AC_MSG_NOTIFY([Checking library functions and types with $ANAL_FLAGS])
 
 AC_CACHE_SAVE
 
@@ -236,10 +237,9 @@ AC_FUNC_SETVBUF_REVERSED
 
 top_saved_CFLAGS="$CFLAGS"
 top_saved_CXXFLAGS="$CXXFLAGS"
-CONFTEST_CFLAGS="$FANG_DIALECT_FLAGS $FANG_WARN_FLAGS $FANG_WARN_CFLAGS $CONFTEST_NOWARN_FLAGS $CONFTEST_NOWARN_CFLAGS $CFLAGS"
-CONFTEST_CXXFLAGS="$FANG_DIALECT_FLAGS $FANG_WARN_FLAGS $FANG_WARN_CXX_FLAGS $CONFTEST_NOWARN_FLAGS $CONFTEST_NOWARN_CXXFLAGS $CXXFLAGS"
 
 dnl ignore warnings for function checks
+dnl CONFTEST flags are defined by FANG_CONFTEST_FLAGS from hackt.m4
 CFLAGS="$CONFTEST_CFLAGS -Wno-error"
 CXXFLAGS="$CONFTEST_CXXFLAGS -Wno-error"
 
