@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.16 2006/04/24 00:28:07 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.16.2.1 2006/04/25 18:24:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -504,7 +504,7 @@ if (value_collection_ref->is_template_formal()) {
 			try {
 				return return_type(new const_collection_type(
 					ce.make_value_slice(cil)));
-			} catch (const std::out_of_range& r) {
+			} catch (const std::out_of_range&) {
 				// cerr << r.what() << endl;
 				cerr << "Error: indices out of range of " <<
 					util::what<this_type>::name() << 

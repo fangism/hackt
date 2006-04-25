@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-04-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-03:
+	  configure check for std::_Identity, _Select1st, _Select2nd.  
+
+
 2006-04-24	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-19-icc-01-02:

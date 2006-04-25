@@ -1,5 +1,5 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.3.8.2 2006/04/24 20:15:30 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.3.8.3 2006/04/25 18:23:25 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
@@ -382,4 +382,81 @@ if test "$fang_cv_hash_map_intel_style" = yes ; then
 		[Define if hash_map is Intel-style])
 fi
 ])
+
+dnl
+dnl Three tests combined in one.
+dnl Checks if <functional> contains _Identity, _Select1st, _Select2nd.
+dnl
+AC_DEFUN([FANG_CXX_STL_FUNCTIONAL_SELECT],
+[AC_REQUIRE([AC_HEADER_STDCXX])
+
+AC_CACHE_CHECK([whether <functional> contains std::_Identity],
+[fang_cv_cxx_stl_functional_identity],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+		#include <functional>
+	], [
+		int i = 4;
+		int j = std::_Identity<int>()(i);
+		while (j) --j;
+	]),
+	[fang_cv_cxx_stl_functional_identity=yes],
+	[fang_cv_cxx_stl_functional_identity=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_functional_identity" = yes ; then
+	AC_DEFINE(HAVE_STD__IDENTITY, [],
+		[Define if STL contains _Identity functor])
+fi
+
+AC_CACHE_CHECK([whether <functional> contains std::_Select1st],
+[fang_cv_cxx_stl_functional_select1st],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+		#include <utility>
+		#include <functional>
+	], [[
+		typedef	std::pair<int, int>	pair_type;
+		pair_type i(4,8);
+		int j = std::_Select1st<pair_type>()(i);
+		while (j) --j;
+	]]),
+	[fang_cv_cxx_stl_functional_select1st=yes],
+	[fang_cv_cxx_stl_functional_select1st=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_functional_select1st" = yes ; then
+	AC_DEFINE(HAVE_STD__SELECT1ST, [],
+		[Define if STL contains _Select1st functor])
+fi
+
+AC_CACHE_CHECK([whether <functional> contains std::_Select2nd],
+[fang_cv_cxx_stl_functional_select2nd],
+[AC_LANG_PUSH(C++)
+AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+		#include <utility>
+		#include <functional>
+	], [[
+		typedef	std::pair<int, int>	pair_type;
+		pair_type i(4,8);
+		int j = std::_Select2nd<pair_type>()(i);
+		while (j) --j;
+	]]),
+	[fang_cv_cxx_stl_functional_select2nd=yes],
+	[fang_cv_cxx_stl_functional_select2nd=no]
+)
+AC_LANG_POP(C++)
+])
+if test "$fang_cv_cxx_stl_functional_select2nd" = yes ; then
+	AC_DEFINE(HAVE_STD__SELECT2ND, [],
+		[Define if STL contains _Select2nd functor])
+fi
+
+])
+
 

@@ -4,6 +4,13 @@
 # This version tag is used in building "main/version.cc".
 
 
+2006-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-03:
+	  Object/inst/*_collection.tcc: No empty macro arguments.  
+	  Bunch more fixes in the util/ library headers.  
+
+
 2006-04-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-19-icc-01-02:
