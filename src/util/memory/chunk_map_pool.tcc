@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.tcc"
 	Method definitions for chunk-allocated memory pool.
-	$Id: chunk_map_pool.tcc,v 1.10 2006/04/11 07:54:49 fang Exp $
+	$Id: chunk_map_pool.tcc,v 1.10.4.1 2006/04/25 18:24:51 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_TCC__
@@ -12,9 +12,10 @@
 #ifndef	EXTERN_TEMPLATE_UTIL_MEMORY_CHUNK_MAP_POOL
 
 #include <iostream>
+#include <iterator>				// for std::distance
 #include "util/macros.h"
-#include "util/numeric/nibble_tables.h"
-#include "util/numeric/integer_traits.h"
+#include "util/numeric/nibble_tables.h"		// may not need anymore :(
+#include "util/numeric/integer_traits.h"	// may not need anymore :(
 #include "util/static_assert.h"
 #include "util/bitset.tcc"
 #include "util/attributes.h"
@@ -29,6 +30,12 @@
 
 #define	FORMAT_HEX_POINTER(x)	reinterpret_cast<void*>(size_t(x))
 
+/**
+	Whether or not we try to be fancy and hand optimize.  
+	Define to 0 to be conservative.  
+ */
+#define	USE_HAND_OPTIMIZE_DISTANCE			0
+
 namespace util {
 namespace memory {
 #include "util/using_ostream.h"
@@ -42,11 +49,20 @@ using numeric::is_power_of_2;
 TYPELESS_MEMORY_CHUNK_TEMPLATE_SIGNATURE
 bool
 TYPELESS_MEMORY_CHUNK_CLASS::contains(void* p) const {
+#if USE_HAND_OPTIMIZE_DISTANCE
+	// some compilers will complain about suspicious reinterpret_cast
 	const size_t
 		diff = reinterpret_cast<size_t>(p)
 			-reinterpret_cast<size_t>(&elements[0]);
 	register const size_t offset =
 		divide_by_constant<element_size, size_t>(diff);
+#else
+	// the more proper way, but relying on compiler to optimize
+	register const typename
+		std::iterator_traits<storage_type*>::difference_type
+		offset = std::distance(&elements[0],
+			reinterpret_cast<const storage_type*>(p));
+#endif
 	if (offset >= chunk_size)
 		return false;
 	const bit_map_type dealloc_mask = bit_map_type(1) << offset;
@@ -96,11 +112,19 @@ void
 TYPELESS_MEMORY_CHUNK_CLASS::__deallocate(void* p) {
 	// For shame! pointer-arithmetic!
 	// worry about portability later...
+#if USE_HAND_OPTIMIZE_DISTANCE
 	const size_t
 		diff = reinterpret_cast<size_t>(p)
 			-reinterpret_cast<size_t>(&elements[0]);
 	register const size_t offset =
 		divide_by_constant<element_size, size_t>(diff);
+#else
+	// the more proper way, but relying on compiler to optimize
+	register const typename
+		std::iterator_traits<storage_type*>::difference_type
+		offset = std::distance(&elements[0],
+			reinterpret_cast<storage_type*>(p));
+#endif
 #if 0
 	// for debugging
 	if (offset >= chunk_size) {
@@ -333,6 +357,8 @@ CHUNK_MAP_POOL_CLASS::status(ostream& o) const {
 //=============================================================================
 }	// end namespace memory
 }	// end namespace util
+
+#undef	USE_HAND_OPTIMIZE_DISTANCE
 
 #endif	// EXTERN_TEMPLATE_UTIL_MEMORY_CHUNK_MAP_POOL
 #endif	// __UTIL_MEMORY_CHUNK_MAP_POOL_TCC__

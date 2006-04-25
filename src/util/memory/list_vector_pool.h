@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.16 2006/03/16 03:40:30 fang Exp $
+	$Id: list_vector_pool.h,v 1.16.12.1 2006/04/25 18:24:51 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -94,7 +94,7 @@ T::operator new (size_t s) {						\
 	return pool.allocate();						\
 }									\
 void*									\
-T::operator new (size_t s, void*& p) {					\
+T::operator new (size_t s, void* p) {					\
 	INVARIANT(sizeof(T) == s);					\
 	NEVER_NULL(p); return p;					\
 }									\
@@ -161,7 +161,7 @@ T::operator new (size_t s) {						\
 }									\
 									\
 void*									\
-T::operator new (size_t s, void*& p) {					\
+T::operator new (size_t s, void* p) {					\
 	INVARIANT(sizeof(T) == s);					\
 	NEVER_NULL(p); return p;					\
 }									\

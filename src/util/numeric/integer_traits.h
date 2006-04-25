@@ -2,7 +2,7 @@
 	\file "util/numeric/integer_traits.h"
 	The templates in this file allow compile time decisions
 	based on traits of constant integer values.  
-	$Id: integer_traits.h,v 1.8 2005/09/04 21:15:10 fang Exp $
+	$Id: integer_traits.h,v 1.8.60.1 2006/04/25 18:24:52 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_INTEGER_TRAITS_H__
@@ -235,7 +235,7 @@ struct next_odd {
 // the greatest odd number strictly less than
 template <size_t N>
 struct prev_odd {
-	enum { value = (N & -2) -1 };
+	enum { value = (N & size_t(-2)) -1 };
 };
 
 #if 0

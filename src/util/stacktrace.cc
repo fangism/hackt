@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.13 2006/02/13 02:48:07 fang Exp $
+	$Id: stacktrace.cc,v 1.13.16.1 2006/04/25 18:24:48 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -28,11 +28,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 namespace util {
 using std::list;
 using std::ostream;
-using util::qmap;
+// using util::qmap;
 using std::stack;
 using std::ostream_iterator;
 #include "util/using_ostream.h"
-using util::memory::raw_count_ptr;
+using memory::raw_count_ptr;
 
 // macro to guarantee proper orderly initialization
 REQUIRES_STACKTRACE_STATIC_INIT

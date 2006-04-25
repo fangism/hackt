@@ -2,7 +2,7 @@
 	\file "util/multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.23 2006/04/18 18:42:43 fang Exp $
+	$Id: multikey.h,v 1.23.2.1 2006/04/25 18:24:47 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -482,33 +482,37 @@ public:
 	K
 	default_value(void) const { return 0; }
 
+	/**
+		Aside: extra parens on the address-of & operand
+		needed for Intel ICC.  :S
+	 */
 	iterator
-	begin(void) { return &impl_type::operator[](0); }
+	begin(void) { return &(impl_type::operator[](0)); }
 
 	const_iterator
-	begin(void) const { return &impl_type::operator[](0); }
+	begin(void) const { return &(impl_type::operator[](0)); }
 
 	iterator
-	end(void) { return &impl_type::operator[](size()); }
+	end(void) { return &(impl_type::operator[](size())); }
 
 	const_iterator
-	end(void) const { return &impl_type::operator[](size()); }
+	end(void) const { return &(impl_type::operator[](size())); }
 
 	reverse_iterator
 	rbegin(void)
-		{ return reverse_iterator(&impl_type::operator[](size())); }
+		{ return reverse_iterator(&(impl_type::operator[](size()))); }
 
 	const_reverse_iterator
 	rbegin(void) const {
-		return const_reverse_iterator(&impl_type::operator[](size()));
+		return const_reverse_iterator(&(impl_type::operator[](size())));
 	}
 
 	reverse_iterator
-	rend(void) { return reverse_iterator(&impl_type::operator[](0)); }
+	rend(void) { return reverse_iterator(&(impl_type::operator[](0))); }
 
 	const_reverse_iterator
 	rend(void) const {
-		return const_reverse_iterator(&impl_type::operator[](0));
+		return const_reverse_iterator(&(impl_type::operator[](0)));
 	}
 
 	reference

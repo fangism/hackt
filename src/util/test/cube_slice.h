@@ -1,7 +1,7 @@
 /**
 	\file "cube_slice.h"
 	Rigorous testing class for multikey_qmap.  
-	$Id: cube_slice.h,v 1.10 2006/04/18 18:42:47 fang Exp $
+	$Id: cube_slice.h,v 1.10.2.1 2006/04/25 18:24:53 fang Exp $
  */
 
 #include "util/macros.h"
@@ -174,7 +174,7 @@ public:
 	void
 	slice_test_2d(void) const {
 		map_3d_type::const_iterator start(str_map.begin());
-		map_3d_type::const_iterator end(--str_map.end());
+		// map_3d_type::const_iterator end(--str_map.end());
 		assert(start != str_map.end());
 		map_3d_type::key_list_pair_type ext(str_map.index_extremities());
 		int min1 = ext.first.front();
@@ -206,7 +206,7 @@ public:
 	void
 	slice_test_3d(void) const {
 		map_3d_type::const_iterator start(str_map.begin());
-		map_3d_type::const_iterator end(--str_map.end());
+		// map_3d_type::const_iterator end(--str_map.end());
 		assert(start != str_map.end());
 		map_3d_type::key_list_pair_type ext(str_map.index_extremities());
 		int min1 = ext.first.front();

@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool_fwd.h"
 	Forward declarations for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool_fwd.h,v 1.6 2006/03/16 03:40:30 fang Exp $
+	$Id: chunk_map_pool_fwd.h,v 1.6.12.1 2006/04/25 18:24:51 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_FWD_H__
@@ -17,7 +17,8 @@
 #define	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(C)			\
 	static void*	operator new (size_t);				\
 	static void	operator delete (void*);			\
-	static void*	operator new (size_t, void*&);			\
+	static void*	operator new (size_t, void*);			\
+	static void	operator delete (void*, void*) { }		\
 private:								\
 	typedef	util::memory::chunk_map_pool<this_type,C> pool_type;	\
 	static	pool_type				pool;
@@ -30,7 +31,8 @@ private:								\
 	static void*	operator new (size_t);				\
 	static void	operator delete (void*);			\
 private:								\
-	static void*	operator new (size_t, void*&);			\
+	static void*	operator new (size_t, void*);			\
+	static void	operator delete (void*, void*) { }		\
 	typedef	util::memory::chunk_map_pool<this_type,C> pool_type;	\
 	typedef	util::memory::raw_count_ptr<pool_type>			\
 						pool_ref_ref_type;	\

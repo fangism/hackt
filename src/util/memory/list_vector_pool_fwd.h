@@ -2,7 +2,7 @@
 	\file "util/memory/list_vector_pool_fwd.h"
 	Forward declaration for container-based memory pool.  
 
-	$Id: list_vector_pool_fwd.h,v 1.7 2005/05/22 06:24:22 fang Exp $
+	$Id: list_vector_pool_fwd.h,v 1.7.88.1 2006/04/25 18:24:52 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_FWD_H__
@@ -35,7 +35,8 @@
 #define	LIST_VECTOR_POOL_DEFAULT_STATIC_DECLARATIONS			\
 	static void*	operator new (size_t);				\
 	static void	operator delete (void*);			\
-	static void*	operator new (size_t, void*&);			\
+	static void*	operator new (size_t, void*);			\
+	static void	operator delete (void*, void*) { }		\
 private:								\
 	typedef	util::memory::list_vector_pool<this_type>	pool_type;\
 	static pool_type				pool;
@@ -66,7 +67,8 @@ private:								\
 	static void*	operator new (size_t);				\
 	static void	operator delete (void*);			\
 private:								\
-	static void*	operator new (size_t, void*&);			\
+	static void*	operator new (size_t, void*);			\
+	static void	operator delete (void*, void*) { }		\
 	typedef	util::memory::list_vector_pool<this_type>	pool_type;\
 	typedef	util::memory::raw_count_ptr<pool_type>	pool_ref_ref_type;\
 public:									\

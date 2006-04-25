@@ -1,5 +1,21 @@
 # "src/util/ChangeLog"
 
+2006-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-03:
+	  Memory pools' operator new prototypes' arguments changed from
+		void*& to void*.  
+		Added missing placement delete operator (no-op).  
+	  chunk_map_pool.tcc: offset calculation now uses 
+		RandomIterator distance to avoid using reinterpret_cast.  
+	  Added util/STL/functional.h for confgure-dependent deficiencies
+		with std::_Identity, _Select1st, _Select2nd.  
+	  util/multikey.h: extra parens around address-of operand.  
+	  util/test/Makefile.am: use configure-generated @*_WARN_FLAGS@,
+		eliminated -pipe flag.  
+	  util/test/test-expect.sh.in: redirection fix.  
+
+
 2006-04-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-19-icc-01-02:

@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "test-expect.sh.in"
-#	$Id: test-expect.sh.in,v 1.4 2005/12/08 22:01:14 fang Exp $
+#	$Id: test-expect.sh.in,v 1.4.42.1 2006/04/25 18:24:54 fang Exp $
 # This file came from "test-expect.sh" in revision prehistory.  
 
 # $1 is the executable, expecting no input
@@ -44,8 +44,8 @@ then
 	mv -f $bldroot.out.filter $bldroot.out.prefilter
 	$morefilter $bldroot.stderr.prefilter $bldroot.stderr.filter
 	$morefilter $bldroot.out.prefilter $bldroot.out.filter
-	@DIFF@ -u $bldroot.stderr.prefilter $bldroot.out.prefilter 2>&1 | \
-		@CAT@ > $bldroot.prefilter.diff
+	@DIFF@ -u $bldroot.stderr.prefilter $bldroot.out.prefilter > \
+		$bldroot.prefilter.diff
 	# what the heck, print a warning message, just FYI
 	if test -s $bldroot.prefilter.diff
 	then
@@ -53,8 +53,7 @@ then
 	fi
 fi
 
-@DIFF@ -u $bldroot.stderr.filter $bldroot.out.filter 2>&1 | \
-	@CAT@ > $bldroot.diff
+@DIFF@ -u $bldroot.stderr.filter $bldroot.out.filter > $bldroot.diff
 
 if test -s $bldroot.diff
 then

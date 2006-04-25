@@ -1,7 +1,7 @@
 /**
 	\file "util/STL/functional_fwd.h"
 	Forward declarations of the <functional> header.
-	$Id: functional_fwd.h,v 1.3 2005/05/10 04:51:31 fang Exp $
+	$Id: functional_fwd.h,v 1.3.92.1 2006/04/25 18:24:50 fang Exp $
  */
 
 #ifndef	__UTIL_STL_FUNCTIONAL_FWD_H__
@@ -80,9 +80,15 @@ template <class O, class T>
 binder2nd<O>
 bind2nd(const O&, const T&);
 
+// may not be standard! see "util/STL/functional.h"
+template <class P>
+struct _Identity;
+
+// may not be standard! see "util/STL/functional.h"
 template <class P>
 struct _Select1st;
 
+// may not be standard! see "util/STL/functional.h"
 template <class P>
 struct _Select2nd;
 
