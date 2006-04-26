@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.12 2006/04/24 00:28:04 fang Exp $
+ 	$Id: const_collection.tcc,v 1.12.2.1 2006/04/26 19:50:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -29,8 +29,10 @@
 #include <iostream>
 #include <exception>
 #include <algorithm>
+#include <stdexcept>
 
 #include "Object/expr/const_collection.h"
+#include "Object/expr/const_param.h"
 #include "Object/traits/class_traits.h"
 #include "Object/common/multikey_index.h"
 #include "Object/expr/const_index.h"
@@ -424,7 +426,7 @@ if (il.empty()) {
 	STACKTRACE_INDENT_PRINT("u = " << u << endl);
 	if (!this->values.range_check(l) || !this->values.range_check(u)) {
 		// can't return it, drat...
-		std::__throw_out_of_range(
+		throw std::out_of_range(
 			"packed_array_generic index is out of range.");
 	}
 	key_gen.get_lower_corner() = l;

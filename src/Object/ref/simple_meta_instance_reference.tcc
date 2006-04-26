@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.19 2006/04/12 08:53:17 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.19.4.1 2006/04/26 19:50:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -17,6 +17,7 @@
 #include "Object/common/dump_flags.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/def/footprint.h"
+#include "Object/type/fundamental_type_reference.h"
 #include "common/TODO.h"
 #include "common/ICE.h"
 #include "util/what.h"

@@ -3,7 +3,7 @@
 	Implementation for container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.tcc,v 1.6 2005/06/21 21:26:41 fang Exp $
+	$Id: list_vector_pool.tcc,v 1.6.80.1 2006/04/26 19:50:51 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_TCC__
@@ -144,7 +144,8 @@ list_vector_pool<T,Threaded>::~list_vector_pool() {
 	while (!free_list.empty()) {
 		// to prevent double-destruction!
 		// if a delete operator already implicitly called dtors!
-		lazy_construct(free_list.front(),
+		const pointer destroy_me = free_list.front();
+		lazy_construct(destroy_me,
 			list_vector_pool_destruction_policy<T>());
 		free_list.pop();	// is queue::pop_front()
 	}

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context_value_resolver.h"
 	Specialized operator definitions for value collection
 	resolution.  
-	$Id: unroll_context_value_resolver.h,v 1.5 2006/02/10 21:50:44 fang Exp $
+	$Id: unroll_context_value_resolver.h,v 1.5.20.1 2006/04/26 19:50:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
@@ -41,11 +41,15 @@ public:
 	 */
 	const_return_type
 	operator () (const unroll_context& c, const value_collection_type& v,
-			value_type& i) const {
+			value_type& i) const;
+#if 0
+	{
 		// hack: intercept loop variable lookups
 		const value_scalar_type* const
 			vsp(IS_A(const value_scalar_type*, &v));
 		if (vsp && vsp->is_loop_variable()) {
+			// icc: this causes premature instantiation of 
+			// value_array<pint_tag, 0>
 			const count_ptr<const pint_const>
 				pc(c.lookup_loop_var(*vsp));
 			if (pc) {
@@ -65,9 +69,12 @@ public:
 				: v);
 		return const_return_type(false, &_vals);
 	}
+#endif
 
 	value_collection_type&
-	operator () (const unroll_context& c, value_collection_type& v) const {
+	operator () (const unroll_context& c, value_collection_type& v) const;
+#if 0
+	{
 		// no specialization, can't assign to loop vars.  
 		const footprint* const f(c.get_target_footprint());
 		value_collection_type&
@@ -76,6 +83,7 @@ public:
 				: v);
 		return _vals;
 	}
+#endif
 
 };	// end class value_resolver
 
@@ -97,7 +105,9 @@ public:
 	 */
 	const_return_type
 	operator () (const unroll_context& c, const value_collection_type& v,
-			value_type& i) const {
+			value_type& i) const;
+#if 0
+	{
 		const footprint* const f(c.get_target_footprint());
 		const value_collection_type&
 			_vals(f ? IS_A(const value_collection_type&,
@@ -105,9 +115,12 @@ public:
 				: v);
 		return const_return_type(false, &_vals);
 	}
+#endif
 
 	value_collection_type&
-	operator () (const unroll_context& c, value_collection_type& v) const {
+	operator () (const unroll_context& c, value_collection_type& v) const;
+#if 0
+	{
 		// no specialization, can't assign to loop vars.  
 		const footprint* const f(c.get_target_footprint());
 		value_collection_type&
@@ -116,7 +129,7 @@ public:
 				: v);
 		return _vals;
 	}
-
+#endif
 };	// end class value_resolver
 
 //-----------------------------------------------------------------------------
@@ -137,7 +150,9 @@ public:
 	 */
 	const_return_type
 	operator () (const unroll_context& c, const value_collection_type& v,
-			value_type& i) const {
+			value_type& i) const;
+#if 0
+	{
 		const footprint* const f(c.get_target_footprint());
 		const value_collection_type&
 			_vals(f ? IS_A(const value_collection_type&,
@@ -145,9 +160,12 @@ public:
 				: v);
 		return const_return_type(false, &_vals);
 	}
+#endif
 
 	value_collection_type&
-	operator () (const unroll_context& c, value_collection_type& v) const {
+	operator () (const unroll_context& c, value_collection_type& v) const;
+#if 0
+	{
 		// no specialization, can't assign to loop vars.  
 		const footprint* const f(c.get_target_footprint());
 		value_collection_type&
@@ -156,6 +174,7 @@ public:
 				: v);
 		return _vals;
 	}
+#endif
 
 };	// end class value_resolver
 
