@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.18 2006/04/24 00:28:04 fang Exp $
+	$Id: footprint.cc,v 1.18.4.1 2006/04/27 23:06:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,7 +27,9 @@
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/STL/hash_map_utils.h"
+#if FOOTPRINT_USE_HASH_QMAP
 #include "util/hash_qmap.tcc"
+#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.h"
 #include "util/indent.h"
@@ -255,7 +257,13 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df) const {
  */
 footprint::instance_collection_ptr_type
 footprint::operator [] (const string& k) const {
+#if FOOTPRINT_USE_HASH_QMAP
 	return instance_collection_map[k];
+#else
+	const const_instance_map_iterator f(instance_collection_map.find(k));
+	return (f != instance_collection_map.end()) ? f->second
+		: instance_collection_ptr_type(NULL);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

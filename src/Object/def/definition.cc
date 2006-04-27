@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.20 2006/03/21 21:53:12 fang Exp $
+ 	$Id: definition.cc,v 1.20.12.1 2006/04/27 23:06:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -25,7 +25,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "AST/delim.h"
 #include "AST/token_string.h"
 
-#include "util/hash_qmap.tcc"
 #include "util/hash_specializations.h"		// substitute for the following
 
 #include "Object/def/param_definition.h"
@@ -59,6 +58,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "common/ICE.h"
 #include "common/TODO.h"
 
+#if TFM_USE_HASH_QMAP || PFM_USE_HASH_QMAP
+#include "util/hash_qmap.tcc"
+#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
 #include "util/binders.h"

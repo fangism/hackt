@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-04-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-21-maps-01:
+	  Branch for cleaning up implementation and use of maps and hash_maps.
+		Phasing out our old friends hash_qmap and qmap for simplicity.
+	  This revision has flagged out hash_qmaps from the source.  
+	  Next revision will purge, then we clean out qmaps.  
+
 
 2006-04-26	David Fang		<fangism@users.sourceforge.net>
 

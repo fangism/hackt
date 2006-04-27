@@ -3,18 +3,25 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.11 2006/04/18 18:42:38 fang Exp $
+	$Id: scopespace.h,v 1.11.4.1 2006/04/27 23:06:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
 #define	__HAC_OBJECT_COMMON_SCOPESPACE_H__
+
+#include "Object/devel_switches.h"
+#define	SCOPE_USE_HASH_QMAP		(USE_HASH_QMAP || 0)
 
 #include <list>
 #include "Object/common/util_types.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/boolean_types.h"
 #include "util/qmap.h"			// need complete definition
+#if SCOPE_USE_HASH_QMAP
 #include "util/hash_qmap.h"		// need complete definition
+#else
+#include "util/STL/hash_map.h"
+#endif
 #include "util/memory/excl_ptr.h"
 
 //=============================================================================
@@ -39,7 +46,9 @@ using std::list;
 using std::string;
 using std::istream;
 using std::ostream;
+#if SCOPE_USE_HASH_QMAP
 using util::hash_qmap;
+#endif
 using util::persistent;
 using util::persistent_object_manager;
 using parser::token_identifier;
@@ -105,7 +114,13 @@ protected:	// typedefs -- keep these here for re-use
 		To get the modifiable pointers, you'll need to look them up 
 		in the corresponding type-specific map.  
 	 */
+#if SCOPE_USE_HASH_QMAP
 	typedef	hash_qmap<string, some_ptr<object> >	used_id_map_type;
+#else
+	typedef	HASH_MAP_NAMESPACE::default_hash_map<string,
+			some_ptr<object> >::type
+						used_id_map_type;
+#endif
 
 	// new idea: use used_id_map as cache for type references and 
 	// parameters expressions.  

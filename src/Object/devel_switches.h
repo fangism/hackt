@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.12 2006/04/11 07:54:37 fang Exp $
+	$Id: devel_switches.h,v 1.12.6.1 2006/04/27 23:06:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -22,7 +22,7 @@
 #endif
 
 // leave this error enabled for released code
-#if 1
+#if 0
 #error	Production code should NOT include this header file.  \
 	However, if you are developing, use this file as you see fit.  
 #endif
@@ -33,6 +33,13 @@
 /**
 	TODO: decide policy for handling relaxed type actuals.  
  */
+
+
+/**
+	Whether or not to use hash_qmap.
+	Goal: 0
+ */
+#define	USE_HASH_QMAP				0
 
 //=============================================================================
 

@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.5 2006/01/22 18:19:37 fang Exp $
+	$Id: template_formals_manager.h,v 1.5.36.1 2006/04/27 23:06:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -12,10 +12,17 @@
 #include <iosfwd>
 #include <vector>
 
+#include "Object/devel_switches.h"
+#define	TFM_USE_HASH_QMAP		(USE_HASH_QMAP || 0)
+
 #include "util/macros.h"
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"	// for persistent object interface
+#if TFM_USE_HASH_QMAP
 #include "util/hash_qmap.h"
+#else
+#include "util/STL/hash_map.h"
+#endif
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -32,7 +39,9 @@ using std::ostream;
 using std::vector;
 using util::bad_bool;
 using util::good_bool;
+#if TFM_USE_HASH_QMAP
 using util::hash_qmap;
+#endif
 using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
@@ -67,7 +76,12 @@ public:
 	typedef	never_ptr<const param_value_collection>
 					template_formals_value_type;
 	// double-maintenance...
+#if TFM_USE_HASH_QMAP
 	typedef	hash_qmap<string, template_formals_value_type>
+#else
+	typedef	HASH_MAP_NAMESPACE::hash_map<string,
+			template_formals_value_type>
+#endif
 					template_formals_map_type;
 
 	/**

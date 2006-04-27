@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.30 2006/02/13 02:48:06 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.30.18.1 2006/04/27 23:06:40 fang Exp $
  */
 
 // flags and switches
@@ -12,10 +12,12 @@
 
 #include "util/hash_specializations.h"	// include this first
 	// for hash specialization to take effect
-#include "util/hash_qmap.tcc"
 #include "util/new_functor.tcc"
 #include "util/list_vector.tcc"
 #include "util/persistent_object_manager.tcc"	// for read_pointer
+#if USE_HASH_QMAP
+#include "util/hash_qmap.tcc"
+#endif
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/excl_array_ptr.h"
@@ -521,32 +523,36 @@ persistent_object_manager::register_transient_object(
 		const persistent* ptr, const persistent::hash_key& t, 
 		const aux_alloc_arg_type a) {
 	STACKTRACE("pom::register_transient_object()");
+#if USE_HASH_QMAP
 	const size_t probe = addr_to_index_map[ptr];
+#else
+	const addr_to_index_map_type::const_iterator
+		f(addr_to_index_map.find(ptr));
+#endif
 	if (ptr)
 		assert(t != persistent::hash_key::null);
-	if (probe < reconstruction_table.size()) {
+#if USE_HASH_QMAP
+	if (probe < reconstruction_table.size())
+#else
+	if (f != addr_to_index_map.end())
+#endif
+	{
+#if !USE_HASH_QMAP
+		const size_t probe = f->second.val;
+#endif
 		// sanity check
-		const reconstruction_table_entry& e __ATTRIBUTE_UNUSED__ = 
-			reconstruction_table[probe];
+		const reconstruction_table_entry& e
+			__ATTRIBUTE_UNUSED_CTOR__((reconstruction_table[probe]));
 		assert(e.type() == t);
-		assert(e.addr() == ptr);
+		assert(e.addr() == ptr);	// check reverse mapping
 		assert(e.get_alloc_arg() == a);
 		return true;
 	} else {
 		static const reconstruction_table_entry empty;
 		// else add new entry
 		addr_to_index_map[ptr] = reconstruction_table.size();
-#if 1
 		reconstruction_table.push_back(
 			reconstruction_table_entry(ptr, t, a));
-#else
-		// This causes strange death???
-		// can't pass temporary object because of mark-and-sweep
-		// style destructor of reconstruction_table_entry.  
-		// construct empty, then initialize in place.
-		reconstruction_table.push_back(empty);
-		reconstruction_table.back().construct(ptr, t, a);
-#endif
 			// should transfer ownership of newly 
 			// constructed stringstream
 		return false;
@@ -572,9 +578,16 @@ persistent_object_manager::initialize_null(void) {
  */
 bool
 persistent_object_manager::flag_visit(const persistent* ptr) {
+#if USE_HASH_QMAP
 	const size_t probe = addr_to_index_map[ptr];
 	INVARIANT(probe < reconstruction_table.size());
-	reconstruction_table_entry& e = reconstruction_table[probe];
+#else
+	const addr_to_index_map_type::const_iterator
+		f(addr_to_index_map.find(ptr));
+	INVARIANT(f != addr_to_index_map.end());
+	const size_t probe = f->second.val;
+#endif
+	reconstruction_table_entry& e(reconstruction_table[probe]);
 	INVARIANT(e.addr() == ptr);		// sanity check
 	if (e.flagged())
 		return true;
@@ -593,9 +606,16 @@ persistent_object_manager::flag_visit(const persistent* ptr) {
  */
 size_t
 persistent_object_manager::lookup_ptr_index(const persistent* ptr) const {
+#if USE_HASH_QMAP
 	const size_t probe = addr_to_index_map[ptr];
 	// because uninitialized value of Long is -1
-	if (probe >= reconstruction_table.size()) {
+	if (probe >= reconstruction_table.size())
+#else
+	const addr_to_index_map_type::const_iterator
+		f(addr_to_index_map.find(ptr));
+	if (f == addr_to_index_map.end())
+#endif
+	{
 		// more useful diagnosis message
 		if (ptr) {
 			ptr->what(cerr << "FATAL: Object (") << ") at addr " <<
@@ -607,7 +627,11 @@ persistent_object_manager::lookup_ptr_index(const persistent* ptr) const {
 		// else just NULL, don't bother
 		THROW_EXIT;
 	}
+#if USE_HASH_QMAP
 	return probe;
+#else
+	return f->second.val;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -628,7 +652,7 @@ persistent_object_manager::lookup_reconstruction_table_entry(
 persistent*
 persistent_object_manager::lookup_obj_ptr(const size_t i) const {
 	INVARIANT(i < reconstruction_table.size());
-	const reconstruction_table_entry& e = reconstruction_table[i];
+	const reconstruction_table_entry& e(reconstruction_table[i]);
 	return const_cast<persistent*>(e.addr());
 }
 
@@ -640,7 +664,7 @@ persistent_object_manager::lookup_obj_ptr(const size_t i) const {
 std::pair<persistent*, persistent_object_manager::visit_info*>
 persistent_object_manager::lookup_ptr_visit_info(const size_t i) const {
 	INVARIANT(i < reconstruction_table.size());
-	const reconstruction_table_entry& e = reconstruction_table[i];
+	const reconstruction_table_entry& e(reconstruction_table[i]);
 	return std::make_pair(
 		const_cast<persistent*>(e.addr()),
 		&e.get_visit_info());
@@ -680,7 +704,7 @@ persistent_object_manager::do_not_delete(const persistent* p) const {
 size_t*
 persistent_object_manager::lookup_ref_count(const size_t i) const {
 	STACKTRACE("lookup_ref_count(size_t)");
-	const reconstruction_table_entry& e = reconstruction_table[i];
+	const reconstruction_table_entry& e(reconstruction_table[i]);
 	return e.count();
 }
 
@@ -702,8 +726,8 @@ persistent_object_manager::lookup_ref_count(const persistent* p) const {
  */
 ostream&
 persistent_object_manager::lookup_write_buffer(const persistent* ptr) const {
-	stringstream& ret =
-		reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
+	stringstream&
+		ret(reconstruction_table[lookup_ptr_index(ptr)].get_buffer());
 #if DEBUG_ME
 	cerr << "lookup_write_buffer(): tellg = " << ret.tellg()
 		<< ", tellp = " << ret.tellp() << endl;
@@ -719,8 +743,8 @@ persistent_object_manager::lookup_write_buffer(const persistent* ptr) const {
  */
 istream&
 persistent_object_manager::lookup_read_buffer(const persistent* ptr) const {
-	stringstream& ret =
-		reconstruction_table[lookup_ptr_index(ptr)].get_buffer();
+	stringstream&
+		ret(reconstruction_table[lookup_ptr_index(ptr)].get_buffer());
 #if DEBUG_ME
 	cerr << "lookup_read_buffer(): tellg = " << ret.tellg()
 		<< ", tellp = " << ret.tellp() << endl;
@@ -761,16 +785,27 @@ persistent_object_manager::registered_type_sequence_number(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if key and auxiliary index map to a valid 
+		registered type.
+ */
 bool
 persistent_object_manager::verify_registered_type(
 		const persistent::hash_key& k, const aux_alloc_arg_type i) {
-	const reconstructor_vector_type& ctor_vec =
-		static_cast<const reconstruction_function_map_type&>(
-			reconstruction_function_map())[k];
+	const reconstruction_function_map_type&
+		m(reconstruction_function_map());
+#if USE_HASH_QMAP
+	const reconstructor_vector_type& ctor_vec(m[k]);
+#else
+	const reconstruction_function_map_type::const_iterator f(m.find(k));
+	if (f == m.end())
+		return false;
+	const reconstructor_vector_type& ctor_vec(f->second);
+#endif
 	if (size_t(i) >= ctor_vec.size())
 		return false;
 	else {
-		const reconstruct_function_ptr_type probe = ctor_vec[i];
+		const reconstruct_function_ptr_type probe(ctor_vec[i]);
 		return (probe != NULL);
 	}
 }
@@ -778,15 +813,15 @@ persistent_object_manager::verify_registered_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 persistent_object_manager::dump_registered_type_map(ostream& o) {
-	const reconstruction_function_map_type& m =
-		reconstruction_function_map();
-	reconstruction_function_map_type::const_iterator iter = m.begin();
-	const reconstruction_function_map_type::const_iterator end = m.end();
+	const reconstruction_function_map_type&
+		m(reconstruction_function_map());
+	reconstruction_function_map_type::const_iterator iter(m.begin());
+	const reconstruction_function_map_type::const_iterator end(m.end());
 	o << "persistent_object_manager::reconstruction_function_map has " <<
-		reconstruction_function_map().size() << " entries." << endl;
+		m.size() << " entries." << endl;
 	o << "(Each entry may contain multiple constructor functors.)" << endl;
 	o << "\tkey[index]\twhat" << endl;
-	for ( ; iter != end; iter++) {
+	for ( ; iter != end; ++iter) {
 		// this calls the appropriate construct_empty()
 		// really should be a unique_ptr, after I finish it...
 		// DANGER: may not be safe to call what() on uninitialized
@@ -796,7 +831,7 @@ persistent_object_manager::dump_registered_type_map(ostream& o) {
 		const reconstructor_vector_type& ctor_vec(iter->second);
 		size_t j = 0;
 		for ( ; j < ctor_vec.size(); j++) {
-			reconstruct_function_ptr_type ctor = ctor_vec[j];
+			reconstruct_function_ptr_type ctor(ctor_vec[j]);
 			if (ctor) {
 				const excl_ptr<persistent> tmp((*ctor)());
 				NEVER_NULL(tmp);
@@ -816,7 +851,7 @@ persistent_object_manager::dump_text(ostream& o) const {
 	const size_t max = reconstruction_table.size();
 	o << "\ti\taddr\t\ttype\t\targ\thead\ttail" << endl;
 	for ( ; i < max; i++) {
-		const reconstruction_table_entry& e = reconstruction_table[i];
+		const reconstruction_table_entry& e(reconstruction_table[i]);
 		o << '\t' << i << '\t';
 		streamsize w = o.width();
 		o.width(10);
@@ -846,7 +881,7 @@ persistent_object_manager::write_header(ofstream& f) {
 	// include NULL in entry in write-out
 	size_t i = 0;
 	for ( ; i<max; i++) {
-		const reconstruction_table_entry& e = reconstruction_table[i];
+		const reconstruction_table_entry& e(reconstruction_table[i]);
 		write_value(f, e.type());
 		write_value(f, e.get_alloc_arg());
 #if 0
@@ -918,11 +953,18 @@ persistent_object_manager::reconstruct(void) {
 	addr_to_index_map[NULL] = 0;
 	size_t i = 1;
 	for ( ; i<max; i++) {
-		reconstruction_table_entry& e = reconstruction_table[i];
-		const persistent::hash_key& t = e.type();
+		reconstruction_table_entry& e(reconstruction_table[i]);
+		const persistent::hash_key& t(e.type());
 		if (t != persistent::hash_key::null) {	// not NULL_TYPE
+#if USE_HASH_QMAP
 			const reconstructor_vector_type&
 				ctor_vec(reconstruction_function_map()[t]);
+#else
+			const reconstruction_function_map_type::const_iterator
+				f(reconstruction_function_map().find(t));
+			INVARIANT(f != reconstruction_function_map().end());
+			const reconstructor_vector_type& ctor_vec(f->second);
+#endif
 			const size_t j = e.get_alloc_arg();
 			if (j >= ctor_vec.size() || !ctor_vec[j]) {
 				cerr << "WARNING: don\'t know how to "
@@ -957,9 +999,9 @@ persistent_object_manager::finish_write(ofstream& f) {
 	const size_t max = reconstruction_table.size();
 	size_t i = 0;
 	for ( ; i<max; i++) {
-		reconstruction_table_entry& e = reconstruction_table[i];
+		reconstruction_table_entry& e(reconstruction_table[i]);
 		// flush out each stream buffer in order
-		istream& o = e.get_buffer();	// is a stringstream
+		istream& o(e.get_buffer());	// is a stringstream
 		INVARIANT(o.good());
 		stringbuf* sb = IS_A(stringbuf*, o.rdbuf());
 		NEVER_NULL(sb);
@@ -1246,7 +1288,7 @@ persistent_object_manager::reset_for_loading(void) {
 	const size_t max = reconstruction_table.size();
 	size_t i = 1;		// 0th object is reserved NULL, skip it
 	for ( ; i<max; i++) {
-		reconstruction_table_entry& e = reconstruction_table[i];
+		reconstruction_table_entry& e(reconstruction_table[i]);
 		e.reset_addr();
 		// shouldn't need to manipulate stream positions
 	}

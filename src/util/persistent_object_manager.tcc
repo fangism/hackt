@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.24 2006/04/27 00:17:08 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.24.2.1 2006/04/27 23:06:41 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -93,8 +93,8 @@ int
 persistent_object_manager::register_persistent_type(void) {
 	typedef	persistent_traits<T>	traits_type;
 	// need to maek sure map and type key are initialized
-	reconstruction_function_map_type& m __ATTRIBUTE_UNUSED__ =
-		reconstruction_function_map();
+	reconstruction_function_map_type& m
+		__ATTRIBUTE_UNUSED_CTOR__((reconstruction_function_map()));
 	const aux_alloc_arg_type sub_index = traits_type::sub_index;
 	const reconstruct_function_ptr_type
 		cf = &traits_type::empty_constructor;
@@ -113,11 +113,11 @@ persistent_object_manager::register_persistent_type(
 		const reconstruct_function_ptr_type cf) {
 	typedef	persistent_traits<T>	traits_type;
 	NEVER_NULL(cf);
-	reconstruction_function_map_type& m = reconstruction_function_map();
-	const persistent::hash_key& type_key = traits_type::type_key;
+	reconstruction_function_map_type& m(reconstruction_function_map());
+	const persistent::hash_key& type_key(traits_type::type_key);
 	const size_t sub_index = a;
 	INVARIANT(type_key != persistent::hash_key::null);
-	reconstructor_vector_type& ctor_vec = m[type_key];
+	reconstructor_vector_type& ctor_vec(m[type_key]);
 		// will create an empty vec if not already there
 	if (sub_index >= ctor_vec.size())
 		ctor_vec.resize(sub_index+1, NULL);
