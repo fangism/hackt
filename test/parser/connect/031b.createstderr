@@ -4,48 +4,48 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	42
+	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	203
-	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	187
-	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
-	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
-	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	203
+	10	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	187
+	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	168
+	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
 	45	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
 	47	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
@@ -121,14 +121,14 @@ In namespace "", we have: {
       }
 
   Instances:
-    count = int<32>^0 count (instantiated) = ::load.c.egg_array.yolk (1) 
+    count = int<32>^0 count (instantiated) = ::count (1) 
     golden = process egg<>^0 golden (instantiated) = ::golden (1) (
-      int<32>^0 yolk (instantiated) = ::load.c.egg_array.yolk (1) 
+      int<32>^0 yolk (instantiated) = ::count (1) 
     )
     load = process bundle<>^0 load (instantiated) = ::load (2) (
       process basket<>^0 c (instantiated) = ::load.c (3) (
         process egg<>^0 egg_array (instantiated) = ::golden (1) (
-          int<32>^0 yolk (instantiated) = ::load.c.egg_array.yolk (1) 
+          int<32>^0 yolk (instantiated) = ::count (1) 
         )
       )
     )

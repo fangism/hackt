@@ -30,21 +30,21 @@ Persistent Object Manager text dump:
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
 	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -105,12 +105,12 @@ In namespace "", we have: {
 
   Instances:
     w = process bar<>^0 w (instantiated) = ::w (1) (
-      process foo<1>^0 a (instantiated) = ::z.a (2) 
-      process foo<2>^0 b (instantiated) = ::z.b (3) 
+      process foo<1>^0 a (instantiated) = ::w.a (2) 
+      process foo<2>^0 b (instantiated) = ::w.b (3) 
     )
     z = process bar<>^0 z (instantiated) = ::z (4) (
-      process foo<1>^0 a (instantiated) = ::z.a (2) 
-      process foo<2>^0 b (instantiated) = ::z.b (3) 
+      process foo<1>^0 a (instantiated) = ::w.a (2) 
+      process foo<2>^0 b (instantiated) = ::w.b (3) 
     )
 }
 

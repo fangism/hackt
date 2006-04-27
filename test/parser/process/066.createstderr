@@ -14,8 +14,8 @@ Persistent Object Manager text dump:
 	10	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	368
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -29,11 +29,11 @@ Persistent Object Manager text dump:
 	25	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
@@ -42,21 +42,21 @@ Persistent Object Manager text dump:
 	38	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -66,21 +66,21 @@ Persistent Object Manager text dump:
 	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	63	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	64	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	67	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	71	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	72	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	71	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	75	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	78	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	79	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	75	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	77	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	81	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -108,13 +108,13 @@ In namespace "", we have: {
         foo<> y
         x = y;
       footprint: {
-        process foo<>^0 x (instantiated) = ::bar::y (1) (
-          bool^0 a (instantiated) = ::bar::x.b (1) 
-          bool^0 b (instantiated) = ::bar::x.b (1) 
+        process foo<>^0 x (instantiated) = ::bar::x (1) (
+          bool^0 a (instantiated) = ::bar::x.a (1) 
+          bool^0 b (instantiated) = ::bar::x.a (1) 
         )
-        process foo<>^0 y (instantiated) = ::bar::y (1) (
-          bool^0 a (instantiated) = ::bar::x.b (1) 
-          bool^0 b (instantiated) = ::bar::x.b (1) 
+        process foo<>^0 y (instantiated) = ::bar::x (1) (
+          bool^0 a (instantiated) = ::bar::x.a (1) 
+          bool^0 b (instantiated) = ::bar::x.a (1) 
         )
         process instance pool:
         1	::bar::x
@@ -140,8 +140,8 @@ In namespace "", we have: {
         bool<> b
         a = b;
       footprint: {
-        bool^0 a (instantiated) = ::foo::b (1) 
-        bool^0 b (instantiated) = ::foo::b (1) 
+        bool^0 a (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::a (1) 
         bool instance pool:
         1	::foo::a
         bool port aliases:
@@ -162,24 +162,24 @@ In namespace "", we have: {
         bar<> q
         p = q;
       footprint: {
-        process bar<>^0 p (instantiated) = ::ick::q (1) (
-          process foo<>^0 x (instantiated) = ::ick::p.y (2) (
-            bool^0 a (instantiated) = ::ick::q.x.b (1) 
-            bool^0 b (instantiated) = ::ick::q.x.b (1) 
+        process bar<>^0 p (instantiated) = ::ick::p (1) (
+          process foo<>^0 x (instantiated) = ::ick::p.x (2) (
+            bool^0 a (instantiated) = ::ick::p.x.a (1) 
+            bool^0 b (instantiated) = ::ick::p.x.a (1) 
           )
-          process foo<>^0 y (instantiated) = ::ick::p.y (2) (
-            bool^0 a (instantiated) = ::ick::q.x.b (1) 
-            bool^0 b (instantiated) = ::ick::q.x.b (1) 
+          process foo<>^0 y (instantiated) = ::ick::p.x (2) (
+            bool^0 a (instantiated) = ::ick::p.x.a (1) 
+            bool^0 b (instantiated) = ::ick::p.x.a (1) 
           )
         )
-        process bar<>^0 q (instantiated) = ::ick::q (1) (
-          process foo<>^0 x (instantiated) = ::ick::p.y (2) (
-            bool^0 a (instantiated) = ::ick::q.x.b (1) 
-            bool^0 b (instantiated) = ::ick::q.x.b (1) 
+        process bar<>^0 q (instantiated) = ::ick::p (1) (
+          process foo<>^0 x (instantiated) = ::ick::p.x (2) (
+            bool^0 a (instantiated) = ::ick::p.x.a (1) 
+            bool^0 b (instantiated) = ::ick::p.x.a (1) 
           )
-          process foo<>^0 y (instantiated) = ::ick::p.y (2) (
-            bool^0 a (instantiated) = ::ick::q.x.b (1) 
-            bool^0 b (instantiated) = ::ick::q.x.b (1) 
+          process foo<>^0 y (instantiated) = ::ick::p.x (2) (
+            bool^0 a (instantiated) = ::ick::p.x.a (1) 
+            bool^0 b (instantiated) = ::ick::p.x.a (1) 
           )
         )
         process instance pool:
@@ -197,24 +197,24 @@ In namespace "", we have: {
 
   Instances:
     poo = process ick<>^0 poo (instantiated) = ::poo (1) (
-      process bar<>^0 p (instantiated) = ::poo.q (2) (
-        process foo<>^0 x (instantiated) = ::poo.p.y (3) (
-          bool^0 a (instantiated) = ::poo.q.x.b (1) 
-          bool^0 b (instantiated) = ::poo.q.x.b (1) 
+      process bar<>^0 p (instantiated) = ::poo.p (2) (
+        process foo<>^0 x (instantiated) = ::poo.p.x (3) (
+          bool^0 a (instantiated) = ::poo.p.x.a (1) 
+          bool^0 b (instantiated) = ::poo.p.x.a (1) 
         )
-        process foo<>^0 y (instantiated) = ::poo.p.y (3) (
-          bool^0 a (instantiated) = ::poo.q.x.b (1) 
-          bool^0 b (instantiated) = ::poo.q.x.b (1) 
+        process foo<>^0 y (instantiated) = ::poo.p.x (3) (
+          bool^0 a (instantiated) = ::poo.p.x.a (1) 
+          bool^0 b (instantiated) = ::poo.p.x.a (1) 
         )
       )
-      process bar<>^0 q (instantiated) = ::poo.q (2) (
-        process foo<>^0 x (instantiated) = ::poo.p.y (3) (
-          bool^0 a (instantiated) = ::poo.q.x.b (1) 
-          bool^0 b (instantiated) = ::poo.q.x.b (1) 
+      process bar<>^0 q (instantiated) = ::poo.p (2) (
+        process foo<>^0 x (instantiated) = ::poo.p.x (3) (
+          bool^0 a (instantiated) = ::poo.p.x.a (1) 
+          bool^0 b (instantiated) = ::poo.p.x.a (1) 
         )
-        process foo<>^0 y (instantiated) = ::poo.p.y (3) (
-          bool^0 a (instantiated) = ::poo.q.x.b (1) 
-          bool^0 b (instantiated) = ::poo.q.x.b (1) 
+        process foo<>^0 y (instantiated) = ::poo.p.x (3) (
+          bool^0 a (instantiated) = ::poo.p.x.a (1) 
+          bool^0 b (instantiated) = ::poo.p.x.a (1) 
         )
       )
     )

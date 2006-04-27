@@ -66,9 +66,9 @@ In namespace "", we have: {
           pint^0 N value: ?
           bool^1 a
             unrolled indices: {
-              0 = ::foo::a[2] (1) 
+              0 = ::foo::a[0] (1) 
               1 = ::foo::a[1] (2) 
-              2 = ::foo::a[2] (1) 
+              2 = ::foo::a[0] (1) 
             }
           bool instance pool:
           1	::foo::a[0]
@@ -83,9 +83,9 @@ In namespace "", we have: {
     poo = process foo<3>^0 poo (instantiated) = ::poo (1) (
       bool^1 a
         unrolled indices: {
-          0 = ::poo.a[2] (1) 
+          0 = ::poo.a[0] (1) 
           1 = ::poo.a[1] (2) 
-          2 = ::poo.a[2] (1) 
+          2 = ::poo.a[0] (1) 
         }
     )
 }

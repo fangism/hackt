@@ -62,8 +62,8 @@ In namespace "", we have: {
         process foo<>^2 x
           unrolled indices: {
             [0][0] = ::bar::x[0][0] (1) 
-            [0][1] = ::bar::x[1][0] (2) 
-            [1][0] = ::bar::x[1][0] (2) 
+            [0][1] = ::bar::x[0][1] (2) 
+            [1][0] = ::bar::x[0][1] (2) 
             [1][1] = ::bar::x[1][1] (3) 
           }
         process instance pool:
@@ -85,10 +85,10 @@ In namespace "", we have: {
       footprint: {
         bool^2 a
           unrolled indices: {
-            [0][0] = ::foo::a[1][1] (1) 
+            [0][0] = ::foo::a[0][0] (1) 
             [0][1] = ::foo::a[0][1] (2) 
             [1][0] = ::foo::a[1][0] (3) 
-            [1][1] = ::foo::a[1][1] (1) 
+            [1][1] = ::foo::a[0][0] (1) 
           }
         bool instance pool:
         1	::foo::a[0][0]

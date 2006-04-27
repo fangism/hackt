@@ -38,8 +38,8 @@ Persistent Object Manager text dump:
 	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
 	36	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
-	37	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
-	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	37	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
 	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -99,13 +99,13 @@ In namespace "", we have: {
             }
           bool^1 a
             unrolled indices: {
-              0 = ::foo::b[0] (1) 
-              1 = ::foo::b[1] (2) 
+              0 = ::foo::a[0] (1) 
+              1 = ::foo::a[1] (2) 
             }
           bool^1 b
             unrolled indices: {
-              0 = ::foo::b[0] (1) 
-              1 = ::foo::b[1] (2) 
+              0 = ::foo::a[0] (1) 
+              1 = ::foo::a[1] (2) 
             }
           bool instance pool:
           1	::foo::a[0]

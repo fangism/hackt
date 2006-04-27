@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.10 2006/04/27 00:15:35 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.11 2006/04/27 05:51:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -165,29 +165,28 @@ alias_reference_set<Tag>::shortest_alias(void) {
 	const_iterator i(alias_array.begin());
 	const const_iterator e(alias_array.end());
 	// accumulate to find the index of the shallowest alias
-	const_iterator shortest_alias_iter(i);
-	size_t shortest_depth = (*i)->hierarchical_depth();
-	for (i++; i!=e; i++) {
+	// alias_ptr_type __shortest_alias(&*(*i)->find());
+	alias_ptr_type __shortest_alias(*i);
+	size_t shortest_depth = __shortest_alias->hierarchical_depth();
+	for (++i; i!=e; ++i) {
 		size_t depth = (*i)->hierarchical_depth();
-		if (depth < shortest_depth) {
-			shortest_alias_iter = i;
+		if ((depth < shortest_depth) && (*i != __shortest_alias)) {
+			__shortest_alias = *i;
 			shortest_depth = depth;
 		}
 	}
-#if 0
 {
 	// manually flatten the union-find structure
 	iterator ii(alias_array.begin());
 	// const iterator ee(alias_array.end());
 	for ( ; ii!=e; ++ii) {
 		(*ii)->finalize_canonicalize(
-			IS_A(alias_base_type&, **shortest_alias_iter));
+			IS_A(alias_base_type&, *__shortest_alias));
 	}
 }
-#endif
 	// pardon the const_cast :S, we intend to modify, yes
 	// consider making mutable...
-	return *shortest_alias_iter;
+	return __shortest_alias;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

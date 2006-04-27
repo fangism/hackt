@@ -1,22 +1,12 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.2 2006/04/27 00:16:07 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.3 2006/04/27 05:51:51 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
-#if 0
-#include <utility>		// for std::pair
-#include "Object/unroll/unroll_context.h"
 #include "Object/expr/pint_const.h"
-#include "Object/traits/pint_traits.h"
-#include "Object/traits/pbool_traits.h"
-#include "Object/traits/preal_traits.h"
-#include "Object/inst/param_value_collection.h"
-#include "Object/inst/value_collection.h"
 #include "Object/inst/pint_value_collection.h"
-#include "Object/def/footprint.h"
-#endif
 
 namespace HAC {
 namespace entity {

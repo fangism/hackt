@@ -10,19 +10,19 @@ Persistent Object Manager text dump:
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	35
+	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	36
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
-	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	40
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
+	12	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
+	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
@@ -43,10 +43,10 @@ In namespace "", we have: {
     int32 = datatype-definition-alias: int32
       = int<32>
   Instances:
-    fe = int<32>^0 fe (instantiated) = ::fo (1) 
-    fi = int<32>^0 fi (instantiated) = ::fo (1) 
-    fo = int<32>^0 fo (instantiated) = ::fo (1) 
-    fum = int<32>^0 fum (instantiated) = ::fo (1) 
+    fe = int<32>^0 fe (instantiated) = ::fum (1) 
+    fi = int<32>^0 fi (instantiated) = ::fum (1) 
+    fo = int<32>^0 fo (instantiated) = ::fum (1) 
+    fum = int<32>^0 fum (instantiated) = ::fum (1) 
 }
 
 Created state:

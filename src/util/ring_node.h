@@ -1,16 +1,11 @@
 /**
 	\file "util/ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.7 2006/04/27 00:17:09 fang Exp $
+	$Id: ring_node.h,v 1.8 2006/04/27 05:51:51 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
 #define	__UTIL_RING_NODE_H__
-
-// whether or not to include subset of definitions separately, but still inline
-#ifndef	FORCE_INLINE_RING_NODE
-#define	FORCE_INLINE_RING_NODE		1
-#endif
 
 /**
 	Define to 1 if we want ring_node's copy-constructor.
@@ -69,21 +64,12 @@ protected:
 		All ring_node point to themselves upon construction.  
 		No empty construction.  
 	 */
-#if FORCE_INLINE_RING_NODE
 	ring_node_base() : next(this) { }
-#else
-	ring_node_base();
-#endif
 
 protected:
 	explicit
-#if FORCE_INLINE_RING_NODE
 	ring_node_base(ring_node_base* r) : next(r) { NEVER_NULL(next); }
-#else
-	ring_node_base(ring_node_base* r);
-#endif
 
-#if FORCE_INLINE_RING_NODE
 	/**
 		Potentially expensive destructor.
 		Must maintain circular reference invariant!
@@ -99,9 +85,6 @@ protected:
 		// else this is the last node, just drops itself
 		next = NULL;
 	}
-#else
-	~ring_node_base();
-#endif
 
 	/**
 		Fusing two ring_nodes into one, extremely efficient.  
@@ -109,15 +92,10 @@ protected:
 		in the same cycle, then swapping pointer will result
 		in two disjoint cycles!  Kinda cool actually.  
 	 */
-#if FORCE_INLINE_RING_NODE
 	void
 	unsafe_merge(ring_node_base& r) {
 		std::swap(next, r.next);
 	}
-#else
-	void
-	unsafe_merge(ring_node_base& r);
-#endif
 
 public:
 #if 0
@@ -142,7 +120,6 @@ public:
 		\pre A containing B <=> B containing A.
 		\post A containing B <=> B containing A.
 	 */
-#if FORCE_INLINE_RING_NODE
 	bool
 	contains(const ring_node_base& r) const {
 		const ring_node_base* walk1 = this;
@@ -157,10 +134,6 @@ public:
 		} while (walk1 != this && walk2 != &r);
 		return false;
 	}
-#else
-	bool
-	contains(const ring_node_base& r) const;
-#endif
 
 	bool
 	points_to(ring_node_base* b) const {

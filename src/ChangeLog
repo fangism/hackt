@@ -6,6 +6,15 @@
 
 2006-04-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-21:
+	  Cleaned up unroll_context_value_resolver.
+	  Turned on union-find canonicalization with 'shortest' alias name, 
+		which was mistakenly disabled before.  
+		Only create-tests werew affected and updated.  
+
+
+2006-04-26	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-20-merged-icc-01-04:
 	  Merge of batch of icc portability fixes.  To be continued later.
 

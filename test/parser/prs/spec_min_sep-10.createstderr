@@ -4,32 +4,32 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	3	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	283
 	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	283
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	51
-	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	51
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
@@ -81,10 +81,10 @@ In namespace "", we have: {
       }
 
   Instances:
-    b = bool^0 b (instantiated) = ::g.q (1) 
+    b = bool^0 b (instantiated) = ::b (1) 
     g = process groupie<>^0 g (instantiated) = ::g (1) (
-      bool^0 p (instantiated) = ::g.q (1) 
-      bool^0 q (instantiated) = ::g.q (1) 
+      bool^0 p (instantiated) = ::b (1) 
+      bool^0 q (instantiated) = ::b (1) 
       bool^0 r (instantiated) = ::g.r (2) 
     )
     h = process groupie<>^0 h (instantiated) = ::h (2) (

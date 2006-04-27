@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	201
 	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -19,24 +19,24 @@ Persistent Object Manager text dump:
 	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
@@ -102,26 +102,26 @@ In namespace "", we have: {
       }
 
   Instances:
-    j = process wrap<>^0 j (instantiated) = ::k (1) (
-      bool^0 a (instantiated) = ::m.b (1) 
-      bool^0 b (instantiated) = ::m.b (1) 
+    j = process wrap<>^0 j (instantiated) = ::j (1) (
+      bool^0 a (instantiated) = ::w (1) 
+      bool^0 b (instantiated) = ::w (1) 
     )
-    k = process wrap<>^0 k (instantiated) = ::k (1) (
-      bool^0 a (instantiated) = ::m.b (1) 
-      bool^0 b (instantiated) = ::m.b (1) 
+    k = process wrap<>^0 k (instantiated) = ::j (1) (
+      bool^0 a (instantiated) = ::w (1) 
+      bool^0 b (instantiated) = ::w (1) 
     )
     l = process wrap<>^0 l (instantiated) = ::l (2) (
-      bool^0 a (instantiated) = ::m.b (1) 
-      bool^0 b (instantiated) = ::m.b (1) 
+      bool^0 a (instantiated) = ::w (1) 
+      bool^0 b (instantiated) = ::w (1) 
     )
     m = process wrap<>^0 m (instantiated) = ::m (3) (
-      bool^0 a (instantiated) = ::m.b (1) 
-      bool^0 b (instantiated) = ::m.b (1) 
+      bool^0 a (instantiated) = ::w (1) 
+      bool^0 b (instantiated) = ::w (1) 
     )
-    w = bool^0 w (instantiated) = ::m.b (1) 
-    x = bool^0 x (instantiated) = ::m.b (1) 
-    y = bool^0 y (instantiated) = ::m.b (1) 
-    z = bool^0 z (instantiated) = ::m.b (1) 
+    w = bool^0 w (instantiated) = ::w (1) 
+    x = bool^0 x (instantiated) = ::w (1) 
+    y = bool^0 y (instantiated) = ::w (1) 
+    z = bool^0 z (instantiated) = ::w (1) 
 }
 
 Created state:

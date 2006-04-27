@@ -29,16 +29,16 @@ Persistent Object Manager text dump:
 	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	76
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	39	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	40	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -94,19 +94,19 @@ In namespace "", we have: {
       }
 
   Instances:
-    a = bool^0 a (instantiated) = ::myass.l[0] (1) 
-    b = bool^0 b (instantiated) = ::myass.l[1] (2) 
-    c = bool^0 c (instantiated) = ::myass.l[2] (3) 
+    a = bool^0 a (instantiated) = ::a (1) 
+    b = bool^0 b (instantiated) = ::b (2) 
+    c = bool^0 c (instantiated) = ::c (3) 
     myass = process ass<3>^0 myass (instantiated) = ::myass (1) (
       bool^1 l
         unrolled indices: {
-          0 = ::myass.l[0] (1) 
-          1 = ::myass.l[1] (2) 
-          2 = ::myass.l[2] (3) 
+          0 = ::a (1) 
+          1 = ::b (2) 
+          2 = ::c (3) 
         }
-      bool^0 r (instantiated) = ::myass.r (4) 
+      bool^0 r (instantiated) = ::r (4) 
     )
-    r = bool^0 r (instantiated) = ::myass.r (4) 
+    r = bool^0 r (instantiated) = ::r (4) 
 }
 
 Created state:

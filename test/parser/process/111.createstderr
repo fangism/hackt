@@ -14,8 +14,8 @@ Persistent Object Manager text dump:
 	10	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
 	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -29,18 +29,18 @@ Persistent Object Manager text dump:
 	25	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -66,8 +66,8 @@ In namespace "", we have: {
         foo<> y
         x = y;
       footprint: {
-        process foo<>^0 x (instantiated) = ::bar::y (1) 
-        process foo<>^0 y (instantiated) = ::bar::y (1) 
+        process foo<>^0 x (instantiated) = ::bar::x (1) 
+        process foo<>^0 y (instantiated) = ::bar::x (1) 
         process instance pool:
         1	::bar::x
       }
@@ -84,8 +84,8 @@ In namespace "", we have: {
         bool<> b
         a = b;
       footprint: {
-        bool^0 a (instantiated) = ::foo::b (1) 
-        bool^0 b (instantiated) = ::foo::b (1) 
+        bool^0 a (instantiated) = ::foo::a (1) 
+        bool^0 b (instantiated) = ::foo::a (1) 
         bool instance pool:
         1	::foo::a
       }
@@ -102,8 +102,8 @@ In namespace "", we have: {
         bar<> q
         p = q;
       footprint: {
-        process bar<>^0 p (instantiated) = ::ick::q (1) 
-        process bar<>^0 q (instantiated) = ::ick::q (1) 
+        process bar<>^0 p (instantiated) = ::ick::p (1) 
+        process bar<>^0 q (instantiated) = ::ick::p (1) 
         process instance pool:
         1	::ick::p
       }

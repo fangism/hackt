@@ -39,7 +39,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	85
+	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -54,7 +54,7 @@ Persistent Object Manager text dump:
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
+	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
 	54	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	55	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	56	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -148,7 +148,7 @@ In namespace "", we have: {
           0 = ::P.z[0] (3) 
           1 = ::P.z[1] (4) 
           2 = ::P.z[2] (5) 
-          3 = ::Q.z[2] (6) 
+          3 = ::P.z[3] (6) 
         }
     )
     Q = process baz<3>^0 Q (instantiated) = ::Q (2) (
@@ -158,7 +158,7 @@ In namespace "", we have: {
         unrolled indices: {
           0 = ::Q.z[0] (9) 
           1 = ::Q.z[1] (10) 
-          2 = ::Q.z[2] (6) 
+          2 = ::P.z[3] (6) 
         }
     )
 }

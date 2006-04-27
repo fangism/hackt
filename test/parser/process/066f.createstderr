@@ -14,17 +14,17 @@ Persistent Object Manager text dump:
 	10	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
@@ -48,8 +48,8 @@ In namespace "", we have: {
         ick<> b
         a = b;
       footprint: {
-        process ick<>^0 a (instantiated) = ::foo::b (1) 
-        process ick<>^0 b (instantiated) = ::foo::b (1) 
+        process ick<>^0 a (instantiated) = ::foo::a (1) 
+        process ick<>^0 b (instantiated) = ::foo::a (1) 
         process instance pool:
         1	::foo::a
         process port aliases:
@@ -67,8 +67,8 @@ In namespace "", we have: {
 
   Instances:
     poo = process foo<>^0 poo (instantiated) = ::poo (1) (
-      process ick<>^0 a (instantiated) = ::poo.b (2) 
-      process ick<>^0 b (instantiated) = ::poo.b (2) 
+      process ick<>^0 a (instantiated) = ::poo.a (2) 
+      process ick<>^0 b (instantiated) = ::poo.a (2) 
     )
 }
 

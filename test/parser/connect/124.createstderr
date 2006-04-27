@@ -28,10 +28,10 @@ Persistent Object Manager text dump:
 	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -80,10 +80,10 @@ In namespace "", we have: {
         array<> p
         p = q;
       footprint: {
-        process array<>^0 p (instantiated) = ::foo::q (1) (
+        process array<>^0 p (instantiated) = ::foo::p (1) (
           bool^0 x (instantiated) = ::foo::p.x (1) 
         )
-        process array<>^0 q (instantiated) = ::foo::q (1) (
+        process array<>^0 q (instantiated) = ::foo::p (1) (
           bool^0 x (instantiated) = ::foo::p.x (1) 
         )
         process instance pool:

@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
 	5	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -36,7 +36,7 @@ Persistent Object Manager text dump:
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
@@ -97,11 +97,11 @@ In namespace "", we have: {
       }
 
   Instances:
-    w = process bar<>^0 w (instantiated) = ::z (1) (
+    w = process bar<>^0 w (instantiated) = ::w (1) (
       process foo<1>^0 a (instantiated) = ::w.a (2) 
       process foo<2>^0 b (instantiated) = ::w.b (3) 
     )
-    z = process bar<>^0 z (instantiated) = ::z (1) (
+    z = process bar<>^0 z (instantiated) = ::w (1) (
       process foo<1>^0 a (instantiated) = ::w.a (2) 
       process foo<2>^0 b (instantiated) = ::w.b (3) 
     )

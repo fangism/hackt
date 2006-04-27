@@ -32,10 +32,10 @@ Persistent Object Manager text dump:
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -92,10 +92,10 @@ In namespace "", we have: {
         )
       footprint: {
         process ch1of1<>^0 ad (instantiated) = ::lut::ad (1) (
-          bool^0 d (instantiated) = ::lut::ce.a (1) 
+          bool^0 d (instantiated) = ::lut::ad.d (1) 
         )
         process dcelm<>^0 ce (instantiated) = ::lut::ce (2) (
-          bool^0 a (instantiated) = ::lut::ce.a (1) 
+          bool^0 a (instantiated) = ::lut::ad.d (1) 
         )
         process instance pool:
         1	::lut::ad

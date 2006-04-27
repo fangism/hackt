@@ -25,22 +25,22 @@ Persistent Object Manager text dump:
 	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	34	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
 	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -59,7 +59,7 @@ Persistent Object Manager text dump:
 	55	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	57	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	58	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	58	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	59	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	60	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	61	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
@@ -128,28 +128,28 @@ In namespace "", we have: {
       }
 
   Instances:
-    a = bool^0 a (instantiated) = ::p.b (1) 
+    a = bool^0 a (instantiated) = ::a (1) 
     p = process portaproc<>^0 p (instantiated) = ::p (1) (
-      bool^0 b (instantiated) = ::p.b (1) 
+      bool^0 b (instantiated) = ::a (1) 
       bool^1 c
         unrolled indices: {
-          0 = ::p.c[0] (2) 
-          1 = ::p.c[1] (3) 
-          2 = ::p.c[2] (4) 
-          3 = ::p.c[3] (5) 
+          0 = ::x[0] (2) 
+          1 = ::x[1] (3) 
+          2 = ::x[2] (4) 
+          3 = ::x[3] (5) 
         }
-      int<32>^0 i (instantiated) = ::p.i (1) 
+      int<32>^0 i (instantiated) = ::q (1) 
       int<32>^1 j
         unrolled indices: {
-          0 = ::p.j[0] (2) 
-          1 = ::p.j[1] (3) 
+          0 = ::r[0] (2) 
+          1 = ::r[1] (3) 
         }
     )
-    q = int<32>^0 q (instantiated) = ::p.i (1) 
+    q = int<32>^0 q (instantiated) = ::q (1) 
     r = int<32>^1 r
       unrolled indices: {
-        0 = ::p.j[0] (2) 
-        1 = ::p.j[1] (3) 
+        0 = ::r[0] (2) 
+        1 = ::r[1] (3) 
       }
     s = process portaproc<>^0 s (instantiated) = ::s (2) (
       bool^0 b (instantiated) = ::s.b (6) 
@@ -185,10 +185,10 @@ In namespace "", we have: {
     )
     x = bool^1 x
       unrolled indices: {
-        0 = ::p.c[0] (2) 
-        1 = ::p.c[1] (3) 
-        2 = ::p.c[2] (4) 
-        3 = ::p.c[3] (5) 
+        0 = ::x[0] (2) 
+        1 = ::x[1] (3) 
+        2 = ::x[2] (4) 
+        3 = ::x[3] (5) 
       }
 }
 

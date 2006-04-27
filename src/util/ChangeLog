@@ -2,6 +2,13 @@
 
 2006-04-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-21:
+	  Inlined bunch of ring_node basic methods, even though we no longer
+		use ring_nodes in hackt.  
+
+
+2006-04-26	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-20-merged-icc-01-04:
 	  Merge of portability fixes, and configurability improvements.  
 	  Many template-related issues, and template library issues resolved.

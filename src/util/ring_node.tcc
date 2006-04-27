@@ -1,7 +1,7 @@
 /**
 	\file "util/ring_node.tcc"
 	Implementation of ring_node class.
-	$Id: ring_node.tcc,v 1.4 2005/06/21 21:26:38 fang Exp $
+	$Id: ring_node.tcc,v 1.5 2006/04/27 05:51:52 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_TCC__
@@ -12,59 +12,6 @@
 #ifndef	EXTERN_TEMPLATE_UTIL_RING_NODE
 
 namespace util {
-//=============================================================================
-
-#if !FORCE_INLINE_RING_NODE
-inline
-ring_node_base::ring_node_base() : next(this) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
-ring_node_base::ring_node_base(ring_node_base* r) : next(r) {
-	NEVER_NULL(next);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
-ring_node_base::~ring_node_base() {
-	if (next != this) {
-		ring_node_base* walk = next;
-		while (walk->next != this) {
-			walk = walk->next;
-		}
-		// found the node that points to this, update it
-		walk->next = next;
-	}
-	// else this is the last node, just drops itself
-	next = NULL;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
-void
-ring_node_base::unsafe_merge(ring_node_base& r) {
-	std::swap(next, r.next);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
-bool
-ring_node_base::contains(const ring_node_base& r) const {
-	const_next_type walk1 = this;
-	const_next_type walk2 = &r;
-	do {
-		if (walk1 == &r || walk2 == this)
-			return true;
-		else {
-			walk1 = walk1->next;
-			walk2 = walk2->next;
-		}
-	} while (walk1 != this && walk2 != &r);
-	return false;
-}
-
-#endif	// FORCE_INLINE_RING_NODE
-
 //=============================================================================
 // class ring_node_derived method definitions
 

@@ -27,20 +27,20 @@ Persistent Object Manager text dump:
 	23	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
 	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	67
 
@@ -65,18 +65,18 @@ In namespace "", we have: {
         foo<> y
         x = y;
       footprint: {
-        process foo<>^0 x (instantiated) = ::bar::y (1) (
+        process foo<>^0 x (instantiated) = ::bar::x (1) (
           bool^1 a
             unrolled indices: {
-              0 = ::bar::x.a[1] (1) 
-              1 = ::bar::x.a[1] (1) 
+              0 = ::bar::x.a[0] (1) 
+              1 = ::bar::x.a[0] (1) 
             }
         )
-        process foo<>^0 y (instantiated) = ::bar::y (1) (
+        process foo<>^0 y (instantiated) = ::bar::x (1) (
           bool^1 a
             unrolled indices: {
-              0 = ::bar::x.a[1] (1) 
-              1 = ::bar::x.a[1] (1) 
+              0 = ::bar::x.a[0] (1) 
+              1 = ::bar::x.a[0] (1) 
             }
         )
         process instance pool:
@@ -104,8 +104,8 @@ In namespace "", we have: {
       footprint: {
         bool^1 a
           unrolled indices: {
-            0 = ::foo::a[1] (1) 
-            1 = ::foo::a[1] (1) 
+            0 = ::foo::a[0] (1) 
+            1 = ::foo::a[0] (1) 
           }
         bool instance pool:
         1	::foo::a[0]
@@ -116,18 +116,18 @@ In namespace "", we have: {
 
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
-      process foo<>^0 x (instantiated) = ::poo.y (2) (
+      process foo<>^0 x (instantiated) = ::poo.x (2) (
         bool^1 a
           unrolled indices: {
-            0 = ::poo.x.a[1] (1) 
-            1 = ::poo.x.a[1] (1) 
+            0 = ::poo.x.a[0] (1) 
+            1 = ::poo.x.a[0] (1) 
           }
       )
-      process foo<>^0 y (instantiated) = ::poo.y (2) (
+      process foo<>^0 y (instantiated) = ::poo.x (2) (
         bool^1 a
           unrolled indices: {
-            0 = ::poo.x.a[1] (1) 
-            1 = ::poo.x.a[1] (1) 
+            0 = ::poo.x.a[0] (1) 
+            1 = ::poo.x.a[0] (1) 
           }
       )
     )

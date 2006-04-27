@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	201
 	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -17,9 +17,9 @@ Persistent Object Manager text dump:
 	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
@@ -62,13 +62,13 @@ In namespace "", we have: {
       }
 
   Instances:
-    j = process wrap<>^0 j (instantiated) = ::k (1) (
-      bool^0 a (instantiated) = ::j.b (1) 
-      bool^0 b (instantiated) = ::j.b (1) 
+    j = process wrap<>^0 j (instantiated) = ::j (1) (
+      bool^0 a (instantiated) = ::j.a (1) 
+      bool^0 b (instantiated) = ::j.a (1) 
     )
-    k = process wrap<>^0 k (instantiated) = ::k (1) (
-      bool^0 a (instantiated) = ::j.b (1) 
-      bool^0 b (instantiated) = ::j.b (1) 
+    k = process wrap<>^0 k (instantiated) = ::j (1) (
+      bool^0 a (instantiated) = ::j.a (1) 
+      bool^0 b (instantiated) = ::j.a (1) 
     )
 }
 

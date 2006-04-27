@@ -46,8 +46,8 @@ In namespace "", we have: {
       footprint: {
         bool^1 a
           unrolled indices: {
-            0 = ::foo::a[1] (1) 
-            1 = ::foo::a[1] (1) 
+            0 = ::foo::a[0] (1) 
+            1 = ::foo::a[0] (1) 
           }
         bool instance pool:
         1	::foo::a[0]
@@ -60,8 +60,8 @@ In namespace "", we have: {
     poo = process foo<>^0 poo (instantiated) = ::poo (1) (
       bool^1 a
         unrolled indices: {
-          0 = ::poo.a[1] (1) 
-          1 = ::poo.a[1] (1) 
+          0 = ::poo.a[0] (1) 
+          1 = ::poo.a[0] (1) 
         }
     )
 }

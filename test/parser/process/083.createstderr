@@ -57,19 +57,19 @@ Persistent Object Manager text dump:
 	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	67	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	64	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	67	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -155,9 +155,9 @@ In namespace "", we have: {
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
       process foo<>^0 x (instantiated) = ::poo.x (2) (
-        bool^0 a (instantiated) = ::poo.z.c (1) 
+        bool^0 a (instantiated) = ::poo.x.a (1) 
         bool^0 b (instantiated) = ::poo.x.b (2) 
-        bool^0 c (instantiated) = ::poo.z.c (1) 
+        bool^0 c (instantiated) = ::poo.x.a (1) 
       )
       process foo<>^0 y (instantiated) = ::poo.y (3) (
         bool^0 a (instantiated) = ::poo.y.a (3) 
@@ -165,9 +165,9 @@ In namespace "", we have: {
         bool^0 c (instantiated) = ::poo.y.c (5) 
       )
       process foo<>^0 z (instantiated) = ::poo.z (4) (
-        bool^0 a (instantiated) = ::poo.z.c (1) 
+        bool^0 a (instantiated) = ::poo.x.a (1) 
         bool^0 b (instantiated) = ::poo.z.b (6) 
-        bool^0 c (instantiated) = ::poo.z.c (1) 
+        bool^0 c (instantiated) = ::poo.x.a (1) 
       )
     )
 }

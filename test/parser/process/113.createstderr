@@ -74,8 +74,8 @@ In namespace "", we have: {
           pint^0 N value: ?
           int<3>^1 x
             unrolled indices: {
-              0 = ::bar::x[1] (1) 
-              1 = ::bar::x[1] (1) 
+              0 = ::bar::x[0] (1) 
+              1 = ::bar::x[0] (1) 
             }
           int instance pool:
           1	::bar::x[0]

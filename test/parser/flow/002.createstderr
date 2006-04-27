@@ -13,7 +13,7 @@ Persistent Object Manager text dump:
 	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
@@ -34,10 +34,10 @@ In namespace "", we have: {
   Instances:
     x = bool^1 x
       unrolled indices: {
-        0 = ::y (1) 
-        1 = ::y (1) 
+        0 = ::x[0] (1) 
+        1 = ::x[0] (1) 
       }
-    y = bool^0 y (instantiated) = ::y (1) 
+    y = bool^0 y (instantiated) = ::x[0] (1) 
 }
 
 Created state:

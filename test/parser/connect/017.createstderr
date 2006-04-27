@@ -42,14 +42,14 @@ In namespace "", we have: {
       }
 
   Instances:
-    bag = process barf<>^0 bag (instantiated) = ::sack[4] (1) 
+    bag = process barf<>^0 bag (instantiated) = ::sack[0] (1) 
     sack = process barf<>^1 sack
       unrolled indices: {
-        0 = ::sack[4] (1) 
+        0 = ::sack[0] (1) 
         1 = ::sack[1] (2) 
         2 = ::sack[2] (3) 
         3 = ::sack[3] (4) 
-        4 = ::sack[4] (1) 
+        4 = ::sack[0] (1) 
       }
 }
 

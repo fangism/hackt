@@ -35,28 +35,28 @@ Persistent Object Manager text dump:
 	31	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
 	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -85,15 +85,15 @@ In namespace "", we have: {
         b = y.b;
         a = b;
       footprint: {
-        bool^0 a (instantiated) = ::bar::y.b (1) 
-        bool^0 b (instantiated) = ::bar::y.b (1) 
+        bool^0 a (instantiated) = ::bar::a (1) 
+        bool^0 b (instantiated) = ::bar::a (1) 
         process foo<>^0 x (instantiated) = ::bar::x (1) (
-          bool^0 a (instantiated) = ::bar::y.b (1) 
+          bool^0 a (instantiated) = ::bar::a (1) 
           bool^0 b (instantiated) = ::bar::x.b (2) 
         )
         process foo<>^0 y (instantiated) = ::bar::y (2) (
           bool^0 a (instantiated) = ::bar::y.a (3) 
-          bool^0 b (instantiated) = ::bar::y.b (1) 
+          bool^0 b (instantiated) = ::bar::a (1) 
         )
         process instance pool:
         1	::bar::x
@@ -130,12 +130,12 @@ In namespace "", we have: {
   Instances:
     poo = process bar<>^0 poo (instantiated) = ::poo (1) (
       process foo<>^0 x (instantiated) = ::poo.x (2) (
-        bool^0 a (instantiated) = ::poo.y.b (1) 
+        bool^0 a (instantiated) = ::poo.x.a (1) 
         bool^0 b (instantiated) = ::poo.x.b (2) 
       )
       process foo<>^0 y (instantiated) = ::poo.y (3) (
         bool^0 a (instantiated) = ::poo.y.a (3) 
-        bool^0 b (instantiated) = ::poo.y.b (1) 
+        bool^0 b (instantiated) = ::poo.x.a (1) 
       )
     )
 }

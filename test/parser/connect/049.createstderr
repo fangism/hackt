@@ -34,28 +34,28 @@ Persistent Object Manager text dump:
 	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	34	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
-	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	48	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	50	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	51	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	53	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	37	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
+	43	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	44	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	52	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	53	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	54	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
 	55	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
 	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -127,26 +127,26 @@ In namespace "", we have: {
   Instances:
     a = bool^0 a (instantiated) = ::a (1) 
     p = process portaproc<>^0 p (instantiated) = ::p (1) (
-      bool^0 b (instantiated) = ::p.c[2] (2) 
+      bool^0 b (instantiated) = ::x[2] (2) 
       bool^1 c
         unrolled indices: {
-          0 = ::p.c[0] (3) 
-          1 = ::p.c[1] (4) 
-          2 = ::p.c[2] (2) 
-          3 = ::p.c[3] (5) 
+          0 = ::x[0] (3) 
+          1 = ::x[1] (4) 
+          2 = ::x[2] (2) 
+          3 = ::x[3] (5) 
         }
-      int<32>^0 i (instantiated) = ::p.i (1) 
+      int<32>^0 i (instantiated) = ::q (1) 
       int<32>^1 j
         unrolled indices: {
-          0 = ::p.j[0] (2) 
-          1 = ::p.j[1] (3) 
+          0 = ::r[0] (2) 
+          1 = ::r[1] (3) 
         }
     )
-    q = int<32>^0 q (instantiated) = ::p.i (1) 
+    q = int<32>^0 q (instantiated) = ::q (1) 
     r = int<32>^1 r
       unrolled indices: {
-        0 = ::p.j[0] (2) 
-        1 = ::p.j[1] (3) 
+        0 = ::r[0] (2) 
+        1 = ::r[1] (3) 
       }
     s = process portaproc<>^0 s (instantiated) = ::s (2) (
       bool^0 b (instantiated) = ::s.b (6) 
@@ -166,10 +166,10 @@ In namespace "", we have: {
     )
     x = bool^1 x
       unrolled indices: {
-        0 = ::p.c[0] (3) 
-        1 = ::p.c[1] (4) 
-        2 = ::p.c[2] (2) 
-        3 = ::p.c[3] (5) 
+        0 = ::x[0] (3) 
+        1 = ::x[1] (4) 
+        2 = ::x[2] (2) 
+        3 = ::x[3] (5) 
       }
 }
 

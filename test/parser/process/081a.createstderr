@@ -16,9 +16,9 @@ Persistent Object Manager text dump:
 	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
+	15	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
 	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
-	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
+	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	80
 	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	28
 	19	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
@@ -83,9 +83,9 @@ In namespace "", we have: {
         0 = ::x[0] (1) (
           bool^1 a
             unrolled indices: {
-              0 = ::x[2].a[2] (1) 
+              0 = ::x[0].a[0] (1) 
               1 = ::x[0].a[1] (2) 
-              2 = ::x[2].a[2] (1) 
+              2 = ::x[0].a[0] (1) 
             }
         )
         1 = ::x[1] (2) (
@@ -99,9 +99,9 @@ In namespace "", we have: {
         2 = ::x[2] (3) (
           bool^1 a
             unrolled indices: {
-              0 = ::x[2].a[2] (1) 
+              0 = ::x[0].a[0] (1) 
               1 = ::x[2].a[1] (6) 
-              2 = ::x[2].a[2] (1) 
+              2 = ::x[0].a[0] (1) 
             }
         )
       }

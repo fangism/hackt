@@ -4,12 +4,12 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	8	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
@@ -33,17 +33,17 @@ In namespace "", we have: {
   Instances:
     a = bool^1 a
       unrolled indices: {
-        0 = ::b[0] (1) 
-        1 = ::b[1] (2) 
-        2 = ::b[2] (3) 
-        3 = ::b[3] (4) 
+        0 = ::a[0] (1) 
+        1 = ::a[1] (2) 
+        2 = ::a[2] (3) 
+        3 = ::a[3] (4) 
       }
     b = bool^1 b
       unrolled indices: {
-        0 = ::b[0] (1) 
-        1 = ::b[1] (2) 
-        2 = ::b[2] (3) 
-        3 = ::b[3] (4) 
+        0 = ::a[0] (1) 
+        1 = ::a[1] (2) 
+        2 = ::a[2] (3) 
+        3 = ::a[3] (4) 
       }
 }
 

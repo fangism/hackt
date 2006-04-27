@@ -45,14 +45,14 @@ Persistent Object Manager text dump:
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
 	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	54	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -129,14 +129,14 @@ In namespace "", we have: {
       footprint: {
         process bar<>^0 p (instantiated) = ::ick::p (1) (
           process foo<>^0 x (instantiated) = ::ick::p.x (2) (
-            bool^0 a (instantiated) = ::ick::q.x.b (1) 
+            bool^0 a (instantiated) = ::ick::p.x.a (1) 
             bool^0 b (instantiated) = ::ick::p.x.b (2) 
           )
         )
         process bar<>^0 q (instantiated) = ::ick::q (3) (
           process foo<>^0 x (instantiated) = ::ick::q.x (4) (
             bool^0 a (instantiated) = ::ick::q.x.a (3) 
-            bool^0 b (instantiated) = ::ick::q.x.b (1) 
+            bool^0 b (instantiated) = ::ick::p.x.a (1) 
           )
         )
         process instance pool:

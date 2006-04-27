@@ -72,36 +72,36 @@ Persistent Object Manager text dump:
 	68	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	69	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	70	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	71	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
 	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	74	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	74	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
 	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	77	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
-	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	79	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	76	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	79	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
 	80	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	82	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	82	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
 	83	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	84	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	85	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	85	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
 	86	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	88	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	91	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	87	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	88	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	89	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	91	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	92	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	93	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	94	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	95	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	96	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	97	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	98	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	99	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	100	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	94	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	95	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	96	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	97	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	98	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	99	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	100	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	101	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	102	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	103	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -150,30 +150,30 @@ In namespace "", we have: {
         pand<> pnd
         pnd (g, pa0);
       footprint: {
-        process e1of2<>^0 aa (instantiated) = ::funit::lt.a (1) (
+        process e1of2<>^0 aa (instantiated) = ::funit::aa (1) (
           bool^0 d (instantiated) = ::funit::aa.d (1) 
         )
         process pupcopy<>^0 a0copy (instantiated) = ::funit::a0copy (2) (
-          process e1of2<>^0 r (instantiated) = ::funit::lt.a (1) (
+          process e1of2<>^0 r (instantiated) = ::funit::aa (1) (
             bool^0 d (instantiated) = ::funit::aa.d (1) 
           )
-          process e1of2<>^0 rp (instantiated) = ::funit::pnd.a (3) (
+          process e1of2<>^0 rp (instantiated) = ::funit::pa0 (3) (
             bool^0 d (instantiated) = ::funit::aa.d (1) 
           )
         )
-        process e1of2<>^0 pa0 (instantiated) = ::funit::pnd.a (3) (
+        process e1of2<>^0 pa0 (instantiated) = ::funit::pa0 (3) (
           bool^0 d (instantiated) = ::funit::aa.d (1) 
         )
         process pand<>^0 lt (instantiated) = ::funit::lt (4) (
-          process globals<>^0 g (instantiated) = ::funit::pnd.g (5) 
-          process e1of2<>^0 a (instantiated) = ::funit::lt.a (1) (
+          process globals<>^0 g (instantiated) = ::funit::g (5) 
+          process e1of2<>^0 a (instantiated) = ::funit::aa (1) (
             bool^0 d (instantiated) = ::funit::aa.d (1) 
           )
         )
-        process globals<>^0 g (instantiated) = ::funit::pnd.g (5) 
+        process globals<>^0 g (instantiated) = ::funit::g (5) 
         process pand<>^0 pnd (instantiated) = ::funit::pnd (6) (
-          process globals<>^0 g (instantiated) = ::funit::pnd.g (5) 
-          process e1of2<>^0 a (instantiated) = ::funit::pnd.a (3) (
+          process globals<>^0 g (instantiated) = ::funit::g (5) 
+          process e1of2<>^0 a (instantiated) = ::funit::pa0 (3) (
             bool^0 d (instantiated) = ::funit::aa.d (1) 
           )
         )

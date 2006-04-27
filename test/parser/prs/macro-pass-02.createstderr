@@ -62,20 +62,20 @@ Persistent Object Manager text dump:
 	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	67	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	63	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	66	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	67	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	69	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	71	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	76	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	77	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -159,20 +159,20 @@ In namespace "", we have: {
         passp<> p
         p (_g, s, d);
       footprint: {
-        bool^0 d (instantiated) = ::passnp::p.d (1) 
-        bool^0 g (instantiated) = ::passnp::n.g (2) 
+        bool^0 d (instantiated) = ::passnp::d (1) 
+        bool^0 g (instantiated) = ::passnp::g (2) 
         process passn<>^0 n (instantiated) = ::passnp::n (1) (
-          bool^0 g (instantiated) = ::passnp::n.g (2) 
-          bool^0 s (instantiated) = ::passnp::p.s (3) 
-          bool^0 d (instantiated) = ::passnp::p.d (1) 
+          bool^0 g (instantiated) = ::passnp::g (2) 
+          bool^0 s (instantiated) = ::passnp::s (3) 
+          bool^0 d (instantiated) = ::passnp::d (1) 
         )
         process passp<>^0 p (instantiated) = ::passnp::p (2) (
-          bool^0 g (instantiated) = ::passnp::p.g (4) 
-          bool^0 s (instantiated) = ::passnp::p.s (3) 
-          bool^0 d (instantiated) = ::passnp::p.d (1) 
+          bool^0 g (instantiated) = ::passnp::_g (4) 
+          bool^0 s (instantiated) = ::passnp::s (3) 
+          bool^0 d (instantiated) = ::passnp::d (1) 
         )
-        bool^0 s (instantiated) = ::passnp::p.s (3) 
-        bool^0 _g (instantiated) = ::passnp::p.g (4) 
+        bool^0 s (instantiated) = ::passnp::s (3) 
+        bool^0 _g (instantiated) = ::passnp::_g (4) 
         process instance pool:
         1	::passnp::n
         2	::passnp::p

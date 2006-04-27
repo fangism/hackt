@@ -4,15 +4,15 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
+	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
@@ -32,11 +32,11 @@ In namespace "", we have: {
   Instances:
     w = bool^1 w
       unrolled indices: {
-        0 = ::x (1) 
-        1 = ::y (2) 
+        0 = ::w[0] (1) 
+        1 = ::w[1] (2) 
       }
-    x = bool^0 x (instantiated) = ::x (1) 
-    y = bool^0 y (instantiated) = ::y (2) 
+    x = bool^0 x (instantiated) = ::w[0] (1) 
+    y = bool^0 y (instantiated) = ::w[1] (2) 
     z = bool^0 z (instantiated) = ::z (3) 
 }
 

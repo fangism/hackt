@@ -24,13 +24,13 @@ Persistent Object Manager text dump:
 	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -40,13 +40,13 @@ Persistent Object Manager text dump:
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
 	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -74,11 +74,11 @@ In namespace "", we have: {
         ick<> b
         a = b;
       footprint: {
-        process ick<>^0 a (instantiated) = ::foo::b (1) (
+        process ick<>^0 a (instantiated) = ::foo::a (1) (
           process oof<>^0 m (instantiated) = ::foo::a.m (2) 
           process oof<>^0 n (instantiated) = ::foo::a.n (3) 
         )
-        process ick<>^0 b (instantiated) = ::foo::b (1) (
+        process ick<>^0 b (instantiated) = ::foo::a (1) (
           process oof<>^0 m (instantiated) = ::foo::a.m (2) 
           process oof<>^0 n (instantiated) = ::foo::a.n (3) 
         )
@@ -123,11 +123,11 @@ In namespace "", we have: {
 
   Instances:
     poo = process foo<>^0 poo (instantiated) = ::poo (1) (
-      process ick<>^0 a (instantiated) = ::poo.b (2) (
+      process ick<>^0 a (instantiated) = ::poo.a (2) (
         process oof<>^0 m (instantiated) = ::poo.a.m (3) 
         process oof<>^0 n (instantiated) = ::poo.a.n (4) 
       )
-      process ick<>^0 b (instantiated) = ::poo.b (2) (
+      process ick<>^0 b (instantiated) = ::poo.a (2) (
         process oof<>^0 m (instantiated) = ::poo.a.m (3) 
         process oof<>^0 n (instantiated) = ::poo.a.n (4) 
       )

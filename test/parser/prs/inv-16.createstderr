@@ -22,33 +22,33 @@ Persistent Object Manager text dump:
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
 	48	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	49	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -96,21 +96,21 @@ In namespace "", we have: {
 
   Instances:
     i1 = process inv<>^0 i1 (instantiated) = ::i1 (1) (
-      bool^0 a (instantiated) = ::i1.a (3) 
-      bool^0 b (instantiated) = ::i1.b (4) 
+      bool^0 a (instantiated) = ::x (3) 
+      bool^0 b (instantiated) = ::y (4) 
     )
     i2 = process inv<>^0 i2 (instantiated) = ::i2 (2) (
-      bool^0 a (instantiated) = ::i2.a (1) 
+      bool^0 a (instantiated) = ::p (1) 
       bool^0 b (instantiated) = ::i2.b (5) 
     )
     i3 = process inv<>^0 i3 (instantiated) = ::i3 (3) (
       bool^0 a (instantiated) = ::i3.a (6) 
-      bool^0 b (instantiated) = ::i3.b (2) 
+      bool^0 b (instantiated) = ::q (2) 
     )
-    p = bool^0 p (instantiated) = ::i2.a (1) 
-    q = bool^0 q (instantiated) = ::i3.b (2) 
-    x = bool^0 x (instantiated) = ::i1.a (3) 
-    y = bool^0 y (instantiated) = ::i1.b (4) 
+    p = bool^0 p (instantiated) = ::p (1) 
+    q = bool^0 q (instantiated) = ::q (2) 
+    x = bool^0 x (instantiated) = ::x (3) 
+    y = bool^0 y (instantiated) = ::y (4) 
 }
 
 Created state:
