@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.5 2006/04/24 00:28:01 fang Exp $
+dnl	$Id: cxx.m4,v 1.6 2006/04/27 00:14:35 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -9,6 +9,7 @@ dnl This is only useful for AC_COMPILE_IFLSE because it doesn't link.
 dnl
 AC_DEFUN([_TRIVIAL_SOURCE_],
 [AC_LANG_PROGRAM([extern int __foo__;])]
+dnl [AC_LANG_PROGRAM([static int __foo__ = 4;],[while(__foo__) { --__foo__; }])]
 )
 
 dnl
@@ -26,6 +27,10 @@ dnl thus we introduce a configure switch to disable it.
 dnl All other warning options can be cancelled with CFLAGS/CXXFLAGS
 dnl e.g. -w camcels all warnings, and -Wno-error cancel error-promotion.  
 dnl
+dnl NOTE: we check for gcc last because some other compiler (icc)
+dnl are able to pass themselves off as the GNU C++ compiler in the 
+dnl AC_PROG_CXX test, oddly enough... a bug?
+dnl
 AC_DEFUN([FANG_ANAL_COMPILE_FLAGS],
 [AC_REQUIRE([AC_PROG_CC])
 AC_REQUIRE([FANG_CXX_COMPILER])
@@ -35,20 +40,21 @@ AC_ARG_ENABLE(strict-dialect,
 	This is sometimes necessary to allow 64b builds.])
 )
 if test x"$enable_strict_dialect" != xno ; then
-	if test "$ac_cv_cxx_compiler_gnu" = yes ; then
-		TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
-	elif test "$hackt_cxx_compiler_intel" = yes ; then
+	if test "$hackt_cxx_compiler_intel" = yes ; then
 		TRY_DIALECT_FLAGS="-strict-ansi"
+	elif test "$ac_cv_cxx_compiler_gnu" = yes ; then
+		TRY_DIALECT_FLAGS="-ansi -pedantic-errors"
 	else
 		TRY_DIALECT_FLAGS="-ansi"
 	fi
 fi
 
 AC_MSG_CHECKING([whether C/C++ compilers accept fangism's anal-retentive flags])
-if test "$ac_cv_cxx_compiler_gnu" = yes ; then
+dnl icc diagnostic 561: nonstandard proprocessing directive (trouble w/ ccache)
+if test "$hackt_cxx_compiler_intel" = yes ; then
+	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror -wd561 -wd1419"
+elif test "$ac_cv_cxx_compiler_gnu" = yes ; then
 	ANAL_FLAGS="$TRY_DIALECT_FLAGS -W -Wall -Werror"
-elif test "$hackt_cxx_compiler_intel" = yes ; then
-	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror"
 else
 	ANAL_FLAGS="$TRY_DIALECT_FLAGS -Wall -Werror"
 fi
@@ -76,6 +82,73 @@ AC_MSG_RESULT([yes])
 ])
 
 dnl
+dnl Check for whether or not standard library headers pass
+dnl the anal compile flags.  If they don't we have trouble...
+dnl
+AC_DEFUN([FANG_STD_HEADERS_ANALLY_STRICT],
+[AC_REQUIRE([FANG_AM_FLAGS])
+AC_REQUIRE([AC_HEADER_STDCXX])
+AC_REQUIRE([FANG_CONFTEST_FLAGS])
+AC_CACHE_CHECK([whether standard C++ headers are anally strictness-conforming],
+[fang_cv_cxx_strict_anal_headers],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	CXXFLAGS="$CONFTEST_CXXFLAGS"
+	AC_COMPILE_IFELSE(
+	AC_LANG_PROGRAM([
+		/* most of these should be standard */
+		#include <cstddef>
+		#include <cstdlib>
+		#include <cstdio>
+		#include <cassert>
+		#include <cmath>
+		#ifdef	HAVE_CCTYPE
+		#include <cctype>
+		#endif
+		#include <cerrno>
+		#ifdef	HAVE_CFLOAT
+		#include <cfloat>
+		#endif
+		#ifdef	HAVE_CLIMITS
+		#include <climits>
+		#endif
+		#ifdef	HAVE_CLOCALE
+		#include <clocale>
+		#endif
+		#ifdef	HAVE_CSIGNAL
+		#include <csignal>
+		#endif
+		#ifdef	HAVE_CSETJMP
+		#include <csetjmp>
+		#endif
+		#ifdef	HAVE_CSTDARG
+		#include <cstdarg>
+		#endif
+		#ifdef	HAVE_CTIME
+		#include <ctime>
+		#endif
+		#ifdef	HAVE_CWCHAR
+		#include <cwchar>
+		#endif
+		#ifdef	HAVE_CWCTYPE
+		#include <cwctype>
+		#endif
+		],[]),
+		[fang_cv_cxx_strict_anal_headers=yes],
+		[fang_cv_cxx_strict_anal_headers=no]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+dnl AC_MSG_RESULT([$fang_cv_cxx_strict_anal_headers])
+if test "$fang_cv_cxx_strict_anal_headers" = no ; then
+	echo "CONFTEST_CXXFLAGS: $CONFTEST_CXXFLAGS"
+	AC_MSG_ERROR([You're in big trouble if the standard headers don't pass with the given warnings flags!])
+fi
+])
+
+dnl
 dnl TODO: redefine this macro cleanly, instead of this monolithic beast
 dnl TODO: learn m4
 dnl TODO: cache values!
@@ -88,31 +161,33 @@ dnl
 AC_DEFUN([FANG_AM_FLAGS],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 dnl setup the list of flags to try
-if test "$ac_cv_cxx_compiler_gnu" = yes ; then
-	TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
-	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual"
-	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wcast-align -Wconversion -Werror"
-	TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
-	TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
-	TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
-	TRY_NOWARN_FLAGS="-Wno-unused -Wno-missing-prototypes -Wno-shadow"
-	TRY_NOWARN_FLAGS="$TRY_NOWARN_FLAGS -Wno-cast-qual -Wno-long-double"
-	TRY_NOWARN_CFLAGS="-Wno-strict-prototypes"
-	TRY_NOWARN_CXXFLAGS="-Wno-overloaded-virtual"
-elif test "$hackt_cxx_compiler_intel" = yes ; then
+if test "$hackt_cxx_compiler_intel" = yes ; then
 	TRY_WARN_FLAGS="-Wall -Wshadow -Wmain -Wpointer-arith -Wdeprecated -Werror"
 dnl -wd is icc's equivalent of -Wno
 dnl 111: unreachable statement
 dnl 279: constant controlling expression
 dnl 383: value copied to temporary, reference to temporary used
 dnl 444: base class non-virtual destructor
+dnl 561: nonstandard preprocessing directive '# 123 "file.c"'
+dnl 869: unused parameter
 dnl 981: operands evaluated in unspecified order
-	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -wd111 -wd279 -wd981"
+dnl 1419: external declaration in primary source file (WTF?)
+	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -wd111 -wd279 -wd561 -wd869 -wd981 -wd1419"
 	TRY_WARN_CFLAGS="-Wmissing-prototypes"
 	TRY_WARN_CXXFLAGS="-Wabi -wd383 -wd444"
 	TRY_NOWARN_FLAGS="-Wno-shadow"
 	TRY_NOWARN_CFLAGS="-Wno-missing-prototypes"
 	TRY_NOWARN_CXXFLAGS=""
+elif test "$ac_cv_cxx_compiler_gnu" = yes ; then
+	TRY_WARN_FLAGS="-W -Wall -Wundef -Wshadow -Wno-unused-parameter"
+	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wpointer-arith -Wcast-qual"
+	TRY_WARN_FLAGS="$TRY_WARN_FLAGS -Wcast-align -Wconversion -Werror"
+	TRY_WARN_CFLAGS="-Wmissing-prototypes -Wstrict-prototypes"
+	TRY_WARN_CFLAGS="$TRY_WARN_CFLAGS -Wbad-function-cast -Wnested-externs"
+	TRY_WARN_CXXFLAGS="-Wold-style-cast -Woverloaded-virtual"
+	TRY_NOWARN_FLAGS="-Wno-unused -Wno-shadow -Wno-cast-qual -Wno-long-double"
+	TRY_NOWARN_CFLAGS="-Wno-strict-prototypes -Wno-missing-prototypes"
+	TRY_NOWARN_CXXFLAGS="-Wno-overloaded-virtual"
 else
 	TRY_WARN_FLAGS="-Whatever"
 	TRY_WARN_CFLAGS=""
@@ -297,6 +372,7 @@ AM_CONDITIONAL(HAVE_GXX, test x"$ac_cv_cxx_compiler_gnu" = "xyes")
 if ( echo "$CXX_VERSION" | grep -i ICC )
 then
 	hackt_cxx_compiler_intel=yes
+	AC_DEFINE(INTEL_COMPILER, [], [Define if Intel C/C++ compiler detected])
 else
 	hackt_cxx_compiler_intel=no
 fi
@@ -378,11 +454,13 @@ dnl Check for __attribute__ ((const))
 dnl
 AC_DEFUN([AC_CXX_ATTRIBUTE_CONST],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((const))],
 [ac_cv_cxx_attribute_const],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void pure_func (void) __attribute__ ((const));
@@ -406,11 +484,13 @@ dnl Check for __attribute__ ((pure))
 dnl
 AC_DEFUN([AC_CXX_ATTRIBUTE_PURE],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((pure))],
 [ac_cv_cxx_attribute_pure],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void pure_func (void) __attribute__ ((pure));
@@ -434,11 +514,13 @@ dnl Check for __attribute__ ((holy))
 dnl
 AC_DEFUN([AC_CXX_ATTRIBUTE_HOLY],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((holy))],
 [ac_cv_cxx_attribute_holy],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void holy_func (void) __attribute__ ((holy));
@@ -462,11 +544,13 @@ dnl Check for __attribute__ ((precious))
 dnl
 AC_DEFUN([AC_CXX_ATTRIBUTE_PRECIOUS],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((precious))],
 [ac_cv_cxx_attribute_precious],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void precious_func (void) __attribute__ ((precious));
@@ -490,11 +574,13 @@ dnl Check for __attribute__ ((evil))
 dnl
 AC_DEFUN([AC_CXX_ATTRIBUTE_EVIL],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((evil))],
 [ac_cv_cxx_attribute_evil],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void evil_func (void) __attribute__ ((evil));
@@ -518,11 +604,13 @@ dnl Checks for __attribute__ ((noreturn))
 dnl
 AC_DEFUN([AC_CXX_ATTRIBUTE_NORETURN],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((noreturn))],
 [ac_cv_cxx_attribute_noreturn],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void die (int) __attribute__ ((noreturn));
@@ -744,6 +832,38 @@ AC_LANG_POP(C++)
 if test "$ac_cv_cxx_template_template_parameter_default_binding" = "yes"; then
 AC_DEFINE(HAVE_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING, [],
         [Define if templates with default arguments can bind to template template parameters with fewer parameters.])
+fi
+])
+
+
+dnl
+dnl Checking whether or not template parameter may be named directly 
+dnl as a base type.  
+dnl The work around is to use the identity<> type-trait "util/type_traits.h"
+dnl to create an indirect reference to the desired type.  
+dnl
+AC_DEFUN([AC_CXX_TEMPLATE_FORMAL_BASE_CLASS],
+[AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
+AC_CACHE_CHECK(
+[whether templates formal parameter may be named directly as base class],
+[ac_cv_cxx_template_formal_base_class],
+[AC_LANG_PUSH(C++)
+	saved_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
+	AC_COMPILE_IFELSE(
+		AC_LANG_PROGRAM(
+		[template <class C>
+		struct S : public C { };
+		], []),
+		[ac_cv_cxx_template_formal_base_class=yes],
+		[ac_cv_cxx_template_formal_base_class=no]
+	)
+	CXXFLAGS=$saved_CXXFLAGS
+AC_LANG_POP(C++)
+])
+if test "$ac_cv_cxx_template_formal_base_class" = "yes"; then
+AC_DEFINE(HAVE_TEMPLATE_FORMAL_BASE_CLASS, [],
+        [Define if templates formal parameters may be named as base classes.])
 fi
 ])
 

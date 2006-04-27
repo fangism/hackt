@@ -1,5 +1,41 @@
 "ChangeLog"
 
+2006-04-26	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-20-merged-icc-01-04:
+	  Merged portability and configurisms from branch.  
+		Vast improvement in icc support, but it still doesn't fully
+		build yet.  Punting for later, when I have time to waste.
+
+
+2006-04-25	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-03:
+	  configure check for std::_Identity, _Select1st, _Select2nd.  
+
+
+2006-04-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-02:
+	  Tons of configurisms for SGI vs. Intel hash_map.
+		Checking for namespace and template argument style.  
+	  Forward declaration headers fixed accordingly.  
+
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-01:
+	  Another crack at getting icc to compile hackt.  
+	  configure.ac: moved AC_HEADER_STDCXX test earlier
+	  config/cxx.m4: switched the ordering of detecting compiler
+		in determining the set of anal compile flags to test.
+		New test to check that standard headers pass strict
+		compile flags.  If not, then you're pretty sunk already!
+		Attribute tests that include standard headers now use
+		CONFTEST_CXXFLAGS instead of ANAL_FLAGS to forgive
+		selected warnings.  
+	  config/cxx_STL.m4: some new header checks
+	  config/hackt.m4: new FANG_CONFTEST_FLAGS macro
+
+
 2006-04-23	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-19:
