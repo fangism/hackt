@@ -1,5 +1,51 @@
 # "src/util/ChangeLog"
 
+2006-04-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-20-merged-icc-01-04:
+	  Merge of portability fixes, and configurability improvements.  
+	  Many template-related issues, and template library issues resolved.
+
+
+2006-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-03:
+	  Memory pools' operator new prototypes' arguments changed from
+		void*& to void*.  
+		Added missing placement delete operator (no-op).  
+	  chunk_map_pool.tcc: offset calculation now uses 
+		RandomIterator distance to avoid using reinterpret_cast.  
+	  Added util/STL/functional.h for confgure-dependent deficiencies
+		with std::_Identity, _Select1st, _Select2nd.  
+	  util/multikey.h: extra parens around address-of operand.  
+	  util/test/Makefile.am: use configure-generated @*_WARN_FLAGS@,
+		eliminated -pipe flag.  
+	  util/test/test-expect.sh.in: redirection fix.  
+
+
+2006-04-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-02:
+	  Significant configuration improvements regarding standard
+		hash_map and friends.  
+
+
+2006-04-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-01:
+	  Batch of minor header adjustments for icc's sake. 
+	  util/hash_specializations.h: using reinterpret_cast for pointer.
+	  util/inttypes.h: conditional definition re-written without
+		assuming short-circuit conditional evaluation.  
+	  util/union_find.h: typo fix.
+	  general: removed redundant using declarations in same namespace.  
+		Added declaration prototypes for some template functions.  
+	  TODO: hash_qmap and qmap are causing some problems with
+		incomplete types from const_assoc_query.h.
+		Now might be a good time to migrate to the original
+		STL associative containers.  Proceed with caution.  
+
+
 2006-04-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-18-merged-prsim-03-09:

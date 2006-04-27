@@ -1,9 +1,9 @@
 /**
 	\file "util/multikey_qmap.h"
 	Multidimensional queryable map.  
-	NOTE: this should erally be redefined as a template specialization, 
+	NOTE: this should really be redefined as a template specialization, 
 	not as a child class.
-	$Id: multikey_qmap.h,v 1.13 2005/05/10 04:51:27 fang Exp $
+	$Id: multikey_qmap.h,v 1.14 2006/04/27 00:17:07 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_QMAP_H__
@@ -13,9 +13,7 @@
 #include "util/qmap.h"
 #include "util/multikey_map.h"
 
-
 namespace util {
-using util::qmap;
 
 //=============================================================================
 }	// end namespace util

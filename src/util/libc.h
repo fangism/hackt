@@ -12,7 +12,7 @@
 	NOTE: that these declarations are not extern "C", 
 	because we will compile libc.c in C++.  
 
-	$Id: libc.h,v 1.6 2006/04/03 05:30:38 fang Exp $
+	$Id: libc.h,v 1.7 2006/04/27 00:16:58 fang Exp $
  */
 
 #ifndef	__UTIL_LIBC_H__
@@ -180,12 +180,12 @@ extern int	setvbuf(FILE*, char*, int, size_t);
 extern FILE*	tmpfile(void);
 #endif
 
-#if	defined(HAVE_TMPNAME) && HAVE_TMPNAME
+#if	defined(HAVE_TMPNAME)
 #else
 extern char*	tmpname(char*);
 #endif
 
-#if	defined(HAVE_TEMPNAME) && HAVE_TEMPNAME
+#if	defined(HAVE_TEMPNAME)
 #else
 extern char*	tempname(const char*, const char*);
 #endif

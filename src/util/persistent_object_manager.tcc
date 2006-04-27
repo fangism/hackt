@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.23 2006/04/24 00:28:09 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.24 2006/04/27 00:17:08 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -71,7 +71,7 @@ namespace util {
 //=============================================================================
 #include "util/using_ostream.h"
 using namespace util::memory;
-using util::what;
+// using util::what;
 #if ENABLE_STACKTRACE
 using std::ostringstream;
 #endif

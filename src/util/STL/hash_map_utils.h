@@ -2,7 +2,7 @@
 	\file "util/STL/hash_map_utils.h"
 	This file contains some external utility functions related
 	to hash_maps.  
-	$Id: hash_map_utils.h,v 1.1 2006/03/21 21:53:13 fang Exp $
+	$Id: hash_map_utils.h,v 1.2 2006/04/27 00:17:23 fang Exp $
  */
 
 #ifndef	__UTIL_STL_HASH_MAP_UTILS_H__
@@ -13,6 +13,11 @@
 
 namespace HASH_MAP_NAMESPACE {
 //=============================================================================
+// just declaration
+HASH_MAP_TEMPLATE_SIGNATURE
+void
+hash_map_copy_reverse_buckets(const HASH_MAP_CLASS&, HASH_MAP_CLASS&);
+
 /**
 	Slow sequential copying of from source hash_map to destination, 
 	which effectively reverses the order within each bucket.

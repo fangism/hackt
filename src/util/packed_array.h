@@ -2,7 +2,7 @@
 	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.11 2005/07/20 21:01:01 fang Exp $
+	$Id: packed_array.h,v 1.12 2006/04/27 00:17:08 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -31,7 +31,6 @@ packed_array<D,K,bool>
 #endif
 
 namespace util {
-using util::multikey;
 using std::istream;
 using std::ostream;
 

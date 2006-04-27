@@ -2,7 +2,7 @@
 	\file "util/named_ifstream_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: named_ifstream_manager.h,v 1.3 2006/04/13 21:45:07 fang Exp $
+	$Id: named_ifstream_manager.h,v 1.4 2006/04/27 00:17:08 fang Exp $
  */
 
 #ifndef	__UTIL_NAMED_IFSTREAM_MANAGER_H__
@@ -23,15 +23,15 @@
 #include "util/file_status.h"
 
 #if !defined(HAVE_STD_IFSTREAM_DEV_STDIN)
-#warn	"Support without std::ifstream("/dev/stdin") is yet untested."
+#warn "Support without std::ifstream("/dev/stdin") is yet untested."
 #endif
 
 namespace util {
 using std::ostream;
 using std::ifstream;
 using std::string;
-using util::unique_list;
-using util::file_status;
+// using util::unique_list;
+// using util::file_status;
 class named_ifstream_track;
 
 //=============================================================================

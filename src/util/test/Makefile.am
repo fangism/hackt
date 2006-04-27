@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.44 2006/04/18 18:42:47 fang Exp $
+#	$Id: Makefile.am,v 1.45 2006/04/27 00:17:55 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -192,21 +192,20 @@ AM_CPPFLAGS = -I$(srcdir)/../..
 
 if HAVE_GXX
 # some of these flags are deadly...
-GENERAL_WARN_FLAGS = -W -Wall -Wundef -Wno-unused-parameter -Wshadow \
-	-Wpointer-arith -Wcast-qual -Wcast-align -Wconversion -Werror
+GENERAL_WARN_FLAGS = @FANG_WARN_FLAGS@
 # C specific warnings
-WARN_CFLAGS = -Wmissing-prototypes -Wstrict-prototypes \
-	-Wbad-function-cast -Wnested-externs
+WARN_CFLAGS = @FANG_WARN_CFLAGS@
 # C++ specific warnings
-WARN_CXXFLAGS = -Wold-style-cast -Woverloaded-virtual
+WARN_CXXFLAGS = @FANG_WARN_CXXFLAGS@
 # -Wsign-promo	# kills some code
-DIALECT_FLAGS = -ansi -pedantic-errors
-PIPE_FLAG = -pipe
+DIALECT_FLAGS = @FANG_DIALECT_FLAGS@
+# PIPE_FLAG = -pipe
+PIPE_FLAG =
 else
-GENERAL_WARN_FLAGS =
-WARN_CFLAGS =
-WARN_CXXFLAGS =
-DIALECT_FLAGS =
+GENERAL_WARN_FLAGS = @FANG_WARN_FLAGS@
+WARN_CFLAGS = @FANG_WARN_CFLAGS@
+WARN_CXXFLAGS = @FANG_WARN_CXXFLAGS@
+DIALECT_FLAGS = @FANG_DIALECT_FLAGS@
 PIPE_FLAG =
 endif
 

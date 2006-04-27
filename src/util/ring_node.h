@@ -1,7 +1,7 @@
 /**
 	\file "util/ring_node.h"
 	Declaration for ring_node struct.
-	$Id: ring_node.h,v 1.6 2006/03/15 04:38:25 fang Exp $
+	$Id: ring_node.h,v 1.7 2006/04/27 00:17:09 fang Exp $
  */
 
 #ifndef	__UTIL_RING_NODE_H__
@@ -9,7 +9,7 @@
 
 // whether or not to include subset of definitions separately, but still inline
 #ifndef	FORCE_INLINE_RING_NODE
-#define	FORCE_INLINE_RING_NODE		0
+#define	FORCE_INLINE_RING_NODE		1
 #endif
 
 /**

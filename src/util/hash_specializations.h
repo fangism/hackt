@@ -3,13 +3,15 @@
 	Contains hash function specializations.  
 	Include this file before using any hash_map for specializations
 	to take effect.
-	$Id: hash_specializations.h,v 1.8 2005/09/04 21:15:07 fang Exp $
+	$Id: hash_specializations.h,v 1.9 2006/04/27 00:16:56 fang Exp $
  */
 
 #ifndef	__UTIL_HASH_SPECIALIZATIONS_H__
 #define	__UTIL_HASH_SPECIALIZATIONS_H__
 
 #include "config.h"
+
+#if 	defined(HASH_MAP_SGI_STYLE)
 
 #include "util/STL/hash_map_fwd.h"	// needed for namespace definition
 #include <string>
@@ -28,22 +30,10 @@
 // template specializations
 
 namespace HASH_MAP_NAMESPACE {
-using std::string;
 
 // forward declare the specialization for const char*
 template <>
 struct hash<const char*>;
-
-/**
-	Explicit template specialization of hash of a string class, 
-	which just uses the internal char* representation as a wrapper.
- */
-template <>
-struct hash<string> {
-	size_t operator() (const string& x) const {
-		return hash<const char*>()(x.c_str());
-	}
-};	// end hash<>
 
 /**
 	May want to shuffle around bits because pointers tend to be aligned, 
@@ -57,12 +47,30 @@ template <class T>
 struct hash<const T*> {
 	size_t operator() (const T* x) const {
 		// need something with same size as raw pointer
-		register const long y = long(x);
-		return hash<long>()(y ^ (y >> 7));
+#if	SIZEOF_VOIDP == SIZEOF_SIZE_T
+		typedef	size_t		__type;
+#else
+#error	"I need an integer type with same size as pointer."
+#endif
+		register const __type y = reinterpret_cast<const __type>(x);
+		return hash<__type>()(y ^ (y >> 7));
+	}
+};	// end hash<>
+
+/**
+	Explicit template specialization of hash of a string class, 
+	which just uses the internal char* representation as a wrapper.
+ */
+template <>
+struct hash<std::string> {
+	size_t operator() (const std::string& x) const {
+		return hash<const char*>()(x.c_str());
 	}
 };	// end hash<>
 
 }	// end namespace HASH_MAP_NAMESPACE
+
+#endif	// defined(HASH_MAP_SGI_STYLE)
 
 //=============================================================================
 

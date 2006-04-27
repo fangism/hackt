@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.8 2006/02/01 06:11:46 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.9 2006/04/27 00:17:07 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -14,9 +14,9 @@
 
 #include <iostream>
 #include <limits>
-#include <functional>
 #include <algorithm>
 #include <iterator>
+#include "util/STL/functional.h"
 
 #define	DEBUG_SLICE		0
 
@@ -306,7 +306,7 @@ multikey_assoc<D,C>::is_compact_slice(
 	}
 	// else check for compact subdimensions
 
-	const_iterator lb(lower_bound(key_gen));
+	// const_iterator lb(lower_bound(key_gen));
 	key_list_type lower_list_key(key_gen.begin(), key_gen.end());
 	key_gen++;
 	const return_type ret(__is_dense_subslice(lower_list_key));

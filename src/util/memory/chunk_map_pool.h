@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.10 2006/04/13 21:45:07 fang Exp $
+	$Id: chunk_map_pool.h,v 1.11 2006/04/27 00:17:27 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -49,7 +49,7 @@ T::operator new (size_t s) {						\
 #define	__CHUNK_MAP_POOL_DEFAULT_OPERATOR_PLACEMENT_NEW(TemplSpec, T)	\
 TemplSpec								\
 void*									\
-T::operator new (size_t s, void*& p) {					\
+T::operator new (size_t s, void* p) {					\
 	INVARIANT(sizeof(T) == s);					\
 	NEVER_NULL(p); return p;					\
 }									\
@@ -160,7 +160,7 @@ T::operator new (size_t s) {						\
 #define	__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(TemplSpec, T)	\
 TemplSpec								\
 void*									\
-T::operator new (size_t s, void*& p) {					\
+T::operator new (size_t s, void* p) {					\
 	INVARIANT(sizeof(T) == s);					\
 	NEVER_NULL(p);							\
 	return p;							\

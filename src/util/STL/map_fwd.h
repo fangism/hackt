@@ -2,7 +2,7 @@
 	\file "util/qmap_fwd.h"
 	Forward declarations for std::map wrapper.  
 	Full description in "STL/map.h".
-	$Id: map_fwd.h,v 1.5 2006/04/23 07:37:29 fang Exp $
+	$Id: map_fwd.h,v 1.6 2006/04/27 00:17:23 fang Exp $
  */
 
 #ifndef	__UTIL_STL_MAP_FWD_H__
@@ -13,8 +13,14 @@
 #include "util/STL/functional_fwd.h"		// for std::less
 
 namespace std {
-template <class K, class T, typename C, typename A>
+
+#define	STD_MAP_TEMPLATE_SIGNATURE					\
+template <typename K, typename T, typename C, typename A>
+
+STD_MAP_TEMPLATE_SIGNATURE
 class map;
+
+#define	STD_MAP_CLASS		std::map<K, T, C, A >
 
 /**
 	Template typedef for default STL map with only key-value

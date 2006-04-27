@@ -2,7 +2,7 @@
 	\file "util/null_construct.h"
 	Uses traits to initializes a type with a default value.
 	Might consider making this a struct for better specializability.  
-	$Id: null_construct.h,v 1.4 2006/01/22 06:53:35 fang Exp $
+	$Id: null_construct.h,v 1.5 2006/04/27 00:17:08 fang Exp $
  */
 
 #ifndef	__UTIL_NULL_CONSTRUCT_H__
@@ -15,6 +15,11 @@
 
 namespace util {
 USING_UTIL_MEMORY_POINTER_TRAITS
+//=============================================================================
+
+template <class T>
+T
+__null_construct(not_a_pointer_tag);
 
 template <class T>
 T
@@ -23,17 +28,32 @@ __null_construct(not_a_pointer_tag) {
 //	return std::_Construct<T>();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+P
+__null_construct(raw_pointer_tag);
+
 template <class P>
 P
 __null_construct(raw_pointer_tag) {
 	return NULL;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class P>
+P
+__null_construct(pointer_class_base_tag);
+
 template <class P>
 P
 __null_construct(pointer_class_base_tag) {
 	return P();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+T
+null_construct(void);
 
 /**
 	Pointer types are guaranteed to return NULL, 
@@ -48,6 +68,7 @@ null_construct(void) {
 	return __null_construct<T>(pointer_category());
 }
 
+//=============================================================================
 }	// end namespace util
 
 #endif	// __UTIL_NULL_CONSTRUCT_H__
