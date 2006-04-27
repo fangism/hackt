@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.15 2006/03/21 21:53:11 fang Exp $
+ 	$Id: namespace.cc,v 1.16 2006/04/27 00:15:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -75,7 +75,6 @@ namespace HAC {
 namespace entity {
 
 #include "util/using_ostream.h"
-using util::hash_map;
 using util::qmap;
 using parser::scope;
 using std::_Select1st;

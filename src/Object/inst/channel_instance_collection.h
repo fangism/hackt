@@ -3,7 +3,7 @@
 	Class declarations for channel instance and collections.  
 	This file originated from "Object/art_object_instance_chan.h"
 		in a previous life.  
-	$Id: channel_instance_collection.h,v 1.6 2006/01/22 18:20:00 fang Exp $
+	$Id: channel_instance_collection.h,v 1.7 2006/04/27 00:15:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_H__
@@ -18,6 +18,16 @@
 
 namespace HAC {
 namespace entity {
+
+/**
+	Need this because typedef not allowed in nested elaborated
+	type specifiers in base classes.  (in this case, of
+	the instance_collection)
+ */
+class class_traits<channel_tag>::collection_type_manager_parent_type
+	: public general_collection_type_manager<channel_tag> {
+};
+
 //=============================================================================
 // convenient typedefs
 

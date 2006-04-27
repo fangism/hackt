@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.14 2006/04/24 00:28:08 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.15 2006/04/27 00:16:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -32,6 +32,7 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/expr/meta_range_list.h"
+#include "Object/expr/const_range_list.h"
 #include "Object/def/footprint.h"
 #include "Object/inst/instance_collection.h"
 

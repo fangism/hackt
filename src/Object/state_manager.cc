@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.12 2006/04/11 07:54:38 fang Exp $
+	$Id: state_manager.cc,v 1.13 2006/04/27 00:15:26 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -18,6 +18,7 @@
 #include "Object/traits/enum_traits.h"
 #include "Object/traits/int_traits.h"
 #include "Object/traits/bool_traits.h"
+#include "Object/inst/channel_instance_collection.h"
 #include "Object/entry_collection.h"
 #include "main/cflat_options.h"
 #include "util/stacktrace.h"

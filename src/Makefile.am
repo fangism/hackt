@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.117 2006/04/24 00:28:03 fang Exp $
+#	$Id: Makefile.am,v 1.118 2006/04/27 00:15:20 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -229,6 +229,7 @@ OBJECT_CC_FILES = \
 	Object/unroll/meta_conditional_base.cc \
 	Object/unroll/meta_loop_base.cc \
 	Object/unroll/unroll_context.cc \
+	Object/unroll/unroll_context_value_resolver.cc \
 	Object/module.cc \
 	Object/global_entry.cc \
 	Object/port_context.cc \
@@ -496,7 +497,6 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/unroll/port_connection.h \
 	Object/unroll/process_instantiation_statement.h \
 	Object/unroll/sequential_scope.h \
-	Object/unroll/unroll_context_value_resolver.h \
 	Object/lang/PRS_fwd.h \
 	Object/lang/PRS_base.h \
 	Object/lang/PRS_literal_unroller.h \
@@ -663,7 +663,7 @@ libhacktparsers_la_SOURCES = \
 	$(PARSER_CC_FILES) $(PARSER_H_FILES)
 
 ALL_HEADER_FILES += \
-	config.h \
+	$(CONFIG_HEADERS) \
 	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
 	$(AST_H_FILES) \

@@ -4,6 +4,63 @@
 # This version tag is used in building "main/version.cc".
 
 
+2006-04-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-20-merged-icc-01-04:
+	  Merge of batch of icc portability fixes.  To be continued later.
+
+
+2006-04-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-04:
+	  Moved method definitions out of unroll_context_value_resolver.h
+		into .cc file to avoid early instantiation during
+		header check.  The .cc is compiled separately, but could be
+		included in the invoking .cc file if deemed beneficial.  
+	  channel_traits::collection_type_manager_parent_type
+		is no longer typedef'd because nested typedef not allowed 
+		as a base class (standard 7.1.5.3).  Definition moved to
+		channel_instance_collection.h, re-defined as trivial
+		derivative of the general_collection_type_manager.
+	  fixed typo in port_alias_tracker.cc, where union-find
+		flattening wasn't occuring, but will uncomment only
+		after branch-merge.  
+	  Other .tcc files: added necessary headers to satisfy type 
+		completeness in the event of early instantiation,
+		from non-template-dependent code.  
+	  Status: terminating this branch here, though icc still
+		can't compile many .cc units.  All header checks now pass
+		at least, but more work to be done beyond.  
+		This is a good point to check in the work so far.  
+	  Thus far, used the following configure params:
+		'CC=icc' 'CXX=icpc'
+		'CPPFLAGS=-I$ICC_ROOT/include -I$ICC_ROOT/include/c++'
+		'CFLAGS=-O3'
+		'CXXFLAGS=-O3 -wd11,171,473,810,1418,1476,1505,1682,1683'
+		'LDFLAGS=-L$ICC_ROOT/lib -lcprts -lunwind'
+
+
+2006-04-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-03:
+	  Object/inst/*_collection.tcc: No empty macro arguments.  
+	  Bunch more fixes in the util/ library headers.  
+
+
+2006-04-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-02:
+	  util library configuration fixes only.
+
+
+2006-04-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-19-icc-01-01:
+	  Mostly autoconf/configure updates for icc portability.  
+	  This snapshot does NOT compile in icc yet. 
+	  Some traits headers cleaned up.
+
+
 2006-04-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-19:

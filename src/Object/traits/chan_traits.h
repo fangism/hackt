@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.13 2006/04/12 08:53:17 fang Exp $
+	$Id: chan_traits.h,v 1.14 2006/04/27 00:15:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -63,8 +63,17 @@ struct class_traits<channel_tag> {
 
 	typedef	channel_instance_collection	instance_collection_generic_type;
 	typedef	physical_instance_collection	instance_collection_parent_type;
+#if 0
+	// 7.1.5.3 Elaborated type specifiers.
+	// If the identifier resolves to a typedef name or template type
+	// parameter, the elaborated type specifier is ill-formed.
 	typedef	general_collection_type_manager<tag_type>
 					collection_type_manager_parent_type;
+#else
+	// will be derived trivially from general_collection_type_manager
+	// this is now defined in "Object/inst/channel_instance_collection.h"
+	struct collection_type_manager_parent_type;
+#endif
 	template <size_t D>
 	struct instance_array {
 		typedef	entity::instance_array<tag_type,D>	type;

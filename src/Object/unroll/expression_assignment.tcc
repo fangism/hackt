@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.11 2006/04/12 08:53:19 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.12 2006/04/27 00:16:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -62,7 +62,7 @@ EXPRESSION_ASSIGNMENT_CLASS::operator new (size_t s) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 void*
-EXPRESSION_ASSIGNMENT_CLASS::operator new (size_t s, void*& p) {
+EXPRESSION_ASSIGNMENT_CLASS::operator new (size_t s, void* p) {
 	INVARIANT(sizeof(this_type) == s);
 	NEVER_NULL(p); return p;
 }

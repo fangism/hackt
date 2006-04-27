@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.13 2006/03/16 03:40:25 fang Exp $
+ 	$Id: value_collection.tcc,v 1.14 2006/04/27 00:15:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -30,6 +30,7 @@
 
 #include "Object/inst/value_collection.h"
 #include "Object/expr/const_collection.h"
+#include "Object/expr/param_expr.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
 #include "Object/expr/const_range.h"
@@ -40,6 +41,7 @@
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/def/definition_base.h"
 #include "Object/common/namespace.h"
+#include "Object/type/param_type_reference.h"
 // #include "Object/unroll/unroll_context.h"
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/ref/meta_value_reference.h"
@@ -415,21 +417,24 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 //      VALUE_ARRAY_TEMPLATE_SIGNATURE, VALUE_ARRAY_CLASS)
 // but the preprocessor is retarded about arguments with commas in them, 
 // so we forced to expand this macro by hand.  :S
-        
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-__SELF_CHUNK_MAP_POOL_STATIC_INIT( , typename, VALUE_ARRAY_CLASS)
-        
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(, typename, VALUE_ARRAY_CLASS)
+
+#define	EMPTY
 
 VALUE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW( , VALUE_ARRAY_CLASS)
-
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW( , VALUE_ARRAY_CLASS)
+__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY, typename, VALUE_ARRAY_CLASS)
         
 VALUE_ARRAY_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE( , VALUE_ARRAY_CLASS)
+__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY, typename, VALUE_ARRAY_CLASS)
+
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY, VALUE_ARRAY_CLASS)
+
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY, VALUE_ARRAY_CLASS)
+        
+VALUE_ARRAY_TEMPLATE_SIGNATURE
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY, VALUE_ARRAY_CLASS)
+#undef	EMPTY
 #endif  // POOL_ALLOCATE_VALUE_COLLECTIONS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -734,21 +739,24 @@ VALUE_ARRAY_CLASS::load_object(const persistent_object_manager& m, istream& f) {
 //      VALUE_SCALAR_TEMPLATE_SIGNATURE, VALUE_SCALAR_CLASS)
 // but the preprocessor is retarded about arguments with commas in them, 
 // so we forced to expand this macro by hand.  :S
+
+#define	EMPTY
         
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-__SELF_CHUNK_MAP_POOL_STATIC_INIT( , typename, VALUE_SCALAR_CLASS)
+__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY, typename, VALUE_SCALAR_CLASS)
         
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(, typename, VALUE_SCALAR_CLASS)
+__CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY, typename, VALUE_SCALAR_CLASS)
 
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW( , VALUE_SCALAR_CLASS)
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY, VALUE_SCALAR_CLASS)
 
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW( , VALUE_SCALAR_CLASS)
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY, VALUE_SCALAR_CLASS)
         
 VALUE_SCALAR_TEMPLATE_SIGNATURE
-__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE( , VALUE_SCALAR_CLASS)
+__CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY, VALUE_SCALAR_CLASS)
+#undef	EMPTY
 #endif  // POOL_ALLOCATE_VALUE_COLLECTIONS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

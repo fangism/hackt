@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.12 2006/04/24 00:28:07 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.13 2006/04/27 00:15:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -16,6 +16,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.h"
 #include "Object/global_entry.h"
+#include "Object/unroll/unroll_context.h"
 #include "common/ICE.h"
 #include "util/stacktrace.h"
 #include "util/packed_array.h"
