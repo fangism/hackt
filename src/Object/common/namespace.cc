@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.16.2.1 2006/04/27 23:06:36 fang Exp $
+ 	$Id: namespace.cc,v 1.16.2.2 2006/04/28 01:04:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -53,9 +53,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/persistent_type_hash.h"
 
-#if SCOPE_USE_HASH_QMAP
-#include "util/hash_qmap.tcc"
-#endif
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -136,13 +133,9 @@ scopespace::is_global_namespace(void) const {
  */
 never_ptr<const object>
 scopespace::lookup_member(const string& id) const {
-#if SCOPE_USE_HASH_QMAP
-	return static_cast<const used_id_map_type&>(used_id_map)[id];
-#else
 	const const_map_iterator f(used_id_map.find(id));
 	return (f != used_id_map.end()) ? f->second :
 		never_ptr<const object>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -151,13 +144,9 @@ scopespace::lookup_member(const string& id) const {
  */
 never_ptr<const object>
 scopespace::__lookup_member(const string& id) const {
-#if SCOPE_USE_HASH_QMAP
-	return static_cast<const used_id_map_type&>(used_id_map)[id];
-#else
 	const const_map_iterator f(used_id_map.find(id));
 	return (f != used_id_map.end()) ? f->second :
 		never_ptr<const object>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -166,13 +155,9 @@ scopespace::__lookup_member(const string& id) const {
  */
 never_ptr<object>
 scopespace::lookup_member_with_modify(const string& id) const {
-#if SCOPE_USE_HASH_QMAP
-	return static_cast<const used_id_map_type&>(used_id_map)[id];
-#else
 	const const_map_iterator f(used_id_map.find(id));
 	return (f != used_id_map.end()) ?
 		never_ptr<object>(f->second) : never_ptr<object>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

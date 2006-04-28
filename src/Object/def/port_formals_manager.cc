@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.7.30.1 2006/04/27 23:06:39 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.7.30.2 2006/04/28 01:04:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -29,9 +29,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/common/dump_flags.h"
 
-#if PFM_USE_HASH_QMAP
-#include "util/hash_qmap.tcc"
-#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
 #include "util/stacktrace.h"
@@ -100,14 +97,10 @@ port_formals_manager::dump(ostream& o) const {
  */
 port_formals_manager::port_formals_value_type
 port_formals_manager::lookup_port_formal(const string& id) const {
-#if PFM_USE_HASH_QMAP
-	return static_cast<const port_formals_map_type&>(port_formals_map)[id];
-#else
 	const port_formals_map_type::const_iterator
 		f(port_formals_map.find(id));
 	return (f != port_formals_map.end()) ? f->second :
 		port_formals_value_type(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

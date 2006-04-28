@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.6.36.1 2006/04/27 23:06:39 fang Exp $
+	$Id: port_formals_manager.h,v 1.6.36.2 2006/04/28 01:04:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -13,17 +13,10 @@
 #include <vector>
 #include "util/macros.h"
 #include "Object/common/util_types.h"	// for checked_refs_type
-#include "Object/devel_switches.h"
-
-#define	PFM_USE_HASH_QMAP		(USE_HASH_QMAP || 0)
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
-#if PFM_USE_HASH_QMAP
-#include "util/hash_qmap.h"
-#else
 #include "util/STL/hash_map.h"
-#endif
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
@@ -43,9 +36,6 @@ using std::vector;
 using parser::token_identifier;
 using util::bad_bool;
 using util::good_bool;
-#if PFM_USE_HASH_QMAP
-using util::hash_qmap;
-#endif
 using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
@@ -73,11 +63,7 @@ public:
 		Implemented as a hash_qmap and list.  
 	**/
 	typedef vector<port_formals_value_type>	port_formals_list_type;
-#if PFM_USE_HASH_QMAP
-	typedef hash_qmap<string, port_formals_value_type>
-#else
 	typedef HASH_MAP_NAMESPACE::hash_map<string, port_formals_value_type>
-#endif
 						port_formals_map_type;
 	typedef	port_formals_list_type::const_iterator
 						const_list_iterator;

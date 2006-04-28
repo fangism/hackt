@@ -5,6 +5,10 @@
 
 2006-04-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-21-maps-02:
+	  Clean up of previous revision only.  
+
+
 	* HACKT-00-01-04-main-00-78-21-maps-01:
 	  Branch for cleaning up implementation and use of maps and hash_maps.
 		Phasing out our old friends hash_qmap and qmap for simplicity.
