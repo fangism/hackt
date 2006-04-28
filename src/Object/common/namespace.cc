@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.16 2006/04/27 00:15:30 fang Exp $
+ 	$Id: namespace.cc,v 1.17 2006/04/28 03:20:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -22,7 +22,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <numeric>
 #include <string>
-#include <list>
 
 #include "util/ptrs_functional.h"
 #include "util/compose.h"
@@ -37,8 +36,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 // include this as early as possible
 #include "util/hash_specializations.h"		// substitute for the following
 #include "util/STL/hash_map_utils.h"
-#include "util/hash_qmap.tcc"
-#include "util/qmap.tcc"
 
 #include "AST/token_string.h"
 #include "AST/identifier.h"
@@ -75,7 +72,6 @@ namespace HAC {
 namespace entity {
 
 #include "util/using_ostream.h"
-using util::qmap;
 using parser::scope;
 using std::_Select1st;
 using std::_Select2nd;
@@ -99,7 +95,6 @@ using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
 //=============================================================================
 // class scopespace method definitions
 scopespace::scopespace() : 
-//		object(), 
 		persistent(), used_id_map() {
 }
 
@@ -135,7 +130,9 @@ scopespace::is_global_namespace(void) const {
  */
 never_ptr<const object>
 scopespace::lookup_member(const string& id) const {
-	return static_cast<const used_id_map_type&>(used_id_map)[id];
+	const const_map_iterator f(used_id_map.find(id));
+	return (f != used_id_map.end()) ? f->second :
+		never_ptr<const object>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -144,17 +141,20 @@ scopespace::lookup_member(const string& id) const {
  */
 never_ptr<const object>
 scopespace::__lookup_member(const string& id) const {
-	return static_cast<const used_id_map_type&>(used_id_map)[id];
+	const const_map_iterator f(used_id_map.find(id));
+	return (f != used_id_map.end()) ? f->second :
+		never_ptr<const object>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Same as regular map lookup, but returning a modifiable
-	pointer.  
+	Same as regular map lookup, but returning a modifiable pointer.  
  */
 never_ptr<object>
 scopespace::lookup_member_with_modify(const string& id) const {
-	return static_cast<const used_id_map_type&>(used_id_map)[id];
+	const const_map_iterator f(used_id_map.find(id));
+	return (f != used_id_map.end()) ?
+		never_ptr<object>(f->second) : never_ptr<object>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -169,8 +169,8 @@ scopespace::lookup_member_with_modify(const string& id) const {
  */
 never_ptr<const object>
 scopespace::lookup_object(const string& id) const {
-	never_ptr<const object> o = lookup_member(id);
-	never_ptr<const scopespace> parent(get_parent());
+	const never_ptr<const object> o(lookup_member(id));
+	const never_ptr<const scopespace> parent(get_parent());
 	if (o) return o;
 	else if (parent) return parent->lookup_object(id);
 	else return never_ptr<const object>(NULL);
@@ -187,7 +187,7 @@ scopespace::lookup_object(const qualified_id_slice& id) const {
 	typedef	never_ptr<const object>		return_type;
 	STACKTRACE("scopespace::lookup_object()");
 if (id.is_absolute()) {
-	never_ptr<const scopespace> parent(get_parent());
+	const never_ptr<const scopespace> parent(get_parent());
 	if (parent)
 		return parent->lookup_object(id);
 	else {	// we are the ROOT, start looking down namespaces
@@ -205,7 +205,7 @@ if (id.is_absolute()) {
 	// else need to resolve namespace portion first
 	qualified_id_slice idc(id);
 	const never_ptr<const name_space>
-		ns = lookup_namespace(idc.betail()).is_a<const name_space>();
+		ns(lookup_namespace(idc.betail()).is_a<const name_space>());
 	if (ns)
 		return ns->lookup_object(**(--id.end()));
 	else return return_type(NULL);
@@ -231,7 +231,7 @@ ostream&
 scopespace::dump_for_definitions(ostream& o) const {
 	// to canonicalize the dump, we bin and sort into maps
 	const_bin_sort bins;
-	const_bin_sort& bins_ref = bins;
+	const_bin_sort& bins_ref(bins);
 	bins_ref =
 #if 1
 	for_each_if(used_id_map.begin(), used_id_map.end(), 
@@ -676,7 +676,7 @@ scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 		d_b(o_p.is_a<definition_base>());
 	const never_ptr<instance_collection_base>
 		i_b(o_p.is_a<instance_collection_base>());
-	const string& k = i.first;
+	const string& k(i.first);
 	if (n_b) {
 		ns_bin[k] = n_b;
 	} else if (d_b) {
@@ -911,7 +911,7 @@ ostream&
 name_space::dump(ostream& o) const {
 	// to canonicalize the dump, we bin and sort into maps
 	const_bin_sort bins;
-	const_bin_sort& bins_ref = bins;
+	const_bin_sort& bins_ref(bins);
 	bins_ref =
 	for_each_if(used_id_map.begin(), used_id_map.end(), 
 		not1(bind1st(mem_fun(&name_space::exclude_object_val), this)),
@@ -1031,7 +1031,7 @@ name_space::add_open_namespace(const string& n) {
 	cerr << "In name_space::add_open_namespace(\"" << n << "\"): " << endl;
 #endif
 	never_ptr<name_space> ret;
-	const never_ptr<const object> probe = lookup_member(n);
+	const never_ptr<const object> probe(lookup_member(n));
 	if (probe) {
 		const never_ptr<const name_space>
 			probe_ns(probe.is_a<const name_space>());
@@ -1572,7 +1572,9 @@ name_space::lookup_namespace(const qualified_id_slice& id) const {
 never_ptr<const name_space>
 name_space::lookup_open_alias(const string& id) const {
 	// need static cast to guarantee non-modification
-	return static_cast<const alias_map_type&>(open_aliases)[id];
+	typedef	never_ptr<const name_space>	return_type;
+	const alias_map_type::const_iterator f(open_aliases.find(id));
+	return (f != open_aliases.end()) ? f->second : return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.h"
 	Clases related to serial, persistent object management.  
-	$Id: persistent_object_manager.h,v 1.23 2006/04/27 00:17:08 fang Exp $
+	$Id: persistent_object_manager.h,v 1.24 2006/04/28 03:20:15 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_H__
@@ -13,7 +13,7 @@
 #include <map>
 #include "util/persistent.h"
 
-#include "util/hash_qmap.h"
+#include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/IO_utils.h"		// for read and write to streams
@@ -141,7 +141,7 @@ private:
 		Every pointer will be mapped to an auxiliary index.  
 		Is the reverse map of reconstruction_table_type.
 	 */
-	typedef	default_hash_qmap<const void*, Long>::type
+	typedef	HASH_MAP_NAMESPACE::default_hash_map<const void*, Long>::type
 						addr_to_index_map_type;
 
 	/**
@@ -161,7 +161,8 @@ private:
 	/**
 		Map from of persistent type's key to allocator function.  
 	 */
-	typedef hash_qmap<persistent::hash_key, reconstructor_vector_type>
+	typedef HASH_MAP_NAMESPACE::default_hash_map<persistent::hash_key,
+			reconstructor_vector_type>::type
 					reconstruction_function_map_type;
 
 private:

@@ -1,6 +1,6 @@
 /**
 	\file "main/simple_options.tcc"
-	$Id: simple_options.tcc,v 1.2 2006/01/22 06:53:12 fang Exp $
+	$Id: simple_options.tcc,v 1.3 2006/04/28 03:20:14 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_SIMPLE_OPTIONS_TCC__
@@ -25,11 +25,13 @@ parse_simple_command_options(const int argc, char* argv[], Opt& cf,
 	switch (c) {
 		case 'f': {
 			typedef	typename ModMap::mapped_type	mapped_type;
-			const mapped_type& om(mod_map[optarg]);
-			if (!om) {
+			typedef	typename ModMap::const_iterator	const_iterator;
+			const const_iterator mi(mod_map.find(optarg));
+			if (mi == mod_map.end() || !mi->second) {
 				cerr << "Invalid mode: " << optarg << endl;
 				return 1;
 			} else {
+				const mapped_type& om(mi->second);
 				om(cf);
 			}
 			break;

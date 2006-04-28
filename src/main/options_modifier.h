@@ -1,15 +1,16 @@
 /**
 	\file "main/options_modifier.h"
 	Utility class for modifying options, using a map and registry.  
-	$Id: options_modifier.h,v 1.3 2006/04/18 18:42:41 fang Exp $
+	$Id: options_modifier.h,v 1.4 2006/04/28 03:20:14 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_OPTIONS_MODIFIER_H__
 #define	__HAC_MAIN_OPTIONS_MODIFIER_H__
 
 #include <iosfwd>
+#include <map>
 #include "util/string_fwd.h"
-#include "util/qmap_fwd.h"
+#include "util/STL/map_fwd.h"
 
 namespace HAC {
 
@@ -31,9 +32,11 @@ struct options_modifier_policy {
 	typedef	OptionsType			options_type;
 	typedef Modifier			modifier_type;
 	struct options_modifier_info;
-	typedef	typename util::default_qmap<std::string,
+	typedef	typename std::default_map<std::string,
 			options_modifier_info>::type
 					options_modifier_map_type;
+	typedef	typename options_modifier_map_type::const_iterator
+					options_modifier_map_iterator;
 	class register_options_modifier_base;
 protected:
 	static const options_modifier_map_type	options_modifier_map;

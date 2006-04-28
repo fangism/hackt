@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.5 2006/01/22 18:19:37 fang Exp $
+	$Id: template_formals_manager.h,v 1.6 2006/04/28 03:20:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -15,7 +15,7 @@
 #include "util/macros.h"
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"	// for persistent object interface
-#include "util/hash_qmap.h"
+#include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 
@@ -32,7 +32,6 @@ using std::ostream;
 using std::vector;
 using util::bad_bool;
 using util::good_bool;
-using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
@@ -67,7 +66,8 @@ public:
 	typedef	never_ptr<const param_value_collection>
 					template_formals_value_type;
 	// double-maintenance...
-	typedef	hash_qmap<string, template_formals_value_type>
+	typedef	HASH_MAP_NAMESPACE::hash_map<string,
+			template_formals_value_type>
 					template_formals_map_type;
 
 	/**

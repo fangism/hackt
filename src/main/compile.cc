@@ -3,12 +3,13 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.9 2006/01/25 20:26:04 fang Exp $
+	$Id: compile.cc,v 1.10 2006/04/28 03:20:14 fang Exp $
  */
 
 #include <iostream>
 #include <list>
 #include <string>
+#include <map>
 #include "main/program_registry.h"
 #include "main/compile.h"
 #include "main/main_funcs.h"
@@ -17,7 +18,6 @@
 #include "util/getopt_portable.h"
 #include "util/dirent.h"		// configured wrapper around <dirent.h>
 #include "util/attributes.h"
-#include "util/qmap.tcc"
 
 extern HAC::lexer::file_manager
 hackt_parse_file_manager;
@@ -217,12 +217,12 @@ compile::parse_command_options(const int argc, char* argv[], options& opt) {
 		opt.dump_module = true;
 		break;
 	case 'f': {
-		const options_modifier_info&
-			om(options_modifier_map[optarg]);
-		if (!om) {
+		const options_modifier_map_type::const_iterator
+			mi(options_modifier_map.find(optarg));
+		if (mi == options_modifier_map.end() || !mi->second) {
 			cerr << "Invalid option argument: " << optarg << endl;
 			return 1;
-		} else if (!om(opt).good) {
+		} else if (!((mi->second)(opt).good)) {
 			return 1;
 		}
 		break;

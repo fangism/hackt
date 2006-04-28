@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.6 2006/01/22 18:19:35 fang Exp $
+	$Id: port_formals_manager.h,v 1.7 2006/04/28 03:20:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -16,7 +16,7 @@
 
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
-#include "util/hash_qmap.h"
+#include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
 
 namespace HAC {
@@ -36,7 +36,6 @@ using std::vector;
 using parser::token_identifier;
 using util::bad_bool;
 using util::good_bool;
-using util::hash_qmap;
 using util::persistent;
 using util::persistent_object_manager;
 using util::memory::excl_ptr;
@@ -64,7 +63,7 @@ public:
 		Implemented as a hash_qmap and list.  
 	**/
 	typedef vector<port_formals_value_type>	port_formals_list_type;
-	typedef hash_qmap<string, port_formals_value_type>
+	typedef HASH_MAP_NAMESPACE::hash_map<string, port_formals_value_type>
 						port_formals_map_type;
 	typedef	port_formals_list_type::const_iterator
 						const_list_iterator;

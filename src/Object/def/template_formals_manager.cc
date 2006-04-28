@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.8 2006/02/11 03:56:48 fang Exp $
+	$Id: template_formals_manager.cc,v 1.9 2006/04/28 03:20:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,7 +20,6 @@
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"
 
-#include "util/hash_qmap.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/IO_utils.tcc"
@@ -107,8 +106,11 @@ template_formals_manager::dump(ostream& o) const {
  */
 never_ptr<const param_value_collection>
 template_formals_manager::lookup_template_formal(const string& id) const {
-	return static_cast<const template_formals_map_type&>
-		(template_formals_map)[id];
+	typedef	never_ptr<const param_value_collection>	return_type;
+	const template_formals_map_type::const_iterator
+		f(template_formals_map.find(id));
+	return (f != template_formals_map.end()) ? f->second
+		: return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

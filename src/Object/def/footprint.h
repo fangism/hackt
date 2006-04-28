@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.14 2006/04/11 07:54:39 fang Exp $
+	$Id: footprint.h,v 1.15 2006/04/28 03:20:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -10,7 +10,6 @@
 #include <iosfwd>
 #include "Object/inst/instance_pool.h"
 #include "Object/traits/classification_tags.h"
-
 #include "Object/inst/process_instance.h"
 #include "Object/inst/channel_instance.h"
 #include "Object/inst/struct_instance.h"
@@ -25,7 +24,7 @@
 #include "util/boolean_types.h"
 #include "util/persistent_fwd.h"
 #include "util/string_fwd.h"
-#include "util/hash_qmap.h"
+#include "util/STL/hash_map.h"
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
@@ -121,7 +120,8 @@ private:
 		BTW, using count_ptrs for ease of copy-constructibility.  
 		Q: do we need a separate port_formals_manager?
 	 */
-	typedef	util::hash_qmap<string, instance_collection_ptr_type>
+	typedef	HASH_MAP_NAMESPACE::hash_map<string,
+			instance_collection_ptr_type>
 					instance_collection_map_type;
 	typedef	instance_collection_map_type::const_iterator
 					const_instance_map_iterator;
