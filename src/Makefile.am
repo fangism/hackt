@@ -1,9 +1,9 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.118 2006/04/27 00:15:20 fang Exp $
+#	$Id: Makefile.am,v 1.118.2.1 2006/04/28 03:08:12 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
-SUFFIXES = .yy .ll .ii .test
+SUFFIXES = .yy .ll .ii .test .i
 
 # standard definitions and macro initializers
 # appends to SUFFIXES
@@ -103,7 +103,8 @@ config_params.h: $(top_builddir)/config.status
 
 # can't include libhacktexec.la because of circular dependence
 # builddate.h:
-builddate.h: libhackt.la $(LIBFANGUTIL)
+# builddate.h: libhackt.la $(LIBFANGUTIL)
+builddate.h: ChangeLog
 	@$(ECHO) "#ifndef	BUILDDATE" > $@
 	$(ECHO) "#define	BUILDDATE	\""`$(DATE)`"\"" >> $@
 	@$(ECHO) "#endif	/* BUILDDATE */" >> $@
@@ -950,10 +951,14 @@ AM_YFLAGS = -d -t -v
 AM_LFLAGS = 
 
 # for occasional debugging
-SAVETEMP = $(CXXCOMPILE) -v -save-temps
+# SAVETEMP = $(CXXCOMPILE) -v -save-temps
 .cc.ii:
-	$(SAVETEMP) -c $<
-	@$(ECHO) ".ii is placed in local directory."
+	$(CXXPREPROCESS) $< > $@
+#	$(SAVETEMP) -c $<
+#	@$(ECHO) ".ii is placed in local directory."
+
+.c.i:
+	$(CPREPROCESS) $< > $@
 
 # doesn't work
 # YACC_PREFIX = -DYACC_PREFIX=hackt_yy

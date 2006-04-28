@@ -3,17 +3,18 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.11.4.2 2006/04/28 01:04:17 fang Exp $
+	$Id: scopespace.h,v 1.11.4.3 2006/04/28 03:08:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
 #define	__HAC_OBJECT_COMMON_SCOPESPACE_H__
 
 #include <list>
+#include <map>
 #include "Object/common/util_types.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/boolean_types.h"
-#include "util/qmap.h"			// need complete definition
+#include "util/STL/map_fwd.h"
 #include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
 
@@ -47,7 +48,6 @@ using parser::qualified_id;
 using util::memory::never_ptr;
 using util::memory::some_ptr;
 using util::memory::excl_ptr;
-using util::default_qmap;
 using util::good_bool;
 using util::bad_bool;
 
@@ -68,7 +68,7 @@ protected:	// typedefs -- keep these here for re-use
 		Aliased namespaces, which are not owned, 
 		cannot be modified.  
 	 */
-	typedef	default_qmap<string, never_ptr<const name_space> >::type
+	typedef	std::default_map<string, never_ptr<const name_space> >::type
 							alias_map_type;
 
 	/**
@@ -121,19 +121,19 @@ protected:
 	class bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
 	public:
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<name_space> >::type
 							ns_bin_type;
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<definition_base> >::type
 							def_bin_type;
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<typedef_base> >::type
 							alias_bin_type;
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<instance_collection_base> >::type
 							inst_bin_type;
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<param_value_collection> >::type
 							param_bin_type;
 
@@ -156,19 +156,19 @@ protected:
 	class const_bin_sort {
 	// public unary_function<const used_id_map_type::const_iterator&, void>
 	public:
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<const name_space> >::type
 							ns_bin_type;
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<const definition_base> >::type
 							def_bin_type;
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<const typedef_base> >::type
 							alias_bin_type;
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<const instance_collection_base> >::type
 							inst_bin_type;
-		typedef default_qmap<string,
+		typedef std::default_map<string,
 				never_ptr<const param_value_collection> >::type
 							param_bin_type;
 

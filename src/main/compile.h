@@ -1,7 +1,7 @@
 /**
 	\file "main/compile.h"
 	Interface header for compile module.  
-	$Id: compile.h,v 1.6 2006/04/18 18:42:41 fang Exp $
+	$Id: compile.h,v 1.6.4.1 2006/04/28 03:08:16 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_COMPILE_H__
@@ -9,7 +9,7 @@
 
 #include "main/hackt_fwd.h"
 #include "util/boolean_types.h"
-#include "util/qmap_fwd.h"
+#include "util/STL/map_fwd.h"
 #include "util/string_fwd.h"
 
 namespace HAC {
@@ -26,7 +26,7 @@ public:
 	typedef	util::good_bool (*options_modifier)(options&);
 private:
 	struct options_modifier_info;
-	typedef	util::default_qmap<std::string, options_modifier_info>::type
+	typedef	std::default_map<std::string, options_modifier_info>::type
 						options_modifier_map_type;
 	static const options_modifier_map_type	options_modifier_map;
 public:

@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.16.2.2 2006/04/28 01:04:17 fang Exp $
+ 	$Id: namespace.cc,v 1.16.2.3 2006/04/28 03:08:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -22,7 +22,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 #include <numeric>
 #include <string>
-#include <list>
 
 #include "util/ptrs_functional.h"
 #include "util/compose.h"
@@ -53,7 +52,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/persistent_type_hash.h"
 
-#include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/memory/list_vector_pool.tcc"
 #include "util/indent.h"
@@ -74,7 +72,6 @@ namespace HAC {
 namespace entity {
 
 #include "util/using_ostream.h"
-using util::qmap;
 using parser::scope;
 using std::_Select1st;
 using std::_Select2nd;
@@ -1575,7 +1572,9 @@ name_space::lookup_namespace(const qualified_id_slice& id) const {
 never_ptr<const name_space>
 name_space::lookup_open_alias(const string& id) const {
 	// need static cast to guarantee non-modification
-	return static_cast<const alias_map_type&>(open_aliases)[id];
+	typedef	never_ptr<const name_space>	return_type;
+	const alias_map_type::const_iterator f(open_aliases.find(id));
+	return (f != open_aliases.end()) ? f->second : return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

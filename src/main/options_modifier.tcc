@@ -1,7 +1,7 @@
 /**
 	\file "main/options_modifier.tcc"
 	Implementation details of options modifier manager.  
-	$Id: options_modifier.tcc,v 1.2 2006/01/22 06:53:11 fang Exp $
+	$Id: options_modifier.tcc,v 1.2.36.1 2006/04/28 03:08:16 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_OPTIONS_MODIFIER_TCC__
@@ -10,7 +10,7 @@
 #include "util/static_trace.h"
 #include "main/options_modifier.h"
 #include <string>
-#include "util/qmap.tcc"
+#include <map>
 #include <iostream>
 
 namespace HAC {

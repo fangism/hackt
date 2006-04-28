@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.10 2006/04/12 08:53:19 fang Exp $
+	$Id: cflat.cc,v 1.10.6.1 2006/04/28 03:08:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -502,13 +502,13 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 	}
 	// cflat mode
 	const char* const mode = argv[1];
-	const options_modifier_info om(options_modifier_map[mode]);
-	if (!om) {
+	const options_modifier_map_iterator mi(options_modifier_map.find(mode));
+	if (mi == options_modifier_map.end() || !mi->second) {
 		cerr << "Invalid mode: " << mode << endl;
 		usage();
 		return 1;
 	} else {
-		om(cf);
+		(mi->second)(cf);
 	}
 
 	// additional mode modifiers

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.21 2006/04/23 07:37:17 fang Exp $
+#	$Id: TODO,v 1.21.4.1 2006/04/28 03:08:13 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -43,19 +43,20 @@ prsim:
 		in the old prsim, watch/break points are preserved
 		so we keep that behavior for now.  
 
+enhancement:
+	macro/spec/attribute strings need to be compressed or stored in some 
+	dictionary to avoid writing identical strings out, wasting memory.
+	In general, a dictionary might be appropriate for all 
+		recurring strings.  Embed into persistent object manager?
+		yes, give each unique string ID number.  
+		Must be replayable on all platforms, so use ordered map?
+		Just first-come-first-serve, construct map in object header.  
+
 ===============================================================================
 complete type creation: (20060128)
 	The algorithm for hierarhical ID allocation is horked.
-	The business with ring_nodes is not bullet proof and 
-		prone to mistakes, as it is difficult to reason about
-		correctness and completeness.
-	Proposal: COMPLETE rewite unroll and create to use a union-find
-		path compression approach to allocating unique IDs.
-		The style makes it easy and efficient to combine alias sets, 
-		is on the average less expensive than ring maintainence, 
-		although, it will no longer be easy to iterate
-		over rings of aliases.  
-	Consider doing this at the time of major rewrite...
+	Substitute ring-nodes with union-finds.  
+	[Status: complete 20060314]
 
 ===============================================================================
 loop development:
@@ -212,16 +213,13 @@ parser:
 		source file.  This will be needed for multi-parse/multi-lex
 		compilation, and avoiding comflicts in libbogus.  
 
-	HIGH PRIORITY:
+	HIGH PRIORITY: [Status: complete 20051112]
 	convert generated lexers into classes:
-		instead of passing an extra foo argument, can simply refer
-		to 'this'.
-		Fold state information into lexer class.  
-		Make tables into static const members.  
-		This will greatly simplify the present name-hacking, and 
-			leverage the automatic namespace isolation from classes.
 		automatically find static table and function declarations and 
 			generate a class definition!
+
+	LOW PRIORTY: C/C++ parser to construct and manipulate syntax trees
+		rather than text... more of a fun (?) side project.
 
 ===============================================================================
 PRS and CHP

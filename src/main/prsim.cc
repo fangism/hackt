@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.4 2006/04/23 07:37:24 fang Exp $
+	$Id: prsim.cc,v 1.4.4.1 2006/04/28 03:08:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -172,13 +172,13 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 			o.interactive = false;
 			break;
 		case 'f': {
-			const options_modifier_info&
-				om(options_modifier_map[optarg]);
-			if (!om) {
+			const options_modifier_map_iterator
+				mi(options_modifier_map.find(optarg));
+			if (mi == options_modifier_map.end() || !mi->second) {
 				cerr << "Invalid mode: " << optarg << endl;
 				return 1;
 			} else {
-				om(o);
+				(mi->second)(o);
 			}
 			break;
 		}

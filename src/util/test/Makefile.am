@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.45 2006/04/27 00:17:55 fang Exp $
+#	$Id: Makefile.am,v 1.45.2.1 2006/04/28 03:08:17 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -140,9 +140,10 @@ liblinktest_la_SOURCES = \
 # liblinktest_la_LDFLAGS = -multiply_defined
 
 # for occasional compiler debugging
-SAVETEMP = $(CXXCOMPILE) -v -save-temps
+# SAVETEMP = $(CXXCOMPILE) -v -save-temps
 .cc.ii:
-	$(SAVETEMP) -c $<
+	$(CXXPREPROCESS) $< > $@
+#	$(SAVETEMP) -c $<
 
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 
