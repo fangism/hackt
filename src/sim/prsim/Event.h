@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.4 2006/04/23 07:37:26 fang Exp $
+	$Id: Event.h,v 1.4.6.1 2006/04/30 17:33:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -52,37 +52,27 @@ public:
 		The index of the node to switch.
 	 */
 	node_index_type			node;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	/**
 		The index of the rule expression that caused this to fire, 
 		also the source of the delay value.  
 	 */
 	rule_index_type			cause_rule;
-#endif
 	/**
 		The node's new value: 0, 1, 2 (X).
 	 */
 	unsigned char			val;
 
-	Event() : node(INVALID_NODE_INDEX)
-#if ENABLE_PRSIM_CAUSE_TRACKING
-		, cause_rule(INVALID_RULE_INDEX)
-#endif
-		{ }
+	Event() : node(INVALID_NODE_INDEX), cause_rule(INVALID_RULE_INDEX) { }
 
 	/**
 		The rule index is allowed to be NULL (invalid), 
 		to indicate an external (perhaps user) cause.  
 	 */
 	Event(const node_index_type n,
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		const rule_index_type r, 
-#endif
 		const unsigned char v) :
 		node(n),
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		cause_rule(r),
-#endif
 		val(v) { }
 
 };	// end struct Event

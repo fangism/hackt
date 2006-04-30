@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8 2006/04/24 00:28:09 fang Exp $
+	$Id: State.cc,v 1.8.6.1 2006/04/30 17:33:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -356,17 +356,11 @@ State::append_excllo_ring(ring_set_type& r) {
 event_index_type
 State::__allocate_event(node_type& n,
 		const node_index_type ni,
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		const rule_index_type ri,
-#endif
 		const char val) {
 	INVARIANT(!n.pending_event());
 	n.set_event(event_pool.allocate(
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		event_type(ni, ri, val)
-#else
-		event_type(ni, val)
-#endif
 		));
 	return n.get_event();
 }
@@ -505,11 +499,7 @@ State::set_node_time(const node_index_type ni, const char val,
 	}
 // otherwise, enqueue the event.  
 	const event_index_type ei =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		__allocate_event(n, ni, INVALID_RULE_INDEX, val);
-#else
-		__allocate_event(n, ni, val);
-#endif
 #if 0
 	const event_type& e(get_event(ei));
 	STACKTRACE_INDENT_PRINT("new event: (node,val)" << endl);
@@ -629,22 +619,14 @@ State::time_type
 State::get_delay_up(const event_type& e) const {
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		(e.cause_rule && time_traits::is_zero(
 				rule_map.find(e.cause_rule)->second.after) ?
 			time_traits::zero : random_delay())
-#else
-		random_delay()
-#endif
 		:
 	(timing_mode == TIMING_UNIFORM ? uniform_delay :
 	// timing_mode == TIMING_AFTER
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		(e.cause_rule ?
 			rule_map.find(e.cause_rule)->second.after : 0)
-#else
-		time_traits::default_delay
-#endif
 	));
 }
 
@@ -657,22 +639,14 @@ State::time_type
 State::get_delay_dn(const event_type& e) const {
 	return current_time +
 		(timing_mode == TIMING_RANDOM ?
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		(e.cause_rule && time_traits::is_zero(
 				rule_map.find(e.cause_rule)->second.after) ?
 			time_traits::zero : random_delay())
-#else
-			random_delay()
-#endif
 			:
 		(timing_mode == TIMING_UNIFORM ? uniform_delay :
 		// timing_mode == TIMING_AFTER
-#if ENABLE_PRSIM_CAUSE_TRACKING
 			(e.cause_rule ?
 				rule_map.find(e.cause_rule)->second.after : 0)
-#else
-			time_traits::default_delay
-#endif
 		));
 }
 
@@ -951,7 +925,6 @@ for ( ; i!=e; ++i) {
 					== expr_type::PULL_ON) {
 		DEBUG_STEP_PRINT("enqueuing pull-up event" << endl);
 				const event_index_type ne =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 					// the pull-up index may not necessarily
 					// correspond to the causing expression!
 					__allocate_event(er, eri,
@@ -959,10 +932,6 @@ for ( ; i!=e; ++i) {
 						// er.pull_up_index, 
 						INVALID_RULE_INDEX, 
 						node_type::LOGIC_HIGH);
-#else
-					__allocate_event(er, eri,
-						node_type::LOGIC_HIGH);
-#endif
 				// ne->cause = ni
 				enqueue_exclhi(get_delay_up(get_event(ne)), ne);
 			}
@@ -1005,16 +974,11 @@ for ( ; i!=e; ++i) {
 					== expr_type::PULL_ON) {
 			DEBUG_STEP_PRINT("enqueuing pull-dn event" << endl);
 				const event_index_type ne =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 					// same comment as enforce_exclhi
 					__allocate_event(er, eri,
 						// er.pull_dn_index, 
 						INVALID_RULE_INDEX,
 						node_type::LOGIC_LOW);
-#else
-					__allocate_event(er, eri,
-						node_type::LOGIC_LOW);
-#endif
 				// ne->cause = ni
 				enqueue_excllo(get_delay_dn(get_event(ne)), ne);
 			}
@@ -1134,15 +1098,11 @@ State::propagate_evaluation(const node_index_type ni, expr_index_type ui,
 		node_type::value_to_char[size_t(next)] << endl;
 #endif
 	expr_type* u;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	__scratch_expr_trace.clear();
-#endif
 do {
 	char old_pull, new_pull;	// pulling state of the subexpression
 	u = &expr_pool[ui];
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	__scratch_expr_trace.push_back(ui);
-#endif
 #if DEBUG_STEP
 	DEBUG_STEP_PRINT("examining expression ID: " << ui << endl);
 	u->dump_struct(STACKTRACE_INDENT) << endl;
@@ -1179,7 +1139,6 @@ do {
 	next = new_pull;
 	ui = u->parent;
 } while (!u->is_root());
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	// we delay the root rule search until here to reduce the amount
 	// of searching required to find the responsible rule expression.  
 	rule_index_type root_rule;
@@ -1192,7 +1151,6 @@ do {
 	root_rule = *ri;
 }
 	INVARIANT(root_rule);
-#endif
 // propagation made it to the root node, indexed by ui (now node_index_type)
 	node_type& n(get_node(ui));
 	DEBUG_STEP_PRINT("propagated to output node: " <<
@@ -1215,11 +1173,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("pulling up (on or weak)" << endl);
 		const event_index_type pe =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 			__allocate_event(n, ui, root_rule, next);
-#else
-			__allocate_event(n, ui, next);
-#endif
 		const event_type& e(get_event(pe));
 		// pe->cause = root
 		if (n.has_exclhi()) {
@@ -1246,11 +1200,7 @@ if (!n.pending_event()) {
 			"pull-up turned off, yielding to opposing pull-down."
 			<< endl);
 		const event_index_type pe =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 			__allocate_event(n, ui, root_rule, node_type::LOGIC_LOW);
-#else
-			__allocate_event(n, ui, node_type::LOGIC_LOW);
-#endif
 		// pe->cause = root
 		if (n.has_excllo()) {
 			const event_type& e(get_event(pe));
@@ -1330,10 +1280,7 @@ if (!n.pending_event()) {
 			then we enqueue the event somewhere.
 		***/
 		DEBUG_STEP_PRINT("pulling down (on or weak)" << endl);
-		const event_index_type pe = __allocate_event(n, ui,
-#if ENABLE_PRSIM_CAUSE_TRACKING
-			root_rule, 
-#endif
+		const event_index_type pe = __allocate_event(n, ui, root_rule, 
 			node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
@@ -1361,11 +1308,7 @@ if (!n.pending_event()) {
 			"pull-down turned off, yielding to opposing pull-up."
 			<< endl);
 		const event_index_type pe =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 			__allocate_event(n, ui, root_rule, node_type::LOGIC_HIGH);
-#else
-			__allocate_event(n, ui, node_type::LOGIC_HIGH);
-#endif
 		// pe->cause = root
 		if (n.has_exclhi()) {
 			const event_type& e(get_event(pe));
