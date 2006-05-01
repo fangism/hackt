@@ -5,7 +5,17 @@
 
 2006-04-30	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-78-22-prsim-04:
+	* HACKT-00-01-04-main-00-78-22-prsim-04-02:
+	  prsim implemented node-to-node cause tracking, based on
+		VLSI/tools/prsim (tag: PRSIM-original).  
+	  struct NodeState given __attribute__((aligned)).
+	  Command.cc:Step: factored out print_watched_node() for consistency.
+	  Next: clean-up only for patch sake.
+
+
+2006-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-01:
 	  Branch for remaining features I had planned for the baseline
 		prsim-simulator.  
 	  Features reserved for digital simulation will not be included here.  

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.6 2006/04/23 07:37:26 fang Exp $
+	$Id: Node.h,v 1.6.6.1 2006/05/01 02:59:56 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -12,14 +12,16 @@
 #include <vector>
 #include "util/string_fwd.h"
 #include "util/macros.h"
+#include "util/attributes.h"
 #include "sim/common.h"
+#include "sim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::ostream;
 using std::vector;
-// using std::valarray;
+
 //=============================================================================
 /**
 	Node state information structure.  
@@ -135,7 +137,7 @@ public:
 /**
 	Structural information extended with stateful information.  
 	Size of this should be a total of 8 double-words, or 32 B.  
-	Nice and aligned.  
+	Nice and quad-word aligned.  
  */
 struct NodeState : public Node {
 	typedef	Node				parent_type;
@@ -194,7 +196,13 @@ protected:
 		INVALID_EVENT_INDEX (0) means no pending event.  
 	 */
 	event_index_type			event_index;
-
+#if ENABLE_PRSIM_CAUSE_TRACKING
+	/**
+		The firing of this node was caused by...
+		like last arriving input, for critical path analysis.  
+	 */
+	node_index_type				caused_by_node;
+#endif
 	/**
 		Transition counts.  
 		Not critical to simulation, unless we want statistics.  
@@ -203,7 +211,11 @@ protected:
 public:
 	NodeState() : parent_type(), value(LOGIC_OTHER), 
 		state_flags(NODE_INITIAL_STATE_FLAGS),
-		event_index(INVALID_EVENT_INDEX) { }
+		event_index(INVALID_EVENT_INDEX), 
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		caused_by_node(INVALID_NODE_INDEX), 
+#endif
+		tcount(0) { }
 
 	/// count on compiler to optimize zero comparison
 	bool
@@ -296,7 +308,7 @@ public:
 
 	void
 	reset(void);
-};	// end struct NodeState
+} __ATTRIBUTE_ALIGNED__ ;	// end struct NodeState
 
 //=============================================================================
 }	// end namespace PRSIM

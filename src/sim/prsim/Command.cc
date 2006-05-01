@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.7 2006/04/23 07:37:25 fang Exp $
+	$Id: Command.cc,v 1.7.6.1 2006/05/01 02:59:52 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -36,6 +36,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 /**
 	These commands are deprecated, but provided for backwards compatibility.
+	Eventually disable this.  
+	(NOTE: the alias command can always effectively re-enable it.)
  */
 #define	WANT_OLD_RANDOM_COMMANDS			1
 
@@ -912,6 +914,12 @@ public:
 	static CommandCategory&         category;
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
+#if 0
+	static ostream& __print_watched_node(ostream&, const State&, 
+		const State::node_type&, const State::node_type&);
+#endif
+	static ostream& print_watched_node(ostream&, const State&, 
+		const State::step_return_type&, const State::time_type);
 private:
 	static const size_t             receipt_id;
 };      // end class Step
@@ -930,6 +938,49 @@ Step::main(State& s) {
 }
 #endif
 
+#if ENABLE_PRSIM_CAUSE_TRACKING
+#define	GET_NODE(x)			(x).first
+#define	GET_CAUSE(x)			(x).second
+#else
+#define	GET_NODE(x)			x
+#endif
+
+#if 0
+ostream&
+Step::__print_watched_node(ostream& o, const State& s, 
+		const State::node_type& n, const State::node_type& c) {
+	const string nodename(
+		s.get_node_canonical_name(GET_NODE(r)));
+	o << '\t' << ct << '\t';
+	n.dump_value(o << nodename << " : ") << endl;
+	// possibly add cause information too
+}
+#endif
+
+/**
+	Yeah, I know looking up already looked up node, but we don't
+	care because printing and diagnostics are not performance-critical.  
+ */
+ostream&
+Step::print_watched_node(ostream& o, const State& s, 
+		const State::step_return_type& r,
+		const State::time_type ct) {
+	const node_index_type ni = GET_NODE(r);
+	const string nodename(s.get_node_canonical_name(ni));
+	const State::node_type& n(s.get_node(ni));
+	o << ct << '\t';
+	n.dump_value(o << nodename << " : ");
+#if ENABLE_PRSIM_CAUSE_TRACKING
+	const node_index_type ci = GET_CAUSE(r);
+	if (ci) {
+		const string causename(s.get_node_canonical_name(ci));
+		const State::node_type& c(s.get_node(ci));
+		c.dump_value(o << "\t[by " << causename << ":=") << ']';
+	}
+#endif
+	return o << endl;
+}
+
 /**
 	Like process_step() from original prsim.  
  */
@@ -943,10 +994,11 @@ if (a.size() > 2) {
 	typedef	State::node_type		node_type;
 	size_t i;		// the number of discrete time steps
 		// not necessarily == the number of discrete events
-	node_index_type ni;
+	State::step_return_type ni;	// also stores the cause of the event
 	if (a.size() == 2) {
 		if (string_to_num(a.back(), i)) {
 			cerr << "Error parsing #steps." << endl;
+			// usage()?
 			return Command::BADARG;
 		}
 	} else {
@@ -955,7 +1007,7 @@ if (a.size() > 2) {
 	s.resume();
 	time_type tm = s.time();
 	// could check s.pending_events()
-	while (!s.stopped() && i && (ni = s.step())) {
+	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
 		// if time actually advanced, decrement steps-remaining
 		// NB: may need specialization for real-valued (float) time.  
 		const time_type ct(s.time());
@@ -963,27 +1015,37 @@ if (a.size() > 2) {
 			--i;
 			tm = ct;
 		}
-		const node_type& n(s.get_node(ni));
+		const node_type& n(s.get_node(GET_NODE(ni)));
 		/***
 			The following code should be consistent with
 			Cycle::main() and Advance::main().
 			tracing stuff here later...
 		***/
 		if (s.watching_all_nodes()) {
-			const string nodename(s.get_node_canonical_name(ni));
+#if 0
+			const string nodename(
+				s.get_node_canonical_name(GET_NODE(ni)));
 			cout << '\t' << ct << '\t';
 			n.dump_value(cout << nodename << " : ") << endl;
 			// possibly add cause information too
+#else
+			print_watched_node(cout << '\t', s, ni, ct);
+#endif
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
-			const bool w = s.is_watching_node(ni);
-			const string nodename(s.get_node_canonical_name(ni));
+			const bool w = s.is_watching_node(GET_NODE(ni));
+			const string nodename(
+				s.get_node_canonical_name(GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
+#if 0
 				cout << '\t' << ct << '\t';
 				n.dump_value(cout << nodename << " : ") << endl;
 				// possibly add cause information too
+#else
+				print_watched_node(cout << '\t', s, ni, ct);
+#endif
 			}	// else already have message from before
 			}
 			// channel support
@@ -1028,35 +1090,47 @@ if (a.size() != 2) {
 		return Command::BADARG;
 	}
 	const time_type stop_time = s.time() +add;
-	node_index_type ni;
+	State::step_return_type ni;
 	s.resume();
 	while (!s.stopped() && s.pending_events() &&
-			(s.next_event_time() < stop_time) && (ni = s.step())) {
+			(s.next_event_time() < stop_time) &&
+			GET_NODE((ni = s.step()))) {
 		// NB: may need specialization for real-valued (float) time.  
 
 		// honor breakpoints?
 		// tracing stuff here later...
-		const node_type& n(s.get_node(ni));
+		const node_type& n(s.get_node(GET_NODE(ni)));
 		/***
 			The following code should be consistent with
 			Cycle::main() and Step::main().
 			TODO: factor this out for maintainability.  
 		***/
 		if (s.watching_all_nodes()) {
-			const string nodename(s.get_node_canonical_name(ni));
+#if 0
+			const string nodename(s.get_node_canonical_name(
+				GET_NODE(ni)));
 			cout << '\t' << s.time() << '\t';
 			n.dump_value(cout << nodename << " : ") << endl;
 			// possibly add cause information too
+#else
+			Step::print_watched_node(cout << '\t', s, ni, s.time());
+#endif
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
-			const bool w = s.is_watching_node(ni);
-			const string nodename(s.get_node_canonical_name(ni));
+			const bool w = s.is_watching_node(GET_NODE(ni));
+			const string nodename(s.get_node_canonical_name(
+				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
+#if 0
 				cout << '\t' << s.time() << '\t';
 				n.dump_value(cout << nodename << " : ") << endl;
 				// possibly add cause information too
+#else
+				Step::print_watched_node(cout << '\t',
+					s, ni, s.time());
+#endif
 			}	// else already have message from before
 			}
 			// channel support
@@ -1093,6 +1167,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Cycle, "cycle", simulation,
 	TODO: add cause tracing.
 	TODO: handle breakpoint.
 	TODO: implement no/globaltime policy for resetting.  
+	Isn't the while-loop made redundant by State::cycle()?
  */
 int
 Cycle::main(State& s, const string_list & a) {
@@ -1101,30 +1176,42 @@ if (a.size() != 1) {
 	return Command::SYNTAX;
 } else {
 	typedef	State::node_type		node_type;
-	node_index_type ni;
+	State::step_return_type ni;
 	s.resume();	// clear STOP flag
-	while (!s.stopped() && (ni = s.step())) {
-		if (!ni)	return Command::NORMAL;
-		const node_type& n(s.get_node(ni));
+	while (!s.stopped() && GET_NODE((ni = s.step()))) {
+		if (!GET_NODE(ni))
+			return Command::NORMAL;
+		const node_type& n(s.get_node(GET_NODE(ni)));
 		/***
 			The following code should be consistent with
 			Step::main() and Advance::main().
 		***/
 		if (s.watching_all_nodes()) {
-			const string nodename(s.get_node_canonical_name(ni));
+#if 0
+			const string nodename(s.get_node_canonical_name(
+				GET_NODE(ni)));
 			cout << '\t' << s.time() << '\t';
 			n.dump_value(cout << nodename << " : ") << endl;
 			// possibly add cause information too
+#else
+			Step::print_watched_node(cout << '\t', s, ni, s.time());
+#endif
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
-			const bool w = s.is_watching_node(ni);
-			const string nodename(s.get_node_canonical_name(ni));
+			const bool w = s.is_watching_node(GET_NODE(ni));
+			const string nodename(s.get_node_canonical_name(
+				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
+#if 0
 				cout << '\t' << s.time() << '\t';
 				n.dump_value(cout << nodename << " : ") << endl;
 				// possibly add cause information too
+#else
+				Step::print_watched_node(cout << '\t',
+					s, ni, s.time());
+#endif
 			}	// else already have message from before
 			}
 			// channel support
@@ -2015,6 +2102,8 @@ Timing::usage(ostream& o) {
 }
 
 //=============================================================================
+#undef	GET_NODE
+#undef	GET_CAUSE
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
 //=============================================================================
 }	// end namespace PRSIM

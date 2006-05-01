@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.5.6.1 2006/04/30 17:33:53 fang Exp $
+	$Id: State.h,v 1.5.6.2 2006/05/01 03:00:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -34,6 +34,9 @@ using std::string;
 using entity::module;
 using util::list_vector;
 using std::ostream;
+#if ENABLE_PRSIM_CAUSE_TRACKING
+using std::pair;
+#endif
 using util::ifstream_manager;
 using util::string_list;
 using HASH_MAP_NAMESPACE::hash_map;
@@ -84,6 +87,16 @@ public:
 		watch_entry() : breakpoint(0) { }
 	};
 	typedef	std::map<node_index_type, watch_entry>	watch_list_type;
+#if ENABLE_PRSIM_CAUSE_TRACKING
+	/**
+		The first node index is the one that just changed, 
+		the second index refers to the node that caused it, 
+		deduced from some event queue.  
+	 */
+	typedef	pair<node_index_type, node_index_type>	step_return_type;
+#else
+	typedef	node_index_type				step_return_type;
+#endif
 private:
 	/**
 		A fast, realloc-free vector-like structure
@@ -372,10 +385,10 @@ public:
 	void
 	clear_all_breakpoints(void);
 
-	node_index_type
+	step_return_type
 	step(void);
 
-	node_index_type
+	step_return_type
 	cycle(void);
 
 	void
@@ -468,7 +481,11 @@ public:
 
 private:
 	event_index_type
-	__allocate_event(node_type&, const node_index_type,
+	__allocate_event(node_type&, const node_index_type n,
+#if ENABLE_PRSIM_CAUSE_TRACKING
+		// this is the causing node
+		const node_index_type c, 
+#endif
 		const rule_index_type, const char);
 
 	void

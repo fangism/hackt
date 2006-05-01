@@ -2,7 +2,7 @@
 	0	c : 1
 	0	a : 1
 	0	d : 0
-	10	e : 0
+	10	e : 0	[by a:=1]
 time: 10
 X nodes:
 
