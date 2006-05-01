@@ -8,6 +8,7 @@
 	* HACKT-00-01-04-main-00-78-22-prsim-04-02:
 	  prsim implemented node-to-node cause tracking, based on
 		VLSI/tools/prsim (tag: PRSIM-original).  
+		prsim test cases updated accordingly.
 	  struct NodeState given __attribute__((aligned)).
 	  Command.cc:Step: factored out print_watched_node() for consistency.
 	  Next: clean-up only for patch sake.
