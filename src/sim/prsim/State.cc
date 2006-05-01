@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.2 2006/05/01 02:59:58 fang Exp $
+	$Id: State.cc,v 1.8.6.3 2006/05/01 03:25:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -357,9 +357,7 @@ State::append_excllo_ring(ring_set_type& r) {
 event_index_type
 State::__allocate_event(node_type& n,
 		const node_index_type ni,
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		const node_index_type ci, 
-#endif
 		const rule_index_type ri,
 		const char val) {
 	STACKTRACE_VERBOSE;
@@ -369,11 +367,7 @@ State::__allocate_event(node_type& n,
 #endif
 	INVARIANT(!n.pending_event());
 	n.set_event(event_pool.allocate(
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		event_type(ni, ci, ri, val)
-#else
-		event_type(ni, ri, val)
-#endif
 		));
 	return n.get_event();
 }
@@ -512,13 +506,9 @@ State::set_node_time(const node_index_type ni, const char val,
 	}
 // otherwise, enqueue the event.  
 	const event_index_type ei =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		// node cause to assign, since this is externally set
 		__allocate_event(n, ni, INVALID_NODE_INDEX, 
 			INVALID_RULE_INDEX, val);
-#else
-		__allocate_event(n, ni, INVALID_RULE_INDEX, val);
-#endif
 #if 0
 	const event_type& e(get_event(ei));
 	STACKTRACE_INDENT_PRINT("new event: (node,val)" << endl);
@@ -947,10 +937,7 @@ for ( ; i!=e; ++i) {
 				const event_index_type ne =
 					// the pull-up index may not necessarily
 					// correspond to the causing expression!
-					__allocate_event(er, eri,
-#if ENABLE_PRSIM_CAUSE_TRACKING
-						ni, 
-#endif
+					__allocate_event(er, eri, ni, 
 						// not sure...
 						// er.pull_up_index, 
 						INVALID_RULE_INDEX, 
@@ -999,10 +986,7 @@ for ( ; i!=e; ++i) {
 			DEBUG_STEP_PRINT("enqueuing pull-dn event" << endl);
 				const event_index_type ne =
 					// same comment as enforce_exclhi
-					__allocate_event(er, eri,
-#if ENABLE_PRSIM_CAUSE_TRACKING
-						ni, 
-#endif
+					__allocate_event(er, eri, ni, 
 						// er.pull_dn_index, 
 						INVALID_RULE_INDEX,
 						node_type::LOGIC_LOW);
@@ -1032,11 +1016,7 @@ State::step(void) {
 	INVARIANT(exclhi_queue.empty());
 	INVARIANT(excllo_queue.empty());
 	if (event_queue.empty()) {
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
-#else
-		return INVALID_NODE_INDEX;
-#endif
 	}
 	const event_placeholder_type ep(dequeue_event());
 	current_time = ep.time;
@@ -1045,9 +1025,7 @@ State::step(void) {
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	const event_type& pe(get_event(ei));
 	const node_index_type ni = pe.node;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	const node_index_type ci = pe.cause_node;
-#endif
 	DEBUG_STEP_PRINT("examining node: " <<
 		get_node_canonical_name(ni) << endl);
 	node_type& n(get_node(ni));
@@ -1062,11 +1040,7 @@ State::step(void) {
 		// cause propagation?
 		// if (cause) *cause = pe->cause;
 		DEBUG_STEP_PRINT("X: returning node index " << ni << endl);
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		return return_type(ni, ci);
-#else
-		return ni;
-#endif
 	}
 	// assert: vacuous firings on the event queue
 	assert(prev != pe.val || n.is_unstab());
@@ -1112,11 +1086,7 @@ State::step(void) {
 
 	// return the affected node's index
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	return return_type(ni, ci);
-#else
-	return ni;
-#endif
 }	// end method step()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1218,10 +1188,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("pulling up (on or weak)" << endl);
 		const event_index_type pe =
-			__allocate_event(n, ui,
-#if ENABLE_PRSIM_CAUSE_TRACKING
-				ni, 
-#endif
+			__allocate_event(n, ui, ni, 
 				root_rule, next);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
@@ -1249,10 +1216,7 @@ if (!n.pending_event()) {
 			"pull-up turned off, yielding to opposing pull-down."
 			<< endl);
 		const event_index_type pe =
-			__allocate_event(n, ui,
-#if ENABLE_PRSIM_CAUSE_TRACKING
-				ni, 
-#endif
+			__allocate_event(n, ui, ni, 
 				root_rule, node_type::LOGIC_LOW);
 		// pe->cause = root
 		if (n.has_excllo()) {
@@ -1279,9 +1243,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
 		e.val = node_type::LOGIC_LOW;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		e.cause_node = ni;
-#endif
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
@@ -1299,9 +1261,7 @@ if (!n.pending_event()) {
 				eu & event_type::EVENT_INTERFERENCE;
 			const string cause_name(get_node_canonical_name(ni));
 			const string out_name(get_node_canonical_name(ui));
-#if ENABLE_PRSIM_CAUSE_TRACKING
 			e.cause_node = ni;
-#endif
 			e.val = node_type::LOGIC_OTHER;
 			// diagnostic message
 			cout << "WARNING: ";
@@ -1337,10 +1297,7 @@ if (!n.pending_event()) {
 			then we enqueue the event somewhere.
 		***/
 		DEBUG_STEP_PRINT("pulling down (on or weak)" << endl);
-		const event_index_type pe = __allocate_event(n, ui,
-#if ENABLE_PRSIM_CAUSE_TRACKING
-			ni, 
-#endif
+		const event_index_type pe = __allocate_event(n, ui, ni, 
 			root_rule, 
 			node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
@@ -1368,10 +1325,7 @@ if (!n.pending_event()) {
 			"pull-down turned off, yielding to opposing pull-up."
 			<< endl);
 		const event_index_type pe =
-			__allocate_event(n, ui,
-#if ENABLE_PRSIM_CAUSE_TRACKING
-				ni, 
-#endif
+			__allocate_event(n, ui, ni, 
 				root_rule, node_type::LOGIC_HIGH);
 		// pe->cause = root
 		if (n.has_exclhi()) {
@@ -1398,9 +1352,7 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
 		// there is a pending 'X' in the queue
 		e.val = node_type::LOGIC_HIGH;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		e.cause_node = ni;
-#endif
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
@@ -1418,9 +1370,7 @@ if (!n.pending_event()) {
 				eu & event_type::EVENT_INTERFERENCE;
 			const string cause_name(get_node_canonical_name(ni));
 			const string out_name(get_node_canonical_name(ui));
-#if ENABLE_PRSIM_CAUSE_TRACKING
 			e.cause_node = ni;
-#endif
 			e.val = node_type::LOGIC_OTHER;
 			// diagnostic message
 			cout << "WARNING: ";
@@ -1452,17 +1402,8 @@ if (!n.pending_event()) {
 State::step_return_type
 State::cycle(void) {
 	step_return_type ret;
-#if ENABLE_PRSIM_CAUSE_TRACKING
-	while ((ret = step()).first)
-#else
-	while ((ret = step()))
-#endif
-	{
-#if ENABLE_PRSIM_CAUSE_TRACKING
+	while ((ret = step()).first) {
 		if (get_node(ret.first).is_breakpoint() || stopped())
-#else
-		if (get_node(ret).is_breakpoint() || stopped())
-#endif
 			break;
 	}
 	return ret;

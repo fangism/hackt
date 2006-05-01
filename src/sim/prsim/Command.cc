@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.7.6.1 2006/05/01 02:59:52 fang Exp $
+	$Id: Command.cc,v 1.7.6.2 2006/05/01 03:25:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -914,10 +914,6 @@ public:
 	static CommandCategory&         category;
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
-#if 0
-	static ostream& __print_watched_node(ostream&, const State&, 
-		const State::node_type&, const State::node_type&);
-#endif
 	static ostream& print_watched_node(ostream&, const State&, 
 		const State::step_return_type&, const State::time_type);
 private:
@@ -938,24 +934,8 @@ Step::main(State& s) {
 }
 #endif
 
-#if ENABLE_PRSIM_CAUSE_TRACKING
 #define	GET_NODE(x)			(x).first
 #define	GET_CAUSE(x)			(x).second
-#else
-#define	GET_NODE(x)			x
-#endif
-
-#if 0
-ostream&
-Step::__print_watched_node(ostream& o, const State& s, 
-		const State::node_type& n, const State::node_type& c) {
-	const string nodename(
-		s.get_node_canonical_name(GET_NODE(r)));
-	o << '\t' << ct << '\t';
-	n.dump_value(o << nodename << " : ") << endl;
-	// possibly add cause information too
-}
-#endif
 
 /**
 	Yeah, I know looking up already looked up node, but we don't
@@ -970,14 +950,12 @@ Step::print_watched_node(ostream& o, const State& s,
 	const State::node_type& n(s.get_node(ni));
 	o << ct << '\t';
 	n.dump_value(o << nodename << " : ");
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	const node_index_type ci = GET_CAUSE(r);
 	if (ci) {
 		const string causename(s.get_node_canonical_name(ci));
 		const State::node_type& c(s.get_node(ci));
 		c.dump_value(o << "\t[by " << causename << ":=") << ']';
 	}
-#endif
 	return o << endl;
 }
 
@@ -1022,15 +1000,7 @@ if (a.size() > 2) {
 			tracing stuff here later...
 		***/
 		if (s.watching_all_nodes()) {
-#if 0
-			const string nodename(
-				s.get_node_canonical_name(GET_NODE(ni)));
-			cout << '\t' << ct << '\t';
-			n.dump_value(cout << nodename << " : ") << endl;
-			// possibly add cause information too
-#else
 			print_watched_node(cout << '\t', s, ni, ct);
-#endif
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
@@ -1039,13 +1009,7 @@ if (a.size() > 2) {
 				s.get_node_canonical_name(GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-#if 0
-				cout << '\t' << ct << '\t';
-				n.dump_value(cout << nodename << " : ") << endl;
-				// possibly add cause information too
-#else
 				print_watched_node(cout << '\t', s, ni, ct);
-#endif
 			}	// else already have message from before
 			}
 			// channel support
@@ -1106,15 +1070,7 @@ if (a.size() != 2) {
 			TODO: factor this out for maintainability.  
 		***/
 		if (s.watching_all_nodes()) {
-#if 0
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
-			cout << '\t' << s.time() << '\t';
-			n.dump_value(cout << nodename << " : ") << endl;
-			// possibly add cause information too
-#else
 			Step::print_watched_node(cout << '\t', s, ni, s.time());
-#endif
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
@@ -1123,14 +1079,8 @@ if (a.size() != 2) {
 				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-#if 0
-				cout << '\t' << s.time() << '\t';
-				n.dump_value(cout << nodename << " : ") << endl;
-				// possibly add cause information too
-#else
 				Step::print_watched_node(cout << '\t',
 					s, ni, s.time());
-#endif
 			}	// else already have message from before
 			}
 			// channel support
@@ -1187,15 +1137,7 @@ if (a.size() != 1) {
 			Step::main() and Advance::main().
 		***/
 		if (s.watching_all_nodes()) {
-#if 0
-			const string nodename(s.get_node_canonical_name(
-				GET_NODE(ni)));
-			cout << '\t' << s.time() << '\t';
-			n.dump_value(cout << nodename << " : ") << endl;
-			// possibly add cause information too
-#else
 			Step::print_watched_node(cout << '\t', s, ni, s.time());
-#endif
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
@@ -1204,14 +1146,8 @@ if (a.size() != 1) {
 				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-#if 0
-				cout << '\t' << s.time() << '\t';
-				n.dump_value(cout << nodename << " : ") << endl;
-				// possibly add cause information too
-#else
 				Step::print_watched_node(cout << '\t',
 					s, ni, s.time());
-#endif
 			}	// else already have message from before
 			}
 			// channel support

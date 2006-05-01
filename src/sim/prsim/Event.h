@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.4.6.2 2006/05/01 02:59:54 fang Exp $
+	$Id: Event.h,v 1.4.6.3 2006/05/01 03:25:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -11,7 +11,6 @@
 #include <queue>
 #include <vector>
 #include "sim/common.h"
-#include "sim/devel_switches.h"
 #include "util/likely.h"
 #include "util/macros.h"
 #include "util/memory/index_pool.h"
@@ -52,7 +51,6 @@ public:
 		The index of the node to switch.
 	 */
 	node_index_type			node;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	/**
 		The index of the node that caused this event to 
 		become enqueued.  
@@ -61,7 +59,6 @@ public:
 		This index may be null/invalid.  
 	 */
 	node_index_type			cause_node;
-#endif
 	/**
 		The index of the rule expression that caused this to fire, 
 		also the source of the delay value.  
@@ -73,9 +70,7 @@ public:
 	unsigned char			val;
 
 	Event() : node(INVALID_NODE_INDEX),
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		cause_node(INVALID_NODE_INDEX), 
-#endif
 		cause_rule(INVALID_RULE_INDEX) { }
 
 	/**
@@ -83,15 +78,11 @@ public:
 		to indicate an external (perhaps user) cause.  
 	 */
 	Event(const node_index_type n,
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		const node_index_type c, 
-#endif
 		const rule_index_type r, 
 		const unsigned char v) :
 		node(n),
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		cause_node(c), 
-#endif
 		cause_rule(r),
 		val(v) { }
 

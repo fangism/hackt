@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.5.6.1 2006/05/01 02:59:55 fang Exp $
+	$Id: Node.cc,v 1.5.6.2 2006/05/01 03:25:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -117,9 +117,7 @@ NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
 void
 NodeState::initialize(void) {
 	event_index = INVALID_EVENT_INDEX;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	caused_by_node = INVALID_NODE_INDEX;
-#endif
 	value = LOGIC_OTHER;
 	state_flags |= NODE_INITIALIZE_SET_MASK;
 	state_flags &= ~NODE_INITIALIZE_CLEAR_MASK;
@@ -132,9 +130,7 @@ NodeState::initialize(void) {
 void
 NodeState::reset(void) {
 	event_index = INVALID_EVENT_INDEX;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	caused_by_node = INVALID_NODE_INDEX;
-#endif
 	value = LOGIC_OTHER;
 	state_flags = NODE_INITIAL_STATE_FLAGS;
 }

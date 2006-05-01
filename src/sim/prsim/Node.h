@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.6.6.1 2006/05/01 02:59:56 fang Exp $
+	$Id: Node.h,v 1.6.6.2 2006/05/01 03:25:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -196,13 +196,11 @@ protected:
 		INVALID_EVENT_INDEX (0) means no pending event.  
 	 */
 	event_index_type			event_index;
-#if ENABLE_PRSIM_CAUSE_TRACKING
 	/**
 		The firing of this node was caused by...
 		like last arriving input, for critical path analysis.  
 	 */
 	node_index_type				caused_by_node;
-#endif
 	/**
 		Transition counts.  
 		Not critical to simulation, unless we want statistics.  
@@ -212,9 +210,7 @@ public:
 	NodeState() : parent_type(), value(LOGIC_OTHER), 
 		state_flags(NODE_INITIAL_STATE_FLAGS),
 		event_index(INVALID_EVENT_INDEX), 
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		caused_by_node(INVALID_NODE_INDEX), 
-#endif
 		tcount(0) { }
 
 	/// count on compiler to optimize zero comparison

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.2 2006/04/23 07:37:25 fang Exp $
+	$Id: devel_switches.h,v 1.2.6.1 2006/05/01 03:25:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_DEVEL_SWITCHES_H__
@@ -30,7 +30,11 @@
 //=============================================================================
 // define your simulator-wide development switches here:
 
-#define	ENABLE_PRSIM_CAUSE_TRACKING			1
+/**
+	Define to 1 to enable prsim checkpointing capability.  
+	Goal:
+ */
+#define	ENABLE_PRSIM_CHECKPOINT			1
 
 //=============================================================================
 
