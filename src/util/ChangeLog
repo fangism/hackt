@@ -1,5 +1,21 @@
 # "src/util/ChangeLog"
 
+2006-05-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-23:
+	  Added support for old histedit-style editline interface, 
+		so you can still use the same immaculate util::readline_wrapper
+		class to interface to an underlying readline/editline 
+		implementation -- all memory management automated.  
+		On OS X, this now works with /usr/lib/histedit.h
+		and /usr/lib/libedit.dylib, so installing a newer
+		readline-wrapped editline is not necessary.  
+	  The configuration step must (and already does) distinguish between
+		histedit-style and readline-style interface.  
+	  No changes in config/rl_l.m4 necessary.  
+	  Tab-completion is still missing from editline... for now.
+
+
 2006-04-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-21:

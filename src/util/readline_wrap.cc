@@ -1,7 +1,8 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.2 2006/01/22 06:53:36 fang Exp $
+	$Id: readline_wrap.cc,v 1.3 2006/05/01 06:36:14 fang Exp $
+	TODO: for editline/histedit, set H_SETUNIQUE flag.
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,7 +13,7 @@
 #include "util/readline.h"
 #include "util/string.h"
 #include "util/stacktrace.h"
-
+#include "util/value_saver.h"
 
 /**
 	Arbitrarily chosen buffer line size.  
@@ -29,19 +30,53 @@ using namespace strings;		// for some utility functions
 //=============================================================================
 // class readline_wrapper method definitions
 
-// TODO: do we need to initialize and free?
+#ifdef	USE_HISTEDIT
+string
+readline_wrapper::current_prompt = string();
 
-readline_wrapper::readline_wrapper() : hold_line(NULL), prompt(),
-		_skip_blank_lines(true) { }
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const readline_wrapper::char_type*
+readline_wrapper::el_prompt(EditLine* e) {
+	return current_prompt.c_str();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: do we need to initialize and free?
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 readline_wrapper::readline_wrapper(const string& s) :
-		hold_line(NULL), prompt(s),
+		hold_line(NULL),
+#ifdef	USE_HISTEDIT
+		_editline(el_init(PACKAGE, stdin, stdout, stderr)), 
+		_el_history(history_init()), 
+#else
+		prompt(s),
+#endif
 		_skip_blank_lines(true) {
+#ifdef	USE_HISTEDIT
+	former_prompt = current_prompt;
+	current_prompt = s;
+	el_set(&*_editline, EL_PROMPT, &el_prompt);	// sticky
+	// the rest is ripped from "tools/prsim/prsim.c"
+	el_set(&*_editline, EL_EDITOR, "emacs");
+	HistEvent ev;
+	history(&*_el_history, &ev, H_SETSIZE, 1000);
+	el_set(&*_editline, EL_HIST, &history, &*_el_history);
+	el_set(&*_editline, EL_BIND, "^P", "ed-prev-history", NULL);
+	el_set(&*_editline, EL_BIND, "^N", "ed-next-history", NULL);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-readline_wrapper::~readline_wrapper() { }
+/**
+	For histedit, restore the former prompt upon destruction.
+ */
+readline_wrapper::~readline_wrapper() {
+#ifdef	USE_HISTEDIT
+	current_prompt = former_prompt;
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -49,7 +84,11 @@ readline_wrapper::~readline_wrapper() { }
  */
 void
 readline_wrapper::set_prompt(const string& s) {
+#ifdef	USE_HISTEDIT
+	current_prompt = s;
+#else
 	prompt = s;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -58,12 +97,36 @@ readline_wrapper::set_prompt(const string& s) {
 	Recommendation: trim whitespace before passing the string pointer.  
 	\param hl the current hold line, must be non-NULL
 		and point to a non-NUL character.  
+	\return same pointer to string added, else NULL if there is an error.  
  */
 readline_wrapper::const_char_type*
 readline_wrapper::__add_history(const_char_type* const hl) {
-#if USE_READLINE
+#ifdef	USE_READLINE
 	const_char_type* cursor = hl;
+#ifdef	USE_HISTEDIT
+	// returns int signaling error...
+	HistEvent hev;	// not used
+	hev.str = NULL;
+	if (history(&*_el_history, &hev, H_ENTER, cursor) < 0) {
+		// is this possible?
+		return NULL;
+	}
+#if 0
+	if (hev.str) {
+		// This always happens!  although the documentation
+		// doesn't say what the hell this pointer points to, 
+		// nor does it say to whom the memory belongs.  
+		// All I know is that free bitches if you try to delete it, 
+		// so we best leave it alone.  
+		cerr << "Fang, I got a non-null string from editline\'s "
+			"history(), and I don\'t know what to do!" << endl;
+		cerr << "got: " << hev.str << endl;
+		free(const_cast<char_type*>(hev.str));
+	}
+#endif
+#else
 	add_history(RL_CONST_CAST(cursor));
+#endif
 	return cursor;
 #else
 	history.push_back(string(hl));
@@ -77,7 +140,11 @@ readline_wrapper::__add_history(const_char_type* const hl) {
  */
 readline_wrapper::const_char_type*
 readline_wrapper::gets(void) {
+#ifdef	USE_HISTEDIT
+	return this->gets(current_prompt);
+#else
 	return this->gets(prompt);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -85,6 +152,8 @@ readline_wrapper::gets(void) {
 	NOTE: some ancient version of readline haas prototype without
 	'const' in ANY of the arguments (v. 4.1, ca. 2002).  
 	That is utterly unaacceptable.  We provide an internal workaround.  
+	Q: should the prompt be sticky or only for the duration of this call?
+	A: right now, is only temporary effect.
 	TODO: handle line continuations (ending with '\')
 	TODO: parse semicolons (see sh behavior)
 	\return allocated line, or NULL if EOF.  
@@ -98,14 +167,28 @@ readline_wrapper::gets(const string& _prompt) {
 	// check with fgets as well
 	bool is_blank;
 	const char* cursor;
+#ifdef	USE_HISTEDIT
+	const value_saver<string>
+		_p(current_prompt, _prompt);	// temporary effect only
+#endif
 do {
-#if USE_READLINE
+#ifdef	USE_READLINE
+#ifdef	USE_HISTEDIT
+	// note: el_gets returns a char* that is owned (I think) by
+	// the EditLine library, and thus should not be directly passed
+	// to a manager pointer, but rather str-duplicated.
+	// I deduced this because it sometimes returns the same buffer address.
+	// Solution: change pointer type to never-own.
+	int count;	// number of characters read by el_gets()
+	hold_line = hold_line_type(el_gets(&*_editline, &count));
+#else
 	// (also covers editline)
 	// NOTE: some ASS-version of readline accepts a char* 
 	// for the prompt argument and trips an error here, 
 	// hence the const_cast
 	hold_line = hold_line_type(readline(
 		RL_CONST_CAST(_prompt.c_str())));
+#endif
 #else
 	cout << _prompt;
 	get_line_type get_line(static_cast<char_type*>(
@@ -156,12 +239,20 @@ do {
 ostream&
 readline_wrapper::version_string(ostream& o) {
 #if	defined(HAVE_GNUREADLINE)
-	return o << "GNU readline " << rl_library_version;
+	o << "GNU readline " << rl_library_version;
 #elif	defined(HAVE_BSDEDITLINE)
-	return o << "BSD editline " << rl_library_version;
+#ifdef	USE_HISTEDIT
+	o << "BSD EditLine (histedit interface)";
+	#if	defined(LIBEDIT_MAJOR) && defined(LIBEDIT_MINOR)
+	o << " ver. "  << LIBEDIT_MAJOR <<  '.' <<  LIBEDIT_MINOR;
+	#endif
 #else
-	return o << "none";
+	o << "BSD editline " << rl_library_version;
 #endif
+#else
+	o << "none";
+#endif
+	return o;
 }
 
 //=============================================================================

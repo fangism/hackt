@@ -3,7 +3,7 @@
 	Convenience wrapper for readline and editline.  
 	NOTE: the readline headers really aren't needed here, 
 	only needed in the implementation of this module.  
-	$Id: readline_wrap.h,v 1.2 2006/01/22 06:53:36 fang Exp $
+	$Id: readline_wrap.h,v 1.3 2006/05/01 06:36:15 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_WRAP_H__
@@ -21,19 +21,34 @@
 	The purpose is to do all the configure-dependent work in this
 	class to provide a consistent interface to the developer.  
  */
-#define	USE_READLINE		1
-#else
-#define	USE_READLINE		0
+#define	USE_READLINE
+#elif	defined(USE_READLINE)
+// else leave USE_READLINE undefined
+#error	"USE_READLINE is already defined, but I want it undefined!"
 #endif
 
-#if !USE_READLINE
+#ifndef	USE_READLINE
 #include <list>
+#endif
+
+#if	defined(HAVE_BSDEDITLINE) && defined(EDITLINE_HAS_HISTEDIT_INTERFACE) && defined(HAVE_HISTEDIT_H)
+#define	USE_HISTEDIT
+#elif	defined(USE_HISTEDIT)
+#error	"USE_HISTEDIT is already defined, but I want it undefined!"
+#endif
+
+#ifdef 	USE_HISTEDIT
+#include <histedit.h>
+#include "util/attributes.h"
 #endif
 
 namespace util {
 using std::string;
 using std::ostream;
 using memory::excl_malloc_ptr;
+#ifdef	USE_HISTEDIT
+using memory::excl_ptr;
+#endif
 //=============================================================================
 /**
 	This readline wrapper class provide a consistent programming interface
@@ -56,17 +71,65 @@ public:
 	typedef	const char			const_char_type;
 private:
 	typedef	excl_malloc_ptr<char_type>::type	get_line_type;
+#ifdef	USE_HISTEDIT
+	/**
+		histedit's (editline) el_gets return a pointer to
+		its own managed internal buffer, and thus, should not
+		be claimed as owned.  
+	 */
+	typedef	memory::never_ptr<const_char_type>	hold_line_type;
+#else
 	typedef	excl_malloc_ptr<const_char_type>::type	hold_line_type;
+#endif
+#ifdef	USE_HISTEDIT
+	struct editline_tag {
+		void
+		operator () (EditLine* e) const {
+			el_end(e);
+		}
+	} __VISIBILITY_HIDDEN__;
+
+	struct editline_history_tag {
+		void
+		operator () (History* h) const {
+			history_end(h);
+		}
+	} __VISIBILITY_HIDDEN__;
+	typedef	excl_ptr<EditLine, editline_tag>::type	editline_ptr_type;
+	typedef	excl_ptr<History, editline_history_tag>::type
+							history_ptr_type;
+	// typedef	const char_type* el_prompt_fn_type(EditLine*);
+	static	const char_type*	el_prompt(EditLine*);
+	static	string			current_prompt;
+#endif
+private:
 	/**
 		Temporary storage for the current line.  
 	 */
 	hold_line_type			hold_line;
+#ifdef	USE_HISTEDIT
+	/**
+		Managed EditLine pointer.
+	 */
+	editline_ptr_type		_editline;
+	/**
+		Manager (editline) History pointer.  
+	 */
+	history_ptr_type		_el_history;
+	/**
+		This holds the pointer to the former prompt, 
+		in case of nested editline interpreters.  
+		This is restored upon destruction.  
+	 */
+	string				former_prompt;
+#else
 	/**
 		Fixed prompt.
 		TODO: more sophisticated prompt later.  
 	 */
 	string				prompt;
-#if !USE_READLINE
+#endif
+#ifndef	USE_READLINE
 	typedef	std::list<string>	history_type;
 	history_type			history;
 #endif
@@ -77,10 +140,8 @@ private:
 	 */
 	bool				_skip_blank_lines;
 public:
-	readline_wrapper();
-
 	explicit
-	readline_wrapper(const string&);
+	readline_wrapper(const string& = string());
 
 	~readline_wrapper();
 
@@ -88,7 +149,13 @@ public:
 	set_prompt(const string&);
 
 	const string&
-	get_prompt(void) const { return prompt; }
+	get_prompt(void) const {
+#ifdef	USE_HISTEDIT
+		return current_prompt;
+#else
+		return prompt;
+#endif
+	}
 
 	/**
 		Just a wrapper around gets to give the same interface as 
