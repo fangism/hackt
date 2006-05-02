@@ -38,6 +38,11 @@ core.*
 *.prsimrc-out
 *.prsimrc-out-filter
 *.prsimrc-diff
+*.prsimckpt
+*.prsimckpt-dupe
+*.prsimckpt-outdump
+*.prsimckpt-indump
+*.prsimckpt-diff
 *.sort
 *.sprs
 *.sprsdiff

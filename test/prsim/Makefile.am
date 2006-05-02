@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2006/04/23 07:37:31 fang Exp $
+#	$Id: Makefile.am,v 1.5.6.1 2006/05/02 23:46:24 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -25,6 +25,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	after-celem-base after-celem-01 after-celem-02 \
 	pass-gates-01 pass-gates-02 pass-gates-03 \
 	excl-rings-01 excl-rings-02
+
+HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
 
 EXTRA_DIST +=
 

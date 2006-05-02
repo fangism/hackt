@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.4 2006/05/02 06:29:45 fang Exp $
+	$Id: State.cc,v 1.8.6.5 2006/05/02 23:46:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -380,12 +380,13 @@ State::__allocate_event(node_type& n,
 /**
 	This variant is used to enqueue a pre-constructed event, 
 	useful for loading checkpoints.  
+	NOTE: only use this for loading checkpoints!
  */
 event_index_type
-State::__allocate_event(const event_type& ev) {
+State::__load_allocate_event(const event_type& ev) {
 	node_type& n(get_node(ev.node));
-	INVARIANT(!n.pending_event());
-	n.set_event(event_pool.allocate(ev));
+//	INVARIANT(!n.pending_event());
+	n.load_event(event_pool.allocate(ev));
 	return n.get_event();
 }
 
@@ -2033,7 +2034,7 @@ State::load_checkpoint(istream& i) {
 		read_value(i, t);
 		event_type ev;
 		ev.load_state(i);
-		enqueue_event(t, __allocate_event(ev));
+		enqueue_event(t, __load_allocate_event(ev));
 	}
 }
 	// excl_rings -- structural only
@@ -2062,7 +2063,10 @@ State::load_checkpoint(istream& i) {
 	// object alignment safety check
 	int tail;
 	read_value(i, tail);
-	INVARIANT(tail == 0xF00D);
+	if (tail != 0xF00D) {
+		cerr << "ERROR: detected checkpoint misalignment!" << endl;
+		return true;
+	}
 }
 	return !i;
 }	// end State::load_checkpoint

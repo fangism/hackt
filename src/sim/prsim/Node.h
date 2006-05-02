@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.6.6.3 2006/05/02 06:29:43 fang Exp $
+	$Id: Node.h,v 1.6.6.4 2006/05/02 23:46:15 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -225,6 +225,16 @@ public:
 	void
 	set_event(const event_index_type i) {
 		INVARIANT(event_index == INVALID_EVENT_INDEX);
+		INVARIANT(i != INVALID_EVENT_INDEX);
+		event_index = i;
+	}
+
+	/**
+		This variation should only be used during checkpoint
+		loading.  
+	 */
+	void
+	load_event(const event_index_type i) {
 		INVARIANT(i != INVALID_EVENT_INDEX);
 		event_index = i;
 	}

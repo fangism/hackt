@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-05:
+	  Minor fix in node state checkpointing.  
+		Event queue reconstruction may use different newly
+		allocated event indices.  
+	  Enabled checkpointing tests for all existing prsim test cases, 
+		all pass thus far.  
+
+
 2006-05-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-22-prsim-04-04:

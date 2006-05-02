@@ -1,0 +1,78 @@
+#!@SH_PATH@
+# "hackt-prsim-ckpt"
+#	$Id: hackt-prsim-ckpt.sh.in,v 1.1.2.1 2006/05/02 23:46:23 fang Exp $
+# Template test script for comparing checking checkpoint consistency
+# TODO: add more status information, such as breakpoints, watchpoints
+
+# arguments:
+# $1	"hackt prsim" execution command
+# $2	the object file to build (using make) and run
+# $3	the prsim-run-commands script to run (must reside in srcdir!)
+
+prsim=$1
+obj=$2
+prsimrc=$3
+
+# strip srcdir path
+bldroot=`@ECHO@ "$prsimrc" | @SED@ 's|.*/||g'`
+outroot=`@ECHO@ "$bldroot" | @SED@ 's|[.].*$||g'`
+
+@CALLMAKE@ $obj > /dev/null 2>&1
+if test ! -f $obj
+then
+	@ECHO@ Failed to make "$obj"
+	exit 1
+fi
+
+# produce first checkpoint
+$prsim $obj > $outroot.prsimckpt-tmp 2>&1 <<EOF
+echo DELETE FROM HERE
+source $prsimrc
+echo DELETE TO HERE
+status 0
+status 1
+status X
+queue
+time
+save $outroot.prsimckpt
+EOF
+
+# trim any output produced by the primary source script
+@SED@ '/DELETE FROM HERE/,/DELETE TO HERE/d' $outroot.prsimckpt-tmp > \
+	$outroot.prsimckpt-outdump
+rm $outroot.prsimckpt-tmp
+
+if test ! -f $outroot.prsimckpt
+then
+	@ECHO@ "No checkpoint generated, skipping test."
+	exit 0;
+fi
+
+# load first checkpoint and produce duplicate checkpoint
+$prsim $obj > $outroot.prsimckpt-indump 2>&1 <<EOF
+load $outroot.prsimckpt
+status 0
+status 1
+status X
+queue
+time
+save $outroot.prsimckpt-dupe
+EOF
+
+@DIFF@ -u $outroot.prsimckpt-outdump $outroot.prsimckpt-indump > \
+	$outroot.prsimckpt-diff
+
+if test -s $outroot.prsimckpt-diff
+then
+	@ECHO@ "$outroot.prsimckpt-diff is non-empty!"
+	exit 1
+fi
+
+if @DIFF@ -q $outroot.prsimckpt $outroot.prsimckpt-dupe
+then :
+else
+	# will already have diff message
+	# @ECHO@ "$outroot.prsimckpt and its -dupe differ!"
+	exit 1
+fi
+

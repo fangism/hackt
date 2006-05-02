@@ -1,5 +1,11 @@
 # "test/ChangeLog"
 
+2006-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-05:
+	  Added test support for verifying prsim checkpoint consistency.
+
+
 2006-04-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-22-prsim-04-02:

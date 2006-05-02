@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.29 2006/04/27 05:51:52 fang Exp $
+#	$Id: Make.test-tail,v 1.29.4.1 2006/05/02 23:46:20 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -32,6 +32,7 @@ HACKT_CFLAT_SEU_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-seu-expect.sh
 HACKT_CFLAT_SPRS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-sprs-expect.sh
 HACKT_PRSIMEXPR_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-expr-alloc-expect.sh
 HACKT_PRSIMRC_TEST_SH = $(TEST_BUILDDIR)/hackt-prsimrc-expect.sh
+HACKT_PRSIM_CKPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-ckpt.sh
 
 HACKT_COMPILE_ERROR_FILTER = $(AWK) \
 		-f $(TEST_SRCDIR)/hackt-parse-expect-filter.awk \
@@ -227,17 +228,34 @@ else
 	@$(ECHO) "Sorry, no cflat found in path." ; exit 1
 endif
 
+
 # Each run-commands script should include the command to invoke
 # for loading the object, e.g.: hackt prsim foo.haco-a
 # This rule should deduce the input object from the source script.  
+
+# doesn't work :S
+# EXTRACT_HACO_PIPE = $(GREP) "^#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
+#	$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'
+#	$(AWK) -f $(top_srcdir)/test/extract-haco.awk
+# @obj=`$(CAT) $< | $(EXTRACT_HACO_PIPE)` ;
+
 .prsimrc.prsimtest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
-	@obj=`$(GREP) "^#" $< | $(GREP) "@haco@" | $(HEAD) -n1 | \
-		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }' ` ; \
+	@obj=`$(CAT) $< | $(GREP) "^#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
+		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'` ; \
 	$(ECHO) "$(HACKT_PRSIMRC_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" \
 		"\"$(PRSIMRC_FILTER_AWK)\"" \
 		"\"$(PRSIMRC_TIME_FILTER_AWK)\"" >> $@
+	@$(CHMOD) +x $@
+
+
+.prsimrc.prsimckpttest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@obj=`$(CAT) $< | $(GREP) "^#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
+		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'` ; \
+	$(ECHO) "$(HACKT_PRSIM_CKPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@
 	@$(CHMOD) +x $@
 
 CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
@@ -245,7 +263,7 @@ CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
 	prsdiffs prsdiffs.sort prsimexprdiffs \
 	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort \
 	createfromhacodiffs allocfromhacodiffs \
-	prsimrcdiffs
+	prsimrcdiffs prsimckptdiffs
 # need prs summaries? nah...
 
 compilediffs: force
@@ -298,6 +316,9 @@ prsseudiffs.sort: force
 prsimrcdiffs: force
 	-$(CAT) *.prsimrc-diff > $@
 
+prsimckptdiffs: force
+	-$(CAT) *.prsimckpt-diff > $@
+
 prsimexprdiffs: force
 	-$(CAT) *.prsimexprdiff > $@
 
@@ -334,7 +355,8 @@ TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
-	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest)
+	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
+	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest)
 
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
@@ -395,6 +417,9 @@ echo-prsimexpr-tests: force
 echo-prsimrc-tests: force
 	@$(ECHO) $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
 
+echo-prsimckpt-tests: force
+	@$(ECHO) $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
+
 # filter-out is GNUMake feature
 #	$($(filter-out $(HACKT_PARSE_TEST_PASSES), $(HACKT_PARSE_TEST_SUBJECTS)):=.stderr)
 
@@ -432,7 +457,8 @@ CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseu-diff) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexprdiff) \
-	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest)
+	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
+	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest)
 
 
 DISTCLEANFILES += local.cvsignore
@@ -458,6 +484,7 @@ AUTO_IGNORE += local.cvsignore \
 	$(EMPTY_CFLAT_PRS) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
+	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
 	$(CHECK_SUMMARIES)
 
 if NO_VPATH
@@ -514,6 +541,8 @@ clean-local: clean-summaries
 	-$(RM) *.prsimexpr-dot *.prsimexpr-ps
 	-$(RM) *.prsimtest *.prsimrc-out *.prsimrc-out-filter *.prsimrc-diff
 	-$(RM) *.sprs *.sprsdiff *.sprsdiff.sort
+	-$(RM) *.prsimckpt *.prsimckpttest *.prsimckpt-dupe
+	-$(RM) *.prsimckpt-outdump *.prsimckpt-indump *.prsimckpt-diff
 
 # really remove these files!
 cleaner: clean cleaner-recursive cleaner-local
@@ -564,6 +593,7 @@ help-test:
 	@$(ECHO) "	cflat-sprs-tests: lists HACKT_CFLAT_SPRS_TEST_SUBJECTS"
 	@$(ECHO) "	prsimexpr-tests: lists HACKT_PRSIMEXPR_TEST_SUBJECTS"
 	@$(ECHO) "	prsimrc-tests: lists HACKT_PRSIMRC_TEST_SCRIPTS_BASES"
+	@$(ECHO) "	prsimckpt-tests: lists HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES"
 	@$(ECHO) "	compile-passes: lists TESTS that pass parsing"
 	@$(ECHO) "	bison-outputs: list TESTS whose output is bison-specific"
 	@$(ECHO) "	empty-cflat-prs: list of tests whose cflat-output is empty"

@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.27 2006/04/12 08:53:24 fang Exp $
+#	$Id: Makefile.am,v 1.27.8.1 2006/05/02 23:46:20 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -23,11 +23,13 @@ PRECONFIGURED_TESTSCRIPTS = \
 	hackt-cflat-sprs-expect.sh.in \
 	hackt-prsim-expr-alloc-expect.sh.in \
 	hackt-prsimrc-expect.sh.in \
+	hackt-prsim-ckpt.sh.in \
 	test-series.sh.in
 
 POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
 AUTO_IGNORE += $(POSTCONFIGURED_TESTSCRIPTS)
 
+# These are useful maintainer script that we don't bother configure-generating
 NONCONFIGURED_UPDATESCRIPTS = \
 	update-compilestderr.sh \
 	update-compilestderr-bison.sh \

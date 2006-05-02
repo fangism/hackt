@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.5.6.3 2006/05/02 06:29:43 fang Exp $
+	$Id: Node.cc,v 1.5.6.4 2006/05/02 23:46:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -200,21 +200,33 @@ NodeState::string_to_value(const string& v) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: we don't save the event index because it may change upon 
+	reconstruction due to event allocation.  
+	It is reconstructed by load_event, which is called during
+	event queue reconstruction.  
+	Otherwise, the event_index is left as INVALID_EVENT_INDEX
+ */
 void
 NodeState::save_state(ostream& o) const {
 	write_value(o, value);
 	write_value(o, state_flags);
-	write_value(o, event_index);
+//	write_value(o, event_index);
 	write_value(o, caused_by_node);
 	write_value(o, tcount);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The node state must be reeconstructed *before* the event queue
+	is reconstructed, because it overwrites the event_index field.  
+ */
 void
 NodeState::load_state(istream& i) {
 	read_value(i, value);
 	read_value(i, state_flags);
-	read_value(i, event_index);
+//	read_value(i, event_index);
+	INVARIANT(event_index == INVALID_EVENT_INDEX);
 	read_value(i, caused_by_node);
 	read_value(i, tcount);
 }
