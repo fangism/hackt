@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.12 2006/04/27 00:16:07 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.12.4.1 2006/05/02 06:29:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -39,7 +39,7 @@ namespace entity {
 USING_UTIL_COMPOSE
 using std::mem_fun_ref;
 using util::dereference;
-using std::bind2nd_argval;
+using util::bind2nd_argval;
 using util::persistent_traits;
 
 //=============================================================================

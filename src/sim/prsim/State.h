@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.5.6.3 2006/05/01 03:25:49 fang Exp $
+	$Id: State.h,v 1.5.6.4 2006/05/02 06:29:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -34,9 +34,30 @@ using std::string;
 using entity::module;
 using util::list_vector;
 using std::ostream;
+using std::istream;
 using util::ifstream_manager;
 using util::string_list;
 using HASH_MAP_NAMESPACE::hash_map;
+
+//=============================================================================
+/**
+	Watch list entry.  
+	Node index not included because it will be the first
+	value of the mapped pair.  
+ */
+struct watch_entry {
+	/// true if node is also a breakpoint
+	char	breakpoint;
+	// TODO: if is also a member of vector
+	watch_entry() : breakpoint(0) { }
+
+	void
+	save_state(ostream&) const;
+
+	void
+	load_state(istream&);
+} __ATTRIBUTE_ALIGNED__ ;
+
 //=============================================================================
 /**
 	The prsim simulation state.
@@ -70,19 +91,7 @@ public:
 	typedef	vector<expr_type>		expr_pool_type;
 	typedef	RuleState<time_type>		rule_type;
 	typedef	hash_map<expr_index_type, rule_type>	rule_map_type;
-	/**
-		Watch list entry.  
-		Node index not included because it will be the first
-		value of the mapped pair.  
-	 */
-	struct watch_entry {
-		/// true if node is also a breakpoint
-		char	breakpoint;
-		// TODO: if is also a member of vector
-		char	__padding1__;
-		short	__padding2__;
-		watch_entry() : breakpoint(0) { }
-	};
+
 	typedef	std::map<node_index_type, watch_entry>	watch_list_type;
 	/**
 		The first node index is the one that just changed, 
@@ -206,6 +215,8 @@ protected:
 						excl_ring_map_type;
 	typedef	vector<event_placeholder_type>	excl_queue_type;
 	typedef	vector<event_index_type>	pending_queue_type;
+	typedef	vector<event_queue_type::value_type>
+						temp_queue_type;
 private:
 //	count_ptr<const module>			mod;
 	const module&				mod;
@@ -476,9 +487,11 @@ public:
 private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
-		// this is the causing node
-		const node_index_type c, 
+		const node_index_type c, // this is the causing node
 		const rule_index_type, const char);
+
+	event_index_type
+	__allocate_event(const event_type&);
 
 	void
 	__deallocate_event(node_type&, const event_index_type);
@@ -572,6 +585,12 @@ public:
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
 		const char p = entity::PRS::PRS_LITERAL_TYPE_ENUM) const;
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
 
 private:
 	void

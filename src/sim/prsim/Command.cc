@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.7.6.2 2006/05/01 03:25:42 fang Exp $
+	$Id: Command.cc,v 1.7.6.3 2006/05/02 06:29:40 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command.h"
 #include "sim/prsim/State.h"
 #include "sim/prsim/Reference.h"
+#include "sim/devel_switches.h"
 
 #include "common/TODO.h"
 #include "util/qmap.tcc"
@@ -32,7 +33,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/string.tcc"
 #include "util/memory/excl_malloc_ptr.h"
 #include "util/tokenize.h"
-#include "util/attributes.h"
 
 /**
 	These commands are deprecated, but provided for backwards compatibility.
@@ -46,6 +46,7 @@ namespace SIM {
 namespace PRSIM {
 #include "util/using_istream.h"
 #include "util/using_ostream.h"
+using std::ios_base;
 using std::set;
 using std::ifstream;
 using std::copy;
@@ -1420,6 +1421,9 @@ NoBreakPtAll::usage(ostream& o) {
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnBreakAll, "unbreakall", simulation,
 	"alias for \'nobreakptall\'")
 
+/**
+	Just an alias to nobreakptall.
+ */
 int
 UnBreakAll::main(State& s, const string_list& a) {
 	return NoBreakPtAll::main(s, a);
@@ -1429,6 +1433,75 @@ void
 UnBreakAll::usage(ostream& o) {
 	NoBreakPtAll::usage(o);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_PRSIM_CHECKPOINT
+
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Save, "save", simulation, 
+	"saves simulation state to a checkpoint")
+
+int
+Save::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& fname(a.back());
+	std::ofstream f(fname.c_str(), ios_base::binary);
+	if (!f) {
+		cerr << "Error opening file \"" << fname <<
+			"\" for writing." << endl;
+		return Command::BADFILE;
+	}
+	if (s.save_checkpoint(f)) {
+		// error-handling?
+		cerr << "Error writing checkpoint!" << endl;
+		return Command::UNKNOWN;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+Save::usage(ostream& o) {
+	o << "save <file>" << endl;
+	o << brief << endl;
+	o << "(recommend some extension like .prsimckpt)" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Load, "load", simulation, 
+	"loads simulation state from a checkpoint")
+
+int
+Load::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& fname(a.back());
+	std::ifstream f(fname.c_str(), ios_base::binary);
+	if (!f) {
+		cerr << "Error opening file \"" << fname <<
+			"\" for reading." << endl;
+		return Command::BADFILE;
+	}
+	if (s.load_checkpoint(f)) {
+		// error-handling?
+		cerr << "Error loading checkpoint!" << endl;
+		return Command::UNKNOWN;
+	}
+	return Command::NORMAL;
+}
+}
+
+void
+Load::usage(ostream& o) {
+	o << "load <file>" << endl;
+	o << brief << endl;
+}
+
+#endif	// ENABLE_PRSIM_CHECKPOINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(What, "what", info,

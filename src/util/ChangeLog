@@ -1,5 +1,19 @@
 # "src/util/ChangeLog"
 
+2006-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-04:
+	  Ooops, relocated definitions in util/binders.h to namespace util, 
+		rather than namespace std.  (For shame!)
+	  Also added util/reference_wrapper.h, to try to replace 
+		argval reference binders.
+	  util/type_traits: Added is_pointer/remove_pointer/add_pointer, 
+		volatile family, is_integral, is_floating_point, 
+		is_arithmetic.  
+	  Added: util/call_traits.h -- parameter traits.  
+	  Removed: util/const_traits.h -- deprecated in favor of call_traits.
+
+
 2006-04-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-21:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.3 2006/05/01 03:25:47 fang Exp $
+	$Id: State.cc,v 1.8.6.4 2006/05/02 06:29:45 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -32,6 +32,10 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/likely.h"
 #include "util/string.tcc"
+#include "util/IO_utils.tcc"
+#include "util/binders.h"
+#include "util/reference_wrapper.h"
+#include "util/wtf.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -55,6 +59,10 @@ using std::ostringstream;
 using std::for_each;
 using std::mem_fun_ref;
 using util::strings::string_to_num;
+using util::read_value;
+using util::write_value;
+using util::bind2nd_argval;
+using util::bind2nd_argval_void;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -361,14 +369,23 @@ State::__allocate_event(node_type& n,
 		const rule_index_type ri,
 		const char val) {
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	// HERE
-	STACKTRACE_INDENT_PRINT("ni = " << ni << ", ci = " << ci << endl);
-#endif
 	INVARIANT(!n.pending_event());
 	n.set_event(event_pool.allocate(
 		event_type(ni, ci, ri, val)
 		));
+	return n.get_event();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant is used to enqueue a pre-constructed event, 
+	useful for loading checkpoints.  
+ */
+event_index_type
+State::__allocate_event(const event_type& ev) {
+	node_type& n(get_node(ev.node));
+	INVARIANT(!n.pending_event());
+	n.set_event(event_pool.allocate(ev));
 	return n.get_event();
 }
 
@@ -1619,9 +1636,8 @@ State::dump_struct_dot(ostream& o) const {
  */
 ostream&
 State::dump_event_queue(ostream& o) const {
-	typedef	vector<event_queue_type::value_type>	temp_type;
-	typedef	temp_type::const_iterator		const_iterator;
-	temp_type temp;
+	typedef	temp_queue_type::const_iterator		const_iterator;
+	temp_queue_type temp;
 	event_queue.copy_to(temp);
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
@@ -1843,6 +1859,226 @@ State::dump_node_excl_rings(ostream& o, const node_index_type ni) const {
 	}
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: need to check consistency with module.  
+	Write out a header for safety checks.  
+	TODO: save state only? without structure?
+	\return true if to signal that an error occurred. 
+ */
+bool
+State::save_checkpoint(ostream& o) const {
+{
+	// node_pool
+	write_value(o, node_pool.size());
+	for_each(++node_pool.begin(), node_pool.end(), 
+#if 1
+		bind2nd_argval(mem_fun_ref(&node_type::save_state), o)
+#else
+	// doesn't quite work yet!?
+	// might need to wrap the mem_fun_ref to take a wrapper?
+		std::bind2nd(mem_fun_ref(&node_type::save_state),
+			util::ref(o))
+#endif
+	);
+}{
+	// expr_pool
+	write_value(o, expr_pool.size());
+	for_each(++expr_pool.begin(), expr_pool.end(), 
+		bind2nd_argval(mem_fun_ref(&expr_type::save_state), o)
+	);
+}
+	// graph_pool -- structural only
+{
+	// rule_map -- currently structural only, but we include code anyways
+	typedef	rule_map_type::const_iterator		const_iterator;
+	write_value(o, rule_map.size());
+	const_iterator i(rule_map.begin()), e(rule_map.end());
+	for ( ; i!=e; ++i) {
+		write_value(o, i->first);
+		i->second.save_state(o);
+	}
+}{
+	// event_pool -- only selected entries
+	// event_queue
+	typedef	temp_queue_type::const_iterator		const_iterator;
+	temp_queue_type temp;
+	event_queue.copy_to(temp);
+	const_iterator i(temp.begin()), e(temp.end());
+	write_value(o, temp.size());
+	for ( ;i!=e; ++i) {
+		write_value(o, i->time);
+		event_pool[i->event_index].save_state(o);
+	}
+}
+	// excl_rings -- structural only
+	// excl and pending queues should be empty!
+	INVARIANT(exclhi_queue.empty());
+	INVARIANT(excllo_queue.empty());
+	INVARIANT(pending_queue.empty());
+	write_value(o, current_time);
+	write_value(o, uniform_delay);
+{
+	// watch_list? yes, because needs to be kept consistent with nodes
+	typedef	watch_list_type::const_iterator		const_iterator;
+	write_value(o, watch_list.size());
+	const_iterator i(watch_list.begin()), e(watch_list.end());
+	for ( ; i!=e; ++i) {
+		write_value(o, i->first);
+		i->second.save_state(o);
+	}
+}
+	write_value(o, flags);
+	write_value(o, timing_mode);
+	// interrupted flag, just ignore
+	// ifstreams? don't bother managing input stream stack.
+	// __scratch_expr_trace -- never needed, ignore
+{
+	// object alignment safety check
+	const int tail = 0xF00D;
+	write_value(o, tail);
+}
+	return !o;
+}	// end State::save_checkpoint
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Has a ton of consistency checking.  
+	TODO: need some sort of consistency check with module.  
+	\pre the State is already allocated b/c no resizing is done
+		during checkpoint loading.  
+	\return true if to signal that an error occurred. 
+ */
+bool
+State::load_checkpoint(istream& i) {
+	initialize();		// start by initializing everything
+	// or reset(); ?
+{
+	// node_pool
+	size_t s;
+	read_value(i, s);
+	if (node_pool.size() != s) {
+		cerr << "ERROR: checkpoint\'s node_pool size is inconsistent."
+			<< endl;
+		return true;
+	}
+	typedef node_pool_type::iterator	iterator;
+	const iterator b(++node_pool.begin()), e(node_pool.end());
+	// util::wtf_is(b);
+#if 0
+	// doesn't work :(
+	for_each(b, e, 
+		bind2nd_argval_void(mem_fun_ref(&node_type::load_state), i)
+	);
+#else
+	iterator j(b);
+	for ( ; j!=e; ++j) {
+		j->load_state(i);
+	}
+#endif
+}{
+	// expr_pool
+	size_t s;
+	read_value(i, s);
+	if (expr_pool.size() != s) {
+		cerr << "ERROR: checkpoint\'s expr_pool size is inconsistent."
+			<< endl;
+		return true;
+	}
+	typedef expr_pool_type::iterator	iterator;
+	const iterator b(++expr_pool.begin()), e(expr_pool.end());
+#if 0
+	for_each(b, e, 
+		bind2nd_argval_void(mem_fun_ref(&expr_type::load_state), i)
+	);
+#else
+	iterator j(b);
+	for ( ; j!=e; ++j) {
+		j->load_state(i);
+	}
+#endif
+}
+	// graph_pool -- structural only
+{
+	// rule_map -- currently structural only, but we include code anyways
+	typedef	rule_map_type::iterator		iterator;
+	size_t s;
+	read_value(i, s);
+	if (rule_map.size() != s) {
+		cerr << "ERROR: checkpoint\'s rule_map size is inconsistent."
+			<< endl;
+		return true;
+	}
+	iterator j(rule_map.begin()), e(rule_map.end());
+	for ( ; j!=e; ++j) {
+		rule_map_type::key_type k;
+		read_value(i, k);
+		if (j->first != k) {
+			cerr << "ERROR: checkpoint\'s rule_map key is "
+				"inconsistent.  got: " << k << ", expected: "
+				<< j->first << endl;
+			return true;
+		}
+		j->second.load_state(i);
+	}
+}{
+	// event_pool -- only selected entries
+	// event_queue
+	size_t s;
+	read_value(i, s);
+	for ( ; s; --s) {
+		time_type t;
+		read_value(i, t);
+		event_type ev;
+		ev.load_state(i);
+		enqueue_event(t, __allocate_event(ev));
+	}
+}
+	// excl_rings -- structural only
+	// excl and pending queues should be empty!
+	INVARIANT(exclhi_queue.empty());
+	INVARIANT(excllo_queue.empty());
+	INVARIANT(pending_queue.empty());
+	read_value(i, current_time);
+	read_value(i, uniform_delay);
+{
+	// watch_list? yes, because needs to be kept consistent with nodes
+	size_t s;
+	read_value(i, s);
+	for ( ; s; --s) {
+		watch_list_type::key_type k;
+		read_value(i, k);
+		watch_list[k].load_state(i);
+	}
+}
+	read_value(i, flags);
+	read_value(i, timing_mode);
+	// interrupted flag, just ignore
+	// ifstreams? don't bother managing input stream stack.
+	// __scratch_expr_trace -- never needed, ignore
+{
+	// object alignment safety check
+	int tail;
+	read_value(i, tail);
+	INVARIANT(tail == 0xF00D);
+}
+	return !i;
+}	// end State::load_checkpoint
+
+//=============================================================================
+// struct watch_entry method definitions
+
+void
+watch_entry::save_state(ostream& o) const {
+	write_value(o, breakpoint);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+watch_entry::load_state(istream& i) {
+	read_value(i, breakpoint);
 }
 
 //=============================================================================

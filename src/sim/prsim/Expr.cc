@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.3 2006/04/03 05:30:36 fang Exp $
+	$Id: Expr.cc,v 1.3.12.1 2006/05/02 06:29:42 fang Exp $
  */
 
 #include <iostream>
@@ -9,11 +9,15 @@
 #include "sim/prsim/Expr.h"
 #include "Object/lang/PRS_enum.h"
 #include "util/macros.h"
+#include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.h"
+using util::read_value;
+using util::write_value;
+
 //=============================================================================
 // class Expr method definitions
 
@@ -145,6 +149,26 @@ ExprState::dump_state(ostream& o) const {
 		" X: " << size_t(unknowns) << "(/" << size_t(size) << ')'
 		<< " pull: " << size_t(pull_state());
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Technically, this ExprState information can be reconstructed
+	based on the state of all Nodes, and the event queue.  
+	For now we just save and load values.  
+	TODO: reconstruction algorithm.
+ */
+void
+ExprState::save_state(ostream& o) const {
+	write_value(o, countdown);
+	write_value(o, unknowns);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprState::load_state(istream& i) {
+	read_value(i, countdown);
+	read_value(i, unknowns);
 }
 
 //=============================================================================

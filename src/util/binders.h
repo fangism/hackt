@@ -2,7 +2,7 @@
  *	\file "util/binders.h"
  *	This file contains specializations for binder adaptors
  *	base on the standard set found in <functional>.
- *	$Id: binders.h,v 1.6 2005/05/10 04:51:22 fang Exp $
+ *	$Id: binders.h,v 1.6.96.1 2006/05/02 06:29:53 fang Exp $
  */
 
 #ifndef	__UTIL_BINDERS_H__
@@ -10,7 +10,7 @@
 
 #include <functional>
 
-namespace std {
+namespace util {
 
 //=============================================================================
 // adapters for binders, using value instead of reference
@@ -20,7 +20,7 @@ namespace std {
 	Untested.
  */
 template <class T>
-struct Identity_argval : public unary_function<T, T> {
+struct Identity_argval : public std::unary_function<T, T> {
 //	T operator () (T& x) const { return x; }
 	T operator () (const T x) const { return x; }
 };	// end class Identity_argval
@@ -38,7 +38,7 @@ struct Identity_argval : public unary_function<T, T> {
  */
 template <class B>
 class binder1st_argval :
-	public unary_function<typename B::second_argument_type, 
+	public std::unary_function<typename B::second_argument_type, 
 				typename B::result_type> {
 public:
 	typedef	typename B::first_argument_type		arg1_type;
@@ -100,7 +100,7 @@ bind1st_argval(const B& op, T& v) {
  */
 template <class B>
 class binder2nd_argval :
-	public unary_function<typename B::first_argument_type, 
+	public std::unary_function<typename B::first_argument_type, 
 				typename B::result_type> {
 public:
 	typedef	typename B::second_argument_type	arg2_type;
@@ -124,7 +124,7 @@ public:
  */
 template <class B>
 class binder2nd_argval_void :
-	public unary_function<typename B::first_argument_type, void> {
+	public std::unary_function<typename B::first_argument_type, void> {
 public:
 	typedef	typename B::second_argument_type	arg2_type;
 	typedef	typename B::first_argument_type		argument_type;
@@ -190,7 +190,7 @@ bind2nd_argval_void(const B& op, T& v) {
 }
 
 //=============================================================================
-}	// end namespace std
+}	// end namespace util
 
 #endif	// __UTIL_BINDERS_H__
 

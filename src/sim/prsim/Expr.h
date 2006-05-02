@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.4 2006/04/23 07:37:26 fang Exp $
+	$Id: Expr.h,v 1.4.6.1 2006/05/02 06:29:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -18,6 +18,7 @@ namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::ostream;
+using std::istream;
 // using std::valarray;
 using std::vector;
 using std::pair;
@@ -261,6 +262,12 @@ public:
 	ostream&
 	dump_state(ostream&) const;
 
+	void
+	save_state(ostream&) const;
+
+	void
+	load_state(istream&);
+
 };	// end struct ExprState
 
 //=============================================================================
@@ -268,6 +275,7 @@ public:
 	There should be one of these per Expr.  
 	Access to these is not performance critical, 
 	which is why we keep it separate.  
+	There is not stateful information here, just structural.  
 	This maintains the graph node type information, 
 	which is not fully needed in simulation, only needed during
 	feedback or anything that requires downward traversal.  

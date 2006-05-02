@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.6.6.2 2006/05/01 03:25:46 fang Exp $
+	$Id: Node.h,v 1.6.6.3 2006/05/02 06:29:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -14,12 +14,12 @@
 #include "util/macros.h"
 #include "util/attributes.h"
 #include "sim/common.h"
-#include "sim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::ostream;
+using std::istream;
 using std::vector;
 
 //=============================================================================
@@ -304,6 +304,13 @@ public:
 
 	void
 	reset(void);
+
+	void
+	save_state(ostream&) const;
+
+	void
+	load_state(istream&);
+
 } __ATTRIBUTE_ALIGNED__ ;	// end struct NodeState
 
 //=============================================================================

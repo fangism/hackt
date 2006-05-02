@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.5.6.2 2006/05/01 03:25:45 fang Exp $
+	$Id: Node.cc,v 1.5.6.3 2006/05/02 06:29:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,6 +13,7 @@
 #include "sim/prsim/Node.h"
 #include "util/macros.h"
 #include "util/stacktrace.h"
+#include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace SIM {
@@ -20,6 +21,8 @@ namespace PRSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
 using std::string;
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class Node method definitions
@@ -166,9 +169,11 @@ NodeState::char_to_value(const char v) {
 	case 'f':	// fall-through
 	case 'F':	// fall-through
 	case '0': return LOGIC_LOW;
+
 	case 't':	// fall-through
 	case 'T':	// fall-through
 	case '1': return LOGIC_HIGH;
+
 	case 'X':	// fall-through
 	case 'x':	// fall-through
 	case 'U':	// fall-through
@@ -192,6 +197,26 @@ NodeState::string_to_value(const string& v) {
 	} else {
 		return char_to_value(v[0]);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+NodeState::save_state(ostream& o) const {
+	write_value(o, value);
+	write_value(o, state_flags);
+	write_value(o, event_index);
+	write_value(o, caused_by_node);
+	write_value(o, tcount);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+NodeState::load_state(istream& i) {
+	read_value(i, value);
+	read_value(i, state_flags);
+	read_value(i, event_index);
+	read_value(i, caused_by_node);
+	read_value(i, tcount);
 }
 
 //=============================================================================

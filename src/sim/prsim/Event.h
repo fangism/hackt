@@ -1,17 +1,19 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.4.6.3 2006/05/01 03:25:43 fang Exp $
+	$Id: Event.h,v 1.4.6.4 2006/05/02 06:29:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
 #define	__HAC_SIM_PRSIM_EVENT_H__
 
+#include <iosfwd>
 #include <map>
 #include <queue>
 #include <vector>
 #include "sim/common.h"
 #include "util/likely.h"
+#include "util/attributes.h"
 #include "util/macros.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
@@ -19,6 +21,8 @@
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using std::istream;
+using std::ostream;
 using std::priority_queue;
 using std::vector;
 using std::map;
@@ -86,7 +90,13 @@ public:
 		cause_rule(r),
 		val(v) { }
 
-};	// end struct Event
+	void
+	save_state(ostream&) const;
+
+	void
+	load_state(istream&);
+
+} __ATTRIBUTE_ALIGNED__ ;	// end struct Event
 
 //=============================================================================
 /**
@@ -217,6 +227,9 @@ public:
 	push(const value_type& p) {
 		equeue.push(p);
 	}
+
+	size_t
+	size(void) const { return equeue.size(); }
 
 	/**
 		\pre queue is not empty.  

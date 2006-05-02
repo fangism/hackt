@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.27 2006/04/27 00:15:34 fang Exp $
+	$Id: instance_collection.tcc,v 1.27.4.1 2006/05/02 06:29:35 fang Exp $
 	TODO: trim includes
  */
 
@@ -99,7 +99,7 @@ using util::multikey_generator;
 USING_UTIL_COMPOSE
 using util::dereference;
 using std::mem_fun_ref;
-using std::bind2nd_argval;
+using util::bind2nd_argval;
 using util::multikey;
 using util::value_writer;
 using util::value_reader;

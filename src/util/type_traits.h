@@ -8,7 +8,7 @@
 		Kludge: template typedefs.  
 	See also "util/memory/pointer_traits.h"
 	Add more traits as needed.  
-	$Id: type_traits.h,v 1.5 2006/04/18 18:42:44 fang Exp $
+	$Id: type_traits.h,v 1.5.6.1 2006/05/02 06:30:01 fang Exp $
  */
 
 #ifndef	__UTIL_TYPE_TRAITS_H__
@@ -77,6 +77,38 @@ template <class T>
 struct is_const<T const> : public true_value { };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Template default for non-volatile type.  
+ */
+template <class T>
+struct remove_volatile : public identity<T> { };
+
+/**
+	Specialization that removes the volatile from a type.  
+ */
+template <class T>
+struct remove_volatile<T volatile> : public identity<T> { };
+
+template <class T>
+struct add_volatile : public identity<T volatile> { };
+
+template <class T>
+struct add_volatile<T volatile> : public identity<T volatile> { };
+
+template <class T>
+struct is_volatile : public false_value { };
+
+template <class T>
+struct is_volatile<T volatile> : public true_value { };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Could use MPL compose... fancy-schmancy...
+ */
+template <class T>
+struct remove_cv : public remove_const<typename remove_volatile<T>::type> { };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class T>
 struct remove_reference : public identity<T> { };
 
@@ -97,6 +129,107 @@ struct is_reference : public false_value { };
 
 template <class T>
 struct is_reference<T&> : public true_value { };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+struct remove_pointer : public identity<T> { };
+
+template <class T>
+struct remove_pointer<T*> : public identity<T> { };
+
+template <class T>
+struct remove_all_pointers : public identity<T> { };
+
+template <class T>
+struct remove_all_pointers<T*> :
+	public identity<typename remove_all_pointers<T>::type> { };
+
+/**
+	Note, this creates pointer-to-pointer-to...
+ */
+template <class T>
+struct add_pointer : public identity<T*> { };
+
+template <class T>
+struct is_pointer : public false_value { };
+
+template <class T>
+struct is_pointer<T*> : public true_value { };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// this could conceivably belong in "util/numeric/inttype_traits.h"...
+
+namespace detail {
+template <class T>
+struct __is_integral : public false_value { };
+
+template <>
+struct __is_integral<char> : public true_value { };
+
+template <>
+struct __is_integral<unsigned char> : public true_value { };
+
+template <>
+struct __is_integral<short> : public true_value { };
+
+template <>
+struct __is_integral<unsigned short> : public true_value { };
+
+template <>
+struct __is_integral<int> : public true_value { };
+
+template <>
+struct __is_integral<unsigned int> : public true_value { };
+
+template <>
+struct __is_integral<long> : public true_value { };
+
+template <>
+struct __is_integral<unsigned long> : public true_value { };
+
+#if	SIZEOF_LONG_LONG
+template <>
+struct __is_integral<long long> : public true_value { };
+
+template <>
+struct __is_integral<unsigned long long> : public true_value { };
+#endif
+}	// end namespace detail
+
+template <class T>
+struct is_integral : public detail::__is_integral<
+	typename remove_cv<typename remove_reference<T>::type>::type > { };
+
+// UTIL_STATIC_ASSERT(is_integral<size_t>::value)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+namespace detail {
+
+template <class T>
+struct __is_floating_point : public false_value { };
+
+template <>
+struct __is_floating_point<float> : public true_value { };
+
+template <>
+struct __is_floating_point<double> : public true_value { };
+
+// better not use this for now, if we're issuing warnings about long-double
+#if	0 && SIZEOF_LONG_DOUBLE
+template <>
+struct __is_floating_point<long double> : public true_value { };
+#endif
+}	// end namespace detail
+
+template <class T>
+struct is_floating_point : public detail::__is_floating_point<
+	typename remove_cv<typename remove_reference<T>::type>::type > { };
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <class T>
+struct is_arithmetic : public bool_value<
+		is_integral<T>::value || is_floating_point<T>::value
+	> { };
 
 //=============================================================================
 template <class T, class S>

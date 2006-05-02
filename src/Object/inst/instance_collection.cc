@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.18 2006/04/23 07:37:19 fang Exp $
+ 	$Id: instance_collection.cc,v 1.18.6.1 2006/05/02 06:29:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -67,7 +67,7 @@ namespace entity {
 using namespace ADS;		// for composition functors
 using util::dereference;
 #include "util/using_ostream.h"
-using std::bind2nd_argval_void;
+using util::bind2nd_argval_void;
 using util::indent;
 using util::auto_indent;
 using util::write_string;
