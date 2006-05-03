@@ -5,6 +5,22 @@
 
 2006-05-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-22-prsim-04-06:
+	  prsim now tracks transition counts, but not direction specific, 
+		and ignores transitions to X.  
+	  New prsim commands:
+		'breaks' list breakpoints.
+		'watches' list all watched nodes.
+		'tcounts' show tcounts in node info display.
+		'notcounts' hide tcounts
+		'zerotcounts' reset tcounts
+	  update: 'get' now prints cause of last transition, 
+		and tcounts if enabled.  Few prsim test cases updated.  
+	  Handful of new test cases for new commands.  
+
+
+2006-05-02	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-22-prsim-04-05:
 	  Minor fix in node state checkpointing.  
 		Event queue reconstruction may use different newly

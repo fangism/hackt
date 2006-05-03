@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.7.6.3 2006/05/02 06:29:40 fang Exp $
+	$Id: Command.cc,v 1.7.6.4 2006/05/03 05:28:46 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -916,7 +916,11 @@ public:
 	static int      main(State&, const string_list&);
 	static void     usage(ostream&);
 	static ostream& print_watched_node(ostream&, const State&, 
-		const State::step_return_type&, const State::time_type);
+		const node_index_type, const string&);
+	static ostream& print_watched_node(ostream&, const State&, 
+		const State::step_return_type&);
+	static ostream& print_watched_node(ostream&, const State&, 
+		const State::step_return_type&, const string&);
 private:
 	static const size_t             receipt_id;
 };      // end class Step
@@ -924,32 +928,32 @@ private:
 INITIALIZE_COMMAND_CLASS(Step, "step", simulation,
 	"step through event")
 
-#if 0
-/**
-	Like prs_step() from original prsim.
-	\return index of the affected node.  
- */
+static
+inline
 node_index_type
-Step::main(State& s) {
-	return s.step();
+GET_NODE(const State::step_return_type& x) {
+	return x.first;
 }
-#endif
 
-#define	GET_NODE(x)			(x).first
-#define	GET_CAUSE(x)			(x).second
+static
+inline
+node_index_type
+GET_CAUSE(const State::step_return_type& x) {
+	return x.second;
+}
 
 /**
 	Yeah, I know looking up already looked up node, but we don't
 	care because printing and diagnostics are not performance-critical.  
+	\param nodename the name to use for reporting, which need not be
+		the canonical name of the node, but some equivalent.  
  */
 ostream&
 Step::print_watched_node(ostream& o, const State& s, 
-		const State::step_return_type& r,
-		const State::time_type ct) {
+		const State::step_return_type& r, const string& nodename) {
 	const node_index_type ni = GET_NODE(r);
-	const string nodename(s.get_node_canonical_name(ni));
+	// const string nodename(s.get_node_canonical_name(ni));
 	const State::node_type& n(s.get_node(ni));
-	o << ct << '\t';
 	n.dump_value(o << nodename << " : ");
 	const node_index_type ci = GET_CAUSE(r);
 	if (ci) {
@@ -957,7 +961,34 @@ Step::print_watched_node(ostream& o, const State& s,
 		const State::node_type& c(s.get_node(ci));
 		c.dump_value(o << "\t[by " << causename << ":=") << ']';
 	}
+	if (s.show_tcounts()) {
+		o << "\t(" << n.tcount << " T)";
+	}
 	return o << endl;
+}
+
+/**
+	This automatically uses the canonical name.  
+ */
+ostream&
+Step::print_watched_node(ostream& o, const State& s, 
+		const State::step_return_type& r) {
+	const node_index_type ni = GET_NODE(r);
+	const string nodename(s.get_node_canonical_name(ni));
+	return print_watched_node(o, s, r, nodename);
+}
+
+/**
+	This variation deduces the cause of the given node's last transition,
+	the last arriving input to a firing rule.  
+	\param nodename the name to use for reporting.  
+ */
+ostream&
+Step::print_watched_node(ostream& o, const State& s, 
+		const node_index_type ni, const string& nodename) {
+	return print_watched_node(o, s,
+		State::step_return_type(ni, s.get_node(ni).get_cause_node()), 
+		nodename);
 }
 
 /**
@@ -1001,7 +1032,7 @@ if (a.size() > 2) {
 			tracing stuff here later...
 		***/
 		if (s.watching_all_nodes()) {
-			print_watched_node(cout << '\t', s, ni, ct);
+			print_watched_node(cout << '\t' << ct << '\t', s, ni);
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
@@ -1010,7 +1041,8 @@ if (a.size() > 2) {
 				s.get_node_canonical_name(GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				print_watched_node(cout << '\t', s, ni, ct);
+				print_watched_node(cout << '\t' << ct << '\t',
+					s, ni);
 			}	// else already have message from before
 			}
 			// channel support
@@ -1071,7 +1103,8 @@ if (a.size() != 2) {
 			TODO: factor this out for maintainability.  
 		***/
 		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t', s, ni, s.time());
+			Step::print_watched_node(cout << '\t' << s.time() <<
+				'\t', s, ni);
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
@@ -1080,8 +1113,8 @@ if (a.size() != 2) {
 				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t',
-					s, ni, s.time());
+				Step::print_watched_node(cout << '\t' <<
+					s.time() << '\t', s, ni);
 			}	// else already have message from before
 			}
 			// channel support
@@ -1138,7 +1171,8 @@ if (a.size() != 1) {
 			Step::main() and Advance::main().
 		***/
 		if (s.watching_all_nodes()) {
-			Step::print_watched_node(cout << '\t', s, ni, s.time());
+			Step::print_watched_node(cout << '\t' << s.time() <<
+				'\t', s, ni);
 		}
 		if (n.is_breakpoint()) {
 			// this includes watchpoints
@@ -1147,8 +1181,8 @@ if (a.size() != 1) {
 				GET_NODE(ni)));
 			if (w) {
 			if (!s.watching_all_nodes()) {
-				Step::print_watched_node(cout << '\t',
-					s, ni, s.time());
+				Step::print_watched_node(cout << '\t' <<
+					s.time() << '\t', s, ni);
 			}	// else already have message from before
 			}
 			// channel support
@@ -1435,6 +1469,26 @@ UnBreakAll::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Breaks, "breaks", simulation,
+	"list all nodes that are breakpoints")
+
+int
+Breaks::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_breakpoints(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+Breaks::usage(ostream& o) {
+	o << "breaks";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if ENABLE_PRSIM_CHECKPOINT
 
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Save, "save", simulation, 
@@ -1572,8 +1626,21 @@ if (a.size() != 2) {
 		// we have ni = the canonically allocated index of the bool node
 		// just look it up in the node_pool
 		// const state_manager& sm(s.get_module().get_state_manager());
+#if 0
 		const State::node_type& n(s.get_node(ni));
 		n.dump_value(cout << objname << " : ") << endl;
+		const node_index_type ci = n.cause_node;
+		if (ci) {
+			const string causename(s.get_node_canonical_name(ci));
+			const State::node_type& c(s.get_node(ci));
+			c.dump_value(o << "\t[by " << causename << ":=") << ']';
+		}
+		if (s.show_tcounts()) {
+			o << "\t(" << n.tcount << " T)";
+		}
+#else
+		Step::print_watched_node(cout, s, ni, objname);
+#endif
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -2034,6 +2101,86 @@ NoWatchAll::usage(ostream& o) {
 	o << "nowatchall" << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watches, "watches", view,
+	"list all nodes that are explicitly watched")
+
+int
+Watches::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_watched_nodes(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+Watches::usage(ostream& o) {
+	o << "watches";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(TCounts, "tcounts", view, 
+	"show transition counts on watched nodes")
+
+int
+TCounts::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.set_show_tcounts();
+	return Command::NORMAL;
+}
+}
+
+void
+TCounts::usage(ostream& o) {
+	o << "tcounts" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoTCounts, "notcounts", view, 
+	"hide transition counts on watched nodes")
+
+int
+NoTCounts::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.clear_show_tcounts();
+	return Command::NORMAL;
+}
+}
+
+void
+NoTCounts::usage(ostream& o) {
+	o << "notcounts" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(ZeroTCounts, "zerotcounts", view, 
+	"reset transition counts on all nodes")
+
+int
+ZeroTCounts::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.reset_tcounts();
+	return Command::NORMAL;
+}
+}
+
+void
+ZeroTCounts::usage(ostream& o) {
+	o << "zerotcounts" << endl;
+}
+
 //-----------------------------------------------------------------------------
 #if WANT_OLD_RANDOM_COMMANDS
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Random, "random", modes, 
@@ -2111,8 +2258,6 @@ Timing::usage(ostream& o) {
 }
 
 //=============================================================================
-#undef	GET_NODE
-#undef	GET_CAUSE
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
 //=============================================================================
 }	// end namespace PRSIM

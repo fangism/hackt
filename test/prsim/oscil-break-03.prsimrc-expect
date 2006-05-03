@@ -1,0 +1,8 @@
+breaking on R.x[0] 
+breakpoints: R.x[0] 
+unbreak R.x[0] 
+breakpoints: 
+breaking on R.x[2] and R.x[9] 
+breakpoints: R.x[2] R.x[9] 
+unbreakall 
+breakpoints: 

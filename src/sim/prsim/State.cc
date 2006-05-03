@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.5 2006/05/02 23:46:16 fang Exp $
+	$Id: State.cc,v 1.8.6.6 2006/05/03 05:28:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -189,6 +189,16 @@ State::initialize(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Resets transition counts of all nodes.  
+ */
+void
+State::reset_tcounts(void) {
+	for_each(node_pool.begin(), node_pool.end(), 
+		mem_fun_ref(&node_type::reset_tcount));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Resets the state of simulation, as if it had just started up.  
 	Preserve the watch/break point state.
 	\pre expressions are already properly sized.  
@@ -356,7 +366,8 @@ State::append_excllo_ring(ring_set_type& r) {
 	Should be inline only.  
 	\param n the reference to the node.
 	\param ni the referenced node's index.
-	\param ci the index of the node that caused this event to enqueue.  
+	\param ci the index of the node that caused this event to enqueue, 
+		may be INVALID_NODE_INDEX.
 	\param ri the index rule/expression that caused this event to fire.
 	\param val the future value of the node.
 	\pre n must not already have a pending event.
@@ -373,6 +384,7 @@ State::__allocate_event(node_type& n,
 	n.set_event(event_pool.allocate(
 		event_type(ni, ci, ri, val)
 		));
+	n.set_cause_node(ci);
 	return n.get_event();
 }
 
@@ -561,6 +573,34 @@ void
 State::clear_all_breakpoints(void) {
 	for_each(node_pool.begin(), node_pool.end(),
 		mem_fun_ref(&node_type::clear_breakpoint));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Lists all nodes marked as breakpoints.  
+ */
+ostream&
+State::dump_breakpoints(ostream& o) const {
+	typedef	node_pool_type::const_iterator		const_iterator;
+	const const_iterator b(node_pool.begin()), e(node_pool.end());
+	const_iterator i(b);
+	o << "breakpoints: ";
+	for (++i; i!=e; ++i) {
+	if (i->is_breakpoint()) {
+		const node_index_type ni = distance(b, i);
+		const watch_list_type::const_iterator
+			f(watch_list.find(ni));
+		/**
+			If not found in the watchlist, or
+			is found and also flagged as breakpoint, 
+			then we have a true breakpoint.  
+		 */
+		if (f == watch_list.end() || f->second.breakpoint) {
+			o << get_node_canonical_name(ni) << ' ';
+		}
+	}	// end if is_breakpoint
+	}	// end for-all nodes
+	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1070,6 +1110,9 @@ State::step(void) {
 #endif
 	// saved previous value above already
 	n.set_value(pe.val);
+	// count transition only if new value is not X
+	if (pe.val != node_type::LOGIC_OTHER)
+		++n.tcount;
 	__deallocate_event(n, ei);
 	// reminder: do not reference pe beyond this point (deallocated)
 	// could scope the reference to prevent it...
@@ -1093,7 +1136,6 @@ State::step(void) {
 	}	// end if (excllo enforcement)
 
 	// energy estimation?  TODO later for a different sim variant
-	// transition counts ++
 
 	// check and flush pending queue, spawn fanout events
 	flush_pending_queue();
@@ -1477,7 +1519,7 @@ void
 State::unwatch_all_nodes(void) {
 	typedef	watch_list_type::const_iterator		const_iterator;
 	const_iterator i(watch_list.begin()), e(watch_list.end());
-	for (; i!=e; ++i) {
+	for ( ; i!=e; ++i) {
 		node_type& n(get_node(i->first));
 		if (i->second.breakpoint) {
 			n.set_breakpoint();
@@ -1486,6 +1528,22 @@ State::unwatch_all_nodes(void) {
 		}
 	}
 	watch_list.clear();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints list of explicitly watched nodes.  
+	Doesn't count watchall flag.  
+ */
+ostream&
+State::dump_watched_nodes(ostream& o) const {
+	typedef	watch_list_type::const_iterator		const_iterator;
+	const_iterator i(watch_list.begin()), e(watch_list.end());
+	o << "watched nodes: ";
+	for (; i!=e; ++i) {
+		o << get_node_canonical_name(i->first) << ' ';
+	}
+	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

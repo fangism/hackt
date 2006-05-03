@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.5.6.4 2006/05/02 23:46:13 fang Exp $
+	$Id: Node.cc,v 1.5.6.5 2006/05/03 05:28:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -122,6 +122,7 @@ NodeState::initialize(void) {
 	event_index = INVALID_EVENT_INDEX;
 	caused_by_node = INVALID_NODE_INDEX;
 	value = LOGIC_OTHER;
+	tcount = 0;
 	state_flags |= NODE_INITIALIZE_SET_MASK;
 	state_flags &= ~NODE_INITIALIZE_CLEAR_MASK;
 }
@@ -135,6 +136,7 @@ NodeState::reset(void) {
 	event_index = INVALID_EVENT_INDEX;
 	caused_by_node = INVALID_NODE_INDEX;
 	value = LOGIC_OTHER;
+	tcount = 0;
 	state_flags = NODE_INITIAL_STATE_FLAGS;
 }
 

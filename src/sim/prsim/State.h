@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.5.6.5 2006/05/02 23:46:17 fang Exp $
+	$Id: State.h,v 1.5.6.6 2006/05/03 05:28:50 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -160,6 +160,11 @@ private:
 			sparse watch_list.  
 		 */
 		FLAG_WATCHALL = 0x10,
+		/**
+			Whether or not to show transition counts
+			when displaying nodes.  
+		 */
+		FLAG_SHOW_TCOUNTS = 0x20,
 		/**
 			Flags to set upon initialize().
 		 */
@@ -357,6 +362,18 @@ public:
 	norandom(void) { timing_mode = TIMING_UNIFORM; }
 
 	bool
+	show_tcounts(void) const { return flags & FLAG_SHOW_TCOUNTS; }
+
+	void
+	set_show_tcounts(void) { flags |= FLAG_SHOW_TCOUNTS; }
+
+	void
+	clear_show_tcounts(void) { flags &= ~FLAG_SHOW_TCOUNTS; }
+
+	void
+	reset_tcounts(void);
+
+	bool
 	pending_events(void) const { return !event_queue.empty(); }
 
 	static
@@ -389,6 +406,9 @@ public:
 
 	void
 	clear_all_breakpoints(void);
+
+	ostream&
+	dump_breakpoints(ostream&) const;
 
 	step_return_type
 	step(void);
@@ -444,6 +464,9 @@ public:
 	/// for any user-defined structures from the .hac
 	void
 	unwatch_structure(void);
+
+	ostream&
+	dump_watched_nodes(ostream&) const;
 
 	ostream&
 	status_nodes(ostream&, const char) const;

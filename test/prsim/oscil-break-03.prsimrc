@@ -1,0 +1,22 @@
+# "oscil-break-03.prsimrc"
+#	$Id: oscil-break-03.prsimrc,v 1.1.2.1 2006/05/03 05:29:03 fang Exp $
+# @haco@ oscillator.haco-a
+# Testing breakpoint listing features.
+
+
+echo breaking on R.x[0]
+breakpt R.x[0]
+breaks
+
+echo unbreak R.x[0]
+unbreak R.x[0]
+breaks
+
+echo breaking on R.x[2] and R.x[9]
+breakpt R.x[2]
+breakpt R.x[9]
+breaks
+
+echo unbreakall
+unbreakall
+breaks

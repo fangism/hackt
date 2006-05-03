@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.6.6.4 2006/05/02 23:46:15 fang Exp $
+	$Id: Node.h,v 1.6.6.5 2006/05/03 05:28:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -201,6 +201,7 @@ protected:
 		like last arriving input, for critical path analysis.  
 	 */
 	node_index_type				caused_by_node;
+public:
 	/**
 		Transition counts.  
 		Not critical to simulation, unless we want statistics.  
@@ -218,6 +219,12 @@ public:
 	pending_event(void) const {
 		return event_index != INVALID_EVENT_INDEX;
 	}
+
+	node_index_type
+	get_cause_node(void) const { return caused_by_node; }
+
+	void
+	set_cause_node(const node_index_type ci) { caused_by_node = ci; }
 
 	event_index_type
 	get_event(void) const { return event_index; }
@@ -314,6 +321,9 @@ public:
 
 	void
 	reset(void);
+
+	void
+	reset_tcount(void) { tcount = 0; }
 
 	void
 	save_state(ostream&) const;
