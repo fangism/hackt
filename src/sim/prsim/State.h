@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.5.6.6 2006/05/03 05:28:50 fang Exp $
+	$Id: State.h,v 1.5.6.7 2006/05/03 23:24:04 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -100,6 +100,18 @@ public:
 	 */
 	typedef	std::pair<node_index_type, node_index_type>
 							step_return_type;
+private:
+	struct evaluate_return_type {
+		node_index_type			node_index;
+		expr_type*			root_ex;
+		char				root_pull;
+
+		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
+
+		evaluate_return_type(const node_index_type ni,
+			expr_type* const e, const char p) :
+			node_index(ni), root_ex(e), root_pull(p) { }
+	};	// end struct evaluate_return_type
 private:
 	/**
 		A fast, realloc-free vector-like structure
@@ -560,6 +572,10 @@ private:
 
 	time_type
 	get_delay_dn(const event_type&) const;
+
+	evaluate_return_type
+	evaluate(const node_index_type, expr_index_type, 
+		char prev, char next);
 
 	void
 	propagate_evaluation(const node_index_type, expr_index_type, 

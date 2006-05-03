@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.5.6.5 2006/05/03 05:28:47 fang Exp $
+	$Id: Node.cc,v 1.5.6.6 2006/05/03 23:24:01 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -222,9 +222,12 @@ NodeState::save_state(ostream& o) const {
 /**
 	The node state must be reeconstructed *before* the event queue
 	is reconstructed, because it overwrites the event_index field.  
+	\pre node is reset to unknown value to be able to reconstruct
+		intermediate expression state through propagation.  
  */
 void
 NodeState::load_state(istream& i) {
+	INVARIANT(value == LOGIC_OTHER);
 	read_value(i, value);
 	read_value(i, state_flags);
 //	read_value(i, event_index);

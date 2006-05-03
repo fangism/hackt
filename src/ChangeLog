@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-07:
+	  Checkpointing now no longer writes out expression state, but rather
+		reconstructs it from the nodes by re-using evaluation
+		propagation, without affecting the queues.  
+		Results in dramatic reduction in checkpoint size.  
+		Flag: DEDUCE_PRSIM_EXPR_STATE in "sim/devel_switches.h"
+	  Factored out evaluation phase of State::propagate_evaluation
+		into its own subroutine, re-used in checkpoint loading.  
+
+
 2006-05-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-22-prsim-04-06:

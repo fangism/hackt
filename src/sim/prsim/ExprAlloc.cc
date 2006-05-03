@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.8 2006/04/24 00:28:09 fang Exp $
+	$Id: ExprAlloc.cc,v 1.8.6.1 2006/05/03 23:24:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -208,8 +208,7 @@ ExprAlloc::visit(const footprint_rule& r) {
 {
 	// first, unconditionally create a rule entry in the state's rule
 	// map for every top-level (root) expression that affects a node.  
-	rule_type& rule
-		__ATTRIBUTE_UNUSED_CTOR__((st_rule_map[ret_ex_index]));
+	rule_type& rule __ATTRIBUTE_UNUSED_CTOR__((st_rule_map[ret_ex_index]));
 	// now iterate over attributes to apply changes
 	typedef footprint_rule::attributes_list_type	attr_list_type;
 	typedef	attr_list_type::const_iterator		const_iterator;
@@ -250,8 +249,7 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 expr_index_type
 ExprAlloc::allocate_new_not_expr(const expr_index_type ei) {
 	STACKTRACE_INDENT_PRINT("sub_ex_index = " << ei << endl);
-	st_expr_pool.push_back(
-		expr_type(expr_type::EXPR_NOT,1));
+	st_expr_pool.push_back(expr_type(expr_type::EXPR_NOT,1));
 	st_graph_node_pool.push_back(graph_node_type());
 	// now link parent to only-child
 	const expr_index_type last = st_expr_pool.size() -1;

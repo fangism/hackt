@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.2.6.1 2006/05/01 03:25:41 fang Exp $
+	$Id: devel_switches.h,v 1.2.6.2 2006/05/03 23:23:59 fang Exp $
  */
 
 #ifndef	__HAC_SIM_DEVEL_SWITCHES_H__
@@ -32,9 +32,17 @@
 
 /**
 	Define to 1 to enable prsim checkpointing capability.  
-	Goal:
+	Goal: 1
  */
 #define	ENABLE_PRSIM_CHECKPOINT			1
+
+/**
+	Define to 1 to use reconstruction algorithm for 
+	restoring intermediate expression state from checkpoint.
+	Little slower, but dramatically reduces checkpoint size.
+	Goal: 1
+ */
+#define	DEDUCE_PRSIM_EXPR_STATE			1
 
 //=============================================================================
 

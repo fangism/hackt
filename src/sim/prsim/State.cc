@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.6 2006/05/03 05:28:49 fang Exp $
+	$Id: State.cc,v 1.8.6.7 2006/05/03 23:24:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,7 @@
 #include "sim/prsim/Event.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
+#include "sim/devel_switches.h"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
@@ -1151,20 +1152,16 @@ State::step(void) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	The main expression evaluation method, ripped off of
-	old prsim's propagate_up.  
-	\param ni the index of the node causing this propagation (root),
-		only used for diagnostic purposes.
-	\param ui the index of the sub expression being evaluated, 
-		this is already a parent expression of the causing node, 
-		unlike original prsim.  
-	\param prev the former value of the node/subexpression
-	\param next the new value of the node/subexpression
-	NOTE: the action table here depends on the expression-type's
-		subtype encoding.  For now, we use the Expr's encoding.  
+	Evaluates expression changes without propagating/generating events.  
+	Useful for expression state reconstruction from checkpoint.  
+	\return pair(root expression, new pull value) if event propagated
+		to the root, else (INVALID_NODE_INDEX, whatever)
+	Side effect (sort of): trace of expressions visited is in
+		the __scratch_expr_trace array.  
  */
-void
-State::propagate_evaluation(const node_index_type ni, expr_index_type ui, 
+// inline
+State::evaluate_return_type
+State::evaluate(const node_index_type ni, expr_index_type ui, 
 		char prev, char next) {
 #if DEBUG_STEP
 	STACKTRACE_VERBOSE;
@@ -1207,13 +1204,44 @@ do {
 	if (old_pull == new_pull) {
 		// then the pull-state did not change.
 		DEBUG_STEP_PRINT("end of propagation." << endl);
-		return;
+		return evaluate_return_type();
 	}
 	// already accounted for negation in pull_state()
 	prev = old_pull;
 	next = new_pull;
 	ui = u->parent;
 } while (!u->is_root());
+	// made it to root
+	return evaluate_return_type(ui, u, next);
+}	// end State::evaluate()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The main expression evaluation method, ripped off of
+	old prsim's propagate_up.  
+	\param ni the index of the node causing this propagation (root),
+		only used for diagnostic purposes.
+	\param ui the index of the sub expression being evaluated, 
+		this is already a parent expression of the causing node, 
+		unlike original prsim.  
+		Locally, this is used as the index of the affected node.  
+	\param prev the former value of the node/subexpression
+	\param next the new value of the node/subexpression.
+		Locally, this is used as index of the root expression, 
+		in the event that an evaluation propagates to root.  
+	NOTE: the action table here depends on the expression-type's
+		subtype encoding.  For now, we use the Expr's encoding.  
+ */
+void
+State::propagate_evaluation(const node_index_type ni, expr_index_type ui, 
+		char prev, char next) {
+	const evaluate_return_type
+		ev_result(evaluate(ni, ui, prev, next));
+	if (!ev_result.node_index)
+		return;
+	next = ev_result.root_pull;
+	ui = ev_result.node_index;
+	const expr_type* const u(ev_result.root_ex);
 	// we delay the root rule search until here to reduce the amount
 	// of searching required to find the responsible rule expression.  
 	rule_index_type root_rule;
@@ -1943,11 +1971,13 @@ State::save_checkpoint(ostream& o) const {
 #endif
 	);
 }{
+#if !DEDUCE_PRSIM_EXPR_STATE
 	// expr_pool
 	write_value(o, expr_pool.size());
 	for_each(++expr_pool.begin(), expr_pool.end(), 
 		bind2nd_argval(mem_fun_ref(&expr_type::save_state), o)
 	);
+#endif
 }
 	// graph_pool -- structural only
 {
@@ -2038,6 +2068,7 @@ State::load_checkpoint(istream& i) {
 	}
 #endif
 }{
+#if !DEDUCE_PRSIM_EXPR_STATE
 	// expr_pool
 	size_t s;
 	read_value(i, s);
@@ -2058,6 +2089,30 @@ State::load_checkpoint(istream& i) {
 		j->load_state(i);
 	}
 #endif
+#else
+	// to reconstruct from nodes only, we perform propagation evaluation
+	// on every node, as if it had just fired out of X state.  
+	typedef node_pool_type::const_iterator	const_iterator;
+	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
+	const_iterator ni(nb);
+	for (++ni; ni!=ne; ++ni) {
+		typedef	node_type::const_fanout_iterator
+					const_fanout_iterator;
+		const node_type& n(*ni);
+		const_fanout_iterator fi(n.fanout.begin()), fe(n.fanout.end());
+		const char next = n.current_value();
+		const char prev = node_type::LOGIC_OTHER;
+		if (next != prev) {
+			const expr_index_type nj(distance(nb, ni));
+			for ( ; fi!=fe; ++fi) {
+				evaluate(nj, *fi, prev, next);
+				// evaluate does not modify any queues
+			}
+			// but we don't actually use these event queues, 
+			// those are loaded from the checkpoint.  
+		}
+	}	// end for-all nodes
+#endif	// DEDUCE_PRSIM_EXPR_STATE
 }
 	// graph_pool -- structural only
 {
