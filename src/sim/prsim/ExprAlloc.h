@@ -1,12 +1,13 @@
 /**
 	\file "sim/prsim/ExprAlloc.h"
-	$Id: ExprAlloc.h,v 1.6 2006/04/23 07:37:26 fang Exp $
+	$Id: ExprAlloc.h,v 1.6.6.1 2006/05/04 02:51:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOC_H__
 #define	__HAC_SIM_PRSIM_EXPRALLOC_H__
 
 #include "Object/lang/cflat_context_visitor.h"
+#include "sim/prsim/ExprAllocFlags.h"
 #include "sim/prsim/State.h"		// for nested typedefs
 #include "sim/common.h"
 
@@ -21,7 +22,6 @@ using entity::SPEC::footprint_directive;
 using entity::cflat_context_visitor;
 
 //=============================================================================
-
 /**
 	Visits all PRS expressions and allocates them for use with 
 	the prsim simulator.  
@@ -46,9 +46,12 @@ public:
 protected:
 	/// the expression index last returned
 	expr_index_type				ret_ex_index;
+	ExprAllocFlags				flags;
 public:
 	explicit
 	ExprAlloc(state_type&);
+
+	ExprAlloc(state_type&, const ExprAllocFlags&);
 
 	// default empty destructor
 

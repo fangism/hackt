@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.8.6.1 2006/05/03 23:24:00 fang Exp $
+	$Id: ExprAlloc.cc,v 1.8.6.2 2006/05/04 02:51:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -174,7 +174,20 @@ ExprAlloc::ExprAlloc(state_type& _s) :
 		st_expr_pool(state.expr_pool), 
 		st_graph_node_pool(state.expr_graph_node_pool), 
 		st_rule_map(state.get_rule_map()),
-		ret_ex_index(INVALID_EXPR_INDEX) {
+		ret_ex_index(INVALID_EXPR_INDEX), 
+		flags() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ExprAlloc::ExprAlloc(state_type& _s, const ExprAllocFlags& f) :
+		cflat_context_visitor(), 
+		state(_s),
+		st_node_pool(state.node_pool), 
+		st_expr_pool(state.expr_pool), 
+		st_graph_node_pool(state.expr_graph_node_pool), 
+		st_rule_map(state.get_rule_map()),
+		ret_ex_index(INVALID_EXPR_INDEX), 
+		flags(f) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -249,6 +262,7 @@ ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 expr_index_type
 ExprAlloc::allocate_new_not_expr(const expr_index_type ei) {
 	STACKTRACE_INDENT_PRINT("sub_ex_index = " << ei << endl);
+#if 0
 	st_expr_pool.push_back(expr_type(expr_type::EXPR_NOT,1));
 	st_graph_node_pool.push_back(graph_node_type());
 	// now link parent to only-child
@@ -258,6 +272,11 @@ ExprAlloc::allocate_new_not_expr(const expr_index_type ei) {
 	child.offset = 0;
 	st_graph_node_pool.back().push_back_expr(ei);
 	return st_expr_pool.size() -1;
+#else
+	// just negate the expression, duh!
+	st_expr_pool[ei].toggle_not();
+	return ei;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

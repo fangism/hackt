@@ -1,56 +1,44 @@
 Nodes: 
 node[1]: "a.in[0]" up: -, dn: - fanout: 2, 5, 
-node[2]: "a.in[1]" up: -, dn: - fanout: 3, 7, 
-node[3]: "z" up: 23, dn: 1 fanout: 
-node[4]: "b.in[0]" up: -, dn: - fanout: 10, 15, 
-node[5]: "b.in[1]" up: -, dn: - fanout: 11, 17, 
-node[6]: "b.in[2]" up: -, dn: - fanout: 12, 19, 
-node[7]: "b.in[3]" up: -, dn: - fanout: 13, 21, 
+node[2]: "a.in[1]" up: -, dn: - fanout: 3, 6, 
+node[3]: "z" up: 17, dn: 1 fanout: 
+node[4]: "b.in[0]" up: -, dn: - fanout: 8, 13, 
+node[5]: "b.in[1]" up: -, dn: - fanout: 9, 14, 
+node[6]: "b.in[2]" up: -, dn: - fanout: 10, 15, 
+node[7]: "b.in[3]" up: -, dn: - fanout: 11, 16, 
 Expressions: 
 expr[1]: type: or<3> (pull-dn: 3)
-	children: 2, 3, 9, offset: -
+	children: 2, 3, 7, offset: -
 expr[2]: type: or<1> (parent: 1)
 	children: #1, offset: 0
 expr[3]: type: or<1> (parent: 1)
 	children: #2, offset: 1
-expr[4]: type: and<2> (parent: 23)
-	children: 6, 8, offset: 0
-expr[5]: type: or<1> (parent: 6)
+expr[4]: type: and<2> (parent: 17)
+	children: 5, 6, offset: 0
+expr[5]: type: nor<1> (parent: 4)
 	children: #1, offset: 0
 expr[6]: type: nor<1> (parent: 4)
-	children: 5, offset: 0
-expr[7]: type: or<1> (parent: 8)
-	children: #2, offset: 0
-expr[8]: type: nor<1> (parent: 4)
-	children: 7, offset: 1
-expr[9]: type: or<4> (parent: 1)
-	children: 10, 11, 12, 13, offset: 2
-expr[10]: type: or<1> (parent: 9)
+	children: #2, offset: 1
+expr[7]: type: or<4> (parent: 1)
+	children: 8, 9, 10, 11, offset: 2
+expr[8]: type: or<1> (parent: 7)
 	children: #4, offset: 0
-expr[11]: type: or<1> (parent: 9)
+expr[9]: type: or<1> (parent: 7)
 	children: #5, offset: 1
-expr[12]: type: or<1> (parent: 9)
+expr[10]: type: or<1> (parent: 7)
 	children: #6, offset: 2
-expr[13]: type: or<1> (parent: 9)
+expr[11]: type: or<1> (parent: 7)
 	children: #7, offset: 3
-expr[14]: type: and<4> (parent: 23)
-	children: 16, 18, 20, 22, offset: 1
-expr[15]: type: or<1> (parent: 16)
+expr[12]: type: and<4> (parent: 17)
+	children: 13, 14, 15, 16, offset: 1
+expr[13]: type: nor<1> (parent: 12)
 	children: #4, offset: 0
-expr[16]: type: nor<1> (parent: 14)
-	children: 15, offset: 0
-expr[17]: type: or<1> (parent: 18)
-	children: #5, offset: 0
-expr[18]: type: nor<1> (parent: 14)
-	children: 17, offset: 1
-expr[19]: type: or<1> (parent: 20)
-	children: #6, offset: 0
-expr[20]: type: nor<1> (parent: 14)
-	children: 19, offset: 2
-expr[21]: type: or<1> (parent: 22)
-	children: #7, offset: 0
-expr[22]: type: nor<1> (parent: 14)
-	children: 21, offset: 3
-expr[23]: type: or<2> (pull-up: 3)
-	children: 4, 14, offset: -
+expr[14]: type: nor<1> (parent: 12)
+	children: #5, offset: 1
+expr[15]: type: nor<1> (parent: 12)
+	children: #6, offset: 2
+expr[16]: type: nor<1> (parent: 12)
+	children: #7, offset: 3
+expr[17]: type: or<2> (pull-up: 3)
+	children: 4, 12, offset: -
 

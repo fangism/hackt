@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.4.6.1 2006/05/02 06:29:42 fang Exp $
+	$Id: Expr.h,v 1.4.6.2 2006/05/04 02:51:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -95,6 +95,8 @@ public:
 	bool
 	is_not(void) const { return type & EXPR_NOT; }
 
+	void
+	toggle_not(void) { type ^= EXPR_NOT; }
 
 	/**
 		\pre direction is only meaningful if this expression is 

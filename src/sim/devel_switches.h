@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.2.6.2 2006/05/03 23:23:59 fang Exp $
+	$Id: devel_switches.h,v 1.2.6.3 2006/05/04 02:51:36 fang Exp $
  */
 
 #ifndef	__HAC_SIM_DEVEL_SWITCHES_H__
@@ -31,18 +31,32 @@
 // define your simulator-wide development switches here:
 
 /**
-	Define to 1 to enable prsim checkpointing capability.  
-	Goal: 1
- */
-#define	ENABLE_PRSIM_CHECKPOINT			1
-
-/**
 	Define to 1 to use reconstruction algorithm for 
 	restoring intermediate expression state from checkpoint.
 	Little slower, but dramatically reduces checkpoint size.
 	Goal: 1
+	Status: looks good, checkpoint consistency tests are satisfactory.  
  */
 #define	DEDUCE_PRSIM_EXPR_STATE			1
+
+/**
+	Define to 1 to enable prsim expression optimization, 
+	where literal leaf nodes are folded.  
+	This results in a siginificant reduction in the number of expression 
+	leaf nodes if nodes fanout directly to expressions as operands.  
+	NOTE: this transformation is only legal when there is no information
+	to be retained per literal.  e.g. sized PRS cannot use this.  
+	Goal: 1
+ */
+#define	PRSIM_ENABLE_LITERAL_FOLDING		1
+
+/**
+	Define to 1 to allow expression trees to be rewritten
+	by pulling negations closer to roots.  
+	This sometimes results in shorter expression paths.  
+	Goal: 1
+ */
+#define	PRSIM_ENABLE_NEGATION_DENORMALIZATION	1
 
 //=============================================================================
 

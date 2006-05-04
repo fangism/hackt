@@ -5,6 +5,20 @@
 
 2006-05-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-22-prsim-04-08:
+	  Updated ExprAlloc::allocate_new_not_expr: just toggle NOT flag!
+		Few graphical test cases updated in parser/prs.  
+	  Provisions for expression allocation optimizations, 
+		added flag set for ExprAlloc-ation, set by main/prsim.cc.
+	  New options (and -fno counterparts): to be implemented next.
+		-f fold-literals : eliminate leaves (saves memory, faster)
+		-f denormalize-negations : reverse DeMorgan transformation.
+		-O1 : both of the above.
+	  NOTE: checkpoint files are valid across differently optimized
+		invocations of prsim because intermediate expression
+		state is reconstructed from nodes (which don't change).  
+
+
 	* HACKT-00-01-04-main-00-78-22-prsim-04-07:
 	  Checkpointing now no longer writes out expression state, but rather
 		reconstructs it from the nodes by re-using evaluation

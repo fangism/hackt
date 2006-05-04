@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.5.6.7 2006/05/03 23:24:04 fang Exp $
+	$Id: State.h,v 1.5.6.8 2006/05/04 02:51:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -30,6 +30,7 @@ namespace entity {
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
+struct ExprAllocFlags;
 using std::string;
 using entity::module;
 using util::list_vector;
@@ -295,7 +296,7 @@ public:
 	} __ATTRIBUTE_UNUSED__ ;
 public:
 	explicit
-	State(const module&);
+	State(const module&, const ExprAllocFlags&);
 private:
 	// inaccessible undefined copy-constructor ... for now
 	State(const State&);

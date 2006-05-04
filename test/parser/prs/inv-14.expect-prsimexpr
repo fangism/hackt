@@ -1,11 +1,9 @@
 Nodes: 
 node[1]: "__inv__.a" up: -, dn: - fanout: 1, 2, 
-node[2]: "__inv__.b" up: 3, dn: 1 fanout: 
+node[2]: "__inv__.b" up: 2, dn: 1 fanout: 
 Expressions: 
 expr[1]: type: or<1> (pull-dn: 2)
 	children: #1, offset: -
-expr[2]: type: or<1> (parent: 3)
-	children: #1, offset: 0
-expr[3]: type: nor<1> (pull-up: 2)
-	children: 2, offset: -
+expr[2]: type: nor<1> (pull-up: 2)
+	children: #1, offset: -
 

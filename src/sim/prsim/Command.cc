@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.7.6.4 2006/05/03 05:28:46 fang Exp $
+	$Id: Command.cc,v 1.7.6.5 2006/05/04 02:51:38 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1489,8 +1489,6 @@ Breaks::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_PRSIM_CHECKPOINT
-
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Save, "save", simulation, 
 	"saves simulation state to a checkpoint")
 
@@ -1554,8 +1552,6 @@ Load::usage(ostream& o) {
 	o << "load <file>" << endl;
 	o << brief << endl;
 }
-
-#endif	// ENABLE_PRSIM_CHECKPOINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(What, "what", info,

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.7 2006/05/03 23:24:02 fang Exp $
+	$Id: State.cc,v 1.8.6.8 2006/05/04 02:51:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -81,7 +81,7 @@ using entity::process_tag;
 	\param m the expanded module object.
 	\pre m must already be past the allcoate phase.  
  */
-State::State(const entity::module& m) : 
+State::State(const entity::module& m, const ExprAllocFlags& f) : 
 		mod(m), 
 		node_pool(), expr_pool(), expr_graph_node_pool(),
 		event_pool(), event_queue(), 
@@ -126,7 +126,7 @@ State::State(const entity::module& m) :
 
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
-	ExprAlloc v(*this);
+	ExprAlloc v(*this, f);
 
 
 	// this may throw an exception!
@@ -2055,7 +2055,6 @@ State::load_checkpoint(istream& i) {
 	}
 	typedef node_pool_type::iterator	iterator;
 	const iterator b(++node_pool.begin()), e(node_pool.end());
-	// util::wtf_is(b);
 #if 0
 	// doesn't work :(
 	for_each(b, e, 
@@ -2107,6 +2106,7 @@ State::load_checkpoint(istream& i) {
 			for ( ; fi!=fe; ++fi) {
 				evaluate(nj, *fi, prev, next);
 				// evaluate does not modify any queues
+				// just updates expression states
 			}
 			// but we don't actually use these event queues, 
 			// those are loaded from the checkpoint.  

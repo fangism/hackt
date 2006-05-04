@@ -1,18 +1,18 @@
 Nodes: 
 node[1]: "_nor.in[0]" up: -, dn: - fanout: 2, 7, 
-node[2]: "_nor.in[1]" up: -, dn: - fanout: 3, 9, 
-node[3]: "_nor.in[2]" up: -, dn: - fanout: 4, 11, 
-node[4]: "_nor.in[3]" up: -, dn: - fanout: 5, 13, 
-node[5]: "z" up: 29, dn: 1 fanout: 
-node[6]: "_nand.in[0]" up: -, dn: - fanout: 16, 21, 
-node[7]: "_nand.in[1]" up: -, dn: - fanout: 17, 23, 
-node[8]: "_nand.in[2]" up: -, dn: - fanout: 18, 25, 
-node[9]: "_nand.in[3]" up: -, dn: - fanout: 19, 27, 
-node[10]: "_c.in[0]" up: -, dn: - fanout: 31, 34, 
-node[11]: "_c.in[1]" up: -, dn: - fanout: 32, 36, 
+node[2]: "_nor.in[1]" up: -, dn: - fanout: 3, 8, 
+node[3]: "_nor.in[2]" up: -, dn: - fanout: 4, 9, 
+node[4]: "_nor.in[3]" up: -, dn: - fanout: 5, 10, 
+node[5]: "z" up: 21, dn: 1 fanout: 
+node[6]: "_nand.in[0]" up: -, dn: - fanout: 12, 17, 
+node[7]: "_nand.in[1]" up: -, dn: - fanout: 13, 18, 
+node[8]: "_nand.in[2]" up: -, dn: - fanout: 14, 19, 
+node[9]: "_nand.in[3]" up: -, dn: - fanout: 15, 20, 
+node[10]: "_c.in[0]" up: -, dn: - fanout: 23, 26, 
+node[11]: "_c.in[1]" up: -, dn: - fanout: 24, 27, 
 Expressions: 
 expr[1]: type: or<6> (pull-dn: 5)
-	children: 2, 3, 4, 5, 15, 30, offset: -
+	children: 2, 3, 4, 5, 11, 22, offset: -
 expr[2]: type: or<1> (parent: 1)
 	children: #1, offset: 0
 expr[3]: type: or<1> (parent: 1)
@@ -21,68 +21,48 @@ expr[4]: type: or<1> (parent: 1)
 	children: #3, offset: 2
 expr[5]: type: or<1> (parent: 1)
 	children: #4, offset: 3
-expr[6]: type: and<4> (parent: 29)
-	children: 8, 10, 12, 14, offset: 0
-expr[7]: type: or<1> (parent: 8)
+expr[6]: type: and<4> (parent: 21)
+	children: 7, 8, 9, 10, offset: 0
+expr[7]: type: nor<1> (parent: 6)
 	children: #1, offset: 0
 expr[8]: type: nor<1> (parent: 6)
-	children: 7, offset: 0
-expr[9]: type: or<1> (parent: 10)
-	children: #2, offset: 0
+	children: #2, offset: 1
+expr[9]: type: nor<1> (parent: 6)
+	children: #3, offset: 2
 expr[10]: type: nor<1> (parent: 6)
-	children: 9, offset: 1
-expr[11]: type: or<1> (parent: 12)
-	children: #3, offset: 0
-expr[12]: type: nor<1> (parent: 6)
-	children: 11, offset: 2
-expr[13]: type: or<1> (parent: 14)
-	children: #4, offset: 0
-expr[14]: type: nor<1> (parent: 6)
-	children: 13, offset: 3
-expr[15]: type: and<4> (parent: 1)
-	children: 16, 17, 18, 19, offset: 4
-expr[16]: type: or<1> (parent: 15)
+	children: #4, offset: 3
+expr[11]: type: and<4> (parent: 1)
+	children: 12, 13, 14, 15, offset: 4
+expr[12]: type: or<1> (parent: 11)
 	children: #6, offset: 0
-expr[17]: type: or<1> (parent: 15)
+expr[13]: type: or<1> (parent: 11)
 	children: #7, offset: 1
-expr[18]: type: or<1> (parent: 15)
+expr[14]: type: or<1> (parent: 11)
 	children: #8, offset: 2
-expr[19]: type: or<1> (parent: 15)
+expr[15]: type: or<1> (parent: 11)
 	children: #9, offset: 3
-expr[20]: type: or<4> (parent: 29)
-	children: 22, 24, 26, 28, offset: 1
-expr[21]: type: or<1> (parent: 22)
+expr[16]: type: or<4> (parent: 21)
+	children: 17, 18, 19, 20, offset: 1
+expr[17]: type: nor<1> (parent: 16)
 	children: #6, offset: 0
-expr[22]: type: nor<1> (parent: 20)
-	children: 21, offset: 0
-expr[23]: type: or<1> (parent: 24)
-	children: #7, offset: 0
-expr[24]: type: nor<1> (parent: 20)
-	children: 23, offset: 1
-expr[25]: type: or<1> (parent: 26)
-	children: #8, offset: 0
-expr[26]: type: nor<1> (parent: 20)
-	children: 25, offset: 2
-expr[27]: type: or<1> (parent: 28)
-	children: #9, offset: 0
-expr[28]: type: nor<1> (parent: 20)
-	children: 27, offset: 3
-expr[29]: type: or<3> (pull-up: 5)
-	children: 6, 20, 33, offset: -
-expr[30]: type: and<2> (parent: 1)
-	children: 31, 32, offset: 5
-expr[31]: type: or<1> (parent: 30)
+expr[18]: type: nor<1> (parent: 16)
+	children: #7, offset: 1
+expr[19]: type: nor<1> (parent: 16)
+	children: #8, offset: 2
+expr[20]: type: nor<1> (parent: 16)
+	children: #9, offset: 3
+expr[21]: type: or<3> (pull-up: 5)
+	children: 6, 16, 25, offset: -
+expr[22]: type: and<2> (parent: 1)
+	children: 23, 24, offset: 5
+expr[23]: type: or<1> (parent: 22)
 	children: #10, offset: 0
-expr[32]: type: or<1> (parent: 30)
+expr[24]: type: or<1> (parent: 22)
 	children: #11, offset: 1
-expr[33]: type: and<2> (parent: 29)
-	children: 35, 37, offset: 2
-expr[34]: type: or<1> (parent: 35)
+expr[25]: type: and<2> (parent: 21)
+	children: 26, 27, offset: 2
+expr[26]: type: nor<1> (parent: 25)
 	children: #10, offset: 0
-expr[35]: type: nor<1> (parent: 33)
-	children: 34, offset: 0
-expr[36]: type: or<1> (parent: 37)
-	children: #11, offset: 0
-expr[37]: type: nor<1> (parent: 33)
-	children: 36, offset: 1
+expr[27]: type: nor<1> (parent: 25)
+	children: #11, offset: 1
 
