@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.4.6.2 2006/05/04 02:51:39 fang Exp $
+	$Id: Expr.h,v 1.4.6.3 2006/05/04 23:16:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -97,6 +97,17 @@ public:
 
 	void
 	toggle_not(void) { type ^= EXPR_NOT; }
+
+	void
+	toggle_demorgan(void) {
+		// pushes the bubble: and <-> nor, nand <-> or
+		type ^= (EXPR_NOT | EXPR_AND);
+	}
+
+	bool
+	is_trivial(void) const {
+		return (size == 1) && !is_not();
+	}
 
 	/**
 		\pre direction is only meaningful if this expression is 

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAllocFlags.h"
-	$Id: ExprAllocFlags.h,v 1.1.2.1 2006/05/04 02:51:40 fang Exp $
+	$Id: ExprAllocFlags.h,v 1.1.2.2 2006/05/04 23:16:47 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPRALLOCFLAGS_H__
@@ -58,6 +58,11 @@ struct ExprAllocFlags {
 		if (level)
 			flags |= OPTIMIZE_FLAGS;
 		else	flags &= ~OPTIMIZE_FLAGS;
+	}
+
+	bool
+	any_optimize(void) const {
+		return flags | OPTIMIZE_FLAGS;
 	}
 
 };	// end struct ExprAllocFlags

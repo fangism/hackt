@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.h"
-	$Id: cflat_visitor.h,v 1.4 2006/02/04 06:43:21 fang Exp $
+	$Id: cflat_visitor.h,v 1.4.28.1 2006/05/04 23:16:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_VISITOR_H__
@@ -43,10 +43,8 @@ public:
 	cflat_visitor() : expr_pool(NULL) { }
 virtual	~cflat_visitor() { }
 
-#if 0
 virtual	void
 	visit(const state_manager&);
-#endif
 virtual	void
 	visit(const footprint&);
 virtual	void

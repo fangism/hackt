@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2006-05-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-09:
+	  Bug fix in util/memory/free_list.h: acquiring from queue
+		free_list should access the front(), not back().
+
+
 2006-04-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-22-prsim-04-04:

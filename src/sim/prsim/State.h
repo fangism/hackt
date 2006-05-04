@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.5.6.8 2006/05/04 02:51:41 fang Exp $
+	$Id: State.h,v 1.5.6.9 2006/05/04 23:16:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -624,7 +624,12 @@ public:
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
-		const char p = entity::PRS::PRS_LITERAL_TYPE_ENUM) const;
+#if 0
+		const char p = entity::PRS::PRS_LITERAL_TYPE_ENUM
+#else
+		const char p = expr_type::EXPR_ROOT
+#endif
+		) const;
 
 	bool
 	save_checkpoint(ostream&) const;

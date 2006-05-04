@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_visitor.cc"
-	$Id: cflat_visitor.cc,v 1.5 2006/02/10 21:50:40 fang Exp $
+	$Id: cflat_visitor.cc,v 1.5.24.1 2006/05/04 23:16:42 fang Exp $
  */
 
 #include <algorithm>
@@ -8,6 +8,9 @@
 #include "Object/lang/cflat_visitor.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
+#include "Object/state_manager.h"
+#include "Object/global_entry.tcc"
+#include "Object/traits/proc_traits.h"
 
 namespace HAC {
 namespace entity {
@@ -34,6 +37,24 @@ public:
 		cfv.expr_pool = NULL;
 	}
 };      // end struct expr_pool_setter
+
+//=============================================================================
+/**
+	Default state_manager traversal. 
+ */
+void
+cflat_visitor::visit(const state_manager& sm) {
+	size_t pid = 1;		// 0-indexed, but 0th entry is null
+	// const global_entry_pool<process_tag>& proc_entry_pool(sm);
+	const global_entry_pool<process_tag>&
+		proc_entry_pool(sm.get_pool<process_tag>());
+	// Could re-write in terms of begin() and end() iterators.  
+	const size_t plim = proc_entry_pool.size();
+	for ( ; pid < plim; ++pid) {
+		entity::production_rule_substructure::accept(
+			proc_entry_pool[pid], *this);
+	}
+}
 
 //=============================================================================
 /**

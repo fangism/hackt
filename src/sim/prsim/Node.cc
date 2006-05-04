@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.5.6.6 2006/05/03 23:24:01 fang Exp $
+	$Id: Node.cc,v 1.5.6.7 2006/05/04 23:16:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -69,10 +69,10 @@ ostream&
 Node::dump_struct(ostream& o) const {
 	o << "up: ";
 	if (pull_up_index)	o << pull_up_index;
-	else			o << '-';
+	else			o << '-';	// irrelevant
 	o << ", dn: ";
 	if (pull_dn_index)	o << pull_dn_index;
-	else			o << '-';
+	else			o << '-';	// irrelevant
 	o << " fanout: ";
 #if 1
 //	o << '<' << fanout.size() << "> ";

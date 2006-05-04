@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.8 2006/05/04 02:51:41 fang Exp $
+	$Id: State.cc,v 1.8.6.9 2006/05/04 23:16:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1829,7 +1829,11 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	const graph_node_type& g(expr_graph_node_pool[ei]);
 	// can elaborate more on when parens are needed
 	const bool need_parens = e.parenthesize(ptype);
+#if 0
 	const char _type = e.to_prs_enum();
+#else
+	const char _type = e.type;
+#endif
 	// check if this sub-expression is a root expression by looking
 	// up the expression index in the rule_map.  
 	typedef	rule_map_type::const_iterator	rule_iterator;
