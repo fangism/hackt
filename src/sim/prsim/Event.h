@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.4.6.4 2006/05/02 06:29:41 fang Exp $
+	$Id: Event.h,v 1.4.6.5 2006/05/05 04:55:37 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -35,6 +35,8 @@ using util::memory::free_list_release;
 	Based on struct prs_event (PrsEvent).  
  */
 struct Event {
+private:
+	typedef	Event			this_type;
 public:
 	/**
 		Event attribute encoding.  
@@ -95,6 +97,14 @@ public:
 
 	void
 	load_state(istream&);
+
+	static
+	ostream&
+	dump_checkpoint_state_header(ostream&);
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream&, istream&);
 
 } __ATTRIBUTE_ALIGNED__ ;	// end struct Event
 

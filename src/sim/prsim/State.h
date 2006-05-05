@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.5.6.9 2006/05/04 23:16:48 fang Exp $
+	$Id: State.h,v 1.5.6.10 2006/05/05 04:55:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -57,6 +57,11 @@ struct watch_entry {
 
 	void
 	load_state(istream&);
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream&, istream&);
+
 } __ATTRIBUTE_ALIGNED__ ;
 
 //=============================================================================
@@ -624,12 +629,13 @@ public:
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
-#if 0
-		const char p = entity::PRS::PRS_LITERAL_TYPE_ENUM
-#else
-		const char p = expr_type::EXPR_ROOT
-#endif
-		) const;
+		const char p, const bool cp = false) const;
+
+	ostream&
+	dump_subexpr(ostream& o, const expr_index_type ei) const {
+		// really don't care what kind of expr, is ignored
+		return dump_subexpr(o, ei, expr_type::EXPR_ROOT, true);
+	}
 
 	bool
 	save_checkpoint(ostream&) const;
@@ -637,9 +643,15 @@ public:
 	bool
 	load_checkpoint(istream&);
 
+	static
+	ostream&
+	dump_checkpoint(ostream&, istream&);
+
 private:
 	void
 	head_sentinel(void);
+
+	static const string		magic_string;
 
 };	// end class State
 

@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.5.6.2 2006/05/03 05:28:53 fang Exp $
+#	$Id: Makefile.am,v 1.5.6.3 2006/05/05 04:55:50 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -28,6 +28,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	excl-rings-01 excl-rings-02 excl-rings-03
 
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
+
+# HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
 EXTRA_DIST +=
 

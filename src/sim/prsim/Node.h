@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.6.6.5 2006/05/03 05:28:48 fang Exp $
+	$Id: Node.h,v 1.6.6.6 2006/05/05 04:55:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -140,6 +140,9 @@ public:
 	Nice and quad-word aligned.  
  */
 struct NodeState : public Node {
+private:
+	typedef	NodeState			this_type;
+public:
 	typedef	Node				parent_type;
 
 	typedef	enum {
@@ -330,6 +333,14 @@ public:
 
 	void
 	load_state(istream&);
+
+	static
+	ostream&
+	dump_checkpoint_state_header(ostream&);
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream&, istream&);
 
 } __ATTRIBUTE_ALIGNED__ ;	// end struct NodeState
 

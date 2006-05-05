@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.9 2006/05/04 23:16:48 fang Exp $
+	$Id: State.cc,v 1.8.6.10 2006/05/05 04:55:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -50,6 +50,17 @@
 #define	DEBUG_FANOUT_PRINT(x)
 #endif
 
+/**
+	Currently, the rule map is just a map to structural information
+	and contains no stateful information.
+	If and when rules retain stateful information, 
+	enabling expression-transforming optimizations might become a problem
+	because expression structures are different, and will affect
+	the contents of the checkpoint.
+	Until that day, we won't worry about it.  
+ */
+#define	CHECKPOINT_RULE_STATE_MAP		0
+
 namespace HAC {
 namespace entity { }
 
@@ -71,6 +82,10 @@ using entity::process_tag;
 #include "util/using_ostream.h"
 //=============================================================================
 // class State method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string
+State::magic_string("hackt-prsim-ckpt");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1165,9 +1180,9 @@ State::evaluate(const node_index_type ni, expr_index_type ui,
 		char prev, char next) {
 #if DEBUG_STEP
 	STACKTRACE_VERBOSE;
-	DEBUG_STEP_INDENT << "node " << ni << " from " <<
+	DEBUG_STEP_PRINT("node " << ni << " from " <<
 		node_type::value_to_char[size_t(prev)] << " -> " <<
-		node_type::value_to_char[size_t(next)] << endl;
+		node_type::value_to_char[size_t(next)] << endl);
 #endif
 	expr_type* u;
 	__scratch_expr_trace.clear();
@@ -1212,7 +1227,13 @@ do {
 	ui = u->parent;
 } while (!u->is_root());
 	// made it to root
+	// TODO: fix expression propagation for negated operations!
+#if 1
 	return evaluate_return_type(ui, u, next);
+#else
+	return evaluate_return_type(ui, u,
+		u->is_not() ? expr_type::negate_pull(next) : next);
+#endif
 }	// end State::evaluate()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1816,10 +1837,13 @@ State::dump_node_fanin(ostream& o, const node_index_type ni) const {
 /**
 	Recursive expression printer.  
 	Should be modeled after cflat's expression printer.  
+	\param ptype the parent's expression type, only used if cp is true.
+	\param pr whether or not parent is root
+		(if so, ignore type comparison for parenthesization).  
  */
 ostream&
 State::dump_subexpr(ostream& o, const expr_index_type ei, 
-		const char ptype) const {
+		const char ptype, const bool pr) const {
 #if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;
 #endif
@@ -1828,7 +1852,7 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	const expr_type& e(expr_pool[ei]);
 	const graph_node_type& g(expr_graph_node_pool[ei]);
 	// can elaborate more on when parens are needed
-	const bool need_parens = e.parenthesize(ptype);
+	const bool need_parens = e.parenthesize(ptype, pr);
 #if 0
 	const char _type = e.to_prs_enum();
 #else
@@ -1961,6 +1985,7 @@ State::dump_node_excl_rings(ostream& o, const node_index_type ni) const {
  */
 bool
 State::save_checkpoint(ostream& o) const {
+	write_value(o, magic_string);
 {
 	// node_pool
 	write_value(o, node_pool.size());
@@ -1985,6 +2010,7 @@ State::save_checkpoint(ostream& o) const {
 }
 	// graph_pool -- structural only
 {
+#if CHECKPOINT_RULE_STATE_MAP
 	// rule_map -- currently structural only, but we include code anyways
 	typedef	rule_map_type::const_iterator		const_iterator;
 	write_value(o, rule_map.size());
@@ -1993,6 +2019,7 @@ State::save_checkpoint(ostream& o) const {
 		write_value(o, i->first);
 		i->second.save_state(o);
 	}
+#endif
 }{
 	// event_pool -- only selected entries
 	// event_queue
@@ -2028,11 +2055,7 @@ State::save_checkpoint(ostream& o) const {
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
-{
-	// object alignment safety check
-	const int tail = 0xF00D;
-	write_value(o, tail);
-}
+	write_value(o, magic_string);
 	return !o;
 }	// end State::save_checkpoint
 
@@ -2048,6 +2071,12 @@ bool
 State::load_checkpoint(istream& i) {
 	initialize();		// start by initializing everything
 	// or reset(); ?
+	string header_check;
+	read_value(i, header_check);
+	if (header_check != magic_string) {
+		cerr << "ERROR: not a hackt prsim checkpoint file." << endl;
+		return true;
+	}
 {
 	// node_pool
 	size_t s;
@@ -2120,6 +2149,7 @@ State::load_checkpoint(istream& i) {
 }
 	// graph_pool -- structural only
 {
+#if CHECKPOINT_RULE_STATE_MAP
 	// rule_map -- currently structural only, but we include code anyways
 	typedef	rule_map_type::iterator		iterator;
 	size_t s;
@@ -2141,6 +2171,7 @@ State::load_checkpoint(istream& i) {
 		}
 		j->second.load_state(i);
 	}
+#endif
 }{
 	// event_pool -- only selected entries
 	// event_queue
@@ -2177,16 +2208,106 @@ State::load_checkpoint(istream& i) {
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
 {
-	// object alignment safety check
-	int tail;
-	read_value(i, tail);
-	if (tail != 0xF00D) {
+	read_value(i, header_check);
+	if (header_check != magic_string) {
 		cerr << "ERROR: detected checkpoint misalignment!" << endl;
 		return true;
 	}
 }
 	return !i;
 }	// end State::load_checkpoint
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Textual dump of checkpoint without loading it.  
+	Keep this consistent with the save/load methods above.  
+	\param i the input file stream for the checkpoint.
+	\param o the output stream to dump to.  
+ */
+ostream&
+State::dump_checkpoint(ostream& o, istream& i) {
+	string header_check;
+	read_value(i, header_check);
+	o << "header string: " << header_check << endl;
+{
+	// node_pool
+	size_t s;
+	read_value(i, s);
+	size_t j = 1;
+	o << "Have " << s << " unique boolean nodes:" << endl;
+	node_type::dump_checkpoint_state_header(o << '\t') << endl;
+	for ( ; j<s; ++j) {
+		node_type::dump_checkpoint_state(o << j << '\t', i) << endl;
+	}
+}{
+#if !DEDUCE_PRSIM_EXPR_STATE
+	// expr_pool
+	size_t s;
+	read_value(i, s);
+	size_t j = 1;
+	o << "Have " << s << " expression nodes:" << endl;
+	expr_type::dump_checkpoint_state_header(o << '\t') << endl;
+	for ( ; j<s; ++j) {
+		expr_type::dump_checkpoint_state(o << j << '\t', i) << endl;
+	}
+#endif
+}
+	// graph_pool -- structural only
+{
+#if CHECKPOINT_RULE_STATE_MAP
+	// rule_map -- currently structural only, but we include code anyways
+	size_t s;
+	read_value(i, s);
+	o << "Have " << s << " rule attribute map entries:" << endl;
+	size_t j = 0;
+	for ( ; j<s; ++j) {
+		rule_map_type::key_type k;
+		read_value(i, k);
+		o << k << '\t';
+		rule_type::dump_checkpoint_state(o, i) << endl;
+	}
+#endif
+}{
+	// event_pool -- only selected entries
+	// event_queue
+	size_t s;
+	read_value(i, s);
+	o << "Have " << s << " events in queue:" << endl;
+	event_type::dump_checkpoint_state_header(o << '\t') << endl;
+	for ( ; s; --s) {
+		time_type t;
+		read_value(i, t);
+		o << t << '\t';
+		event_type::dump_checkpoint_state(o, i) << endl;
+	}
+}
+	time_type current_time, uniform_delay;
+	read_value(i, current_time);
+	read_value(i, uniform_delay);
+	o << "current time: " << current_time << endl;
+	o << "uniform delay: " << uniform_delay << endl;
+{
+	// watch_list? yes, because needs to be kept consistent with nodes
+	size_t s;
+	read_value(i, s);
+	o << "Have " << s << " nodes in watch-list:" << endl;
+	for ( ; s; --s) {
+		watch_list_type::key_type k;
+		read_value(i, k);
+		o << k << '\t';
+		watch_entry::dump_checkpoint_state(o, i) << endl;
+	}
+}
+	flags_type flags;
+	read_value(i, flags);
+	o << "flags: " << size_t(flags) << endl;
+	char timing_mode;
+	read_value(i, timing_mode);
+	o << "timing mode: " << size_t(timing_mode) << endl;
+	read_value(i, header_check);
+	o << "footer string: " << header_check << endl;
+	return o;
+}	// end State::dump_checkpoint
 
 //=============================================================================
 // struct watch_entry method definitions
@@ -2200,6 +2321,14 @@ watch_entry::save_state(ostream& o) const {
 void
 watch_entry::load_state(istream& i) {
 	read_value(i, breakpoint);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+watch_entry::dump_checkpoint_state(ostream& o, istream& i) {
+	char breakpoint;
+	read_value(i, breakpoint);
+	return o << size_t(breakpoint);
 }
 
 //=============================================================================

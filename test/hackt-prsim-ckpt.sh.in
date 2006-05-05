@@ -1,6 +1,6 @@
 #!@SH_PATH@
-# "hackt-prsim-ckpt"
-#	$Id: hackt-prsim-ckpt.sh.in,v 1.1.2.2 2006/05/03 05:28:51 fang Exp $
+# "hackt-prsim-ckpt.sh.in"
+#	$Id: hackt-prsim-ckpt.sh.in,v 1.1.2.3 2006/05/05 04:55:48 fang Exp $
 # Template test script for comparing checking checkpoint consistency
 # TODO: add more status information, such as breakpoints, watchpoints
 
@@ -45,7 +45,7 @@ rm $outroot.prsimckpt-tmp
 if test ! -f $outroot.prsimckpt
 then
 	@ECHO@ "No $outroot.prsimckpt checkpoint generated, skipping test."
-	exit 0;
+	exit 0
 fi
 
 # load first checkpoint and produce duplicate checkpoint
@@ -71,8 +71,11 @@ fi
 if @DIFF@ -q $outroot.prsimckpt $outroot.prsimckpt-dupe
 then :
 else
-	# will already have diff message
-	# @ECHO@ "$outroot.prsimckpt and its -dupe differ!"
+	$prsim -d $outroot.prsimckpt > $outroot.prsimckpt-dump
+	$prsim -d $outroot.prsimckpt-dupe > $outroot.prsimckpt-dupe-dump
+	@DIFF@ -u $outroot.prsimckpt-dump $outroot.prsimckpt-dupe-dump > \
+		$outroot.prsimckpt-diff
+	@ECHO@ "See $outroot.prsimckpt-diff for dump difference details."
 	exit 1
 fi
 

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.2.6.3 2006/05/04 02:51:36 fang Exp $
+	$Id: devel_switches.h,v 1.2.6.4 2006/05/05 04:55:33 fang Exp $
  */
 
 #ifndef	__HAC_SIM_DEVEL_SWITCHES_H__
@@ -40,23 +40,11 @@
 #define	DEDUCE_PRSIM_EXPR_STATE			1
 
 /**
-	Define to 1 to enable prsim expression optimization, 
-	where literal leaf nodes are folded.  
-	This results in a siginificant reduction in the number of expression 
-	leaf nodes if nodes fanout directly to expressions as operands.  
-	NOTE: this transformation is only legal when there is no information
-	to be retained per literal.  e.g. sized PRS cannot use this.  
+	Define to 1 to track node-to-node cause paths by direction, 
+	so we can track complete cycles in backtracing critical paths.  
 	Goal: 1
  */
-#define	PRSIM_ENABLE_LITERAL_FOLDING		1
-
-/**
-	Define to 1 to allow expression trees to be rewritten
-	by pulling negations closer to roots.  
-	This sometimes results in shorter expression paths.  
-	Goal: 1
- */
-#define	PRSIM_ENABLE_NEGATION_DENORMALIZATION	1
+#define	SEPARATE_CAUSE_NODE_DIRECTION		0
 
 //=============================================================================
 

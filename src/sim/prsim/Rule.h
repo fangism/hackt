@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.2.6.1 2006/05/02 06:29:44 fang Exp $
+	$Id: Rule.h,v 1.2.6.2 2006/05/05 04:55:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -69,6 +69,10 @@ struct RuleState : public Rule<Time> {
 
 	void
 	load_state(istream&) { }
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream& o, istream&) { return o; }
 
 } __ATTRIBUTE_ALIGNED__ ;	// end struct RuleState
 

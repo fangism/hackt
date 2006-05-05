@@ -39,6 +39,8 @@ core.*
 *.prsimrc-out-filter
 *.prsimrc-diff
 *.prsimckpt
+*.prsimckpt-O1
+*.prsimckpt-O1-err
 *.prsimckpt-dupe
 *.prsimckpt-outdump
 *.prsimckpt-indump

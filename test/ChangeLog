@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2006-05-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-10:
+	  Added test support for verifying that prsim -O1 results in 
+		identical checkpoints as the default -O0.  
+
+
 2006-05-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-22-prsim-04-05:

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.3.12.2 2006/05/04 23:16:45 fang Exp $
+	$Id: Expr.cc,v 1.3.12.3 2006/05/05 04:55:38 fang Exp $
  */
 
 #include <iostream>
@@ -60,16 +60,19 @@ Expr::to_prs_enum(void) const {
 	Determine whether or not to parenthesize this subexpression
 	during pretty-printing.  
 	\param ptype is the parent expression type enumeration.
+	\param proot
  */
 bool
-Expr::parenthesize(const char ptype) const {
+Expr::parenthesize(const char ptype, const bool proot) const {
 #if 0
 	return (ptype != entity::PRS::PRS_LITERAL_TYPE_ENUM) &&
 		(ptype != to_prs_enum()) && (size > 1);
 #else
-	return !(type & EXPR_ROOT) &&
-		(size > 1 &&
-			(((type ^ ptype) & EXPR_MASK) || (type & EXPR_NOT)));
+	const bool neg = type & EXPR_NOT;
+	const bool mismatch = (type ^ ptype) & EXPR_MASK;
+	// const bool proot = ptype & EXPR_ROOT;
+	// return (size > 1 && ((mismatch && !proot) || neg));
+	return (size > 1 && (neg || (mismatch && !proot)));
 #endif
 }
 
@@ -175,6 +178,20 @@ void
 ExprState::load_state(istream& i) {
 	read_value(i, countdown);
 	read_value(i, unknowns);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+ExprState::dump_checkpoint_state_header(ostream& o) {
+	return o << "countdn\tunknowns";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+ExprState::dump_checkpoint_state(ostream& o, istream& i) {
+	this_type temp;
+	temp.load_state(i);
+	return o << size_t(temp.countdown) << '\t' << size_t(temp.unknowns);
 }
 
 //=============================================================================

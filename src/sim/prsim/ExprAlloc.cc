@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.8.6.3 2006/05/04 23:16:47 fang Exp $
+	$Id: ExprAlloc.cc,v 1.8.6.4 2006/05/05 04:55:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -487,8 +487,6 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 		whose subexpressions are scanned to see if they are
 		negated literals.  If all are such, then we can apply
 		DeMorgan's transformation to eliminate those literals.  
-	TODO: allow subexpressions that are not nodes, 
-		and push nots down to them.  
  */
 void
 ExprAlloc::denormalize_negation(const expr_index_type _e) {
@@ -506,10 +504,11 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 		if (!c.first) {		// is expression
 			const expr_index_type ei(c.second);
 			const expr_type& oe(st_expr_pool[ei]);
-			const graph_node_type& og(st_graph_node_pool[ei]);
-			const child_entry_type& ogc(og.children[0]);
+			// const graph_node_type& og(st_graph_node_pool[ei]);
+			// const child_entry_type& ogc(og.children[0]);
 			// if is single node-child parent
-			if (oe.size == 1 && oe.is_not() && ogc.first) {
+			if (oe.size == 1 && oe.is_not()) {
+					// && ogc.first
 				// ok, leave denorm as is
 			} else	denorm = false;
 		} else	denorm = false;
@@ -527,17 +526,24 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 			// if is single node-child parent
 			// re-connect graph, skipping over
 			// the intermediate trivial node
-			const node_index_type cn = ogc.second;
 			// replace grandparent's child connect.
-			c = ogc;
-			node_type& ln(st_node_pool[cn]);
-			// grandchild's has no parent connect.
-			// replace child's fanout: ei -> _e
-			replace(ln.fanout.begin(), ln.fanout.end(), ei, _e);
-			// there should be no references to 
-			// expression ei remaining
+			if (ogc.first) {
+				c = ogc;
+				const node_index_type cn = ogc.second;
+				node_type& ln(st_node_pool[cn]);
+				// grandchild's has no parent connect.
+				// replace child's fanout: ei -> _e
+				replace(ln.fanout.begin(), ln.fanout.end(), ei, _e);
+				// there should be no references to 
+				// expression ei remaining
 			STACKTRACE_INDENT_PRINT("releasing " << ei << endl);
-			free_list_release(expr_free_list, ei);
+				free_list_release(expr_free_list, ei);
+			} else {
+				// is an expression, just keep structure
+				// the same and negate the type
+				const expr_index_type ce = ogc.second;
+				st_expr_pool[ce].toggle_not();
+			}
 		}	// end for all subexpressions
 		// apply DeMorgan's law
 		st_expr_pool[_e].toggle_demorgan();
@@ -548,8 +554,6 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 /**
 	Create expressions bottom-up.  
 	\pre state's node_array is already allocated.  
-	TODO: optimize expression hierarchy using NAND and NOR expr types
-		for nodes whose children are all negated.  Ooooo.
  */
 void
 ExprAlloc::visit(const footprint_expr_node& e) {

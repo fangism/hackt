@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.4.6.3 2006/05/04 23:16:46 fang Exp $
+	$Id: Expr.h,v 1.4.6.4 2006/05/05 04:55:39 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -13,6 +13,11 @@
 #include <utility>
 #include "sim/common.h"
 #include "util/macros.h"
+
+/**
+	Define to 1 to use PULL_WEAK == 1.
+ */
+#define	USE_BETTER_PULL_ENCODING		0
 
 namespace HAC {
 namespace SIM {
@@ -159,9 +164,8 @@ public:
 	bool
 	is_nand(void) const { return (type & EXPR_AND) && (type & EXPR_NOT); }
 
-	/// see "Object/lang/PRS_enum.h"
 	bool
-	parenthesize(const char) const;
+	parenthesize(const char, const bool) const;
 
 	/// see "Object/lang/PRS_enum.h"
 	char
@@ -188,8 +192,11 @@ private:
 //=============================================================================
 /**
 	Stateful expression class, derived from expression structure.  
+	TODO: figure out a clean way to use enums in code rather than chars.  
  */
 struct ExprState : public Expr {
+private:
+	typedef	ExprState		this_type;
 public:
 	typedef	Expr			parent_type;
 	/**
@@ -198,11 +205,12 @@ public:
 		Consider re-enumerating so that 2-x can be used
 		to invert.  (Will need to recode some tables in this case.)
 	 */
-	typedef	enum {
-		PULL_OFF = 0,
-		PULL_ON = 1,
-		PULL_WEAK = 2
-	} pull_enum;
+	enum {
+		PULL_OFF = 0x00,
+		PULL_ON = 0x01,
+		PULL_WEAK = 0x02
+	};	// wants to be pull_enum
+	typedef	unsigned char		pull_enum;
 
 public:
 	/**
@@ -272,6 +280,16 @@ public:
 		return is_or() ? or_pull_state() : and_pull_state();
 	}
 
+	/**
+		TODO: re-encode pull states so we can use 2-x.
+	 */
+	static
+	char
+	negate_pull(const char p) {
+		return (p == PULL_WEAK) ? PULL_WEAK :
+			((p == PULL_OFF) ? PULL_ON : PULL_OFF);
+	}
+
 	ostream&
 	dump_state(ostream&) const;
 
@@ -280,6 +298,14 @@ public:
 
 	void
 	load_state(istream&);
+
+	static
+	ostream&
+	dump_checkpoint_state_header(ostream&);
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream&, istream&);
 
 };	// end struct ExprState
 

@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.5.2.1 2006/05/04 02:51:33 fang Exp $
+	$Id: prsim.cc,v 1.5.2.2 2006/05/05 04:55:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -10,6 +10,7 @@
 #include "util/static_trace.h"
 
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include <list>
 
@@ -58,6 +59,8 @@ public:
 	bool			check_structure;
 	/// whether or not to produce a dot-format structure dump before running
 	bool			dump_dot_struct;
+	/// whether or not checkpoint dump is requested
+	bool			dump_checkpoint;
 	ExprAllocFlags		expr_alloc_flags;
 
 	typedef	std::list<string>	source_paths_type;
@@ -67,6 +70,7 @@ public:
 	prsim_options() : help_only(false), interactive(true), 
 		dump_expr_alloc(false), run(true),
 		check_structure(true), dump_dot_struct(false), 
+		dump_checkpoint(false),
 		expr_alloc_flags(), 
 		source_paths() { }
 
@@ -95,6 +99,10 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 		cerr << "Error in command invocation." << endl;
 		usage();
 		return 1;
+	}
+	if (opt.dump_checkpoint) {
+		// dump of checkpoint only
+		return 0;
 	}
 	if (opt.help_only) {
 		util::string_list args;
@@ -171,7 +179,7 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 		argc, argv, o, options_modifier_map);
 #else
 	// now we're adding our own flags
-	static const char optstring[] = "+bf:hiI:O:";
+	static const char optstring[] = "+bd:f:hiI:O:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -179,6 +187,16 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 			// batch-mode, non-interactive
 			o.interactive = false;
 			break;
+		case 'd': {
+			o.dump_checkpoint = true;
+			std::ifstream f(optarg, std::ios_base::binary);
+			if (!f) {
+				cerr << "Error opening file \"" << optarg <<
+					"\" for reading." << endl;
+			}
+			State::dump_checkpoint(cout, f);
+			break;
+		}
 		case 'f': {
 			const options_modifier_map_iterator
 				mi(options_modifier_map.find(optarg));
@@ -231,6 +249,7 @@ prsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-infile>" << endl;
 	cerr << "options:" << endl;
 	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
+	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
 	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
 	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
 	cerr << "\t-i : interactive (default)" << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.3.12.1 2006/05/02 06:29:41 fang Exp $
+	$Id: Event.cc,v 1.3.12.2 2006/05/05 04:55:35 fang Exp $
  */
 
 #include <iostream>
@@ -72,6 +72,21 @@ Event::load_state(istream& i) {
 	read_value(i, cause_node);
 	read_value(i, cause_rule);
 	read_value(i, val);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+Event::dump_checkpoint_state_header(ostream& o) {
+	return o << "node\tcause-node\tcause-rule\tvalue";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+Event::dump_checkpoint_state(ostream& o, istream& i) {
+	this_type temp;
+	temp.load_state(i);
+	return o << temp.node << "\t\t" << temp.cause_node << "\t\t" <<
+		temp.cause_rule << '\t' << size_t(temp.val);
 }
 
 //=============================================================================

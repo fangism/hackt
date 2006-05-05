@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.5.6.7 2006/05/04 23:16:48 fang Exp $
+	$Id: Node.cc,v 1.5.6.8 2006/05/05 04:55:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -213,7 +213,7 @@ void
 NodeState::save_state(ostream& o) const {
 	write_value(o, value);
 	write_value(o, state_flags);
-//	write_value(o, event_index);
+//	omit event index, which is reconstructed
 	write_value(o, caused_by_node);
 	write_value(o, tcount);
 }
@@ -230,10 +230,25 @@ NodeState::load_state(istream& i) {
 	INVARIANT(value == LOGIC_OTHER);
 	read_value(i, value);
 	read_value(i, state_flags);
-//	read_value(i, event_index);
+//	omit event index, which is reconstructed
 	INVARIANT(event_index == INVALID_EVENT_INDEX);
 	read_value(i, caused_by_node);
 	read_value(i, tcount);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+NodeState::dump_checkpoint_state_header(ostream& o) {
+	return o << "value\tflags\tcause\ttcount";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+NodeState::dump_checkpoint_state(ostream& o, istream& i) {
+	this_type temp;
+	temp.load_state(i);
+	return temp.dump_value(o) << '\t' << size_t(temp.state_flags) <<
+		'\t' << temp.caused_by_node << '\t' << temp.tcount;
 }
 
 //=============================================================================

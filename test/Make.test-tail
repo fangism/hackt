@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.29.4.1 2006/05/02 23:46:20 fang Exp $
+#	$Id: Make.test-tail,v 1.29.4.2 2006/05/05 04:55:47 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -33,6 +33,7 @@ HACKT_CFLAT_SPRS_TEST_SH = $(TEST_BUILDDIR)/hackt-cflat-sprs-expect.sh
 HACKT_PRSIMEXPR_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-expr-alloc-expect.sh
 HACKT_PRSIMRC_TEST_SH = $(TEST_BUILDDIR)/hackt-prsimrc-expect.sh
 HACKT_PRSIM_CKPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-ckpt.sh
+HACKT_PRSIM_OPT_TEST_SH = $(TEST_BUILDDIR)/hackt-prsim-opt.sh
 
 HACKT_COMPILE_ERROR_FILTER = $(AWK) \
 		-f $(TEST_SRCDIR)/hackt-parse-expect-filter.awk \
@@ -258,6 +259,14 @@ endif
 	$(ECHO) "$(HACKT_PRSIM_CKPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@
 	@$(CHMOD) +x $@
 
+.prsimrc.prsimopttest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(ECHO) "# \"$@\"" >> $@
+	@obj=`$(CAT) $< | $(GREP) "^#" | $(GREP) "@haco@" | $(HEAD) -n1 | \
+		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'` ; \
+	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@
+	@$(CHMOD) +x $@
+
 CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
 	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \
 	prsdiffs prsdiffs.sort prsimexprdiffs \
@@ -356,7 +365,8 @@ TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \
 	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
-	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest)
+	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest)
 
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)
 
@@ -458,7 +468,8 @@ CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexprdiff) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
-	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest)
+	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest)
 
 
 DISTCLEANFILES += local.cvsignore
@@ -485,6 +496,7 @@ AUTO_IGNORE += local.cvsignore \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
 	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
 	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest) \
 	$(CHECK_SUMMARIES)
 
 if NO_VPATH
@@ -543,6 +555,7 @@ clean-local: clean-summaries
 	-$(RM) *.sprs *.sprsdiff *.sprsdiff.sort
 	-$(RM) *.prsimckpt *.prsimckpttest *.prsimckpt-dupe
 	-$(RM) *.prsimckpt-outdump *.prsimckpt-indump *.prsimckpt-diff
+	-$(RM) *.prsimopttest *.prsimckpt-O1 *.prsimckpt-O1-err
 
 # really remove these files!
 cleaner: clean cleaner-recursive cleaner-local

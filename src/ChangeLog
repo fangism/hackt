@@ -5,6 +5,18 @@
 
 2006-05-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-22-prsim-04-10:
+	  Added support for debugging checkpoints by producing textual dump.
+	  Can invoke: hackt prsim -d <checkpoint>
+	  Test support added for diff-ing checkpoints for validation.  
+	  Adjusted parenthesization heuristic for pretty-print.  
+	  ExprAlloc: denormalize_negation now works on children expressions
+		as well as children nodes.  
+	  Checkpoint no longer include rule-attribute map because it is 
+		both stateless and dependent on the expression allocation.
+	  -O1 not quite ready yet for prime time -- more testing required.  
+
+
 	* HACKT-00-01-04-main-00-78-22-prsim-04-09:
 	  cflat_visitor::visit(const state_manager&) now overridable.  
 	  Updated PRSIM::Expr::parenthesize, easier to understand/use.
