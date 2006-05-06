@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.5.6.4 2006/05/06 02:13:46 fang Exp $
+#	$Id: Makefile.am,v 1.5.6.5 2006/05/06 03:36:57 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -7,11 +7,13 @@ include $(top_srcdir)/test/Make.test-head
 # .hac inputs
 HACKT_PRSIMRC_TEST_SUBJECTS = celem inv oscillator half-celem deep tree \
 	celem-share after-celem-def after-celem after-celem-more \
-	pass-gates-def pass-gates excl-rings-def excl-rings
+	pass-gates-def pass-gates excl-rings-def excl-rings \
+	logic-defs and nand or nor
 
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	celem-01 celem-02 celem-03 celem-04 \
 	inv-00 inv-01 inv-02 inv-03 inv-04 inv-05 inv-06 inv-07 inv-08 inv-09 \
+	and-01 nand-01 or-01 nor-01 \
 	cycle-source-a cycle-source-b \
 	unstable-01 \
 	oscil-break-01 oscil-break-02 oscil-break-03 \

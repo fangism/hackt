@@ -1,0 +1,7 @@
+// "and.hac"
+
+import "logic-defs.hac";
+
+bool a, b, c;
+and G(a, b, c);
+

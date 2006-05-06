@@ -1,0 +1,7 @@
+// "nor.hac"
+
+import "logic-defs.hac";
+
+bool a, b, c;
+nor G(a, b, c);
+

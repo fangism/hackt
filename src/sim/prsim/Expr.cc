@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.3.12.3 2006/05/05 04:55:38 fang Exp $
+	$Id: Expr.cc,v 1.3.12.4 2006/05/06 03:36:54 fang Exp $
  */
 
 #include <iostream>
@@ -64,16 +64,9 @@ Expr::to_prs_enum(void) const {
  */
 bool
 Expr::parenthesize(const char ptype, const bool proot) const {
-#if 0
-	return (ptype != entity::PRS::PRS_LITERAL_TYPE_ENUM) &&
-		(ptype != to_prs_enum()) && (size > 1);
-#else
 	const bool neg = type & EXPR_NOT;
 	const bool mismatch = (type ^ ptype) & EXPR_MASK;
-	// const bool proot = ptype & EXPR_ROOT;
-	// return (size > 1 && ((mismatch && !proot) || neg));
 	return (size > 1 && (neg || (mismatch && !proot)));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

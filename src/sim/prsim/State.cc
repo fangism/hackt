@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.11 2006/05/06 02:13:44 fang Exp $
+	$Id: State.cc,v 1.8.6.12 2006/05/06 03:36:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -419,7 +419,6 @@ State::__allocate_event(node_type& n,
 event_index_type
 State::__load_allocate_event(const event_type& ev) {
 	node_type& n(get_node(ev.node));
-//	INVARIANT(!n.pending_event());
 	n.load_event(event_pool.allocate(ev));
 	return n.get_event();
 }
@@ -548,6 +547,7 @@ State::set_node_time(const node_index_type ni, const char val,
 	}
 // If the value is the same as former value, then ignore it.
 // What if delay differs?
+// TODO: could invalidate and re-enqueue with min. time, e.g.
 	if (val == last_val) { return ENQUEUE_ACCEPT; }
 // If node has pending even in queue already, warn and ignore.
 	if (pending) {
@@ -797,8 +797,13 @@ for ( ; i!=e; ++i) {
 			cout << "interference `";
 			cout << get_node_canonical_name(_ni) <<
 				"\'" << endl;
-			// TODO: if (ne->cause)
-			//	... caused by ...
+			if (ev.cause_node) {
+				cout << ">> cause: `" <<
+					get_node_canonical_name(ev.cause_node)
+					<< "\' (val: ";
+				get_node(ev.cause_node).dump_value(cout) <<
+					')' << endl;
+			}
 		}
 		ev.val = node_type::LOGIC_OTHER;
 		switch (_n.current_value()) {
@@ -1013,7 +1018,7 @@ for ( ; i!=e; ++i) {
 				// what if is pulling weakly?
 				expr_pool[er.pull_up_index].pull_state()
 					== expr_type::PULL_ON) {
-		DEBUG_STEP_PRINT("enqueuing pull-up event" << endl);
+			DEBUG_STEP_PRINT("enqueuing pull-up event" << endl);
 				const event_index_type ne =
 					// the pull-up index may not necessarily
 					// correspond to the causing expression!
@@ -1117,19 +1122,11 @@ State::step(void) {
 	// comment?
 	if (pe.val == node_type::LOGIC_OTHER &&
 		prev == node_type::LOGIC_OTHER) {
-		// cause propagation?
-		// if (cause) *cause = pe->cause;
 		DEBUG_STEP_PRINT("X: returning node index " << ni << endl);
 		return return_type(ni, ci);
 	}
 	// assert: vacuous firings on the event queue
-	assert(prev != pe.val || n.is_unstab());
-#if 0
-	// more cause propagation debugging statements
-	if (cause) {
-		*cause = pe->cause;
-	}
-#endif
+	INVARIANT(prev != pe.val || n.is_unstab());
 	// saved previous value above already
 	n.set_value(pe.val);
 	// count transition only if new value is not X
@@ -1707,6 +1704,7 @@ State::dump_state(ostream& o) const {
 /**
 	This prints out the netlist of nodes and expressions
 	in dot-form for visualization.  
+	Good for visualizing a decent 2D cell/wire/transistor placement.
  */
 ostream&
 State::dump_struct_dot(ostream& o) const {
@@ -1862,11 +1860,7 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	const graph_node_type& g(expr_graph_node_pool[ei]);
 	// can elaborate more on when parens are needed
 	const bool need_parens = e.parenthesize(ptype, pr);
-#if 0
-	const char _type = e.to_prs_enum();
-#else
 	const char _type = e.type;
-#endif
 	// check if this sub-expression is a root expression by looking
 	// up the expression index in the rule_map.  
 	typedef	rule_map_type::const_iterator	rule_iterator;

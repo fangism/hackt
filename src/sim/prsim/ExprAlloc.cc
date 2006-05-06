@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.8.6.5 2006/05/06 02:13:43 fang Exp $
+	$Id: ExprAlloc.cc,v 1.8.6.6 2006/05/06 03:36:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -255,6 +255,7 @@ ExprAlloc::compact_expr_pools(void) {
 		graph_node_type& g(st_graph_node_pool[n]);
 		e = st_expr_pool[i];
 		g = st_graph_node_pool[i];
+		// TODO: this code is re-used several times in this file.  
 		// relink parent
 		{
 		graph_node_type::child_entry_type&

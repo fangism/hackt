@@ -5,6 +5,13 @@
 
 2006-05-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-78-22-prsim-04-12:
+	  Added missing cause diagnostic to State::flush_pending_queue().  
+		Few test cases updated accordingly.  
+	  Added some basic test cases to prsim.
+	  Branch matured for merging.  
+
+
 	* HACKT-00-01-04-main-00-78-22-prsim-04-11:
 	  Added Expr::is_disjunctive() when we only care if expr. type
 		is OR or NOR.  

@@ -10,6 +10,7 @@ WARNING: unstable `b'-
 >> cause: `a' (val: 0)
 	25	a : 0
 WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 	30	b : X	[by a:=0]
 	40	c : X	[by b:=X]
 bring back to known states 
@@ -24,5 +25,6 @@ WARNING: interference `b'-
 >> cause: `a' (val: 1)
 	65	a : 1
 WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 	70	b : X	[by a:=1]
 	80	c : X	[by b:=X]

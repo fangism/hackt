@@ -36,8 +36,10 @@ event queue:
 	40	a : X
 expecting weak interference of X vs. X on b, propagating to c 
 WARNING: weak-interference `b'
+>> cause: `a' (val: X)
 	40	a : X
 WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 	50	b : X	[by a:=X]
 expect to see c:x in queue, b:x just happened 
 event queue:
@@ -62,8 +64,10 @@ time: 100
 event queue:
 expecting weak interference, of course 
 WARNING: weak-interference `b'
+>> cause: `a' (val: X)
 	100	a : X
 WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 	110	b : X	[by a:=X]
 	120	c : X	[by b:=X]
 time should be 120, queue should be empty 
@@ -108,8 +112,10 @@ event queue:
 	40	a : X
 expecting weak interference of X vs. X on b, propagating to c 
 WARNING: weak-interference `b'
+>> cause: `a' (val: X)
 	40	a : X
 WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 	50	b : X	[by a:=X]
 expect to see c:x in queue, b:x just happened 
 event queue:
@@ -134,8 +140,10 @@ time: 100
 event queue:
 expecting weak interference, of course 
 WARNING: weak-interference `b'
+>> cause: `a' (val: X)
 	100	a : X
 WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 	110	b : X	[by a:=X]
 	120	c : X	[by b:=X]
 time should be 120, queue should be empty 
@@ -173,7 +181,9 @@ event queue:
 	40	a : X
 expecting weak interference of X vs. X on b, propagating to c 
 WARNING: weak-interference `b'
+>> cause: `a' (val: X)
 WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 expect to see c:x in queue, b:x just happened 
 event queue:
 	60	c : X
@@ -190,7 +200,9 @@ time: 100
 event queue:
 expecting weak interference, of course 
 WARNING: weak-interference `b'
+>> cause: `a' (val: X)
 WARNING: weak-interference `c'
+>> cause: `b' (val: X)
 time should be 120, queue should be empty 
 time: 120
 event queue:
