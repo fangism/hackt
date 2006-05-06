@@ -6,7 +6,7 @@
 	DISABLE_INVARIANT turns off invariant checking.  
 	DISABLE_NULL_CHECK turns off null pointer checks.  
 
-	$Id: macros.h,v 1.10 2006/01/22 06:53:34 fang Exp $
+	$Id: macros.h,v 1.11 2006/05/06 22:08:35 fang Exp $
  */
 
 #ifndef	__UTIL_MACROS_H__
@@ -21,6 +21,17 @@
 #else
 // standard C header
 #include <assert.h>
+#endif
+
+//=============================================================================
+/**
+	This is needed because some preprocessors error on empty arguments.  
+	Pass EMPTY_ARG when 'nothing' is passed as a macro argument.  
+ */
+#ifdef	EMPTY_ARG
+#error	I want EMPTY_ARG to be defined to nothing.
+#else
+#define	EMPTY_ARG
 #endif
 
 //=============================================================================

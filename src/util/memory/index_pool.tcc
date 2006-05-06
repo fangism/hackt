@@ -1,6 +1,6 @@
 /**
 	\file "util/memory/index_pool.tcc"
-	$Id: index_pool.tcc,v 1.3 2006/01/28 18:21:21 fang Exp $
+	$Id: index_pool.tcc,v 1.4 2006/05/06 22:08:41 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_INDEX_POOL_TCC__
@@ -28,7 +28,7 @@ template <class Pool>
 typename index_pool<Pool>::size_type
 index_pool<Pool>::allocate(void) {
 	const size_type ret = this->size();
-	push_back(value_type());
+	this->push_back(value_type());
 	return ret;
 }
 
@@ -41,7 +41,7 @@ template <class Pool>
 typename index_pool<Pool>::size_type
 index_pool<Pool>::allocate(const value_type& v) {
 	const size_type ret = this->size();
-	push_back(v);
+	this->push_back(v);
 	return ret;
 }
 

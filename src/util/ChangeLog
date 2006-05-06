@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
 
+2006-05-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79:
+	  util/STL/functional.h: forgot header inclusion protection, doh!
+
+
 2006-05-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-24-merged-prsim-04-12:

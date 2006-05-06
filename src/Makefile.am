@@ -1,9 +1,9 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.120 2006/05/06 04:18:33 fang Exp $
+#	$Id: Makefile.am,v 1.121 2006/05/06 22:08:06 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
-SUFFIXES = .yy .ll .ii .test .i
+SUFFIXES = .yy .ll .ii .test .i .hii. .hhii .tccii
 
 # standard definitions and macro initializers
 # appends to SUFFIXES
@@ -955,11 +955,20 @@ AM_LFLAGS =
 # SAVETEMP = $(CXXCOMPILE) -v -save-temps
 .cc.ii:
 	$(CXXPREPROCESS) $< > $@
-#	$(SAVETEMP) -c $<
-#	@$(ECHO) ".ii is placed in local directory."
 
 .c.i:
 	$(CPREPROCESS) $< > $@
+
+# yes, even use C++ for .h files because we've (perhaps mistakenly)
+# named all C++ header files .h instead of .hh
+.h.hii:
+	$(CXXPREPROCESS) $< > $@
+
+.hh.hhii:
+	$(CXXPREPROCESS) $< > $@
+
+.tcc.tccii:
+	$(CXXPREPROCESS) $< > $@
 
 # doesn't work
 # YACC_PREFIX = -DYACC_PREFIX=hackt_yy

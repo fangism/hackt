@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.17 2006/04/28 03:20:12 fang Exp $
+ 	$Id: namespace.cc,v 1.18 2006/05/06 22:08:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -23,6 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <numeric>
 #include <string>
 
+#include "util/STL/functional.h"
 #include "util/ptrs_functional.h"
 #include "util/compose.h"
 #include "util/binders.h"

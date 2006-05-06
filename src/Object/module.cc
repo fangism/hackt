@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.17 2006/04/12 08:53:12 fang Exp $
+ 	$Id: module.cc,v 1.18 2006/05/06 22:08:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -203,7 +203,7 @@ module::unroll_module(void) {
  */
 good_bool
 module::create_dependent_types(void) {
-#if 0 && SEPARATE_ALLOCATE_SUBPASS
+#if 0
 	// enabling this requires changes in the end of ::create_unique
 	// this doesn't quite work the way I expected it...
 	const top_level_footprint_importer foo(*this);

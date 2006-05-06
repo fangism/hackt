@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.13 2006/05/06 04:18:42 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.14 2006/05/06 22:08:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -176,9 +176,9 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 	NEVER_NULL(e);
 	bad_bool err(false);
 	size_t dim = this->src->dimensions();
-	if (!validate_dimensions_match(e, dim).good)
+	if (!this->validate_dimensions_match(e, dim).good)
 		err.bad = true;
-	if (!validate_reference_is_uninitialized(e).good)
+	if (!this->validate_reference_is_uninitialized(e).good)
 		err.bad = true;
 	dest_ptr_type pb(e.template is_a<value_reference_type>());
 	if (!pb) {

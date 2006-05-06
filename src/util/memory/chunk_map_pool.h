@@ -1,7 +1,7 @@
 /**
 	\file "util/memory/chunk_map_pool.h"
 	Class definition for chunk-allocated mapped memory pool template.  
-	$Id: chunk_map_pool.h,v 1.11 2006/04/27 00:17:27 fang Exp $
+	$Id: chunk_map_pool.h,v 1.12 2006/05/06 22:08:41 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_CHUNK_MAP_POOL_H__
@@ -13,6 +13,7 @@
 #include <map>
 #include "util/memory/chunk_map_pool_fwd.h"
 #include "util/numeric/inttype_traits.h"
+#include "util/macros.h"
 #include "util/bitset.h"
 #include "util/attributes.h"
 #include "util/cppcat.h"
@@ -83,7 +84,7 @@ T::operator delete (void* p) {						\
 	the underlying allocator for a class.  
  */
 #define	CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(T)			\
-	__CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION( , , T)
+	__CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(EMPTY_ARG, EMPTY_ARG, T)
 
 /**
 	Template version of the class member definition macro. 
@@ -116,7 +117,7 @@ T::__robust_init__ (T::get_pool());
 	Use this macro for non-template types.  
  */
 #define	REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(T)				\
-	__REQUIRES_CHUNK_MAP_POOL_STATIC_INIT( , , T)			
+	__REQUIRES_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, EMPTY_ARG, T)
 
 /**
 	Declares and initializes an external anchor for properly
@@ -195,8 +196,8 @@ T::operator delete (void* p) {						\
 	overloads of new and delete.  
  */
 #define	CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(T)			\
-	__SELF_CHUNK_MAP_POOL_STATIC_INIT( , , T)			\
-	__CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION( , , T)
+	__SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, EMPTY_ARG, T)	\
+	__CHUNK_MAP_POOL_ROBUST_STATIC_DEFINITION(EMPTY_ARG, EMPTY_ARG, T)
 
 /**
 	Template version of same definitions.  

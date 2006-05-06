@@ -1,8 +1,11 @@
 /**
 	\file "util/STL/functional.h"
 	Adds possibly missing (non-standard) definitions.  
-	$Id: functional.h,v 1.2 2006/04/27 00:17:21 fang Exp $
+	$Id: functional.h,v 1.3 2006/05/06 22:08:40 fang Exp $
  */
+
+#ifndef	__UTIL_STL_FUNCTIONAL_H__
+#define	__UTIL_STL_FUNCTIONAL_H__
 
 #include "config.h"
 #include "util/STL/functional_fwd.h"
@@ -47,4 +50,6 @@ struct _Select2nd : public unary_function<_Pair, typename _Pair::second_type> {
 
 //=============================================================================
 }	// end namespace std
+
+#endif	// __UTIL_STL_FUNCTIONAL_H__
 

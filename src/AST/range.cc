@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.4 2006/02/21 04:48:19 fang Exp $
+	$Id: range.cc,v 1.5 2006/05/06 22:08:12 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.4 2006/02/21 04:48:19 fang Exp $
+	$Id: range.cc,v 1.5 2006/05/06 22:08:12 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -627,7 +627,7 @@ dense_range_list::check_formal_dense_ranges(const context& c) const {
 	// initialize some bools to true
 	// and set them false approriately in iterations
 	bad_bool err(false);
-	bool is_pint_expr = true;
+	// bool is_pint_expr = true;
 	bool is_static_constant = true;
 	bool is_initialized = true;
 	check_type::const_iterator i(temp.begin());
@@ -636,7 +636,7 @@ dense_range_list::check_formal_dense_ranges(const context& c) const {
 		STACKTRACE("for-loop");
 		const count_ptr<pint_expr> p(i->is_a<pint_expr>());
 		if (!p) {
-			is_pint_expr = false;
+			// is_pint_expr = false;
 			cerr << "non-int expression found where single int "
 				"is expected in dense range declaration.  "
 				"ERROR!  " << endl;     // where?

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.15 2006/04/16 18:36:17 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.16 2006/05/06 22:08:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -60,6 +60,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
+using std::distance;
 using util::persistent_traits;
 using util::write_value;
 using util::read_value;

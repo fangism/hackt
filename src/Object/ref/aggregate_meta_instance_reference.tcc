@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.5 2006/04/23 07:37:24 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.6 2006/05/06 22:08:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -20,6 +20,7 @@
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
+using std::distance;
 
 //=============================================================================
 // class aggregate_meta_instance_reference method definitions

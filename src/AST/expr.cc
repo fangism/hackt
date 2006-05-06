@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.10 2006/04/12 08:53:11 fang Exp $
+	$Id: expr.cc,v 1.11 2006/05/06 22:08:10 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <limits>				// for numeric_limits
 #include <iterator>
+#include "util/STL/functional.h"		// for _Select{1st,2nd}
 
 #include "AST/token.h"
 #include "AST/token_char.h"
@@ -2197,8 +2198,7 @@ array_construction::check_meta_generic(const context& c) const {
 	typedef	expr_list::checked_meta_generic_type	checked_array_type;
 	checked_array_type	temp;
 	ex->postorder_check_meta_generic(temp, c);
-	const checked_array_type::const_iterator
-		first_obj(temp.begin()), end_obj(temp.end());
+	const checked_array_type::const_iterator first_obj(temp.begin());
 	// going to use the first object to determine whether to construct
 	// aggregate value reference or aggregate instance reference
 	if (!first_obj->first && !first_obj->second) {

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.tcc"
 	Template methods for persistent_object_manager class.
-	$Id: persistent_object_manager.tcc,v 1.25 2006/04/28 03:20:15 fang Exp $
+	$Id: persistent_object_manager.tcc,v 1.26 2006/05/06 22:08:38 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_OBJECT_MANAGER_TCC__
@@ -18,6 +18,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <functional>			// for std::for_each
 
 #include "util/macros.h"
 #include "util/stacktrace.h"
@@ -75,6 +76,7 @@ using namespace util::memory;
 #if ENABLE_STACKTRACE
 using std::ostringstream;
 #endif
+using std::for_each;
 
 //=============================================================================
 // class persistent_object_manager template method definitions

@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.13 2006/03/15 04:38:15 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.14 2006/05/06 22:08:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -60,6 +60,7 @@ namespace HAC {
 namespace entity {
 using util::persistent_traits;
 using util::persistent_object_manager;
+using std::distance;
 using std::istream;
 #include "util/using_ostream.h"
 using std::mem_fun_ref;

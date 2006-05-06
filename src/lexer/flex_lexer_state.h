@@ -1,7 +1,7 @@
 /**
 	\file "lexer/flex_lexer_state.h"
 	Structure holding all of the flex scanner's stateful information.  
-	$Id: flex_lexer_state.h,v 1.3 2006/01/22 06:53:09 fang Exp $
+	$Id: flex_lexer_state.h,v 1.4 2006/05/06 22:08:30 fang Exp $
  */
 
 #ifndef	__LEXER_FLEX_LEXER_STATE_H__
@@ -58,10 +58,12 @@ struct lexer_state {
 /**
 	We're not using the stack, don't worry about it for now.  
  */
-#if 0 && YY_STACK_USED
+#if 0
+#if YY_STACK_USED
 	int			yy_start_stack_ptr;	// = 0;
 	int			yy_start_stack_depth;	// = 0;
 	int*			yy_start_stack;		// = NULL;
+#endif
 #endif
 // the following appear in flex 2.5.31
 	int			yylineno;		// = 0;

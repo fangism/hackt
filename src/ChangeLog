@@ -5,6 +5,13 @@
 
 2006-05-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79:
+	  Makefile.am: added more preprocessor intermediate file suffix rules.
+	  Minor source touch-ups for standard conformance.  
+
+
+2006-05-06	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-78-24-merged-prsim-04-12:
 	  prsim improvements merged:
 	  new commands:

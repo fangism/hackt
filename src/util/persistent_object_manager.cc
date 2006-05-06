@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent_object_manager.cc"
 	Method definitions for serial object manager.  
-	$Id: persistent_object_manager.cc,v 1.31 2006/04/28 03:20:15 fang Exp $
+	$Id: persistent_object_manager.cc,v 1.32 2006/05/06 22:08:36 fang Exp $
  */
 
 // flags and switches
@@ -169,10 +169,10 @@ public:
 
 	reconstruction_table_entry(const persistent::hash_key& t, 
 		const aux_alloc_arg_type a, 
-		const streampos h, const streampos t);
+		const streampos h, const streampos tl);
 
 	reconstruction_table_entry(const persistent::hash_key& t, 
-		const streampos h, const streampos t);
+		const streampos h, const streampos tl);
 
 	reconstruction_table_entry(const persistent* p,
 		const persistent::hash_key& t, 

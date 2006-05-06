@@ -2,7 +2,7 @@
 	\file "util/readline.h"
 	Header wrapper implementation for readline and editline.  
 	Includes the appropriate header from configuration. 
-	$Id: readline.h,v 1.3 2006/05/01 06:36:13 fang Exp $
+	$Id: readline.h,v 1.4 2006/05/06 22:08:39 fang Exp $
  */
 
 #ifndef	__UTIL_READLINE_H__
@@ -30,9 +30,13 @@
 	#endif
 #endif	/* HAVE_GNUREADLINE || HAVE_BSDEDITLINE */
 
-#if	defined(READLINE_PROMPT_CONST) && !READLINE_PROMPT_CONST
+#if	defined(READLINE_PROMPT_CONST)
+#if	!READLINE_PROMPT_CONST
 // your readline header sucks: it is not const-correct
 #define RL_CONST_CAST(x)	const_cast<char*>(x)
+#else
+#define RL_CONST_CAST(x)	x
+#endif
 #else
 #define RL_CONST_CAST(x)	x
 #endif

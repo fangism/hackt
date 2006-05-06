@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.9 2006/05/06 04:18:55 fang Exp $
+	$Id: State.cc,v 1.10 2006/05/06 22:08:32 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -70,6 +70,7 @@ using std::string;
 using std::ostringstream;
 using std::for_each;
 using std::mem_fun_ref;
+using std::distance;
 using util::strings::string_to_num;
 using util::read_value;
 using util::write_value;

@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.8 2006/04/28 03:20:13 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.9 2006/05/06 22:08:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -18,6 +18,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <exception>
 #include <iostream>
 #include <functional>
+#include <iterator>
 
 #include "util/hash_specializations.h"		// substitute for the following
 #include "AST/token_string.h"	// for token_identifier
@@ -45,6 +46,7 @@ using util::write_value;
 using util::read_value;
 using util::write_string;
 using util::read_string;
+using std::distance;
 
 //=============================================================================
 // class port_formals_manager method definitions

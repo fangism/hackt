@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.19 2006/04/28 03:20:13 fang Exp $
+	$Id: footprint.cc,v 1.20 2006/05/06 22:08:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -360,7 +360,7 @@ good_bool
 footprint::create_dependent_types(void) {
 	STACKTRACE_VERBOSE;
 	const instance_map_iterator
-		b(instance_collection_map.begin()),
+		// b(instance_collection_map.begin()),
 		e(instance_collection_map.end());
 #if 0 && ENABLE_STACKTRACE
 	STACKTRACE_INDENT("instance_collection_map.size() = " <<

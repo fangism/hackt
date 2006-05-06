@@ -3,12 +3,13 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.9 2006/04/28 03:20:13 fang Exp $
+	$Id: template_formals_manager.cc,v 1.10 2006/05/06 22:08:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
 
 #include <iostream>
+#include <iterator>
 #include "util/hash_specializations.h"	// include as early as possible
 
 #include "Object/def/template_formals_manager.h"
@@ -29,6 +30,7 @@
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
+using std::distance;
 using util::indent;
 using util::auto_indent;
 using util::write_value;

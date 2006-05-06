@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/directive_source.cc"
-	$Id: directive_source.cc,v 1.4 2006/04/12 08:53:16 fang Exp $
+	$Id: directive_source.cc,v 1.5 2006/05/06 22:08:26 fang Exp $
  */
 
 #include <iostream>
@@ -39,6 +39,8 @@ using util::auto_indent;
 using PRS::rule_dump_context;
 using util::read_value;
 using util::write_value;
+using std::distance;
+using std::find;
 using std::find_if;
 using std::mem_fun_ref;
 
