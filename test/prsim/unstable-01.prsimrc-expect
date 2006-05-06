@@ -4,10 +4,10 @@ expect instability
 WARNING: unstable `b'-
 >> cause: `a' (val: 0)
 	5	a : 0
-	10	b : X
+	10	b : X	[by a:=0]
 	0	a : 0
 expect instability 
 WARNING: interference `b'-
 >> cause: `a' (val: 1)
 	5	a : 1
-	10	b : 0
+	10	b : 0	[by a:=1]

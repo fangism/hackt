@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-05-05	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-24-merged-prsim-04-12:
+	  Branch merge of -prsim-04-12.
+	  Includes minor configure test fix in config/cxx.m4 (attribute).
+
+
 2006-04-26	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-20-merged-icc-01-04:

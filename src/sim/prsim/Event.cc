@@ -1,18 +1,22 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.3 2006/04/03 05:30:36 fang Exp $
+	$Id: Event.cc,v 1.4 2006/05/06 04:18:48 fang Exp $
  */
 
+#include <iostream>
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Event.tcc"
 #include "sim/time.h"
-#include "util/attributes.h"
 #include "util/memory/index_pool.tcc"
+#include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using util::write_value;
+using util::read_value;
+
 //=============================================================================
 // class Event static initializations
 
@@ -52,6 +56,39 @@ Event::dnguard[3][3] = {
 	}
 };
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+Event::save_state(ostream& o) const {
+	write_value(o, node);
+	write_value(o, cause_node);
+	write_value(o, cause_rule);
+	write_value(o, val);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+Event::load_state(istream& i) {
+	read_value(i, node);
+	read_value(i, cause_node);
+	read_value(i, cause_rule);
+	read_value(i, val);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+Event::dump_checkpoint_state_header(ostream& o) {
+	return o << "node\tcause-node\tcause-rule\tvalue";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+Event::dump_checkpoint_state(ostream& o, istream& i) {
+	this_type temp;
+	temp.load_state(i);
+	return o << temp.node << "\t\t" << temp.cause_node << "\t\t" <<
+		temp.cause_rule << '\t' << size_t(temp.val);
+}
+
 //=============================================================================
 // class EventPool method definitions
 /**
@@ -76,6 +113,7 @@ EventPool::clear(void) {
 		event_pool.allocate();
 	INVARIANT(!zero);
 }
+
 
 //=============================================================================
 // class EventQueue method definitions

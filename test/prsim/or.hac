@@ -1,0 +1,7 @@
+// "or.hac"
+
+import "logic-defs.hac";
+
+bool a, b, c;
+or G(a, b, c);
+

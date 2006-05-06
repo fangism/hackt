@@ -1,0 +1,74 @@
+#!@SH_PATH@
+# "hackt-prsim-opt.sh.in"
+#	$Id: hackt-prsim-opt.sh.in,v 1.2 2006/05/06 04:19:03 fang Exp $
+# Template test script for comparing checking checkpoint consistency
+# between unoptimized and optimized prsim runs.  
+
+# arguments:
+# $1	"hackt prsim" execution command
+# $2	the object file to build (using make) and run
+# $3	the prsim-run-commands script to run (must reside in srcdir!)
+
+prsim=$1
+obj=$2
+prsimrc=$3
+flags="-O1"
+
+# strip srcdir path
+bldroot=`@ECHO@ "$prsimrc" | @SED@ 's|.*/||g'`
+outroot=`@ECHO@ "$bldroot" | @SED@ 's|[.].*$||g'`
+
+@CALLMAKE@ $obj > /dev/null 2>&1
+if test ! -f $obj
+then
+	@ECHO@ Failed to make "$obj"
+	exit 1
+fi
+
+# produce first checkpoint
+if test ! -f $outroot.prsimckpt
+then
+	$prsim $obj > /dev/null 2>&1 <<EOF
+source $prsimrc
+save $outroot.prsimckpt
+EOF
+fi
+
+# still doesn't exist because script exited before checkpoint saved
+if test ! -f $outroot.prsimckpt
+then
+	@ECHO@ "No $outroot.prsimckpt checkpoint generated, skipping test."
+	exit 0
+fi
+
+# load first checkpoint and produce duplicate checkpoint
+$prsim $flags $obj > $outroot.prsimckpt-O1-err 2>&1 <<EOF
+source $prsimrc
+save $outroot.prsimckpt-O1
+EOF
+
+if test $? != 0
+then
+	@ECHO@ "$prsim $flags $obj failed unexpectedly."
+	@ECHO@ "See $outroot.prsimckpt-O1-err for details."
+	exit 1
+fi
+
+if test ! -s $outroot.prsimckpt-O1
+then
+	exit 1
+fi
+
+# Binary difference
+if @DIFF@ -q $outroot.prsimckpt $outroot.prsimckpt-O1
+then :
+else
+	# will already have diff message
+	$prsim -d $outroot.prsimckpt > $outroot.prsimckpt-dump
+	$prsim -d $outroot.prsimckpt-O1 > $outroot.prsimckpt-O1-dump
+	@DIFF@ -u $outroot.prsimckpt-dump $outroot.prsimckpt-O1-dump > \
+		$outroot.prsimopt-diff
+	@ECHO@ "See $outroot.prsimopt-diff for dump difference details."
+	exit 1
+fi
+

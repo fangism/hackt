@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.6 2006/04/23 07:37:26 fang Exp $
+	$Id: Node.h,v 1.7 2006/05/06 04:18:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -12,14 +12,16 @@
 #include <vector>
 #include "util/string_fwd.h"
 #include "util/macros.h"
+#include "util/attributes.h"
 #include "sim/common.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::ostream;
+using std::istream;
 using std::vector;
-// using std::valarray;
+
 //=============================================================================
 /**
 	Node state information structure.  
@@ -135,9 +137,12 @@ public:
 /**
 	Structural information extended with stateful information.  
 	Size of this should be a total of 8 double-words, or 32 B.  
-	Nice and aligned.  
+	Nice and quad-word aligned.  
  */
 struct NodeState : public Node {
+private:
+	typedef	NodeState			this_type;
+public:
 	typedef	Node				parent_type;
 
 	typedef	enum {
@@ -194,7 +199,12 @@ protected:
 		INVALID_EVENT_INDEX (0) means no pending event.  
 	 */
 	event_index_type			event_index;
-
+	/**
+		The firing of this node was caused by...
+		like last arriving input, for critical path analysis.  
+	 */
+	node_index_type				caused_by_node;
+public:
 	/**
 		Transition counts.  
 		Not critical to simulation, unless we want statistics.  
@@ -203,7 +213,9 @@ protected:
 public:
 	NodeState() : parent_type(), value(LOGIC_OTHER), 
 		state_flags(NODE_INITIAL_STATE_FLAGS),
-		event_index(INVALID_EVENT_INDEX) { }
+		event_index(INVALID_EVENT_INDEX), 
+		caused_by_node(INVALID_NODE_INDEX), 
+		tcount(0) { }
 
 	/// count on compiler to optimize zero comparison
 	bool
@@ -211,12 +223,28 @@ public:
 		return event_index != INVALID_EVENT_INDEX;
 	}
 
+	node_index_type
+	get_cause_node(void) const { return caused_by_node; }
+
+	void
+	set_cause_node(const node_index_type ci) { caused_by_node = ci; }
+
 	event_index_type
 	get_event(void) const { return event_index; }
 
 	void
 	set_event(const event_index_type i) {
 		INVARIANT(event_index == INVALID_EVENT_INDEX);
+		INVARIANT(i != INVALID_EVENT_INDEX);
+		event_index = i;
+	}
+
+	/**
+		This variation should only be used during checkpoint
+		loading.  
+	 */
+	void
+	load_event(const event_index_type i) {
 		INVARIANT(i != INVALID_EVENT_INDEX);
 		event_index = i;
 	}
@@ -296,7 +324,25 @@ public:
 
 	void
 	reset(void);
-};	// end struct NodeState
+
+	void
+	reset_tcount(void) { tcount = 0; }
+
+	void
+	save_state(ostream&) const;
+
+	void
+	load_state(istream&);
+
+	static
+	ostream&
+	dump_checkpoint_state_header(ostream&);
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream&, istream&);
+
+} __ATTRIBUTE_ALIGNED__ ;	// end struct NodeState
 
 //=============================================================================
 }	// end namespace PRSIM

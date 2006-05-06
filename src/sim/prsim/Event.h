@@ -1,25 +1,28 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.4 2006/04/23 07:37:26 fang Exp $
+	$Id: Event.h,v 1.5 2006/05/06 04:18:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
 #define	__HAC_SIM_PRSIM_EVENT_H__
 
+#include <iosfwd>
 #include <map>
 #include <queue>
 #include <vector>
 #include "sim/common.h"
 #include "util/likely.h"
+#include "util/attributes.h"
 #include "util/macros.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
-#include "sim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+using std::istream;
+using std::ostream;
 using std::priority_queue;
 using std::vector;
 using std::map;
@@ -32,6 +35,8 @@ using util::memory::free_list_release;
 	Based on struct prs_event (PrsEvent).  
  */
 struct Event {
+private:
+	typedef	Event			this_type;
 public:
 	/**
 		Event attribute encoding.  
@@ -52,40 +57,56 @@ public:
 		The index of the node to switch.
 	 */
 	node_index_type			node;
-#if ENABLE_PRSIM_CAUSE_TRACKING
+	/**
+		The index of the node that caused this event to 
+		become enqueued.  
+		This is often the last arriving input to some guard
+		expression, but can also be attributed to exclusive rings.  
+		This index may be null/invalid.  
+	 */
+	node_index_type			cause_node;
 	/**
 		The index of the rule expression that caused this to fire, 
 		also the source of the delay value.  
 	 */
 	rule_index_type			cause_rule;
-#endif
 	/**
 		The node's new value: 0, 1, 2 (X).
 	 */
 	unsigned char			val;
 
-	Event() : node(INVALID_NODE_INDEX)
-#if ENABLE_PRSIM_CAUSE_TRACKING
-		, cause_rule(INVALID_RULE_INDEX)
-#endif
-		{ }
+	Event() : node(INVALID_NODE_INDEX),
+		cause_node(INVALID_NODE_INDEX), 
+		cause_rule(INVALID_RULE_INDEX) { }
 
 	/**
 		The rule index is allowed to be NULL (invalid), 
 		to indicate an external (perhaps user) cause.  
 	 */
 	Event(const node_index_type n,
-#if ENABLE_PRSIM_CAUSE_TRACKING
+		const node_index_type c, 
 		const rule_index_type r, 
-#endif
 		const unsigned char v) :
 		node(n),
-#if ENABLE_PRSIM_CAUSE_TRACKING
+		cause_node(c), 
 		cause_rule(r),
-#endif
 		val(v) { }
 
-};	// end struct Event
+	void
+	save_state(ostream&) const;
+
+	void
+	load_state(istream&);
+
+	static
+	ostream&
+	dump_checkpoint_state_header(ostream&);
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream&, istream&);
+
+} __ATTRIBUTE_ALIGNED__ ;	// end struct Event
 
 //=============================================================================
 /**
@@ -216,6 +237,9 @@ public:
 	push(const value_type& p) {
 		equeue.push(p);
 	}
+
+	size_t
+	size(void) const { return equeue.size(); }
 
 	/**
 		\pre queue is not empty.  

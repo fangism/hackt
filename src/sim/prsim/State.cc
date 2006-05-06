@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8 2006/04/24 00:28:09 fang Exp $
+	$Id: State.cc,v 1.9 2006/05/06 04:18:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,7 @@
 #include "sim/prsim/Event.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
+#include "sim/devel_switches.h"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
@@ -32,6 +33,10 @@
 #include "util/memory/count_ptr.tcc"
 #include "util/likely.h"
 #include "util/string.tcc"
+#include "util/IO_utils.tcc"
+#include "util/binders.h"
+#include "util/reference_wrapper.h"
+#include "util/wtf.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -45,6 +50,17 @@
 #define	DEBUG_FANOUT_PRINT(x)
 #endif
 
+/**
+	Currently, the rule map is just a map to structural information
+	and contains no stateful information.
+	If and when rules retain stateful information, 
+	enabling expression-transforming optimizations might become a problem
+	because expression structures are different, and will affect
+	the contents of the checkpoint.
+	Until that day, we won't worry about it.  
+ */
+#define	CHECKPOINT_RULE_STATE_MAP		0
+
 namespace HAC {
 namespace entity { }
 
@@ -55,6 +71,10 @@ using std::ostringstream;
 using std::for_each;
 using std::mem_fun_ref;
 using util::strings::string_to_num;
+using util::read_value;
+using util::write_value;
+using util::bind2nd_argval;
+using util::bind2nd_argval_void;
 using entity::state_manager;
 using entity::global_entry_pool;
 using entity::bool_tag;
@@ -62,6 +82,10 @@ using entity::process_tag;
 #include "util/using_ostream.h"
 //=============================================================================
 // class State method definitions
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string
+State::magic_string("hackt-prsim-ckpt");
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -72,7 +96,7 @@ using entity::process_tag;
 	\param m the expanded module object.
 	\pre m must already be past the allcoate phase.  
  */
-State::State(const entity::module& m) : 
+State::State(const entity::module& m, const ExprAllocFlags& f) : 
 		mod(m), 
 		node_pool(), expr_pool(), expr_graph_node_pool(),
 		event_pool(), event_queue(), 
@@ -117,7 +141,7 @@ State::State(const entity::module& m) :
 
 	// NOTE: we're referencing 'this' during construction, however, we 
 	// are done constructing this State's members at this point.  
-	ExprAlloc v(*this);
+	ExprAlloc v(*this, f);
 
 
 	// this may throw an exception!
@@ -177,6 +201,16 @@ State::initialize(void) {
 	// unwatchall()? no, preserved
 	// timing mode preserved
 	current_time = 0;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Resets transition counts of all nodes.  
+ */
+void
+State::reset_tcounts(void) {
+	for_each(node_pool.begin(), node_pool.end(), 
+		mem_fun_ref(&node_type::reset_tcount));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -280,11 +314,14 @@ State::check_expr(const expr_index_type i) const {
 	const expr_type& e(expr_pool[i]);
 	const graph_node_type& g(expr_graph_node_pool[i]);
 	// check parent
+	assert(e.parent);
 	if (e.is_root()) {
+		assert(e.parent < node_pool.size());
 		const node_type& n
 			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
 		assert(n.get_pull_expr(e.direction()) == i);
 	} else {
+		assert(e.parent < expr_pool.size());
 		// const Expr& pe(expr_pool[e.parent]);
 		const graph_node_type& pg(expr_graph_node_pool[e.parent]);
 		const graph_node_type::child_entry_type&
@@ -297,9 +334,12 @@ State::check_expr(const expr_index_type i) const {
 	size_t j = 0;
 	for ( ; j<e.size; ++j) {
 		const graph_node_type::child_entry_type& c(g.children[j]);
+		assert(c.second);
 		if (c.first) {		// points to leaf node
+			assert(c.second < node_pool.size());
 			assert(node_pool[c.second].contains_fanout(i));
 		} else {		// points to expression
+			assert(c.second < expr_pool.size());
 			assert(expr_pool[c.second].parent == i);
 			assert(expr_graph_node_pool[c.second].offset == j);
 		}
@@ -348,6 +388,8 @@ State::append_excllo_ring(ring_set_type& r) {
 	Should be inline only.  
 	\param n the reference to the node.
 	\param ni the referenced node's index.
+	\param ci the index of the node that caused this event to enqueue, 
+		may be INVALID_NODE_INDEX.
 	\param ri the index rule/expression that caused this event to fire.
 	\param val the future value of the node.
 	\pre n must not already have a pending event.
@@ -356,18 +398,28 @@ State::append_excllo_ring(ring_set_type& r) {
 event_index_type
 State::__allocate_event(node_type& n,
 		const node_index_type ni,
-#if ENABLE_PRSIM_CAUSE_TRACKING
+		const node_index_type ci, 
 		const rule_index_type ri,
-#endif
 		const char val) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(!n.pending_event());
 	n.set_event(event_pool.allocate(
-#if ENABLE_PRSIM_CAUSE_TRACKING
-		event_type(ni, ri, val)
-#else
-		event_type(ni, val)
-#endif
+		event_type(ni, ci, ri, val)
 		));
+	n.set_cause_node(ci);
+	return n.get_event();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant is used to enqueue a pre-constructed event, 
+	useful for loading checkpoints.  
+	NOTE: only use this for loading checkpoints!
+ */
+event_index_type
+State::__load_allocate_event(const event_type& ev) {
+	node_type& n(get_node(ev.node));
+	n.load_event(event_pool.allocate(ev));
 	return n.get_event();
 }
 
@@ -495,6 +547,7 @@ State::set_node_time(const node_index_type ni, const char val,
 	}
 // If the value is the same as former value, then ignore it.
 // What if delay differs?
+// TODO: could invalidate and re-enqueue with min. time, e.g.
 	if (val == last_val) { return ENQUEUE_ACCEPT; }
 // If node has pending even in queue already, warn and ignore.
 	if (pending) {
@@ -505,11 +558,9 @@ State::set_node_time(const node_index_type ni, const char val,
 	}
 // otherwise, enqueue the event.  
 	const event_index_type ei =
-#if ENABLE_PRSIM_CAUSE_TRACKING
-		__allocate_event(n, ni, INVALID_RULE_INDEX, val);
-#else
-		__allocate_event(n, ni, val);
-#endif
+		// node cause to assign, since this is externally set
+		__allocate_event(n, ni, INVALID_NODE_INDEX, 
+			INVALID_RULE_INDEX, val);
 #if 0
 	const event_type& e(get_event(ei));
 	STACKTRACE_INDENT_PRINT("new event: (node,val)" << endl);
@@ -544,6 +595,34 @@ void
 State::clear_all_breakpoints(void) {
 	for_each(node_pool.begin(), node_pool.end(),
 		mem_fun_ref(&node_type::clear_breakpoint));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Lists all nodes marked as breakpoints.  
+ */
+ostream&
+State::dump_breakpoints(ostream& o) const {
+	typedef	node_pool_type::const_iterator		const_iterator;
+	const const_iterator b(node_pool.begin()), e(node_pool.end());
+	const_iterator i(b);
+	o << "breakpoints: ";
+	for (++i; i!=e; ++i) {
+	if (i->is_breakpoint()) {
+		const node_index_type ni = distance(b, i);
+		const watch_list_type::const_iterator
+			f(watch_list.find(ni));
+		/**
+			If not found in the watchlist, or
+			is found and also flagged as breakpoint, 
+			then we have a true breakpoint.  
+		 */
+		if (f == watch_list.end() || f->second.breakpoint) {
+			o << get_node_canonical_name(ni) << ' ';
+		}
+	}	// end if is_breakpoint
+	}	// end for-all nodes
+	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -629,22 +708,14 @@ State::time_type
 State::get_delay_up(const event_type& e) const {
 return current_time +
 	(timing_mode == TIMING_RANDOM ?
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		(e.cause_rule && time_traits::is_zero(
 				rule_map.find(e.cause_rule)->second.after) ?
 			time_traits::zero : random_delay())
-#else
-		random_delay()
-#endif
 		:
 	(timing_mode == TIMING_UNIFORM ? uniform_delay :
 	// timing_mode == TIMING_AFTER
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		(e.cause_rule ?
 			rule_map.find(e.cause_rule)->second.after : 0)
-#else
-		time_traits::default_delay
-#endif
 	));
 }
 
@@ -657,22 +728,14 @@ State::time_type
 State::get_delay_dn(const event_type& e) const {
 	return current_time +
 		(timing_mode == TIMING_RANDOM ?
-#if ENABLE_PRSIM_CAUSE_TRACKING
 		(e.cause_rule && time_traits::is_zero(
 				rule_map.find(e.cause_rule)->second.after) ?
 			time_traits::zero : random_delay())
-#else
-			random_delay()
-#endif
 			:
 		(timing_mode == TIMING_UNIFORM ? uniform_delay :
 		// timing_mode == TIMING_AFTER
-#if ENABLE_PRSIM_CAUSE_TRACKING
 			(e.cause_rule ?
 				rule_map.find(e.cause_rule)->second.after : 0)
-#else
-			time_traits::default_delay
-#endif
 		));
 }
 
@@ -734,8 +797,13 @@ for ( ; i!=e; ++i) {
 			cout << "interference `";
 			cout << get_node_canonical_name(_ni) <<
 				"\'" << endl;
-			// TODO: if (ne->cause)
-			//	... caused by ...
+			if (ev.cause_node) {
+				cout << ">> cause: `" <<
+					get_node_canonical_name(ev.cause_node)
+					<< "\' (val: ";
+				get_node(ev.cause_node).dump_value(cout) <<
+					')' << endl;
+			}
 		}
 		ev.val = node_type::LOGIC_OTHER;
 		switch (_n.current_value()) {
@@ -922,6 +990,7 @@ for ( ; i!=e; ++i) {
 /**
 	Enforces exclusive high rings by enqueue necessary events 
 	into the exclusive high queue.  
+	\param ni index of the node that changed that affects exclhi rings.  
  */
 void
 State::enforce_exclhi(const node_index_type ni) {
@@ -949,20 +1018,15 @@ for ( ; i!=e; ++i) {
 				// what if is pulling weakly?
 				expr_pool[er.pull_up_index].pull_state()
 					== expr_type::PULL_ON) {
-		DEBUG_STEP_PRINT("enqueuing pull-up event" << endl);
+			DEBUG_STEP_PRINT("enqueuing pull-up event" << endl);
 				const event_index_type ne =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 					// the pull-up index may not necessarily
 					// correspond to the causing expression!
-					__allocate_event(er, eri,
+					__allocate_event(er, eri, ni, 
 						// not sure...
 						// er.pull_up_index, 
 						INVALID_RULE_INDEX, 
 						node_type::LOGIC_HIGH);
-#else
-					__allocate_event(er, eri,
-						node_type::LOGIC_HIGH);
-#endif
 				// ne->cause = ni
 				enqueue_exclhi(get_delay_up(get_event(ne)), ne);
 			}
@@ -976,6 +1040,7 @@ for ( ; i!=e; ++i) {
 /**
 	Enforces exclusive low rings by enqueue necessary events 
 	into the exclusive low queue.  
+	\param ni index of the node that changed that affects excllo rings.  
  */
 void
 State::enforce_excllo(const node_index_type ni) {
@@ -1005,16 +1070,11 @@ for ( ; i!=e; ++i) {
 					== expr_type::PULL_ON) {
 			DEBUG_STEP_PRINT("enqueuing pull-dn event" << endl);
 				const event_index_type ne =
-#if ENABLE_PRSIM_CAUSE_TRACKING
 					// same comment as enforce_exclhi
-					__allocate_event(er, eri,
+					__allocate_event(er, eri, ni, 
 						// er.pull_dn_index, 
 						INVALID_RULE_INDEX,
 						node_type::LOGIC_LOW);
-#else
-					__allocate_event(er, eri,
-						node_type::LOGIC_LOW);
-#endif
 				// ne->cause = ni
 				enqueue_excllo(get_delay_dn(get_event(ne)), ne);
 			}
@@ -1033,14 +1093,15 @@ for ( ; i!=e; ++i) {
 	\return index of the affected node, 
 		INVALID_NODE_INDEX if nothing happened.  
  */
-node_index_type
+State::step_return_type
 State::step(void) {
+	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
 	INVARIANT(pending_queue.empty());
 	INVARIANT(exclhi_queue.empty());
 	INVARIANT(excllo_queue.empty());
 	if (event_queue.empty()) {
-		return INVALID_NODE_INDEX;
+		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
 	const event_placeholder_type ep(dequeue_event());
 	current_time = ep.time;
@@ -1049,6 +1110,7 @@ State::step(void) {
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	const event_type& pe(get_event(ei));
 	const node_index_type ni = pe.node;
+	const node_index_type ci = pe.cause_node;
 	DEBUG_STEP_PRINT("examining node: " <<
 		get_node_canonical_name(ni) << endl);
 	node_type& n(get_node(ni));
@@ -1060,22 +1122,19 @@ State::step(void) {
 	// comment?
 	if (pe.val == node_type::LOGIC_OTHER &&
 		prev == node_type::LOGIC_OTHER) {
-		// cause propagation?
-		// if (cause) *cause = pe->cause;
 		DEBUG_STEP_PRINT("X: returning node index " << ni << endl);
-		return ni;
+		return return_type(ni, ci);
 	}
 	// assert: vacuous firings on the event queue
-	assert(prev != pe.val || n.is_unstab());
-#if 0
-	// more cause propagation debugging statements
-	if (cause) {
-		*cause = pe->cause;
-	}
-#endif
+	INVARIANT(prev != pe.val || n.is_unstab());
 	// saved previous value above already
 	n.set_value(pe.val);
+	// count transition only if new value is not X
+	if (pe.val != node_type::LOGIC_OTHER)
+		++n.tcount;
 	__deallocate_event(n, ei);
+	// reminder: do not reference pe beyond this point (deallocated)
+	// could scope the reference to prevent it...
 	const char next = n.current_value();
 	// value propagation...
 {
@@ -1096,7 +1155,6 @@ State::step(void) {
 	}	// end if (excllo enforcement)
 
 	// energy estimation?  TODO later for a different sim variant
-	// transition counts ++
 
 	// check and flush pending queue, spawn fanout events
 	flush_pending_queue();
@@ -1107,8 +1165,82 @@ State::step(void) {
 
 	// return the affected node's index
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
-	return ni;
+	return return_type(ni, ci);
 }	// end method step()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Evaluates expression changes without propagating/generating events.  
+	Useful for expression state reconstruction from checkpoint.  
+	\return pair(root expression, new pull value) if event propagated
+		to the root, else (INVALID_NODE_INDEX, whatever)
+	\param prev previous value of node.
+		Locally used as old pull state of subexpression.  
+	\param next new value of node.
+		Locally used as new pull state of subexpression.  
+	Side effect (sort of): trace of expressions visited is in
+		the __scratch_expr_trace array.  
+	CAUTION: distinguish between expression value and pull-state!
+ */
+// inline
+State::evaluate_return_type
+State::evaluate(const node_index_type ni, expr_index_type ui, 
+		char prev, char next) {
+#if DEBUG_STEP
+	STACKTRACE_VERBOSE;
+	DEBUG_STEP_PRINT("node " << ni << " from " <<
+		node_type::value_to_char[size_t(prev)] << " -> " <<
+		node_type::value_to_char[size_t(next)] << endl);
+#endif
+	expr_type* u;
+	__scratch_expr_trace.clear();
+do {
+	char old_pull, new_pull;	// pulling state of the subexpression
+	u = &expr_pool[ui];
+	__scratch_expr_trace.push_back(ui);
+#if DEBUG_STEP
+	DEBUG_STEP_PRINT("examining expression ID: " << ui << endl);
+	u->dump_struct(STACKTRACE_INDENT) << endl;
+	u->dump_state(STACKTRACE_INDENT << "before: ") << endl;
+#endif
+	// trust compiler to effectively perform branch-invariant
+	// code-motion
+	if (u->is_disjunctive()) {
+		// is disjunctive (or)
+		DEBUG_STEP_PRINT("is_or()" << endl);
+		// countdown represents the number of 1's
+		old_pull = u->or_pull_state();
+		u->unknowns += (next >> 1) - (prev >> 1);
+		u->countdown += (next & node_type::LOGIC_VALUE)
+			- (prev & node_type::LOGIC_VALUE);
+		new_pull = u->or_pull_state();
+	} else {
+		DEBUG_STEP_PRINT("is_and()" << endl);
+		// is conjunctive (and)
+		old_pull = u->and_pull_state();
+		// countdown represents the number of 0's
+		u->unknowns += (next >> 1) - (prev >> 1);
+		u->countdown += !next - !prev;
+		new_pull = u->and_pull_state();
+	}	// end if
+#if DEBUG_STEP
+	u->dump_state(STACKTRACE_INDENT << "after : ") << endl;
+#endif
+	if (old_pull == new_pull) {
+		// then the pull-state did not change.
+		DEBUG_STEP_PRINT("end of propagation." << endl);
+		return evaluate_return_type();
+	}
+	// already accounted for negation in pull_state()
+	// NOTE: cannot equate pull with value!
+	prev = old_pull;
+	next = new_pull;
+	ui = u->parent;
+} while (!u->is_root());
+	// made it to root
+	// negation already accounted for
+	return evaluate_return_type(ui, u, next);
+}	// end State::evaluate()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1119,67 +1251,24 @@ State::step(void) {
 	\param ui the index of the sub expression being evaluated, 
 		this is already a parent expression of the causing node, 
 		unlike original prsim.  
+		Locally, this is used as the index of the affected node.  
 	\param prev the former value of the node/subexpression
-	\param next the new value of the node/subexpression
+	\param next the new value of the node/subexpression.
+		Locally, this is used as index of the root expression, 
+		in the event that an evaluation propagates to root.  
 	NOTE: the action table here depends on the expression-type's
 		subtype encoding.  For now, we use the Expr's encoding.  
  */
 void
 State::propagate_evaluation(const node_index_type ni, expr_index_type ui, 
 		char prev, char next) {
-#if DEBUG_STEP
-	STACKTRACE_VERBOSE;
-	DEBUG_STEP_INDENT << "node " << ni << " from " <<
-		node_type::value_to_char[size_t(prev)] << " -> " <<
-		node_type::value_to_char[size_t(next)] << endl;
-#endif
-	expr_type* u;
-#if ENABLE_PRSIM_CAUSE_TRACKING
-	__scratch_expr_trace.clear();
-#endif
-do {
-	char old_pull, new_pull;	// pulling state of the subexpression
-	u = &expr_pool[ui];
-#if ENABLE_PRSIM_CAUSE_TRACKING
-	__scratch_expr_trace.push_back(ui);
-#endif
-#if DEBUG_STEP
-	DEBUG_STEP_PRINT("examining expression ID: " << ui << endl);
-	u->dump_struct(STACKTRACE_INDENT) << endl;
-	u->dump_state(STACKTRACE_INDENT << "before: ") << endl;
-#endif
-	// trust compiler to effectively perform branch-invariant
-	// code-motion
-	if (u->is_or()) {
-		// is disjunctive (or)
-		// countdown represents the number of 1's
-		old_pull = u->or_pull_state();
-		u->unknowns += (next >> 1) - (prev >> 1);
-		u->countdown += (next & node_type::LOGIC_VALUE)
-			- (prev & node_type::LOGIC_VALUE);
-		new_pull = u->or_pull_state();
-	} else {
-		// is conjunctive (and)
-		old_pull = u->and_pull_state();
-		// countdown represents the number of 0's
-		u->unknowns += (next >> 1) - (prev >> 1);
-		u->countdown += !next - !prev;
-		new_pull = u->and_pull_state();
-	}
-#if DEBUG_STEP
-	u->dump_state(STACKTRACE_INDENT << "after : ") << endl;
-#endif
-	if (old_pull == new_pull) {
-		// then the pull-state did not change.
-		DEBUG_STEP_PRINT("end of propagation." << endl);
+	const evaluate_return_type
+		ev_result(evaluate(ni, ui, prev, next));
+	if (!ev_result.node_index)
 		return;
-	}
-	// already accounted for negation in pull_state()
-	prev = old_pull;
-	next = new_pull;
-	ui = u->parent;
-} while (!u->is_root());
-#if ENABLE_PRSIM_CAUSE_TRACKING
+	next = ev_result.root_pull;
+	ui = ev_result.node_index;
+	const expr_type* const u(ev_result.root_ex);
 	// we delay the root rule search until here to reduce the amount
 	// of searching required to find the responsible rule expression.  
 	rule_index_type root_rule;
@@ -1192,7 +1281,6 @@ do {
 	root_rule = *ri;
 }
 	INVARIANT(root_rule);
-#endif
 // propagation made it to the root node, indexed by ui (now node_index_type)
 	node_type& n(get_node(ui));
 	DEBUG_STEP_PRINT("propagated to output node: " <<
@@ -1215,11 +1303,8 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("pulling up (on or weak)" << endl);
 		const event_index_type pe =
-#if ENABLE_PRSIM_CAUSE_TRACKING
-			__allocate_event(n, ui, root_rule, next);
-#else
-			__allocate_event(n, ui, next);
-#endif
+			__allocate_event(n, ui, ni, 
+				root_rule, next);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
 		if (n.has_exclhi()) {
@@ -1246,11 +1331,8 @@ if (!n.pending_event()) {
 			"pull-up turned off, yielding to opposing pull-down."
 			<< endl);
 		const event_index_type pe =
-#if ENABLE_PRSIM_CAUSE_TRACKING
-			__allocate_event(n, ui, root_rule, node_type::LOGIC_LOW);
-#else
-			__allocate_event(n, ui, node_type::LOGIC_LOW);
-#endif
+			__allocate_event(n, ui, ni, 
+				root_rule, node_type::LOGIC_LOW);
 		// pe->cause = root
 		if (n.has_excllo()) {
 			const event_type& e(get_event(pe));
@@ -1276,7 +1358,7 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
 		e.val = node_type::LOGIC_LOW;
-		// e.cause = ni
+		e.cause_node = ni;
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
@@ -1294,7 +1376,7 @@ if (!n.pending_event()) {
 				eu & event_type::EVENT_INTERFERENCE;
 			const string cause_name(get_node_canonical_name(ni));
 			const string out_name(get_node_canonical_name(ui));
-			// e.cause = ni
+			e.cause_node = ni;
 			e.val = node_type::LOGIC_OTHER;
 			// diagnostic message
 			cout << "WARNING: ";
@@ -1330,13 +1412,10 @@ if (!n.pending_event()) {
 			then we enqueue the event somewhere.
 		***/
 		DEBUG_STEP_PRINT("pulling down (on or weak)" << endl);
-		const event_index_type pe = __allocate_event(n, ui,
-#if ENABLE_PRSIM_CAUSE_TRACKING
+		const event_index_type pe = __allocate_event(n, ui, ni, 
 			root_rule, 
-#endif
 			node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
-		// pe->cause = root
 		if (n.has_excllo()) {
 			// insert into exclhi queue
 			enqueue_excllo(get_delay_dn(e), pe);
@@ -1361,11 +1440,8 @@ if (!n.pending_event()) {
 			"pull-down turned off, yielding to opposing pull-up."
 			<< endl);
 		const event_index_type pe =
-#if ENABLE_PRSIM_CAUSE_TRACKING
-			__allocate_event(n, ui, root_rule, node_type::LOGIC_HIGH);
-#else
-			__allocate_event(n, ui, node_type::LOGIC_HIGH);
-#endif
+			__allocate_event(n, ui, ni, 
+				root_rule, node_type::LOGIC_HIGH);
 		// pe->cause = root
 		if (n.has_exclhi()) {
 			const event_type& e(get_event(pe));
@@ -1391,7 +1467,7 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
 		// there is a pending 'X' in the queue
 		e.val = node_type::LOGIC_HIGH;
-		// e.cause = ni
+		e.cause_node = ni;
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
@@ -1409,7 +1485,7 @@ if (!n.pending_event()) {
 				eu & event_type::EVENT_INTERFERENCE;
 			const string cause_name(get_node_canonical_name(ni));
 			const string out_name(get_node_canonical_name(ui));
-			// e.cause = ni
+			e.cause_node = ni;
 			e.val = node_type::LOGIC_OTHER;
 			// diagnostic message
 			cout << "WARNING: ";
@@ -1438,11 +1514,11 @@ if (!n.pending_event()) {
 	\return null node index if queue is emptied, else
 		the ID of the node that tripped a breakpoint.  
  */
-node_index_type
+State::step_return_type
 State::cycle(void) {
-	node_index_type ret;
-	while ((ret = step())) {
-		if (get_node(ret).is_breakpoint() || stopped())
+	step_return_type ret;
+	while ((ret = step()).first) {
+		if (get_node(ret.first).is_breakpoint() || stopped())
 			break;
 	}
 	return ret;
@@ -1498,7 +1574,7 @@ void
 State::unwatch_all_nodes(void) {
 	typedef	watch_list_type::const_iterator		const_iterator;
 	const_iterator i(watch_list.begin()), e(watch_list.end());
-	for (; i!=e; ++i) {
+	for ( ; i!=e; ++i) {
 		node_type& n(get_node(i->first));
 		if (i->second.breakpoint) {
 			n.set_breakpoint();
@@ -1507,6 +1583,22 @@ State::unwatch_all_nodes(void) {
 		}
 	}
 	watch_list.clear();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints list of explicitly watched nodes.  
+	Doesn't count watchall flag.  
+ */
+ostream&
+State::dump_watched_nodes(ostream& o) const {
+	typedef	watch_list_type::const_iterator		const_iterator;
+	const_iterator i(watch_list.begin()), e(watch_list.end());
+	o << "watched nodes: ";
+	for (; i!=e; ++i) {
+		o << get_node_canonical_name(i->first) << ' ';
+	}
+	return o << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1612,6 +1704,7 @@ State::dump_state(ostream& o) const {
 /**
 	This prints out the netlist of nodes and expressions
 	in dot-form for visualization.  
+	Good for visualizing a decent 2D cell/wire/transistor placement.
  */
 ostream&
 State::dump_struct_dot(ostream& o) const {
@@ -1658,9 +1751,8 @@ State::dump_struct_dot(ostream& o) const {
  */
 ostream&
 State::dump_event_queue(ostream& o) const {
-	typedef	vector<event_queue_type::value_type>	temp_type;
-	typedef	temp_type::const_iterator		const_iterator;
-	temp_type temp;
+	typedef	temp_queue_type::const_iterator		const_iterator;
+	temp_queue_type temp;
 	event_queue.copy_to(temp);
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
@@ -1752,10 +1844,13 @@ State::dump_node_fanin(ostream& o, const node_index_type ni) const {
 /**
 	Recursive expression printer.  
 	Should be modeled after cflat's expression printer.  
+	\param ptype the parent's expression type, only used if cp is true.
+	\param pr whether or not parent is root
+		(if so, ignore type comparison for parenthesization).  
  */
 ostream&
 State::dump_subexpr(ostream& o, const expr_index_type ei, 
-		const char ptype) const {
+		const char ptype, const bool pr) const {
 #if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;
 #endif
@@ -1764,8 +1859,8 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	const expr_type& e(expr_pool[ei]);
 	const graph_node_type& g(expr_graph_node_pool[ei]);
 	// can elaborate more on when parens are needed
-	const bool need_parens = e.parenthesize(ptype);
-	const char _type = e.to_prs_enum();
+	const bool need_parens = e.parenthesize(ptype, pr);
+	const char _type = e.type;
 	// check if this sub-expression is a root expression by looking
 	// up the expression index in the rule_map.  
 	typedef	rule_map_type::const_iterator	rule_iterator;
@@ -1778,7 +1873,7 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	if (e.is_not()) {
 		o << '~';
 	}
-	const char* op = e.is_or() ? " | " : " & ";
+	const char* op = e.is_disjunctive() ? " | " : " & ";
 	typedef	graph_node_type::const_iterator		const_iterator;
 	const_iterator ci(g.begin()), ce(g.end());
 	if (need_parens) {
@@ -1882,6 +1977,361 @@ State::dump_node_excl_rings(ostream& o, const node_index_type ni) const {
 	}
 }
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: need to check consistency with module.  
+	Write out a header for safety checks.  
+	TODO: save state only? without structure?
+	\return true if to signal that an error occurred. 
+ */
+bool
+State::save_checkpoint(ostream& o) const {
+	write_value(o, magic_string);
+{
+	// node_pool
+	write_value(o, node_pool.size());
+	for_each(++node_pool.begin(), node_pool.end(), 
+#if 1
+		bind2nd_argval(mem_fun_ref(&node_type::save_state), o)
+#else
+	// doesn't quite work yet!?
+	// might need to wrap the mem_fun_ref to take a wrapper?
+		std::bind2nd(mem_fun_ref(&node_type::save_state),
+			util::ref(o))
+#endif
+	);
+}{
+#if !DEDUCE_PRSIM_EXPR_STATE
+	// expr_pool
+	write_value(o, expr_pool.size());
+	for_each(++expr_pool.begin(), expr_pool.end(), 
+		bind2nd_argval(mem_fun_ref(&expr_type::save_state), o)
+	);
+#endif
+}
+	// graph_pool -- structural only
+{
+#if CHECKPOINT_RULE_STATE_MAP
+	// rule_map -- currently structural only, but we include code anyways
+	typedef	rule_map_type::const_iterator		const_iterator;
+	write_value(o, rule_map.size());
+	const_iterator i(rule_map.begin()), e(rule_map.end());
+	for ( ; i!=e; ++i) {
+		write_value(o, i->first);
+		i->second.save_state(o);
+	}
+#endif
+}{
+	// event_pool -- only selected entries
+	// event_queue
+	typedef	temp_queue_type::const_iterator		const_iterator;
+	temp_queue_type temp;
+	event_queue.copy_to(temp);
+	const_iterator i(temp.begin()), e(temp.end());
+	write_value(o, temp.size());
+	for ( ;i!=e; ++i) {
+		write_value(o, i->time);
+		event_pool[i->event_index].save_state(o);
+	}
+}
+	// excl_rings -- structural only
+	// excl and pending queues should be empty!
+	INVARIANT(exclhi_queue.empty());
+	INVARIANT(excllo_queue.empty());
+	INVARIANT(pending_queue.empty());
+	write_value(o, current_time);
+	write_value(o, uniform_delay);
+{
+	// watch_list? yes, because needs to be kept consistent with nodes
+	typedef	watch_list_type::const_iterator		const_iterator;
+	write_value(o, watch_list.size());
+	const_iterator i(watch_list.begin()), e(watch_list.end());
+	for ( ; i!=e; ++i) {
+		write_value(o, i->first);
+		i->second.save_state(o);
+	}
+}
+	write_value(o, flags);
+	write_value(o, timing_mode);
+	// interrupted flag, just ignore
+	// ifstreams? don't bother managing input stream stack.
+	// __scratch_expr_trace -- never needed, ignore
+	write_value(o, magic_string);
+	return !o;
+}	// end State::save_checkpoint
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Has a ton of consistency checking.  
+	TODO: need some sort of consistency check with module.  
+	\pre the State is already allocated b/c no resizing is done
+		during checkpoint loading.  
+	\return true if to signal that an error occurred. 
+ */
+bool
+State::load_checkpoint(istream& i) {
+	initialize();		// start by initializing everything
+	// or reset(); ?
+	string header_check;
+	read_value(i, header_check);
+	if (header_check != magic_string) {
+		cerr << "ERROR: not a hackt prsim checkpoint file." << endl;
+		return true;
+	}
+{
+	// node_pool
+	size_t s;
+	read_value(i, s);
+	if (node_pool.size() != s) {
+		cerr << "ERROR: checkpoint\'s node_pool size is inconsistent."
+			<< endl;
+		return true;
+	}
+	typedef node_pool_type::iterator	iterator;
+	const iterator b(++node_pool.begin()), e(node_pool.end());
+#if 0
+	// doesn't work :(
+	for_each(b, e, 
+		bind2nd_argval_void(mem_fun_ref(&node_type::load_state), i)
+	);
+#else
+	iterator j(b);
+	for ( ; j!=e; ++j) {
+		j->load_state(i);
+	}
+#endif
+}{
+#if !DEDUCE_PRSIM_EXPR_STATE
+	// expr_pool
+	size_t s;
+	read_value(i, s);
+	if (expr_pool.size() != s) {
+		cerr << "ERROR: checkpoint\'s expr_pool size is inconsistent."
+			<< endl;
+		return true;
+	}
+	typedef expr_pool_type::iterator	iterator;
+	const iterator b(++expr_pool.begin()), e(expr_pool.end());
+#if 0
+	for_each(b, e, 
+		bind2nd_argval_void(mem_fun_ref(&expr_type::load_state), i)
+	);
+#else
+	iterator j(b);
+	for ( ; j!=e; ++j) {
+		j->load_state(i);
+	}
+#endif
+#else
+	// to reconstruct from nodes only, we perform propagation evaluation
+	// on every node, as if it had just fired out of X state.  
+	typedef node_pool_type::const_iterator	const_iterator;
+	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
+	const_iterator ni(nb);
+	for (++ni; ni!=ne; ++ni) {
+		typedef	node_type::const_fanout_iterator
+					const_fanout_iterator;
+		const node_type& n(*ni);
+		const_fanout_iterator fi(n.fanout.begin()), fe(n.fanout.end());
+		const char next = n.current_value();
+		const char prev = node_type::LOGIC_OTHER;
+		if (next != prev) {
+			const expr_index_type nj(distance(nb, ni));
+			for ( ; fi!=fe; ++fi) {
+				evaluate(nj, *fi, prev, next);
+				// evaluate does not modify any queues
+				// just updates expression states
+			}
+			// but we don't actually use these event queues, 
+			// those are loaded from the checkpoint.  
+		}
+	}	// end for-all nodes
+#endif	// DEDUCE_PRSIM_EXPR_STATE
+}
+	// graph_pool -- structural only
+{
+#if CHECKPOINT_RULE_STATE_MAP
+	// rule_map -- currently structural only, but we include code anyways
+	typedef	rule_map_type::iterator		iterator;
+	size_t s;
+	read_value(i, s);
+	if (rule_map.size() != s) {
+		cerr << "ERROR: checkpoint\'s rule_map size is inconsistent."
+			<< endl;
+		return true;
+	}
+	iterator j(rule_map.begin()), e(rule_map.end());
+	for ( ; j!=e; ++j) {
+		rule_map_type::key_type k;
+		read_value(i, k);
+		if (j->first != k) {
+			cerr << "ERROR: checkpoint\'s rule_map key is "
+				"inconsistent.  got: " << k << ", expected: "
+				<< j->first << endl;
+			return true;
+		}
+		j->second.load_state(i);
+	}
+#endif
+}{
+	// event_pool -- only selected entries
+	// event_queue
+	size_t s;
+	read_value(i, s);
+	for ( ; s; --s) {
+		time_type t;
+		read_value(i, t);
+		event_type ev;
+		ev.load_state(i);
+		enqueue_event(t, __load_allocate_event(ev));
+	}
+}
+	// excl_rings -- structural only
+	// excl and pending queues should be empty!
+	INVARIANT(exclhi_queue.empty());
+	INVARIANT(excllo_queue.empty());
+	INVARIANT(pending_queue.empty());
+	read_value(i, current_time);
+	read_value(i, uniform_delay);
+{
+	// watch_list? yes, because needs to be kept consistent with nodes
+	size_t s;
+	read_value(i, s);
+	for ( ; s; --s) {
+		watch_list_type::key_type k;
+		read_value(i, k);
+		watch_list[k].load_state(i);
+	}
+}
+	read_value(i, flags);
+	read_value(i, timing_mode);
+	// interrupted flag, just ignore
+	// ifstreams? don't bother managing input stream stack.
+	// __scratch_expr_trace -- never needed, ignore
+{
+	read_value(i, header_check);
+	if (header_check != magic_string) {
+		cerr << "ERROR: detected checkpoint misalignment!" << endl;
+		return true;
+	}
+}
+	return !i;
+}	// end State::load_checkpoint
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Textual dump of checkpoint without loading it.  
+	Keep this consistent with the save/load methods above.  
+	\param i the input file stream for the checkpoint.
+	\param o the output stream to dump to.  
+ */
+ostream&
+State::dump_checkpoint(ostream& o, istream& i) {
+	string header_check;
+	read_value(i, header_check);
+	o << "header string: " << header_check << endl;
+{
+	// node_pool
+	size_t s;
+	read_value(i, s);
+	size_t j = 1;
+	o << "Have " << s << " unique boolean nodes:" << endl;
+	node_type::dump_checkpoint_state_header(o << '\t') << endl;
+	for ( ; j<s; ++j) {
+		node_type::dump_checkpoint_state(o << j << '\t', i) << endl;
+	}
+}{
+#if !DEDUCE_PRSIM_EXPR_STATE
+	// expr_pool
+	size_t s;
+	read_value(i, s);
+	size_t j = 1;
+	o << "Have " << s << " expression nodes:" << endl;
+	expr_type::dump_checkpoint_state_header(o << '\t') << endl;
+	for ( ; j<s; ++j) {
+		expr_type::dump_checkpoint_state(o << j << '\t', i) << endl;
+	}
+#endif
+}
+	// graph_pool -- structural only
+{
+#if CHECKPOINT_RULE_STATE_MAP
+	// rule_map -- currently structural only, but we include code anyways
+	size_t s;
+	read_value(i, s);
+	o << "Have " << s << " rule attribute map entries:" << endl;
+	size_t j = 0;
+	for ( ; j<s; ++j) {
+		rule_map_type::key_type k;
+		read_value(i, k);
+		o << k << '\t';
+		rule_type::dump_checkpoint_state(o, i) << endl;
+	}
+#endif
+}{
+	// event_pool -- only selected entries
+	// event_queue
+	size_t s;
+	read_value(i, s);
+	o << "Have " << s << " events in queue:" << endl;
+	event_type::dump_checkpoint_state_header(o << '\t') << endl;
+	for ( ; s; --s) {
+		time_type t;
+		read_value(i, t);
+		o << t << '\t';
+		event_type::dump_checkpoint_state(o, i) << endl;
+	}
+}
+	time_type current_time, uniform_delay;
+	read_value(i, current_time);
+	read_value(i, uniform_delay);
+	o << "current time: " << current_time << endl;
+	o << "uniform delay: " << uniform_delay << endl;
+{
+	// watch_list? yes, because needs to be kept consistent with nodes
+	size_t s;
+	read_value(i, s);
+	o << "Have " << s << " nodes in watch-list:" << endl;
+	for ( ; s; --s) {
+		watch_list_type::key_type k;
+		read_value(i, k);
+		o << k << '\t';
+		watch_entry::dump_checkpoint_state(o, i) << endl;
+	}
+}
+	flags_type flags;
+	read_value(i, flags);
+	o << "flags: " << size_t(flags) << endl;
+	char timing_mode;
+	read_value(i, timing_mode);
+	o << "timing mode: " << size_t(timing_mode) << endl;
+	read_value(i, header_check);
+	o << "footer string: " << header_check << endl;
+	return o;
+}	// end State::dump_checkpoint
+
+//=============================================================================
+// struct watch_entry method definitions
+
+void
+watch_entry::save_state(ostream& o) const {
+	write_value(o, breakpoint);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+watch_entry::load_state(istream& i) {
+	read_value(i, breakpoint);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+watch_entry::dump_checkpoint_state(ostream& o, istream& i) {
+	char breakpoint;
+	read_value(i, breakpoint);
+	return o << size_t(breakpoint);
 }
 
 //=============================================================================

@@ -1,0 +1,63 @@
+# "oscil-break-01.prsimrc"
+#	$Id: oscil-break-02.prsimrc,v 1.2 2006/05/06 04:19:34 fang Exp $
+# @haco@ oscillator.haco-a
+# Testing the tcounts features, and get reporting causes
+
+tcounts
+alias x5 get R.x[5]
+watchall
+
+set _Reset 0
+cycle
+set _Reset 1
+echo breaking on R.x[0]
+breakpt R.x[0]
+cycle
+x5
+cycle
+x5
+step 20
+x5
+step 20
+x5
+advance 200
+x5
+advance 200
+x5
+echo unbreak R.x[0]
+unbreak R.x[0]
+step 20
+x5
+advance 200
+x5
+echo breaking on R.x[2] and R.x[9]
+breakpt R.x[2]
+breakpt R.x[9]
+cycle
+x5
+cycle
+x5
+step 10
+x5
+step 10
+x5
+advance 100
+x5
+advance 100
+x5
+echo unbreakall
+unbreakall
+step 20
+x5
+advance 200
+x5
+
+echo turning off tcounts
+notcounts
+x5
+
+echo zero-ing tcounts
+tcounts
+zerotcounts
+x5
+

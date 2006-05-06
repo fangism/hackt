@@ -4,14 +4,13 @@
 	container values such as set, map, hash_map.  
 
 	Incidentally, this is used by "const_assoc_query.h".
-	$Id: assoc_traits.h,v 1.4 2006/04/27 00:16:36 fang Exp $
+	$Id: assoc_traits.h,v 1.5 2006/05/06 04:18:56 fang Exp $
  */
 
 #ifndef	__UTIL_ASSOC_TRAITS_H__
 #define	__UTIL_ASSOC_TRAITS_H__
 
 #include "util/assoc_traits_fwd.h"
-#include "util/const_traits.h"
 #include "util/STL/map_fwd.h"
 #include "util/STL/hash_map_fwd.h"
 #include "util/STL/set_fwd.h"

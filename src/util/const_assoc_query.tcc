@@ -1,12 +1,13 @@
 /**
 	\file "util/const_assoc_query.tcc"
 	Definition for map-like class adapter with const-semantics lookup.
-	$Id: const_assoc_query.tcc,v 1.6 2006/02/20 20:50:59 fang Exp $
+	$Id: const_assoc_query.tcc,v 1.7 2006/05/06 04:18:57 fang Exp $
  */
 
 #ifndef	__UTIL_CONST_ASSOC_QUERY_TCC__
 #define	__UTIL_CONST_ASSOC_QUERY_TCC__
 
+#include "util/STL/functional.h"	// in case _Select is missing
 #include "util/const_assoc_query.h"
 #include "util/assoc_traits.h"		// contains STL specializations
 #include "util/null_construct.h"

@@ -1,5 +1,26 @@
 # "test/ChangeLog"
 
+2006-05-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-10:
+	  Added test support for verifying that prsim -O1 results in 
+		identical checkpoints as the default -O0.  
+
+
+2006-05-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-05:
+	  Added test support for verifying prsim checkpoint consistency.
+
+
+2006-04-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-02:
+	  prsimrc-random-time-filter.awk: account for cause diagnostics
+	  update-*.sh: maintainer scripts updated with getopt-ability
+		to take -s srcdir as argument, useful in VPATH builds.  
+
+
 2006-04-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-13-merged-spec-02-04:

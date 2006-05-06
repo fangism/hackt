@@ -1,0 +1,53 @@
+# "excl-rings-03.prsimrc"
+#	$Id: excl-rings-03.prsimrc,v 1.2 2006/05/06 04:19:24 fang Exp $
+# @haco@ excl-rings.haco-a
+# testing excl rings features
+
+watchall
+
+set a 1
+set b 1
+cycle
+
+set a 0
+set b 0
+cycle
+echo since a- was first, x+, while y+ is suppressed
+assert x 1
+assert y 0
+get x
+get y
+
+set a 1
+cycle
+echo resetting x- should allow y+
+assert y 1
+get x
+get y
+set b 1
+cycle
+assert y 0
+get x
+get y
+
+set b 0
+set a 0
+cycle
+echo since b- was first, y+, while x+ is suppressed
+assert y 1
+assert x 0
+get x
+get y
+
+set b 1
+cycle
+echo resetting y- should allow x+
+assert x 1
+get x
+get y
+set a 1
+cycle
+assert x 0
+get x
+get y
+

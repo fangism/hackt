@@ -1,0 +1,36 @@
+	0	a : 1
+	0	b : 1
+	10	x : 0	[by a:=1]
+	10	y : 0	[by b:=1]
+	10	a : 0
+	10	b : 0
+	20	x : 1	[by a:=0]
+since a- was first, x+, while y+ is suppressed 
+x : 1	[by a:=0]
+y : 0	[by b:=0]
+	20	a : 1
+	30	x : 0	[by a:=1]
+	40	y : 1	[by x:=0]
+resetting x- should allow y+ 
+x : 0	[by a:=1]
+y : 1	[by x:=0]
+	40	b : 1
+	50	y : 0	[by b:=1]
+x : 0	[by a:=1]
+y : 0	[by b:=1]
+	50	b : 0
+	50	a : 0
+	60	y : 1	[by b:=0]
+since b- was first, y+, while x+ is suppressed 
+x : 0	[by a:=0]
+y : 1	[by b:=0]
+	60	b : 1
+	70	y : 0	[by b:=1]
+	80	x : 1	[by y:=0]
+resetting y- should allow x+ 
+x : 1	[by y:=0]
+y : 0	[by b:=1]
+	80	a : 1
+	90	x : 0	[by a:=1]
+x : 0	[by a:=1]
+y : 0	[by b:=1]

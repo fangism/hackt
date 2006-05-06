@@ -62,6 +62,7 @@ X nodes:
 b 
 setting a -> X 
 WARNING: weak-interference `c'
+>> cause: `a' (val: X)
 0 nodes:
 
 1 nodes:

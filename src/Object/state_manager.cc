@@ -2,7 +2,7 @@
 	\file "Object/state_manager.cc"
 	This module has been obsoleted by the introduction of
 		the footprint class in "Object/def/footprint.h".
-	$Id: state_manager.cc,v 1.13 2006/04/27 00:15:26 fang Exp $
+	$Id: state_manager.cc,v 1.14 2006/05/06 04:18:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -182,6 +182,7 @@ if (cf.include_prs) {
  */
 void
 state_manager::accept(PRS::cflat_visitor& v) const {
+#if 0
 	size_t pid = 1;		// 0-indexed, but 0th entry is null
 	const global_entry_pool<process_tag>& proc_entry_pool(*this);
 	// Could re-write in terms of begin() and end() iterators.  
@@ -189,6 +190,9 @@ state_manager::accept(PRS::cflat_visitor& v) const {
 	for ( ; pid < plim; pid++) {
 		production_rule_substructure::accept(proc_entry_pool[pid], v);
 	}
+#else
+	v.visit(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

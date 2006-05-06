@@ -1,7 +1,7 @@
 /**
 	\file "main/prsim.h"
 	Interface header for prsim module.  
-	$Id: prsim.h,v 1.3 2006/01/27 08:07:21 fang Exp $
+	$Id: prsim.h,v 1.4 2006/05/06 04:18:43 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_PRSIM_H__
@@ -13,6 +13,7 @@
 namespace HAC {
 class prsim_options;
 
+//=============================================================================
 /**
 	Instance-less class.  
 	Yes, most everything is private, not supposed to use this directly, 
@@ -53,10 +54,13 @@ private:
 		_default, _run, _no_run, 
 		_dump_expr_alloc, _no_dump_expr_alloc,
 		_check_structure, _no_check_structure,
-		_dump_dot_struct, _no_dump_dot_struct;
+		_dump_dot_struct, _no_dump_dot_struct,
+		_fold_literals, _no_fold_literals,
+		_denormalize_negations, _no_denormalize_negations;
 
 };	// end class prsim
 
+//=============================================================================
 }	// end namespace HAC
 
 #endif	// __HAC_MAIN_PRSIM_H__

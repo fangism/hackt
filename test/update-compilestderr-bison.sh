@@ -1,6 +1,6 @@
 #!/bin/sh
 # "update-compilestderr-bison.sh"
-#	$Id: update-compilestderr-bison.sh,v 1.2 2005/12/13 04:15:53 fang Exp $
+#	$Id: update-compilestderr-bison.sh,v 1.3 2006/05/06 04:19:06 fang Exp $
 # convenient maintainer script for updating expected outputs
 # use this script when updating bison tests
 
@@ -8,9 +8,28 @@
 # too much hassle because not all parse failure outputs are 
 # dependent on the parser-generator
 
-for i in $@
+args=`getopt "s:" $*`
+if test $? != 0
+then
+	echo "Usage: $0 [ -s srcdir ] [files...]"
+	exit 2
+fi
+set -- $args
+
+# assumed source directory
+srcdir=.
+for i
 do
-	cp -f $i.test.filter $i.stderr.bison
-	echo "Updated $i.stderr.bison"
+	case "$i"
+	in
+		-s) srcdir="$2" shift; shift;;
+		--) shift; break;;
+	esac
+done
+
+for i
+do
+	cp -f $i.test.filter $srcdir/$i.stderr.bison
+	echo "Updated $srcdir/$i.stderr.bison"
 done
 

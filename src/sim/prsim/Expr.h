@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.4 2006/04/23 07:37:26 fang Exp $
+	$Id: Expr.h,v 1.5 2006/05/06 04:18:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -14,10 +14,16 @@
 #include "sim/common.h"
 #include "util/macros.h"
 
+/**
+	Define to 1 to use PULL_WEAK == 1.
+ */
+#define	USE_BETTER_PULL_ENCODING		0
+
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::ostream;
+using std::istream;
 // using std::valarray;
 using std::vector;
 using std::pair;
@@ -94,6 +100,19 @@ public:
 	bool
 	is_not(void) const { return type & EXPR_NOT; }
 
+	void
+	toggle_not(void) { type ^= EXPR_NOT; }
+
+	void
+	toggle_demorgan(void) {
+		// pushes the bubble: and <-> nor, nand <-> or
+		type ^= (EXPR_NOT | EXPR_AND);
+	}
+
+	bool
+	is_trivial(void) const {
+		return (size == 1) && !is_not();
+	}
 
 	/**
 		\pre direction is only meaningful if this expression is 
@@ -143,11 +162,16 @@ public:
 	is_or(void) const { return !(type & EXPR_AND) && !(type & EXPR_NOT); }
 
 	bool
+	is_conjunctive(void) const { return type & EXPR_AND; }
+
+	bool
+	is_disjunctive(void) const { return !(type & EXPR_AND); }
+
+	bool
 	is_nand(void) const { return (type & EXPR_AND) && (type & EXPR_NOT); }
 
-	/// see "Object/lang/PRS_enum.h"
 	bool
-	parenthesize(const char) const;
+	parenthesize(const char, const bool) const;
 
 	/// see "Object/lang/PRS_enum.h"
 	char
@@ -174,8 +198,11 @@ private:
 //=============================================================================
 /**
 	Stateful expression class, derived from expression structure.  
+	TODO: figure out a clean way to use enums in code rather than chars.  
  */
 struct ExprState : public Expr {
+private:
+	typedef	ExprState		this_type;
 public:
 	typedef	Expr			parent_type;
 	/**
@@ -184,11 +211,12 @@ public:
 		Consider re-enumerating so that 2-x can be used
 		to invert.  (Will need to recode some tables in this case.)
 	 */
-	typedef	enum {
-		PULL_OFF = 0,
-		PULL_ON = 1,
-		PULL_WEAK = 2
-	} pull_enum;
+	enum {
+		PULL_OFF = 0x00,
+		PULL_ON = 0x01,
+		PULL_WEAK = 0x02
+	};	// wants to be pull_enum
+	typedef	unsigned char		pull_enum;
 
 public:
 	/**
@@ -222,6 +250,16 @@ public:
 	reset(void) { initialize(); }
 
 	/**
+		TODO: re-encode pull states so we can use 2-x.
+	 */
+	static
+	char
+	negate_pull(const char p) {
+		return (p == PULL_WEAK) ? PULL_WEAK :
+			((p == PULL_OFF) ? PULL_ON : PULL_OFF);
+	}
+
+	/**
 		\pre this->is_or();
 		countdown represents the number of 1's
 		PULL_ON: countdown != 0
@@ -231,8 +269,9 @@ public:
 	 */
 	char
 	or_pull_state(void) const {
-		return (countdown ? PULL_ON ^ is_not() :
-			(unknowns ? PULL_WEAK : PULL_OFF ^ is_not()));
+		const char ret = (countdown ? PULL_ON :
+			(unknowns ? PULL_WEAK : PULL_OFF));
+		return is_not() ? negate_pull(ret) : ret;
 	}
 
 	/**
@@ -245,21 +284,37 @@ public:
 	 */
 	char
 	and_pull_state(void) const {
-		return (countdown ? PULL_OFF ^ is_not() :
-			(unknowns ? PULL_WEAK : PULL_ON ^ is_not()));
+		const char ret = (countdown ? PULL_OFF :
+			(unknowns ? PULL_WEAK : PULL_ON));
+		return is_not() ? negate_pull(ret) : ret;
 	}
 
 	/**
 		See pull_enum enumerations.  
+		NOTE: this does account for negation.  
 		\return 0 if off, 1 if on, 2 if weak (X)
 	 */
 	char
 	pull_state(void) const {
-		return is_or() ? or_pull_state() : and_pull_state();
+		return is_disjunctive() ? or_pull_state() : and_pull_state();
 	}
 
 	ostream&
 	dump_state(ostream&) const;
+
+	void
+	save_state(ostream&) const;
+
+	void
+	load_state(istream&);
+
+	static
+	ostream&
+	dump_checkpoint_state_header(ostream&);
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream&, istream&);
 
 };	// end struct ExprState
 
@@ -268,6 +323,7 @@ public:
 	There should be one of these per Expr.  
 	Access to these is not performance critical, 
 	which is why we keep it separate.  
+	There is not stateful information here, just structural.  
 	This maintains the graph node type information, 
 	which is not fully needed in simulation, only needed during
 	feedback or anything that requires downward traversal.  

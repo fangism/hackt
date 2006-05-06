@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/Rule.h"
-	$Id: Rule.h,v 1.2 2006/04/23 07:37:26 fang Exp $
+	$Id: Rule.h,v 1.3 2006/05/06 04:18:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_RULE_H__
@@ -8,11 +8,13 @@
 
 #include <iosfwd>
 #include "sim/time.h"
+#include "util/attributes.h"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 using std::ostream;
+using std::istream;
 
 //-----------------------------------------------------------------------------
 /**
@@ -33,8 +35,6 @@ public:
 		Uses rule_enum_type to signal flags.  
 	 */
 	short				rule_flags;
-	/// unused space for now.  
-	short				__padding__;
 public:
 	Rule() : after(delay_policy<time_type>::default_delay), 
 		rule_flags(RULE_DEFAULT_FLAGS) { }
@@ -63,7 +63,18 @@ public:
  */
 template <typename Time>
 struct RuleState : public Rule<Time> {
-};	// end struct RuleState
+
+	void
+	save_state(ostream&) const { }
+
+	void
+	load_state(istream&) { }
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream& o, istream&) { return o; }
+
+} __ATTRIBUTE_ALIGNED__ ;	// end struct RuleState
 
 //-----------------------------------------------------------------------------
 }	// end namespace PRSIM

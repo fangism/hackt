@@ -1,7 +1,7 @@
 /**
 	\file "AST/node_list.tcc"
 	Template-only definitions for parser classes and methods.  
-	$Id: node_list.tcc,v 1.3 2006/01/22 06:52:54 fang Exp $
+	$Id: node_list.tcc,v 1.4 2006/05/06 04:18:36 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_node_list.tcc,v 1.10.34.1 2005/12/11 00:45:09 fang Exp
  */
@@ -18,7 +18,7 @@
 #include "util/what.tcc"
 #include "util/stacktrace.h"
 #include "util/type_traits.h"
-#include "util/binders.h"
+// #include "util/binders.h"
 #include "util/memory/count_ptr.tcc"
 
 // DO NOT INCLUDE THIS FILE IN OTHER HEADER FILES
@@ -56,8 +56,8 @@ namespace parser {
 class context;
 using util::what;
 using std::transform;
-using std::bind2nd;
-using std::bind2nd_argval;
+// using std::bind2nd;
+// using util::bind2nd_argval;
 using std::mem_fun;
 using std::mem_fun_ref;
 

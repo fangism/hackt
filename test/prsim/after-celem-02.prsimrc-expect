@@ -20,7 +20,7 @@ Fanins of node `c':
 	0	a[1] : 0
 	0	a[3] : 0
 	0	a[3] : 1
-	100	c : 0
+	100	c : 0	[by a[3]:=1]
 time: 100
 All subnodes of 'w':
 a[0] : 0

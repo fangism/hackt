@@ -1,0 +1,36 @@
+/**
+	\file "logic-defs.hac"
+	Basic combinational logic for testing prsim behavior.  
+	$Id: logic-defs.hac,v 1.2 2006/05/06 04:19:27 fang Exp $
+ */
+
+defproc inv(bool x, y) {
+prs {
+	x => y-
+}
+}
+
+defproc and(bool a, b, c) {
+prs {
+	a & b => c+
+}
+}
+
+defproc nand(bool a, b, c) {
+prs {
+	a & b => c-
+}
+}
+
+defproc or(bool a, b, c) {
+prs {
+	a | b => c+
+}
+}
+
+defproc nor(bool a, b, c) {
+prs {
+	a | b => c-
+}
+}
+

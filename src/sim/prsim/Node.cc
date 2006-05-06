@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.5 2006/04/24 00:28:09 fang Exp $
+	$Id: Node.cc,v 1.6 2006/05/06 04:18:55 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -13,6 +13,7 @@
 #include "sim/prsim/Node.h"
 #include "util/macros.h"
 #include "util/stacktrace.h"
+#include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace SIM {
@@ -20,6 +21,8 @@ namespace PRSIM {
 #include "util/using_ostream.h"
 using std::ostream_iterator;
 using std::string;
+using util::write_value;
+using util::read_value;
 
 //=============================================================================
 // class Node method definitions
@@ -66,10 +69,10 @@ ostream&
 Node::dump_struct(ostream& o) const {
 	o << "up: ";
 	if (pull_up_index)	o << pull_up_index;
-	else			o << '-';
+	else			o << '-';	// irrelevant
 	o << ", dn: ";
 	if (pull_dn_index)	o << pull_dn_index;
-	else			o << '-';
+	else			o << '-';	// irrelevant
 	o << " fanout: ";
 #if 1
 //	o << '<' << fanout.size() << "> ";
@@ -117,7 +120,9 @@ NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
 void
 NodeState::initialize(void) {
 	event_index = INVALID_EVENT_INDEX;
+	caused_by_node = INVALID_NODE_INDEX;
 	value = LOGIC_OTHER;
+	tcount = 0;
 	state_flags |= NODE_INITIALIZE_SET_MASK;
 	state_flags &= ~NODE_INITIALIZE_CLEAR_MASK;
 }
@@ -129,7 +134,9 @@ NodeState::initialize(void) {
 void
 NodeState::reset(void) {
 	event_index = INVALID_EVENT_INDEX;
+	caused_by_node = INVALID_NODE_INDEX;
 	value = LOGIC_OTHER;
+	tcount = 0;
 	state_flags = NODE_INITIAL_STATE_FLAGS;
 }
 
@@ -164,9 +171,11 @@ NodeState::char_to_value(const char v) {
 	case 'f':	// fall-through
 	case 'F':	// fall-through
 	case '0': return LOGIC_LOW;
+
 	case 't':	// fall-through
 	case 'T':	// fall-through
 	case '1': return LOGIC_HIGH;
+
 	case 'X':	// fall-through
 	case 'x':	// fall-through
 	case 'U':	// fall-through
@@ -190,6 +199,56 @@ NodeState::string_to_value(const string& v) {
 	} else {
 		return char_to_value(v[0]);
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Note: we don't save the event index because it may change upon 
+	reconstruction due to event allocation.  
+	It is reconstructed by load_event, which is called during
+	event queue reconstruction.  
+	Otherwise, the event_index is left as INVALID_EVENT_INDEX
+ */
+void
+NodeState::save_state(ostream& o) const {
+	write_value(o, value);
+	write_value(o, state_flags);
+//	omit event index, which is reconstructed
+	write_value(o, caused_by_node);
+	write_value(o, tcount);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	The node state must be reeconstructed *before* the event queue
+	is reconstructed, because it overwrites the event_index field.  
+	\pre node is reset to unknown value to be able to reconstruct
+		intermediate expression state through propagation.  
+ */
+void
+NodeState::load_state(istream& i) {
+	INVARIANT(value == LOGIC_OTHER);
+	read_value(i, value);
+	read_value(i, state_flags);
+//	omit event index, which is reconstructed
+	INVARIANT(event_index == INVALID_EVENT_INDEX);
+	read_value(i, caused_by_node);
+	read_value(i, tcount);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+NodeState::dump_checkpoint_state_header(ostream& o) {
+	return o << "value\tflags\tcause\ttcount";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+NodeState::dump_checkpoint_state(ostream& o, istream& i) {
+	this_type temp;
+	temp.load_state(i);
+	return temp.dump_value(o) << '\t' << size_t(temp.state_flags) <<
+		'\t' << temp.caused_by_node << '\t' << temp.tcount;
 }
 
 //=============================================================================

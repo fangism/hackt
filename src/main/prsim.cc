@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.5 2006/04/28 03:20:14 fang Exp $
+	$Id: prsim.cc,v 1.6 2006/05/06 04:18:42 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -10,6 +10,7 @@
 #include "util/static_trace.h"
 
 #include <iostream>
+#include <fstream>
 #include <cstring>
 #include <list>
 
@@ -22,12 +23,16 @@
 #include "util/persistent_object_manager.h"
 #include "sim/prsim/State.h"
 #include "sim/prsim/Command.h"
+#include "sim/prsim/ExprAllocFlags.h"
+#include "util/string.tcc"	// for string_to_num
 
 namespace HAC {
 using SIM::PRSIM::State;
 using SIM::PRSIM::CommandRegistry;
+using SIM::PRSIM::ExprAllocFlags;
 using util::persistent;
 using util::persistent_object_manager;
+using util::strings::string_to_num;
 
 #include "util/using_ostream.h"
 
@@ -54,6 +59,9 @@ public:
 	bool			check_structure;
 	/// whether or not to produce a dot-format structure dump before running
 	bool			dump_dot_struct;
+	/// whether or not checkpoint dump is requested
+	bool			dump_checkpoint;
+	ExprAllocFlags		expr_alloc_flags;
 
 	typedef	std::list<string>	source_paths_type;
 	/// include search paths for sources
@@ -61,7 +69,11 @@ public:
 
 	prsim_options() : help_only(false), interactive(true), 
 		dump_expr_alloc(false), run(true),
-		check_structure(true), dump_dot_struct(false) { }
+		check_structure(true), dump_dot_struct(false), 
+		dump_checkpoint(false),
+		expr_alloc_flags(), 
+		source_paths() { }
+
 };	// end class options
 
 //=============================================================================
@@ -87,6 +99,10 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 		cerr << "Error in command invocation." << endl;
 		usage();
 		return 1;
+	}
+	if (opt.dump_checkpoint) {
+		// dump of checkpoint only
+		return 0;
 	}
 	if (opt.help_only) {
 		util::string_list args;
@@ -123,7 +139,7 @@ prsim::main(const int argc, char* argv[], const global_options&) {
 
 	// the simulator state object, initialized with the module
 try {
-	State sim_state(*the_module);		// may throw
+	State sim_state(*the_module, opt.expr_alloc_flags);	// may throw
 	const State::signal_handler int_handler(&sim_state);
 	if (opt.dump_expr_alloc)
 		sim_state.dump_struct(cout) << endl;
@@ -163,7 +179,7 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 		argc, argv, o, options_modifier_map);
 #else
 	// now we're adding our own flags
-	static const char optstring[] = "+bf:hiI:";
+	static const char optstring[] = "+bd:f:hiI:O:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -171,6 +187,16 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 			// batch-mode, non-interactive
 			o.interactive = false;
 			break;
+		case 'd': {
+			o.dump_checkpoint = true;
+			std::ifstream f(optarg, std::ios_base::binary);
+			if (!f) {
+				cerr << "Error opening file \"" << optarg <<
+					"\" for reading." << endl;
+			}
+			State::dump_checkpoint(cout, f);
+			break;
+		}
 		case 'f': {
 			const options_modifier_map_iterator
 				mi(options_modifier_map.find(optarg));
@@ -192,6 +218,17 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 		case 'I':
 			o.source_paths.push_back(optarg);
 			break;
+		case 'O': {
+			int opt_level;
+			if (string_to_num(optarg, opt_level)) {
+				cerr << "Invalid optimization level: " <<
+					optarg << "." << endl;
+				return 1;
+			} else {
+				o.expr_alloc_flags.optimize(opt_level);
+			}
+			break;
+		}
 		case ':':
 			cerr << "Expected but missing option-argument." << endl;
 			return 1;
@@ -212,10 +249,12 @@ prsim::usage(void) {
 	cerr << "usage: " << name << " [options] <hackt-obj-infile>" << endl;
 	cerr << "options:" << endl;
 	cerr << "\t-b : batch-mode, non-interactive (promptless)" << endl;
+	cerr << "\t-d <checkpoint>: textual dump of checkpoint only" << endl;
 	cerr << "\t-f <flag> : general options modifiers (listed below)" << endl;
 	cerr << "\t-h : print commands help and exit (objfile optional)" << endl;
 	cerr << "\t-i : interactive (default)" << endl;
 	cerr << "\t-I <path> : include path for scripts (repeatable)" << endl;
+	cerr << "\t-O <0..1> : expression optimization level" << endl;
         const size_t flags = options_modifier_map.size();
 	if (flags) {
 		cerr << "flags (" << flags << " total):" << endl;
@@ -240,6 +279,14 @@ static void __prsim_dump_dot_struct(prsim_options& o)
 	{ o.dump_dot_struct = true; }
 static void __prsim_no_dump_dot_struct(prsim_options& o)
 	{ o.dump_dot_struct = false; }
+static void __prsim_fold_literals(prsim_options& o)
+	{ o.expr_alloc_flags.fold_literals(); }
+static void __prsim_no_fold_literals(prsim_options& o)
+	{ o.expr_alloc_flags.no_fold_literals(); }
+static void __prsim_denormalize_negations(prsim_options& o)
+	{ o.expr_alloc_flags.denormalize_negations(); }
+static void __prsim_no_denormalize_negations(prsim_options& o)
+	{ o.expr_alloc_flags.no_denormalize_negations(); }
 
 const prsim::register_options_modifier
 	prsim::_default(
@@ -268,7 +315,19 @@ const prsim::register_options_modifier
 		"print dot-formatted graph structure"), 
 	prsim::_no_dump_dot_struct(
 		"no-dump-dot-struct", &__prsim_no_dump_dot_struct,
-		"suppress dot-formatted graph structure (default)");
+		"suppress dot-formatted graph structure (default)"),
+	prsim::_fold_literals(
+		"fold-literals", &__prsim_fold_literals,
+		"[OPT] eliminate literal leaf nodes"), 
+	prsim::_no_fold_literals(
+		"no-fold-literals", &__prsim_no_fold_literals,
+		"[OPT] disable fold-literals"), 
+	prsim::_denormalize_negations(
+		"denormalize-negations", &__prsim_denormalize_negations,
+		"[OPT] apply DeMorgan\'s transformations"), 
+	prsim::_no_denormalize_negations(
+		"no-denormalize-negations", &__prsim_no_denormalize_negations,
+		"[OPT] disable denormalize-negations");
 
 //=============================================================================
 }	// end namespace HAC

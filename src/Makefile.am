@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.119 2006/04/28 03:20:04 fang Exp $
+#	$Id: Makefile.am,v 1.120 2006/05/06 04:18:33 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -551,7 +551,8 @@ SIM_TCC_FILES = \
 SIM_H_FILES = $(SIM_CC_FILES:.cc=.h) \
 	$(SIM_TCC_FILES:.tcc=.h) \
 	sim/common.h \
-	sim/devel_switches.h
+	sim/devel_switches.h \
+	sim/prsim/ExprAllocFlags.h
 
 # libhacktexec sources
 MAIN_EXEC_CC_FILES = \

@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.7 2006/02/21 23:07:35 fang Exp $
+	$Id: instance.cc,v 1.8 2006/05/06 04:18:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -94,10 +94,10 @@ using util::dereference;
 using std::transform;
 using std::mem_fun_ref;
 using ADS::unary_compose;
-using std::bind2nd_argval;
+using util::bind2nd_argval;
 using std::accumulate;
-using std::_Select1st;
-using std::_Select2nd;
+// using std::_Select1st;
+// using std::_Select2nd;
 using std::find;
 using entity::meta_instance_reference_base;
 using entity::meta_value_reference_base;

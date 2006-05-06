@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.13 2006/04/12 08:53:23 fang Exp $
+#	$Id: Make.test-head,v 1.14 2006/05/06 04:19:00 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -15,7 +15,7 @@ SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.outdump .indump .unrolldump .createdump .allocdump \
 	.haco-c-from-haco .haco-a-from-haco .haco-a-from-u \
 	.hacktcreatefromhacotest .hacktallocfromhacotest \
-	.prsimrc .prsimtest
+	.prsimrc .prsimtest .prsimckpttest .prsimopttest
 
 if HAVE_CFLAT
 SUFFIXES += .cast .castprs

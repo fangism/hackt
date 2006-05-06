@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.6 2006/04/27 00:14:35 fang Exp $
+dnl	$Id: cxx.m4,v 1.7 2006/05/06 04:18:32 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -780,7 +780,7 @@ AC_CACHE_CHECK([whether compiler accepts __attribute__((aligned(size)))],
 	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	AC_COMPILE_IFELSE(
 		AC_LANG_PROGRAM(
-		[struct __attribute__((aligned)) foo {
+		[struct __attribute__((aligned(8))) foo {
 			char x; char y; char z;
 			foo() { }
 			~foo() { }

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.5 2006/04/23 07:37:27 fang Exp $
+	$Id: State.h,v 1.6 2006/05/06 04:18:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -30,13 +30,40 @@ namespace entity {
 namespace SIM {
 namespace PRSIM {
 class ExprAlloc;
+struct ExprAllocFlags;
 using std::string;
 using entity::module;
 using util::list_vector;
 using std::ostream;
+using std::istream;
 using util::ifstream_manager;
 using util::string_list;
 using HASH_MAP_NAMESPACE::hash_map;
+
+//=============================================================================
+/**
+	Watch list entry.  
+	Node index not included because it will be the first
+	value of the mapped pair.  
+ */
+struct watch_entry {
+	/// true if node is also a breakpoint
+	char	breakpoint;
+	// TODO: if is also a member of vector
+	watch_entry() : breakpoint(0) { }
+
+	void
+	save_state(ostream&) const;
+
+	void
+	load_state(istream&);
+
+	static
+	ostream&
+	dump_checkpoint_state(ostream&, istream&);
+
+} __ATTRIBUTE_ALIGNED__ ;
+
 //=============================================================================
 /**
 	The prsim simulation state.
@@ -70,20 +97,27 @@ public:
 	typedef	vector<expr_type>		expr_pool_type;
 	typedef	RuleState<time_type>		rule_type;
 	typedef	hash_map<expr_index_type, rule_type>	rule_map_type;
-	/**
-		Watch list entry.  
-		Node index not included because it will be the first
-		value of the mapped pair.  
-	 */
-	struct watch_entry {
-		/// true if node is also a breakpoint
-		char	breakpoint;
-		// TODO: if is also a member of vector
-		char	__padding1__;
-		short	__padding2__;
-		watch_entry() : breakpoint(0) { }
-	};
+
 	typedef	std::map<node_index_type, watch_entry>	watch_list_type;
+	/**
+		The first node index is the one that just changed, 
+		the second index refers to the node that caused it, 
+		deduced from some event queue.  
+	 */
+	typedef	std::pair<node_index_type, node_index_type>
+							step_return_type;
+private:
+	struct evaluate_return_type {
+		node_index_type			node_index;
+		expr_type*			root_ex;
+		char				root_pull;
+
+		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
+
+		evaluate_return_type(const node_index_type ni,
+			expr_type* const e, const char p) :
+			node_index(ni), root_ex(e), root_pull(p) { }
+	};	// end struct evaluate_return_type
 private:
 	/**
 		A fast, realloc-free vector-like structure
@@ -145,6 +179,11 @@ private:
 		 */
 		FLAG_WATCHALL = 0x10,
 		/**
+			Whether or not to show transition counts
+			when displaying nodes.  
+		 */
+		FLAG_SHOW_TCOUNTS = 0x20,
+		/**
 			Flags to set upon initialize().
 		 */
 		FLAGS_INITIALIZE_SET_MASK = 0x00,
@@ -199,6 +238,8 @@ protected:
 						excl_ring_map_type;
 	typedef	vector<event_placeholder_type>	excl_queue_type;
 	typedef	vector<event_index_type>	pending_queue_type;
+	typedef	vector<event_queue_type::value_type>
+						temp_queue_type;
 private:
 //	count_ptr<const module>			mod;
 	const module&				mod;
@@ -260,7 +301,7 @@ public:
 	} __ATTRIBUTE_UNUSED__ ;
 public:
 	explicit
-	State(const module&);
+	State(const module&, const ExprAllocFlags&);
 private:
 	// inaccessible undefined copy-constructor ... for now
 	State(const State&);
@@ -339,6 +380,18 @@ public:
 	norandom(void) { timing_mode = TIMING_UNIFORM; }
 
 	bool
+	show_tcounts(void) const { return flags & FLAG_SHOW_TCOUNTS; }
+
+	void
+	set_show_tcounts(void) { flags |= FLAG_SHOW_TCOUNTS; }
+
+	void
+	clear_show_tcounts(void) { flags &= ~FLAG_SHOW_TCOUNTS; }
+
+	void
+	reset_tcounts(void);
+
+	bool
 	pending_events(void) const { return !event_queue.empty(); }
 
 	static
@@ -372,10 +425,13 @@ public:
 	void
 	clear_all_breakpoints(void);
 
-	node_index_type
+	ostream&
+	dump_breakpoints(ostream&) const;
+
+	step_return_type
 	step(void);
 
-	node_index_type
+	step_return_type
 	cycle(void);
 
 	void
@@ -428,6 +484,9 @@ public:
 	unwatch_structure(void);
 
 	ostream&
+	dump_watched_nodes(ostream&) const;
+
+	ostream&
 	status_nodes(ostream&, const char) const;
 
 	template <class L>
@@ -468,11 +527,12 @@ public:
 
 private:
 	event_index_type
-	__allocate_event(node_type&, const node_index_type,
-#if ENABLE_PRSIM_CAUSE_TRACKING
-		const rule_index_type, 
-#endif
-		const char);
+	__allocate_event(node_type&, const node_index_type n,
+		const node_index_type c, // this is the causing node
+		const rule_index_type, const char);
+
+	event_index_type
+	__load_allocate_event(const event_type&);
 
 	void
 	__deallocate_event(node_type&, const event_index_type);
@@ -518,6 +578,10 @@ private:
 
 	time_type
 	get_delay_dn(const event_type&) const;
+
+	evaluate_return_type
+	evaluate(const node_index_type, expr_index_type, 
+		char prev, char next);
 
 	void
 	propagate_evaluation(const node_index_type, expr_index_type, 
@@ -565,11 +629,29 @@ public:
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
-		const char p = entity::PRS::PRS_LITERAL_TYPE_ENUM) const;
+		const char p, const bool cp = false) const;
+
+	ostream&
+	dump_subexpr(ostream& o, const expr_index_type ei) const {
+		// really don't care what kind of expr, is ignored
+		return dump_subexpr(o, ei, expr_type::EXPR_ROOT, true);
+	}
+
+	bool
+	save_checkpoint(ostream&) const;
+
+	bool
+	load_checkpoint(istream&);
+
+	static
+	ostream&
+	dump_checkpoint(ostream&, istream&);
 
 private:
 	void
 	head_sentinel(void);
+
+	static const string		magic_string;
 
 };	// end class State
 

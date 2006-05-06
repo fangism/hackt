@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.3 2006/04/03 05:30:36 fang Exp $
+	$Id: Expr.cc,v 1.4 2006/05/06 04:18:50 fang Exp $
  */
 
 #include <iostream>
@@ -9,11 +9,15 @@
 #include "sim/prsim/Expr.h"
 #include "Object/lang/PRS_enum.h"
 #include "util/macros.h"
+#include "util/IO_utils.tcc"
 
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
 #include "util/using_ostream.h"
+using util::read_value;
+using util::write_value;
+
 //=============================================================================
 // class Expr method definitions
 
@@ -56,11 +60,13 @@ Expr::to_prs_enum(void) const {
 	Determine whether or not to parenthesize this subexpression
 	during pretty-printing.  
 	\param ptype is the parent expression type enumeration.
+	\param proot
  */
 bool
-Expr::parenthesize(const char ptype) const {
-	return (ptype != entity::PRS::PRS_LITERAL_TYPE_ENUM) &&
-		(ptype != to_prs_enum()) && (size > 1);
+Expr::parenthesize(const char ptype, const bool proot) const {
+	const bool neg = type & EXPR_NOT;
+	const bool mismatch = (type ^ ptype) & EXPR_MASK;
+	return (size > 1 && (neg || (mismatch && !proot)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -145,6 +151,40 @@ ExprState::dump_state(ostream& o) const {
 		" X: " << size_t(unknowns) << "(/" << size_t(size) << ')'
 		<< " pull: " << size_t(pull_state());
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Technically, this ExprState information can be reconstructed
+	based on the state of all Nodes, and the event queue.  
+	For now we just save and load values.  
+	TODO: reconstruction algorithm.
+ */
+void
+ExprState::save_state(ostream& o) const {
+	write_value(o, countdown);
+	write_value(o, unknowns);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+ExprState::load_state(istream& i) {
+	read_value(i, countdown);
+	read_value(i, unknowns);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+ExprState::dump_checkpoint_state_header(ostream& o) {
+	return o << "countdn\tunknowns";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+ExprState::dump_checkpoint_state(ostream& o, istream& i) {
+	this_type temp;
+	temp.load_state(i);
+	return o << size_t(temp.countdown) << '\t' << size_t(temp.unknowns);
 }
 
 //=============================================================================
