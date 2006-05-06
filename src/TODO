@@ -1,13 +1,10 @@
 "TODO"
-#	$Id: TODO,v 1.22 2006/04/28 03:20:06 fang Exp $
+#	$Id: TODO,v 1.23 2006/05/06 22:25:24 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
 ===============================================================================
 Simulation:
-
-	In general, write walkers for everything, it's about time...
-	Make walkers 'friendly'...
 
 	Little buglet:
 	* when interpreter reports syntax error, position is wrong because
@@ -21,7 +18,7 @@ Simulation:
 		counter.  
 
 prsim:
-	cause-tracking
+	cause-tracking (perhaps track per new value +,-,X)
 	interpreter commands:
 		interp key [value]
 			for interpreter mode flags:
@@ -34,11 +31,8 @@ prsim:
 			Q: do we allow nodes to belong to multiple vectors?
 				current state of old prsims cannot.
 		use getopt-style interpretation?
-		sh syntax?
 	concept of environment variables?
 	far future: expression evaluation! variable expansion!
-	checkpoint generation and restoration
-
 	Q: should initialize clear the watching state?
 		in the old prsim, watch/break points are preserved
 		so we keep that behavior for now.  
@@ -54,7 +48,7 @@ enhancement:
 
 ===============================================================================
 complete type creation: (20060128)
-	The algorithm for hierarhical ID allocation is horked.
+	The algorithm for hierarchical ID allocation is horked.
 	Substitute ring-nodes with union-finds.  
 	[Status: complete 20060314]
 
@@ -135,6 +129,19 @@ CODE HYGIENE:
 		base_definition_type
 
 ===============================================================================
+object serialization:
+	preserve source line number information for select tokens, 
+	this is necessary for error reporting in later compile phases.
+
+	Tag object files with hackt version information (signature).
+	(Pass a generic header/tagging function to persistent object manager.)
+
+endianness:
+	update IO_utils' write_value and read_value specializations
+		for basic types to use endianness mode to change reading.
+		Writing should be in native endianness.  
+	Will need to read/write a header to set the endian mode.  
+
 hackt diff (or objdiff):
 	a program to detail the differences between two object files
 	differences can be structural, 
@@ -221,12 +228,23 @@ parser:
 	LOW PRIORTY: C/C++ parser to construct and manipulate syntax trees
 		rather than text... more of a fun (?) side project.
 
+	LOW PRIORITY:
+		Piece together grammar snippets m4-style?
+
 ===============================================================================
+LANGUAGES:
+	Is there any need to support the addition of languages
+		with something like @LANG { ... }?
+
 PRS and CHP
 
 need to handle loops and conditionals *around* prs { ... } bodies
 	need intermediate representation support for conditional PRS (easy)
 	Tentatively not supported until issue is resolved.  
+
+SPEC:
+	support for 'inline' attribute to flatten subinstances into 
+		current definition scope (and give equivalent aliases)
 
 CHP:
 	restrict references in the nonmeta language to be scalar?
@@ -242,18 +260,7 @@ Expression resolutions:
 		Too much effort for now... just screw it.  
 
 ===============================================================================
-External package dependence and support
-
-	consider support for BSD histedit support, older non-wrapped
-		version of readline, not exactly readline compatible.
-		e.g. on Apple: /usr/include/histedit.h /usr/lib/libedit.dylib
-
-===============================================================================
 KNOWN BUGS
-
-canonical name in alloc dump is missing parent namespace completely
-	e.g.: parser/typedef/005.hac, probably in namespace/00{3,4,5}.hac too
-	to fix: fix dump options in dump_canonical/hierarchical_name.
 
 test cases:
 parser/connect/120.hac, 121.hac

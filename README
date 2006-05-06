@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.8 2005/12/08 22:01:05 fang Exp $
+	$Id: README,v 1.9 2006/05/06 22:25:23 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -52,7 +52,7 @@ be used to compile this project:
 	gcc-3.2.x or earlier
 
 The following compilers are supported and recommended:
-	gcc-3.3.x, -3.4.x, -4.0.x
+	gcc-3.3.x, -3.4.x, -4.0.x, -4.1.x
 
 The following platforms and compilers are actively supported by this project:
 	Mac OS X 10.3+, gcc-3.3+ (either Apple* or FSF)
@@ -93,6 +93,7 @@ KNOWN ISSUES
 	at configure time to guarantee consistency.
 	TODO: find way to coordinate use and selection of flags
 	between autoconf and automake.  
+	Status: Fixed with autoconf flag tests.
 
 2005-12-07:
 	An early release of gcc-3.3 doesn't correctly heed the

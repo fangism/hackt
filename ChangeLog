@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-05-06	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79:
+	  Cleaned out the top-level TODO log.  
+	  Minor source clean-ups.  
+
+
 2006-05-05	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-24-merged-prsim-04-12:

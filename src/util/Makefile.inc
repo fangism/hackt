@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.11 2006/05/06 04:18:56 fang Exp $
+#	$Id: Makefile.inc,v 1.12 2006/05/06 22:25:25 fang Exp $
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy
@@ -12,8 +12,7 @@ util-libs: $(UTILLIBS)
 # SUBDIRS += util/test
 
 # phony program to generate _build/.../.deps directories on distcheck
-PHONYSOURCES += util/STL/dummy.cc util/obsolete/dummy.cc \
-	util/lang/lexyacc/dummy.cc
+PHONYSOURCES += util/STL/dummy.cc util/lang/lexyacc/dummy.cc
 
 # template definition header files
 UTIL_TCC_FILES = \
@@ -219,10 +218,9 @@ EXTRA_DIST += \
 	util/STL/README \
 	util/progs/README \
 	util/lang/README \
-	$(LEXYACC_PREFIX_GENERATOR) \
-	util/obsolete/README
+	$(LEXYACC_PREFIX_GENERATOR)
 
-UTIL_DIRS = util util/numeric util/memory util/obsolete util/STL \
+UTIL_DIRS = util util/numeric util/memory util/STL \
 	util/lang util/lang/lexyacc util/lang/CX util/progs
 
 CLEANSUBDIRS += $(UTIL_DIRS)
@@ -243,8 +241,6 @@ util/numeric/.cvsignore: util/.cvsignore
 	$(CP) $? $@
 util/progs/.cvsignore: util/.cvsignore
 	$(CP) $? $@
-util/obsolete/.cvsignore: util/.cvsignore
-	$(CP) $? $@
 
 util/lang/CX/cx-parse.yy: util/lang/CX/cx-parse.yy.in
 	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
@@ -256,6 +252,5 @@ SUBDIR_CVSIGNORE += \
 	util/lang/.cvsignore util/lang/lexyacc/.cvsignore \
 	util/lang/CX/.cvsignore \
 	util/memory/.cvsignore util/numeric/.cvsignore \
-	util/progs/.cvsignore \
-	util/obsolete/.cvsignore
+	util/progs/.cvsignore
 
