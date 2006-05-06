@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.8.6.4 2006/05/05 04:55:40 fang Exp $
+	$Id: ExprAlloc.cc,v 1.8.6.5 2006/05/06 02:13:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -679,6 +679,7 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 
 		// we don't OR-combine if the expression being examined
 		// is already a top-level root-expression.  
+		// NOTE: we mean is_or(), not just is_disjunctive()
 		if (pe.is_or() && !state.is_rule_expr(top_ex_index)) {
 		STACKTRACE_INDENT_PRINT("prev. root expr is OR" << endl);
 			// then simply extend the previous expr's children
@@ -705,12 +706,16 @@ ExprAlloc::link_node_to_root_expr(const node_index_type ni,
 			const expr_index_type root_ex_id =
 				allocate_new_Nary_expr(
 					entity::PRS::PRS_OR_EXPR_TYPE_ENUM, 2);
-			expr_type& new_ex(st_expr_pool.back());
-			new_ex.pull(ni, dir);
+			expr_type& new_ex(st_expr_pool[root_ex_id]);
+			new_ex.pull(ni, dir);	// sets parent node
 			link_child_expr(root_ex_id, dir_index, 0);
 			link_child_expr(root_ex_id, top_ex_index, 1);
 			// update the pull-up/dn root expression for the node
 			dir_index = root_ex_id;
+#if 0
+		STACKTRACE_INDENT_PRINT("new OR-expr " << root_ex_id <<
+			"\'s new parent node: " << new_ex.parent << endl);
+#endif
 		}
 	} else {
 		STACKTRACE_INDENT_PRINT("pull-up/dn not yet set" << endl);

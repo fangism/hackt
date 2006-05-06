@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.4.6.4 2006/05/05 04:55:39 fang Exp $
+	$Id: Expr.h,v 1.4.6.5 2006/05/06 02:13:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -162,6 +162,12 @@ public:
 	is_or(void) const { return !(type & EXPR_AND) && !(type & EXPR_NOT); }
 
 	bool
+	is_conjunctive(void) const { return type & EXPR_AND; }
+
+	bool
+	is_disjunctive(void) const { return !(type & EXPR_AND); }
+
+	bool
 	is_nand(void) const { return (type & EXPR_AND) && (type & EXPR_NOT); }
 
 	bool
@@ -244,6 +250,16 @@ public:
 	reset(void) { initialize(); }
 
 	/**
+		TODO: re-encode pull states so we can use 2-x.
+	 */
+	static
+	char
+	negate_pull(const char p) {
+		return (p == PULL_WEAK) ? PULL_WEAK :
+			((p == PULL_OFF) ? PULL_ON : PULL_OFF);
+	}
+
+	/**
 		\pre this->is_or();
 		countdown represents the number of 1's
 		PULL_ON: countdown != 0
@@ -253,8 +269,9 @@ public:
 	 */
 	char
 	or_pull_state(void) const {
-		return (countdown ? PULL_ON ^ is_not() :
-			(unknowns ? PULL_WEAK : PULL_OFF ^ is_not()));
+		const char ret = (countdown ? PULL_ON :
+			(unknowns ? PULL_WEAK : PULL_OFF));
+		return is_not() ? negate_pull(ret) : ret;
 	}
 
 	/**
@@ -267,27 +284,19 @@ public:
 	 */
 	char
 	and_pull_state(void) const {
-		return (countdown ? PULL_OFF ^ is_not() :
-			(unknowns ? PULL_WEAK : PULL_ON ^ is_not()));
+		const char ret = (countdown ? PULL_OFF :
+			(unknowns ? PULL_WEAK : PULL_ON));
+		return is_not() ? negate_pull(ret) : ret;
 	}
 
 	/**
 		See pull_enum enumerations.  
+		NOTE: this does account for negation.  
 		\return 0 if off, 1 if on, 2 if weak (X)
 	 */
 	char
 	pull_state(void) const {
-		return is_or() ? or_pull_state() : and_pull_state();
-	}
-
-	/**
-		TODO: re-encode pull states so we can use 2-x.
-	 */
-	static
-	char
-	negate_pull(const char p) {
-		return (p == PULL_WEAK) ? PULL_WEAK :
-			((p == PULL_OFF) ? PULL_ON : PULL_OFF);
+		return is_disjunctive() ? or_pull_state() : and_pull_state();
 	}
 
 	ostream&

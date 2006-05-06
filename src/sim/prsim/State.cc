@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.8.6.10 2006/05/05 04:55:42 fang Exp $
+	$Id: State.cc,v 1.8.6.11 2006/05/06 02:13:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -314,11 +314,14 @@ State::check_expr(const expr_index_type i) const {
 	const expr_type& e(expr_pool[i]);
 	const graph_node_type& g(expr_graph_node_pool[i]);
 	// check parent
+	assert(e.parent);
 	if (e.is_root()) {
+		assert(e.parent < node_pool.size());
 		const node_type& n
 			__ATTRIBUTE_UNUSED_CTOR__((node_pool[e.parent]));
 		assert(n.get_pull_expr(e.direction()) == i);
 	} else {
+		assert(e.parent < expr_pool.size());
 		// const Expr& pe(expr_pool[e.parent]);
 		const graph_node_type& pg(expr_graph_node_pool[e.parent]);
 		const graph_node_type::child_entry_type&
@@ -331,9 +334,12 @@ State::check_expr(const expr_index_type i) const {
 	size_t j = 0;
 	for ( ; j<e.size; ++j) {
 		const graph_node_type::child_entry_type& c(g.children[j]);
+		assert(c.second);
 		if (c.first) {		// points to leaf node
+			assert(c.second < node_pool.size());
 			assert(node_pool[c.second].contains_fanout(i));
 		} else {		// points to expression
+			assert(c.second < expr_pool.size());
 			assert(expr_pool[c.second].parent == i);
 			assert(expr_graph_node_pool[c.second].offset == j);
 		}
@@ -1171,8 +1177,13 @@ State::step(void) {
 	Useful for expression state reconstruction from checkpoint.  
 	\return pair(root expression, new pull value) if event propagated
 		to the root, else (INVALID_NODE_INDEX, whatever)
+	\param prev previous value of node.
+		Locally used as old pull state of subexpression.  
+	\param next new value of node.
+		Locally used as new pull state of subexpression.  
 	Side effect (sort of): trace of expressions visited is in
 		the __scratch_expr_trace array.  
+	CAUTION: distinguish between expression value and pull-state!
  */
 // inline
 State::evaluate_return_type
@@ -1197,8 +1208,9 @@ do {
 #endif
 	// trust compiler to effectively perform branch-invariant
 	// code-motion
-	if (u->is_or()) {
+	if (u->is_disjunctive()) {
 		// is disjunctive (or)
+		DEBUG_STEP_PRINT("is_or()" << endl);
 		// countdown represents the number of 1's
 		old_pull = u->or_pull_state();
 		u->unknowns += (next >> 1) - (prev >> 1);
@@ -1206,13 +1218,14 @@ do {
 			- (prev & node_type::LOGIC_VALUE);
 		new_pull = u->or_pull_state();
 	} else {
+		DEBUG_STEP_PRINT("is_and()" << endl);
 		// is conjunctive (and)
 		old_pull = u->and_pull_state();
 		// countdown represents the number of 0's
 		u->unknowns += (next >> 1) - (prev >> 1);
 		u->countdown += !next - !prev;
 		new_pull = u->and_pull_state();
-	}
+	}	// end if
 #if DEBUG_STEP
 	u->dump_state(STACKTRACE_INDENT << "after : ") << endl;
 #endif
@@ -1222,18 +1235,14 @@ do {
 		return evaluate_return_type();
 	}
 	// already accounted for negation in pull_state()
+	// NOTE: cannot equate pull with value!
 	prev = old_pull;
 	next = new_pull;
 	ui = u->parent;
 } while (!u->is_root());
 	// made it to root
-	// TODO: fix expression propagation for negated operations!
-#if 1
+	// negation already accounted for
 	return evaluate_return_type(ui, u, next);
-#else
-	return evaluate_return_type(ui, u,
-		u->is_not() ? expr_type::negate_pull(next) : next);
-#endif
 }	// end State::evaluate()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1870,7 +1879,7 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	if (e.is_not()) {
 		o << '~';
 	}
-	const char* op = e.is_or() ? " | " : " & ";
+	const char* op = e.is_disjunctive() ? " | " : " & ";
 	typedef	graph_node_type::const_iterator		const_iterator;
 	const_iterator ci(g.begin()), ce(g.end());
 	if (need_parens) {

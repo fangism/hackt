@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-78-22-prsim-04-11:
+	  Added Expr::is_disjunctive() when we only care if expr. type
+		is OR or NOR.  
+	  Bug fix in ExprAlloc's OR-combination, reference *new* expr, 
+		which is not necessarily the last one.  
+	  More assertions in structural check.  
+	  Updated Expr::*_pull_state() functions.  
+	  Enabled -O1 consistency testing for all prsim test cases... PASS!
+	  Consider re-enumerating node-value expr-pull... dangerous.
+	  Status: perhaps a few more test cases, then merge.  
+
+
 2006-05-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-22-prsim-04-10:
