@@ -1,7 +1,7 @@
 /**
 	\file "integer_traits_test.cc"
 	Testing compile-time integer traits facilities.
-	$Id: integer_traits_test.cc,v 1.6 2006/02/26 02:28:04 fang Exp $
+	$Id: integer_traits_test.cc,v 1.7 2006/05/07 20:56:12 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -59,7 +59,7 @@ template <size_t N>
 static
 void
 test_prime(void) {
-	// OBSERVE: no functioncall!
+	// OBSERVE: no function call!
 	cout << N << " is " << ifthenelse_value<is_prime<N>::value,
 		const char*, prime_str, composite_str>::value << endl;
 }

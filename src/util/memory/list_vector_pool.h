@@ -3,7 +3,7 @@
 	Simple template container-based memory pool.  
 	Basically allocates a large chunk at a time.  
 
-	$Id: list_vector_pool.h,v 1.17 2006/04/27 00:17:31 fang Exp $
+	$Id: list_vector_pool.h,v 1.18 2006/05/07 20:56:10 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_LIST_VECTOR_POOL_H__
@@ -211,7 +211,7 @@ struct list_vector_pool_policy {
  */
 #define	LIST_VECTOR_POOL_LAZY_DESTRUCTION(T)				\
 template <>								\
-struct list_vector_pool_policy<T> {					\
+struct list_vector_pool_policy<T > {					\
 	typedef	lazy_destruction_tag	destruction_policy;		\
 };	// end struct list_vector_pool_policy
 

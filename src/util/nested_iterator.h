@@ -5,7 +5,7 @@
 
 	\todo Specify all pre-conditions, post-conditions, and semantics.  
 
-	$Id: nested_iterator.h,v 1.5 2005/05/10 04:51:28 fang Exp $
+	$Id: nested_iterator.h,v 1.6 2006/05/07 20:56:09 fang Exp $
  */
 
 #ifndef	__UTIL_NESTED_ITERATOR_H__
@@ -81,22 +81,25 @@ class nested_iterator :
 	// implementation: inner and outer iterators
 	private pair<OuterIter, InnerIter>, 
 	// abstraction: should look and feel like an InnerIter iterator type
-	public iterator<typename InnerIter::iterator_category, 
-		typename InnerIter::value_type, 
-		typename InnerIter::difference_type, 
-		typename InnerIter::pointer, 
-		typename InnerIter::reference> {
+	public iterator<
+		typename std::iterator_traits<InnerIter>::iterator_category, 
+		typename std::iterator_traits<InnerIter>::value_type, 
+		typename std::iterator_traits<InnerIter>::difference_type, 
+		typename std::iterator_traits<InnerIter>::pointer, 
+		typename std::iterator_traits<InnerIter>::reference> {
 // allow the entire family to reference each other's private members directly
 template <class, class>
 friend class nested_iterator;
 
 private:
 	typedef	pair<OuterIter, InnerIter>		base_type;
-	typedef	iterator<typename InnerIter::iterator_category, 
-			typename InnerIter::value_type, 
-			typename InnerIter::difference_type, 
-			typename InnerIter::pointer, 
-			typename InnerIter::reference>	interface_type;
+	typedef	std::iterator_traits<InnerIter>		inner_iterator_traits;
+	typedef	iterator<typename inner_iterator_traits::iterator_category, 
+			typename inner_iterator_traits::value_type, 
+			typename inner_iterator_traits::difference_type, 
+			typename inner_iterator_traits::pointer, 
+			typename inner_iterator_traits::reference>
+							interface_type;
 	typedef	OuterIter				outer_iterator_type;
 	typedef	InnerIter				inner_iterator_type;
 public:
@@ -182,7 +185,7 @@ public:
 			// what if first is already at the first chunk?
 			// is ok, because it's comparable to begin()
 			this->first--;
-			this->second = --this->first->end();
+			this->second = this->first->end() -1;
 		} else {
 			this->second--;
 		}
@@ -201,11 +204,11 @@ public:
 	operator [] (const difference_type& n) const {
 		if (n > 0) {
 			const difference_type d = 
-				distance(this->second, this->first->end());
+				std::distance(this->second, this->first->end());
 			if (n >= d) {
 				// need to advance first
 				register difference_type m = n -d;
-				outer_iterator_type o = this->first +1;
+				outer_iterator_type o(this->first +1);
 				register difference_type s = o->size();
 				while (m >= s) {
 					m -= s;
@@ -214,24 +217,25 @@ public:
 				}
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = o->begin();
-				advance(ret, m);
+				inner_iterator_type ret(o->begin());
+				std::advance(ret, m);
 				return *ret;
 				// return o->begin()[m];	// same
 			} else {
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = this->second;
-				advance(ret, n);
+				inner_iterator_type ret(this->second);
+				std::advance(ret, n);
 				return *ret;
 				// return second[n];		// same
 			}
 		} else if (n < 0) {
 			const difference_type d = 
-				distance(this->first->begin(), this->second);
+				std::distance(this->first->begin(),
+					this->second);
 			if (d + n > 0) {
 				register difference_type m = n -d;
-				outer_iterator_type o = this->first;
+				outer_iterator_type o(this->first);
 				o--;	// move back one first
 				register difference_type s = o->size();
 				while (m > s) {
@@ -241,15 +245,15 @@ public:
 				}
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = o->end();
-				advance(ret, -m);
+				inner_iterator_type ret(o->end());
+				std::advance(ret, -m);
 				return *ret;
 				// return o->end()[-m];
 			} else {
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = this->second;
-				advance(ret, n);
+				inner_iterator_type ret(this->second);
+				std::advance(ret, n);
 				return *ret;
 				// return second[n];
 			}
@@ -261,7 +265,7 @@ public:
 	operator += (const difference_type& n) {
 		if (n > 0) {
 			const difference_type d = 
-				distance(this->second, this->first->end());
+				std::distance(this->second, this->first->end());
 			if (n >= d) {
 				// need to advance first
 				register difference_type m = n -d;
@@ -274,12 +278,12 @@ public:
 					s = this->first->size();
 				}
 				this->second = this->first->begin();
-				advance(this->second, m);
+				std::advance(this->second, m);
 				// second = first->begin() +m;
 			} else {
 				// if second is random_access_iterator
 				// this will be fast
-				advance(this->second, n);	// second += n;
+				std::advance(this->second, n);	// second += n;
 			}
 		} else {
 			(*this) -= -n;		// too lazy to copy
@@ -290,7 +294,7 @@ public:
 	nested_iterator
 	operator + (const difference_type& n) const {
 		nested_iterator ret(*this);
-		advance(ret, n);		// ret += n;
+		std::advance(ret, n);		// ret += n;
 		return ret;
 	}
 
@@ -298,7 +302,8 @@ public:
 	operator -= (const difference_type& n) {
 		if (n > 0) {
 			const difference_type d = 
-				distance(this->first->begin(), this->second);
+				std::distance(this->first->begin(),
+					this->second);
 			if (n > d) {
 				register difference_type m = n -d;
 				this->first--;
@@ -310,10 +315,10 @@ public:
 					s = this->first->size();
 				}
 				this->second = this->first->end();
-				advance(this->second, -m);
+				std::advance(this->second, -m);
 				// second = first->end() -m;
 			} else {
-				advance(this->second, -n);	// second -= n;
+				std::advance(this->second, -n);	// second -= n;
 			}
 		} else {
 			(*this) += -n;		// too lazy to copy
@@ -324,7 +329,7 @@ public:
 	nested_iterator
 	operator - (const difference_type& n) const {
 		nested_iterator ret(*this);
-		advance(ret, -n);		// ret -= n;
+		std::advance(ret, -n);		// ret -= n;
 		return ret;
 	}
 
@@ -368,22 +373,25 @@ class nested_reverse_iterator :
 	private pair<OuterIter, InnerIter>, 
 	// abstraction: should look and feel like an InnerIter iterator type
 	// would really just like to use reverse_iterator<T>
-	public iterator<typename InnerIter::iterator_category, 
-		typename InnerIter::value_type, 
-		typename InnerIter::difference_type, 
-		typename InnerIter::pointer, 
-		typename InnerIter::reference> {
+	public iterator<
+		typename std::iterator_traits<InnerIter>::iterator_category, 
+		typename std::iterator_traits<InnerIter>::value_type, 
+		typename std::iterator_traits<InnerIter>::difference_type, 
+		typename std::iterator_traits<InnerIter>::pointer, 
+		typename std::iterator_traits<InnerIter>::reference> {
 // allow the entire family to reference each other's private members directly
 template <class, class>
 friend class nested_reverse_iterator;
 
 private:
 	typedef	pair<OuterIter, InnerIter>		base_type;
-	typedef	iterator<typename InnerIter::iterator_category, 
-			typename InnerIter::value_type, 
-			typename InnerIter::difference_type, 
-			typename InnerIter::pointer, 
-			typename InnerIter::reference>	interface_type;
+	typedef	std::iterator_traits<InnerIter>		inner_iterator_traits;
+	typedef	iterator<typename inner_iterator_traits::iterator_category, 
+			typename inner_iterator_traits::value_type, 
+			typename inner_iterator_traits::difference_type, 
+			typename inner_iterator_traits::pointer, 
+			typename inner_iterator_traits::reference>
+							interface_type;
 	typedef	OuterIter				outer_iterator_type;
 	typedef	InnerIter				inner_iterator_type;
 public:
@@ -488,11 +496,12 @@ public:
 	operator [] (const difference_type& n) const {
 		if (n > 0) {
 			const difference_type d = 
-				distance(this->second, this->first->rend());
+				std::distance(this->second,
+					this->first->rend());
 			if (n >= d) {
 				// need to advance first
 				register difference_type m = n -d;
-				outer_iterator_type o = this->first +1;
+				outer_iterator_type o(this->first +1);
 				register difference_type s = o->size();
 				while (m >= s) {
 					m -= s;
@@ -501,24 +510,25 @@ public:
 				}
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = o->rbegin();
-				advance(ret, m);
+				inner_iterator_type ret(o->rbegin());
+				std::advance(ret, m);
 				return *ret;
 				// return o->rbegin()[m];	// same
 			} else {
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = this->second;
-				advance(ret, n);
+				inner_iterator_type ret(this->second);
+				std::advance(ret, n);
 				return *ret;
 				// return second[n];		// same
 			}
 		} else if (n < 0) {
 			const difference_type d = 
-				distance(this->first->rbegin(), this->second);
+				std::distance(this->first->rbegin(),
+					this->second);
 			if (d + n > 0) {
 				register difference_type m = n -d;
-				outer_iterator_type o = this->first;
+				outer_iterator_type o(this->first);
 				o--;	// move back one first
 				register difference_type s = o->size();
 				while (m > s) {
@@ -528,15 +538,15 @@ public:
 				}
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = o->rend();
-				advance(ret, -m);
+				inner_iterator_type ret(o->rend());
+				std::advance(ret, -m);
 				return *ret;
 				// return o->rend()[-m];
 			} else {
 				// inner_iterator_type may not be random_access
 				// register object?
-				inner_iterator_type ret = this->second;
-				advance(ret, n);
+				inner_iterator_type ret(this->second);
+				std::advance(ret, n);
 				return *ret;
 				// return second[n];
 			}
@@ -548,7 +558,8 @@ public:
 	operator += (const difference_type& n) {
 		if (n > 0) {
 			const difference_type d = 
-				distance(this->second, this->first->rend());
+				std::distance(this->second,
+					this->first->rend());
 			if (n >= d) {
 				// need to advance first
 				register difference_type m = n -d;
@@ -561,12 +572,12 @@ public:
 					s = this->first->size();
 				}
 				this->second = this->first->rbegin();
-				advance(this->second, m);
+				std::advance(this->second, m);
 				// second = first->rbegin() +m;
 			} else {
 				// if second is random_access_iterator
 				// this will be fast
-				advance(this->second, n);	// second += n;
+				std::advance(this->second, n);	// second += n;
 			}
 		} else {
 			(*this) -= -n;		// too lazy to copy
@@ -577,7 +588,7 @@ public:
 	nested_reverse_iterator
 	operator + (const difference_type& n) const {
 		nested_reverse_iterator ret(*this);
-		advance(ret, n);		// ret += n;
+		std::advance(ret, n);		// ret += n;
 		return ret;
 	}
 
@@ -585,7 +596,8 @@ public:
 	operator -= (const difference_type& n) {
 		if (n > 0) {
 			const difference_type d = 
-				distance(this->first->rbegin(), this->second);
+				std::distance(this->first->rbegin(),
+					this->second);
 			if (n > d) {
 				register difference_type m = n -d;
 				this->first--;
@@ -597,10 +609,10 @@ public:
 					s = this->first->size();
 				}
 				this->second = this->first->rend();
-				advance(this->second, -m);
+				std::advance(this->second, -m);
 				// second = first->rend() -m;
 			} else {
-				advance(this->second, -n);	// second -= n;
+				std::advance(this->second, -n);	// second -= n;
 			}
 		} else {
 			(*this) += -n;		// too lazy to copy
@@ -611,7 +623,7 @@ public:
 	nested_reverse_iterator
 	operator - (const difference_type& n) const {
 		nested_reverse_iterator ret(*this);
-		advance(ret, -n);		// ret -= n;
+		std::advance(ret, -n);		// ret -= n;
 		return ret;
 	}
 
@@ -953,24 +965,25 @@ operator - (const nested_iterator<LeftOuterIter, LeftInnerIter>& l,
 #if DEBUG_NESTED_ITERATOR
 	cerr << "nested_iterator::operator - (): " << endl;
 #endif
-	const RightOuterIter& roi = r.outer_iterator();
+	const RightOuterIter& roi(r.outer_iterator());
 	// this distance() is specialized for random-access iterators
 	const outer_difference_type outer_diff =
-		distance(roi, l.outer_iterator());
+		std::distance(roi, l.outer_iterator());
 	if (!outer_diff) {
 #if DEBUG_NESTED_ITERATOR
 		cerr << "outer iterators match." << endl;
 #endif
-		return distance(r.inner_iterator(), l.inner_iterator());
+		return std::distance(r.inner_iterator(), l.inner_iterator());
 	} else if (LIKELY(outer_diff > 0)) {
 #if DEBUG_NESTED_ITERATOR
 		cerr << "outer iterators mismatch." << endl;
 #endif
 		const return_type tail =
-			distance(l.outer_iterator()->begin(), l.inner_iterator());
+			std::distance(l.outer_iterator()->begin(),
+				l.inner_iterator());
 			// l.inner_iterator() -l.outer_iterator()->begin();
 		const return_type head =
-			distance(r.inner_iterator(), roi->end());
+			std::distance(r.inner_iterator(), roi->end());
 			// roi->end() -r.inner_iterator() -1;
 		RightOuterIter roi_1(roi);
 		roi_1++;
@@ -1003,23 +1016,24 @@ operator - (const nested_reverse_iterator<LeftOuterIter, LeftInnerIter>& l,
 #if DEBUG_NESTED_ITERATOR
 	cerr << "nested_reverse_iterator::operator - (): " << endl;
 #endif
-	const RightOuterIter& roi = r.outer_iterator();
+	const RightOuterIter& roi(r.outer_iterator());
 	// this distance() is specialized for random-access iterators
 	const outer_difference_type outer_diff =
-		distance(roi, l.outer_iterator());
+		std::distance(roi, l.outer_iterator());
 	if (!outer_diff) {
 #if DEBUG_NESTED_ITERATOR
 		cerr << "outer reverse_iterators match." << endl;
 #endif
-		return distance(r.inner_iterator(), l.inner_iterator());
+		return std::distance(r.inner_iterator(), l.inner_iterator());
 	} else if (LIKELY(outer_diff > 0)) {
 #if DEBUG_NESTED_ITERATOR
 		cerr << "outer reverse_iterators mismatch." << endl;
 #endif
 		const return_type tail =
-			distance(l.outer_iterator()->rbegin(), l.inner_iterator());
+			std::distance(l.outer_iterator()->rbegin(),
+				l.inner_iterator());
 		const return_type head =
-			distance(r.inner_iterator(), roi->rend());
+			std::distance(r.inner_iterator(), roi->rend());
 		RightOuterIter roi_1(roi);
 		roi_1++;
 		return accumulate(roi_1, l.outer_iterator(), head +tail, 

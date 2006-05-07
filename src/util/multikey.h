@@ -2,7 +2,7 @@
 	\file "util/multikey.h"
 	Multidimensional key class, use to emulate true multiple dimensions
 	with a standard map class.
-	$Id: multikey.h,v 1.24 2006/04/27 00:17:04 fang Exp $
+	$Id: multikey.h,v 1.25 2006/05/07 20:56:09 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_H__
@@ -15,6 +15,7 @@
 #include <valarray>
 #include <iosfwd>
 #include "util/IO_utils_fwd.h"
+#include "util/addressof.h"
 
 #define	MULTIKEY_TEMPLATE_SIGNATURE					\
 template <size_t D, class K>
@@ -487,32 +488,33 @@ public:
 		needed for Intel ICC.  :S
 	 */
 	iterator
-	begin(void) { return &(impl_type::operator[](0)); }
+	begin(void) { return addressof((*this)[0]); }
 
 	const_iterator
-	begin(void) const { return &(impl_type::operator[](0)); }
+	begin(void) const { return addressof((*this)[0]); }
 
 	iterator
-	end(void) { return &(impl_type::operator[](size())); }
+	end(void) { return addressof((*this)[size()]); }
 
 	const_iterator
-	end(void) const { return &(impl_type::operator[](size())); }
+	end(void) const { return addressof((*this)[size()]); }
 
 	reverse_iterator
-	rbegin(void)
-		{ return reverse_iterator(&(impl_type::operator[](size()))); }
+	rbegin(void) { return reverse_iterator(addressof((*this)[size()])); }
 
 	const_reverse_iterator
 	rbegin(void) const {
-		return const_reverse_iterator(&(impl_type::operator[](size())));
+		return const_reverse_iterator(addressof((*this)[size()]));
 	}
 
 	reverse_iterator
-	rend(void) { return reverse_iterator(&(impl_type::operator[](0))); }
+	rend(void) {
+		return reverse_iterator(addressof((*this)[0]));
+	}
 
 	const_reverse_iterator
 	rend(void) const {
-		return const_reverse_iterator(&(impl_type::operator[](0)));
+		return const_reverse_iterator(addressof((*this)[0]));
 	}
 
 	reference

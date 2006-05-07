@@ -1,7 +1,7 @@
 /**
 	\file "friend_function_formal_bug.cc"
 	Example of a major bug in gcc-3.3, and its workaround.  
-	$Id: friend_function_formal_bug.cc,v 1.4 2005/12/08 22:01:14 fang Exp $
+	$Id: friend_function_formal_bug.cc,v 1.5 2006/05/07 20:56:11 fang Exp $
  */
 
 #include <vector>
@@ -22,6 +22,8 @@ namespace std {
 	_Construct(_T1*, const _T2&);
 
 }
+#else
+#include "util/STL/construct_fwd.h"
 #endif
 
 using std::_Construct;
@@ -73,7 +75,8 @@ public:
 	static void*	operator new (size_t);
 	static void	operator delete (void*);
 private:
-	static void*	operator new (size_t, void*&);
+	static void*	operator new (size_t, void*);
+	static void	operator delete (void*, void*);
 public:
 	typedef fake_pool<this_type>		pool_type;
 private:
@@ -91,7 +94,7 @@ thing::operator new (size_t) {
 
 #if 1
 void*
-thing::operator new (size_t, void*& p) {
+thing::operator new (size_t, void* p) {
 	return p;
 }
 

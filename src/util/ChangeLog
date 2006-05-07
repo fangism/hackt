@@ -1,5 +1,15 @@
 # "src/util/ChangeLog"
 
+2006-05-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-01:
+	  Clean-ups for portability sake.
+	  Added util::addressof operator to assist in compiler workarounds.
+		NOTE: not as powerful as boost::utility::addressof.
+	  util/nested_iterator.h: use iterator_traits instead of
+		iterator directly, in case pointer iterator is not wrapped.  
+
+
 2006-05-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79:
