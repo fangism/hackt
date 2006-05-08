@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.9 2006/03/16 03:40:28 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.10 2006/05/08 06:12:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -16,6 +16,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.tcc"
+#include "util/attributes.h"
 // #include "util/memory/list_vector_pool.h"
 #include "util/memory/chunk_map_pool.h"
 #include "Object/def/built_in_datatype_def.h"
@@ -142,7 +143,8 @@ static excl_ptr<pint_scalar>
 int_def_width(new pint_scalar(int_traits::built_in_definition, "width"));
 
 static const good_bool
-__good_int_width(int_def_width->assign_default_value(int_def_width_default));
+__good_int_width
+__ATTRIBUTE_UNUSED_CTOR__((int_def_width->assign_default_value(int_def_width_default)));
 
 // INVARIANT(__good_int_width.good);
 
@@ -150,9 +152,9 @@ static excl_ptr<instance_collection_base>
 int_def_width_base(int_def_width);
 
 static const never_ptr<const instance_collection_base>
-int_def_width_ref =
-const_cast<built_in_datatype_def&>(int_traits::built_in_definition)
-	.add_template_formal(int_def_width_base);
+int_def_width_ref
+__ATTRIBUTE_UNUSED_CTOR__((const_cast<built_in_datatype_def&>(
+	int_traits::built_in_definition).add_template_formal(int_def_width_base)));
 
 #if 0
 // can't hurt to keep this initialization check...

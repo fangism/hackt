@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.12 2006/04/23 07:37:17 fang Exp $
+	$Id: PRS.cc,v 1.13 2006/05/08 06:12:03 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -69,6 +69,7 @@ using entity::definition_base;
 using entity::process_definition;
 using entity::pint_scalar;
 using entity::meta_range_expr;
+using std::find;
 using std::find_if;
 using std::mem_fun_ref;
 

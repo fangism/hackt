@@ -1,7 +1,7 @@
 /**
 	\file "util/new_functor.h"
 	Turns new operator for constructing an object into a functor.  
-	$Id: new_functor.h,v 1.3 2005/05/10 04:51:28 fang Exp $
+	$Id: new_functor.h,v 1.4 2006/05/08 06:12:10 fang Exp $
  */
 
 #ifndef	__UTIL_NEW_FUNCTOR_H__
@@ -22,6 +22,12 @@ struct new_functor : public nullary_function_virtual<R*> {
 	typedef	R		upcast_type;
 	typedef	T		object_type;
 	// concept_check: R is superclass of T
+
+	/**
+		Strict C++ requires an explicitly declared default ctor
+		for const-initalized class objects.   
+	 */
+	new_functor() { }
 
 	~new_functor() { }
 

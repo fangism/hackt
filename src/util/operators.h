@@ -1,7 +1,7 @@
 /**
 	\file "util/operators.h"
 	Functors but with virtual resolution.
-	$Id: operators.h,v 1.8 2006/04/13 21:45:07 fang Exp $
+	$Id: operators.h,v 1.9 2006/05/08 06:12:11 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__
@@ -39,6 +39,7 @@ namespace std {
  */
 template <>
 struct modulus<float> : public binary_function<float,float,float> {
+	modulus() { }
 	float
 	operator () (const float& x, const float& y) const {
 #if	defined(HAVE_FMODF)
@@ -60,6 +61,7 @@ struct modulus<float> : public binary_function<float,float,float> {
  */
 template <>
 struct modulus<double> : public binary_function<double,double,double> {
+	modulus() { }
 	double
 	operator () (const double& x, const double& y) const {
 #if	defined(HAVE_FMOD)
@@ -74,7 +76,6 @@ struct modulus<double> : public binary_function<double,double,double> {
 //=============================================================================
 
 namespace util {
-// using namespace std;
 
 //=============================================================================
 /**
@@ -169,6 +170,7 @@ virtual	R operator () (const A& a, const S& s) const = 0;
  */
 template <class R = int, class A = int>
 struct plus : public binary_arithmetic_operation<R, A> {
+	plus() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::plus<A>()(a,b); }
 	bool is_associative(void) const { return true; }
@@ -180,6 +182,7 @@ struct plus : public binary_arithmetic_operation<R, A> {
  */
 template <class R = int, class A = int>
 struct minus : public binary_arithmetic_operation<R, A> {
+	minus() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::minus<A>()(a,b); }
 	bool is_associative(void) const { return false; }
@@ -191,6 +194,7 @@ struct minus : public binary_arithmetic_operation<R, A> {
  */
 template <class R = int, class A = int>
 struct multiplies : public binary_arithmetic_operation<R, A> {
+	multiplies() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::multiplies<A>()(a,b); }
 	bool is_associative(void) const { return true; }
@@ -202,6 +206,7 @@ struct multiplies : public binary_arithmetic_operation<R, A> {
  */
 template <class R = int, class A = int>
 struct divides : public binary_arithmetic_operation<R, A> {
+	divides() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::divides<A>()(a,b); }
 	bool is_associative(void) const { return false; }
@@ -213,6 +218,7 @@ struct divides : public binary_arithmetic_operation<R, A> {
  */
 template <class R = int, class A = int>
 struct modulus : public binary_arithmetic_operation<R, A> {
+	modulus() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::modulus<A>()(a,b); }
 	bool is_associative(void) const { return false; }
@@ -224,6 +230,7 @@ struct modulus : public binary_arithmetic_operation<R, A> {
  */
 template <class R = bool, class A = int>
 struct equal_to : public binary_relational_operation<R, A> {
+	equal_to() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::equal_to<A>()(a,b); }
 };	// end struct equal_to
@@ -234,6 +241,7 @@ struct equal_to : public binary_relational_operation<R, A> {
  */
 template <class R = bool, class A = int>
 struct not_equal_to : public binary_relational_operation<R, A> {
+	not_equal_to() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::not_equal_to<A>()(a,b); }
 };	// end struct not_equal_to
@@ -244,6 +252,7 @@ struct not_equal_to : public binary_relational_operation<R, A> {
  */
 template <class R = bool, class A = int>
 struct greater : public binary_relational_operation<R, A> {
+	greater() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::greater<A>()(a,b); }
 };	// end struct greater
@@ -254,6 +263,7 @@ struct greater : public binary_relational_operation<R, A> {
  */
 template <class R = bool, class A = int>
 struct less : public binary_relational_operation<R, A> {
+	less() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::less<A>()(a,b); }
 };	// end struct less
@@ -264,6 +274,7 @@ struct less : public binary_relational_operation<R, A> {
  */
 template <class R = bool, class A = int>
 struct greater_equal : public binary_relational_operation<R, A> {
+	greater_equal() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::greater_equal<A>()(a,b); }
 };	// end struct greater_equal
@@ -274,6 +285,7 @@ struct greater_equal : public binary_relational_operation<R, A> {
  */
 template <class R = bool, class A = int>
 struct less_equal : public binary_relational_operation<R, A> {
+	less_equal() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::less_equal<A>()(a,b); }
 };	// end struct less_equal
@@ -284,6 +296,7 @@ struct less_equal : public binary_relational_operation<R, A> {
  */
 template <class R = bool, class A = bool>
 struct logical_and : public binary_logical_operation<R, A> {
+	logical_and() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::logical_and<A>()(a,b); }
 };	// end struct logical_and
@@ -294,6 +307,7 @@ struct logical_and : public binary_logical_operation<R, A> {
  */
 template <class R = bool, class A = bool>
 struct logical_or : public binary_logical_operation<R, A> {
+	logical_or() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::logical_or<A>()(a,b); }
 };	// end struct logical_or
@@ -304,6 +318,7 @@ struct logical_or : public binary_logical_operation<R, A> {
  */
 template <class R = bool, class A = bool>
 struct logical_xor : public binary_logical_operation<R, A> {
+	logical_xor() { }
 	R operator () (const A& a, const A& b) const
 		{ return a ^ b; }
 };	// end struct logical_xor
@@ -314,6 +329,7 @@ struct logical_xor : public binary_logical_operation<R, A> {
  */
 template <class R = int, class A = int, class S = int>
 struct shift_left : public shift_operation<R, A, S> {
+	shift_left() { }
 	R operator () (const A& a, const S& s) const
 		{ return a << s; }
 };	// end struct shift_left
@@ -326,6 +342,7 @@ struct shift_left : public shift_operation<R, A, S> {
  */
 template <class R = int, class A = int, class S = int>
 struct shift_right : public shift_operation<R, A, S> {
+	shift_right() { }
 	R operator () (const A& a, const S& s) const
 		{ return a >> s; }
 };	// end struct shift_right

@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/SPEC.h"
-	$Id: SPEC.h,v 1.4 2006/04/12 08:53:15 fang Exp $
+	$Id: SPEC.h,v 1.5 2006/05/08 06:12:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_H__
@@ -67,6 +67,7 @@ class directives_set : private directives_set_base {
 	typedef	directives_set_base			parent_type;
 public:
 	typedef	parent_type::const_reference		const_reference;
+	typedef	parent_type::reference			reference;
 public:
 	directives_set();
 	~directives_set();

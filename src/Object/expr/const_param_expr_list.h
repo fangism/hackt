@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.11 2006/04/23 07:37:19 fang Exp $
+	$Id: const_param_expr_list.h,v 1.12 2006/05/08 06:12:05 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -34,6 +34,7 @@ protected:
 	typedef	vector<count_ptr<const const_param> >	parent_type;
 public:
 	typedef	parent_type::value_type			value_type;
+	typedef	parent_type::reference			reference;
 	typedef	parent_type::const_reference		const_reference;
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;

@@ -1,7 +1,7 @@
 /**
 	\file "util/persistent.h"
 	Base class interface for persistent, serializable objects.  
-	$Id: persistent.h,v 1.14 2005/05/22 06:24:21 fang Exp $
+	$Id: persistent.h,v 1.15 2006/05/08 06:12:12 fang Exp $
  */
 
 #ifndef	__UTIL_PERSISTENT_H__
@@ -166,9 +166,23 @@ public:
 		hash_key(const string& k);
 		// standard destructor
 
-		size_t get_hash(void) const { return hash; }
-		const_iterator begin(void) const { return &key[0]; }
-		const_iterator end(void) const { return &key[MAX_LEN]; }
+		size_t
+		get_hash(void) const { return hash; }
+
+		const_iterator
+		begin(void) const { return &key[0]; }
+
+		const_iterator
+		end(void) const { return &key[MAX_LEN]; }
+
+#if	defined(HASH_MAP_INTEL_STYLE)
+		/**
+			Intel-style's hash_compare function needs an
+			implicit conversion to size_t.  
+			\return precomputed hash index.  
+		 */
+		operator size_t () const { return hash; }
+#endif
 
 		friend bool operator == (const hash_key&, const hash_key&);
 		friend bool operator != (const hash_key&, const hash_key&);

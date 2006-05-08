@@ -3,7 +3,7 @@
 	Queryable map with non-modifying (const) lookup method.  
 	Non-modifying lookup guarantees that no extraneous empty
 	elements are added by lookup.  
-	$Id: qmap.h,v 1.11 2006/01/22 06:53:36 fang Exp $
+	$Id: qmap.h,v 1.12 2006/05/08 06:12:14 fang Exp $
  */
 
 #ifndef	__UTIL_QMAP_H__
@@ -28,12 +28,19 @@ QMAP_TEMPLATE_SIGNATURE
 class qmap : public const_assoc_query<map<K,T,C,A> > {
 private:
 	typedef	map<K,T,C,A>				parent_type;
+	typedef	const_assoc_query<parent_type>		impl_type;
 public:
 	// convenient types used in clean(), all other inherited naturally
-        typedef typename parent_type::mapped_type	mapped_type;   
-	typedef typename parent_type::iterator		iterator;
-	typedef typename parent_type::const_iterator	const_iterator;
+	typedef	typename parent_type::mapped_type	mapped_type;   
+	typedef	typename parent_type::iterator		iterator;
+	typedef	typename parent_type::const_iterator	const_iterator;
 
+	/**
+		Strict C++ requires that a default constructor be 
+		explicitly declared to be const-initializable.  
+		(Not caught by g++, but caught by icc.)
+	 */
+	qmap() : impl_type() { }
 
 	void
 	clean(void);

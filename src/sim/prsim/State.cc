@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.10 2006/05/06 22:08:32 fang Exp $
+	$Id: State.cc,v 1.11 2006/05/08 06:12:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1006,7 +1006,8 @@ State::enforce_exclhi(const node_index_type ni) {
 #endif
 	const_iterator i(exhi.begin()), e(exhi.end());
 for ( ; i!=e; ++i) {
-	typedef	const_iterator::value_type::const_iterator	set_iter;
+	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
+								set_iter;
 	const set_iter si(i->find(ni));
 	if (si != i->end()) {
 		set_iter ii(i->begin()), ie(i->end());
@@ -1056,7 +1057,8 @@ State::enforce_excllo(const node_index_type ni) {
 #endif
 	const_iterator i(exlo.begin()), e(exlo.end());
 for ( ; i!=e; ++i) {
-	typedef	const_iterator::value_type::const_iterator	set_iter;
+	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
+								set_iter;
 	const set_iter si(i->find(ni));
 	if (si != i->end()) {
 		set_iter ii(i->begin()), ie(i->end());
@@ -1993,7 +1995,7 @@ State::save_checkpoint(ostream& o) const {
 {
 	// node_pool
 	write_value(o, node_pool.size());
-	for_each(++node_pool.begin(), node_pool.end(), 
+	for_each(node_pool.begin() +1, node_pool.end(), 
 #if 1
 		bind2nd_argval(mem_fun_ref(&node_type::save_state), o)
 #else
@@ -2007,7 +2009,7 @@ State::save_checkpoint(ostream& o) const {
 #if !DEDUCE_PRSIM_EXPR_STATE
 	// expr_pool
 	write_value(o, expr_pool.size());
-	for_each(++expr_pool.begin(), expr_pool.end(), 
+	for_each(expr_pool.begin() +1, expr_pool.end(), 
 		bind2nd_argval(mem_fun_ref(&expr_type::save_state), o)
 	);
 #endif
@@ -2091,7 +2093,7 @@ State::load_checkpoint(istream& i) {
 		return true;
 	}
 	typedef node_pool_type::iterator	iterator;
-	const iterator b(++node_pool.begin()), e(node_pool.end());
+	const iterator b(node_pool.begin() +1), e(node_pool.end());
 #if 0
 	// doesn't work :(
 	for_each(b, e, 
@@ -2114,7 +2116,7 @@ State::load_checkpoint(istream& i) {
 		return true;
 	}
 	typedef expr_pool_type::iterator	iterator;
-	const iterator b(++expr_pool.begin()), e(expr_pool.end());
+	const iterator b(expr_pool.begin() +1), e(expr_pool.end());
 #if 0
 	for_each(b, e, 
 		bind2nd_argval_void(mem_fun_ref(&expr_type::load_state), i)

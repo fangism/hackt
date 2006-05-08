@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.13 2006/04/12 08:53:15 fang Exp $
+	$Id: PRS.h,v 1.14 2006/05/08 06:12:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -109,6 +109,7 @@ public:
 	typedef	dynamic_param_expr_list		values_type;
 	typedef	count_ptr<const param_expr>	value_type;
 	typedef	const value_type&		const_reference;
+	typedef	value_type&			reference;
 private:
 	string					key;
 	count_ptr<values_type>			values;

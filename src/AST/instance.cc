@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.9 2006/05/06 22:08:12 fang Exp $
+	$Id: instance.cc,v 1.10 2006/05/08 06:12:04 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -232,7 +232,7 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 	bad_bool err(false);
 	entity::param_expression_assignment::meta_instance_reference_appender
 		append_it(*ret);
-	const checked_meta_exprs_type::const_iterator dest_end(--temp.end());
+	const checked_meta_exprs_type::const_iterator dest_end(temp.end() -1);
 	checked_meta_exprs_type::const_iterator dest_iter(temp.begin());
 	err = accumulate(dest_iter, dest_end, err, append_it);
 

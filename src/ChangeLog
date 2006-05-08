@@ -5,6 +5,13 @@
 
 2006-05-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-02:
+	  More portability fixes, regarding nested types, using declarations,
+		unused variables, iterator traits, explicit default ctors.  
+
+
+2006-05-07	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-01:
 	  Portability touch-ups only, in util library.  
 
