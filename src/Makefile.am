@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.122 2006/05/09 05:39:23 fang Exp $
+#	$Id: Makefile.am,v 1.123 2006/05/09 18:36:40 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -50,34 +50,36 @@ bin_SCRIPTS = haco hacunroll haccreate hacalloc hflat hacprsim
 
 CLEANFILES += $(bin_SCRIPTS)
 
+# no need to use $(DESTDIR) (typically used for a staged install)
+# installcheck is never run on the staged install, only on the final
 haco:
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile $$""@" >> $@
 	@$(CHMOD) +x $@
 
 hacunroll:
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll $$""@" >> $@
 	@$(CHMOD) +x $@
 
 haccreate:
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create $$""@" >> $@
 	@$(CHMOD) +x $@
 
 hacalloc:
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc $$""@" >> $@
 	@$(CHMOD) +x $@
 
 hflat:
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat $$""@" >> $@
 	@$(CHMOD) +x $@
 
 hacprsim:
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim $$""@" >> $@
 	@$(CHMOD) +x $@
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -1106,7 +1108,7 @@ installcheck-local:
 		p1=`echo $$p|$(SED) 's/$(EXEEXT)$$//'`; \
 		if test -f $$p || test -f $$p1 ; then \
 			f=`echo "$$p1" | $(SED) 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
-			run=$(DESTDIR)$(bindir)/$$f ; \
+			run=$(bindir)/$$f ; \
 			if test ! -f $$run ; then \
 				$(ECHO) "*** DID YOU FORGET TO make install FIRST? ***" ; \
 			fi ; \
@@ -1120,7 +1122,7 @@ installcheck-local:
 	@list='$(bin_SCRIPTS)' ; \
 	for p1 in $$list ; do \
 		f=`echo "$$p1" | $(SED) 's|^.*/||;$(transform)'`; \
-		run=$(DESTDIR)$(bindir)/$$f ; \
+		run=$(bindir)/$$f ; \
 		if test ! -f $$run ; then \
 			$(ECHO) "*** DID YOU FORGET TO make install FIRST? ***" ; \
 		fi ; \

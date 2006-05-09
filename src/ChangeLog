@@ -10,6 +10,8 @@
 		hflat (cflat), hacprsim (prsim) for user convenience.  
 		Scripts' names are also transformed by configure upon
 		installation.  Scripts verified runnable in installcheck-local.
+	  Also: should not be reference $(DESTDIR) on installed files, 
+		only staged installations.  
 
 
 2006-05-07	David Fang		<fangism@users.sourceforge.net>
