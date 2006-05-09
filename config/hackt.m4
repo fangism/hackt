@@ -1,14 +1,20 @@
 dnl "config/hackt.m4"
-dnl	$Id: hackt.m4,v 1.4 2006/04/27 00:14:35 fang Exp $
+dnl	$Id: hackt.m4,v 1.5 2006/05/09 05:39:17 fang Exp $
 dnl
 dnl This file is for autoconf macros specific to HACKT.
 dnl General-purpose macros should be based in other m4 files.  
 dnl
 
+dnl @synopsis HACKT_ARG_ENABLE_LIBTOOL_VERBOSE
 dnl
 dnl For this project, we prefer to keep libtool --silent by default,
 dnl however, one can use this to enable verbose mode.
 dnl NOTE: if desired this could be generalized to pass other flags.
+dnl
+dnl @category ConfigureOptions
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_ENABLE_LIBTOOL_VERBOSE],
 [AC_REQUIRE([AC_PROG_LIBTOOL])
@@ -22,19 +28,31 @@ if test x"$enable_libtool_verbose" != "xyes" ; then
 fi
 ])
 
+dnl @synopsis HACKT_AUTO_CVSIGNORE
 dnl
-dnl Define an AM_CONDITIONAL flag for VPATH-specific options.
+dnl Define an AM_CONDITIONAL NO_VPATH flag for VPATH-specific options.
 dnl For example, don't bother generating .cvsignore.
+dnl
+dnl @category ProjectSpecific
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_AUTO_CVSIGNORE],
 [AM_CONDITIONAL(NO_VPATH, test "$srcdir" = ".")]
-)
+)dnl
 
+dnl @synopsis FANG_CONFEST_FLAGS
 dnl
 dnl Defines the set of flags we want to use for configure-testing.
 dnl This includes some flags to disable warnings that otherwise break
 dnl some configure-tests.
 dnl This defines shell variables: CONFTEST_CFLAGS and CONFTEST_CXXFLAGS.
+dnl
+dnl @category ConfigureTests
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CONFTEST_FLAGS],
 [AC_REQUIRE([FANG_AM_FLAGS])
@@ -42,9 +60,17 @@ CONFTEST_CFLAGS="$FANG_DIALECT_FLAGS $FANG_WARN_FLAGS $FANG_WARN_CFLAGS $CONFTES
 CONFTEST_CXXFLAGS="$FANG_DIALECT_FLAGS $FANG_WARN_FLAGS $FANG_WARN_CXX_FLAGS $CONFTEST_NOWARN_FLAGS $CONFTEST_NOWARN_CXXFLAGS $CXXFLAGS"
 ])
 
+dnl @synopsis HACKT_ARG_WITH_XDR
 dnl
-dnl Chec for xdr header and library.
+dnl Check for xdr header and library.
 dnl This typically doesn't require a PATH argument.  
+dnl Defines configure substitute variables XDR_INCLUDE for include path to
+dnl header, XDR_LDPATH for path to library (if needed), XDR_LIB library name.
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_WITH_XDR],
 [AC_REQUIRE([AC_PROG_CC])
@@ -91,10 +117,19 @@ dnl these variables are set only if corresponding headers/libraries are found
 AC_SUBST(XDR_INCLUDE)
 AC_SUBST(XDR_LDPATH)
 AC_SUBST(XDR_LIB)
-])
+])dnl
 
+dnl @synopsis HACKT_ARG_WITH_NCURSES
 dnl
-dnl Check for terminal library.
+dnl Check for terminal manipulation library.
+dnl Defines NCURSES_INCLUDE for include path to headers, 
+dnl NCURSES_LDPATH for path to libraries, and 
+dnl NCURSES_LIB for the library itself.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_WITH_NCURSES],
 [AC_REQUIRE([AC_PROG_CC])
@@ -139,11 +174,20 @@ dnl these variables are set only if corresponding headers/libraries are found
 AC_SUBST(NCURSES_INCLUDE)
 AC_SUBST(NCURSES_LDPATH)
 AC_SUBST(NCURSES_LIB)
-])
+])dnl
 
 
+dnl @synopsis HACKT_ARG_WITH_GMP
 dnl
 dnl Check for GMP libraries and headers.
+dnl Defines GMP_INCLUDE for include path to headers, 
+dnl GMP_LDPATH for path to libraries, and 
+dnl GMP_LIB for the library itself.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_WITH_GMP],
 [AC_REQUIRE([AC_PROG_CC])
@@ -232,11 +276,19 @@ dnl these variables are set only if corresponding headers/libraries are found
 AC_SUBST(GMP_INCLUDE)
 AC_SUBST(GMP_LDPATH)
 AC_SUBST(GMP_LIB)
-])
+])dnl
 
 
-dnl testing the AC_ARG_ENABLE autoconf feature
+dnl @synopsis HACKT_ARG_EMABLE_GOD_MODE
+dnl
+dnl Testing the AC_ARG_ENABLE autoconf feature
 dnl god-mode doesn't actually do anything... yet
+dnl
+dnl @category ProjectSpecific
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
 AC_DEFUN([HACKT_ARG_ENABLE_GOD_MODE],
 [AC_MSG_CHECKING([whether divine powers are bestowed upon thee])
 AC_ARG_ENABLE(god_mode,
@@ -251,12 +303,18 @@ dnl if given
 	],
 dnl if not given
 	[AC_MSG_RESULT([no (default)])]
-)])
+)])dnl
 
 
+dnl @synopsis HACKT_ARG_ENABLE_FUN
 dnl
 dnl Just for fun. 
 dnl enable or disable fun modules
+dnl
+dnl @category ProjectSpecific
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_ENABLE_FUN],
 [AC_MSG_CHECKING([how bored we are])
@@ -272,10 +330,17 @@ then    AC_MSG_RESULT([quite])
 else    AC_MSG_RESULT([not yet])
 	AC_DEFINE(WANT_TO_HAVE_FUN, 0, [Conditional inclusion of fun modules.])
 fi
-])
+])dnl
 
+dnl @synopsis HACKT_ARG_ENABLE_UNIVERSAL_BINARY
 dnl
 dnl This macro doesn't really belong here, whatever...
+dnl TODO: complete me!  (See example in GMP package.)
+dnl
+dnl @category ProjectSpecific
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_ENABLE_UNIVERSAL_BINARY],
 [AC_MSG_CHECKING([whether universal binaries are requested])
@@ -290,12 +355,19 @@ AC_ARG_ENABLE(fat_binary,
 	],
 	[AC_MSG_RESULT([no])]
 )
-])
+])dnl
 
+dnl @synopsis FANG_PROG_SLEEP
 dnl
-dnl Sleep is evil.
+dnl Checks for the sleep command.  
+dnl SlEEp is EEvil.
 dnl
-AC_DEFUN([AC_PROG_SLEEP],
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_PROG_SLEEP],
 [AC_CHECK_PROG([SLEEP], sleep, sleep)
 if test ! -n "$SLEEP"
 then
@@ -303,13 +375,19 @@ then
 fi
 AC_MSG_CHECKING([for *enough* sleep])
 AC_MSG_RESULT([maybe])
-])
+])dnl
 
+dnl @synopsis HACKT_CHECK_SANITY
 dnl
 dnl Sanity check.
 dnl
+dnl @category Miscellanous
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
 AC_DEFUN([HACKT_CHECK_SANITY],
-[AC_REQUIRE([AC_PROG_SLEEP])
+[AC_REQUIRE([FANG_PROG_SLEEP])
 dnl not so funny...
 AC_MSG_CHECKING([whether fang is sane])
 dnl sleep 1; echo -n "."; sleep 1; echo -n "."; sleep 1; echo -n "." sleep 1; 

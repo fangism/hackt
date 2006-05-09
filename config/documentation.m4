@@ -1,5 +1,5 @@
 dnl "config/documentation.m4"
-dnl	$Id: documentation.m4,v 1.3 2006/03/17 04:15:35 fang Exp $
+dnl	$Id: documentation.m4,v 1.4 2006/05/09 05:39:16 fang Exp $
 dnl Autoconf macros pertaining to package documentation.
 dnl This provides macros for checking for latex and related programs
 dnl that are used in building the documentation.  
@@ -9,26 +9,45 @@ dnl project, I've named them with a DOC_ prefix.
 dnl I hope these will be useful for future projects.  
 dnl
 
+dnl @synopsis DOC_CHECK_PROG_PERL
 dnl
 dnl Checks for perl in path, and also records the path to perl in PERL_PATH.
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([DOC_CHECK_PROG_PERL],
 [AC_CHECK_PROG([PERL], perl, perl)
 AC_PATH_PROG([PERL_PATH], perl)]
-)
+)dnl
 
+dnl @synopsis DOC_CHECK_PROG__DOXYGEN
 dnl
 dnl Checks for doxygen, source documentation.  
+dnl Defines DOXYGEN and automake HAVE_DOXYGEN.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([DOC_CHECK_PROG_DOXYGEN],
 [AC_CHECK_PROG([DOXYGEN], doxygen, doxygen)
 AM_CONDITIONAL(HAVE_DOXYGEN, test -n "$DOXYGEN")]
-)
+)dnl
 
+dnl @synopsis DOC_CHECK_PROG_DOT
 dnl
 dnl Checks for dot, from graphviz, from AT&T.  
 dnl Defines HAVE_DOT_TRUE/FALSE for automake.
 dnl Defines HAVE_DOT for doxygen configuration.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([DOC_CHECK_PROG_DOT],
 [AC_CHECK_PROG([DOT], dot, dot)
@@ -41,12 +60,18 @@ then
 else
 	AC_SUBST(HAVE_DOT, "NO")
 fi
-])
+])dnl
 
+dnl @synopsis DOC_CHECK_PROG_LATEX
 dnl
 dnl Checks for our favorite typesetter, LaTeX.  
 dnl Defines HAVE_LATEX_TRUE/FALSE for Makefiles.  
 dnl Defines HAVE_LATEX for doxygen configuration.
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([DOC_CHECK_PROG_LATEX],
 [AC_CHECK_PROG([LATEX], latex, latex)
@@ -55,11 +80,17 @@ if test -n "$LATEX"
 then AC_SUBST(HAVE_LATEX, "YES")
 else AC_SUBST(HAVE_LATEX, "NO")
 fi
-])
+])dnl
 
+dnl @synopsis DOC_CHECK_PROG_PDFLATEX
 dnl
 dnl Checks for pdflatex, and defines HAVE_PDFLATEX_TRUE/FALSE for automake.  
 dnl Defines HAVE_PDFLATEX for doxygen configuration.
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([DOC_CHECK_PROG_PDFLATEX],
 [AC_CHECK_PROG([PDFLATEX], pdflatex, pdflatex)
@@ -68,35 +99,74 @@ if test -n "$PDFLATEX"
 then AC_SUBST(HAVE_PDFLATEX, "YES")
 else AC_SUBST(HAVE_PDFLATEX, "NO")
 fi
-])
+])dnl
 
+dnl @synopsis DOC_CHECK_PROG_DVIPS
 dnl
 dnl Checks for dvips, a DVI to PS converter.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([DOC_CHECK_PROG_DVIPS],
 [AC_REQUIRE([DOC_CHECK_PROG_LATEX])
 AC_CHECK_PROG([DVIPS], dvips, dvips)
 AM_CONDITIONAL(HAVE_DVIPS, test -n "$DVIPS" )]
-)
+)dnl
 
+dnl @synopsis DOC_CHECK_PROG_BIBTEX
+dnl
+dnl Defines BIBTEX variable and HAVE_BIBTEX for automake.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
 AC_DEFUN([DOC_CHECK_PROG_BIBTEX],
 [AC_CHECK_PROG([BIBTEX], bibtex, bibtex)
 AM_CONDITIONAL(HAVE_BIBTEX, test -n "$BIBTEX" )]
-)
+)dnl
 
+dnl @synopsis DOC_CHECK_PROG_MAKEINDEX
+dnl
+dnl Defines MAKEINDEX variable and HAVE_MAKEINDEX for automake.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
 AC_DEFUN([DOC_CHECK_PROG_MAKEINDEX],
 [AC_CHECK_PROG([MAKEINDEX], makeindex, makeindex)
 AM_CONDITIONAL(HAVE_MAKEINDEX, test -n "$MAKEINDEX" )]
-)
+)dnl
 
+dnl @synopsis DOC_CHECK_PROG_PS2PDF
+dnl
+dnl Defines PS2PDF variable and HAVE_PS2PDF for automake.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
 AC_DEFUN([DOC_CHECK_PROG_PS2PDF],
 [AC_CHECK_PROG([PS2PDF], ps2pdf, ps2pdf)
 AM_CONDITIONAL(HAVE_PS2PDF, test -n "$PS2PDF" )]
-)
+)dnl
 
+dnl @synopsis DOC_ARG_ENABLE_DOCS
 dnl
 dnl Whether or not documents should be built.
 dnl For the HACKT project, documents are in the dox directory.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([DOC_ARG_ENABLE_DOCS],
 [AC_REQUIRE([DOC_CHECK_PROG_LATEX])
@@ -127,6 +197,6 @@ then
 else
 AC_MSG_NOTICE([You can still build latex documents explicitly with 'make pdf ps'])
 fi
-])
+])dnl
 
 

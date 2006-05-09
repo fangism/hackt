@@ -1,35 +1,50 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.7 2006/05/06 04:18:32 fang Exp $
+dnl	$Id: cxx.m4,v 1.8 2006/05/09 05:39:14 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
+dnl @synopsis _TRIVIAL_SOURCE_
 dnl
-dnl dummy source file for trivial compiler tests
+dnl A dummy source file for trivial compiler tests.
 dnl This is only useful for AC_COMPILE_IFLSE because it doesn't link.  
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
 dnl
 AC_DEFUN([_TRIVIAL_SOURCE_],
 [AC_LANG_PROGRAM([extern int __foo__;])]
 dnl [AC_LANG_PROGRAM([static int __foo__ = 4;],[while(__foo__) { --__foo__; }])]
 )
 
+dnl @synopsis FANG_ANAL_COMPILE_FLAGS
 dnl
 dnl This checks to see if your compilers understand the strictest
-dnl warning flags.  
+dnl warning flags, preferred by Fang.  
 dnl The result is stored in ANAL_FLAGS.  
 dnl For now, it just checks a fixed set of flags, and errors out
 dnl if your compilers don't accept them.
-dnl TODO: workaround variations from other compilers.  
 dnl Some tests in the other macros in this project require that
 dnl warnings be converted to errors.  
 dnl Could rewrite this using AC_TRY_COMPILE.
-dnl Once -ansi is enabled there's no other option to cancel it out
-dnl thus we introduce a configure switch to disable it.  
 dnl All other warning options can be cancelled with CFLAGS/CXXFLAGS
-dnl e.g. -w camcels all warnings, and -Wno-error cancel error-promotion.  
+dnl e.g. -w cancels all warnings (gcc), 
+dnl and -Wno-error cancel error-promotion (gcc).  
 dnl
-dnl NOTE: we check for gcc last because some other compiler (icc)
+dnl TODO: workaround variations from other compilers.  
+dnl NOTE: we check for gcc *last* because some other compiler (icc)
 dnl are able to pass themselves off as the GNU C++ compiler in the 
 dnl AC_PROG_CXX test, oddly enough... a bug?
+dnl
+dnl Depends on _TRIVIAL_SOURCE_
+dnl Requires: FANG_CXX_COMPILER
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_ANAL_COMPILE_FLAGS],
 [AC_REQUIRE([AC_PROG_CC])
@@ -79,21 +94,28 @@ CXXFLAGS="$saved_CXXFLAGS"
 AC_LANG_POP(C++)
 dnl rm -f conftest.c conftest.cc
 AC_MSG_RESULT([yes])
-])
+])dnl
 
+dnl @synopsis FANG_STD_HEADERS_ANALLY_STRICT
 dnl
-dnl Check for whether or not standard library headers pass
-dnl the anal compile flags.  If they don't we have trouble...
+dnl Check for whether or not standard library C headers pass
+dnl the anal compile flags.  If they don't we have trouble... error out.  
+dnl
+dnl Requires: FANG_AM_FLAGS, FANG_CONFTEST_FLAGS, FANG_HEADER_STDCXX
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_STD_HEADERS_ANALLY_STRICT],
 [AC_REQUIRE([FANG_AM_FLAGS])
-AC_REQUIRE([AC_HEADER_STDCXX])
+AC_REQUIRE([FANG_HEADER_STDCXX])
 AC_REQUIRE([FANG_CONFTEST_FLAGS])
 AC_CACHE_CHECK([whether standard C++ headers are anally strictness-conforming],
 [fang_cv_cxx_strict_anal_headers],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([
@@ -141,22 +163,29 @@ AC_CACHE_CHECK([whether standard C++ headers are anally strictness-conforming],
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-dnl AC_MSG_RESULT([$fang_cv_cxx_strict_anal_headers])
 if test "$fang_cv_cxx_strict_anal_headers" = no ; then
 	echo "CONFTEST_CXXFLAGS: $CONFTEST_CXXFLAGS"
 	AC_MSG_ERROR([You're in big trouble if the standard headers don't pass with the given warnings flags!])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_AM_FLAGS
+dnl
+dnl Sets automake flags with a bunch of anal retentive warnings, 
+dnl most of which are cancellable through CXXFLAGS and CFLAGS.  
 dnl
 dnl TODO: redefine this macro cleanly, instead of this monolithic beast
-dnl TODO: learn m4
 dnl TODO: cache values!
 dnl Results in AC_SUBST variables:
 dnl	FANG_WARN_FLAGS, FANG_WARN_CFLAGS, FANG_WARN_CXXFLAGS
 dnl the NOWARN_FLAGS are applied only during configuration tests
 dnl it is often necessary to disable some strict warnings that affect the
-dnl outcome of configure tests
+dnl outcome of configure tests.
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_AM_FLAGS],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
@@ -335,11 +364,18 @@ AC_SUBST(FANG_WARN_FLAGS)
 AC_SUBST(FANG_WARN_CFLAGS)
 AC_SUBST(FANG_WARN_CXXFLAGS)
 AC_SUBST(FANG_DIALECT_FLAGS)
-])
+])dnl
 
 
+dnl @synopsis FANG_CXX_VERSION
 dnl
 dnl Produces an AC_SUBST-itutable string for the compiler version.
+dnl Also warns if compiler version is detected as prerelease or experimental.  
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_VERSION],
 [AC_REQUIRE([AC_PROG_CXX])
@@ -356,8 +392,9 @@ then
 	are officially supported.  Use at your own risk.])
 fi
 AC_SUBST(CXX_VERSION)
-])
+])dnl
 
+dnl @synopsis FANG_CXX_COMPILER
 dnl
 dnl Detects GNU C++ compiler.  
 dnl Produces AM_CONDITIONAL variable HAVE_GXX
@@ -365,6 +402,13 @@ dnl Detects Intel C++ compiler.
 dnl Produces AM_CONDITIONAL variable HAVE_ICC
 dnl and defined shell variable ac_cv_cxx_compiler_intel
 dnl TODO: use AC_CACHE_CHECK
+dnl Defines HAVE_GXX if compiler is GNU (or GNU-like)
+dnl Defines HAVE_ICC if compiler is Intel's
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_COMPILER],
 [AC_REQUIRE([FANG_CXX_VERSION])
@@ -380,262 +424,319 @@ AM_CONDITIONAL(HAVE_ICC, echo "$CXX_VERSION" | grep ICC)
 ])
 
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_UNUSED
 dnl
 dnl Checks for compiler support for __attribute__((unused)).
 dnl NOTE: This check uses the C++ language mode.  
-dnl Result: AC_DEFINE(HAVE_ATTRIBUTE_UNUSED)
+dnl Defines HAVE_ATTRIBUTE_UNUSED if attribute is supported.
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_UNUSED],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_UNUSED],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((unused))],
-[ac_cv_cxx_attribute_unused],
+[fang_cv_cxx_attribute_unused],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
 	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([],[const int foo __attribute__ ((unused)) = 0;]),
-		[ac_cv_cxx_attribute_unused=yes],
-		[ac_cv_cxx_attribute_unused=no]
+		[fang_cv_cxx_attribute_unused=yes],
+		[fang_cv_cxx_attribute_unused=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
 dnl AC_MSG_RESULT([$ac_cx_cxx_attribute_unused])
-if test "$ac_cv_cxx_attribute_unused" = "yes"; then
+if test "$fang_cv_cxx_attribute_unused" = "yes"; then
 	AC_DEFINE(HAVE_ATTRIBUTE_UNUSED, [], 
 		[True if compiler supports __attribute__((unused)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_UNUSED_CTOR
 dnl
-dnl Checks for where unused attribute belong around constructor syntax.
+dnl Checks for where the unused attribute belongs around constructor syntax.
+dnl Defines HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR or
+dnl HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_UNUSED_CTOR],
-[AC_REQUIRE([AC_CXX_ATTRIBUTE_UNUSED])
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_UNUSED_CTOR],
+[AC_REQUIRE([FANG_CXX_ATTRIBUTE_UNUSED])
 AC_LANG_PUSH(C++)
 saved_CXXFLAGS=$CXXFLAGS
 CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 AC_CACHE_CHECK([if __attribute__((unused)) comes before construction],
-[ac_cv_cxx_attribute_unused_before_ctor],
+[fang_cv_cxx_attribute_unused_before_ctor],
 [AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([class foo { public: foo(const int); };],
 		[const foo bar __attribute__ ((unused)) (13);]),
-		[ac_cv_cxx_attribute_unused_before_ctor=yes],
-		[ac_cv_cxx_attribute_unused_before_ctor=no]
+		[fang_cv_cxx_attribute_unused_before_ctor=yes],
+		[fang_cv_cxx_attribute_unused_before_ctor=no]
 	)
 ])
 dnl AC_MSG_RESULT([$ac_cx_cxx_attribute_unused_before_ctor])
-if test "$ac_cv_cxx_attribute_unused_before_ctor" = "yes"; then
+if test "$fang_cv_cxx_attribute_unused_before_ctor" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_BEFORE_CTOR, [],
 	[True if __attribute__((unused)) is accepted before construction])
 fi
 
 AC_CACHE_CHECK([if __attribute__((unused)) comes after construction],
-[ac_cv_cxx_attribute_unused_after_ctor],
+[fang_cv_cxx_attribute_unused_after_ctor],
 [AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([class foo { public: foo(const int); };],
 		[const foo bar (13) __attribute__ ((unused));]),
-		[ac_cv_cxx_attribute_unused_after_ctor=yes],
-		[ac_cv_cxx_attribute_unused_after_ctor=no]
+		[fang_cv_cxx_attribute_unused_after_ctor=yes],
+		[fang_cv_cxx_attribute_unused_after_ctor=no]
 	)
 ])
 dnl AC_MSG_RESULT([$ac_cx_cxx_attribute_unused_after_ctor])
-if test "$ac_cv_cxx_attribute_unused_after_ctor" = "yes"; then
+if test "$fang_cv_cxx_attribute_unused_after_ctor" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_UNUSED_AFTER_CTOR, [],
 	[True if __attribute__((unused)) is accepted after construction])
 fi
 
 CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_CONST
 dnl
 dnl Check for __attribute__ ((const))
+dnl Define HAVE_ATTRIBUTE_CONST if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_CONST],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_CONST],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((const))],
-[ac_cv_cxx_attribute_const],
+[fang_cv_cxx_attribute_const],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void pure_func (void) __attribute__ ((const));
 		void pure_func (void) { exit (1); }
 		],[pure_func();]),
-		[ac_cv_cxx_attribute_const=yes],
-		[ac_cv_cxx_attribute_const=no]
+		[fang_cv_cxx_attribute_const=yes],
+		[fang_cv_cxx_attribute_const=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_const])
-if test "$ac_cv_cxx_attribute_const" = "yes"; then
+if test "$fang_cv_cxx_attribute_const" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_CONST, [],
 	[True if compiler supports __attribute__((const)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_PURE
 dnl
 dnl Check for __attribute__ ((pure))
+dnl 'pure' marks a function as having no side-effects.  
+dnl Define HAVE_ATTRIBUTE_PURE if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_PURE],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_PURE],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((pure))],
-[ac_cv_cxx_attribute_pure],
+[fang_cv_cxx_attribute_pure],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void pure_func (void) __attribute__ ((pure));
 		void pure_func (void) { exit (1); }
 		],[pure_func();]),
-		[ac_cv_cxx_attribute_pure=yes],
-		[ac_cv_cxx_attribute_pure=no]
+		[fang_cv_cxx_attribute_pure=yes],
+		[fang_cv_cxx_attribute_pure=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_pure])
-if test "$ac_cv_cxx_attribute_pure" = "yes"; then
+if test "$fang_cv_cxx_attribute_pure" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_PURE, [],
 	[True if compiler supports __attribute__((pure)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_PURE
 dnl
 dnl Check for __attribute__ ((holy))
+dnl As far as I know this is not a real attribute, so this is useful for
+dnl making sure that conftests do fail on unknown attributes.  
+dnl Define HAVE_ATTRIBUTE_PURE if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_HOLY],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_HOLY],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((holy))],
-[ac_cv_cxx_attribute_holy],
+[fang_cv_cxx_attribute_holy],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void holy_func (void) __attribute__ ((holy));
 		void holy_func (void) { exit (1); }
 		],[holy_func();]),
-		[ac_cv_cxx_attribute_holy=yes],
-		[ac_cv_cxx_attribute_holy=no]
+		[fang_cv_cxx_attribute_holy=yes],
+		[fang_cv_cxx_attribute_holy=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_holy])
-if test "$ac_cv_cxx_attribute_holy" = "yes"; then
+if test "$fang_cv_cxx_attribute_holy" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_HOLY, [],
 	[True if compiler supports __attribute__((holy)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_PRECIOUS, my preciousss...
 dnl
 dnl Check for __attribute__ ((precious))
+dnl As far as I know this is not a real attribute, so this is useful for
+dnl making sure that conftests do fail on unknown attributes.  
+dnl Define HAVE_ATTRIBUTE_PRECIOUS if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_PRECIOUS],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_PRECIOUS],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((precious))],
-[ac_cv_cxx_attribute_precious],
+[fang_cv_cxx_attribute_precious],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void precious_func (void) __attribute__ ((precious));
 		void precious_func (void) { exit (1); }
 		],[precious_func();]),
-		[ac_cv_cxx_attribute_precious=yes],
-		[ac_cv_cxx_attribute_precious=no]
+		[fang_cv_cxx_attribute_precious=yes],
+		[fang_cv_cxx_attribute_precious=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_precious])
-if test "$ac_cv_cxx_attribute_precious" = "yes"; then
+if test "$fang_cv_cxx_attribute_precious" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_PRECIOUS, [],
 	[True if compiler supports __attribute__((precious)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_EVIL
 dnl
 dnl Check for __attribute__ ((evil))
+dnl Define HAVE_ATTRIBUTE_EVIL if evil.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_EVIL],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_EVIL],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((evil))],
-[ac_cv_cxx_attribute_evil],
+[fang_cv_cxx_attribute_evil],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void evil_func (void) __attribute__ ((evil));
 		void evil_func (void) { exit (1); }
 		],[evil_func();]),
-		[ac_cv_cxx_attribute_evil=yes],
-		[ac_cv_cxx_attribute_evil=no]
+		[fang_cv_cxx_attribute_evil=yes],
+		[fang_cv_cxx_attribute_evil=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_evil])
-if test "$ac_cv_cxx_attribute_evil" = "yes"; then
+if test "$fang_cv_cxx_attribute_evil" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_EVIL, [],
 	[True if compiler supports __attribute__((evil)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_NORETURN
 dnl
 dnl Checks for __attribute__ ((noreturn))
+dnl Define HAVE_ATTRIBUTE_NORETURN if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_NORETURN],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_NORETURN],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_REQUIRE([FANG_STD_HEADERS_ANALLY_STRICT])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((noreturn))],
-[ac_cv_cxx_attribute_noreturn],
+[fang_cv_cxx_attribute_noreturn],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
-	dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 	CXXFLAGS="$CONFTEST_CXXFLAGS"
 	AC_COMPILE_IFELSE(
 	AC_LANG_PROGRAM([#include <cstdlib>
 		void die (int) __attribute__ ((noreturn));
 		void die (int k) { exit (k); }],
 		[die(1);]),
-		[ac_cv_cxx_attribute_noreturn=yes],
-		[ac_cv_cxx_attribute_noreturn=no]
+		[fang_cv_cxx_attribute_noreturn=yes],
+		[fang_cv_cxx_attribute_noreturn=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_noreturn])
-if test "$ac_cv_cxx_attribute_noreturn" = "yes"; then
+if test "$fang_cv_cxx_attribute_noreturn" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_NORETURN, [],
 	[True if compiler supports __attribute__((noreturn)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_NORETURN
 dnl
 dnl Checks for __attribute__ ((malloc))
+dnl 'malloc' says that function returns non-aliasing pointers.  
+dnl Define HAVE_ATTRIBUTE_MALLOC if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_MALLOC],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_MALLOC],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((malloc))],
-[ac_cv_cxx_attribute_malloc],
+[fang_cv_cxx_attribute_malloc],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
 	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
@@ -644,31 +745,39 @@ AC_CACHE_CHECK([whether compiler accepts __attribute__((malloc))],
 		void* __fangmalloc (unsigned int) __attribute__ ((malloc));
 		void __fangfree(void*);],
 		[void* mem = __fangmalloc(4); __fangfree(mem);]),
-		[ac_cv_cxx_attribute_malloc=yes],
-		[ac_cv_cxx_attribute_malloc=no]
+		[fang_cv_cxx_attribute_malloc=yes],
+		[fang_cv_cxx_attribute_malloc=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-dnl AC_MSG_RESULT([$ac_cv_cxx_attribute_malloc])
-if test "$ac_cv_cxx_attribute_malloc" = "yes"; then
+dnl AC_MSG_RESULT([$fang_cv_cxx_attribute_malloc])
+if test "$fang_cv_cxx_attribute_malloc" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_MALLOC, [],
 	[True if compiler supports __attribute__((malloc)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_VISIBILITY
 dnl
 dnl Checking for visibility attributes, "hidden" and "default"
 dnl New since gcc-4.0.
+dnl Define HAVE_ATTRIBUTE_VISIBILITY_HIDDEN if supported.  
+dnl Define HAVE_ATTRIBUTE_VISIBILITY_DEFAULT if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_VISIBILITY],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_VISIBILITY],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_LANG_PUSH(C++)
 saved_CXXFLAGS=$CXXFLAGS
 CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
 dnl check for __visibility__(("hidden"))
 AC_CACHE_CHECK([whether compiler accepts __attribute__((visibility("hidden")))],
-[ac_cv_cxx_attribute_visibility_hidden],
+[fang_cv_cxx_attribute_visibility_hidden],
 	AC_COMPILE_IFELSE(
 		AC_LANG_PROGRAM(
 		[struct __attribute__((visibility("hidden"))) foo {
@@ -676,17 +785,17 @@ AC_CACHE_CHECK([whether compiler accepts __attribute__((visibility("hidden")))],
 			~foo() { }
 		};],
 		[foo bar;]),
-		[ac_cv_cxx_attribute_visibility_hidden=yes],
-		[ac_cv_cxx_attribute_visibility_hidden=no]
+		[fang_cv_cxx_attribute_visibility_hidden=yes],
+		[fang_cv_cxx_attribute_visibility_hidden=no]
 	)
 )
-if test "$ac_cv_cxx_attribute_visibility_hidden" = "yes"; then
+if test "$fang_cv_cxx_attribute_visibility_hidden" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_HIDDEN, [],
         [True if compiler supports __attribute__((visibility("hidden"))) ])
 fi
 dnl check for __visibility__(("default"))
 AC_CACHE_CHECK([whether compiler accepts __attribute__((visibility("default")))],
-[ac_cv_cxx_attribute_visibility_default],
+[fang_cv_cxx_attribute_visibility_default],
 	AC_COMPILE_IFELSE(
 		AC_LANG_PROGRAM(
 		[struct __attribute__((visibility("default"))) foo {
@@ -694,27 +803,34 @@ AC_CACHE_CHECK([whether compiler accepts __attribute__((visibility("default")))]
 			~foo() { }
 		};],
 		[foo bar;]),
-		[ac_cv_cxx_attribute_visibility_default=yes],
-		[ac_cv_cxx_attribute_visibility_default=no]
+		[fang_cv_cxx_attribute_visibility_default=yes],
+		[fang_cv_cxx_attribute_visibility_default=no]
 	)
 )
-if test "$ac_cv_cxx_attribute_visibility_default" = "yes"; then
+if test "$fang_cv_cxx_attribute_visibility_default" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_VISIBILITY_DEFAULT, [],
         [True if compiler supports __attribute__((visibility("default"))) ])
 fi
 dnl restore flags and language
 CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
-])
+])dnl
 
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_PACKED
 dnl
 dnl Checking for packed attribute.
+dnl Define HAVE_ATTRIBUTE_PACKED if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_PACKED],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_PACKED],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((packed))],
-[ac_cv_cxx_attribute_packed],
+[fang_cv_cxx_attribute_packed],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
 	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
@@ -726,25 +842,32 @@ AC_CACHE_CHECK([whether compiler accepts __attribute__((packed))],
 			~foo() { }
 		};],
 		[foo bar;]),
-		[ac_cv_cxx_attribute_packed=yes],
-		[ac_cv_cxx_attribute_packed=no]
+		[fang_cv_cxx_attribute_packed=yes],
+		[fang_cv_cxx_attribute_packed=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_attribute_packed" = "yes"; then
+if test "$fang_cv_cxx_attribute_packed" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_PACKED, [],
         [True if compiler supports __attribute__((packed)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_ALIGNED
 dnl
 dnl Checking for aligned attribute.
+dnl Define HAVE_ATTRIBUTE_ALIGNED if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_ALIGNED],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_ALIGNED],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((aligned))],
-[ac_cv_cxx_attribute_aligned],
+[fang_cv_cxx_attribute_aligned],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
 	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
@@ -756,25 +879,32 @@ AC_CACHE_CHECK([whether compiler accepts __attribute__((aligned))],
 			~foo() { }
 		};],
 		[foo bar;]),
-		[ac_cv_cxx_attribute_aligned=yes],
-		[ac_cv_cxx_attribute_aligned=no]
+		[fang_cv_cxx_attribute_aligned=yes],
+		[fang_cv_cxx_attribute_aligned=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_attribute_aligned" = "yes"; then
+if test "$fang_cv_cxx_attribute_aligned" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_ALIGNED, [],
         [True if compiler supports __attribute__((aligned)) ])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_ATTRIBUTE_ALIGNED_SIZE
 dnl
 dnl Checking for aligned (size) attribute.
+dnl Define HAVE_ATTRIBUTE_ALIGNED_SIZE if supported.  
 dnl
-AC_DEFUN([AC_CXX_ATTRIBUTE_ALIGNED_SIZE],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_ATTRIBUTE_ALIGNED_SIZE],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_CACHE_CHECK([whether compiler accepts __attribute__((aligned(size)))],
-[ac_cv_cxx_attribute_aligned_size],
+[fang_cv_cxx_attribute_aligned_size],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
 	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
@@ -786,19 +916,20 @@ AC_CACHE_CHECK([whether compiler accepts __attribute__((aligned(size)))],
 			~foo() { }
 		};],
 		[foo bar;]),
-		[ac_cv_cxx_attribute_aligned_size=yes],
-		[ac_cv_cxx_attribute_aligned_size=no]
+		[fang_cv_cxx_attribute_aligned_size=yes],
+		[fang_cv_cxx_attribute_aligned_size=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_attribute_aligned_size" = "yes"; then
+if test "$fang_cv_cxx_attribute_aligned_size" = "yes"; then
 AC_DEFINE(HAVE_ATTRIBUTE_ALIGNED_SIZE, [],
         [True if compiler supports __attribute__((aligned(size))) ])
 fi
-])
+])dnl
 
 
+dnl @synopsis FANG_CXX_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING
 dnl
 dnl Checking for extension that allows binding of templates with
 dnl fewer arguments to template with more parameters and sufficient
@@ -806,12 +937,18 @@ dnl trailing default parameters.
 dnl See: http://gcc.gnu.org/gcc-4.2/changes.html
 dnl	which is where test case is stolen from.  
 dnl gcc-4.2 is the first branch series that rejects this.  
+dnl Define HAVE_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING
 dnl
-AC_DEFUN([AC_CXX_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_CACHE_CHECK(
 [whether templates with default parameters can bind to template template parameters with fewer parameters],
-[ac_cv_cxx_template_template_parameter_default_binding],
+[fang_cv_cxx_template_template_parameter_default_binding],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
 	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
@@ -823,30 +960,37 @@ AC_CACHE_CHECK(
 		struct S {};
 		template void f(S<double>);
 		]], []),
-		[ac_cv_cxx_template_template_parameter_default_binding=yes],
-		[ac_cv_cxx_template_template_parameter_default_binding=no]
+		[fang_cv_cxx_template_template_parameter_default_binding=yes],
+		[fang_cv_cxx_template_template_parameter_default_binding=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_template_template_parameter_default_binding" = "yes"; then
+if test "$fang_cv_cxx_template_template_parameter_default_binding" = "yes"; then
 AC_DEFINE(HAVE_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING, [],
         [Define if templates with default arguments can bind to template template parameters with fewer parameters.])
 fi
-])
+])dnl
 
 
+dnl @synopsis FANG_CXX_TEMPLATE_FORMAL_BASE_CLASS
 dnl
 dnl Checking whether or not template parameter may be named directly 
 dnl as a base type.  
 dnl The work around is to use the identity<> type-trait "util/type_traits.h"
 dnl to create an indirect reference to the desired type.  
+dnl Define HAVE_TEMPLATE_FORMAL_BASE_CLASS.
 dnl
-AC_DEFUN([AC_CXX_TEMPLATE_FORMAL_BASE_CLASS],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_TEMPLATE_FORMAL_BASE_CLASS],
 [AC_REQUIRE([FANG_ANAL_COMPILE_FLAGS])
 AC_CACHE_CHECK(
 [whether templates formal parameter may be named directly as base class],
-[ac_cv_cxx_template_formal_base_class],
+[fang_cv_cxx_template_formal_base_class],
 [AC_LANG_PUSH(C++)
 	saved_CXXFLAGS=$CXXFLAGS
 	CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
@@ -855,16 +999,16 @@ AC_CACHE_CHECK(
 		[template <class C>
 		struct S : public C { };
 		], []),
-		[ac_cv_cxx_template_formal_base_class=yes],
-		[ac_cv_cxx_template_formal_base_class=no]
+		[fang_cv_cxx_template_formal_base_class=yes],
+		[fang_cv_cxx_template_formal_base_class=no]
 	)
 	CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_template_formal_base_class" = "yes"; then
+if test "$fang_cv_cxx_template_formal_base_class" = "yes"; then
 AC_DEFINE(HAVE_TEMPLATE_FORMAL_BASE_CLASS, [],
         [Define if templates formal parameters may be named as base classes.])
 fi
-])
+])dnl
 
 

@@ -1,16 +1,26 @@
 dnl "config/cxx_STL.m4"
-dnl	$Id: cxx_STL.m4,v 1.4 2006/04/27 00:14:35 fang Exp $
+dnl	$Id: cxx_STL.m4,v 1.5 2006/05/09 05:39:15 fang Exp $
 dnl Autoconf macros for detecting variations in C++ STL for any given compiler.
 dnl
 
 
+dnl @synopsis FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS
+dnl
 dnl source taken from "src/util/STL/reverse_iterator.h"
-dnl known to be present in gcc-4.1 headers, but missing in all previous versions
-AC_DEFUN([AC_CXX_STL_REVERSE_ITERATOR_COMPARISONS],
-[AC_REQUIRE([AC_PROG_CXX])	dnl from "config/cxx.m4"
+dnl known to be present in gcc-4.1 headers, 
+dnl but missing in all previous versions of gcc.  
+dnl Defines HAVE_STL_REVERSE_ITERATOR_COMPARISONS if present.  
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS],
+[AC_REQUIRE([AC_PROG_CXX])
 AC_CACHE_CHECK(
 	[whether libstdc++ (STL) already contains reverse_iterator comparisons],
-[ac_cv_cxx_stl_reverse_iterator_comparisons],
+[fang_cv_cxx_stl_reverse_iterator_comparisons],
 [AC_LANG_PUSH(C++)
 dnl saved_CXXFLAGS=$CXXFLAGS
 dnl CXXFLAGS="$saved_CXXFLAGS $ANAL_FLAGS"
@@ -26,30 +36,35 @@ AC_COMPILE_IFELSE(
 		}
 		}]], []
 	),
-	[ac_cv_cxx_stl_reverse_iterator_comparisons=no],
-	[ac_cv_cxx_stl_reverse_iterator_comparisons=yes]
+	[fang_cv_cxx_stl_reverse_iterator_comparisons=no],
+	[fang_cv_cxx_stl_reverse_iterator_comparisons=yes]
 )
 dnl CXXFLAGS=$saved_CXXFLAGS
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_stl_reverse_iterator_comparisons" = "yes" ; then
+if test "$fang_cv_cxx_stl_reverse_iterator_comparisons" = "yes" ; then
 AC_DEFINE(HAVE_STL_REVERSE_ITERATOR_COMPARISONS, [],
 	[True if STL <iterator> header defines reverse_iterator comparisons])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_STD_IFSTREAM_DEV_STDIN
 dnl
-dnl Category: C++
 dnl Checks to see if std::ifstream can open "/dev/stdin"
-dnl AC_DEFINEs HAVE_STD_IFSTREAM_DEV_STDIN if successful.  
+dnl Defines HAVE_STD_IFSTREAM_DEV_STDIN if successful.  
 dnl
-AC_DEFUN([AC_CXX_STD_IFSTREAM_DEV_STDIN],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STD_IFSTREAM_DEV_STDIN],
 [AC_REQUIRE([AC_PROG_CXX])
 AC_CACHE_CHECK(
 	[whether std::ifstream works with /dev/stdin],
-	[ac_cv_cxx_std_ifstream_dev_stdin],
+	[fang_cv_cxx_std_ifstream_dev_stdin],
 [AC_LANG_PUSH(C++)
-ac_cv_cxx_std_ifstream_dev_stdin=no
+fang_cv_cxx_std_ifstream_dev_stdin=no
 AC_LINK_IFELSE(
 	AC_LANG_PROGRAM([[
 		#include <iostream>
@@ -72,7 +87,7 @@ AC_LINK_IFELSE(
 	./conftest$ac_exeext < conftest.in > conftest.out 2>&1
 	if diff conftest.in conftest.out > /dev/null 2>&1
 	then
-		ac_cv_cxx_std_ifstream_dev_stdin=yes
+		fang_cv_cxx_std_ifstream_dev_stdin=yes
 	fi
 	rm -f conftest.in conftest.out
 	],
@@ -80,24 +95,29 @@ AC_LINK_IFELSE(
 )
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_std_ifstream_dev_stdin" = yes ; then
+if test "$fang_cv_cxx_std_ifstream_dev_stdin" = yes ; then
 AC_DEFINE(HAVE_STD_IFSTREAM_DEV_STDIN, [], 
 	[Define if std::ifstream(/dev/stdin) works])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_STD_OFSTREAM_DEV_STDOUT
 dnl
-dnl Category: C++
 dnl Checks to see if std::ofstream can open "/dev/stdout"
-dnl AC_DEFINEs HAVE_STD_OFSTREAM_DEV_STDOUT if successful.  
+dnl Defines HAVE_STD_OFSTREAM_DEV_STDOUT if successful.  
 dnl
-AC_DEFUN([AC_CXX_STD_OFSTREAM_DEV_STDOUT],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STD_OFSTREAM_DEV_STDOUT],
 [AC_REQUIRE([AC_PROG_CXX])
 AC_CACHE_CHECK(
 	[whether std::ofstream works with /dev/stdout],
-	[ac_cv_cxx_std_ofstream_dev_stdout],
+	[fang_cv_cxx_std_ofstream_dev_stdout],
 [AC_LANG_PUSH(C++)
-ac_cv_cxx_std_ofstream_dev_stdout=no
+fang_cv_cxx_std_ofstream_dev_stdout=no
 AC_LINK_IFELSE(
 	AC_LANG_PROGRAM([[
 		#include <iostream>
@@ -120,7 +140,7 @@ AC_LINK_IFELSE(
 	./conftest$ac_exeext < conftest.in > conftest.out 2>&1
 	if diff conftest.in conftest.out > /dev/null 2>&1
 	then
-		ac_cv_cxx_std_ofstream_dev_stdout=yes
+		fang_cv_cxx_std_ofstream_dev_stdout=yes
 	fi
 	rm -f conftest.in conftest.out
 	],
@@ -128,24 +148,29 @@ AC_LINK_IFELSE(
 )
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_std_ofstream_dev_stdout" = yes ; then
+if test "$fang_cv_cxx_std_ofstream_dev_stdout" = yes ; then
 AC_DEFINE(HAVE_STD_OFSTREAM_DEV_STDOUT, [], 
 	[Define if std::ofstream(/dev/stdout) works])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_STD_OFSTREAM_DEV_STDERR
 dnl
-dnl Category: C++
 dnl Checks to see if std::ofstream can open "/dev/stderr"
-dnl AC_DEFINEs HAVE_STD_OFSTREAM_DEV_STDERR if successful.  
+dnl Defines HAVE_STD_OFSTREAM_DEV_STDERR if successful.  
 dnl
-AC_DEFUN([AC_CXX_STD_OFSTREAM_DEV_STDERR],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CXX_STD_OFSTREAM_DEV_STDERR],
 [AC_REQUIRE([AC_PROG_CXX])
 AC_CACHE_CHECK(
 	[whether std::ofstream works with /dev/stderr],
-	[ac_cv_cxx_std_ofstream_dev_stderr],
+	[fang_cv_cxx_std_ofstream_dev_stderr],
 [AC_LANG_PUSH(C++)
-ac_cv_cxx_std_ofstream_dev_stderr=no
+fang_cv_cxx_std_ofstream_dev_stderr=no
 AC_LINK_IFELSE(
 	AC_LANG_PROGRAM([[
 		#include <iostream>
@@ -168,7 +193,7 @@ AC_LINK_IFELSE(
 	./conftest$ac_exeext < conftest.in > conftest.out 2>&1
 	if diff conftest.in conftest.out > /dev/null 2>&1
 	then
-		ac_cv_cxx_std_ofstream_dev_stderr=yes
+		fang_cv_cxx_std_ofstream_dev_stderr=yes
 	fi
 	rm -f conftest.in conftest.out
 	],
@@ -176,20 +201,25 @@ AC_LINK_IFELSE(
 )
 AC_LANG_POP(C++)
 ])
-if test "$ac_cv_cxx_std_ofstream_dev_stderr" = yes ; then
+if test "$fang_cv_cxx_std_ofstream_dev_stderr" = yes ; then
 AC_DEFINE(HAVE_STD_OFSTREAM_DEV_STDERR, [], 
 	[Define if std::ofstream(/dev/stderr) works])
 fi
-])
+])dnl
 
-
+dnl @synopsis FANG_HEADER_STDCXX
 dnl
-dnl Check for presence and location of "standard" C++ headers.
+dnl Check for presence and location of "standard" and "nonstandard" C++ headers.
 dnl NOTE: not all these headers are STL, (some are just libstdc++)
-dnl but these belong here bettern than in "cxx.m4" which checks more
+dnl but these belong here better than in "cxx.m4" which checks more
 dnl for compiler and language attributes.
 dnl
-AC_DEFUN([AC_HEADER_STDCXX],
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_HEADER_STDCXX],
 [AC_REQUIRE([AC_PROG_CXX])
 AC_LANG_PUSH(C++)
 dnl C++ wrappers to standard C headers
@@ -220,16 +250,22 @@ dnl can't include <tr1/boost_shared_ptr.h> directly
 AC_CHECK_HEADERS([tr1/memory])
 AC_CHECK_HEADERS([tr1/tuple tr1/array])
 AC_LANG_POP(C++)
-])
+])dnl
 
+dnl @synopsis FANG_HASH_MAP_NAMESPACE
 dnl
 dnl Detect the home namespace of hash_map.
 dnl The location/existence of the header file does NOT necessarily correlate
 dnl with the home namespace!  (Lesson learned)
+dnl Defines HASH_MAP_IN_STD or HASH_MAP_IN___GNU_CXX.
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_HASH_MAP_NAMESPACE],
-[AC_REQUIRE([AC_HEADER_STDCXX])
-
+[AC_REQUIRE([FANG_HEADER_STDCXX])
 cat > conftest2.h <<ACEOF
 	#if	defined(HAVE_EXT_HASH_MAP)
 	#include <ext/hash_map>
@@ -287,13 +323,20 @@ if test "$fang_cv_hash_map___gnu_cxx_namespace" = yes ; then
 fi
 
 rm -f conftest2.h
-])
+])dnl
 
 
+dnl @synopsis FANG_HASH_MAP_STYLE
 dnl
-dnl Checks whether or not the hash_map has 4 or 5 template arguments.
-dnl SGI-style uses separate hash and compare functors.
-dnl Intel style uses a composed hash_compare binary functor.  
+dnl Checks whether or not the hash_map has 4 or 5 template parameters.
+dnl SGI-style uses separate hash and compare functors (5 params).
+dnl Intel style uses a composed hash_compare binary functor (4 params).  
+dnl Defines HASH_MAP_SGI_STYLE or HASH_MAP_INTEL_STYLE.  
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_HASH_MAP_STYLE],
 [AC_REQUIRE([FANG_HASH_MAP_NAMESPACE])
@@ -345,8 +388,7 @@ AC_COMPILE_IFELSE(
 AC_LANG_POP(C++)
 ])
 if test "$fang_cv_hash_map_sgi_style" = yes ; then
-	AC_DEFINE(HASH_MAP_SGI_STYLE, [],
-		[Define if hash_map is SGI-style])
+	AC_DEFINE(HASH_MAP_SGI_STYLE, [], [Define if hash_map is SGI-style])
 fi
 
 AC_CACHE_CHECK([if hash_map is Intel-style],
@@ -378,17 +420,25 @@ AC_COMPILE_IFELSE(
 AC_LANG_POP(C++)
 ])
 if test "$fang_cv_hash_map_intel_style" = yes ; then
-	AC_DEFINE(HASH_MAP_INTEL_STYLE, [],
-		[Define if hash_map is Intel-style])
+	AC_DEFINE(HASH_MAP_INTEL_STYLE, [], [Define if hash_map is Intel-style])
 fi
-])
+])dnl
 
+dnl @synopsis FANG_CXX_STL_FUNCTIONAL_SELECT
 dnl
 dnl Three tests combined in one.
 dnl Checks if <functional> contains _Identity, _Select1st, _Select2nd.
+dnl Defines HAVE_STD__IDENTITY, HAVE_STD__SELECT1ST, HAVE_STD_SELECT__2ND
+dnl respectively, if they are available and defined.  
+dnl In source, "util/STL/functional.h" provide them if they are missing.  
+dnl
+dnl @category Cxx
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([FANG_CXX_STL_FUNCTIONAL_SELECT],
-[AC_REQUIRE([AC_HEADER_STDCXX])
+[AC_REQUIRE([FANG_HEADER_STDCXX])
 
 AC_CACHE_CHECK([whether <functional> contains std::_Identity],
 [fang_cv_cxx_stl_functional_identity],
@@ -457,6 +507,6 @@ if test "$fang_cv_cxx_stl_functional_select2nd" = yes ; then
 		[Define if STL contains _Select2nd functor])
 fi
 
-])
+])dnl
 
 

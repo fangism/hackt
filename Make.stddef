@@ -2,7 +2,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.13 2006/01/22 06:52:45 fang Exp $
+#	$Id: Make.stddef,v 1.14 2006/05/09 05:39:13 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -71,5 +71,10 @@ SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 # we've provided some project wide definitions in Make.global
 # NOTE: only directory and file names here, no wild-cards
 AUTO_IGNORE =
+
+# This helper script is built by the top-level Makefile
+# This is useful self-contained script for transforming program names
+# to their installed names.  
+INSTALL_TRANSFORM_SH = $(top_builddir)/install_transform.sh
 
 # end "Make.stddef"

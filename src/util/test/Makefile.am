@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.46 2006/04/28 03:20:16 fang Exp $
+#	$Id: Makefile.am,v 1.47 2006/05/09 05:39:24 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -10,8 +10,10 @@ include $(top_srcdir)/Make.stddef
 
 AUTOMAKE_OPTIONS += subdir-objects
 
-SUFFIXES = .test .ii
+SUFFIXES = .test .ii .i .hii .hhii .tccii
 TEST_EXPECT_SH = test-expect.sh
+
+check_SCRIPTS = $(TEST_EXPECT_SH)
 
 # auto-generated test scripts
 .cc.test:
@@ -20,6 +22,7 @@ TEST_EXPECT_SH = test-expect.sh
 	@$(ECHO) ./$(TEST_EXPECT_SH) ./$* $(srcdir) >> $@
 	@$(CHMOD) +x $@
 
+# these are all test programs, not to be installed
 noinst_PROGRAMS = \
 	exit_test \
 	throw_test \
@@ -141,9 +144,20 @@ liblinktest_la_SOURCES = \
 
 # for occasional compiler debugging
 # SAVETEMP = $(CXXCOMPILE) -v -save-temps
+.c.i:
+	$(CPREPROCESS) $< > $@
+
 .cc.ii:
 	$(CXXPREPROCESS) $< > $@
-#	$(SAVETEMP) -c $<
+
+.h.hii:
+	$(CXXPREPROCESS) $< > $@
+
+.hh.hhii:
+	$(CXXPREPROCESS) $< > $@
+
+.tcc.tccii:
+	$(CXXPREPROCESS) $< > $@
 
 # do not explicitly reference files in parent directory, because automake
 # will clobber the .deps dependencies in the parent directory, 
@@ -230,7 +244,7 @@ CLEANFILES += \
 	$(PREFILTER_FILES) \
 	$(EMPTY_STDERR_FILES)
 
-DISTCLEANFILES += test-expect.sh $(libfangutil_la_SOURCES)
+DISTCLEANFILES += $(TEST_EXPECT_SH) $(libfangutil_la_SOURCES)
 
 TESTS += $(noinst_PROGRAMS:=.test)
 

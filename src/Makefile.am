@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.121 2006/05/06 22:08:06 fang Exp $
+#	$Id: Makefile.am,v 1.122 2006/05/09 05:39:23 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -46,6 +46,39 @@ endif
 ########################### main dependencies #################################
 
 bin_PROGRAMS = hackt
+bin_SCRIPTS = haco hacunroll haccreate hacalloc hflat hacprsim
+
+CLEANFILES += $(bin_SCRIPTS)
+
+haco:
+	@$(ECHO) "#!$(SH_PATH)" > $@
+	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile $$""@" >> $@
+	@$(CHMOD) +x $@
+
+hacunroll:
+	@$(ECHO) "#!$(SH_PATH)" > $@
+	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll $$""@" >> $@
+	@$(CHMOD) +x $@
+
+haccreate:
+	@$(ECHO) "#!$(SH_PATH)" > $@
+	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create $$""@" >> $@
+	@$(CHMOD) +x $@
+
+hacalloc:
+	@$(ECHO) "#!$(SH_PATH)" > $@
+	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc $$""@" >> $@
+	@$(CHMOD) +x $@
+
+hflat:
+	@$(ECHO) "#!$(SH_PATH)" > $@
+	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat $$""@" >> $@
+	@$(CHMOD) +x $@
+
+hacprsim:
+	@$(ECHO) "#!$(SH_PATH)" > $@
+	$(ECHO) "exec $(DESTDIR)$(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim $$""@" >> $@
+	@$(CHMOD) +x $@
 
 # dirgen is completely bogus, workaround to coerce directory generation
 noinst_PROGRAMS = dirgen getopt_test $(UTILPROGRAMS) $(FUNPROGRAMS)
@@ -1068,7 +1101,7 @@ EXTRA_DIST += local.cvsignore \
 TESTS += hackt_persistent_table.sh test/getopt_test.test
 
 installcheck-local:
-	@list=$(bin_PROGRAMS) ; \
+	@list='$(bin_PROGRAMS)' ; \
 	for p in $$list ; do \
 		p1=`echo $$p|$(SED) 's/$(EXEEXT)$$//'`; \
 		if test -f $$p || test -f $$p1 ; then \
@@ -1083,6 +1116,16 @@ installcheck-local:
 			$$run version ; \
 		else : ; \
 		fi; \
+	done
+	@list='$(bin_SCRIPTS)' ; \
+	for p1 in $$list ; do \
+		f=`echo "$$p1" | $(SED) 's|^.*/||;$(transform)'`; \
+		run=$(DESTDIR)$(bindir)/$$f ; \
+		if test ! -f $$run ; then \
+			$(ECHO) "*** DID YOU FORGET TO make install FIRST? ***" ; \
+		fi ; \
+		$(ECHO) "======== running: $$run ==============" ; \
+		$$run || : ; \
 	done
 	@$(ECHO) "======== end of installcheck ========"
 
@@ -1244,7 +1287,10 @@ endif
 # all: cvsignore
 
 clean-libs:
-	-$(RM) $(noinst_LTLIBRARIES)
+	-$(RM) $(LTLIBRARIES)
+
+clean-scripts:
+	-$(RM) $(SCRIPTS)
 
 DISTCLEANFILES += $(SUBDIR_CVSIGNORE) $(CONFIG_PARSERS)
 DISTCLEANDIRS += $(DEPDIR)
@@ -1275,6 +1321,7 @@ help-local:
 	@$(ECHO) "    clean-lexer: cleans lexer subdir's objects"
 	@$(ECHO) "    clean-parser: cleans parser subdir's objects"
 	@$(ECHO) "    clean-libs: cleans all libraries and archives"
+	@$(ECHO) "    clean-scripts: cleans built bin scripts"
 	@$(ECHO) "    show-stacktrace-sources: grep for debug-enabled sources"
 	@$(ECHO) "Local echo-* targets:"
 	@$(ECHO) "    libhacktexec-sources"

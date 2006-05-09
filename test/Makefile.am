@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.28 2006/05/06 04:19:01 fang Exp $
+#	$Id: Makefile.am,v 1.29 2006/05/09 05:39:25 fang Exp $
 
 include $(srcdir)/Make.test-head
 
@@ -28,6 +28,7 @@ PRECONFIGURED_TESTSCRIPTS = \
 	test-series.sh.in
 
 POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
+check_SCRIPTS = $(POSTCONFIGURED_TESTSCRIPTS)
 AUTO_IGNORE += $(POSTCONFIGURED_TESTSCRIPTS)
 
 # These are useful maintainer script that we don't bother configure-generating

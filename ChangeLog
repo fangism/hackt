@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2006-05-08	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03:
+	  Documented config/*.m4 autoconf macros, suitable for publication.  
+		Documented in the style recommended by ac-archive.sf.net.  
+	  Renamed many custom-defined AC_* macros to FANG_ or HACKT_
+		to not infringe upon reserved autoconf namespaces.  
+		configure.ac calls to macros updated accordingly.  
+	  top_builddir generates a install_transform.sh
+		to assist in transforming program names.
+
+
 2006-05-06	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79:

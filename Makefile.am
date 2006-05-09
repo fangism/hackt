@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.30 2006/04/13 21:44:37 fang Exp $
+#	$Id: Makefile.am,v 1.31 2006/05/09 05:39:13 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -43,6 +43,8 @@ AUTO_IGNORE += aclocal.m4 libtool \
 	distcheck.log distcheck.log.tmp
 
 doc_DATA = AUTHORS BOUNTY COPYING NEWS README TODO
+
+noinst_SCRIPTS = install_transform.sh
 
 # Many of these are already in DIST_COMMON
 EXTRA_DIST += Make.stddef Make.global local.cvsignore \

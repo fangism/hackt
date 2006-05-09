@@ -1,30 +1,48 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.2 2006/02/25 04:54:59 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.3 2006/05/09 05:39:20 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
 dnl
 
+dnl @synopsis HACKT_ARG_VAR_LEX
 dnl
 dnl Enables LEX as a configurable variable.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_VAR_LEX],
 [AC_REQUIRE([AM_PROG_LEX])
 AC_ARG_VAR(LEX, [lexer/scanner, such as [f]lex])
-])
+])dnl
 
+dnl @synopsis HACKT_ARG_VAR_YACC
 dnl
 dnl Enables YACC as a configurable variable.  
 dnl This usually picks up bison by default if found, 
-dnl but can be manually overridden
+dnl but can be manually overridden.
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_ARG_VAR_YACC],
 [AC_REQUIRE([AC_PROG_YACC])
 AC_ARG_VAR(YACC, [parser generator, requires LALR(1), such as yacc/bison])
-])
+])dnl
 
+dnl @synopsis HACKT_LEX_VERSION
 dnl
 dnl Detects and records the LEX version as LEX_VERSION.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_LEX_VERSION],
 [AC_REQUIRE([AM_PROG_LEX])
@@ -42,14 +60,19 @@ case $LEX in
 esac
 LEX_VERSION=`$LEX --version | head -n 1`
 AC_SUBST(LEX_VERSION)
-])
+])dnl
 
-
+dnl @synopsis HACKT_AM_CONDITIONAL_HAVE_YACC
 dnl
 dnl Defines one of {HAVE_BISON, HAVE_BYACC, HAVE_YACC} to be true for automake.
 dnl check whether or not bison is disguising as yacc (with bison -y)
 dnl some parser builds in sub-directories will compile differently
 dnl depending on which parser is used.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_AM_CONDITIONAL_HAVE_YACC],
 [AC_REQUIRE([AC_PROG_YACC])
@@ -57,13 +80,19 @@ dnl reminder: AM_CONDITIONALs must be defined unconditionally
 AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
 AM_CONDITIONAL(HAVE_BYACC, echo "$YACC" | grep -q byacc)
 AM_CONDITIONAL(HAVE_YACC, echo "$YACC" | grep -v byacc | grep -q yacc)
-])
+])dnl
 
+dnl @synopsis HACKT_YACC_VERSION
 dnl
 dnl defines YACC_VERSION or BISON_VERSION with a version string if possible
 dnl TODO: check whether or not bison/yacc works on a basic file
 dnl this must be consistent with the above
 dnl there might be a better way to do this...
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-05-08
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
 dnl
 AC_DEFUN([HACKT_YACC_VERSION],
 [AC_REQUIRE([AC_PROG_YACC])
@@ -115,6 +144,6 @@ dnl	fi
 	* ) AC_MSG_ERROR([No parser-generator found.]) ;;
 esac
 AC_SUBST(YACC_VERSION)
-])
+])dnl
 
 

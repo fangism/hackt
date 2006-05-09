@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.8 2006/05/06 04:18:46 fang Exp $
+	$Id: Command.cc,v 1.9 2006/05/09 05:39:23 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1015,15 +1015,15 @@ if (a.size() > 2) {
 		i = 1;
 	}
 	s.resume();
-	time_type tm = s.time();
+	time_type time = s.time();
 	// could check s.pending_events()
 	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
 		// if time actually advanced, decrement steps-remaining
 		// NB: may need specialization for real-valued (float) time.  
 		const time_type ct(s.time());
-		if (tm != ct) {
+		if (time != ct) {
 			--i;
-			tm = ct;
+			time = ct;
 		}
 		const node_type& n(s.get_node(GET_NODE(ni)));
 		/***

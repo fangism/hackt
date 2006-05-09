@@ -6,7 +6,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.18 2006/04/24 00:27:59 fang Exp $
+#	$Id: Make.global,v 1.19 2006/05/09 05:39:12 fang Exp $
 
 
 # automatically runs autotools (and recursively in dubdirectories)
@@ -109,6 +109,12 @@ echo-prefix: force
 
 echo-exec-prefix: force
 	@$(ECHO) $(exec_prefix)
+
+echo-programs: force
+	@$(ECHO) $(PROGRAMS)
+
+echo-scripts: force
+	@$(ECHO) $(SCRIPTS)
 
 echo-package: force
 	@$(ECHO) $(PACKAGE)
@@ -226,6 +232,7 @@ endif
 	@$(ECHO) "	auto-ignore: list of automatic cvsignored files"
 	@$(ECHO) "	srcdir, top-srcdir, top-builddir, subdir, "
 	@$(ECHO) "	build, host, prefix, exec-prefix"
+	@$(ECHO) "	programs, scripts"
 	@$(ECHO) "	program-transform-name, package{,-version,-bugreport}"
 	@$(ECHO) "	CFLAGS, CXXFLAGS, CPPFLAGS, LDFLAGS, AM_*FLAGS, LIBS, LEX, YACC"
 

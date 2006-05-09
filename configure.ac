@@ -3,13 +3,13 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.61 2006/05/06 04:18:31 fang Exp $
+#	$Id: configure.ac,v 1.62 2006/05/09 05:39:13 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060506, fangism@users.sourceforge.net)
+AC_INIT(hackt, 0.1.4-devel-20060508, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -63,7 +63,7 @@ AC_CHECK_PROG([TAIL], tail, tail)
 #	checking for PWD doesn't work as expected...
 AC_CHECK_PROG([SED], sed, sed)
 AC_CHECK_PROG([TOUCH], touch, touch)
-AC_PROG_SLEEP
+FANG_PROG_SLEEP
 AC_CHECK_PROG([INDENT], indent, indent)
 AC_CHECK_PROGS([M4], gm4 m4, m4)
 
@@ -125,9 +125,9 @@ AC_SUBST(LIBTOOL_DEPS)
 dnl defined in config.hackt.m4
 HACKT_ARG_ENABLE_GOD_MODE
 dnl defined in config/header_validation.m4
-AC_ARG_ENABLE_HEADER_VALIDATION
+FANG_ARG_ENABLE_HEADER_VALIDATION
 dnl from "config/rl_el.m4"
-AC_ARG_WITH_READLINE_EDITLINE
+FANG_ARG_WITH_READLINE_EDITLINE
 HACKT_ARG_WITH_GMP
 HACKT_ARG_WITH_XDR
 
@@ -172,33 +172,33 @@ dnl checks tons of standard C++ headers in various locations
 dnl from "config/cxx_STL.m4"
 dnl from this point to the end, we also apply ANAL_FLAGS before CFLAGS
 dnl and CXXFLAGS to reflect what will be used during the build process.  
-AC_HEADER_STDCXX
+FANG_HEADER_STDCXX
 dnl AC_MSG_NOTIFY([Checking library functions and types with $ANAL_FLAGS])
 
-AC_CXX_ATTRIBUTE_UNUSED
-AC_CXX_ATTRIBUTE_UNUSED_CTOR
-AC_CXX_ATTRIBUTE_CONST
-AC_CXX_ATTRIBUTE_PURE
-AC_CXX_ATTRIBUTE_HOLY
-AC_CXX_ATTRIBUTE_NORETURN
-AC_CXX_ATTRIBUTE_MALLOC
-AC_CXX_ATTRIBUTE_PRECIOUS
-AC_CXX_ATTRIBUTE_VISIBILITY
-AC_CXX_ATTRIBUTE_PACKED
-AC_CXX_ATTRIBUTE_ALIGNED
-AC_CXX_ATTRIBUTE_ALIGNED_SIZE
-AC_CXX_ATTRIBUTE_EVIL
-AC_CXX_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING
-AC_CXX_TEMPLATE_FORMAL_BASE_CLASS
+FANG_CXX_ATTRIBUTE_UNUSED
+FANG_CXX_ATTRIBUTE_UNUSED_CTOR
+FANG_CXX_ATTRIBUTE_CONST
+FANG_CXX_ATTRIBUTE_PURE
+FANG_CXX_ATTRIBUTE_HOLY
+FANG_CXX_ATTRIBUTE_NORETURN
+FANG_CXX_ATTRIBUTE_MALLOC
+FANG_CXX_ATTRIBUTE_PRECIOUS
+FANG_CXX_ATTRIBUTE_VISIBILITY
+FANG_CXX_ATTRIBUTE_PACKED
+FANG_CXX_ATTRIBUTE_ALIGNED
+FANG_CXX_ATTRIBUTE_ALIGNED_SIZE
+FANG_CXX_ATTRIBUTE_EVIL
+FANG_CXX_DEFAULT_TEMPLATE_TEMPLATE_PARAMETER_BINDING
+FANG_CXX_TEMPLATE_FORMAL_BASE_CLASS
 
 FANG_HASH_MAP_NAMESPACE
 FANG_HASH_MAP_STYLE
 FANG_CXX_STL_FUNCTIONAL_SELECT
-AC_CXX_STL_REVERSE_ITERATOR_COMPARISONS
-AC_CXX_STD_IFSTREAM_DEV_STDIN
-AC_CXX_STD_OFSTREAM_DEV_STDOUT
-AC_CXX_STD_OFSTREAM_DEV_STDERR
-AC_C_BUILTIN_EXPECT
+FANG_CXX_STL_REVERSE_ITERATOR_COMPARISONS
+FANG_CXX_STD_IFSTREAM_DEV_STDIN
+FANG_CXX_STD_OFSTREAM_DEV_STDOUT
+FANG_CXX_STD_OFSTREAM_DEV_STDERR
+FANG_C_BUILTIN_EXPECT
 
 AC_CACHE_SAVE
 
@@ -226,8 +226,9 @@ AC_C_CONST
 AC_C_INLINE
 AC_C_RESTRICT
 AC_TYPE_SIZE_T
+AC_TYPE_SIGNAL
 AC_C_VOLATILE
-AC_TYPEDEF_FILE			dnl defined in "config/cc.m4"
+FANG_TYPEDEF_FILE			dnl defined in "config/cc.m4"
 
 # library functions
 AC_FUNC_ERROR_AT_LINE
@@ -248,10 +249,10 @@ CXXFLAGS="$CONFTEST_CXXFLAGS -Wno-error"
 
 AC_CHECK_TYPES([ptrdiff_t])
 dnl AC_CHECK_FUNCS([sqrt])
-dnl AC_FUNC_SQRT
+FANG_FUNC_SQRT
 dnl AC_CHECK_FUNCS([fmod fmodf])
-AC_FUNC_FMOD
-AC_FUNC_FMODF
+FANG_FUNC_FMOD
+FANG_FUNC_FMODF
 AC_CHECK_FUNCS([getopt])
 AC_CHECK_FUNCS([strsep strtok strtok_r]) dnl strsep is missing on Solaris 2.9
 AC_CHECK_FUNCS([strdup])
@@ -290,10 +291,8 @@ AC_CHECK_SIZEOF(int64)
 AC_CHECK_SIZEOF(uint64)
 AC_CHECK_SIZEOF(int64_t)
 AC_CHECK_SIZEOF(uint64_t)
-dnl AC_CHECK_SIZEOF(quad_t)
-dnl AC_CHECK_SIZEOF(u_quad_t)
-AC_TYPE_QUAD_T_ARITHMETIC
-AC_TYPE_U_QUAD_T_ARITHMETIC
+FANG_TYPE_QUAD_T_ARITHMETIC
+FANG_TYPE_U_QUAD_T_ARITHMETIC
 
 CFLAGS="$top_saved_CFLAGS"
 CXXFLAGS="$top_saved_CXXFLAGS"
@@ -303,10 +302,10 @@ AC_CACHE_SAVE
 HACKT_CHECK_SANITY
 
 dnl readline or editline support
-AC_CHECK_READLINE
-AC_CHECK_EDITLINE
+FANG_CHECK_READLINE
+FANG_CHECK_EDITLINE
 dnl check prototype of readline() if applicable
-AC_CHECK_READLINE_ARG_CONST
+FANG_CHECK_READLINE_ARG_CONST
 
 dnl TODO: xdr
 dnl for automake consumption
@@ -379,6 +378,8 @@ AC_CONFIG_FILES([src/util/test/hash_map_iterator_O2_bug_test.test],
 	[chmod +x src/util/test/hash_map_iterator_O2_bug_test.test])
 AC_CONFIG_FILES([src/scripts/deps_to_dot.awk],
 	[chmod +x src/scripts/deps_to_dot.awk])
+AC_CONFIG_FILES([install_transform.sh],
+	[chmod +x install_transform.sh])
 AC_CONFIG_FILES([test/parse-test-expect.sh],
 	[chmod +x test/parse-test-expect.sh])
 AC_CONFIG_FILES([test/hackt-obj-diff.sh],
