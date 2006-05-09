@@ -2,6 +2,12 @@
 
 2006-05-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-02:
+	  More portability clean-ups for standard conformance.  
+
+
+2006-05-07	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-01:
 	  Clean-ups for portability sake.
 	  Added util::addressof operator to assist in compiler workarounds.
