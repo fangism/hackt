@@ -1,13 +1,14 @@
 /**
 	\file "common/ICE.cc"
 	String and common symbols defined for internal compiler errors.
-	$Id: ICE.cc,v 1.6 2006/02/21 21:33:02 fang Exp $
+	$Id: ICE.cc,v 1.6.22.1 2006/05/11 03:46:27 fang Exp $
  */
 
 #include <ostream>
 #include "common/ICE.h"
 #include "config.h"
 #include "util/attributes.h"
+#include "cvstag.h"	// generated
 
 namespace HAC {
 using std::ostream;
@@ -19,9 +20,11 @@ const char ICE_never_call[] = "... is never supposed to be called.";
 //-----------------------------------------------------------------------------
 static const char ICE_greeting[] = "Internal compiler error: in ";
 static const char ICE_footer[] =
-"*** Please submit a bug report including version (" PACKAGE_STRING "),\n"
-"*** test case with steps to reproduce, and configuration, if appropriate,\n"
-"*** to <" PACKAGE_BUGREPORT ">.  Thank you, and have a nice day.";
+"*** Please submit a bug report including version \n"
+"*** \"" PACKAGE_STRING ", " CVSTAG "\",\n"
+"*** (preferably reduced) test case, steps to reproduce, and configuration,\n"
+"*** if appropriate, to <" PACKAGE_BUGREPORT ">.\n"
+"*** This program will now self-destruct.  Thank you, and have a nice day.";
 
 //=============================================================================
 void

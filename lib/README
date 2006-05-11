@@ -1,4 +1,5 @@
 "lib/README"
+	$Id: README,v 1.1.32.1 2006/05/11 03:46:14 fang Exp $
 
 This is the home directory of general library files.  
 All files are architecture-independent.  
@@ -7,6 +8,6 @@ I'll write an install Makefile for this eventually.
 
 Contents of subdirectories:
 
-<write stuff here>
+mk: makefile templates, standard and automake-style
 
 

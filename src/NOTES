@@ -1,7 +1,22 @@
 # "NOTES"
+#	$Id: NOTES,v 1.13.66.1 2006/05/11 03:46:21 fang Exp $
 
 Developer's Notes (transcripts of fangism muttering to himself...)
 
+//=============================================================================
+2006-05-10:
+	Brief discussion about supporting nonmeta subscripts in CHP.
+	Conclusion: must have nonmeta-value (int<>) subscripts.
+	Status: CHP sublanguage current constrains instances references
+		to be meta-references (compile-time only).
+	However, CHP intermediate representation might be more restrictive,
+		and may benefit from having static selection graphs.  
+	Strategies: internal expansion of nonmeta selections
+		into meta-selection equivalents.  How?
+	Concerns: range checking
+
+//=============================================================================
+// forgot about this file for several months...
 //=============================================================================
 2005-09-01: ARTXX-00-01-04-main-00-55-footprint-01-32:
 	Notes on algorithm for replaying internal port aliases:

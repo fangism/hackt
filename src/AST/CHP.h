@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.3 2006/01/22 06:52:52 fang Exp $
+	$Id: CHP.h,v 1.3.40.1 2006/05/11 03:46:22 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -464,6 +464,42 @@ public:
 
 	CHP_CHECK_STMT_PROTO;
 };	// end class prob_selection
+
+//=============================================================================
+/**
+	Compile-time expanded loop for selection statement.  
+	This converts a run-time selection into an explicit
+	compile-time selection.  
+	e.g.: [[]i:N: i==j -> X!(x[j]) ]
+ */
+class metaloop_selection : public statement {
+private:
+	typedef	statement				parent_type;
+private:
+	const excl_ptr<const char_punctuation_type>	lb;
+	const excl_ptr<const char_punctuation_type>	selection_type;
+	const excl_ptr<const token_identifier>		index;
+	const excl_ptr<const range>			bounds;
+	const excl_ptr<const guarded_command>		body;
+	const excl_ptr<const char_punctuation_type>	rb;
+public:
+	metaloop_selection(const char_punctuation_type*, 
+		const char_punctuation_type*,
+		const token_identifier*, const range*, 
+		const guarded_command*, const char_punctuation_type*);
+	~metaloop_selection();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	CHP_CHECK_STMT_PROTO;
+};	// end class metaloop_selection
 
 //=============================================================================
 /// CHP loop contains a list of statements

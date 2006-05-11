@@ -1,5 +1,5 @@
 # "mk/hackt-rules.am"
-#	$Id: hackt-rules.am,v 1.2 2006/02/10 21:50:32 fang Exp $
+#	$Id: hackt-rules.am,v 1.2.26.1 2006/05/11 03:46:14 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
@@ -39,8 +39,17 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 .haco-a.sprs:
 	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
 
+# note: does not use optimization
 .haco-a.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@
+
+# note: does not use optimization
+.haco-a.prsimexpr-dot:
+	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct $< > $@
+
+# assumes dot found in path
+.prsimexpr-dot.prsimexpr-ps:
+	dot -Tps $< -o $@
 
 all:
 

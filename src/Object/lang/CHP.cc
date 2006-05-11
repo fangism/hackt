@@ -1,12 +1,13 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.7 2006/03/20 02:41:06 fang Exp $
+	$Id: CHP.cc,v 1.7.16.1 2006/05/11 03:46:26 fang Exp $
  */
 
 #include "Object/lang/CHP.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/int_expr.h"
+#include "Object/expr/meta_range_expr.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
@@ -18,9 +19,11 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/pint_value_collection.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
+#include "util/IO_utils.tcc"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::action_sequence,
@@ -33,6 +36,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::deterministic_selection,
 		"CHP-deterministic-selection")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::nondeterministic_selection,
 		"CHP-nondeterministic-selection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::metaloop_selection,
+		"CHP-metaloop-selection")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::assignment,
 		"CHP-assignment")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::condition_wait,
@@ -57,6 +62,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::nondeterministic_selection, CHP_NONDET_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::CHP::metaloop_selection, CHP_SELECT_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::assignment, CHP_ASSIGNMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::condition_wait, CHP_WAIT_TYPE_KEY, 0)
@@ -76,6 +83,8 @@ namespace CHP {
 using util::auto_indent;
 using util::persistent_traits;
 #include "util/using_ostream.h"
+using util::write_value;
+using util::read_value;
 //=============================================================================
 // class action_sequence method definitions
 
@@ -358,6 +367,66 @@ void
 nondeterministic_selection::load_object(const persistent_object_manager& m, 
 		istream& i) {
 	m.read_pointer_list(i, static_cast<list_type&>(*this));
+}
+
+//=============================================================================
+// class metaloop_selection method definitions
+
+metaloop_selection::metaloop_selection() :
+		action(), meta_loop_base(), body(), selection_type(false) {
+}
+
+metaloop_selection::metaloop_selection(const ind_var_ptr_type& i, 
+		const range_ptr_type& r, const body_ptr_type& b, 
+		const bool t) :
+		action(), meta_loop_base(i, r), body(b), selection_type(t) {
+	NEVER_NULL(body);
+}
+
+metaloop_selection::~metaloop_selection() { }
+
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(metaloop_selection)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+metaloop_selection::dump(ostream& o, const expr_dump_context& c) const {
+	o << (body ? "deterministic " : "nondeterministic ");
+	o << ind_var->get_name() << ':';
+	range->dump(o, entity::expr_dump_context(c)) <<
+		": {" << endl;
+	{
+		INDENT_SECTION(o);
+		body->dump(o << auto_indent, c) << endl;
+	}
+	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_selection::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	meta_loop_base::collect_transient_info_base(m);
+	body->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_selection::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	meta_loop_base::write_object_base(m, o);
+	m.write_pointer(o, body);
+	write_value(o, selection_type);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_selection::load_object(const persistent_object_manager& m,
+		istream& i) {
+	meta_loop_base::load_object_base(m, i);
+	m.read_pointer(i, body);
+	read_value(i, selection_type);
 }
 
 //=============================================================================

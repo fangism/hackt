@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-01:
+	  Branch spawned for CHP language support development.  
+	  Added NOTES entry discussing prospect of upgrading CHP
+		to support nonmeta references over meta references.  
+	  Added meta-loop selection construct to CHP grammar, 
+		and added AST and IR classes 'metaloop_selection'.  
+		Objective: to expand into equivalent fixed-way selections.  
+		Also added persistent type key CHP_SELECT_LOOP_TYPE_KEY.  
+	  Makefile.am: install scripts depend on config.status
+	  common/ICE.cc: uses CVSTAG from cvstag.h
+	  TODO: currently compiler rejects attempts create
+		nonmeta_value_references to parameters, ... enable me!
+	  TODO: iron-out test cases chp/065,066
+
+
 2006-05-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03:

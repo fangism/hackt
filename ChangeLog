@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2006-05-10	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-01:
+	  Make.global: cvsdiffs target now works in VPATH builds
+		by switching to the $(srcdir) to run cvs diff, 
+		still redirecting to the builddir's 'cvsdiffs'.  
+
+
 2006-05-08	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03:

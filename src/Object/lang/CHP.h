@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.9 2006/04/18 18:42:40 fang Exp $
+	$Id: CHP.h,v 1.9.8.1 2006/05/11 03:46:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -12,6 +12,7 @@
 #include "Object/lang/CHP_base.h"
 #include "Object/ref/references_fwd.h"
 #include "Object/expr/expr_fwd.h"
+#include "Object/unroll/meta_loop_base.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "util/static_assert.h"
@@ -187,6 +188,45 @@ public:
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nondeterministic_selection
+
+//=============================================================================
+/**
+	A construct for compile-time expanding a regular
+	selection statement.  
+ */
+class metaloop_selection : public action, public meta_loop_base {
+	typedef	metaloop_selection		this_type;
+public:
+	typedef	meta_loop_base::ind_var_ptr_type	ind_var_ptr_type;
+	typedef	meta_loop_base::range_ptr_type	range_ptr_type;
+	typedef	count_ptr<guarded_action>	body_ptr_type;
+private:
+	/**
+		The one guarded action is presumably dependent on the 
+		induction variable.  Will be expanded into 
+		a full selection statement at unroll-time.  
+	 */
+	body_ptr_type				body;
+	/**
+		True is for determinstic selection, 
+		false is for nondeterministic selection.
+		No other types supported yet.  
+	 */
+	bool					selection_type;
+public:
+	metaloop_selection();
+	metaloop_selection(const ind_var_ptr_type&, const range_ptr_type&, 
+		const body_ptr_type&, const bool);
+	~metaloop_selection();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class metaloop_selection
 
 //=============================================================================
 /**

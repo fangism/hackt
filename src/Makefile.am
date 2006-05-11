@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.123 2006/05/09 18:36:40 fang Exp $
+#	$Id: Makefile.am,v 1.123.2.1 2006/05/11 03:46:19 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -52,32 +52,32 @@ CLEANFILES += $(bin_SCRIPTS)
 
 # no need to use $(DESTDIR) (typically used for a staged install)
 # installcheck is never run on the staged install, only on the final
-haco:
+haco: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile $$""@" >> $@
 	@$(CHMOD) +x $@
 
-hacunroll:
+hacunroll: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll $$""@" >> $@
 	@$(CHMOD) +x $@
 
-haccreate:
+haccreate: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create $$""@" >> $@
 	@$(CHMOD) +x $@
 
-hacalloc:
+hacalloc: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc $$""@" >> $@
 	@$(CHMOD) +x $@
 
-hflat:
+hflat: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat $$""@" >> $@
 	@$(CHMOD) +x $@
 
-hacprsim:
+hacprsim: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
 	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim $$""@" >> $@
 	@$(CHMOD) +x $@
@@ -656,6 +656,7 @@ libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
+common/ICE.lo common/ICE.o: cvstag.h
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
 main/version.lo main/version.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
 	parser/yacc_version.h lexer/lex_version.h
