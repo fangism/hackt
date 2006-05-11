@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.21 2006/04/28 03:20:12 fang Exp $
+ 	$Id: definition.cc,v 1.22 2006/05/11 22:45:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2170,8 +2170,13 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_user_def_data_type
 			cpt(make_canonical_type(canonical_actuals));
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		const unroll_context
+			c(canonical_actuals, template_formals, f, parent);
+#else
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
+#endif
 #if 0 && ENABLE_STACKTRACE
 		STACKTRACE_INDENT << "new context c @ " << &c << endl;
 		c.dump(cerr) << endl;
@@ -2223,8 +2228,13 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_user_def_data_type
 			cpt(make_canonical_type(canonical_actuals));
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		const unroll_context
+			c(canonical_actuals, template_formals, f, parent);
+#else
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
+#endif
 		// this replays internal aliases of all instances in this scope
 		if (!f->create_dependent_types().good) {
 			// error message
@@ -2962,8 +2972,13 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		const unroll_context
+			c(canonical_actuals, template_formals, f, parent);
+#else
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
+#endif
 		if (sequential_scope::unroll(c).good) {
 			// NOTE: nothing can be done with production rules
 			// until nodes have been assigned local ID numbers
@@ -3014,9 +3029,16 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		const unroll_context
+			c(canonical_actuals, template_formals, f, parent);
+#else
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
+#endif
 		// this replays internal aliases of all instances in this scope
+		// doesn't use context? what if dependent on global parameter?
+		// probably need to pass it in!
 		if (!f->create_dependent_types().good) {
 			// error message
 			return good_bool(false);

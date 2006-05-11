@@ -1,0 +1,22 @@
+// "068.hac"
+// copy-modified from "066.hac"
+// should pass
+// reference to global parameter as rvalue
+
+namespace bar {
+pint Q;
+Q = 2;
+
+template <pint X>
+defproc ick() {
+	bool z[X];
+}
+
+defproc foo() {
+	ick<Q> zoo[Q];
+}
+
+}	// end namespace bar
+
+bar::foo f;
+

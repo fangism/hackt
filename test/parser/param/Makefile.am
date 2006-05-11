@@ -1,5 +1,5 @@
 # "test/parser/param/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2006/02/21 04:50:40 fang Exp $
+#	$Id: Makefile.am,v 1.12 2006/05/11 22:46:07 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -22,7 +22,7 @@ HACKT_PARSE_TEST_PASSES = \
 	033 036 037 038 039 \
 	040 041 042 043 044 045 046 047 048 \
 	050 055 058 059 \
-	060 061 062 063 064 065
+	060 061 062 063 064 065 066 067 068 069
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -38,7 +38,7 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 	036 037 038 039 \
 	040 041 042 043 044 045 046 047 \
 	050 055 058 059 \
-	060 061 062 063 064 065
+	060 061 062 063 064 065 066 067 068 069
 
 # TODO: preal test cases
 # do some serious arithmetic

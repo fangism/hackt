@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.14 2006/04/24 00:28:08 fang Exp $
+	$Id: unroll_context.cc,v 1.15 2006/05/11 22:46:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -38,12 +38,19 @@ namespace entity {
 unroll_context::unroll_context() :
 		next(), template_args(), template_formals(),
 		target_footprint(NULL)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
 		{ }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::unroll_context(footprint* const f) :
 		next(), template_args(), template_formals(), 
-		target_footprint(f) {
+		target_footprint(f)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -55,7 +62,11 @@ unroll_context::unroll_context(const template_actuals& a,
 		next(),
 		template_args(a),
 		template_formals(&f), 
-		target_footprint(NULL) {
+		target_footprint(NULL)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -63,11 +74,19 @@ unroll_context::unroll_context(const template_actuals& a,
 	Called in process_definition::unroll_complete_type.
  */
 unroll_context::unroll_context(const template_actuals& a, 
-		const template_formals_manager& f, footprint* const fp) :
+		const template_formals_manager& f, footprint* const fp
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, const never_ptr<const name_space> n
+#endif
+		) :
 		next(), 
 		template_args(a), 
 		template_formals(&f), 
-		target_footprint(fp) {
+		target_footprint(fp)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(n)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,7 +100,11 @@ unroll_context::unroll_context(const template_actuals& a,
 		next(&c),
 		template_args(a),
 		template_formals(&f), 
-		target_footprint(NULL) {
+		target_footprint(NULL)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -157,6 +180,22 @@ unroll_context::get_target_footprint(void) const {
 	}
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if LOOKUP_GLOBAL_META_PARAMETERS
+/**
+	\return pointer to the deepest namespace in which this unroll
+		context was created.  
+ */
+never_ptr<const name_space>
+unroll_context::get_parent_namespace(void) const {
+	if (parent_namespace)
+		return parent_namespace;
+	else if (next)
+		return next->get_parent_namespace();
+	else	return never_ptr<const name_space>(NULL);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

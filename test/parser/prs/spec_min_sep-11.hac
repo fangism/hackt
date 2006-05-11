@@ -1,0 +1,16 @@
+// "spec_min_sep-11.hac"
+// test-case contributed by Clint Kelly
+// exercises out-of-scope lookup of global parameter
+
+pint blah = 5;
+
+defproc ass(bool q) {
+        bool a, b, c;
+        spec {
+                min_sep<blah>(a, b)
+        }
+}
+
+bool x;
+ass myass(x);
+

@@ -1,0 +1,106 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
+	8	##ADDR##	proccoll	1	#HEAD#	#TAIL#	35
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	192
+	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	18	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	26	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	proccoll	1	#HEAD#	#TAIL#	77
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	namespc_	0	#HEAD#	#TAIL#	31
+	36	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  1 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    Q = pint^0 Q (init = 2) value: 2
+  Namespaces:
+    bar =     In namespace "bar", we have: {
+      0 parameter-collections
+      0 instantiation-collections
+      0 sub-namespaces
+      2 definitions
+      0 typedefs
+      Definitions:
+        foo = process-definition (defined) foo(
+          )
+          In definition "foo", we have: {
+          Instances:
+            zoo = ick<::Q> zoo
+
+          unroll sequence: 
+            ick<::Q> zoo[0..1]
+          footprint: {
+            process ick<2>^1 zoo
+              unrolled indices: {
+                0 = ::bar::foo::zoo[0] 
+                1 = ::bar::foo::zoo[1] 
+              }
+          }
+          }
+
+        ick = process-definition (defined) ick<
+          pint<> X
+          >(
+          )
+          In definition "ick", we have: {
+          Parameters:
+            X = pint<> X
+          Instances:
+            z = bool<> z
+
+          unroll sequence: 
+            pint<> X
+            bool<> z[0..X-1]
+          footprint collection: {
+            <2> {
+              pint^0 X value: ?
+              bool^1 z
+                unrolled indices: {
+                  0 = ::bar::ick::z[0] 
+                  1 = ::bar::ick::z[1] 
+                }
+            }
+          }
+          }
+
+    }
+  Instances:
+    f = process foo<>^0 f (instantiated) = ::f 
+}
+

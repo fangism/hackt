@@ -3,6 +3,24 @@
 Developer's Notes (transcripts of fangism muttering to himself...)
 
 //=============================================================================
+2006-05-11:
+	Re: Global parameter value lookup
+	Temporary workaround to allow global meta parameters to be looked
+		up during unroll value resolution.
+	But what namespace is chosen as the start for parent lookups!?
+	Currently, the namespace that is parent of the TYPE being
+		instantiated is looked up, NOT the namespace in which
+		the type is INSTANTIATED.  
+		See implementation in 
+		process_definition::unroll_complete_type and 
+		::create_complete_type.
+	Read that last statement one more time.  
+	This resembles argument-dependent lookup, a.k.a. ADL.  
+	The underlying problem is that unroll_context doesn't really
+		support namespace lookup yet.  
+	TODO: need well-defined lookup semantics and bindings.  
+
+//=============================================================================
 2005-09-01: ARTXX-00-01-04-main-00-55-footprint-01-32:
 	Notes on algorithm for replaying internal port aliases:
 	had: detect whether or not instance in question is a 

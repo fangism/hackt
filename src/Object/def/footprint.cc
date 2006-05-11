@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.20 2006/05/06 22:08:15 fang Exp $
+	$Id: footprint.cc,v 1.21 2006/05/11 22:45:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -250,6 +250,10 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df) const {
 		must be local to this definition scope!
 	TODO: detect handle global references, 
 		probably in simple_meta_instance_reference::unroll
+	NOTE: we forbid global references to instances, but allow for
+		parameter values (2006-05-11).  
+	NOTE: strategy, deferring lookup of global parameters
+		to unroll_context_value_resolver specializations.  
 	\return pointer to the collection.  
  */
 footprint::instance_collection_ptr_type

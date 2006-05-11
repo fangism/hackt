@@ -1,19 +1,25 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.3 2006/04/27 05:51:51 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.4 2006/05/11 22:46:03 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/expr/pint_const.h"
 #include "Object/inst/pint_value_collection.h"
+#include "Object/devel_switches.h"
+#if LOOKUP_GLOBAL_META_PARAMETERS
+#include "Object/common/namespace.h"
+#endif
 
 namespace HAC {
 namespace entity {
 
 //=============================================================================
 // class unroll_context_value_resolver<pint_tag> method definitions
+
 /**
+	Looks up a value for reading and resolving.  
 	\return true if lookup was resolved a loop variable.  
  */
 unroll_context_value_resolver<pint_tag>::const_return_type
@@ -39,21 +45,43 @@ unroll_context_value_resolver<pint_tag>::operator ()
 	}
 	// end hack
 	const footprint* const f(c.get_target_footprint());
-	const value_collection_type&
-		_vals(f ? IS_A(const value_collection_type&,
-				*(*f)[v.get_name()])
-			: v);
-	return const_return_type(false, &_vals);
+	const value_collection_type*
+		_vals(f ? IS_A(const value_collection_type*,
+				&*(*f)[v.get_name()])
+			: &v);
+#if LOOKUP_GLOBAL_META_PARAMETERS
+	// don't expect footprint lookup to find globals, only locals
+	if (!_vals) {
+		// not found in current footprint
+		// then lookup parent namespaces until found...
+		// need to get namespace stack from context...
+		const never_ptr<const name_space> n(c.get_parent_namespace());
+		NEVER_NULL(n);
+		const never_ptr<const value_collection_type>
+			_v(n->lookup_object(v.get_name())
+				.is_a<const value_collection_type>());
+		INVARIANT(_v);
+		_vals = &*_v;
+	}
+#else
+	INVARIANT(_vals);
+#endif
+	return const_return_type(false, _vals);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Looks up a value-collection for modification purposes.  
+	Does NOT perform lookup of globals, because globals
+	should not be modified through outside contexts.  
+ */
 unroll_context_value_resolver<pint_tag>::value_collection_type&
 unroll_context_value_resolver<pint_tag>::operator ()
 	(const unroll_context& c, value_collection_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
 	value_collection_type&
-		_vals(f ? IS_A(value_collection_type&,
-				*(*f)[v.get_name()])
+		_vals(f ? IS_A(value_collection_type&, *(*f)[v.get_name()])
 			: v);
 	return _vals;
 }
@@ -66,52 +94,79 @@ unroll_context_value_resolver<pbool_tag>::operator ()
 		(const unroll_context& c, const value_collection_type& v,
 		value_type& i) const {
 	const footprint* const f(c.get_target_footprint());
-	const value_collection_type&
-		_vals(f ? IS_A(const value_collection_type&,
-				*(*f)[v.get_name()])
-			: v);
-	return const_return_type(false, &_vals);
+	const value_collection_type*
+		_vals(f ? IS_A(const value_collection_type*,
+				&*(*f)[v.get_name()])
+			: &v);
+#if LOOKUP_GLOBAL_META_PARAMETERS
+	// don't expect footprint lookup to find globals, only locals
+	if (!_vals) {
+		const never_ptr<const name_space> n(c.get_parent_namespace());
+		NEVER_NULL(n);
+		const never_ptr<const value_collection_type>
+			_v(n->lookup_object(v.get_name())
+				.is_a<const value_collection_type>());
+		INVARIANT(_v);
+		_vals = &*_v;
+	}
+#else
+	INVARIANT(_vals);
+#endif
+	return const_return_type(false, _vals);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context_value_resolver<pbool_tag>::value_collection_type&
 unroll_context_value_resolver<pbool_tag>::operator ()
 	(const unroll_context& c, value_collection_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
 	value_collection_type&
-		_vals(f ? IS_A(value_collection_type&,
-				*(*f)[v.get_name()])
+		_vals(f ? IS_A(value_collection_type&, *(*f)[v.get_name()])
 			: v);
 	return _vals;
 }
 
 //-----------------------------------------------------------------------------
-
-	/**
-		No need to check if variable is for flow control, 
-			because those are not declared and referenced.  
-		\param i is never used.  
-	 */
+/**
+	No need to check if variable is for flow control, 
+		because those are not declared and referenced.  
+	\param i is never used.  
+ */
 unroll_context_value_resolver<preal_tag>::const_return_type
 unroll_context_value_resolver<preal_tag>::operator ()
 		(const unroll_context& c, const value_collection_type& v,
 		value_type& i) const {
 	const footprint* const f(c.get_target_footprint());
-	const value_collection_type&
-		_vals(f ? IS_A(const value_collection_type&,
-				*(*f)[v.get_name()])
-			: v);
-	return const_return_type(false, &_vals);
+	const value_collection_type*
+		_vals(f ? IS_A(const value_collection_type*,
+				&*(*f)[v.get_name()])
+			: &v);
+#if LOOKUP_GLOBAL_META_PARAMETERS
+	// don't expect footprint lookup to find globals, only locals
+	if (!_vals) {
+		const never_ptr<const name_space> n(c.get_parent_namespace());
+		NEVER_NULL(n);
+		const never_ptr<const value_collection_type>
+			_v(n->lookup_object(v.get_name())
+				.is_a<const value_collection_type>());
+		INVARIANT(_v);
+		_vals = &*_v;
+	}
+#else
+	INVARIANT(_vals);
+#endif
+	return const_return_type(false, _vals);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context_value_resolver<preal_tag>::value_collection_type&
 unroll_context_value_resolver<preal_tag>::operator ()
 	(const unroll_context& c, value_collection_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
 	value_collection_type&
-		_vals(f ? IS_A(value_collection_type&,
-				*(*f)[v.get_name()])
+		_vals(f ? IS_A(value_collection_type&, *(*f)[v.get_name()])
 			: v);
 	return _vals;
 }

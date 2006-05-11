@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-04:
+	  Added support for resolving/lookup-up global parameter values
+		during unroll/creation.  This patch is a quick hack, 
+		but is actuallysomewhat tested with new test cases.  
+	  NOTE: the lookup of out-of-scope parameters starts with the
+		parent namespace of the TYPE being instantiated, 
+		not the namespace in which the instance is declared.  
+		Added NOTES entry about this.  
+
+
 2006-05-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03:

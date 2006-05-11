@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.7 2006/01/22 18:21:01 fang Exp $
+	$Id: unroll_context.h,v 1.8 2006/05/11 22:46:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -12,10 +12,12 @@
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
 #include "Object/type/template_actuals.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
 // forward declarations
+class name_space;
 class const_param;
 class pint_const;
 class footprint;
@@ -81,6 +83,9 @@ private:
 		to definition-footprint's actual instance-collection.  
 	 */
 	footprint*					target_footprint;
+#if LOOKUP_GLOBAL_META_PARAMETERS
+	never_ptr<const name_space>			parent_namespace;
+#endif
 public:
 	// parameterless types and entity::module need this
 	unroll_context();
@@ -92,7 +97,11 @@ public:
 		const template_formals_manager&);
 
 	unroll_context(const template_actuals&,
-		const template_formals_manager&, footprint* const);
+		const template_formals_manager&, footprint* const
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, const never_ptr<const name_space>
+#endif
+		);
 
 	unroll_context(const template_actuals&,
 		const template_formals_manager&, const this_type&);
@@ -108,6 +117,11 @@ public:
 	// may bcome obsolete
 	const footprint*
 	get_target_footprint(void) const;
+
+#if LOOKUP_GLOBAL_META_PARAMETERS
+	never_ptr<const name_space>
+	get_parent_namespace(void) const;
+#endif
 
 	bool
 	in_definition_context(void) const { return target_footprint; }
