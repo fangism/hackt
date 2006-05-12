@@ -1,0 +1,12 @@
+// "068.hac"
+// copy-modified from "067.hac"
+// should fail
+// no nonmeta references may be aggregate
+
+defproc badchp(bool b[4]) {
+bool c[4];
+chp {
+	*[ c := b ]
+}
+}
+

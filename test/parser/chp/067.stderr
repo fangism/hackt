@@ -1,0 +1,4 @@
+Sorry, non-scalar instance reference at [9:5..10] not supported in CHP yet.
+ERROR in CHP statement(s) at [9:2..24]
+ERROR in one of the actions in [9:2..24]
+ERROR: at least one error in CHP body.

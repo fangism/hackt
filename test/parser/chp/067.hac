@@ -1,0 +1,12 @@
+// "067.hac"
+// should fail
+// no nonmeta references may be aggregate
+// in this case the nonmeta language is CHP
+
+defproc badchp(bool b[4]) {
+bool c[4];
+chp {
+	*[ c[0..1] := b[2..3] ]
+}
+}
+

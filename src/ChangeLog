@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-02:
+	  Added devel-switch USE_NONMETA_VALUE_REFERENCE to enable
+		construction of nonmeta rvalue references to parameters.  
+		Feature is untested.  
+	  TODO: test new cases in parser/chp.
+
+
 2006-05-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-01:

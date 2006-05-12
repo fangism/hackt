@@ -1,0 +1,16 @@
+// "066.hac"
+// copy-reduced from "065.hac"
+// should pass
+
+defproc metalooptest(chan?(int<4>) L; chan!(bool) R) {
+int<4> l;
+bool b[16];
+pint p = 13;
+chp {
+	*[
+		L?(l);
+		[ (l==p) -> R!(b[p]) [] else -> skip ]
+	]
+}
+}
+

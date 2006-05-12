@@ -1,0 +1,14 @@
+// "070.hac"
+// copy-modified from "069.hac"
+// should pass : allowed to assign pint to int
+
+template <pint W>
+defproc badchp(int<W> b) {
+pint c;
+chp {
+	*[ b := c ]
+}
+}
+
+badchp<8> X;
+
