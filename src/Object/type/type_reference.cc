@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.14 2006/03/20 02:41:09 fang Exp $
+ 	$Id: type_reference.cc,v 1.14.16.1 2006/05/12 20:56:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -603,10 +603,12 @@ data_type_reference::unroll_port_instances(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Convenience function for creating data int type-references.
+	\param w the integer width, here allowed to be 0.  
 	\returns newly allocated integer type reference.
  */
 data_type_reference*
 data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
+	INVARIANT(w >= 0);
 	// is an excl_ptr, incidentally
 	const fundamental_type_reference::template_args_ptr_type
 		width_params(new const_param_expr_list(

@@ -1,0 +1,6 @@
+Type mismatch in assignment at [9:5..10]:
+	left: int<::badchp::W>
+	right: bool<>
+ERROR in CHP statement(s) at [9:2..12]
+ERROR in one of the actions in [9:2..12]
+ERROR: at least one error in CHP body.

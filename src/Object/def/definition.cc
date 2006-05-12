@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.21 2006/04/28 03:20:12 fang Exp $
+ 	$Id: definition.cc,v 1.21.4.1 2006/05/12 20:56:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -1329,6 +1329,10 @@ built_in_datatype_def::resolve_canonical_datatype_definition(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: Possibly check that int's width parameter is > 0?
+	Or punt check until unroll/instantiation time?
+ */
 definition_base::type_ref_ptr_type
 built_in_datatype_def::make_fundamental_type_reference(
 		make_type_arg_type ta) const {

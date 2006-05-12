@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.7 2006/02/21 21:33:02 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.7.22.1 2006/05/12 20:56:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -94,7 +94,7 @@ protected:
 		\param t type must be resolved constant.
 		\pre first time called for the collection.  
 	 */
-	void
+	good_bool
 	commit_type_first_time(const instance_collection_parameter_type& t);
 
 };	// end struct parameterless_collection_type_manager

@@ -1,0 +1,5 @@
+// "037.hac"
+// should fail: can't create int<0> explicitly
+
+int<0> X;
+

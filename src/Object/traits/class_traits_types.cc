@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.10 2006/05/08 06:12:07 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.10.2.1 2006/05/12 20:56:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -165,43 +165,17 @@ static const int check = (assert(int_def_width_ref), assert(int_def_width), 0);
 // This problem doesn't occur on OSX/FreeBSD, AFAICT.
 #endif
 
-#if 0
-static ostream&
-__cerr__(int_def.dump(std::cerr) << std::endl);
-#endif
-
-#if 0
-/** built-in data int type reference */
-const data_type_reference
-bool_type = data_type_reference(
-	never_ptr<const built_in_datatype_def>(&bool_def));
-#endif
-
-#if 0
-const count_ptr<const data_type_reference>
-bool_type_ptr(new data_type_reference(
-	never_ptr<const built_in_datatype_def>(&bool_def)));
-#else
 const bool_traits::type_ref_ptr_type
 bool_traits::built_in_type_ptr(new data_type_reference(
 	never_ptr<const built_in_datatype_def>(&built_in_definition)));
-#endif
 
-#if 0
-// is an excl_ptr...
-static fundamental_type_reference::template_args_ptr_type
-__thirty_two__(new const_param_expr_list(
-	count_ptr<const pint_const>(new pint_const(32))));
-
-const count_ptr<const data_type_reference>
-int32_type_ptr(new data_type_reference(
-	never_ptr<const built_in_datatype_def>(&int_def), __thirty_two__));
-#else
 // be careful once type references are memory-pooled!
 // the following function call calls a bunch of allocators (new)
 const count_ptr<const data_type_reference>
 int_traits::int32_type_ptr(data_type_reference::make_quick_int_type_ref(32));
-#endif
+
+const count_ptr<const data_type_reference>
+int_traits::magic_int_type_ptr(data_type_reference::make_quick_int_type_ref(0));
 
 //=============================================================================
 }	// end namespace entity

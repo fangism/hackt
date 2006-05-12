@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-03:
+	  Introduced int<0> as a magic int type suitable for typing
+		pint's for the sake of creating nonmeta rvalue references.  
+	  establish_collection_type, and commit_type_first_time now
+		return good_bool to signal error status.  
+	  Cleaned up Object/traits/class_traits_type.cc, and also
+		initializes int_traits::magic_int_type_ptr.  
+	  Added some new test cases for these.  
+
+
 2006-05-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-02:

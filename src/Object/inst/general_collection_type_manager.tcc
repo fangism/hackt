@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.tcc,v 1.7 2006/02/21 21:33:01 fang Exp $
+	$Id: general_collection_type_manager.tcc,v 1.7.22.1 2006/05/12 20:56:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
@@ -129,12 +129,14 @@ GENERAL_COLLECTION_TYPE_MANAGER_CLASS::check_type(
 	TODO: argument should be same type as type parameter
  */
 GENERAL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
-void
+good_bool
 GENERAL_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 		const instance_collection_parameter_type& t) {
+	NEVER_NULL(t);
 	INVARIANT(!this->type_parameter);
 	// static type canonical_type<> is already canonical and resolved!
 	this->type_parameter = t;
+	return good_bool(true);
 }
 
 //=============================================================================

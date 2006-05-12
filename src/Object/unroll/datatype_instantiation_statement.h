@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.8 2006/03/15 04:38:22 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.8.18.1 2006/05/12 20:56:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -119,8 +119,7 @@ protected:
 		if (t.is_strict() && !t.unroll_definition_footprint().good) {
 			return good_bool(false);
 		}
-		v.establish_collection_type(t);
-		return good_bool(true);
+		return v.establish_collection_type(t);
 	}
 
 	static

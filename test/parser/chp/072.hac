@@ -1,0 +1,14 @@
+// "072.hac"
+// copy-modified from "070.hac"
+// should fail : can't assign pbool to int
+
+template <pint W>
+defproc badchp(int<W> b) {
+pbool c;
+chp {
+	*[ b := c ]
+}
+}
+
+badchp<8> X;
+
