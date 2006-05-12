@@ -13,6 +13,8 @@
 		parent namespace of the TYPE being instantiated, 
 		not the namespace in which the instance is declared.  
 		Added NOTES entry about this.  
+	  Fixed minor bug with wrong exit status from a bad 
+		instance declaration.
 
 
 2006-05-08	David Fang		<fangism@users.sourceforge.net>

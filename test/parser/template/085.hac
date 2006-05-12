@@ -1,0 +1,8 @@
+// "085.hac"
+// should fail : missing template argument where one expected
+
+template <pint P>
+defproc ass() { }
+
+ass myass;
+

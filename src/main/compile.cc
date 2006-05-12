@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.10 2006/04/28 03:20:14 fang Exp $
+	$Id: compile.cc,v 1.11 2006/05/12 00:39:09 fang Exp $
  */
 
 #include <iostream>
@@ -188,7 +188,9 @@ compile::main(const int argc, char* argv[], const global_options&) {
 	}
 	const excl_ptr<module> mod =
 		parse_and_check(argv[0]);
-	if (!mod)	return 1;
+	if (!mod) {
+		return 1;
+	}
 	if (argc -optind >= 2) {
 		// save_module(*mod, argv[1]);
 		// save_module_debug(*mod, argv[1]);

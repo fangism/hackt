@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.10 2006/05/08 06:12:04 fang Exp $
+	$Id: instance.cc,v 1.11 2006/05/12 00:39:08 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -666,6 +666,7 @@ instance_declaration::check_build(context& c) const {
 		ids->check_build(c);		// return value?
 	} else {
 		// already have error message
+		THROW_EXIT;		// temporary error handling
 		return never_ptr<const object>(NULL);
 	}
 	// instance could be ANY type
