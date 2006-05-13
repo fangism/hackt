@@ -1,9 +1,10 @@
 # "dox/mk/Make.latex"
+#	vim: ft=automake
 # Include this file *LAST* in latex Makefiles.  
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.7 2006/02/05 03:26:06 fang Exp $
+#	$Id: Make.latex,v 1.7.30.1 2006/05/13 02:45:10 fang Exp $
 
 # useful macros
 get_bldroot=`echo "$@" | sed -e 's|^.*/||g' -e 's|\..*$$||g'`

@@ -1,5 +1,7 @@
 # "misc/sudoku/Makefile.inc"
 # includable auto-Makefile snippet
+#	$Id: Makefile.inc,v 1.3.22.1 2006/05/13 02:45:31 fang Exp $
+#	vim: ft=automake
 
 # variables conditionally defined and provided in this Makefile
 

@@ -1,7 +1,8 @@
 /**
  *	\file "lexer/instref-lex.ll"
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: instref-lex.ll,v 1.3 2006/02/25 04:55:02 fang Exp $
+ *	$Id: instref-lex.ll,v 1.3.20.1 2006/05/13 02:45:30 fang Exp $
+ *	vim: ft=lex
  */
 
 /****** DEFINITIONS **********************************************************/

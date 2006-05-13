@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-05-12	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-04:
+	  Added vim modelines to Makefile.am snippets, lexer .ll files:
+		e.g., "vim: ft=automake"
+
+
 2006-05-10	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-01:

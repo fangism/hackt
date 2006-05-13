@@ -1,6 +1,7 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.14 2006/05/06 04:19:00 fang Exp $
+#	$Id: Make.test-head,v 1.14.2.1 2006/05/13 02:45:34 fang Exp $
+#	vim: ft=automake
 
 include $(top_srcdir)/Make.stddef
 

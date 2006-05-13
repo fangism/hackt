@@ -1,0 +1,4 @@
+Error: left-side of expression is not an lvalue.
+ERROR in CHP statement(s) at [8:2..12]
+ERROR in one of the actions in [8:2..12]
+ERROR: at least one error in CHP body.

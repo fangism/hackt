@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.123.2.1 2006/05/11 03:46:19 fang Exp $
+#	$Id: Makefile.am,v 1.123.2.2 2006/05/13 02:45:17 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -54,32 +54,32 @@ CLEANFILES += $(bin_SCRIPTS)
 # installcheck is never run on the staged install, only on the final
 haco: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 hacunroll: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 haccreate: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 hacalloc: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 hflat: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 hacprsim: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 # dirgen is completely bogus, workaround to coerce directory generation

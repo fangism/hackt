@@ -1,4 +1,5 @@
 # "Make.global"
+#	vim: ft=automake
 # Project-wide Makefile targets and dependencies.
 # Generally, it is recommended to include this Makefile last.  
 # This file may be used as an includable Makefile snippet, 
@@ -6,8 +7,7 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.19.2.1 2006/05/11 03:46:13 fang Exp $
-
+#	$Id: Make.global,v 1.19.2.2 2006/05/13 02:45:07 fang Exp $
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force

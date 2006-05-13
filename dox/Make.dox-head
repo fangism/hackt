@@ -1,5 +1,6 @@
 # "dox/Make.dox-head"
-#	$Id: Make.dox-head,v 1.5 2006/03/17 04:52:10 fang Exp $
+#	$Id: Make.dox-head,v 1.5.16.1 2006/05/13 02:45:07 fang Exp $
+#	vim: ft=automake
 # To be included first by Makefiles in subdirectories
 # The complement is "dox/Make.dox-tail" which includes "dox/mk/Make.latex".
 

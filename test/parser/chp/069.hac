@@ -1,12 +1,12 @@
 // "069.hac"
 // should pass : allowed to assign pbool to bool
 
-defproc badchp(bool b) {
+defproc assignme(bool b) {
 pbool c;
 chp {
 	*[ b := c ]
 }
 }
 
-badchp X;
+assignme X;
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.5.8.1 2006/05/11 03:46:22 fang Exp $
+	$Id: CHP.cc,v 1.5.8.2 2006/05/13 02:45:18 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -552,6 +552,9 @@ binary_assignment::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Type checks a nonmeta value assignment.  
+ */
 statement::return_type
 binary_assignment::check_action(context& c) const {
 	typedef	data_nonmeta_instance_reference			lref_type;
@@ -567,6 +570,13 @@ binary_assignment::check_action(context& c) const {
 		cerr << "Unsupported reference at " << where(*lval) << endl;
 		cerr << "Sorry, currently only support simple datatype "
 			"instance references, bug Fang about it." << endl;
+		return statement::return_type(NULL);
+	}
+	// check that LHS is referenceable as an lvalue
+	// e.g. parameters cannot be lvalues.  
+	if (!lref->is_lvalue()) {
+		cerr << "Error: left-side of expression is not an lvalue."
+			<< endl;
 		return statement::return_type(NULL);
 	}
 	const expr::nonmeta_return_type
@@ -607,7 +617,7 @@ binary_assignment::check_action(context& c) const {
 	}
 	// at this point, all is good
 	return statement::return_type(new entity::CHP::assignment(lref, rv));
-}
+}	// end method binary_assignment::check_action
 
 //=============================================================================
 // class bool_assignment method definitions

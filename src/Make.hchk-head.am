@@ -1,5 +1,6 @@
 # "src/Make.hchk-head.am"
-#	$Id: Make.hchk-head.am,v 1.4 2006/01/22 06:52:51 fang Exp $
+#	$Id: Make.hchk-head.am,v 1.4.40.1 2006/05/13 02:45:14 fang Exp $
+#	vim: ft=automake
 # Makefile header for enforcing header checks.
 # Counterpart is "src/Make.hchk-tail.am"
 

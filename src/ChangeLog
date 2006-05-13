@@ -5,6 +5,15 @@
 
 2006-05-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-03-CHP-02-04:
+	  Added is_nonmeta_data_lvalue trait to meta-classes to
+		distinguish lvalue-able types from nonlvalue-able, 
+		such as meta parameters.  
+	  Enabled bunch more CHP test cases.  
+
+
+2006-05-12	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-03-CHP-02-03:
 	  Introduced int<0> as a magic int type suitable for typing
 		pint's for the sake of creating nonmeta rvalue references.  

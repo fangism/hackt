@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.9 2006/03/20 02:41:08 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.1 2006/05/13 02:45:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -127,6 +127,13 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dimensions(void) const {
 		INVARIANT(c <= dim);
 		return dim -c;
 	} else  return dim;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+bool
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::is_lvalue(void) const {
+	return traits_type::is_nonmeta_data_lvalue;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

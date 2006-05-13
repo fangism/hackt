@@ -3,12 +3,12 @@
 // should pass : allowed to assign pint to int
 
 template <pint W>
-defproc badchp(int<W> b) {
+defproc assignme(int<W> b) {
 pint c;
 chp {
 	*[ b := c ]
 }
 }
 
-badchp<8> X;
+assignme<8> X;
 

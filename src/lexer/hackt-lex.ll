@@ -1,11 +1,11 @@
 /**
  *	\file "lexer/hackt-lex.ll"
+ *	vim: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.13 2006/02/25 04:55:02 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.13.20.1 2006/05/13 02:45:29 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
- *	:set syntax=lex
  */
 
 /***************** FOREWORD ***************************************************

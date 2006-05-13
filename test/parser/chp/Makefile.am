@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.6.2.3 2006/05/12 20:56:53 fang Exp $
+#	$Id: Makefile.am,v 1.6.2.4 2006/05/13 02:45:43 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -11,7 +11,7 @@ HACKT_PARSE_TEST_FAILURES = \
 	046 047 048 \
 	050 051 055 056 059 \
 	062 067 068 \
-	071 072
+	071 072 073
 
 HACKT_PARSE_TEST_PASSES = 000 002 005 \
 	015 017 019 \
@@ -19,7 +19,8 @@ HACKT_PARSE_TEST_PASSES = 000 002 005 \
 	032 033 034 036 039 \
 	040 041 042 043 044 045 049 \
 	052 053 054 057 058 \
-	060 061 063 064
+	060 061 063 064 066 069 \
+	070
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -34,13 +35,14 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
 
 # TODO: create phase
+# HACKT_CREATE_TEST_SUBJECTS =
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 \
 	035 055 056 059 062
 
 # pending test cases
-EXTRA_DIST += 065.hac 066.hac 069.hac 070.hac
+EXTRA_DIST += 065.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

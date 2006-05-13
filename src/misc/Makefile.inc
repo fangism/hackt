@@ -1,5 +1,7 @@
 # "misc/Makefile.inc"
+#	vim: ft=automake
 # includable auto-Makefile snippet
+#	$Id: Makefile.inc,v 1.3.22.1 2006/05/13 02:45:30 fang Exp $
 
 # variables conditionally defined and provided in this Makefile
 FUNPROGRAMS =
