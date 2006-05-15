@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-05:
+	  AST/expr.cc: id_expr::check_nonmeta... fixed lookup
+		to accept nonmeta references.  
+	  Devel. switch: ENABLE_CHP_FOOTPRINT in progress.
+	  TODO: decide if any changes are necessary for unrolling CHP's IR.  
+	  TODO: implement implicit decode of subscripts.  
+
+
 2006-05-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-04:

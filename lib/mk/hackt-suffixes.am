@@ -1,5 +1,6 @@
 # "mk/hackt-suffixes.am"
-#	$Id: hackt-suffixes.am,v 1.2.26.1 2006/05/11 03:46:15 fang Exp $
+#	vim: ft=automake
+#	$Id: hackt-suffixes.am,v 1.2.26.2 2006/05/15 03:59:18 fang Exp $
 # automake-style Makefile excerpt for adding hackt suffix rules.  
 # Include this file in a Makefile.am, somewhere after SUFFIXES
 #	has already been defined.  

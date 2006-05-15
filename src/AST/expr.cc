@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.11.2.1 2006/05/11 03:46:23 fang Exp $
+	$Id: expr.cc,v 1.11.2.2 2006/05/15 03:59:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -955,8 +955,8 @@ inst_ref_expr::nonmeta_return_type
 id_expr::check_nonmeta_reference(const context& c) const {
 	typedef inst_ref_expr::nonmeta_return_type	return_type;
 	STACKTRACE_VERBOSE;
-	const never_ptr<const object>
-		o(qid->check_build(c));		// will lookup_object
+	const never_ptr<const instance_collection_base>
+		o(qid->lookup_instance(c));	// not ->check_build(c);
 	if (o) {
 		const never_ptr<const instance_collection_base>
 			inst(o.is_a<const instance_collection_base>());

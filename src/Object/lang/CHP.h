@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.9.8.1 2006/05/11 03:46:26 fang Exp $
+	$Id: CHP.h,v 1.9.8.2 2006/05/15 03:59:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -13,6 +13,7 @@
 #include "Object/ref/references_fwd.h"
 #include "Object/expr/expr_fwd.h"
 #include "Object/unroll/meta_loop_base.h"
+#include "Object/devel_switches.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "util/static_assert.h"
@@ -21,13 +22,18 @@
 namespace HAC {
 namespace entity {
 class data_nonmeta_instance_reference;
+class unroll_context;
+class footprint;
+
 namespace CHP {
+class footprint;
 using std::list;
 using std::vector;
 using std::istream;
 using util::good_bool;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+
 //=============================================================================
 /**
 	Typical action list.  
@@ -69,6 +75,7 @@ public:
 //=============================================================================
 /**
 	Concurrent CHP actions.  
+	This is also the top-level CHP object per definition.  
  */
 class concurrent_actions : public action, public action_list_type {
 private:
@@ -94,6 +101,11 @@ public:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+#if ENABLE_CHP_FOOTPRINT
+	good_bool
+	unroll(const unroll_context&, entity::footprint&) const;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class concurrent_actions

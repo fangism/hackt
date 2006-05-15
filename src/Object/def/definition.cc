@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.21.4.1 2006/05/12 20:56:35 fang Exp $
+ 	$Id: definition.cc,v 1.21.4.2 2006/05/15 03:59:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2943,6 +2943,9 @@ process_definition::register_complete_type(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This just plays the sequential instantiation record, which 
+	instantiates objects and connections.  
+	PRS/CHP etc., are unrolled during ::create_complete_type.  
 	TODO: catch mutual recursion of types?
  */
 good_bool
@@ -3037,6 +3040,12 @@ if (defined) {
 			// already have error message
 			return good_bool(false);
 		}
+#if ENABLE_CHP_FOOTPRINT
+		if (!chp.unroll(c, *f).good) {
+			// already have error message
+			return good_bool(false);
+		}
+#endif
 	}
 	return good_bool(true);
 } else {

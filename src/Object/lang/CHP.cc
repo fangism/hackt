@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.7.16.1 2006/05/11 03:46:26 fang Exp $
+	$Id: CHP.cc,v 1.7.16.2 2006/05/15 03:59:28 fang Exp $
  */
 
 #include "Object/lang/CHP.h"
@@ -174,6 +174,17 @@ concurrent_actions::dump(ostream& o, const expr_dump_context& c) const {
 	}
 	return o << auto_indent << '}';
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_FOOTPRINT
+good_bool
+concurrent_actions::unroll(const unroll_context& c,
+		entity::footprint& f) const {
+	// FINISH_ME(Fang);
+	return good_bool(true);
+}
+
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

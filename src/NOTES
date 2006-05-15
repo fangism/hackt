@@ -1,12 +1,26 @@
 # "NOTES"
-#	$Id: NOTES,v 1.13.66.1 2006/05/11 03:46:21 fang Exp $
+#	$Id: NOTES,v 1.13.66.2 2006/05/15 03:59:20 fang Exp $
 
 Developer's Notes (transcripts of fangism muttering to himself...)
+
+//=============================================================================
+2006-05-14:
+	CHP footprint implementation:
+	is it mostly a copy of the source representation?
+	Does CHP have any parameter dependents that aren't already 
+		taken care of in type-unrolling and object-instantiation?
+		Proposed a metaloop-selection, which could be expanded, 
+		but would rather punt on it.
+	The purpose of such footprint unrolling is to finish compile-time
+		evaluation of meta-parameter dependents to fixed constants.  
+		e.g. x[i].  'i' could be a meta parameter (constant).  
+
 
 //=============================================================================
 2006-05-10:
 	Brief discussion about supporting nonmeta subscripts in CHP.
 	Conclusion: must have nonmeta-value (int<>) subscripts.
+		subscripts are an implicit decode (one-of-many).
 	Status: CHP sublanguage current constrains instances references
 		to be meta-references (compile-time only).
 	However, CHP intermediate representation might be more restrictive,

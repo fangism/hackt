@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.13.4.1 2006/05/12 01:57:46 fang Exp $
+	$Id: devel_switches.h,v 1.13.4.2 2006/05/15 03:59:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -39,8 +39,15 @@
 	meta parameters, (pint, pbool, preal).  
 	These instance references, however, will be rvalue-only.  
 	Compile-time constants can never be lvalues!
+	Goal: 1
  */
 #define	USE_NONMETA_VALUE_REFERENCES			1
+
+/**
+	Define to 1 to enable CHP footprint unrolling.  
+	Goal: 1
+ */
+#define	ENABLE_CHP_FOOTPRINT				1
 
 //=============================================================================
 

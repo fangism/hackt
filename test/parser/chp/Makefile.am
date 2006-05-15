@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.6.2.4 2006/05/13 02:45:43 fang Exp $
+#	$Id: Makefile.am,v 1.6.2.5 2006/05/15 03:59:33 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -19,7 +19,7 @@ HACKT_PARSE_TEST_PASSES = 000 002 005 \
 	032 033 034 036 039 \
 	040 041 042 043 044 045 049 \
 	052 053 054 057 058 \
-	060 061 063 064 066 069 \
+	060 061 063 064 065 066 069 \
 	070
 
 HACKT_PARSE_TEST_SUBJECTS = \
@@ -42,7 +42,7 @@ BISON_OUTPUTS += 001 003 004 \
 	035 055 056 059 062
 
 # pending test cases
-EXTRA_DIST += 065.hac
+EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 
