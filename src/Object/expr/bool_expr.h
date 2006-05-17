@@ -5,17 +5,25 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: bool_expr.h,v 1.5 2006/01/22 18:19:39 fang Exp $
+	$Id: bool_expr.h,v 1.5.40.1 2006/05/17 02:22:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_EXPR_H__
 #define	__HAC_OBJECT_EXPR_BOOL_EXPR_H__
 
 #include "Object/expr/data_expr.h"
+#include "Object/devel_switches.h"
+#if COW_UNROLL_DATA_EXPR
+#include "util/memory/pointer_classes_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
+#if COW_UNROLL_DATA_EXPR
+class unroll_context;
+using util::memory::count_ptr;
+#endif
+
 //=============================================================================
 /**
 	Abstract boolean data type expression.  
@@ -26,6 +34,15 @@ protected:
 	bool_expr() : parent_type() { }
 public:
 virtual	~bool_expr() { }
+
+#if	COW_UNROLL_DATA_EXPR
+#define	UNROLL_RESOLVE_COPY_BOOL_PROTO					\
+	count_ptr<bool_expr>						\
+	unroll_resolve_copy(const unroll_context&, 			\
+		const count_ptr<bool_expr>&) const
+
+virtual	UNROLL_RESOLVE_COPY_BOOL_PROTO = 0;
+#endif
 
 };	// end class bool_expr
 

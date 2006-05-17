@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.9.8.2 2006/05/15 03:59:28 fang Exp $
+	$Id: CHP.h,v 1.9.8.3 2006/05/17 02:22:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -59,6 +59,10 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
+
 	// helper methods needed for process_definition
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
@@ -103,6 +107,8 @@ public:
 	load_object_base(const persistent_object_manager&, istream&);
 
 #if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+
 	good_bool
 	unroll(const unroll_context&, entity::footprint&) const;
 #endif
@@ -123,6 +129,18 @@ public:
 	typedef	count_ptr<bool_expr>		guard_ptr_type;
 	typedef	count_ptr<action>		stmt_ptr_type;
 	typedef	guarded_action			this_type;
+#if ENABLE_CHP_FOOTPRINT
+	struct unroll_return_type {
+		bool				changed;
+		count_ptr<guarded_action>	copy;
+
+		unroll_return_type() : changed(true), copy(NULL) { }
+
+		unroll_return_type(const bool b,
+			const count_ptr<guarded_action>& c) :
+			changed(b), copy(c) { }
+	};	// end struct unroll_return_type
+#endif
 protected:
 	/**
 		In the case of an else-clause, this guard is allowed to 
@@ -147,6 +165,11 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+#if ENABLE_CHP_FOOTPRINT
+	unroll_return_type
+	unroll(const unroll_context&) const;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class guarded_action
@@ -176,6 +199,10 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class deterministic_selection
 
@@ -197,6 +224,10 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nondeterministic_selection
@@ -237,6 +268,10 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class metaloop_selection
 
@@ -268,6 +303,10 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class assignment
 
@@ -295,6 +334,10 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class condition_wait
@@ -328,6 +371,10 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
 
 	template <class L>
 	good_bool
@@ -365,6 +412,10 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
+
 	template <class L>
 	good_bool
 	add_references(const L&);
@@ -390,6 +441,10 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class do_while_loop
@@ -417,6 +472,10 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+#if ENABLE_CHP_FOOTPRINT
+	CHP_UNROLL_ACTION_PROTO;
+#endif
 
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

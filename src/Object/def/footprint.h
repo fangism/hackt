@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.15.4.1 2006/05/15 03:59:27 fang Exp $
+	$Id: footprint.h,v 1.15.4.2 2006/05/17 02:22:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -21,7 +21,8 @@
 #include "Object/lang/SPEC_footprint.h"
 #include "Object/devel_switches.h"
 #if ENABLE_CHP_FOOTPRINT
-#include "Object/lang/CHP_footprint.h"
+#include "Object/lang/CHP.h"
+// #include "Object/lang/CHP_footprint.h"
 #endif
 // #include "Object/inst/alias_visitee.h"
 #include "util/boolean_types.h"
@@ -196,10 +197,16 @@ private:
 	PRS::footprint				prs_footprint;
 #if ENABLE_CHP_FOOTPRINT
 	/**
+		The CHP footprint type is the same as the source tree's
+		IR, but with meta-parameter dependencies resolved
+		and substituted.  
+	 */
+	typedef	CHP::concurrent_actions		chp_footprint_type;
+	/**
 		Meta-param unrolled footprint of CHP, 
 		established during the create phase.  
 	 */
-	CHP::footprint				chp_footprint;
+	chp_footprint_type			chp_footprint;
 #endif
 	/**
 		Unrolled specifications, local to this scope.  
@@ -276,10 +283,10 @@ public:
 	get_prs_footprint(void) const { return prs_footprint; }
 
 #if ENABLE_CHP_FOOTPRINT
-	CHP::footprint&
+	chp_footprint_type&
 	get_chp_footprint(void) { return chp_footprint; }
 
-	const CHP::footprint&
+	const chp_footprint_type&
 	get_chp_footprint(void) const { return chp_footprint; }
 #endif
 

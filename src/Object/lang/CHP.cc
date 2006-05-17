@@ -1,14 +1,19 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.7.16.2 2006/05/15 03:59:28 fang Exp $
+	$Id: CHP.cc,v 1.7.16.3 2006/05/17 02:22:51 fang Exp $
  */
 
+#include <iterator>
+#include <algorithm>
+#include <exception>
+// #include <functional>
 #include "Object/lang/CHP.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/int_expr.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/def/footprint.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
@@ -80,11 +85,35 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 namespace CHP {
+using std::equal;
+using std::transform;
+using std::back_inserter;
 using util::auto_indent;
 using util::persistent_traits;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+//=============================================================================
+// class action method definitions
+
+#if ENABLE_CHP_FOOTPRINT
+/**
+	Unroll-copies the action pointer, using shallow copy if
+	nothing changed, deep-copy if something internal changed.  
+	\throw exception if there is an error.  
+ */
+action_ptr_type
+action::transformer::operator () (const action_ptr_type& a) const {
+	NEVER_NULL(a);
+	const unroll_return_type r(a->unroll(_context));
+	if (r.changed && !r.copy) {
+		// expect to already have error message
+		throw std::exception();
+	}
+	return (r.changed ? r.copy : a);
+}
+#endif
+
 //=============================================================================
 // class action_sequence method definitions
 
@@ -107,6 +136,25 @@ action_sequence::dump(ostream& o, const expr_dump_context& c) const {
 	}
 	return o << auto_indent << '}';
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_FOOTPRINT
+unroll_action_return_type
+action_sequence::unroll(const unroll_context& c) const {
+	const count_ptr<this_type> ret(new this_type);
+	NEVER_NULL(ret);
+	try {
+		transform(begin(), end(), back_inserter(*ret), 
+			action::transformer(c)
+		);
+	} catch (...) {
+		cerr << "Error unrolling action_sequence." << endl;
+		return unroll_action_return_type();
+	}
+	const bool eq = equal(begin(), end(), ret->begin());
+	return unroll_action_return_type(!eq, ret);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -177,10 +225,50 @@ concurrent_actions::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if ENABLE_CHP_FOOTPRINT
+
+/**
+	Creates a partially-deep copy of the language tree, 
+	re-using references to unchanged members where possible.  
+	If unrolling any list member results in a different pointer, 
+	then a new sequence is created.  
+	Purpose: resolve all meta-parameter dependents to constants.  
+	\return pointer to self-if unchanged, pointer to newly
+		allocated sequence if changed, NULL if error encountered.  
+ */
+unroll_action_return_type
+concurrent_actions::unroll(const unroll_context& c) const {
+	const count_ptr<this_type> ret(new this_type);
+	NEVER_NULL(ret);
+	try {
+		transform(begin(), end(), back_inserter(*ret), 
+			action::transformer(c)
+		);
+	} catch (...) {
+		cerr << "Error unrolling concurrent_actions." << endl;
+		return unroll_action_return_type();
+	}
+	const bool eq = equal(begin(), end(), ret->begin());
+	return unroll_action_return_type(!eq, ret);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by process_definition::create_complete_type().
+ */
 good_bool
 concurrent_actions::unroll(const unroll_context& c,
 		entity::footprint& f) const {
-	// FINISH_ME(Fang);
+	const unroll_action_return_type r(unroll(c));
+	if (r.changed && !r.copy) {
+		// expect to already have error message
+		return good_bool(false);
+	}
+	this_type& t(f.get_chp_footprint());
+	if (r.changed) {
+		t = *r.copy.is_a<const this_type>();
+	} else {
+		t = *this;
+	}
 	return good_bool(true);
 }
 
@@ -257,6 +345,20 @@ guarded_action::dump(ostream& o, const expr_dump_context& c) const {
 		return stmt->dump(o, c);
 	else 	return o << "skip";
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_CHP_FOOTPRINT && 0
+/**
+	Unroll-resolves the data-expression and action.  
+ */
+guarded_action::unroll_return_type
+guarded_action::unroll(const unroll_context& c) const {
+	const guard_ptr_type g(guard->unroll(c));
+
+	const unroll_action_ptr_type a(stmt->unroll(c));
+
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

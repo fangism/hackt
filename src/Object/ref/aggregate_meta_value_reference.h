@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.2 2006/02/21 04:48:34 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.2.22.1 2006/05/17 02:22:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -16,6 +16,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -57,6 +58,8 @@ private:
 	typedef	typename traits_type::simple_meta_value_reference_type
 						simple_reference_type;
 	typedef	typename traits_type::expr_base_type	expr_base_type;
+	typedef	typename traits_type::data_expr_base_type
+							data_expr_base_type;
 	typedef	expr_base_type				interface_type;
 	typedef	count_ptr<const interface_type>		init_arg_type;
 public:
@@ -153,6 +156,12 @@ public:
 	bad_bool
 	unroll_lvalue_references(const unroll_context&, 
 		value_reference_collection_type&) const;
+
+#if COW_UNROLL_DATA_EXPR
+	count_ptr<data_expr_base_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<data_expr_base_type>&) const;
+#endif
 
 	good_bool
 	append_meta_value_reference(const count_ptr<const param_expr>&);

@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-06:
+	  Does not compile -- checking in code in-progress 
+		before going on vacation.  
+	  Proposing to implement copy-on-change expession unrolling
+		for nonmeta expressions and references.  
+		If any template-dependent parameters are resolved, 
+		copy and replace sub-tree.  
+	  CHP footprint will be same type as source tree, but with 
+		meta parameters resolved.  
+
+
 2006-05-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-05:

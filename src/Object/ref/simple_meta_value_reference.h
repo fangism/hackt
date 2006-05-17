@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.9 2006/02/21 23:07:37 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.9.22.1 2006/05/17 02:22:53 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -14,6 +14,7 @@
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 	// transformed to not be instance-specific
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -49,6 +50,8 @@ private:
 	typedef	typename traits_type::meta_value_reference_parent_type
 							parent_type;
 	typedef	typename parent_type::expr_base_type	expr_base_type;
+	typedef	typename traits_type::data_expr_base_type
+							data_expr_base_type;
 	// is not actually specific to instances
 	typedef	simple_meta_indexed_reference_base	common_base_type;
 	typedef	expr_base_type				interface_type;
@@ -149,6 +152,12 @@ public:
 	bad_bool
 	unroll_lvalue_references(const unroll_context&, 
 		value_reference_collection_type&) const;
+
+#if COW_UNROLL_DATA_EXPR
+	count_ptr<data_expr_base_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<data_expr_base_type>&) const;
+#endif
 
 protected:
 	using common_base_type::collect_transient_info_base;

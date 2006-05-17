@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.13.4.2 2006/05/15 03:59:24 fang Exp $
+	$Id: devel_switches.h,v 1.13.4.3 2006/05/17 02:22:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -48,6 +48,16 @@
 	Goal: 1
  */
 #define	ENABLE_CHP_FOOTPRINT				1
+
+/**
+	Define to 1 to implement copy-on-write nonmeta-expression
+	unrolling.  
+	Copy-on-write will result in a reference copy when result is
+	unchanged, and a fresh deep copy if result is changed.  
+	Wish: covariant return types.  (g++-3.4 and newer)
+	Goal: 1
+ */
+#define	COW_UNROLL_DATA_EXPR				1
 
 //=============================================================================
 

@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.9 2006/04/16 18:36:17 fang Exp $
+	$Id: const_collection.h,v 1.9.10.1 2006/05/17 02:22:48 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -18,6 +18,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 // #include "util/memory/chunk_map_pool_fwd.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -56,13 +57,13 @@ class const_collection :
 public:
 	typedef	class_traits<Tag>			traits_type;
 private:
-	typedef	typename traits_type::expr_base_type
-							expr_base_type;
+	typedef	typename traits_type::expr_base_type	expr_base_type;
+	typedef	typename traits_type::data_expr_base_type
+							data_expr_base_type;
 public:
 	typedef	typename traits_type::const_collection_parent_type
 							parent_const_type;
-	typedef	typename traits_type::const_expr_type
-							const_expr_type;
+	typedef	typename traits_type::const_expr_type	const_expr_type;
 	typedef	typename traits_type::value_type	value_type;
 	typedef	util::packed_array_generic<pint_value_type, value_type>
 							array_type;
@@ -159,6 +160,12 @@ public:
 
 	count_ptr<parent_const_type>
 	unroll_resolve_rvalues(const unroll_context&) const;
+
+#if COW_UNROLL_DATA_EXPR
+	count_ptr<data_expr_base_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<data_expr_base_type>&) const;
+#endif
 
 	this_type
 	make_value_slice(const const_index_list&) const;

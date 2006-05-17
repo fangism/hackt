@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.9.16.1 2006/05/13 02:45:20 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.9.16.2 2006/05/17 02:22:53 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -16,11 +16,13 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
 class const_index_list;
+class unroll_context;
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -113,6 +115,12 @@ public:
 
 	bool
 	must_be_equivalent(const interface_type& ) const;
+
+#if COW_UNROLL_DATA_EXPR
+	count_ptr<data_expr_base_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<data_expr_base_type>&) const;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS
