@@ -1,4 +1,6 @@
-// "010.hac" this should pass, good array declaration
+// "010.hac"
+// this fails on old CAST-style array declarations
+// and undeclared parameters
 
 int good_array[5];
 

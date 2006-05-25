@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2006/03/15 04:38:30 fang Exp $
+#	$Id: Makefile.am,v 1.14 2006/05/25 20:11:25 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -54,6 +54,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 
 # test-cases to process
 # many of these are pending construction of higher dimension arrays
+# 049.hac is a parse-fail test case, update at earliest convenience
 EXTRA_DIST += \
 	049.hac 050.hac 054.hac 055.hac
 
