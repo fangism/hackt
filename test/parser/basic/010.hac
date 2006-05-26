@@ -1,7 +1,5 @@
 // "010.hac"
-// this fails on old CAST-style array declarations
-// and undeclared parameters
-
+// this fails on old CAST-style array declarations and undeclared parameters
 int good_array[5];
 
 namespace more_arrays {
