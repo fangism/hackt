@@ -1,6 +1,6 @@
 # "dox/tutorial/Makefile.am"
 # Makefile for tutorial directory
-#	$Id: Makefile.am,v 1.4 2006/05/26 07:26:59 fang Exp $
+#	$Id: Makefile.am,v 1.5 2006/05/26 07:46:01 fang Exp $
 
 PDFS = hackt.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -8,6 +8,7 @@ PSS = $(PDFS:.pdf=.ps)
 include $(top_srcdir)/dox/Make.dox-head
 
 EXTRA_DIST += README ChangeLog \
+	hackt.tex \
 	hackt/intro.tex \
 	hackt/compiler.tex \
 	hackt/shell.tex \
