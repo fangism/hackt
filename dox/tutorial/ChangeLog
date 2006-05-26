@@ -1,7 +1,14 @@
 # "dox/tutorial/ChangeLog"
 
+2006-05-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-06:
+	  hackt/*.tex: written more usage documentation, mostly complete.
+
+
 2006-05-25	David Fang		<fangism@users.sourceforge.net>
 
-	* hackt.tex: started hackt executable usage document
+	* HACKT-00-01-04-main-00-79-05:
+	  hackt.tex: started hackt executable usage document
 		chapters placed in hackt/ subdirectory.  
 

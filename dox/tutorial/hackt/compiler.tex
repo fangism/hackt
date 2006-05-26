@@ -1,5 +1,5 @@
 % "hackt/compiler.tex"
-%	$Id: compiler.tex,v 1.1 2006/05/26 07:27:01 fang Exp $
+%	$Id: compiler.tex,v 1.2 2006/05/26 23:16:55 fang Exp $
 
 \chapter{Compiler}
 \label{sec:compiler}
@@ -12,11 +12,10 @@ TODO: figure of compile flow and phases.
 The first compile phase produces a parsed and partially checked object
 file given an input text (source) file.  
 
-Usage:
-\binhackt \ttt{compile} \ttt{[}\tit{options}\ttt{]} \tit{source} 
+Usage: \binhackt\ \ttt{compile} \ttt{[}\tit{options}\ttt{]} \tit{source} 
 	\ttt{[}\tit{object}\ttt{]}
 
-The source file is a text file in the \HAC\ language.  
+The source file is a text file in the \hac\ language.  
 The object file, if given, is the result of the compile.  
 If the object file is omitted, the program just reports the result
 of complation without producing an object file.  
@@ -26,7 +25,8 @@ Options:
 \item \ttt{-h}: show usage
 \item \ttt{-I} \tit{path} : adds include path for importing other source files (repeatable)
 \item \ttt{-d}: produces text dump of compiled module, like \ttt{objdump} in Section~\ref{sec:diagnostics:objdump}
-\item \ttt{-f} \tit{opt} : general compile flags (repeatable)
+\item \ttt{-f} \tit{opt} : general compile flags (repeatable) where \tit{opt} 
+	is one of the following:
 \begin{itemize}
 	\item \ttt{dump-include-paths}: 
 		dumps \ttt{-I} include paths as they are processed
@@ -39,43 +39,90 @@ Options:
 \end{itemize}
 \end{itemize}
 
-\ttt{haco} is provided as a single-command alias to \ttt{hackt compile}.  
+\ttt{haco} is provided as a single-command alias to 
+\ttt{hackt compile}\footnote{Thus named because we use \ttt{.haco} 
+as the extension for compiled object files}.
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Unroll}
 \label{sec:compiler:unroll}
 
+The unroll phase processes top-level instantiation and connection 
+statements sequentially.  Top-level meta-parameters are substituted
+and expanded.  
+The input object file is a compiled object file, the result of
+\ttt{hackt compile}.  
+If the object file is already unrolled, then the object file
+is saved unchanged (essentially copied).  
+
+Usage: \binhackt\ \ttt{unroll} \tit{in-object} \tit{out-object}
+
 \ttt{hacunroll} is provided as a single-command alias to \ttt{hackt unroll}.  
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Create}
 \label{sec:compiler:create}
 
+The create phase generates footprints for each complete type once, 
+so that instances of the same type may share the same footprint.  
+The input object file is the result of \ttt{hackt unroll}.  
+If the input object is not already unrolled, it will automatically
+be unrolled.  
+
+Usage: \binhackt\ \ttt{create} \tit{in-object} \tit{out-object}
+
 \ttt{haccreate} is provided as a single-command alias to \ttt{hackt create}.  
 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Allocate}
 \label{sec:compiler:alloc}
 
+The alloc phase expands the entire instance hierarchy top-down, 
+so that every unique instance has its own state in memory.  
+The input object file is the result of \ttt{hackt create}, 
+but will automatically run \ttt{create} on the object file if necessary.  
+
+Usage: \binhackt\ \ttt{alloc} \tit{in-object} \tit{out-object}
+
 \ttt{hacalloc} is provided as a single-command alias to \ttt{hackt alloc}.  
 
-Before you start worrying about having to keep track of compile phases, 
-one feature is that the unroll, create, and allocate compile phases 
+% Before you start worrying about having to keep track of compile phases, 
+In summary, 
+the unroll, create, and allocate compile phases 
 automatically run the necessary prerequisite phases where needed.  
+All developed tools should also implement this behavior.  
 
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Conventions}
-\label{sec:compiler:comventions}
+\label{sec:compiler:conventions}
 
+As a convention, we name our object files according to the last
+phase with which it was processed or produced.  
 
+\begin{itemize}
+\item \ttt{.haco} -- compiled only
+\item \ttt{.haco-u} -- compiled and unrolled
+\item \ttt{.haco-c} -- compiled and created
+\item \ttt{.haco-a} -- compiled and allocated
+\end{itemize}
 
+These suffices can be used to define \ttt{make} rules.  
+Examples of Makefile templates can be found in the distribution
+\ttt{lib/mk} or installed in \ttt{/install/share/hackt/mk/}.
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \section{Examples}
 \label{sec:compiler:examples}
 
-In this section, we use the following source `\ttt{foo.hac}' 
+In this section, we use the following source `\ttt{inv.hac}' 
 as our input example.  
 
 \begin{verbatim}
 defproc inv(bool a, b) {
 prs {
-	a	-> b-
-	~a	-> b+
+  a    -> b-
+  ~a   -> b+
 }
 }
 
@@ -83,3 +130,12 @@ bool x, y;
 inv Z(x, y);
 \end{verbatim}
 
+This defines an inverter process \ttt{inv} with public boolean ports
+\ttt{a} and \ttt{b}.  
+The top-level declares boolean nodes \ttt{x} and \ttt{y}, 
+which are connected to the ports of instantiated inverter \ttt{Z}.  
+
+A more comprehensive description of the language can be found built in
+\ttt{dox/lang/hac.pdf} or installed as \ttt{/install/share/hackt/doc/hac.pdf}.  
+
+TODO: fill in uses of example
