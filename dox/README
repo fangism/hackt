@@ -10,4 +10,6 @@ util/ contains documentation for using Fang's C++ Utility Library.
 objfmt/ contains the documentation describing the intermediate object
 	format used by the front-end HACKT compiler, intended as
 	an interface to other developing tools.  
+tutorial/ contains usage tutorials for the various tools in this project
+cast2hac/ contains documentation for migrating legacy CAST sources to HAC
 

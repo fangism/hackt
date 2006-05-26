@@ -1,0 +1,55 @@
+% "hacdef.tex"
+% Macros and definitions common to most HAC latex documents.  
+%	$Id: hacdef.tex,v 1.1 2006/05/26 07:26:56 fang Exp $
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% format shortcuts
+\newcommand{\ttt}[1]{\texttt{#1}}
+\newcommand{\tit}[1]{\textit{#1}}
+\newcommand{\tbf}[1]{\textbf{#1}}
+
+% special words
+\newcommand\hac{HAC}
+\newcommand\CAST{CAST}
+\newcommand\hackt{HACKT}
+\newcommand\binhackt{\ttt{hackt}}
+\newcommand\pint{\ttt{pint}}
+\newcommand\pbool{\ttt{pbool}}
+\renewcommand\int{\ttt{int}}		% don't expect to use integrals
+\newcommand\bool{\ttt{bool}}
+\newcommand\bit{\ttt{bit}}
+
+% symbols
+\newcommand{\at}{\symbol{"40}}		% '@' character
+\newcommand{\hash}{\ttt{\symbol{"23}}}	% '#' character
+\let\pound\hash
+\newcommand{\hashhash}{\hash\hash}
+
+\newcommand{\concur}{\ttt{\symbol{"2C}}}	% ',' character
+\newcommand{\seq}{\ttt{\symbol{"3B}}}	% ';' character
+\newcommand{\query}{\ttt{\symbol{"3F}}}	% '?' character
+\newcommand{\bang}{\ttt{\symbol{"21}}}	% '!' character
+\newcommand{\send}[1]{\bang(#1)}
+\newcommand{\receive}[1]{\query(#1)}
+\newcommand{\lbracket}{\ttt{\symbol{"5B}}}	% '[' character
+\newcommand{\rbracket}{\ttt{\symbol{"5D}}}	% ']' character
+\newcommand{\thickbar}{\lbracket\rbracket}
+\newcommand{\oldthinbar}{\ttt{\symbol{"7C}}}
+\newcommand{\thinbar}{\ttt{\symbol{"3A}}}
+\newcommand{\assign}{\ttt{:=}}
+\newcommand{\asterisk}{\ttt{\symbol{"2A}}}
+\newcommand{\chpbeginloop}{\asterisk\lbracket}
+\let\chpendloop\rbracket
+% probe?
+
+\newcommand{\prsand}{\ttt{\symbol{"26}}}	% '&' character
+\newcommand{\prsor}{\ttt{\symbol{"7C}}}		% '|' character
+\newcommand{\prsnot}{\ttt{\symbol{"7E}}}	% '~' character
+\newcommand{\prsup}{\ttt{+}}
+\newcommand{\prsdn}{\ttt{-}}
+\newcommand{\prsrarrow}{\ttt{->}}
+\newcommand{\prslarrow}{\ttt{<-}}
+\newcommand{\prscarrow}{\ttt{=>}}
+\newcommand{\prsrarrowup}{\ttt{+>}}
+\newcommand{\prslarrowup}{\ttt{<+}}
+

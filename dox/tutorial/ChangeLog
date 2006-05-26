@@ -1,0 +1,7 @@
+# "dox/tutorial/ChangeLog"
+
+2006-05-25	David Fang		<fangism@users.sourceforge.net>
+
+	* hackt.tex: started hackt executable usage document
+		chapters placed in hackt/ subdirectory.  
+

@@ -1,0 +1,85 @@
+% "hackt/compiler.tex"
+%	$Id: compiler.tex,v 1.1 2006/05/26 07:27:01 fang Exp $
+
+\chapter{Compiler}
+\label{sec:compiler}
+
+TODO: figure of compile flow and phases.
+
+\section{Compile}
+\label{sec:compiler:compile}
+
+The first compile phase produces a parsed and partially checked object
+file given an input text (source) file.  
+
+Usage:
+\binhackt \ttt{compile} \ttt{[}\tit{options}\ttt{]} \tit{source} 
+	\ttt{[}\tit{object}\ttt{]}
+
+The source file is a text file in the \HAC\ language.  
+The object file, if given, is the result of the compile.  
+If the object file is omitted, the program just reports the result
+of complation without producing an object file.  
+
+Options:
+\begin{itemize}
+\item \ttt{-h}: show usage
+\item \ttt{-I} \tit{path} : adds include path for importing other source files (repeatable)
+\item \ttt{-d}: produces text dump of compiled module, like \ttt{objdump} in Section~\ref{sec:diagnostics:objdump}
+\item \ttt{-f} \tit{opt} : general compile flags (repeatable)
+\begin{itemize}
+	\item \ttt{dump-include-paths}: 
+		dumps \ttt{-I} include paths as they are processed
+	\item \ttt{dump-object-header}: 
+		(diagnostic) dumps persistent object header before saving
+	\item \ttt{no-dump-include-paths}: 
+		suppress feedback of \ttt{-I} include paths
+	\item \ttt{no-dump-object-header}: 
+		suppress persistent object header dump
+\end{itemize}
+\end{itemize}
+
+\ttt{haco} is provided as a single-command alias to \ttt{hackt compile}.  
+
+\section{Unroll}
+\label{sec:compiler:unroll}
+
+\ttt{hacunroll} is provided as a single-command alias to \ttt{hackt unroll}.  
+
+\section{Create}
+\label{sec:compiler:create}
+
+\ttt{haccreate} is provided as a single-command alias to \ttt{hackt create}.  
+
+\section{Allocate}
+\label{sec:compiler:alloc}
+
+\ttt{hacalloc} is provided as a single-command alias to \ttt{hackt alloc}.  
+
+Before you start worrying about having to keep track of compile phases, 
+one feature is that the unroll, create, and allocate compile phases 
+automatically run the necessary prerequisite phases where needed.  
+
+\section{Conventions}
+\label{sec:compiler:comventions}
+
+
+
+\section{Examples}
+\label{sec:compiler:examples}
+
+In this section, we use the following source `\ttt{foo.hac}' 
+as our input example.  
+
+\begin{verbatim}
+defproc inv(bool a, b) {
+prs {
+	a	-> b-
+	~a	-> b+
+}
+}
+
+bool x, y;
+inv Z(x, y);
+\end{verbatim}
+

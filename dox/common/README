@@ -1,0 +1,7 @@
+"dox/common/README"
+
+This directory is for including latex macros and packages common to
+most documents in the dox/ directory tree.  
+This directory should be used by pointing the TEXINPUTS path to
+this source directory.  
+

@@ -1,0 +1,29 @@
+% "hackt/intro.tex"
+%	$Id: intro.tex,v 1.1 2006/05/26 07:27:03 fang Exp $
+
+\chapter{Introduction}
+\label{sec:intro}
+
+This document is a usage guide for the \binhackt\ executable.  
+\binhackt\ is the command to dispatch one of many programs in its 
+collection of tools.  
+The general usage is:
+
+\binhackt \ttt{[}\tit{general options}\ttt{]} \tit{command}
+	\ttt{[}\tit{command arguments}\ttt{]}
+
+Currently, there are no general options to hackt, but some may
+be added in the future.  
+Most commands will give a brief summary of their options when 
+invoked without command arguments, or when passed \ttt{-h} for help.  
+Some common subprograms also have equivalent single-command aliases
+that are installed by \ttt{make install}.  
+
+TODO: write texinfo documentation and man pages...
+
+The following topics are \emph{not} covered in this guide:
+\begin{itemize}
+\item language -- covered in \ttt{hac.pdf}, in \ttt{dox/lang}
+\item simulators -- covered in separate guides
+\end{itemize}
+

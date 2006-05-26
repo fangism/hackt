@@ -1,5 +1,5 @@
 # "dox/mk/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2006/03/15 04:38:10 fang Exp $
+#	$Id: Makefile.am,v 1.5 2006/05/26 07:26:58 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -11,7 +11,7 @@ include $(top_srcdir)/Make.stddef
 # Thus, we are burdened with copying this one file to the build directory
 # to ensure a sucessful VPATH build of the documents.  
 
-mktexdep = maketexdepend.tex
+# mktexdep = maketexdepend.tex
 
 EXTRA_DIST += maketexdepend.awk maketexdepend.tex Make.latex
 
@@ -26,13 +26,13 @@ local.cvsignore: $(srcdir)/../local.cvsignore
 #	@if test ! -f $@ ; then $(CP) $(srcdir)/$@ $@ ; fi
 # Thus, we resort to using a phony target to achieve the same thing.  
 
-all-local: phony_mktexdep
+# all-local: phony_mktexdep
 
-phony_mktexdep:
-	@if test ! -f $(mktexdep) ; then $(CP) $(srcdir)/$(mktexdep) $(mktexdep) ; fi
+# phony_mktexdep:
+#	@if test ! -f $(mktexdep) ; then $(CP) $(srcdir)/$(mktexdep) $(mktexdep) ; fi
 
-distclean-local:
-	if test "$(srcdir)" != "." ; then $(RM) $(mktexdep) ; fi
+# distclean-local:
+#	if test "$(srcdir)" != "." ; then $(RM) $(mktexdep) ; fi
 
 include $(top_srcdir)/Make.global
 

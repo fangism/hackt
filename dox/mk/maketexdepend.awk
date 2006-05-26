@@ -2,7 +2,7 @@
 
 # "maketexdepend.awk"
 # by Fang <fangism@users.sourceforge.net>
-#	$Id: maketexdepend.awk,v 1.5 2006/02/05 03:26:07 fang Exp $
+#	$Id: maketexdepend.awk,v 1.6 2006/05/26 07:26:58 fang Exp $
 #
 # auto-generate LaTeX dependencies
 # usage: awk -f <this script> [variables] <top-level tex file>
@@ -30,6 +30,8 @@
 # recursively descend into said file, but will keep it as a dependence
 #	this is useful for stopping recursion at automatically generated files
 #	that will not exist in a clean distribution
+# likewise, use \maketexdependignorepattern{...} to ignore files that match
+#	the regular expression argument.  
 
 # limitation: if file is included multiple times in different environments?
 #	proposed solution: take conjunctive minimum of conditions?
@@ -85,6 +87,11 @@ if (!is_commented($0)) {
 /\\maketexdependignore/ {
 if (!is_commented($0)) {
 	ignore[extract_ignore_file($0)] = 1;
+}}
+
+/\\maketexdependignorepattern/ {
+if (!is_commented($0)) {
+	ignorepattern[extract_ignore_file($0)] = 1;
 }}
 
 /\\maketexdependstop/ {
@@ -221,6 +228,14 @@ for (f in dep_files) {
 		 	# ignore figures!
 		delete dep_files[f];
 		num_deps--;
+	}
+	# if file name matches an ignored pattern, also drop it
+	for (p in ignorepattern) {
+		if (match(f, p)) {
+			delete dep_files[f];
+			num_deps--;
+			break;
+		}
 	}
 }
 if (num_deps) {		# > 0

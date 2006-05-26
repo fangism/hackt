@@ -1,0 +1,26 @@
+% "hackt/diagnostics.tex"
+%	$Id: diagnostics.tex,v 1.1 2006/05/26 07:27:02 fang Exp $
+
+\chapter{Diagnostics}
+\label{sec:diagnostics}
+
+This chapter describes some diagnostic commands of \binhackt.  
+
+\section{Version}
+\label{sec:diagnostics:version}
+
+\begin{verbatim}
+hackt version
+\end{verbatim}
+
+\section{Object Dump}
+\label{sec:diagnostics:objdump}
+
+\binhackt\ also provides a command for viewing the contents of a compiled
+object file as (questionably) human-readable text.  
+The regression test suite uses \ttt{objdump} heavily to verify the
+contents of object files as they are transformed through the various
+compile phases.  
+Occasionally, it may be useful to the casual or curious user for 
+bug tracking.  
+
