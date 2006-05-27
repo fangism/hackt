@@ -1,6 +1,13 @@
 # "dox/cast2hac/ChangeLog"
 
+2006-05-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-06:
+	  Wrote a lot more sections.  
+
+
 2006-05-25	David Fang		<fangism@users.sourceforge.net>
 
-	* new: started this directory for the CAST-to-HAC migration guide.
+	* HACKT-00-01-04-main-00-79-05:
+	  started this directory for the CAST-to-HAC migration guide.
 

@@ -1,0 +1,28 @@
+% "cast2hac/types.tex"
+%	$Id: types.tex,v 1.1 2006/05/27 04:52:57 fang Exp $
+
+\section{Types}
+\label{sec:types}
+
+The names of the primitive types have changed.  
+Types that correspond to compile-time meta parameters are prefixed with `p', 
+such as \pint\ and \pbool.  
+
+\begin{table}[ht]
+\begin{center}
+\caption{Summary of changes in fundmental types}
+\label{tab:types}
+\begin{tabular}{|c|c|}
+\hline
+\CAST & \hac \\ \hline \hline
+\ttt{node} & \bool \\ \hline
+N/A	& \int \\ \hline
+\int & \pint \\ \hline
+\bool & \pbool \\ \hline
+N/A	& \preal \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+The new types \preal\ and \int\ are explained in the \hac\ language reference.  
+

@@ -1,5 +1,5 @@
-% "hackt.tex"
-%	$Id: cast2hac.tex,v 1.2 2006/05/26 23:51:26 fang Exp $
+% "cast2hac.tex"
+%	$Id: cast2hac.tex,v 1.3 2006/05/27 04:52:56 fang Exp $
 
 \documentclass[12pt]{article}
 
@@ -65,61 +65,16 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % main contents
 
-\section{Introduction}
-\label{sec:intro}
-
-The purpose of this document is to assist \CAST\ users in migrating
-old sources to the \hac\ language for use with the \hackt\ tools.  
-This document assumes the reader is already familiar with the \CAST\ language
-and some of its tools.  
-This guide does not cover the new features of the \hac\ language; 
-those are covered in the language reference.  
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-\section{Types}
-\label{sec:types}
-
-The names of the primitive types have changed.  
-Types that correspond to compile-time meta parameters are prefixed with `p', 
-such as \pint\ and \pbool.  
-
-\begin{table}
-\begin{center}
-\caption{Summary of changes in fundmental types}
-\label{tab:types}
-\begin{tabular}{|c|c|}
-\hline
-\CAST & \hac \\ \hline \hline
-\ttt{node} & \bool \\ \hline
-N/A	& \int \\ \hline
-\int & \pint \\ \hline
-\bool & \pbool \\ \hline
-N/A	& \preal \\ \hline
-\end{tabular}
-\end{center}
-\end{table}
-
-The new types \preal\ and \int\ are explained in the \hac\ language reference.  
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-\section{Definitions}
-\label{sec:definitions}
-
-Definitions use the keywords \defproc, \defchan, and \defdata.  
-The old \CAST\ keyword \ttt{define} can simply be replaced with \defproc.  
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-\section{Arrays}
-\label{sec:arrays}
-
-In \CAST, the dimensions were declared between the type-identifier
-and the instance-identifier.  
-Arrays in \hac\ are syntactically C-style, where the dimensions of the 
-array follow the array's identifier.  
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-\section{Templates}
-\label{sec:templates}
+\input intro
+\input types
+\input definitions
+\input arrays
+\input connections
+\input loops
+\input templates
+\input PRS
+\input CHP
+\input spec
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \ifpdf\pdfbookmark[0]{Bibliography}{bibliography}\fi

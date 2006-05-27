@@ -1,0 +1,35 @@
+% "cast2hac/connections.tex"
+%	$Id: connections.tex,v 1.1 2006/05/27 04:52:56 fang Exp $
+
+\section{Connections}
+\label{sec:connections}
+
+\CAST\ allowed a definition to be connected with fewer port arguments than
+port parameters, assuming that the trailing ports remain 
+unconnected externally.  
+\hac\ forbids this error-prone mismatch, and requires one to pass in
+blanks in place of all unconnected ports, even trailing ports.  
+
+For example, given a \defproc (\ttt{define}) \ttt{inv} with three
+\bool\ (\ttt{node}) ports and external nodes \ttt{x, y, z}, 
+Table~\ref{tab:ports} shows what declaration connections are legal.  
+
+\begin{table}[ht]
+\begin{center}
+\caption{Examples of legal and illegal port connections}
+\label{tab:ports}
+\begin{tabular}{|l||c|c|}
+\hline
+declaration & \CAST & \hac \\ \hline \hline
+\ttt{inv x;} & valid & valid \\ \hline
+\ttt{inv x();} & valid & invalid \\ \hline
+\ttt{inv x(x, y, z);} & valid & valid \\ \hline
+\ttt{inv x(x, y);} & valid & invalid \\ \hline
+\ttt{inv x(x);} & valid & invalid \\ \hline
+\ttt{inv x(x, , z);} & valid & valid \\ \hline
+\ttt{inv x(x, , );} & valid & valid \\ \hline
+\ttt{inv x(x, y, );} & valid & valid \\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
