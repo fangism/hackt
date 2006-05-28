@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.2 2006/04/23 07:37:22 fang Exp $
+	$Id: SPEC_common.cc,v 1.2.10.1 2006/05/28 06:45:52 fang Exp $
  */
 
 #include <iostream>
@@ -248,8 +248,20 @@ LVS_exclhi::__check_num_nodes(const char* name, const size_t s) {
 }
 
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_exclhi)
+
 // make sure nodes aren't aliased accidentally?
+#if 0
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(LVS_exclhi)
+#else
+/**
+	Allow any arbitrary grouping, just treat all nodes in all groups
+	as one flat list for one exclusive ring.  
+ */
+good_bool
+LVS_exclhi::__check_node_args(const char* name, const node_args_type& a) {
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
@@ -263,8 +275,20 @@ LVS_excllo::__check_num_nodes(const char* name, const size_t s) {
 }
 
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_excllo)
+
 // make sure nodes aren't aliased accidentally?
+#if 0
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(LVS_excllo)
+#else
+/**
+	Allow any arbitrary grouping, just treat all nodes in all groups
+	as one flat list for one exclusive ring.  
+ */
+good_bool
+LVS_excllo::__check_node_args(const char* name, const node_args_type& a) {
+	return good_bool(true);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 good_bool

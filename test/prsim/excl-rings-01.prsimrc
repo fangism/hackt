@@ -1,5 +1,5 @@
 # "excl-rings-01.prsimrc"
-#	$Id: excl-rings-01.prsimrc,v 1.2 2006/04/23 07:37:34 fang Exp $
+#	$Id: excl-rings-01.prsimrc,v 1.2.10.1 2006/05/28 06:46:43 fang Exp $
 # @haco@ excl-rings.haco-a
 # testing excl rings features
 
@@ -8,12 +8,12 @@ what foo
 
 fanin x
 fanin y
-echo allrings:
-allrings
+echo allrings-mk:
+allrings-mk
 
 echo rings of x:
-rings x
+rings-mk x
 
 echo rings of y:
-rings y
+rings-mk y
 

@@ -5,15 +5,15 @@ Fanins of node `x':
 Fanins of node `y':
 [after 10]	~b -> y+
 [after 10]	b -> y-
-allrings: 
-exclhi rings:
+allrings-mk: 
+forced exclhi rings:
 { x, y }
-excllo rings:
+forced excllo rings:
 rings of x: 
-exclhi rings of which `x' is a member:
+forced exclhi rings of which `x' is a member:
 { x, y }
-excllo rings of which `x' is a member:
+forced excllo rings of which `x' is a member:
 rings of y: 
-exclhi rings of which `y' is a member:
+forced exclhi rings of which `y' is a member:
 { x, y }
-excllo rings of which `y' is a member:
+forced excllo rings of which `y' is a member:

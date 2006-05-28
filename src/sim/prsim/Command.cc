@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.9 2006/05/09 05:39:23 fang Exp $
+	$Id: Command.cc,v 1.9.4.1 2006/05/28 06:45:55 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1017,6 +1017,9 @@ if (a.size() > 2) {
 	s.resume();
 	time_type time = s.time();
 	// could check s.pending_events()
+#if ENABLE_PRSIM_EXCL_CHECKS
+	try {
+#endif
 	while (!s.stopped() && i && GET_NODE((ni = s.step()))) {
 		// if time actually advanced, decrement steps-remaining
 		// NB: may need specialization for real-valued (float) time.  
@@ -1057,6 +1060,12 @@ if (a.size() > 2) {
 			}
 		}
 	}	// end while
+#if ENABLE_PRSIM_EXCL_CHECKS
+	} catch (State::excl_exception exex) {
+		s.inspect_excl_exception(exex, cerr);
+		return Command::FATAL;
+	}	// no other exceptions
+#endif
 	return Command::NORMAL;
 }
 }	// end Step::main()
@@ -1089,6 +1098,9 @@ if (a.size() != 2) {
 	const time_type stop_time = s.time() +add;
 	State::step_return_type ni;
 	s.resume();
+#if ENABLE_PRSIM_EXCL_CHECKS
+	try {
+#endif
 	while (!s.stopped() && s.pending_events() &&
 			(s.next_event_time() < stop_time) &&
 			GET_NODE((ni = s.step()))) {
@@ -1130,6 +1142,12 @@ if (a.size() != 2) {
 			}
 		}
 	}	// end while
+#if ENABLE_PRSIM_EXCL_CHECKS
+	} catch (State::excl_exception exex) {
+		s.inspect_excl_exception(exex, cerr);
+		return Command::FATAL;
+	}	// no other exceptions
+#endif
 	if (!s.stopped() && s.time() < stop_time) {
 		s.update_time(stop_time);
 	}
@@ -1162,6 +1180,9 @@ if (a.size() != 1) {
 	typedef	State::node_type		node_type;
 	State::step_return_type ni;
 	s.resume();	// clear STOP flag
+#if ENABLE_PRSIM_EXCL_CHECKS
+	try {
+#endif
 	while (!s.stopped() && GET_NODE((ni = s.step()))) {
 		if (!GET_NODE(ni))
 			return Command::NORMAL;
@@ -1196,6 +1217,12 @@ if (a.size() != 1) {
 			}
 		}
 	}	// end while (!s.stopped())
+#if ENABLE_PRSIM_EXCL_CHECKS
+	} catch (State::excl_exception exex) {
+		s.inspect_excl_exception(exex, cerr);
+		return Command::FATAL;
+	}	// no other exceptions
+#endif
 	return Command::NORMAL;
 }	// end if
 }	// end Cycle::main()
@@ -1770,11 +1797,11 @@ Fanout::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(Rings, "rings", info, 
-	"print exclusive rings of which a node is a member")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsMk, "rings-mk", info, 
+	"print forced exclusive rings of which a node is a member")
 
 int
-Rings::main(State& s, const string_list& a) {
+RingsMk::main(State& s, const string_list& a) {
 if (a.size() != 2) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
@@ -1782,7 +1809,7 @@ if (a.size() != 2) {
 	const string& objname(a.back());
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
-		s.dump_node_excl_rings(cout, ni);
+		s.dump_node_mk_excl_rings(cout, ni);
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -1792,31 +1819,80 @@ if (a.size() != 2) {
 }
 
 void
-Rings::usage(ostream& o) {
-	o << "rings <node>" << endl;
+RingsMk::usage(ostream& o) {
+	o << "rings-mk <node>" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRings, "allrings", info, 
-	"dump all exclusive hi/lo rings")
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsMk, "allrings-mk", info, 
+	"dump all forced exclusive hi/lo rings")
 
 int
-AllRings::main(State& s, const string_list& a) {
+AllRingsMk::main(State& s, const string_list& a) {
 if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.dump_exclhi_rings(cout);
-	s.dump_excllo_rings(cout);
+	s.dump_mk_exclhi_rings(cout);
+	s.dump_mk_excllo_rings(cout);
 	return Command::NORMAL;
 }
 }
 
 void
-AllRings::usage(ostream& o) {
-	o << "allrings" << endl;
+AllRingsMk::usage(ostream& o) {
+	o << "allrings-mk" << endl;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_PRSIM_EXCL_CHECKS
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(RingsChk, "rings-chk", info, 
+	"print checked exclusive rings of which a node is a member")
+
+int
+RingsChk::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.dump_node_check_excl_rings(cout, ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+RingsChk::usage(ostream& o) {
+	o << "rings-chk <node>" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AllRingsChk, "allrings-chk", info, 
+	"dump all checked exclusive hi/lo rings")
+
+int
+AllRingsChk::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.dump_check_exclhi_rings(cout);
+	s.dump_check_excllo_rings(cout);
+	return Command::NORMAL;
+}
+}
+
+void
+AllRingsChk::usage(ostream& o) {
+	o << "allrings-chk" << endl;
+}
+#endif	// ENABLE_PRSIM_EXCL_CHECKS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // will category conflict with command?
@@ -2252,6 +2328,50 @@ Timing::usage(ostream& o) {
 	o << "if no mode is given, just reports the current mode." << endl;
 	State::help_timing(o);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_PRSIM_EXCL_CHECKS
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(CheckExcl, "checkexcl", modes, 
+	"enable mutual exclusion checks")
+
+int
+CheckExcl::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+} else {
+	s.check_excl();
+	return Command::NORMAL;
+}
+}
+
+void
+CheckExcl::usage(ostream& o) {
+	o << "checkexcl" << endl;
+	o << "Enables run-time mutual exclusion checks." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoCheckExcl, "nocheckexcl", modes, 
+	"disable mutual exclusion checks")
+
+int
+NoCheckExcl::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+} else {
+	s.nocheck_excl();
+	return Command::NORMAL;
+}
+}
+
+void
+NoCheckExcl::usage(ostream& o) {
+	o << "nocheckexcl" << endl;
+	o << "Disables run-time mutual exclusion checks." << endl;
+}
+#endif	// ENABLE_PRSIM_EXCL_CHECKS
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS

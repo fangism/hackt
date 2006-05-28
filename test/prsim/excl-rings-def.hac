@@ -1,20 +1,20 @@
 // "excl-rings-def.hac"
 
-defproc	exclhi_pair(bool a, b) {
+defproc	mk_exclhi_pair(bool a, b) {
 spec {
 	mk_exclhi(a, b)
 }
 }
 
 
-defproc	excllo_pair(bool a, b) {
+defproc	mk_excllo_pair(bool a, b) {
 spec {
 	mk_excllo(a, b)
 }
 }
 
 defproc	arb_invs(bool a, b, x, y) {
-exclhi_pair e(x, y);
+mk_exclhi_pair e(x, y);
 prs {
 	a	=> x-
 	b	=> y-

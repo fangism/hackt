@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.7 2006/05/06 04:18:55 fang Exp $
+	$Id: Node.h,v 1.7.4.1 2006/05/28 06:45:58 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -14,6 +14,7 @@
 #include "util/macros.h"
 #include "util/attributes.h"
 #include "sim/common.h"
+#include "sim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
@@ -48,14 +49,27 @@ struct Node {
 		NODE_UNSTAB = 0x0001,
 		/**
 			Whether or not this node belongs to at least one
-			exclusive high ring.  
+			forced exclusive high ring.  
 		 */
-		NODE_EXCLHI = 0x0002,
+		NODE_MK_EXCLHI = 0x0002,
 		/**
 			Whether or not this node belongs to at least one
-			exclusive low ring.  
+			forced exclusive low ring.  
 		 */
-		NODE_EXCLLO = 0x0004
+		NODE_MK_EXCLLO = 0x0004
+#if ENABLE_PRSIM_EXCL_CHECKS
+		,
+		/**
+			Whether or not this node belongs to at least one
+			checked exclusive high ring.  
+		 */
+		NODE_CHECK_EXCLHI = 0x0008,
+		/**
+			Whether or not this node belongs to at least one
+			checked exclusive high ring.  
+		 */
+		NODE_CHECK_EXCLLO = 0x0010
+#endif
 	} struct_flags_enum;
 
 
@@ -114,16 +128,34 @@ public:
 	is_unstab(void) const { return struct_flags & NODE_UNSTAB; }
 
 	bool
-	has_exclhi(void) const { return struct_flags & NODE_EXCLHI; }
+	has_mk_exclhi(void) const { return struct_flags & NODE_MK_EXCLHI; }
 
 	bool
-	has_excllo(void) const { return struct_flags & NODE_EXCLLO; }
+	has_mk_excllo(void) const { return struct_flags & NODE_MK_EXCLLO; }
 
 	void
-	make_exclhi(void) { struct_flags |= NODE_EXCLHI; }
+	make_exclhi(void) { struct_flags |= NODE_MK_EXCLHI; }
 
 	void
-	make_excllo(void) { struct_flags |= NODE_EXCLLO; }
+	make_excllo(void) { struct_flags |= NODE_MK_EXCLLO; }
+
+#if ENABLE_PRSIM_EXCL_CHECKS
+	bool
+	has_check_exclhi(void) const {
+		return struct_flags & NODE_CHECK_EXCLHI;
+	}
+
+	bool
+	has_check_excllo(void) const {
+		return struct_flags & NODE_CHECK_EXCLLO;
+	}
+
+	void
+	check_exclhi(void) { struct_flags |= NODE_CHECK_EXCLHI; }
+
+	void
+	check_excllo(void) { struct_flags |= NODE_CHECK_EXCLLO; }
+#endif
 
 	ostream&
 	dump_fanout_dot(ostream&, const std::string&) const;

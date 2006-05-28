@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-05-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-06-prsim-05-01:
+	  Renamed some prsim excl_ring symbols to mk_excl_ring to distinguish
+		from new check_excl_rings.  
+	  Implemented built-in prsim exclhi/lo checking, not to be confused
+		with mk_exclhi/lo forcing.  
+	  LVS_exclhi/lo directives "exclhi", "excllo" given meaning to 
+		hackt prsim, used to indicate excl. checking.  
+		::check_node_args relaxed to allow arbitrary
+		groupings of arguments, though args are treated as flat list. 
+	  Node structure new bit-fields: NODE_CHECK_EXCL{HI,LO}
+	  Renamed commands rings -> rings-mk, allrings -> allrings-mk.
+	  New commands 'rings-chk', 'allrings-chk' -- dump checked exclusive
+		hi/lo rings, all, or by node.  
+		'checkexcl', 'nocheckexcl' enables/disables exclusive checking. 
+	  TOOD: validate excl. checking vs. checkpointing.  
+
+
 2006-05-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-06:

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.3 2006/05/06 04:18:44 fang Exp $
+	$Id: devel_switches.h,v 1.3.4.1 2006/05/28 06:45:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_DEVEL_SWITCHES_H__
@@ -45,6 +45,14 @@
 	Goal: 1
  */
 #define	SEPARATE_CAUSE_NODE_DIRECTION		0
+
+
+/**
+	built-in support for exclusive hi/lo checking in prsim.  
+	This is to replace the old CHECK_CHANNELS fake prs mechanism.  
+	Goal: 1
+ */
+#define	ENABLE_PRSIM_EXCL_CHECKS		1
 
 //=============================================================================
 
