@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.11.4.1 2006/05/28 06:45:59 fang Exp $
+	$Id: State.cc,v 1.11.4.2 2006/05/28 18:27:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -2479,13 +2479,13 @@ State::load_checkpoint(istream& i) {
 	typedef node_pool_type::const_iterator	const_iterator;
 	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
 	const_iterator ni(nb);
+	const char prev = node_type::LOGIC_OTHER;
 	for (++ni; ni!=ne; ++ni) {
 		typedef	node_type::const_fanout_iterator
 					const_fanout_iterator;
 		const node_type& n(*ni);
 		const_fanout_iterator fi(n.fanout.begin()), fe(n.fanout.end());
 		const char next = n.current_value();
-		const char prev = node_type::LOGIC_OTHER;
 		if (next != prev) {
 			const expr_index_type nj(distance(nb, ni));
 			for ( ; fi!=fe; ++fi) {
@@ -2559,6 +2559,27 @@ State::load_checkpoint(istream& i) {
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
+
+#if ENABLE_PRSIM_EXCL_CHECKS
+	// this must be run *after* mode flags are loaded
+if (checking_excl()) {
+	typedef node_pool_type::const_iterator	const_iterator;
+	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
+	const_iterator ni(nb);
+	const char prev = node_type::LOGIC_OTHER;
+	for (++ni; ni!=ne; ++ni) {
+	// lock exclusive check rings
+		const node_type& n(*ni);
+		const char next = n.current_value();
+		const excl_exception
+			e(check_excl_rings(distance(nb, ni), n, prev, next));
+		if (e.lock_id) {
+			inspect_excl_exception(e, cerr);
+			// don't bother throwing
+		}
+	}
+}
+#endif	// ENABLE_PRSIM_EXCL_CHECKS
 {
 	read_value(i, header_check);
 	if (header_check != magic_string) {
