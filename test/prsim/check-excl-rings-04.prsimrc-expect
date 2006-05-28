@@ -1,0 +1,25 @@
+foo refers to process-inst-ref check_invs<>
+Fanins of node `x':
+[after 10]	~a -> x+
+[after 10]	a -> x-
+Fanins of node `y':
+[after 10]	~b -> y+
+[after 10]	b -> y-
+allrings-chk: 
+checked exclhi rings:
+{ x, y }
+checked excllo rings:
+checked rings of a: 
+checked exclhi rings of which `a' is a member:
+checked excllo rings of which `a' is a member:
+checked rings of b: 
+checked exclhi rings of which `b' is a member:
+checked excllo rings of which `b' is a member:
+checked rings of x: 
+checked exclhi rings of which `x' is a member:
+{ x, y }
+checked excllo rings of which `x' is a member:
+checked rings of y: 
+checked exclhi rings of which `y' is a member:
+{ x, y }
+checked excllo rings of which `y' is a member:

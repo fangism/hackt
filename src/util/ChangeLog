@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2006-05-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-06-prsim-05-01:
+	  iterator_more.h: implemented push_iterator and pusher helper function
+		for stacks and queues, and set_insert_iterator (set_inserter)
+		for set-like containers. 
+
+
 2006-05-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-02:

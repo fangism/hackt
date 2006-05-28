@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.6 2006/05/06 04:18:55 fang Exp $
+	$Id: State.h,v 1.7 2006/05/28 19:27:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -106,6 +106,28 @@ public:
 	 */
 	typedef	std::pair<node_index_type, node_index_type>
 							step_return_type;
+#if ENABLE_PRSIM_EXCL_CHECKS
+	typedef	size_t				lock_index_type;
+	/**
+		Exception thrown when there is a violation of 
+		exclusion among exclhi or excllo checked rings.  
+	 */
+	struct excl_exception {
+		/// true for exclhi, false for excllo
+		bool				type;
+		/// index of the mutex lock triggered
+		lock_index_type			lock_id;
+		/// node that failed to set lock
+		node_index_type			node_id;
+
+		excl_exception(const bool b, const lock_index_type li, 
+			const node_index_type ni) : type(b), 
+			lock_id(li), node_id(ni) { }
+	};	// end struct excl_exception
+#define	THROWS_EXCL_EXCEPTION	throw (excl_exception)
+#else
+#define	THROWS_EXCL_EXCEPTION
+#endif
 private:
 	struct evaluate_return_type {
 		node_index_type			node_index;
@@ -154,8 +176,6 @@ private:
 		the flags member.  
 	 */
 	enum {
-		/// initial flags
-		FLAGS_DEFAULT = 0x00,
 		/**
 			If true, then no weak interference is reported.  
 		 */
@@ -183,6 +203,18 @@ private:
 			when displaying nodes.  
 		 */
 		FLAG_SHOW_TCOUNTS = 0x20,
+#if ENABLE_PRSIM_EXCL_CHECKS
+		/**
+			Set to true to check exclusiveness of nodes.  
+		 */
+		FLAG_CHECK_EXCL = 0x40, 
+#endif
+		/// initial flags
+#if ENABLE_PRSIM_EXCL_CHECKS
+		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
+#else
+		FLAGS_DEFAULT = 0x00,
+#endif
 		/**
 			Flags to set upon initialize().
 		 */
@@ -222,6 +254,7 @@ private:
 		TIMING_DEFAULT = TIMING_UNIFORM
 	};
 
+public:
 	/**
 		Instead of using circular linked lists with pointers, 
 		we use a map of (cyclic referenced) indices to represent
@@ -231,15 +264,46 @@ private:
 			Node structure.  
 		Alternative: use map for sparser exclusive rings.  
 	 */
-public:
 	typedef	std::set<node_index_type>	ring_set_type;
 protected:
 	typedef	vector<ring_set_type>
-						excl_ring_map_type;
-	typedef	vector<event_placeholder_type>	excl_queue_type;
+						mk_excl_ring_map_type;
+	typedef	vector<event_placeholder_type>	mk_excl_queue_type;
 	typedef	vector<event_index_type>	pending_queue_type;
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
+	typedef	vector<expr_index_type>		expr_trace_type;
+#if ENABLE_PRSIM_EXCL_CHECKS
+	/**
+		Exclusive checks are implemented as lock flags.  
+		reminder: this is specialized in STL :)
+		0th index is reserved as a placeholder.  
+		Using bools, as soon as exclusion is violated, 
+		cannot continue because lock will be incoherent.  
+		For continuability, use semaphore counters.  
+	 */
+	typedef	vector<bool>			check_excl_lock_pool_type;
+	enum {	INVALID_LOCK_INDEX = 0,
+		FIRST_VALID_LOCK = INVALID_LOCK_INDEX +1
+	};
+	typedef	vector<lock_index_type>		lock_index_list_type;
+	/**
+		Sparse map of nodes to their check-exclusive rings.  
+	 */
+	typedef	map<node_index_type, lock_index_list_type>
+						check_excl_ring_map_type;
+	/**
+		Useful for collating check-excl rings sparsely, 
+		a reverse map of lock_index to set of nodes.  
+		Not generated upon allocation, only upon dumping.  
+	 */
+	typedef	map<lock_index_type, ring_set_type>
+						check_excl_reverse_map_type;
+	/**
+		Useful for reverse-mapping all check-excl rings.  
+	 */
+	typedef	vector<ring_set_type>		check_excl_array_type;
+#endif
 private:
 //	count_ptr<const module>			mod;
 	const module&				mod;
@@ -251,13 +315,19 @@ private:
 	// rule state and structural information (sparse map)
 	rule_map_type				rule_map;
 	// exclusive rings
-	excl_ring_map_type			exhi;
-	excl_ring_map_type			exlo;
+	mk_excl_ring_map_type			mk_exhi;
+	mk_excl_ring_map_type			mk_exlo;
 	// exclusive logic queues
-	excl_queue_type				exclhi_queue;
-	excl_queue_type				excllo_queue;
+	mk_excl_queue_type			exclhi_queue;
+	mk_excl_queue_type			excllo_queue;
 	// pending queue
 	pending_queue_type			pending_queue;
+#if ENABLE_PRSIM_EXCL_CHECKS
+	check_excl_lock_pool_type		check_exhi_ring_pool;
+	check_excl_lock_pool_type		check_exlo_ring_pool;
+	check_excl_ring_map_type		check_exhi;
+	check_excl_ring_map_type		check_exlo;
+#endif
 	// current time, etc...
 	time_type				current_time;
 	time_type				uniform_delay;
@@ -276,9 +346,9 @@ private:
 	volatile bool				interrupted;
 	// interpreter state
 	ifstream_manager			ifstreams;
-	typedef	vector<expr_index_type>		expr_trace_type;
 	/**
 		For efficient tracing and lookup of root rule expressions.  
+		Should not be maintained for state checkpointing.  
 	 */
 	expr_trace_type				__scratch_expr_trace;
 public:
@@ -429,10 +499,10 @@ public:
 	dump_breakpoints(ostream&) const;
 
 	step_return_type
-	step(void);
+	step(void) THROWS_EXCL_EXCEPTION;
 
 	step_return_type
-	cycle(void);
+	cycle(void) THROWS_EXCL_EXCEPTION;
 
 	void
 	stop(void) {
@@ -508,22 +578,74 @@ public:
 	dump_source_paths(ostream&) const;
 
 	void
-	append_exclhi_ring(ring_set_type&);
+	append_mk_exclhi_ring(ring_set_type&);
 
 	void
-	append_excllo_ring(ring_set_type&);
+	append_mk_excllo_ring(ring_set_type&);
+
+#if ENABLE_PRSIM_EXCL_CHECKS
+protected:
+	excl_exception
+	check_excl_rings(const node_index_type, const node_type&, 
+		const char prev, const char next);
+
+public:
+	bool
+	checking_excl(void) const { return flags & FLAG_CHECK_EXCL; }
+
+	void
+	check_excl(void) { flags |= FLAG_CHECK_EXCL; }
+
+	void
+	nocheck_excl(void) { flags &= ~FLAG_CHECK_EXCL; }
+
+	void
+	append_check_exclhi_ring(const ring_set_type&);
+
+	void
+	append_check_excllo_ring(const ring_set_type&);
+
+	void
+	inspect_excl_exception(const excl_exception&, ostream&) const;
+#endif
 
 	ostream&
-	dump_ring(ostream&, const ring_set_type&) const;
+	dump_mk_excl_ring(ostream&, const ring_set_type&) const;
 
 	ostream&
-	dump_exclhi_rings(ostream&) const;
+	dump_mk_exclhi_rings(ostream&) const;
 
 	ostream&
-	dump_excllo_rings(ostream&) const;
+	dump_mk_excllo_rings(ostream&) const;
 
 	ostream&
-	dump_node_excl_rings(ostream&, const node_index_type) const;
+	dump_node_mk_excl_rings(ostream&, const node_index_type) const;
+
+#if ENABLE_PRSIM_EXCL_CHECKS
+	ostream&
+	dump_check_excl_ring(ostream&, const lock_index_list_type&) const;
+
+	ostream&
+	dump_check_exclhi_rings(ostream&) const;
+
+	ostream&
+	dump_check_excllo_rings(ostream&) const;
+
+	ostream&
+	dump_node_check_excl_rings(ostream&, const node_index_type) const;
+
+private:
+
+	void
+	__collate_check_excl_reverse_map(const check_excl_ring_map_type&, 
+		check_excl_array_type&) const;
+
+	void
+	__partial_collate_check_excl_reverse_map(
+		const check_excl_ring_map_type&, 
+		const lock_index_list_type&, 
+		check_excl_reverse_map_type&) const;
+#endif
 
 private:
 	event_index_type

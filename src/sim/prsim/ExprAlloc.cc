@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.9 2006/05/06 04:18:52 fang Exp $
+	$Id: ExprAlloc.cc,v 1.10 2006/05/28 19:27:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -898,6 +898,67 @@ Assert::main(visitor_type& v, const param_args_type& params,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_PRSIM_EXCL_CHECKS
+// this is useful for both LVS and hackt-prsim
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
+
+/**
+	Allocates a lock flag for checking exclusiveness.  
+	First collect all nodes into a set (for uniqueness) of node indices,
+	then registers each node with lock flag index.  
+ */
+void
+LVS_exclhi::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	typedef	node_args_type::const_iterator		const_iterator;
+	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
+	ring_set_type temp;
+	const_iterator i(nodes.begin()), e(nodes.end());
+	for ( ; i!=e; ++i) {
+		typedef	const_iterator::value_type::const_iterator
+					index_iterator;
+		index_iterator ii(i->begin()), ie(i->end());
+		for ( ; ii!=ie; ++ii) {
+			const node_index_type ni =
+				v.__lookup_global_bool_id(*ii);
+			temp.insert(ni);
+		}
+	}
+	INVARIANT(temp.size() > 1);
+	v.state.append_check_exclhi_ring(temp);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
+
+/**
+	Allocates a lock flag for checking exclusiveness.  
+	First collect all nodes into a set (for uniqueness) of node indices,
+	then registers each node with lock flag index.  
+ */
+void
+LVS_excllo::main(visitor_type& v, const param_args_type& params, 
+		const node_args_type& nodes) {
+	typedef	node_args_type::const_iterator		const_iterator;
+	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
+	ring_set_type temp;
+	const_iterator i(nodes.begin()), e(nodes.end());
+	for ( ; i!=e; ++i) {
+		typedef	const_iterator::value_type::const_iterator
+					index_iterator;
+		index_iterator ii(i->begin()), ie(i->end());
+		for ( ; ii!=ie; ++ii) {
+			const node_index_type ni =
+				v.__lookup_global_bool_id(*ii);
+			temp.insert(ni);
+		}
+	}
+	INVARIANT(temp.size() > 1);
+	v.state.append_check_excllo_ring(temp);
+}
+#endif	// ENABLE_PRSIM_EXCL_CHECKS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")
 
 /**
@@ -921,7 +982,7 @@ SIM_force_exclhi::main(visitor_type& v, const param_args_type& params,
 		r.insert(ni);
 	}
 	INVARIANT(r.size() > 1);
-	v.state.append_exclhi_ring(r);
+	v.state.append_mk_exclhi_ring(r);
 	INVARIANT(r.empty());
 }
 
@@ -949,7 +1010,7 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 		r.insert(ni);
 	}
 	INVARIANT(r.size() > 1);
-	v.state.append_excllo_ring(r);
+	v.state.append_mk_excllo_ring(r);
 	INVARIANT(r.empty());
 }
 

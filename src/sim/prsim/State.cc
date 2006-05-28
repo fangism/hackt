@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.11 2006/05/08 06:12:08 fang Exp $
+	$Id: State.cc,v 1.12 2006/05/28 19:27:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -32,6 +32,7 @@
 #include "util/memory/index_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/likely.h"
+#include "util/iterator_more.h"
 #include "util/string.tcc"
 #include "util/IO_utils.tcc"
 #include "util/binders.h"
@@ -71,6 +72,10 @@ using std::ostringstream;
 using std::for_each;
 using std::mem_fun_ref;
 using std::distance;
+using std::find;
+using std::copy;
+using std::set_intersection;
+using util::set_inserter;
 using util::strings::string_to_num;
 using util::read_value;
 using util::write_value;
@@ -102,9 +107,13 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		node_pool(), expr_pool(), expr_graph_node_pool(),
 		event_pool(), event_queue(), 
 		rule_map(), 
-		exhi(), exlo(), 
+		mk_exhi(), mk_exlo(), 
 		exclhi_queue(), excllo_queue(), 
 		pending_queue(), 
+#if ENABLE_PRSIM_EXCL_CHECKS
+		check_exhi_ring_pool(1), check_exlo_ring_pool(1), 
+		check_exhi(), check_exlo(), 
+#endif
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
@@ -251,6 +260,10 @@ State::head_sentinel(void) {
 	node_pool.resize(FIRST_VALID_NODE);
 	expr_pool.resize(FIRST_VALID_EXPR);
 	expr_graph_node_pool.push_back(graph_node_type());
+#if ENABLE_PRSIM_EXCL_CHECKS
+	check_exhi_ring_pool.resize(FIRST_VALID_LOCK);
+	check_exlo_ring_pool.resize(FIRST_VALID_LOCK);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -355,14 +368,14 @@ State::check_expr(const expr_index_type i) const {
 	\param r is a set of nodes in an exclusive ring.  
  */
 void
-State::append_exclhi_ring(ring_set_type& r) {
+State::append_mk_exclhi_ring(ring_set_type& r) {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
 		get_node(*i).make_exclhi();
 	}
-	exhi.push_back(ring_set_type());
-	exhi.back().swap(r);
+	mk_exhi.push_back(ring_set_type());
+	mk_exhi.back().swap(r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -373,15 +386,55 @@ State::append_exclhi_ring(ring_set_type& r) {
 	\param r is a set of nodes in an exclusive ring.  
  */
 void
-State::append_excllo_ring(ring_set_type& r) {
+State::append_mk_excllo_ring(ring_set_type& r) {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	const_iterator i(r.begin()), e(r.end());
 	for ( ; i!=e; ++i) {
 		get_node(*i).make_excllo();
 	}
-	exlo.push_back(ring_set_type());
-	exlo.back().swap(r);
+	mk_exlo.push_back(ring_set_type());
+	mk_exlo.back().swap(r);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_PRSIM_EXCL_CHECKS
+/**
+	Creates an exclusive high checking ring.  
+	For all nodes in set r, add index to newly allocated lock flag.  
+	Also set check_exhi flags of listed nodes.  
+ */
+void
+State::append_check_exclhi_ring(const ring_set_type& r) {
+	typedef	ring_set_type::const_iterator	const_iterator;
+	const lock_index_type j = check_exhi_ring_pool.size();
+	check_exhi_ring_pool.push_back(false);
+	const_iterator i(r.begin()), e(r.end());
+	for ( ; i!=e; ++i) {
+		const node_index_type ni = *i;
+		get_node(ni).check_exclhi();
+		check_exhi[ni].push_back(j);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates an exclusive low checking ring.  
+	For all nodes in set r, add index to newly allocated lock flag.  
+	Also set check_exlo flags of listed nodes.  
+ */
+void
+State::append_check_excllo_ring(const ring_set_type& r) {
+	typedef	ring_set_type::const_iterator	const_iterator;
+	const lock_index_type j = check_exlo_ring_pool.size();
+	check_exlo_ring_pool.push_back(false);
+	const_iterator i(r.begin()), e(r.end());
+	for ( ; i!=e; ++i) {
+		const node_index_type ni = *i;
+		get_node(ni).check_excllo();
+		check_exlo[ni].push_back(j);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -855,7 +908,7 @@ for ( ; i!=e; ++i) {
  */
 void
 State::flush_exclhi_queue(void) {
-	typedef	excl_queue_type::const_iterator	const_iterator;
+	typedef	mk_excl_queue_type::const_iterator	const_iterator;
 #if DEBUG_STEP
 	STACKTRACE_VERBOSE;
 #endif
@@ -868,8 +921,8 @@ for ( ; i!=e; ++i) {
 		Look through events: if any of them have a pending
 		queue entry, then we're done (?)
 	***/
-	typedef	excl_ring_map_type::const_iterator ring_iterator;
-	ring_iterator ri(exhi.begin()), re(exhi.end());
+	typedef	mk_excl_ring_map_type::const_iterator ring_iterator;
+	ring_iterator ri(mk_exhi.begin()), re(mk_exhi.end());
 	for ( ; ri!=re; ++ri) {
 		/**
 			TODO: rewite with set lookup to replace flag conditional
@@ -931,7 +984,7 @@ for ( ; i!=e; ++i) {
  */
 void
 State::flush_excllo_queue(void) {
-	typedef	excl_queue_type::const_iterator	const_iterator;
+	typedef	mk_excl_queue_type::const_iterator	const_iterator;
 #if DEBUG_STEP
 	STACKTRACE_VERBOSE;
 #endif
@@ -944,8 +997,8 @@ for ( ; i!=e; ++i) {
 		Look through events: if any of them have a pending
 		queue entry, then we're done (?)
 	***/
-	typedef	excl_ring_map_type::const_iterator ring_iterator;
-	ring_iterator ri(exlo.begin()), re(exlo.end());
+	typedef	mk_excl_ring_map_type::const_iterator ring_iterator;
+	ring_iterator ri(mk_exlo.begin()), re(mk_exlo.end());
 	for ( ; ri!=re; ++ri) {
 		/**
 			TODO: rewite with set lookup to replace flag conditional
@@ -1000,11 +1053,11 @@ State::enforce_exclhi(const node_index_type ni) {
 		in n's exclhi rings are enabled.  
 		If so, insert them into the exclhi-queue.
 	***/
-	typedef	excl_ring_map_type::const_iterator	const_iterator;
+	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 #if DEBUG_STEP
 	STACKTRACE_VERBOSE;
 #endif
-	const_iterator i(exhi.begin()), e(exhi.end());
+	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
 								set_iter;
@@ -1051,11 +1104,11 @@ State::enforce_excllo(const node_index_type ni) {
 		in n's excllo rings are enabled.  
 		If so, insert them into the excllo-queue.
 	***/
-	typedef	excl_ring_map_type::const_iterator	const_iterator;
+	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 #if DEBUG_STEP
 	STACKTRACE_VERBOSE;
 #endif
-	const_iterator i(exlo.begin()), e(exlo.end());
+	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
 								set_iter;
@@ -1088,6 +1141,145 @@ for ( ; i!=e; ++i) {
 }	// end method enforce_excllo
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_PRSIM_EXCL_CHECKS
+/**
+	Lock and unlock rings.  
+	Before node is set, check state of rings for mutex.  
+	\param ni index of changing node.
+	\param n the node corresponding to ni
+	\param prev former value
+	\param next upcoming value
+ */
+State::excl_exception
+State::check_excl_rings(const node_index_type ni, const node_type& n, 
+		const char prev, const char next) {
+	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
+	typedef	lock_index_list_type::const_iterator	lock_index_iterator;
+	typedef	check_excl_lock_pool_type::reference	lock_reference;
+	if (n.has_check_exclhi()) {
+	if (next == node_type::LOGIC_HIGH) {
+		// need to lock
+		const const_iterator f(check_exhi.find(ni));
+		INVARIANT(f != check_exhi.end());
+		// make sure all locks are free
+		lock_index_iterator
+			i(f->second.begin()), e(f->second.end());
+		for ( ; i!=e; ++i) {
+			const lock_index_type li = *i;
+			INVARIANT(li);
+			INVARIANT(li < check_exhi_ring_pool.size());
+			lock_reference l(check_exhi_ring_pool[li]);
+			// set all locks
+			if (l) {
+				// identify lock ID, and node ID
+				return excl_exception(true, li, ni);
+			} else {
+				l = true;	// lock ring
+			}
+		}
+	} else if (prev == node_type::LOGIC_HIGH && next != prev) {
+		// need to unlock
+		const const_iterator f(check_exhi.find(ni));
+		INVARIANT(f != check_exhi.end());
+		// make sure all locks are free
+		lock_index_iterator
+			i(f->second.begin()), e(f->second.end());
+		for ( ; i!=e; ++i) {
+			const lock_index_type li = *i;
+			INVARIANT(li);
+			INVARIANT(li < check_exhi_ring_pool.size());
+			// unlock ring
+			check_exhi_ring_pool[li] = false;
+		}
+	}
+	}	// end if n.has_check_exclhi()
+	if (n.has_check_excllo()) {
+	if (next == node_type::LOGIC_LOW) {
+		// need to lock
+		const const_iterator f(check_exlo.find(ni));
+		INVARIANT(f != check_exlo.end());
+		// make sure all locks are free
+		lock_index_iterator
+			i(f->second.begin()), e(f->second.end());
+		for ( ; i!=e; ++i) {
+			const lock_index_type li = *i;
+			INVARIANT(li);
+			INVARIANT(li < check_exlo_ring_pool.size());
+			lock_reference l(check_exlo_ring_pool[li]);
+			// set all locks
+			if (l) {
+				// identify lock ID, and node ID
+				return excl_exception(false, li, ni);
+			} else {
+				l = true;	// lock ring
+			}
+		}
+	} else if (prev == node_type::LOGIC_LOW && next != prev) {
+		// need to unlock
+		const const_iterator f(check_exlo.find(ni));
+		INVARIANT(f != check_exlo.end());
+		// make sure all locks are free
+		lock_index_iterator
+			i(f->second.begin()), e(f->second.end());
+		for ( ; i!=e; ++i) {
+			const lock_index_type li = *i;
+			INVARIANT(li);
+			INVARIANT(li < check_exlo_ring_pool.size());
+			// unlock ring
+			check_exlo_ring_pool[li] = false;
+		}
+	}
+	}	// end if n.has_check_excllo()
+	// if this point reached, we're good
+	return excl_exception(true, INVALID_LOCK_INDEX, INVALID_NODE_INDEX);
+}	// end method State::check_excl_rings()
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Diagnostic subroutine for dissecting excl violation exceptions.  
+	Uses extremely slow search because this only occurs on exception.  
+ */
+void
+State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
+	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
+	ring_set_type ring;
+	const_iterator i, e;
+	if (exex.type) {
+		i = check_exhi.begin();
+		e = check_exhi.end();
+	} else {
+		i = check_exlo.begin();
+		e = check_exlo.end();
+	}
+	// find all nodes that contain the lock index
+	for ( ; i!=e; ++i) {
+		const lock_index_list_type::const_iterator
+			le(i->second.end()), 
+			lf(find(i->second.begin(), le, exex.lock_id));
+		if (lf != le) {
+			// then this node_index belongs to this ring
+			ring.insert(i->first);
+		}
+	}
+	INVARIANT(ring.size() > 1);
+	o << "ERROR: excl" << (exex.type ? "hi" : "lo") << 
+		" violation detected!" << endl;
+	ring_set_type::const_iterator ri(ring.begin()), re(ring.end());
+	o << "ring-state:" << endl;
+	for (; ri!=re; ++ri) {
+		o << "\t" << get_node_canonical_name(*ri) << " : ";
+		get_node(*ri).dump_value(o) << endl;
+	}
+	o << "but node `" << get_node_canonical_name(exex.node_id) <<
+		"\' tried to become " << (exex.type ? 1 : 0) << "." << endl;
+	o << "The simulator state is no longer coherent; "
+		"do not bother trying to continue the simulation, "
+		"but you may further inspect the state." << endl;
+}	// end method State::inspect_excl_exception
+
+#endif	// ENABLE_PRSIM_EXCL_CHECKS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modeled after prs_step() from the original prsim.  
 	TODO: possible add arguments later. 
@@ -1095,9 +1287,11 @@ for ( ; i!=e; ++i) {
 	\post the exclhi, excllo, and pending queues are empty.
 	\return index of the affected node, 
 		INVALID_NODE_INDEX if nothing happened.  
+	\throw excl_exception if there is a logical exclusion violation, 
+		leaving violating event in queue.  
  */
 State::step_return_type
-State::step(void) {
+State::step(void) THROWS_EXCL_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
 	INVARIANT(pending_queue.empty());
@@ -1131,6 +1325,20 @@ State::step(void) {
 	// assert: vacuous firings on the event queue
 	INVARIANT(prev != pe.val || n.is_unstab());
 	// saved previous value above already
+#if ENABLE_PRSIM_EXCL_CHECKS
+	if (checking_excl()) {
+		const excl_exception
+			exex(check_excl_rings(ni, n, prev, pe.val));
+		if (UNLIKELY(exex.lock_id)) {
+			// to keep event queue coherent, re-enqueue event
+			// because event will not be deallocated!
+			// next attempt to step will hit same exception
+			// forcing simulation to be stuck (intentional)
+			enqueue_event(ep.time, ep.event_index);
+			throw exex;
+		}
+	}
+#endif
 	n.set_value(pe.val);
 	// count transition only if new value is not X
 	if (pe.val != node_type::LOGIC_OTHER)
@@ -1148,12 +1356,12 @@ State::step(void) {
 	}
 }
 	// exclhi ring enforcement
-	if (n.has_exclhi() && (next == node_type::LOGIC_LOW)) {
+	if (n.has_mk_exclhi() && (next == node_type::LOGIC_LOW)) {
 		enforce_exclhi(ni);
 	}	// end if (exclhi enforcement)
 
 	// excllo ring enforcement
-	if (n.has_excllo() && (next == node_type::LOGIC_HIGH)) {
+	if (n.has_mk_excllo() && (next == node_type::LOGIC_HIGH)) {
 		enforce_excllo(ni);
 	}	// end if (excllo enforcement)
 
@@ -1310,7 +1518,7 @@ if (!n.pending_event()) {
 				root_rule, next);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
-		if (n.has_exclhi()) {
+		if (n.has_mk_exclhi()) {
 			// insert into exclhi queue
 			enqueue_exclhi(get_delay_up(e), pe);
 		} else {
@@ -1337,7 +1545,7 @@ if (!n.pending_event()) {
 			__allocate_event(n, ui, ni, 
 				root_rule, node_type::LOGIC_LOW);
 		// pe->cause = root
-		if (n.has_excllo()) {
+		if (n.has_mk_excllo()) {
 			const event_type& e(get_event(pe));
 			enqueue_excllo(get_delay_up(e), pe);
 		} else {
@@ -1419,7 +1627,7 @@ if (!n.pending_event()) {
 			root_rule, 
 			node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
-		if (n.has_excllo()) {
+		if (n.has_mk_excllo()) {
 			// insert into exclhi queue
 			enqueue_excllo(get_delay_dn(e), pe);
 		} else {
@@ -1446,7 +1654,7 @@ if (!n.pending_event()) {
 			__allocate_event(n, ui, ni, 
 				root_rule, node_type::LOGIC_HIGH);
 		// pe->cause = root
-		if (n.has_exclhi()) {
+		if (n.has_mk_exclhi()) {
 			const event_type& e(get_event(pe));
 			enqueue_exclhi(get_delay_dn(e), pe);
 		} else {
@@ -1518,7 +1726,7 @@ if (!n.pending_event()) {
 		the ID of the node that tripped a breakpoint.  
  */
 State::step_return_type
-State::cycle(void) {
+State::cycle(void) THROWS_EXCL_EXCEPTION {
 	step_return_type ret;
 	while ((ret = step()).first) {
 		if (get_node(ret.first).is_breakpoint() || stopped())
@@ -1918,7 +2126,7 @@ State::dump_source_paths(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_ring(ostream& o, const ring_set_type& r) const {
+State::dump_mk_excl_ring(ostream& o, const ring_set_type& r) const {
 	typedef	ring_set_type::const_iterator	const_iterator;
 	INVARIANT(r.size() > 1);
 	const_iterator i(r.begin()), e(r.end());
@@ -1932,24 +2140,24 @@ State::dump_ring(ostream& o, const ring_set_type& r) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_exclhi_rings(ostream& o) const {
-	o << "exclhi rings:" << endl;
-	typedef	excl_ring_map_type::const_iterator	const_iterator;
-	const_iterator i(exhi.begin()), e(exhi.end());
+State::dump_mk_exclhi_rings(ostream& o) const {
+	o << "forced exclhi rings:" << endl;
+	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
+	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 	for ( ; i!=e; ++i) {
-		dump_ring(o, *i) << endl;
+		dump_mk_excl_ring(o, *i) << endl;
 	}
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-State::dump_excllo_rings(ostream& o) const {
-	o << "excllo rings:" << endl;
-	typedef	excl_ring_map_type::const_iterator	const_iterator;
-	const_iterator i(exlo.begin()), e(exlo.end());
+State::dump_mk_excllo_rings(ostream& o) const {
+	o << "forced excllo rings:" << endl;
+	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
+	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 	for ( ; i!=e; ++i) {
-		dump_ring(o, *i) << endl;
+		dump_mk_excl_ring(o, *i) << endl;
 	}
 	return o;
 }
@@ -1959,28 +2167,166 @@ State::dump_excllo_rings(ostream& o) const {
 	Prints excl-ring fanout of node.  
  */
 ostream&
-State::dump_node_excl_rings(ostream& o, const node_index_type ni) const {
-	typedef	excl_ring_map_type::const_iterator	const_iterator;
+State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni) const {
+	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	const string nn(get_node_canonical_name(ni));
 {
-	o << "exclhi rings of which `" << nn << "\' is a member:" << endl;
-	const_iterator i(exhi.begin()), e(exhi.end());
+	o << "forced exclhi rings of which `" << nn <<
+		"\' is a member:" << endl;
+	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 	for ( ; i!=e; ++i) {
 		if (i->find(ni) != i->end()) {
-			dump_ring(o, *i) << endl;
+			dump_mk_excl_ring(o, *i) << endl;
 		}
 	}
 }{
-	o << "excllo rings of which `" << nn << "\' is a member:" << endl;
-	const_iterator i(exlo.begin()), e(exlo.end());
+	o << "forced excllo rings of which `" << nn <<
+		"\' is a member:" << endl;
+	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 	for ( ; i!=e; ++i) {
 		if (i->find(ni) != i->end()) {
-			dump_ring(o, *i) << endl;
+			dump_mk_excl_ring(o, *i) << endl;
 		}
 	}
 }
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_PRSIM_EXCL_CHECKS
+ostream&
+State::dump_check_excl_ring(ostream& o, const lock_index_list_type& r) const {
+	typedef	lock_index_list_type::const_iterator	const_iterator;
+	INVARIANT(r.size() > 1);
+	const_iterator i(r.begin()), e(r.end());
+	o << "{ ";
+	o << get_node_canonical_name(*i);
+	for (++i; i!=e; ++i) {
+		o << ", " << get_node_canonical_name(*i);
+	}
+	return o << " }";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dump all checked exclhi rings.  
+ */
+ostream&
+State::dump_check_exclhi_rings(ostream& o) const {
+	o << "checked exclhi rings:" << endl;
+	check_excl_array_type temp(check_exhi_ring_pool.size());
+	__collate_check_excl_reverse_map(check_exhi, temp);
+	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
+	const_iterator i(temp.begin()), e(temp.end());
+	// skip first b/c [0] is reserved
+	for (++i; i!=e; ++i) {
+		dump_mk_excl_ring(o, *i) << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Dump all checked excllo rings.  
+ */
+ostream&
+State::dump_check_excllo_rings(ostream& o) const {
+	o << "checked excllo rings:" << endl;
+	check_excl_array_type temp(check_exlo_ring_pool.size());
+	__collate_check_excl_reverse_map(check_exlo, temp);
+	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
+	const_iterator i(temp.begin()), e(temp.end());
+	// skip first b/c [0] is reserved
+	for (++i; i!=e; ++i) {
+		dump_mk_excl_ring(o, *i) << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generates map of lock_index to set of nodes in ring.  
+	\pre r is sized to the corresponding lock-pool (array) size.  
+ */
+void
+State::__collate_check_excl_reverse_map(const check_excl_ring_map_type& m, 
+		check_excl_array_type& r) const {
+	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
+	const_iterator i(m.begin()), e(m.end());
+	for ( ; i!=e; ++i) {
+		typedef	lock_index_list_type::const_iterator
+							lock_index_iterator;
+		const lock_index_list_type& ll(i->second);
+		lock_index_iterator li(ll.begin()), le(ll.end());
+		for ( ; li!=le; ++li) {
+			r[*li].insert(i->first);
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generates partial map of lock_index to set of nodes in ring.  
+	\pre r should be empty.  
+ */
+void
+State::__partial_collate_check_excl_reverse_map(
+		const check_excl_ring_map_type& m, 
+		const lock_index_list_type& l, 
+		check_excl_reverse_map_type& r) const {
+	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
+	typedef	std::set<lock_index_type>		lock_set_type;
+	lock_set_type ref;
+	copy(l.begin(), l.end(), set_inserter(ref));
+	const_iterator i(m.begin()), e(m.end());
+	for ( ; i!=e; ++i) {
+		typedef	lock_index_list_type::const_iterator
+							lock_index_iterator;
+		const lock_index_list_type& ll(i->second);
+		lock_index_iterator li(ll.begin()), le(ll.end());
+		for ( ; li!=le; ++li) {
+			// predicated
+			if (ref.find(*li) != ref.end()) {
+				r[*li].insert(i->first);
+			}
+		}
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::dump_node_check_excl_rings(ostream& o, const node_index_type ni) const {
+	typedef	check_excl_reverse_map_type::const_iterator	const_iterator;
+	const string nn(get_node_canonical_name(ni));
+	const node_type n(get_node(ni));
+{
+	o << "checked exclhi rings of which `" << nn <<
+		"\' is a member:" << endl;
+	if (n.has_check_exclhi()) {
+		check_excl_reverse_map_type temp;
+		__partial_collate_check_excl_reverse_map(check_exhi, 
+			check_exhi.find(ni)->second, temp);
+		const_iterator i(temp.begin()), e(temp.end());
+		for ( ; i!=e; ++i) {
+			dump_mk_excl_ring(o, i->second) << endl;
+		}
+	}
+}{
+	o << "checked excllo rings of which `" << nn <<
+		"\' is a member:" << endl;
+	if (n.has_check_excllo()) {
+		check_excl_reverse_map_type temp;
+		__partial_collate_check_excl_reverse_map(check_exlo, 
+			check_exlo.find(ni)->second, temp);
+		const_iterator i(temp.begin()), e(temp.end());
+		for ( ; i!=e; ++i) {
+			dump_mk_excl_ring(o, i->second) << endl;
+		}
+	}
+}
+	return o;
+}
+#endif	// ENABLE_PRSIM_EXCL_CHECKS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2133,13 +2479,13 @@ State::load_checkpoint(istream& i) {
 	typedef node_pool_type::const_iterator	const_iterator;
 	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
 	const_iterator ni(nb);
+	const char prev = node_type::LOGIC_OTHER;
 	for (++ni; ni!=ne; ++ni) {
 		typedef	node_type::const_fanout_iterator
 					const_fanout_iterator;
 		const node_type& n(*ni);
 		const_fanout_iterator fi(n.fanout.begin()), fe(n.fanout.end());
 		const char next = n.current_value();
-		const char prev = node_type::LOGIC_OTHER;
 		if (next != prev) {
 			const expr_index_type nj(distance(nb, ni));
 			for ( ; fi!=fe; ++fi) {
@@ -2213,6 +2559,27 @@ State::load_checkpoint(istream& i) {
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
+
+#if ENABLE_PRSIM_EXCL_CHECKS
+	// this must be run *after* mode flags are loaded
+if (checking_excl()) {
+	typedef node_pool_type::const_iterator	const_iterator;
+	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
+	const_iterator ni(nb);
+	const char prev = node_type::LOGIC_OTHER;
+	for (++ni; ni!=ne; ++ni) {
+	// lock exclusive check rings
+		const node_type& n(*ni);
+		const char next = n.current_value();
+		const excl_exception
+			e(check_excl_rings(distance(nb, ni), n, prev, next));
+		if (e.lock_id) {
+			inspect_excl_exception(e, cerr);
+			// don't bother throwing
+		}
+	}
+}
+#endif	// ENABLE_PRSIM_EXCL_CHECKS
 {
 	read_value(i, header_check);
 	if (header_check != magic_string) {
