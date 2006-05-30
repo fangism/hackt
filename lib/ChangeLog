@@ -1,4 +1,10 @@
 "ChangeLog"
+2006-05-30	Sandra Jackson	<sjj3@cornell.edu>
+
+	* HACKT-00-01-04-main-00-79-08:
+	  Added library file env.hac. (sources/sinks)
+	  Updated channel.hac to more efficient version.
+	  File buffer.hac uses new versions.
 
 2006-03-28	Sandra Jackson	<sjj3@cornell.edu>
 

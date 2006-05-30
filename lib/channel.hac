@@ -1,146 +1,93 @@
-// 1of1
+/*** e1of<N> definitions ********************************/
 
-defproc e1of1(bool d,i,e){d=i;}
-defproc a1of1(bool d,i,e){d=i;}
+template <pint N>
+defproc e1of(bool d[N], e)
+  {
+  }
 
-// 1of2
+typedef e1of<1> e1of1;
+typedef e1of<2> e1of2;
+typedef e1of<3> e1of3;
+typedef e1of<4> e1of4;
+typedef e1of<5> e1of5;
+typedef e1of<6> e1of6;
+typedef e1of<7> e1of7;
+typedef e1of<8> e1of8;
 
-defproc c1of2(bool d[2]; bool z,o,t,f)
+/*** a1of<N> definitions ********************************/
+template <pint N>
+defproc a1of(bool d[N], a)
+  {
+  }
+
+typedef a1of<1> a1of1;
+typedef a1of<2> a1of2;
+typedef a1of<3> a1of3;
+typedef a1of<4> a1of4;
+typedef a1of<5> a1of5;
+typedef a1of<6> a1of6;
+typedef a1of<7> a1of7;
+typedef a1of<8> a1of8;
+
+/*** 1of<N> definitions ********************************/
+template <pint N>
+defproc c1of(bool d[N])
+  {
+  }
+
+template <pint N>
+defproc _c1of(bool d[N])
+  {
+  }
+
+typedef c1of<2> c1of2;
+typedef c1of<3> c1of3;
+typedef c1of<4> c1of4;
+typedef c1of<5> c1of5;
+typedef c1of<6> c1of6;
+typedef c1of<7> c1of7;
+typedef c1of<8> c1of8;
+
+typedef _c1of<2> _c1of2;
+typedef _c1of<3> _c1of3;
+typedef _c1of<4> _c1of4;
+typedef _c1of<5> _c1of5;
+typedef _c1of<6> _c1of6;
+typedef _c1of<7> _c1of7;
+typedef _c1of<8> _c1of8;
+
+/*** <M>x1of<N> definitions ********************************/
+template <pint N,M>
+defproc eMx1ofN(c1of<N> b[M]; bool e)
+  {
+  }
+
+template <pint M,N>
+defproc aMx1ofN(c1of<N> b[M]; bool a)
+  {
+  }
+
+typedef eMx1ofN<2,2> e2x1of2;
+typedef aMx1ofN<2,2> a2x1of2;
+
+/*** 1of1 definitions ********************************/
+defproc e1of1d(bool d, e)
+  {
+  }
+
+defproc a1of1d(bool d, a)
+  {
+  }
+
+/*** 1of2 definitions *******************************/
+defproc e1of2tf(bool d[2]; bool z,o,t,f,e)
 {
   z=d[0]=f;
   o=d[1]=t;
 }
 
-defproc _c1of2(bool d[2]; bool z,o,t,f)
+defproc a1of2tf(bool d[2]; bool z,o,t,f,a)
 {
   z=d[0]=f;
   o=d[1]=t;
-}
-
-defproc e1of2(bool d[2]; bool z,o,t,f,e)
-{
-  z=d[0]=f;
-  o=d[1]=t;
-}
-
-defproc a1of2(bool d[2]; bool z,o,t,f,a)
-{
-  z=d[0]=f;
-  o=d[1]=t;
-}
-
-defproc e2x1of2(c1of2 b[2]; c1of2 b0,b1; bool e)
-{
-  b0=b[0];
-  b1=b[1];
-}
-
-defproc a2x1of2(c1of2 b[2]; c1of2 b0,b1; bool a)
-{
-  b0=b[0];
-  b1=b[1];
-}
-
-defproc c1of3(bool d[3]; bool z,o,w)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-}
-
-defproc _c1of3(bool d[3]; bool z,o,w)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-}
-
-defproc e1of3(bool d[3]; bool z,o,w,e)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-}
-
-defproc a1of3(bool d[3]; bool z,o,w,a)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-}
-
-defproc c1of4(bool d[4]; bool z,o,w,h)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-}
-
-defproc _c1of4(bool d[4]; bool z,o,w,h)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-}
-
-defproc _e1of4(bool d[4]; bool z,o,w,h,e)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-}
-
-defproc elof4(bool d[4]; bool z,o,w,h,e)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-}
-
-defproc a1of4(bool d[4]; bool z,o,w,h,e)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-}
-
-defproc c1of5(bool d[5]; bool z,o,w,h,f)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-  f=d[4];
-}
-
-defproc _c1of5(bool d[5]; bool z,o,w,h,f)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-  f=d[4];
-}
-
-defproc e1of5(bool d[5]; bool z,o,w,h,f)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-  f=d[4];
-}
-
-defproc a1of5(bool d[5]; bool z,o,w,h,f)
-{
-  z=d[0];
-  o=d[1];
-  w=d[2];
-  h=d[3];
-  f=d[4];
 }

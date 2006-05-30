@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2006/05/30 21:27:30 fang Exp $
+#	$Id: Makefile.am,v 1.5 2006/05/30 23:35:05 sandra Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -17,7 +17,9 @@ makedir = $(pkgdatadir)/mk
 # library writers: add stuff here that you want to be installed standard
 # TODO: organize a standard structure for library includes
 hacktlib_DATA = \
-	channel.hac
+	channel.hac \
+	env.hac \
+	buffer.hac
 
 # Makefile and automake templates
 make_DATA = \
@@ -28,6 +30,7 @@ make_DATA = \
 EXTRA_DIST += README \
 	buffer.hac \
 	channel.hac \
+	env.hac \
 	ChangeLog \
         $(make_DATA)
 
