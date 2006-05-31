@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2006-05-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-09:
+	  parse-test-expect.sh.in: include flags are passed in by Makefile.am
+		using the HACO_FLAGS variable.  
+	  Makefile.am: introduced appendable HACO_FLAGS variable
+		for compiling against files in other directories.  
+
+
 2006-05-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-78-22-prsim-04-10:
