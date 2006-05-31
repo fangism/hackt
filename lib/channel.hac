@@ -1,9 +1,25 @@
+/**
+	"channel.hac"
+	Standard channel definitions in HAC.  
+	Q: place thes in some namespace?
+	$Id: channel.hac,v 1.3 2006/05/31 18:15:04 fang Exp $
+ */
+
 /*** e1of<N> definitions ********************************/
 
+/**
+	Data rails are d[]. 
+	Active-low acknowledge is e.  
+ */
 template <pint N>
 defproc e1of(bool d[N], e)
-  {
-  }
+{
+spec {
+	exclhi(d[0], d[1..N-1])
+	// the split d[] array works around the minimum number of arguments
+	// required for the SPEC exclhi directive
+}
+}
 
 typedef e1of<1> e1of1;
 typedef e1of<2> e1of2;
@@ -15,10 +31,18 @@ typedef e1of<7> e1of7;
 typedef e1of<8> e1of8;
 
 /*** a1of<N> definitions ********************************/
+
+/**
+	Data rails are d[]. 
+	Active-high acknowledge is a.  
+ */
 template <pint N>
 defproc a1of(bool d[N], a)
-  {
-  }
+{
+spec {
+	exclhi(d[0], d[1..N-1])
+}
+}
 
 typedef a1of<1> a1of1;
 typedef a1of<2> a1of2;
@@ -30,16 +54,32 @@ typedef a1of<7> a1of7;
 typedef a1of<8> a1of8;
 
 /*** 1of<N> definitions ********************************/
+
+/**
+	1-of-N rails.  Mutually exclusive high.  
+	'c' is for active-high channel.  
+ */
 template <pint N>
 defproc c1of(bool d[N])
-  {
-  }
+{
+spec {
+	exclhi(d[0], d[1..N-1])
+}
+}
 
+/**
+	1-of-N rails.  Mutually exclusive low.  
+	'_c' is for active-low channel.  
+ */
 template <pint N>
 defproc _c1of(bool d[N])
-  {
-  }
+{
+spec {
+	excllo(d[0], d[1..N-1])
+}
+}
 
+typedef c1of<1> c1of1;
 typedef c1of<2> c1of2;
 typedef c1of<3> c1of3;
 typedef c1of<4> c1of4;
@@ -48,6 +88,7 @@ typedef c1of<6> c1of6;
 typedef c1of<7> c1of7;
 typedef c1of<8> c1of8;
 
+typedef _c1of<1> _c1of1;
 typedef _c1of<2> _c1of2;
 typedef _c1of<3> _c1of3;
 typedef _c1of<4> _c1of4;
@@ -56,28 +97,120 @@ typedef _c1of<6> _c1of6;
 typedef _c1of<7> _c1of7;
 typedef _c1of<8> _c1of8;
 
+/*** shared-rail 1of<N> definitions ************************/
+/**
+	Data rails are d[]. 
+	Active-low acknowledge is e.  
+	Active-high request (completion) is v.
+ */
+template <pint N>
+defproc ev1of(bool d[N], e, v)
+{
+spec {
+	exclhi(d[0], d[1..N-1])
+}
+}
+
+typedef	ev1of<1>	ev1of1;
+typedef	ev1of<2>	ev1of2;
+typedef	ev1of<3>	ev1of3;
+typedef	ev1of<4>	ev1of4;
+typedef	ev1of<5>	ev1of5;
+typedef	ev1of<6>	ev1of6;
+typedef	ev1of<7>	ev1of7;
+typedef	ev1of<8>	ev1of8;
+
+/**
+	Data rails are d[]. 
+	Active-low acknowledge is e.  
+	Active-low request (completion) is n.
+ */
+template <pint N>
+defproc en1of(bool d[N], e, n)
+{
+spec {
+	exclhi(d[0], d[1..N-1])
+}
+}
+
+typedef	en1of<1>	en1of1;
+typedef	en1of<2>	en1of2;
+typedef	en1of<3>	en1of3;
+typedef	en1of<4>	en1of4;
+typedef	en1of<5>	en1of5;
+typedef	en1of<6>	en1of6;
+typedef	en1of<7>	en1of7;
+typedef	en1of<8>	en1of8;
+
+/**
+	Data rails are d[]. 
+	Active-high acknowledge is a.  
+	Active-high request (completion) is v.
+ */
+template <pint N>
+defproc av1of(bool d[N], a, v)
+{
+spec {
+	exclhi(d[0], d[1..N-1])
+}
+}
+
+typedef	av1of<1>	av1of1;
+typedef	av1of<2>	av1of2;
+typedef	av1of<3>	av1of3;
+typedef	av1of<4>	av1of4;
+typedef	av1of<5>	av1of5;
+typedef	av1of<6>	av1of6;
+typedef	av1of<7>	av1of7;
+typedef	av1of<8>	av1of8;
+
+/**
+	Data rails are d[]. 
+	Active-high acknowledge is a.  
+	Active-low request (completion) is n.
+ */
+template <pint N>
+defproc an1of(bool d[N], a, n)
+{
+spec {
+	exclhi(d[0], d[1..N-1])
+}
+}
+
+typedef	an1of<1>	an1of1;
+typedef	an1of<2>	an1of2;
+typedef	an1of<3>	an1of3;
+typedef	an1of<4>	an1of4;
+typedef	an1of<5>	an1of5;
+typedef	an1of<6>	an1of6;
+typedef	an1of<7>	an1of7;
+typedef	an1of<8>	an1of8;
+
+
+
+
 /*** <M>x1of<N> definitions ********************************/
 template <pint N,M>
 defproc eMx1ofN(c1of<N> b[M]; bool e)
-  {
-  }
+{
+}
 
 template <pint M,N>
 defproc aMx1ofN(c1of<N> b[M]; bool a)
-  {
-  }
+{
+}
 
 typedef eMx1ofN<2,2> e2x1of2;
 typedef aMx1ofN<2,2> a2x1of2;
 
 /*** 1of1 definitions ********************************/
 defproc e1of1d(bool d, e)
-  {
-  }
+{
+}
 
 defproc a1of1d(bool d, a)
-  {
-  }
+{
+}
 
 /*** 1of2 definitions *******************************/
 defproc e1of2tf(bool d[2]; bool z,o,t,f,e)
@@ -91,3 +224,4 @@ defproc a1of2tf(bool d[2]; bool z,o,t,f,a)
   z=d[0]=f;
   o=d[1]=t;
 }
+

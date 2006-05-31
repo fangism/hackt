@@ -2,7 +2,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.30 2006/05/06 04:19:00 fang Exp $
+#	$Id: Make.test-tail,v 1.31 2006/05/31 18:15:07 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -50,15 +50,16 @@ PRSIMRC_TIME_FILTER_AWK = $(AWK) -f $(TEST_SRCDIR)/prsimrc-random-time-filter.aw
 
 DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
 
+HACO_FLAGS += -I$(srcdir)
 
 .hac.stderr:
 	@$(TOUCH) $@
 
 .hac.haco:
-	$(HACKT_COMPILE_EXE) -I$(srcdir) $< $@
+	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $@
 
 .hac.outdump:
-	$(HACKT_COMPILE_EXE) -d -I$(srcdir) $< > $@ 2>&1
+	$(HACKT_COMPILE_EXE) -d $(HACO_FLAGS) $< > $@ 2>&1
 
 .haco.indump:
 	$(DEFAULT_OBJDUMP_RULE_ACTION)
@@ -70,14 +71,14 @@ DEFAULT_OBJDUMP_RULE_ACTION = $(HACKT_OBJDUMP_EXE) $< > $@ 2>&1
 .hac.hacktcmpltest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_PARSE_TEST_SH) "\"$(PARSE_TEST_EXE)\"" $(srcdir) $* \
+	@$(ECHO) $(HACKT_PARSE_TEST_SH) "\"$(PARSE_TEST_EXE) $(HACO_FLAGS)\"" $(srcdir) $* \
 		"\"$(HACKT_COMPILE_ERROR_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
 .hac.hacktobjtest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
-	@$(ECHO) $(HACKT_OBJ_TEST_SH) "\"$(HACKT_COMPILE_EXE)\"" \
+	@$(ECHO) $(HACKT_OBJ_TEST_SH) "\"$(HACKT_COMPILE_EXE) $(HACO_FLAGS)\"" \
 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
 		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
 	@$(CHMOD) +x $@

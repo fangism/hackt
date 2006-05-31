@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "parse-test-expect.sh.in"
-#	$Id: parse-test-expect.sh.in,v 1.3 2006/01/30 07:42:08 fang Exp $
+#	$Id: parse-test-expect.sh.in,v 1.4 2006/05/31 18:15:09 fang Exp $
 # This file used to be:
 #	Id: artc-expect.sh.in,v 1.7.2.1 2005/12/12 19:35:52 fang Exp
 # This file came from "artc-expect.sh" in revision pre-history.
@@ -16,7 +16,7 @@
 # if test $# -lt 4 ; then exit 1 ; fi
 
 # need to search source directory for VPATH builds
-cmd="$1 -I $2"
+cmd="$1"
 srcroot=$2/$3
 bldroot=$3
 filter="$4"

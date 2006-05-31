@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2005/12/13 04:21:17 fang Exp $
+#	$Id: Makefile.am,v 1.14 2006/05/31 18:15:12 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -28,7 +28,9 @@ HACKT_PARSE_TEST_PASSES = \
 # 107,109: known bugs in progress
 # 089-093: known bugs, haven't decided when to reject
 
-HACKT_PARSE_TEST_SUBJECTS = $(HACKT_PARSE_TEST_FAILURES) $(HACKT_PARSE_TEST_PASSES)
+HACKT_PARSE_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_FAILURES) \
+	$(HACKT_PARSE_TEST_PASSES)
 
 HACKT_OBJ_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_PASSES)

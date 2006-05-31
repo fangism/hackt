@@ -1,0 +1,5 @@
+// "buffer_wrap.hac"
+// testing includability of "buffer.hac"
+
+import "buffer.hac";
+

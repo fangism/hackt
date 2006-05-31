@@ -3,9 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
-2006-05-30      Sandra Jackson    	<sjj3@cornell.edu> 
+2006-05-31	David Fang		<fangism@users.sourceforge.net>
 
-        * HACKT-00-01-04-main-00-79-08:
+	* HACKT-00-01-04-main-00-79-09:
+	  No source revision, library and test cases only.
+
+
+2006-05-30	Sandra Jackson		<sjj3@cornell.edu> 
+
+	* HACKT-00-01-04-main-00-79-08:
 	  No source revision, library only.
 
 

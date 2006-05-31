@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.14 2006/05/06 04:19:00 fang Exp $
+#	$Id: Make.test-head,v 1.15 2006/05/31 18:15:06 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -20,6 +20,9 @@ SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 if HAVE_CFLAT
 SUFFIXES += .cast .castprs
 endif
+
+# for compile include paths
+HACO_FLAGS =
 
 # the {in,out,unroll,create,alloc}dump suffixes are just 
 # for testing convenience.   They follow the procedures in the test scripts.  

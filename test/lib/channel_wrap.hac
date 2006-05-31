@@ -1,0 +1,5 @@
+// "channel_wrap.hac"
+// just include "channel.hac", no instantiations
+
+import "channel.hac";
+

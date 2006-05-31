@@ -1,0 +1,6 @@
+// "env_wrap.hac"
+// just tests inclusion of "env.hac"
+
+import "env.hac";
+
+
