@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.124 2006/06/01 05:06:55 fang Exp $
+#	$Id: Makefile.am,v 1.125 2006/06/01 19:33:53 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -101,7 +101,7 @@ LIBBOGUS2_LA = libbogus2_la
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
-	libhacktast.la libhackt.la libhacktinst.la $(LIBFANGUTIL)
+	libhacktast.la libhackt.la $(LIBFANGUTIL)
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -644,6 +644,8 @@ libhackt_la_SOURCES = \
 	$(OBJECT_CC_NO_H_FILES) \
 	$(COMMON_FILES) \
 	config.h
+
+libhackt_la_LIBADD = libhacktinst.la
 
 libhacktinst_la_SOURCES = \
 	$(OBJECT_INST_CC_FILES) \
