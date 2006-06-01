@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.123 2006/05/09 18:36:40 fang Exp $
+#	$Id: Makefile.am,v 1.124 2006/06/01 05:06:55 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -88,7 +88,7 @@ noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libhacktast.la \
-	$(UTILLIBS) libhacktexec.la libhacktsim.la $(FUNLIBS) \
+	$(UTILLIBS) libhacktexec.la libhacktinst.la libhacktsim.la $(FUNLIBS) \
 	libbogus.la libbogus2.la
 
 # this name is needed for libtool objects
@@ -101,7 +101,7 @@ LIBBOGUS2_LA = libbogus2_la
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
-	libhacktast.la libhackt.la $(LIBFANGUTIL)
+	libhacktast.la libhackt.la libhacktinst.la $(LIBFANGUTIL)
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -232,13 +232,7 @@ AST_H_FILES = $(AST_CC_FILES:.cc=.h) \
 	AST/type_base.h
 
 # all of these .cc files have a corresponding .h file
-OBJECT_CC_FILES = \
-	Object/common/object_base.cc \
-	Object/common/namespace.cc \
-	Object/common/extern_templates.cc \
-	Object/common/dump_flags.cc \
-	Object/expr/expr_dump_context.cc \
-	Object/traits/class_traits.cc \
+OBJECT_INST_CC_FILES = \
 	Object/inst/substructure_alias_base.cc \
 	Object/inst/subinstance_manager.cc \
 	Object/inst/port_alias_tracker.cc \
@@ -255,7 +249,33 @@ OBJECT_CC_FILES = \
 	Object/inst/enum_instance_collection.cc \
 	Object/inst/struct_instance_collection.cc \
 	Object/inst/process_instance_collection.cc \
-	Object/inst/channel_instance_collection.cc \
+	Object/inst/channel_instance_collection.cc
+
+OBJECT_INST_TCC_FILES = \
+	Object/inst/general_collection_type_manager.tcc \
+	Object/inst/null_collection_type_manager.tcc \
+	Object/inst/int_collection_type_manager.tcc \
+	Object/inst/parameterless_collection_type_manager.tcc \
+	Object/inst/subinstance_manager.tcc \
+	Object/inst/substructure_alias_base.tcc \
+	Object/inst/alias_actuals.tcc \
+	Object/inst/alias_empty.tcc \
+	Object/inst/instance_alias.tcc \
+	Object/inst/instance_collection.tcc \
+	Object/inst/internal_aliases_policy.tcc \
+	Object/inst/value_collection.tcc \
+	Object/inst/instance_pool.tcc \
+	Object/inst/state_instance.tcc
+
+OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h)
+
+OBJECT_CC_FILES = \
+	Object/common/object_base.cc \
+	Object/common/namespace.cc \
+	Object/common/extern_templates.cc \
+	Object/common/dump_flags.cc \
+	Object/expr/expr_dump_context.cc \
+	Object/traits/class_traits.cc \
 	Object/unroll/conditional_scope.cc \
 	Object/unroll/expression_assignment.cc \
 	Object/unroll/instance_management_base.cc \
@@ -319,20 +339,6 @@ OBJECT_CC_NO_H_FILES = \
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
 	Object/expr/const_collection.tcc \
-	Object/inst/general_collection_type_manager.tcc \
-	Object/inst/null_collection_type_manager.tcc \
-	Object/inst/int_collection_type_manager.tcc \
-	Object/inst/parameterless_collection_type_manager.tcc \
-	Object/inst/subinstance_manager.tcc \
-	Object/inst/substructure_alias_base.tcc \
-	Object/inst/alias_actuals.tcc \
-	Object/inst/alias_empty.tcc \
-	Object/inst/instance_alias.tcc \
-	Object/inst/instance_collection.tcc \
-	Object/inst/internal_aliases_policy.tcc \
-	Object/inst/value_collection.tcc \
-	Object/inst/instance_pool.tcc \
-	Object/inst/state_instance.tcc \
 	Object/ref/aggregate_meta_instance_reference.tcc \
 	Object/ref/aggregate_meta_value_reference.tcc \
 	Object/ref/meta_instance_reference_subtypes.tcc \
@@ -639,6 +645,11 @@ libhackt_la_SOURCES = \
 	$(COMMON_FILES) \
 	config.h
 
+libhacktinst_la_SOURCES = \
+	$(OBJECT_INST_CC_FILES) \
+	$(OBJECT_INST_TCC_FILES) \
+	$(OBJECT_INST_H_FILES)
+
 libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES)
 
 libhacktexec_la_SOURCES = \
@@ -703,6 +714,7 @@ ALL_HEADER_FILES += \
 	$(CONFIG_HEADERS) \
 	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
+	$(OBJECT_INST_H_FILES) \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
@@ -710,6 +722,7 @@ ALL_HEADER_FILES += \
 
 ALL_TCC_FILES += \
 	$(OBJECT_TCC_FILES) \
+	$(OBJECT_INST_TCC_FILES) \
 	$(MAIN_EXEC_TCC_FILES) \
 	$(SIM_TCC_FILES) \
 	$(AST_TCC_FILES)
