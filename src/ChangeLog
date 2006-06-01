@@ -5,6 +5,12 @@
 
 2006-05-31	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-10:
+	  Minor bug fix: prsim initialize now resets check rings.  
+
+
+2006-05-31	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-09:
 	  No source revision, library and test cases only.
 

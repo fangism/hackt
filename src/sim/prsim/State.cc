@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.12 2006/05/28 19:27:12 fang Exp $
+	$Id: State.cc,v 1.13 2006/06/01 04:12:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -72,6 +72,7 @@ using std::ostringstream;
 using std::for_each;
 using std::mem_fun_ref;
 using std::distance;
+using std::fill;
 using std::find;
 using std::copy;
 using std::set_intersection;
@@ -206,6 +207,10 @@ State::initialize(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
+#if ENABLE_PRSIM_EXCL_CHECKS
+	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
+	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
+#endif
 	flags |= FLAGS_INITIALIZE_SET_MASK;
 	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 	// unwatchall()? no, preserved
@@ -241,6 +246,10 @@ State::reset(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
+#if ENABLE_PRSIM_EXCL_CHECKS
+	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
+	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
+#endif
 	flags = FLAGS_DEFAULT;
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
