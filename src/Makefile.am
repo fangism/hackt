@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.125 2006/06/01 19:33:53 fang Exp $
+#	$Id: Makefile.am,v 1.126 2006/06/01 20:47:20 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -88,7 +88,8 @@ noinst_SCRIPTS = hackt_persistent_table.sh
 
 # convenience libraries
 noinst_LTLIBRARIES = libhackt.la libhacktparsers.la libhacktast.la \
-	$(UTILLIBS) libhacktexec.la libhacktinst.la libhacktsim.la $(FUNLIBS) \
+	$(UTILLIBS) libhacktexec.la libhacktinstref.la \
+	libhacktsim.la $(FUNLIBS) \
 	libbogus.la libbogus2.la
 
 # this name is needed for libtool objects
@@ -101,7 +102,7 @@ LIBBOGUS2_LA = libbogus2_la
 
 hackt_SOURCES = main/hackt.cc
 hackt_LDADD = libhacktexec.la libhacktsim.la libhacktparsers.la \
-	libhacktast.la libhackt.la $(LIBFANGUTIL)
+	libhacktast.la libhackt.la libhacktinstref.la $(LIBFANGUTIL)
 # libhackt.la includes libhacktparsers.la, dependency below
 
 getopt_test_SOURCES = test/getopt_test.cc
@@ -267,7 +268,76 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/instance_pool.tcc \
 	Object/inst/state_instance.tcc
 
-OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h)
+OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
+	Object/inst/alias_visitee.h \
+	Object/inst/alias_visitor.h \
+	Object/inst/collection_fwd.h \
+	Object/inst/instance_fwd.h \
+	Object/inst/substructure_alias_fwd.h \
+	Object/inst/general_collection_type_manager.h \
+	Object/inst/null_collection_type_manager.h \
+	Object/inst/int_collection_type_manager.h \
+	Object/inst/parameterless_collection_type_manager.h \
+	Object/inst/instance_collection_base.h \
+	Object/inst/physical_instance_collection.h \
+	Object/inst/datatype_instance_collection.h \
+	Object/inst/instance_alias_info.h \
+	Object/inst/instance_alias.h \
+	Object/inst/internal_aliases_policy_fwd.h \
+	Object/inst/internal_aliases_policy.h \
+	Object/inst/alias_empty.h \
+	Object/inst/value_collection.h \
+	Object/inst/instance_pool_fwd.h \
+	Object/inst/instance_pool.h \
+	Object/inst/state_instance.h \
+	Object/inst/bool_instance.h \
+	Object/inst/int_instance.h \
+	Object/inst/enum_instance.h \
+	Object/inst/struct_instance.h \
+	Object/inst/process_instance.h \
+	Object/inst/channel_instance.h \
+	Object/inst/pbool_instance.h \
+	Object/inst/pint_instance.h \
+	Object/inst/preal_instance.h
+
+OBJECT_REF_CC_FILES = \
+	Object/ref/instance_reference.cc \
+	Object/ref/instance_reference_datatype.cc
+
+OBJECT_REF_TCC_FILES = \
+	Object/ref/aggregate_meta_instance_reference.tcc \
+	Object/ref/aggregate_meta_value_reference.tcc \
+	Object/ref/meta_instance_reference_subtypes.tcc \
+	Object/ref/simple_meta_instance_reference.tcc \
+	Object/ref/simple_nonmeta_instance_reference.tcc \
+	Object/ref/member_meta_instance_reference.tcc \
+	Object/ref/simple_meta_value_reference.tcc \
+	Object/ref/simple_nonmeta_value_reference.tcc
+
+OBJECT_REF_H_FILES = \
+	Object/ref/references_fwd.h \
+	Object/ref/meta_reference_union.h \
+	Object/ref/aggregate_meta_instance_reference_base.h \
+	Object/ref/aggregate_meta_instance_reference.h \
+	Object/ref/aggregate_meta_value_reference_base.h \
+	Object/ref/aggregate_meta_value_reference.h \
+	Object/ref/member_meta_instance_reference.h \
+	Object/ref/meta_index_list_fwd.h \
+	Object/ref/meta_instance_reference_base.h \
+	Object/ref/meta_instance_reference_subtypes.h \
+	Object/ref/meta_value_reference_base.h \
+	Object/ref/meta_value_reference.h \
+	Object/ref/nonmeta_instance_reference_base.h \
+	Object/ref/nonmeta_instance_reference_subtypes.h \
+	Object/ref/data_nonmeta_instance_reference.h \
+	Object/ref/simple_meta_instance_reference.h \
+	Object/ref/simple_meta_indexed_reference_base.h \
+	Object/ref/simple_meta_value_reference.h \
+	Object/ref/simple_nonmeta_instance_reference.h \
+	Object/ref/simple_nonmeta_instance_reference_base.h \
+	Object/ref/simple_nonmeta_value_reference.h \
+	Object/ref/inst_ref_implementation_fwd.h \
+	Object/ref/inst_ref_implementation.h
 
 OBJECT_CC_FILES = \
 	Object/common/object_base.cc \
@@ -332,21 +402,11 @@ OBJECT_CC_NO_H_FILES = \
 	Object/expr/nonmeta_param_value_reference.cc \
 	Object/expr/operators.cc \
 	Object/expr/data_expr.cc \
-	Object/type/type_reference.cc \
-	Object/ref/instance_reference.cc \
-	Object/ref/instance_reference_datatype.cc
+	Object/type/type_reference.cc
 
 # these header files have source (.cc) files with different names
 OBJECT_TCC_FILES = \
 	Object/expr/const_collection.tcc \
-	Object/ref/aggregate_meta_instance_reference.tcc \
-	Object/ref/aggregate_meta_value_reference.tcc \
-	Object/ref/meta_instance_reference_subtypes.tcc \
-	Object/ref/simple_meta_instance_reference.tcc \
-	Object/ref/simple_nonmeta_instance_reference.tcc \
-	Object/ref/member_meta_instance_reference.tcc \
-	Object/ref/simple_meta_value_reference.tcc \
-	Object/ref/simple_nonmeta_value_reference.tcc \
 	Object/type/canonical_type.tcc \
 	Object/unroll/alias_connection.tcc \
 	Object/unroll/expression_assignment.tcc \
@@ -453,65 +513,12 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/preal_unary_expr.h \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
-	Object/inst/alias_visitee.h \
-	Object/inst/alias_visitor.h \
-	Object/inst/collection_fwd.h \
-	Object/inst/instance_fwd.h \
-	Object/inst/substructure_alias_fwd.h \
-	Object/inst/general_collection_type_manager.h \
-	Object/inst/null_collection_type_manager.h \
-	Object/inst/int_collection_type_manager.h \
-	Object/inst/parameterless_collection_type_manager.h \
-	Object/inst/instance_collection_base.h \
-	Object/inst/physical_instance_collection.h \
-	Object/inst/datatype_instance_collection.h \
-	Object/inst/instance_alias_info.h \
-	Object/inst/instance_alias.h \
-	Object/inst/internal_aliases_policy_fwd.h \
-	Object/inst/internal_aliases_policy.h \
-	Object/inst/alias_empty.h \
-	Object/inst/value_collection.h \
-	Object/inst/instance_pool_fwd.h \
-	Object/inst/instance_pool.h \
-	Object/inst/state_instance.h \
-	Object/inst/bool_instance.h \
-	Object/inst/int_instance.h \
-	Object/inst/enum_instance.h \
-	Object/inst/struct_instance.h \
-	Object/inst/process_instance.h \
-	Object/inst/channel_instance.h \
-	Object/inst/pbool_instance.h \
-	Object/inst/pint_instance.h \
-	Object/inst/preal_instance.h \
 	Object/lang/cflat_visitee.h \
 	Object/lang/PRS_enum.h \
 	Object/lang/PRS_footprint_expr.h \
 	Object/lang/PRS_footprint_expr_pool_fwd.h \
 	Object/lang/PRS_footprint_macro.h \
 	Object/lang/PRS_footprint_rule.h \
-	Object/ref/references_fwd.h \
-	Object/ref/meta_reference_union.h \
-	Object/ref/aggregate_meta_instance_reference_base.h \
-	Object/ref/aggregate_meta_instance_reference.h \
-	Object/ref/aggregate_meta_value_reference_base.h \
-	Object/ref/aggregate_meta_value_reference.h \
-	Object/ref/member_meta_instance_reference.h \
-	Object/ref/meta_index_list_fwd.h \
-	Object/ref/meta_instance_reference_base.h \
-	Object/ref/meta_instance_reference_subtypes.h \
-	Object/ref/meta_value_reference_base.h \
-	Object/ref/meta_value_reference.h \
-	Object/ref/nonmeta_instance_reference_base.h \
-	Object/ref/nonmeta_instance_reference_subtypes.h \
-	Object/ref/data_nonmeta_instance_reference.h \
-	Object/ref/simple_meta_instance_reference.h \
-	Object/ref/simple_meta_indexed_reference_base.h \
-	Object/ref/simple_meta_value_reference.h \
-	Object/ref/simple_nonmeta_instance_reference.h \
-	Object/ref/simple_nonmeta_instance_reference_base.h \
-	Object/ref/simple_nonmeta_value_reference.h \
-	Object/ref/inst_ref_implementation_fwd.h \
-	Object/ref/inst_ref_implementation.h \
 	Object/type/type_fwd.h \
 	Object/type/builtin_channel_type_reference.h \
 	Object/type/channel_type_reference.h \
@@ -645,12 +652,14 @@ libhackt_la_SOURCES = \
 	$(COMMON_FILES) \
 	config.h
 
-libhackt_la_LIBADD = libhacktinst.la
-
-libhacktinst_la_SOURCES = \
+# combined library of instances and references
+libhacktinstref_la_SOURCES = \
 	$(OBJECT_INST_CC_FILES) \
 	$(OBJECT_INST_TCC_FILES) \
-	$(OBJECT_INST_H_FILES)
+	$(OBJECT_INST_H_FILES) \
+	$(OBJECT_REF_CC_FILES) \
+	$(OBJECT_REF_TCC_FILES) \
+	$(OBJECT_REF_H_FILES)
 
 libhacktast_la_SOURCES = $(AST_CC_FILES) $(AST_TCC_FILES) $(AST_H_FILES)
 

@@ -10,6 +10,9 @@
 		into its own convenience library libhacktinst.la 
 		for size managability, reduces link bottleneck
 		and link-time memory requirement.  
+	  update: renamed to libhacktinstref.la and include 
+		instance reference library/objects because of 
+		mutual dependence.  
 
 
 2006-05-31	David Fang		<fangism@users.sourceforge.net>
