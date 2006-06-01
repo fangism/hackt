@@ -1,5 +1,5 @@
 # "test/parser/array/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2006/05/25 20:11:25 fang Exp $
+#	$Id: Makefile.am,v 1.15 2006/06/01 19:25:21 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -57,6 +57,10 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 # 049.hac is a parse-fail test case, update at earliest convenience
 EXTRA_DIST += \
 	049.hac 050.hac 054.hac 055.hac
+
+# the following test cases should pass everything, 
+# just need to update expected outputs at earliest convenience
+EXTRA_DIST += 061.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

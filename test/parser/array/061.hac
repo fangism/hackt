@@ -1,0 +1,10 @@
+// "061.hac" should pass
+// contributed by Nathan Smith <nrs27@csl.cornell.edu>
+// testing parameter variables and making a dense array
+// testing for documentation-nrs27
+
+pint y[2][2];
+y[1][1] = 5;
+int bar[4][5][y[1][1]];
+
+
