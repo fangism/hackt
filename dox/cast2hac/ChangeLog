@@ -1,5 +1,12 @@
 # "dox/cast2hac/ChangeLog"
 
+2006-06-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-12:
+	  Started subsection about definition's port restrictions in HAC
+		relative to CAST.  
+
+
 2006-05-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-06:
