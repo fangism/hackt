@@ -1,0 +1,16 @@
+// "087.hac"
+// should fail
+// NOTE: uses spec-directive feature
+// testing for graceful and decipherable failure of range reference
+
+template <pint N>
+defproc e1of(bool d[N], e) {
+spec {
+        exclhi(d[0], d[1..N-1])
+	// will die during create for N==1
+}
+}
+
+e1of<1> foo;
+
+

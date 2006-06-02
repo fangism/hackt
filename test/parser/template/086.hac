@@ -1,0 +1,13 @@
+// "086.hac"
+// copy-reduced from "test/lib/source-01.hac" bug-triggering case
+
+template <pint N, A[N]>
+defproc internal() { }
+
+template <pint N, A[N]>
+defproc use_the_source() {
+internal<N, A> s;
+}
+
+use_the_source<1, {1}> luke;
+

@@ -1,0 +1,5 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	luke	use_the_source<1, {1}>
+	process: 2
+2	process	1	1	luke.s	internal<1, {1}>

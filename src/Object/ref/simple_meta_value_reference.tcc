@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.17 2006/04/27 00:15:39 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.18 2006/06/02 04:35:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -758,10 +758,19 @@ if (_vals.get_dimensions()) {
 	{
 	const const_range_list
 		crl(full_indices.collapsed_dimension_ranges());
-	const multikey_index_type
-		array_sizes(crl.resolve_sizes());
-	a.resize(array_sizes);
-	// a.resize(upper -lower +ones);
+	try {
+		const multikey_index_type
+			array_sizes(crl.resolve_sizes());
+		a.resize(array_sizes);
+		// a.resize(upper -lower +ones);
+	} catch (const_range_list::bad_range r) {
+		const_range::diagnose_bad_range(cerr << "got: ", r) << endl;
+		cerr << "Error during resolution of indexed reference to:"
+			<< endl;;
+		_vals.dump(cerr << "\tcollection state: ",
+			dump_flags::verbose) << endl;
+		return bad_bool(true);
+	}
 	}
 
 	// construct the range of aliases to collect

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.11 2006/04/23 07:37:22 fang Exp $
+	$Id: SPEC_registry.cc,v 1.12 2006/06/02 04:35:16 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -215,6 +215,7 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 	exclhi -- for LVS: asserts that a set of nodes may only
 		contain one logic high value.  
 		Useful for charge-sharing and sneak-path analysis.  
+	TODO: is the default output in the correct format?
  */
 void
 LVS_exclhi::main(cflat_prs_printer& p, const param_args_type& v,

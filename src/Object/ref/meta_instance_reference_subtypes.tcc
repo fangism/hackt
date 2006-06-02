@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.8 2006/04/27 00:15:37 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.9 2006/06/02 04:35:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -204,10 +204,19 @@ if (inst.get_dimensions()) {
 	crl.dump(STACKTRACE_INDENT << "range: ", 
 		expr_dump_context::default_value) << endl;
 #endif
-	const multikey_index_type
-		array_sizes(crl.resolve_sizes());
-	a.resize(array_sizes);
-	// a.resize(upper -lower +ones);
+	try {
+		const multikey_index_type
+			array_sizes(crl.resolve_sizes());
+		a.resize(array_sizes);
+		// a.resize(upper -lower +ones);
+	} catch (const_range_list::bad_range r) {
+		const_range::diagnose_bad_range(cerr << "got: ", r) << endl;
+		cerr << "Error during resolution of indexed reference to:"
+			<< endl;;
+		inst.dump(cerr << "\tcollection state: ",
+			dump_flags::verbose) << endl;
+		return bad_bool(true);
+	}
 	}
 
 	// construct the range of aliases to collect

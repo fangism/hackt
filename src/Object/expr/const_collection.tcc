@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.13 2006/04/27 00:15:32 fang Exp $
+ 	$Id: const_collection.tcc,v 1.14 2006/06/02 04:35:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -418,7 +418,8 @@ if (il.empty()) {
 	il.dump(STACKTRACE_INDENT << "il = ") << endl;
 	crl.dump(STACKTRACE_INDENT << "crl = ") << endl;
 #endif
-	this_type ret(crl.resolve_sizes());
+try {
+	this_type ret(crl.resolve_sizes());	// may throw const_range
 	generic_index_generator_type key_gen(il.size());
 	const key_type l(il.lower_multikey());
 	const key_type u(il.upper_multikey());
@@ -440,6 +441,13 @@ if (il.empty()) {
 	} while (key_gen != key_gen.get_lower_corner());
 	INVARIANT(coll_iter == ret.values.end());
 	return ret;
+} catch (const_range_list::bad_range r) {
+	// convert exception to std::range_error
+	const_range::diagnose_bad_range(cerr << "got: ", r) << endl;
+	cerr << "Error during attempt to extrace slice of values from " <<
+		util::what<this_type>::name() << endl;
+	throw std::range_error("indices contain bad range.");
+}
 }
 }
 

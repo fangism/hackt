@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.10 2006/05/28 19:27:10 fang Exp $
+	$Id: ExprAlloc.cc,v 1.11 2006/06/02 04:35:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -906,6 +906,7 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
 	Allocates a lock flag for checking exclusiveness.  
 	First collect all nodes into a set (for uniqueness) of node indices,
 	then registers each node with lock flag index.  
+	Rings of size 1 are automatically ignored.  
  */
 void
 LVS_exclhi::main(visitor_type& v, const param_args_type& params, 
@@ -924,8 +925,9 @@ LVS_exclhi::main(visitor_type& v, const param_args_type& params,
 			temp.insert(ni);
 		}
 	}
-	INVARIANT(temp.size() > 1);
-	v.state.append_check_exclhi_ring(temp);
+	if (temp.size() > 1) {
+		v.state.append_check_exclhi_ring(temp);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -935,6 +937,7 @@ DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 	Allocates a lock flag for checking exclusiveness.  
 	First collect all nodes into a set (for uniqueness) of node indices,
 	then registers each node with lock flag index.  
+	Rings of size 1 are automatically ignored.  
  */
 void
 LVS_excllo::main(visitor_type& v, const param_args_type& params, 
@@ -953,8 +956,9 @@ LVS_excllo::main(visitor_type& v, const param_args_type& params,
 			temp.insert(ni);
 		}
 	}
-	INVARIANT(temp.size() > 1);
-	v.state.append_check_excllo_ring(temp);
+	if (temp.size() > 1) {
+		v.state.append_check_excllo_ring(temp);
+	}
 }
 #endif	// ENABLE_PRSIM_EXCL_CHECKS
 

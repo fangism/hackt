@@ -1,6 +1,7 @@
 // "source-01.hac"
 // contributed by Filipp Akopyan <filipp@csl.cornell.edu>
 // BUG: 2nd parameter {...} dies (abort) during create with only value
+// FIXED: HACKT-00-01-04-main-00-79-13
 
 import "env.hac";
 import "channel.hac";

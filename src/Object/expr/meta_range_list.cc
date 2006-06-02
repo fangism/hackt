@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.13 2006/05/06 22:08:20 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.14 2006/06/02 04:35:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -491,7 +491,7 @@ INSTANTIATE_CONST_RANGE_LIST_MULTIKEY_GENERATOR(4)
 	\pre this->size() must be valid.
  */
 multikey_index_type
-const_range_list::resolve_sizes(void) const {
+const_range_list::resolve_sizes(void) const throw (bad_range) {
 	multikey_index_type ret(size());
 	const_iterator i(begin());
 	const const_iterator e(end());
@@ -499,7 +499,7 @@ const_range_list::resolve_sizes(void) const {
 	for ( ; i!=e; i++, j++) {
 		if (i->empty()) {
 			// then we have a bad range
-			THROW_EXIT;
+			throw *i;
 		}
 		ret[j] = i->size();
 	}

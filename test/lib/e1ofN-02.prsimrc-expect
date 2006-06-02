@@ -1,0 +1,48 @@
+checked exclhi rings:
+{ A.d[0], B.d[1] }
+{ A.d[0], C.d[1], C.d[2] }
+{ A.d[0], D.d[1], D.d[2], D.d[3] }
+{ A.d[0], E.d[1], E.d[2], E.d[3], E.d[4] }
+checked excllo rings:
+checked exclhi rings of which `A.d[0]' is a member:
+{ A.d[0], B.d[1] }
+{ A.d[0], C.d[1], C.d[2] }
+{ A.d[0], D.d[1], D.d[2], D.d[3] }
+{ A.d[0], E.d[1], E.d[2], E.d[3], E.d[4] }
+checked excllo rings of which `A.d[0]' is a member:
+checked exclhi rings of which `A.d[0]' is a member:
+{ A.d[0], B.d[1] }
+{ A.d[0], C.d[1], C.d[2] }
+{ A.d[0], D.d[1], D.d[2], D.d[3] }
+{ A.d[0], E.d[1], E.d[2], E.d[3], E.d[4] }
+checked excllo rings of which `A.d[0]' is a member:
+checked exclhi rings of which `A.d[0]' is a member:
+{ A.d[0], B.d[1] }
+{ A.d[0], C.d[1], C.d[2] }
+{ A.d[0], D.d[1], D.d[2], D.d[3] }
+{ A.d[0], E.d[1], E.d[2], E.d[3], E.d[4] }
+checked excllo rings of which `A.d[0]' is a member:
+checked exclhi rings of which `A.d[0]' is a member:
+{ A.d[0], B.d[1] }
+{ A.d[0], C.d[1], C.d[2] }
+{ A.d[0], D.d[1], D.d[2], D.d[3] }
+{ A.d[0], E.d[1], E.d[2], E.d[3], E.d[4] }
+checked excllo rings of which `A.d[0]' is a member:
+checked exclhi rings of which `A.d[0]' is a member:
+{ A.d[0], B.d[1] }
+{ A.d[0], C.d[1], C.d[2] }
+{ A.d[0], D.d[1], D.d[2], D.d[3] }
+{ A.d[0], E.d[1], E.d[2], E.d[3], E.d[4] }
+checked excllo rings of which `A.d[0]' is a member:
+checked exclhi rings of which `B.d[1]' is a member:
+{ A.d[0], B.d[1] }
+checked excllo rings of which `B.d[1]' is a member:
+checked exclhi rings of which `C.d[2]' is a member:
+{ A.d[0], C.d[1], C.d[2] }
+checked excllo rings of which `C.d[2]' is a member:
+checked exclhi rings of which `D.d[3]' is a member:
+{ A.d[0], D.d[1], D.d[2], D.d[3] }
+checked excllo rings of which `D.d[3]' is a member:
+checked exclhi rings of which `E.d[4]' is a member:
+{ A.d[0], E.d[1], E.d[2], E.d[3], E.d[4] }
+checked excllo rings of which `E.d[4]' is a member:

@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.10 2006/03/15 04:38:15 fang Exp $
+ 	$Id: meta_range.cc,v 1.11 2006/06/02 04:35:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -533,6 +533,15 @@ bool
 const_range::range_size_equivalent(const const_index& i) const {
 	const never_ptr<const const_range> r(IS_A(const const_range*, &i));
 	return r && (r->second - r->first == second -first);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints error diagnostic for a bad range.
+ */
+ostream&
+const_range::diagnose_bad_range(ostream& o, const const_range& r) {
+	return o << "bad range: " << r.first << ".." << r.second;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

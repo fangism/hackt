@@ -1,0 +1,33 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	A	e1of<1>
+	bool: 1,2
+2	(top)	-	2	B	e1of<2>
+	bool: 3,4,5
+3	(top)	-	3	C	e1of<3>
+	bool: 6,7,8,9
+4	(top)	-	4	D	e1of<4>
+	bool: 10,11,12,13,14
+5	(top)	-	5	E	e1of<5>
+	bool: 15,16,17,18,19,20
+[global bool entries]
+1	(top)	-	1	A.d[0]	
+2	(top)	-	2	A.e	
+3	(top)	-	3	B.d[0]	
+4	(top)	-	4	B.d[1]	
+5	(top)	-	5	B.e	
+6	(top)	-	6	C.d[0]	
+7	(top)	-	7	C.d[1]	
+8	(top)	-	8	C.d[2]	
+9	(top)	-	9	C.e	
+10	(top)	-	10	D.d[0]	
+11	(top)	-	11	D.d[1]	
+12	(top)	-	12	D.d[2]	
+13	(top)	-	13	D.d[3]	
+14	(top)	-	14	D.e	
+15	(top)	-	15	E.d[0]	
+16	(top)	-	16	E.d[1]	
+17	(top)	-	17	E.d[2]	
+18	(top)	-	18	E.d[3]	
+19	(top)	-	19	E.d[4]	
+20	(top)	-	20	E.e	

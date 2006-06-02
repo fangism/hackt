@@ -1,0 +1,15 @@
+// "e1ofN-02.hac"
+// copy-modfied from "e1ofN-01.hac"
+// instantiating a bunch of channels
+// use prsim to dump all checked excl-rings.  
+
+import "channel.hac";
+
+e1of1	A;
+e1of2	B;
+e1of3	C;
+e1of4	D;
+e1of5	E;
+
+A.d[0] = B.d[0] = C.d[0] = D.d[0] = E.d[0];
+

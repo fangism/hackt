@@ -1,0 +1,9 @@
+got: bad range: 1..0
+Error during resolution of indexed reference to:
+	collection state: bool^1 d
+  unrolled indices: {
+    0 = ::e1of::d[0] (1) 
+  }
+Error resolving literal node at position 2 of spec directive 'exclhi'.
+Error during create_unique.
+ERROR in creating.  Aborting.

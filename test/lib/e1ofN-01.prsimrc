@@ -1,0 +1,13 @@
+# "e1ofN-01.prsimrc"
+#	$Id: e1ofN-01.prsimrc,v 1.1 2006/06/02 04:35:24 fang Exp $
+# @haco@ e1ofN-01.haco-a
+# testing excl rings
+
+allrings-chk
+
+rings-chk A.d[0]
+rings-chk B.d[0]
+rings-chk C.d[0]
+rings-chk D.d[0]
+rings-chk E.d[0]
+

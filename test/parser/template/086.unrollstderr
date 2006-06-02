@@ -1,0 +1,117 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	205
+	4	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	10	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
+	16	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	41
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	223
+	20	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	21	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	28	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
+	38	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	41
+	39	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	apimvref	0	#HEAD#	#TAIL#	17
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    internal = process-definition (defined) internal<
+      pint<> N
+      pint<> A[0..N-1]
+      >(
+      )
+      In definition "internal", we have: {
+      Parameters:
+        A = pint<> A
+
+        N = pint<> N
+      unroll sequence: 
+        pint<> N
+        pint<> A[0..N-1]
+      footprint collection: {
+        <1, {1}> {
+          pint^1 A
+            unrolled index-value pairs: {
+              0 = ?
+            }
+          pint^0 N value: ?
+        }
+      }
+      }
+
+    use_the_source = process-definition (defined) use_the_source<
+      pint<> N
+      pint<> A[0..N-1]
+      >(
+      )
+      In definition "use_the_source", we have: {
+      Parameters:
+        A = pint<> A
+
+        N = pint<> N
+      Instances:
+        s = internal<::use_the_source::N, ::use_the_source::A> s
+      unroll sequence: 
+        pint<> N
+        pint<> A[0..N-1]
+        internal<::use_the_source::N, ::use_the_source::A> s
+      footprint collection: {
+        <1, {1}> {
+          pint^1 A
+            unrolled index-value pairs: {
+              0 = ?
+            }
+          pint^0 N value: ?
+          process internal<1, {1}>^0 s (instantiated) = ::use_the_source::s 
+        }
+      }
+      }
+
+  Instances:
+    luke = process use_the_source<1, {1}>^0 luke (instantiated) = ::luke 
+}
+

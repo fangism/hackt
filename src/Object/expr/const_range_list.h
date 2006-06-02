@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range_list.h,v 1.10 2006/02/21 04:48:23 fang Exp $
+	$Id: const_range_list.h,v 1.11 2006/06/02 04:35:13 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_LIST_H__
@@ -12,6 +12,7 @@
 #include <list>
 #include <vector>
 #include "Object/expr/meta_range_list.h"
+#include "Object/expr/const_range.h"
 #include "Object/common/multikey_index.h"
 #include "util/multikey_fwd.h"
 
@@ -41,6 +42,11 @@ public:
 	typedef	list_type::const_iterator		const_iterator;
 	typedef	list_type::reverse_iterator		reverse_iterator;
 	typedef	list_type::const_reverse_iterator	const_reverse_iterator;
+	/**
+		Exception type for resolving a bad range, such
+		as negative indices, or backwards bounds. 
+	 */
+	typedef	const_range				bad_range;
 public:
 	const_range_list();
 
@@ -109,7 +115,7 @@ public:
 
 	// is a pint_const_collection::array_type::key_type
 	multikey_index_type
-	resolve_sizes(void) const;
+	resolve_sizes(void) const throw (bad_range);
 
 	good_bool
 	unroll_resolve_rvalues(const_range_list&, const unroll_context&) const;

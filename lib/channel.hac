@@ -2,7 +2,7 @@
 	"channel.hac"
 	Standard channel definitions in HAC.  
 	Q: place thes in some namespace?
-	$Id: channel.hac,v 1.3 2006/05/31 18:15:04 fang Exp $
+	$Id: channel.hac,v 1.4 2006/06/02 04:35:09 fang Exp $
  */
 
 /*** e1of<N> definitions ********************************/
@@ -15,7 +15,7 @@ template <pint N>
 defproc e1of(bool d[N], e)
 {
 spec {
-	exclhi(d[0], d[1..N-1])
+	exclhi(d[0], d[0..N-1])
 	// the split d[] array works around the minimum number of arguments
 	// required for the SPEC exclhi directive
 }
@@ -40,7 +40,7 @@ template <pint N>
 defproc a1of(bool d[N], a)
 {
 spec {
-	exclhi(d[0], d[1..N-1])
+	exclhi(d[0], d[0..N-1])
 }
 }
 
@@ -63,7 +63,7 @@ template <pint N>
 defproc c1of(bool d[N])
 {
 spec {
-	exclhi(d[0], d[1..N-1])
+	exclhi(d[0], d[0..N-1])
 }
 }
 
@@ -75,7 +75,7 @@ template <pint N>
 defproc _c1of(bool d[N])
 {
 spec {
-	excllo(d[0], d[1..N-1])
+	excllo(d[0], d[0..N-1])
 }
 }
 
@@ -107,7 +107,7 @@ template <pint N>
 defproc ev1of(bool d[N], e, v)
 {
 spec {
-	exclhi(d[0], d[1..N-1])
+	exclhi(d[0], d[0..N-1])
 }
 }
 
@@ -129,7 +129,7 @@ template <pint N>
 defproc en1of(bool d[N], e, n)
 {
 spec {
-	exclhi(d[0], d[1..N-1])
+	exclhi(d[0], d[0..N-1])
 }
 }
 
@@ -151,7 +151,7 @@ template <pint N>
 defproc av1of(bool d[N], a, v)
 {
 spec {
-	exclhi(d[0], d[1..N-1])
+	exclhi(d[0], d[0..N-1])
 }
 }
 
@@ -173,7 +173,7 @@ template <pint N>
 defproc an1of(bool d[N], a, n)
 {
 spec {
-	exclhi(d[0], d[1..N-1])
+	exclhi(d[0], d[0..N-1])
 }
 }
 

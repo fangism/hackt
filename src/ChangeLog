@@ -5,6 +5,20 @@
 
 2006-06-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-13:
+	  Series of mInor bug fixes:
+	  prsim check-ring (exclhi/lo) directive now automatically
+		ignores rings of size 1, such as occurs with 1of1 rails.  
+	  const_range::resolve_sizes() now throws bad_range (const_range)
+		when a range is malformed, e.g. negative or backwards.  
+		Callers now catch the exception and print useful error message.
+	  TODO: fix port formals manager instance collection dumping
+		for objdump diagnostics (missing dimensions of decl.)
+	  TODO: re-define source/buckets with typedefs
+
+
+2006-06-01	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-12:
 	  Fixed dumping of template formal value collections (latent bug), 
 		finally prints out the dimensions of parameter collections.  

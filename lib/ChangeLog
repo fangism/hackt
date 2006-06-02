@@ -2,6 +2,12 @@
 
 2006-05-31	David Fang	<fangism@users.sourceforce.net>
 
+	* HACKT-00-01-04-main-00-79-13:
+	  Fixed typo in channel's exclhi/lo spec-directives.
+
+
+2006-05-31	David Fang	<fangism@users.sourceforce.net>
+
 	* HACKT-00-01-04-main-00-79-09:
 	  Added ev (shared validity) style channels to "channel.hac".
 	  Added exclhi/lo directives to channels' data rails.  
