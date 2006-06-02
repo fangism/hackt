@@ -2,7 +2,7 @@
 	\file "Object/def/channel_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "art_object_definition_chan.h".
-	$Id: channel_definition_alias.h,v 1.6 2006/01/22 18:19:28 fang Exp $
+	$Id: channel_definition_alias.h,v 1.7 2006/06/02 20:15:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_CHANNEL_DEFINITION_ALIAS_H__
@@ -60,6 +60,8 @@ public:
 
 	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
+
+	CERTIFY_PORT_ACTUALS_PROTO;
 
 	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO;
 

@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.7 2006/01/22 18:19:27 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.8 2006/06/02 20:15:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -56,6 +56,8 @@ public:
 
 	never_ptr<const datatype_definition_base>
 	resolve_canonical_datatype_definition(void) const;
+
+	CERTIFY_PORT_ACTUALS_PROTO;
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 	// overrides definition_base's, exception to rule

@@ -2,7 +2,7 @@
 	"channel.hac"
 	Standard channel definitions in HAC.  
 	Q: place thes in some namespace?
-	$Id: channel.hac,v 1.4 2006/06/02 04:35:09 fang Exp $
+	$Id: channel.hac,v 1.5 2006/06/02 20:15:13 fang Exp $
  */
 
 /*** e1of<N> definitions ********************************/
@@ -217,11 +217,17 @@ defproc e1of2tf(bool d[2]; bool z,o,t,f,e)
 {
   z=d[0]=f;
   o=d[1]=t;
+spec {
+	exclhi(d[0], d[1])
+}
 }
 
 defproc a1of2tf(bool d[2]; bool z,o,t,f,a)
 {
   z=d[0]=f;
   o=d[1]=t;
+spec {
+	exclhi(d[0], d[1])
+}
 }
 

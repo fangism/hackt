@@ -2,7 +2,7 @@
 	\file "Object/def/param_definition.h"
 	Definition-related HAC object classes.  
 	This file used to be "Object/art_object_definition.h".
-	$Id: param_definition.h,v 1.5 2006/01/22 18:19:34 fang Exp $
+	$Id: param_definition.h,v 1.6 2006/06/02 20:15:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PARAM_DEFINITION_H__
@@ -66,6 +66,8 @@ public:
 	excl_ptr<definition_base>
 	make_typedef(never_ptr<const scopespace> s, 
 		const token_identifier& id) const;
+
+	CERTIFY_PORT_ACTUALS_PROTO;
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 

@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.7 2006/01/22 18:19:31 fang Exp $
+	$Id: definition_base.h,v 1.8 2006/06/02 20:15:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -180,9 +180,12 @@ public:
 	make_type_ptr_type
 	make_default_template_arguments(void) const;
 
+#define	CERTIFY_PORT_ACTUALS_PROTO					\
+	good_bool							\
+	certify_port_actuals(const checked_refs_type&) const
+
 	/** by default returns false */
-virtual	good_bool
-	certify_port_actuals(const checked_refs_type&) const;
+virtual	CERTIFY_PORT_ACTUALS_PROTO = 0;
 
 public:
 #define	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO				\

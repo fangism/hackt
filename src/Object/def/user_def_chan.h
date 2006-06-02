@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.7 2006/01/22 18:19:38 fang Exp $
+	$Id: user_def_chan.h,v 1.8 2006/06/02 20:15:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_CHAN_H__
@@ -94,8 +94,7 @@ public:
 	never_ptr<const port_formals_manager>
 	get_port_formals_manager(void) const;
 
-	good_bool
-	certify_port_actuals(const checked_refs_type&) const;
+	CERTIFY_PORT_ACTUALS_PROTO;
 
 	MAKE_CANONICAL_CHANNEL_TYPE_REFERENCE_PROTO;
 

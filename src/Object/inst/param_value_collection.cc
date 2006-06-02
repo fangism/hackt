@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.13 2006/06/02 05:14:24 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.14 2006/06/02 20:15:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -58,48 +58,6 @@ param_value_collection::param_value_collection(const scopespace& o,
 param_value_collection::~param_value_collection() {
 	STACKTRACE_DTOR("~param_value_collection()");
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Obsolete?  do not use anymore?
- */
-ostream&
-param_value_collection::dump(ostream& o, const dump_flags& df) const {
-#if STACKTRACE_DUMPS
-	STACKTRACE("pvc::dump");
-#endif
-	parent_type::dump_base(o, df);
-	const count_ptr<const param_expr>
-		init_def(default_value());
-	if (init_def) {
-		expr_dump_context dc(expr_dump_context::default_value);
-		dc.enclosing_scope = owner;
-		if (is_template_formal())
-			init_def->dump(o << " (default = ", dc) << ")";
-		else	init_def->dump(o << " (init = ", dc) << ")";
-	}
-	// print out the values of instances that have been unrolled
-	if (is_partially_unrolled()) {
-		if (dimensions) {
-			INDENT_SECTION(o);
-			o << auto_indent <<
-				"unrolled index-value pairs: {" << endl;
-			{
-				INDENT_SECTION(o);
-				dump_unrolled_values(o);
-			}
-			o << auto_indent << "}";	// << endl;
-		} else {
-			disable_indent no_indent(o);
-			o << " value: ";
-			// suppress indent
-			dump_unrolled_values(o);	// already endl
-		}
-	}
-	return o;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

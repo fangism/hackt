@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.8 2006/02/04 06:43:17 fang Exp $
+	$Id: process_definition.h,v 1.9 2006/06/02 20:15:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -94,8 +94,7 @@ public:
 
 	DEFINITION_ADD_PORT_FORMAL_PROTO;
 
-	good_bool
-	certify_port_actuals(const checked_refs_type& ol) const;
+	CERTIFY_PORT_ACTUALS_PROTO;
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const;

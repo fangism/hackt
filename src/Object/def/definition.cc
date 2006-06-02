@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.22 2006/05/11 22:45:58 fang Exp $
+ 	$Id: definition.cc,v 1.23 2006/06/02 20:15:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -387,6 +387,7 @@ definition_base::certify_template_arguments(template_actuals& ta) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Default: return false (if unimplemented)
 	Temporarily prints an error message.  
@@ -397,6 +398,7 @@ definition_base::certify_port_actuals(const checked_refs_type&) const {
 		<< endl;
 	return good_bool(false);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1113,6 +1115,16 @@ channel_definition_alias::get_port_formals_manager(void) const {
 	return base->get_base_chan_def()->get_port_formals_manager();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	Untested.
+ */
+good_bool
+channel_definition_alias::certify_port_actuals(
+		const checked_refs_type& cr) const {
+	return base->get_base_chan_def()->certify_port_actuals(cr);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 channel_definition_alias::assign_typedef(
@@ -1328,6 +1340,14 @@ built_in_datatype_def::resolve_canonical_datatype_definition(void) const {
 	return never_ptr<const datatype_definition_base>(this);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+built_in_datatype_def::certify_port_actuals(
+		const checked_refs_type& cr) const {
+	cerr << "No built-in data types have public ports." << endl;
+	return good_bool(false);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 definition_base::type_ref_ptr_type
 built_in_datatype_def::make_fundamental_type_reference(
@@ -1537,6 +1557,14 @@ built_in_param_def::get_scopespace(void) const {
 	return never_ptr<const scopespace>(NULL);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+built_in_param_def::certify_port_actuals(
+		const checked_refs_type& cr) const {
+	ICE_NEVER_CALL(cerr);
+	return good_bool(false);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Cannot alias built-in parameter types!
@@ -1680,6 +1708,14 @@ enum_datatype_def::get_scopespace(void) const {
 never_ptr<const datatype_definition_base>
 enum_datatype_def::resolve_canonical_datatype_definition(void) const {
 	return never_ptr<const datatype_definition_base>(this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+enum_datatype_def::certify_port_actuals(
+		const checked_refs_type& cr) const {
+	cerr << "Enums do not have ports." << endl;
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2063,6 +2099,13 @@ user_def_datatype::get_port_formals_manager(void) const {
 	return never_ptr<const port_formals_manager>(&port_formals);
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+user_def_datatype::certify_port_actuals(
+		const checked_refs_type& cr) const {
+	return port_formals.certify_port_actuals(cr);
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 definition_base::type_ref_ptr_type
 user_def_datatype::make_fundamental_type_reference(
@@ -2389,6 +2432,13 @@ datatype_definition_alias::get_scopespace(void) const {
 never_ptr<const port_formals_manager>
 datatype_definition_alias::get_port_formals_manager(void) const {
 	return base->get_base_datatype_def()->get_port_formals_manager();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+datatype_definition_alias::certify_port_actuals(
+		const checked_refs_type& cr) const {
+	return base->get_base_datatype_def()->certify_port_actuals(cr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3227,6 +3277,13 @@ process_definition_alias::assign_typedef(
 	base = f.is_a_xfer<const process_type_reference>();
 	NEVER_NULL(base);
 	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+good_bool
+process_definition_alias::certify_port_actuals(
+		const checked_refs_type& cr) const {
+	return base->get_base_proc_def()->certify_port_actuals(cr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

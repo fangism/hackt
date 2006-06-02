@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_alias.h,v 1.6 2006/01/22 18:19:30 fang Exp $
+	$Id: datatype_definition_alias.h,v 1.7 2006/06/02 20:15:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_ALIAS_H__
@@ -62,6 +62,8 @@ public:
 
 	bool
 	assign_typedef(excl_ptr<const fundamental_type_reference>& f);
+
+	CERTIFY_PORT_ACTUALS_PROTO;
 
 	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO;
 
