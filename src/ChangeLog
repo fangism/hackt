@@ -5,6 +5,17 @@
 
 2006-06-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-12:
+	  Fixed dumping of template formal value collections (latent bug), 
+		finally prints out the dimensions of parameter collections.  
+		Implemented as: virtual value_collection::dump_formal(ostream&)
+		Needed for accurate diagnostics.  Test cases updated.  
+	  Minor documentation updates.  
+	  TODO: investigating bug report submitted by Filipp.  
+
+
+2006-06-01	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-11:
 	  Makefile.am: split libhackt's instance objects Object/inst/*.o
 		into its own convenience library libhacktinst.la 

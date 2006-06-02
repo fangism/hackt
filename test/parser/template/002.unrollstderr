@@ -26,8 +26,7 @@ In namespace "", we have: {
   Definitions:
     array_me = process-definition (declared) array_me<
       pint<> N
-      pint<> A
-
+      pint<> A[0..N-1]
       >(
       )
       In definition "array_me", we have: {

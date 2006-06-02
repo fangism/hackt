@@ -8,4 +8,5 @@ import "channel.hac";
 bool _Reset;
 e1of2 p1;
 source_e1of2 <1,{1}> src_p1(p1, _Reset);
+// source_e1of2 <2,{1,1}> src_p1(p1, _Reset);	// this works around
 

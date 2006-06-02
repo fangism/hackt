@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.15 2006/05/06 22:08:24 fang Exp $
+ 	$Id: value_collection.tcc,v 1.16 2006/06/02 00:26:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -30,6 +30,7 @@
 
 #include "Object/inst/value_collection.h"
 #include "Object/expr/const_collection.h"
+#include "Object/expr/expr_dump_context.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_index.h"
 #include "Object/expr/const_index_list.h"
@@ -161,6 +162,31 @@ VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This variant is called by template_formal_manager::dump_*.  
+ */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+ostream&
+VALUE_COLLECTION_CLASS::dump_formal(ostream& o) const {
+	INVARIANT(this->is_template_formal());
+//	this->dump_base(o);
+	this->dump_collection_only(o);
+	expr_dump_context dc(expr_dump_context::default_value);
+	dc.enclosing_scope = this->owner;
+	if (this->dimensions) {
+		const index_collection_item_ptr_type
+			i(this->get_initial_instantiation_indices());
+		NEVER_NULL(i);
+		i->dump(o, dc);
+	}
+	if (this->ival) {
+		this->ival->dump(o << " (default = ", dc) << ")";
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variant is used when there is an unroll_context available.  
 	Intended for diagnostic use, printing resolved dimensions
 	of template formal parameter value collection.  
 	\param c unroll_context is needed in case of template dependence.  
@@ -182,6 +208,46 @@ if (this->dimensions) {
 	}
 	crl.dump(o << ' ');
 }
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Was moved up from base class implementation.
+	Obsolete? or still used?
+	(used to be called virtually by template_formal_manager::dump)
+ */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+ostream&
+VALUE_COLLECTION_CLASS::dump(ostream& o, const dump_flags& df) const {
+	parent_type::dump_base(o, df);
+	const count_ptr<const param_expr>
+		init_def(this->default_value());
+	if (init_def) {
+		expr_dump_context dc(expr_dump_context::default_value);
+		dc.enclosing_scope = this->owner;
+		if (this->is_template_formal())
+			init_def->dump(o << " (default = ", dc) << ")";
+		else    init_def->dump(o << " (init = ", dc) << ")";
+	}
+	// print out the values of instances that have been unrolled
+	if (this->is_partially_unrolled()) {
+		if (this->dimensions) {
+			INDENT_SECTION(o);
+			o << auto_indent <<
+				"unrolled index-value pairs: {" << endl;
+			{
+				INDENT_SECTION(o);
+				dump_unrolled_values(o);
+			}
+			o << auto_indent << "}";	// << endl;
+		} else {
+			const util::disable_indent no_indent(o);
+			o << " value: ";
+			// suppress indent
+			dump_unrolled_values(o);	// already endl
+		}
+	}
 	return o;
 }
 

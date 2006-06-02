@@ -40,8 +40,7 @@ In namespace "", we have: {
   Definitions:
     mychan = user-def-chan (declared) mychan<
       pint<> K
-      pint<> J
-
+      pint<> J[0..K-1]
       >
       chan(
         int<::mychan::J[0]>

@@ -3,10 +3,11 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.10 2006/05/06 22:08:17 fang Exp $
+	$Id: template_formals_manager.cc,v 1.11 2006/06/02 00:26:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include <iterator>
@@ -58,6 +59,9 @@ template_formals_manager::~template_formals_manager() { }
 ostream&
 template_formals_manager::dump_formals_list(ostream& o, 
 		const template_formals_list_type& l) {
+#if STACKTRACE_DUMPS
+	STACKTRACE("tfm::dump");
+#endif
 	o << '<' << endl;	// continued from last print
 	template_formals_list_type::const_iterator i(l.begin());
 	const template_formals_list_type::const_iterator e(l.end());
@@ -68,8 +72,7 @@ template_formals_manager::dump_formals_list(ostream& o,
 		// INVARIANT((*i)->is_template_formal());
 		INVARIANT((*i)->is_template_formal() ||
 			(*i)->is_loop_variable());
-		(*i)->dump(o << auto_indent,
-			dump_flags::no_definition_owner) << endl;
+		(*i)->dump_formal(o << auto_indent) << endl;
 	}
 	return o << auto_indent << '>';
 }

@@ -53,8 +53,7 @@ In namespace "", we have: {
       }
   Definitions:
     foo = process-definition (defined) foo<
-      pint<> N
-
+      pint<> N[0..1]
       >(
       )
       In definition "foo", we have: {

@@ -26,8 +26,7 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (declared) foo<
       pint<> N
-      pint<> A
-
+      pint<> A[0..N-1]
       >(
       )
       In definition "foo", we have: {

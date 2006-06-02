@@ -21,10 +21,8 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     foo = process-definition (declared) foo<
-      pint<> bar
-
-      pint<> food
-
+      pint<> bar[0..4]
+      pint<> food[0..11][0..11]
       >(
       )
       In definition "foo", we have: {

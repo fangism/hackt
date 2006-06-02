@@ -539,8 +539,7 @@ In namespace "", we have: {
     source_e = process-definition (defined) source_e<
       pint<> N
       pint<> M
-      pint<> d
-
+      pint<> d[0..N-1]
       >(
         globals<> g
         e1of<::source_e::M> rr

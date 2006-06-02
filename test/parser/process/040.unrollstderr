@@ -26,8 +26,7 @@ In namespace "", we have: {
   Definitions:
     foo = process-definition (declared) foo<
       pint<> bar
-      pbool<> jinx
-
+      pbool<> jinx[0..bar-1]
       >(
       )
       In definition "foo", we have: {

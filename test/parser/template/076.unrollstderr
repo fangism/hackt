@@ -129,8 +129,7 @@ In namespace "", we have: {
   Definitions:
     ass = process-definition (defined) ass<
       pint<> N
-      pint<> d
-
+      pint<> d[0..N-1]
       >(
         bool<> x
         bool<> y
@@ -177,8 +176,7 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       pint<> M
-      pint<> d
-
+      pint<> d[0..N-1]
       >(
         bool<> r
         bool<> s

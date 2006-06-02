@@ -3,13 +3,14 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.11 2006/02/21 04:48:30 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.12 2006/06/02 00:26:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
 #define	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
 
 #define	ENABLE_STACKTRACE		0
+#define	STACKTRACE_DUMPS		(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 
@@ -59,8 +60,12 @@ param_value_collection::~param_value_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 ostream&
 param_value_collection::dump(ostream& o, const dump_flags& df) const {
+#if STACKTRACE_DUMPS
+	STACKTRACE("pvc::dump");
+#endif
 	parent_type::dump_base(o, df);
 	const count_ptr<const param_expr>
 		init_def(default_value());
@@ -91,6 +96,7 @@ param_value_collection::dump(ostream& o, const dump_flags& df) const {
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

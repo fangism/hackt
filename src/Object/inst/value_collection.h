@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.13 2006/04/18 18:42:40 fang Exp $
+	$Id: value_collection.h,v 1.14 2006/06/02 00:26:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -163,6 +163,12 @@ virtual	ostream&
 
 	ostream&
 	dump_formal(ostream&, const unroll_context&) const;
+
+	ostream&
+	dump_formal(ostream&) const;
+
+	ostream&
+	dump(ostream&, const dump_flags&) const;
 
 	// PROBLEM: built-in? needs to be consistent
 	count_ptr<const fundamental_type_reference>

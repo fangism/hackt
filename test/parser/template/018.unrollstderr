@@ -40,8 +40,7 @@ In namespace "", we have: {
   Definitions:
     the_matrix = process-definition (defined) the_matrix<
       pint<> N
-      pint<> M
-
+      pint<> M[0..N-1][0..N-1]
       >(
       )
       In definition "the_matrix", we have: {
