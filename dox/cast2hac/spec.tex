@@ -1,7 +1,30 @@
 % "cast2hac/spec.tex"
-%	$Id: spec.tex,v 1.1 2006/05/27 04:52:57 fang Exp $
+%	$Id: spec.tex,v 1.2 2006/06/03 05:52:29 fang Exp $
 
 \section{Spec directives}
 \label{sec:spec}
 
+The \ttt{spec} sub-language in \hac\ is a generalized version
+of the \ttt{spec} bodies in \CAST.  
+See the SPEC language chapter in the \ttt{hac.pdf} language reference.  
+
+Spec directives may be parameterized in \hac, 
+and arguments may be passed in groups. 
+
+\section{Porting from CAST}
+\label{sec:spec:porting}
+
+This section describes some common uses of spec-directives
+in migrating from \CAST\ to \hac.  
+
+\ttt{CHECK\_CHANNELS} production rules may be replaced 
+with \ttt{exclhi} and \ttt{excllo} directives, 
+which are used by \ttt{hackt prsim} for built-in checking
+of mutual exclusion at run-time.  
+
+Forced exclusive high/low rings, 
+which used to be \emph{inside PRS} bodies, 
+were declared as \ttt{exclhi} and \ttt{excllo}.  
+In \hac, they are now the \ttt{mk\_exclhi} and \ttt{mk\_excllo} 
+spec directives.  
 

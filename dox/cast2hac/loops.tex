@@ -1,7 +1,38 @@
 % "cast2hac/loops.tex"
-%	$Id: loops.tex,v 1.1 2006/05/27 04:52:56 fang Exp $
+%	$Id: loops.tex,v 1.2 2006/06/03 05:52:29 fang Exp $
 
 \section{Loops}
 \label{sec:loops}
 
+In \CAST, the an example of a loop statement in the meta-language
+might look like:
+
+\begin{verbatim}
+<i:N:
+  inv z[i];
+  x[i] = y[i];
+>
+\end{verbatim}
+
+The equivalent in \hac\ would look like:
+
+\begin{verbatim}
+(;i:N:
+  inv z[i..i];
+  x[i] = y[i];
+)
+\end{verbatim}
+
+The main difference is the use of parentheses instead of 
+angle brackets and an extra semicolon operator.  
+Notice that the declaration of \ttt{z} in the loop uses
+an explicit range to declare each sparse instance 
+in the collection (Section~\ref{sec:arrays}).  
+(It is highly recommended to keep declarations outside of 
+loops where possible, leaving only connection statements inside loops.)
+
+Like in \CAST, loops may be nested arbitrarily deep.  
+
+Do NOT write PRS bodies inside loops, the semantics are currently
+undefined.  
 

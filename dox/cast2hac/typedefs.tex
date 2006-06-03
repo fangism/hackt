@@ -1,0 +1,62 @@
+% "cast2hac/typedefs.tex"
+%	$Id: typedefs.tex,v 1.1 2006/06/03 05:52:29 fang Exp $
+
+\section{Typedefs}
+\label{sec:typedefs}
+
+Type aliases or \emph{typedefs} were not supported in \CAST, 
+but are worth mentioning as a new feature of \hac.  
+Like in C, typedefs are a mechanism for giving user-defined names
+to an existing type.  
+(TODO: discuss the benefits of style.)
+If one really wanted to use \ttt{node} and \bool\ as the same type, 
+one could write: \ttt{typedef bool node;}
+and use \ttt{node} interchangeably with \bool.  
+
+The real benefit is being able to bind definitions templates
+to new definitions that just forward template arguments to
+underlying types.  
+
+In the library \ttt{channel.hac}, we see the following example:
+
+\begin{verbatim}
+template <pint N>
+defproc e1of (bool d[N], e) { ... }
+
+typedef	e1of<2> e1of2;
+\end{verbatim}
+
+This declarations defines type \ttt{e1of2} to be an alias
+to the complete type \ttt{e1of<2>}.  
+In \CAST, \ttt{e1of(2)} and \ttt{e1of2} are different definitions and hence,
+could not be equivalent types.  
+Connecting them required connecting their public port members, 
+which was an inconvenience when mixing template types with non-template types.  
+More common examples can be found in the library \ttt{env.hac}.  
+
+\subsection{Typedef Templates}
+\label{sec:typedefs:templates}
+
+Typedefs themselves may be templated, as best illustrated by 
+the following example:
+
+\begin{verbatim}
+template <pint N, M>
+defproc matrix(bool x[N][M]) { ... }
+
+template <pint L>
+typedef matrix<1, L> row;
+
+row<3> a_row_of_length_3;
+
+template <pint H>
+typedef matrix<H, 1> col;
+
+col<3> a_col_of_height_3;
+
+template <pint N>
+typedef matrix<N, N> square;
+
+square<2> a_2x2_square_matrix;
+\end{verbatim}
+

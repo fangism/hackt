@@ -1,9 +1,51 @@
 % "cast2hac/templates.tex"
-%	$Id: templates.tex,v 1.1 2006/05/27 04:52:57 fang Exp $
+%	$Id: templates.tex,v 1.2 2006/06/03 05:52:29 fang Exp $
 
 \section{Templates}
 \label{sec:templates}
 
 \CAST\ supported parameterized definitions and types, also known as templates.
 \hac\ supports templates using C++-like template syntax.  
+Templates are useful for defining a family types with 
+highly regular differences.  
+Such genearlizations often occur in definitions whose 
+port sizes vary trivially.  
+The most notable differences from \CAST\ templates and \hac\ templates
+is the use of angle brackets around template arguments 
+and parameter declarations, and the grammatic location of the 
+template signature.  
+
+In \CAST, a parameterized definition might look like this:
+
+\begin{verbatim}
+define foo(int N) (node[N] x) { }
+\end{verbatim}
+
+The equivalent definition in \hac\ would be:
+
+\begin{verbatim}
+template <pint N>
+defproc foo (bool x[N]) { }
+\end{verbatim}
+
+\CAST\ and \hac alike support parameter-dependent template parameters.
+
+\begin{verbatim}
+define array(int N, D[N]) () { }
+\end{verbatim}
+
+\noindent
+would be written in \hac\ as:
+
+\begin{verbatim}
+template <pint N, D[N]>
+defproc array() { }
+\end{verbatim}
+
+Definitions are not the only templatable entities.  
+Section~\ref{sec:typedefs:templates} discusses how typedefs 
+can be templated in \hac.  
+
+\subsection{Relaxed Templates}
+\label{sec:templates:relaxed}
 

@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2006-06-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-16:
+	  Applied documentation patch contributed by 
+		Nathan Smith <nrs27@cornell.edu>, 
+		modifying "chapters/arrays.tex" with more description
+		and some examples.  
+
+
 2006-02-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-77-15:

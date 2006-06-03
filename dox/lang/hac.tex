@@ -1,6 +1,6 @@
 % "hac.tex"
 
-%	$Id: hac.tex,v 1.5 2006/05/26 07:26:57 fang Exp $
+%	$Id: hac.tex,v 1.6 2006/06/03 05:52:31 fang Exp $
 
 \documentclass[12pt]{book}
 
@@ -11,6 +11,7 @@
 \usepackage{ifpdf}
 \usepackage{verbatim}
 \usepackage{makeidx}
+\usepackage{amsthm}		% AMS-theorem
 
 % COMPILE OPTIONS
 \ifpdf
@@ -43,6 +44,22 @@
 % \setlength{\footskip}{0in}
 \setlength{\textwidth}{6in}
 \setlength{\textheight}{8.5in}
+
+% more sophisticated declaration of example environment
+\newtheoremstyle{sectionexample}{\topsep}{\topsep}%
+{\ttfamily}%	Body font
+{}%	Indent amount (empty = no indent, \parindent = para indent)
+{\bfseries}%	Thm head font
+{}%	Punctuation after thm head
+{\newline}%	Space after thm head (\newline = linebreak)
+{\thmname{#1}\thmnumber{ #2}\thmnote{ #3}}%	Thm head spec
+\theoremstyle{sectionexample}
+\newtheorem{sectionexample}{Example}[section]
+
+% kind of dirty space-hacking, but modular
+\newenvironment{example}[1]
+  {\begin{sectionexample}[#1]\ \\ \vspace{-2.5em}\begin{quote}}
+  {\end{quote}\end{sectionexample}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \maketexdependignore{hacdef.tex}

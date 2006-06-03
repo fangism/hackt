@@ -1,6 +1,6 @@
 % "chapters/arrays.tex"
 
-%	$Id: arrays.tex,v 1.6 2006/02/21 23:07:32 fang Exp $
+%	$Id: arrays.tex,v 1.7 2006/06/03 05:52:32 fang Exp $
 
 \chapter{Arrays}
 \label{sec:arrays}
@@ -13,14 +13,21 @@ In \hac, arrays come in two flavors: sparse and dense.
 \label{sec:arrays:dense}
 
 Dense arrays, which may be multidimensional, have the constraint that
-each dimension is precisely covered by a set of contiguous indices.  
+each dimension is precisely covered by a set of contiguous indices, 
+expressible in the form \ttt{[a..x][b..y]}.
+The lower index of each dimension need not start at $0$.  
 
 The syntax for dense arrays is similar to that of C declarations,
-with a few extensions.  
+with a few extensions discussed in Section~\ref{sec:arrays:declarations}.
+The following examples are all dense declarations, resulting in
+densely packed collections:
 
-[listing of examples]
-
-Notion of densely packed.  
+\begin{example}{Dense array declarations}
+pint y[2][2];      // y is dense 2D\\
+pint N = 5;\\
+int bar[4][5][N];  // bar is dense 3D\\
+int z[2..6][3];    // z is dense 2D
+\end{example}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Sparse arrays}
@@ -33,8 +40,24 @@ One feature of \hac\ is that one may arbitrarily extend
 arrays, as sets of indices, with multiple declarations.  
 A dense array can be made sparse by adding indexed instances that
 break the dense condition.
-A sparse array can be made dense by filling in indices to satisfy
-the dense condition.  
+
+This example declare collection \ttt{q} with two statements, 
+resulting in a sparsely poplulated (sparse) collection.  
+
+\begin{example}{Sparse array from declarations}
+int q[2][2][2];\\
+int q[1][1][3..3];   // result is sparse
+\end{example}
+
+A sparse array can be populated densely by filling in indices to satisfy
+the dense condition, 
+
+\begin{example}{Dense array from declarations}
+pint q[1..1][0..1][2..3];\\
+pint q[1][1][2..3];\\
+pint q[1][1..1][2..3]; // result is dense
+\end{example}
+
 The only constraint is that one cannot re-instantiate an index
 that has been previously instantiated.  
 
@@ -62,7 +85,7 @@ When we refer to instances as being type-equivalent,
 we also mean that they are size-equivalent.  
 A connection between two instances is legal if and only if 
 they are type-equivalent and size-equivalent.  
-In Chapter blah, we discuss connections more in-depth.  
+In Chapter~\ref{sec:connections}, we discuss connections more in-depth.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Declarations}
@@ -130,9 +153,21 @@ Consider the following examples, given that \ttt{y} is a 2-D array:
 For convenience, one may refer to the entire collection
 of an array with just the name of the instance.  
 However, such an \emph{implicit} collection reference is valid
-if and only if the implied collection (or sub-array) is densely packed.  
+if and only if the implied collection (or sub-array) is densely packed.
 
-[some valid and invalid examples]
+\tit{some valid and invalid examples}
+% tested in /test/parser/array/066.hac
+\begin{example}{References with collapsing dimensions}
+int y[3][4][5];\\
+int z[2][3];\\
+z[0..1][0..2] = y[2][2..3][0..2];  // y ref. collapses 1st dim.\\
+z[0..1][0..2] = y[1..2][1..3][3];  // y ref. collapses 3rd dim.\\
+z = y[0][2..3][0..2];\\
+int x[2][3];\\
+x = z;
+\end{example}
+
+(TODO: split the above example into several small ones...)
 
 The idea of implicit collections extends to higher dimensions as well.  
 Supposing the first $m$ out of $n$ dimensions are indexed, 

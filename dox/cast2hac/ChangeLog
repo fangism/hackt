@@ -1,6 +1,13 @@
 # "dox/cast2hac/ChangeLog"
 
-2006-06-31	David Fang		<fangism@users.sourceforge.net>
+2006-05-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-16:
+	  Added typedef section, wrote part of templates, PRS, CHP, spec
+		sections including some short examples.  
+
+
+2006-05-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-12:
 	  Started subsection about definition's port restrictions in HAC
