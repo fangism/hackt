@@ -77,8 +77,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        foo<::bar::M, ::foo::D+1> x
-
+        foo<::bar::M, ::foo::D+1> x[0..N-1]
       )
       In definition "bar", we have: {
       Parameters:
@@ -122,8 +121,7 @@ In namespace "", we have: {
       pint<> D
       pint<> E (default = D+1)
       >(
-        bool<> a
-
+        bool<> a[0..D-1]
       )
       In definition "foo", we have: {
       Parameters:

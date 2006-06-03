@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.13 2006/04/11 07:54:42 fang Exp $
+	$Id: physical_instance_collection.h,v 1.14 2006/06/03 00:15:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -62,6 +62,9 @@ private:
 public:
 	ostream&
 	dump(ostream&, const dump_flags&) const;
+
+virtual	ostream&
+	dump_formal(ostream&) const = 0;
 
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\

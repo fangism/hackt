@@ -50,8 +50,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     celem2inv = process-definition (defined) celem2inv(
-        bool<> a
-
+        bool<> a[0..1]
         bool<> _o
       )
       In definition "celem2inv", we have: {

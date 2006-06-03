@@ -58,8 +58,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     matrix_array = process-definition (defined) matrix_array(
-        bool<> in
-
+        bool<> in[0..3][0..3]
         bool<> _o
       )
       In definition "matrix_array", we have: {

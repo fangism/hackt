@@ -85,8 +85,7 @@ In namespace "", we have: {
     prime_array = process-definition (defined) prime_array<
       pint<> P
       >(
-        bool<> x
-
+        bool<> x[0..P+1-1]
       )
       In definition "prime_array", we have: {
       Parameters:

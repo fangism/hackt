@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.19 2006/05/06 04:18:39 fang Exp $
+ 	$Id: instance_collection.cc,v 1.20 2006/06/03 00:14:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -117,6 +117,8 @@ ostream&
 instance_collection_base::dump_collection_only(ostream& o) const {
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
+		// if (dimensions)
+		o << '^' << dimensions;
 	} else {
 		const param_value_collection*
 			p(IS_A(const param_value_collection*, this));

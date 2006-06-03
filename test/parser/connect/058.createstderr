@@ -81,11 +81,9 @@ In namespace "", we have: {
   Definitions:
     portaproc = process-definition (defined) portaproc(
         bool<> b
-        bool<> c
-
+        bool<> c[0..3]
         int<32> i
-        int<32> j
-
+        int<32> j[0..1]
       )
       In definition "portaproc", we have: {
       Instances:

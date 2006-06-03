@@ -73,10 +73,8 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N[0..1]
       >(
-        bool<> a
-
-        bool<> b
-
+        bool<> a[0..N[0]-1]
+        bool<> b[0..N[1]-1]
       )
       In definition "foo", we have: {
       Parameters:

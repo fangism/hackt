@@ -44,8 +44,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     ass = process-definition (defined) ass(
-        bool<> q
-
+        bool<> q[0..2][0..1]
       )
       In definition "ass", we have: {
       Instances:

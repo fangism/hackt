@@ -73,8 +73,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     lut = process-definition (defined) lut(
-        pbitint<> pbint
-
+        pbitint<> pbint[0..1]
       )
       In definition "lut", we have: {
       Instances:

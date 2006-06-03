@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.18 2006/06/02 05:21:33 fang Exp $
+ 	$Id: value_collection.tcc,v 1.19 2006/06/03 00:15:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -255,7 +255,7 @@ VALUE_COLLECTION_CLASS::dump(ostream& o, const dump_flags& df) const {
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::type_dump(ostream& o) const {
-	return o << traits_type::tag_name << '^' << this->dimensions;
+	return o << traits_type::tag_name;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -42,8 +42,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     wrap = process-definition (defined) wrap(
-        bool<> a
-
+        bool<> a[0..1]
       )
       In definition "wrap", we have: {
       Instances:

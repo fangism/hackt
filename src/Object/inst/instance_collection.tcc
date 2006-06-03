@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.29 2006/05/06 22:08:21 fang Exp $
+	$Id: instance_collection.tcc,v 1.30 2006/06/03 00:14:55 fang Exp $
 	TODO: trim includes
  */
 
@@ -244,6 +244,27 @@ ostream&
 INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 	typename collection_type_manager_parent_type::dumper dump_it(o);
 	return dump_it(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: for port collections with relaxed types, might want to expand
+	relaxed actuals at some point for diagnostics.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_COLLECTION_CLASS::dump_formal(ostream& o) const {
+//	this->dump_base(o);
+	this->dump_collection_only(o);
+	expr_dump_context dc(expr_dump_context::default_value);
+	dc.enclosing_scope = this->owner;
+	if (this->dimensions) {
+		const index_collection_item_ptr_type
+			i(this->get_initial_instantiation_indices());
+		NEVER_NULL(i);
+		i->dump(o, dc);
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

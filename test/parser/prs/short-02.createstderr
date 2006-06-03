@@ -86,8 +86,7 @@ In namespace "", we have: {
     celem = process-definition (defined) celem<
       pint<> N
       >(
-        bool<> in
-
+        bool<> in[0..N-1]
         bool<> out
       )
       In definition "celem", we have: {

@@ -2441,8 +2441,7 @@ In namespace "", we have: {
     _c1of = process-definition (defined) _c1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
       )
       In definition "_c1of", we have: {
       Parameters:
@@ -2460,8 +2459,7 @@ In namespace "", we have: {
     a1of = process-definition (defined) a1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
         bool<> a
       )
       In definition "a1of", we have: {
@@ -2493,8 +2491,7 @@ In namespace "", we have: {
       }
 
     a1of2tf = process-definition (defined) a1of2tf(
-        bool<> d
-
+        bool<> d[0..1]
         bool<> z
         bool<> o
         bool<> t
@@ -2527,8 +2524,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        c1of<::aMx1ofN::N> b
-
+        c1of<::aMx1ofN::N> b[0..M-1]
         bool<> a
       )
       In definition "aMx1ofN", we have: {
@@ -2549,8 +2545,7 @@ In namespace "", we have: {
     an1of = process-definition (defined) an1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
         bool<> a
         bool<> n
       )
@@ -2574,8 +2569,7 @@ In namespace "", we have: {
     av1of = process-definition (defined) av1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
         bool<> a
         bool<> v
       )
@@ -2600,8 +2594,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        a1of<::bitbucket_Mxa1of::N> r
-
+        a1of<::bitbucket_Mxa1of::N> r[0..(M-1)-1]
         bool<> _Reset
       )
       In definition "bitbucket_Mxa1of", we have: {
@@ -2641,8 +2634,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        e1of<::bitbucket_Mxe1of::N> r
-
+        e1of<::bitbucket_Mxe1of::N> r[0..(M-1)-1]
         bool<> _Reset
       )
       In definition "bitbucket_Mxe1of", we have: {
@@ -2739,8 +2731,7 @@ In namespace "", we have: {
     c1of = process-definition (defined) c1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
       )
       In definition "c1of", we have: {
       Parameters:
@@ -2773,8 +2764,7 @@ In namespace "", we have: {
     e1of = process-definition (defined) e1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
         bool<> e
       )
       In definition "e1of", we have: {
@@ -2836,8 +2826,7 @@ In namespace "", we have: {
       }
 
     e1of2tf = process-definition (defined) e1of2tf(
-        bool<> d
-
+        bool<> d[0..1]
         bool<> z
         bool<> o
         bool<> t
@@ -2870,8 +2859,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::eMx1ofN::N> b
-
+        c1of<::eMx1ofN::N> b[0..M-1]
         bool<> e
       )
       In definition "eMx1ofN", we have: {
@@ -2892,8 +2880,7 @@ In namespace "", we have: {
     en1of = process-definition (defined) en1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
         bool<> e
         bool<> n
       )
@@ -2917,8 +2904,7 @@ In namespace "", we have: {
     ev1of = process-definition (defined) ev1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
         bool<> e
         bool<> v
       )

@@ -52,8 +52,7 @@ In namespace "", we have: {
       pint<> I
       pint<> J
       >(
-        bool<> a
-
+        bool<> a[0..N-1]
       )
       In definition "crazy_inv", we have: {
       Parameters:

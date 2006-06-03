@@ -30,8 +30,7 @@ In namespace "", we have: {
         int<32>
       )
       (
-        int<16> i
-
+        int<16> i[0..1]
       )
       In channel definition "mychan", we have: {
       Instances:

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.20 2006/04/18 18:42:39 fang Exp $
+	$Id: instance_collection.h,v 1.21 2006/06/03 00:14:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -155,6 +155,9 @@ virtual	ostream&
 
 	ostream&
 	type_dump(ostream&) const;
+
+	ostream&
+	dump_formal(ostream&) const;
 
 	void
 	attach_initial_instantiation_statement(

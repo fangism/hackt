@@ -1,7 +1,7 @@
 Size of dimension 1 does not match!  got: 3 and 2.
 ERROR: type/size mismatch between template formal and actual.
 	got: {1,2}
-	expected: pint^1 [0..2]
+	expected: pint [0..2]
 ERROR: actual parameter types do not completely match up against formals.
 ERROR: unable to resolve process-type-reference during unroll.
 Error encountered during module::unroll.

@@ -206,8 +206,7 @@ In namespace "", we have: {
     celem = process-definition (defined) celem<
       pint<> N
       >(
-        bool<> in
-
+        bool<> in[0..N-1]
         bool<> out
       )
       In definition "celem", we have: {
@@ -256,8 +255,7 @@ In namespace "", we have: {
     nand = process-definition (defined) nand<
       pint<> N
       >(
-        bool<> in
-
+        bool<> in[0..N-1]
         bool<> out
       )
       In definition "nand", we have: {
@@ -292,8 +290,7 @@ In namespace "", we have: {
     nor = process-definition (defined) nor<
       pint<> N
       >(
-        bool<> in
-
+        bool<> in[0..N-1]
         bool<> out
       )
       In definition "nor", we have: {

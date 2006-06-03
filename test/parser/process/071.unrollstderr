@@ -1,4 +1,4 @@
-FATAL: reference to uninstantiated bool^1 index [4]
+FATAL: reference to uninstantiated bool index [4]
 ERROR: unrolling aliases.
 ERROR: unrolling instance references in bool_connection::unroll().
 Instantiated from: foo<3>

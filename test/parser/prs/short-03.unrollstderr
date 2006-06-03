@@ -92,8 +92,7 @@ In namespace "", we have: {
     nand = process-definition (defined) nand<
       pint<> N
       >(
-        bool<> in
-
+        bool<> in[0..N-1]
         bool<> out
       )
       In definition "nand", we have: {

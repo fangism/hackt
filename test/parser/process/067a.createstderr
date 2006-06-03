@@ -54,8 +54,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     bar = process-definition (defined) bar(
-        foo<> x
-
+        foo<> x[0..1]
       )
       In definition "bar", we have: {
       Instances:

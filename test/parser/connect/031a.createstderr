@@ -82,8 +82,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     basket = process-definition (defined) basket(
-        egg<> egg_array
-
+        egg<> egg_array[0..1]
       )
       In definition "basket", we have: {
       Instances:
@@ -111,8 +110,7 @@ In namespace "", we have: {
       }
 
     bundle = process-definition (defined) bundle(
-        basket<> c
-
+        basket<> c[0..1]
       )
       In definition "bundle", we have: {
       Instances:

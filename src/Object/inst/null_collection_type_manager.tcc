@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.tcc,v 1.5 2006/02/21 04:48:30 fang Exp $
+	$Id: null_collection_type_manager.tcc,v 1.6 2006/06/03 00:15:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
@@ -32,8 +32,7 @@ struct NULL_COLLECTION_TYPE_MANAGER_CLASS::dumper {
 
 	ostream&
 	operator () (const instance_collection_generic_type& c) {
-		return os << traits_type::tag_name <<
-			'^' << c.get_dimensions();
+		return os << traits_type::tag_name;
 	}
 };	// end struct dumper
 

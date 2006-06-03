@@ -1,9 +1,9 @@
 Type mismatch in aggregate process reference.
-	got: process foo<>^0
-	and: process bar<>^0
+	got: process foo<>
+	and: process bar<>
 Type mismatch in aggregate process reference.
-	got: process foo<>^0
-	and: process bar<>^0
+	got: process foo<>
+	and: process bar<>
 ERROR: unrolling instance references in process_connection::unroll().
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

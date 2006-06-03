@@ -45,8 +45,7 @@ In namespace "", we have: {
   Definitions:
     bar = process-definition (defined) bar(
         bool<> a
-        bool<> b
-
+        bool<> b[0..1]
       )
       In definition "bar", we have: {
       Instances:

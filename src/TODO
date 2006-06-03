@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.24 2006/05/27 05:11:21 fang Exp $
+#	$Id: TODO,v 1.25 2006/06/03 00:14:49 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -19,9 +19,7 @@ Simulation:
 
 prsim:
 	cause-tracking (perhaps track per new value +,-,X)
-	built-in exclusive checking (exclhi/lo)
-		(not to be confused with mk_exclhi/lo)
-		serve same purpose as CHECK_CHANNELS.  
+	direction-specific breakpoints
 	interpreter commands:
 		interp key [value]
 			for interpreter mode flags:

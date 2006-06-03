@@ -47,8 +47,7 @@ In namespace "", we have: {
   Definitions:
     bar = process-definition (defined) bar(
         int<32> a
-        int<32> b
-
+        int<32> b[0..1]
       )
       In definition "bar", we have: {
       Instances:

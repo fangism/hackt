@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.9 2006/05/06 22:08:16 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.10 2006/06/03 00:14:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -85,8 +85,7 @@ port_formals_manager::dump(ostream& o) const {
 		const port_formals_list_type::const_iterator
 			e(port_formals_list.end());
 		for ( ; i!=e; i++) {
-			(*i)->dump(o << auto_indent, 
-				dump_flags::no_definition_owner) << endl;
+			(*i)->dump_formal(o << auto_indent) << endl;
 		}
 	}
 	return o << auto_indent << ')';

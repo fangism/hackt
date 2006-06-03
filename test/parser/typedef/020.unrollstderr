@@ -78,8 +78,7 @@ In namespace "", we have: {
       >(
         bool<> x
         bool<> y
-        bool<> z
-
+        bool<> z[0..N-1]
       )
       In definition "baz", we have: {
       Parameters:

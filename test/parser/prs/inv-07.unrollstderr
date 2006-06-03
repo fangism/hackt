@@ -41,8 +41,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     inv = process-definition (defined) inv(
-        bool<> a
-
+        bool<> a[0..0][0..1]
       )
       In definition "inv", we have: {
       Instances:

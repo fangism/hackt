@@ -69,8 +69,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        foo<::bar::M> x
-
+        foo<::bar::M> x[0..N-1]
       )
       In definition "bar", we have: {
       Parameters:
@@ -123,8 +122,7 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> D
       >(
-        bool<> a
-
+        bool<> a[0..D-1]
       )
       In definition "foo", we have: {
       Parameters:

@@ -37,8 +37,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     foo = process-definition (defined) foo(
-        bool<> r
-
+        bool<> r[0..1]
       )
       In definition "foo", we have: {
       Instances:

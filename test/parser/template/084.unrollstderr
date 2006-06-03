@@ -2,14 +2,14 @@ ERROR: types mismatch!
 	got: foo<3, {1,2,3}>
 	and: foo<3, {7,8,9}>
 Type mismatch in aggregate process reference.
-	got: process foo<3, {1,2,3}>^0
-	and: process foo<3, {7,8,9}>^0
+	got: process foo<3, {1,2,3}>
+	and: process foo<3, {7,8,9}>
 ERROR: types mismatch!
 	got: foo<3, {1,2,3}>
 	and: foo<3, {7,8,9}>
 Type mismatch in aggregate process reference.
-	got: process foo<3, {1,2,3}>^0
-	and: process foo<3, {7,8,9}>^0
+	got: process foo<3, {1,2,3}>
+	and: process foo<3, {7,8,9}>
 ERROR: unrolling instance references in process_connection::unroll().
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

@@ -71,8 +71,7 @@ In namespace "", we have: {
     celemNinv = process-definition (defined) celemNinv<
       pint<> N
       >(
-        bool<> a
-
+        bool<> a[0..N-1]
         bool<> _o
       )
       In definition "celemNinv", we have: {

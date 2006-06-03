@@ -92,8 +92,7 @@ In namespace "", we have: {
     nor = process-definition (defined) nor<
       pint<> N
       >(
-        bool<> in
-
+        bool<> in[0..N-1]
         bool<> out
       )
       In definition "nor", we have: {

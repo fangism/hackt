@@ -42,8 +42,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     bar = process-definition (defined) bar(
-        foo<> x
-
+        foo<> x[0..1][0..1]
       )
       In definition "bar", we have: {
       Instances:
@@ -117,8 +116,7 @@ In namespace "", we have: {
       }
 
     foo = process-definition (defined) foo(
-        bool<> a
-
+        bool<> a[0..1][0..1]
       )
       In definition "foo", we have: {
       Instances:

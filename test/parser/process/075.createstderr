@@ -56,8 +56,7 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        int<::bar::M> x
-
+        int<::bar::M> x[0..N-1]
       )
       In definition "bar", we have: {
       Parameters:

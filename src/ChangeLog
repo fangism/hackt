@@ -5,6 +5,15 @@
 
 2006-06-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-15:
+	  Updated dumping of physical instance collections to print
+		dimensions, and full indices for public ports.
+		This helps a lot with more accurate diagnostics.
+		Tons of test case expect-dumps updated.  
+
+
+2006-06-02	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-14:
 	  Implemented certify_port_actuals for all typedefs.  
 		This was forgotten before, now allows port forwarding

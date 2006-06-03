@@ -297,8 +297,7 @@ In namespace "", we have: {
     ch1of = process-definition (defined) ch1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
       )
       In definition "ch1of", we have: {
       Parameters:
@@ -314,8 +313,7 @@ In namespace "", we have: {
     e1of = process-definition (defined) e1of<
       pint<> N
       >(
-        bool<> d
-
+        bool<> d[0..N-1]
         bool<> e
       )
       In definition "e1of", we have: {
@@ -347,8 +345,7 @@ In namespace "", we have: {
       }
 
     e1of2 = process-definition (defined) e1of2(
-        bool<> d
-
+        bool<> d[0..1]
         bool<> t
         bool<> f
         bool<> e

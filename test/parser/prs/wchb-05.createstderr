@@ -73,8 +73,7 @@ In namespace "", we have: {
   0 typedefs
   Definitions:
     e1of2 = process-definition (defined) e1of2(
-        bool<> d
-
+        bool<> d[0..1]
         bool<> e
       )
       In definition "e1of2", we have: {
