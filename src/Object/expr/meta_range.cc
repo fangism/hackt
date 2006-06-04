@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.10 2006/03/15 04:38:15 fang Exp $
+ 	$Id: meta_range.cc,v 1.10.18.1 2006/06/04 22:26:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -84,6 +84,18 @@ REQUIRES_STACKTRACE_STATIC_INIT
  */
 typedef discrete_interval_set<pint_value_type>	interval_type;
 
+
+//=============================================================================
+// class meta_index_expr method definitions
+
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const nonmeta_index_expr_base>
+meta_index_expr::unroll_resolve_copy(const unroll_context& c,
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	INVARIANT(p == this);
+	return unroll_resolve_copy(c, p.is_a<const meta_index_expr>());
+}
+#endif
 
 //=============================================================================
 // class meta_range_expr method definitions
@@ -251,6 +263,21 @@ pint_range::resolve_range(const_range& r) const {
 		return good_bool(false);
 	return good_bool(true);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const const_index>
+pint_range::unroll_resolve_copy(const unroll_context& c,
+		const count_ptr<const meta_index_expr>& p) const {
+	INVARIANT(p == this);
+	const count_ptr<const_range> ret(new const_range);
+	if (unroll_resolve_range(c, *ret).good) {
+		return ret;
+	} else {
+		return count_ptr<const const_index>(NULL);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -522,6 +549,16 @@ count_ptr<const_index>
 const_range::resolve_index(void) const {
 	return count_ptr<const_index>(new const_range(*this));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const const_index>
+const_range::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const meta_index_expr>& p) const {
+	INVARIANT(p == this);
+	return p.is_a<const const_range>();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

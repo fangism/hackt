@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.9.16.3 2006/06/04 05:59:25 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.9.16.4 2006/06/04 22:26:21 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -117,9 +117,9 @@ public:
 	must_be_equivalent(const interface_type& ) const;
 
 #if COW_UNROLL_DATA_EXPR
-	count_ptr<data_expr_base_type>
+	count_ptr<const data_expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
-		const count_ptr<data_expr_base_type>&) const;
+		const count_ptr<const data_expr_base_type>&) const;
 protected:
 	using data_expr_base_type::unroll_resolve_copy;
 #endif

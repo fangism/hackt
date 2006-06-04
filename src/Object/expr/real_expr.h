@@ -2,7 +2,7 @@
 	\file "Object/expr/real_expr.h"
 	Base class for boolean data expressions.  
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: real_expr.h,v 1.2.26.1 2006/06/04 05:59:22 fang Exp $
+	$Id: real_expr.h,v 1.2.26.2 2006/06/04 22:26:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_REAL_EXPR_H__
@@ -34,9 +34,9 @@ virtual	~real_expr() { }
 
 #if COW_UNROLL_DATA_EXPR
 #define	UNROLL_RESOLVE_COPY_REAL_PROTO					\
-	count_ptr<real_expr>						\
+	count_ptr<const real_expr>					\
 	unroll_resolve_copy(const unroll_context&, 			\
-		const count_ptr<real_expr>&) const
+		const count_ptr<const real_expr>&) const
 
 virtual	UNROLL_RESOLVE_COPY_REAL_PROTO = 0;
 #endif

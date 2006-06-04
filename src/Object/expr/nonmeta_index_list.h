@@ -3,7 +3,7 @@
 	Class definitions for nonmeta index lists.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: nonmeta_index_list.h,v 1.5.40.1 2006/06/04 05:59:12 fang Exp $
+	$Id: nonmeta_index_list.h,v 1.5.40.2 2006/06/04 22:26:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_INDEX_LIST_H__
@@ -31,11 +31,12 @@ using util::memory::count_ptr;
 	NOTE: value_type is const pointer. 
  */
 class nonmeta_index_list : public persistent, 
-		public vector<count_ptr<nonmeta_index_expr_base> > {
+		public vector<count_ptr<const nonmeta_index_expr_base> > {
 	typedef	nonmeta_index_list		this_type;
-	typedef	vector<count_ptr<nonmeta_index_expr_base> >
+	typedef	vector<count_ptr<const nonmeta_index_expr_base> >
 						list_type;
 public:
+	typedef	list_type::value_type		value_type;
 	typedef	list_type::iterator		iterator;
 	typedef	list_type::const_iterator	const_iterator;
 public:

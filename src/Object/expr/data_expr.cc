@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.7.16.1 2006/06/04 05:59:10 fang Exp $
+	$Id: data_expr.cc,v 1.7.16.2 2006/06/04 22:26:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -70,6 +70,19 @@ using std::istream;
 using util::persistent_traits;
 using util::write_value;
 using util::read_value;
+
+//=============================================================================
+// class int_expr method definitions
+
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const nonmeta_index_expr_base>
+int_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	INVARIANT(p == this);
+	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+#endif
+
 //=============================================================================
 // class int_arith_expr method definitions
 
@@ -135,6 +148,17 @@ int_arith_expr::int_arith_expr() : lx(NULL), rx(NULL), op(NULL) { }
 int_arith_expr::~int_arith_expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int_arith_expr::int_arith_expr(const operand_ptr_type& l, const op_type* o,
+		const operand_ptr_type& r) :
+		lx(l), rx(r), op(o) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_arith_expr::int_arith_expr(const operand_ptr_type& l, const char o,
 		const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
@@ -171,8 +195,9 @@ int_arith_expr::get_data_type_ref(void) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
 	const return_type lt(lx->get_data_type_ref());
 	const return_type rt(rx->get_data_type_ref());
-	if (!lt || !rt)
+	if (!lt || !rt) {
 		return return_type(NULL);
+	}
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
 	if (lt->may_be_connectibly_type_equivalent(*rt)) {
@@ -186,6 +211,27 @@ int_arith_expr::get_data_type_ref(void) const {
 		return return_type(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const int_expr>
+int_arith_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const int_expr>& p) const {
+	INVARIANT(p == this);
+	const operand_ptr_type lc(lx->unroll_resolve_copy(c, lx));
+	const operand_ptr_type rc(rx->unroll_resolve_copy(c, rx));
+	if (!lc || !rc) {
+		return count_ptr<const int_expr>(NULL);
+	}
+	if (lc == lx && rc == rx) {
+		// return self-copy
+		return p;
+	} else {
+		// return new resolved expression
+		return count_ptr<const this_type>(new this_type(lc, op, rc));
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -330,8 +376,10 @@ int_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	BUG: may_be_type_equivalent rejects pint vs. int comparison.  
+		(last confirmed? test case?)
 	TODO: replace get_data_type_ref with nonmeta_inst_ref
 		type_equivalence call directly.  
+	\return NULL to signal error.  
  */
 count_ptr<const data_type_reference>
 int_relational_expr::get_data_type_ref(void) const {
@@ -354,6 +402,27 @@ int_relational_expr::get_data_type_ref(void) const {
 		return return_type(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const bool_expr>
+int_relational_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const bool_expr>& p) const {
+	INVARIANT(p == this);
+	const operand_ptr_type lc(lx->unroll_resolve_copy(c, lx));
+	const operand_ptr_type rc(rx->unroll_resolve_copy(c, rx));
+	if (!lc || !rc) {
+		return count_ptr<const bool_expr>(NULL);
+	}
+	if (lc == lx && rc == rx) {
+		// return self-copy
+		return p;
+	} else {
+		// return new resolved expression
+		return count_ptr<const this_type>(new this_type(lc, op, rc));
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -504,6 +573,26 @@ bool_logical_expr::get_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const bool_expr>
+bool_logical_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const bool_expr>& p) const {
+	INVARIANT(p == this);
+	const operand_ptr_type lc(lx->unroll_resolve_copy(c, lx));
+	const operand_ptr_type rc(rx->unroll_resolve_copy(c, rx));
+	if (!lc || !rc) {
+		return count_ptr<const bool_expr>(NULL);
+	} else if (lc == lx && rc == rx) {
+		// return self-copy
+		return p;
+	} else {
+		// return new resolved expression
+		return count_ptr<const this_type>(new this_type(lc, op, rc));
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_logical_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -564,6 +653,23 @@ int_negation_expr::get_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const int_expr>
+int_negation_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const int_expr>& p) const {
+	INVARIANT(p == this);
+	const operand_ptr_type oc(ex->unroll_resolve_copy(c, ex));
+	if (!oc) {
+		return count_ptr<const int_expr>(NULL);
+	} else if (oc == ex) {
+		return p;
+	} else {
+		return count_ptr<const this_type>(new this_type(oc));
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 int_negation_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -614,6 +720,23 @@ bool_negation_expr::get_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const bool_expr>
+bool_negation_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const bool_expr>& p) const {
+	INVARIANT(p == this);
+	const operand_ptr_type oc(ex->unroll_resolve_copy(c, ex));
+	if (!oc) {
+		return count_ptr<const bool_expr>(NULL);
+	} else if (oc == ex) {
+		return p;
+	} else {
+		return count_ptr<const this_type>(new this_type(oc));
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 bool_negation_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -661,6 +784,27 @@ ostream&
 int_range_expr::dump(ostream& o, const expr_dump_context&) const {
 	return upper->what(lower->what(o << '[') << "..") << ']';
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const nonmeta_index_expr_base>
+int_range_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	INVARIANT(p == this);
+	const bound_ptr_type lc(lower->unroll_resolve_copy(c, lower));
+	const bound_ptr_type uc(upper->unroll_resolve_copy(c, upper));
+	if (!uc || !lc) {
+		return count_ptr<const nonmeta_index_expr_base>(NULL);
+	}
+	if (uc == lower && lc == upper) {
+		// return self-copy
+		return p;
+	} else {
+		// return new resolved expression
+		return count_ptr<const this_type>(new this_type(lc, uc));
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

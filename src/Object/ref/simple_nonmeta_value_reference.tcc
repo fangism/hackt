@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.2 2006/06/04 05:59:26 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.3 2006/06/04 22:26:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -233,10 +233,10 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::must_be_equivalent(
 	If not, can just return this as a reference-counted copy!
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-count_ptr<typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::data_expr_base_type>
+count_ptr<const typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::data_expr_base_type>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 		const unroll_context& c, 
-		const count_ptr<data_expr_base_type>& p) const {
+		const count_ptr<const data_expr_base_type>& p) const {
 	INVARIANT(p == this);
 	if (this->array_indices) {
 		// resolve the indices

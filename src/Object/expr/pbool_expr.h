@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.9.16.1 2006/06/04 05:59:14 fang Exp $
+	$Id: pbool_expr.h,v 1.9.16.2 2006/06/04 22:26:17 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -93,9 +93,9 @@ virtual	const_index_list
 
 #if COW_UNROLL_DATA_EXPR
 #define	UNROLL_RESOLVE_COPY_PBOOL_PROTO					\
-	count_ptr<pbool_expr>						\
+	count_ptr<const pbool_expr>					\
 	unroll_resolve_copy(const unroll_context&, 			\
-		const count_ptr<pbool_expr>&) const
+		const count_ptr<const pbool_expr>&) const
 
 
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;

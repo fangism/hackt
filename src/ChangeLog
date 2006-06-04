@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-08:
+	  Wrote expr-hierarchy's unroll_resolve_copy methods, 
+		leaving only undefined references to new CHP unroll methods.  
+
+
 2006-06-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-07:
@@ -16,7 +23,6 @@
 	  Most revisions from this patch are wrapped in
 		#if COW_UNROLL_DATA_EXPR (Moo! copy-on-write)
 	  TODO: fill in the definitions, and finish CHP footprint unrolling.  
-		Will be delayed due to vacation... :S
 
 
 2006-05-15	David Fang		<fangism@users.sourceforge.net>

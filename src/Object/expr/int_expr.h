@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: int_expr.h,v 1.5.40.1 2006/06/04 05:59:11 fang Exp $
+	$Id: int_expr.h,v 1.5.40.2 2006/06/04 22:26:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_EXPR_H__
@@ -24,9 +24,11 @@ namespace entity {
 		depending on CHP language resolution.  
  */
 class int_expr : virtual public nonmeta_index_expr_base, public data_expr {
+	typedef	int_expr			this_type;
 	typedef	data_expr			parent_type;
+	typedef	nonmeta_index_expr_base		index_parent_type;
 protected:
-	int_expr() : nonmeta_index_expr_base(), parent_type() { }
+	int_expr() : index_parent_type(), parent_type() { }
 public:
 virtual	~int_expr() { }
 
@@ -35,12 +37,12 @@ virtual	ostream&
 
 #if	COW_UNROLL_DATA_EXPR
 #define	UNROLL_RESOLVE_COPY_INT_PROTO					\
-	count_ptr<int_expr>						\
+	count_ptr<const int_expr>					\
 	unroll_resolve_copy(const unroll_context&,			\
-		const count_ptr<int_expr>&) const
+		const count_ptr<const int_expr>&) const
 
 virtual UNROLL_RESOLVE_COPY_INT_PROTO = 0;
-
+protected:
 	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO;
 #endif
 

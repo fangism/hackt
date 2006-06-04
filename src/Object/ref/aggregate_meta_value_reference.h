@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.2.22.2 2006/06/04 05:59:23 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.2.22.3 2006/06/04 22:26:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -158,9 +158,9 @@ public:
 		value_reference_collection_type&) const;
 
 #if COW_UNROLL_DATA_EXPR
-	count_ptr<expr_base_type>
+	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
-		const count_ptr<expr_base_type>&) const;
+		const count_ptr<const expr_base_type>&) const;
 protected:
 	using expr_base_type::unroll_resolve_copy;
 #endif

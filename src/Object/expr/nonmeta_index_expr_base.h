@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: nonmeta_index_expr_base.h,v 1.5.40.1 2006/06/04 05:59:12 fang Exp $
+	$Id: nonmeta_index_expr_base.h,v 1.5.40.2 2006/06/04 22:26:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_INDEX_EXPR_BASE_H__
@@ -44,9 +44,9 @@ virtual	ostream&
 
 #if COW_UNROLL_DATA_EXPR
 #define	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO				\
-	count_ptr<nonmeta_index_expr_base>				\
+	count_ptr<const nonmeta_index_expr_base>			\
 	unroll_resolve_copy(const unroll_context&, 			\
-		const count_ptr<nonmeta_index_expr_base>&) const
+		const count_ptr<const nonmeta_index_expr_base>&) const
 
 virtual	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO = 0;
 #endif
