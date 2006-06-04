@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.15 2006/04/16 18:36:17 fang Exp $
+ 	$Id: basic_param.cc,v 1.15.10.1 2006/06/04 05:59:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -202,6 +202,15 @@ pbool_expr::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<bool_expr>
+pbool_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<bool_expr>& b) const {
+	return unroll_resolve_copy(c, b.is_a<this_type>());
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
 pbool_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
@@ -284,6 +293,15 @@ pint_expr::static_constant_param(void) const {
 	return count_ptr<const const_param>(
 		new pint_const(static_constant_value()));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<int_expr>
+pint_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<int_expr>& b) const {
+	return unroll_resolve_copy(c, b.is_a<this_type>());
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
@@ -400,6 +418,15 @@ preal_expr::static_constant_param(void) const {
 	return count_ptr<const const_param>(
 		new preal_const(static_constant_value()));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+count_ptr<real_expr>
+preal_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<real_expr>& b) const {
+	return unroll_resolve_copy(c, b.is_a<this_type>());
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>

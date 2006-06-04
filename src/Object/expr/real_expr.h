@@ -2,16 +2,25 @@
 	\file "Object/expr/real_expr.h"
 	Base class for boolean data expressions.  
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: real_expr.h,v 1.2 2006/02/10 21:50:38 fang Exp $
+	$Id: real_expr.h,v 1.2.26.1 2006/06/04 05:59:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_REAL_EXPR_H__
 #define	__HAC_OBJECT_EXPR_REAL_EXPR_H__
 
 #include "Object/expr/data_expr.h"
+#include "Object/devel_switches.h"
+#if COW_UNROLL_DATA_EXPR
+#include "util/memory/pointer_classes_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
+#if COW_UNROLL_DATA_EXPR
+class unroll_context;
+using util::memory::count_ptr;
+#endif
+
 //=============================================================================
 /**
 	Abstract boolean data type expression.  
@@ -22,6 +31,15 @@ protected:
 	real_expr() : parent_type() { }
 public:
 virtual	~real_expr() { }
+
+#if COW_UNROLL_DATA_EXPR
+#define	UNROLL_RESOLVE_COPY_REAL_PROTO					\
+	count_ptr<real_expr>						\
+	unroll_resolve_copy(const unroll_context&, 			\
+		const count_ptr<real_expr>&) const
+
+virtual	UNROLL_RESOLVE_COPY_REAL_PROTO = 0;
+#endif
 
 };	// end class real_expr
 

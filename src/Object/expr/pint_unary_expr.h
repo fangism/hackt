@@ -3,7 +3,7 @@
 	Unary negation of meta integer.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_unary_expr.h,v 1.7 2006/02/21 04:48:26 fang Exp $
+	$Id: pint_unary_expr.h,v 1.7.22.1 2006/06/04 05:59:19 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_UNARY_EXPR_H__
@@ -22,6 +22,7 @@ using util::memory::count_ptr;
  */
 class pint_unary_expr : public pint_expr {
 	typedef	pint_unary_expr			this_type;
+	typedef	pint_expr			parent_type;
 public:
 	typedef	pint_value_type		value_type;
 	typedef	char			op_type;
@@ -75,6 +76,12 @@ public:
 
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
+
+#if COW_UNROLL_DATA_EXPR
+	UNROLL_RESOLVE_COPY_PINT_PROTO;
+protected:
+	using parent_type::unroll_resolve_copy;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

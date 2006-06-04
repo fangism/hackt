@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.7 2006/03/20 02:41:04 fang Exp $
+	$Id: data_expr.cc,v 1.7.16.1 2006/06/04 05:59:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -695,6 +695,9 @@ int_range_expr::load_object(const persistent_object_manager& m,
 nonmeta_index_list::nonmeta_index_list() : persistent(), list_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param s is just a size to reserve, not the number of initial elements!
+ */
 nonmeta_index_list::nonmeta_index_list(const size_t s) :
 		persistent(), list_type() {
 	util::reserve(AS_A(list_type&, *this), s);
@@ -736,6 +739,31 @@ nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 	}
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+/**
+	Produces a list with unroll-resolved values of indices. 
+	The caller can compare this-object to the result by doing
+	a pointer-sequence compare to determine whether or not the
+	result is actually different, as a result of resolving meta-values.  
+	For efficiency, when the result is identical to the argument, 
+	the (non-mutable) reference argument can be shared to save memory.  
+	\return nonmeta index list with resolved indices.  
+ */
+count_ptr<nonmeta_index_list>
+nonmeta_index_list::unroll_resolve_copy(const unroll_context& c) const {
+	const count_ptr<this_type> ret(new this_type(this->size()));
+	NEVER_NULL(ret);
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; ++i) {
+		NEVER_NULL(*i);
+		ret->push_back((*i)->unroll_resolve_copy(c, *i));
+	}
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

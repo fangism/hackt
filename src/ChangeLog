@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-07:
+	  Compiles but does not link.  Most new prototypes in place, 
+		only (most trivial) definitions are missing.
+	  Added entirely virtual function hierarchy for unroll-resolving
+		nonmeta expressions and references.  
+		The gist of the implementation is to be able to 
+		copy (reference-counted) pointers to results that do not
+		change as a result of unrolling meta value resolution.  
+	  Most revisions from this patch are wrapped in
+		#if COW_UNROLL_DATA_EXPR (Moo! copy-on-write)
+	  TODO: fill in the definitions, and finish CHP footprint unrolling.  
+		Will be delayed due to vacation... :S
+
+
 2006-05-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-06:

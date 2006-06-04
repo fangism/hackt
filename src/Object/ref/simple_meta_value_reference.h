@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.9.22.1 2006/05/17 02:22:53 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.9.22.2 2006/06/04 05:59:24 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -144,6 +144,11 @@ public:
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
 
+protected:
+	count_ptr<const_param>
+	__unroll_resolve_rvalues(const unroll_context&) const;
+
+public:
 #if 0
 	count_ptr<const_index>
 	unroll_resolve_rvalues_index(const unroll_context&) const;
@@ -154,9 +159,11 @@ public:
 		value_reference_collection_type&) const;
 
 #if COW_UNROLL_DATA_EXPR
-	count_ptr<data_expr_base_type>
+	count_ptr<expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
-		const count_ptr<data_expr_base_type>&) const;
+		const count_ptr<expr_base_type>&) const;
+protected:
+	using parent_type::unroll_resolve_copy;
 #endif
 
 protected:

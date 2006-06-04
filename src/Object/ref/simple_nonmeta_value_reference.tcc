@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.1 2006/05/13 02:45:21 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.2 2006/06/04 05:59:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -41,7 +41,6 @@
 namespace HAC {
 namespace entity {
 //=============================================================================
-using namespace util::memory;
 #include "util/using_ostream.h"
 using util::persistent_traits;
 
@@ -223,6 +222,50 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::must_be_equivalent(
 	} else {
 		// conservatively
 		return false;
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+/**
+	See if indicies were changed as a result of meta-parameter resolution.  
+	If not, can just return this as a reference-counted copy!
+ */
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::data_expr_base_type>
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
+		const unroll_context& c, 
+		const count_ptr<data_expr_base_type>& p) const {
+	INVARIANT(p == this);
+	if (this->array_indices) {
+		// resolve the indices
+		count_ptr<index_list_type>
+			resolved_indices(this->array_indices
+				->unroll_resolve_copy(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving nonmeta value reference\'s "
+				"indices." << endl;
+			return count_ptr<this_type>(NULL);
+		}
+		if (std::equal(resolved_indices->begin(),
+				resolved_indices->end(),
+				this->array_indices->begin())) {
+			// then resolution changed nothing, return this-copy
+			return p;
+		} else {
+			excl_ptr<index_list_type>
+				ri(resolved_indices.exclusive_release());
+			count_ptr<this_type>
+				ret(new this_type(this->value_collection_ref));
+			ret->attach_indices(ri);
+			INVARIANT(!ri);		// transferred ownership
+			return ret;
+		}
+	} else {
+		// is scalar reference (cannot be implicit indices!)
+		// therefore, just return this copy!
+		return p;
 	}
 }
 #endif

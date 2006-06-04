@@ -3,7 +3,7 @@
 	Class definitions for arithmetic int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_arith_expr.h,v 1.7 2006/04/18 18:42:38 fang Exp $
+	$Id: int_arith_expr.h,v 1.7.8.1 2006/06/04 05:59:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_ARITH_EXPR_H__
@@ -77,6 +77,12 @@ public:
 	dimensions(void) const { return 0; }
 
 	GET_DATA_TYPE_REF_PROTO;
+
+#if COW_UNROLL_DATA_EXPR
+	UNROLL_RESOLVE_COPY_INT_PROTO;
+protected:
+	using parent_type::unroll_resolve_copy;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

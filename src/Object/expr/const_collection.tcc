@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.13 2006/04/27 00:15:32 fang Exp $
+ 	$Id: const_collection.tcc,v 1.13.6.1 2006/06/04 05:59:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -392,6 +392,21 @@ count_ptr<typename CONST_COLLECTION_CLASS::parent_const_type>
 CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c) const {
 	return count_ptr<parent_const_type>(new this_type(*this));
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_DATA_EXPR
+/**
+	\param p this pointer, redundant, reference counted.  
+	\return the reference-counted pointer, a shared shallow copy.  
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<typename CONST_COLLECTION_CLASS::expr_base_type>
+CONST_COLLECTION_CLASS::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<expr_base_type>& p) const {
+	INVARIANT(p == this);
+	return p.template is_a<this_type>();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
