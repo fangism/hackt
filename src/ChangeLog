@@ -5,6 +5,18 @@
 
 2006-06-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-03-CHP-02-09:
+	  Finally back into compiling/linking state!
+	  Finished implementing unroll_resolve_copy in the CHP class
+		hierarchy, which can now resolve a footprint efficiently.  
+	  Bunch more minor additions of unroll_resolve_copy interfaces
+		to the expression hierarchy.  
+	  NOTE: none of this new code is tested yet, but no regressions
+		caused so far (old code untouched).
+	  TODO: test cases, test cases, test cases
+		cleanup devel_switch flags, verify CHP footprint objdumps.  
+
+
 	* HACKT-00-01-04-main-00-79-03-CHP-02-08:
 	  Wrote expr-hierarchy's unroll_resolve_copy methods, 
 		leaving only undefined references to new CHP unroll methods.  
@@ -20,6 +32,9 @@
 		The gist of the implementation is to be able to 
 		copy (reference-counted) pointers to results that do not
 		change as a result of unrolling meta value resolution.  
+	  Updated all unroll_resolve_copy prototypes to take 
+		const (pointee) arguments and return const (pointee)
+		pointers -- goes along with copy-on-write semantics.  
 	  Most revisions from this patch are wrapped in
 		#if COW_UNROLL_DATA_EXPR (Moo! copy-on-write)
 	  TODO: fill in the definitions, and finish CHP footprint unrolling.  

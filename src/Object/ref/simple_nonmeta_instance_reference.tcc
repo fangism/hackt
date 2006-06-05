@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.7 2006/03/20 02:41:08 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.7.16.1 2006/06/05 04:02:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -125,6 +125,47 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::attach_indices(
 
 	this->array_indices = i;
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Ripped from simple_nonmeta_value_reference::unroll_resolve_copy().
+ */
+SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS>
+SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::unroll_resolve_copy(
+		const unroll_context& c,
+		const count_ptr<const this_type>& p) const {
+	INVARIANT(p == this);
+	if (this->array_indices) {
+		// resolve the indices
+		count_ptr<index_list_type>
+			resolved_indices(this->array_indices
+				->unroll_resolve_copy(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving nonmeta value reference\'s "
+				"indices." << endl;
+			return count_ptr<this_type>(NULL);
+		}
+		if (std::equal(resolved_indices->begin(),
+				resolved_indices->end(),
+				this->array_indices->begin())) {
+			// then resolution changed nothing, return this-copy
+			return p;
+		} else {
+			excl_ptr<index_list_type>
+				ri(resolved_indices.exclusive_release());
+			count_ptr<this_type>
+				ret(new this_type(this->inst_collection_ref));
+			ret->attach_indices(ri);
+			INVARIANT(!ri);		// transferred ownership
+			return ret;
+		}
+	} else {
+		// is scalar reference (cannot be implicit indices!)
+		// therefore, just return this copy!
+		return p;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

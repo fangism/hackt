@@ -2,8 +2,11 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.7.16.2 2006/06/04 22:26:14 fang Exp $
+	$Id: data_expr.cc,v 1.7.16.3 2006/06/05 04:02:42 fang Exp $
  */
+
+#include "util/static_trace.h"
+DEFAULT_STATIC_TRACE_BEGIN
 
 #define	ENABLE_STACKTRACE			0
 
@@ -14,6 +17,9 @@
 #include "Object/expr/int_negation_expr.h"
 #include "Object/expr/bool_negation_expr.h"
 #include "Object/expr/int_range_expr.h"
+#include "Object/expr/real_expr.h"
+#include "Object/expr/enum_expr.h"
+#include "Object/expr/struct_expr.h"
 #include "Object/expr/nonmeta_index_list.h"
 #include "Object/expr/int_range_list.h"
 #include "Object/expr/expr_dump_context.h"
@@ -78,6 +84,62 @@ using util::read_value;
 count_ptr<const nonmeta_index_expr_base>
 int_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const nonmeta_index_expr_base>& p) const {
+	INVARIANT(p == this);
+	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const data_expr>
+int_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+#endif
+
+//=============================================================================
+// class bool_expr method definitions
+
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const data_expr>
+bool_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+#endif
+
+//=============================================================================
+// class real_expr method definitions
+
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const data_expr>
+real_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+#endif
+
+//=============================================================================
+// class enum_expr method definitions
+
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const data_expr>
+enum_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const data_expr>& p) const {
+	INVARIANT(p == this);
+	return unroll_resolve_copy(c, p.is_a<const this_type>());
+}
+#endif
+
+//=============================================================================
+// class struct_expr method definitions
+
+#if COW_UNROLL_DATA_EXPR
+count_ptr<const data_expr>
+struct_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
@@ -965,4 +1027,6 @@ nonmeta_index_list::load_object(const persistent_object_manager& m,
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+DEFAULT_STATIC_TRACE_END
 

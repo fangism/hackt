@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: bool_expr.h,v 1.5.40.2 2006/06/04 22:26:10 fang Exp $
+	$Id: bool_expr.h,v 1.5.40.3 2006/06/05 04:02:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_EXPR_H__
@@ -29,6 +29,7 @@ using util::memory::count_ptr;
 	Abstract boolean data type expression.  
  */
 class bool_expr : public data_expr {
+	typedef	bool_expr			this_type;
 	typedef	data_expr			parent_type;
 protected:
 	bool_expr() : parent_type() { }
@@ -42,6 +43,8 @@ virtual	~bool_expr() { }
 		const count_ptr<const bool_expr>&) const
 
 virtual	UNROLL_RESOLVE_COPY_BOOL_PROTO = 0;
+
+	UNROLL_RESOLVE_COPY_DATA_PROTO;
 #endif
 
 };	// end class bool_expr

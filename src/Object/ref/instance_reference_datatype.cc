@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.8 2006/04/11 07:54:44 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.8.10.1 2006/06/05 04:02:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -251,6 +251,24 @@ struct nonmeta_reference_type_check_policy<int_tag> {
 };	// end struct nonmeta_reference_type_check_policy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif
+
+//=============================================================================
+// class data_nonmeta_instance_reference method definitions
+
+#if COW_UNROLL_DATA_EXPR
+/**
+	Using cross-casting: cross-over and cross-back.  
+	Leveraging lvalue < rvalue fact.
+ */
+count_ptr<const data_nonmeta_instance_reference>
+data_nonmeta_instance_reference::unroll_resolve_copy(const unroll_context& c,
+		const count_ptr<const this_type>& p) const {
+	INVARIANT(p == this);
+	const count_ptr<const data_expr> d(p.is_a<const data_expr>());
+	NEVER_NULL(d);
+	return d->unroll_resolve_copy(c, d).is_a<const this_type>();
+}
 #endif
 
 //=============================================================================

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.6.18.1 2006/05/17 02:22:51 fang Exp $
+	$Id: CHP_base.h,v 1.6.18.2 2006/06/05 04:02:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
@@ -27,11 +27,11 @@ using util::persistent_object_manager;
 #if ENABLE_CHP_FOOTPRINT
 class action;
 using util::memory::count_ptr;
-typedef	count_ptr<action>			action_ptr_type;
+typedef	count_ptr<const action>			action_ptr_type;
 #endif
 
 //=============================================================================
-#if ENABLE_CHP_FOOTPRINT
+#if 0 && ENABLE_CHP_FOOTPRINT
 /**
 	Interpretation of members:
 	~changed : no change (no error), can use shallow copy,
@@ -62,7 +62,11 @@ struct unroll_action_return_type {
  */
 class action : public persistent {
 public:
+#if 0
 	typedef	unroll_action_return_type	unroll_return_type;
+#else
+	typedef	action_ptr_type			unroll_return_type;
+#endif
 
 	action() { }
 virtual	~action() { }
@@ -85,8 +89,9 @@ virtual	ostream&
 	};
 
 #define	CHP_UNROLL_ACTION_PROTO						\
-	unroll_action_return_type					\
-	unroll(const unroll_context&) const
+	action_ptr_type							\
+	unroll_resolve_copy(const unroll_context&,			\
+		const action_ptr_type&) const
 
 virtual	CHP_UNROLL_ACTION_PROTO = 0;
 #endif

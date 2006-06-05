@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: int_expr.h,v 1.5.40.2 2006/06/04 22:26:16 fang Exp $
+	$Id: int_expr.h,v 1.5.40.3 2006/06/05 04:02:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_EXPR_H__
@@ -44,6 +44,7 @@ virtual	ostream&
 virtual UNROLL_RESOLVE_COPY_INT_PROTO = 0;
 protected:
 	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO;
+	UNROLL_RESOLVE_COPY_DATA_PROTO;
 #endif
 
 };	// end class int_expr

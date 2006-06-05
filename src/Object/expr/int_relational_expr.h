@@ -3,7 +3,7 @@
 	Class definitions for relational int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_relational_expr.h,v 1.7.8.1 2006/06/04 05:59:12 fang Exp $
+	$Id: int_relational_expr.h,v 1.7.8.2 2006/06/05 04:02:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_RELATIONAL_EXPR_H__
@@ -30,6 +30,7 @@ using util::persistent_object_manager;
  */
 class int_relational_expr : public bool_expr {
 	typedef	int_relational_expr		this_type;
+	typedef	bool_expr			parent_type;
 public:
 	typedef	bool_value_type			value_type;
 	typedef	int_value_type			arg_type;
@@ -88,6 +89,8 @@ public:
 
 #if COW_UNROLL_DATA_EXPR
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
+protected:
+	using parent_type::unroll_resolve_copy;
 #endif
 
 public:

@@ -2,7 +2,7 @@
 	\file "Object/expr/real_expr.h"
 	Base class for boolean data expressions.  
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: real_expr.h,v 1.2.26.2 2006/06/04 22:26:19 fang Exp $
+	$Id: real_expr.h,v 1.2.26.3 2006/06/05 04:02:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_REAL_EXPR_H__
@@ -26,6 +26,7 @@ using util::memory::count_ptr;
 	Abstract boolean data type expression.  
  */
 class real_expr : public data_expr {
+	typedef	real_expr			this_type;
 	typedef	data_expr			parent_type;
 protected:
 	real_expr() : parent_type() { }
@@ -39,6 +40,8 @@ virtual	~real_expr() { }
 		const count_ptr<const real_expr>&) const
 
 virtual	UNROLL_RESOLVE_COPY_REAL_PROTO = 0;
+protected:
+	UNROLL_RESOLVE_COPY_DATA_PROTO;
 #endif
 
 };	// end class real_expr

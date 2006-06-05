@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: preal_expr.h,v 1.4.16.2 2006/06/04 22:26:18 fang Exp $
+	$Id: preal_expr.h,v 1.4.16.3 2006/06/05 04:02:47 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_EXPR_H__
@@ -100,6 +100,8 @@ virtual	const_index_list
 	UNROLL_RESOLVE_COPY_REAL_PROTO;
 
 virtual UNROLL_RESOLVE_COPY_PREAL_PROTO = 0;
+protected:
+	using real_expr::unroll_resolve_copy;
 #endif
 
 protected:

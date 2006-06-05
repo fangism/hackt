@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: enum_expr.h,v 1.4.40.2 2006/06/04 22:26:15 fang Exp $
+	$Id: enum_expr.h,v 1.4.40.3 2006/06/05 04:02:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_ENUM_EXPR_H__
@@ -32,6 +32,7 @@ using util::memory::count_ptr;
 	enum comparison expressions.  
  */
 class enum_expr : public data_expr {
+	typedef	enum_expr			this_type;
 	typedef	data_expr			parent_type;
 protected:
 	enum_expr() : parent_type() { }
@@ -45,6 +46,8 @@ virtual	~enum_expr() { }
 		const count_ptr<const enum_expr>&) const
 
 virtual	UNROLL_RESOLVE_COPY_ENUM_PROTO = 0;
+protected:
+	UNROLL_RESOLVE_COPY_DATA_PROTO;
 #endif
 
 };	// end class enum_expr

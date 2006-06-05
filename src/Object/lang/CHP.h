@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.9.8.3 2006/05/17 02:22:51 fang Exp $
+	$Id: CHP.h,v 1.9.8.4 2006/06/05 04:02:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -38,7 +38,7 @@ using util::persistent_object_manager;
 /**
 	Typical action list.  
  */
-typedef	list<count_ptr<action> >		action_list_type;
+typedef	list<action_ptr_type>			action_list_type;
 
 //=============================================================================
 /**
@@ -49,6 +49,8 @@ private:
 	typedef	action				parent_type;
 	typedef	action_list_type		list_type;
 	typedef	action_sequence			this_type;
+protected:
+	typedef	list_type::const_iterator	const_iterator;
 public:
 	action_sequence();
 	~action_sequence();
@@ -111,6 +113,12 @@ public:
 
 	good_bool
 	unroll(const unroll_context&, entity::footprint&) const;
+
+private:
+	good_bool
+	__unroll(const unroll_context&, this_type&) const;
+
+public:
 #endif
 
 	PERSISTENT_METHODS_DECLARATIONS
@@ -125,21 +133,23 @@ public:
 	Do guards need back-references to selection statement?
  */
 class guarded_action : public persistent {
-public:
-	typedef	count_ptr<bool_expr>		guard_ptr_type;
-	typedef	count_ptr<action>		stmt_ptr_type;
 	typedef	guarded_action			this_type;
-#if ENABLE_CHP_FOOTPRINT
+public:
+	typedef	count_ptr<const bool_expr>	guard_ptr_type;
+	typedef	count_ptr<const action>		stmt_ptr_type;
+#if 0 && ENABLE_CHP_FOOTPRINT
 	struct unroll_return_type {
 		bool				changed;
-		count_ptr<guarded_action>	copy;
+		count_ptr<const guarded_action>	copy;
 
 		unroll_return_type() : changed(true), copy(NULL) { }
 
 		unroll_return_type(const bool b,
-			const count_ptr<guarded_action>& c) :
+			const count_ptr<const guarded_action>& c) :
 			changed(b), copy(c) { }
 	};	// end struct unroll_return_type
+#else
+	typedef	count_ptr<const guarded_action>	unroll_return_type;
 #endif
 protected:
 	/**
@@ -168,7 +178,18 @@ public:
 
 #if ENABLE_CHP_FOOTPRINT
 	unroll_return_type
-	unroll(const unroll_context&) const;
+	unroll_resolve_copy(const unroll_context&,
+		const count_ptr<const guarded_action>&) const;
+
+	struct unroll_resolver {
+		const unroll_context&			_context;
+
+		explicit
+		unroll_resolver(const unroll_context& c) : _context(c) { }
+
+		count_ptr<const guarded_action>
+		operator () (const count_ptr<const guarded_action>&) const;
+	};
 #endif
 
 	PERSISTENT_METHODS_DECLARATIONS
@@ -178,7 +199,14 @@ public:
 /**
 	Typical guarded statement list.  
  */
-typedef	list<count_ptr<guarded_action> >	selection_list_type;
+typedef	list<count_ptr<const guarded_action> >	selection_list_type;
+
+//=============================================================================
+#if ENABLE_CHP_FOOTPRINT
+good_bool
+unroll_resolve_selection_list(const selection_list_type&, 
+	const unroll_context&, selection_list_type&);
+#endif
 
 //=============================================================================
 /**
@@ -242,7 +270,7 @@ class metaloop_selection : public action, public meta_loop_base {
 public:
 	typedef	meta_loop_base::ind_var_ptr_type	ind_var_ptr_type;
 	typedef	meta_loop_base::range_ptr_type	range_ptr_type;
-	typedef	count_ptr<guarded_action>	body_ptr_type;
+	typedef	count_ptr<const guarded_action>	body_ptr_type;
 private:
 	/**
 		The one guarded action is presumably dependent on the 
@@ -286,9 +314,9 @@ private:
 	typedef	action					parent_type;
 	typedef	assignment				this_type;
 public:
-	typedef	count_ptr<data_nonmeta_instance_reference>
+	typedef	count_ptr<const data_nonmeta_instance_reference>
 							lval_ptr_type;
-	typedef	count_ptr<data_expr>			rval_ptr_type;
+	typedef	count_ptr<const data_expr>		rval_ptr_type;
 private:
 	lval_ptr_type					lval;
 	rval_ptr_type					rval;
@@ -321,12 +349,15 @@ public:
 class condition_wait : public action {
 	typedef	action					parent_type;
 	typedef	condition_wait				this_type;
-	typedef	count_ptr<bool_expr>			cond_ptr_type;
+	typedef	count_ptr<const bool_expr>		cond_ptr_type;
 private:
 	cond_ptr_type					cond;
 public:
 	condition_wait();
+
+	explicit
 	condition_wait(const cond_ptr_type&);
+
 	~condition_wait();
 
 	ostream&
@@ -350,11 +381,12 @@ class channel_send : public action {
 	typedef	action					parent_type;
 	typedef	channel_send				this_type;
 public:
-	typedef	vector<count_ptr<data_expr> >		expr_list_type;
+	typedef	count_ptr<const data_expr>		data_ptr_type;
+	typedef	vector<data_ptr_type>			expr_list_type;
 	/**
 		should be simple_channel_nonmeta_instnace_reference
 	 */
-	typedef	count_ptr<simple_channel_nonmeta_instance_reference>
+	typedef	count_ptr<const simple_channel_nonmeta_instance_reference>
 							chan_ptr_type;
 private:
 	chan_ptr_type					chan;
@@ -392,10 +424,10 @@ class channel_receive : public action {
 	typedef	action					parent_type;
 	typedef	channel_receive				this_type;
 public:
-	typedef	count_ptr<data_nonmeta_instance_reference>
+	typedef	count_ptr<const data_nonmeta_instance_reference>
 							inst_ref_ptr_type;
 	typedef	vector<inst_ref_ptr_type>		inst_ref_list_type;
-	typedef	count_ptr<simple_channel_nonmeta_instance_reference>
+	typedef	count_ptr<const simple_channel_nonmeta_instance_reference>
 							chan_ptr_type;
 private:
 	chan_ptr_type					chan;
@@ -457,7 +489,7 @@ class do_forever_loop : public action {
 	typedef	action					parent_type;
 	typedef	do_forever_loop				this_type;
 public:
-	typedef	count_ptr<action>			body_ptr_type;
+	typedef	count_ptr<const action>			body_ptr_type;
 private:
 	body_ptr_type					body;
 private:
@@ -501,6 +533,37 @@ public:
 		}
 	};	// end struct detector
 };	// end class do_forever_loop
+
+//=============================================================================
+/**
+	Context-binding functor.  
+	Relocate this to another file if it ever becomes useful elsewhere.  
+ */
+struct data_expr_unroll_resolver {
+	const unroll_context&			_context;
+
+	explicit
+	data_expr_unroll_resolver(const unroll_context& c) : _context(c) { }
+
+	count_ptr<const data_expr>
+	operator () (const count_ptr<const data_expr>&) const;
+};	// end struct data_expr_unroll_resolver
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Context-binding functor.  
+	Relocate this to another file if it ever becomes useful elsewhere.  
+ */
+struct data_ref_unroll_resolver {
+	const unroll_context&			_context;
+
+	explicit
+	data_ref_unroll_resolver(const unroll_context& c) : _context(c) { }
+
+	count_ptr<const data_nonmeta_instance_reference>
+	operator () (
+		const count_ptr<const data_nonmeta_instance_reference>&) const;
+};	// end struct data_ref_unroll_resolver
 
 //=============================================================================
 }	// end namespace CHP

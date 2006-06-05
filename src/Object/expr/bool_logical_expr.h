@@ -3,7 +3,7 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.7.8.1 2006/06/04 05:59:06 fang Exp $
+	$Id: bool_logical_expr.h,v 1.7.8.2 2006/06/05 04:02:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
@@ -28,6 +28,7 @@ using util::persistent_object_manager;
  */
 class bool_logical_expr : public bool_expr {
 	typedef	bool_logical_expr			this_type;
+	typedef	bool_expr				parent_type;
 public:
 	typedef bool_value_type				value_type;
 	typedef	bool_value_type				arg_type;
@@ -81,6 +82,8 @@ public:
 
 #if COW_UNROLL_DATA_EXPR
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
+protected:
+	using parent_type::unroll_resolve_copy;
 #endif
 
 public:
