@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.3 2006/06/04 22:26:22 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.4 2006/06/20 21:28:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -49,6 +49,140 @@ using util::persistent_traits;
 // in "Object/ref/instance_reference_datatype.cc"
 template <class>
 struct nonmeta_reference_type_check_policy;
+
+//=============================================================================
+/**
+	Specialization for nonmeta types that lack a corresponding
+	meta type, like enum and struct.  
+ */
+template <class Tag>
+struct nonmeta_unroll_resolve_copy_policy<Tag, datatype_tag> {
+	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
+	typedef	typename reference_type::index_list_type
+							index_list_type;
+	typedef	count_ptr<const typename reference_type::data_expr_base_type>
+							return_type;
+
+static
+return_type
+unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
+		const return_type& p) {
+	typedef	reference_type				this_type;
+	if (_this.array_indices) {
+		// resolve the indices
+		// if indices are all meta-valued, then resolve all the way
+		// otherwise there is at least one nonmeta dependence, 
+		// which prevents further compile-time resolution.  
+		count_ptr<index_list_type>
+			resolved_indices(_this.array_indices
+				->unroll_resolve_copy(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving nonmeta value reference\'s "
+				"indices." << endl;
+			return count_ptr<this_type>(NULL);
+		}
+		if (std::equal(resolved_indices->begin(),
+				resolved_indices->end(),
+				_this.array_indices->begin())) {
+			STACKTRACE_INDENT_PRINT("new indices match" << endl);
+			// then resolution changed nothing, return this-copy
+			return p;
+		} else {
+			STACKTRACE_INDENT_PRINT("new indices mismatch" << endl);
+			excl_ptr<index_list_type>
+				ri(resolved_indices.exclusive_release());
+			count_ptr<this_type>
+				ret(new this_type(_this.value_collection_ref));
+			ret->attach_indices(ri);
+			INVARIANT(!ri);		// transferred ownership
+			return ret;
+		}
+	} else {
+		STACKTRACE_INDENT_PRINT("scalar" << endl);
+		// is scalar reference (cannot be implicit indices!)
+		// just return self-copy
+		return p;
+	}
+}	// end method unroll_resolve_copy
+
+};	// end struct nonmeta_unroll_resolve_copy_policy
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+/**
+	Specialization for nonmeta types that have a corresponding
+	meta type, like bool and int.  
+ */
+template <class Tag>
+struct nonmeta_unroll_resolve_copy_policy<Tag, parameter_value_tag> {
+	typedef	simple_nonmeta_value_reference<Tag>	reference_type;
+	typedef	typename reference_type::index_list_type
+							index_list_type;
+	typedef	count_ptr<const typename reference_type::data_expr_base_type>
+							return_type;
+	typedef typename reference_type::traits_type	traits_type;
+	typedef	typename traits_type::template value_array<0>::type
+							value_scalar_type;
+	typedef	typename traits_type::data_value_type	data_value_type;
+	typedef	typename traits_type::const_expr_type	const_expr_type;
+
+static
+return_type
+unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
+		const return_type& p) {
+	typedef	reference_type				this_type;
+	if (_this.array_indices) {
+		// resolve the indices
+		// if indices are all meta-valued, then resolve all the way
+		// otherwise there is at least one nonmeta dependence, 
+		// which prevents further compile-time resolution.  
+		count_ptr<index_list_type>
+			resolved_indices(_this.array_indices
+				->unroll_resolve_copy(c));
+		if (!resolved_indices) {
+			cerr << "Error resolving nonmeta value reference\'s "
+				"indices." << endl;
+			return count_ptr<this_type>(NULL);
+		}
+		if (std::equal(resolved_indices->begin(),
+				resolved_indices->end(),
+				_this.array_indices->begin())) {
+			STACKTRACE_INDENT_PRINT("new indices match" << endl);
+			// then resolution changed nothing, return this-copy
+			return p;
+		} else {
+			STACKTRACE_INDENT_PRINT("new indices mismatch" << endl);
+			excl_ptr<index_list_type>
+				ri(resolved_indices.exclusive_release());
+			count_ptr<this_type>
+				ret(new this_type(_this.value_collection_ref));
+			ret->attach_indices(ri);
+			INVARIANT(!ri);		// transferred ownership
+			return ret;
+		}
+	} else {
+		STACKTRACE_INDENT_PRINT("scalar" << endl);
+		// is scalar reference (cannot be implicit indices!)
+		// therefore, just look this up
+		// code ripped from:
+		// simple_meta_value_reference::unroll_resolve_rvalues
+		const never_ptr<const value_scalar_type>
+			ps(_this.value_collection_ref.
+				template is_a<const value_scalar_type>());
+		_this.value_collection_ref->what(cerr) << endl;
+		NEVER_NULL(ps);
+		data_value_type _val;
+		const bad_bool valid(ps->lookup_value(_val, c));
+		if (valid.bad) {
+                        cerr << "ERROR: in unroll_resolve-ing "
+                                "simple_meta_value_reference, "
+                                "uninitialized value." << endl;
+                        return return_type(NULL);
+		} else {
+			return return_type(new const_expr_type(_val));
+		}
+	}
+}	// end method unroll_resolve_copy
+};	// end struct nonmeta_unroll_resolve_copy_policy
 
 //=============================================================================
 // class simple_nonmeta_value_reference method definitions
@@ -231,42 +365,25 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::must_be_equivalent(
 /**
 	See if indicies were changed as a result of meta-parameter resolution.  
 	If not, can just return this as a reference-counted copy!
+	If alll dependent expressions are meta-values, then resolve them
+	and return the resolved constant value, which must be scalar
+	(because this is nonmeta).  
+	Needs to be implemented using a traits_policy because
+	enum and structs compile-time values are not to be resolved yet, 
+	until support for these typed constants is added to the 
+	language intrinsics.  
  */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const typename SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::data_expr_base_type>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 		const unroll_context& c, 
 		const count_ptr<const data_expr_base_type>& p) const {
+	typedef	count_ptr<const data_expr_base_type>	return_type;
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
-	if (this->array_indices) {
-		// resolve the indices
-		count_ptr<index_list_type>
-			resolved_indices(this->array_indices
-				->unroll_resolve_copy(c));
-		if (!resolved_indices) {
-			cerr << "Error resolving nonmeta value reference\'s "
-				"indices." << endl;
-			return count_ptr<this_type>(NULL);
-		}
-		if (std::equal(resolved_indices->begin(),
-				resolved_indices->end(),
-				this->array_indices->begin())) {
-			// then resolution changed nothing, return this-copy
-			return p;
-		} else {
-			excl_ptr<index_list_type>
-				ri(resolved_indices.exclusive_release());
-			count_ptr<this_type>
-				ret(new this_type(this->value_collection_ref));
-			ret->attach_indices(ri);
-			INVARIANT(!ri);		// transferred ownership
-			return ret;
-		}
-	} else {
-		// is scalar reference (cannot be implicit indices!)
-		// therefore, just return this copy!
-		return p;
-	}
+	return nonmeta_unroll_resolve_copy_policy<Tag,
+			typename Tag::parent_tag>::
+				unroll_resolve_copy(*this, c, p);
 }
 #endif
 

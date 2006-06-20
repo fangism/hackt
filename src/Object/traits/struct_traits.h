@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.14.10.1 2006/05/13 02:45:28 fang Exp $
+	$Id: struct_traits.h,v 1.14.10.2 2006/06/20 21:28:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -50,6 +50,7 @@ struct class_traits<datastruct_tag> {
 	typedef	datastruct_instance_alias_info	instance_alias_info_type;
 	/// defined in "Object/inst/struct_instance.h"
 	class state_instance_base;
+
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;

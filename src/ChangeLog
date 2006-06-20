@@ -3,6 +3,23 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-10:
+	  Added persistence of chp_footprint in footprint.  
+	  Enabled dumping of CHP footprint, should only print
+		when CHP footprint is not empty.  
+	  Implemented unroll_resolving of simple_nonmeta_value_references
+		using tag policy : datatype_tag vs. parameter_value_tag.
+		For parameter references, we resolve values to constants
+		where possible, whereas others retain their 
+		optionally-nonmeta-indexed form.  
+	  Footprint binary size increased for CHP footprint, 
+		test cases updated accordingly.  
+	  Added one test case: chp/074.hac
+		need many more...
+
+
 2006-06-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-09:

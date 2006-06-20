@@ -1,8 +1,10 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.7.16.4 2006/06/05 04:02:48 fang Exp $
+	$Id: CHP.cc,v 1.7.16.5 2006/06/20 21:28:48 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include <iterator>
 #include <algorithm>
@@ -32,6 +34,7 @@
 #include "Object/def/template_formals_manager.h"
 
 #include "util/persistent_object_manager.tcc"
+#include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
 #include "util/IO_utils.tcc"
@@ -173,6 +176,7 @@ action_sequence::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 action_sequence::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
@@ -256,17 +260,46 @@ concurrent_actions::~concurrent_actions() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(concurrent_actions)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just the core dump routine, auto-indented with terminating newline.  
+ */
+ostream&
+concurrent_actions::__dump(ostream& o, const expr_dump_context& c) const {
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		(*i)->dump(o << auto_indent, c) << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 concurrent_actions::dump(ostream& o, const expr_dump_context& c) const {
 	o << "concurrent: {" << endl;
 	{
 		INDENT_SECTION(o);
-		const_iterator i(begin());
-		const const_iterator e(end());
-		for ( ; i!=e; i++)
-			(*i)->dump(o << auto_indent, c) << endl;
+		__dump(o, c);
 	}
 	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Used for dumping resolved footprint, called from footprint::dump.
+	\param f parent footprint (currently unused)
+ */
+ostream&
+concurrent_actions::dump(ostream& o, const entity::footprint& f) const {
+if (!empty()) {
+	o << auto_indent << "resolved concurrent actions:" << endl;
+	{
+		INDENT_SECTION(o);
+		const expr_dump_context c;
+		__dump(o, c);
+	}
+}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -297,6 +330,7 @@ concurrent_actions::__unroll(const unroll_context& c, this_type& r) const {
 action_ptr_type
 concurrent_actions::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
@@ -329,6 +363,7 @@ concurrent_actions::unroll_resolve_copy(const unroll_context& c,
 good_bool
 concurrent_actions::unroll(const unroll_context& c,
 		entity::footprint& f) const {
+	STACKTRACE_VERBOSE;
 #if 0
 	const unroll_action_return_type r(unroll(c));
 	if (r.changed && !r.copy) {
@@ -441,6 +476,7 @@ guarded_action::dump(ostream& o, const expr_dump_context& c) const {
 guarded_action::unroll_return_type
 guarded_action::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const this_type>& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const guard_ptr_type g(guard->unroll_resolve_copy(c, guard));
 	if (!g) {
@@ -537,6 +573,7 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 deterministic_selection::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<this_type> r(new this_type);
 	if (!unroll_resolve_selection_list(*this, c, *r).good) {
@@ -606,6 +643,7 @@ nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 nondeterministic_selection::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<this_type> r(new this_type);
 	if (!unroll_resolve_selection_list(*this, c, *r).good) {
@@ -687,6 +725,7 @@ metaloop_selection::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	selection_list_type result;	// unroll into here
 	const_range cr;
@@ -800,6 +839,7 @@ assignment::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 assignment::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const lval_ptr_type lc(lval->unroll_resolve_copy(c, lval));
 	const rval_ptr_type rc(rval->unroll_resolve_copy(c, rval));
@@ -865,6 +905,7 @@ condition_wait::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 condition_wait::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const cond_ptr_type g(cond->unroll_resolve_copy(c, cond));
 	if (!g) {
@@ -937,6 +978,7 @@ channel_send::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 channel_send::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const chan_ptr_type cc(chan->unroll_resolve_copy(c, chan));
 	expr_list_type exprs_c;
@@ -1028,6 +1070,7 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 channel_receive::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const chan_ptr_type cc(chan->unroll_resolve_copy(c, chan));
 	inst_ref_list_type refs;
@@ -1116,6 +1159,7 @@ do_forever_loop::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 do_forever_loop::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const action_ptr_type b(body->unroll_resolve_copy(c, body));
 	if (!b) {
@@ -1184,6 +1228,7 @@ do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
 action_ptr_type
 do_while_loop::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
 	const count_ptr<this_type> r(new this_type);
 	if (!unroll_resolve_selection_list(*this, c, *r).good) {

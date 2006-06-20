@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.17.6.2 2006/06/04 22:26:21 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.17.6.3 2006/06/20 21:28:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -649,8 +649,9 @@ if (value_collection_ref->is_template_formal()) {
 				"simple_meta_value_reference, "
 				"uninitialized value." << endl;
 			return return_type(NULL);
-		} else
+		} else {
 			return return_type(new const_expr_type(_val));
+		}
 	}
 }
 }	// end method unroll_resolve_rvalues

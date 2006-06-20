@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.6.2.5 2006/05/15 03:59:33 fang Exp $
+#	$Id: Makefile.am,v 1.6.2.6 2006/06/20 21:29:10 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -20,7 +20,7 @@ HACKT_PARSE_TEST_PASSES = 000 002 005 \
 	040 041 042 043 044 045 049 \
 	052 053 054 057 058 \
 	060 061 063 064 065 066 069 \
-	070
+	070 074
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -35,7 +35,11 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
 
 # TODO: create phase
-# HACKT_CREATE_TEST_SUBJECTS =
+# HACKT_CREATE_TEST_SUBJECTS = \
+#	$(HACKT_UNROLL_TEST_SUBJECTS)
+
+# HACKT_ALLOC_TEST_SUBJECTS = \
+#	$(HACKT_CREATE_TEST_SUBJECTS)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 \

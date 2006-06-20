@@ -4,7 +4,7 @@
 	This is the ONE file that needs to be touched to change the 
 	precisions of meta-parameter (and simulation) values globally.  
 	NOTE: this file was moved from "Object/art_object_expr_types.h"
-	$Id: types.h,v 1.5 2006/02/10 21:50:38 fang Exp $
+	$Id: types.h,v 1.5.26.1 2006/06/20 21:28:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_TYPES_H__
@@ -36,19 +36,19 @@ namespace entity {
 		For arbitrary precision integers, will want to use
 		mpz_class from GMP, or cl_z from CLN.  
 	 */
-	typedef	long		int_value_type;
+	typedef	pint_value_type		int_value_type;
 
 	/**
 		Representation of built in bool data type.  
 		Intuitive choice.  
 	 */
-	typedef	bool		bool_value_type;
+	typedef	pbool_value_type	bool_value_type;
 
 	/**
 		Don't know how this is going to work.
 		PUNT!
 	 */
-	typedef	float		real_value_type;
+	typedef	preal_value_type	real_value_type;
 
 	/**
 		For now, limiting to 256 enumerations.  

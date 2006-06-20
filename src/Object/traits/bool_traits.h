@@ -2,13 +2,14 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.11.10.1 2006/05/13 02:45:21 fang Exp $
+	$Id: bool_traits.h,v 1.11.10.2 2006/06/20 21:28:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
 #define	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
+#include "object/traits/pbool_traits.h"
 
 namespace HAC {
 namespace entity {
@@ -20,6 +21,9 @@ struct class_traits<bool_tag> {
 	struct rebind {	typedef	class_traits<Tag>	type; };
 
 	typedef	bool_tag			tag_type;
+	/// inherits some traits from corresponding meta-type
+	typedef	pbool_tag			meta_tag_type;
+	typedef	class_traits<meta_tag_type>	meta_traits_type;
 	static const char			tag_name[];
 	typedef	bool_instance			instance_type;
 	typedef	bool_instance_alias_base	instance_alias_base_type;
@@ -34,6 +38,13 @@ struct class_traits<bool_tag> {
 	enum {		is_nonmeta_data_lvalue = true		};
 	/// defined in "Object/inst/bool_instance_collection.h"
 	class state_instance_base;
+
+	template <size_t D>
+	struct value_array {
+		typedef	typename meta_traits_type::
+			template value_array<D>::type		type;
+	};
+
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
@@ -57,6 +68,7 @@ struct class_traits<bool_tag> {
 	 */
 	typedef	bool_value_type			data_value_type;
 	typedef	bool_expr			data_expr_base_type;
+	typedef	meta_traits_type::const_expr_type	const_expr_type;
 	typedef	simple_bool_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;
 	typedef	simple_bool_meta_instance_reference

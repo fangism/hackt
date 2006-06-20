@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.7.16.3 2006/06/05 04:02:42 fang Exp $
+	$Id: data_expr.cc,v 1.7.16.4 2006/06/20 21:28:45 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -26,7 +26,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/operator_precedence.h"
 
 #include "Object/persistent_type_hash.h"
-#include "Object/ref/simple_nonmeta_value_reference.tcc"
 #include "Object/type/data_type_reference.h"
 #include "Object/traits/bool_traits.h"
 
@@ -72,6 +71,7 @@ using HAC::entity::int_range_expr;
 
 namespace HAC {
 namespace entity {
+#include "util/using_ostream.h"
 using std::istream;
 using util::persistent_traits;
 using util::write_value;
