@@ -1,0 +1,142 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	430
+	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	20	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	26	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    assign_me = process-definition (defined) assign_me<
+      pint<> B
+      >(
+        int<32> b
+      )
+      In definition "assign_me", we have: {
+      Parameters:
+        B = pint<> B
+      Instances:
+        b = int<32> b
+      unroll sequence: 
+        pint<> B
+        int<32> b
+      chp:
+        concurrent: {
+          *[
+            b := B
+          ]
+        }
+      footprint collection: {
+        <123> {
+          pint^0 B value: ?
+          int<32>^0 b (instantiated) = ::assign_me::b (1) 
+          int instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := 123
+            ]
+        }
+        <456> {
+          pint^0 B value: ?
+          int<32>^0 b (instantiated) = ::assign_me::b (1) 
+          int instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := 456
+            ]
+        }
+        <789> {
+          pint^0 B value: ?
+          int<32>^0 b (instantiated) = ::assign_me::b (1) 
+          int instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := 789
+            ]
+        }
+      }
+      }
+
+  Instances:
+    X = process assign_me<123>^0 X (instantiated) = ::X (1) (
+      int<32>^0 b (instantiated) = ::X.b (1) 
+    )
+    Y = process assign_me<456>^0 Y (instantiated) = ::Y (2) (
+      int<32>^0 b (instantiated) = ::Y.b (2) 
+    )
+    Z = process assign_me<789>^0 Z (instantiated) = ::Z (3) (
+      int<32>^0 b (instantiated) = ::Z.b (3) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::X
+2	::Y
+3	::Z
+int instance pool:
+1	::X.b
+2	::Y.b
+3	::Z.b
+

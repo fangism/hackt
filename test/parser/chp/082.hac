@@ -1,0 +1,30 @@
+// "082.hac"
+// copy-modified from "078.hac"
+// should pass : unrolling and creating
+
+template <pint N; pint B[N]; pint M>
+defproc compute_me(chan!(int<16>) b) {
+chp {
+	*[ b!(B[M]) ]		// send instead of assign
+}
+}
+
+pint x[6];
+(;i:6:
+	x[i] = i*i;		// compute squares
+)
+
+compute_me<2, x[0..1], 0> y2_0;
+compute_me<2, x[0..1], 1> y2_1;
+
+compute_me<3, x[2..4], 0> y3_0;
+compute_me<3, x[2..4], 1> y3_1;
+compute_me<3, x[2..4], 2> y3_2;
+
+compute_me<6, x, 0> y6_0;
+compute_me<6, x, 1> y6_1;
+compute_me<6, x, 2> y6_2;
+compute_me<6, x, 3> y6_3;
+compute_me<6, x, 4> y6_4;
+compute_me<6, x, 5> y6_5;
+

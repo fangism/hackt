@@ -1,0 +1,30 @@
+// "077.hac"
+// copy-modified from "076.hac"
+// should pass : unrolling and creating
+
+template <pint N; pbool B[N]; pint M>
+defproc assign_me(bool b) {
+chp {
+	*[ b := B[M] ]
+}
+}
+
+pbool x[6];
+(;i:6:
+	x[i] = (i%2 != 0);	// parens needed because relational
+)
+
+assign_me<2, x[0..1], 0> y2_0;
+assign_me<2, x[0..1], 1> y2_1;
+
+assign_me<3, x[2..4], 0> y3_0;
+assign_me<3, x[2..4], 1> y3_1;
+assign_me<3, x[2..4], 2> y3_2;
+
+assign_me<6, x, 0> y6_0;
+assign_me<6, x, 1> y6_1;
+assign_me<6, x, 2> y6_2;
+assign_me<6, x, 3> y6_3;
+assign_me<6, x, 4> y6_4;
+assign_me<6, x, 5> y6_5;
+

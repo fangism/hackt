@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.14.16.1 2006/05/12 20:56:48 fang Exp $
+ 	$Id: type_reference.cc,v 1.14.16.2 2006/06/22 04:05:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -537,6 +537,11 @@ data_type_reference::may_be_collectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks connectivity.  
+	This is called at parse-tree-check time and is conservative.  
+	Precise type comparison occurs at unroll-time.  
+ */
 bool
 data_type_reference::may_be_connectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
@@ -545,6 +550,33 @@ data_type_reference::may_be_connectibly_type_equivalent(
 	const canonical_compare_result_type eq(*this, t);
 	if (!eq.equal)
 		return false;
+	else	return eq.lt->template_args.may_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Used for checking statements of the form a:=b (CHP).  
+	Need to make an exception for int<W> := int<0>.  
+	\return true if types of expression may be assignable.  
+ */
+bool
+data_type_reference::may_be_assignably_type_equivalent(
+		const data_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	if (base_type_def == &int_traits::built_in_definition) {
+		// allow rvalue's width to be zero as a special case
+		// to allow parameters ints as rvalues
+		const count_ptr<const pint_const>
+			width(eq.rt->template_args[0].is_a<const pint_const>());
+		return (width && width->static_constant_value() == 0) ||
+			eq.lt->template_args.may_be_strict_equivalent(
+				eq.rt->template_args);
+	}
 	else	return eq.lt->template_args.may_be_strict_equivalent(
 			eq.rt->template_args);
 }

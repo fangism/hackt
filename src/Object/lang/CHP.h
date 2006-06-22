@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.9.8.5 2006/06/20 21:28:49 fang Exp $
+	$Id: CHP.h,v 1.9.8.6 2006/06/22 04:04:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -102,7 +102,8 @@ public:
 	dump(ostream&, const expr_dump_context&) const;
 
 	ostream&
-	dump(ostream&, const entity::footprint&) const;
+	dump(ostream&, const entity::footprint&, 
+		const expr_dump_context&) const;
 
 	// helper methods needed for process_definition
 	void

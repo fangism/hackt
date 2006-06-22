@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.23.2.1 2006/06/20 21:28:43 fang Exp $
+#	$Id: TODO,v 1.23.2.2 2006/06/22 04:04:43 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -45,6 +45,8 @@ enhancement:
 		yes, give each unique string ID number.  
 		Must be replayable on all platforms, so use ordered map?
 		Just first-come-first-serve, construct map in object header.  
+	unroll-resolving: use copy-on-write pattern for
+		ALL meta-language unrolling (currently done for nonmeta)
 
 ===============================================================================
 enums and structs
@@ -53,6 +55,15 @@ enums and structs
 	using value_types: char, class datastruct_value_type
 	introduce pstruct keyword to refer to meta-values?
 		use as a type-prefix?
+
+===============================================================================
+channels:
+built-in channel types
+	implement as some kind of variadic template, with
+		variable number of type arguments.  
+	Maintain footprint collection of each type mentioned.  
+	Is there a way to name a channel's structural member, since
+		formals are not named???
 
 ===============================================================================
 complete type creation: (20060128)

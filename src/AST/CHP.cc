@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.5.8.2 2006/05/13 02:45:18 fang Exp $
+	$Id: CHP.cc,v 1.5.8.3 2006/06/22 04:04:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -608,7 +608,17 @@ binary_assignment::check_action(context& c) const {
 			where(*rval) << endl;
 		return statement::return_type(NULL);
 	}
-	if (!ltype->may_be_connectibly_type_equivalent(*rtype)) {
+	// dimension-check
+	if (lref->dimensions() != rv->dimensions()) {
+		cerr << "Error: mismatch in dimensions of assignment." << endl
+			<< "\tgot: " << lref->dimensions() << " at " <<
+			where(*lval) << endl <<
+			"\tand: " << rv->dimensions() << " at " <<
+			where(*rval) << endl;
+		return statement::return_type(NULL);
+	}
+	// used to be ...connectibly_type_equivalent()
+	if (!ltype->may_be_assignably_type_equivalent(*rtype)) {
 		cerr << "Type mismatch in assignment at " <<
 			where(*this) << ':' << endl;
 		ltype->dump(cerr << "\tleft: ") << endl;

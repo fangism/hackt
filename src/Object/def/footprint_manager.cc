@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.8 2006/04/12 08:53:13 fang Exp $
+	$Id: footprint_manager.cc,v 1.8.10.1 2006/06/22 04:04:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -52,13 +52,10 @@ footprint_manager::set_arity(const size_t a) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
-footprint_manager::dump(ostream& o) const {
-	return dump(o, dump_flags::default_value);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-footprint_manager::dump(ostream& o, const dump_flags& df) const {
+footprint_manager::dump(ostream& o, const expr_dump_context& dc) const {
+//	return dump(o, dump_flags::default_value);
+	// const dump_flags& df(dump_flags::no_leading_scope);
+	const dump_flags& df(dump_flags::default_value);
 if (_arity) {
 	o << "footprint collection: {" << endl;
 	{	// indentation scope
@@ -66,12 +63,11 @@ if (_arity) {
 		const_iterator i(begin());
 		const const_iterator e(end());
 		for ( ; i!=e; i++) {
-			i->first.dump(o << auto_indent << '<', 
-				expr_dump_context::default_value)
+			i->first.dump(o << auto_indent << '<', dc)
 				<< "> {" << endl;
 			{
 				INDENT_SECTION(o);
-				i->second.dump_with_collections(o, df);
+				i->second.dump_with_collections(o, df, dc);
 			}
 			o << auto_indent << '}' << endl;
 		}
@@ -82,7 +78,41 @@ if (_arity) {
 	o << "footprint: {" << endl;
 	{
 		INDENT_SECTION(o);
-		only().dump_with_collections(o, df);
+		only().dump_with_collections(o, df, dc);
+	}
+	return o << auto_indent << '}';
+} else {
+	return o;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+footprint_manager::dump(ostream& o, const dump_flags& df) const {
+	const expr_dump_context& dc(expr_dump_context::default_value);
+if (_arity) {
+	o << "footprint collection: {" << endl;
+	{	// indentation scope
+		INDENT_SECTION(o);
+		const_iterator i(begin());
+		const const_iterator e(end());
+		for ( ; i!=e; i++) {
+			i->first.dump(o << auto_indent << '<', dc)
+				<< "> {" << endl;
+			{
+				INDENT_SECTION(o);
+				i->second.dump_with_collections(o, df, dc);
+			}
+			o << auto_indent << '}' << endl;
+		}
+	}
+	return o << auto_indent << '}';
+} else if (size()) {
+	// check size to see of the only complete type has been unrolled
+	o << "footprint: {" << endl;
+	{
+		INDENT_SECTION(o);
+		only().dump_with_collections(o, df, dc);
 	}
 	return o << auto_indent << '}';
 } else {

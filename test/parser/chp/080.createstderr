@@ -1,0 +1,155 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	428
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	19	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	27	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	35	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	62	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    send_me = process-definition (defined) send_me<
+      pint<> B
+      >(
+        chan!(int<32>) b
+      )
+      In definition "send_me", we have: {
+      Parameters:
+        B = pint<> B
+      Instances:
+        b = chan!(int<32>) b
+      unroll sequence: 
+        pint<> B
+        chan!(int<32>) b
+      chp:
+        concurrent: {
+          *[
+            b!(B)
+          ]
+        }
+      footprint collection: {
+        <123> {
+          pint^0 B value: ?
+          channel chan(int<32>)^0 b (instantiated) = ::send_me::b (1) 
+          channel instance pool:
+          1	::send_me::b
+          resolved concurrent actions:
+            *[
+              b!(123)
+            ]
+        }
+        <456> {
+          pint^0 B value: ?
+          channel chan(int<32>)^0 b (instantiated) = ::send_me::b (1) 
+          channel instance pool:
+          1	::send_me::b
+          resolved concurrent actions:
+            *[
+              b!(456)
+            ]
+        }
+        <789> {
+          pint^0 B value: ?
+          channel chan(int<32>)^0 b (instantiated) = ::send_me::b (1) 
+          channel instance pool:
+          1	::send_me::b
+          resolved concurrent actions:
+            *[
+              b!(789)
+            ]
+        }
+      }
+      }
+
+  Instances:
+    X = process send_me<123>^0 X (instantiated) = ::X (1) (
+      channel chan(int<32>)^0 b (instantiated) = ::X.b (1) 
+    )
+    Y = process send_me<456>^0 Y (instantiated) = ::Y (2) (
+      channel chan(int<32>)^0 b (instantiated) = ::Y.b (2) 
+    )
+    Z = process send_me<789>^0 Z (instantiated) = ::Z (3) (
+      channel chan(int<32>)^0 b (instantiated) = ::Z.b (3) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::X
+2	::Y
+3	::Z
+channel instance pool:
+1	::X.b
+2	::Y.b
+3	::Z.b
+

@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.14 2006/05/06 22:08:19 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.14.2.1 2006/06/22 04:04:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -236,7 +236,7 @@ const_index_list::collapsed_dimension_ranges(void) const {
 	expression is a 0-dimensional pint_inst reference.  
  */
 void
-const_index_list::push_back(const count_ptr<const_index>& i) {
+const_index_list::push_back(const const_index_ptr_type& i) {
 	// check dimensionality
 	NEVER_NULL(i);
 	INVARIANT(i->dimensions() == 0);
@@ -372,8 +372,8 @@ bool
 const_index_list::equal_dimensions(const const_index_list& l) const {
 	// compare_if defined in "util/conditional.h"
 	return compare_if(begin(), end(), l.begin(), l.end(), 
-		mem_fun_ref(&count_ptr<const_index>::is_a<const const_range>), 
-		mem_fun_ref(&count_ptr<const_index>::is_a<const const_range>), 
+		mem_fun_ref(&const_index_ptr_type::is_a<const const_range>), 
+		mem_fun_ref(&const_index_ptr_type::is_a<const const_range>), 
 		binary_compose(
 			mem_fun_ref(&const_index::range_size_equivalent), 
 			dereference<count_ptr<const const_index> >(), 

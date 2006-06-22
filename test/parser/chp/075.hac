@@ -1,0 +1,15 @@
+// "075.hac"
+// copy-modified from "074.hac"
+// should pass : unrolling and creating
+
+template <pint B>
+defproc assign_me(int b) {
+chp {
+	*[ b := B ]
+}
+}
+
+assign_me<123> X;
+assign_me<456> Y;
+assign_me<789> Z;
+

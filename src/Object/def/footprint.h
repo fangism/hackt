@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.15.4.2 2006/05/17 02:22:45 fang Exp $
+	$Id: footprint.h,v 1.15.4.3 2006/06/22 04:04:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -41,6 +41,7 @@ class footprint_frame;
 class port_member_context;
 struct alias_visitor;
 struct dump_flags;
+struct expr_dump_context;
 
 using std::string;
 using std::istream;
@@ -237,7 +238,8 @@ public:
 	dump(ostream&) const;
 
 	ostream&
-	dump_with_collections(ostream&, const dump_flags&) const;
+	dump_with_collections(ostream&, const dump_flags&, 
+		const expr_dump_context&) const;
 
 	const port_alias_tracker&
 	get_port_alias_tracker(void) const {

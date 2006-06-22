@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.20.2.1 2006/06/20 21:28:44 fang Exp $
+	$Id: footprint.cc,v 1.20.2.2 2006/06/22 04:04:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -221,7 +221,8 @@ footprint::dump(ostream& o) const {
 	TODO: sort map entries or use qmap.
  */
 ostream&
-footprint::dump_with_collections(ostream& o, const dump_flags& df) const {
+footprint::dump_with_collections(ostream& o, const dump_flags& df, 
+		const expr_dump_context& dc) const {
 	if (!instance_collection_map.empty()) {
 		// NOTE: hash_map is NOT sorted
 		const_instance_map_iterator
@@ -239,7 +240,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df) const {
 #endif
 		prs_footprint.dump(o, *this);
 #if ENABLE_CHP_FOOTPRINT
-		chp_footprint.dump(o, *this);
+		chp_footprint.dump(o, *this, dc);
 #endif
 		spec_footprint.dump(o, *this);
 	}

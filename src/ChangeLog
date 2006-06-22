@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-11:
+	  Further improved nonmeta expression unroll-resolution to substitute
+		constants deduced from indexed expressions where possible.  
+		TODO: mixed meta/nonmeta index test cases.  
+	  footprint and footprint-map dump augmented with expression-context
+		argument for diagnostic pretty-printing.  
+	  CHP assignments and sends now use a modified type-check
+		at parse-time to allow an exception for int:=pint.
+	  Added dimensionality check to CHP assignment checking.  
+	  const_index_list is now list of const-const_index pointers
+	  TODO notes: channels
+
+
 2006-06-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-10:

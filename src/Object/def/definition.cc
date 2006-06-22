@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.21.4.2 2006/05/15 03:59:26 fang Exp $
+ 	$Id: definition.cc,v 1.21.4.3 2006/06/22 04:04:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -1957,7 +1957,7 @@ user_def_datatype::dump(ostream& o) const {
 			get_chp.dump(o << auto_indent, dc) << endl;
 		}
 		if (footprint_map.size()) {
-			footprint_map.dump(o << auto_indent) << endl;
+			footprint_map.dump(o << auto_indent, dc) << endl;
 		}
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
@@ -2639,9 +2639,9 @@ process_definition::dump(ostream& o) const {
 	{	// begin indent level
 		scopespace::dump_for_definitions(o);
 		if (defined) {
+			const expr_dump_context dc(this);
 			o << auto_indent << "unroll sequence: " << endl;
 			{	INDENT_SECTION(o);
-				const expr_dump_context dc(this);
 				sequential_scope::dump(o, dc);
 			}
 			// PRS
@@ -2655,7 +2655,6 @@ process_definition::dump(ostream& o) const {
 			if (!chp.empty()) {
 				o << auto_indent << "chp:" << endl;
 				INDENT_SECTION(o);
-				const expr_dump_context dc(this);
 				chp.dump(o << auto_indent, dc) << endl;
 			}
 			// SPEC
@@ -2666,7 +2665,8 @@ process_definition::dump(ostream& o) const {
 				spec.dump(o, rdc);	// << endl;
 			}
 			if (footprint_map.size()) {
-				footprint_map.dump(o << auto_indent) << endl;
+				footprint_map.dump(
+					o << auto_indent, dc) << endl;
 			}
 		}
 	}	// end indent scope

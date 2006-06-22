@@ -1,0 +1,11 @@
+// "076.hac"
+// copy-modified from "074.hac"
+// should fail : dimension mismatch in CHP assignment
+
+template <pint N; pbool B[N]>
+defproc assign_me(bool b) {
+chp {
+	*[ b := B ]		// should be rejected, dimension mismatch
+}
+}
+

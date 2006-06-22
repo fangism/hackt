@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.7.16.5 2006/06/20 21:28:48 fang Exp $
+	$Id: CHP.cc,v 1.7.16.6 2006/06/22 04:04:57 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -290,12 +290,12 @@ concurrent_actions::dump(ostream& o, const expr_dump_context& c) const {
 	\param f parent footprint (currently unused)
  */
 ostream&
-concurrent_actions::dump(ostream& o, const entity::footprint& f) const {
+concurrent_actions::dump(ostream& o, const entity::footprint& f,
+		const expr_dump_context& c) const {
 if (!empty()) {
 	o << auto_indent << "resolved concurrent actions:" << endl;
 	{
 		INDENT_SECTION(o);
-		const expr_dump_context c;
 		__dump(o, c);
 	}
 }

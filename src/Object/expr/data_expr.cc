@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.7.16.4 2006/06/20 21:28:45 fang Exp $
+	$Id: data_expr.cc,v 1.7.16.5 2006/06/22 04:04:51 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -24,6 +24,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/int_range_list.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/operator_precedence.h"
+#include "Object/expr/const_index_list.h"
+#include "Object/expr/pint_const.h"
 
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
@@ -35,6 +37,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/what.h"
 #include "util/IO_utils.h"
 #include "util/stacktrace.h"
+#include "util/multikey.h"
 
 namespace util {
 using HAC::entity::int_arith_expr;
@@ -959,6 +962,7 @@ nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
  */
 count_ptr<nonmeta_index_list>
 nonmeta_index_list::unroll_resolve_copy(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	const count_ptr<this_type> ret(new this_type(this->size()));
 	NEVER_NULL(ret);
 	const_iterator i(begin());
@@ -970,6 +974,35 @@ nonmeta_index_list::unroll_resolve_copy(const unroll_context& c) const {
 	return ret;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Attempts to construct a const_index_list from a resolved
+	nonmeta_index_list.  
+	Also check that none of the members are ranges, 
+		i.e. all dimensions are collapsed.  
+	\param l the multi-index, already sized properly.  
+	\return If any members of list are not integer constants, then
+		return NULL, signaling (non-fatal) failure.  
+ */
+good_bool
+nonmeta_index_list::make_const_index_list(multikey_index_type& l) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(l.dimensions() == size());
+	const_iterator i(begin());
+	const const_iterator e(end());
+	size_t j = 0;
+	for ( ; i!=e; ++i, ++j) {
+		const count_ptr<const pint_const>
+			ic(i->is_a<const pint_const>());
+		if (ic) {
+			l[j] = ic->static_constant_value();
+		} else {
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
