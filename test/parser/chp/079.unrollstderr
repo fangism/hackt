@@ -71,21 +71,21 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           pbool^0 B value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::send_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::send_me::b 
         }
         <true> {
           pbool^0 B value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::send_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::send_me::b 
         }
       }
       }
 
   Instances:
     X = process send_me<true>^0 X (instantiated) = ::X (
-      channel chan(bool<>)^0 b (instantiated) = ::X.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::X.b 
     )
     Y = process send_me<false>^0 Y (instantiated) = ::Y (
-      channel chan(bool<>)^0 b (instantiated) = ::Y.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::Y.b 
     )
 }
 

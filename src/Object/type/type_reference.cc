@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.14.16.2 2006/06/22 04:05:08 fang Exp $
+ 	$Id: type_reference.cc,v 1.14.16.3 2006/06/23 07:55:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -1056,10 +1056,11 @@ builtin_channel_type_reference::make_unroll_context(void) const {
 count_ptr<const channel_type_reference_base>
 builtin_channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("builtin_channel_type_reference::unroll_resolve()");
-	typedef	count_ptr<const this_type>	return_type;
+	typedef	count_ptr<this_type>	return_type;
 	INVARIANT(!template_args);
-	const count_ptr<this_type> ret(new this_type);
+	const return_type ret(new this_type);
 	NEVER_NULL(ret);
+	ret->direction = direction;
 	util::reserve(ret->datatype_list, datatype_list.size());
 	transform(datatype_list.begin(), datatype_list.end(),
 		back_inserter(ret->datatype_list), 
@@ -1111,6 +1112,7 @@ builtin_channel_type_reference::make_instance_collection(
 canonical_generic_chan_type
 builtin_channel_type_reference::make_canonical_type(void) const {
 	canonical_generic_chan_type ret;
+	ret.direction = direction;
 	util::reserve(ret.datatype_list, datatype_list.size());
 	transform(datatype_list.begin(), datatype_list.end(),
 		back_inserter(ret.datatype_list), 
@@ -1272,7 +1274,7 @@ channel_type_reference::make_unroll_context(void) const {
 count_ptr<const channel_type_reference_base>
 channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("channel_type_reference::unroll_resolve()");
-	typedef	count_ptr<const this_type>	return_type;
+	typedef	count_ptr<this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
@@ -1288,6 +1290,7 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 			const return_type
 				ret(new this_type(base_chan_def, actuals));
 			NEVER_NULL(ret);
+			ret->direction = direction;
 			return (ret->must_be_valid().good ?
 				ret : return_type(NULL));
 		} else {
@@ -1298,6 +1301,7 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 		// need to check must_be_valid?
 		const return_type ret(new this_type(base_chan_def));
 		INVARIANT(ret->must_be_valid().good);
+		ret->direction = direction;
 		return ret;
 	}
 }
@@ -1402,7 +1406,10 @@ channel_type_reference::make_instance_collection(
  */
 canonical_generic_chan_type
 channel_type_reference::make_canonical_type(void) const {
-	return base_chan_def->make_canonical_type(template_args);
+	canonical_generic_chan_type
+		ret(base_chan_def->make_canonical_type(template_args));
+	ret.set_direction(direction);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

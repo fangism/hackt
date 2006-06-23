@@ -1,13 +1,15 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.4 2006/01/22 18:20:40 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.4.40.1 2006/06/23 07:55:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
 #define	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
 
 #define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_CONSTRUCTORS			(0 && ENABLE_STACKTRACE)
+#define	STACKTRACE_DUMPS			(0 && ENABLE_STACKTRACE)
 
 #include "Object/type/canonical_generic_chan_type.h"
 
@@ -36,13 +38,16 @@ using util::read_value;
 // class canonical_type method definitions
 
 canonical_generic_chan_type::canonical_type() :
-		base_type(), canonical_definition_ptr(NULL), datatype_list() {
+		base_type(), canonical_definition_ptr(NULL), 
+		datatype_list(), direction() {
+	// what is direction? don't care
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(
-		const canonical_definition_ptr_type d) :
-		base_type(), canonical_definition_ptr(d), datatype_list() {
+		const canonical_definition_ptr_type d, const char dir) :
+		base_type(), canonical_definition_ptr(d), datatype_list(), 
+		direction(dir) {
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
 }
@@ -50,8 +55,10 @@ canonical_generic_chan_type::canonical_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(
 		const canonical_definition_ptr_type d,
-		const param_list_ptr_type& p) :
-		base_type(p), canonical_definition_ptr(d), datatype_list() {
+		const param_list_ptr_type& p, 
+		const char dir) :
+		base_type(p), canonical_definition_ptr(d), datatype_list(), 
+		direction(dir) {
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
 }
@@ -59,10 +66,11 @@ canonical_generic_chan_type::canonical_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(
 		const canonical_definition_ptr_type d,
-		const template_actuals& p) :
+		const template_actuals& p,
+		const char dir) :
 		base_type(p.make_const_param_list()),
 		canonical_definition_ptr(d),
-		datatype_list() {
+		datatype_list(), direction(dir) {
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
 }
@@ -112,16 +120,22 @@ canonical_generic_chan_type::operator bool () const {
  */
 ostream&
 canonical_generic_chan_type::dump(ostream& o) const {
+#if STACKTRACE_DUMPS
 	STACKTRACE_VERBOSE;
+#endif
 	if (canonical_definition_ptr) {
-		STACKTRACE("user-def-chan");
+#if STACKTRACE_DUMPS
+		STACKTRACE_INDENT_PRINT("user-def-chan" << endl);
+#endif
 		o << canonical_definition_ptr->get_name();
 		base_type::dump_template_args(o,
 			canonical_definition_ptr->num_strict_formals());
 		return channel_type_reference_base::dump_direction(o,direction);
 	} else {
-		STACKTRACE("builtin-def-chan");
 		typedef	datatype_list_type::const_iterator	const_iterator;
+#if STACKTRACE_DUMPS
+		STACKTRACE_INDENT_PRINT("builtin-def-chan" << endl);
+#endif
 		o << "chan";
 		channel_type_reference_base::dump_direction(o, direction);
 		o << '(';
@@ -392,8 +406,8 @@ canonical_generic_chan_type::collect_transient_info_base(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-canonical_generic_chan_type::write_object_base(const persistent_object_manager& m, 
-		ostream& o) const {
+canonical_generic_chan_type::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
 	m.write_pointer(o, canonical_definition_ptr);
 	m.write_pointer(o, param_list_ptr);
 {
@@ -410,8 +424,8 @@ canonical_generic_chan_type::write_object_base(const persistent_object_manager& 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-canonical_generic_chan_type::load_object_base(const persistent_object_manager& m, 
-		istream& i) {
+canonical_generic_chan_type::load_object_base(
+		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, canonical_definition_ptr);
 	m.read_pointer(i, param_list_ptr);
 {

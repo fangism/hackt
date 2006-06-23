@@ -77,7 +77,7 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           pbool^0 B value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::send_me::b (1) 
+          channel chan!(bool<>)^0 b (instantiated) = ::send_me::b (1) 
           channel instance pool:
           1	::send_me::b
           resolved concurrent actions:
@@ -87,7 +87,7 @@ In namespace "", we have: {
         }
         <true> {
           pbool^0 B value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::send_me::b (1) 
+          channel chan!(bool<>)^0 b (instantiated) = ::send_me::b (1) 
           channel instance pool:
           1	::send_me::b
           resolved concurrent actions:
@@ -100,10 +100,10 @@ In namespace "", we have: {
 
   Instances:
     X = process send_me<true>^0 X (instantiated) = ::X (1) (
-      channel chan(bool<>)^0 b (instantiated) = ::X.b (1) 
+      channel chan!(bool<>)^0 b (instantiated) = ::X.b (1) 
     )
     Y = process send_me<false>^0 Y (instantiated) = ::Y (2) (
-      channel chan(bool<>)^0 b (instantiated) = ::Y.b (2) 
+      channel chan!(bool<>)^0 b (instantiated) = ::Y.b (2) 
     )
 }
 

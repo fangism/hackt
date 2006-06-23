@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-prsim-opt.sh.in"
-#	$Id: hackt-prsim-opt.sh.in,v 1.2 2006/05/06 04:19:03 fang Exp $
+#	$Id: hackt-prsim-opt.sh.in,v 1.2.2.1 2006/06/23 07:55:40 fang Exp $
 # Template test script for comparing checking checkpoint consistency
 # between unoptimized and optimized prsim runs.  
 
@@ -37,8 +37,9 @@ fi
 # still doesn't exist because script exited before checkpoint saved
 if test ! -f $outroot.prsimckpt
 then
-	@ECHO@ "No $outroot.prsimckpt checkpoint generated, skipping test."
-	exit 0
+#	@ECHO@ "No $outroot.prsimckpt checkpoint generated, skipping test."
+#	77 is the auto-test code for SKIP
+	exit 77
 fi
 
 # load first checkpoint and produce duplicate checkpoint

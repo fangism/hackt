@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.4 2005/12/13 04:15:39 fang Exp $
+	$Id: canonical_type_base.cc,v 1.4.46.1 2006/06/23 07:55:38 fang Exp $
  */
 
 #include <algorithm>
@@ -66,10 +66,13 @@ canonical_type_base::dump_template_args(ostream& o,
 			expr_dump_context::default_value, 0, num_strict);
 	}
 	o << '>';
-	const size_t s = param_list_ptr->size();
-	if (num_strict < s) {
-		param_list_ptr->dump_range(o << '<',
-			expr_dump_context::default_value, num_strict, s) << '>';
+	if (param_list_ptr) {
+		const size_t s = param_list_ptr->size();
+		if (num_strict < s) {
+			param_list_ptr->dump_range(o << '<',
+				expr_dump_context::default_value,
+				num_strict, s) << '>';
+		}
 	}
 	return o;
 }

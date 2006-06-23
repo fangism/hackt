@@ -91,28 +91,28 @@ In namespace "", we have: {
       footprint collection: {
         <123> {
           pint^0 B value: ?
-          channel chan(int<32>)^0 b (instantiated) = ::send_me::b 
+          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b 
         }
         <456> {
           pint^0 B value: ?
-          channel chan(int<32>)^0 b (instantiated) = ::send_me::b 
+          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b 
         }
         <789> {
           pint^0 B value: ?
-          channel chan(int<32>)^0 b (instantiated) = ::send_me::b 
+          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b 
         }
       }
       }
 
   Instances:
     X = process send_me<123>^0 X (instantiated) = ::X (
-      channel chan(int<32>)^0 b (instantiated) = ::X.b 
+      channel chan!(int<32>)^0 b (instantiated) = ::X.b 
     )
     Y = process send_me<456>^0 Y (instantiated) = ::Y (
-      channel chan(int<32>)^0 b (instantiated) = ::Y.b 
+      channel chan!(int<32>)^0 b (instantiated) = ::Y.b 
     )
     Z = process send_me<789>^0 Z (instantiated) = ::Z (
-      channel chan(int<32>)^0 b (instantiated) = ::Z.b 
+      channel chan!(int<32>)^0 b (instantiated) = ::Z.b 
     )
 }
 

@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.6.2.7 2006/06/22 04:05:41 fang Exp $
+#	$Id: Makefile.am,v 1.6.2.8 2006/06/23 07:55:51 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -22,7 +22,7 @@ HACKT_PARSE_TEST_PASSES = \
 	052 053 054 057 058 \
 	060 061 063 064 065 066 069 \
 	070 074 075 077 078 079 \
-	080 081 082
+	080 081 082 083
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -39,7 +39,7 @@ HACKT_UNROLL_TEST_SUBJECTS = \
 HACKT_CREATE_TEST_SUBJECTS = \
 	064 \
 	074 075 077 078 079 \
-	080 081 082
+	080 081 082 083
 
 # TODO: alloc phase
 # several tests are not ready because we haven't defined

@@ -116,8 +116,8 @@ In namespace "", we have: {
         }
       footprint collection: {
         <12> {
-          channel chan(int<12>)^0 L (instantiated) = ::adjacent_diff::L 
-          channel chan(int<12>)^0 R (instantiated) = ::adjacent_diff::R 
+          channel chan?(int<12>)^0 L (instantiated) = ::adjacent_diff::L 
+          channel chan!(int<12>)^0 R (instantiated) = ::adjacent_diff::R 
           pint^0 W value: ?
           int<12>^0 x (instantiated) = ::adjacent_diff::x 
           int<12>^0 z (instantiated) = ::adjacent_diff::z 
@@ -129,8 +129,8 @@ In namespace "", we have: {
     A = channel chan(int<12>)^0 A (instantiated) = ::differ.L 
     B = channel chan(int<12>)^0 B (instantiated) = ::differ.R 
     differ = process adjacent_diff<12>^0 differ (instantiated) = ::differ (
-      channel chan(int<12>)^0 L (instantiated) = ::differ.L 
-      channel chan(int<12>)^0 R (instantiated) = ::differ.R 
+      channel chan?(int<12>)^0 L (instantiated) = ::differ.L 
+      channel chan!(int<12>)^0 R (instantiated) = ::differ.R 
     )
 }
 

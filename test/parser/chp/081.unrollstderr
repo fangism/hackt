@@ -306,7 +306,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <2, {0,1}, 1> {
           pbool^1 B
@@ -316,7 +316,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <3, {0,1,0}, 0> {
           pbool^1 B
@@ -327,7 +327,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <3, {0,1,0}, 1> {
           pbool^1 B
@@ -338,7 +338,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <3, {0,1,0}, 2> {
           pbool^1 B
@@ -349,7 +349,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <6, {0,1,0,1,0,1}, 0> {
           pbool^1 B
@@ -363,7 +363,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <6, {0,1,0,1,0,1}, 1> {
           pbool^1 B
@@ -377,7 +377,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <6, {0,1,0,1,0,1}, 2> {
           pbool^1 B
@@ -391,7 +391,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <6, {0,1,0,1,0,1}, 3> {
           pbool^1 B
@@ -405,7 +405,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <6, {0,1,0,1,0,1}, 4> {
           pbool^1 B
@@ -419,7 +419,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
         <6, {0,1,0,1,0,1}, 5> {
           pbool^1 B
@@ -433,44 +433,44 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(bool<>)^0 b (instantiated) = ::assign_me::b 
+          channel chan!(bool<>)^0 b (instantiated) = ::assign_me::b 
         }
       }
       }
 
   Instances:
     y2_0 = process assign_me<2, {0,1}, 0>^0 y2_0 (instantiated) = ::y2_0 (
-      channel chan(bool<>)^0 b (instantiated) = ::y2_0.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y2_0.b 
     )
     y2_1 = process assign_me<2, {0,1}, 1>^0 y2_1 (instantiated) = ::y2_1 (
-      channel chan(bool<>)^0 b (instantiated) = ::y2_1.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y2_1.b 
     )
     y3_0 = process assign_me<3, {0,1,0}, 0>^0 y3_0 (instantiated) = ::y3_0 (
-      channel chan(bool<>)^0 b (instantiated) = ::y3_0.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y3_0.b 
     )
     y3_1 = process assign_me<3, {0,1,0}, 1>^0 y3_1 (instantiated) = ::y3_1 (
-      channel chan(bool<>)^0 b (instantiated) = ::y3_1.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y3_1.b 
     )
     y3_2 = process assign_me<3, {0,1,0}, 2>^0 y3_2 (instantiated) = ::y3_2 (
-      channel chan(bool<>)^0 b (instantiated) = ::y3_2.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y3_2.b 
     )
     y6_0 = process assign_me<6, {0,1,0,1,0,1}, 0>^0 y6_0 (instantiated) = ::y6_0 (
-      channel chan(bool<>)^0 b (instantiated) = ::y6_0.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y6_0.b 
     )
     y6_1 = process assign_me<6, {0,1,0,1,0,1}, 1>^0 y6_1 (instantiated) = ::y6_1 (
-      channel chan(bool<>)^0 b (instantiated) = ::y6_1.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y6_1.b 
     )
     y6_2 = process assign_me<6, {0,1,0,1,0,1}, 2>^0 y6_2 (instantiated) = ::y6_2 (
-      channel chan(bool<>)^0 b (instantiated) = ::y6_2.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y6_2.b 
     )
     y6_3 = process assign_me<6, {0,1,0,1,0,1}, 3>^0 y6_3 (instantiated) = ::y6_3 (
-      channel chan(bool<>)^0 b (instantiated) = ::y6_3.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y6_3.b 
     )
     y6_4 = process assign_me<6, {0,1,0,1,0,1}, 4>^0 y6_4 (instantiated) = ::y6_4 (
-      channel chan(bool<>)^0 b (instantiated) = ::y6_4.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y6_4.b 
     )
     y6_5 = process assign_me<6, {0,1,0,1,0,1}, 5>^0 y6_5 (instantiated) = ::y6_5 (
-      channel chan(bool<>)^0 b (instantiated) = ::y6_5.b 
+      channel chan!(bool<>)^0 b (instantiated) = ::y6_5.b 
     )
 }
 

@@ -100,7 +100,7 @@ In namespace "", we have: {
       footprint collection: {
         <123> {
           pint^0 B value: ?
-          channel chan(int<32>)^0 b (instantiated) = ::send_me::b (1) 
+          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b (1) 
           channel instance pool:
           1	::send_me::b
           resolved concurrent actions:
@@ -110,7 +110,7 @@ In namespace "", we have: {
         }
         <456> {
           pint^0 B value: ?
-          channel chan(int<32>)^0 b (instantiated) = ::send_me::b (1) 
+          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b (1) 
           channel instance pool:
           1	::send_me::b
           resolved concurrent actions:
@@ -120,7 +120,7 @@ In namespace "", we have: {
         }
         <789> {
           pint^0 B value: ?
-          channel chan(int<32>)^0 b (instantiated) = ::send_me::b (1) 
+          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b (1) 
           channel instance pool:
           1	::send_me::b
           resolved concurrent actions:
@@ -133,13 +133,13 @@ In namespace "", we have: {
 
   Instances:
     X = process send_me<123>^0 X (instantiated) = ::X (1) (
-      channel chan(int<32>)^0 b (instantiated) = ::X.b (1) 
+      channel chan!(int<32>)^0 b (instantiated) = ::X.b (1) 
     )
     Y = process send_me<456>^0 Y (instantiated) = ::Y (2) (
-      channel chan(int<32>)^0 b (instantiated) = ::Y.b (2) 
+      channel chan!(int<32>)^0 b (instantiated) = ::Y.b (2) 
     )
     Z = process send_me<789>^0 Z (instantiated) = ::Z (3) (
-      channel chan(int<32>)^0 b (instantiated) = ::Z.b (3) 
+      channel chan!(int<32>)^0 b (instantiated) = ::Z.b (3) 
     )
 }
 

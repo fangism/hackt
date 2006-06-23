@@ -26,28 +26,22 @@ Persistent Object Manager text dump:
 	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
 	24	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	25	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	39	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	40	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	43	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	46	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	31	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	32	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	33	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	35	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	36	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -69,8 +63,8 @@ In namespace "", we have: {
         fake_chan<>? L
         fake_chan<>! R
       footprint: {
-        channel fake_chan<>^0 L (instantiated) = ::chan_proc::L 
-        channel fake_chan<>^0 R (instantiated) = ::chan_proc::R 
+        channel fake_chan<>?^0 L (instantiated) = ::chan_proc::L 
+        channel fake_chan<>!^0 R (instantiated) = ::chan_proc::R 
       }
       }
 
@@ -93,8 +87,8 @@ In namespace "", we have: {
 
   Instances:
     P = process chan_proc<>^0 P (instantiated) = ::P (
-      channel fake_chan<>^0 L (instantiated) = ::P.L 
-      channel fake_chan<>^0 R (instantiated) = ::P.R 
+      channel fake_chan<>?^0 L (instantiated) = ::P.L 
+      channel fake_chan<>!^0 R (instantiated) = ::P.R 
     )
     X = channel fake_chan<>^0 X (instantiated) = ::P.L 
     Y = channel fake_chan<>^0 Y (instantiated) = ::P.R 

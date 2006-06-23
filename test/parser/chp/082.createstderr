@@ -361,7 +361,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -377,7 +377,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -394,7 +394,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -411,7 +411,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -428,7 +428,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -448,7 +448,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -468,7 +468,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -488,7 +488,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -508,7 +508,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -528,7 +528,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -548,7 +548,7 @@ In namespace "", we have: {
             }
           pint^0 M value: ?
           pint^0 N value: ?
-          channel chan(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
+          channel chan!(int<16>)^0 b (instantiated) = ::compute_me::b (1) 
           channel instance pool:
           1	::compute_me::b
           resolved concurrent actions:
@@ -561,37 +561,37 @@ In namespace "", we have: {
 
   Instances:
     y2_0 = process compute_me<2, {0,1}, 0>^0 y2_0 (instantiated) = ::y2_0 (7) (
-      channel chan(int<16>)^0 b (instantiated) = ::y2_0.b (7) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y2_0.b (7) 
     )
     y2_1 = process compute_me<2, {0,1}, 1>^0 y2_1 (instantiated) = ::y2_1 (8) (
-      channel chan(int<16>)^0 b (instantiated) = ::y2_1.b (8) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y2_1.b (8) 
     )
     y3_0 = process compute_me<3, {4,9,16}, 0>^0 y3_0 (instantiated) = ::y3_0 (9) (
-      channel chan(int<16>)^0 b (instantiated) = ::y3_0.b (9) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y3_0.b (9) 
     )
     y3_1 = process compute_me<3, {4,9,16}, 1>^0 y3_1 (instantiated) = ::y3_1 (10) (
-      channel chan(int<16>)^0 b (instantiated) = ::y3_1.b (10) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y3_1.b (10) 
     )
     y3_2 = process compute_me<3, {4,9,16}, 2>^0 y3_2 (instantiated) = ::y3_2 (11) (
-      channel chan(int<16>)^0 b (instantiated) = ::y3_2.b (11) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y3_2.b (11) 
     )
     y6_0 = process compute_me<6, {0,1,4,9,16,25}, 0>^0 y6_0 (instantiated) = ::y6_0 (1) (
-      channel chan(int<16>)^0 b (instantiated) = ::y6_0.b (1) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y6_0.b (1) 
     )
     y6_1 = process compute_me<6, {0,1,4,9,16,25}, 1>^0 y6_1 (instantiated) = ::y6_1 (2) (
-      channel chan(int<16>)^0 b (instantiated) = ::y6_1.b (2) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y6_1.b (2) 
     )
     y6_2 = process compute_me<6, {0,1,4,9,16,25}, 2>^0 y6_2 (instantiated) = ::y6_2 (3) (
-      channel chan(int<16>)^0 b (instantiated) = ::y6_2.b (3) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y6_2.b (3) 
     )
     y6_3 = process compute_me<6, {0,1,4,9,16,25}, 3>^0 y6_3 (instantiated) = ::y6_3 (4) (
-      channel chan(int<16>)^0 b (instantiated) = ::y6_3.b (4) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y6_3.b (4) 
     )
     y6_4 = process compute_me<6, {0,1,4,9,16,25}, 4>^0 y6_4 (instantiated) = ::y6_4 (5) (
-      channel chan(int<16>)^0 b (instantiated) = ::y6_4.b (5) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y6_4.b (5) 
     )
     y6_5 = process compute_me<6, {0,1,4,9,16,25}, 5>^0 y6_5 (instantiated) = ::y6_5 (6) (
-      channel chan(int<16>)^0 b (instantiated) = ::y6_5.b (6) 
+      channel chan!(int<16>)^0 b (instantiated) = ::y6_5.b (6) 
     )
 }
 

@@ -3,6 +3,21 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-12:
+	  Fixed minor bug in canonical_type_base::dump_template_args, 
+		unprotected dereference is now guarded, duh!
+	  canonical_generic_chan_type now requires direction argument.
+	  direction of canonical channel type is now set and propagated
+		through type-unrolling resolution (forgot before, oops).
+	  Test cases now show channel direction in unrolled instances
+		and footprints's sub-instances (updated).  
+		A few tests lost const-param-expr-list, resulting in
+		only index differences, no other noticeable difference, 
+		cause of this change not quite known.  
+
+
 2006-06-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-11:
