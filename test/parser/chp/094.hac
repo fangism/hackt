@@ -1,0 +1,18 @@
+// "094.hac"
+// copy-modified from "084.hac"
+// should pass : meta indices, 2D channel array
+
+template <pint I, J>
+defproc send_indexed (chan!(int) out[2][2]) {
+chp {
+	*[
+		out[I][J]!(I+J)	// meta-only
+	]
+}
+}
+
+send_indexed<0,0> foo;
+send_indexed<0,1> ick;
+send_indexed<1,0> poo;
+send_indexed<1,1> bar;
+

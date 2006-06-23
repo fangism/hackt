@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.23.2.2 2006/06/22 04:04:43 fang Exp $
+#	$Id: TODO,v 1.23.2.3 2006/06/23 18:58:18 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -47,6 +47,11 @@ enhancement:
 		Just first-come-first-serve, construct map in object header.  
 	unroll-resolving: use copy-on-write pattern for
 		ALL meta-language unrolling (currently done for nonmeta)
+
+===============================================================================
+quickies:
+	complete aggregate_meta_value_reference::unroll_resolve_rvalues
+		for case of higher-dimension const collections.  
 
 ===============================================================================
 enums and structs

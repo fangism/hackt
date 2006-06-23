@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.8.16.1 2006/06/22 04:05:07 fang Exp $
+ 	$Id: data_type_reference.h,v 1.8.16.2 2006/06/23 18:58:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -110,6 +110,9 @@ public:
 
 	bool
 	may_be_assignably_type_equivalent(const this_type&) const;
+
+	bool
+	may_be_binop_type_equivalent(const this_type&) const;
 
 	MERGE_RELAXED_ACTUALS_PROTO;
 

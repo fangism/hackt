@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.7.16.5 2006/06/22 04:04:51 fang Exp $
+	$Id: data_expr.cc,v 1.7.16.6 2006/06/23 18:58:19 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -265,7 +265,7 @@ int_arith_expr::get_data_type_ref(void) const {
 	}
 	// check that they may be equivalent...
 	// this call currently uses generic check, which is ok.
-	if (lt->may_be_connectibly_type_equivalent(*rt)) {
+	if (lt->may_be_binop_type_equivalent(*rt)) {
 		return lt;	// or rt, doesn't matter in this phase
 	// idea: if one type is complete and resolvable, then prefer it.
 	} else {
@@ -282,13 +282,20 @@ int_arith_expr::get_data_type_ref(void) const {
 count_ptr<const int_expr>
 int_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const int_expr>& p) const {
+	typedef	count_ptr<const pint_const>	const_ptr_type;
 	INVARIANT(p == this);
 	const operand_ptr_type lc(lx->unroll_resolve_copy(c, lx));
 	const operand_ptr_type rc(rx->unroll_resolve_copy(c, rx));
 	if (!lc || !rc) {
 		return count_ptr<const int_expr>(NULL);
 	}
-	if (lc == lx && rc == rx) {
+	const const_ptr_type lk(lc.is_a<const pint_const>());
+	const const_ptr_type rk(rc.is_a<const pint_const>());
+	if (lk && rk) {
+		const pint_value_type lv = lk->static_constant_value();
+		const pint_value_type rv = rk->static_constant_value();
+		return const_ptr_type(new pint_const((*op)(lv, rv)));
+	} else if (lc == lx && rc == rx) {
 		// return self-copy
 		return p;
 	} else {

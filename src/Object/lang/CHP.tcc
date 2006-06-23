@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.7.10.1 2006/06/22 04:05:00 fang Exp $
+	$Id: CHP.tcc,v 1.7.10.2 2006/06/23 18:58:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -160,6 +160,7 @@ channel_receive::add_references(const L& l) {
 					" in receive list.  " << endl;
 				return good_bool(false);
 			}
+			// (!(*ti)->may_be_assignably_type_equivalent(*etype))
 			if (!(*ti)->may_be_connectibly_type_equivalent(*etype))
 			{
 				cerr << "Type mismatch in reference " << i <<

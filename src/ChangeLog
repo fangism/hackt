@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-13:
+	  nonmeta arith expr checks for special case where one operand 
+		as magic width 0 (parameter-int).
+	  nonmeta arith expr folds unroll-resolved constants.  
+	  Bunch of CHP test cases added testing meta and nonmeta indexing of 
+		data and channels and value aggregates.  
+	  Status: branch mature enough
+	  TODO: cleanup devel_switches, and merge branch. 
+
+
 2006-06-22	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-12:

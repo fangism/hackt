@@ -1,0 +1,14 @@
+// "095.hac"
+// should fail: trying to receive on send-only channel
+
+defproc buf(chan!(bool) B) {
+bool b;
+chp {
+	*[
+		B?(b)
+	]
+}
+}
+
+buf x;
+

@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.14.16.3 2006/06/23 07:55:38 fang Exp $
+ 	$Id: type_reference.cc,v 1.14.16.4 2006/06/23 18:58:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -574,6 +574,34 @@ data_type_reference::may_be_assignably_type_equivalent(
 		const count_ptr<const pint_const>
 			width(eq.rt->template_args[0].is_a<const pint_const>());
 		return (width && width->static_constant_value() == 0) ||
+			eq.lt->template_args.may_be_strict_equivalent(
+				eq.rt->template_args);
+	}
+	else	return eq.lt->template_args.may_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Used for checking statements of the form 'a op b' (CHP).  
+	Need to make an exception for int<W> := int<0>.  
+	\return true if types of expression may be assignable.  
+ */
+bool
+data_type_reference::may_be_binop_type_equivalent(
+		const data_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	if (base_type_def == &int_traits::built_in_definition) {
+		// allow lhs or rhs's integer width to be 0
+		const count_ptr<const pint_const>
+			lw(eq.lt->template_args[0].is_a<const pint_const>()),
+			rw(eq.rt->template_args[0].is_a<const pint_const>());
+		return (lw && lw->static_constant_value() == 0) ||
+			(rw && rw->static_constant_value() == 0) ||
 			eq.lt->template_args.may_be_strict_equivalent(
 				eq.rt->template_args);
 	}

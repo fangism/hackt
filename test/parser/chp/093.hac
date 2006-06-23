@@ -1,0 +1,21 @@
+// "093.hac"
+// copy-modified from "092.hac"
+// should pass : indexed channel
+
+template <pint I>
+defproc send_indexed (chan?(int<1>) index; chan!(int) out[2]) {
+pint x[2];
+x[0] = 1;
+x[1] = 0;
+int<1> y;
+chp {
+	*[
+		index?(y);
+		out[x[y]]!(I)
+	]
+}
+}
+
+send_indexed<0> foo;
+send_indexed<1> bar;
+

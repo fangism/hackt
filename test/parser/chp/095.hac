@@ -1,0 +1,13 @@
+// "095.hac"
+// should fail: trying to send on read-only channel
+
+defproc buf(chan?(bool) B) {
+chp {
+	*[
+		B!(true)
+	]
+}
+}
+
+buf x;
+
