@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.13.8.1 2006/05/12 01:57:51 fang Exp $
+	$Id: value_collection.h,v 1.13.8.2 2006/06/23 21:08:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -16,7 +16,6 @@
 #include "Object/inst/instance_collection_base.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/devel_switches.h"
 
 #include "util/memory/count_ptr.h"
 #include "util/inttypes.h"
@@ -218,11 +217,9 @@ virtual	const_index_list
 
 virtual	UNROLL_LVALUE_REFERENCES_PROTO = 0;
 
-#if USE_NONMETA_VALUE_REFERENCES
 protected:
 	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const;
-#endif
 
 public:
 

@@ -5,7 +5,7 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: struct_expr.h,v 1.4.40.2 2006/06/05 04:02:48 fang Exp $
+	$Id: struct_expr.h,v 1.4.40.3 2006/06/23 21:08:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_STRUCT_EXPR_H__
@@ -29,7 +29,6 @@ public:
 virtual	~struct_expr() { }
 
 protected:
-#if COW_UNROLL_DATA_EXPR
 	/**
 		Dummy function, meant to satisfy a name interface only.  
 	 */
@@ -41,7 +40,6 @@ protected:
 virtual	UNROLL_RESOLVE_COPY_STRUCT_PROTO = 0;
 
 	UNROLL_RESOLVE_COPY_DATA_PROTO;
-#endif
 };	// end class struct_expr
 
 //=============================================================================

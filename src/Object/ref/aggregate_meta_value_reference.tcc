@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.5.8.1 2006/06/04 22:26:20 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.5.8.2 2006/06/23 21:08:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -502,7 +502,6 @@ if (this->_is_concatenation) {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 /**
 	Wrapped call to unroll_resolve_rvalues that returns resolved
 	values suitable for nonmeta representations.  
@@ -515,7 +514,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 	INVARIANT(p == this);
 	return this->unroll_resolve_rvalues(c).template is_a<const expr_base_type>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.7.16.6 2006/06/22 04:04:57 fang Exp $
+	$Id: CHP.cc,v 1.7.16.7 2006/06/23 21:08:25 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -106,7 +106,6 @@ using util::read_value;
 //=============================================================================
 // class action method definitions
 
-#if ENABLE_CHP_FOOTPRINT
 /**
 	Unroll-copies the action pointer, using shallow copy if
 	nothing changed, deep-copy if something internal changed.  
@@ -126,7 +125,6 @@ action::transformer::operator () (const action_ptr_type& a) const {
 	return a->unroll_resolve_copy(_context, a);
 #endif
 }
-#endif
 
 //=============================================================================
 // struct data_expr_unroll_resolver method definitions
@@ -172,7 +170,6 @@ action_sequence::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 action_sequence::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -204,7 +201,6 @@ action_sequence::unroll_resolve_copy(const unroll_context& c,
 	else	return ret;
 #endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -303,8 +299,6 @@ if (!empty()) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
-
 good_bool
 concurrent_actions::__unroll(const unroll_context& c, this_type& r) const {
 	transform(begin(), end(), back_inserter(r), action::transformer(c));
@@ -312,6 +306,7 @@ concurrent_actions::__unroll(const unroll_context& c, this_type& r) const {
 		f(find(r.begin(), r.end(), action_ptr_type(NULL)));
 	if (f != r.end()) {
 		cerr << "Error unrolling action_sequence." << endl;
+		// cerr << "Error unrolling action list." << endl;
 		return good_bool(false);
 	}
 	return good_bool(true);
@@ -334,18 +329,6 @@ concurrent_actions::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	const count_ptr<this_type> ret(new this_type);
 	NEVER_NULL(ret);
-#if 0
-	try {
-		transform(begin(), end(), back_inserter(*ret), 
-			action::transformer(c)
-		);
-	} catch (...) {
-		cerr << "Error unrolling concurrent_actions." << endl;
-		return unroll_action_return_type();
-	}
-	const bool eq = equal(begin(), end(), ret->begin());
-	return unroll_action_return_type(!eq, ret);
-#else
 	if (__unroll(c, *ret).good) {
 		if (equal(begin(), end(), ret->begin()))
 			return p;
@@ -353,7 +336,6 @@ concurrent_actions::unroll_resolve_copy(const unroll_context& c,
 	} else {
 		return action_ptr_type(NULL);
 	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -364,25 +346,9 @@ good_bool
 concurrent_actions::unroll(const unroll_context& c,
 		entity::footprint& f) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	const unroll_action_return_type r(unroll(c));
-	if (r.changed && !r.copy) {
-		// expect to already have error message
-		return good_bool(false);
-	}
-	this_type& t(f.get_chp_footprint());
-	if (r.changed) {
-		t = *r.copy.is_a<const this_type>();
-	} else {
-		t = *this;
-	}
-	return good_bool(true);
-#else
 	this_type& t(f.get_chp_footprint());
 	return __unroll(c, t);
-#endif
 }
-#endif	// ENABLE_CHP_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -431,14 +397,12 @@ concurrent_actions::load_object(const persistent_object_manager& m,
 //=============================================================================
 // struct guarded_action::unroll_resolver method definitions
 
-#if ENABLE_CHP_FOOTPRINT
 count_ptr<const guarded_action>
 guarded_action::unroll_resolver::operator () (
 		const count_ptr<const guarded_action>& g) const {
 	NEVER_NULL(g);
 	return g->unroll_resolve_copy(_context, g);
 }
-#endif
 
 //=============================================================================
 // class guarded_action method definitions
@@ -469,7 +433,6 @@ guarded_action::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 /**
 	Unroll-resolves the data-expression and action.  
  */
@@ -496,7 +459,6 @@ guarded_action::unroll_resolve_copy(const unroll_context& c,
 		return unroll_return_type(new this_type(g, a));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -525,7 +487,6 @@ guarded_action::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
-#if ENABLE_CHP_FOOTPRINT
 /**
 	Helper routine.  
  */
@@ -542,7 +503,6 @@ unroll_resolve_selection_list(const selection_list_type& s,
 	}
 	return good_bool(true);
 }
-#endif
 
 //=============================================================================
 // class deterministic_selection method definitions
@@ -569,7 +529,6 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 deterministic_selection::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -588,7 +547,6 @@ deterministic_selection::unroll_resolve_copy(const unroll_context& c,
 		return r;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -639,7 +597,6 @@ nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 nondeterministic_selection::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -658,7 +615,6 @@ nondeterministic_selection::unroll_resolve_copy(const unroll_context& c,
 		return r;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -717,7 +673,6 @@ metaloop_selection::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 /**
 	This expands a meta-loop into unrolled form.  
 	Partially ripped from entity::PRS::rule_loop::unroll().  
@@ -782,7 +737,6 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 		return ret;
 	}
 }
-#endif	// ENABLE_CHP_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -835,7 +789,6 @@ assignment::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 assignment::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -851,7 +804,6 @@ assignment::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(new this_type(lc, rc));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -901,7 +853,6 @@ condition_wait::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 condition_wait::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -917,7 +868,6 @@ condition_wait::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(new this_type(g));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -974,7 +924,6 @@ channel_send::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 channel_send::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1006,7 +955,6 @@ channel_send::unroll_resolve_copy(const unroll_context& c,
 		return ret;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1066,7 +1014,6 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 channel_receive::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1098,7 +1045,6 @@ channel_receive::unroll_resolve_copy(const unroll_context& c,
 		return ret;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1155,7 +1101,6 @@ do_forever_loop::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 do_forever_loop::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1174,7 +1119,6 @@ do_forever_loop::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(new this_type(b));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1224,7 +1168,6 @@ do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_CHP_FOOTPRINT
 action_ptr_type
 do_while_loop::unroll_resolve_copy(const unroll_context& c, 
 		const action_ptr_type& p) const {
@@ -1243,7 +1186,6 @@ do_while_loop::unroll_resolve_copy(const unroll_context& c,
 		return r;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

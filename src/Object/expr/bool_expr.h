@@ -5,24 +5,19 @@
 		last revision of "Object/art_object_data_expr_base.h"
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
-	$Id: bool_expr.h,v 1.5.40.3 2006/06/05 04:02:41 fang Exp $
+	$Id: bool_expr.h,v 1.5.40.4 2006/06/23 21:08:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_EXPR_H__
 #define	__HAC_OBJECT_EXPR_BOOL_EXPR_H__
 
 #include "Object/expr/data_expr.h"
-#include "Object/devel_switches.h"
-#if COW_UNROLL_DATA_EXPR
 #include "util/memory/pointer_classes_fwd.h"
-#endif
 
 namespace HAC {
 namespace entity {
-#if COW_UNROLL_DATA_EXPR
 class unroll_context;
 using util::memory::count_ptr;
-#endif
 
 //=============================================================================
 /**
@@ -36,7 +31,6 @@ protected:
 public:
 virtual	~bool_expr() { }
 
-#if	COW_UNROLL_DATA_EXPR
 #define	UNROLL_RESOLVE_COPY_BOOL_PROTO					\
 	count_ptr<const bool_expr>					\
 	unroll_resolve_copy(const unroll_context&, 			\
@@ -45,7 +39,6 @@ virtual	~bool_expr() { }
 virtual	UNROLL_RESOLVE_COPY_BOOL_PROTO = 0;
 
 	UNROLL_RESOLVE_COPY_DATA_PROTO;
-#endif
 
 };	// end class bool_expr
 

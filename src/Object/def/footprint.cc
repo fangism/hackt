@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.20.2.2 2006/06/22 04:04:46 fang Exp $
+	$Id: footprint.cc,v 1.20.2.3 2006/06/23 21:08:02 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -239,9 +239,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		scope_aliases.dump(o);
 #endif
 		prs_footprint.dump(o, *this);
-#if ENABLE_CHP_FOOTPRINT
 		chp_footprint.dump(o, *this, dc);
-#endif
 		spec_footprint.dump(o, *this);
 	}
 	return o;
@@ -623,9 +621,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<int_tag>::_pool.collect_transient_info_base(m);
 	footprint_base<bool_tag>::_pool.collect_transient_info_base(m);
 	prs_footprint.collect_transient_info_base(m);
-#if ENABLE_CHP_FOOTPRINT
 	chp_footprint.collect_transient_info_base(m);
-#endif
 	spec_footprint.collect_transient_info_base(m);
 }
 
@@ -664,9 +660,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	port_aliases.write_object_base(m, o);
 	scope_aliases.write_object_base(m, o);
 	prs_footprint.write_object_base(m, o);
-#if ENABLE_CHP_FOOTPRINT
 	chp_footprint.write_object_base(m, o);
-#endif
 	spec_footprint.write_object_base(m, o);
 }
 
@@ -699,9 +693,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	port_aliases.load_object_base(m, i);
 	scope_aliases.load_object_base(m, i);
 	prs_footprint.load_object_base(m, i);
-#if ENABLE_CHP_FOOTPRINT
 	chp_footprint.load_object_base(m, i);
-#endif
 	spec_footprint.load_object_base(m, i);
 }
 

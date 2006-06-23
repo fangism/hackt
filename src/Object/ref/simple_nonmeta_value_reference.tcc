@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.5 2006/06/22 04:05:05 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.9.16.6 2006/06/23 21:08:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -393,7 +393,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::must_be_equivalent(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 /**
 	See if indicies were changed as a result of meta-parameter resolution.  
 	If not, can just return this as a reference-counted copy!
@@ -417,7 +416,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 			typename Tag::parent_tag>::
 				unroll_resolve_copy(*this, c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

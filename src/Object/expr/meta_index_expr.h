@@ -3,7 +3,7 @@
 	Base class related to lists of meta index expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_expr.h,v 1.7.22.2 2006/06/04 22:26:16 fang Exp $
+	$Id: meta_index_expr.h,v 1.7.22.3 2006/06/23 21:08:13 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
@@ -68,7 +68,6 @@ virtual	count_ptr<const_index>
 virtual	bool
 	must_be_equivalent_index(const meta_index_expr& ) const = 0;
 
-#if COW_UNROLL_DATA_EXPR
 	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO;
 
 #define	UNROLL_RESOLVE_COPY_META_INDEX_PROTO				\
@@ -77,7 +76,6 @@ virtual	bool
 		const count_ptr<const meta_index_expr>&) const
 
 virtual	UNROLL_RESOLVE_COPY_META_INDEX_PROTO = 0;
-#endif
 
 // additional virtual functions for dimensionality...
 };	// end class meta_index_expr

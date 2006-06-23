@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.8.8.1 2006/06/04 05:59:18 fang Exp $
+	$Id: pint_relational_expr.h,v 1.8.8.2 2006/06/23 21:08:17 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
@@ -114,11 +114,9 @@ public:
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
 
-#if COW_UNROLL_DATA_EXPR
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
 protected:
 	using parent_type::unroll_resolve_copy;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

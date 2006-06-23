@@ -5,6 +5,14 @@
 
 2006-06-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-03-CHP-02-14:
+	  Cleaned up all outstanding devel_switches. 
+	  Cross-checked against gcc-4.x.
+	  Ready to merge to trunk. 
+
+
+2006-06-23	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-03-CHP-02-13:
 	  nonmeta arith expr checks for special case where one operand 
 		as magic width 0 (parameter-int).

@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.12.18.1 2006/06/04 22:26:17 fang Exp $
+ 	$Id: operators.cc,v 1.12.18.2 2006/06/23 21:08:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -232,7 +232,6 @@ pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const pint_expr>
 pint_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pint_expr>& p) const {
@@ -240,7 +239,6 @@ pint_unary_expr::unroll_resolve_copy(const unroll_context& c,
 	// lazy...
 	return unroll_resolve_rvalues(c).is_a<const pint_expr>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -398,7 +396,6 @@ preal_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const preal_expr>
 preal_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const preal_expr>& p) const {
@@ -406,7 +403,6 @@ preal_unary_expr::unroll_resolve_copy(const unroll_context& c,
 	// lazy...
 	return unroll_resolve_rvalues(c).is_a<const preal_expr>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -562,7 +558,6 @@ pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const pbool_expr>
 pbool_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
@@ -570,7 +565,6 @@ pbool_unary_expr::unroll_resolve_copy(const unroll_context& c,
 	// lazy...
 	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -836,7 +830,6 @@ pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const pint_expr>
 pint_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pint_expr>& p) const {
@@ -859,7 +852,6 @@ pint_arith_expr::unroll_resolve_copy(const unroll_context& c,
 	}
 #endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1136,7 +1128,6 @@ pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const pbool_expr>
 pint_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
@@ -1144,7 +1135,6 @@ pint_relational_expr::unroll_resolve_copy(const unroll_context& c,
 	// lazy...
 	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1401,7 +1391,6 @@ preal_arith_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const preal_expr>
 preal_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const preal_expr>& p) const {
@@ -1409,7 +1398,6 @@ preal_arith_expr::unroll_resolve_copy(const unroll_context& c,
 	// lazy...
 	return unroll_resolve_rvalues(c).is_a<const preal_expr>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1677,7 +1665,6 @@ preal_relational_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const pbool_expr>
 preal_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
@@ -1685,7 +1672,6 @@ preal_relational_expr::unroll_resolve_copy(const unroll_context& c,
 	// lazy...
 	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1939,7 +1925,6 @@ pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const pbool_expr>
 pbool_logical_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
@@ -1947,7 +1932,6 @@ pbool_logical_expr::unroll_resolve_copy(const unroll_context& c,
 	// lazy...
 	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

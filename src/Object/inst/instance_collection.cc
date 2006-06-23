@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.19.2.2 2006/05/12 20:56:42 fang Exp $
+ 	$Id: instance_collection.cc,v 1.19.2.3 2006/06/23 21:08:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -507,13 +507,11 @@ param_value_collection::make_meta_instance_reference(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_NONMETA_VALUE_REFERENCES
 count_ptr<nonmeta_instance_reference_base>
 param_value_collection::make_nonmeta_instance_reference(void) const {
 	ICE_NEVER_CALL(cerr);
 	return count_ptr<nonmeta_instance_reference_base>(NULL);
 }
-#endif
 
 //=============================================================================
 // class datatype_instance_collection method definitions

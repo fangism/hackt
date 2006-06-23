@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.4.8.1 2006/06/04 05:59:19 fang Exp $
+	$Id: preal_arith_expr.h,v 1.4.8.2 2006/06/23 21:08:17 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -110,11 +110,9 @@ public:
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
 
-#if COW_UNROLL_DATA_EXPR
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
 protected:
 	using parent_type::unroll_resolve_copy;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

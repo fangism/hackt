@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.17.6.3 2006/06/20 21:28:51 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.17.6.4 2006/06/23 21:08:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -657,7 +657,6 @@ if (value_collection_ref->is_template_formal()) {
 }	// end method unroll_resolve_rvalues
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 /**
 	Wrapped call to unroll_resolve_rvalues that returns resolved
 	values suitable for nonmeta representations.  
@@ -670,7 +669,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 	INVARIANT(p == this);
 	return this->unroll_resolve_rvalues(c).template is_a<const expr_base_type>();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

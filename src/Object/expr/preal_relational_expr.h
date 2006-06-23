@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_relational_expr.h"
 	Boolean relations between real-valued parameters.  
-	$Id: preal_relational_expr.h,v 1.4.8.1 2006/06/04 05:59:22 fang Exp $
+	$Id: preal_relational_expr.h,v 1.4.8.2 2006/06/23 21:08:18 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_RELATIONAL_EXPR_H__
@@ -112,11 +112,9 @@ public:
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
 
-#if COW_UNROLL_DATA_EXPR
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
 protected:
 	using parent_type::unroll_resolve_copy;
-#endif 
 
 public:
 	FRIEND_PERSISTENT_TRAITS

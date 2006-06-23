@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.21.4.3 2006/06/22 04:04:45 fang Exp $
+ 	$Id: definition.cc,v 1.21.4.4 2006/06/23 21:08:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3040,12 +3040,10 @@ if (defined) {
 			// already have error message
 			return good_bool(false);
 		}
-#if ENABLE_CHP_FOOTPRINT
 		if (!chp.unroll(c, *f).good) {
 			// already have error message
 			return good_bool(false);
 		}
-#endif
 	}
 	return good_bool(true);
 } else {

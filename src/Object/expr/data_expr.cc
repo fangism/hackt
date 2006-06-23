@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.7.16.6 2006/06/23 18:58:19 fang Exp $
+	$Id: data_expr.cc,v 1.7.16.7 2006/06/23 21:08:11 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -83,7 +83,6 @@ using util::read_value;
 //=============================================================================
 // class int_expr method definitions
 
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const nonmeta_index_expr_base>
 int_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const nonmeta_index_expr_base>& p) const {
@@ -98,55 +97,46 @@ int_expr::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
-#endif
 
 //=============================================================================
 // class bool_expr method definitions
 
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const data_expr>
 bool_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
-#endif
 
 //=============================================================================
 // class real_expr method definitions
 
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const data_expr>
 real_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
-#endif
 
 //=============================================================================
 // class enum_expr method definitions
 
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const data_expr>
 enum_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
-#endif
 
 //=============================================================================
 // class struct_expr method definitions
 
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const data_expr>
 struct_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const data_expr>& p) const {
 	INVARIANT(p == this);
 	return unroll_resolve_copy(c, p.is_a<const this_type>());
 }
-#endif
 
 //=============================================================================
 // class int_arith_expr method definitions
@@ -278,7 +268,6 @@ int_arith_expr::get_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const int_expr>
 int_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const int_expr>& p) const {
@@ -303,7 +292,6 @@ int_arith_expr::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const this_type>(new this_type(lc, op, rc));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -476,7 +464,6 @@ int_relational_expr::get_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const bool_expr>
 int_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -494,7 +481,6 @@ int_relational_expr::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const this_type>(new this_type(lc, op, rc));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -645,7 +631,6 @@ bool_logical_expr::get_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const bool_expr>
 bool_logical_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -662,7 +647,6 @@ bool_logical_expr::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const this_type>(new this_type(lc, op, rc));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -725,7 +709,6 @@ int_negation_expr::get_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const int_expr>
 int_negation_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const int_expr>& p) const {
@@ -739,7 +722,6 @@ int_negation_expr::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const this_type>(new this_type(oc));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -792,7 +774,6 @@ bool_negation_expr::get_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const bool_expr>
 bool_negation_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& p) const {
@@ -806,7 +787,6 @@ bool_negation_expr::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const this_type>(new this_type(oc));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -858,7 +838,6 @@ int_range_expr::dump(ostream& o, const expr_dump_context&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const nonmeta_index_expr_base>
 int_range_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const nonmeta_index_expr_base>& p) const {
@@ -876,7 +855,6 @@ int_range_expr::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const this_type>(new this_type(lc, uc));
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -957,7 +935,6 @@ nonmeta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 /**
 	Produces a list with unroll-resolved values of indices. 
 	The caller can compare this-object to the result by doing
@@ -980,7 +957,6 @@ nonmeta_index_list::unroll_resolve_copy(const unroll_context& c) const {
 	}
 	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,7 +3,7 @@
 	Unary negation of meta boolean.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_unary_expr.h,v 1.7.22.1 2006/06/04 05:59:16 fang Exp $
+	$Id: pbool_unary_expr.h,v 1.7.22.2 2006/06/23 21:08:15 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_UNARY_EXPR_H__
@@ -76,11 +76,9 @@ public:
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
 
-#if COW_UNROLL_DATA_EXPR
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
 protected:
 	using parent_type::unroll_resolve_copy;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

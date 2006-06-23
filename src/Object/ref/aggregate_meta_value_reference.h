@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.2.22.3 2006/06/04 22:26:19 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.2.22.4 2006/06/23 21:08:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -16,7 +16,6 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -157,13 +156,11 @@ public:
 	unroll_lvalue_references(const unroll_context&, 
 		value_reference_collection_type&) const;
 
-#if COW_UNROLL_DATA_EXPR
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 protected:
 	using expr_base_type::unroll_resolve_copy;
-#endif
 
 public:
 	good_bool

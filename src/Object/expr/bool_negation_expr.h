@@ -3,7 +3,7 @@
 	Class definitions for boolean negation expression.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_negation_expr.h,v 1.6.16.2 2006/06/05 04:02:41 fang Exp $
+	$Id: bool_negation_expr.h,v 1.6.16.3 2006/06/23 21:08:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_NEGATION_EXPR_H__
@@ -46,11 +46,9 @@ public:
 
 	GET_DATA_TYPE_REF_PROTO;
 
-#if COW_UNROLL_DATA_EXPR
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
 protected:
 	using parent_type::unroll_resolve_copy;
-#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

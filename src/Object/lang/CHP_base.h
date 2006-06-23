@@ -1,17 +1,14 @@
 /**
 	\file "Object/lang/CHP_base.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP_base.h,v 1.6.18.2 2006/06/05 04:02:49 fang Exp $
+	$Id: CHP_base.h,v 1.6.18.3 2006/06/23 21:08:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_BASE_H__
 #define	__HAC_OBJECT_LANG_CHP_BASE_H__
 
 #include "util/persistent.h"
-#include "Object/devel_switches.h"
-#if ENABLE_CHP_FOOTPRINT
 #include "util/memory/count_ptr.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -24,37 +21,9 @@ namespace CHP {
 using std::ostream;
 using util::persistent;
 using util::persistent_object_manager;
-#if ENABLE_CHP_FOOTPRINT
 class action;
 using util::memory::count_ptr;
 typedef	count_ptr<const action>			action_ptr_type;
-#endif
-
-//=============================================================================
-#if 0 && ENABLE_CHP_FOOTPRINT
-/**
-	Interpretation of members:
-	~changed : no change (no error), can use shallow copy,
-		copy can be valid (unused) or NULL.  
-	changed && ~copy : there was an error creating copy.  
-	changed && copy : copy points to newly allocated copy.  
- */
-struct unroll_action_return_type {
-	bool					changed;
-	action_ptr_type				copy;
-
-	/**
-		Default constructor signals an error.  
-	 */
-	unroll_action_return_type() : changed(true), copy(NULL) { }
-
-	unroll_action_return_type(const bool b, const action_ptr_type& c) :
-		changed(b), copy(c) { }
-
-	// default destructor
-
-};      // end struct unroll_action_return_type
-#endif
 
 //=============================================================================
 /**
@@ -62,11 +31,7 @@ struct unroll_action_return_type {
  */
 class action : public persistent {
 public:
-#if 0
-	typedef	unroll_action_return_type	unroll_return_type;
-#else
 	typedef	action_ptr_type			unroll_return_type;
-#endif
 
 	action() { }
 virtual	~action() { }
@@ -74,7 +39,6 @@ virtual	~action() { }
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const = 0;
 
-#if ENABLE_CHP_FOOTPRINT
 	/**
 		unroll_context-binding functor.  
 	 */
@@ -94,7 +58,6 @@ virtual	ostream&
 		const action_ptr_type&) const
 
 virtual	CHP_UNROLL_ACTION_PROTO = 0;
-#endif
 
 };	// end class action
 

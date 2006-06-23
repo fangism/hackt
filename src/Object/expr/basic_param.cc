@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.15.10.2 2006/06/04 22:26:09 fang Exp $
+ 	$Id: basic_param.cc,v 1.15.10.3 2006/06/23 21:08:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -202,13 +202,11 @@ pbool_expr::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const bool_expr>
 pbool_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const bool_expr>& b) const {
 	return unroll_resolve_copy(c, b.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
@@ -295,7 +293,6 @@ pint_expr::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const int_expr>
 pint_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const int_expr>& b) const {
@@ -320,7 +317,6 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const nonmeta_index_expr_base>& b) const {
 	return unroll_resolve_copy(c, b.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
@@ -439,13 +435,11 @@ preal_expr::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 count_ptr<const real_expr>
 preal_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const real_expr>& b) const {
 	return unroll_resolve_copy(c, b.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
@@ -652,7 +646,6 @@ pint_const::unroll_resolve_index(const unroll_context&) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 /**
 	Constant need not be unrolled, return reference counted copy of self.  
  */
@@ -662,7 +655,6 @@ pint_const::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -791,7 +783,6 @@ pbool_const::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 /**
 	Constant need not be unrolled, return reference counted copy of self.  
  */
@@ -801,7 +792,6 @@ pbool_const::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -942,7 +932,6 @@ preal_const::unroll_resolve_rvalues(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_DATA_EXPR
 /**
 	Constant need not be unrolled, return reference counted copy of self.  
  */
@@ -952,7 +941,6 @@ preal_const::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
