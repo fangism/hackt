@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.5 2006/04/18 18:42:37 fang Exp $
+	$Id: CHP.cc,v 1.6 2006/06/26 01:45:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -21,17 +21,20 @@
 #include "AST/node_list.tcc"
 #include "AST/token.h"
 #include "AST/parse_context.h"
+#include "AST/range.h"
 
 #include "Object/lang/CHP.tcc"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/channel_type_reference_base.h"
 #include "Object/expr/pbool_const.h"
 #include "Object/expr/bool_expr.h"
+#include "Object/expr/meta_range_expr.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/channel_instance_collection.h"
+#include "Object/inst/pint_value_collection.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"
 #include "Object/def/process_definition.h"
@@ -61,6 +64,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::receive, "(chp-receive)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::det_selection, "(chp-det-sel)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::nondet_selection, "(chp-nondet-sel)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::prob_selection, "(chp-prob-sel)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::metaloop_selection, "(chp-metaloop-sel)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::loop, "(chp-loop)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::do_until, "(chp-do-until)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::log, "(chp-log)")
@@ -78,6 +82,7 @@ using std::back_inserter;
 using std::mem_fun_ref;
 #include "util/using_ostream.h"
 using entity::bool_expr;
+using entity::meta_range_expr;
 using entity::CHP::action_sequence;
 using entity::CHP::concurrent_actions;
 using entity::CHP::guarded_action;
@@ -88,6 +93,7 @@ using entity::user_def_datatype;
 using entity::process_definition;
 using entity::data_nonmeta_instance_reference;
 using entity::data_type_reference;
+using entity::pint_scalar;
 
 //=============================================================================
 // class statement method definitions
@@ -546,6 +552,9 @@ binary_assignment::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Type checks a nonmeta value assignment.  
+ */
 statement::return_type
 binary_assignment::check_action(context& c) const {
 	typedef	data_nonmeta_instance_reference			lref_type;
@@ -561,6 +570,13 @@ binary_assignment::check_action(context& c) const {
 		cerr << "Unsupported reference at " << where(*lval) << endl;
 		cerr << "Sorry, currently only support simple datatype "
 			"instance references, bug Fang about it." << endl;
+		return statement::return_type(NULL);
+	}
+	// check that LHS is referenceable as an lvalue
+	// e.g. parameters cannot be lvalues.  
+	if (!lref->is_lvalue()) {
+		cerr << "Error: left-side of expression is not an lvalue."
+			<< endl;
 		return statement::return_type(NULL);
 	}
 	const expr::nonmeta_return_type
@@ -592,7 +608,17 @@ binary_assignment::check_action(context& c) const {
 			where(*rval) << endl;
 		return statement::return_type(NULL);
 	}
-	if (!ltype->may_be_connectibly_type_equivalent(*rtype)) {
+	// dimension-check
+	if (lref->dimensions() != rv->dimensions()) {
+		cerr << "Error: mismatch in dimensions of assignment." << endl
+			<< "\tgot: " << lref->dimensions() << " at " <<
+			where(*lval) << endl <<
+			"\tand: " << rv->dimensions() << " at " <<
+			where(*rval) << endl;
+		return statement::return_type(NULL);
+	}
+	// used to be ...connectibly_type_equivalent()
+	if (!ltype->may_be_assignably_type_equivalent(*rtype)) {
 		cerr << "Type mismatch in assignment at " <<
 			where(*this) << ':' << endl;
 		ltype->dump(cerr << "\tleft: ") << endl;
@@ -601,7 +627,7 @@ binary_assignment::check_action(context& c) const {
 	}
 	// at this point, all is good
 	return statement::return_type(new entity::CHP::assignment(lref, rv));
-}
+}	// end method binary_assignment::check_action
 
 //=============================================================================
 // class bool_assignment method definitions
@@ -1063,6 +1089,72 @@ prob_selection::check_action(context& c) const {
 	cerr << "Fang, finish CHP::prob_selection::check_action()!" << endl;
 	return statement::return_type(NULL);
 }
+
+//=============================================================================
+// class metaloop_selection method definitions
+
+metaloop_selection::metaloop_selection(const char_punctuation_type* l, 
+		const char_punctuation_type* st, 
+		const token_identifier* i, 
+		const range* b, 
+		const guarded_command* gc, 
+		const char_punctuation_type* r) :
+		parent_type(), 
+		lb(l), selection_type(st), index(i), bounds(b), 
+		body(gc), rb(r) {
+	NEVER_NULL(selection_type);
+	NEVER_NULL(index);
+	NEVER_NULL(bounds);
+	NEVER_NULL(body);
+}
+
+metaloop_selection::~metaloop_selection() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(metaloop_selection)
+
+line_position
+metaloop_selection::leftmost(void) const {
+	if (lb)	return lb->leftmost();
+	else	return index->leftmost();
+}
+
+line_position
+metaloop_selection::rightmost(void) const {
+	if (rb)	return rb->rightmost();
+	else	return body->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+statement::return_type
+metaloop_selection::check_action(context& c) const {
+	const range::meta_return_type rng(bounds->check_meta_index(c));
+	if (!rng) {
+		cerr << "Error in loop range at " << where(*bounds) << endl;
+		return return_type(NULL);
+	}
+	const entity::CHP::metaloop_selection::range_ptr_type
+		loop_range(meta_range_expr::make_explicit_range(rng));
+	NEVER_NULL(loop_range);
+	// induction variable scope in effect until return
+	const context::loop_var_frame _lvf(c, *index);
+	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	if (!loop_ind) {
+		cerr << "Error registering loop variable: " << *index <<
+			" at " << where(*index) << endl;
+		return return_type(NULL);
+	}
+	const guarded_command::return_type
+		gc(body->check_guarded_action(c));
+	if (!gc) {
+		cerr << "Error in guarded-command body: at " << where(*body)
+			<< endl;
+		return return_type(NULL);
+	}
+	// selection type is either ":" (nondet) or "[]" (deterministic)
+	return count_ptr<entity::CHP::metaloop_selection>(
+		new entity::CHP::metaloop_selection(loop_ind, loop_range, gc, 
+			selection_type->text[0] != ':'));
+}	// end method metaloop_selection::check_action
 
 //=============================================================================
 // class loop method definitions

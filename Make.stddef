@@ -1,8 +1,9 @@
 # "Make.stddef"
+#	vim: ft=automake
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.14 2006/05/09 05:39:13 fang Exp $
+#	$Id: Make.stddef,v 1.15 2006/06/26 01:45:21 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  

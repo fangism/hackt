@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.9 2006/03/20 02:41:08 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.10 2006/06/26 01:46:21 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -21,6 +21,7 @@
 namespace HAC {
 namespace entity {
 class const_index_list;
+class unroll_context;
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
@@ -44,6 +45,15 @@ struct data_type_resolver {
 };	// end struct data_type_resolver
 
 //=============================================================================
+/**
+	Policy class implementing unroll-resolving. 
+	\param TagDupe is true if type_tag has corresponding meta_type_tag,
+		e.g. bool_traits::has_meta_equivalent.
+ */
+template <class Tag, class TagParent>
+struct nonmeta_unroll_resolve_copy_policy;
+
+//=============================================================================
 #define	SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE		\
 template <class Tag>
 
@@ -64,8 +74,8 @@ class simple_nonmeta_value_reference :
 friend struct data_type_resolver<Tag>;
 public:
 	typedef	class_traits<Tag>			traits_type;
-	typedef	typename traits_type::data_value_type	data_value_type;
 private:
+friend struct nonmeta_unroll_resolve_copy_policy<Tag, typename Tag::parent_tag>;
 	typedef	SIMPLE_NONMETA_VALUE_REFERENCE_CLASS	this_type;
 	typedef	typename traits_type::nonmeta_instance_reference_base_type
 							parent_type;
@@ -109,7 +119,17 @@ public:
 	GET_DATA_TYPE_REF_PROTO;
 
 	bool
+	is_lvalue(void) const;
+
+	bool
 	must_be_equivalent(const interface_type& ) const;
+
+	count_ptr<const data_expr_base_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const data_expr_base_type>&) const;
+
+protected:
+	using data_expr_base_type::unroll_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

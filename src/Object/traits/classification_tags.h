@@ -4,7 +4,7 @@
 	These type tags may be used for specialization of many
 	features of the language.  
 	This file used to be "Object/art_object_classification_tags.h".
-	$Id: classification_tags.h,v 1.7 2006/04/12 08:53:18 fang Exp $
+	$Id: classification_tags.h,v 1.8 2006/06/26 01:46:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASSIFICATION_TAGS_H__
@@ -14,6 +14,8 @@
 
 namespace HAC {
 namespace entity {
+template <class Tag> class instance_collection;
+template <class Tag> class value_collection;
 
 /***
 	Rationale for NOT making the tag classes the actual traits class?
@@ -34,6 +36,11 @@ struct object_entity_tag { };
  */
 struct physical_instance_tag : public object_entity_tag {
 	typedef	object_entity_tag	parent_tag;
+
+	template <class Tag>
+	struct collection {
+		typedef	instance_collection<Tag>	type;
+	};
 };	// end struct physical_instance_tag
 
 /**
@@ -42,6 +49,11 @@ struct physical_instance_tag : public object_entity_tag {
  */
 struct parameter_value_tag : public object_entity_tag {
 	typedef	object_entity_tag	parent_tag;
+
+	template <class Tag>
+	struct collection {
+		typedef	value_collection<Tag>		type;
+	};
 };	// end struct parameter_value_tag
 
 /**

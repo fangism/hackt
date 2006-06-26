@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.30 2006/06/03 00:14:55 fang Exp $
+	$Id: instance_collection.tcc,v 1.31 2006/06/26 01:46:12 fang Exp $
 	TODO: trim includes
  */
 
@@ -314,13 +314,13 @@ INSTANCE_COLLECTION_CLASS::must_be_collectibly_type_equivalent(
 /**
 	Sets the type of the collection during the first instantiation
 	of any of its members.  
+	Called from instantiation_statement.
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-void
+good_bool
 INSTANCE_COLLECTION_CLASS::establish_collection_type(
 		const instance_collection_parameter_type& t) {
-	NEVER_NULL(t);
-	collection_type_manager_parent_type::commit_type_first_time(t);
+	return collection_type_manager_parent_type::commit_type_first_time(t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1331,6 +1331,9 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 	Ideally, the error should never trigger because
 	re-instantiation / redeclaration of a scalar instance
 	is easily detected (and actually detected) during the compile phase.
+	TODO: attaching of relaxed actuals should be policy-dependent!
+	TODO: check template parameter constraints upon instantiation!
+		Consider looking for SPEC-assert directives?
 	\param i indices must be NULL because this is not an array.
  */
 good_bool

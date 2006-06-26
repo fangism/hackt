@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2006/05/09 05:39:27 fang Exp $
+#	$Id: Makefile.am,v 1.7 2006/06/26 01:47:43 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -10,15 +10,21 @@ HACKT_PARSE_TEST_FAILURES = \
 	030 031 035 037 038 \
 	046 047 048 \
 	050 051 055 056 059 \
-	062
+	062 067 068 \
+	071 072 073 076 \
+	095 096
 
-HACKT_PARSE_TEST_PASSES = 000 002 005 \
+HACKT_PARSE_TEST_PASSES = \
+	000 002 005 \
 	015 017 019 \
 	020 021 022 024 025 026 027 028 029 \
 	032 033 034 036 039 \
 	040 041 042 043 044 045 049 \
 	052 053 054 057 058 \
-	060 061
+	060 061 063 064 065 066 069 \
+	070 074 075 077 078 079 \
+	080 081 082 083 084 085 086 087 088 089 \
+	090 091 092 093 094
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -32,11 +38,25 @@ HACKT_OBJ_TEST_SUBJECTS = \
 HACKT_UNROLL_TEST_SUBJECTS = \
 	$(HACKT_OBJ_TEST_SUBJECTS)
 
-# TODO: create phase
+HACKT_CREATE_TEST_SUBJECTS = \
+	064 \
+	074 075 077 078 079 \
+	080 081 082 083 084 085 086 087 088 089 \
+	090 091 092 093 094
+
+# TODO: alloc phase
+# several tests are not ready because we haven't defined
+# footprint frames for built-in channel types yet.  
+# They result in an assertion failure on the frame pointer.  
+# HACKT_ALLOC_TEST_SUBJECTS = \
+#	$(HACKT_CREATE_TEST_SUBJECTS)
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 \
 	035 055 056 059 062
+
+# pending test cases
+EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

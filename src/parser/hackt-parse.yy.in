@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.12 2006/04/12 08:53:20 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.13 2006/06/26 01:46:48 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -343,6 +343,7 @@ extern const char* const yyrule[];
 	CHP::selection*		_chp_selection;
 	CHP::nondet_selection*	_chp_nondet_selection;
 	CHP::det_selection*	_chp_det_selection;
+	CHP::metaloop_selection*	_chp_metaloop_selection;
 	CHP::guarded_command*	_chp_guarded_command;
 	CHP::else_clause*	_chp_else_clause;
 	CHP::comm_list*		_chp_comm_list;
@@ -601,6 +602,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_chp_nondet_selection>	chp_nondet_guarded_command_list
 %type	<_chp_det_selection>	chp_unmatched_det_guarded_command_list
 %type	<_chp_det_selection>	chp_matched_det_guarded_command_list
+%type	<_chp_metaloop_selection>	chp_metaloop_selection
 %type	<_chp_guarded_command>	chp_guarded_command
 %type	<_chp_else_clause>	chp_else_clause
 %type	<_chp_binary_assignment>	chp_binary_assignment
@@ -1487,6 +1489,7 @@ chp_body_item
 /*	| SKIP { $$ = new CHP::skip($1); }		*/
 	| LOG expr_list_in_parens
 		{ $$ = new CHP::log($1, $2); }
+	| chp_metaloop_selection { $$ = $1; }
 	;
 
 chp_loop
@@ -1519,6 +1522,17 @@ chp_selection
 //	| "%[" { chp_guarded_command ":" }** "]%"
 //	| BEGINPROB chp_nondet_guarded_command_list ENDPROB
 */
+	;
+
+chp_metaloop_selection
+	: '[' ':' ID ':' range ':' chp_guarded_command ']'
+		{ $$ = new CHP::metaloop_selection($1, $2, $3, $5, $7, $8);
+			DELETE_TOKEN($4); DELETE_TOKEN($6);
+		}
+	| '[' THICKBAR ID ':' range ':' chp_guarded_command ']'
+		{ $$ = new CHP::metaloop_selection($1, $2, $3, $5, $7, $8);
+			DELETE_TOKEN($4); DELETE_TOKEN($6);
+		}
 	;
 
 /*

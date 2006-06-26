@@ -1,0 +1,13 @@
+// "071.hac"
+// copy-modified from "069.hac"
+// should fail : can't assign pint to bool
+
+defproc badchp(bool b) {
+pint c;
+chp {
+	*[ b := c ]
+}
+}
+
+badchp X;
+

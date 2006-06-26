@@ -1,0 +1,23 @@
+// "090.hac"
+// copy-modified from "089.hac"
+// should pass : index of index
+
+template <pint I>
+defproc send_indexed (chan?(int<1>) index; chan!(int) out) {
+int<1> y;
+int z[2];
+pint x[2];
+x[0] = 1;
+x[1] = 0;
+chp {
+	*[
+		index?(y);
+		out!(z[(y+x[I]) %2])
+		// opportunity for algebraic reduction
+	]
+}
+}
+
+send_indexed<0> foo;
+send_indexed<1> bar;
+

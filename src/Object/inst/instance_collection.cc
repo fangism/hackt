@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.20 2006/06/03 00:14:52 fang Exp $
+ 	$Id: instance_collection.cc,v 1.21 2006/06/26 01:46:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -509,7 +509,6 @@ param_value_collection::make_meta_instance_reference(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 count_ptr<nonmeta_instance_reference_base>
 param_value_collection::make_nonmeta_instance_reference(void) const {
 	ICE_NEVER_CALL(cerr);
@@ -560,16 +559,15 @@ datatype_instance_collection::get_actual_param_list(void) const {
 		children types expect different argument types!
 	Possible to fake it...?
  */
-void
+good_bool
 datatype_instance_collection::establish_collection_type(
 		const instance_collection_parameter_type& p) {
 {
 	bool_instance_collection* const
 		b(IS_A(bool_instance_collection*, this));
 	if (b) {
-		b->establish_collection_type(
+		return b->establish_collection_type(
 			bool_instance_collection::instance_collection_parameter_type());
-		return;
 	}
 }{
 	int_instance_collection* const
@@ -582,8 +580,7 @@ datatype_instance_collection::establish_collection_type(
 		const int_instance_collection::instance_collection_parameter_type
 			w = IS_A(const pint_expr&, *pp->front())
 				.static_constant_value();
-		i->establish_collection_type(w);
-		return;
+		return i->establish_collection_type(w);
 	}
 }{
 	enum_instance_collection* const
@@ -591,21 +588,20 @@ datatype_instance_collection::establish_collection_type(
 	if (e) {
 		const enum_instance_collection::instance_collection_parameter_type
 			d = p.get_base_def().is_a<const enum_datatype_def>();
-		e->establish_collection_type(d);
-		return;
+		return e->establish_collection_type(d);
 	}
 }{
 	// TODO: user-def-structs
 	struct_instance_collection* const
 		e(IS_A(struct_instance_collection*, this));
 	if (e) {
-		e->establish_collection_type(p);
-		return;
+		return e->establish_collection_type(p);
 	}
 }
 	ICE(cerr,
 		cerr << "Unhandled case in this function." << endl;
 	)
+	return good_bool(false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

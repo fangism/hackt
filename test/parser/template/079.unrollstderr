@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	64
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	234
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	238
 	4	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -31,7 +31,7 @@ Persistent Object Manager text dump:
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	30	##ADDR##	procdefn	0	#HEAD#	#TAIL#	213
+	30	##ADDR##	procdefn	0	#HEAD#	#TAIL#	217
 	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	32	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
@@ -56,7 +56,7 @@ Persistent Object Manager text dump:
 	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
 	54	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	procdefn	0	#HEAD#	#TAIL#	276
+	55	##ADDR##	procdefn	0	#HEAD#	#TAIL#	280
 	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	32
 	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	32
@@ -88,7 +88,7 @@ Persistent Object Manager text dump:
 	84	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
 	85	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	32
 	86	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
-	87	##ADDR##	procdefn	0	#HEAD#	#TAIL#	257
+	87	##ADDR##	procdefn	0	#HEAD#	#TAIL#	261
 	88	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	89	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	90	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -129,7 +129,7 @@ Persistent Object Manager text dump:
 	125	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
 	126	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	127	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	128	##ADDR##	procdefn	0	#HEAD#	#TAIL#	278
+	128	##ADDR##	procdefn	0	#HEAD#	#TAIL#	282
 	129	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
 	130	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	131	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

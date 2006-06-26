@@ -1,0 +1,22 @@
+// "086.hac"
+// copy-modified from "083.hac"
+// should pass : nonmeta indices
+
+defproc send_indexed (chan?(int<1>) index[2]; chan!(int) out) {
+pint x[2][2];
+// x = { { 1, 2}, {3, 4} };
+x[0][0] = 1;
+x[0][1] = 2;
+x[1][0] = 3;
+x[1][1] = 4;
+int<1> y, z;
+chp {
+	*[
+		index[0]?(y), index[1]?(z);
+		out!(x[y][z])	// non-meta indices only
+	]
+}
+}
+
+send_indexed foo;
+

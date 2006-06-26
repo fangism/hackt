@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	152
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	156
 	8	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
 	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20

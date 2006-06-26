@@ -1,0 +1,452 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	72
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	1571
+	5	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	40	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	41	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	42	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
+	47	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	48	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
+	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	53	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
+	54	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	55	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
+	61	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	62	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	63	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
+	68	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	69	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	70	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	74	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
+	75	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	76	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	77	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	81	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
+	82	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	83	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	84	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
+	89	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	90	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	91	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	94	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	95	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
+	96	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	97	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	98	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	100	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	101	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	102	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
+	103	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	104	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	105	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	107	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	108	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	109	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	110	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	111	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
+	113	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	114	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	115	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	116	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	117	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	118	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	119	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	120	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	121	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	122	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	123	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	124	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	125	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	126	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	127	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	128	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	129	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	130	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	131	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	132	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	133	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	134	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	135	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	136	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	137	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	138	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	139	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	140	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	141	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	142	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	143	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	144	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	145	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	146	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	147	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	148	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	149	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	150	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	151	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	152	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	153	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	154	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	155	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	156	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	157	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	158	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	159	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	160	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	161	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	162	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	163	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	164	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	165	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	166	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	167	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	168	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	169	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	170	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	171	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	172	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	173	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	174	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	175	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	176	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	177	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	178	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	179	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	180	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	181	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	182	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	183	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	184	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	185	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	186	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	187	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	188	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	189	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	190	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	191	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	192	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	193	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	194	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	195	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	196	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	197	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	198	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	199	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	200	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	201	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	202	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	203	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	204	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	205	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	206	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	207	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	208	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	209	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	210	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	211	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	212	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	213	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	214	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	215	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	216	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	217	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	218	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	219	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	220	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	221	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	222	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	223	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	224	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	225	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	226	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  11 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    x = pint^1 x
+      unrolled index-value pairs: {
+        0 = 0
+        1 = 1
+        2 = 4
+        3 = 9
+        4 = 16
+        5 = 25
+      }
+  Definitions:
+    compute_me = process-definition (defined) compute_me<
+      pint<> N
+      pint<> B[0..N-1]
+      pint<> M
+      >(
+        int<16> b
+      )
+      In definition "compute_me", we have: {
+      Parameters:
+        B = pint<> B
+
+        M = pint<> M
+        N = pint<> N
+      Instances:
+        b = int<16> b
+      unroll sequence: 
+        pint<> N
+        pint<> B[0..N-1]
+        pint<> M
+        int<16> b
+      chp:
+        concurrent: {
+          *[
+            b := B[M]
+          ]
+        }
+      footprint collection: {
+        <2, {0,1}, 0> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <2, {0,1}, 1> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <3, {4,9,16}, 0> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <3, {4,9,16}, 1> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <3, {4,9,16}, 2> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <6, {0,1,4,9,16,25}, 0> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <6, {0,1,4,9,16,25}, 1> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <6, {0,1,4,9,16,25}, 2> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <6, {0,1,4,9,16,25}, 3> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <6, {0,1,4,9,16,25}, 4> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+        <6, {0,1,4,9,16,25}, 5> {
+          pint^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          int<16>^0 b (instantiated) = ::compute_me::b 
+        }
+      }
+      }
+
+  Instances:
+    y2_0 = process compute_me<2, {0,1}, 0>^0 y2_0 (instantiated) = ::y2_0 (
+      int<16>^0 b (instantiated) = ::y2_0.b 
+    )
+    y2_1 = process compute_me<2, {0,1}, 1>^0 y2_1 (instantiated) = ::y2_1 (
+      int<16>^0 b (instantiated) = ::y2_1.b 
+    )
+    y3_0 = process compute_me<3, {4,9,16}, 0>^0 y3_0 (instantiated) = ::y3_0 (
+      int<16>^0 b (instantiated) = ::y3_0.b 
+    )
+    y3_1 = process compute_me<3, {4,9,16}, 1>^0 y3_1 (instantiated) = ::y3_1 (
+      int<16>^0 b (instantiated) = ::y3_1.b 
+    )
+    y3_2 = process compute_me<3, {4,9,16}, 2>^0 y3_2 (instantiated) = ::y3_2 (
+      int<16>^0 b (instantiated) = ::y3_2.b 
+    )
+    y6_0 = process compute_me<6, {0,1,4,9,16,25}, 0>^0 y6_0 (instantiated) = ::y6_0 (
+      int<16>^0 b (instantiated) = ::y6_0.b 
+    )
+    y6_1 = process compute_me<6, {0,1,4,9,16,25}, 1>^0 y6_1 (instantiated) = ::y6_1 (
+      int<16>^0 b (instantiated) = ::y6_1.b 
+    )
+    y6_2 = process compute_me<6, {0,1,4,9,16,25}, 2>^0 y6_2 (instantiated) = ::y6_2 (
+      int<16>^0 b (instantiated) = ::y6_2.b 
+    )
+    y6_3 = process compute_me<6, {0,1,4,9,16,25}, 3>^0 y6_3 (instantiated) = ::y6_3 (
+      int<16>^0 b (instantiated) = ::y6_3.b 
+    )
+    y6_4 = process compute_me<6, {0,1,4,9,16,25}, 4>^0 y6_4 (instantiated) = ::y6_4 (
+      int<16>^0 b (instantiated) = ::y6_4.b 
+    )
+    y6_5 = process compute_me<6, {0,1,4,9,16,25}, 5>^0 y6_5 (instantiated) = ::y6_5 (
+      int<16>^0 b (instantiated) = ::y6_5.b 
+    )
+}
+

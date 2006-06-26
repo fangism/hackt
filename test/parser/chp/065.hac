@@ -1,0 +1,17 @@
+// "065.hac"
+// testing metaloop-selection feature of CHP
+// should pass
+
+defproc metalooptest(chan?(int<4>) L; chan!(bool) R) {
+int<4> l;
+bool b[16];
+chp {
+	*[
+		L?(l);
+		[[]i:16:
+			(l==i) -> R!(b[i])
+		]
+	]
+}
+}
+

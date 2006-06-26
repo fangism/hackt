@@ -8,7 +8,7 @@ Persistent Object Manager text dump:
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	204
 	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20

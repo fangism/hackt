@@ -3,7 +3,7 @@
 	Class definitions for integer negation expression.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_negation_expr.h,v 1.6 2006/03/20 02:41:04 fang Exp $
+	$Id: int_negation_expr.h,v 1.7 2006/06/26 01:46:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_NEGATION_EXPR_H__
@@ -45,6 +45,10 @@ public:
 	dimensions(void) const { return 0; }
 
 	GET_DATA_TYPE_REF_PROTO;
+
+	UNROLL_RESOLVE_COPY_INT_PROTO;
+protected:
+	using parent_type::unroll_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

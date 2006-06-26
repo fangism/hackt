@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.7 2006/03/20 02:41:07 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.8 2006/06/26 01:46:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -82,6 +82,10 @@ public:
 
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
+
+	count_ptr<const this_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const this_type>&) const;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

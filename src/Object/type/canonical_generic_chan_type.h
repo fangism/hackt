@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.5 2006/01/22 18:20:40 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.6 2006/06/26 01:46:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -66,16 +66,19 @@ private:
 	/// the channel direction
 	char					direction;
 public:
+	/// only called to signal an error
 	canonical_type();
 
+public:
 	explicit
-	canonical_type(const canonical_definition_ptr_type);
+	canonical_type(const canonical_definition_ptr_type, 
+		const char dir);
 
 	canonical_type(const canonical_definition_ptr_type, 
-		const param_list_ptr_type&);
+		const param_list_ptr_type&, const char dir);
 
 	canonical_type(const canonical_definition_ptr_type, 
-		const template_actuals&);
+		const template_actuals&, const char dir);
 
 #if 0
 	template <class DefType2>
@@ -101,6 +104,10 @@ public:
 
 	ostream&
 	dump(ostream&) const;
+
+	/// \param d is '!' or '?' or other
+	void
+	set_direction(const char d) { direction = d; }
 
 	count_ptr<const type_reference_type>
 	make_type_reference(void) const;

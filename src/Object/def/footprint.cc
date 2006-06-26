@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.21 2006/05/11 22:45:59 fang Exp $
+	$Id: footprint.cc,v 1.22 2006/06/26 01:45:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -221,7 +221,8 @@ footprint::dump(ostream& o) const {
 	TODO: sort map entries or use qmap.
  */
 ostream&
-footprint::dump_with_collections(ostream& o, const dump_flags& df) const {
+footprint::dump_with_collections(ostream& o, const dump_flags& df, 
+		const expr_dump_context& dc) const {
 	if (!instance_collection_map.empty()) {
 		// NOTE: hash_map is NOT sorted
 		const_instance_map_iterator
@@ -238,6 +239,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df) const {
 		scope_aliases.dump(o);
 #endif
 		prs_footprint.dump(o, *this);
+		chp_footprint.dump(o, *this, dc);
 		spec_footprint.dump(o, *this);
 	}
 	return o;
@@ -623,6 +625,7 @@ footprint::collect_transient_info_base(persistent_object_manager& m) const {
 	footprint_base<int_tag>::_pool.collect_transient_info_base(m);
 	footprint_base<bool_tag>::_pool.collect_transient_info_base(m);
 	prs_footprint.collect_transient_info_base(m);
+	chp_footprint.collect_transient_info_base(m);
 	spec_footprint.collect_transient_info_base(m);
 }
 
@@ -661,6 +664,7 @@ footprint::write_object_base(const persistent_object_manager& m,
 	port_aliases.write_object_base(m, o);
 	scope_aliases.write_object_base(m, o);
 	prs_footprint.write_object_base(m, o);
+	chp_footprint.write_object_base(m, o);
 	spec_footprint.write_object_base(m, o);
 }
 
@@ -693,6 +697,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 	port_aliases.load_object_base(m, i);
 	scope_aliases.load_object_base(m, i);
 	prs_footprint.load_object_base(m, i);
+	chp_footprint.load_object_base(m, i);
 	spec_footprint.load_object_base(m, i);
 }
 

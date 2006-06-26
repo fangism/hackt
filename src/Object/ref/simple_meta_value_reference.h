@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.9 2006/02/21 23:07:37 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.10 2006/06/26 01:46:20 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -49,6 +49,8 @@ private:
 	typedef	typename traits_type::meta_value_reference_parent_type
 							parent_type;
 	typedef	typename parent_type::expr_base_type	expr_base_type;
+	typedef	typename traits_type::data_expr_base_type
+							data_expr_base_type;
 	// is not actually specific to instances
 	typedef	simple_meta_indexed_reference_base	common_base_type;
 	typedef	expr_base_type				interface_type;
@@ -141,6 +143,11 @@ public:
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
 
+protected:
+	count_ptr<const_param>
+	__unroll_resolve_rvalues(const unroll_context&) const;
+
+public:
 #if 0
 	count_ptr<const_index>
 	unroll_resolve_rvalues_index(const unroll_context&) const;
@@ -149,6 +156,12 @@ public:
 	bad_bool
 	unroll_lvalue_references(const unroll_context&, 
 		value_reference_collection_type&) const;
+
+	count_ptr<const expr_base_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const expr_base_type>&) const;
+protected:
+	using parent_type::unroll_resolve_copy;
 
 protected:
 	using common_base_type::collect_transient_info_base;

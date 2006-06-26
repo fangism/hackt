@@ -1,0 +1,5 @@
+ERROR: cannot send on a receive-only channel, at [7:3]
+ERROR in one of the communcation actions in [7:3..10]
+ERROR in CHP statement(s) at [6:2--8:2]
+ERROR in one of the actions in [6:2--8:2]
+ERROR: at least one error in CHP body.

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.7 2006/02/21 21:33:02 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.8 2006/06/26 01:46:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -92,9 +92,11 @@ protected:
 		\param t type must be resolved constant.
 		\pre first time called for the collection.  
 	 */
-	void
+	good_bool
 	commit_type_first_time(
-		const instance_collection_parameter_type& t) const { }
+		const instance_collection_parameter_type& t) const {
+		return good_bool(true);
+	}
 
 };	// end struct null_collection_type_manager
 

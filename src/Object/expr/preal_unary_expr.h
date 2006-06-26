@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_unary_expr.h"
 	Unary negation of meta real value.  
-	$Id: preal_unary_expr.h,v 1.3 2006/02/21 04:48:27 fang Exp $
+	$Id: preal_unary_expr.h,v 1.4 2006/06/26 01:46:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_UNARY_EXPR_H__
@@ -20,6 +20,7 @@ using util::memory::count_ptr;
  */
 class preal_unary_expr : public preal_expr {
 	typedef	preal_unary_expr			this_type;
+	typedef	preal_expr				parent_type;
 public:
 	typedef	preal_value_type		value_type;
 	typedef	char			op_type;
@@ -73,6 +74,10 @@ public:
 
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
+
+	UNROLL_RESOLVE_COPY_PREAL_PROTO;
+protected:
+	using parent_type::unroll_resolve_copy;
 
 public:
 	FRIEND_PERSISTENT_TRAITS

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.9 2006/04/18 18:42:40 fang Exp $
+	$Id: CHP.h,v 1.10 2006/06/26 01:46:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -12,6 +12,7 @@
 #include "Object/lang/CHP_base.h"
 #include "Object/ref/references_fwd.h"
 #include "Object/expr/expr_fwd.h"
+#include "Object/unroll/meta_loop_base.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 #include "util/static_assert.h"
@@ -20,18 +21,23 @@
 namespace HAC {
 namespace entity {
 class data_nonmeta_instance_reference;
+class unroll_context;
+class footprint;
+
 namespace CHP {
+class footprint;
 using std::list;
 using std::vector;
 using std::istream;
 using util::good_bool;
 using util::memory::count_ptr;
 using util::persistent_object_manager;
+
 //=============================================================================
 /**
 	Typical action list.  
  */
-typedef	list<count_ptr<action> >		action_list_type;
+typedef	list<action_ptr_type>			action_list_type;
 
 //=============================================================================
 /**
@@ -42,6 +48,8 @@ private:
 	typedef	action				parent_type;
 	typedef	action_list_type		list_type;
 	typedef	action_sequence			this_type;
+protected:
+	typedef	list_type::const_iterator	const_iterator;
 public:
 	action_sequence();
 	~action_sequence();
@@ -51,6 +59,8 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_UNROLL_ACTION_PROTO;
 
 	// helper methods needed for process_definition
 	void
@@ -68,6 +78,7 @@ public:
 //=============================================================================
 /**
 	Concurrent CHP actions.  
+	This is also the top-level CHP object per definition.  
  */
 class concurrent_actions : public action, public action_list_type {
 private:
@@ -82,7 +93,14 @@ public:
 	what(ostream&) const;
 
 	ostream&
+	__dump(ostream&, const expr_dump_context&) const;
+
+	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	ostream&
+	dump(ostream&, const entity::footprint&, 
+		const expr_dump_context&) const;
 
 	// helper methods needed for process_definition
 	void
@@ -94,6 +112,16 @@ public:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
+	CHP_UNROLL_ACTION_PROTO;
+
+	good_bool
+	unroll(const unroll_context&, entity::footprint&) const;
+
+private:
+	good_bool
+	__unroll(const unroll_context&, this_type&) const;
+
+public:
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class concurrent_actions
 
@@ -106,10 +134,11 @@ public:
 	Do guards need back-references to selection statement?
  */
 class guarded_action : public persistent {
-public:
-	typedef	count_ptr<bool_expr>		guard_ptr_type;
-	typedef	count_ptr<action>		stmt_ptr_type;
 	typedef	guarded_action			this_type;
+public:
+	typedef	count_ptr<const bool_expr>	guard_ptr_type;
+	typedef	count_ptr<const action>		stmt_ptr_type;
+	typedef	count_ptr<const guarded_action>	unroll_return_type;
 protected:
 	/**
 		In the case of an else-clause, this guard is allowed to 
@@ -135,6 +164,20 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	unroll_return_type
+	unroll_resolve_copy(const unroll_context&,
+		const count_ptr<const guarded_action>&) const;
+
+	struct unroll_resolver {
+		const unroll_context&			_context;
+
+		explicit
+		unroll_resolver(const unroll_context& c) : _context(c) { }
+
+		count_ptr<const guarded_action>
+		operator () (const count_ptr<const guarded_action>&) const;
+	};
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class guarded_action
 
@@ -142,7 +185,12 @@ public:
 /**
 	Typical guarded statement list.  
  */
-typedef	list<count_ptr<guarded_action> >	selection_list_type;
+typedef	list<count_ptr<const guarded_action> >	selection_list_type;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+unroll_resolve_selection_list(const selection_list_type&, 
+	const unroll_context&, selection_list_type&);
 
 //=============================================================================
 /**
@@ -162,6 +210,8 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_UNROLL_ACTION_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class deterministic_selection
@@ -185,8 +235,51 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_UNROLL_ACTION_PROTO;
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nondeterministic_selection
+
+//=============================================================================
+/**
+	A construct for compile-time expanding a regular
+	selection statement.  
+ */
+class metaloop_selection : public action, public meta_loop_base {
+	typedef	metaloop_selection		this_type;
+public:
+	typedef	meta_loop_base::ind_var_ptr_type	ind_var_ptr_type;
+	typedef	meta_loop_base::range_ptr_type	range_ptr_type;
+	typedef	count_ptr<const guarded_action>	body_ptr_type;
+private:
+	/**
+		The one guarded action is presumably dependent on the 
+		induction variable.  Will be expanded into 
+		a full selection statement at unroll-time.  
+	 */
+	body_ptr_type				body;
+	/**
+		True is for determinstic selection, 
+		false is for nondeterministic selection.
+		No other types supported yet.  
+	 */
+	bool					selection_type;
+public:
+	metaloop_selection();
+	metaloop_selection(const ind_var_ptr_type&, const range_ptr_type&, 
+		const body_ptr_type&, const bool);
+	~metaloop_selection();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_UNROLL_ACTION_PROTO;
+
+	PERSISTENT_METHODS_DECLARATIONS
+};	// end class metaloop_selection
 
 //=============================================================================
 /**
@@ -199,9 +292,9 @@ private:
 	typedef	action					parent_type;
 	typedef	assignment				this_type;
 public:
-	typedef	count_ptr<data_nonmeta_instance_reference>
+	typedef	count_ptr<const data_nonmeta_instance_reference>
 							lval_ptr_type;
-	typedef	count_ptr<data_expr>			rval_ptr_type;
+	typedef	count_ptr<const data_expr>		rval_ptr_type;
 private:
 	lval_ptr_type					lval;
 	rval_ptr_type					rval;
@@ -215,6 +308,8 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_UNROLL_ACTION_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class assignment
@@ -230,12 +325,15 @@ public:
 class condition_wait : public action {
 	typedef	action					parent_type;
 	typedef	condition_wait				this_type;
-	typedef	count_ptr<bool_expr>			cond_ptr_type;
+	typedef	count_ptr<const bool_expr>		cond_ptr_type;
 private:
 	cond_ptr_type					cond;
 public:
 	condition_wait();
+
+	explicit
 	condition_wait(const cond_ptr_type&);
+
 	~condition_wait();
 
 	ostream&
@@ -243,6 +341,8 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_UNROLL_ACTION_PROTO;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class condition_wait
@@ -255,11 +355,12 @@ class channel_send : public action {
 	typedef	action					parent_type;
 	typedef	channel_send				this_type;
 public:
-	typedef	vector<count_ptr<data_expr> >		expr_list_type;
+	typedef	count_ptr<const data_expr>		data_ptr_type;
+	typedef	vector<data_ptr_type>			expr_list_type;
 	/**
 		should be simple_channel_nonmeta_instnace_reference
 	 */
-	typedef	count_ptr<simple_channel_nonmeta_instance_reference>
+	typedef	count_ptr<const simple_channel_nonmeta_instance_reference>
 							chan_ptr_type;
 private:
 	chan_ptr_type					chan;
@@ -277,6 +378,8 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_UNROLL_ACTION_PROTO;
+
 	template <class L>
 	good_bool
 	add_expressions(const L&);
@@ -293,10 +396,10 @@ class channel_receive : public action {
 	typedef	action					parent_type;
 	typedef	channel_receive				this_type;
 public:
-	typedef	count_ptr<data_nonmeta_instance_reference>
+	typedef	count_ptr<const data_nonmeta_instance_reference>
 							inst_ref_ptr_type;
 	typedef	vector<inst_ref_ptr_type>		inst_ref_list_type;
-	typedef	count_ptr<simple_channel_nonmeta_instance_reference>
+	typedef	count_ptr<const simple_channel_nonmeta_instance_reference>
 							chan_ptr_type;
 private:
 	chan_ptr_type					chan;
@@ -312,6 +415,8 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_UNROLL_ACTION_PROTO;
 
 	template <class L>
 	good_bool
@@ -339,6 +444,8 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+	CHP_UNROLL_ACTION_PROTO;
+
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class do_while_loop
 
@@ -350,7 +457,7 @@ class do_forever_loop : public action {
 	typedef	action					parent_type;
 	typedef	do_forever_loop				this_type;
 public:
-	typedef	count_ptr<action>			body_ptr_type;
+	typedef	count_ptr<const action>			body_ptr_type;
 private:
 	body_ptr_type					body;
 private:
@@ -365,6 +472,8 @@ public:
 
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
+
+	CHP_UNROLL_ACTION_PROTO;
 
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
@@ -390,6 +499,37 @@ public:
 		}
 	};	// end struct detector
 };	// end class do_forever_loop
+
+//=============================================================================
+/**
+	Context-binding functor.  
+	Relocate this to another file if it ever becomes useful elsewhere.  
+ */
+struct data_expr_unroll_resolver {
+	const unroll_context&			_context;
+
+	explicit
+	data_expr_unroll_resolver(const unroll_context& c) : _context(c) { }
+
+	count_ptr<const data_expr>
+	operator () (const count_ptr<const data_expr>&) const;
+};	// end struct data_expr_unroll_resolver
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Context-binding functor.  
+	Relocate this to another file if it ever becomes useful elsewhere.  
+ */
+struct data_ref_unroll_resolver {
+	const unroll_context&			_context;
+
+	explicit
+	data_ref_unroll_resolver(const unroll_context& c) : _context(c) { }
+
+	count_ptr<const data_nonmeta_instance_reference>
+	operator () (
+		const count_ptr<const data_nonmeta_instance_reference>&) const;
+};	// end struct data_ref_unroll_resolver
 
 //=============================================================================
 }	// end namespace CHP

@@ -5,11 +5,11 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
 	5	##ADDR##	proccoll	1	#HEAD#	#TAIL#	35
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	216
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
 	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25

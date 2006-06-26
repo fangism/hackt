@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.23 2006/06/02 20:15:18 fang Exp $
+ 	$Id: definition.cc,v 1.24 2006/06/26 01:45:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -1349,6 +1349,10 @@ built_in_datatype_def::certify_port_actuals(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: Possibly check that int's width parameter is > 0?
+	Or punt check until unroll/instantiation time?
+ */
 definition_base::type_ref_ptr_type
 built_in_datatype_def::make_fundamental_type_reference(
 		make_type_arg_type ta) const {
@@ -1989,7 +1993,7 @@ user_def_datatype::dump(ostream& o) const {
 			get_chp.dump(o << auto_indent, dc) << endl;
 		}
 		if (footprint_map.size()) {
-			footprint_map.dump(o << auto_indent) << endl;
+			footprint_map.dump(o << auto_indent, dc) << endl;
 		}
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
@@ -2695,9 +2699,9 @@ process_definition::dump(ostream& o) const {
 	{	// begin indent level
 		scopespace::dump_for_definitions(o);
 		if (defined) {
+			const expr_dump_context dc(this);
 			o << auto_indent << "unroll sequence: " << endl;
 			{	INDENT_SECTION(o);
-				const expr_dump_context dc(this);
 				sequential_scope::dump(o, dc);
 			}
 			// PRS
@@ -2711,7 +2715,6 @@ process_definition::dump(ostream& o) const {
 			if (!chp.empty()) {
 				o << auto_indent << "chp:" << endl;
 				INDENT_SECTION(o);
-				const expr_dump_context dc(this);
 				chp.dump(o << auto_indent, dc) << endl;
 			}
 			// SPEC
@@ -2722,7 +2725,8 @@ process_definition::dump(ostream& o) const {
 				spec.dump(o, rdc);	// << endl;
 			}
 			if (footprint_map.size()) {
-				footprint_map.dump(o << auto_indent) << endl;
+				footprint_map.dump(
+					o << auto_indent, dc) << endl;
 			}
 		}
 	}	// end indent scope
@@ -2999,6 +3003,9 @@ process_definition::register_complete_type(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This just plays the sequential instantiation record, which 
+	instantiates objects and connections.  
+	PRS/CHP etc., are unrolled during ::create_complete_type.  
 	TODO: catch mutual recursion of types?
  */
 good_bool
@@ -3102,6 +3109,10 @@ if (defined) {
 		}
 		if (!spec.unroll(c, f->get_pool<bool_tag>(), 
 				f->get_spec_footprint()).good) {
+			// already have error message
+			return good_bool(false);
+		}
+		if (!chp.unroll(c, *f).good) {
 			// already have error message
 			return good_bool(false);
 		}

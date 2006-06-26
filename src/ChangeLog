@@ -3,6 +3,120 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-17-merged-CHP-02-14:
+	  Merged CHP work branch, includes:
+		CHP footprint unrolling
+		copy-on-write unroll-resolution of nonmeta expressions
+		Many minor CHP and channel bug fixes.  
+	  Handful of test cases updated as a result of object size changes.  
+
+
+2006-06-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-14:
+	  Cleaned up all outstanding devel_switches. 
+	  Cross-checked against gcc-4.x.
+	  Ready to merge to trunk. 
+
+
+2006-06-23	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-13:
+	  nonmeta arith expr checks for special case where one operand 
+		as magic width 0 (parameter-int).
+	  nonmeta arith expr folds unroll-resolved constants.  
+	  Bunch of CHP test cases added testing meta and nonmeta indexing of 
+		data and channels and value aggregates.  
+	  Status: branch mature enough
+	  TODO: cleanup devel_switches, and merge branch. 
+
+
+2006-06-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-12:
+	  Fixed minor bug in canonical_type_base::dump_template_args, 
+		unprotected dereference is now guarded, duh!
+	  canonical_generic_chan_type now requires direction argument.
+	  direction of canonical channel type is now set and propagated
+		through type-unrolling resolution (forgot before, oops).
+	  Test cases now show channel direction in unrolled instances
+		and footprints's sub-instances (updated).  
+		A few tests lost const-param-expr-list, resulting in
+		only index differences, no other noticeable difference, 
+		cause of this change not quite known.  
+
+
+2006-06-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-11:
+	  Further improved nonmeta expression unroll-resolution to substitute
+		constants deduced from indexed expressions where possible.  
+		TODO: mixed meta/nonmeta index test cases.  
+	  footprint and footprint-map dump augmented with expression-context
+		argument for diagnostic pretty-printing.  
+	  CHP assignments and sends now use a modified type-check
+		at parse-time to allow an exception for int:=pint.
+	  Added dimensionality check to CHP assignment checking.  
+	  const_index_list is now list of const-const_index pointers
+	  TODO notes: channels
+
+
+2006-06-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-10:
+	  Added persistence of chp_footprint in footprint.  
+	  Enabled dumping of CHP footprint, should only print
+		when CHP footprint is not empty.  
+	  Implemented unroll_resolving of simple_nonmeta_value_references
+		using tag policy : datatype_tag vs. parameter_value_tag.
+		For parameter references, we resolve values to constants
+		where possible, whereas others retain their 
+		optionally-nonmeta-indexed form.  
+	  Footprint binary size increased for CHP footprint, 
+		test cases updated accordingly.  
+	  Added one test case: chp/074.hac
+		need many more...
+
+
+2006-06-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-09:
+	  Finally back into compiling/linking state!
+	  Finished implementing unroll_resolve_copy in the CHP class
+		hierarchy, which can now resolve a footprint efficiently.  
+	  Bunch more minor additions of unroll_resolve_copy interfaces
+		to the expression hierarchy.  
+	  NOTE: none of this new code is tested yet, but no regressions
+		caused so far (old code untouched).
+	  TODO: test cases, test cases, test cases
+		cleanup devel_switch flags, verify CHP footprint objdumps.  
+
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-08:
+	  Wrote expr-hierarchy's unroll_resolve_copy methods, 
+		leaving only undefined references to new CHP unroll methods.  
+
+
+2006-06-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-07:
+	  Compiles but does not link.  Most new prototypes in place, 
+		only (most trivial) definitions are missing.
+	  Added entirely virtual function hierarchy for unroll-resolving
+		nonmeta expressions and references.  
+		The gist of the implementation is to be able to 
+		copy (reference-counted) pointers to results that do not
+		change as a result of unrolling meta value resolution.  
+	  Updated all unroll_resolve_copy prototypes to take 
+		const (pointee) arguments and return const (pointee)
+		pointers -- goes along with copy-on-write semantics.  
+	  Most revisions from this patch are wrapped in
+		#if COW_UNROLL_DATA_EXPR (Moo! copy-on-write)
+	  TODO: fill in the definitions, and finish CHP footprint unrolling.  
+
+
 2006-06-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-16:
@@ -128,6 +242,50 @@
 	  No source revision, just documentation updates in dox/.
 
 
+2006-05-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-06:
+	  Does not compile -- checking in code in-progress 
+		before going on vacation.  
+	  Proposing to implement copy-on-change expession unrolling
+		for nonmeta expressions and references.  
+		If any template-dependent parameters are resolved, 
+		copy and replace sub-tree.  
+	  CHP footprint will be same type as source tree, but with 
+		meta parameters resolved.  
+
+
+2006-05-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-05:
+	  AST/expr.cc: id_expr::check_nonmeta... fixed lookup
+		to accept nonmeta references.  
+	  Devel. switch: ENABLE_CHP_FOOTPRINT in progress.
+	  TODO: decide if any changes are necessary for unrolling CHP's IR.  
+	  TODO: implement implicit decode of subscripts.  
+
+
+2006-05-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-04:
+	  Added is_nonmeta_data_lvalue trait to meta-classes to
+		distinguish lvalue-able types from nonlvalue-able, 
+		such as meta parameters.  
+	  Enabled bunch more CHP test cases.  
+
+
+2006-05-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-03:
+	  Introduced int<0> as a magic int type suitable for typing
+		pint's for the sake of creating nonmeta rvalue references.  
+	  establish_collection_type, and commit_type_first_time now
+		return good_bool to signal error status.  
+	  Cleaned up Object/traits/class_traits_type.cc, and also
+		initializes int_traits::magic_int_type_ptr.  
+	  Added some new test cases for these.  
+
+
 2006-05-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-04:
@@ -140,6 +298,32 @@
 		Added NOTES entry about this.  
 	  Fixed minor bug with wrong exit status from a bad 
 		instance declaration.
+
+
+2006-05-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-02:
+	  Added devel-switch USE_NONMETA_VALUE_REFERENCE to enable
+		construction of nonmeta rvalue references to parameters.  
+		Feature is untested.  
+	  TODO: test new cases in parser/chp.
+
+
+2006-05-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-01:
+	  Branch spawned for CHP language support development.  
+	  Added NOTES entry discussing prospect of upgrading CHP
+		to support nonmeta references over meta references.  
+	  Added meta-loop selection construct to CHP grammar, 
+		and added AST and IR classes 'metaloop_selection'.  
+		Objective: to expand into equivalent fixed-way selections.  
+		Also added persistent type key CHP_SELECT_LOOP_TYPE_KEY.  
+	  Makefile.am: install scripts depend on config.status
+	  common/ICE.cc: uses CVSTAG from cvstag.h
+	  TODO: currently compiler rejects attempts create
+		nonmeta_value_references to parameters, ... enable me!
+	  TODO: iron-out test cases chp/065,066
 
 
 2006-05-08	David Fang		<fangism@users.sourceforge.net>

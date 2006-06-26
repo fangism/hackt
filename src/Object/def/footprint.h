@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.15 2006/04/28 03:20:13 fang Exp $
+	$Id: footprint.h,v 1.16 2006/06/26 01:45:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -19,6 +19,7 @@
 #include "Object/inst/port_alias_tracker.h"
 #include "Object/lang/PRS_footprint.h"
 #include "Object/lang/SPEC_footprint.h"
+#include "Object/lang/CHP.h"
 // #include "Object/lang/CHP_footprint.h"
 // #include "Object/inst/alias_visitee.h"
 #include "util/boolean_types.h"
@@ -37,6 +38,7 @@ class footprint_frame;
 class port_member_context;
 struct alias_visitor;
 struct dump_flags;
+struct expr_dump_context;
 
 using std::string;
 using std::istream;
@@ -192,6 +194,17 @@ private:
 	 */
 	PRS::footprint				prs_footprint;
 	/**
+		The CHP footprint type is the same as the source tree's
+		IR, but with meta-parameter dependencies resolved
+		and substituted.  
+	 */
+	typedef	CHP::concurrent_actions		chp_footprint_type;
+	/**
+		Meta-param unrolled footprint of CHP, 
+		established during the create phase.  
+	 */
+	chp_footprint_type			chp_footprint;
+	/**
 		Unrolled specifications, local to this scope.  
 		This is populated during the create phase.  
 	 */
@@ -220,7 +233,8 @@ public:
 	dump(ostream&) const;
 
 	ostream&
-	dump_with_collections(ostream&, const dump_flags&) const;
+	dump_with_collections(ostream&, const dump_flags&, 
+		const expr_dump_context&) const;
 
 	const port_alias_tracker&
 	get_port_alias_tracker(void) const {
@@ -264,6 +278,12 @@ public:
 
 	const PRS::footprint&
 	get_prs_footprint(void) const { return prs_footprint; }
+
+	chp_footprint_type&
+	get_chp_footprint(void) { return chp_footprint; }
+
+	const chp_footprint_type&
+	get_chp_footprint(void) const { return chp_footprint; }
 
 	SPEC::footprint&
 	get_spec_footprint(void) { return spec_footprint; }

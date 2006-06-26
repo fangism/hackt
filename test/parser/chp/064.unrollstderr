@@ -1,0 +1,136 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	254
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	36	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	46	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	47	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	48	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	53	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	63	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	70	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	73	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	75	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  3 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    adjacent_diff = process-definition (defined) adjacent_diff<
+      pint<> W
+      >(
+        chan?(int<::adjacent_diff::W>) L
+        chan!(int<::adjacent_diff::W>) R
+      )
+      In definition "adjacent_diff", we have: {
+      Parameters:
+        W = pint<> W
+      Instances:
+        L = chan?(int<::adjacent_diff::W>) L
+        R = chan!(int<::adjacent_diff::W>) R
+        x = int<::adjacent_diff::W> x
+        z = int<::adjacent_diff::W> z
+      unroll sequence: 
+        pint<> W
+        chan?(int<::adjacent_diff::W>) L
+        chan!(int<::adjacent_diff::W>) R
+        int<::adjacent_diff::W> x
+        int<::adjacent_diff::W> z
+      chp:
+        concurrent: {
+          sequential: {
+            L?(x)
+            L?(z)
+            R!(x-z)
+          }
+        }
+      footprint collection: {
+        <12> {
+          channel chan?(int<12>)^0 L (instantiated) = ::adjacent_diff::L 
+          channel chan!(int<12>)^0 R (instantiated) = ::adjacent_diff::R 
+          pint^0 W value: ?
+          int<12>^0 x (instantiated) = ::adjacent_diff::x 
+          int<12>^0 z (instantiated) = ::adjacent_diff::z 
+        }
+      }
+      }
+
+  Instances:
+    A = channel chan(int<12>)^0 A (instantiated) = ::differ.L 
+    B = channel chan(int<12>)^0 B (instantiated) = ::differ.R 
+    differ = process adjacent_diff<12>^0 differ (instantiated) = ::differ (
+      channel chan?(int<12>)^0 L (instantiated) = ::differ.L 
+      channel chan!(int<12>)^0 R (instantiated) = ::differ.R 
+    )
+}
+

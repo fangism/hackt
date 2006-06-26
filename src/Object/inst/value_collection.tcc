@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.19 2006/06/03 00:15:01 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20 2006/06/26 01:46:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -47,6 +47,7 @@
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
+#include "Object/ref/data_nonmeta_instance_reference.h"
 
 #include "common/ICE.h"
 
@@ -366,6 +367,19 @@ VALUE_COLLECTION_CLASS::make_meta_value_reference(void) const {
 		new simple_meta_value_reference_type(
 			never_ptr<this_type>(const_cast<this_type*>(this))));
 		// omitting index argument
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	New: Create an rvalue reference to a meta parameter, possibly
+		indexed with a nonmeta-value subscript.  
+ */
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<nonmeta_instance_reference_base>
+VALUE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
+	typedef	count_ptr<nonmeta_instance_reference_base>	ptr_return_type;
+	return ptr_return_type(new simple_nonmeta_instance_reference_type(
+		never_ptr<const this_type>(this)));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

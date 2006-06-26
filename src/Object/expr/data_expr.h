@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.6 2006/03/20 02:41:04 fang Exp $
+	$Id: data_expr.h,v 1.7 2006/06/26 01:45:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DATA_EXPR_H__
@@ -14,12 +14,15 @@
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
+// unroll_resolve_copy is only needed because CHP assignments
+// are not (yet) subtyped, if we ever update this, we can trim here
 
 #define	USE_DATA_EXPR_EQUIVALENCE	0
 
 namespace HAC {
 namespace entity {
 class data_type_reference;
+class unroll_context;
 struct expr_dump_context;
 using std::ostream;
 using util::persistent;
@@ -60,6 +63,13 @@ virtual	GET_DATA_TYPE_REF_PROTO = 0;
 
 virtual	DATA_EXPR_MAY_EQUIVALENCE_PROTO = 0;
 #endif
+
+#define	UNROLL_RESOLVE_COPY_DATA_PROTO					\
+	count_ptr<const data_expr>					\
+	unroll_resolve_copy(const unroll_context&, 			\
+		const count_ptr<const data_expr>&) const
+
+virtual	UNROLL_RESOLVE_COPY_DATA_PROTO = 0;
 
 };	// end class data_expr
 

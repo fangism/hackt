@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: preal_const.h,v 1.6 2006/04/16 18:36:18 fang Exp $
+	$Id: preal_const.h,v 1.7 2006/06/26 01:46:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
@@ -27,6 +27,7 @@ USING_CONSTRUCT
 class preal_const : public preal_expr, public const_param {
 private:
 	typedef	preal_const		this_type;
+	typedef	preal_expr		parent_type;
 public:
 	typedef	preal_value_type	value_type;
 	/// cannont initialize non-integer static consts in-class
@@ -94,6 +95,10 @@ public:
 
 	count_ptr<const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
+
+	UNROLL_RESOLVE_COPY_PREAL_PROTO;
+protected:
+	using parent_type::unroll_resolve_copy;
 
 	LESS_OPERATOR_PROTO;
 

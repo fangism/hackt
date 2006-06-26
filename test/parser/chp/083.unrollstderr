@@ -1,0 +1,191 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	397
+	5	##ADDR##	chancoll	0	#HEAD#	#TAIL#	49
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	15	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	29
+	20	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	chancoll	0	#HEAD#	#TAIL#	57
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	66	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	69	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	93
+	70	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	chancoll	0	#HEAD#	#TAIL#	57
+	73	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	75	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	76	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	77	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	93
+	80	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	81	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	82	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	83	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	86	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	89	##ADDR##	chancoll	0	#HEAD#	#TAIL#	57
+	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	91	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	92	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	93	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	94	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	95	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	98	##ADDR##	chancoll	0	#HEAD#	#TAIL#	59
+	99	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	100	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	101	##ADDR##	chancoll	0	#HEAD#	#TAIL#	57
+	102	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	103	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    send_indexed = process-definition (defined) send_indexed<
+      pint<> I
+      >(
+        chan?(int<32>) index
+        chan!(int<32>) out
+      )
+      In definition "send_indexed", we have: {
+      Parameters:
+        I = pint<> I
+        x = pint<> x
+
+      Instances:
+        index = chan?(int<32>) index
+        out = chan!(int<32>) out
+        y = int<32> y
+      unroll sequence: 
+        pint<> I
+        chan?(int<32>) index
+        chan!(int<32>) out
+        pint<> x[0..1][0..1]
+        x[0][0] = 1;
+        x[0][1] = 2;
+        x[1][0] = 3;
+        x[1][1] = 4;
+        int<32> y
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              index?(y)
+              out!(x[I][y])
+            }
+          ]
+        }
+      footprint collection: {
+        <0> {
+          channel chan!(int<32>)^0 out (instantiated) = ::send_indexed::out 
+          pint^0 I value: ?
+          channel chan?(int<32>)^0 index (instantiated) = ::send_indexed::index 
+          pint^2 x
+            unrolled index-value pairs: {
+              [0][0] = 1
+              [0][1] = 2
+              [1][0] = 3
+              [1][1] = 4
+            }
+          int<32>^0 y (instantiated) = ::send_indexed::y 
+        }
+        <1> {
+          channel chan!(int<32>)^0 out (instantiated) = ::send_indexed::out 
+          pint^0 I value: ?
+          channel chan?(int<32>)^0 index (instantiated) = ::send_indexed::index 
+          pint^2 x
+            unrolled index-value pairs: {
+              [0][0] = 1
+              [0][1] = 2
+              [1][0] = 3
+              [1][1] = 4
+            }
+          int<32>^0 y (instantiated) = ::send_indexed::y 
+        }
+      }
+      }
+
+  Instances:
+    bar = process send_indexed<1>^0 bar (instantiated) = ::bar (
+      channel chan?(int<32>)^0 index (instantiated) = ::bar.index 
+      channel chan!(int<32>)^0 out (instantiated) = ::bar.out 
+    )
+    foo = process send_indexed<0>^0 foo (instantiated) = ::foo (
+      channel chan?(int<32>)^0 index (instantiated) = ::foo.index 
+      channel chan!(int<32>)^0 out (instantiated) = ::foo.out 
+    )
+}
+

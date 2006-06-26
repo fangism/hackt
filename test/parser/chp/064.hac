@@ -1,0 +1,7 @@
+// "064.hac"
+
+import "063.hac";
+
+chan(int<12>) A, B;
+adjacent_diff<12> differ(A, B);
+

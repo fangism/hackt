@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.15 2006/05/11 22:46:00 fang Exp $
+	$Id: unroll_context.cc,v 1.16 2006/06/26 01:46:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -123,6 +123,7 @@ unroll_context::empty(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	TODO: add recursive dump to parent scope's (next) contexts.  
+	This routine is pretty much only used to aid debugging.  
  */
 ostream&
 unroll_context::dump(ostream& o) const {
@@ -138,7 +139,8 @@ unroll_context::dump(ostream& o) const {
 	if (target_footprint)
 		target_footprint->dump_with_collections(
 			cerr << endl << "footprint: ",
-			dump_flags::default_value);
+			dump_flags::default_value, 
+			expr_dump_context::default_value);
 #if 1
 	// chain dump:
 	if (next) {

@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.16 2006/06/02 05:14:25 fang Exp $
+	$Id: value_collection.h,v 1.17 2006/06/26 01:46:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -226,6 +226,10 @@ virtual	const_index_list
 		value_reference_collection_type&) const
 
 virtual	UNROLL_LVALUE_REFERENCES_PROTO = 0;
+
+protected:
+	count_ptr<nonmeta_instance_reference_base>
+	make_nonmeta_instance_reference(void) const;
 
 public:
 

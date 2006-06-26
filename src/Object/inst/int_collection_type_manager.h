@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.8 2006/03/20 02:41:05 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.9 2006/06/26 01:46:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -113,7 +113,7 @@ protected:
 		\param t type must be resolved constant.
 		\pre first time called for the collection.  
 	 */
-	void
+	good_bool
 	commit_type_first_time(const instance_collection_parameter_type& t);
 
 private:

@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.8 2006/03/15 04:38:16 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.9 2006/06/26 01:46:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -24,6 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/common/extern_templates.h"
 #include "Object/ref/simple_nonmeta_value_reference.tcc"
+#include "Object/traits/classification_tags.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/preal_traits.h"
@@ -33,6 +34,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/int_expr.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/real_expr.h"
+#include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_const.h"
+#include "Object/expr/preal_const.h"
+#include "Object/inst/pint_instance.h"
+#include "Object/inst/pbool_instance.h"
+#include "Object/inst/preal_instance.h"
 #include "common/TODO.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -75,7 +82,12 @@ struct data_type_resolver<pint_tag> {
 						data_value_reference_type;
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
+#if 0
+		FINISH_ME(Fang);
 		return int_traits::int32_type_ptr;
+#else
+		return int_traits::magic_int_type_ptr;
+#endif
 	}
 };      // end struct data_type_resolver
 

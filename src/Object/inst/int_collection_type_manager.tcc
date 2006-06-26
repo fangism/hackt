@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.9 2006/06/03 00:14:59 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.10 2006/06/26 01:46:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -116,11 +116,18 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::check_type(
 		the collection parameter type could've been copied over.  
  */
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
-void
+good_bool
 INT_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 		const instance_collection_parameter_type& tp) {
 	// INVARIANT(!this->type_parameter);
-	this->type_parameter = tp;
+	if (tp > 0) {
+		this->type_parameter = tp;
+		return good_bool(true);
+	} else {
+		cerr << "Error: int<> must be instantiated with a "
+			"positive width, but got: " << tp << endl;
+		return good_bool(false);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

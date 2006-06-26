@@ -1,0 +1,14 @@
+// "063.hac"
+// copy-modified from "032.hac"
+// should pass
+
+template <pint W>
+defproc adjacent_diff(chan?(int<W>) L; chan!(int<W>) R) {
+int<W> x, z;
+chp {
+	L?(x);
+	L?(z);
+	R!(x - z)
+}
+}
+

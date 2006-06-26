@@ -1,13 +1,12 @@
 /**
 	\file "Object/lang/PRS_footprint.h"
-	$Id: PRS_footprint.h,v 1.8 2006/02/04 06:43:18 fang Exp $
+	$Id: PRS_footprint.h,v 1.9 2006/06/26 01:46:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
 #define	__HAC_OBJECT_LANG_PRS_FOOTPRINT_H__
 
 #include <iosfwd>
-#include <valarray>
 #include <vector>
 #include "Object/inst/instance_pool_fwd.h"
 #include "Object/lang/PRS_footprint_expr.h"

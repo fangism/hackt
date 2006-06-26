@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.14 2006/06/02 04:35:14 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.15 2006/06/26 01:46:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -107,10 +107,12 @@ const_range_list::const_range_list(const const_index_list& i) :
 		meta_range_list(), list_type() {
 	const_index_list::const_iterator j(i.begin());
 	for ( ; j!=i.end(); j++) {
-		const count_ptr<const_index> k(*j);
+		const const_index_list::const_index_ptr_type k(*j);
 		NEVER_NULL(k);
-		const count_ptr<pint_const> p(k.is_a<pint_const>());
-		const count_ptr<const_range> r(k.is_a<const_range>());
+		const count_ptr<const pint_const>
+			p(k.is_a<const pint_const>());
+		const count_ptr<const const_range>
+			r(k.is_a<const const_range>());
 		if (p) {
 			const int min_max = p->static_constant_value();
 			push_back(const_range(min_max, min_max));	// copy

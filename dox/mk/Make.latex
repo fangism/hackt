@@ -1,9 +1,10 @@
 # "dox/mk/Make.latex"
+#	vim: ft=automake
 # Include this file *LAST* in latex Makefiles.  
 # This file uses macros defined in "dox/Make.dox-head"
 #	In other words, that file must be included first!
 # Note, this is a configurable Makefile.in, resolved by the top configure script
-#	$Id: Make.latex,v 1.8 2006/05/26 07:26:57 fang Exp $
+#	$Id: Make.latex,v 1.9 2006/06/26 01:45:24 fang Exp $
 
 # useful macros
 # some of these are defined to be specific to this (hackt) project

@@ -1,0 +1,21 @@
+// "085.hac"
+// copy-modified from "084.hac"
+// should pass : meta indices, index of index, with arithmetic
+
+template <pint I, J>
+defproc send_indexed (chan!(int) out) {
+pint x[2];
+x[0] = 1;
+x[1] = 0;
+chp {
+	*[
+		out!(x[(I+x[J]) %2])
+	]
+}
+}
+
+send_indexed<0,0> foo;
+send_indexed<0,1> ick;
+send_indexed<1,0> poo;
+send_indexed<1,1> bar;
+

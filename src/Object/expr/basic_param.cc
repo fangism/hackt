@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.15 2006/04/16 18:36:17 fang Exp $
+ 	$Id: basic_param.cc,v 1.16 2006/06/26 01:45:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -202,6 +202,13 @@ pbool_expr::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const bool_expr>
+pbool_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const bool_expr>& b) const {
+	return unroll_resolve_copy(c, b.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 excl_ptr<param_expression_assignment>
 pbool_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
@@ -283,6 +290,32 @@ count_ptr<const const_param>
 pint_expr::static_constant_param(void) const {
 	return count_ptr<const const_param>(
 		new pint_const(static_constant_value()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const int_expr>
+pint_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const int_expr>& b) const {
+	return unroll_resolve_copy(c, b.is_a<const this_type>());
+}
+
+/**
+	\return resolved constant index expression, or NULL if error.  
+ */
+count_ptr<const const_index>
+pint_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const meta_index_expr>& b) const {
+	return unroll_resolve_copy(c, b.is_a<const this_type>())
+		.is_a<const const_index>();
+}
+
+/**
+	Need this as a final unique overrider of virtual grandparent.  
+ */
+count_ptr<const nonmeta_index_expr_base>
+pint_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const nonmeta_index_expr_base>& b) const {
+	return unroll_resolve_copy(c, b.is_a<const this_type>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -399,6 +432,13 @@ count_ptr<const const_param>
 preal_expr::static_constant_param(void) const {
 	return count_ptr<const const_param>(
 		new preal_const(static_constant_value()));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const real_expr>
+preal_expr::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const real_expr>& b) const {
+	return unroll_resolve_copy(c, b.is_a<const this_type>());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -607,6 +647,17 @@ pint_const::unroll_resolve_index(const unroll_context&) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Constant need not be unrolled, return reference counted copy of self.  
+ */
+count_ptr<const pint_expr>
+pint_const::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const pint_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param p const parameter integer.
 	\pre p must be pint_const or pint_const_collection.
  */
@@ -729,6 +780,17 @@ pbool_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 count_ptr<const_param>
 pbool_const::unroll_resolve_rvalues(const unroll_context& c) const {
 	return count_ptr<const_param>(new pbool_const(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constant need not be unrolled, return reference counted copy of self.  
+ */
+count_ptr<const pbool_expr>
+pbool_const::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -867,6 +929,17 @@ preal_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 count_ptr<const_param>
 preal_const::unroll_resolve_rvalues(const unroll_context& c) const {
 	return count_ptr<const_param>(new preal_const(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Constant need not be unrolled, return reference counted copy of self.  
+ */
+count_ptr<const preal_expr>
+preal_const::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const preal_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

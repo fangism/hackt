@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.9 2006/06/03 00:15:00 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.10 2006/06/26 01:46:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -128,11 +128,13 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::check_type(
 	TODO: handle typedef'd enums!
  */
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
-void
+good_bool
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::commit_type_first_time(
 		const instance_collection_parameter_type& t) {
+	NEVER_NULL(t);
 	INVARIANT(!this->type_parameter);
 	this->type_parameter = t;
+	return good_bool(true);
 }
 
 //=============================================================================

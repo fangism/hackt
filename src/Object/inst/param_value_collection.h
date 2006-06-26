@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.12 2006/06/02 20:15:21 fang Exp $
+	$Id: param_value_collection.h,v 1.13 2006/06/26 01:46:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -84,8 +84,8 @@ virtual	count_ptr<meta_value_reference_base>
 	make_meta_value_reference(void) const = 0;
 
 private:
-	count_ptr<nonmeta_instance_reference_base>
-	make_nonmeta_instance_reference(void) const;
+virtual	count_ptr<nonmeta_instance_reference_base>
+	make_nonmeta_instance_reference(void) const = 0;
 
 public:
 	/** should just assert fail, forbid reference to param members */

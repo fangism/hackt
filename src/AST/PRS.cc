@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.13 2006/05/08 06:12:03 fang Exp $
+	$Id: PRS.cc,v 1.14 2006/06/26 01:45:46 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -331,17 +331,17 @@ loop::check_rule(context& c) const {
 	NEVER_NULL(ret);
 
 	// copied from body::check_rule
-	const never_ptr<definition_base> d(c.get_current_open_definition());
+	// const never_ptr<definition_base> d(c.get_current_open_definition());
 	checked_rules_type checked_rules;
 	rules->check_list(checked_rules, &body_item::check_rule, c);
-	checked_rules_type::const_iterator
+	const checked_rules_type::const_iterator
 		null_iter(find(checked_rules.begin(), checked_rules.end(), 
 			body_item::return_type()));
 	if (null_iter == checked_rules.end()) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
-		for ( ; i!=e; i++) {
+		for ( ; i!=e; ++i) {
 			excl_ptr<entity::PRS::rule>
 				xfer(i->exclusive_release());
 //			xfer->check();		// paranoia
@@ -355,7 +355,7 @@ loop::check_rule(context& c) const {
 		// THROW_EXIT;
 		return body_item::return_type();
 	}
-}
+}	// end method loop::check_rule
 
 //=============================================================================
 // class body method definitions
@@ -401,7 +401,7 @@ if (rules) {
 	NEVER_NULL(pd);
 	checked_rules_type checked_rules;
 	rules->check_list(checked_rules, &body_item::check_rule, c);
-	checked_rules_type::const_iterator
+	const checked_rules_type::const_iterator
 		null_iter(find(checked_rules.begin(), checked_rules.end(), 
 			body_item::return_type()));
 	if (null_iter == checked_rules.end()) {

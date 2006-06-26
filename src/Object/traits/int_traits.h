@@ -2,13 +2,14 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.11 2006/04/11 07:54:45 fang Exp $
+	$Id: int_traits.h,v 1.12 2006/06/26 01:46:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
 #define	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
+#include "Object/traits/pint_traits.h"
 
 namespace HAC {
 namespace entity {
@@ -20,6 +21,9 @@ struct class_traits<int_tag> {
 	struct rebind {	typedef	class_traits<Tag>	type; };
 
 	typedef	int_tag				tag_type;
+	/// inherits some traits from corresponding meta-type
+	typedef	pint_tag			meta_tag_type;
+	typedef	class_traits<meta_tag_type>	meta_traits_type;
 	static const char			tag_name[];
 	typedef	int_instance			instance_type;
 	typedef	int_instance_alias_base		instance_alias_base_type;
@@ -28,11 +32,19 @@ struct class_traits<int_tag> {
 	static const bool		has_substructure = false;
 	static const bool		can_internally_alias = false;
 	static const bool		has_production_rules = false;
+	enum {		is_nonmeta_data_lvalue = true		};
 	typedef	instance_alias_info_empty
 					instance_alias_relaxed_actuals_type;
 	typedef	int_instance_alias_info	instance_alias_info_type;
 	/// defined in "Object/inst/int_instance_collection.h"
 	class state_instance_base;
+
+	template <size_t D>
+	struct value_array {
+		typedef typename meta_traits_type::
+			template value_array<D>::type	type;
+	};
+
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
@@ -59,6 +71,7 @@ struct class_traits<int_tag> {
 	 */
 	typedef	int_value_type			data_value_type;
 	typedef	int_expr			data_expr_base_type;
+	typedef	meta_traits_type::const_expr_type	const_expr_type;
 	typedef	simple_int_nonmeta_instance_reference
 					simple_nonmeta_instance_reference_type;
 	typedef	simple_int_meta_instance_reference
@@ -93,6 +106,12 @@ struct class_traits<int_tag> {
 		for 'built_in_type_ptr' because the definition is a template.  
 	 */
 	static const type_ref_ptr_type		int32_type_ptr;
+
+	/**
+		Experimental hack: int<0> is used as the data type
+		of pints for the sake of nonmeta (rvalue) classification.  
+	 */
+	static const type_ref_ptr_type		magic_int_type_ptr;
 };	// end struct class_traits<int_tag>
 
 //=============================================================================

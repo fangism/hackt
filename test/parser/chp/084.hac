@@ -1,0 +1,24 @@
+// "084.hac"
+// copy-modified from "083.hac"
+// should pass : meta indices
+
+template <pint I, J>
+defproc send_indexed (chan!(int) out) {
+pint x[2][2];
+// x = { { 1, 2}, {3, 4} };
+x[0][0] = 1;
+x[0][1] = 2;
+x[1][0] = 3;
+x[1][1] = 4;
+chp {
+	*[
+		out!(x[I][J])	// meta-only
+	]
+}
+}
+
+send_indexed<0,0> foo;
+send_indexed<0,1> ick;
+send_indexed<1,0> poo;
+send_indexed<1,1> bar;
+

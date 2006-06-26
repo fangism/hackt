@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-prsim-ckpt.sh.in"
-#	$Id: hackt-prsim-ckpt.sh.in,v 1.2 2006/05/06 04:19:01 fang Exp $
+#	$Id: hackt-prsim-ckpt.sh.in,v 1.3 2006/06/26 01:46:53 fang Exp $
 # Template test script for comparing checking checkpoint consistency
 # TODO: add more status information, such as breakpoints, watchpoints
 
@@ -44,8 +44,9 @@ rm $outroot.prsimckpt-tmp
 
 if test ! -f $outroot.prsimckpt
 then
-	@ECHO@ "No $outroot.prsimckpt checkpoint generated, skipping test."
-	exit 0
+#	@ECHO@ "No $outroot.prsimckpt checkpoint generated, skipping test."
+# The exit code for auto-test SKIP is 77
+	exit 77
 fi
 
 # load first checkpoint and produce duplicate checkpoint

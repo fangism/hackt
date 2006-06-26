@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.9 2006/03/20 02:41:05 fang Exp $
+	$Id: pint_expr.h,v 1.10 2006/06/26 01:46:06 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -34,6 +34,8 @@ using util::memory::never_ptr;
 class pint_expr : virtual public param_expr, virtual public meta_index_expr, 
 		public int_expr {
 	typedef	pint_expr			this_type;
+	typedef	int_expr			nonmeta_parent_type;
+	typedef	meta_index_expr			index_parent_type;
 public:
 	typedef	pint_tag			tag_type;
 	/**
@@ -104,6 +106,20 @@ virtual	good_bool
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
+
+#define	UNROLL_RESOLVE_COPY_PINT_PROTO					\
+	count_ptr<const pint_expr>					\
+	unroll_resolve_copy(const unroll_context&,			\
+		const count_ptr<const pint_expr>&) const
+
+	UNROLL_RESOLVE_COPY_INT_PROTO;
+	UNROLL_RESOLVE_COPY_META_INDEX_PROTO;
+	UNROLL_RESOLVE_COPY_NONMETA_INDEX_PROTO;
+
+virtual UNROLL_RESOLVE_COPY_PINT_PROTO = 0;
+protected:
+	using nonmeta_parent_type::unroll_resolve_copy;
+	// using index_parent_type::unroll_resolve_copy;
 
 protected:
 	excl_ptr<param_expression_assignment>

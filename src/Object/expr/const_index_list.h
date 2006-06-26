@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.9 2006/02/21 04:48:22 fang Exp $
+	$Id: const_index_list.h,v 1.10 2006/06/26 01:45:58 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -36,10 +36,10 @@ using util::memory::count_ptr;
 	members must be reference counted.  
  */
 class const_index_list : public meta_index_list, 
-		private vector<count_ptr<const_index> > {
+		private vector<count_ptr<const const_index> > {
 	typedef	const_index_list		this_type;
 public:
-	typedef	count_ptr<const_index>		const_index_ptr_type;
+	typedef	count_ptr<const const_index>		const_index_ptr_type;
 	typedef	const_index_ptr_type		value_type;
 protected:
 	/** need list of pointers b/c const_index is abstract */
@@ -86,6 +86,8 @@ public:
 	using parent_type::end;
 	using parent_type::rbegin;
 	using parent_type::rend;
+	using parent_type::front;
+	using parent_type::back;
 
 	void
 	push_back(const const_index_ptr_type& i);

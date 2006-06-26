@@ -1,0 +1,13 @@
+// "073.hac"
+// copy-modified from "069.hac"
+// should pass : can't assign bool to pbool
+
+defproc badchp(bool b) {
+pbool c;
+chp {
+	*[ c := b ]
+}
+}
+
+badchp X;
+

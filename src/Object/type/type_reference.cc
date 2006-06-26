@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.14 2006/03/20 02:41:09 fang Exp $
+ 	$Id: type_reference.cc,v 1.15 2006/06/26 01:46:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -537,6 +537,11 @@ data_type_reference::may_be_collectibly_type_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Checks connectivity.  
+	This is called at parse-tree-check time and is conservative.  
+	Precise type comparison occurs at unroll-time.  
+ */
 bool
 data_type_reference::may_be_connectibly_type_equivalent(
 		const fundamental_type_reference& ft) const {
@@ -545,6 +550,61 @@ data_type_reference::may_be_connectibly_type_equivalent(
 	const canonical_compare_result_type eq(*this, t);
 	if (!eq.equal)
 		return false;
+	else	return eq.lt->template_args.may_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Used for checking statements of the form a:=b (CHP).  
+	Need to make an exception for int<W> := int<0>.  
+	\return true if types of expression may be assignable.  
+ */
+bool
+data_type_reference::may_be_assignably_type_equivalent(
+		const data_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	if (base_type_def == &int_traits::built_in_definition) {
+		// allow rvalue's width to be zero as a special case
+		// to allow parameters ints as rvalues
+		const count_ptr<const pint_const>
+			width(eq.rt->template_args[0].is_a<const pint_const>());
+		return (width && width->static_constant_value() == 0) ||
+			eq.lt->template_args.may_be_strict_equivalent(
+				eq.rt->template_args);
+	}
+	else	return eq.lt->template_args.may_be_strict_equivalent(
+			eq.rt->template_args);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Used for checking statements of the form 'a op b' (CHP).  
+	Need to make an exception for int<W> := int<0>.  
+	\return true if types of expression may be assignable.  
+ */
+bool
+data_type_reference::may_be_binop_type_equivalent(
+		const data_type_reference& ft) const {
+	STACKTRACE_VERBOSE;
+	const this_type& t(IS_A(const this_type&, ft));	// assert cast
+	const canonical_compare_result_type eq(*this, t);
+	if (!eq.equal)
+		return false;
+	if (base_type_def == &int_traits::built_in_definition) {
+		// allow lhs or rhs's integer width to be 0
+		const count_ptr<const pint_const>
+			lw(eq.lt->template_args[0].is_a<const pint_const>()),
+			rw(eq.rt->template_args[0].is_a<const pint_const>());
+		return (lw && lw->static_constant_value() == 0) ||
+			(rw && rw->static_constant_value() == 0) ||
+			eq.lt->template_args.may_be_strict_equivalent(
+				eq.rt->template_args);
+	}
 	else	return eq.lt->template_args.may_be_strict_equivalent(
 			eq.rt->template_args);
 }
@@ -603,10 +663,12 @@ data_type_reference::unroll_port_instances(const unroll_context& c,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Convenience function for creating data int type-references.
+	\param w the integer width, here allowed to be 0.  
 	\returns newly allocated integer type reference.
  */
 data_type_reference*
 data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
+	INVARIANT(w >= 0);
 	// is an excl_ptr, incidentally
 	const fundamental_type_reference::template_args_ptr_type
 		width_params(new const_param_expr_list(
@@ -1022,10 +1084,11 @@ builtin_channel_type_reference::make_unroll_context(void) const {
 count_ptr<const channel_type_reference_base>
 builtin_channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("builtin_channel_type_reference::unroll_resolve()");
-	typedef	count_ptr<const this_type>	return_type;
+	typedef	count_ptr<this_type>	return_type;
 	INVARIANT(!template_args);
-	const count_ptr<this_type> ret(new this_type);
+	const return_type ret(new this_type);
 	NEVER_NULL(ret);
+	ret->direction = direction;
 	util::reserve(ret->datatype_list, datatype_list.size());
 	transform(datatype_list.begin(), datatype_list.end(),
 		back_inserter(ret->datatype_list), 
@@ -1077,6 +1140,7 @@ builtin_channel_type_reference::make_instance_collection(
 canonical_generic_chan_type
 builtin_channel_type_reference::make_canonical_type(void) const {
 	canonical_generic_chan_type ret;
+	ret.direction = direction;
 	util::reserve(ret.datatype_list, datatype_list.size());
 	transform(datatype_list.begin(), datatype_list.end(),
 		back_inserter(ret.datatype_list), 
@@ -1238,7 +1302,7 @@ channel_type_reference::make_unroll_context(void) const {
 count_ptr<const channel_type_reference_base>
 channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE("channel_type_reference::unroll_resolve()");
-	typedef	count_ptr<const this_type>	return_type;
+	typedef	count_ptr<this_type>	return_type;
 	// can this code be factored out to type_ref_base?
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
@@ -1254,6 +1318,7 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 			const return_type
 				ret(new this_type(base_chan_def, actuals));
 			NEVER_NULL(ret);
+			ret->direction = direction;
 			return (ret->must_be_valid().good ?
 				ret : return_type(NULL));
 		} else {
@@ -1264,6 +1329,7 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 		// need to check must_be_valid?
 		const return_type ret(new this_type(base_chan_def));
 		INVARIANT(ret->must_be_valid().good);
+		ret->direction = direction;
 		return ret;
 	}
 }
@@ -1368,7 +1434,10 @@ channel_type_reference::make_instance_collection(
  */
 canonical_generic_chan_type
 channel_type_reference::make_canonical_type(void) const {
-	return base_chan_def->make_canonical_type(template_args);
+	canonical_generic_chan_type
+		ret(base_chan_def->make_canonical_type(template_args));
+	ret.set_direction(direction);
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

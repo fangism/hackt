@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.126 2006/06/01 20:47:20 fang Exp $
+#	$Id: Makefile.am,v 1.127 2006/06/26 01:45:41 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -52,34 +52,34 @@ CLEANFILES += $(bin_SCRIPTS)
 
 # no need to use $(DESTDIR) (typically used for a staged install)
 # installcheck is never run on the staged install, only on the final
-haco:
+haco: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` compile \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
-hacunroll:
+hacunroll: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` unroll \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
-haccreate:
+haccreate: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` create \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
-hacalloc:
+hacalloc: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` alloc \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
-hflat:
+hflat: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` cflat \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
-hacprsim:
+hacprsim: $(top_builddir)/config.status
 	@$(ECHO) "#!$(SH_PATH)" > $@
-	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim $$""@" >> $@
+	$(ECHO) "exec $(bindir)/`$(INSTALL_TRANSFORM_SH) hackt` prsim \"$$""@\"" >> $@
 	@$(CHMOD) +x $@
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -302,7 +302,8 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 
 OBJECT_REF_CC_FILES = \
 	Object/ref/instance_reference.cc \
-	Object/ref/instance_reference_datatype.cc
+	Object/ref/instance_reference_datatype.cc \
+	Object/expr/nonmeta_param_value_reference.cc
 
 OBJECT_REF_TCC_FILES = \
 	Object/ref/aggregate_meta_instance_reference.tcc \
@@ -399,7 +400,6 @@ OBJECT_CC_NO_H_FILES = \
 	Object/expr/meta_range.cc \
 	Object/expr/meta_range_list.cc \
 	Object/expr/meta_param_value_reference.cc \
-	Object/expr/nonmeta_param_value_reference.cc \
 	Object/expr/operators.cc \
 	Object/expr/data_expr.cc \
 	Object/type/type_reference.cc
@@ -514,6 +514,8 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/expr/struct_expr.h \
 	Object/expr/types.h \
 	Object/lang/cflat_visitee.h \
+	Object/lang/CHP_footprint.h \
+	Object/lang/CHP_footprint_expr.h \
 	Object/lang/PRS_enum.h \
 	Object/lang/PRS_footprint_expr.h \
 	Object/lang/PRS_footprint_expr_pool_fwd.h \
@@ -678,6 +680,7 @@ libhacktsim_la_SOURCES = $(SIM_CC_FILES) $(SIM_TCC_FILES) $(SIM_H_FILES)
 # any other files that depend on automatically generated headers
 # should have explicit dependencies.  
 # unfornately, it doesn't detect these dependenvies until AFTER first compile
+common/ICE.lo common/ICE.o: cvstag.h
 main/main_funcs.lo main/main_funcs.o: parser/$(HACKT_PARSE_ROOT)-real.h
 main/version.lo main/version.o: $(AUTOHEADERS) $(VERSIONHEADERS) \
 	parser/yacc_version.h lexer/lex_version.h

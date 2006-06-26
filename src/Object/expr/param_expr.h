@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.10 2006/02/21 04:48:25 fang Exp $
+	$Id: param_expr.h,v 1.11 2006/06/26 01:46:04 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -39,9 +39,9 @@ using util::memory::excl_ptr;
  */
 class param_expr : virtual public persistent {
 	typedef	param_expr			this_type;
-public:
+protected:
 	param_expr() : persistent() { }
-
+public:
 virtual	~param_expr() { }
 
 virtual	ostream&

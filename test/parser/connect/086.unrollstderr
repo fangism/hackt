@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	198
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	202
 	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
 	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
@@ -25,28 +25,22 @@ Persistent Object Manager text dump:
 	21	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
 	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	24	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	39	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	30	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	31	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	32	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
+	35	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

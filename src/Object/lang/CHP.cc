@@ -1,13 +1,21 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.7 2006/03/20 02:41:06 fang Exp $
+	$Id: CHP.cc,v 1.8 2006/06/26 01:46:14 fang Exp $
  */
 
+#define	ENABLE_STACKTRACE			0
+
+#include <iterator>
+#include <algorithm>
+#include <exception>
+// #include <functional>
 #include "Object/lang/CHP.h"
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/int_expr.h"
+#include "Object/expr/meta_range_expr.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/def/footprint.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
@@ -18,9 +26,18 @@
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/pint_value_collection.h"
+#include "Object/unroll/unroll_context.h"
+
+#include "Object/expr/const_range.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/def/template_formals_manager.h"
+
 #include "util/persistent_object_manager.tcc"
+#include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 #include "util/indent.h"
+#include "util/IO_utils.tcc"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::action_sequence,
@@ -33,6 +50,8 @@ SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::deterministic_selection,
 		"CHP-deterministic-selection")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::nondeterministic_selection,
 		"CHP-nondeterministic-selection")
+SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::metaloop_selection,
+		"CHP-metaloop-selection")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::assignment,
 		"CHP-assignment")
 SPECIALIZE_UTIL_WHAT(HAC::entity::CHP::condition_wait,
@@ -57,6 +76,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::nondeterministic_selection, CHP_NONDET_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::CHP::metaloop_selection, CHP_SELECT_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::assignment, CHP_ASSIGNMENT_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::CHP::condition_wait, CHP_WAIT_TYPE_KEY, 0)
@@ -73,9 +94,58 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 namespace CHP {
+using std::equal;
+using std::find;
+using std::transform;
+using std::back_inserter;
 using util::auto_indent;
 using util::persistent_traits;
 #include "util/using_ostream.h"
+using util::write_value;
+using util::read_value;
+//=============================================================================
+// class action method definitions
+
+/**
+	Unroll-copies the action pointer, using shallow copy if
+	nothing changed, deep-copy if something internal changed.  
+	\throw exception if there is an error.  
+ */
+action_ptr_type
+action::transformer::operator () (const action_ptr_type& a) const {
+	NEVER_NULL(a);
+#if 0
+	const unroll_return_type r(a->unroll(_context));
+	if (r.changed && !r.copy) {
+		// expect to already have error message
+		throw std::exception();
+	}
+	return (r.changed ? r.copy : a);
+#else
+	return a->unroll_resolve_copy(_context, a);
+#endif
+}
+
+//=============================================================================
+// struct data_expr_unroll_resolver method definitions
+
+count_ptr<const data_expr>
+data_expr_unroll_resolver::operator () (
+		const count_ptr<const data_expr>& e) const {
+	NEVER_NULL(e);
+	return e->unroll_resolve_copy(_context, e);
+}
+
+//=============================================================================
+// struct data_ref_unroll_resolver method definitions
+
+count_ptr<const data_nonmeta_instance_reference>
+data_ref_unroll_resolver::operator () (
+	const count_ptr<const data_nonmeta_instance_reference>& e) const {
+	NEVER_NULL(e);
+	return e->unroll_resolve_copy(_context, e);
+}
+
 //=============================================================================
 // class action_sequence method definitions
 
@@ -97,6 +167,39 @@ action_sequence::dump(ostream& o, const expr_dump_context& c) const {
 			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+action_sequence::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const count_ptr<this_type> ret(new this_type);
+	NEVER_NULL(ret);
+#if 0
+	try {
+		transform(begin(), end(), back_inserter(*ret), 
+			action::transformer(c)
+		);
+	} catch (...) {
+		cerr << "Error unrolling action_sequence." << endl;
+		return unroll_action_return_type();
+	}
+	const bool eq = equal(begin(), end(), ret->begin());
+	return unroll_action_return_type(!eq, ret);
+#else
+	transform(begin(), end(), back_inserter(*ret), action::transformer(c));
+	const const_iterator
+		f(find(ret->begin(), ret->end(), action_ptr_type(NULL)));
+	if (f != ret->end()) {
+		cerr << "Error unrolling action_sequence." << endl;
+		return action_ptr_type(NULL);
+	}
+	if (equal(begin(), end(), ret->begin()))
+		return p;
+	else	return ret;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,17 +256,98 @@ concurrent_actions::~concurrent_actions() { }
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(concurrent_actions)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just the core dump routine, auto-indented with terminating newline.  
+ */
+ostream&
+concurrent_actions::__dump(ostream& o, const expr_dump_context& c) const {
+	const_iterator i(begin());
+	const const_iterator e(end());
+	for ( ; i!=e; i++) {
+		(*i)->dump(o << auto_indent, c) << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 concurrent_actions::dump(ostream& o, const expr_dump_context& c) const {
 	o << "concurrent: {" << endl;
 	{
 		INDENT_SECTION(o);
-		const_iterator i(begin());
-		const const_iterator e(end());
-		for ( ; i!=e; i++)
-			(*i)->dump(o << auto_indent, c) << endl;
+		__dump(o, c);
 	}
 	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Used for dumping resolved footprint, called from footprint::dump.
+	\param f parent footprint (currently unused)
+ */
+ostream&
+concurrent_actions::dump(ostream& o, const entity::footprint& f,
+		const expr_dump_context& c) const {
+if (!empty()) {
+	o << auto_indent << "resolved concurrent actions:" << endl;
+	{
+		INDENT_SECTION(o);
+		__dump(o, c);
+	}
+}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+concurrent_actions::__unroll(const unroll_context& c, this_type& r) const {
+	transform(begin(), end(), back_inserter(r), action::transformer(c));
+	const const_iterator
+		f(find(r.begin(), r.end(), action_ptr_type(NULL)));
+	if (f != r.end()) {
+		cerr << "Error unrolling action_sequence." << endl;
+		// cerr << "Error unrolling action list." << endl;
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Creates a partially-deep copy of the language tree, 
+	re-using references to unchanged members where possible.  
+	If unrolling any list member results in a different pointer, 
+	then a new sequence is created.  
+	Purpose: resolve all meta-parameter dependents to constants.  
+	\return pointer to self-if unchanged, pointer to newly
+		allocated sequence if changed, NULL if error encountered.  
+ */
+action_ptr_type
+concurrent_actions::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const count_ptr<this_type> ret(new this_type);
+	NEVER_NULL(ret);
+	if (__unroll(c, *ret).good) {
+		if (equal(begin(), end(), ret->begin()))
+			return p;
+		else	return ret;
+	} else {
+		return action_ptr_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by process_definition::create_complete_type().
+ */
+good_bool
+concurrent_actions::unroll(const unroll_context& c,
+		entity::footprint& f) const {
+	STACKTRACE_VERBOSE;
+	this_type& t(f.get_chp_footprint());
+	return __unroll(c, t);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -211,6 +395,16 @@ concurrent_actions::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// struct guarded_action::unroll_resolver method definitions
+
+count_ptr<const guarded_action>
+guarded_action::unroll_resolver::operator () (
+		const count_ptr<const guarded_action>& g) const {
+	NEVER_NULL(g);
+	return g->unroll_resolve_copy(_context, g);
+}
+
+//=============================================================================
 // class guarded_action method definitions
 
 guarded_action::guarded_action() : persistent(), guard(), stmt() { }
@@ -236,6 +430,34 @@ guarded_action::dump(ostream& o, const expr_dump_context& c) const {
 	if (stmt)
 		return stmt->dump(o, c);
 	else 	return o << "skip";
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unroll-resolves the data-expression and action.  
+ */
+guarded_action::unroll_return_type
+guarded_action::unroll_resolve_copy(const unroll_context& c, 
+		const count_ptr<const this_type>& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const guard_ptr_type g(guard->unroll_resolve_copy(c, guard));
+	if (!g) {
+		cerr << "Error resolving guard expression." << endl;
+		return unroll_return_type(NULL);
+	}
+	const action_ptr_type a(stmt->unroll_resolve_copy(c, stmt));
+	if (!a) {
+		cerr << "Error resolving action statement of guarded action."
+			<< endl;
+		return unroll_return_type(NULL);
+	}
+	if (g == guard && a == stmt) {
+		// resolving resulted in no change
+		return p;
+	} else {
+		return unroll_return_type(new this_type(g, a));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -265,6 +487,24 @@ guarded_action::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+/**
+	Helper routine.  
+ */
+good_bool
+unroll_resolve_selection_list(const selection_list_type& s, 
+		const unroll_context& c, selection_list_type& d) {
+	typedef	selection_list_type::value_type	ga_ptr_type;
+	transform(s.begin(), s.end(), back_inserter(d),
+		guarded_action::unroll_resolver(c));
+	const selection_list_type::const_iterator
+		f(find(d.begin(), d.end(), ga_ptr_type(NULL)));
+	if (f != d.end()) {
+		return good_bool(false);
+	}
+	return good_bool(true);
+}
+
+//=============================================================================
 // class deterministic_selection method definitions
 
 deterministic_selection::deterministic_selection() :
@@ -286,6 +526,26 @@ deterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+deterministic_selection::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const count_ptr<this_type> r(new this_type);
+	if (!unroll_resolve_selection_list(*this, c, *r).good) {
+		cerr << "Error unrolling deterministic selection." << endl;
+		return action_ptr_type(NULL);
+	}
+	if (equal(begin(), end(), r->begin())) {
+		// return self-copy
+		return p;
+	} else {
+		// return newly constructed copy
+		return r;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -337,6 +597,26 @@ nondeterministic_selection::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+nondeterministic_selection::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const count_ptr<this_type> r(new this_type);
+	if (!unroll_resolve_selection_list(*this, c, *r).good) {
+		cerr << "Error unrolling nondeterministic selection." << endl;
+		return action_ptr_type(NULL);
+	}
+	if (equal(begin(), end(), r->begin())) {
+		// return self-copy
+		return p;
+	} else {
+		// return newly constructed copy
+		return r;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 nondeterministic_selection::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -361,6 +641,132 @@ nondeterministic_selection::load_object(const persistent_object_manager& m,
 }
 
 //=============================================================================
+// class metaloop_selection method definitions
+
+metaloop_selection::metaloop_selection() :
+		action(), meta_loop_base(), body(), selection_type(false) {
+}
+
+metaloop_selection::metaloop_selection(const ind_var_ptr_type& i, 
+		const range_ptr_type& r, const body_ptr_type& b, 
+		const bool t) :
+		action(), meta_loop_base(i, r), body(b), selection_type(t) {
+	NEVER_NULL(body);
+}
+
+metaloop_selection::~metaloop_selection() { }
+
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(metaloop_selection)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+metaloop_selection::dump(ostream& o, const expr_dump_context& c) const {
+	o << (body ? "deterministic " : "nondeterministic ");
+	o << ind_var->get_name() << ':';
+	range->dump(o, entity::expr_dump_context(c)) <<
+		": {" << endl;
+	{
+		INDENT_SECTION(o);
+		body->dump(o << auto_indent, c) << endl;
+	}
+	return o << auto_indent << '}';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This expands a meta-loop into unrolled form.  
+	Partially ripped from entity::PRS::rule_loop::unroll().  
+ */
+action_ptr_type
+metaloop_selection::unroll_resolve_copy(const unroll_context& c,
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	selection_list_type result;	// unroll into here
+	const_range cr;
+	if (!range->unroll_resolve_range(c, cr).good) {
+		cerr << "Error resolving range expression: ";
+		range->dump(cerr, entity::expr_dump_context::default_value)
+			<< endl;
+		return action_ptr_type(NULL);
+	}
+	const pint_value_type min = cr.lower();
+	const pint_value_type max = cr.upper();
+	// if range is empty or backwards, then what?
+	if (min > max) {
+		cerr << "Error: loop range of metaloop_selection is empty."
+			<< endl;
+		return action_ptr_type(NULL);
+	}
+	// using unroll_context's template_formal/actual mechanism.  
+	template_formals_manager tfm;
+	const never_ptr<const pint_scalar> pvc(&*ind_var);
+	tfm.add_strict_template_formal(pvc);
+
+	const count_ptr<pint_const> ind(new pint_const(min));
+	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
+	NEVER_NULL(al);
+	al->push_back(ind);
+	const template_actuals::const_arg_list_ptr_type sl(NULL);
+	const template_actuals ta(al, sl);
+	unroll_context cc(ta, tfm);
+	cc.chain_context(c);
+	pint_value_type ind_val = min;
+	for ( ; ind_val <= max; ind_val++) {
+		*ind = ind_val;
+		const selection_list_type::value_type	// guarded_action
+			g(body->unroll_resolve_copy(c, body));
+		if (!g) {
+			cerr << "Error resolving metaloop_selection at "
+				"iteration " << ind_val << "." << endl;
+			return action_ptr_type(NULL);
+		}
+		result.push_back(g);
+	}
+	if (selection_type) {
+		const count_ptr<deterministic_selection>
+			ret(new deterministic_selection);
+		NEVER_NULL(ret);
+		ret->swap(result);
+		return ret;
+	} else {
+		const count_ptr<nondeterministic_selection>
+			ret(new nondeterministic_selection);
+		NEVER_NULL(ret);
+		ret->swap(result);
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_selection::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	meta_loop_base::collect_transient_info_base(m);
+	body->collect_transient_info(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_selection::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	meta_loop_base::write_object_base(m, o);
+	m.write_pointer(o, body);
+	write_value(o, selection_type);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+metaloop_selection::load_object(const persistent_object_manager& m,
+		istream& i) {
+	meta_loop_base::load_object_base(m, i);
+	m.read_pointer(i, body);
+	read_value(i, selection_type);
+}
+
+//=============================================================================
 // class assignment method definitions
 
 assignment::assignment() : parent_type(), lval(), rval() { }
@@ -380,6 +786,23 @@ ostream&
 assignment::dump(ostream& o, const expr_dump_context& c) const {
 	// const expr_dump_context& c(expr_dump_context::default_value);
 	return rval->dump(lval->dump(o, c) << " := ", c);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+assignment::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const lval_ptr_type lc(lval->unroll_resolve_copy(c, lval));
+	const rval_ptr_type rc(rval->unroll_resolve_copy(c, rval));
+	if (!lc || !rc) {
+		return action_ptr_type(NULL);
+	} else if (lc == lval && rc == rval) {
+		return p;
+	} else {
+		return action_ptr_type(new this_type(lc, rc));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -427,6 +850,23 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(condition_wait)
 ostream&
 condition_wait::dump(ostream& o, const expr_dump_context& c) const {
 	return cond->dump(o << '[', c) << ']';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+condition_wait::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const cond_ptr_type g(cond->unroll_resolve_copy(c, cond));
+	if (!g) {
+		cerr << "Error resolving condition-wait." << endl;
+		return action_ptr_type(NULL);
+	} else if (g == cond) {
+		return p;
+	} else {
+		return action_ptr_type(new this_type(g));
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -481,6 +921,39 @@ channel_send::dump(ostream& o, const expr_dump_context& c) const {
 		(*i)->dump(o << ',', c);
 	}
 	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+channel_send::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const chan_ptr_type cc(chan->unroll_resolve_copy(c, chan));
+	expr_list_type exprs_c;
+	transform(exprs.begin(), exprs.end(), back_inserter(exprs_c), 
+		data_expr_unroll_resolver(c));
+	if (!cc) {
+		cerr << "Error resolving channel reference of send." << endl;
+		return action_ptr_type(NULL);
+	}
+	typedef	expr_list_type::const_iterator	const_iterator;
+	const const_iterator
+		f(find(exprs_c.begin(), exprs_c.end(), data_ptr_type(NULL)));
+	if (f != exprs_c.end()) {
+		cerr << "At least one error resolving arguments of send."
+			<< endl;
+		return action_ptr_type(NULL);
+	}
+	if (cc == chan && equal(exprs.begin(), exprs.end(), exprs_c.begin())) {
+		// resolved members match exactly, return copy
+		return p;
+	} else {
+		count_ptr<this_type> ret(new this_type(cc));
+		NEVER_NULL(ret);
+		ret->exprs.swap(exprs_c);	// faster than copying/assigning
+		return ret;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -541,6 +1014,39 @@ channel_receive::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+channel_receive::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const chan_ptr_type cc(chan->unroll_resolve_copy(c, chan));
+	inst_ref_list_type refs;
+	transform(insts.begin(), insts.end(), back_inserter(refs), 
+		data_ref_unroll_resolver(c));
+	if (!cc) {
+		cerr << "Error resolving channel reference of send." << endl;
+		return action_ptr_type(NULL);
+	}
+	typedef	inst_ref_list_type::const_iterator	const_iterator;
+	const const_iterator
+		f(find(refs.begin(), refs.end(), inst_ref_ptr_type(NULL)));
+	if (f != refs.end()) {
+		cerr << "At least one error resolving arguments of send."
+			<< endl;
+		return action_ptr_type(NULL);
+	}
+	if (cc == chan && equal(insts.begin(), insts.end(), refs.begin())) {
+		// resolved members match exactly, return copy
+		return p;
+	} else {
+		count_ptr<this_type> ret(new this_type(cc));
+		NEVER_NULL(ret);
+		ret->insts.swap(refs);	// faster than copying/assigning
+		return ret;
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 channel_receive::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -595,6 +1101,26 @@ do_forever_loop::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+do_forever_loop::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const action_ptr_type b(body->unroll_resolve_copy(c, body));
+	if (!b) {
+		cerr << "Error resolving do-forever loop." << endl;
+		return action_ptr_type(NULL);
+	}
+	if (b == body) {
+		// return self-copy
+		return p;
+	} else {
+		// return newly constructed copy
+		return action_ptr_type(new this_type(b));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 do_forever_loop::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -639,6 +1165,26 @@ do_while_loop::dump(ostream& o, const expr_dump_context& c) const {
 			(*i)->dump(o << auto_indent, c) << endl;
 	}
 	return o << auto_indent << ']';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+action_ptr_type
+do_while_loop::unroll_resolve_copy(const unroll_context& c, 
+		const action_ptr_type& p) const {
+	STACKTRACE_VERBOSE;
+	INVARIANT(p == this);
+	const count_ptr<this_type> r(new this_type);
+	if (!unroll_resolve_selection_list(*this, c, *r).good) {
+		cerr << "Error unrolling do-while loop." << endl;
+		return action_ptr_type(NULL);
+	}
+	if (equal(begin(), end(), r->begin())) {
+		// return self-copy
+		return p;
+	} else {
+		// return newly constructed copy
+		return r;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

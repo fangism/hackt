@@ -1,12 +1,11 @@
 # "mk/hackt-suffixes.am"
-#	$Id: hackt-suffixes.am,v 1.2 2006/02/10 21:50:32 fang Exp $
+#	vim: ft=automake
+#	$Id: hackt-suffixes.am,v 1.3 2006/06/26 01:45:33 fang Exp $
 # automake-style Makefile excerpt for adding hackt suffix rules.  
 # Include this file in a Makefile.am, somewhere after SUFFIXES
 #	has already been defined.  
 # The counterpart file is "mk/hackt-rules.am".
 
-SUFFIXES += .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
-	.hacktcreatetest .hacktalloctest .hacktcflattest \
-	.haco .haco-u .haco-c .haco-a .prs .sprs .prsimexpr .prsimexpr-dot \
-	.prsimexpr-ps
+SUFFIXES += .hac .haco .haco-u .haco-c .haco-a .prs .sprs .prsimexpr \
+	.prsimexpr-dot .prsimexpr-ps
 

@@ -1,0 +1,14 @@
+// "079.hac"
+// copy-modified from "074.hac"
+// should pass : unrolling
+
+template <pbool B>
+defproc send_me(chan!(bool) b) {
+chp {
+	*[ b!(B) ]
+}
+}
+
+send_me<true> X;
+send_me<false> Y;
+

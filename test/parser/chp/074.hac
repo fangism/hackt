@@ -1,0 +1,13 @@
+// "074.hac"
+// should pass : unrolling
+
+template <pbool B>
+defproc assign_me(bool b) {
+chp {
+	*[ b := B ]
+}
+}
+
+assign_me<true> X;
+assign_me<false> Y;
+

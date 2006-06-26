@@ -30,6 +30,14 @@
 	  File buffer.hac uses new versions.
 
 
+2006-05-10	Sandra Jackson	<sjj3@cornell.edu>
+
+	* HACKT-00-01-04-main-00-79-03-CHP-02-01:
+	  Updated template Makefiles in mk/, removed .*test suffixes
+		because they are only used for regression testing, 
+		added .prsimexpr-{dot,ps} rules.  
+
+
 2006-03-28	Sandra Jackson	<sjj3@cornell.edu>
 
 	* HACKT-00-01-04-main-00-78-06:

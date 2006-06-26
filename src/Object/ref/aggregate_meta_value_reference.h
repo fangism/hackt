@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.2 2006/02/21 04:48:34 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.3 2006/06/26 01:46:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -57,6 +57,8 @@ private:
 	typedef	typename traits_type::simple_meta_value_reference_type
 						simple_reference_type;
 	typedef	typename traits_type::expr_base_type	expr_base_type;
+	typedef	typename traits_type::data_expr_base_type
+							data_expr_base_type;
 	typedef	expr_base_type				interface_type;
 	typedef	count_ptr<const interface_type>		init_arg_type;
 public:
@@ -154,6 +156,13 @@ public:
 	unroll_lvalue_references(const unroll_context&, 
 		value_reference_collection_type&) const;
 
+	count_ptr<const expr_base_type>
+	unroll_resolve_copy(const unroll_context&, 
+		const count_ptr<const expr_base_type>&) const;
+protected:
+	using expr_base_type::unroll_resolve_copy;
+
+public:
 	good_bool
 	append_meta_value_reference(const count_ptr<const param_expr>&);
 

@@ -1,0 +1,577 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	72
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	1526
+	5	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	29
+	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	21	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	34
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	34	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	34
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	41	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	42	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	44	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	35
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	44
+	51	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	52	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	54	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	35
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	44
+	61	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	62	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	64	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	35
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	44
+	71	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	72	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	74	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	75	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	78	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	80	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
+	81	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	82	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	84	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	88	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	90	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
+	91	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	92	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	94	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	95	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	97	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	98	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	100	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
+	101	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	102	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	103	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	104	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	105	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	107	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	108	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	109	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	110	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
+	111	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	112	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	113	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	114	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	115	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	116	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	117	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	118	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	119	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	120	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
+	121	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	122	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	123	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	124	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	125	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	126	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	127	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	128	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	129	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	130	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
+	131	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	132	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	133	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	134	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	135	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	136	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	137	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	138	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	139	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	140	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	141	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	142	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	143	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
+	144	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	145	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	146	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	147	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	148	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	149	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	150	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	151	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	152	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	153	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	154	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	155	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	156	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	157	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	158	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	159	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	160	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	161	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	162	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	163	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	164	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	165	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	166	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	167	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	168	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	169	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	170	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	171	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	172	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	173	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	174	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	175	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	176	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	177	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	178	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	179	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	180	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	181	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	182	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	183	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	184	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	185	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	186	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	187	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	188	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	189	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	190	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	191	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	192	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	193	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	194	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	195	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	196	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	197	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	198	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	199	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	200	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	201	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	202	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	203	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	204	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	205	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	206	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	207	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	208	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	209	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	210	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	211	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	212	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	213	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	214	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	215	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	216	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	217	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	218	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	219	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	220	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	221	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	222	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	223	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	224	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	225	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	226	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	227	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	228	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	229	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	230	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	231	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	232	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	233	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	234	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	235	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	236	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	237	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	238	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	24
+	239	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	240	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	241	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	24
+	242	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	243	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	244	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	245	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	246	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	247	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	248	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	249	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	250	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	251	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	252	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
+	253	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	254	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	255	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	256	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	257	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	258	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	259	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  1 parameter-collections
+  11 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    x = pbool^1 x
+      unrolled index-value pairs: {
+        0 = 0
+        1 = 1
+        2 = 0
+        3 = 1
+        4 = 0
+        5 = 1
+      }
+  Definitions:
+    assign_me = process-definition (defined) assign_me<
+      pint<> N
+      pbool<> B[0..N-1]
+      pint<> M
+      >(
+        bool<> b
+      )
+      In definition "assign_me", we have: {
+      Parameters:
+        B = pbool<> B
+
+        M = pint<> M
+        N = pint<> N
+      Instances:
+        b = bool<> b
+      unroll sequence: 
+        pint<> N
+        pbool<> B[0..N-1]
+        pint<> M
+        bool<> b
+      chp:
+        concurrent: {
+          *[
+            b := B[M]
+          ]
+        }
+      footprint collection: {
+        <2, {0,1}, 0> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := false
+            ]
+        }
+        <2, {0,1}, 1> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := true
+            ]
+        }
+        <3, {0,1,0}, 0> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := false
+            ]
+        }
+        <3, {0,1,0}, 1> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := true
+            ]
+        }
+        <3, {0,1,0}, 2> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := false
+            ]
+        }
+        <6, {0,1,0,1,0,1}, 0> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := false
+            ]
+        }
+        <6, {0,1,0,1,0,1}, 1> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := true
+            ]
+        }
+        <6, {0,1,0,1,0,1}, 2> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := false
+            ]
+        }
+        <6, {0,1,0,1,0,1}, 3> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := true
+            ]
+        }
+        <6, {0,1,0,1,0,1}, 4> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := false
+            ]
+        }
+        <6, {0,1,0,1,0,1}, 5> {
+          pbool^1 B
+            unrolled index-value pairs: {
+              0 = ?
+              1 = ?
+              2 = ?
+              3 = ?
+              4 = ?
+              5 = ?
+            }
+          pint^0 M value: ?
+          pint^0 N value: ?
+          bool^0 b (instantiated) = ::assign_me::b (1) 
+          bool instance pool:
+          1	::assign_me::b
+          resolved concurrent actions:
+            *[
+              b := true
+            ]
+        }
+      }
+      }
+
+  Instances:
+    y2_0 = process assign_me<2, {0,1}, 0>^0 y2_0 (instantiated) = ::y2_0 (7) (
+      bool^0 b (instantiated) = ::y2_0.b (7) 
+    )
+    y2_1 = process assign_me<2, {0,1}, 1>^0 y2_1 (instantiated) = ::y2_1 (8) (
+      bool^0 b (instantiated) = ::y2_1.b (8) 
+    )
+    y3_0 = process assign_me<3, {0,1,0}, 0>^0 y3_0 (instantiated) = ::y3_0 (9) (
+      bool^0 b (instantiated) = ::y3_0.b (9) 
+    )
+    y3_1 = process assign_me<3, {0,1,0}, 1>^0 y3_1 (instantiated) = ::y3_1 (10) (
+      bool^0 b (instantiated) = ::y3_1.b (10) 
+    )
+    y3_2 = process assign_me<3, {0,1,0}, 2>^0 y3_2 (instantiated) = ::y3_2 (11) (
+      bool^0 b (instantiated) = ::y3_2.b (11) 
+    )
+    y6_0 = process assign_me<6, {0,1,0,1,0,1}, 0>^0 y6_0 (instantiated) = ::y6_0 (1) (
+      bool^0 b (instantiated) = ::y6_0.b (1) 
+    )
+    y6_1 = process assign_me<6, {0,1,0,1,0,1}, 1>^0 y6_1 (instantiated) = ::y6_1 (2) (
+      bool^0 b (instantiated) = ::y6_1.b (2) 
+    )
+    y6_2 = process assign_me<6, {0,1,0,1,0,1}, 2>^0 y6_2 (instantiated) = ::y6_2 (3) (
+      bool^0 b (instantiated) = ::y6_2.b (3) 
+    )
+    y6_3 = process assign_me<6, {0,1,0,1,0,1}, 3>^0 y6_3 (instantiated) = ::y6_3 (4) (
+      bool^0 b (instantiated) = ::y6_3.b (4) 
+    )
+    y6_4 = process assign_me<6, {0,1,0,1,0,1}, 4>^0 y6_4 (instantiated) = ::y6_4 (5) (
+      bool^0 b (instantiated) = ::y6_4.b (5) 
+    )
+    y6_5 = process assign_me<6, {0,1,0,1,0,1}, 5>^0 y6_5 (instantiated) = ::y6_5 (6) (
+      bool^0 b (instantiated) = ::y6_5.b (6) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::y6_0
+2	::y6_1
+3	::y6_2
+4	::y6_3
+5	::y6_4
+6	::y6_5
+7	::y2_0
+8	::y2_1
+9	::y3_0
+10	::y3_1
+11	::y3_2
+bool instance pool:
+1	::y6_0.b
+2	::y6_1.b
+3	::y6_2.b
+4	::y6_3.b
+5	::y6_4.b
+6	::y6_5.b
+7	::y2_0.b
+8	::y2_1.b
+9	::y3_0.b
+10	::y3_1.b
+11	::y3_2.b
+

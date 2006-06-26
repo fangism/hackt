@@ -3,7 +3,7 @@
 	Class definitions for nonmeta index lists.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: nonmeta_index_list.h,v 1.5 2006/01/22 18:19:52 fang Exp $
+	$Id: nonmeta_index_list.h,v 1.6 2006/06/26 01:46:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_INDEX_LIST_H__
@@ -11,17 +11,23 @@
 
 #include <vector>
 #include "util/persistent.h"
+#include "Object/common/multikey_index.h"
 #include "util/memory/count_ptr.h"
+#include "util/boolean_types.h"
 
 namespace HAC {
 namespace entity {
 class nonmeta_index_expr_base;
 struct expr_dump_context;
+class unroll_context;
+class const_index_list;
 using std::vector;
 using std::ostream;
 using util::persistent;
 using util::persistent_object_manager;
 using util::memory::count_ptr;
+using util::good_bool;
+
 //=============================================================================
 /**
 	List of indices, which may contain non-meta expressions, 
@@ -34,6 +40,7 @@ class nonmeta_index_list : public persistent,
 	typedef	vector<count_ptr<const nonmeta_index_expr_base> >
 						list_type;
 public:
+	typedef	list_type::value_type		value_type;
 	typedef	list_type::iterator		iterator;
 	typedef	list_type::const_iterator	const_iterator;
 public:
@@ -52,6 +59,12 @@ public:
 
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
+
+	count_ptr<this_type>
+	unroll_resolve_copy(const unroll_context&) const;
+
+	good_bool
+	make_const_index_list(multikey_index_type&) const;
 
 	PERSISTENT_METHODS_DECLARATIONS
 };	// end class nonmeta_index_list
