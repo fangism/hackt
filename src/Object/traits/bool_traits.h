@@ -2,14 +2,14 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.12 2006/06/26 01:46:22 fang Exp $
+	$Id: bool_traits.h,v 1.13 2006/06/27 20:32:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
 #define	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
 
 #include "Object/traits/class_traits.h"
-#include "object/traits/pbool_traits.h"
+#include "Object/traits/pbool_traits.h"
 
 namespace HAC {
 namespace entity {
