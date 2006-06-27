@@ -1,8 +1,11 @@
 % "cast2hac/types.tex"
-%	$Id: types.tex,v 1.1 2006/05/27 04:52:57 fang Exp $
+%	$Id: types.tex,v 1.2 2006/06/27 02:33:11 fang Exp $
 
 \section{Types}
 \label{sec:types}
+
+\subsection{Fundamental Types}
+\label{sec:types:fundamental}
 
 The names of the primitive types have changed.  
 Types that correspond to compile-time meta parameters are prefixed with `p', 
@@ -26,3 +29,11 @@ N/A	& \preal \\ \hline
 
 The new types \preal\ and \int\ are explained in the \hac\ language reference.  
 
+\subsection{User-defined Types}
+\label{sec:types:userdef}
+
+For the purposes of migrating from \CAST, we restrict our attention
+in the rest of this document to \emph{processes}, 
+the only kind of user-defined metaclass in \CAST.  
+\hac supports data and channel metaclasses, which have no equivalent in \CAST.  
+Section~\ref{sec:definitions} describes the changes in defining processes.  

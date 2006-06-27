@@ -1,5 +1,5 @@
 % "cast2hac/definitions.tex"
-%	$Id: definitions.tex,v 1.2 2006/06/01 22:17:48 fang Exp $
+%	$Id: definitions.tex,v 1.3 2006/06/27 02:33:10 fang Exp $
 
 \section{Definitions}
 \label{sec:definitions}
@@ -15,15 +15,17 @@ TODO: write more on newer port restrictions...
 In \CAST, port declarations were allowed to be sparse, 
 whereas in \hac, only dense declarations are allowed.
 
-The following \CAST\ defintions were legal:
+The following \CAST\ definitions were legal:
 
 \begin{verbatim}
-define foo(node x[1..3]) { }
-define bar(node x[0..2]) { }
+define foo()(node x[1..3]) { }
+define bar()(node x[0..2]) { }
 \end{verbatim}
 
 However, in \hac, there is no equivalent to declaring port instances
 that start with non-zero indices.  
+Note, that in \CAST, the first set of parentheses in each definition
+are reserved for template parameterization.  
 Thus, the above definition of \ttt{foo} cannot be expressed in \hac, 
 whereas the definition of \ttt{bar} could be rewritten:
 
@@ -33,5 +35,7 @@ defproc bar(bool x[3]) { }
 
 See Section~\ref{sec:arrays} for more on dense and sparse arrays 
 and their declarations.  
+Section~\ref{sec:templates} describes how to generalize definitions
+using template parameters.  
 
 

@@ -1,6 +1,6 @@
 % "hacdef.tex"
 % Macros and definitions common to most HAC latex documents.  
-%	$Id: hacdef.tex,v 1.3 2006/05/27 04:52:57 fang Exp $
+%	$Id: hacdef.tex,v 1.4 2006/06/27 02:33:11 fang Exp $
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % format shortcuts
@@ -23,6 +23,7 @@
 % symbols
 \newcommand{\at}{\symbol{"40}}		% '@' character
 \newcommand{\hash}{\ttt{\symbol{"23}}}	% '#' character
+\newcommand{\modulus}{\ttt{\symbol{"25}}}	% '%' character
 \let\pound\hash
 \newcommand{\hashhash}{\hash\hash}
 
@@ -45,6 +46,7 @@
 \newcommand{\asterisk}{\ttt{\symbol{"2A}}}
 \newcommand{\chpbeginloop}{\asterisk\lbracket}
 \let\chpendloop\rbracket
+\newcommand{\chpendprobsel}{\rbracket\modulus}
 % probe?
 
 \newcommand{\prsand}{\ttt{\symbol{"26}}}	% '&' character

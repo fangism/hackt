@@ -1,5 +1,5 @@
 % "cast2hac/typedefs.tex"
-%	$Id: typedefs.tex,v 1.1 2006/06/03 05:52:29 fang Exp $
+%	$Id: typedefs.tex,v 1.2 2006/06/27 02:33:11 fang Exp $
 
 \section{Typedefs}
 \label{sec:typedefs}
@@ -59,4 +59,10 @@ typedef matrix<N, N> square;
 
 square<2> a_2x2_square_matrix;
 \end{verbatim}
+
+The typedef template feature is useful for binding selected parameters
+of highly generalized template definitions to conveniently
+reduce the number of parameters.  
+
+Q: Can typedef templates be defined with default parameter values?
 

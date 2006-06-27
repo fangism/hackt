@@ -1,9 +1,33 @@
 % "cast2hac/CHP.tex"
-%	$Id: CHP.tex,v 1.2 2006/06/03 05:52:28 fang Exp $
+%	$Id: CHP.tex,v 1.3 2006/06/27 02:33:09 fang Exp $
 
 \section{CHP}
 \label{sec:chp}
 
+The CHP language is slightly different in \hac\ than in \CAST.  
+
+\subsection{Lexical Conventions}
+\label{sec:chp:lex}
+
+In \hac, \ttt{\chpendprobsel} is a token for ``end probabalistic selection,''
+thus, if the dividend of a modulus expression is indexed
+(ending with a \rbracket), then an extra space is required.
+For example, \ttt{x[i]\modulus{}2} must be written as
+\ttt{x[i]~\modulus{}2}.
+
+\subsection{Grammar}
+\label{sec:chp:grammar}
+
 Nondeterministic selections are delimited by \ttt{:} in \hac, 
 whereas they were delimited by \ttt{|} in \CAST.  
+
+
+In \CAST, send and receive actions were written as:
+\ttt{X!x} or \ttt{Y!z}, but in \hac, send and receive arguments must be
+enclosed within parenthesis like function call arguments:
+\ttt{X!(x)} or \ttt{Y!(z)}.  
+Rationale: syntactic consistency and disambiguation with the 
+concurrency operator (comma).  
+
+
 

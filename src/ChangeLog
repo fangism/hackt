@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-18:
+	  No source revision, documentation patch only.  
+
+
 2006-06-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-17-merged-CHP-02-14:
