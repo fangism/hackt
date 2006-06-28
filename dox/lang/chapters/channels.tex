@@ -1,19 +1,137 @@
 % "chapters/channels.tex"
 
-%	$Id: channels.tex,v 1.3 2005/06/20 19:47:36 fang Exp $
+%	$Id: channels.tex,v 1.4 2006/06/28 22:17:39 fang Exp $
 
 \chapter{Channels}
 \label{sec:channels}
 
 Processes communicate to each other via channels.  
+Channels are an abstract notion of a point-to-point medium
+of communication between sender and receiver.
+(\hac\ does not yet support multi-sender or multi-receiver communication
+primitives.)  
 
-Directionality of channels.  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Sending and Receiving}
+\label{sec:channel:sendrecv}
+
+Without going into the details of channels, we can define a notion of 
+directionality for channels.  
+Suppose we have some channel type \ttt{chan(bool)}.  
+
+\begin{verbatim}
+chan(bool) X;
+chan?(bool) Y;
+chan!(bool) Z;
+\end{verbatim}
+
+This declares a channel \ttt{X} with unspecified direction (nondirectional), 
+\ttt{Y} as a read-only (receive-only) directional channel, 
+and \ttt{Z} as a send-only directional channel.  
+Send-only and receive-only channels are the most useful in
+process port declarations ---
+what use are uni-directional channels in the global or local 
+scopes\footnote{Should multi-module linkage ever be specified and implemented, 
+a receive-only channel in one module could connect to 
+a send-only channel in another module.}?
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Connections and Directions}
+\label{sec:channel:sendrecv:connect}
+
+What are legal connections between channel instance references?
+
+Q: Should legal programs be restricted to connecting
+at most one-receiver to one-sender?
+
+Q: Should dangling channels (one-way only) be allowed, rejected, or warned?
+Does not count ports.  
+
+Aliasing: is connecting two read-only channels legal for the sake of aliasing?
+Connecting two read-only ports of different processes seems like an error.
+Can we define precise alias semantics?
+
+We use the following example program template to answer questions.  
+
+\begin{verbatim}
+defproc inner(chan(bool) A; chan?(bool) B; chan!(bool) C) { ... }
+defproc outer(chan(bool) P; chan?(bool) Q; chan!(bool) R) {
+  inner x(...), y(...);
+}
+\end{verbatim}
+
+\begin{itemize}
+\item \ttt{x(P,Q,R), y;} -- legal
+\item \ttt{x, y; x.A = P; x.B = Q; x.C = R} -- legal, equivalent to the previous
+\item \ttt{x, y(x.A, x.B, x.C);} -- legal?  two receive ports being aliased!
+\item \ttt{x(P,R,Q), y;} -- error: connecting send-only to receive-only channel
+\item \ttt{x, y(x.A, x.C, x.B);} -- error: equivalent to above
+\end{itemize}
+
+Goal: precise set of rules for channel connections.
+Q: does it depend on whether or not referenced channel is local vs. port?
+
+Proposal: a read-only port can take a directionless or 
+read-only port (forwarded) channel as an argumnent.  
+(Likewise for send-only ports.)  
+
+Should we allow alias connection syntax for channels?
+Aliasing is a symmetric relation, whereas port connections \emph{need not} be.  
+
+Proposal:
+Unidirectional channels should not be referenceable as aliases, only
+connected through ports.  
+Only nondirectional channels may use alias syntax.  
+Thus, directional channels may only be connected by passing port arguments.  
+Consequences: every physical channel must be connected to at least one
+nondirectional channel.  
+A send-receive pair must be connected using a nondirectional channel
+of the same type.  
+
+Proposal:
+A nondirectional channel may be connected to only one read-only channel
+and only one send-only channel.  
+The following example would be rejected:
+
+\begin{verbatim}
+defproc bucket(chan?(bool) S) { ... }
+chan(bool) R;
+bucket a(R), b(R);
+\end{verbatim}
+
+Implementation detail: 
+As aliases are built using a union-find, make sure the canonical node
+always knows what direction of channels have been connected (propagation).  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Fundamental Channel Types}
 \label{sec:channels:fundamental}
 
+Until now, we've used \ttt{chan(bool)} without discussing its meaning.  
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{User-defined Channel Types}
 \label{sec:channels:userdef}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Issues}
+\label{sec:channels:issues}
+
+This section is the most of asked (but not necessarily answered) questions
+pertaining to the channel aspects of the \hac\ language.  
+
+\subsection{Typedefs}
+\label{sec:channels:typedefs}
+
+Q: Should channels be typedef-able?
+
+\subsection{Relaxed Templates}
+\label{sec:channels:relaxed_templates}
+
+Q: Should channels ever involve relaxed template arguments?
+A: No.  Can't see a good reason for allowing channel type to vary
+	within a higher dimension collection.  This applies recursively
+	to data-types which fall into the channel's type specification.  
+	Can processes every be involved in channel type?  Probably not.  
 

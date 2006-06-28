@@ -1,5 +1,5 @@
 # "NOTES"
-#	$Id: NOTES,v 1.15 2006/06/26 01:45:42 fang Exp $
+#	$Id: NOTES,v 1.16 2006/06/28 22:17:42 fang Exp $
 
 Developer's Notes (transcripts of fangism muttering to himself...)
 
@@ -7,6 +7,8 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 2006-05-14:
 	CHP footprint implementation:
 	is it mostly a copy of the source representation?
+		Yes, so we use same class hierarchy, but unrolling
+		results in substituting meta-values with constants.  
 	Does CHP have any parameter dependents that aren't already 
 		taken care of in type-unrolling and object-instantiation?
 		Proposed a metaloop-selection, which could be expanded, 
@@ -14,6 +16,7 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 	The purpose of such footprint unrolling is to finish compile-time
 		evaluation of meta-parameter dependents to fixed constants.  
 		e.g. x[i].  'i' could be a meta parameter (constant).  
+	Status: done (2006-06-25)
 
 //=============================================================================
 2006-05-11:
@@ -45,6 +48,7 @@ Developer's Notes (transcripts of fangism muttering to himself...)
 	Strategies: internal expansion of nonmeta selections
 		into meta-selection equivalents.  How?
 	Concerns: range checking
+	Update (2006-06-xx): no longer restricted to meta indices!
 
 //=============================================================================
 // forgot about this file for several months...

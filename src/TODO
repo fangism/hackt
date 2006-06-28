@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.26 2006/06/26 01:45:43 fang Exp $
+#	$Id: TODO,v 1.27 2006/06/28 22:17:43 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -270,10 +270,6 @@ need to handle loops and conditionals *around* prs { ... } bodies
 SPEC:
 	support for 'inline' attribute to flatten subinstances into 
 		current definition scope (and give equivalent aliases)
-
-CHP:
-	restrict references in the nonmeta language to be scalar?
-		no aggregates?
 
 ===============================================================================
 Expression resolutions:

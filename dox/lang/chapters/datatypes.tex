@@ -1,12 +1,15 @@
 % "chapters/datatypes.tex"
 
-%	$Id: datatypes.tex,v 1.4 2005/12/13 04:14:42 fang Exp $
+%	$Id: datatypes.tex,v 1.5 2006/06/28 22:17:39 fang Exp $
 
 \chapter{Datatypes}
 \label{sec:datatypes}
 
 Datatypes are physical representations of information.  
 Or not.  
+
+TODO: this must spell out structs and user-defined datatype implementations
+as distinct notions.  
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,7 +19,35 @@ Or not.
 Currently, \hac\ has two built in datatypes: \bool\ and \int.  
 These are not to be confused with the parameter types \pbool\ and \pint.  
 A \bool\ represents the state of a physical or logical node.  
-An \int\ is simply an array of \bool s with an integer interpretation.  
+An \int\ is simply an array of \bool{}s with an integer interpretation.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Booleans}
+\label{sec:datatypes:builtin:bool}
+
+In the nonmeta language, assigning a \pbool\ value to a \bool\ 
+is common and legal.  
+The compiler should eventually resolve all meta-parameter values to
+constants, which would result in assigning a boolean constant
+to a \bool\ data instance.  
+
+In the following example, the \ttt{constant<true>} and
+\ttt{constant<false>} types would unroll as one-time
+assignments to different values.  
+(See Chapter~\ref{sec:chp} for the description of the CHP language.)
+
+\begin{verbatim}
+template <pbool B>
+defproc constant(bool b) {
+  chp { b := B }
+}
+\end{verbatim}
+
+Nonmeta operators:
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Integers}
+\label{sec:datatypes:builtin:int}
 
 The \int\ type can take an optional \emph{width} parameter that specifies
 the \emph{physical} number of bits used to represent the integer.  
@@ -29,10 +60,18 @@ datatype definition.
 Templates are discussed in more detail in Chapter~\ref{sec:templates}.  
 The specify an \int's width, one can write \ttt{int<}\tit{pint}\ttt{>}.  
 
+For integer type-checking in the nonmeta language, 
+the assignment of a \pint\ value or constant to an \int\ of
+\emph{any} width is legal.  
+Implementation detail: this is accomplished by using \ttt{int<0>}
+as a magic width type for meta-valued integers and constants.  
+
+Arithmetic and relational operators:
 In CHP, the standard arithmetic operations on \int\ types interprets
 the bits as signed two's-complement integers.  
 Operator overloading is not yet supported for user-defined datatypes, 
 but may be in the future.  
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Enumerations}
@@ -65,6 +104,11 @@ There is no notion of equivalence between enumerated types
 
 In \hac, one can define arbitrarily complex datatypes.  
 User-defined datatypes resemble structs in C.  
+
+Actually, the user-defined datatype implementations are
+NOT the same as plain structs.  
+They describe an \emph{implementation} of an abstract data type
+with physical types.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Declarations}

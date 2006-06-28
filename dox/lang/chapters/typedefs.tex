@@ -1,6 +1,6 @@
 % "chapters/typedefs.tex"
 
-%	$Id: typedefs.tex,v 1.6 2005/04/20 03:27:22 fang Exp $
+%	$Id: typedefs.tex,v 1.7 2006/06/28 22:17:40 fang Exp $
 
 \chapter{Typedefs}
 \label{sec:typedefs}
@@ -114,6 +114,10 @@ e.g. \ttt{extern typedef foo;}
 
 \medskip
 \textbf{Linkage.}  See Chapter~\ref{sec:linkage}.  
+
+Q: Should typedefs ever be templatable with relaxed arguments?
+A: Maybe only if we guarantee that strict arguments don't
+	ever depend on (escape to) relaxed parameters.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
