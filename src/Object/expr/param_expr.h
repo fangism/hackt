@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.12 2006/06/29 03:11:36 fang Exp $
+	$Id: param_expr.h,v 1.12.2.1 2006/06/29 23:24:45 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -13,6 +13,7 @@
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/excl_ptr.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -84,8 +85,14 @@ virtual	count_ptr<const const_param>
 	count_ptr<aggregate_meta_value_reference_base>
 	make_aggregate_meta_value_reference(const count_ptr<const this_type>&);
 
+#if COW_UNROLL_RESOLVE_RVALUES
+virtual	count_ptr<const const_param>
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const param_expr>&) const = 0;
+#else
 virtual	count_ptr<const const_param>
 	unroll_resolve_rvalues(const unroll_context&) const = 0;
+#endif
 
 	// helper functor, defined in "Object/expr/param_expr_functor.h"
 	struct unroller;

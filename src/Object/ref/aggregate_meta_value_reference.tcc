@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.7 2006/06/29 03:11:39 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.1 2006/06/29 23:24:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -354,7 +354,11 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const const_param>
 AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
-		const unroll_context& c) const {
+		const unroll_context& c
+#if COW_UNROLL_RESOLVE_RVALUES
+		, const count_ptr<const expr_base_type>& p
+#endif
+		) const {
 	typedef count_ptr<const const_collection_type>	return_type;
 	typedef count_ptr<const_collection_type>	temp_ret_type;
 	typedef	vector<count_ptr<const const_param> >	temp_type;
@@ -364,6 +368,9 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 	typedef typename const_collection_type::key_type	key_type;
 	typedef typename const_collection_type::iterator	target_iterator;
 
+#if COW_UNROLL_RESOLVE_RVALUES
+	INVARIANT(p == this);
+#endif
 	const size_t subdim = subreferences.front()->dimensions();
 	temp_type temp;
 	util::reserve(temp, subreferences.size());	// pre-allocate
@@ -382,20 +389,20 @@ if (this->_is_concatenation) {
 	const temp_iterator b(temp.begin()), e(temp.end());
 	temp_iterator i(b);
 	for ( ; i!=e; ++i, ++ti) {
-		temp_reference p(*i);
-		if (!p) {
+		temp_reference pr(*i);
+		if (!pr) {
 			cerr << "Error unroll-resolving sub-reference "
 				<< distance(b, i) +1 << " of ";
 			this->what(cerr) << endl;
 			return return_type(NULL);
 		}
 		const count_ptr<const const_expr_type>
-			ce(p.template is_a<const const_expr_type>());
+			ce(pr.template is_a<const const_expr_type>());
 		if (ce) {
 			*ti = ce->static_constant_value();
 		} else {
 		const return_type
-			cc(p.template is_a<const const_collection_type>());
+			cc(pr.template is_a<const const_collection_type>());
 		if (cc) {
 			*ti = cc->static_constant_value();
 		} else {
@@ -513,7 +520,12 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 		const unroll_context& c, 
 		const count_ptr<const expr_base_type>& p) const {
 	INVARIANT(p == this);
+#if COW_UNROLL_RESOLVE_RVALUES
+	return this->unroll_resolve_rvalues(c, p)
+		.template is_a<const expr_base_type>();
+#else
 	return this->unroll_resolve_rvalues(c).template is_a<const expr_base_type>();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

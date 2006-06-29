@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-01:
+	  Mini-branch for patching expression unrolling.  
+	  Copy-on-write unroll_resolve_rvalues eliminates wasteful copying
+		when unroll-resolving meta parameter expressions.  
+	  Results in fewer persistent heap objects for identical constants, 
+		many test cases updated accordingly.  
+	  TODO: apply to param-expr-lists, implement local __unroll to 
+		eliminate cross-cast on return.  
+
+
 2006-06-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-20:

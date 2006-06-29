@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.17 2006/06/29 03:11:35 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.17.2.1 2006/06/29 23:24:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -925,7 +925,11 @@ dynamic_param_expr_list::unroll_resolve_rvalues(const unroll_context& c) const {
 	for ( ; i!=e; i++) {
 		const count_ptr<const param_expr> ip(*i);
 		const count_ptr<const const_param>
+#if COW_UNROLL_RESOLVE_RVALUES
+			pc(ip->unroll_resolve_rvalues(c, ip));
+#else
 			pc(ip->unroll_resolve_rvalues(c));
+#endif
 		if (pc) {
 			ret->push_back(pc);
 		} else {

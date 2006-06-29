@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.11 2006/06/29 03:11:40 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.11.2.1 2006/06/29 23:24:59 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -14,6 +14,7 @@
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 	// transformed to not be instance-specific
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -140,8 +141,14 @@ public:
 	const_index_list
 	unroll_resolve_dimensions(const unroll_context&) const;
 
+#if COW_UNROLL_RESOLVE_RVALUES
+	count_ptr<const const_param>
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const expr_base_type>&) const;
+#else
 	count_ptr<const const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
+#endif
 
 protected:
 	count_ptr<const const_param>
@@ -161,6 +168,9 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 protected:
+#if COW_UNROLL_RESOLVE_RVALUES
+	using parent_type::unroll_resolve_rvalues;
+#endif
 	using parent_type::unroll_resolve_copy;
 
 protected:

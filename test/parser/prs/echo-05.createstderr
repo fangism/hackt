@@ -60,18 +60,14 @@ Persistent Object Manager text dump:
 	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	64	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	65	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	66	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	67	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

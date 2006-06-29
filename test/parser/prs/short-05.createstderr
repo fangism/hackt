@@ -163,37 +163,34 @@ Persistent Object Manager text dump:
 	159	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	160	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	161	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	162	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	163	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
-	164	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
-	165	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	166	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	167	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	168	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	169	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	170	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	171	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	172	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	173	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	174	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
-	175	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
-	176	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	177	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	178	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	179	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	180	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	181	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	182	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	52
-	183	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	162	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
+	163	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	164	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	165	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	166	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	167	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	168	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	169	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	170	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	171	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	172	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
+	173	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	174	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
+	175	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	176	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	177	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	178	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	179	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	52
+	180	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	36
+	181	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	182	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	183	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	184	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	185	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	186	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	187	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	188	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	189	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	190	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	191	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	192	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

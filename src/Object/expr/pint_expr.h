@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.10 2006/06/26 01:46:06 fang Exp $
+	$Id: pint_expr.h,v 1.10.2.1 2006/06/29 23:24:53 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -106,6 +106,16 @@ virtual	good_bool
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
+
+#if COW_UNROLL_RESOLVE_RVALUES
+	count_ptr<const const_param>
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const param_expr>&) const;
+
+virtual	count_ptr<const const_param>
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const pint_expr>&) const = 0;
+#endif
 
 #define	UNROLL_RESOLVE_COPY_PINT_PROTO					\
 	count_ptr<const pint_expr>					\

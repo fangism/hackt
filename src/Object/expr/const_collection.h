@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.11 2006/06/29 03:11:33 fang Exp $
+	$Id: const_collection.h,v 1.11.2.1 2006/06/29 23:24:42 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -18,6 +18,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 // #include "util/memory/chunk_map_pool_fwd.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -157,8 +158,16 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
+#if COW_UNROLL_RESOLVE_RVALUES
+	count_ptr<const const_param>
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const expr_base_type>&) const;
+
+	using expr_base_type::unroll_resolve_rvalues;
+#else
 	count_ptr<const parent_const_type>
 	unroll_resolve_rvalues(const unroll_context&) const;
+#endif
 
 	using expr_base_type::unroll_resolve_copy;
 

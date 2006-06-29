@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.16 2006/06/29 03:11:34 fang Exp $
+ 	$Id: const_collection.tcc,v 1.16.2.1 2006/06/29 23:24:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -387,10 +387,27 @@ CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return reference-counted pointer to self.  
+ */
 CONST_COLLECTION_TEMPLATE_SIGNATURE
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+#else
 count_ptr<const typename CONST_COLLECTION_CLASS::parent_const_type>
-CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c) const {
+#endif
+CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c
+#if COW_UNROLL_RESOLVE_RVALUES
+		, const count_ptr<const expr_base_type>& p
+#endif
+		) const {
+#if COW_UNROLL_RESOLVE_RVALUES
+	INVARIANT(p == this);
+	return p.template is_a<const this_type>();
+#else
+	// wasteful copy
 	return count_ptr<const parent_const_type>(new this_type(*this));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
