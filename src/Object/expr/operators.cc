@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.13 2006/06/26 01:46:03 fang Exp $
+ 	$Id: operators.cc,v 1.14 2006/06/29 03:11:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -206,9 +206,9 @@ pint_unary_expr::resolve_dimensions(void) const {
 /**
 	The only unary pint operation is negation.  
  */
-count_ptr<const_param>
+count_ptr<const const_param>
 pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	const return_type ret(ex->unroll_resolve_rvalues(c));
@@ -379,9 +379,9 @@ preal_unary_expr::resolve_dimensions(void) const {
 /**
 	The only unary preal operation is negation.  
  */
-count_ptr<const_param>
+count_ptr<const const_param>
 preal_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
 	const return_type ret(ex->unroll_resolve_rvalues(c));
@@ -531,9 +531,9 @@ pbool_unary_expr::resolve_value(value_type& i) const {
 /**
 	The only unary pbool operation is logical negation.  
  */
-count_ptr<const_param>
+count_ptr<const const_param>
 pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	const return_type ret(ex->unroll_resolve_rvalues(c));
@@ -795,9 +795,9 @@ pint_arith_expr::unroll_resolve_value(const unroll_context& c,
 /**
 	\return pint_const of the resolved value.
  */
-count_ptr<const_param>
+count_ptr<const const_param>
 pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	const return_type lex(lx->unroll_resolve_rvalues(c));
@@ -1095,9 +1095,9 @@ pint_relational_expr::resolve_value(value_type& i) const {
 /**
 	\return pbool_const of the resolved value.
  */
-count_ptr<const_param>
+count_ptr<const const_param>
 pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	const return_type lex(lx->unroll_resolve_rvalues(c));
@@ -1367,9 +1367,9 @@ preal_arith_expr::unroll_resolve_value(const unroll_context& c,
 /**
 	\return preal_const of the resolved value.
  */
-count_ptr<const_param>
+count_ptr<const const_param>
 preal_arith_expr::unroll_resolve_rvalues(const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
 	const return_type lex(lx->unroll_resolve_rvalues(c));
@@ -1644,9 +1644,9 @@ preal_relational_expr::resolve_value(value_type& i) const {
 /**
 	\return pbool_const of the resolved value.
  */
-count_ptr<const_param>
+count_ptr<const const_param>
 preal_relational_expr::unroll_resolve_rvalues(const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
 	const return_type lex(lx->unroll_resolve_rvalues(c));
@@ -1892,9 +1892,9 @@ pbool_logical_expr::resolve_value(value_type& i) const {
 /**
 	\return pbool_const of the resolved value.
  */
-count_ptr<const_param>
+count_ptr<const const_param>
 pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
 	const return_type lex(lx->unroll_resolve_rvalues(c));

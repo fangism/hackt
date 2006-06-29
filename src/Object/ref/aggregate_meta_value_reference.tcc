@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.6 2006/06/26 01:46:19 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.7 2006/06/29 03:11:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -352,11 +352,12 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	\pre subreferences non-empty, all non-NULL.
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-count_ptr<const_param>
+count_ptr<const const_param>
 AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 		const unroll_context& c) const {
-	typedef count_ptr<const_collection_type>	return_type;
-	typedef	vector<count_ptr<const_param> >		temp_type;
+	typedef count_ptr<const const_collection_type>	return_type;
+	typedef count_ptr<const_collection_type>	temp_ret_type;
+	typedef	vector<count_ptr<const const_param> >	temp_type;
 	typedef	temp_type::const_iterator		temp_iterator;
 	typedef	temp_type::const_reference		temp_reference;
 	typedef	typename parent_type::unroll_resolver	unroll_resolver_type;
@@ -375,7 +376,7 @@ if (this->_is_concatenation) {
 	// we are constructing 1-dimension array from scalar subrefs.
 	key_type size_1d(1);
 	size_1d[0] = temp.size();
-	const return_type ret(new const_collection_type(size_1d));
+	const temp_ret_type ret(new const_collection_type(size_1d));
 	NEVER_NULL(ret);
 	target_iterator ti(ret->begin());
 	const temp_iterator b(temp.begin()), e(temp.end());
@@ -388,13 +389,13 @@ if (this->_is_concatenation) {
 			this->what(cerr) << endl;
 			return return_type(NULL);
 		}
-		const count_ptr<const_expr_type>
-			ce(p.template is_a<const_expr_type>());
+		const count_ptr<const const_expr_type>
+			ce(p.template is_a<const const_expr_type>());
 		if (ce) {
 			*ti = ce->static_constant_value();
 		} else {
-		const count_ptr<const_collection_type>
-			cc(p.template is_a<const_collection_type>());
+		const return_type
+			cc(p.template is_a<const const_collection_type>());
 		if (cc) {
 			*ti = cc->static_constant_value();
 		} else {

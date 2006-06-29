@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.15 2006/06/26 01:45:58 fang Exp $
+ 	$Id: const_collection.tcc,v 1.16 2006/06/29 03:11:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -388,9 +388,9 @@ CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<typename CONST_COLLECTION_CLASS::parent_const_type>
+count_ptr<const typename CONST_COLLECTION_CLASS::parent_const_type>
 CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c) const {
-	return count_ptr<parent_const_type>(new this_type(*this));
+	return count_ptr<const parent_const_type>(new this_type(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference.h"
-	$Id: meta_value_reference.h,v 1.2 2006/02/21 04:48:37 fang Exp $
+	$Id: meta_value_reference.h,v 1.3 2006/06/29 03:11:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_H__
@@ -75,7 +75,7 @@ virtual	bad_bool
 			\param p pointer to this_type (non-NULL).  
 		 */
 		template <class P>
-		count_ptr<const_param>
+		count_ptr<const const_param>
 		operator () (const P& p) const {
 			NEVER_NULL(p);
 			return p->unroll_resolve_rvalues(_context);

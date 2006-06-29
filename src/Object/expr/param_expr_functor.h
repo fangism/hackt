@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/param_expr_functor.h"
 	Handy functor definitions for param_expr.  
-	$Id: param_expr_functor.h,v 1.2 2006/02/21 04:48:25 fang Exp $
+	$Id: param_expr_functor.h,v 1.3 2006/06/29 03:11:37 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_FUNCTOR_H__
@@ -20,7 +20,7 @@ namespace entity {
 	Helper functor for unrolling a sequence of param_expr pointers.  
  */
 struct param_expr::unroller {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	const unroll_context&	_context;
 
 	explicit

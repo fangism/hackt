@@ -5,6 +5,11 @@
 
 2006-06-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-20:
+	  Constified return pointer for unroll_resolve_rvalues of
+		param_expr's, should be read-only for copy-on-write.  
+
+
 	* HACKT-00-01-04-main-00-79-19:
 	  Documentation only.  
 

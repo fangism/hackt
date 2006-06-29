@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.16 2006/06/26 01:45:55 fang Exp $
+ 	$Id: basic_param.cc,v 1.17 2006/06/29 03:11:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -634,9 +634,9 @@ pint_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const_param>
+count_ptr<const const_param>
 pint_const::unroll_resolve_rvalues(const unroll_context&) const {
-	return count_ptr<const_param>(new pint_const(*this));
+	return count_ptr<const const_param>(new pint_const(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -777,9 +777,9 @@ pbool_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const_param>
+count_ptr<const const_param>
 pbool_const::unroll_resolve_rvalues(const unroll_context& c) const {
-	return count_ptr<const_param>(new pbool_const(*this));
+	return count_ptr<const const_param>(new pbool_const(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -926,9 +926,9 @@ preal_const::unroll_resolve_value(const unroll_context&, value_type& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-count_ptr<const_param>
+count_ptr<const const_param>
 preal_const::unroll_resolve_rvalues(const unroll_context& c) const {
-	return count_ptr<const_param>(new preal_const(*this));
+	return count_ptr<const const_param>(new preal_const(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

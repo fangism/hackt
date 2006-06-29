@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.3 2006/06/26 01:46:19 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.4 2006/06/29 03:11:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -139,7 +139,7 @@ public:
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type&) const;
 
-	count_ptr<const_param>
+	count_ptr<const const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
 
 	/// should this be called? actually, yeah, possibly early check
@@ -148,9 +148,6 @@ public:
 
 	const_index_list
 	unroll_resolve_dimensions(const unroll_context&) const;
-
-	count_ptr<const_param>
-	uroll_resolve_rvalues(const unroll_context&) const;
 
 	bad_bool
 	unroll_lvalue_references(const unroll_context&, 

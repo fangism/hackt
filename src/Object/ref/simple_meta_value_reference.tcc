@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.19 2006/06/26 01:46:20 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.20 2006/06/29 03:11:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -457,10 +457,10 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	\return dense array of values, NULL if error.  
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-count_ptr<const_param>
+count_ptr<const const_param>
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 		const unroll_context& c) const {
-	typedef	count_ptr<const_param>		return_type;
+	typedef	count_ptr<const const_param>		return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_INDENT << "this reference = ", 

@@ -3,7 +3,7 @@
 	Unary negation of meta integer.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_unary_expr.h,v 1.8 2006/06/26 01:46:06 fang Exp $
+	$Id: pint_unary_expr.h,v 1.9 2006/06/29 03:11:38 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_UNARY_EXPR_H__
@@ -74,7 +74,7 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
-	count_ptr<const_param>
+	count_ptr<const const_param>
 	unroll_resolve_rvalues(const unroll_context&) const;
 
 	UNROLL_RESOLVE_COPY_PINT_PROTO;
