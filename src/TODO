@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.27 2006/06/28 22:17:43 fang Exp $
+#	$Id: TODO,v 1.28 2006/06/30 23:25:15 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -53,6 +53,20 @@ enhancement:
 quickies:
 	complete aggregate_meta_value_reference::unroll_resolve_rvalues
 		for case of higher-dimension const collections.  
+
+===============================================================================
+PRIORITY: MEMORY HOG
+instance collections:
+	instance_collections and their contents are being 
+		replicated too many places.  
+	Unrolled instance collections should just reference source
+		collection declarations for information like dimensionality
+		name, scope, parent...  
+	Port instance collections should be dense to not pay expense
+		of keeping sparse maps.  packed_array_generic!
+	But then what will instance references refer to?
+	Member instance references? public vs. generic (private)
+	Possibly introduce use of placeholders.   
 
 ===============================================================================
 enums and structs
