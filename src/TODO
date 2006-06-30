@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.28 2006/06/30 23:25:15 fang Exp $
+#	$Id: TODO,v 1.29 2006/06/30 23:28:46 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -67,6 +67,11 @@ instance collections:
 	But then what will instance references refer to?
 	Member instance references? public vs. generic (private)
 	Possibly introduce use of placeholders.   
+
+===============================================================================
+command interface:
+	add a "-c" command-line option to all executables 
+	to use source file directly as input, instead of object file.  
 
 ===============================================================================
 enums and structs
