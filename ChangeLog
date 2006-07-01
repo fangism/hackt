@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2006-07-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-21:
+	  config/rl_el.m4: forgot to allow header check for histedit.h
+		in the check for --with-editline.  Now works with histedit.  
+	  Minor provisions to enable use with bison-2.1.  Damn you, bison.  
+
+
 2006-05-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-04:

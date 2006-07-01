@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-21:
+	  Added another parser hack script to accommodate bison-2.1, 
+		which uses some preprocessor variable YYENABLE_NLS
+		without defining it a priori.  Damn you, bison.  
+	  This snapshot tested against apple-gcc4 (build 5341) for the 
+		first time and found one utility library test failure:
+		local_static_store_test.  
+		Suspect compiler bug, investigation pending.
+
+
 2006-06-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-20:

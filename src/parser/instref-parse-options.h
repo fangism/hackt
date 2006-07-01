@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: instref-parse-options.h,v 1.2 2006/01/22 06:53:24 fang Exp $
+	$Id: instref-parse-options.h,v 1.3 2006/07/01 21:00:33 fang Exp $
  */
 
 #ifndef	__PARSER_INSTREF_PARSE_OPTIONS_H__
@@ -42,6 +42,14 @@
 // to determine whether or not yylloc is used in the call to yylex
 #ifndef	YYLSP_NEEDED
 #define	YYLSP_NEEDED			0
+#endif
+
+// needed for bison-2.1
+#ifndef	YYENABLE_NLS
+#define	YYENABLE_NLS			0
+#endif
+#ifndef	ENABLE_NLS
+#define	ENABLE_NLS			0
 #endif
 
 // in the original source, a local variable yylval shares the same name

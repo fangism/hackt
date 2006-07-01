@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.127 2006/06/26 01:45:41 fang Exp $
+#	$Id: Makefile.am,v 1.128 2006/07/01 21:00:31 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -776,6 +776,7 @@ CLEANFILES += $(LEXYACC_PREFIX_H_FILES)
 PARSER_HACK_PIPE =
 if HAVE_BISON
 PARSER_HACK_PIPE += $(AWK) -f $(srcdir)/parser/try_lex_catch.awk | \
+	$(AWK) -f $(srcdir)/parser/nls_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/yyerror_bison_hack.awk | \
 	$(AWK) -f $(srcdir)/parser/purify_flex.awk | \
 	$(SED_CXX_REFERENCE) | \
@@ -1090,6 +1091,7 @@ EXTRA_DIST += local.cvsignore \
 	parser/yacc-union-type.awk \
 	parser/bison-union-type.awk \
 	parser/yyerror_bison_hack.awk \
+	parser/nls_bison_hack.awk \
 	parser/yygrowstack_yacc_hack.awk \
 	parser/patch_byacc.awk \
 	parser/purify_flex.awk \

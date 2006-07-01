@@ -1,5 +1,5 @@
 dnl "config/rl_el.m4"
-dnl	$Id: rl_el.m4,v 1.4 2006/05/09 05:39:21 fang Exp $
+dnl	$Id: rl_el.m4,v 1.5 2006/07/01 21:00:28 fang Exp $
 dnl Readline and Editline support for the utility library used by hackt.
 dnl This is not only specific to hackt, so we place these macros here.  
 dnl
@@ -178,8 +178,12 @@ LDFLAGS="$LDFLAGS $el_ldpath"
 		[AC_DEFINE([HAVE_BSDEDITLINE],[1],
 			[Define to enable BSD editline])
 		dnl saved_CPPFLAGS="$CPPFLAGS"
-		EL_INCLUDE="$el_include"],
-		[AC_MSG_ERROR(Couldn't find BSD editline headers.)])
+		EL_INCLUDE="$el_include"], [])
+	if test x"$ac_cv_header_editline_readline_h" = xno ; then
+		if test x"$ac_cv_header_histedit_h" = xno ; then
+			AC_MSG_ERROR(Couldn't find BSD editline headers.)
+		fi
+	fi
 	dnl depends on terminal library support
 	if test x"$ac_cv_search_tputs" != xno ; then
 		:

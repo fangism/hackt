@@ -1,7 +1,7 @@
 /**
-	\file "named_pooled_ting.cc"
+	\file "named_pooled_thing.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.6 2006/01/22 06:53:46 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.7 2006/07/01 21:00:37 fang Exp $
  */
 
 #define ENABLE_STATIC_TRACE				1
