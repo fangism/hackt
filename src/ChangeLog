@@ -5,6 +5,12 @@
 
 2006-06-30	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-20-cow-03:
+	  Just cleaned up COW_UNROLL_RESOLVE_RVALUES switch, committed.  
+	  Next: finish resolving aggregate_meta_value_reference for
+		higher dimensions, maybe concatenations...
+
+
 	* HACKT-00-01-04-main-00-79-20-cow-02:
 	  Copy-on-write meta-parameter-value lists. 
 		Had to touch template_actuals...

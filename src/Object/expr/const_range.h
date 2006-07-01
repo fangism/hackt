@@ -1,9 +1,9 @@
 /**
-	\file "Object/expr/pbool_const.h"
+	\file "Object/expr/const_range.h"
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.9 2006/06/26 01:45:59 fang Exp $
+	$Id: const_range.h,v 1.9.2.1 2006/07/01 22:05:09 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__

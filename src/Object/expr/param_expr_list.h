@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.10.26.1 2006/07/01 03:42:10 fang Exp $
+	$Id: param_expr_list.h,v 1.10.26.2 2006/07/01 22:05:12 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -15,7 +15,6 @@
 #include "util/boolean_types.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/excl_ptr.h"
-#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -84,21 +83,12 @@ virtual	bool
 	is_relaxed_formal_dependent(void) const = 0;
 
 // coordinate with COUNT_TEMPLATE_ARGS in "Object/art_object_definition_base.h"
-#if COW_UNROLL_RESOLVE_RVALUES
 	typedef	count_ptr<const const_param_expr_list>
-#else
-	typedef	count_ptr<const_param_expr_list>
-#endif
 					unroll_resolve_rvalues_return_type;
 
-#if COW_UNROLL_RESOLVE_RVALUES
 virtual	unroll_resolve_rvalues_return_type
 	unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const param_expr_list>&) const = 0;
-#else
-virtual	unroll_resolve_rvalues_return_type
-	unroll_resolve_rvalues(const unroll_context&) const = 0;
-#endif
 
 // coordinate with template_formals_manager::template_formals_list_type
 protected:

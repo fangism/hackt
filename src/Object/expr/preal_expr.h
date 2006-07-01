@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: preal_expr.h,v 1.5.2.2 2006/07/01 03:42:17 fang Exp $
+	$Id: preal_expr.h,v 1.5.2.3 2006/07/01 22:05:15 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_EXPR_H__
@@ -96,7 +96,6 @@ virtual	count_ptr<const preal_const>
 	__unroll_resolve_rvalue(const unroll_context&, 
 		const count_ptr<const preal_expr>&) const = 0;
 
-#if COW_UNROLL_RESOLVE_RVALUES
 	count_ptr<const const_param>
 	unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const param_expr>&) const;
@@ -104,7 +103,6 @@ virtual	count_ptr<const preal_const>
 virtual	count_ptr<const const_param>
 	unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const preal_expr>&) const = 0;
-#endif
 
 #define	UNROLL_RESOLVE_COPY_PREAL_PROTO					\
 	count_ptr<const preal_expr>					\

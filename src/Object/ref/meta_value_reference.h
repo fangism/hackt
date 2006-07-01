@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference.h"
-	$Id: meta_value_reference.h,v 1.3.2.1 2006/06/29 23:24:58 fang Exp $
+	$Id: meta_value_reference.h,v 1.3.2.2 2006/07/01 22:05:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_H__
@@ -11,7 +11,6 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -79,11 +78,7 @@ virtual	bad_bool
 		count_ptr<const const_param>
 		operator () (const P& p) const {
 			NEVER_NULL(p);
-#if COW_UNROLL_RESOLVE_RVALUES
 			return p->unroll_resolve_rvalues(_context, p);
-#else
-			return p->unroll_resolve_rvalues(_context);
-#endif
 		}
 	};	// end struct unroll_resolve_rvaluesr
 

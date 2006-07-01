@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.20.2.2 2006/07/01 03:42:22 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.20.2.3 2006/07/01 22:05:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -497,15 +497,10 @@ SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const const_param>
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 		const unroll_context& c, 
-#if COW_UNROLL_RESOLVE_RVALUES
-		const count_ptr<const expr_base_type>& p
-#endif
-		) const {
+		const count_ptr<const expr_base_type>& p) const {
 	typedef	count_ptr<const const_param>		return_type;
 	STACKTRACE_VERBOSE;
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-#endif
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_INDENT << "this reference = ", 
 		expr_dump_context::default_value) << endl;
@@ -711,12 +706,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 		const unroll_context& c,
 		const count_ptr<const expr_base_type>& p) const {
 	INVARIANT(p == this);
-#if COW_UNROLL_RESOLVE_RVALUES
 	return this->unroll_resolve_rvalues(c, p)
 		.template is_a<const expr_base_type>();
-#else
-	return this->unroll_resolve_rvalues(c).template is_a<const expr_base_type>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

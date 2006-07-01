@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.14.2.2 2006/07/01 03:42:09 fang Exp $
+ 	$Id: operators.cc,v 1.14.2.3 2006/07/01 22:05:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -234,25 +234,17 @@ pint_unary_expr::__unroll_resolve_rvalue(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c,
 		const count_ptr<const pint_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pint_expr>
 pint_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pint_expr>& p) const {
-	INVARIANT(p == this);
-	// lazy...
-#if COW_UNROLL_RESOLVE_RVALUES
 	return __unroll_resolve_rvalue(c, p);
-#else
-	return unroll_resolve_rvalues(c).is_a<const pint_expr>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -413,26 +405,18 @@ preal_unary_expr::__unroll_resolve_rvalue(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 preal_unary_expr::unroll_resolve_rvalues(const unroll_context& c,
 		const count_ptr<const preal_expr>& p
 		) const {
 	return __unroll_resolve_rvalue(c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const preal_expr>
 preal_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const preal_expr>& p) const {
-	INVARIANT(p == this);
-	// lazy...
-#if COW_UNROLL_RESOLVE_RVALUES
 	return __unroll_resolve_rvalue(c, p);
-#else
-	return unroll_resolve_rvalues(c).is_a<const preal_expr>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -590,25 +574,17 @@ pbool_unary_expr::__unroll_resolve_rvalue(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pbool_expr>
 pbool_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
-	INVARIANT(p == this);
-	// lazy...
-#if COW_UNROLL_RESOLVE_RVALUES
 	return __unroll_resolve_rvalue(c, p);
-#else
-	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -875,24 +851,17 @@ pint_arith_expr::__unroll_resolve_rvalue(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const pint_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pint_expr>
 pint_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pint_expr>& p) const {
-	INVARIANT(p == this);
-#if COW_UNROLL_RESOLVE_RVALUES
 	return __unroll_resolve_rvalue(c, p);
-#else
-	return unroll_resolve_rvalues(c).is_a<const pint_expr>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1171,25 +1140,17 @@ pint_relational_expr::__unroll_resolve_rvalue(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pbool_expr>
 pint_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
-	INVARIANT(p == this);
-	// lazy...
-#if COW_UNROLL_RESOLVE_RVALUES
 	return __unroll_resolve_rvalue(c, p);
-#else
-	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1447,25 +1408,17 @@ preal_arith_expr::__unroll_resolve_rvalue(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 preal_arith_expr::unroll_resolve_rvalues(const unroll_context& c,
 		const count_ptr<const preal_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const preal_expr>
 preal_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const preal_expr>& p) const {
-	INVARIANT(p == this);
-	// lazy...
-#if COW_UNROLL_RESOLVE_RVALUES
 	return __unroll_resolve_rvalue(c, p);
-#else
-	return unroll_resolve_rvalues(c).is_a<const preal_expr>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1735,25 +1688,17 @@ preal_relational_expr::__unroll_resolve_rvalue(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 preal_relational_expr::unroll_resolve_rvalues(const unroll_context& c,
 		const count_ptr<const pbool_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pbool_expr>
 preal_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
-	INVARIANT(p == this);
-	// lazy...
-#if COW_UNROLL_RESOLVE_RVALUES
 	return __unroll_resolve_rvalue(c, p);
-#else
-	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2008,25 +1953,17 @@ pbool_logical_expr::__unroll_resolve_rvalue(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pbool_expr>
 pbool_logical_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
-	INVARIANT(p == this);
-	// lazy...
-#if COW_UNROLL_RESOLVE_RVALUES
 	return __unroll_resolve_rvalue(c, p);
-#else
-	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

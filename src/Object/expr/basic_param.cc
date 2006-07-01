@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.17.2.2 2006/07/01 03:42:07 fang Exp $
+ 	$Id: basic_param.cc,v 1.17.2.3 2006/07/01 22:05:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -202,13 +202,11 @@ pbool_expr::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 pbool_expr::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const param_expr>& b) const {
 	return unroll_resolve_rvalues(c, b.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
@@ -302,13 +300,11 @@ pint_expr::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 pint_expr::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const param_expr>& b) const {
 	return unroll_resolve_rvalues(c, b.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
@@ -453,13 +449,11 @@ preal_expr::static_constant_param(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if COW_UNROLL_RESOLVE_RVALUES
 count_ptr<const const_param>
 preal_expr::unroll_resolve_rvalues(const unroll_context& c, 
 		const count_ptr<const param_expr>& b) const {
 	return unroll_resolve_rvalues(c, b.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const real_expr>
@@ -671,16 +665,9 @@ pint_const::__unroll_resolve_rvalue(const unroll_context&,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_param>
 pint_const::unroll_resolve_rvalues(const unroll_context&, 
-#if COW_UNROLL_RESOLVE_RVALUES
-		const count_ptr<const pint_expr>& p
-#endif
-		) const {
-#if COW_UNROLL_RESOLVE_RVALUES
+		const count_ptr<const pint_expr>& p) const {
 	INVARIANT(p == this);
 	return p.is_a<const pint_const>();	// must be true: this
-#else
-	return count_ptr<const const_param>(new pint_const(*this));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -830,17 +817,10 @@ pbool_const::__unroll_resolve_rvalue(const unroll_context&,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_param>
-pbool_const::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const pbool_expr>& p
-#endif
-		) const {
-#if COW_UNROLL_RESOLVE_RVALUES
+pbool_const::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
 	INVARIANT(p == this);
 	return p.is_a<const pbool_const>();
-#else
-	return count_ptr<const const_param>(new pbool_const(*this));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -996,17 +976,10 @@ preal_const::__unroll_resolve_rvalue(const unroll_context&,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_param>
-preal_const::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const preal_expr>& p
-#endif
-		) const {
-#if COW_UNROLL_RESOLVE_RVALUES
+preal_const::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const preal_expr>& p) const {
 	INVARIANT(p == this);
 	return p.is_a<const preal_const>();
-#else
-	return count_ptr<const const_param>(new preal_const(*this));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

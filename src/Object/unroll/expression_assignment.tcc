@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.14.6.1 2006/06/29 23:25:03 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.14.6.2 2006/07/01 22:05:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -262,11 +262,7 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 	INVARIANT(this->src);
 	// works for scalars and multidimensional arrays alike
 	const count_ptr<const const_param>
-#if COW_UNROLL_RESOLVE_RVALUES
 		src_values(this->src->unroll_resolve_rvalues(c, this->src));
-#else
-		src_values(this->src->unroll_resolve_rvalues(c));
-#endif
 	if (!src_values) {
 		this->src->dump(
 			cerr << "ERROR: failed to resolve source values of ",

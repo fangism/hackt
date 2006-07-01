@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-07-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-03:
+	  Added scripts/rm_pattern.sh used in the definition of
+		RM_PATTERN in Make.stddef.  rm residues begone!
+
+
 2006-06-30	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-20-cow-02:

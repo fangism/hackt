@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.15.12.1 2006/07/01 03:42:20 fang Exp $
+	$Id: PRS.cc,v 1.15.12.2 2006/07/01 22:05:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -304,11 +304,7 @@ count_ptr<const const_param_expr_list>
 attribute::unroll_values(const unroll_context& c) const {
 	NEVER_NULL(values);
 	const count_ptr<const const_param_expr_list>
-#if COW_UNROLL_RESOLVE_RVALUES
 		ret(values->unroll_resolve_rvalues(c, values));
-#else
-		ret(values->unroll_resolve_rvalues(c));
-#endif
 	if (!ret) {
 		cerr << "Error resolving attribute values!" << endl;
 	}

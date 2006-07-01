@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.2 2006/07/01 03:42:22 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.3 2006/07/01 22:05:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -370,11 +370,8 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::__unroll_resolve_rvalue(
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const const_param>
 AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
-		const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const expr_base_type>& p
-#endif
-		) const {
+		const unroll_context& c, 
+		const count_ptr<const expr_base_type>& p) const {
 	typedef count_ptr<const const_collection_type>	return_type;
 	typedef count_ptr<const_collection_type>	temp_ret_type;
 	typedef	vector<count_ptr<const const_param> >	temp_type;
@@ -384,9 +381,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 	typedef typename const_collection_type::key_type	key_type;
 	typedef typename const_collection_type::iterator	target_iterator;
 
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-#endif
 	const size_t subdim = subreferences.front()->dimensions();
 	temp_type temp;
 	util::reserve(temp, subreferences.size());	// pre-allocate
@@ -536,12 +531,8 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 		const unroll_context& c, 
 		const count_ptr<const expr_base_type>& p) const {
 	INVARIANT(p == this);
-#if COW_UNROLL_RESOLVE_RVALUES
 	return this->unroll_resolve_rvalues(c, p)
 		.template is_a<const expr_base_type>();
-#else
-	return this->unroll_resolve_rvalues(c).template is_a<const expr_base_type>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

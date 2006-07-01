@@ -3,7 +3,7 @@
 	Classes related to constant parameter expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param.h,v 1.10.2.1 2006/06/29 23:24:43 fang Exp $
+	$Id: const_param.h,v 1.10.2.2 2006/07/01 22:05:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_H__
@@ -68,17 +68,6 @@ virtual	count_ptr<const const_param>
 
 	bool
 	is_unconditional(void) const { return true; }
-
-#if COW_UNROLL_RESOLVE_RVALUES
-#if 0
-virtual	count_ptr<const const_param>
-	unroll_resolve_rvalues(const unroll_context&, 
-		const count_ptr<const param_expr>&) const = 0;
-#endif
-#else
-virtual	count_ptr<const const_param>
-	unroll_resolve_rvalues(const unroll_context&) const = 0;
-#endif
 
 #define	LESS_OPERATOR_PROTO						\
 	bool								\
