@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.14.2.1 2006/06/29 23:24:44 fang Exp $
+ 	$Id: operators.cc,v 1.14.2.2 2006/07/01 03:42:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -206,21 +206,14 @@ pint_unary_expr::resolve_dimensions(void) const {
 /**
 	The only unary pint operation is negation.  
  */
-count_ptr<const const_param>
-pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const pint_expr>& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>		return_type;
+count_ptr<const pint_const>
+pint_unary_expr::__unroll_resolve_rvalue(const unroll_context& c,
+		const count_ptr<const pint_expr>& p) const {
+	typedef	count_ptr<const pint_const>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-	const return_type ret(ex->unroll_resolve_rvalues(c, ex));
-#else
-	const return_type ret(ex->unroll_resolve_rvalues(c));
-#endif
+	const return_type ret(ex->__unroll_resolve_rvalue(c, ex));
 	if (ret) {
 #if 0
 		count_ptr<pint_const> pc(ret.is_a<pint_const>());
@@ -230,8 +223,8 @@ pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c
 		return return_type(
 			new pint_const(- pc->static_constant_value()));
 #else
-		return return_type(new pint_const(
-			-ret.is_a<const pint_expr>()->static_constant_value()));
+		return return_type(
+			new pint_const(-ret->static_constant_value()));
 #endif
 	} else {
 		// there is an error
@@ -241,13 +234,22 @@ pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+pint_unary_expr::unroll_resolve_rvalues(const unroll_context& c,
+		const count_ptr<const pint_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pint_expr>
 pint_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pint_expr>& p) const {
 	INVARIANT(p == this);
 	// lazy...
 #if COW_UNROLL_RESOLVE_RVALUES
-	return unroll_resolve_rvalues(c, p).is_a<const pint_expr>();
+	return __unroll_resolve_rvalue(c, p);
 #else
 	return unroll_resolve_rvalues(c).is_a<const pint_expr>();
 #endif
@@ -392,24 +394,17 @@ preal_unary_expr::resolve_dimensions(void) const {
 /**
 	The only unary preal operation is negation.  
  */
-count_ptr<const const_param>
-preal_unary_expr::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const preal_expr>& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>		return_type;
+count_ptr<const preal_const>
+preal_unary_expr::__unroll_resolve_rvalue(const unroll_context& c,
+		const count_ptr<const preal_expr>& p) const {
+	typedef	count_ptr<const preal_const>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-	const return_type ret(ex->unroll_resolve_rvalues(c, ex));
-#else
-	const return_type ret(ex->unroll_resolve_rvalues(c));
-#endif
+	const return_type ret(ex->__unroll_resolve_rvalue(c, ex));
 	if (ret) {
-		return return_type(new preal_const(
-			-ret.is_a<const preal_expr>()->static_constant_value()));
+		return return_type(
+			new preal_const(-ret->static_constant_value()));
 	} else {
 		// there is an error
 		// discard intermediate result
@@ -418,13 +413,23 @@ preal_unary_expr::unroll_resolve_rvalues(const unroll_context& c
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+preal_unary_expr::unroll_resolve_rvalues(const unroll_context& c,
+		const count_ptr<const preal_expr>& p
+		) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const preal_expr>
 preal_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const preal_expr>& p) const {
 	INVARIANT(p == this);
 	// lazy...
 #if COW_UNROLL_RESOLVE_RVALUES
-	return unroll_resolve_rvalues(c, p).is_a<const preal_expr>();
+	return __unroll_resolve_rvalue(c, p);
 #else
 	return unroll_resolve_rvalues(c).is_a<const preal_expr>();
 #endif
@@ -557,21 +562,14 @@ pbool_unary_expr::resolve_value(value_type& i) const {
 /**
 	The only unary pbool operation is logical negation.  
  */
-count_ptr<const const_param>
-pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const pbool_expr>& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>		return_type;
+count_ptr<const pbool_const>
+pbool_unary_expr::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_const>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-	const return_type ret(ex->unroll_resolve_rvalues(c, ex));
-#else
-	const return_type ret(ex->unroll_resolve_rvalues(c));
-#endif
+	const return_type ret(ex->__unroll_resolve_rvalue(c, ex));
 	if (ret) {
 #if 0
 		count_ptr<pbool_const> pc(ret.is_a<pbool_const>());
@@ -581,9 +579,8 @@ pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c
 		return return_type(
 			new pbool_const(!pc->static_constant_value()));
 #else
-		return return_type(new pbool_const(
-			!ret.is_a<const pbool_expr>()
-				->static_constant_value()));
+		return return_type(
+			new pbool_const(!ret->static_constant_value()));
 #endif
 	} else {
 		// there is an error
@@ -593,13 +590,22 @@ pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+pbool_unary_expr::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pbool_expr>
 pbool_unary_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
 	INVARIANT(p == this);
 	// lazy...
 #if COW_UNROLL_RESOLVE_RVALUES
-	return unroll_resolve_rvalues(c, p).is_a<const pbool_expr>();
+	return __unroll_resolve_rvalue(c, p);
 #else
 	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
 #endif
@@ -834,23 +840,15 @@ pint_arith_expr::unroll_resolve_value(const unroll_context& c,
 /**
 	\return pint_const of the resolved value.
  */
-count_ptr<const const_param>
-pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const pint_expr>& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>		return_type;
+count_ptr<const pint_const>
+pint_arith_expr::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const pint_expr>& p) const {
+	typedef	count_ptr<const pint_const>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-	const return_type lex(lx->unroll_resolve_rvalues(c, lx));
-	const return_type rex(rx->unroll_resolve_rvalues(c, rx));
-#else
-	const return_type lex(lx->unroll_resolve_rvalues(c));
-	const return_type rex(rx->unroll_resolve_rvalues(c));
-#endif
+	const return_type lex(lx->__unroll_resolve_rvalue(c, lx));
+	const return_type rex(rx->__unroll_resolve_rvalue(c, rx));
 	if (lex && rex) {
 		// actually could be scalar const_collection!
 #if 0
@@ -865,10 +863,8 @@ pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c
 #else
 		// TODO: need a specialized unroll_resolve_rvalues for the value_type
 		// for now, just assert the type
-		const pint_value_type lop =
-			lex.is_a<const pint_expr>()->static_constant_value();
-		const pint_value_type rop =
-			rex.is_a<const pint_expr>()->static_constant_value();
+		const pint_value_type lop = lex->static_constant_value();
+		const pint_value_type rop = rex->static_constant_value();
 #endif
 		return return_type(new pint_const((*op)(lop, rop)));
 	} else {
@@ -879,30 +875,23 @@ pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+pint_arith_expr::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const pint_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pint_expr>
 pint_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pint_expr>& p) const {
 	INVARIANT(p == this);
-#if 1
-	// lazy...
 #if COW_UNROLL_RESOLVE_RVALUES
-	return unroll_resolve_rvalues(c, p).is_a<const pint_expr>();
+	return __unroll_resolve_rvalue(c, p);
 #else
 	return unroll_resolve_rvalues(c).is_a<const pint_expr>();
-#endif
-#else
-	// is this necessary, we just want a constant result...
-	const operand_ptr_type lc(lx->unroll_resolve_copy(c, lx));
-	const operand_ptr_type rc(rx->unroll_resolve_copy(c, rx));
-	if (!lc || !rc) {
-		// already have error message
-		return count_ptr<const pint_expr>(NULL);
-	} else if (lc == lx && rc == rx) {
-		// no change resulted
-		return p;
-	} else {
-		return count_ptr<const pint_expr>(new this_type(lc, op, rc));
-	}
 #endif
 }
 
@@ -1148,23 +1137,16 @@ pint_relational_expr::resolve_value(value_type& i) const {
 /**
 	\return pbool_const of the resolved value.
  */
-count_ptr<const const_param>
-pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const pbool_expr>& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>		return_type;
+count_ptr<const pbool_const>
+pint_relational_expr::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_const>		return_type;
+	typedef	count_ptr<const pint_const>		leaf_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-	const return_type lex(lx->unroll_resolve_rvalues(c, lx));
-	const return_type rex(rx->unroll_resolve_rvalues(c, rx));
-#else
-	const return_type lex(lx->unroll_resolve_rvalues(c));
-	const return_type rex(rx->unroll_resolve_rvalues(c));
-#endif
+	const leaf_type lex(lx->__unroll_resolve_rvalue(c, lx));
+	const leaf_type rex(rx->__unroll_resolve_rvalue(c, rx));
 	if (lex && rex) {
 #if 0
 		const count_ptr<pint_const> lpc(lex.is_a<pint_const>());
@@ -1177,10 +1159,8 @@ pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c
 		const pint_value_type lop = lpc->static_constant_value();
 		const pint_value_type rop = rpc->static_constant_value();
 #else
-		const pint_value_type lop =
-			lex.is_a<const pint_expr>()->static_constant_value();
-		const pint_value_type rop =
-			rex.is_a<const pint_expr>()->static_constant_value();
+		const pint_value_type lop = lex->static_constant_value();
+		const pint_value_type rop = rex->static_constant_value();
 #endif
 		return return_type(new pbool_const((*op)(lop, rop)));
 	} else {
@@ -1191,13 +1171,22 @@ pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+pint_relational_expr::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pbool_expr>
 pint_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
 	INVARIANT(p == this);
 	// lazy...
 #if COW_UNROLL_RESOLVE_RVALUES
-	return unroll_resolve_rvalues(c, p).is_a<const pbool_expr>();
+	return __unroll_resolve_rvalue(c, p);
 #else
 	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
 #endif
@@ -1434,31 +1423,21 @@ preal_arith_expr::unroll_resolve_value(const unroll_context& c,
 /**
 	\return preal_const of the resolved value.
  */
-count_ptr<const const_param>
-preal_arith_expr::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const preal_expr>& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>		return_type;
+count_ptr<const preal_const>
+preal_arith_expr::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const preal_expr>& p) const {
+	typedef	count_ptr<const preal_const>		return_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-	const return_type lex(lx->unroll_resolve_rvalues(c, lx));
-	const return_type rex(rx->unroll_resolve_rvalues(c, rx));
-#else
-	const return_type lex(lx->unroll_resolve_rvalues(c));
-	const return_type rex(rx->unroll_resolve_rvalues(c));
-#endif
+	const return_type lex(lx->__unroll_resolve_rvalue(c, lx));
+	const return_type rex(rx->__unroll_resolve_rvalue(c, rx));
 	if (lex && rex) {
 		// actually could be scalar const_collection!
 		// TODO: need a specialized unroll_resolve_rvalues for the value_type
 		// for now, just assert the type
-		const preal_value_type lop =
-			lex.is_a<const preal_expr>()->static_constant_value();
-		const preal_value_type rop =
-			rex.is_a<const preal_expr>()->static_constant_value();
+		const preal_value_type lop = lex->static_constant_value();
+		const preal_value_type rop = rex->static_constant_value();
 		return return_type(new preal_const((*op)(lop, rop)));
 	} else {
 		// there is an error in at least one sub-expression
@@ -1468,13 +1447,22 @@ preal_arith_expr::unroll_resolve_rvalues(const unroll_context& c
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+preal_arith_expr::unroll_resolve_rvalues(const unroll_context& c,
+		const count_ptr<const preal_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const preal_expr>
 preal_arith_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const preal_expr>& p) const {
 	INVARIANT(p == this);
 	// lazy...
 #if COW_UNROLL_RESOLVE_RVALUES
-	return unroll_resolve_rvalues(c, p).is_a<const preal_expr>();
+	return __unroll_resolve_rvalue(c, p);
 #else
 	return unroll_resolve_rvalues(c).is_a<const preal_expr>();
 #endif
@@ -1725,28 +1713,19 @@ preal_relational_expr::resolve_value(value_type& i) const {
 /**
 	\return pbool_const of the resolved value.
  */
-count_ptr<const const_param>
-preal_relational_expr::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const pbool_expr>& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>		return_type;
+count_ptr<const pbool_const>
+preal_relational_expr::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_const>		return_type;
+	typedef	count_ptr<const preal_const>		leaf_type;
 	// should return a preal_const
 	// maybe make a preal_const version to avoid casting
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-	const return_type lex(lx->unroll_resolve_rvalues(c, lx));
-	const return_type rex(rx->unroll_resolve_rvalues(c, rx));
-#else
-	const return_type lex(lx->unroll_resolve_rvalues(c));
-	const return_type rex(rx->unroll_resolve_rvalues(c));
-#endif
+	const leaf_type lex(lx->__unroll_resolve_rvalue(c, lx));
+	const leaf_type rex(rx->__unroll_resolve_rvalue(c, rx));
 	if (lex && rex) {
-		const preal_value_type lop =
-			lex.is_a<const preal_expr>()->static_constant_value();
-		const preal_value_type rop =
-			rex.is_a<const preal_expr>()->static_constant_value();
+		const preal_value_type lop = lex->static_constant_value();
+		const preal_value_type rop = rex->static_constant_value();
 		return return_type(new pbool_const((*op)(lop, rop)));
 	} else {
 		// there is an error in at least one sub-expression
@@ -1756,13 +1735,22 @@ preal_relational_expr::unroll_resolve_rvalues(const unroll_context& c
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+preal_relational_expr::unroll_resolve_rvalues(const unroll_context& c,
+		const count_ptr<const pbool_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pbool_expr>
 preal_relational_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
 	INVARIANT(p == this);
 	// lazy...
 #if COW_UNROLL_RESOLVE_RVALUES
-	return unroll_resolve_rvalues(c, p).is_a<const pbool_expr>();
+	return __unroll_resolve_rvalue(c, p);
 #else
 	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
 #endif
@@ -1987,23 +1975,15 @@ pbool_logical_expr::resolve_value(value_type& i) const {
 /**
 	\return pbool_const of the resolved value.
  */
-count_ptr<const const_param>
-pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c
-#if COW_UNROLL_RESOLVE_RVALUES
-		, const count_ptr<const pbool_expr>& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>		return_type;
+count_ptr<const pbool_const>
+pbool_logical_expr::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_const>		return_type;
 	// should return a pint_const
 	// maybe make a pint_const version to avoid casting
-#if COW_UNROLL_RESOLVE_RVALUES
 	INVARIANT(p == this);
-	const return_type lex(lx->unroll_resolve_rvalues(c, lx));
-	const return_type rex(rx->unroll_resolve_rvalues(c, rx));
-#else
-	const return_type lex(lx->unroll_resolve_rvalues(c));
-	const return_type rex(rx->unroll_resolve_rvalues(c));
-#endif
+	const return_type lex(lx->__unroll_resolve_rvalue(c, lx));
+	const return_type rex(rx->__unroll_resolve_rvalue(c, rx));
 	if (lex && rex) {
 #if 0
 		const count_ptr<pbool_const> lpc(lex.is_a<pbool_const>());
@@ -2016,10 +1996,8 @@ pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c
 		const pbool_value_type lop = lpc->static_constant_value();
 		const pbool_value_type rop = rpc->static_constant_value();
 #else
-		const pbool_value_type lop =
-			lex.is_a<const pbool_expr>()->static_constant_value();
-		const pbool_value_type rop =
-			rex.is_a<const pbool_expr>()->static_constant_value();
+		const pbool_value_type lop = lex->static_constant_value();
+		const pbool_value_type rop = rex->static_constant_value();
 #endif
 		return return_type(new pbool_const((*op)(lop, rop)));
 	} else {
@@ -2030,13 +2008,22 @@ pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if COW_UNROLL_RESOLVE_RVALUES
+count_ptr<const const_param>
+pbool_logical_expr::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const pbool_expr>& p) const {
+	return __unroll_resolve_rvalue(c, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const pbool_expr>
 pbool_logical_expr::unroll_resolve_copy(const unroll_context& c, 
 		const count_ptr<const pbool_expr>& p) const {
 	INVARIANT(p == this);
 	// lazy...
 #if COW_UNROLL_RESOLVE_RVALUES
-	return unroll_resolve_rvalues(c, p).is_a<const pbool_expr>();
+	return __unroll_resolve_rvalue(c, p);
 #else
 	return unroll_resolve_rvalues(c).is_a<const pbool_expr>();
 #endif

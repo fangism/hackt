@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.127 2006/06/26 01:45:41 fang Exp $
+#	$Id: Makefile.am,v 1.127.2.1 2006/07/01 03:42:04 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1324,7 +1324,10 @@ clean-scripts:
 DISTCLEANFILES += $(SUBDIR_CVSIGNORE) $(CONFIG_PARSERS)
 DISTCLEANDIRS += $(DEPDIR)
 
-distclean-local: clean-parser clean-lexer
+distclean-local: clean-parser clean-lexer distclean-deps
+
+distclean-deps:
+	-$(RM) -r `$(FIND) . -name .deps -type d`
 
 dist-hook:
 	for f in $(DISTCLEANFILES) $(CLEANFILES); do \
@@ -1354,6 +1357,8 @@ help-local:
 	@$(ECHO) "    show-stacktrace-sources: grep for debug-enabled sources"
 	@$(ECHO) "Local echo-* targets:"
 	@$(ECHO) "    libhacktexec-sources"
+
+.PHONY: distclean-deps distclean-local dist-hook
 
 # standard targets
 include $(srcdir)/Make.hchk-tail.am

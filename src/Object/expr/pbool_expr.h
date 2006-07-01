@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.10.2.1 2006/06/29 23:24:48 fang Exp $
+	$Id: pbool_expr.h,v 1.10.2.2 2006/07/01 03:42:11 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -18,6 +18,7 @@
 namespace HAC {
 namespace entity {
 struct pbool_tag;
+class pbool_const;
 class const_param;
 class const_index_list;
 class unroll_context;
@@ -90,6 +91,10 @@ virtual	good_bool
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
+
+virtual	count_ptr<const pbool_const>
+	__unroll_resolve_rvalue(const unroll_context&, 
+		const count_ptr<const pbool_expr>&) const = 0;
 
 #if COW_UNROLL_RESOLVE_RVALUES
 	count_ptr<const const_param>

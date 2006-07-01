@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.4.2.1 2006/06/29 23:24:56 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.4.2.2 2006/07/01 03:42:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -138,6 +138,10 @@ public:
 
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type&) const;
+
+	count_ptr<const const_expr_type>
+	__unroll_resolve_rvalue(const unroll_context&, 
+		const count_ptr<const expr_base_type>&) const;
 
 #if COW_UNROLL_RESOLVE_RVALUES
 	count_ptr<const const_param>

@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.6.2.1 2006/06/29 23:24:54 fang Exp $
+	$Id: preal_arith_expr.h,v 1.6.2.2 2006/07/01 03:42:16 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -106,6 +106,10 @@ public:
 
 	const_index_list
 	resolve_dimensions(void) const;
+
+	count_ptr<const preal_const>
+	__unroll_resolve_rvalue(const unroll_context&, 
+		const count_ptr<const preal_expr>&) const;
 
 #if COW_UNROLL_RESOLVE_RVALUES
 	count_ptr<const const_param>

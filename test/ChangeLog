@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2006-06-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-02:
+	  Make.test-tail: clean target uses more patterns instead of 
+		auto-deduced CLEANFILES lists to avoid comand-line limit.
+		Extra clean patterns added to rm -rf to avoid 
+		directory listing spillage.  
+
+
 2006-05-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-09:

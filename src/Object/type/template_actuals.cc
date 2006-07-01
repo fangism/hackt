@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.9 2006/04/24 00:28:07 fang Exp $
+	$Id: template_actuals.cc,v 1.9.12.1 2006/07/01 03:42:23 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -69,7 +69,7 @@ template_actuals::template_actuals() :
 	\param s list of strict template actuals (may be NULL)
 	\param r list of relaxed template actuals (may be NULL)
  */
-template_actuals::template_actuals(const arg_list_ptr_type& s, 
+template_actuals::template_actuals(const const_arg_list_ptr_type& s, 
 		const const_arg_list_ptr_type& r) :
 		strict_template_args(s), relaxed_template_args(r) {
 	STACKTRACE_CTOR_VERBOSE;
@@ -193,7 +193,7 @@ template_actuals::operator [] (const size_t i) const {
 bool
 template_actuals::is_constant(void) const {
 	return (!strict_template_args ||
-			strict_template_args.is_a<const_param_expr_list>() ||
+			strict_template_args.is_a<const const_param_expr_list>() ||
 			strict_template_args->is_static_constant()) &&
 		(!relaxed_template_args ||
 			relaxed_template_args.is_a<const const_param_expr_list>() ||
@@ -207,10 +207,22 @@ template_actuals::get_strict_args(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 template_actuals::arg_list_ptr_type
 template_actuals::get_strict_args(void) {
 	return strict_template_args;
 }
+#else
+/**
+	Replaces strict template args, no questions asked.  
+	Called after certify_template_arguments to substitute
+	default values automatically.  
+ */
+void
+template_actuals::replace_strict_args(const const_arg_list_ptr_type& s) {
+	strict_template_args = s;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template_actuals::const_arg_list_ptr_type
@@ -230,9 +242,14 @@ template_actuals
 template_actuals::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
 	bool err = false;
-	arg_list_ptr_type sr, rr;
+	const_arg_list_ptr_type sr, rr;
 	if (strict_template_args) {
+#if COW_UNROLL_RESOLVE_RVALUES
+		sr = strict_template_args->unroll_resolve_rvalues(c, 
+			strict_template_args);
+#else
 		sr = strict_template_args->unroll_resolve_rvalues(c);
+#endif
 		if (!sr) {
 			cerr << "ERROR in resolving strict template actuals."
 				<< endl;
@@ -242,7 +259,12 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 		}
 	}
 	if (relaxed_template_args) {
+#if COW_UNROLL_RESOLVE_RVALUES
+		rr = relaxed_template_args->unroll_resolve_rvalues(c, 
+			relaxed_template_args);
+#else
 		rr = relaxed_template_args->unroll_resolve_rvalues(c);
+#endif
 		if (!rr) {
 			cerr << "ERROR in resolving relaxed template actuals."
 				<< endl;
@@ -392,7 +414,8 @@ template_actuals::load_object_base(const persistent_object_manager& m,
 	m.read_pointer(i, strict_template_args);
 	m.read_pointer(i, relaxed_template_args);
 	if (strict_template_args)
-		m.load_object_once(&*strict_template_args);
+		m.load_object_once(
+			const_cast<expr_list_type*>(&*strict_template_args));
 	if (relaxed_template_args)
 		m.load_object_once(
 			const_cast<expr_list_type*>(&*relaxed_template_args));

@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-06-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-02:
+	  Copy-on-write meta-parameter-value lists. 
+		Had to touch template_actuals...
+	  Makefile.am: added local distclean-deps to help remove
+		.deps directories ("Directory not empty" problem).
+	  Implemented quasi-covariant __unroll_resolve_rvalue to return
+		a scalar value in place where scalars are expected, 
+		and avoid extra cross-casting between other unroll methods.  
+
+
 2006-06-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-20-cow-01:

@@ -1,5 +1,17 @@
 "ChangeLog"
 
+2006-06-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-02:
+	  configure.ac: apply extra patch to top_builddir/Makefile:
+		am__remove_distdir hacked to repeatedly try rm -rf $(distdir)
+		until command succeeds because of residual files from
+		recursive remove when too many files in directory.  
+	  config/am__remove_distdir.diff is the patch for this.
+		This patch should (IMO) be applied to automake's 
+		am/distdir.am upstream source.  
+
+
 2006-05-12	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-03-CHP-02-04:

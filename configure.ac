@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.68 2006/06/26 01:45:21 fang Exp $
+#	$Id: configure.ac,v 1.68.2.1 2006/07/01 03:41:59 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -337,8 +337,11 @@ chmod +x config_subst.awk.sh
 CONFIGDATE=`$DATE`
 AC_SUBST(CONFIGDATE)
 
+# additional patch to Makefile to work around automake shortcoming
+# recursive rm may fail if too many files in particular subdir.
+AC_CONFIG_FILES([Makefile], 
+	[patch -p0 < $srcdir/config/am__remove_distdir.diff])
 AC_CONFIG_FILES([
-	Makefile
 	scripts/Makefile
 	src/Makefile
 	src/util/test/Makefile

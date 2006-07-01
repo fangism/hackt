@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.11 2006/06/02 00:26:52 fang Exp $
+	$Id: template_formals_manager.cc,v 1.11.2.1 2006/07/01 03:42:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -328,12 +328,20 @@ template_formals_manager::equivalent_template_formals(
 good_bool
 template_formals_manager::certify_template_arguments(
 		template_actuals& t) const {
-	const count_ptr<param_expr_list> spl(t.get_strict_args());
-	const good_bool sg(spl ?
-		spl->certify_template_arguments(
-			strict_template_formals_list) :
-		partial_check_null_template_argument(
-			strict_template_formals_list));
+	const count_ptr<const param_expr_list>& spl(t.get_strict_args());
+	good_bool sg;
+	if (spl) {
+		const count_ptr<param_expr_list> rep(spl->copy());
+		sg = rep->certify_template_arguments(
+			strict_template_formals_list);
+		if (sg.good) {
+			t.replace_strict_args(rep);
+		}
+		// else already have error message
+	} else {
+		sg = partial_check_null_template_argument(
+			strict_template_formals_list);
+	}
 	// NOTE: at this phase of certification, the relaxed actuals
 	// are allowed to be ommitted, and thus should not be filled in.  
 	// Also note: relaxed formals aren't allowed to have default values.

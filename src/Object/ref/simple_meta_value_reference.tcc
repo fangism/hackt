@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.20.2.1 2006/06/29 23:24:59 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.20.2.2 2006/07/01 03:42:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -451,10 +451,47 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	NOTE: most of this code ripped from unroll_resolve_rvalues
+	so take care when maintaining!
+	TODO: factor out to eliminate duplication...
+	Resolution: just wrap and save myself the trouble...
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const typename SIMPLE_META_VALUE_REFERENCE_CLASS::const_expr_type>
+SIMPLE_META_VALUE_REFERENCE_CLASS::__unroll_resolve_rvalue(
+		const unroll_context& c, 
+		const count_ptr<const expr_base_type>& p) const {
+	typedef	count_ptr<const const_expr_type>	return_type;
+	const count_ptr<const const_param>
+		temp(this->unroll_resolve_rvalues(c, p));
+if (temp) {
+	const return_type ret(temp.template is_a<const const_expr_type>());
+	if (ret) {
+		return ret;
+	} else {
+		const count_ptr<const const_collection_type>
+			cret(temp.template is_a<const const_collection_type>());
+		NEVER_NULL(cret);	// what else could it be?
+		if (cret->dimensions()) {
+			cerr << "Error: got non-scalar value where "
+				"scalar value was expected." << endl;
+			return return_type(NULL);
+		} else {
+			return return_type(new const_expr_type(cret->front()));
+		}
+	}
+} else {
+	return return_type(NULL);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Resolves a scalar or collective instance reference into a 
 	packed array of values.  
 	\param c unrolling context, may contain template actuals.
 	\return dense array of values, NULL if error.  
+		When result is scalar, always returns the const_expr_type.  
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const const_param>

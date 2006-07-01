@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.33 2006/06/26 01:46:52 fang Exp $
+#	$Id: Make.test-tail,v 1.33.2.1 2006/07/01 03:42:26 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -437,11 +437,16 @@ echo-prsimckpt-tests: force
 
 # must be previously defined
 CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
+	$(EMPTY_CFLAT_PRS) \
+	$(HACKT_PARSE_TEST_PASSES:=.stderr)
+
+# just using pattern to delete generated files from now on
+# running into command-line length limits on various platforms
+EXPLICIT_CLEANFILES = \
 	$(HACKT_PARSE_TEST_SUBJECTS:=.diff) \
 	$(HACKT_PARSE_TEST_SUBJECTS:=.test) \
 	$(HACKT_PARSE_TEST_SUBJECTS:=.test.filter) \
 	$(HACKT_PARSE_TEST_SUBJECTS:=.stderr.filter) \
-	$(HACKT_PARSE_TEST_PASSES:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison.filter) \
 	$(BISON_OUTPUTS:=.bison.diff) \
 	$(HACKT_OBJ_TEST_SUBJECTS:=.outdump) \
@@ -464,7 +469,6 @@ CLEANFILES += $(TESTS) $(CHECK_SUMMARIES) \
 	$(HACKT_ALLOC_TEST_SUBJECTS:=.allocdiff) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prs) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.prsdiff) \
-	$(EMPTY_CFLAT_PRS) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseu) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.prsseu-diff) \
 	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr) \
@@ -529,37 +533,77 @@ clean-tests-recursive:
 clean-summaries:
 	$(RM) $(CHECK_SUMMARIES)
 
+clean-compiletests:
+	-$(RM) *.test
+	-$(RM) *.diff
+	-$(RM) *.test.filter
+	-$(RM) *.hacktcmpltest
+	-$(RM) *.stderr.filter *.stderr.bison.filter *.bison.diff
+	-$(RM) *.test *.test.filter
 
-# automatically removes $(CLEANFILES)
-clean-local: clean-summaries
-	-$(RM) *.core core.*
-	-$(RM) *.filter *.diff *.sort *.noindex
-	-$(RM) *.hacktcmpltest *.hacktobjtest *.hacktunrolltest
-	-$(RM) *.hacktcreatetest *.hacktalloctest *.hacktcflattest
-	-$(RM) *.hacktsprstest *.hacktcflatseutest
-	-$(RM) *.hacktcreatefromhacotest
-	-$(RM) *.hacktprsimexprtest
+clean-unrolltests:
+	-$(RM) *.hacktobjtest
+	-$(RM) *.hacktunrolltest
 	-$(RM) *.indump *.outdump *.objdiff
+	-$(RM) *.indump.filter *.outdump.filter
 	-$(RM) *.haco *.haco-dump
-	-$(RM) *.haco-u *.unrolldump *.unrolldiff *.haco-u-dump
-	-$(RM) *.haco-c *.createdump *.creatediff *.haco-c-dump
-	-$(RM) *.haco-a *.allocdump *.allocdiff *.haco-a-dump
-	-$(RM) *-from-haco *.haco*
-	-$(RM) *.*-from-*-dump
-	-$(RM) *.*-from-*-diff
+	-$(RM) *.haco-u *.unrolldump
+	-$(RM) *.unrolldiff *.haco-u-dump
+	-$(RM) *.unrolldump.filter
+
+clean-createtests:
+	-$(RM) *.hacktcreatetest
+	-$(RM) *.hacktcreatefromhacotest
+	-$(RM) *.haco-c *.createdump
+	-$(RM) *.creatediff *.haco-c-dump
+	-$(RM) *.createdump.filter
 	-$(RM) *.create-from*
+
+clean-alloctests:
+	-$(RM) *.hacktalloctest
+	-$(RM) *.haco-a *.allocdump
+	-$(RM) *.allocdiff *.haco-a-dump
+	-$(RM) *.allocdump.filter
 	-$(RM) *.alloc-from*
+
+clean-cflattests:
+	-$(RM) *.hacktcflattest
+	-$(RM) *.hacktsprstest
+	-$(RM) *.hacktcflatseutest
+	-$(RM) *.hacktprsimexprtest
 	-$(RM) *.prs *.prsdiff *.prsdiff.sort
 	-$(RM) *.prsseu *.prsseu-diff
 	-$(RM) *.prsimexpr *.prsimexprdiff
 	-$(RM) *.prsimexpr-dot *.prsimexpr-ps
-	-$(RM) *.prsimtest *.prsimrc-out *.prsimrc-out-filter *.prsimrc-diff
 	-$(RM) *.sprs *.sprsdiff *.sprsdiff.sort
-	-$(RM) *.prsimckpt *.prsimckpttest *.prsimckpt-dupe
-	-$(RM) *.prsimckpt-outdump *.prsimckpt-indump *.prsimckpt-diff
-	-$(RM) *.prsimopttest *.prsimckpt-O1 
-	-$(RM) *.prsimckpt-O1-err *.prsimckpt-O1-dump
+
+clean-prsimtests:
+	-$(RM) *.prsimtest *.prsimrc-out
+	-$(RM) *.prsimrc-out-filter *.prsimrc-diff
+	-$(RM) *.prsimckpt
+	-$(RM) *.prsimckpttest
+	-$(RM) *.prsimckpt-dupe
+	-$(RM) *.prsimckpt-outdump
+	-$(RM) *.prsimckpt-indump
+	-$(RM) *.prsimckpt-diff
+	-$(RM) *.prsimopttest
+	-$(RM) *.prsimckpt-O1 
+	-$(RM) *.prsimckpt-O1-err
+	-$(RM) *.prsimckpt-O1-dump
 	-$(RM) *.prsimopt-diff
+
+# automatically removes $(CLEANFILES)
+clean-local: clean-summaries clean-compiletests clean-unrolltests \
+		clean-createtests clean-alloctests \
+		clean-cflattests clean-prsimtests
+	-$(RM) *.core core.*
+	-$(RM) *.diff
+	-$(RM) *.sort
+	-$(RM) *.noindex
+	-$(RM) *-from-haco *.haco*
+	-$(RM) *.*-from-*-dump
+	-$(RM) *.*-from-*-diff
+# repeat some rm's to cover spilling command-line arguments
 
 # really remove these files!
 cleaner: clean cleaner-recursive cleaner-local

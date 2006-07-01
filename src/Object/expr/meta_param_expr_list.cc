@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.17.2.1 2006/06/29 23:24:43 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.17.2.2 2006/07/01 03:42:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -85,6 +85,12 @@ const_param_expr_list::const_param_expr_list(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_param_expr_list::~const_param_expr_list() {
 	STACKTRACE_DTOR("~const_param_expr_list()");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<param_expr_list>
+const_param_expr_list::copy(void) const {
+	return count_ptr<param_expr_list>(new this_type(*this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -371,11 +377,22 @@ const_param_expr_list::must_be_equivalent(const this_type& cpl) const {
 	because this is already constant.  
  */
 param_expr_list::unroll_resolve_rvalues_return_type
-const_param_expr_list::unroll_resolve_rvalues(const unroll_context& c) const {
+const_param_expr_list::unroll_resolve_rvalues(const unroll_context& c
+#if COW_UNROLL_RESOLVE_RVALUES
+		, const count_ptr<const param_expr_list>& p
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
+#if COW_UNROLL_RESOLVE_RVALUES
+	// return counted copy of self
+	INVARIANT(p == this);
+	return p.is_a<const this_type>();
+#else
 	// safe to use default copy construction because
 	// count_ptr's are copy-constructible
-	return unroll_resolve_rvalues_return_type(new const_param_expr_list(*this));
+	return unroll_resolve_rvalues_return_type(
+		new const_param_expr_list(*this));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -702,6 +719,12 @@ dynamic_param_expr_list::~dynamic_param_expr_list() {
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_param_expr_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<param_expr_list>
+dynamic_param_expr_list::copy(void) const {
+	return count_ptr<param_expr_list>(new this_type(*this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 dynamic_param_expr_list::dump(ostream& o, const expr_dump_context& c) const {
 	if (empty()) return o;
@@ -915,10 +938,17 @@ if (cpl) {
 		else NULL if resolution failed.
  */
 param_expr_list::unroll_resolve_rvalues_return_type
-dynamic_param_expr_list::unroll_resolve_rvalues(const unroll_context& c) const {
+dynamic_param_expr_list::unroll_resolve_rvalues(const unroll_context& c
+#if COW_UNROLL_RESOLVE_RVALUES
+		, const count_ptr<const param_expr_list>& p
+#endif
+		) const {
 	typedef	unroll_resolve_rvalues_return_type		return_type;
 	STACKTRACE_VERBOSE;
-	const return_type ret(new const_param_expr_list);
+#if COW_UNROLL_RESOLVE_RVALUES
+	INVARIANT(p == this);
+#endif
+	const count_ptr<const_param_expr_list> ret(new const_param_expr_list);
 	NEVER_NULL(ret);
 	const_iterator i(begin());
 	const const_iterator e(end());

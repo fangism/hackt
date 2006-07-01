@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.1 2006/06/29 23:24:57 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.2 2006/07/01 03:42:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -343,6 +343,22 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 		const unroll_context&) const {
 	ICE_NEVER_CALL(cerr);
 	return const_index_list();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Aggregate values never result in scalars, be it concatenation
+	or array construction, so this will always fail.  
+	\return NULL to signal error.  
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const typename AGGREGATE_META_VALUE_REFERENCE_CLASS::const_expr_type>
+AGGREGATE_META_VALUE_REFERENCE_CLASS::__unroll_resolve_rvalue(
+		const unroll_context& c, 
+		const count_ptr<const expr_base_type>& p) const {
+	cerr << "Error: got " << util::what<this_type>::name() << 
+		" where scalar value was expected." << endl;
+	return count_ptr<const const_expr_type>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
