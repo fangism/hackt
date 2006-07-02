@@ -1,34 +1,36 @@
 START-initialization: named_pooled_thing.o
 \- list_vector_pool()
-Reserved named_thing chunk of size 16*1 starting at 0x8057238
+Reserved named_thing chunk of size 16*4 starting at 0x805d3b0
 /- list_vector_pool()
 END---initialization: named_pooled_thing.o
+START-initialization: local_static_store_test.cc
 \- dummy ctor
-0x8056b34
+0x805b908 -> Dot
 /- dummy ctor
 \- operator new
 | \- list_vector_pool::allocate()
 | | \- empty ctor
-0xbfffe270
+0xbfffdca0
 | | /- empty ctor
 | | \- dtor
-0xbfffe270
+0xbfffdca0 -> 
 | | /- dtor
-Allocated named_thing from pool @ 0x8057238
+Allocated named_thing from pool @ 0x805d3b0
 | /- list_vector_pool::allocate()
 /- operator new
 \- dummy ctor
-0x8057238
+0x805d3b0 -> Eve
 /- dummy ctor
+END---initialization: local_static_store_test.cc
 \- MAIN()
-anon_static sitting at 0x8056b34
-anon_dynamic sitting at 0x8057238
+anon_static sitting at 0x805b908
+anon_dynamic sitting at 0x805d3b0
 | \- actually_called_one()
 | | \- dummy ctor
-0x8056b68
+0x805b940 -> Joe
 | | /- dummy ctor
 | | \- dummy ctor
-0x8056b69
+0x805b944 -> Carol
 | | /- dummy ctor
 | /- actually_called_one()
 | \- actually_called_one()
@@ -37,83 +39,94 @@ anon_dynamic sitting at 0x8057238
 | | \- operator new
 | | | \- list_vector_pool::allocate()
 | | | | \- empty ctor
-0xbfffe230
+0xbfffdc80
 | | | | /- empty ctor
 | | | | \- dtor
-0xbfffe230
+0xbfffdc80 -> 
 | | | | /- dtor
-Allocated named_thing from pool @ 0x8057239
+Allocated named_thing from pool @ 0x805d3b4
 | | | /- list_vector_pool::allocate()
 | | /- operator new
 | | \- dummy ctor
-0x8057239
+0x805d3b4 -> Bob
 | | /- dummy ctor
 | | \- operator new
 | | | \- list_vector_pool::allocate()
 | | | | \- empty ctor
-0xbfffe230
+0xbfffdc80
 | | | | /- empty ctor
 | | | | \- dtor
-0xbfffe230
+0xbfffdc80 -> 
 | | | | /- dtor
-Allocated named_thing from pool @ 0x805723a
+Allocated named_thing from pool @ 0x805d3b8
 | | | /- list_vector_pool::allocate()
 | | /- operator new
 | | \- dummy ctor
-0x805723a
+0x805d3b8 -> Anna
 | | /- dummy ctor
 | /- actually_called_two()
 | \- actually_called_two()
 | /- actually_called_two()
 /- MAIN()
 \- dtor
-0x805723a
+0x805d3b8 -> Anna
 /- dtor
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned named_thing @ 0x805723a to free-list.
+Returned named_thing @ 0x805d3b8 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- dtor
-0x8057239
+0x805d3b4 -> Bob
 /- dtor
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned named_thing @ 0x8057239 to free-list.
+Returned named_thing @ 0x805d3b4 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- dtor
-0x8056b69
+0x805b944 -> Carol
 /- dtor
 \- dtor
-0x8056b68
+0x805b940 -> Joe
 /- dtor
+START-destruction: local_static_store_test.cc
 \- dtor
-0x8057238
+0x805d3b0 -> Eve
 /- dtor
 \- operator delete
 | \- list_vector_pool::deallocate()
-Returned named_thing @ 0x8057238 to free-list.
+Returned named_thing @ 0x805d3b0 to free-list.
 | /- list_vector_pool::deallocate()
 /- operator delete
 \- dtor
-0x8056b34
+0x805b908 -> Dot
 /- dtor
+END---destruction: local_static_store_test.cc
 START-destruction: named_pooled_thing.o
 \- ~list_vector_pool()
-~list_vector_pool<named_thing>() at 0x8057110
+~list_vector_pool<named_thing>() at 0x805c9b8
 | \- list_vector_pool::status()
-	1 chunks of 16*1 named_thing allocated.
+	1 chunks of 16*4 named_thing allocated.
 	Peak usage: 3 elements, free-list has 3 remaining.
 | /- list_vector_pool::status()
+| \- empty ctor
+0x805d3b8
+| /- empty ctor
+| \- empty ctor
+0x805d3b4
+| /- empty ctor
+| \- empty ctor
+0x805d3b0
+| /- empty ctor
 /- ~list_vector_pool()
 \- dtor
-0x8057238
+0x805d3b0 -> 
 /- dtor
 \- dtor
-0x8057239
+0x805d3b4 -> 
 /- dtor
 \- dtor
-0x805723a
+0x805d3b8 -> 
 /- dtor
 END---destruction: named_pooled_thing.o

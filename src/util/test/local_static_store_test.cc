@@ -8,14 +8,18 @@
 	doesn't seem to be destroyed.  
 	Don't know what the standard says about this behavior...
 
-	$Id: local_static_store_test.cc,v 1.7 2006/07/01 21:00:36 fang Exp $
+	$Id: local_static_store_test.cc,v 1.8 2006/07/02 00:25:11 fang Exp $
  */
 
 #define ENABLE_STACKTRACE		1
+#define	ENABLE_STATIC_TRACE		1
 
 #ifdef	NDEBUG
 #undef	NDEBUG
 #endif
+
+#include "util/static_trace.h"
+STATIC_TRACE_BEGIN("local_static_store_test.cc")
 
 #include <iostream>
 // #include <string>
@@ -93,3 +97,4 @@ main(int, char*[]) {
 	return 0;
 }
 
+STATIC_TRACE_END("local_static_store_test.cc")

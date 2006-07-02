@@ -5,6 +5,10 @@
 
 2006-07-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-22:
+	  Minor util test updates for better diagnostics.  
+
+
 	* HACKT-00-01-04-main-00-79-21:
 	  Added another parser hack script to accommodate bison-2.1, 
 		which uses some preprocessor variable YYENABLE_NLS

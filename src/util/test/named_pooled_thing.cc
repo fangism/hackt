@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_thing.cc"
 	Definitions for another testing class.
-	$Id: named_pooled_thing.cc,v 1.7 2006/07/01 21:00:37 fang Exp $
+	$Id: named_pooled_thing.cc,v 1.8 2006/07/02 00:25:12 fang Exp $
  */
 
 #define ENABLE_STATIC_TRACE				1
@@ -27,7 +27,8 @@ namespace util {
 namespace memory {
 	// this changes the deletion policy to be lazy
 	// which is safe for terminal (non-recursive) objects
-	LIST_VECTOR_POOL_LAZY_DESTRUCTION(named_thing)
+	// LIST_VECTOR_POOL_LAZY_DESTRUCTION(named_thing)
+	// can't do this if class has non-trivial members
 }
 }
 
@@ -38,17 +39,17 @@ REQUIRES_STACKTRACE_STATIC_INIT
 using std::cin;
 
 #if 1
-named_thing::named_thing() {
+named_thing::named_thing() : name("") {
 	STACKTRACE("empty ctor");
 	cout << this << endl;
 }
-named_thing::named_thing(const string&) {
+named_thing::named_thing(const string& s) : name(s) {
 	STACKTRACE("dummy ctor");
-	cout << this << endl;
+	cout << this << " -> " << name << endl;
 }
 named_thing::~named_thing() {
 	STACKTRACE("dtor");
-	cout << this << endl;
+	cout << this << " -> " << name << endl;
 //	char c; cin >> c;
 }
 

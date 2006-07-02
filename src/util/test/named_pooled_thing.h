@@ -1,7 +1,7 @@
 /**
 	\file "named_pooled_thing.h"
 	Named, pooled object for testing.  
-	$Id: named_pooled_thing.h,v 1.4 2005/09/04 21:15:12 fang Exp $
+	$Id: named_pooled_thing.h,v 1.5 2006/07/02 00:25:12 fang Exp $
  */
 
 #ifndef	__NAMED_POOLED_THING_H__
@@ -18,12 +18,15 @@
 
 using util::what;
 using std::string;
-using namespace util::memory;
+using util::memory::never_ptr;
+using util::memory::excl_ptr;
+using util::memory::count_ptr;
 USING_CONSTRUCT
 
 #if 1
 class named_thing {
 	typedef	named_thing		this_type;
+	string				name;
 public:
 	named_thing();
 	named_thing(const string& s);
