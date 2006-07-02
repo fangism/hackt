@@ -8,7 +8,7 @@
 	doesn't seem to be destroyed.  
 	Don't know what the standard says about this behavior...
 
-	$Id: local_static_store_test.cc,v 1.8 2006/07/02 00:25:11 fang Exp $
+	$Id: local_static_store_test.cc,v 1.9 2006/07/02 01:18:17 fang Exp $
  */
 
 #define ENABLE_STACKTRACE		1
@@ -32,6 +32,7 @@ STATIC_TRACE_BEGIN("local_static_store_test.cc")
 // DEBUG memory pool using stacktrace, seeing double destruction!
 
 // using std::string;
+REQUIRES_STACKTRACE_STATIC_INIT
 
 // declare this before any dynamic allocation of this type in this module
 REQUIRES_LIST_VECTOR_POOL_STATIC_INIT(named_thing)

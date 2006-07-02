@@ -12,6 +12,8 @@
 		initialization ordering during global static inits.  
 		This is a hard-to-trigger latent bug, only possibly triggered
 		during global initialization diagnostics.  
+	  Added missing REQUIRES_STACKTRACE_STATIC_INIT to 
+		local_static_store_test.cc.
 
 
 	* HACKT-00-01-04-main-00-79-21:
