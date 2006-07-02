@@ -2,7 +2,7 @@
 	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.12 2006/04/27 00:17:08 fang Exp $
+	$Id: packed_array.h,v 1.12.10.1 2006/07/02 03:59:37 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -363,6 +363,10 @@ public:
 
 	bool
 	range_check(const key_type& k) const;
+
+	/// overload for concatenation!initializations
+	this_type&
+	operator += (const this_type&);
 
 protected:
 	void

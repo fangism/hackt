@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.33.2.2 2006/07/01 22:05:28 fang Exp $
+#	$Id: Make.test-tail,v 1.33.2.3 2006/07/02 03:59:40 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -534,7 +534,9 @@ clean-summaries:
 	$(RM) $(CHECK_SUMMARIES)
 
 clean-compiletests:
-	-$(RM_PATTERN) "*.test" "*.diff" "*.test.filter"
+	-$(RM_PATTERN) "*.test"
+	-$(RM_PATTERN) "*.diff"
+	-$(RM_PATTERN) "*.test.filter"
 	-$(RM_PATTERN) "*.hacktcmpltest"
 	-$(RM_PATTERN) "*.stderr.filter"
 	-$(RM_PATTERN) "*.stderr.bison.filter"
@@ -543,18 +545,25 @@ clean-compiletests:
 clean-unrolltests:
 	-$(RM_PATTERN) "*.hacktobjtest"
 	-$(RM_PATTERN) "*.hacktunrolltest"
-	-$(RM_PATTERN) "*.indump" "*.outdump" "*.objdiff"
-	-$(RM_PATTERN) "*.indump.filter" "*.outdump.filter"
-	-$(RM_PATTERN) "*.haco" "*.haco-dump"
-	-$(RM_PATTERN) "*.haco-u" "*.haco-u-dump"
+	-$(RM_PATTERN) "*.indump"
+	-$(RM_PATTERN) "*.outdump"
+	-$(RM_PATTERN) "*.objdiff"
+	-$(RM_PATTERN) "*.indump.filter"
+	-$(RM_PATTERN) "*.outdump.filter"
+	-$(RM_PATTERN) "*.haco"
+	-$(RM_PATTERN) "*.haco-dump"
+	-$(RM_PATTERN) "*.haco-u"
+	-$(RM_PATTERN) "*.haco-u-dump"
 	-$(RM_PATTERN) "*.unrolldiff"
-	-$(RM_PATTERN) "*.unrolldump" "*.unrolldump.filter"
+	-$(RM_PATTERN) "*.unrolldump"
+	-$(RM_PATTERN) "*.unrolldump.filter"
 
 clean-createtests:
 	-$(RM_PATTERN) "*.hacktcreatetest"
 	-$(RM_PATTERN) "*.hacktcreatefromhacotest"
 	-$(RM_PATTERN) "*.haco-c"
-	-$(RM_PATTERN) "*.createdump" "*.creatediff"
+	-$(RM_PATTERN) "*.createdump"
+	-$(RM_PATTERN) "*.creatediff"
 	-$(RM_PATTERN) "*.haco-c-dump"
 	-$(RM_PATTERN) "*.createdump.filter"
 	-$(RM_PATTERN) "*.create-from*"
@@ -563,7 +572,8 @@ clean-alloctests:
 	-$(RM_PATTERN) "*.hacktalloctest"
 	-$(RM_PATTERN) "*.hacktallocfromhacotest"
 	-$(RM_PATTERN) "*.haco-a"
-	-$(RM_PATTERN) "*.allocdump" "*.allocdump.filter"
+	-$(RM_PATTERN) "*.allocdump"
+	-$(RM_PATTERN) "*.allocdump.filter"
 	-$(RM_PATTERN) "*.allocdiff"
 	-$(RM_PATTERN) "*.haco-a-dump"
 	-$(RM_PATTERN) "*.alloc-from*"
@@ -576,7 +586,8 @@ clean-cflattests:
 	-$(RM_PATTERN) "*.prs"
 	-$(RM_PATTERN) "*.prsdiff"
 	-$(RM_PATTERN) "*.prsdiff.sort"
-	-$(RM_PATTERN) "*.prsseu" "*.prsseu-diff"
+	-$(RM_PATTERN) "*.prsseu"
+	-$(RM_PATTERN) "*.prsseu-diff"
 	-$(RM_PATTERN) "*.prsimexpr"
 	-$(RM_PATTERN) "*.prsimexprdiff"
 	-$(RM_PATTERN) "*.prsimexpr-dot"
@@ -597,7 +608,7 @@ clean-prsimtests:
 	-$(RM_PATTERN) "*.prsimckpt-indump"
 	-$(RM_PATTERN) "*.prsimckpt-diff"
 	-$(RM_PATTERN) "*.prsimopttest"
-	-$(RM_PATTERN) "*.prsimckpt-O1 "
+	-$(RM_PATTERN) "*.prsimckpt-O1"
 	-$(RM_PATTERN) "*.prsimckpt-O1-err"
 	-$(RM_PATTERN) "*.prsimckpt-O1-dump"
 	-$(RM_PATTERN) "*.prsimopt-diff"

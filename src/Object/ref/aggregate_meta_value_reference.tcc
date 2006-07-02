@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.3 2006/07/01 22:05:19 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.4 2006/07/02 03:59:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -40,6 +40,8 @@ namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using std::distance;
+using std::copy;
+using std::equal;
 using std::transform;
 using std::back_inserter;
 using util::write_value;
@@ -387,8 +389,58 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 	util::reserve(temp, subreferences.size());	// pre-allocate
 	transform(subreferences.begin(), subreferences.end(), 
 		back_inserter(temp), unroll_resolver_type(c));
+	const temp_iterator b(temp.begin()), e(temp.end());
 if (this->_is_concatenation) {
 	FINISH_ME(Fang);
+#if 0
+	// saved code snippet for later use
+{
+	// evaluate trailing dimensions (after 1st must match)
+	typedef	typename const_collection_type::key_type	array_size_type;
+	typedef	vector<array_size_type>			size_array_type;
+	typedef	typename size_array_type::const_iterator	size_iterator;
+	typedef	typename sub_type::const_iterator	const_sub_iterator;
+	size_array_type sub_sizes;
+	const const_sub_iterator sb(sub.begin()), se(sub.end());
+{
+	sub_sizes.reserve(temp.size());
+	const_sub_iterator si(sb);
+	for ( ; si!=se; ++si) {
+		sub_sizes.push_back((*si)->array_dimensions());
+	}
+}
+	const size_iterator zb(sub_sizes.begin()), ze(sub_sizes.end());
+	const array_size_type& head_size(*zb);
+{
+	size_iterator zi(zb+1);
+	for ( ; zi!=ze; ++zi) {
+		if (!equal(head_size.begin() +1, head_size.end(), 
+				zi->begin() +1)) {
+			cerr << "Error: trailing dimensions mismatch between "
+				"sub-collection 1 and " <<
+				distance(zb, zi) +1 << "." << endl;
+			cerr << "\tgot: " << head_size << " and: " <<
+				*zi << endl;
+			return return_type(NULL);
+		}
+	}
+}
+	const temp_ret_type ret(new const_collection_type(**sb));
+{
+	// array_size_type new_size(head_size);
+	// new_size.front() = size1;
+	// const temp_ret_type ret(new const_collection_type(new_size));
+
+	// the magic: the resulting collection is just serial composition
+	// of constituents' values from the packed-arrays!  Holy guacamole!
+	const_sub_iterator si(sb+1);
+	for ( ; si!=se; ++si) {
+		*ret += **si;
+	}
+}
+	return ret;
+}
+#endif
 	return return_type(NULL);
 } else if (!subdim) {
 	// we are constructing 1-dimension array from scalar subrefs.
@@ -397,7 +449,6 @@ if (this->_is_concatenation) {
 	const temp_ret_type ret(new const_collection_type(size_1d));
 	NEVER_NULL(ret);
 	target_iterator ti(ret->begin());
-	const temp_iterator b(temp.begin()), e(temp.end());
 	temp_iterator i(b);
 	for ( ; i!=e; ++i, ++ti) {
 		temp_reference pr(*i);
@@ -428,11 +479,71 @@ if (this->_is_concatenation) {
 	return ret;
 } else {
 	// we are constructing N-dimension array from N-1-dim. subrefs.
-	// TODO: size-checking
-	FINISH_ME(Fang);
-	return return_type(NULL);
+	// constituents must be at least 1D
+	// TODO: size/dimension-checking
+	typedef	vector<return_type>			sub_type;
+	// transfer temp to sub
+	sub_type sub;
+	sub.reserve(temp.size());
+	temp_iterator i(b);
+	for ( ; i<e; ++i) {
+		// we already statically know the dimensionality of sub-refs
+		if (!*i) {
+			cerr << "Error unroll-resolving " << subdim << 
+				"D sub-reference "
+				<< distance(b, i) +1 << " of ";
+			this->what(cerr) << endl;
+			return return_type(NULL);
+		}
+		sub.push_back(i->template is_a<const const_collection_type>());
+		NEVER_NULL(sub.back());	// assert cast succeeded
+		INVARIANT(sub.back()->dimensions() == subdim);
+	}
+	// all dimensions must match for array construction
+	typedef	typename const_collection_type::key_type	array_size_type;
+	typedef	vector<array_size_type>			size_array_type;
+	typedef	typename size_array_type::const_iterator	size_iterator;
+	typedef	typename sub_type::const_iterator	const_sub_iterator;
+	size_array_type sub_sizes;
+	const const_sub_iterator sb(sub.begin()), se(sub.end());
+{
+	sub_sizes.reserve(temp.size());
+	const_sub_iterator si(sb);
+	for ( ; si!=se; ++si) {
+		sub_sizes.push_back((*si)->array_dimensions());
+	}
 }
+	const size_iterator zb(sub_sizes.begin()), ze(sub_sizes.end());
+	const array_size_type& head_size(*zb);
+{
+	size_iterator zi(zb+1);
+	for ( ; zi!=ze; ++zi) {
+		if (!equal(head_size.begin(), head_size.end(), zi->begin())) {
+			cerr << "Error: dimensions mismatch between "
+				"sub-collection 1 and " <<
+				distance(zb, zi) +1 << "." << endl;
+			cerr << "\tgot: " << head_size << " and: " <<
+				*zi << endl;
+			return return_type(NULL);
+		}
+	}
 }
+{
+	array_size_type new_size(head_size.size() +1);
+	new_size.front() = 0;	// reset 1st dimension as 0, then grow
+	copy(head_size.begin(), head_size.end(), new_size.begin() +1);
+	const temp_ret_type ret(new const_collection_type(new_size));
+
+	// the magic: the resulting collection is just serial composition
+	// of constituents' values from the packed-arrays!  Holy guacamole!
+	const_sub_iterator si(sb);
+	for ( ; si!=se; ++si) {
+		*ret += **si;
+	}
+	return ret;
+}
+}	// end if (!subdim)
+}	// end method unroll_resolve_rvalues
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

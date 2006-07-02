@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.11.2.3 2006/07/01 22:05:05 fang Exp $
+	$Id: const_collection.h,v 1.11.2.4 2006/07/02 03:59:32 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -177,6 +177,10 @@ public:
 
 	bool
 	operator < (const const_param&) const;
+
+	// concatenation overload
+	this_type&
+	operator += (const this_type&);
 
 public:
 	PERSISTENT_METHODS_DECLARATIONS

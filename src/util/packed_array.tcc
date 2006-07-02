@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.15 2006/04/27 00:17:08 fang Exp $
+	$Id: packed_array.tcc,v 1.15.10.1 2006/07/02 03:59:38 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <numeric>
+#include <algorithm>
 #include "util/macros.h"
 
 #ifdef	EXCLUDE_DEPENDENT_TEMPLATES_UTIL_PACKED_ARRAY
@@ -474,6 +475,34 @@ PACKED_ARRAY_GENERIC_CLASS::operator == (const this_type& a) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This is a cool method.  
+	\pre dimensionalities match
+	\pre trailing dimensions match (shouldn't have to recheck)
+ */
+PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+PACKED_ARRAY_GENERIC_CLASS&
+PACKED_ARRAY_GENERIC_CLASS::operator += (const this_type& a) {
+	key_type new_size(this->sizes);
+if (this->dimensions() == a.dimensions()) {
+	// we have a concatenation situation
+	INVARIANT(std::equal(this->sizes.begin()+1, this->sizes.end(), 
+		a.sizes.begin()+1));
+	new_size.front() += a.sizes.front();
+} else {
+	// we have an array construction (N+1 from N)
+	INVARIANT(this->dimensions() == a.dimensions() +1);
+	INVARIANT(std::equal(this->sizes.begin()+1, this->sizes.end(), 
+		a.sizes.begin()));
+	++new_size.front();
+}
+	const size_t start = sizes_product(this->sizes);
+	this->resize(new_size);
+	copy(a.begin(), a.end(), this->begin() +start);
+	return *this;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Resizes to 0-dimensions, i.e. one scalar element.  
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
@@ -487,6 +516,13 @@ PACKED_ARRAY_GENERIC_CLASS::resize(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this preserves values in-place, regardless of how
+	the dimensions are reshaped.  
+	Only in special cases are the old set of indices still valid.
+	E.g. dimension extension (adding 1st dimension of size 1), 
+	or growth in the first dimension.  
+ */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 void
 PACKED_ARRAY_GENERIC_CLASS::resize(const key_type& s) {

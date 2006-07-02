@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.16.2.3 2006/07/01 22:05:06 fang Exp $
+ 	$Id: const_collection.tcc,v 1.16.2.4 2006/07/02 03:59:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -507,6 +507,21 @@ CONST_COLLECTION_CLASS::operator < (const const_param& p) const {
 		INVARIANT(!this->dimensions());
 		return this->front() < pc.static_constant_value();
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped operator overloading for value concatenation.  
+	\pre same as packed_array_generic::operator += 's
+	May assert fail if preconditions not met.  
+	\param r constant value collection to concatenate.  
+	\return this
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+CONST_COLLECTION_CLASS&
+CONST_COLLECTION_CLASS::operator += (const this_type& r) {
+	this->values += r.values;
+	return *this;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

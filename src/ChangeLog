@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-04:
+	  Implemented first draft of aggregate construction for 
+		higher dimensions, aided by a smart operator overload
+		in util::packed_array_generic.  
+	  TODO: param test cases up the wazoo, debug if necessary.
+	  TODO: possibly implement value-array concatenation while we're at it.
+
+
 2006-06-30	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-20-cow-03:
