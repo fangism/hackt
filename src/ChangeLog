@@ -7,6 +7,11 @@
 
 	* HACKT-00-01-04-main-00-79-22:
 	  Minor util test updates for better diagnostics.  
+	  stacktrace.cc, static_trace.cc: inserted local-static declarations
+		of std::ios_base::Init to guarantee proper iostream
+		initialization ordering during global static inits.  
+		This is a hard-to-trigger latent bug, only possibly triggered
+		during global initialization diagnostics.  
 
 
 	* HACKT-00-01-04-main-00-79-21:

@@ -1,7 +1,7 @@
 /**
 	\file "util/stacktrace.cc"
 	Implementation of stacktrace class.
-	$Id: stacktrace.cc,v 1.14 2006/04/27 00:17:10 fang Exp $
+	$Id: stacktrace.cc,v 1.15 2006/07/02 00:42:06 fang Exp $
  */
 
 // ENABLE_STACKTRACE is forced for this module, regardless of pre-definitions!
@@ -73,6 +73,8 @@ public:
 	static
 	ostream&
 	print_auto_indent(ostream& o) {
+		// guarantee iostream initialized before first used.  
+		static const std::ios_base::Init ios_init;
 		// static? no, get fresh copy!
 		static const stack_text_type&
 			si(*manager::get_stack_indent());
