@@ -1,0 +1,4 @@
+Error: subreference of aggregate concatenations must be non-scalar.
+Error building aggregate value reference.  [7:5..9]
+Error in source expression.
+HALT: at least one error in the assignment list.  [7:1..9]

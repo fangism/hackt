@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.12 2006/06/26 01:45:47 fang Exp $
+	$Id: expr.cc,v 1.12.2.1 2006/07/03 04:49:29 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -117,6 +117,19 @@ using std::_Select1st;
 using std::_Select2nd;
 using util::back_insert_assigner;
 using entity::expr_dump_context;
+
+//=============================================================================
+// local prototypes
+
+static
+expr::meta_return_type
+aggregate_check_meta_expr(const expr_list& el, const context& c, 
+	const bool cat);
+
+static
+expr::generic_meta_return_type
+aggregate_check_meta_generic(const expr_list& el, const context& c, 
+	const bool cat);
 
 //=============================================================================
 // class expr method definitions
@@ -427,6 +440,10 @@ expr_list::make_aggregate_value_reference(const checked_meta_exprs_type& ex,
 		cerr << "Error in first subreference, cannot construct "
 			"aggregate value reference." << endl;
 		return return_type(NULL);
+	} else if (cat && !bi->dimensions()) {
+		cerr << "Error: subreference of aggregate concatenations "
+			"must be non-scalar." << endl;
+		return return_type(NULL);
 	}
 	const count_ptr<aggregate_meta_value_reference_base>
 		ret(param_expr::make_aggregate_meta_value_reference(bi));
@@ -441,6 +458,10 @@ expr_list::make_aggregate_value_reference(const checked_meta_exprs_type& ex,
 			cerr << "Error in subreference at position " << j <<
 				", cannot construct aggregate value reference."
 				<< endl;
+			return return_type(NULL);
+		} else if (cat && !mi->dimensions()) {
+			cerr << "Error: subreference of aggregate concatenations "
+				"must be non-scalar." << endl;
 			return return_type(NULL);
 		}
 		if (!ret->append_meta_value_reference(mi).good) {
@@ -2019,7 +2040,8 @@ logical_expr::check_prs_expr(context& c) const {
 //=============================================================================
 // class array_concatenation method definitions
 
-array_concatenation::array_concatenation(const expr* e) : expr(), parent(e) {
+array_concatenation::array_concatenation(const expr* e) :
+		expr(), parent_type(e) {
 	NEVER_NULL(e);
 }
 
@@ -2030,12 +2052,12 @@ PARSER_WHAT_DEFAULT_IMPLEMENTATION(array_concatenation)
 
 line_position
 array_concatenation::leftmost(void) const {
-	return parent::leftmost();
+	return parent_type::leftmost();
 }
 
 line_position
 array_concatenation::rightmost(void) const {
-	return parent::rightmost();
+	return parent_type::rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2050,9 +2072,8 @@ array_concatenation::check_meta_expr(const context& c) const {
 		const const_iterator only(begin());
 		return (*only)->check_meta_expr(c);
 	} else {
-		cerr << "Fang, finish array_concatenation::check_meta_expr()!"
-			<< endl;
-		return expr::meta_return_type(NULL);
+		// pass true to indicate concatenation
+		return aggregate_check_meta_expr(*this, c, true);
 	}
 }
 
@@ -2063,8 +2084,7 @@ array_concatenation::check_nonmeta_expr(const context& c) const {
 		const const_iterator only(begin());
 		return (*only)->check_nonmeta_expr(c);
 	} else {
-		cerr << "Fang, finish array_concatenation::check_nonmeta_expr()!"
-			<< endl;
+		FINISH_ME(Fang);
 		return nonmeta_expr_return_type(NULL);
 	}
 }
@@ -2077,9 +2097,8 @@ array_concatenation::check_meta_generic(const context& c) const {
 		const const_iterator only(begin());
 		return (*only)->check_meta_generic(c);
 	} else {
-		cerr << "Fang, finish array_concatenation::check_meta_generic()!" <<
-			endl;
-		return expr::generic_meta_return_type();
+		// pass true to indicate concatenation
+		return aggregate_check_meta_generic(*this, c, true);
 	}
 }
 
@@ -2165,19 +2184,26 @@ array_construction::rightmost(void) const {
 	Code partially ripped from check_meta_generic, below.  
  */
 expr::meta_return_type
-array_construction::check_meta_expr(const context& c) const {
+aggregate_check_meta_expr(const expr_list& el, const context& c, 
+		const bool cat) {
 	typedef	expr::meta_return_type			return_type;
 	typedef	expr_list::checked_meta_exprs_type	checked_array_type;
 	checked_array_type	temp;
-	ex->postorder_check_meta_exprs(temp, c);
+	el.postorder_check_meta_exprs(temp, c);
 	// pass 'false' to indicate construction, not concatenation
 	const return_type
-		ret(expr_list::make_aggregate_value_reference(temp, false));
+		ret(expr_list::make_aggregate_value_reference(temp, cat));
 	if (!ret) {
 		cerr << "Error constructing aggregate expression.  "
-			<< where(*ex) << endl;
+			<< where(el) << endl;
 	}
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::meta_return_type
+array_construction::check_meta_expr(const context& c) const {
+	return aggregate_check_meta_expr(*ex, c, false);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2196,17 +2222,18 @@ array_construction::check_nonmeta_expr(const context& c) const {
 	alias connection.  So we check for both cases here.  
  */
 expr::generic_meta_return_type
-array_construction::check_meta_generic(const context& c) const {
+aggregate_check_meta_generic(const expr_list& el, const context& c, 
+		const bool cat) {
 	typedef	expr::generic_meta_return_type	return_type;
 	typedef	expr_list::checked_meta_generic_type	checked_array_type;
 	checked_array_type	temp;
-	ex->postorder_check_meta_generic(temp, c);
+	el.postorder_check_meta_generic(temp, c);
 	const checked_array_type::const_iterator first_obj(temp.begin());
 	// going to use the first object to determine whether to construct
 	// aggregate value reference or aggregate instance reference
 	if (!first_obj->first && !first_obj->second) {
 		cerr << "Error checking first subreference of aggregate.  "
-			<< where(*ex) << endl;
+			<< where(el) << endl;
 		return return_type();
 	} else if (first_obj->first) {
 		// then we have expressions and value references to combine
@@ -2215,10 +2242,10 @@ array_construction::check_meta_generic(const context& c) const {
 		// pass 'false' to indicate construction, not concatenation
 		const meta_expr_return_type
 		ret(expr_list::make_aggregate_value_reference(
-				checked_exprs, false));
+				checked_exprs, cat));
 		if (!ret) {
 			cerr << "Error building aggregate value reference.  "
-				<< where(*ex) << endl;
+				<< where(el) << endl;
 		}
 		return return_type(ret, inst_ref_meta_return_type(NULL));
 	} else {
@@ -2229,14 +2256,20 @@ array_construction::check_meta_generic(const context& c) const {
 		// pass 'false' to indicate construction, not concatenation
 		const inst_ref_meta_return_type
 		ret(inst_ref_expr_list::make_aggregate_instance_reference(
-				checked_refs, false));
+				checked_refs, cat));
 		if (!ret) {
 			cerr << "Error building aggregate instance reference.  "
-				<< where(*ex) << endl;
+				<< where(el) << endl;
 		}
 		return return_type(meta_expr_return_type(NULL), ret);
 	}
 	return return_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+expr::generic_meta_return_type
+array_construction::check_meta_generic(const context& c) const {
+	return aggregate_check_meta_generic(*ex, c, false);
 }
 
 //=============================================================================

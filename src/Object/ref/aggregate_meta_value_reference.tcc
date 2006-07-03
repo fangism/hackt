@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.4 2006/07/02 03:59:35 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.5 2006/07/03 04:49:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -368,6 +368,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::__unroll_resolve_rvalue(
 	Packs subreferences into appropriate const_collection.  
 	Don't forget to check dimension limits.  
 	\pre subreferences non-empty, all non-NULL.
+	\pre for concatenation, subreferences must never be scalar.  
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const const_param>
@@ -391,10 +392,26 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 		back_inserter(temp), unroll_resolver_type(c));
 	const temp_iterator b(temp.begin()), e(temp.end());
 if (this->_is_concatenation) {
-	FINISH_ME(Fang);
-#if 0
-	// saved code snippet for later use
-{
+	// most of this code copy-modified from construction case, below
+	typedef	vector<return_type>			sub_type;
+	// transfer temp to sub
+	sub_type sub;
+	sub.reserve(temp.size());
+	temp_iterator i(b);
+	for ( ; i<e; ++i) {
+		// we already statically know the dimensionality of sub-refs
+		if (!*i) {
+			cerr << "Error unroll-resolving " << subdim << 
+				"D sub-reference "
+				<< distance(b, i) +1 << " of ";
+			this->what(cerr) << endl;
+			return return_type(NULL);
+		}
+		sub.push_back(i->template is_a<const const_collection_type>());
+		// sub-references must never be scalar!
+		NEVER_NULL(sub.back());	// assert cast succeeded
+		INVARIANT(sub.back()->dimensions() == this->dimensions());
+	}
 	// evaluate trailing dimensions (after 1st must match)
 	typedef	typename const_collection_type::key_type	array_size_type;
 	typedef	vector<array_size_type>			size_array_type;
@@ -425,12 +442,9 @@ if (this->_is_concatenation) {
 		}
 	}
 }
+	// start by copying first chunk of values
 	const temp_ret_type ret(new const_collection_type(**sb));
 {
-	// array_size_type new_size(head_size);
-	// new_size.front() = size1;
-	// const temp_ret_type ret(new const_collection_type(new_size));
-
 	// the magic: the resulting collection is just serial composition
 	// of constituents' values from the packed-arrays!  Holy guacamole!
 	const_sub_iterator si(sb+1);
@@ -439,9 +453,6 @@ if (this->_is_concatenation) {
 	}
 }
 	return ret;
-}
-#endif
-	return return_type(NULL);
 } else if (!subdim) {
 	// we are constructing 1-dimension array from scalar subrefs.
 	key_type size_1d(1);
@@ -480,7 +491,6 @@ if (this->_is_concatenation) {
 } else {
 	// we are constructing N-dimension array from N-1-dim. subrefs.
 	// constituents must be at least 1D
-	// TODO: size/dimension-checking
 	typedef	vector<return_type>			sub_type;
 	// transfer temp to sub
 	sub_type sub;

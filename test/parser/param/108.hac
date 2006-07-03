@@ -1,0 +1,11 @@
+// "108.hac"
+// copy-modified from "106.hac"
+// testing array concatenation
+// should pass
+
+pint x[2], y[3], z[7];
+x = {0,1};
+y = {2,3,4};
+
+z = x # y # {5,6};
+

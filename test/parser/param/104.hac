@@ -1,0 +1,8 @@
+// "104.hac"
+// copy-modified from "098.hac"
+// testing array concatenation
+// should pass
+
+pint z[4];
+z = {0,1} # {2,3};
+

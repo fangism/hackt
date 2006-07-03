@@ -1,0 +1,11 @@
+// "109.hac"
+// copy-modified from "105.hac"
+// should pass: concatenating larger array
+
+pint x[2][3];
+x = {{0,1,2},{3,4,5}};
+
+pint z[4][3], w[4][3];
+z = x # {{6,7,8},{9,10,11}};
+w = {{6,7,8},{9,10,11}} # x;
+

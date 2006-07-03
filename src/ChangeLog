@@ -5,6 +5,15 @@
 
 2006-07-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-20-cow-06:
+	  Implemented checking and unrolling of array concatenations!
+		Well, THAT was easy -- thanks to good reuse of existing code.  
+	  Added another batch of param/ test cases to support.  
+	  TODO: port new aggregate value-reference concatenation code 
+		and re-apply to aggregate instance-references... 
+		while we're at it.  Add connect/ test cases.  
+
+
 	* HACKT-00-01-04-main-00-79-20-cow-05:
 	  Removed useless nonzero size assertion from 
 		util::packed_array_generic.
