@@ -1,0 +1,8 @@
+// "077.hac"
+// copy-modified from "071.hac"
+// should fail: rvalues uninitialized in self-reference
+
+pint x[2][2];
+
+x = {{0,1}, {x[0][0], x[1][1]}};
+

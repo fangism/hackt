@@ -5,6 +5,16 @@
 
 2006-07-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-20-cow-05:
+	  Removed useless nonzero size assertion from 
+		util::packed_array_generic.
+	  Added useful error message when assigning lvalue that 
+		already has value.
+	  Added a TON of param/ test cases.  
+
+
+2006-07-02	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-20-cow-04:
 	  Implemented first draft of aggregate construction for 
 		higher dimensions, aided by a smart operator overload

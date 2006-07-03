@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
 
+2006-07-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-05:
+	  Added operator overload to packed_array_generic for facilitating
+		multi-dimensional compositions and concatenations.  
+	  Removed requirement that resolve_sizes must result in non-zero
+		size, to allow for "thin empty collections".  
+
+
 2006-05-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-06-prsim-05-01:

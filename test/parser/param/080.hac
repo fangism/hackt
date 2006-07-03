@@ -1,0 +1,10 @@
+// "080.hac"
+// copy-modified from "079.hac"
+// should pass: 3D array with assignment
+
+pint x[2][2];
+pint y[2][2];
+
+x = {{0,1}, {2, 3}};
+y = {x[0..1][0], x[0..1][1]};	// transpose!
+

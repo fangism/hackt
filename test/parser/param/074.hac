@@ -1,0 +1,8 @@
+// "074.hac"
+// copy-modified from "073.hac"
+// should pass
+
+pint x[2][2];
+
+x[0..1] = {{0,1}, {2, 3}};
+

@@ -1,5 +1,5 @@
-Error: value referenced has not been instantiated!
-ERROR: assigning index [2] of pint collection ::foo.
-ERROR: something went wrong in pint assignment.
+FATAL: reference to uninstantiated pint at ::foo [2]
+ERROR: unrolling aliases.
+ERROR: unrolling lvalue references in pint assignment.
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

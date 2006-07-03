@@ -1,0 +1,9 @@
+ERROR: reference to uninitialized pint ::x at index: [0][0]
+ERROR: in unroll_resolve-ing simple_meta_instance_reference.
+ERROR: reference to uninitialized pint ::x at index: [1][1]
+ERROR: in unroll_resolve-ing simple_meta_instance_reference.
+Error unroll-resolving sub-reference 1 of agg.-pint-val-ref
+Error unroll-resolving 1D sub-reference 2 of agg.-pint-val-ref
+ERROR: failed to resolve source values of { { 0, 1 }, { pint-val-ref ::x[0][0], pint-val-ref ::x[1][1] } } in pint assignment.
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

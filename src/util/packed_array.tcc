@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.15.10.1 2006/07/02 03:59:38 fang Exp $
+	$Id: packed_array.tcc,v 1.15.10.2 2006/07/03 00:37:54 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -378,6 +378,7 @@ PACKED_ARRAY_GENERIC_CLASS::last_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Helper function to compute the size based on dimensions.  
+	\return product of dimensions, may be 0 if collection is 'thin'.  
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_GENERIC_CLASS::index_type
@@ -385,7 +386,7 @@ PACKED_ARRAY_GENERIC_CLASS::sizes_product(const key_type& k) {
 	const index_type ret =
 		accumulate(k.begin(), k.end(), 1,
 			std::multiplies<index_type>());
-	INVARIANT(ret > 0);
+	// INVARIANT(ret > 0);
 	return ret;
 }
 

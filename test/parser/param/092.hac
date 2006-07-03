@@ -1,0 +1,10 @@
+// "092.hac"
+// copy-modified from "090.hac"
+// should fail: wrong dimensionality of sub reference
+
+pint x[2][2];
+pint y[2][2][2];
+
+x = {{0,1}, {2, 3}};
+y = {x[1], x[0]};	// 3D != 2D
+

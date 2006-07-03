@@ -1,0 +1,3 @@
+ERROR: dimensions of expression 1 (3) doesn't match that of the rhs (2).
+Error initializing item 1 of assign-list.  
+HALT: at least one error in the assignment list.  [9:1..16]
