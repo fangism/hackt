@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.11 2006/04/27 00:17:30 fang Exp $
+	$Id: excl_ptr.h,v 1.12 2006/07/03 21:42:23 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -968,7 +968,10 @@ public:
 	 */
 	this_type&
 	operator = (this_type& p) throw() {
-		this->reset(p.own, p.release());
+		const bool o = p.own;
+		const pointer t(p.release());
+		// forced sequence point
+		this->reset(o, t);
 		return *this;
 	}
 
@@ -985,11 +988,14 @@ public:
 
 	/**
 		Transfers ownership.
+		Owns if not null.  
 	 */
 	this_type&
 	operator = (excl_ptr<T, deallocation_policy>& p) throw() {
-		this->reset(p.ptr != NULL, p.release());
+		const pointer t(p.release());
+		// forced sequence point
 		INVARIANT(!p);
+		this->reset(t, t);
 		return *this;
 	}
 
@@ -999,8 +1005,10 @@ public:
 	template <class S>
 	some_ptr<T, deallocation_policy>&
 	operator = (excl_ptr<S, deallocation_policy>& p) throw() {
-		this->reset(p.ptr != NULL, p.release());
+		const pointer t(p.release());
+		// forced sequence point
 		INVARIANT(!p);
+		this->reset(t, t);
 		return *this;
 	}
 

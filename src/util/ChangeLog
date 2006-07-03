@@ -1,5 +1,16 @@
 # "src/util/ChangeLog"
 
+2006-07-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-23:
+	  CRITICAL BUG FIX in pointer class library:
+		some_ptr assignment operator overloads used to depend
+		on function argument sequencing, which is not defined by
+		any standard -- re-wrote with explicit sequencing to correct.
+	  First triggered with i686-apple-darwin8-gcc-4.0.1 (build 5341).
+	  Thanks to Clint Kelly for reporting, and assisting with diagnosis.  
+
+
 2006-05-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-06-prsim-05-01:

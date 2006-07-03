@@ -1,7 +1,7 @@
 /**
 	\file "pointer_classes_test.cc"
 	Test for pointer classes.  
-	$Id: pointer_classes_test.cc,v 1.8 2006/02/26 02:28:05 fang Exp $
+	$Id: pointer_classes_test.cc,v 1.9 2006/07/03 21:42:25 fang Exp $
  */
 
 #ifdef	NDEBUG
@@ -54,9 +54,10 @@ void basic_vector_test(void) {
 	{
 	excl_ptr<int> foo(new int(-1));		// inconvenient, but safe?
 	V[3] = foo;
+	assert(!foo);	assert(V[3]);	assert(V[3].owned());
 //	V[3] = excl_ptr<int>(new int(-1));	// can't do this, const temp?
 	}
-	assert(V[3]);
+	assert(V[3]);	assert(V[3].owned());
 	k = *V[2];
 	assert(V[2]);
 	cout << "k = " << k << endl;
@@ -67,7 +68,7 @@ void basic_vector_test(void) {
 	assert(!j);
 	cout << "j = NULL" << endl;
 
-	assert(V[3]);
+	assert(V[3]);	assert(V[3].owned());
 	i = V[3];	assert(i);
 	assert(V[3]);	assert(!V[3].owned());
 	for (k=0 ; k<4; k++) {

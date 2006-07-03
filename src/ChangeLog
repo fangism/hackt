@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-23:
+	  CRITICAL BUG FIX in pointer class library, see util/ChangeLog.
+
+
 2006-07-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-22:
