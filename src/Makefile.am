@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.127.2.1 2006/07/01 03:42:04 fang Exp $
+#	$Id: Makefile.am,v 1.127.2.2 2006/07/04 04:41:02 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -306,6 +306,7 @@ OBJECT_REF_CC_FILES = \
 	Object/expr/nonmeta_param_value_reference.cc
 
 OBJECT_REF_TCC_FILES = \
+	Object/ref/aggregate_reference_collection_base.tcc \
 	Object/ref/aggregate_meta_instance_reference.tcc \
 	Object/ref/aggregate_meta_value_reference.tcc \
 	Object/ref/meta_instance_reference_subtypes.tcc \
@@ -318,6 +319,7 @@ OBJECT_REF_TCC_FILES = \
 OBJECT_REF_H_FILES = \
 	Object/ref/references_fwd.h \
 	Object/ref/meta_reference_union.h \
+	Object/ref/aggregate_reference_collection_base.h \
 	Object/ref/aggregate_meta_instance_reference_base.h \
 	Object/ref/aggregate_meta_instance_reference.h \
 	Object/ref/aggregate_meta_value_reference_base.h \
@@ -729,6 +731,7 @@ ALL_HEADER_FILES += \
 	$(COMMON_H_FILES) \
 	$(OBJECT_H_FILES) \
 	$(OBJECT_INST_H_FILES) \
+	$(OBJECT_REF_H_FILES) \
 	$(AST_H_FILES) \
 	$(PARSER_H_FILES) \
 	$(SIM_H_FILES) \
@@ -737,6 +740,7 @@ ALL_HEADER_FILES += \
 ALL_TCC_FILES += \
 	$(OBJECT_TCC_FILES) \
 	$(OBJECT_INST_TCC_FILES) \
+	$(OBJECT_REF_TCC_FILES) \
 	$(MAIN_EXEC_TCC_FILES) \
 	$(SIM_TCC_FILES) \
 	$(AST_TCC_FILES)

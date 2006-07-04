@@ -1,0 +1,11 @@
+// "131.hac"
+// testing higher-dimension instance references used with connections
+// should pass
+
+bool a, b, c, d, e, f, g, h;
+bool x[4][2];
+bool y[2][4];
+
+x = {{a, b}, {c, d}, {e, f}, {g, h}};
+y = {{a, b, c, d}, {e, f, g, h}};
+

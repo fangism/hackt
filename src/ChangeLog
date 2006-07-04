@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-07:
+	  Implemented: aggregate lvalue and instance reference unrolling
+		for both array constructions and concatenations.
+		Also factored out common code very cleanly into
+		aggregate_reference_collection_base methods.  
+	  AST/expr.cc: check that arguments of concatenation are non-scalar.  
+	  Added another load of test cases for new features and code paths, 
+		not as thorough coverage as before, but good enough.  
+	  Status: last revision on this branch, barring any compiler-isms.  
+
+
 2006-07-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-20-cow-06:

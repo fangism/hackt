@@ -1,5 +1,5 @@
 # "test/parser/connect/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2006/04/05 22:32:24 fang Exp $
+#	$Id: Makefile.am,v 1.20.16.1 2006/07/04 04:42:00 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -13,7 +13,8 @@ HACKT_PARSE_TEST_FAILURES = \
 	061 \
 	070 072 073 076 077 079 \
 	080 081 082 \
-	090
+	090 \
+	138
 
 # The following tests now pass parsing since we've disabled static 
 # compile-time checks:
@@ -33,7 +34,7 @@ HACKT_PARSE_TEST_PASSES = \
 	100 101 102 103 103a 104 105 106 107 108 109 \
 	110 111 112 113 118 119 \
 	122 123 124 125 126 127 128 129 \
-	130
+	130 131 132 133 134 135 136 137 139
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -72,7 +73,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	100 102 103 104 106 107 109 \
 	111 112 113 118 119 \
 	122 123 124 125 126 127 128 129 \
-	130
+	130 131 132 133 134 136 137 139
 
 # punted until unroll tests are restored: 114 114a
 # KNOWN BUG: 116 117: doesn't handle creation of bar
@@ -92,7 +93,7 @@ HACKT_ALLOC_TEST_SUBJECTS = \
 	083 084 085 \
 	111 112 113 118 119 \
 	122 123 124 125 126 127 128 129 \
-	130
+	130 131 132 133 134 136 137 139
 
 # add 031a,b later... too tired to hand-verify
 # add most CREATE tests to ALLOC tests later...
@@ -112,7 +113,7 @@ HACKT_CFLAT_TEST_SUBJECTS = \
 	083 084 085 \
 	111 112 113 118 119 \
 	122 123 124 125 126 127 128 129 \
-	130
+	130 131 132 133 134
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 032 076 077

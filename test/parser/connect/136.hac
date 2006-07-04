@@ -1,0 +1,9 @@
+// "136.hac"
+// copy-modified from "131.hac"
+// testing higher-dimension instance references used with connections
+// should pass
+
+bool x[2][2][2];
+x = {x[1], x[0]};
+// end up with 4 unique nodes
+

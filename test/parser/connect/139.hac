@@ -1,0 +1,9 @@
+// "139.hac"
+// should pass
+// connecting self array, rotated concatenation
+
+bool x[8];
+
+x = x[6..7] # x[0..5];
+// will result in 2 unique bools
+

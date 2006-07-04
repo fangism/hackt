@@ -1,0 +1,4 @@
+Error: lvalue referenced at position 4 is already assigned value 0
+At least one error in assignment.
+Error encountered during module::unroll.
+ERROR in unrolling.  Aborting.

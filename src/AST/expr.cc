@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.12.2.1 2006/07/03 04:49:29 fang Exp $
+	$Id: expr.cc,v 1.12.2.2 2006/07/04 04:41:03 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -596,6 +596,10 @@ inst_ref_expr_list::make_aggregate_instance_reference(
 	if (!bi) {
 		cerr << "Error in first subreference, cannot construct "
 			"aggregate instance reference." << endl;
+		return return_type(NULL);
+	} else if (cat && !bi->dimensions()) {
+		cerr << "Error: subreference of aggregate concatenations "
+			"must be non-scalar." << endl;
 		return return_type(NULL);
 	}
 	const count_ptr<aggregate_meta_instance_reference_base>

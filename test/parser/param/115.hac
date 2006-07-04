@@ -1,0 +1,10 @@
+// "115.hac"
+// copy-modified from "111.hac"
+// should fail assigning values multiple times
+
+pint x[2][2];
+x = {{0,1}, {2, 3}};
+
+pint a, b, c, d;
+{{a, b}, {c, a}} = x;	// 'a' is repeated!
+

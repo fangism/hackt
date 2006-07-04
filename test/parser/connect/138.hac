@@ -1,0 +1,7 @@
+// "138.hac"
+// should parse fail
+// cannot concatenate scalars
+
+bool x, y, z;
+x # y = y # z;
+

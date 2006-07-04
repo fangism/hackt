@@ -2,7 +2,7 @@
 	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.12.10.1 2006/07/02 03:59:37 fang Exp $
+	$Id: packed_array.h,v 1.12.10.2 2006/07/04 04:41:13 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -15,20 +15,6 @@
 #include <iosfwd>
 #include "util/macros.h"
 #include "util/multikey.h"
-
-#define	PACKED_ARRAY_CLASS						\
-packed_array<D,K,T>
-
-#define	PACKED_ARRAY_GENERIC_CLASS					\
-packed_array_generic<K,T>
-
-#if 0
-#define	PACKED_BOOL_ARRAY_TEMPLATE_SIGNATURE				\
-template <size_t D, class K>
-
-#define	PACKED_BOOL_ARRAY_CLASS						\
-packed_array<D,K,bool>
-#endif
 
 namespace util {
 using std::istream;

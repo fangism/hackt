@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.5 2006/07/03 04:49:31 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.7.2.6 2006/07/04 04:41:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <iterator>
 #include "Object/ref/aggregate_meta_value_reference.h"
+#include "Object/ref/aggregate_reference_collection_base.tcc"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/meta_value_reference.h"
 #include "Object/def/definition_base.h"
@@ -41,7 +42,6 @@ namespace entity {
 #include "util/using_ostream.h"
 using std::distance;
 using std::copy;
-using std::equal;
 using std::transform;
 using std::back_inserter;
 using util::write_value;
@@ -413,9 +413,9 @@ if (this->_is_concatenation) {
 		INVARIANT(sub.back()->dimensions() == this->dimensions());
 	}
 	// evaluate trailing dimensions (after 1st must match)
-	typedef	typename const_collection_type::key_type	array_size_type;
-	typedef	vector<array_size_type>			size_array_type;
-	typedef	typename size_array_type::const_iterator	size_iterator;
+	// typedef	typename const_collection_type::key_type	array_size_type;
+	// typedef	vector<array_size_type>			size_array_type;
+	typedef	size_array_type::const_iterator	size_iterator;
 	typedef	typename sub_type::const_iterator	const_sub_iterator;
 	size_array_type sub_sizes;
 	const const_sub_iterator sb(sub.begin()), se(sub.end());
@@ -426,22 +426,10 @@ if (this->_is_concatenation) {
 		sub_sizes.push_back((*si)->array_dimensions());
 	}
 }
-	const size_iterator zb(sub_sizes.begin()), ze(sub_sizes.end());
-	const array_size_type& head_size(*zb);
-{
-	size_iterator zi(zb+1);
-	for ( ; zi!=ze; ++zi) {
-		if (!equal(head_size.begin() +1, head_size.end(), 
-				zi->begin() +1)) {
-			cerr << "Error: trailing dimensions mismatch between "
-				"sub-collection 1 and " <<
-				distance(zb, zi) +1 << "." << endl;
-			cerr << "\tgot: " << head_size << " and: " <<
-				*zi << endl;
-			return return_type(NULL);
-		}
+	if (!check_concatenable_subarray_sizes(sub_sizes).good) {
+		// already have error message
+		return return_type(NULL);
 	}
-}
 	// start by copying first chunk of values
 	const temp_ret_type ret(new const_collection_type(**sb));
 {
@@ -511,7 +499,7 @@ if (this->_is_concatenation) {
 	}
 	// all dimensions must match for array construction
 	typedef	typename const_collection_type::key_type	array_size_type;
-	typedef	vector<array_size_type>			size_array_type;
+	// typedef	vector<array_size_type>			size_array_type;
 	typedef	typename size_array_type::const_iterator	size_iterator;
 	typedef	typename sub_type::const_iterator	const_sub_iterator;
 	size_array_type sub_sizes;
@@ -523,22 +511,12 @@ if (this->_is_concatenation) {
 		sub_sizes.push_back((*si)->array_dimensions());
 	}
 }
-	const size_iterator zb(sub_sizes.begin()), ze(sub_sizes.end());
-	const array_size_type& head_size(*zb);
-{
-	size_iterator zi(zb+1);
-	for ( ; zi!=ze; ++zi) {
-		if (!equal(head_size.begin(), head_size.end(), zi->begin())) {
-			cerr << "Error: dimensions mismatch between "
-				"sub-collection 1 and " <<
-				distance(zb, zi) +1 << "." << endl;
-			cerr << "\tgot: " << head_size << " and: " <<
-				*zi << endl;
-			return return_type(NULL);
-		}
+	if (!check_constructible_subarray_sizes(sub_sizes).good) {
+		// already have error message
+		return return_type(NULL);
 	}
-}
 {
+	const array_size_type& head_size(sub_sizes.front());
 	array_size_type new_size(head_size.size() +1);
 	new_size.front() = 0;	// reset 1st dimension as 0, then grow
 	copy(head_size.begin(), head_size.end(), new_size.begin() +1);
@@ -607,39 +585,32 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 		// else continue
 	}
 }
-	// aggregation, by concatenation or construction
-	const size_t subdim = subreferences.front()->dimensions();
-if (this->_is_concatenation) {
-	// concatenation of arrays into like-dimension larger arrays
-	FINISH_ME(Fang);
-	return bad_bool(true);
-} else {
-	// is array construction
-	if (subdim) {
-		// is higher dimension array
-		FINISH_ME(Fang);
-		return bad_bool(true);
-	} else {
-		// is 1-D array, and all constituents are scalar
-		// just copy pointer value-references over
-		key_type k(1);
-		k[0] = temp.size();
-		a.resize(k);
-		target_iterator ti(a.begin());
-		const const_coll_coll_iterator b(temp.begin()), e(temp.end());
-		const_coll_coll_iterator i(b);
-		for ( ; i!=e; ++i, ++ti) {
-			const key_type s(i->size());
-			INVARIANT(!s.dimensions());
-			// no checking necessary, we statically know the type
-			*ti = i->front();
-		}
-		INVARIANT(ti == a.end());
-		return bad_bool(false);
+	// collect and evaluate subreference dimensions
+	size_array_type sub_sizes;
+{
+	const const_coll_coll_iterator sb(temp.begin()), se(temp.end());
+	sub_sizes.reserve(temp.size());
+	const_coll_coll_iterator si(sb);
+	for ( ; si!=se; ++si) {
+		sub_sizes.push_back(si->size());        // multikey
 	}
 }
+	// aggregation, by concatenation or construction
+	// the magic resizing happens here
+	if (!check_and_resize_packed_array(a, sub_sizes).good) {
+		// already have error message
+		return bad_bool(true);
+	}
+	// use same code for all cases, even with sub-dim == 0
+	// just copy pointer value-references over
+	const const_coll_coll_iterator b(temp.begin()), e(temp.end());
+	const_coll_coll_iterator i(b);
+	for ( ; i!=e; ++i) {
+		// operator overload for growing packed_array_generic
+		a += *i;
+	}
+	return bad_bool(false);
 }	// end method unroll_lvalue_references
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

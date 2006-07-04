@@ -3,7 +3,9 @@
 	Boolean-like classes with different semantics.  
 	The purpose of these classes is to provide self-documenting
 	boolean values, which prevent user errors.  
-	$Id: boolean_types.h,v 1.4 2005/08/08 16:51:14 fang Exp $
+
+	$Id: boolean_types.h,v 1.4.78.1 2006/07/04 04:41:12 fang Exp $
+	"When I'm good, I'm good, but when I'm bad, I'm better." -- Mae West
  */
 
 #ifndef	__UTIL_BOOLEAN_TYPES_H__
@@ -120,6 +122,30 @@ good_bool::good_bool(const bad_bool& b) : good(!b.bad) { }
 
 inline
 bad_bool::bad_bool(const good_bool& b) : bad(!b.good) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// some handy overloaded functions
+// so user doesn't need to remember a priori the return type
+
+static
+inline
+bool
+is_good(const good_bool& g) { return g.good; }
+
+static
+inline
+bool
+is_good(const bad_bool& b) { return !b.bad; }
+
+static
+inline
+bool
+is_bad(const good_bool& g) { return !g.good; }
+
+static
+inline
+bool
+is_bad(const bad_bool& b) { return b.bad; }
 
 //=============================================================================
 
