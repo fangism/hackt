@@ -1,9 +1,10 @@
 // "050.hac"
-// copy-modified from "049.hac"
+// copy-modified from "049b.hac"
 // should pass parsing but fail unrolling
 
 bool x[2];
 bool y[3];
 
-bool z[2][2] = {x, y};	// error: got [2] and [3]
+bool z[2][2];
+z = {x, y};	// error: got [2] and [3]
 

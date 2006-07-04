@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
 
+2006-07-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-24-merged-cow-07:
+	  Branch merge.
+
+
 2006-07-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-23:
@@ -9,6 +15,15 @@
 		any standard -- re-wrote with explicit sequencing to correct.
 	  First triggered with i686-apple-darwin8-gcc-4.0.1 (build 5341).
 	  Thanks to Clint Kelly for reporting, and assisting with diagnosis.  
+
+
+2006-07-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-05:
+	  Added operator overload to packed_array_generic for facilitating
+		multi-dimensional compositions and concatenations.  
+	  Removed requirement that resolve_sizes must result in non-zero
+		size, to allow for "thin empty collections".  
 
 
 2006-05-27	David Fang		<fangism@users.sourceforge.net>

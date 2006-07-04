@@ -1,0 +1,9 @@
+// "137.hac"
+// copy-modified from "136.hac"
+// testing higher-dimension instance references used with connections
+// should pass
+
+bool x[2][2][2];
+bool y[4][2];
+y = x[0] # x[1];
+

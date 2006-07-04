@@ -1,0 +1,91 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
+	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	189
+	20	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	22	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	43	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	50	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  9 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    a = pint^0 a value: 0
+    b = pint^0 b value: 1
+    c = pint^0 c value: 2
+    d = pint^0 d value: 3
+    e = pint^0 e value: 4
+    f = pint^0 f value: 5
+    g = pint^0 g value: 6
+    h = pint^0 h value: 7
+    x = pint^3 x
+      unrolled index-value pairs: {
+        [0][0][0] = 0
+        [0][0][1] = 1
+        [0][1][0] = 2
+        [0][1][1] = 3
+        [1][0][0] = 4
+        [1][0][1] = 5
+        [1][1][0] = 6
+        [1][1][1] = 7
+      }
+}
+
+Created state:
+

@@ -1,0 +1,8 @@
+// "095.hac"
+// copy-modified from "094.hac"
+// should fail: wrong size in subreference
+
+template <pint x[2][2]>
+defproc foo() { }
+
+foo<{{0,1}, {1,2,3}}> bar;

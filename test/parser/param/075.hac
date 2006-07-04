@@ -1,0 +1,8 @@
+// "075.hac"
+// copy-modified from "073.hac"
+// should fail unroll: size mismatch in sub-references
+
+pint x[2][2];
+
+x[0..1] = {{0,1, 4}, {2, 3}};
+

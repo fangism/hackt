@@ -1,0 +1,8 @@
+// "114.hac"
+// copy-modified from "111.hac"
+// should fail, bad aggregate lvalue reference
+
+pint x[2][2];
+{{x[0][0], x[0][1]}, {x[1][0]}} = {{0,1}, {2, 3}};
+// LHS malformed, bad size
+

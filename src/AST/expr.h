@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.h"
 	Expression-related parser classes for HAC.
-	$Id: expr.h,v 1.6 2006/04/12 08:53:12 fang Exp $
+	$Id: expr.h,v 1.7 2006/07/04 07:25:45 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.h,v 1.15.42.1 2005/12/11 00:45:05 fang Exp
  */
@@ -10,6 +10,7 @@
 #define __HAC_AST_EXPR_H__
 
 #include "AST/expr_base.h"
+#include "AST/expr_list.h"	// for array_concatenation
 #include "AST/identifier.h"
 
 namespace HAC {
@@ -282,7 +283,7 @@ public:
 };	// end class logical_expr
 
 //=============================================================================
-typedef	node_list<const expr>			array_concatenation_base;
+// typedef	expr_list			array_concatenation_base;
 
 /**
 	Concatenation of arrays to make bigger arrays.  
@@ -294,10 +295,9 @@ typedef	node_list<const expr>			array_concatenation_base;
 		or can this include values as well?
 	A: should handle both cases, but be resolved at check-time
  */
-class array_concatenation :
-		public expr, public array_concatenation_base {
+class array_concatenation : public expr, public expr_list {
 protected:
-	typedef	array_concatenation_base		parent;
+	typedef	expr_list			parent_type;
 public:
 	explicit
 	array_concatenation(const expr* e);

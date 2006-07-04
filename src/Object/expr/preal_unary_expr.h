@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_unary_expr.h"
 	Unary negation of meta real value.  
-	$Id: preal_unary_expr.h,v 1.5 2006/06/29 03:11:38 fang Exp $
+	$Id: preal_unary_expr.h,v 1.6 2006/07/04 07:26:09 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_UNARY_EXPR_H__
@@ -72,11 +72,17 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
+	count_ptr<const preal_const>
+	__unroll_resolve_rvalue(const unroll_context&, 
+		const count_ptr<const preal_expr>&) const;
+
 	count_ptr<const const_param>
-	unroll_resolve_rvalues(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const preal_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
 protected:
+	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
 
 public:

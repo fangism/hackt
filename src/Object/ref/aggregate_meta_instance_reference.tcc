@@ -1,14 +1,16 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.6 2006/05/06 22:08:27 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.7 2006/07/04 07:26:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
 #define	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
+#include <algorithm>
 #include "Object/ref/aggregate_meta_instance_reference.h"
+#include "Object/ref/aggregate_reference_collection_base.tcc"
 #include "Object/ref/meta_instance_reference_subtypes.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/type/fundamental_type_reference.h"
@@ -21,6 +23,7 @@ namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
 using std::distance;
+using std::copy;
 
 //=============================================================================
 // class aggregate_meta_instance_reference method definitions
@@ -138,8 +141,7 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 	Shamelessly copy-modified from aggregate_meta_value_reference.  
 	\param a is returned by reference as a constructed packed array
 		of references.  
-	TODO: type check collectible equivalence
-	NOTE: only need to check one element ifrom each subreference, 
+	NOTE: only need to check one element from each subreference, 
 		recusive construction guarantees uniformity within each
 		collection.  
  */
@@ -159,6 +161,7 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 							target_iterator;
 	typedef typename alias_collection_type::value_type
 							alias_ptr_type;
+	// collect the collection of alias-collections from sub-references
 	coll_coll_type temp(subreferences.size());
 {
 	coll_coll_iterator ci(temp.begin());
@@ -176,58 +179,53 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 		// else continue
 	}
 }               
-	// aggregation, by concatenation or construction
-	const size_t subdim = subreferences.front()->dimensions();
-if (this->_is_concatenation) {
-	// concatenation of arrays into like-dimension larger arrays
-	FINISH_ME(Fang);
-	return bad_bool(true);
-} else {
-	// is array construction
-	if (subdim) {
-		// is higher dimension array
-		FINISH_ME(Fang);
-		return bad_bool(true);
-	} else {
-		// is 1-D array, and all constituents are scalar
-		// just copy pointer value-references over
-		key_type k(1);
-		k[0] = temp.size();
-		a.resize(k);
-		target_iterator ti(a.begin());
-		const const_coll_coll_iterator b(temp.begin()), e(temp.end());
-		const alias_ptr_type ba(b->front());
-		const never_ptr<const instance_collection_generic_type>
-			bc(ba->container);
-		const_coll_coll_iterator i(b);
-		bool err = false;
-		for ( ; i!=e; ++i, ++ti) {
-			const key_type s(i->size());
-			INVARIANT(!s.dimensions());
-			// type check: collectibly_type_equivalent
-			const alias_ptr_type ia(i->front());
-			const never_ptr<const instance_collection_generic_type>
-				ic(ia->container);
-			// this should be trivially fast for meta-classes
-			// that need minimal or zero checking :)
-			// we only need to check the container type, 
-			// since relaxed actuals will never matter for
-			// collectible type equivalence.  
-			if (!bc->must_be_collectibly_type_equivalent(*ic)) {
-				// may already come with partial error msg.
-				cerr << "Type mismatch in aggregate " <<
-					traits_type::tag_name << " reference."
-					<< endl;
-				bc->type_dump(cerr << "\tgot: ") << endl;
-				ic->type_dump(cerr << "\tand: ") << endl;
-				err = true;
-			}
-			*ti = i->front();
-		}
-		INVARIANT(ti == a.end());
-		return bad_bool(err);
-	}
+        // collect and evaluate subreference dimensions
+        size_array_type sub_sizes;
+{
+        const const_coll_coll_iterator sb(temp.begin()), se(temp.end());
+        sub_sizes.reserve(temp.size());
+        const_coll_coll_iterator si(sb);
+        for ( ; si!=se; ++si) {
+                sub_sizes.push_back(si->size());	// multikey
+        }
 }
+	// aggregation, by concatenation or construction
+	// the magic array resizing happens here
+	if (!check_and_resize_packed_array(a, sub_sizes).good) {
+		// already have error message
+		return bad_bool(true);
+	}
+	// use same code for all cases, even with sub-dim == 0
+	// just copy pointer value-references over
+	const const_coll_coll_iterator b(temp.begin()), e(temp.end());
+	const alias_ptr_type ba(b->front());
+	const never_ptr<const instance_collection_generic_type>
+		bc(ba->container);
+	const_coll_coll_iterator i(b);
+	bool err = false;
+	for ( ; i!=e; ++i) {
+		// type check: collectibly_type_equivalent
+		const alias_ptr_type ia(i->front());
+		const never_ptr<const instance_collection_generic_type>
+			ic(ia->container);
+		// this should be trivially fast for meta-classes
+		// that need minimal or zero checking :)
+		// we only need to check the container type, 
+		// since relaxed actuals will never matter for
+		// collectible type equivalence.  
+		if (!bc->must_be_collectibly_type_equivalent(*ic)) {
+			// may already come with partial error msg.
+			cerr << "Type mismatch in aggregate " <<
+				traits_type::tag_name << " reference."
+				<< endl;
+			bc->type_dump(cerr << "\tgot: ") << endl;
+			ic->type_dump(cerr << "\tand: ") << endl;
+			err = true;
+		}
+		// operator overload to do pointer collection copying
+		a += *i;
+	}
+	return bad_bool(err);
 }	// end method unroll_references
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

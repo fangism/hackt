@@ -1,0 +1,86 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	93
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
+	7	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	10	##ADDR##	cnstpic_	3	#HEAD#	#TAIL#	80
+	11	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	189
+	12	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
+	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	28	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  1 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Parameters:
+    y = pint^2 y
+      unrolled index-value pairs: {
+        [0][0] = 3
+        [0][1] = 2
+        [1][0] = 1
+        [1][1] = 0
+      }
+  Definitions:
+    foo = process-definition (defined) foo<
+      pint<> x[0..1][0..1][0..1]
+      >(
+      )
+      In definition "foo", we have: {
+      Parameters:
+        x = pint<> x
+
+      unroll sequence: 
+        pint<> x[0..1][0..1][0..1]
+      footprint collection: {
+        <{{{0,1},{2,3}},{{3,2},{1,0}}}> {
+          pint^3 x
+            unrolled index-value pairs: {
+              [0][0][0] = ?
+              [0][0][1] = ?
+              [0][1][0] = ?
+              [0][1][1] = ?
+              [1][0][0] = ?
+              [1][0][1] = ?
+              [1][1][0] = ?
+              [1][1][1] = ?
+            }
+        }
+      }
+      }
+
+  Instances:
+    bar = process foo<{{{0,1},{2,3}},{{3,2},{1,0}}}>^0 bar (instantiated) = ::bar 
+}
+

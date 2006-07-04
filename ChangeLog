@@ -1,11 +1,39 @@
 "ChangeLog"
 
+2006-07-04	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-24-merged-cow-07:
+	  Branch merge.  copy-on-write unrolling, higher-dimension
+		aggregate references and collections.  
+	  scripts/rm_pattern.sh: more robust file cleaning of patterns
+	  config/am__remove_distdir.diff: more robust rm -rf
+
+
+2006-07-01	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-03:
+	  Added scripts/rm_pattern.sh used in the definition of
+		RM_PATTERN in Make.stddef.  rm residues begone!
+
+
 2006-07-01	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-21:
 	  config/rl_el.m4: forgot to allow header check for histedit.h
 		in the check for --with-editline.  Now works with histedit.  
 	  Minor provisions to enable use with bison-2.1.  Damn you, bison.  
+
+
+2006-06-30	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-02:
+	  configure.ac: apply extra patch to top_builddir/Makefile:
+		am__remove_distdir hacked to repeatedly try rm -rf $(distdir)
+		until command succeeds because of residual files from
+		recursive remove when too many files in directory.  
+	  config/am__remove_distdir.diff is the patch for this.
+		This patch should (IMO) be applied to automake's 
+		am/distdir.am upstream source.  
 
 
 2006-05-12	David Fang	<fangism@users.sourceforge.net>

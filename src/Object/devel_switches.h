@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.16 2006/06/29 03:11:30 fang Exp $
+	$Id: devel_switches.h,v 1.17 2006/07/04 07:25:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -39,13 +39,6 @@
 	Affects "Object/unroll/unroll_context_value_resolver.cc".
  */
 #define	LOOKUP_GLOBAL_META_PARAMETERS		1
-
-/**
-	Define to 1 to implement copy-on-write unroll resolution
-	of unrolling meta values and expressions.  
-	Goal: 1
- */
-#define	COW_UNROLL_RESOLVE_RVALUES		1
 
 //=============================================================================
 

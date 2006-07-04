@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.16 2006/06/26 01:46:38 fang Exp $
+	$Id: unroll_context.cc,v 1.17 2006/07/04 07:26:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -330,7 +330,7 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 				// else will have infinite mutual recursion
 				if (next) {
 					// self-reference detected
-					return ret->unroll_resolve_rvalues(*next);
+					return ret->unroll_resolve_rvalues(*next, ret);
 				} else {
 					lookup_panic(cerr);	// no return
 					return return_type(NULL);
@@ -339,14 +339,14 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 					// check this scope again
 					// for parameter-dependent-parameter
 					// e.g. in default parameter exprs.
-					return ret->unroll_resolve_rvalues(*this);
+					return ret->unroll_resolve_rvalues(*this, ret);
 				}
 			} else {
 				// not self references, safe to lookup again
 				// NOTE: expressions cannot be cyclic
 				// so checking self-reference is sufficient
 				// for safety
-				return ret->unroll_resolve_rvalues(*this);
+				return ret->unroll_resolve_rvalues(*this, ret);
 				// guaranteed that this will terminate
 				// even if recursive
 			}

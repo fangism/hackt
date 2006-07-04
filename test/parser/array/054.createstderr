@@ -1,0 +1,70 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	6	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	pboolcol	2	#HEAD#	#TAIL#	65
+	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	14	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	19	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	24	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	29	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  3 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  0 definitions
+  0 typedefs
+  Parameters:
+    x = pbool^1 x
+      unrolled index-value pairs: {
+        0 = 0
+        1 = 1
+      }
+    y = pbool^1 y
+      unrolled index-value pairs: {
+        0 = 1
+        1 = 0
+      }
+    z = pbool^2 z
+      unrolled index-value pairs: {
+        [0][0] = 0
+        [0][1] = 1
+        [1][0] = 1
+        [1][1] = 0
+      }
+}
+
+Created state:
+

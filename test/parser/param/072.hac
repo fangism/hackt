@@ -1,0 +1,8 @@
+// "072.hac"
+// copy-modified from "071.hac"
+// should fail during unroll: wrong size
+
+pint x[2][2];
+
+x = {{0,1}, {2, 3, 4}};
+

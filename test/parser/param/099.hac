@@ -1,0 +1,6 @@
+// "099.hac"
+// should fail
+
+pint x;
+x = {0};	// scalar != 1D
+

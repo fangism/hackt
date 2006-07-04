@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.17 2006/04/27 00:15:37 fang Exp $
+ 	$Id: instance_reference.cc,v 1.18 2006/07/04 07:26:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -12,6 +12,7 @@
 
 #include <iostream>
 #include <list>
+#include <algorithm>
 
 #include "Object/ref/meta_instance_reference_subtypes.tcc"
 #include "Object/ref/simple_meta_instance_reference.tcc"
@@ -102,6 +103,7 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 namespace HAC {
 namespace entity {
 #include "util/using_ostream.h"
+using std::equal;
 using util::multidimensional_sparse_set_traits;
 using util::multidimensional_sparse_set;
 using util::write_value;
@@ -304,6 +306,69 @@ simple_nonmeta_instance_reference_base::load_object_base(
 	// must load the 
 	if (array_indices)
 		m.load_object_once(array_indices);
+}
+
+//=============================================================================
+// class aggregate_meta_instance_reference_base method definitions
+
+/**
+	For subarray sizes to be concatenable, the trailing dimensions
+	(after first) must match.  
+ */
+good_bool
+aggregate_reference_collection_base::check_concatenable_subarray_sizes(
+		const size_array_type& s) {
+	typedef size_array_type::const_iterator	size_iterator;
+	const size_iterator zb(s.begin()), ze(s.end());
+	const multikey_index_type& head_size(*zb);
+	size_iterator zi(zb+1);
+	for ( ; zi!=ze; ++zi) {
+		// compare *trailing* dimensions
+		if (!equal(head_size.begin() +1, head_size.end(),
+				zi->begin() +1)) {
+			cerr << "Error: trailing dimensions mismatch between "
+				"sub-collection 1 and " <<
+				distance(zb, zi) +1 << "." << endl;
+			cerr << "\tgot: " << head_size << " and: " <<
+				*zi << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For subarray sizes to be constructible, all dimensions must match.  
+ */
+good_bool
+aggregate_reference_collection_base::check_constructible_subarray_sizes(
+		const size_array_type& s) {
+	typedef size_array_type::const_iterator	size_iterator;
+	const size_iterator zb(s.begin()), ze(s.end());
+	const multikey_index_type& head_size(*zb);
+	size_iterator zi(zb+1);
+	for ( ; zi!=ze; ++zi) {
+		// compare *all* dimensions
+		if (!equal(head_size.begin(), head_size.end(),
+				zi->begin())) {
+			cerr << "Error: dimensions mismatch between "
+				"sub-collection 1 and " <<
+				distance(zb, zi) +1 << "." << endl;
+			cerr << "\tgot: " << head_size << " and: " <<
+				*zi << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+aggregate_reference_collection_base::check_subarray_sizes(
+		const size_array_type& s) const {
+	return _is_concatenation ? check_concatenable_subarray_sizes(s) :
+		check_constructible_subarray_sizes(s);
 }
 
 //=============================================================================

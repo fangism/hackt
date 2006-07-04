@@ -1,0 +1,10 @@
+// "089.hac"
+// copy-modified from "088.hac"
+// should pass: 3D array
+
+pint x[2][2];
+pint y[2][2][2];
+
+x = {{0,1}, {2, 3}};
+y = {x, x};
+

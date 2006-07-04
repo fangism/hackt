@@ -1,0 +1,9 @@
+// "135.hac"
+// copy-modified from "131.hac"
+// testing higher-dimension instance references used with connections
+// should fail: wrong dimensions
+
+bool a, b, c, d, e, f, g, h;
+
+{{a, b}, {c, d}, {e, f}, {g, h}} = {{a, b, c, d}, {e, f, g, h}};
+

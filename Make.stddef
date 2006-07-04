@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.15 2006/06/26 01:45:21 fang Exp $
+#	$Id: Make.stddef,v 1.16 2006/07/04 07:25:33 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -77,5 +77,9 @@ AUTO_IGNORE =
 # This is useful self-contained script for transforming program names
 # to their installed names.  
 INSTALL_TRANSFORM_SH = $(top_builddir)/install_transform.sh
+
+# more robust way of removing patterns
+# note: pattern arguments must be wrapped in quotes, e.g. "*.o"
+RM_PATTERN = $(top_srcdir)/scripts/rm_pattern.sh
 
 # end "Make.stddef"

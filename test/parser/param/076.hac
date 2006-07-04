@@ -1,0 +1,8 @@
+// "076.hac"
+// copy-modified from "071.hac"
+// should pass: 3D array
+
+pint x[2][2][2];
+
+x = {{{0,1}, {2, 3}}, {{5,6}, {7,8}}};
+

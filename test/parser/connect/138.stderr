@@ -1,0 +1,6 @@
+Error: subreference of aggregate concatenations must be non-scalar.
+Error building aggregate instance reference.  [6:1..5]
+Error: subreference of aggregate concatenations must be non-scalar.
+Error building aggregate instance reference.  [6:9..13]
+
+ERROR in the first item in alias-list.

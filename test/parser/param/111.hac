@@ -1,0 +1,11 @@
+// "111.hac"
+// copy-modified from "071.hac"
+// should pass, using aggregate lvalue reference
+
+pint x[2][2];
+
+{{x[0][0], x[0][1]}, {x[1][0], x[1][1]}} = {{0,1}, {2, 3}};
+
+pint a, b, c, d;
+{{a, b}, {c, d}} = x;
+

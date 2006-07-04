@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.12 2006/06/29 03:11:38 fang Exp $
+	$Id: pint_const.h,v 1.13 2006/07/04 07:26:03 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -121,8 +121,15 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
+	count_ptr<const pint_const>
+	__unroll_resolve_rvalue(const unroll_context&, 
+		const count_ptr<const pint_expr>&) const;
+
 	count_ptr<const const_param>
-	unroll_resolve_rvalues(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const pint_expr>&) const;
+
+	using pint_expr::unroll_resolve_rvalues;
 
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;

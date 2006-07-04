@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.12 2006/06/29 03:11:36 fang Exp $
+	$Id: param_expr.h,v 1.13 2006/07/04 07:25:58 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -85,7 +85,8 @@ virtual	count_ptr<const const_param>
 	make_aggregate_meta_value_reference(const count_ptr<const this_type>&);
 
 virtual	count_ptr<const const_param>
-	unroll_resolve_rvalues(const unroll_context&) const = 0;
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const param_expr>&) const = 0;
 
 	// helper functor, defined in "Object/expr/param_expr_functor.h"
 	struct unroller;

@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.16 2006/06/29 03:11:34 fang Exp $
+ 	$Id: const_collection.tcc,v 1.17 2006/07/04 07:25:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -388,9 +388,30 @@ CONST_COLLECTION_CLASS::resolve_dimensions(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONST_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<const typename CONST_COLLECTION_CLASS::parent_const_type>
-CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c) const {
-	return count_ptr<const parent_const_type>(new this_type(*this));
+count_ptr<const typename CONST_COLLECTION_CLASS::const_expr_type>
+CONST_COLLECTION_CLASS::__unroll_resolve_rvalue(const unroll_context& c, 
+		const count_ptr<const expr_base_type>& p) const {
+	typedef	count_ptr<const const_expr_type>	return_type;
+	if (values.dimensions()) {
+		cerr << "Error: got non-scalar " <<
+			util::what<this_type>::name() <<
+			" values where scalar constant expected." << endl;
+		return return_type(NULL);
+	} else {
+		return return_type(new const_expr_type(values.front()));
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return reference-counted pointer to self.  
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<const const_param>
+CONST_COLLECTION_CLASS::unroll_resolve_rvalues(const unroll_context& c, 
+		const count_ptr<const expr_base_type>& p) const {
+	INVARIANT(p == this);
+	return p.template is_a<const this_type>();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -486,6 +507,21 @@ CONST_COLLECTION_CLASS::operator < (const const_param& p) const {
 		INVARIANT(!this->dimensions());
 		return this->front() < pc.static_constant_value();
 	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapped operator overloading for value concatenation.  
+	\pre same as packed_array_generic::operator += 's
+	May assert fail if preconditions not met.  
+	\param r constant value collection to concatenate.  
+	\return this
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+CONST_COLLECTION_CLASS&
+CONST_COLLECTION_CLASS::operator += (const this_type& r) {
+	this->values += r.values;
+	return *this;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

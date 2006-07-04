@@ -1,0 +1,8 @@
+// "103.hac"
+// copy-modified from "100.hac"
+// should pass, concatenation operates on 1 or higher dimensions
+
+pint x[2];
+
+x = {0}#{1};
+

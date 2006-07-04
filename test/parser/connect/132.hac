@@ -1,0 +1,11 @@
+// "132.hac"
+// copy-modified from "131.hac"
+// testing higher-dimension instance references used with connections
+// should pass
+
+bool a, b, c, d, e, f, g, h;
+
+{{a, b}, {c, d}, {e, f}, {g, h}} = {{b, c}, {d, e}, {f, g}, {h, a}};
+// cyclic connection! using 2D array
+
+

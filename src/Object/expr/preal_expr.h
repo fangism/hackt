@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: preal_expr.h,v 1.5 2006/06/26 01:46:07 fang Exp $
+	$Id: preal_expr.h,v 1.6 2006/07/04 07:26:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_EXPR_H__
@@ -18,6 +18,7 @@
 namespace HAC {
 namespace entity {
 struct preal_tag;
+class preal_const;
 class const_param;
 class const_index_list;
 class unroll_context;
@@ -90,6 +91,18 @@ virtual	good_bool
 
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
+
+virtual	count_ptr<const preal_const>
+	__unroll_resolve_rvalue(const unroll_context&, 
+		const count_ptr<const preal_expr>&) const = 0;
+
+	count_ptr<const const_param>
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const param_expr>&) const;
+
+virtual	count_ptr<const const_param>
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const preal_expr>&) const = 0;
 
 #define	UNROLL_RESOLVE_COPY_PREAL_PROTO					\
 	count_ptr<const preal_expr>					\

@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.14 2006/05/06 22:08:29 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.15 2006/07/04 07:26:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -239,11 +239,20 @@ EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i,
 		lvalue_iterator li(temp.begin());
 		rvalue_iterator ri(v.begin()), re(v.end());
 		// c'mon gcc, auto-vectorize this loop!
-		for ( ; ri!=re; ++ri, ++li) {
+		bool assign_err = false;
+		size_t k = 1;
+		for ( ; ri!=re; ++ri, ++li, ++k) {
 			NEVER_NULL(*li);
 			if (!(**li = *ri).good) {
-				return good_bool(false);
+				assign_err = true;
+				cerr << "Error: lvalue referenced at position "
+					<< k << " is already assigned value "
+					<< **li << endl;
 			}
+		}
+		if (assign_err) {
+			cerr << "At least one error in assignment." << endl;
+			return good_bool(false);
 		}
 		INVARIANT(li == temp.end());
 	}
@@ -262,7 +271,7 @@ EXPRESSION_ASSIGNMENT_CLASS::unroll(const unroll_context& c) const {
 	INVARIANT(this->src);
 	// works for scalars and multidimensional arrays alike
 	const count_ptr<const const_param>
-		src_values(this->src->unroll_resolve_rvalues(c));
+		src_values(this->src->unroll_resolve_rvalues(c, this->src));
 	if (!src_values) {
 		this->src->dump(
 			cerr << "ERROR: failed to resolve source values of ",

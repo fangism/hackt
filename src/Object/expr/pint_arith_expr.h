@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.10 2006/06/29 03:11:37 fang Exp $
+	$Id: pint_arith_expr.h,v 1.11 2006/07/04 07:26:02 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -83,8 +83,9 @@ public:
 	dimensions(void) const { return 0; }
 
 	bool
-	may_be_initialized(void) const
-		{ return lx->may_be_initialized() && rx->may_be_initialized(); }
+	may_be_initialized(void) const {
+		return lx->may_be_initialized() && rx->may_be_initialized();
+	}
 
 	bool
 	must_be_initialized(void) const {
@@ -112,11 +113,17 @@ public:
 	const_index_list
 	resolve_dimensions(void) const;
 
+	count_ptr<const pint_const>
+	__unroll_resolve_rvalue(const unroll_context&, 
+		const count_ptr<const pint_expr>&) const;
+
 	count_ptr<const const_param>
-	unroll_resolve_rvalues(const unroll_context&) const;
+	unroll_resolve_rvalues(const unroll_context&, 
+		const count_ptr<const pint_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PINT_PROTO;
 protected:
+	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
 
 public:

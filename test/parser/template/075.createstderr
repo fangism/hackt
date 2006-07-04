@@ -40,82 +40,81 @@ Persistent Object Manager text dump:
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	173
-	42	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	46	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	54	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	173
+	41	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	49	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	52	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	60	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	63	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	66	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	68	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	69	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	67	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	74	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	73	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	78	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	80	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	81	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	77	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	79	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	83	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	84	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	86	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	87	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	86	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	88	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	90	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	91	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	92	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	93	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	94	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	95	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	89	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	90	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	91	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	94	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	95	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	96	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	97	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	98	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	100	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	101	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	97	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	98	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	99	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	100	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	101	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	102	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	103	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	104	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	105	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	106	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	107	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	103	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	104	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	105	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	106	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	107	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	108	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	109	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	110	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
-	111	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	109	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	110	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	111	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	112	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	113	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	114	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

@@ -3,7 +3,7 @@
 	Class for template arguments, a.k.a. actuals.  
 	This file came from "Object/type/template_actuals.h"
 		in a previous life.  
-	$Id: template_actuals.h,v 1.5 2006/01/22 18:20:45 fang Exp $
+	$Id: template_actuals.h,v 1.6 2006/07/04 07:26:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TEMPLATE_ACTUALS_H__
@@ -45,13 +45,13 @@ public:
 	typedef	count_ptr<expr_list_type>	arg_list_ptr_type;
 	typedef	count_ptr<const expr_list_type>	const_arg_list_ptr_type;
 protected:
-	arg_list_ptr_type			strict_template_args;
+	const_arg_list_ptr_type			strict_template_args;
 	const_arg_list_ptr_type			relaxed_template_args;
 public:
 	template_actuals();
 
-	template_actuals(const arg_list_ptr_type&,
-		const const_arg_list_ptr_type&);
+	template_actuals(const const_arg_list_ptr_type& s,
+		const const_arg_list_ptr_type& r);
 
 	// special purpose constructor
 	template_actuals(const template_actuals& t, 
@@ -70,8 +70,13 @@ public:
 	const_arg_list_ptr_type
 	get_strict_args(void) const;
 
+#if 0
 	arg_list_ptr_type
 	get_strict_args(void);
+#else
+	void
+	replace_strict_args(const const_arg_list_ptr_type&);
+#endif
 
 	const_arg_list_ptr_type
 	get_relaxed_args(void) const;

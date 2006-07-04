@@ -1,0 +1,7 @@
+// "113.hac"
+// copy-modified from "111.hac"
+// should fail, using aggregate lvalue reference: wrong size
+
+pint x[2][2];
+
+{{x[0][0], x[0][1]}, {x[1][0], x[1][1]}} = {{0,1,5}, {2,3,4}};

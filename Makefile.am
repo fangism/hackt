@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.31 2006/05/09 05:39:13 fang Exp $
+#	$Id: Makefile.am,v 1.32 2006/07/04 07:25:33 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -55,6 +55,7 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	config/macro-value.h.in \
 	config/config_subst.awk \
 	config/ylwrap \
+	config/am__remove_distdir.diff \
 	DevelopmentPlan.dot
 
 

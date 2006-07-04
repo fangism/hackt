@@ -39,19 +39,15 @@ Persistent Object Manager text dump:
 	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {

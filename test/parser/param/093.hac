@@ -1,0 +1,12 @@
+// "093.hac"
+// copy-modified from "071.hac"
+// should pass
+
+template <pint x[2][2]>
+defproc foo() { }
+
+pint y[2][2];
+y = {{0,1}, {2, 3}};
+
+foo<y> bar;
+

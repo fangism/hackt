@@ -1,0 +1,5 @@
+Error: value reference 2 is 1-dimensional, but the former references in the aggregate are 2-dimensional.
+Error appending aggregate value reference at position 2.
+Error building aggregate value reference.  [9:6..11]
+Error in source expression.
+HALT: at least one error in the assignment list.  [9:1..13]

@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference.h"
-	$Id: meta_value_reference.h,v 1.3 2006/06/29 03:11:40 fang Exp $
+	$Id: meta_value_reference.h,v 1.4 2006/07/04 07:26:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_H__
@@ -78,7 +78,7 @@ virtual	bad_bool
 		count_ptr<const const_param>
 		operator () (const P& p) const {
 			NEVER_NULL(p);
-			return p->unroll_resolve_rvalues(_context);
+			return p->unroll_resolve_rvalues(_context, p);
 		}
 	};	// end struct unroll_resolve_rvaluesr
 

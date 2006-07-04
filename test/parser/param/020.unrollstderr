@@ -1,4 +1,4 @@
-ERROR: assigning index [2] of pint collection ::foo.
-ERROR: something went wrong in pint assignment.
+Error: lvalue referenced at position 1 is already assigned value 5
+At least one error in assignment.
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

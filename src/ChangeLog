@@ -3,10 +3,63 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-24-merged-cow-07:
+	  Branch merge.  Summary:
+		copy-on-write expression unrolling, hence 'cow'
+		completed aggregate l/rvalue and instance references
+			for higher dimensions.  
+		Added a zillion test cases.  
+		Minor adjustments to util library.
+
+
 2006-07-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-23:
 	  CRITICAL BUG FIX in pointer class library, see util/ChangeLog.
+
+
+2006-07-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-07:
+	  Implemented: aggregate lvalue and instance reference unrolling
+		for both array constructions and concatenations.
+		Also factored out common code very cleanly into
+		aggregate_reference_collection_base methods.  
+	  AST/expr.cc: check that arguments of concatenation are non-scalar.  
+	  Added another load of test cases for new features and code paths, 
+		not as thorough coverage as before, but good enough.  
+	  Status: last revision on this branch, barring any compiler-isms.  
+
+
+2006-07-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-06:
+	  Implemented checking and unrolling of array concatenations!
+		Well, THAT was easy -- thanks to good reuse of existing code.  
+	  Added another batch of param/ test cases to support.  
+	  TODO: port new aggregate value-reference concatenation code 
+		and re-apply to aggregate instance-references... 
+		while we're at it.  Add connect/ test cases.  
+
+
+	* HACKT-00-01-04-main-00-79-20-cow-05:
+	  Removed useless nonzero size assertion from 
+		util::packed_array_generic.
+	  Added useful error message when assigning lvalue that 
+		already has value.
+	  Added a TON of param/ test cases.  
+
+
+2006-07-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-04:
+	  Implemented first draft of aggregate construction for 
+		higher dimensions, aided by a smart operator overload
+		in util::packed_array_generic.  
+	  TODO: param test cases up the wazoo, debug if necessary.
+	  TODO: possibly implement value-array concatenation while we're at it.
 
 
 2006-07-01	David Fang		<fangism@users.sourceforge.net>
@@ -30,6 +83,36 @@
 		first time and found one utility library test failure:
 		local_static_store_test.  
 		Suspect compiler bug, investigation pending.
+
+
+2006-06-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-03:
+	  Just cleaned up COW_UNROLL_RESOLVE_RVALUES switch, committed.  
+	  Next: finish resolving aggregate_meta_value_reference for
+		higher dimensions, maybe concatenations...
+
+
+	* HACKT-00-01-04-main-00-79-20-cow-02:
+	  Copy-on-write meta-parameter-value lists. 
+		Had to touch template_actuals...
+	  Makefile.am: added local distclean-deps to help remove
+		.deps directories ("Directory not empty" problem).
+	  Implemented quasi-covariant __unroll_resolve_rvalue to return
+		a scalar value in place where scalars are expected, 
+		and avoid extra cross-casting between other unroll methods.  
+
+
+2006-06-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-20-cow-01:
+	  Mini-branch for patching expression unrolling.  
+	  Copy-on-write unroll_resolve_rvalues eliminates wasteful copying
+		when unroll-resolving meta parameter expressions.  
+	  Results in fewer persistent heap objects for identical constants, 
+		many test cases updated accordingly.  
+	  TODO: apply to param-expr-lists, implement local __unroll to 
+		eliminate cross-cast on return.  
 
 
 2006-06-28	David Fang		<fangism@users.sourceforge.net>
