@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.129 2006/07/04 07:25:40 fang Exp $
+#	$Id: Makefile.am,v 1.130 2006/07/04 20:46:01 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -1050,6 +1050,10 @@ MORE_BOGUS_CXXFLAGS += -Wno-error
 endif
 BOGUS_CPPFLAGS = -DLIBBOGUS $(AM_CPPFLAGS) $(MORE_BOGUS_CPPFLAGS)
 BOGUS_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS) $(MORE_BOGUS_CXXFLAGS)
+
+# Conditional definition of __STDC_VERSION__ needed for flex 2.5.33?
+INCLUDE_C99 = -include $(srcdir)/util/c99.h
+
 # *COUGH* *HACK*:
 # LIBBOGUS tells lexer/hackt-lex.cc to use un-transformed symbol names
 
@@ -1067,7 +1071,8 @@ libbogus2_la_CXXFLAGS = $(BOGUS_CXXFLAGS)
 # which are generated automatically by yacc/bison/[f]lex for 
 # traditional C compilers.  (Not the cleanest code ever generated.)
 # libhacktparsers_la_CPPFLAGS = $(AM_CPPFLAGS)
-libhacktparsers_la_CXXFLAGS = $(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
+libhacktparsers_la_CXXFLAGS = \
+	$(AM_CXXFLAGS) $(PARSER_NOWARN_FLAGS)
 
 # is required to be set for Make.hchk-tail.am
 EMPTY_SOURCE = $(srcdir)/test/header_test.cc

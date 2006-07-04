@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.14 2006/06/26 01:46:50 fang Exp $
+#	$Id: Makefile.inc,v 1.15 2006/07/04 20:46:01 fang Exp $
 #	vim: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -80,6 +80,7 @@ UTIL_HEADER_FILES = \
 	util/assoc_traits.h \
 	util/attributes.h \
 	util/boolean_types.h \
+	util/c99.h \
 	util/c_decl.h \
 	util/call_traits.h \
 	util/cppcat.h \
