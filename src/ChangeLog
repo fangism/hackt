@@ -5,6 +5,12 @@
 
 2006-07-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-25:
+	  No source revision, tag bump only.  
+
+
+2006-07-04	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-24-merged-cow-07:
 	  Branch merge.  Summary:
 		copy-on-write expression unrolling, hence 'cow'
