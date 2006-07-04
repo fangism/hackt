@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.9 2006/05/06 22:25:23 fang Exp $
+	$Id: README,v 1.10 2006/07/04 20:51:56 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -53,6 +53,7 @@ be used to compile this project:
 
 The following compilers are supported and recommended:
 	gcc-3.3.x, -3.4.x, -4.0.x, -4.1.x
+	gcc-4.2-pre (20060610 prerelease in good standing so far)
 
 The following platforms and compilers are actively supported by this project:
 	Mac OS X 10.3+, gcc-3.3+ (either Apple* or FSF)
@@ -60,8 +61,8 @@ The following platforms and compilers are actively supported by this project:
 	SuSE (or any) linux, gcc-3.3+
 
 * Apple's gcc-4.0 release with OS X 10.4 (build 4061) is buggy and missing
-6 months of bug fixes from FSF.  You'll need the XCode 2.1 upgrade for 
-a working compiler (build 5026).  
+6 months of bug fixes from FSF.  You'll need at least the XCode 2.1 upgrade 
+for a working compiler (build 5026).  
 
 These are the platforms to which the developer has access and can maintain
 build success and consistency.  
@@ -71,6 +72,7 @@ run the project, but that means they have yet to be discovered.
 To build the source, one need at least bison-1.35 (that's not asking too much),
 or some POSIX-compliant implementation of yacc.  
 For example, bison-1.28 is known to fail, and is not actively supported(*1).  
+Some versions of byaccj (in C mode) have been known to work.  
 The YACC variable is used to set the parser generator and may be 
 passed to the configure script.  
 lex or flex is required to generate the scanner, and may be set using the
@@ -80,6 +82,14 @@ LEX configure variable.
 	standard, it produces name.yy.tab.c instead of y.tab.c, 
 	same with the header file.  The yacc rules from automake/autoconf
 	do not account for this deviation.  
+
+Supported versions of bison: 1.35, 1.875, 2.0, 2.1
+Supported versions of flex: 2.5.4, 2.5.31
+
+Unsupported versions of bison:
+	1.28 -- see comment *1
+Unsupported versions of flex:
+	2.5.33 -- fails -Wundef (__STDC_VERSION__) and -Werror (signed comp.)
 
 ===============================================================================
 KNOWN ISSUES
