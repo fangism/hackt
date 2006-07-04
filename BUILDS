@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.12 2006/07/04 18:59:18 fang Exp $
+	$Id: BUILDS,v 1.13 2006/07/04 19:32:13 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -105,12 +105,12 @@ The following builds are on Intel Core Duo:
 ===============================================================================
 i686-linux-gnu
 
-Version: hackt 0.1.4-devel-20060601
-CVS Tag: HACKT-00-01-04-main-00-79-11
-Configured with: '--disable-docs' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
+Version: hackt 0.1.4-devel-20060703
+CVS Tag: HACKT-00-01-04-main-00-79-24-merged-cow-07
+Configured with: '--prefix=/usr/local/cad' '--with-editline=/usr/local' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: i686-pc-linux-gnu
 c++: g++ (GCC) 3.3.3 (SuSE Linux)
-config-LIBS:   -lncurses 
+config-LIBS: -ledit  -lncurses 
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
 readline: BSD EditLine (histedit interface) ver. 2.9
