@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.8 2006/05/28 19:27:11 fang Exp $
+	$Id: Node.h,v 1.9 2006/07/08 02:45:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -56,9 +56,7 @@ struct Node {
 			Whether or not this node belongs to at least one
 			forced exclusive low ring.  
 		 */
-		NODE_MK_EXCLLO = 0x0004
-#if ENABLE_PRSIM_EXCL_CHECKS
-		,
+		NODE_MK_EXCLLO = 0x0004,
 		/**
 			Whether or not this node belongs to at least one
 			checked exclusive high ring.  
@@ -69,7 +67,6 @@ struct Node {
 			checked exclusive high ring.  
 		 */
 		NODE_CHECK_EXCLLO = 0x0010
-#endif
 	} struct_flags_enum;
 
 
@@ -139,7 +136,6 @@ public:
 	void
 	make_excllo(void) { struct_flags |= NODE_MK_EXCLLO; }
 
-#if ENABLE_PRSIM_EXCL_CHECKS
 	bool
 	has_check_exclhi(void) const {
 		return struct_flags & NODE_CHECK_EXCLHI;
@@ -155,7 +151,6 @@ public:
 
 	void
 	check_excllo(void) { struct_flags |= NODE_CHECK_EXCLLO; }
-#endif
 
 	ostream&
 	dump_fanout_dot(ostream&, const std::string&) const;

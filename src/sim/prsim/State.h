@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.7 2006/05/28 19:27:12 fang Exp $
+	$Id: State.h,v 1.8 2006/07/08 02:45:30 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -106,7 +106,6 @@ public:
 	 */
 	typedef	std::pair<node_index_type, node_index_type>
 							step_return_type;
-#if ENABLE_PRSIM_EXCL_CHECKS
 	typedef	size_t				lock_index_type;
 	/**
 		Exception thrown when there is a violation of 
@@ -125,9 +124,6 @@ public:
 			lock_id(li), node_id(ni) { }
 	};	// end struct excl_exception
 #define	THROWS_EXCL_EXCEPTION	throw (excl_exception)
-#else
-#define	THROWS_EXCL_EXCEPTION
-#endif
 private:
 	struct evaluate_return_type {
 		node_index_type			node_index;
@@ -203,18 +199,12 @@ private:
 			when displaying nodes.  
 		 */
 		FLAG_SHOW_TCOUNTS = 0x20,
-#if ENABLE_PRSIM_EXCL_CHECKS
 		/**
 			Set to true to check exclusiveness of nodes.  
 		 */
 		FLAG_CHECK_EXCL = 0x40, 
-#endif
 		/// initial flags
-#if ENABLE_PRSIM_EXCL_CHECKS
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
-#else
-		FLAGS_DEFAULT = 0x00,
-#endif
 		/**
 			Flags to set upon initialize().
 		 */
@@ -273,7 +263,6 @@ protected:
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
 	typedef	vector<expr_index_type>		expr_trace_type;
-#if ENABLE_PRSIM_EXCL_CHECKS
 	/**
 		Exclusive checks are implemented as lock flags.  
 		reminder: this is specialized in STL :)
@@ -303,7 +292,6 @@ protected:
 		Useful for reverse-mapping all check-excl rings.  
 	 */
 	typedef	vector<ring_set_type>		check_excl_array_type;
-#endif
 private:
 //	count_ptr<const module>			mod;
 	const module&				mod;
@@ -314,20 +302,24 @@ private:
 	event_queue_type			event_queue;
 	// rule state and structural information (sparse map)
 	rule_map_type				rule_map;
-	// exclusive rings
+	/// coerce exclusive-hi ring
 	mk_excl_ring_map_type			mk_exhi;
+	/// coerce exclusive-low ring
 	mk_excl_ring_map_type			mk_exlo;
-	// exclusive logic queues
+	/// coerced exclusive-hi logic queue
 	mk_excl_queue_type			exclhi_queue;
+	/// coerced exclusive-low logic queue
 	mk_excl_queue_type			excllo_queue;
-	// pending queue
+	/// pending queue
 	pending_queue_type			pending_queue;
-#if ENABLE_PRSIM_EXCL_CHECKS
+	/// pool of exclusive-hi checking locks
 	check_excl_lock_pool_type		check_exhi_ring_pool;
+	/// pool of exclusive-low checking locks
 	check_excl_lock_pool_type		check_exlo_ring_pool;
+	/// sparse set of node-associated lock sets
 	check_excl_ring_map_type		check_exhi;
+	/// sparse set of node-associated lock sets
 	check_excl_ring_map_type		check_exlo;
-#endif
 	// current time, etc...
 	time_type				current_time;
 	time_type				uniform_delay;
@@ -583,7 +575,6 @@ public:
 	void
 	append_mk_excllo_ring(ring_set_type&);
 
-#if ENABLE_PRSIM_EXCL_CHECKS
 protected:
 	excl_exception
 	check_excl_rings(const node_index_type, const node_type&, 
@@ -607,7 +598,6 @@ public:
 
 	void
 	inspect_excl_exception(const excl_exception&, ostream&) const;
-#endif
 
 	ostream&
 	dump_mk_excl_ring(ostream&, const ring_set_type&) const;
@@ -621,7 +611,6 @@ public:
 	ostream&
 	dump_node_mk_excl_rings(ostream&, const node_index_type) const;
 
-#if ENABLE_PRSIM_EXCL_CHECKS
 	ostream&
 	dump_check_excl_ring(ostream&, const lock_index_list_type&) const;
 
@@ -645,7 +634,6 @@ private:
 		const check_excl_ring_map_type&, 
 		const lock_index_list_type&, 
 		check_excl_reverse_map_type&) const;
-#endif
 
 private:
 	event_index_type

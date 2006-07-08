@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.11 2006/06/02 04:35:18 fang Exp $
+	$Id: ExprAlloc.cc,v 1.12 2006/07/08 02:45:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -898,7 +898,6 @@ Assert::main(visitor_type& v, const param_args_type& params,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_PRSIM_EXCL_CHECKS
 // this is useful for both LVS and hackt-prsim
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(LVS_exclhi, "exclhi")
 
@@ -960,7 +959,6 @@ LVS_excllo::main(visitor_type& v, const param_args_type& params,
 		v.state.append_check_excllo_ring(temp);
 	}
 }
-#endif	// ENABLE_PRSIM_EXCL_CHECKS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_DEFINE_PRSIM_SPEC_DIRECTIVE_CLASS(SIM_force_exclhi, "mk_exclhi")

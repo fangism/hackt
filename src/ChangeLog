@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-26:
+	  Committed old patch flags for ENABLE_PRSIM_EXCL_CHECKS, 
+		and DEDUCE_PRSIM_EXPR_STATE.  
+
+
 2006-07-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-25:

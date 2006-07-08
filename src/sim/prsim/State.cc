@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.13 2006/06/01 04:12:47 fang Exp $
+	$Id: State.cc,v 1.14 2006/07/08 02:45:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -111,10 +111,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		mk_exhi(), mk_exlo(), 
 		exclhi_queue(), excllo_queue(), 
 		pending_queue(), 
-#if ENABLE_PRSIM_EXCL_CHECKS
 		check_exhi_ring_pool(1), check_exlo_ring_pool(1), 
 		check_exhi(), check_exlo(), 
-#endif
 		current_time(0), 
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
@@ -207,10 +205,8 @@ State::initialize(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
-#if ENABLE_PRSIM_EXCL_CHECKS
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
-#endif
 	flags |= FLAGS_INITIALIZE_SET_MASK;
 	flags &= ~FLAGS_INITIALIZE_CLEAR_MASK;
 	// unwatchall()? no, preserved
@@ -246,10 +242,8 @@ State::reset(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
-#if ENABLE_PRSIM_EXCL_CHECKS
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
-#endif
 	flags = FLAGS_DEFAULT;
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
@@ -269,10 +263,8 @@ State::head_sentinel(void) {
 	node_pool.resize(FIRST_VALID_NODE);
 	expr_pool.resize(FIRST_VALID_EXPR);
 	expr_graph_node_pool.push_back(graph_node_type());
-#if ENABLE_PRSIM_EXCL_CHECKS
 	check_exhi_ring_pool.resize(FIRST_VALID_LOCK);
 	check_exlo_ring_pool.resize(FIRST_VALID_LOCK);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -406,7 +398,6 @@ State::append_mk_excllo_ring(ring_set_type& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_PRSIM_EXCL_CHECKS
 /**
 	Creates an exclusive high checking ring.  
 	For all nodes in set r, add index to newly allocated lock flag.  
@@ -443,7 +434,6 @@ State::append_check_excllo_ring(const ring_set_type& r) {
 		check_exlo[ni].push_back(j);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1150,7 +1140,6 @@ for ( ; i!=e; ++i) {
 }	// end method enforce_excllo
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_PRSIM_EXCL_CHECKS
 /**
 	Lock and unlock rings.  
 	Before node is set, check state of rings for mutex.  
@@ -1286,8 +1275,6 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 		"but you may further inspect the state." << endl;
 }	// end method State::inspect_excl_exception
 
-#endif	// ENABLE_PRSIM_EXCL_CHECKS
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modeled after prs_step() from the original prsim.  
@@ -1334,7 +1321,6 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	// assert: vacuous firings on the event queue
 	INVARIANT(prev != pe.val || n.is_unstab());
 	// saved previous value above already
-#if ENABLE_PRSIM_EXCL_CHECKS
 	if (checking_excl()) {
 		const excl_exception
 			exex(check_excl_rings(ni, n, prev, pe.val));
@@ -1347,7 +1333,6 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 			throw exex;
 		}
 	}
-#endif
 	n.set_value(pe.val);
 	// count transition only if new value is not X
 	if (pe.val != node_type::LOGIC_OTHER)
@@ -2202,7 +2187,6 @@ State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_PRSIM_EXCL_CHECKS
 ostream&
 State::dump_check_excl_ring(ostream& o, const lock_index_list_type& r) const {
 	typedef	lock_index_list_type::const_iterator	const_iterator;
@@ -2335,7 +2319,6 @@ State::dump_node_check_excl_rings(ostream& o, const node_index_type ni) const {
 }
 	return o;
 }
-#endif	// ENABLE_PRSIM_EXCL_CHECKS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2360,14 +2343,6 @@ State::save_checkpoint(ostream& o) const {
 			util::ref(o))
 #endif
 	);
-}{
-#if !DEDUCE_PRSIM_EXPR_STATE
-	// expr_pool
-	write_value(o, expr_pool.size());
-	for_each(expr_pool.begin() +1, expr_pool.end(), 
-		bind2nd_argval(mem_fun_ref(&expr_type::save_state), o)
-	);
-#endif
 }
 	// graph_pool -- structural only
 {
@@ -2461,28 +2436,6 @@ State::load_checkpoint(istream& i) {
 	}
 #endif
 }{
-#if !DEDUCE_PRSIM_EXPR_STATE
-	// expr_pool
-	size_t s;
-	read_value(i, s);
-	if (expr_pool.size() != s) {
-		cerr << "ERROR: checkpoint\'s expr_pool size is inconsistent."
-			<< endl;
-		return true;
-	}
-	typedef expr_pool_type::iterator	iterator;
-	const iterator b(expr_pool.begin() +1), e(expr_pool.end());
-#if 0
-	for_each(b, e, 
-		bind2nd_argval_void(mem_fun_ref(&expr_type::load_state), i)
-	);
-#else
-	iterator j(b);
-	for ( ; j!=e; ++j) {
-		j->load_state(i);
-	}
-#endif
-#else
 	// to reconstruct from nodes only, we perform propagation evaluation
 	// on every node, as if it had just fired out of X state.  
 	typedef node_pool_type::const_iterator	const_iterator;
@@ -2506,7 +2459,6 @@ State::load_checkpoint(istream& i) {
 			// those are loaded from the checkpoint.  
 		}
 	}	// end for-all nodes
-#endif	// DEDUCE_PRSIM_EXPR_STATE
 }
 	// graph_pool -- structural only
 {
@@ -2569,7 +2521,6 @@ State::load_checkpoint(istream& i) {
 	// ifstreams? don't bother managing input stream stack.
 	// __scratch_expr_trace -- never needed, ignore
 
-#if ENABLE_PRSIM_EXCL_CHECKS
 	// this must be run *after* mode flags are loaded
 if (checking_excl()) {
 	typedef node_pool_type::const_iterator	const_iterator;
@@ -2588,7 +2539,6 @@ if (checking_excl()) {
 		}
 	}
 }
-#endif	// ENABLE_PRSIM_EXCL_CHECKS
 {
 	read_value(i, header_check);
 	if (header_check != magic_string) {
@@ -2621,18 +2571,6 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	for ( ; j<s; ++j) {
 		node_type::dump_checkpoint_state(o << j << '\t', i) << endl;
 	}
-}{
-#if !DEDUCE_PRSIM_EXPR_STATE
-	// expr_pool
-	size_t s;
-	read_value(i, s);
-	size_t j = 1;
-	o << "Have " << s << " expression nodes:" << endl;
-	expr_type::dump_checkpoint_state_header(o << '\t') << endl;
-	for ( ; j<s; ++j) {
-		expr_type::dump_checkpoint_state(o << j << '\t', i) << endl;
-	}
-#endif
 }
 	// graph_pool -- structural only
 {
