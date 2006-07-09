@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.5 2006/07/08 02:45:25 fang Exp $
+	$Id: devel_switches.h,v 1.6 2006/07/09 02:11:40 fang Exp $
  */
 
 #ifndef	__HAC_SIM_DEVEL_SWITCHES_H__
@@ -22,20 +22,13 @@
 #endif
 
 // leave this error enabled for released code
-#if 0
+#if 1
 #error	Production code should NOT include this header file.  \
 	However, if you are developing, use this file as you see fit.  
 #endif
 
 //=============================================================================
 // define your simulator-wide development switches here:
-
-/**
-	Define to 1 to track node-to-node cause paths by direction, 
-	so we can track complete cycles in backtracing critical paths.  
-	Goal: 1
- */
-#define	SEPARATE_CAUSE_NODE_DIRECTION		0
 
 //=============================================================================
 

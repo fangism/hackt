@@ -1,0 +1,17 @@
+time: 0
+	0	a : 1
+expect instability 
+WARNING: unstable `b'-
+>> cause: `a' (val: 0)
+	5	a : 0
+event queue:
+	10	b : X
+expect b:X in queue 
+end of queue 
+	0	a : 0
+expect instability 
+WARNING: interference `b'-
+>> cause: `a' (val: 1)
+	5	a : 1
+event queue:
+	10	b : 0

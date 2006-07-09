@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.8 2006/07/08 02:45:30 fang Exp $
+	$Id: State.h,v 1.9 2006/07/09 02:11:44 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -203,6 +203,14 @@ private:
 			Set to true to check exclusiveness of nodes.  
 		 */
 		FLAG_CHECK_EXCL = 0x40, 
+#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
+		/**
+			Allow unstable events to be dropped off queue
+			instead of propagating unknowns.  
+			Also dequeues weakly unstable events (involving X).  
+		 */
+		FLAG_UNSTABLE_DEQUEUE = 0x80,
+#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
 		/**
@@ -216,16 +224,17 @@ private:
 		FLAGS_INITIALIZE_CLEAR_MASK =
 			FLAG_STOP_SIMULATION
 	};
+	/**
+		As we add more flags this will have to expand...
+	 */
 	typedef	unsigned char			flags_type;
 
 	enum {
 		/**
-			Uses after-delays.  
+			Uses per-rule after-delays.  
 			These can be manually annotated or
 			automatically computed by some model, 
 			such as sizing.  
-			TODO: not yet supported.
-			Pending decision on how delays are handled.  
 		 */
 		TIMING_AFTER = 0,
 		/**
@@ -569,6 +578,19 @@ public:
 	ostream&
 	dump_source_paths(ostream&) const;
 
+#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
+	bool
+	dequeue_unstable_events(void) const {
+		return flags & FLAG_UNSTABLE_DEQUEUE;
+	}
+
+	void
+	dequeue_unstable_events(const bool dq) {
+		if (dq)	flags |= FLAG_UNSTABLE_DEQUEUE;
+		else	flags &= ~FLAG_UNSTABLE_DEQUEUE;
+	}
+#endif
+
 	void
 	append_mk_exclhi_ring(ring_set_type&);
 
@@ -696,6 +718,12 @@ private:
 	void
 	propagate_evaluation(const node_index_type, expr_index_type, 
 		char prev, char next);
+
+	void
+	__diagnose_violation(ostream&, const char next, 
+		const event_index_type, event_type&, 
+		const node_index_type ui, node_type& n, 
+		const node_index_type ni, const bool dir);
 
 public:
 	void

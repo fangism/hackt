@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.14 2006/07/08 02:45:29 fang Exp $
+	$Id: State.cc,v 1.15 2006/07/09 02:11:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,7 +17,6 @@
 #include "sim/prsim/Event.tcc"
 #include "sim/prsim/Rule.tcc"
 #include "sim/random_time.h"
-#include "sim/devel_switches.h"
 #include "util/list_vector.tcc"
 #include "Object/module.h"
 #include "Object/state_manager.h"
@@ -1491,6 +1490,7 @@ State::propagate_evaluation(const node_index_type ni, expr_index_type ui,
 	DEBUG_STEP_PRINT("propagated to output node: " <<
 		get_node_canonical_name(ui) << " with pull state " <<
 		size_t(next) << endl);
+	const event_index_type ei = n.get_event();
 if (u->direction()) {
 	// pull-up
 if (!n.pending_event()) {
@@ -1549,7 +1549,7 @@ if (!n.pending_event()) {
 } else if (!n.in_excl_queue()) {
 	DEBUG_STEP_PRINT("pending, but not excl event on this node." << endl);
 	// there is a pending event, not in the exclusive queue
-	event_type& e(get_event(n.get_event()));
+	event_type& e(get_event(ei));
 	if (next == expr_type::PULL_OFF && n.pull_dn_index &&
 		expr_pool[n.pull_dn_index].pull_state() == expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
@@ -1567,38 +1567,8 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
-		// something is amiss!
-		const char eu =
-			event_type::upguard[size_t(next)][size_t(e.val)];
-		DEBUG_STEP_PRINT("event_update = " << size_t(eu) << endl);
-		const bool vacuous = eu & event_type::EVENT_VACUOUS;
-		if (!vacuous) {
-			// then must be unstable or interfering (exclusive)
-			const bool instability =
-				(eu & event_type::EVENT_UNSTABLE) &&
-				!n.is_unstab();
-			const bool interference =
-				eu & event_type::EVENT_INTERFERENCE;
-			const string cause_name(get_node_canonical_name(ni));
-			const string out_name(get_node_canonical_name(ui));
-			e.cause_node = ni;
-			e.val = node_type::LOGIC_OTHER;
-			// diagnostic message
-			cout << "WARNING: ";
-			if (eu & event_type::EVENT_WEAK)
-				cout << "weak-";
-			if (interference) {
-				cout << "interference `";
-			} else if (instability) {
-				cout << "unstable `";
-			}
-			cout << out_name << "\'+" << endl;
-			cout << ">> cause: `" << cause_name << "\' (val: ";
-			get_node(ni).dump_value(cout) << 	// " -> " <<
-			// cout << node_type::value_to_char[size_t(e.val)] <<
-				")" << endl;
-		}
-		// else is OK
+		__diagnose_violation(cout, next, ei, e, ui, n, 
+			ni, u->direction());
 	}	// end if diagnostic
 }	// end if (!n.ex_queue)
 } else {
@@ -1657,7 +1627,7 @@ if (!n.pending_event()) {
 	}
 } else if (!n.in_excl_queue()) {
 	// there is a pending event, not in an exclusive queue
-	event_type& e(get_event(n.get_event()));
+	event_type& e(get_event(ei));
 	if (next == node_type::LOGIC_LOW && n.pull_up_index &&
 		expr_pool[n.pull_up_index].pull_state() == expr_type::PULL_ON &&
 		e.val == node_type::LOGIC_OTHER &&
@@ -1676,42 +1646,79 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
-		// something is amiss!
-		const char eu =
-			event_type::dnguard[size_t(next)][size_t(e.val)];
-		DEBUG_STEP_PRINT("event_update = " << size_t(eu) << endl);
-		const bool vacuous = eu & event_type::EVENT_VACUOUS;
-		if (!vacuous) {
-			// then must be unstable or interfering (exclusive)
-			const bool instability =
-				(eu & event_type::EVENT_UNSTABLE) &&
-				!n.is_unstab();
-			const bool interference =
-				eu & event_type::EVENT_INTERFERENCE;
-			const string cause_name(get_node_canonical_name(ni));
-			const string out_name(get_node_canonical_name(ui));
-			e.cause_node = ni;
-			e.val = node_type::LOGIC_OTHER;
-			// diagnostic message
-			cout << "WARNING: ";
-			if (eu & event_type::EVENT_WEAK)
-				cout << "weak-";
-			if (interference) {
-				cout << "interference `";
-			} else if (instability) {
-				cout << "unstable `";
-			}
-			cout << out_name << "\'-" << endl;
-			cout << ">> cause: `" << cause_name << "\' (val: ";
-			get_node(ni).dump_value(cout) <<	// " -> " <<
-			// cout << node_type::value_to_char[size_t(e.val)] <<
-				")" << endl;
-		}
-		// else is OK
+		__diagnose_violation(cout, next, ei, e, ui, n, 
+			ni, u->direction());
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
 }	// end method propagate_evaluation
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper function for repetitive diagnostic code.  
+	\param o error output stream
+	\param next the next value of this node
+	\param ei index of the event in question
+	\param e the event in question
+	\param ui index of the node that fired
+	\param n the node that fired
+	\param ni the node involved in event e
+	\param dir the direction of pull of the causing rule
+ */
+void
+State::__diagnose_violation(ostream& o, const char next, 
+		const event_index_type ei, event_type& e, 
+		const node_index_type ui, node_type& n, 
+		const node_index_type ni, const bool dir) {
+	// something is amiss!
+	const char eu = dir ?
+		event_type::upguard[size_t(next)][size_t(e.val)] :
+		event_type::dnguard[size_t(next)][size_t(e.val)];
+	DEBUG_STEP_PRINT("event_update = " << size_t(eu) << endl);
+	const bool vacuous = eu & event_type::EVENT_VACUOUS;
+	if (!vacuous) {
+		// then must be unstable or interfering (exclusive)
+#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
+		const bool instability =
+			(eu & event_type::EVENT_UNSTABLE) &&
+			!n.is_unstab();
+#else
+		// unused
+#endif
+		/***
+			This last condition !unstab violates exact exclution 
+			between unstable and interference!
+			Do not use this undocumented feature, it is not 
+			expected to work as presently coded.  
+		***/
+		const bool interference =
+			eu & event_type::EVENT_INTERFERENCE;
+		const string cause_name(get_node_canonical_name(ni));
+		const string out_name(get_node_canonical_name(ui));
+		e.cause_node = ni;
+#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
+		if (instability && dequeue_unstable_events()) {
+			__deallocate_event(n, ei);
+		} else {
+			// interference || !dequeue_unstable
+			e.val = node_type::LOGIC_OTHER;
+		}
+#else
+		e.val = node_type::LOGIC_OTHER;
+#endif
+		// diagnostic message
+		o << "WARNING: ";
+		if (eu & event_type::EVENT_WEAK)
+			o << "weak-";
+		o << (interference ? "interference `" : "unstable `") <<
+			out_name << "\'" << (dir ? '+' : '-') << endl;
+		o << ">> cause: `" << cause_name << "\' (val: ";
+		get_node(ni).dump_value(o) <<	// " -> " <<
+		// o << node_type::value_to_char[size_t(e.val)] <<
+			")" << endl;
+	}
+	// else vacuous is OK
+}	// end method __diagose_violation
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

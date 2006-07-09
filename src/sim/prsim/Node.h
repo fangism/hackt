@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.9 2006/07/08 02:45:28 fang Exp $
+	$Id: Node.h,v 1.10 2006/07/09 02:11:43 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -14,7 +14,7 @@
 #include "util/macros.h"
 #include "util/attributes.h"
 #include "sim/common.h"
-#include "sim/devel_switches.h"
+#include "sim/prsim/devel_switches.h"
 
 namespace HAC {
 namespace SIM {
@@ -162,6 +162,42 @@ public:
 
 //=============================================================================
 /**
+	Structure for tracking event causality in greater detail.  
+	Members kept in separate arrays for better alignment.  
+ */
+struct LastCause {
+	/**
+		The causing node.  
+		Indexed by node's current value.  
+	 */
+	node_index_type				caused_by_node[3];
+	/**
+		The value of the causing node.  
+		3 of 4 slots used for better padding.  
+	 */
+	unsigned char				caused_by_value[4];
+
+	/**
+		How the f-- do you initialize aggregate members?
+	 */
+	LastCause()
+		// caused_by_node({0}),
+		// caused_by_value({0})
+	{
+		// caused_by_node = {0};
+		// caused_by_value = {0};
+		// *this = {{0,0,0}, {0,0,0}};
+		caused_by_node[0] = INVALID_NODE_INDEX;
+		caused_by_node[1] = INVALID_NODE_INDEX;
+		caused_by_node[2] = INVALID_NODE_INDEX;
+		caused_by_value[0] = 0;	// don't care
+		caused_by_value[1] = 0;	// don't care
+		caused_by_value[2] = 0;	// don't care
+	}
+};	// end struct LastCause
+
+//=============================================================================
+/**
 	Structural information extended with stateful information.  
 	Size of this should be a total of 8 double-words, or 32 B.  
 	Nice and quad-word aligned.  
@@ -211,8 +247,7 @@ public:
 	static const char		invert_value[3];
 protected:
 	/**
-		Technically, this is stateful, not structural information.
-		enum:
+		Uses enum value_enum:
 		0 = 0, 1 = 1, 2 = X, 3 = X
 	 */
 	unsigned char				value;
@@ -226,11 +261,18 @@ protected:
 		INVALID_EVENT_INDEX (0) means no pending event.  
 	 */
 	event_index_type			event_index;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	/**
+		Structure for tracking last cause, by node and value.  
+	 */
+	LastCause				causes;
+#else
 	/**
 		The firing of this node was caused by...
 		like last arriving input, for critical path analysis.  
 	 */
 	node_index_type				caused_by_node;
+#endif
 public:
 	/**
 		Transition counts.  
@@ -241,7 +283,11 @@ public:
 	NodeState() : parent_type(), value(LOGIC_OTHER), 
 		state_flags(NODE_INITIAL_STATE_FLAGS),
 		event_index(INVALID_EVENT_INDEX), 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		causes(), 
+#else
 		caused_by_node(INVALID_NODE_INDEX), 
+#endif
 		tcount(0) { }
 
 	/// count on compiler to optimize zero comparison
@@ -250,11 +296,14 @@ public:
 		return event_index != INVALID_EVENT_INDEX;
 	}
 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+#else
 	node_index_type
 	get_cause_node(void) const { return caused_by_node; }
 
 	void
 	set_cause_node(const node_index_type ci) { caused_by_node = ci; }
+#endif
 
 	event_index_type
 	get_event(void) const { return event_index; }

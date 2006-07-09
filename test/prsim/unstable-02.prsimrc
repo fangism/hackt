@@ -1,0 +1,31 @@
+# "unstable-02.prsimrc"
+#	$Id: unstable-02.prsimrc,v 1.1 2006/07/09 02:11:50 fang Exp $
+# @haco@ inv.haco-a
+# testing different modes of instabilities
+
+watchall
+time
+
+# this is the default
+unstable-unknown
+
+initialize
+set a 1
+advance 5
+set a 0
+echo expect instability
+advance 5
+queue
+echo expect b:X in queue
+echo end of queue
+
+initialize
+set a 0
+advance 5
+set a 1
+echo expect instability
+advance 5
+# but again, this is reported as interference due to evaluation 
+# ordering problem of combinational gates.  
+queue
+

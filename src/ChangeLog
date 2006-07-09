@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27:
+	  Moved prsim development flags to sim/prsim/devel_switches.h (new).
+	  Factored out instability/interference checking code into sub-method.
+	  New switch: PRSIM_ALLOW_UNSTABLE_DEQUEUE enables mode
+		to optionally choose behavior of instability:
+		re-enqueue X (old), or dequeue event (new).  
+	  New commands 'unstable-unknown' or 'unstable-dequeue' to pick mode.
+	  Added a few test cases for this feature.  
+
+
 2006-07-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-26:

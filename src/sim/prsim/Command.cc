@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.11 2006/07/08 02:45:26 fang Exp $
+	$Id: Command.cc,v 1.12 2006/07/09 02:11:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -24,7 +24,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "sim/prsim/Command.h"
 #include "sim/prsim/State.h"
 #include "sim/prsim/Reference.h"
-#include "sim/devel_switches.h"
 
 #include "common/TODO.h"
 #include "util/qmap.tcc"
@@ -2356,6 +2355,52 @@ NoCheckExcl::usage(ostream& o) {
 	o << "nocheckexcl" << endl;
 	o << "Disables run-time mutual exclusion checks." << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableUnknown, "unstable-unknown", 
+	modes, "rule instabilities propagate unknowns")
+
+int
+UnstableUnknown::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+} else {
+	s.dequeue_unstable_events(false);
+	return Command::NORMAL;
+}
+}
+
+void
+UnstableUnknown::usage(ostream& o) {
+	o << name << endl;
+	o << "Unstable events propagate X\'s during run-time." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableDequeue, "unstable-dequeue", 
+	modes, "rule instabilities dequeue events")
+
+int
+UnstableDequeue::main(State& s, const string_list& a) {
+if (a.size() > 1) {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+} else {
+	s.dequeue_unstable_events(true);
+	return Command::NORMAL;
+}
+}
+
+void
+UnstableDequeue::usage(ostream& o) {
+	o << name << endl;
+	o << "Unstable events are dequeued during run-time." << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#endif	// PRSIM_ALLOW_UNSTABLE_DEQUEUE
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
