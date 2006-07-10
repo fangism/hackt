@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.4.8.1 2006/07/10 02:28:13 fang Exp $
+	$Id: Event.cc,v 1.4.8.2 2006/07/10 18:43:08 fang Exp $
  */
 
 #include <iostream>
@@ -73,6 +73,7 @@ Event::save_state(ostream& o) const {
 	write_value(o, cause_node);
 	write_value(o, cause_rule);
 	write_value(o, val);
+	// is this necessary, or is there an invariant we can rely on?
 	write_value(o, flags);
 }
 

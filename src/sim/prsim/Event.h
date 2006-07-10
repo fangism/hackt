@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.5.8.1 2006/07/10 02:28:13 fang Exp $
+	$Id: Event.h,v 1.5.8.2 2006/07/10 18:43:10 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -17,6 +17,7 @@
 #include "util/macros.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
+#include "sim/prsim/devel_switches.h"
 
 #define	DEBUG_EVENT_POOL_ALLOC				0
 
@@ -35,6 +36,7 @@ using util::memory::free_list_release;
 //=============================================================================
 /**
 	Based on struct prs_event (PrsEvent).  
+	NOTE: sizeof(event) should be 16B, aligned/padded.  
  */
 struct Event {
 private:
@@ -52,7 +54,15 @@ public:
 		EVENT_WEAK_INTERFERENCE = EVENT_INTERFERENCE | EVENT_WEAK
 	} event_flags_enum;
 public:
+	/**
+		Event classification table of 
+		pull-up-state vs. event pending value.  
+	 */
 	static const char		upguard[3][3];
+	/**
+		Event classification table of 
+		pull-dn-state vs. event pending value.  
+	 */
 	static const char		dnguard[3][3];
 public:
 	/**
@@ -74,10 +84,17 @@ public:
 	rule_index_type			cause_rule;
 	/**
 		The node's new value: 0, 1, 2 (X).
+		See Node::value enumeration.
 	 */
 	unsigned char			val;
 protected:
 	enum {
+#if PRSIM_FIX_BOGUS_INTERFERENCE
+		/**
+			Signals that event is pending interference.  
+		 */
+		EVENT_FLAG_PENDING_INTERFERENCE = 0x01,
+#endif
 		/**
 			Signals that event cancelled.  
 		 */
@@ -95,6 +112,7 @@ public:
 	Event() : node(INVALID_NODE_INDEX),
 		cause_node(INVALID_NODE_INDEX), 
 		cause_rule(INVALID_RULE_INDEX), 
+		val(0), 
 		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
 
 	/**
@@ -122,6 +140,19 @@ public:
 
 	void
 	load_state(istream&);
+
+#if PRSIM_FIX_BOGUS_INTERFERENCE
+	bool
+	pending_interference(void) const {
+		return flags & EVENT_FLAGS_DEFAULT_VALUE;
+	}
+
+	void
+	pending_interference(const bool i) {
+		if (i)	flags |= EVENT_FLAGS_DEFAULT_VALUE;
+		else	flags &= ~EVENT_FLAGS_DEFAULT_VALUE;
+	}
+#endif
 
 	static
 	ostream&

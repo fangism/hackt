@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.9.2.1 2006/07/10 02:28:15 fang Exp $
+	$Id: State.h,v 1.9.2.2 2006/07/10 18:43:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -664,6 +664,16 @@ private:
 		const node_index_type c, // this is the causing node
 		const rule_index_type, const char);
 
+#if PRSIM_FIX_BOGUS_INTERFERENCE
+	event_index_type
+	__allocate_pending_interference_event(
+		node_type&, const node_index_type n,
+		const node_index_type c); // this is the causing node
+
+	void
+	__deallocate_pending_interference_event(const event_index_type);
+#endif
+
 	event_index_type
 	__load_allocate_event(const event_type&);
 
@@ -722,6 +732,12 @@ private:
 	void
 	propagate_evaluation(const node_index_type, expr_index_type, 
 		char prev, char next);
+
+#if PRSIM_FIX_BOGUS_INTERFERENCE
+	void
+	kill_evaluation(const node_index_type, expr_index_type, 
+		char prev, char next);
+#endif
 
 	void
 	__diagnose_violation(ostream&, const char next, 

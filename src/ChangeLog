@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-02:
+	  Found tools/prsim patch to fixes the false-interference problem
+		during unstable events, depending on evaluation ordering.  
+		diff -ubd -r1.10 -r.11 prs.c (2006-04-24)
+		Applied logical-equivalent patch by hand in hackt's prsim.
+		Patch is wrapped in PRSIM_FIX_BOGUS_INTERFERENCE switch, 
+		tentatively disabled until test updates are grokked.  
+	  TODO: properly cancel pending events affected by the instability.  
+
+
 2006-07-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-27-prsim-06-01:
