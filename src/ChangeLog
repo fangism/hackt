@@ -3,6 +3,26 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-01:
+	  Branch for fixing prsim internals and finishing missing features.
+	  prsim: new commands
+		setf - set forcefully, overriding pending events
+		setrf - set random delay forcefully, overriding pending events
+	  prsim/Event.{h,cc}: added flags member to Event structure,
+		EventPool runs some validity checks upon destruction.  
+	  prsim/State.cc: now able to kill events on the queue, 
+		dequeue_event automatically skips over them (and frees them), 
+		set_node_time can now be forced, overriding pending events.
+		BUG FIXED: X -> X transition forgot to deallocate event.  
+		FIXED: dequeuing of unstable events is accomplished
+			using Event::kill().
+		Killed events are not shown in dump.  
+	  BUGS: noted editline EOF problem, with known workaround.
+	  Fix for false interference coming shortly.  
+
+
 2006-07-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-27:

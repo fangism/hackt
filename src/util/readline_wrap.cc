@@ -1,7 +1,7 @@
 /**
 	\file "util/readline_wrap.cc"
 	Simplified wrapper implementation for readline.  
-	$Id: readline_wrap.cc,v 1.3 2006/05/01 06:36:14 fang Exp $
+	$Id: readline_wrap.cc,v 1.3.8.1 2006/07/10 02:28:17 fang Exp $
 	TODO: for editline/histedit, set H_SETUNIQUE flag.
  */
 
@@ -65,6 +65,7 @@ readline_wrapper::readline_wrapper(const string& s) :
 	el_set(&*_editline, EL_HIST, &history, &*_el_history);
 	el_set(&*_editline, EL_BIND, "^P", "ed-prev-history", NULL);
 	el_set(&*_editline, EL_BIND, "^N", "ed-next-history", NULL);
+	// el_set(&*_editline, EL_BIND, "^D", "ed-end-of-file", NULL);
 #endif
 }
 

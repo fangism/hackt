@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.9 2006/07/09 02:11:44 fang Exp $
+	$Id: State.h,v 1.9.2.1 2006/07/10 02:28:15 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -474,17 +474,18 @@ public:
 
 	int
 	set_node_time(const node_index_type, const char val, 
-		const time_type t);
+		const time_type t, const bool f);
 
 	int
 	set_node_after(const node_index_type n, const char val, 
-		const time_type t) {
-		return set_node_time(n, val, this->current_time +t);
+		const time_type t, const bool f) {
+		return set_node_time(n, val, this->current_time +t, f);
 	}
 
 	int
-	set_node(const node_index_type n, const char val) {
-		return set_node_time(n, val, this->current_time);
+	set_node(const node_index_type n, const char val,
+			const bool f) {
+		return set_node_time(n, val, this->current_time, f);
 	}
 
 	void
@@ -668,6 +669,9 @@ private:
 
 	void
 	__deallocate_event(node_type&, const event_index_type);
+
+	void
+	__deallocate_killed_event(const event_index_type);
 
 	const event_type&
 	get_event(const event_index_type) const;

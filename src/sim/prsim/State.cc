@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.15 2006/07/09 02:11:43 fang Exp $
+	$Id: State.cc,v 1.15.2.1 2006/07/10 02:28:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -35,7 +35,7 @@
 #include "util/string.tcc"
 #include "util/IO_utils.tcc"
 #include "util/binders.h"
-#include "util/reference_wrapper.h"
+// #include "util/reference_wrapper.h"
 #include "util/wtf.h"
 
 #if	DEBUG_STEP
@@ -164,7 +164,14 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 /**
 	TODO: possibly run some checks?
  */
-State::~State() { }
+State::~State() {
+	// dequeue all events and check consistency with event pool 
+	// upon its destruction.
+	while (!event_queue.empty()) {
+		const event_placeholder_type next(event_queue.pop());
+		event_pool.deallocate(next.event_index);
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -195,6 +202,7 @@ State::destroy(void) {
  */
 void
 State::initialize(void) {
+	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
 		mem_fun_ref(&node_type::initialize));
 	for_each(expr_pool.begin(), expr_pool.end(), 
@@ -204,6 +212,7 @@ State::initialize(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
+	INVARIANT(event_pool.check_valid_empty());
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
 	flags |= FLAGS_INITIALIZE_SET_MASK;
@@ -219,6 +228,7 @@ State::initialize(void) {
  */
 void
 State::reset_tcounts(void) {
+	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
 		mem_fun_ref(&node_type::reset_tcount));
 }
@@ -232,6 +242,7 @@ State::reset_tcounts(void) {
  */
 void
 State::reset(void) {
+	STACKTRACE_VERBOSE;
 	for_each(node_pool.begin(), node_pool.end(), 
 		mem_fun_ref(&node_type::reset));
 	for_each(expr_pool.begin(), expr_pool.end(), 
@@ -241,6 +252,7 @@ State::reset(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
+	INVARIANT(event_pool.check_valid_empty());
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
 	flags = FLAGS_DEFAULT;
@@ -490,6 +502,15 @@ State::__deallocate_event(node_type& n, const event_index_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Just deallocates a killed event, called from dequeue_event.  
+ */
+void
+State::__deallocate_killed_event(const event_index_type i) {
+	event_pool.deallocate(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const State::event_type&
 State::get_event(const event_index_type i) const {
 	return event_pool[i];
@@ -553,9 +574,18 @@ State::enqueue_pending(const event_index_type ei) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Fetches next event from the priority queue.  
+	Automatically skips and deallocates killed events.  
+ */
 State::event_placeholder_type
 State::dequeue_event(void) {
-	return event_queue.pop();
+	event_placeholder_type ret(event_queue.pop());
+	while (get_event(ret.event_index).killed()) {
+		__deallocate_killed_event(ret.event_index);
+		ret = event_queue.pop();
+	};
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -573,11 +603,14 @@ State::next_event_time(void) const {
 	\param ni the canonically allocated global index of the bool node.
 	\param val the new value to set the node.
 	\param t the time at which the event should occur.  
+	\param f whether or not the setting is forced, thereby cancelling
+		previous pending events, if false, then pending events 
+		have precedence.  
 	\return status: 0 is accepted, 1 is warning.  
  */
 int
 State::set_node_time(const node_index_type ni, const char val,
-		const time_type t) {
+		const time_type t, const bool f) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("setting " << get_node_canonical_name(ni) <<
 		" to " << node_type::value_to_char[size_t(val)] <<
@@ -585,7 +618,7 @@ State::set_node_time(const node_index_type ni, const char val,
 	// we have ni = the canonically allocated index of the bool node
 	// just look it up in the node_pool
 	node_type& n(get_node(ni));
-	const bool pending = n.pending_event();
+	const event_index_type pending = n.get_event();
 	const char last_val = n.current_value();
 /***
 	If node is in the event queue already and is set to the 
@@ -604,10 +637,18 @@ State::set_node_time(const node_index_type ni, const char val,
 // If node has pending even in queue already, warn and ignore.
 	if (pending) {
 		const string objname(get_node_canonical_name(ni));
+	if (f) {
+		// cancel it, but don't deallocate it until dequeued
+		cout << "WARNING: pending event for node `" << objname <<
+			"\' was overridden." << endl;
+		get_event(pending).kill();
+		n.clear_event();
+	} else {
 		cout << "WARNING: pending value for node `" << objname <<
 			"\'; ignoring request" << endl;
 		return ENQUEUE_WARNING;
 	}
+	}	// end if pending
 // otherwise, enqueue the event.  
 	const event_index_type ei =
 		// node cause to assign, since this is externally set
@@ -1311,10 +1352,12 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 		node_type::value_to_char[size_t(prev)] << endl);
 	DEBUG_STEP_PRINT("new value: " <<
 		node_type::value_to_char[size_t(pe.val)] << endl);
-	// comment?
 	if (pe.val == node_type::LOGIC_OTHER &&
 		prev == node_type::LOGIC_OTHER) {
+		// node being set to X, but is already X, this could occur
+		// b/c there are other causees of X besides guards going X.
 		DEBUG_STEP_PRINT("X: returning node index " << ni << endl);
+		__deallocate_event(n, ei);
 		return return_type(ni, ci);
 	}
 	// assert: vacuous firings on the event queue
@@ -1670,6 +1713,7 @@ State::__diagnose_violation(ostream& o, const char next,
 		const event_index_type ei, event_type& e, 
 		const node_index_type ui, node_type& n, 
 		const node_index_type ni, const bool dir) {
+	STACKTRACE_VERBOSE;
 	// something is amiss!
 	const char eu = dir ?
 		event_type::upguard[size_t(next)][size_t(e.val)] :
@@ -1697,9 +1741,16 @@ State::__diagnose_violation(ostream& o, const char next,
 		const string out_name(get_node_canonical_name(ui));
 		e.cause_node = ni;
 #if PRSIM_ALLOW_UNSTABLE_DEQUEUE
-		if (instability && dequeue_unstable_events()) {
-			__deallocate_event(n, ei);
-		} else {
+		if (instability) {
+			if (dequeue_unstable_events()) {
+				// __deallocate_event(n, ei);
+				e.kill();
+				n.clear_event();
+			} else {
+				e.val = node_type::LOGIC_OTHER;
+			}
+		}
+		if (interference) {
 			// interference || !dequeue_unstable
 			e.val = node_type::LOGIC_OTHER;
 		}
@@ -1969,10 +2020,12 @@ State::dump_event_queue(ostream& o) const {
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
 	for ( ; i!=e; ++i) {
-		o << '\t' << i->time << '\t';
 		const event_type& ev(get_event(i->event_index));
-		o << get_node_canonical_name(ev.node) << " : " <<
-			node_type::value_to_char[ev.val] << endl;
+		if (!ev.killed()) {
+			o << '\t' << i->time << '\t' <<
+				get_node_canonical_name(ev.node) << " : " <<
+				node_type::value_to_char[ev.val] << endl;
+		}
 	}
 	return o;
 }

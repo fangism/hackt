@@ -1,19 +1,29 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.4 2006/05/06 04:18:48 fang Exp $
+	$Id: Event.cc,v 1.4.8.1 2006/07/10 02:28:13 fang Exp $
  */
 
 #include <iostream>
+#include <iterator>
+#include <numeric>
 #include "sim/prsim/Event.h"
 #include "sim/prsim/Event.tcc"
 #include "sim/time.h"
 #include "util/memory/index_pool.tcc"
 #include "util/IO_utils.tcc"
 
+// debug switch defined in this corresponding header file
+#if DEBUG_EVENT_POOL_ALLOC
+#define	ENABLE_STACKTRACE			1
+#endif
+
+#include "util/stacktrace.h"
+
 namespace HAC {
 namespace SIM {
 namespace PRSIM {
+#include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
 
@@ -63,6 +73,7 @@ Event::save_state(ostream& o) const {
 	write_value(o, cause_node);
 	write_value(o, cause_rule);
 	write_value(o, val);
+	write_value(o, flags);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -72,6 +83,7 @@ Event::load_state(istream& i) {
 	read_value(i, cause_node);
 	read_value(i, cause_rule);
 	read_value(i, val);
+	read_value(i, flags);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -81,6 +93,9 @@ Event::dump_checkpoint_state_header(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: update to dump flags
+ */
 ostream&
 Event::dump_checkpoint_state(ostream& o, istream& i) {
 	this_type temp;
@@ -102,7 +117,42 @@ EventPool::EventPool() : event_pool(), free_indices() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-EventPool::~EventPool() { }
+EventPool::~EventPool() {
+	INVARIANT(check_valid_empty());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Strict paranoia checking.  
+	All resources returned properly to the pool, free-list
+		must be as big as the pool (minus sentinel).  
+ */
+bool
+EventPool::check_valid_empty(void) const {
+	bool die = false;
+	const size_t p = event_pool.size() -1;
+	const size_t m = free_indices.size();
+	if (p != m) {
+		cerr << "FATAL: event pool size is " << p <<
+			" while free-list size is " << m << endl;
+		die = true;
+	} else {
+		const size_t s = std::accumulate(
+			free_indices.begin(), free_indices.end(), 0);
+		if (s != m*(m+1)/2) {	// triangular sum
+			cerr << "FATAL: event pool free list sum "
+				"is not what\'s expected!" << endl;
+			die = true;
+		}
+	}
+	if (die) {
+		std::ostream_iterator<size_t> osi(cerr, ",");
+		cerr << "free-list: ";
+		copy(free_indices.begin(), free_indices.end(), osi);
+		cerr << endl;
+	}
+	return !die;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -113,6 +163,39 @@ EventPool::clear(void) {
 		event_pool.allocate();
 	INVARIANT(!zero);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if DEBUG_EVENT_POOL_ALLOC
+/**
+	Keep this consistent with the inline definition.  
+ */
+event_index_type
+EventPool::allocate(const event_type& e) {
+	STACKTRACE_VERBOSE;
+	if (UNLIKELY(free_indices.empty())) {   // UNLIKELY
+		const event_index_type ret = event_pool.size();
+		event_pool.allocate(e); // will realloc
+		INVARIANT(ret);
+		STACKTRACE_INDENT_PRINT("allocating entry: " << ret << endl);
+		return ret;
+	} else {                        // LIKELY
+		const event_index_type ret = free_list_acquire(free_indices);
+		event_pool[ret] = e;
+		STACKTRACE_INDENT_PRINT("allocating entry: " << ret << endl);
+		return ret;
+	}
+}
+#endif
+
+#if DEBUG_EVENT_POOL_ALLOC
+void
+EventPool::deallocate(const event_index_type i) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("deallocating entry: " << i << endl);
+	INVARIANT(i);
+	free_list_release(free_indices, i);
+}
+#endif  
 
 
 //=============================================================================

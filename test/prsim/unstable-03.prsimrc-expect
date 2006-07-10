@@ -5,7 +5,6 @@ WARNING: unstable `b'-
 >> cause: `a' (val: 0)
 	5	a : 0
 event queue:
-	10	b : 1
 	15	b : 1
 expect empty queue 
 end of queue 
@@ -15,4 +14,4 @@ WARNING: interference `b'-
 >> cause: `a' (val: 1)
 	5	a : 1
 event queue:
-	10	a : 0
+	10	b : 0
