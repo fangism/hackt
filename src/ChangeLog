@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-04:
+	  More improvements to be able to simulate instability scenarios
+		with different realistic behaviors, fixed ISEs.  
+	  TODO: accomodate anomalies in the event queue when user
+		coercively sets nodes with 'setf'.  Before, such commands
+		were just dropped with a warning if there was a pending event.  
+		We can now use the instability mechanism to work with this.  
+		Might add a 'force' flag as done with tools/prsim.  UTFL!
+
+
 2006-07-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-27-prsim-06-03:

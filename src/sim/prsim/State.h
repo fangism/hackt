@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.9.2.3 2006/07/12 05:52:42 fang Exp $
+	$Id: State.h,v 1.9.2.4 2006/07/12 19:16:20 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -680,6 +680,8 @@ private:
 
 	void
 	__deallocate_event(node_type&, const event_index_type);
+
+	class event_deallocator;
 
 	void
 	__deallocate_killed_event(const event_index_type);

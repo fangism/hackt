@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.15.2.3 2006/07/12 05:52:41 fang Exp $
+	$Id: State.cc,v 1.15.2.4 2006/07/12 19:16:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -35,7 +35,6 @@
 #include "util/string.tcc"
 #include "util/IO_utils.tcc"
 #include "util/binders.h"
-#include "util/wtf.h"
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
@@ -85,6 +84,29 @@ using entity::global_entry_pool;
 using entity::bool_tag;
 using entity::process_tag;
 #include "util/using_ostream.h"
+//=============================================================================
+// class State::event_deallocator definition
+
+/**
+	Helper class using destructor semantics to automatically
+	deallocate an event upon end-of-life.  
+	This helps the State::step method in which there are
+	multiple early return cases.  
+	Except, there's one case where we don't want to deallocate... 
+		(exception)
+ */
+class State::event_deallocator {
+	State&				_state;
+	node_type& 			_node;
+	const event_index_type		_event;
+public:
+	event_deallocator(State& s, node_type& n, const event_index_type e) :
+		_state(s), _node(n), _event(e) { }
+	~event_deallocator() {
+		_state.__deallocate_event(_node, _event);
+	}
+} __ATTRIBUTE_UNUSED__ ;	// end class State::event_deallocator
+
 //=============================================================================
 // class State method definitions
 
@@ -1491,6 +1513,9 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 		get_node_canonical_name(ni) << endl);
 	node_type& n(get_node(ni));
 	const char prev = n.current_value();
+{
+	// event-deallocation scope (optional)
+	// const event_deallocator __d(*this, n, ei);	// auto-deallocate?
 	DEBUG_STEP_PRINT("former value: " <<
 		node_type::value_to_char[size_t(prev)] << endl);
 	DEBUG_STEP_PRINT("new value: " <<
@@ -1503,8 +1528,25 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 		__deallocate_event(n, ei);
 		return return_type(ni, ci);
 	}
-	// assert: vacuous firings on the event queue
+	// assert: vacuous firings on the event queue, 
+	// but ONLY if unstable events don't cause vacuous events to
+	// be resheduled, e.g. pulse
+#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
+	if (dequeue_unstable_events()) {
+		if (UNLIKELY(prev == pe.val)) {
+			// Q: or is it better to catch this before enqueuing?
+			__deallocate_event(n, ei);
+			// then just silence this event
+			// slow head-recusrion, but infrequent
+			return step();
+		}
+		// else proceed
+	} else {
+		INVARIANT(prev != pe.val || n.is_unstab());
+	}
+#else
 	INVARIANT(prev != pe.val || n.is_unstab());
+#endif
 	// saved previous value above already
 	if (checking_excl()) {
 		const excl_exception
@@ -1520,9 +1562,11 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	}
 	n.set_value(pe.val);
 	// count transition only if new value is not X
-	if (pe.val != node_type::LOGIC_OTHER)
+	if (pe.val != node_type::LOGIC_OTHER) {
 		++n.tcount;
-	__deallocate_event(n, ei);
+	}
+	 __deallocate_event(n, ei);
+}
 	// reminder: do not reference pe beyond this point (deallocated)
 	// could scope the reference to prevent it...
 	const char next = n.current_value();

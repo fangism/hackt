@@ -1,0 +1,52 @@
+# "inv-15.prsimrc"
+# copy-modified from "inv-05.prsimrc"
+#	$Id: inv-15.prsimrc,v 1.1.2.1 2006/07/12 19:16:24 fang Exp $
+# @haco@ inv.haco-a
+# testing for instabilities
+
+# trying different instability behavior
+unstable-dequeue
+
+watchall
+assert a x
+assert b x
+assert c x
+time
+
+echo setting 'a-' and letting propagate
+set a 0
+cycle
+assert b 1
+assert c 0
+
+time
+echo introduce a low pulse on 'a'
+set a 1
+advance 5
+set a 0
+echo expect instability on b- because of a-
+cycle
+echo but no X's, just dequeued and requeued unstable events
+assert b 1
+assert c 0
+time
+
+echo bring back to known states
+set a 1
+cycle
+assert b 0
+assert c 1
+
+time
+echo introduce a high pulse on 'a'
+set a 0
+advance 5
+set a 1
+echo expect instability on b+ because of a+
+cycle
+assert b 0
+assert c 1
+echo no other vacuous events were generated
+queue
+echo empty queue
+
