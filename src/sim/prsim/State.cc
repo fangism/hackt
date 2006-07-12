@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.15.2.2 2006/07/10 18:43:11 fang Exp $
+	$Id: State.cc,v 1.15.2.3 2006/07/12 05:52:41 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -35,7 +35,6 @@
 #include "util/string.tcc"
 #include "util/IO_utils.tcc"
 #include "util/binders.h"
-// #include "util/reference_wrapper.h"
 #include "util/wtf.h"
 
 #if	DEBUG_STEP
@@ -484,16 +483,17 @@ State::__allocate_event(node_type& n,
 	\param ni the referenced node's index.
 	\param ci the index of the node that caused this event to enqueue, 
 		may be INVALID_NODE_INDEX.
+	\param next the next value of the node (from event).  
  */
 event_index_type
 State::__allocate_pending_interference_event(node_type& n,
 		const node_index_type ni,
-		const node_index_type ci) {
+		const node_index_type ci, const char next) {
 	STACKTRACE_VERBOSE;
 	// node may or may not have pending event (?)
 	// don't care about the node value
 	const event_index_type ne = event_pool.allocate(
-		event_type(ni, ci, INVALID_RULE_INDEX, node_type::LOGIC_OTHER));
+		event_type(ni, ci, INVALID_RULE_INDEX, next));
 	get_event(ne).pending_interference(true);
 	// n.set_event(ne);
 	n.set_cause_node(ci);
@@ -951,56 +951,134 @@ for ( ; i!=e; ++i) {
 		} else {
 #endif
 		ev.val = node_type::LOGIC_OTHER;
-		switch (_n.current_value()) {
-		case node_type::LOGIC_LOW:
-		DEBUG_STEP_PRINT("moving - event to event queue" << endl);
-			enqueue_event(get_delay_dn(ev), ne);
-			break;
-		case node_type::LOGIC_HIGH:
-		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
-			enqueue_event(get_delay_up(ev), ne);
-			break;
-		case node_type::LOGIC_OTHER:
-		DEBUG_STEP_PRINT("cancelling event" << endl);
-			_n.clear_excl_queue();
-			__deallocate_event(_n, ne);
-			break;
-		default:
-			ICE(cerr, 
-				cerr << "Invalid logic value." << endl;
-			);
-		}	// end switch
+		__flush_pending_event_with_interference(_n, ne, ev);
 #if PRSIM_FIX_BOGUS_INTERFERENCE
 		}	// end if pending_interference
 #endif
 	} else {
 		DEBUG_STEP_PRINT("no interference." << endl);
-		if (_n.current_value() != ev.val) {
-			if (ev.val == node_type::LOGIC_HIGH) {
-		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
-				enqueue_event(get_delay_up(ev), ne);
+#if 1 && PRSIM_ALLOW_UNSTABLE_DEQUEUE && PRSIM_FIX_BOGUS_INTERFERENCE
+		const event_index_type pe = _n.get_event();
+		DEBUG_STEP_PRINT("prior enqueued event on this node (possibly killed): " <<
+			pe << endl);
+		if (pe && UNLIKELY(pe != ne)) {
+			// then one of these events must be tossed!
+			// this arises as a result of instabilities
+			// and the need to cancel events
+			DEBUG_STEP_PRINT("node has enqueued different event "
+				<< pe << " vs. this one " << ne << endl);
+			event_type& pv(get_event(pe));
+			// walk event_queue, find delay of the former event?
+			// inspect event values?
+			if (dequeue_unstable_events()) {
+			DEBUG_STEP_PRINT("replacing original event" << endl);
+				// new behavior: cancel the original event
+				// which was updated to X
+				_n.clear_event();
+				INVARIANT(pv.killed());
+				_n.set_event(ne);
+				__flush_pending_event_replacement(_n, ne, ev);
 			} else {
-		DEBUG_STEP_PRINT("moving - event to event queue" << endl);
-				enqueue_event(get_delay_dn(ev), ne);
-			}
-		} else {
-		DEBUG_STEP_PRINT("cancelling event" << endl);
-			// no change in value, just cancel
-			_n.clear_excl_queue();
-#if 0 && PRSIM_FIX_BOGUS_INTERFERENCE
-			if (ev.pending_interference()) {
+			DEBUG_STEP_PRINT("keeping original event" << endl);
+				// original behavior: drop new event
+				// b/c original event updated to value X
 				__deallocate_pending_interference_event(ne);
-			} else {
-				__deallocate_event(_n, ne);
+				// leave original event alone
 			}
-#else
-			__deallocate_event(_n, ne);
+		} else {	// LIKELY(pe == ne)
 #endif
-		}	// end switch
+		__flush_pending_event_no_interference(_n, ne, ev);
+#if 1 && PRSIM_ALLOW_UNSTABLE_DEQUEUE && PRSIM_FIX_BOGUS_INTERFERENCE
+		}	// end if (pe != ne)
+#endif
 	}	// end if may_be_pulled ...
 }	// end for all in pending_queue
 	pending_queue.clear();	// or .resize(0), same thing
 }	// end method flush_pending_queue
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For the sake of shortening long code.  
+ */
+// inline
+void
+State::__flush_pending_event_with_interference(node_type& _n, 
+		const event_index_type ne, event_type& ev) {
+	switch (_n.current_value()) {
+	case node_type::LOGIC_LOW:
+	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
+		enqueue_event(get_delay_dn(ev), ne);
+		break;
+	case node_type::LOGIC_HIGH:
+	DEBUG_STEP_PRINT("moving + event to event queue" << endl);
+		enqueue_event(get_delay_up(ev), ne);
+		break;
+	case node_type::LOGIC_OTHER:
+	DEBUG_STEP_PRINT("cancelling event" << endl);
+		_n.clear_excl_queue();
+		__deallocate_event(_n, ne);
+		break;
+	default:
+		ICE(cerr, 
+			cerr << "Invalid logic value." << endl;
+		);
+	}	// end switch
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For the sake of shortening long code.  
+ */
+// inline
+void
+State::__flush_pending_event_no_interference(node_type& _n, 
+		const event_index_type ne, event_type& ev) {
+	if (_n.current_value() != ev.val) {
+		if (ev.val == node_type::LOGIC_HIGH) {
+		DEBUG_STEP_PRINT("moving + event to event queue" << endl);
+			enqueue_event(get_delay_up(ev), ne);
+		} else {
+		DEBUG_STEP_PRINT("moving - event to event queue" << endl);
+			enqueue_event(get_delay_dn(ev), ne);
+		}
+	} else {
+		DEBUG_STEP_PRINT("cancelling event" << endl);
+		// no change in value, just cancel
+		_n.clear_excl_queue();
+		__deallocate_event(_n, ne);
+	}	// end switch
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	For the sake of shortening long code.  
+ */
+// inline
+void
+State::__flush_pending_event_replacement(node_type& _n, 
+		const event_index_type ne, event_type& ev) {
+	switch (ev.val) {
+	case node_type::LOGIC_LOW:
+	DEBUG_STEP_PRINT("moving - event to event queue" << endl);
+		enqueue_event(get_delay_dn(ev), ne);
+		break;
+	case node_type::LOGIC_HIGH:
+	DEBUG_STEP_PRINT("moving + event to event queue" << endl);
+		enqueue_event(get_delay_up(ev), ne);
+		break;
+	case node_type::LOGIC_OTHER:
+	DEBUG_STEP_PRINT("don't know what to do!" << endl);
+		FINISH_ME(Fang);
+		enqueue_event(get_delay_up(ev), ne);
+		// _n.clear_excl_queue();
+		// __deallocate_event(_n, ne);
+		break;
+	default:
+		ICE(cerr, 
+			cerr << "Invalid logic value." << endl;
+		);
+	}	// end switch
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1381,6 +1459,7 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Modeled after prs_step() from the original prsim.  
+	Critical path through here.  
 	TODO: possible add arguments later. 
 	\pre the exclhi, excllo, and pending queues are empty.
 	\post the exclhi, excllo, and pending queues are empty.
@@ -1401,6 +1480,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	}
 	const event_placeholder_type ep(dequeue_event());
 	current_time = ep.time;
+	DEBUG_STEP_PRINT("time = " << current_time << endl);
 	const event_index_type& ei(ep.event_index);
 	INVARIANT(ei);
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
@@ -1418,7 +1498,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	if (pe.val == node_type::LOGIC_OTHER &&
 		prev == node_type::LOGIC_OTHER) {
 		// node being set to X, but is already X, this could occur
-		// b/c there are other causees of X besides guards going X.
+		// b/c there are other causes of X besides guards going X.
 		DEBUG_STEP_PRINT("X: returning node index " << ni << endl);
 		__deallocate_event(n, ei);
 		return return_type(ni, ci);
@@ -1481,13 +1561,32 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if PRSIM_FIX_BOGUS_INTERFERENCE
 /**
+	This is code is invoked when cancelling events due to
+	instablity.  This will also enqueue new events in some cases where
+	schedule events already fired.  
+
+	This code is far off critical-path, in the rare event of processing
+	unstable events.  
+
+	\param ni index of the node whose value change was unstable.  
+	\param ui the expression id used to traverse up tree.  
+	\param prev the current value of the node.
+	\param next the 'would-be' new value of the node 
+		(from the unstable event).  
+	Algorithm:
+		Figure out which events are affected by the unstable node.  
+		NOTE: 'causing' in this context doesn't necessarily mean
+			the last arriving input, but rather, the value
+			affects the pull-state of the output at all.  
+		For each expression in the node's fanout:
+			
  */
 void
 State::kill_evaluation(const node_index_type ni, expr_index_type ui, 
-	char prev, char next) {
-
+		char prev, char next) {
+	FINISH_ME(Fang);
 }
-#endif
+#endif	// PRSIM_FIX_BOGUS_INTERFERENCE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1805,13 +1904,9 @@ State::__diagnose_violation(ostream& o, const char next,
 	const bool vacuous = eu & event_type::EVENT_VACUOUS;
 	if (!vacuous) {
 		// then must be unstable or interfering (exclusive)
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 		const bool instability =
 			(eu & event_type::EVENT_UNSTABLE) &&
 			!n.is_unstab();
-#else
-		// unused
-#endif
 		/***
 			This last condition !unstab violates exact exclution 
 			between unstable and interference!
@@ -1824,13 +1919,17 @@ State::__diagnose_violation(ostream& o, const char next,
 		const string out_name(get_node_canonical_name(ui));
 
 #if PRSIM_FIX_BOGUS_INTERFERENCE
-					// causing rule only used by propagate
-					// don't care about value, 
-					// event is for sake of checking
+			// causing rule only used by propagate
+			// don't care about value, 
+			// event is for sake of checking
+			// check for conflicting/redundant events 
+			// on pending queue (result of instability)
 #define	INTERFERENCE_CASE_ACTION					\
 			const event_index_type pe =			\
 				__allocate_pending_interference_event(	\
-					n, ui, ni);			\
+					n, ui, ni, 			\
+					dir ? node_type::LOGIC_HIGH :	\
+						node_type::LOGIC_LOW);	\
 			enqueue_pending(pe);
 #else
 #define	INTERFERENCE_CASE_ACTION					\
@@ -1842,8 +1941,11 @@ State::__diagnose_violation(ostream& o, const char next,
 #if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 			if (dequeue_unstable_events()) {
 				// let dequeuer deallocate killed events
-				e.kill();
-				n.clear_event();
+				const size_t pe = n.get_event();
+				DEBUG_STEP_PRINT("dequeuing unstable event " << pe << endl);
+				get_event(pe).kill();
+				// n.clear_event();
+				// or punt clearing until later?
 #if 0
 	{	// pardon momentary ugly indentation...
 		typedef	node_type::const_fanout_iterator	const_iterator;

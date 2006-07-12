@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-03:
+	  Fix for last patch, to get both modes of handling instabilities
+		working to not cause prsim test regressions, with a few
+		old cases updated with the correct expected behavior.
+		No more bogus interference.  (PRSIM_FIX_BOGUS_INTERFERENCE on)
+	  TODO: Some new pending test cases still need to be fixed.  
+	  TODO: *consider* replacing pending queue with pending map [node], 
+		for code simplicity, maintainability, comprehensibility,
+		and flexibility.  Will it cost performance?  Hard to say.  
+		This is where a set of benchmark tests would help.  
+
+
 2006-07-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-27-prsim-06-02:

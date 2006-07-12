@@ -20,8 +20,7 @@ bring back to known states
 introduce a high pulse on 'a' 
 	60	a : 0
 expect instability on b+ because of a+ 
-BUT GETS INTEFERENCE BECAUSE OF FANOUT EVALUATION ORDERING... 
-WARNING: interference `b'-
+WARNING: unstable `b'+
 >> cause: `a' (val: 1)
 	65	a : 1
 WARNING: weak-interference `c'

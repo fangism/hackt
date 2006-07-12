@@ -1,5 +1,5 @@
 # "unstable-03.prsimrc"
-#	$Id: unstable-03.prsimrc,v 1.1 2006/07/09 02:11:52 fang Exp $
+#	$Id: unstable-03.prsimrc,v 1.1.2.1 2006/07/12 05:52:52 fang Exp $
 # @haco@ inv.haco-a
 # testing different modes of instabilities
 
@@ -30,4 +30,6 @@ advance 5
 # This test will fail to behave as expected until the false interference 
 # is properly handled.  
 queue
+echo end of queue
+cycle
 

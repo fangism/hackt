@@ -1,5 +1,5 @@
 # "inv-05.prsimrc"
-#	$Id: inv-05.prsimrc,v 1.2 2006/04/03 05:30:49 fang Exp $
+#	$Id: inv-05.prsimrc,v 1.2.20.1 2006/07/12 05:52:44 fang Exp $
 # @haco@ inv.haco-a
 # testing for instabilities
 
@@ -35,7 +35,8 @@ set a 0
 advance 5
 set a 1
 echo expect instability on b+ because of a+
-echo BUT GETS INTEFERENCE BECAUSE OF FANOUT EVALUATION ORDERING...
+# echo BUT GETS INTEFERENCE BECAUSE OF FANOUT EVALUATION ORDERING...
+# this has been fixed as of HACKT-00-01-04-main-00-79-27-prsim-06-03
 cycle
 assert b x
 assert c x

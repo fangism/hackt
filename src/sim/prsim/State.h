@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.9.2.2 2006/07/10 18:43:12 fang Exp $
+	$Id: State.h,v 1.9.2.3 2006/07/12 05:52:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -668,7 +668,8 @@ private:
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
-		const node_index_type c); // this is the causing node
+		const node_index_type c,	// this is the causing node
+		const char);
 
 	void
 	__deallocate_pending_interference_event(const event_index_type);
@@ -715,6 +716,18 @@ private:
 
 	void
 	flush_pending_queue(void);
+
+	void
+	__flush_pending_event_with_interference(
+		node_type&, const event_index_type, event_type&);
+
+	void
+	__flush_pending_event_no_interference(
+		node_type&, const event_index_type, event_type&);
+
+	void
+	__flush_pending_event_replacement(
+		node_type&, const event_index_type, event_type&);
 
 	event_placeholder_type
 	dequeue_event(void);
