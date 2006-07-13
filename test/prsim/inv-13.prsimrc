@@ -1,6 +1,6 @@
 # "inv-13.prsimrc"
 # @haco@ inv.haco-a
-#	$Id: inv-13.prsimrc,v 1.1.2.2 2006/07/12 05:52:47 fang Exp $
+#	$Id: inv-13.prsimrc,v 1.1.2.3 2006/07/13 02:39:45 fang Exp $
 
 # testing the setf command
 
@@ -16,6 +16,7 @@ echo continuing...
 cycle
 echo kind of incoherent with a- and b-...
 echo what happens if we set a- now? should b+ be queued?
+# to restore correctness, yes
 
 time
 set a 0

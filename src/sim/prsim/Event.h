@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.5.8.2 2006/07/10 18:43:10 fang Exp $
+	$Id: Event.h,v 1.5.8.3 2006/07/13 02:39:41 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -99,6 +99,11 @@ protected:
 			Signals that event cancelled.  
 		 */
 		EVENT_FLAG_KILLED = 0x02,
+		/**
+			Whether or not event is coerced, say, by the user.  
+			Coerced events may require special handling.  
+		 */
+		EVENT_FLAG_FORCED = 0x04,
 		// add more as seen fit
 		EVENT_FLAGS_DEFAULT_VALUE = 0x00
 	};
@@ -134,6 +139,12 @@ public:
 
 	bool
 	killed(void) const { return flags & EVENT_FLAG_KILLED; }
+
+	void
+	force(void) { flags |= EVENT_FLAG_FORCED; }
+
+	bool
+	forced(void) const { return flags & EVENT_FLAG_FORCED; }
 
 	void
 	save_state(ostream&) const;

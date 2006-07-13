@@ -5,6 +5,26 @@
 
 2006-07-12	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-27-prsim-06-05:
+	  prsim: introduced event 'force' flag to indicate that user
+		coerced a particular event.  Added support for handling
+		forced events by redirecting conflicts to pending queue.  
+	  BUG FIXED: 'dequeue_event' wasn't checking for queue-empty now that
+		events may be killed.  
+	  TODO: issue: how to recover from user-coerced event?  problem is
+		that vacuous events don't propagate so a coerced node
+		may never again be re-evaluated, resulting in a quasi-deadlock
+		'stuck' state where pull on a node takes no effect.  
+		Reminder: no support for SEUs (no intention)
+		Proposal: user must supply an 'unset' command to trigger
+			re-evaluation of a coerced node's inputs, 
+			the equivalent of releasing from coercion.  
+			An 'unset-all' command might be useful too.  
+		Can demonstrate this with ring-oscillator test cases.  
+
+
+2006-07-12	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-27-prsim-06-04:
 	  More improvements to be able to simulate instability scenarios
 		with different realistic behaviors, fixed ISEs.  

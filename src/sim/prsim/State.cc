@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.15.2.4 2006/07/12 19:16:19 fang Exp $
+	$Id: State.cc,v 1.15.2.5 2006/07/13 02:39:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -38,8 +38,10 @@
 
 #if	DEBUG_STEP
 #define	DEBUG_STEP_PRINT(x)		STACKTRACE_INDENT_PRINT(x)
+#define	STACKTRACE_VERBOSE_STEP		STACKTRACE_VERBOSE
 #else
 #define	DEBUG_STEP_PRINT(x)
+#define	STACKTRACE_VERBOSE_STEP
 #endif
 
 #if	DEBUG_FANOUT
@@ -545,6 +547,8 @@ State::__load_allocate_event(const event_type& ev) {
  */
 void
 State::__deallocate_event(node_type& n, const event_index_type i) {
+	STACKTRACE_VERBOSE_STEP;
+	DEBUG_STEP_PRINT("freeing index " << i << endl);
 #if !PRSIM_FIX_BOGUS_INTERFERENCE
 	INVARIANT(n.get_event() == i);
 #endif
@@ -561,6 +565,8 @@ State::__deallocate_event(node_type& n, const event_index_type i) {
  */
 void
 State::__deallocate_pending_interference_event(const event_index_type i) {
+	STACKTRACE_VERBOSE_STEP;
+	DEBUG_STEP_PRINT("freeing index " << i << endl);
 	// pending-interference event is not the same as 
 	// the node's true pending event.  
 	event_pool.deallocate(i);
@@ -573,6 +579,8 @@ State::__deallocate_pending_interference_event(const event_index_type i) {
  */
 void
 State::__deallocate_killed_event(const event_index_type i) {
+	STACKTRACE_VERBOSE_STEP;
+	DEBUG_STEP_PRINT("freeing index " << i << endl);
 	event_pool.deallocate(i);
 }
 
@@ -643,13 +651,21 @@ State::enqueue_pending(const event_index_type ei) {
 /**
 	Fetches next event from the priority queue.  
 	Automatically skips and deallocates killed events.  
+	NOTE: possible that last event in queue is killed, 
+		in which case, need to return a NULL placeholder.  
  */
 State::event_placeholder_type
 State::dequeue_event(void) {
+	STACKTRACE_VERBOSE_STEP;
 	event_placeholder_type ret(event_queue.pop());
 	while (get_event(ret.event_index).killed()) {
 		__deallocate_killed_event(ret.event_index);
-		ret = event_queue.pop();
+		if (event_queue.empty()) {
+			return event_placeholder_type(
+				current_time, INVALID_EVENT_INDEX);
+		} else {
+			ret = event_queue.pop();
+		}
 	};
 	return ret;
 }
@@ -724,6 +740,10 @@ State::set_node_time(const node_index_type ni, const char val,
 	const event_type& e(get_event(ei));
 	STACKTRACE_INDENT_PRINT("new event: (node,val)" << endl);
 #endif
+	if (f) {	// what if nothing was pending?
+		// mark event as forced
+		get_event(ei).force();
+	}
 	enqueue_event(t, ei);
 	return ENQUEUE_ACCEPT;
 }
@@ -918,9 +938,7 @@ State::is_rule_expr(const expr_index_type ei) const {
 void
 State::flush_pending_queue(void) {
 	typedef	pending_queue_type::const_iterator	const_iterator;
-#if DEBUG_STEP
-	STACKTRACE_VERBOSE;
-#endif
+	STACKTRACE_VERBOSE_STEP;
 	const_iterator i(pending_queue.begin()), e(pending_queue.end());
 for ( ; i!=e; ++i) {
 	const event_index_type ne = *i;
@@ -1111,9 +1129,7 @@ State::__flush_pending_event_replacement(node_type& _n,
 void
 State::flush_exclhi_queue(void) {
 	typedef	mk_excl_queue_type::const_iterator	const_iterator;
-#if DEBUG_STEP
-	STACKTRACE_VERBOSE;
-#endif
+	STACKTRACE_VERBOSE_STEP;
 	const_iterator i(exclhi_queue.begin()), e(exclhi_queue.end());
 for ( ; i!=e; ++i) {
 	const event_placeholder_type& ep(*i);
@@ -1187,9 +1203,7 @@ for ( ; i!=e; ++i) {
 void
 State::flush_excllo_queue(void) {
 	typedef	mk_excl_queue_type::const_iterator	const_iterator;
-#if DEBUG_STEP
-	STACKTRACE_VERBOSE;
-#endif
+	STACKTRACE_VERBOSE_STEP;
 	const_iterator i(excllo_queue.begin()), e(excllo_queue.end());
 for ( ; i!=e; ++i) {
 	const event_placeholder_type& ep(*i);
@@ -1256,9 +1270,7 @@ State::enforce_exclhi(const node_index_type ni) {
 		If so, insert them into the exclhi-queue.
 	***/
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
-#if DEBUG_STEP
-	STACKTRACE_VERBOSE;
-#endif
+	STACKTRACE_VERBOSE_STEP;
 	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
@@ -1307,9 +1319,7 @@ State::enforce_excllo(const node_index_type ni) {
 		If so, insert them into the excllo-queue.
 	***/
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
-#if DEBUG_STEP
-	STACKTRACE_VERBOSE;
-#endif
+	STACKTRACE_VERBOSE_STEP;
 	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
@@ -1504,9 +1514,13 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	current_time = ep.time;
 	DEBUG_STEP_PRINT("time = " << current_time << endl);
 	const event_index_type& ei(ep.event_index);
-	INVARIANT(ei);
+	if (!ei) {
+		// possible in the event that last events are killed
+		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
+	}
 	DEBUG_STEP_PRINT("event_index = " << ei << endl);
 	const event_type& pe(get_event(ei));
+	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
 	const node_index_type ci = pe.cause_node;
 	DEBUG_STEP_PRINT("examining node: " <<
@@ -1567,6 +1581,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	}
 	 __deallocate_event(n, ei);
 }
+	// note: pe is invalid, deallocated beyond this point, could scope it
 	// reminder: do not reference pe beyond this point (deallocated)
 	// could scope the reference to prevent it...
 	const char next = n.current_value();
@@ -1578,6 +1593,38 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 		propagate_evaluation(ni, *i, prev, next);
 	}
 }
+	/***
+		If an event is forced (say, by user), then check node's own
+		guards to determine whether or not a new event needs to
+		be registered on this node.  
+	***/
+	if (force && n.get_event()) {
+		DEBUG_STEP_PRINT("detected a forced event vs. pending event" << endl);
+		if (n.pull_up_index && 
+			get_event(n.pull_up_index).val == node_type::LOGIC_HIGH
+				&& next != node_type::LOGIC_HIGH) {
+			DEBUG_STEP_PRINT("force pull-up" << endl);
+			const event_index_type _ne =
+				__allocate_event(n, ni, 
+					INVALID_NODE_INDEX,	// no cause
+					n.pull_up_index, 	// cause?
+					node_type::LOGIC_HIGH);
+			enqueue_pending(_ne);
+		}
+		else if (n.pull_dn_index && 
+			get_event(n.pull_dn_index).val == node_type::LOGIC_LOW
+				&& next != node_type::LOGIC_LOW) {
+			DEBUG_STEP_PRINT("force pull-dn" << endl);
+			const event_index_type _ne =
+				__allocate_event(n, ni, 
+					INVALID_NODE_INDEX,	// no cause
+					n.pull_dn_index, 	// cause?
+					node_type::LOGIC_LOW);
+			enqueue_pending(_ne);
+		}
+		// no weak events yet
+	}
+
 	// exclhi ring enforcement
 	if (n.has_mk_exclhi() && (next == node_type::LOGIC_LOW)) {
 		enforce_exclhi(ni);
@@ -1653,12 +1700,10 @@ State::kill_evaluation(const node_index_type ni, expr_index_type ui,
 State::evaluate_return_type
 State::evaluate(const node_index_type ni, expr_index_type ui, 
 		char prev, char next) {
-#if DEBUG_STEP
-	STACKTRACE_VERBOSE;
+	STACKTRACE_VERBOSE_STEP;
 	DEBUG_STEP_PRINT("node " << ni << " from " <<
 		node_type::value_to_char[size_t(prev)] << " -> " <<
 		node_type::value_to_char[size_t(next)] << endl);
-#endif
 	expr_type* u;
 	__scratch_expr_trace.clear();
 do {
@@ -2285,12 +2330,21 @@ State::dump_event_queue(ostream& o) const {
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
 	for ( ; i!=e; ++i) {
+		DEBUG_STEP_PRINT(i->event_index);
 		const event_type& ev(get_event(i->event_index));
 		if (!ev.killed()) {
 			o << '\t' << i->time << '\t' <<
 				get_node_canonical_name(ev.node) << " : " <<
 				node_type::value_to_char[ev.val] << endl;
 		}
+#if DEBUG_STEP
+		else {
+			o << '\t' << i->time << '\t' <<
+				get_node_canonical_name(ev.node) << " : " <<
+				node_type::value_to_char[ev.val] <<
+				'\t' << "(killed)" << endl;
+		}
+#endif
 	}
 	return o;
 }

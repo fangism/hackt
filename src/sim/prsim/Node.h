@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.10 2006/07/09 02:11:43 fang Exp $
+	$Id: Node.h,v 1.10.2.1 2006/07/13 02:39:42 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -223,6 +223,7 @@ public:
 		NODE_INITIAL_STATE_FLAGS = 0x00,
 		/**
 			Whether or not a breakpoint is enabled on this node.
+			This includes watching state.  
 		 */
 		NODE_BREAKPOINT = 0x01,
 		/**
