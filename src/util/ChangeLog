@@ -1,5 +1,17 @@
 # "src/util/ChangeLog"
 
+2006-07-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-28:
+	  New useful utility classes:
+		util/member_select.h: makes functors out of member-selection, 
+			for use with functional programming, 
+			more general than std::_Select{1st,2nd}.
+		util/tagged_subtype.h: for subtyping data types with
+			an additional template parameter for type distinction, 
+			useful for error-prevention and self-documentation.  
+
+
 2006-07-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-24-merged-cow-07:

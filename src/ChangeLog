@@ -3,6 +3,12 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-13	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-28:
+	  Added a few utility class templates to util/ library.  
+
+
 2006-07-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-27:

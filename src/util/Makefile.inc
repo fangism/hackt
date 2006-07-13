@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.15 2006/07/04 20:46:01 fang Exp $
+#	$Id: Makefile.inc,v 1.16 2006/07/13 22:21:38 fang Exp $
 #	vim: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -107,6 +107,7 @@ UTIL_HEADER_FILES = \
 	util/maplikeset.h \
 	util/member_saver_fwd.h \
 	util/member_saver.h \
+	util/member_select.h \
 	util/memory/deallocation_policy_fwd.h \
 	util/memory/deallocation_policy.h \
 	util/memory/chunk_map_pool_fwd.h \
@@ -161,6 +162,7 @@ UTIL_HEADER_FILES = \
 	util/static_assert.h \
 	util/static_trace.h \
 	util/string_fwd.h \
+	util/tagged_subtype.h \
 	util/template.h \
 	util/tokenize_fwd.h \
 	util/tokenize.h \
