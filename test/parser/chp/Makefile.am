@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2006/07/16 03:35:24 fang Exp $
+#	$Id: Makefile.am,v 1.9 2006/07/16 03:51:39 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -53,7 +53,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 003 004 019b \
-	035 055 056 059 061b 062
+	035 055 056 059 062
 
 # pending test cases
 EXTRA_DIST +=
