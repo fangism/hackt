@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2006-07-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-29:
+	  Updated test-series.sh.in to allow for compile tests with warnings.  
+	  test.cvsignore and Make.test-tail account for *.nowarn.  
+
+
 2006-07-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-29:

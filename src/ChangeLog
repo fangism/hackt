@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-30:
+	  Minor fixes to diagnostics for new operators, 
+		including a few test case updates.  
+	  New test cases for operators in meta-language and CHP.  
+	  Clean-up of parser/hackt-parse.yy.in.
+
+
 2006-07-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-29:

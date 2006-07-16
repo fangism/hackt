@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.14 2006/07/16 03:34:43 fang Exp $
+	$Id: expr.cc,v 1.15 2006/07/16 20:39:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1730,6 +1730,8 @@ arith_expr::check_nonmeta_expr(const context& c) const {
 	const count_ptr<bool_expr> rb(ro.is_a<bool_expr>());
 	const char ch = op->text[0];
 	if (li && ri) {
+		return return_type(new entity::int_arith_expr(li, ch, ri));
+	} else if (lb && rb) {
 		// we'll forgive using the wrong operator for now...
 		switch (ch) {
 		case '&':
@@ -1745,20 +1747,14 @@ arith_expr::check_nonmeta_expr(const context& c) const {
 				<< where(*op) << endl;
 			return return_type(new entity::bool_logical_expr(lb, "!=", rb));
 		default:
-			return return_type(
-				new entity::int_arith_expr(li, ch, ri));
+			cerr << "ERROR: unrecognized operator \'" << op->text
+				<< "\' at " << where(*op) << endl;
+			return return_type(NULL);
 		}
 	} else {
-		static const char err_str[] =
-			"ERROR: int_arith_expr expected an int, but got a ";
-		if (!li) {
-			lo->what(cerr << err_str) <<
-				" at " << where(*l) << endl;
-		}
-		if (!ri) {
-			ro->what(cerr << err_str) <<
-				" at " << where(*r) << endl;
-		}
+		cerr << "ERROR: int_arith_expr expected ints, but got:\n\t";
+		lo->what(cerr) << " at " << where(*l) << "\n\t";
+		ro->what(cerr) << " at " << where(*r) << endl;
 		return return_type(NULL);
 	}
 }	// end method arith_expr::check_nonmeta_expr

@@ -1,0 +1,129 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
+	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	CHPrecv_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	44	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	28
+	47	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	nnegatex	0	#HEAD#	#TAIL#	13
+	53	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	57	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	60	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	62	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    foo = process-definition (defined) foo(
+        chan?(int<32>) A
+        chan?(int<32>) B
+        chan!(int<32>) C
+        chan!(int<32>) D
+        chan!(int<32>) E
+        chan!(int<32>) F
+      )
+      In definition "foo", we have: {
+      Instances:
+        A = chan?(int<32>) A
+        B = chan?(int<32>) B
+        C = chan!(int<32>) C
+        D = chan!(int<32>) D
+        E = chan!(int<32>) E
+        F = chan!(int<32>) F
+        a = int<32> a
+        b = int<32> b
+        z = int<32> z
+      unroll sequence: 
+        chan?(int<32>) A
+        chan?(int<32>) B
+        chan!(int<32>) C
+        chan!(int<32>) D
+        chan!(int<32>) E
+        chan!(int<32>) F
+        int<32> a
+        int<32> b
+        int<32> z
+      chp:
+        concurrent: {
+          *[
+            sequential: {
+              concurrent: {
+                A?(a)
+                B?(b)
+              }
+              z := a^b
+              concurrent: {
+                C!(z)
+                D!(~z)
+                E!(a&b)
+                F!(a|b)
+              }
+            }
+          ]
+        }
+      }
+
+}
+
+Created state:
+

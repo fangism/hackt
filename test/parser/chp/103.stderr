@@ -1,0 +1,3 @@
+WARNING: Use '!=' for logical-XOR on bools.  [11:11]
+WARNING: Use '&&' for logical-AND on bools.  [12:24]
+WARNING: Use '||' for logical-OR on bools.  [12:35]

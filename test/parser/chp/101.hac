@@ -1,0 +1,16 @@
+// "101.hac"
+// copy-modified from "100.hac"
+// testing use of (wrong) bitwise operators
+// should pass, but begrudgingly with warnings
+
+defproc foo(chan?(int) A, B; chan!(int) C, D, E, F) {
+	int a, b, z;
+	chp {
+		*[
+			A?(a),B?(b);
+			z := a^b;
+			C!(z), D!(~z), E!(a && b), F!(a || b)
+		]
+	}
+}
+

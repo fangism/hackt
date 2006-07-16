@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2006/07/16 03:51:39 fang Exp $
+#	$Id: Makefile.am,v 1.10 2006/07/16 20:40:03 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -24,7 +24,8 @@ HACKT_PARSE_TEST_PASSES = \
 	060 061 063 064 065 066 069 \
 	070 074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
-	090 091 092 093 094 097
+	090 091 092 093 094 097 098 099 \
+	100 101 102 103
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -42,7 +43,8 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	064 \
 	074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
-	090 091 092 093 094 097
+	090 091 092 093 094 097 098 099 \
+	100 101 102 103
 
 # TODO: alloc phase
 # several tests are not ready because we haven't defined
@@ -56,7 +58,7 @@ BISON_OUTPUTS += 001 003 004 019b \
 	035 055 056 059 062
 
 # pending test cases
-EXTRA_DIST +=
+EXTRA_DIST += 101.stderr 103.stderr
 
 include $(top_srcdir)/test/Make.test-tail
 

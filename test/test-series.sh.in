@@ -1,7 +1,7 @@
 #!@SH_PATH@
 # "test-series.sh.in"
 # convenience script for running a sequence of tests on one input file.
-#	$Id: test-series.sh.in,v 1.8 2006/07/16 03:35:03 fang Exp $
+#	$Id: test-series.sh.in,v 1.9 2006/07/16 20:39:55 fang Exp $
 # This file originally came from "test-series.sh" in revision prehistory.  
 
 # usage: pass in the root names of the test cases (without the .hac extension)
@@ -14,7 +14,8 @@ do
 	fi
 	@ECHO@ $t.hacktcmpltest
 	./$t.hacktcmpltest
-	if test $? -eq 0 || test ! -s $t.test
+	@GREP@ -v "^WARNING" $t.test > $t.test.nowarn
+	if test ! -s $t.test.nowarn
 	then
 		if test ! -f $t.hacktobjtest
 		then
@@ -71,6 +72,7 @@ do
 			./$t.hacktcflattest
 		fi
 	fi
+	rm -f $t.test.nowarn
 done
 
 

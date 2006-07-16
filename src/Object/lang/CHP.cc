@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.9 2006/07/16 03:34:53 fang Exp $
+	$Id: CHP.cc,v 1.10 2006/07/16 20:39:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -449,10 +449,13 @@ guarded_action::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const this_type>& p) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
-	const guard_ptr_type g(guard->unroll_resolve_copy(c, guard));
-	if (!g) {
-		cerr << "Error resolving guard expression." << endl;
-		return unroll_return_type(NULL);
+	guard_ptr_type g(NULL);
+	if (guard) {
+		g = guard->unroll_resolve_copy(c, guard);
+		if (!g) {
+			cerr << "Error resolving guard expression." << endl;
+			return unroll_return_type(NULL);
+		}
 	}
 	const action_ptr_type a(stmt->unroll_resolve_copy(c, stmt));
 	if (!a) {

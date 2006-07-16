@@ -1,0 +1,16 @@
+// "098.hac"
+// copy-modified from "097.hac"
+// testing concurrent selections
+
+defproc foo() {
+	bool x, z;
+	int y, w;
+	chp {
+		*[[x -> y:=y+1 [] else -> y:=y-1],
+			[z -> w:=w+1 [] else -> w:=w-1]
+		]
+	}
+}
+
+foo f;
+

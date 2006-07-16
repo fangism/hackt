@@ -1,0 +1,12 @@
+// "120.hac"
+// copy-modified from "119.hac"
+// testing bitwise operators -- should pass
+
+pint x[2];
+pint a = ~0x0ee0;
+x[0] = 0xfeed;
+x[1] = 0xb00f;
+pint y = (x[0] & ~0x0ee0);
+pint z = (0xdead | x[1]);
+pint w = (y ^ z);
+

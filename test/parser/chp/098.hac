@@ -1,0 +1,13 @@
+// "098.hac"
+// copy-modified from "097.hac"
+// testing concurrent statements with sequential groupings
+
+defproc foo() {
+	int x, y, z, w;
+	chp {
+		*[{x:=y;y:=y+1},{z:=w;w:=w+1}]
+	}
+}
+
+foo f;
+

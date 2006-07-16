@@ -55,6 +55,7 @@ core.*
 *.sprsdiff
 *-dump
 *-diff
+*.nowarn
 ignore
 Makefile
 Makefile.in

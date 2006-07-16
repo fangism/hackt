@@ -1,0 +1,16 @@
+// "103.hac"
+// copy-modified from "102.hac"
+// testing use of (wrong) logical operators
+// should pass, but begrudgingly with warnings
+
+defproc foo(chan?(bool) A, B; chan!(bool) C, D, E, F) {
+	bool a, b, y, z;
+	chp {
+		*[
+			A?(a),B?(b);
+			z := a ^ b;
+			C!(z), D!(~z), E!(a & b), F!(a | b)
+		]
+	}
+}
+

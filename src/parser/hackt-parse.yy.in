@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.14 2006/07/16 03:34:54 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.15 2006/07/16 20:39:50 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -302,7 +302,6 @@ extern const char* const yyrule[];
 
 	expr*			_expr;
 	inst_ref_expr*		_inst_ref_expr;
-/*	paren_expr*		_paren_expr;	*/
 	qualified_id*		_qualified_id;
 	id_expr*		_id_expr;
 
@@ -346,7 +345,6 @@ extern const char* const yyrule[];
 	CHP::metaloop_selection*	_chp_metaloop_selection;
 	CHP::guarded_command*	_chp_guarded_command;
 	CHP::else_clause*	_chp_else_clause;
-/*	CHP::comm_list*		_chp_comm_list;		*/
 	CHP::communication*	_chp_communication;
 	CHP::send*		_chp_send;
 	CHP::receive*		_chp_receive;
@@ -585,7 +583,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_type_completion_statement>	instance_type_completion_statement
 %type	<_type_completion_connection_statement>	instance_type_completion_connection_statement
 /* %type	<_instance_alias>	instance_alias	*/
-/* %type	<_alias_list>	rvalue_optional_alias_list */
 %type	<_alias_list>	alias_list nonempty_alias_list
 %type	<_expr_list>	connection_actuals_list
 %type	<_guarded_definition_body_list>	guarded_definition_body_list
@@ -610,8 +607,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_chp_else_clause>	chp_else_clause
 %type	<_chp_binary_assignment>	chp_binary_assignment
 %type	<_chp_bool_assignment>	chp_bool_assignment
-/* %type	<_chp_comm_list>	chp_comm_list	*/
-/* %type	<_chp_communication>	chp_comm_action	*/
 %type	<_chp_send>	chp_send
 %type	<_chp_receive>	chp_recv
 %type	<_expr>		chp_guard_expr
@@ -620,7 +615,8 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>		chp_paren_add_expr chp_shift_expr chp_relational_expr
 %type	<_expr>		chp_logical_and_expr chp_logical_or_expr chp_not_expr
 /* %type	<_expr>		chp_xor_expr */
-%type	<_expr>		chp_bitwise_and_expr chp_bitwise_xor_expr chp_bitwise_or_expr
+%type	<_expr>		chp_bitwise_and_expr chp_bitwise_xor_expr
+%type	<_expr>		chp_bitwise_or_expr
 %type	<_hse_stmt_list>	hse_body
 %type	<_hse_stmt_list>	full_hse_body_item_list
 %type	<_hse_stmt>	full_hse_body_item hse_body_item
@@ -650,17 +646,16 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_spec_directive_list>	spec_body
 %type	<_spec_directive>	spec_item spec_directive
 %type	<_expr>	paren_expr expr
-/* %type	<n>	primary_expr */
 %type	<_expr>	literal
 %type	<_id_expr>	id_expr
 %type	<_qualified_id>	qualified_id absolute_id relative_id
-%type	<_inst_ref_expr_list>	member_index_expr_list member_index_expr_list_in_parens
+%type	<_inst_ref_expr_list>	member_index_expr_list
+%type	<_inst_ref_expr_list>	member_index_expr_list_in_parens
 %type	<_inst_ref_expr_list>	mandatory_member_index_expr_list
 %type	<_inst_ref_expr_list>	mandatory_member_index_expr_list_in_parens
 %type	<_inst_ref_expr_list>	grouped_reference_list
 %type	<_inst_ref_expr_list>	grouped_reference_list_in_parens
 %type	<_expr_list>	expr_optional_list expr_optional_list_in_angles
-/* %type	<_expr_list>	shift_expr_list */
 %type	<_expr_list>	expr_list_in_angles
 %type	<_expr_list>	expr_list_in_angles_optional
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
@@ -696,7 +691,6 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr>		complex_aggregate_reference
 %type	<_expr>		optional_complex_aggregate_reference
 %type	<_expr>		complex_expr_term
-/* %type	<_expr_list>	complex_expr_term_list */
 %type	<_array_concatenation>		array_concatenation
 /* %type	<_loop_concatenation>		loop_concatenation	*/
 %type	<_array_construction>		array_construction
@@ -765,12 +759,6 @@ body
 		{ $$ = $1; $1->push_back($2); }
 	| body_item
 		{ $$ = new root_body($1); }
-/***
-	| body import_item
-		{ $$ = $1; }
-	| import_item
-		{ $$ = new root_body(); }
-***/
 	;
 
 body_item
@@ -1125,13 +1113,6 @@ base_data_type
 /* ever need user-defined types? eventually...
 	optional parens get confused with template-parameters
 	going to use angle brackets <> in the template-fashion */
-/* BAD: eliminate this special case, let type-checker handle */
-/***
-	: INT_TYPE '<' INT '>'
-		{ $$ = new data_type_base($1, 
-			(new expr_list($3))->wrap($2, $4));
-		}
-***/
 	: INT_TYPE
 		{ $$ = $1; }
 	| BOOL_TYPE
@@ -1255,10 +1236,6 @@ data_param_id
 	/** really, this should be formal */
 	: ID optional_dense_range_list
 		{ $$ = new data_param_id($1, $2); }
-/** archaic
-		{ $$ = ($2) ? new instance_array($1, $2)
-			: new instance_base($1); }
-**/
 	;
 
 
@@ -1286,7 +1263,7 @@ optional_definition_body
 /*
 // considering splitting declarations from connection, e.g.
 //		// declare first
-// myprocesstype<template-params> foo[N,M];		// may be ranges as well
+// myprocesstype<template-params> foo[N,M];	// may be ranges as well
 // foo[i,j](port-actuals);	// inside some for-loop, presumably
 //		// then sparse instantiation connects and assigns
 //
@@ -1300,14 +1277,9 @@ instance_item
 	| connection_statement { $$ = $1; }	/* connection of ports */
 	| instance_type_completion_statement { $$ = $1; }
 	| instance_type_completion_connection_statement { $$ = $1; }
-/*	| alias_list ';'	*/
+	/* covers alias connection and parameter assignments */
 	| nonempty_alias_list ';'
 		{ $$ = $1; DELETE_TOKEN($2); }
-/**
-	| alias_list '=' expr ';'
-		{ $$ = $1; APPEND_LIST($1, $2, $3); DELETE_TOKEN($4); }
-**/
-			/* alias connection */
 	| loop_instantiation { $$ = $1; }
 	| conditional_instantiation { $$ = $1; }
 	;
@@ -1350,9 +1322,7 @@ instance_id_item
 	| ID optional_template_arguments_in_angles connection_actuals_list
 		{ $$ = new instance_connection($1, $2, $3); }
 	/* instance alias or parameter assignment */
-	| ID optional_template_arguments_in_angles
-	  /* '=' rvalue_optional_alias_list */
-	  '=' alias_list
+	| ID optional_template_arguments_in_angles '=' alias_list
 		{ WRAP_LIST($3, $4, NULL);
 		  $$ = new instance_alias($1, $2, $4); }
 	;
@@ -1380,16 +1350,6 @@ instance_type_completion_connection_statement
 		  DELETE_TOKEN($4); }
 	;
 
-/* note that expr can be just another member_index_expr */
-/**
-rvalue_optional_alias_list
-	: alias_list '=' expr
-		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-	| expr
-		{ $$ = new alias_list($1); }
-	;
-**/
-
 /* minimum of LHS and RHS */
 nonempty_alias_list
 	: nonempty_alias_list '=' complex_aggregate_reference
@@ -1411,8 +1371,6 @@ alias_list
 
 /* allowed to be missing actuals */
 connection_actuals_list
-	/* down-cast to more specific type?  internal to consumer */
-/*	: member_index_expr_list_in_parens	*/
 	: '(' complex_aggregate_reference_list ')'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
@@ -1484,13 +1442,8 @@ full_chp_body_item_list
 */
 
 full_chp_body_item
-	/* expr_in_braces are assertions */
-/*
-//	: optional_expr_in_braces chp_body_item optional_expr_in_braces
-	// temporarily simplify
-*/
+	/* expr_in_braces are assertions (disabled for now) */
 	: chp_concurrent_group { $$ = $1; }
-/*	| chp_body_item	*/
 	;
 
 chp_body_item
@@ -1502,10 +1455,6 @@ chp_body_item
 	| chp_bool_assignment { $$ = $1; }
 	| chp_send { $$ = $1; }
 	| chp_recv { $$ = $1; }
-/*	| binary_assignment { $$ = new CHP::assignment($1); } 	*/
-/*	| unary_assignment { $$ = new CHP::incdec_stmt($1); }	*/
-/*	| chp_comm_list { $$ = $1; }			*/
-/*	| SKIP { $$ = new CHP::skip($1); }		*/
 	| LOG expr_list_in_parens
 		{ $$ = new CHP::log($1, $2); }
 	| chp_metaloop_selection { $$ = $1; }
@@ -1727,13 +1676,6 @@ chp_bool_assignment
 	/* could borrow from prs: dir */
 	;
 
-/***
-chp_concurrent_group_in_parens
-	: '(' chp_concurrent_group ')'
-		{ $$ = $1; WRAP_LIST($1, $2, $3); }
-	;
-***/
-
 chp_concurrent_item
 	: chp_body_item { $$ = $1; }
 	| chp_sequence_group { $$ = $1; }
@@ -1748,26 +1690,8 @@ chp_concurrent_group
 		{ $$ = new CHP::stmt_list($1); $$->set_concurrent(true); }
 	;
 
-	/* gives comma-separated communications precedence */
-/***
-chp_comm_list
-	: chp_comm_list ',' chp_comm_action
-		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-	| chp_comm_action
-		{ $$ = new CHP::comm_list($1); }
-	;
-
-chp_comm_action
-	: chp_send { $$ = $1; }
-	| chp_recv { $$ = $1; }
-	;
-***/
-
 chp_send
-/*
-	// for now, require parens like function-call to
-	// disambiguate between ( expr ) and ( expr_list )
-*/
+	/* parens are now required */
 	: member_index_expr '!' expr_list_in_parens
 		{ $$ = new CHP::send($1, $2, $3); }
 	;
@@ -1792,11 +1716,6 @@ full_hse_body_item_list
 	;
 
 full_hse_body_item
-/*
-	// temporary removal of assertions
-//	: optional_expr_in_braces hse_body_item optional_expr_in_braces
-//		{ $$ = $2; }
-*/
 	: hse_body_item
 	;
 
@@ -1915,21 +1834,8 @@ prs_macro
 		 * has to do with the current parser state skipping a 
 		 * reduction step.  
 		 */
-#if 0
-			excl_ptr<const token_identifier>
-				id = $1->extract_identifier();
-			if (!id) {
-				DELETE_TOKEN($1);
-				DELETE_TOKEN($2);
-				$$ = NULL;
-				yyerror("prs_macro : ID mandatory_member_index_expr_list_in_parens");
-			} else {
-				$$ = new PRS::macro(id, $2);
-			}
-#else
 			/* do parse-checking during next pass */
 			$$ = new PRS::macro($1, $2);
-#endif
 		}
 	;
 
@@ -2061,7 +1967,6 @@ spec_item
 /* identical to prs_macro, but we call it a directive */
 spec_directive
 	: ID expr_list_in_angles_optional
-		/* mandatory_member_index_expr_list_in_parens */
 		grouped_reference_list_in_parens
 		{ $$ = new SPEC::directive($1, $2, $3); }
 	;
@@ -2093,17 +1998,6 @@ paren_expr
 	: '(' expr ')'
 		{ $$ = $2; DELETE_TOKEN($1); DELETE_TOKEN($3); }
 	;
-
-/***
-primary_expr
-	// all default actions: $$ = $1;
-	: literal
-// split out, so member_index_expr doesn't recur, 
-// now unary_expr must accept paren_expr
-//	| '(' expr ')'
-	| id_expr
-	;
-***/
 
 literal
 	/* all default actions, all are expr subclasses */
@@ -2438,14 +2332,6 @@ expr_optional_list_in_angles
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
-/***
-shift_expr_list
-	: shift_expr_list ',' expr
-		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-	| expr { $$ = new expr_list($1); }
-	;
-***/
-
 expr_optional_list
 	: expr_optional_list ',' optional_complex_expr 
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
@@ -2491,14 +2377,6 @@ optional_dense_range_list
 	|	{ $$ = NULL; }
 	;
 
-/** not needed
-optional_sparse_range_list
-	: sparse_range_list
-		{ $$ = $1; }
-	|	{ $$ = NULL; }
-	;
-**/
-
 dense_range_list
 	: dense_range_list bracketed_dense_range
 		{ $$ = $1; $$->push_back($2); }
@@ -2543,19 +2421,13 @@ array_concatenation
 complex_expr_term
 	: array_construction { $$ = $1; }
 /*	| loop_concatenation { $$ = $1; }	*/
-/*	| simple_expr { $$ = $1; }		*/
-	| expr { $$ = $1; }			/* S/R conflict on '<' */
-/*	| shift_expr { $$ = $1; }	old conflict-free resolution */
+	| expr { $$ = $1; }		/* S/R conflict on '<' fixed */
 	;
 
 /* building up to higher-dimensions */
 array_construction
 	: '{' mandatory_complex_aggregate_reference_list '}'
 		{ $$ = new array_construction($1, $2, $3); }
-/**
-	: '{' array_concatenation '}'
-		{ $$ = new array_construction($1, $2, $3); }
-**/
 	;
 
 /**
