@@ -2,5 +2,4 @@ Type mismatch in reference 1 of receive list.
 	got: int<32>
 	expected: int<6>
 At least one type error in expr-list in [7:4..9]
-ERROR in one of the communcation actions in [7:2..9]
 ERROR: at least one error in CHP body.

@@ -1,0 +1,14 @@
+// "061b.hac"
+// copy-modified from "061.hac"
+// fails: rejecting bitwise-and expression on bools
+
+defproc foo(chan?(bool) A, B, G; chan!(bool) Z) {
+bool a, b, g;
+chp {
+	*[ a -> B?(b)
+	[] ~a & b -> G?(g)
+	[] ~a & ~b & g -> Z!(true); A?(a)
+	]
+}
+}
+

@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.13 2006/06/26 01:46:48 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.14 2006/07/16 03:34:54 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -346,7 +346,7 @@ extern const char* const yyrule[];
 	CHP::metaloop_selection*	_chp_metaloop_selection;
 	CHP::guarded_command*	_chp_guarded_command;
 	CHP::else_clause*	_chp_else_clause;
-	CHP::comm_list*		_chp_comm_list;
+/*	CHP::comm_list*		_chp_comm_list;		*/
 	CHP::communication*	_chp_communication;
 	CHP::send*		_chp_send;
 	CHP::receive*		_chp_receive;
@@ -593,7 +593,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_language_body>	language_body
 %type	<_chp_stmt_list>	chp_body chp_body_optional
 %type	<_chp_stmt_list>	full_chp_body_item_list
+%type	<_chp_stmt_list>	chp_concurrent_group
+%type	<_chp_stmt_list>	chp_sequence_group
 %type	<_chp_stmt>	full_chp_body_item chp_body_item
+%type	<_chp_stmt>	chp_concurrent_item
 %type	<_chp_stmt>	chp_body_or_skip
 %type	<_chp_loop>	chp_loop
 %type	<_chp_do_until>	chp_do_until
@@ -607,15 +610,17 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_chp_else_clause>	chp_else_clause
 %type	<_chp_binary_assignment>	chp_binary_assignment
 %type	<_chp_bool_assignment>	chp_bool_assignment
-%type	<_chp_comm_list>	chp_comm_list
-%type	<_chp_communication>	chp_comm_action
+/* %type	<_chp_comm_list>	chp_comm_list	*/
+/* %type	<_chp_communication>	chp_comm_action	*/
 %type	<_chp_send>	chp_send
 %type	<_chp_receive>	chp_recv
 %type	<_expr>		chp_guard_expr
 %type	<_expr>		chp_unary_bool_expr chp_simple_bool_expr chp_unary_expr
 %type	<_expr>		chp_mult_expr chp_add_expr chp_add_expr_only
 %type	<_expr>		chp_paren_add_expr chp_shift_expr chp_relational_expr
-%type	<_expr>		chp_and_expr chp_xor_expr chp_or_expr chp_not_expr
+%type	<_expr>		chp_logical_and_expr chp_logical_or_expr chp_not_expr
+/* %type	<_expr>		chp_xor_expr */
+%type	<_expr>		chp_bitwise_and_expr chp_bitwise_xor_expr chp_bitwise_or_expr
 %type	<_hse_stmt_list>	hse_body
 %type	<_hse_stmt_list>	full_hse_body_item_list
 %type	<_hse_stmt>	full_hse_body_item hse_body_item
@@ -654,9 +659,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_inst_ref_expr_list>	mandatory_member_index_expr_list_in_parens
 %type	<_inst_ref_expr_list>	grouped_reference_list
 %type	<_inst_ref_expr_list>	grouped_reference_list_in_parens
-%type	<_expr_list>	shift_expr_optional_list shift_expr_optional_list_in_angles
-%type	<_expr_list>	shift_expr_list shift_expr_list_in_angles
-%type	<_expr_list>	shift_expr_list_in_angles_optional
+%type	<_expr_list>	expr_optional_list expr_optional_list_in_angles
+/* %type	<_expr_list>	shift_expr_list */
+%type	<_expr_list>	expr_list_in_angles
+%type	<_expr_list>	expr_list_in_angles_optional
 %type	<_inst_ref_expr>	optional_member_index_expr member_index_expr
 %type	<_inst_ref_expr>	relative_member_index_expr
 %type	<_inst_ref_expr>	grouped_reference
@@ -666,7 +672,7 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_member_expr>	member_expr local_member_expr
 %type	<_index_expr>	index_expr local_index_expr
 %type	<_expr>	multiplicative_expr additive_expr
-%type	<_expr> shift_expr optional_shift_expr
+%type	<_expr> shift_expr optional_complex_expr
 %type	<_expr>	relational_equality_expr and_expr
 %type	<_node_position>	relational_op
 %type	<_node_position>	muldiv_op
@@ -980,8 +986,11 @@ template_formal_id_default
 	around relational expressions, which covers arithmetic use of '>'.
 	Notice that below, shift_expr is the highest expression
 	before relational_expr.  
+	UPDATE: we've rewritten relational_equality_expr to only require
+		parenthesis around '<' and '>' expressions, to 'localize'
+		the parenthesization requirement.  
 **/
-	: ID optional_dense_range_list '=' shift_expr
+	: ID optional_dense_range_list '=' expr
 		{ $$ = new template_formal_id($1, $2, $3, $4); }
 	;
 
@@ -1359,13 +1368,13 @@ connection_statement
 
 /* completing the relaxed template arguments of an instance */
 instance_type_completion_statement
-	: index_expr shift_expr_optional_list_in_angles ';'
+	: index_expr expr_optional_list_in_angles ';'
 		{ $$ = new type_completion_statement($1, $2);
 		  DELETE_TOKEN($3); }
 	;
 
 instance_type_completion_connection_statement
-	: index_expr shift_expr_optional_list_in_angles 
+	: index_expr expr_optional_list_in_angles 
 		connection_actuals_list ';'
 		{ $$ = new type_completion_connection_statement($1, $2, $3);
 		  DELETE_TOKEN($4); }
@@ -1454,6 +1463,13 @@ chp_body_or_skip
 	| SKIP { $$ = new CHP::skip($1); }
 	;
 
+
+/* need braces to group b/c paren wrapping causes S/R conflict on '+','-' */
+chp_sequence_group
+	: '{' full_chp_body_item_list '}'
+		{ $$ = $2; WRAP_LIST($1, $2, $3); }
+	;
+
 full_chp_body_item_list
 	: full_chp_body_item_list ';' full_chp_body_item
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
@@ -1473,7 +1489,8 @@ full_chp_body_item
 //	: optional_expr_in_braces chp_body_item optional_expr_in_braces
 	// temporarily simplify
 */
-	: chp_body_item
+	: chp_concurrent_group { $$ = $1; }
+/*	| chp_body_item	*/
 	;
 
 chp_body_item
@@ -1483,9 +1500,11 @@ chp_body_item
 	| chp_wait { $$ = $1; }
 	| chp_binary_assignment { $$ = $1; }
 	| chp_bool_assignment { $$ = $1; }
+	| chp_send { $$ = $1; }
+	| chp_recv { $$ = $1; }
 /*	| binary_assignment { $$ = new CHP::assignment($1); } 	*/
 /*	| unary_assignment { $$ = new CHP::incdec_stmt($1); }	*/
-	| chp_comm_list { $$ = $1; }
+/*	| chp_comm_list { $$ = $1; }			*/
 /*	| SKIP { $$ = new CHP::skip($1); }		*/
 	| LOG expr_list_in_parens
 		{ $$ = new CHP::log($1, $2); }
@@ -1567,13 +1586,13 @@ chp_guarded_command
 
 /* must be boolean, literals must not be aggregates */
 chp_guard_expr
-	: chp_or_expr
+	: chp_logical_or_expr
 	;
 
 chp_unary_bool_expr
 	: chp_simple_bool_expr
 	| chp_not_expr
-	| '(' chp_or_expr ')'
+	| '(' chp_logical_or_expr ')'
 		{ DELETE_TOKEN($1); DELETE_TOKEN($3); $$ = $2; }
 	;
 
@@ -1626,6 +1645,7 @@ chp_shift_expr
 		{ $$ = new arith_expr($1, $2, $3); }
 	;
 
+/* HERE do same transformation as meta_expr */
 chp_relational_expr
 	: chp_shift_expr relational_op chp_shift_expr
 		{ $$ = new relational_expr($1, $2, $3); }
@@ -1633,25 +1653,47 @@ chp_relational_expr
 	| chp_unary_bool_expr
 	;
 
-/* uses '&' and '|' for logical operations (not C-style) */
-chp_and_expr
+chp_bitwise_and_expr
 	: chp_relational_expr
-	| chp_and_expr '&' chp_relational_expr
+	| chp_bitwise_and_expr '&' chp_relational_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+chp_bitwise_xor_expr
+	: chp_bitwise_and_expr
+	| chp_bitwise_xor_expr '^' chp_bitwise_and_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+chp_bitwise_or_expr
+	: chp_bitwise_xor_expr
+	| chp_bitwise_or_expr '|' chp_bitwise_xor_expr
+		{ $$ = new arith_expr($1, $2, $3); }
+	;
+
+/* uses '&' and '|' for logical operations (not C-style) */
+chp_logical_and_expr
+	: chp_bitwise_or_expr
+	| chp_logical_and_expr LOGICAL_AND chp_bitwise_or_expr
 		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
+/**
+ * use != as boolean logical xor
 chp_xor_expr
-	: chp_and_expr
-	| chp_xor_expr '^' chp_and_expr
+	: chp_logical_and_expr
+	| chp_xor_expr '^' chp_logical_and_expr
+		{ $$ = new logical_expr($1, $2, $3); }
+	;
+**/
+
+chp_logical_or_expr
+	: chp_logical_and_expr
+	| chp_logical_or_expr LOGICAL_OR chp_logical_and_expr
 		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
-chp_or_expr
-	: chp_xor_expr
-	| chp_or_expr '|' chp_xor_expr
-		{ $$ = new logical_expr($1, $2, $3); }
-	;
-
+/* negation is overloaded for both bool and ints (bitwise) */
 chp_not_expr
 	: '~' chp_unary_bool_expr
 		{ $$ = new prefix_expr($1, $2); }
@@ -1685,8 +1727,30 @@ chp_bool_assignment
 	/* could borrow from prs: dir */
 	;
 
-chp_comm_list
+/***
+chp_concurrent_group_in_parens
+	: '(' chp_concurrent_group ')'
+		{ $$ = $1; WRAP_LIST($1, $2, $3); }
+	;
+***/
+
+chp_concurrent_item
+	: chp_body_item { $$ = $1; }
+	| chp_sequence_group { $$ = $1; }
+	;
+
+/* require concurrent list to have at least two items? */
+chp_concurrent_group
+	: chp_concurrent_group ',' chp_concurrent_item
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| chp_concurrent_item
+
+		{ $$ = new CHP::stmt_list($1); $$->set_concurrent(true); }
+	;
+
 	/* gives comma-separated communications precedence */
+/***
+chp_comm_list
 	: chp_comm_list ',' chp_comm_action
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| chp_comm_action
@@ -1697,6 +1761,7 @@ chp_comm_action
 	: chp_send { $$ = $1; }
 	| chp_recv { $$ = $1; }
 	;
+***/
 
 chp_send
 /*
@@ -1834,7 +1899,7 @@ prs_body_item
 /* macros arguments are restricted to instance references for now */
 /* the argument list must also be non-empty */
 prs_macro
-	/* : ID shift_expr_list_in_angles_optional
+	/* : ID expr_list_in_angles_optional
 		mandatory_member_index_expr_list_in_parens
 		{ $$ = new PRS::macro($1, $3); DELETE_TOKEN($2); }
 	*/
@@ -1937,7 +2002,7 @@ prs_paren_expr
 	;
 
 prs_literal
-	: relative_member_index_expr shift_expr_list_in_angles_optional
+	: relative_member_index_expr expr_list_in_angles_optional
 		{ $$ = new PRS::literal($1, $2); }
 	;
 
@@ -1995,7 +2060,7 @@ spec_item
 
 /* identical to prs_macro, but we call it a directive */
 spec_directive
-	: ID shift_expr_list_in_angles_optional
+	: ID expr_list_in_angles_optional
 		/* mandatory_member_index_expr_list_in_parens */
 		grouped_reference_list_in_parens
 		{ $$ = new SPEC::directive($1, $2, $3); }
@@ -2203,7 +2268,20 @@ shift_expr
 
 relational_equality_expr
 	: shift_expr
-	| shift_expr relational_op shift_expr
+	/* parenthesis requires as a template disambiguator */
+	| '(' relational_equality_expr '<' shift_expr ')'
+		{ $$ = new relational_expr($2, $3, $4);
+			DELETE_TOKEN($1); DELETE_TOKEN($5); }
+	| '(' relational_equality_expr '>' shift_expr ')'
+		{ $$ = new relational_expr($2, $3, $4);
+			DELETE_TOKEN($1); DELETE_TOKEN($5); }
+	| relational_equality_expr LE shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
+	| relational_equality_expr GE shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
+	| relational_equality_expr EQUAL shift_expr
+		{ $$ = new relational_expr($1, $2, $3); }
+	| relational_equality_expr NOTEQUAL shift_expr
 		{ $$ = new relational_expr($1, $2, $3); }
 /*
 // can't cascade relational_expr
@@ -2211,6 +2289,7 @@ relational_equality_expr
 */
 	;
 
+/* phase out */
 relational_op
 	: '<'
 	| '>'
@@ -2220,37 +2299,42 @@ relational_op
 	| NOTEQUAL
 	;
 
+/* bit-wise and is arithmetic */
 and_expr
 	: relational_equality_expr
 	| and_expr '&' relational_equality_expr
-		{ $$ = new logical_expr($1, $2, $3); }
+		{ $$ = new arith_expr($1, $2, $3); }
 	;
 
+/* bit-wise xor is arithmetic */
 exclusive_or_expr
 	: and_expr
 	| exclusive_or_expr '^' and_expr
-		{ $$ = new logical_expr($1, $2, $3); }
+		{ $$ = new arith_expr($1, $2, $3); }
 	;
 
+/* bit-wise or is arithmetic */
 inclusive_or_expr
 	: exclusive_or_expr
 	| inclusive_or_expr '|' exclusive_or_expr
-		{ $$ = new logical_expr($1, $2, $3); }
+		{ $$ = new arith_expr($1, $2, $3); }
 	;
 
-/* short-circuit AND ? */
+/* short-circuit AND ? no, is commutative */
 logical_and_expr
 	: inclusive_or_expr
 	| logical_and_expr LOGICAL_AND inclusive_or_expr
 		{ $$ = new logical_expr($1, $2, $3); }
 	;
 
-/* short-circuit OR ? */
+/* short-circuit OR ? no, is commutative */
 logical_or_expr
 	: logical_and_expr
 	| logical_or_expr LOGICAL_OR logical_and_expr
 		{ $$ = new logical_expr($1, $2, $3); }
 	;
+
+/* no logical XOR, use !=(bool, bool) instead */
 
 /** forget conditional expressions for now
 conditional_expr
@@ -2317,7 +2401,7 @@ optional_expr_in_braces
 **/
 
 strict_relaxed_template_arguments
-	: shift_expr_optional_list_in_angles
+	: expr_optional_list_in_angles
 	  optional_template_arguments_in_angles
 /*		{ $$ = $1; DELETE_TOKEN($2); }	*/
 		{ $$ = new template_argument_list_pair($1, $2); }
@@ -2326,9 +2410,9 @@ strict_relaxed_template_arguments
 
 optional_template_arguments_in_angles
 /*	: member_index_expr_list_in_angles	*/
-/*	replaced with shift_expr_optional_list to eliminate S/R on '>' */
-/*	: shift_expr_optional_list_in_angles	*/
-	: shift_expr_list_in_angles
+/*	replaced with expr_optional_list to eliminate S/R on '>' */
+/*	: expr_optional_list_in_angles	*/
+	: expr_list_in_angles
 /*
 	if angles are given, then expressions are required because
 	relaxed template formals are forbidden from having default values.  
@@ -2338,35 +2422,38 @@ optional_template_arguments_in_angles
 	;
 
 /* used for paramterized macros and PRS literals */
-shift_expr_list_in_angles_optional
-	: shift_expr_list_in_angles { $$ = $1; }
+expr_list_in_angles_optional
+	: expr_list_in_angles { $$ = $1; }
 	| { $$ = NULL; }
 	;
 
-shift_expr_list_in_angles
-	: '<' shift_expr_list '>'
+expr_list_in_angles
+	/* : '<' shift_expr_list '>' */
+	: '<' expr_list '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
-shift_expr_optional_list_in_angles
-	: '<' shift_expr_optional_list '>'
+expr_optional_list_in_angles
+	: '<' expr_optional_list '>'
 		{ $$ = $2; WRAP_LIST($1, $2, $3); }
 	;
 
+/***
 shift_expr_list
-	: shift_expr_list ',' shift_expr
+	: shift_expr_list ',' expr
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-	| shift_expr { $$ = new expr_list($1); }
+	| expr { $$ = new expr_list($1); }
 	;
+***/
 
-shift_expr_optional_list
-	: shift_expr_optional_list ',' optional_shift_expr 
+expr_optional_list
+	: expr_optional_list ',' optional_complex_expr 
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
-	| optional_shift_expr { $$ = new expr_list($1); }
+	| optional_complex_expr { $$ = new expr_list($1); }
 	;
 
 /* now we allow aggregate expressions */
-optional_shift_expr
+optional_complex_expr
 /*	: shift_expr { $$ = $1; }	*/
 	: complex_expr_term { $$ = $1; }
 /* already covers shift_expr, defined below */
@@ -2457,8 +2544,8 @@ complex_expr_term
 	: array_construction { $$ = $1; }
 /*	| loop_concatenation { $$ = $1; }	*/
 /*	| simple_expr { $$ = $1; }		*/
-/*	| expr { $$ = $1; }			*/	// S/R conflict on '<'
-	| shift_expr { $$ = $1; }	/* conflict-free */
+	| expr { $$ = $1; }			/* S/R conflict on '<' */
+/*	| shift_expr { $$ = $1; }	old conflict-free resolution */
 	;
 
 /* building up to higher-dimensions */

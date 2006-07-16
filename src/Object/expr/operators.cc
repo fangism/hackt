@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.15 2006/07/04 07:25:57 fang Exp $
+ 	$Id: operators.cc,v 1.16 2006/07/16 03:34:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -41,6 +41,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/operator_precedence.h"
 #include "Object/persistent_type_hash.h"
 
+#include "util/numeric/sign_traits.h"
 #include "util/stacktrace.h"
 #include "util/qmap.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -92,6 +93,8 @@ using std::istream;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+using util::numeric::signed_type;
+using util::numeric::unsigned_type;
 
 //=============================================================================
 // class pint_unary_expr method definitions
@@ -147,10 +150,21 @@ pint_unary_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: we use unsigned bitwise operations.
+ */
+pint_unary_expr::value_type
+pint_unary_expr::evaluate(const op_type op, const value_type tmp) {
+	typedef	unsigned_type<value_type>::type		unsigned_value_type;
+	return (op == '-') ? -tmp : value_type(~unsigned_value_type(tmp));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pint_unary_expr::value_type
 pint_unary_expr::static_constant_value(void) const {
-	// depends on op
-	return - ex->static_constant_value();
+	// depends on op (only two possibilities)
+	const value_type tmp = ex->static_constant_value();
+	return evaluate(op, tmp);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -175,7 +189,7 @@ pint_unary_expr::unroll_resolve_value(const unroll_context& c,
 	value_type j;
 	NEVER_NULL(ex);
 	const good_bool ret(ex->unroll_resolve_value(c, j));
-	i = -j;		// regardless of ret
+	i = (op == '-') ? -j : ~j;		// regardless of ret
 	return ret;
 }
 
@@ -188,7 +202,7 @@ pint_unary_expr::resolve_value(value_type& i) const {
 	value_type j;
 	NEVER_NULL(ex);
 	const good_bool ret(ex->resolve_value(j));
-	i = -j;		// regardless of ret
+	i = (op == '-') ? -j : ~j;		// regardless of ret
 	return ret;
 }
 
@@ -223,8 +237,9 @@ pint_unary_expr::__unroll_resolve_rvalue(const unroll_context& c,
 		return return_type(
 			new pint_const(- pc->static_constant_value()));
 #else
+		const value_type tmp = ret->static_constant_value();
 		return return_type(
-			new pint_const(-ret->static_constant_value()));
+			new pint_const((op == '-') ? -tmp : ~tmp));
 #endif
 	} else {
 		// there is an error
@@ -331,6 +346,13 @@ preal_unary_expr::value_type
 preal_unary_expr::static_constant_value(void) const {
 	// depends on op
 	return - ex->static_constant_value();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+preal_unary_expr::value_type
+preal_unary_expr::evaluate(const op_type op, const value_type v) {
+	INVARIANT(op == '-');
+	return -v;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -499,9 +521,16 @@ pbool_unary_expr::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
+pbool_unary_expr::value_type
 pbool_unary_expr::static_constant_value(void) const {
-	return !ex->static_constant_value();
+	return evaluate(op, ex->static_constant_value());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pbool_unary_expr::value_type
+pbool_unary_expr::evaluate(const op_type op, const value_type v) {
+	INVARIANT(op == '~');
+	return !v;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -623,6 +652,12 @@ const minus<pint_value_type, pint_value_type>		pint_arith_expr::subtractor;
 const multiplies<pint_value_type, pint_value_type>	pint_arith_expr::multiplier;
 const divides<pint_value_type, pint_value_type>		pint_arith_expr::divider;
 const modulus<pint_value_type, pint_value_type>		pint_arith_expr::remainder;
+const shift_left<pint_value_type, pint_value_type>	pint_arith_expr::doubler;
+const shift_right<pint_value_type, pint_value_type>	pint_arith_expr::halver;
+const bitwise_and<pint_value_type, pint_value_type>	pint_arith_expr::masker;
+const bitwise_or<pint_value_type, pint_value_type>	pint_arith_expr::unmasker;
+const bitwise_xor<pint_value_type, pint_value_type>	pint_arith_expr::hasher;
+// and Donner and Blitzen, and Comet and Cupid, ...
 
 const pint_arith_expr::op_map_type
 pint_arith_expr::op_map;
@@ -663,6 +698,13 @@ pint_arith_expr::op_map_init(void) {
 	op_map_register('*', &multiplier, OP_PREC_TIMES);
 	op_map_register('/', &divider, OP_PREC_TIMES);
 	op_map_register('%', &remainder, OP_PREC_TIMES);
+	// short for "<<"
+	op_map_register('<', &doubler, OP_PREC_SHIFT);
+	// short for ">>"
+	op_map_register('>', &halver, OP_PREC_SHIFT);
+	op_map_register('&', &masker, OP_PREC_BITWISE_AND);
+	op_map_register('^', &hasher, OP_PREC_BITWISE_XOR);
+	op_map_register('|', &unmasker, OP_PREC_BITWISE_OR);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -706,7 +748,12 @@ pint_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 	const bool p = c.need_parentheses(oi.prec, a);
 	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
 	if (p) o << '(';
-	rx->dump(lx->dump(o, c) << oi.op, c);
+	lx->dump(o, c);
+	if (oi.op == '<' || oi.op == '>') {
+		o << oi.op;		// for "<<" and ">>", how cute...
+	}
+	o << oi.op;
+	rx->dump(o, c);
 	if (p) o << ')';
 	return o;
 #else
@@ -734,6 +781,23 @@ pint_arith_expr::static_constant_value(void) const {
 	const arg_type b = rx->static_constant_value();
 	// Oooooh, virtual operator dispatch!
 	return (*op)(a,b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_arith_expr::value_type
+pint_arith_expr::evaluate(const op_key_type o,
+		const value_type l, const value_type r) {
+	const op_type* op(op_map[o]);
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_arith_expr::value_type
+pint_arith_expr::evaluate(const op_type* op,
+		const value_type l, const value_type r) {
+	INVARIANT(op);
+	return (*op)(l,r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1043,9 +1107,27 @@ pint_relational_expr::static_constant_value(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_relational_expr::value_type
+pint_relational_expr::evaluate(const string& o, const value_type l, 
+		const value_type r) {
+	const op_type* const op(op_map[o]);
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_relational_expr::value_type
+pint_relational_expr::evaluate(const op_type* op, const value_type l, 
+		const value_type r) {
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_relational_expr::must_be_equivalent(const pbool_expr& b) const {
-	const pint_relational_expr* const re = IS_A(const pint_relational_expr*, &b);
+	const pint_relational_expr* const
+		re = IS_A(const pint_relational_expr*, &b);
 	if (re) {
 		return (op == re->op) &&
 			lx->must_be_equivalent(*re->lx) &&
@@ -1302,6 +1384,23 @@ preal_arith_expr::static_constant_value(void) const {
 	const arg_type b = rx->static_constant_value();
 	// Oooooh, virtual operator dispatch!
 	return (*op)(a,b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+preal_arith_expr::value_type
+preal_arith_expr::evaluate(const op_key_type o,
+		const value_type l, const value_type r) {
+	const op_type* op(op_map[o]);
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+preal_arith_expr::value_type
+preal_arith_expr::evaluate(const op_type* op,
+		const value_type l, const value_type r) {
+	INVARIANT(op);
+	return (*op)(l,r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1603,9 +1702,27 @@ preal_relational_expr::static_constant_value(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+preal_relational_expr::value_type
+preal_relational_expr::evaluate(const string& o, const value_type l, 
+		const value_type r) {
+	const op_type* const op(op_map[o]);
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+preal_relational_expr::value_type
+preal_relational_expr::evaluate(const op_type* op, const value_type l, 
+		const value_type r) {
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 preal_relational_expr::must_be_equivalent(const pbool_expr& b) const {
-	const preal_relational_expr* const re = IS_A(const preal_relational_expr*, &b);
+	const preal_relational_expr* const
+		re = IS_A(const preal_relational_expr*, &b);
 	if (re) {
 		return (op == re->op) &&
 			lx->must_be_equivalent(*re->lx) &&
@@ -1749,6 +1866,9 @@ pbool_logical_expr::op_or;
 const util::logical_xor<pbool_value_type, pbool_value_type>
 pbool_logical_expr::op_xor;
 
+const util::logical_xnor<pbool_value_type, pbool_value_type>
+pbool_logical_expr::op_xnor;
+
 const pbool_logical_expr::op_map_type
 pbool_logical_expr::op_map;
 
@@ -1779,13 +1899,14 @@ pbool_logical_expr::op_map_register(const string& s, const op_type* o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Static initialization of registered logicalmetic operators.  
+	Static initialization of registered logical operators.  
  */
 size_t
 pbool_logical_expr::op_map_init(void) {
 	op_map_register("&&", &op_and);
 	op_map_register("||", &op_or);
-	op_map_register("^", &op_xor);
+	op_map_register("!=", &op_xor);
+	op_map_register("==", &op_xnor);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -1855,6 +1976,23 @@ pbool_logical_expr::static_constant_value(void) const {
 	const arg_type a = lx->static_constant_value();
 	const arg_type b = rx->static_constant_value();
 	return (*op)(a,b);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pbool_logical_expr::value_type
+pbool_logical_expr::evaluate(const string& o, 
+		const value_type l, const value_type r) {
+	const op_type* op(op_map[o]);
+	INVARIANT(op);
+	return (*op)(l,r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pbool_logical_expr::value_type
+pbool_logical_expr::evaluate(const op_type* op, 
+		const value_type l, const value_type r) {
+	INVARIANT(op);
+	return (*op)(l,r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

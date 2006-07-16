@@ -3,7 +3,7 @@
 	Class definitions for integer negation expression.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_negation_expr.h,v 1.7 2006/06/26 01:46:00 fang Exp $
+	$Id: int_negation_expr.h,v 1.8 2006/07/16 03:34:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_NEGATION_EXPR_H__
@@ -27,11 +27,15 @@ public:
 	typedef	count_ptr<const int_expr>	operand_ptr_type;
 private:
 	operand_ptr_type		ex;
+	/**
+		'-' for arithmetic negation
+		'~' for bitwise negation
+	 */
+	char				op;
 private:
 	int_negation_expr();
 public:
-	explicit
-	int_negation_expr(const operand_ptr_type&);
+	int_negation_expr(const operand_ptr_type&, const char);
 
 	~int_negation_expr();
 

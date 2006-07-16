@@ -7,7 +7,7 @@ chp {
 		A?(a), B?(b), G?(g);
 		[a -> Z!(false)
 		: b -> Z!(true)
-		: g -> Z!(a^b)
+		: g -> Z!(a!=b)		// same as XOR(a,b)
 		]
 	]
 }

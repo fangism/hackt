@@ -14,6 +14,7 @@ state	value
 in state #STATE#, possible rules are:
 	language_body: CHP_LANG '{' . chp_body '}'  (#RULE#)
 acceptable tokens are: 
+	'{' (shift)
 	'[' (shift)
 	ID (shift)
 	SCOPE (shift)

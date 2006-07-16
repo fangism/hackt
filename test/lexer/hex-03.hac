@@ -1,0 +1,10 @@
+// "hex-03.hac"
+// copy-modified from "hex-02.hac"
+// testing hexadecimal lexing
+// should pass on bad constant
+
+pint x = 0xf00d;
+pint y = 0xBeef;
+pint z = 0xdead;
+pint w = x + 0xyzw;	// bad identifier
+

@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.11 2006/07/04 07:26:02 fang Exp $
+	$Id: pint_arith_expr.h,v 1.12 2006/07/16 03:34:50 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -40,11 +40,17 @@ public:
 	static const multiplies<value_type, arg_type>	multiplier;
 	static const divides<value_type, arg_type>	divider;
 	static const modulus<value_type, arg_type>	remainder;
+	static const shift_left<value_type, arg_type>	doubler;
+	static const shift_right<value_type, arg_type>	halver;
+	static const bitwise_and<value_type, arg_type>	masker;
+	static const bitwise_or<value_type, arg_type>	unmasker;
+	static const bitwise_xor<value_type, arg_type>	hasher;
 
 private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	expr_detail::op_info		op_info;
-	typedef	default_qmap<char, const op_type*>::type
+	typedef	char				op_key_type;
+	typedef	default_qmap<op_key_type, const op_type*>::type
 						op_map_type;
 	typedef	default_qmap<const op_type*, op_info>::type
 						reverse_op_map_type;
@@ -100,6 +106,14 @@ public:
 
 	value_type
 	static_constant_value(void) const;
+
+	static
+	value_type
+	evaluate(const op_key_type, const value_type, const value_type);
+
+	static
+	value_type
+	evaluate(const op_type*, const value_type, const value_type);
 
 	bool
 	must_be_equivalent(const pint_expr& ) const;

@@ -7,8 +7,8 @@ chp {
 	R!(1 != 0);
 	R!(1 <= 0);
 	R!(1 >= 0);
-	R!(1 < 0);
-	R!(1 > 0)
+	R!((1 < 0));	// extra parens required by grammar
+	R!((1 > 0))	// extra parens required by grammar
 }
 }
 

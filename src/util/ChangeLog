@@ -1,5 +1,17 @@
 # "src/util/ChangeLog"
 
+2006-07-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-29:
+	  util/operators.h: use std::binary_function interface, 
+		updated default template parameters, 
+		redefined shift_operation as a typedef template, 
+		added logical xnor and bitwise operations.  
+	  Added util/numeric/sign_traits.h for metafunctions on signedness.  
+	  Added util/numeric/zerodiv_detect.h to catch divide-by-zero, 
+		used in util/operators.h.
+
+
 2006-07-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-28:

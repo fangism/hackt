@@ -1,4 +1,3 @@
 Unary '-' operator requires an int argument, but got a bool-nonmeta-inst-ref.  ERROR!  [6:6]
 At least one error in expr-list at [6:4..7]
-ERROR in one of the communcation actions in [6:2..7]
 ERROR: at least one error in CHP body.

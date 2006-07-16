@@ -1,18 +1,20 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2006/04/03 05:30:42 fang Exp $
+#	$Id: Makefile.am,v 1.14 2006/07/16 03:35:08 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	004 005 008 009 \
 	010 011 012 013 017 018 \
-	020 021 023 \
-	oper-01
+	020 021 023
 
 HACKT_PARSE_TEST_PASSES = \
 	000 001 002 003 006 007 \
 	014 015 016 019 \
-	022
+	022 \
+	oper-01 oper-02
+
+# NOTE: oper-01 passes with a warning for now
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \

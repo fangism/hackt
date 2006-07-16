@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.8 2006/06/26 01:46:14 fang Exp $
+	$Id: CHP.cc,v 1.9 2006/07/16 03:34:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -103,6 +103,14 @@ using util::persistent_traits;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
+
+//=============================================================================
+/// helper routines
+static
+good_bool
+unroll_resolve_selection_list(const selection_list_type&,
+	const unroll_context&, selection_list_type&);
+
 //=============================================================================
 // class action method definitions
 
@@ -488,7 +496,12 @@ guarded_action::load_object(const persistent_object_manager& m,
 
 //=============================================================================
 /**
-	Helper routine.  
+	Helper routine, to apply copy-on-write unroll-resolving
+	from one list of guarded actions to another.  
+	\param s the source selection list.
+	\param c the unrolling context.
+	\param d the destination selection list (appended to).  
+	\return bad upon error.  
  */
 good_bool
 unroll_resolve_selection_list(const selection_list_type& s, 

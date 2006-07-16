@@ -5,9 +5,8 @@ template <pint N>
 defproc ass() {
 	bool x, a;
 	[N!=0 & N!=1->
-		prs {
-			x -> a-
-		}
+		x = a;
 	]
+	// incidentally, prs inside of conditional is currently undefined...
 }
 

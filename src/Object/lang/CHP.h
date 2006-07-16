@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.h"
 	Class definitions for CHP-related objects.  
-	$Id: CHP.h,v 1.10 2006/06/26 01:46:15 fang Exp $
+	$Id: CHP.h,v 1.11 2006/07/16 03:34:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_H__
@@ -186,11 +186,6 @@ public:
 	Typical guarded statement list.  
  */
 typedef	list<count_ptr<const guarded_action> >	selection_list_type;
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-good_bool
-unroll_resolve_selection_list(const selection_list_type&, 
-	const unroll_context&, selection_list_type&);
 
 //=============================================================================
 /**

@@ -3,7 +3,7 @@
 	Class definitions for arithmetic int expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: int_arith_expr.h,v 1.8 2006/06/26 01:45:59 fang Exp $
+	$Id: int_arith_expr.h,v 1.9 2006/07/16 03:34:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_INT_ARITH_EXPR_H__
@@ -43,6 +43,11 @@ public:
         static const multiplies<value_type, arg_type>	multiplier;
         static const divides<value_type, arg_type>	divider;
         static const modulus<value_type, arg_type>	remainder;
+        static const shift_left<value_type, arg_type>	doubler;
+        static const shift_right<value_type, arg_type>	halver;
+        static const bitwise_and<value_type, arg_type>	masker;
+        static const bitwise_or<value_type, arg_type>	unmasker;
+        static const bitwise_xor<value_type, arg_type>	hasher;
 private:
 	typedef	expr_detail::op_info			op_info;
 	typedef	default_qmap<char, const op_type*>::type

@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.8 2006/06/26 01:45:59 fang Exp $
+	$Id: data_expr.cc,v 1.9 2006/07/16 03:34:45 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -148,6 +148,11 @@ const minus<int_value_type, int_value_type>	int_arith_expr::subtractor;
 const multiplies<int_value_type, int_value_type> int_arith_expr::multiplier;
 const divides<int_value_type, int_value_type>	int_arith_expr::divider;
 const modulus<int_value_type, int_value_type>	int_arith_expr::remainder;
+const shift_left<int_value_type, int_value_type>	int_arith_expr::doubler;
+const shift_right<int_value_type, int_value_type>	int_arith_expr::halver;
+const bitwise_and<int_value_type, int_value_type>	int_arith_expr::masker;
+const bitwise_xor<int_value_type, int_value_type>	int_arith_expr::hasher;
+const bitwise_or<int_value_type, int_value_type>	int_arith_expr::unmasker;
 
 const int_arith_expr::op_map_type
 int_arith_expr::op_map;
@@ -188,6 +193,11 @@ int_arith_expr::op_map_init(void) {
 	op_map_register('*', &multiplier, OP_PREC_TIMES);
 	op_map_register('/', &divider, OP_PREC_TIMES);
 	op_map_register('%', &remainder, OP_PREC_TIMES);
+	op_map_register('<', &doubler, OP_PREC_SHIFT);
+	op_map_register('>', &halver, OP_PREC_SHIFT);
+	op_map_register('&', &masker, OP_PREC_BITWISE_AND);
+	op_map_register('|', &unmasker, OP_PREC_BITWISE_OR);
+	op_map_register('^', &hasher, OP_PREC_BITWISE_XOR);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -236,7 +246,12 @@ int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 	const bool p = c.need_parentheses(oi.prec, a);
 	const expr_dump_context::stamp_modifier m(c, oi.prec, a);
 	if (p) o << '(';
-	rx->dump(lx->dump(o, c) << oi.op, c);
+	lx->dump(o, c);
+	if (oi.op == '<' || oi.op == '>') {
+		o << oi.op;		// for "<<", ">>"
+	}
+	o << oi.op;
+	rx->dump(o, c);
 	if (p) o << ')';
 	return o;
 #else
@@ -528,6 +543,9 @@ bool_logical_expr::op_or;
 const util::logical_xor<bool_value_type, bool_value_type>
 bool_logical_expr::op_xor;
 
+const util::logical_xnor<bool_value_type, bool_value_type>
+bool_logical_expr::op_xnor;
+
 const bool_logical_expr::op_map_type
 bool_logical_expr::op_map;
 
@@ -565,9 +583,10 @@ bool_logical_expr::op_map_register(const string& s, const op_type* o) {
  */
 size_t
 bool_logical_expr::op_map_init(void) {
-	op_map_register("&", &op_and);
-	op_map_register("|", &op_or);
-	op_map_register("^", &op_xor);
+	op_map_register("&&", &op_and);
+	op_map_register("||", &op_or);
+	op_map_register("!=", &op_xor);
+	op_map_register("==", &op_xnor);
 	INVARIANT(op_map.size() == reverse_op_map.size());
 	return op_map.size();
 }
@@ -687,8 +706,9 @@ bool_logical_expr::load_object(const persistent_object_manager& m, istream& f) {
 int_negation_expr::int_negation_expr() : parent_type(), ex() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-int_negation_expr::int_negation_expr(const operand_ptr_type& e) :
-		parent_type(), ex(e) { }
+int_negation_expr::int_negation_expr(const operand_ptr_type& e, 
+		const char o) :
+		parent_type(), ex(e), op(o) { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 int_negation_expr::~int_negation_expr() { }
@@ -699,7 +719,7 @@ PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(int_negation_expr)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 int_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
-	return ex->dump(o << '~', c);
+	return ex->dump(o << op, c);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -719,7 +739,7 @@ int_negation_expr::unroll_resolve_copy(const unroll_context& c,
 	} else if (oc == ex) {
 		return p;
 	} else {
-		return count_ptr<const this_type>(new this_type(oc));
+		return count_ptr<const this_type>(new this_type(oc, op));
 	}
 }
 
@@ -737,6 +757,7 @@ void
 int_negation_expr::write_object(const persistent_object_manager& m, 
 		ostream& o) const {
 	m.write_pointer(o, ex);
+	write_value(o, op);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -744,6 +765,7 @@ void
 int_negation_expr::load_object(const persistent_object_manager& m, 
 		istream& i) {
 	m.read_pointer(i, ex);
+	read_value(i, op);
 }
 
 //=============================================================================

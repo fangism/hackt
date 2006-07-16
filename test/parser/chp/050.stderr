@@ -2,12 +2,10 @@ Type mismatch in reference 1 of receive list.
 	got: milk<>
 	expected: beer<>
 At least one type error in expr-list in [9:7..9]
-ERROR in one of the communcation actions in [9:5..9]
 Type mismatch in expression 1 of send expression list.  
 	got: milk<>
 	expected: beer<>
 At least one type error in expr-list in [9:14..16]
-ERROR in one of the communcation actions in [9:12..16]
 ERROR in CHP statement(s) at [9:2..18]
 ERROR in one of the actions in [9:2..18]
 ERROR: at least one error in CHP body.

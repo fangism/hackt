@@ -11,7 +11,7 @@ state	value
 #STATE#	identifier: tea [3:22..24]
 #STATE#	keyword: defproc [4:1..7]
 in state #STATE#, possible rules are:
-	template_formal_id_default : ID . optional_dense_range_list '=' shift_expr  (#RULE#)
+	template_formal_id_default : ID . optional_dense_range_list '=' expr  (#RULE#)
 	template_formal_id_nodefault : ID . optional_dense_range_list  (#RULE#)
 	optional_dense_range_list : .  (#RULE#)
 acceptable tokens are: 

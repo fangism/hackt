@@ -2,6 +2,6 @@
 
 defchan my_vewwy_first_e1of2 <: chan(bool) (bool t, f, e) {
 	send { [e]; t+; [~e]; t-}
-	recv { [t | f]; e-; [~t & ~f]; e+ }
+	recv { [t || f]; e-; [~t && ~f]; e+ }
 }
 

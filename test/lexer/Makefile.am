@@ -1,10 +1,11 @@
 # "test/lexer/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2006/01/24 03:01:16 fang Exp $
+#	$Id: Makefile.am,v 1.11 2006/07/16 03:35:03 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	badid-000 badid-001 \
+	hex-02 hex-03 \
 	comment-000 comment-001 comment-002 \
 	string-001 string-002 string-003 \
 	import-000 import-001 import-002 import-003 import-005 \
@@ -14,7 +15,8 @@ HACKT_PARSE_TEST_FAILURES = \
 
 HACKT_PARSE_TEST_PASSES = \
 	comment-003 comment-004 comment-005 comment-006 \
-	import-004 import-012 import-013 import-015-t
+	import-004 import-012 import-013 import-015-t \
+	hex-01
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -26,6 +28,7 @@ HACKT_PARSE_TEST_SUBJECTS = \
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
 # HACKT_UNROLL_TEST_SUBJECTS = $(HACKT_OBJ_TEST_SUBJECTS)
 
+# additional sources included by other test cases
 EXTRA_DIST += empty.hac \
 	import-014-a.hac import-014-b.hac \
 	import-015-b.hac import-015-c.hac import-015-e.hac \

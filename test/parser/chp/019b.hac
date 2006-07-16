@@ -1,0 +1,15 @@
+// "019b.hac" -- should fail: '<' expressions require extra parens
+// copy-modified from "019.hac"
+
+defproc one_shot(chan?(bool) L; chan!(bool) R) {
+int z;
+chp {
+	R!(z == z);
+	R!(z != z);
+	R!(z <= z);
+	R!(z >= z);
+	R!(z < z);
+	R!(z > z)
+}
+}
+

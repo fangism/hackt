@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vim: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.14 2006/06/26 01:46:44 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.15 2006/07/16 03:34:54 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -64,6 +64,7 @@
 #define	ENABLE_STACKTRACE		0 && !defined(LIBBOGUS)
 
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 
 #ifdef	LIBBOGUS
@@ -300,6 +301,7 @@ using namespace HAC::lexer;
 %}
 
 DIGIT		[0-9]
+HEXDIGIT	[0-9A-Fa-f]
 IDHEAD		[a-zA-Z_]
 IDBODY		[a-zA-Z0-9_]
 INT		{DIGIT}+
@@ -307,6 +309,7 @@ SIGN_INT	[+-]?{INT}
 EXP		[eE]{SIGN_INT}
 FRACTIONAL	"."{INT}
 FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
+HEX		0x{HEXDIGIT}+
 
 /* note: '-' signed ints are lexed as two tokens and combined in the parser
 	as a unary expr, thus, no numerical tokens in the language 
@@ -316,6 +319,7 @@ FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
 
 ID		{IDHEAD}{IDBODY}*
 BADID		({INT}{ID})|({FLOAT}{ID})
+BADHEX		{HEX}{ID}
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 WS		{WHITESPACE}
@@ -650,6 +654,23 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	return INT;
 }
 
+{HEX}	{
+	if (token_feedback) {
+		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
+	}
+	/* TODO: error handling of value-ranges */
+	/* consider using stream conversions to avoid precision errors */
+	/* what if we need atol? */
+	HAC::entity::pint_value_type v;
+	std::istringstream iss(yytext);	/* slower, but safer */
+	iss >> std::hex >> v;
+	/* could try to use faster, but unsafe istrstream (deprecated) */
+	hackt_lval->_token_int = new token_int(v);
+	/* hackt_lval->_token_int = new token_int(atoi(yytext)); */
+	TOKEN_UPDATE(foo);
+	return INT;
+}
+
 {ID}	{
 	if (token_feedback) {
 		cerr << "identifier = \"" << yytext << "\" " << 
@@ -688,6 +709,15 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	string_buf_ptr = string_buf;
 	MULTILINE_START(string_pos, foo);	/* just for column positioning */
 	BEGIN(instring); 
+}
+
+{BADHEX}	{ 
+	hackt_parse_file_manager.dump_file_stack(cerr);
+	cerr << "bad hexadecimal integer: \"" << yytext << "\" " <<
+		LINE_COL(CURRENT) << endl;
+	TOKEN_UPDATE(foo);
+	hackt_lval->_token_identifier = NULL;
+	THROW_EXIT;
 }
 
 {BADID}	{ 

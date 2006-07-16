@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2006-07-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-29:
+	  POM-header-filter.awk: ignore WARNING: lines from compiler.  
+	  hackt-obj-diff.sh.in: test for .haco instead of .test output.  
+
+
 2006-07-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-20-cow-03:

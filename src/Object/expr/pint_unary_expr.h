@@ -3,7 +3,7 @@
 	Unary negation of meta integer.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_unary_expr.h,v 1.10 2006/07/04 07:26:06 fang Exp $
+	$Id: pint_unary_expr.h,v 1.11 2006/07/16 03:34:52 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_UNARY_EXPR_H__
@@ -62,6 +62,10 @@ public:
 
 	value_type
 	static_constant_value(void) const;
+
+	static
+	value_type
+	evaluate(const op_type, const value_type);
 
 	bool
 	must_be_equivalent(const pint_expr& ) const;

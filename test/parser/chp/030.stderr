@@ -2,25 +2,20 @@ Type mismatch in expression 1 of send expression list.
 	got: int<32>
 	expected: int<4>
 At least one type error in expr-list in [6:4..10]
-ERROR in one of the communcation actions in [6:2..10]
 Type mismatch in expression 1 of send expression list.  
 	got: int<32>
 	expected: int<4>
 At least one type error in expr-list in [7:4..10]
-ERROR in one of the communcation actions in [7:2..10]
 Type mismatch in expression 1 of send expression list.  
 	got: int<32>
 	expected: int<4>
 At least one type error in expr-list in [8:4..10]
-ERROR in one of the communcation actions in [8:2..10]
 Type mismatch in expression 1 of send expression list.  
 	got: int<32>
 	expected: int<4>
 At least one type error in expr-list in [9:4..10]
-ERROR in one of the communcation actions in [9:2..10]
 Type mismatch in expression 1 of send expression list.  
 	got: int<32>
 	expected: int<4>
 At least one type error in expr-list in [10:4..10]
-ERROR in one of the communcation actions in [10:2..10]
 ERROR: at least one error in CHP body.

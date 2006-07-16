@@ -27,14 +27,14 @@ Persistent Object Manager text dump:
 	23	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	25	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	27	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	32	##ADDR##	CHPwait_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	34	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
@@ -78,9 +78,9 @@ In namespace "", we have: {
         }
       recv-CHP:
         sequential: {
-          [t|f]
+          [t||f]
           e := false
-          [~t&~f]
+          [~t&&~f]
           e := true
         }
       }

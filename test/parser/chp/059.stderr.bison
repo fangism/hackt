@@ -12,7 +12,7 @@ state	value
 #STATE#	keyword: chp [5:1..3]
 #STATE#	{ [5:5]
 #STATE#	*[ [6:2]
-#STATE#	list<(chp-statement)>: (chp-comm-list) ... [7:3..7]
+#STATE#	list<(chp-statement)>: list<(chp-statement)>: (chp-receive) ... ... [7:3..7]
 #STATE#	; [7:8]
 #STATE#	[ [8:3]
 #STATE#	(chp-guarded-cmd) [8:4..13]

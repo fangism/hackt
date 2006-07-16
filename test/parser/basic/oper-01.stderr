@@ -1,2 +1,1 @@
-ERROR: "&" is not a valid boolean logical operator, at [7:8]
-Error parsing guard expression at [7:3..13]
+WARNING: Use '&&' for logical-AND on pbools.  [7:8]

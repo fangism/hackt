@@ -9,7 +9,7 @@ state	value
 #STATE#	< [7:6]
 #STATE#	> [7:7]
 in state #STATE#, possible rules are:
-	shift_expr_list_in_angles: '<' . shift_expr_list '>'  (#RULE#)
+	expr_list_in_angles: '<' . expr_list '>'  (#RULE#)
 acceptable tokens are: 
 	'(' (shift)
 	'-' (shift)

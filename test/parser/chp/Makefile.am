@@ -1,16 +1,16 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2006/06/26 01:47:43 fang Exp $
+#	$Id: Makefile.am,v 1.8 2006/07/16 03:35:24 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
 HACKT_PARSE_TEST_FAILURES = \
 	001 003 004 006 007 008 009 \
-	010 011 012 013 014 016 018 \
+	010 011 012 013 014 016 018 019b \
 	023 \
 	030 031 035 037 038 \
 	046 047 048 \
 	050 051 055 056 059 \
-	062 067 068 \
+	061b 062 067 068 \
 	071 072 073 076 \
 	095 096
 
@@ -24,7 +24,7 @@ HACKT_PARSE_TEST_PASSES = \
 	060 061 063 064 065 066 069 \
 	070 074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
-	090 091 092 093 094
+	090 091 092 093 094 097
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -42,7 +42,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 	064 \
 	074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
-	090 091 092 093 094
+	090 091 092 093 094 097
 
 # TODO: alloc phase
 # several tests are not ready because we haven't defined
@@ -52,8 +52,8 @@ HACKT_CREATE_TEST_SUBJECTS = \
 #	$(HACKT_CREATE_TEST_SUBJECTS)
 
 # more output expectation files for when bison is used
-BISON_OUTPUTS += 001 003 004 \
-	035 055 056 059 062
+BISON_OUTPUTS += 001 003 004 019b \
+	035 055 056 059 061b 062
 
 # pending test cases
 EXTRA_DIST +=

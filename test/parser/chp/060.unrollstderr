@@ -52,7 +52,7 @@ Persistent Object Manager text dump:
 	48	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
 	50	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	51	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	52	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	53	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 
@@ -99,7 +99,7 @@ In namespace "", we have: {
               nondeterministic: {
                 a -> Z!(false)
                 b -> Z!(true)
-                g -> Z!(a^b)
+                g -> Z!(a!=b)
               }
             }
           ]

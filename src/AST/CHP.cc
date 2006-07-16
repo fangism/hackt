@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.6 2006/06/26 01:45:44 fang Exp $
+	$Id: CHP.cc,v 1.7 2006/07/16 03:34:42 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -58,7 +58,6 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::skip, "(chp-skip)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::wait, "(chp-wait)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::binary_assignment, "(chp-assignment)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::bool_assignment, "(chp-assignment)")
-SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::comm_list, "(chp-comm-list)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::send, "(chp-send)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::receive, "(chp-receive)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::CHP::det_selection, "(chp-det-sel)")
@@ -155,6 +154,10 @@ stmt_list::postorder_check_stmts(checked_stmts_type& sl, context& c) const {
  */
 statement::return_type
 stmt_list::check_action(context& c) const {
+if (size() == 1) {
+	// single actions can be returned more efficiently, no need to group
+	return front()->check_action(c);
+} else {
 	typedef	checked_stmts_type::const_iterator	const_checked_iterator;
 	checked_stmts_type checked_stmts;
 	postorder_check_stmts(checked_stmts, c);
@@ -163,10 +166,7 @@ stmt_list::check_action(context& c) const {
 	const const_checked_iterator
 		ni(find(i, e, statement::return_type(NULL)));
 	if (ni == e) {
-		// no NULLs found
-		if (checked_stmts.size() == 1) {
-			return *i;
-		} else if (is_concurrent) {
+		if (is_concurrent) {
 			const count_ptr<concurrent_actions>
 				act_pll(new concurrent_actions);
 			copy(i, e, back_inserter(*act_pll));
@@ -182,7 +182,8 @@ stmt_list::check_action(context& c) const {
 			where(*this) << endl;
 		return return_type(NULL);
 	}
-}
+}	// endif size() == 1
+}	// end stmt_list::check_action
 
 //=============================================================================
 // class body method definitions
@@ -765,67 +766,6 @@ communication::get_channel_direction(
 			.is_a<const channel_type_reference_base>());
 	NEVER_NULL(type_ref);
 	return type_ref->get_direction();
-}
-
-//=============================================================================
-// class comm_list method definitions
-
-CONSTRUCTOR_INLINE
-comm_list::comm_list(const communication* c) :
-		statement(), parent_type(c) {
-}
-
-DESTRUCTOR_INLINE
-comm_list::~comm_list() {
-}
-
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(comm_list)
-
-line_position
-comm_list::leftmost(void) const {
-	return parent_type::leftmost();
-}
-
-line_position
-comm_list::rightmost(void) const {
-	return parent_type::rightmost();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-statement::return_type
-comm_list::check_action(context& c) const {
-	STACKTRACE_VERBOSE;
-	checked_actions_type actions;
-	// actions.reserve(size());
-#if 0
-	// WTF? this should compile!!!
-	check_list(actions, &communication::check_action, c);
-#else
-	const_iterator ci(begin());
-	const const_iterator ce(end());
-	for ( ; ci!=ce; ci++) {
-		actions.push_back((*ci)->check_action(c));
-	}
-#endif
-	const checked_actions_type::const_iterator i(actions.begin());
-	const checked_actions_type::const_iterator e(actions.end());
-	const checked_actions_type::const_iterator
-		ni(find(i, e, statement::return_type()));
-	if (ni != e) {
-		cerr << "ERROR in one of the communcation actions in "
-			<< where(*this) << endl;
-		return statement::return_type(NULL);
-	} else {
-		if (actions.size() == 1) {
-			// there's only one item, no need to make list
-			return *i;	// already points to first item
-		} else {
-			const count_ptr<entity::CHP::concurrent_actions>
-				ret(new entity::CHP::concurrent_actions);
-			copy(i, e, back_inserter(*ret));
-			return ret;
-		}
-	}
 }
 
 //=============================================================================

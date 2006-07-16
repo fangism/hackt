@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_logical_expr.h,v 1.11 2006/07/04 07:26:01 fang Exp $
+	$Id: pbool_logical_expr.h,v 1.12 2006/07/16 03:34:49 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
@@ -25,6 +25,7 @@ using util::memory::count_ptr;
 //=============================================================================
 /**
 	Binary logical expression accepts bools and returns a bool.  
+	This also covers binary boolean relational operators ==, !=.
  */
 class pbool_logical_expr : public pbool_expr {
 	typedef	pbool_logical_expr			this_type;
@@ -37,6 +38,7 @@ public:
 	static const util::logical_and<value_type, arg_type>	op_and;
 	static const util::logical_or<value_type, arg_type>	op_or;
 	static const util::logical_xor<value_type, arg_type>	op_xor;
+	static const util::logical_xnor<value_type, arg_type>	op_xnor;
 private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	default_qmap<string, const op_type*>::type
@@ -95,6 +97,14 @@ public:
 
 	value_type
 	static_constant_value(void) const;
+
+	static
+	value_type
+	evaluate(const string&, const value_type, const value_type);
+
+	static
+	value_type
+	evaluate(const op_type*, const value_type, const value_type);
 
 	bool
 	must_be_equivalent(const pbool_expr& ) const;

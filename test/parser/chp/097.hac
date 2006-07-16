@@ -1,0 +1,12 @@
+// "097.hac"
+// testing concurrent statements
+
+defproc foo() {
+	int x, y, z, w;
+	chp {
+		*[x:=y,z:=w]
+	}
+}
+
+foo f;
+

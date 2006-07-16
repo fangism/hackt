@@ -2,5 +2,4 @@ Expression is not a int-type, ERROR!  [7:7]
 Problem with dimension 1 of sparse_range_list between [7:7]
 ERROR in nonmeta index list!  [7:7]
 At least one error in expr-list at [7:4..9]
-ERROR in one of the communcation actions in [7:2..9]
 ERROR: at least one error in CHP body.

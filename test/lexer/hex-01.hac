@@ -1,0 +1,9 @@
+// "hex-01.hac"
+// testing hexadecimal lexing
+// should pass
+
+pint x = 0xf00d;
+pint y = 0xBeef;
+pint z = 0xdead;
+pint w = x + 0x9999;
+

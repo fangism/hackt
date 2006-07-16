@@ -3,6 +3,43 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-29:
+	  ALERT: significant additions/revisions to front-end, grammar/parser.
+	  CHP: concurrent action groups are no longer limited to send/receive 
+		communications, any statements maybe be grouped in parallel 
+		with ',' operator, which binds tighter than the ';' sequencer.  
+		Sequences may be grouped explicitly by wrapping in
+			braces, e.g. P,{Q;R}
+		Single-action groups are checked efficiently as single actions.
+	  Lexer: added support for hexadecimal integer constants, 0xF00D!.  
+	  Expressions (applies to meta and nonmeta unless otherwise noted):
+		'~' is overloaded for boolean and bitwise-integer negation.  
+		logical ops '&&' '||' are used for booleans (was: '&' '|').
+			Use '!=' relation for logical-XOR.  
+		bitwise ops '&' '|' '^' are used for integers (NEW).
+		If you use them type-incorrectly, compiler will issue a 
+			warning and read your mind and do what you intended.  
+			Because I'm nice that way.  
+		relational expressions (comparisons) now work for 
+			integers and booleans.  (<,>,<=,>= not yet for bools).
+			boolean '!=' is XOR, and '==' is XNOR.  
+		Added support for arithmetic shift operations << and >>.  
+		unary integer operations now include '-' and '~', 
+			added char field to class int_negation_expr.  
+		Updated Object/expr/operator_precedence.h entries
+			to accommodate new bitwise operators.  
+		!!! expression grammar reworked to no longer require
+			using 'shift_expr' for general expressions, but
+			rather plain 'expr', at the inconvenenience of
+			require extra parens around < and > relational
+			expressions, as a disambiguator from 
+			template-dependent expressions (x<T>::y).  
+	  All affected test cases updated.  
+	  update of util/operators.h (see util/ChangeLog)
+
+
 2006-07-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-28:

@@ -8,8 +8,8 @@ chp {
 	R!(x != z);
 	R!(x <= z);
 	R!(x >= z);
-	R!(x < z);
-	R!(x > z)
+	R!((x < z));	// extra parens required by grammar
+	R!((x > z))	// extra parens required by grammar
 }
 }
 

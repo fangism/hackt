@@ -32,7 +32,7 @@ Persistent Object Manager text dump:
 	28	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	32	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
@@ -40,8 +40,8 @@ Persistent Object Manager text dump:
 	36	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	CHPguard	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
-	40	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
+	40	##ADDR##	nlogicex	0	#HEAD#	#TAIL#	22
 	41	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	nbnotex_	0	#HEAD#	#TAIL#	12
@@ -90,8 +90,8 @@ In namespace "", we have: {
         concurrent: {
           *[
             a -> B?(b)
-            ~a&b -> G?(g)
-            ~a&~b&g -> sequential: {
+            ~a&&b -> G?(g)
+            ~a&&~b&&g -> sequential: {
               Z!(true)
               A?(a)
             }

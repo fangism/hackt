@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.11 2006/07/04 07:26:05 fang Exp $
+	$Id: pint_relational_expr.h,v 1.12 2006/07/16 03:34:51 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
@@ -99,6 +99,14 @@ public:
 
 	value_type
 	static_constant_value(void) const;
+
+	static
+	value_type
+	evaluate(const string&, const value_type, const value_type);
+
+	static
+	value_type
+	evaluate(const op_type*, const value_type, const value_type);
 
 	bool
 	must_be_equivalent(const pbool_expr& ) const;

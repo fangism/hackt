@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.h"
 	CHP-specific syntax tree classes.  
-	$Id: CHP.h,v 1.4 2006/06/26 01:45:45 fang Exp $
+	$Id: CHP.h,v 1.5 2006/07/16 03:34:42 fang Exp $
 	Used to be the following before rename:
 	Id: art_parser_chp.h,v 1.13.40.1 2005/12/11 00:45:03 fang Exp
  */
@@ -69,7 +69,7 @@ virtual	CHP_CHECK_STMT_PROTO = 0;
 
 //=============================================================================
 /**
-	Statement list.  
+	Sequential or concurrent statement list.  
  */
 class stmt_list : public statement, public stmt_list_base {
 public:
@@ -280,6 +280,7 @@ public:
 
 //=============================================================================
 /// CHP communication action base class
+
 class communication : public statement {
 	typedef	statement			parent_type;
 protected:
@@ -309,38 +310,6 @@ protected:
 	get_channel_direction(const checked_channel_type::element_type&);
 
 };	// end class communication
-
-//-----------------------------------------------------------------------------
-/// base type for CHP communication list
-typedef	node_list<const communication>			comm_list_base;
-
-/**
-	CHP concurrent communication list.  
- */
-class comm_list : public statement, public comm_list_base {
-private:
-	typedef	comm_list_base				parent_type;
-public:
-	explicit
-	comm_list(const communication* c);
-
-	~comm_list();
-
-	ostream&
-	what(ostream& o) const;
-
-	line_position
-	leftmost(void) const;
-
-	line_position
-	rightmost(void) const;
-
-	CHP_CHECK_STMT_PROTO;
-private:
-	typedef	default_vector<communication::return_type>::type
-						checked_actions_type;
-};	// end class comm_list
-
 
 //-----------------------------------------------------------------------------
 /// CHP send action

@@ -4,7 +4,7 @@
 	TODO: (.m4.in)
 	Use m4 to conditionally turn on/off parts of grammar.  
 	Consider using bison-GLR generator.  
-	$Id: cx-parse.yy.in,v 1.2 2006/01/22 06:53:40 fang Exp $
+	$Id: cx-parse.yy.in,v 1.3 2006/07/16 03:34:58 fang Exp $
  */
 
 %{
@@ -409,6 +409,9 @@ shift_expression
 
 relational_expression
 	: shift_expression
+// as a workaround to template bracket ambiguity
+//	| '(' relational_expression '<' shift_expression ')'
+//	| '(' relational_expression '>' shift_expression ')'
 	| relational_expression '<' shift_expression
 	| relational_expression '>' shift_expression
 	| relational_expression LE shift_expression

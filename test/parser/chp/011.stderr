@@ -1,4 +1,3 @@
 object "WTF" not found, ERROR!  [5:5..7]
 At least one error in expr-list at [5:4..8]
-ERROR in one of the communcation actions in [5:2..8]
 ERROR: at least one error in CHP body.

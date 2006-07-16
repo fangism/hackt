@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.7 2006/07/04 07:26:06 fang Exp $
+	$Id: preal_arith_expr.h,v 1.8 2006/07/16 03:34:52 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -42,7 +42,8 @@ public:
 private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef	expr_detail::op_info		op_info;
-	typedef	default_qmap<char, const op_type*>::type
+	typedef	char				op_key_type;
+	typedef	default_qmap<op_key_type, const op_type*>::type
 						op_map_type;
 	typedef	default_qmap<const op_type*, op_info>::type
 						reverse_op_map_type;
@@ -94,6 +95,14 @@ public:
 
 	value_type
 	static_constant_value(void) const;
+
+	static
+	value_type
+	evaluate(const op_key_type, const value_type, const value_type);
+
+	static
+	value_type
+	evaluate(const op_type*, const value_type, const value_type);
 
 	bool
 	must_be_equivalent(const preal_expr& ) const;

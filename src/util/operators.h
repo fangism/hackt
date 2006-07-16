@@ -1,14 +1,17 @@
 /**
 	\file "util/operators.h"
 	Functors but with virtual resolution.
-	$Id: operators.h,v 1.9 2006/05/08 06:12:11 fang Exp $
+	$Id: operators.h,v 1.10 2006/07/16 03:34:57 fang Exp $
  */
 
 #ifndef __UTIL_OPERATORS_H__
 #define __UTIL_OPERATORS_H__
 
 #include "config.h"
+#include "util/likely.h"
+#include "util/numeric/zerodiv_detect.h"
 #include <functional>
+#include <stdexcept>
 #include <cmath>
 
 #define	USING_UTIL_OPERATIONS						\
@@ -28,7 +31,10 @@
 	using util::greater_equal;					\
 	using util::less_equal;						\
 	using util::shift_left;						\
-	using util::shift_right;
+	using util::shift_right;					\
+	using util::bitwise_and;					\
+	using util::bitwise_or;						\
+	using util::bitwise_xor;
 
 //=============================================================================
 namespace std {
@@ -84,8 +90,8 @@ namespace util {
 	\param A integer-like class for which
 		arithmetic operations are defined.
  */
-template <class R = int, class A = int>
-struct binary_arithmetic_operation {
+template <class R = int, class A = R>
+struct binary_arithmetic_operation : public std::binary_function<A,A,R> {
 /**
 	Required by gcc4 with -W.
 	... even if we never delete subclass objects through these pointers.  
@@ -106,8 +112,8 @@ virtual	bool is_associative(void) const = 0;
 	\param A integer-like class for which 
 		relational operations are defined.
  */
-template <class R = bool, class A = int>
-struct binary_relational_operation {
+template <class R = bool, class A = R>
+struct binary_relational_operation : public std::binary_function<A,A,R> {
 /**
 	Required by gcc4 with -W.
 	... even if we never delete subclass objects through these pointers.  
@@ -127,8 +133,8 @@ virtual	R operator () (const A& a, const A& b) const = 0;
 	\param A bool-like class for which 
 		logical operations are defined.
  */
-template <class R = bool, class A = bool>
-struct binary_logical_operation {
+template <class R = bool, class A = R>
+struct binary_logical_operation : public std::binary_function<A,A,R> {
 /**
 	Required by gcc4 with -W.
 	... even if we never delete subclass objects through these pointers.  
@@ -143,32 +149,35 @@ virtual	R operator () (const A& a, const A& b) const = 0;
 
 //-----------------------------------------------------------------------------
 /**
+	Typedef	template.  
 	\param R integer-like class for the return type of 
 		shift operations.
 	\param A integer-like class for which
-		shift operations are defined.
-	\param S integer-like class for which
-		shift operations are defined (shift amount).
+		shift operations are defined, also used for the shift amount.
  */
-template <class R = int, class A = int, class S = int>
+template <class R, class A>
 struct shift_operation {
-/**
-	Required by gcc4 with -W.
-	... even if we never delete subclass objects through these pointers.  
- */
-virtual	~shift_operation() { }
+	typedef	binary_arithmetic_operation<R,A>	type;
+};	// end struct shift_operation
 
+//-----------------------------------------------------------------------------
 /**
-	Standard function interface for shift operators.  
+	Typedef template for bitwise operations.  
+	\param R integer-like class for the return type of 
+		shift operations.
+	\param A integer-like class for which
+		shift operations are defined, also used for the shift amount.
  */
-virtual	R operator () (const A& a, const S& s) const = 0;
-};	// end struct_operation
+template <class R, class A>
+struct bitwise_operation {
+	typedef	binary_arithmetic_operation<R,A>	type;
+};	// end struct bitwise_operation
 
 //=============================================================================
 /**
 	Wrapper for std::plus binary functor.
  */
-template <class R = int, class A = int>
+template <class R = int, class A = R>
 struct plus : public binary_arithmetic_operation<R, A> {
 	plus() { }
 	R operator () (const A& a, const A& b) const
@@ -180,7 +189,7 @@ struct plus : public binary_arithmetic_operation<R, A> {
 /**
 	Wrapper for std::minus binary functor.
  */
-template <class R = int, class A = int>
+template <class R = int, class A = R>
 struct minus : public binary_arithmetic_operation<R, A> {
 	minus() { }
 	R operator () (const A& a, const A& b) const
@@ -192,7 +201,7 @@ struct minus : public binary_arithmetic_operation<R, A> {
 /**
 	Wrapper for std::multiplies binary functor.
  */
-template <class R = int, class A = int>
+template <class R = int, class A = R>
 struct multiplies : public binary_arithmetic_operation<R, A> {
 	multiplies() { }
 	R operator () (const A& a, const A& b) const
@@ -204,11 +213,20 @@ struct multiplies : public binary_arithmetic_operation<R, A> {
 /**
 	Wrapper for std::divides binary functor.
  */
-template <class R = int, class A = int>
+template <class R = int, class A = R>
 struct divides : public binary_arithmetic_operation<R, A> {
 	divides() { }
-	R operator () (const A& a, const A& b) const
-		{ return std::divides<A>()(a,b); }
+
+	/**
+		\throw domain error if divide by zero.  
+	 */
+	R
+	operator () (const A& a, const A& b) const {
+		if (UNLIKELY(numeric::zerodiv_detect(b))) {
+			throw std::domain_error("Detected divide by 0!");
+		}
+		return std::divides<A>()(a,b);
+	}
 	bool is_associative(void) const { return false; }
 };	// end struct divides
 
@@ -216,11 +234,20 @@ struct divides : public binary_arithmetic_operation<R, A> {
 /**
 	Wrapper for std::modulus binary functor.
  */
-template <class R = int, class A = int>
+template <class R = int, class A = R>
 struct modulus : public binary_arithmetic_operation<R, A> {
 	modulus() { }
-	R operator () (const A& a, const A& b) const
-		{ return std::modulus<A>()(a,b); }
+
+	/**
+		\throw domain error if divide by zero.  
+	 */
+	R
+	operator () (const A& a, const A& b) const {
+		if (UNLIKELY(numeric::zerodiv_detect(b))) {
+			throw std::domain_error("Detected divide by 0!");
+		}
+		return std::modulus<A>()(a,b);
+	}
 	bool is_associative(void) const { return false; }
 };	// end struct modulus
 
@@ -299,17 +326,20 @@ struct logical_and : public binary_logical_operation<R, A> {
 	logical_and() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::logical_and<A>()(a,b); }
+	bool is_associative(void) const { return true; }
 };	// end struct logical_and
 
 //-----------------------------------------------------------------------------
 /**
 	Wrapper for std::logical_or binary functor.
+	Not short circuit OR.  
  */
 template <class R = bool, class A = bool>
 struct logical_or : public binary_logical_operation<R, A> {
 	logical_or() { }
 	R operator () (const A& a, const A& b) const
 		{ return std::logical_or<A>()(a,b); }
+	bool is_associative(void) const { return true; }
 };	// end struct logical_or
 
 //-----------------------------------------------------------------------------
@@ -321,17 +351,31 @@ struct logical_xor : public binary_logical_operation<R, A> {
 	logical_xor() { }
 	R operator () (const A& a, const A& b) const
 		{ return a ^ b; }
+	bool is_associative(void) const { return true; }
+};	// end struct logical_xor
+
+//-----------------------------------------------------------------------------
+/**
+	There is no std::logical_xnor.
+ */
+template <class R = bool, class A = bool>
+struct logical_xnor : public binary_logical_operation<R, A> {
+	logical_xnor() { }
+	R operator () (const A& a, const A& b) const
+		{ return !(a ^ b); }
+	bool is_associative(void) const { return true; }
 };	// end struct logical_xor
 
 //=============================================================================
 /**
 	There is no std::shift_left.
  */
-template <class R = int, class A = int, class S = int>
-struct shift_left : public shift_operation<R, A, S> {
+template <class R = int, class A = int>
+struct shift_left : public shift_operation<R, A>::type {
 	shift_left() { }
-	R operator () (const A& a, const S& s) const
+	R operator () (const A& a, const A& s) const
 		{ return a << s; }
+	bool is_associative(void) const { return false; }
 };	// end struct shift_left
 
 //-----------------------------------------------------------------------------
@@ -340,12 +384,50 @@ struct shift_left : public shift_operation<R, A, S> {
 	Note: to distinguish between arithmetic and logical shift, 
 	specify an unsigned type.  
  */
-template <class R = int, class A = int, class S = int>
-struct shift_right : public shift_operation<R, A, S> {
+template <class R = int, class A = int>
+struct shift_right : public shift_operation<R, A>::type {
 	shift_right() { }
-	R operator () (const A& a, const S& s) const
+	R operator () (const A& a, const A& s) const
 		{ return a >> s; }
+	bool is_associative(void) const { return false; }
 };	// end struct shift_right
+
+//=============================================================================
+/**
+	Wrapper for std::logical_and binary functor.
+ */
+template <class R, class A = R>
+struct bitwise_and : public bitwise_operation<R, A>::type {
+	bitwise_and() { }
+	R operator () (const A& a, const A& b) const
+		{ return a & b; }
+	bool is_associative(void) const { return true; }
+};	// end struct bitwise_and
+
+//-----------------------------------------------------------------------------
+/**
+	Wrapper for std::bitwise_or binary functor.
+	Not short circuit OR.  
+ */
+template <class R, class A = R>
+struct bitwise_or : public bitwise_operation<R, A>::type {
+	bitwise_or() { }
+	R operator () (const A& a, const A& b) const
+		{ return a | b; }
+	bool is_associative(void) const { return true; }
+};	// end struct bitwise_or
+
+//-----------------------------------------------------------------------------
+/**
+	There is no std::bitwise_xor.
+ */
+template <class R, class A = R>
+struct bitwise_xor : public bitwise_operation<R, A>::type {
+	bitwise_xor() { }
+	R operator () (const A& a, const A& b) const
+		{ return a ^ b; }
+	bool is_associative(void) const { return true; }
+};	// end struct bitwise_xor
 
 //=============================================================================
 }	// end namespace util

@@ -3,7 +3,7 @@
 	Class definitions for boolean logical expressions.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_logical_expr.h,v 1.8 2006/06/26 01:45:56 fang Exp $
+	$Id: bool_logical_expr.h,v 1.9 2006/07/16 03:34:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_LOGICAL_EXPR_H__
@@ -37,6 +37,7 @@ public:
 	static const util::logical_and<value_type, arg_type>	op_and;
 	static const util::logical_or<value_type, arg_type>	op_or;
 	static const util::logical_xor<value_type, arg_type>	op_xor;
+	static const util::logical_xnor<value_type, arg_type>	op_xnor;
 private:
 	// safe to use naked (never-delete) pointers on static objects
 	typedef default_qmap<string, const op_type*>::type

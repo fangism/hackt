@@ -1,0 +1,11 @@
+// "118.hac"
+// copy-modified from "117.hac"
+// testing shift operators, should pass
+// negative shift amounts undefined
+
+pint x[2];
+x[0] = 21;
+x[1] = 31;
+pint y = x[0] >> 1;		// should be 4
+pint z = x[1] >> (y>>2);	// 31 / 2^(10/4) = 3
+
