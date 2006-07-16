@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2006/07/16 03:35:08 fang Exp $
+#	$Id: Makefile.am,v 1.15 2006/07/16 07:25:51 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -35,6 +35,8 @@ HACKT_CREATE_TEST_SUBJECTS = \
 BISON_OUTPUTS += 004 005 008 010 017 018 \
 	020 021
 
+# has warning
+EXTRA_DIST += oper-01.stderr
 EXTRA_DIST += TODO
 
 include $(top_srcdir)/test/Make.test-tail

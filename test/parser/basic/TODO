@@ -1,4 +1,5 @@
 to investigate:
 
 019.in: expecting canonical name rajit::parser, but getting parser
+	Status: Fixed
 
