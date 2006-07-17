@@ -1,0 +1,307 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	3440
+	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	36	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	43	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	46	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	PRSrcond	0	#HEAD#	#TAIL#	28
+	49	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
+	50	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	55	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	63	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	65	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	66	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	68	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	73	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	116
+	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	207
+	76	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	116
+	77	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	80	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    div = process-definition (defined) div<
+      pint<> P
+      pint<> Q
+      >(
+      )
+      In definition "div", we have: {
+      Parameters:
+        P = pint<> P
+        Q = pint<> Q
+      Instances:
+        x = bool<> x
+
+        y = bool<> y
+
+        z = bool<> z
+
+      unroll sequence: 
+        pint<> P
+        pint<> Q
+        bool<> x[1..Q-1]
+        bool<> y[1..P-1]
+        bool<> z[1..Q-1]
+      prs:
+        (:p:[1..P-1]:
+          (:q:[1..Q-1]:
+            [ $p%$q==0 ->
+              x[$q] -> y[$p]-
+            [] else ->
+              y[$p] -> z[$q]+
+            ]
+          )
+        )
+      footprint collection: {
+        <15, 8> {
+          pint^0 P value: ?
+          pint^0 Q value: ?
+          bool^1 x
+            unrolled indices: {
+              1 = ::div::x[1] (1) 
+              2 = ::div::x[2] (2) 
+              3 = ::div::x[3] (3) 
+              4 = ::div::x[4] (4) 
+              5 = ::div::x[5] (5) 
+              6 = ::div::x[6] (6) 
+              7 = ::div::x[7] (7) 
+            }
+          bool^1 y
+            unrolled indices: {
+              1 = ::div::y[1] (8) 
+              2 = ::div::y[2] (9) 
+              3 = ::div::y[3] (10) 
+              4 = ::div::y[4] (11) 
+              5 = ::div::y[5] (12) 
+              6 = ::div::y[6] (13) 
+              7 = ::div::y[7] (14) 
+              8 = ::div::y[8] (15) 
+              9 = ::div::y[9] (16) 
+              10 = ::div::y[10] (17) 
+              11 = ::div::y[11] (18) 
+              12 = ::div::y[12] (19) 
+              13 = ::div::y[13] (20) 
+              14 = ::div::y[14] (21) 
+            }
+          bool^1 z
+            unrolled indices: {
+              1 = ::div::z[1] (22) 
+              2 = ::div::z[2] (23) 
+              3 = ::div::z[3] (24) 
+              4 = ::div::z[4] (25) 
+              5 = ::div::z[5] (26) 
+              6 = ::div::z[6] (27) 
+              7 = ::div::z[7] (28) 
+            }
+          bool instance pool:
+          1	::div::x[1]
+          2	::div::x[2]
+          3	::div::x[3]
+          4	::div::x[4]
+          5	::div::x[5]
+          6	::div::x[6]
+          7	::div::x[7]
+          8	::div::y[1]
+          9	::div::y[2]
+          10	::div::y[3]
+          11	::div::y[4]
+          12	::div::y[5]
+          13	::div::y[6]
+          14	::div::y[7]
+          15	::div::y[8]
+          16	::div::y[9]
+          17	::div::y[10]
+          18	::div::y[11]
+          19	::div::y[12]
+          20	::div::y[13]
+          21	::div::y[14]
+          22	::div::z[1]
+          23	::div::z[2]
+          24	::div::z[3]
+          25	::div::z[4]
+          26	::div::z[5]
+          27	::div::z[6]
+          28	::div::z[7]
+          resolved prs:
+          x[1] -> y[1]-
+          y[1] -> z[2]+
+          y[1] -> z[3]+
+          y[1] -> z[4]+
+          y[1] -> z[5]+
+          y[1] -> z[6]+
+          y[1] -> z[7]+
+          x[1] -> y[2]-
+          x[2] -> y[2]-
+          y[2] -> z[3]+
+          y[2] -> z[4]+
+          y[2] -> z[5]+
+          y[2] -> z[6]+
+          y[2] -> z[7]+
+          x[1] -> y[3]-
+          y[3] -> z[2]+
+          x[3] -> y[3]-
+          y[3] -> z[4]+
+          y[3] -> z[5]+
+          y[3] -> z[6]+
+          y[3] -> z[7]+
+          x[1] -> y[4]-
+          x[2] -> y[4]-
+          y[4] -> z[3]+
+          x[4] -> y[4]-
+          y[4] -> z[5]+
+          y[4] -> z[6]+
+          y[4] -> z[7]+
+          x[1] -> y[5]-
+          y[5] -> z[2]+
+          y[5] -> z[3]+
+          y[5] -> z[4]+
+          x[5] -> y[5]-
+          y[5] -> z[6]+
+          y[5] -> z[7]+
+          x[1] -> y[6]-
+          x[2] -> y[6]-
+          x[3] -> y[6]-
+          y[6] -> z[4]+
+          y[6] -> z[5]+
+          x[6] -> y[6]-
+          y[6] -> z[7]+
+          x[1] -> y[7]-
+          y[7] -> z[2]+
+          y[7] -> z[3]+
+          y[7] -> z[4]+
+          y[7] -> z[5]+
+          y[7] -> z[6]+
+          x[7] -> y[7]-
+          x[1] -> y[8]-
+          x[2] -> y[8]-
+          y[8] -> z[3]+
+          x[4] -> y[8]-
+          y[8] -> z[5]+
+          y[8] -> z[6]+
+          y[8] -> z[7]+
+          x[1] -> y[9]-
+          y[9] -> z[2]+
+          x[3] -> y[9]-
+          y[9] -> z[4]+
+          y[9] -> z[5]+
+          y[9] -> z[6]+
+          y[9] -> z[7]+
+          x[1] -> y[10]-
+          x[2] -> y[10]-
+          y[10] -> z[3]+
+          y[10] -> z[4]+
+          x[5] -> y[10]-
+          y[10] -> z[6]+
+          y[10] -> z[7]+
+          x[1] -> y[11]-
+          y[11] -> z[2]+
+          y[11] -> z[3]+
+          y[11] -> z[4]+
+          y[11] -> z[5]+
+          y[11] -> z[6]+
+          y[11] -> z[7]+
+          x[1] -> y[12]-
+          x[2] -> y[12]-
+          x[3] -> y[12]-
+          x[4] -> y[12]-
+          y[12] -> z[5]+
+          x[6] -> y[12]-
+          y[12] -> z[7]+
+          x[1] -> y[13]-
+          y[13] -> z[2]+
+          y[13] -> z[3]+
+          y[13] -> z[4]+
+          y[13] -> z[5]+
+          y[13] -> z[6]+
+          y[13] -> z[7]+
+          x[1] -> y[14]-
+          x[2] -> y[14]-
+          y[14] -> z[3]+
+          y[14] -> z[4]+
+          y[14] -> z[5]+
+          y[14] -> z[6]+
+          x[7] -> y[14]-
+        }
+      }
+      }
+
+  Instances:
+    K = process div<15, 8>^0 K (instantiated) = ::K (1) 
+}
+
+Created state:
+process instance pool:
+1	::K
+

@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.7 2006/07/16 03:34:42 fang Exp $
+	$Id: CHP.cc,v 1.8 2006/07/17 02:53:29 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -19,7 +19,6 @@
 #include "AST/expr_list.h"
 #include "AST/token.h"
 #include "AST/node_list.tcc"
-#include "AST/token.h"
 #include "AST/parse_context.h"
 #include "AST/range.h"
 

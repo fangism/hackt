@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/meta_conditional_base.cc"
 	Base for guarded bodies in meta language.  
-	$Id: meta_conditional_base.cc,v 1.4 2006/01/22 18:20:59 fang Exp $
+	$Id: meta_conditional_base.cc,v 1.5 2006/07/17 02:53:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_CONDITIONAL_BASE_CC__
@@ -30,7 +30,7 @@ meta_conditional_base::meta_conditional_base() : guard() { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 meta_conditional_base::meta_conditional_base(const guard_ptr_type& g) :
 		guard(g) {
-	NEVER_NULL(guard);
+	// may be NULL to represent else clause
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,8 +40,8 @@ meta_conditional_base::~meta_conditional_base() { }
 void
 meta_conditional_base::collect_transient_info_base(
 		persistent_object_manager& m) const {
-	NEVER_NULL(guard);
-	guard->collect_transient_info(m);
+	if (guard)
+		guard->collect_transient_info(m);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

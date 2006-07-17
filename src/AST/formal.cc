@@ -1,7 +1,7 @@
 /**
 	\file "AST/formal.cc"
 	Class method definitions for HAC::parser for formal-related classes.
-	$Id: formal.cc,v 1.3 2006/01/22 06:52:53 fang Exp $
+	$Id: formal.cc,v 1.4 2006/07/17 02:53:33 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_formal.cc,v 1.27.10.1 2005/12/11 00:45:06 fang Exp
  */
@@ -137,14 +137,6 @@ data_param_id::check_build(context& c) const {
 }
 
 //=============================================================================
-// class data_param_id_list method definitions
-
-data_param_id_list::data_param_id_list(const data_param_id* d) :
-		parent_type(d) { }
-
-data_param_id_list::~data_param_id_list() { }
-
-//=============================================================================
 // class data_param_decl method definitions
 
 data_param_decl::data_param_decl(const concrete_type_ref* t, 
@@ -193,20 +185,12 @@ data_param_decl::check_build(context& c) const {
 }
 
 //=============================================================================
-// class data_param_decl_list method definitions
-
-data_param_decl_list::data_param_decl_list(const data_param_decl* d) :
-		parent_type(d) { }
-
-data_param_decl_list::~data_param_decl_list() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Implementation temporary until I have more time...
  */
 good_bool
-data_param_decl_list::check_chan_ports(context& c) const {
-	parent_type::check_build(c);
+check_chan_ports(const data_param_decl_list& p, context& c) {
+	p.check_build(c);
 	// would've exited by now if there was an error.  
 	return good_bool(true);
 }
@@ -216,8 +200,8 @@ data_param_decl_list::check_chan_ports(context& c) const {
 	Implementation temporary until I have more time...
  */
 good_bool
-data_param_decl_list::check_data_ports(context& c) const {
-	parent_type::check_build(c);
+check_data_ports(const data_param_decl_list& p, context& c) {
+	p.check_build(c);
 	// would've exited by now if there was an error.  
 	return good_bool(true);
 }
@@ -304,14 +288,6 @@ port_formal_id::check_build(context& c) const {
 }
 
 //=============================================================================
-// class port_formal_id_list method definitions
-
-port_formal_id_list::port_formal_id_list(const port_formal_id* p) :
-		parent_type(p) { }
-
-port_formal_id_list::~port_formal_id_list() { }
-
-//=============================================================================
 // class port_formal_decl method definitions
 
 CONSTRUCTOR_INLINE
@@ -361,16 +337,6 @@ port_formal_decl::check_build(context& c) const {
 	}
 	return return_type(NULL);
 }
-
-//=============================================================================
-// class port_formal_decl_list method definitions
-
-port_formal_decl_list::port_formal_decl_list() : parent_type() { }
-
-port_formal_decl_list::port_formal_decl_list(const port_formal_decl* p) :
-		parent_type(p) { }
-
-port_formal_decl_list::~port_formal_decl_list() { }
 
 //=============================================================================
 // class template_formal_id method definitions
@@ -461,14 +427,6 @@ template_formal_id::check_build(context& c) const {
 }
 
 //=============================================================================
-// class template_formal_id_list method definitions
-
-template_formal_id_list::template_formal_id_list(const template_formal_id* t) :
-		parent_type(t) { }
-
-template_formal_id_list::~template_formal_id_list() { }
-
-//=============================================================================
 // class template_formal_decl method definitions
 
 CONSTRUCTOR_INLINE
@@ -516,19 +474,6 @@ template_formal_decl::check_build(context& c) const {
 	// catch return errors?
 	return def;
 }
-
-//=============================================================================
-// class template_formal_decl_list method definitions
-
-template_formal_decl_list::template_formal_decl_list() : parent_type() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template_formal_decl_list::template_formal_decl_list(
-		const template_formal_decl* t) :
-		parent_type(t) { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-template_formal_decl_list::~template_formal_decl_list() { }
 
 //=============================================================================
 // struct template_formal_decl_list_pair method definitions

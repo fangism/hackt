@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2006/05/11 22:46:07 fang Exp $
+#	$Id: Makefile.am,v 1.20 2006/07/17 02:53:40 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -11,7 +11,9 @@ HACKT_PARSE_TEST_FAILURES = inv-01 inv-04 inv-05 inv-10 inv-11 \
 	macro-pass-03 macro-pass-04 \
 	macro-param-01 macro-param-02 macro-param-03 \
 	size-02 size-06 \
-	spec_min_sep-02 spec_min_sep-07 spec_min_sep-08 spec_min_sep-09
+	spec_min_sep-02 spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
+	loop-05 loop-07 \
+	cond-01
 
 HACKT_PARSE_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	inv-12 inv-13 inv-14 inv-15 inv-16 inv-17 \
@@ -21,7 +23,8 @@ HACKT_PARSE_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 \
+	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 loop-09 \
+	cond-02 cond-03 cond-04 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 \
@@ -46,7 +49,8 @@ HACKT_CREATE_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 \
+	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 loop-09 \
+	cond-02 cond-03 cond-04 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 \
@@ -69,7 +73,8 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	wchb-01 wchb-02 wchb-03 wchb-04 wchb-05 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
-	loop-00 loop-04 loop-06 loop-08 \
+	loop-00 loop-04 loop-06 loop-08 loop-09 \
+	cond-02 cond-03 cond-04 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 \
@@ -101,14 +106,15 @@ EMPTY_CFLAT_PRS_TESTS += null-00 loop-00 \
 # more output expectation files for when bison is used
 BISON_OUTPUTS += inv-01 inv-11 \
 	echo-02 after-01 size-02 \
-	spec_min_sep-07 spec_min_sep-08 spec_min_sep-09
+	spec_min_sep-07 spec_min_sep-08 spec_min_sep-09 \
+	cond-01 \
+	loop-05 loop-07
 
 # includes other sources files used by test-cases (but aren't cases themselves)
 EXTRA_DIST += celem.hac nand.hac nor.hac logic.hac
 
-# TODO: haven't gotten around to these yet...
-# these are pending some decisions about prs { }
-EXTRA_DIST += loop-05.hac loop-07.hac cond-01.hac
+# pending test cases
+EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 

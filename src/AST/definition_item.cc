@@ -1,7 +1,7 @@
 /**
 	\file "AST/namespace.cc"
 	Class method definitions for namespace and other root item classes.
-	$Id: definition_item.cc,v 1.3 2006/01/22 06:52:53 fang Exp $
+	$Id: definition_item.cc,v 1.4 2006/07/17 02:53:31 fang Exp $
  */
 
 #ifndef	__HAC_AST_DEFINITION_ITEM_CC__
@@ -41,15 +41,6 @@ using util::auto_indent;
 
 //=============================================================================
 // class def_body_item method definitions
-
-//=============================================================================
-// class definition_body method definitions
-
-definition_body::definition_body() : parent() { }
-
-definition_body::definition_body(const def_body_item* d) : parent(d) { }
-
-definition_body::~definition_body() { }
 
 //=============================================================================
 // class language_body methd definitions

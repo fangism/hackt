@@ -1,0 +1,18 @@
+// "cond-02.hac"
+// copy-modified from "cond-01.hac"
+// should pass -- conditional PRS bodies
+
+template <pint N>
+defproc ass() {
+	bool x, a;
+	prs {
+		[N!=0 && N!=1->
+			x -> a-
+		]
+	}
+}
+
+ass<1> x;
+ass<2> y;
+
+

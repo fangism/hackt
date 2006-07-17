@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.30 2006/07/04 07:25:41 fang Exp $
+#	$Id: TODO,v 1.31 2006/07/17 02:53:28 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -62,6 +62,8 @@ instance collections:
 	But then what will instance references refer to?
 	Member instance references? public vs. generic (private)
 	Possibly introduce use of placeholders.   
+	This fix will be highly invasive.  
+
 
 ===============================================================================
 command interface:
@@ -257,7 +259,7 @@ parser:
 	replace the use of lexyacc_prefix.awk with a generated #define 
 		substitution header.  Include that instead of transforming
 		source file.  This will be needed for multi-parse/multi-lex
-		compilation, and avoiding comflicts in libbogus.  
+		compilation, and avoiding conflicts in libbogus.  
 
 	HIGH PRIORITY: [Status: complete 20051112]
 	convert generated lexers into classes:
@@ -278,8 +280,10 @@ LANGUAGES:
 PRS and CHP
 
 need to handle loops and conditionals *around* prs { ... } bodies
-	need intermediate representation support for conditional PRS (easy)
-	Tentatively not supported until issue is resolved.  
+	need intermediate representation support for conditional PRS (DONE)
+	Resolution (20060716):
+		prs {...} cannot appear inside loops/conditionals,
+		neither can typedefs, only instance management.  
 
 SPEC:
 	support for 'inline' attribute to flatten subinstances into 

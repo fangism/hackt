@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.11 2006/05/12 00:39:08 fang Exp $
+	$Id: instance.cc,v 1.12 2006/07/17 02:53:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -76,7 +76,7 @@ SPECIALIZE_UTIL_WHAT(HAC::parser::instance_alias,
 	"(alias-assign)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::loop_instantiation, 
 	"(loop-instance)")
-SPECIALIZE_UTIL_WHAT(HAC::parser::guarded_definition_body, 
+SPECIALIZE_UTIL_WHAT(HAC::parser::guarded_instance_management, 
 	"(guarded-def-body)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::conditional_instantiation, 
 	"(conditional-instance)")
@@ -616,13 +616,6 @@ if (ranges) {
 }
 
 //=============================================================================
-// class instance_id_list method definitions
-
-instance_id_list::instance_id_list(const instance_base* i) : parent_type(i) { }
-
-instance_id_list::~instance_id_list() { }
-
-//=============================================================================
 // class instance_declaration method definitions
 
 /**
@@ -952,7 +945,8 @@ instance_alias::check_build(context& c) const {
 CONSTRUCTOR_INLINE
 loop_instantiation::loop_instantiation(const char_punctuation_type* l,
 		const token_identifier* i, const range* g,
-		const definition_body* b, const char_punctuation_type* r) :
+		const instance_management_list* b,
+		const char_punctuation_type* r) :
 		instance_management(),
 		lp(l), index(i), rng(g), body(b), rp(r) {
 	NEVER_NULL(lp); NEVER_NULL(index);
@@ -1012,34 +1006,35 @@ loop_instantiation::check_build(context& c) const {
 }
 
 //=============================================================================
-// class guarded_definition_body method definitions
+// class guarded_instance_management method definitions
       
 CONSTRUCTOR_INLINE
-guarded_definition_body::guarded_definition_body(const expr* e,
-		const string_punctuation_type* a, const definition_body* b) :
+guarded_instance_management::guarded_instance_management(const expr* e,
+		const string_punctuation_type* a,
+		const instance_management_list* b) :
 		instance_management(), guard(e), arrow(a), body(b) {
 	NEVER_NULL(guard); NEVER_NULL(arrow); NEVER_NULL(body);
 }   
 
 DESTRUCTOR_INLINE
-guarded_definition_body::~guarded_definition_body() {
+guarded_instance_management::~guarded_instance_management() {
 }       
 
-PARSER_WHAT_DEFAULT_IMPLEMENTATION(guarded_definition_body)
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(guarded_instance_management)
 
 line_position
-guarded_definition_body::leftmost(void) const {
+guarded_instance_management::leftmost(void) const {
 	return guard->leftmost();
 }       
 
 line_position
-guarded_definition_body::rightmost(void) const {
+guarded_instance_management::rightmost(void) const {
 	return body->rightmost();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const object>
-guarded_definition_body::check_build(context& c) const {
+guarded_instance_management::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
 	const expr::meta_return_type g(guard->check_meta_expr(c));
 	const count_ptr<pbool_expr> guard_expr(g.is_a<pbool_expr>());
@@ -1059,20 +1054,11 @@ guarded_definition_body::check_build(context& c) const {
 }
 
 //=============================================================================
-// class guarded_definition_body_list method definitions
-
-guarded_definition_body_list::guarded_definition_body_list(
-		const guarded_definition_body* g) :
-		parent_type(g) { }
-
-guarded_definition_body_list::~guarded_definition_body_list() { }
-
-//=============================================================================
 // class conditional_instantiation method definitions
 
 CONSTRUCTOR_INLINE
 conditional_instantiation::conditional_instantiation(
-		const guarded_definition_body_list* n) :
+		const guarded_instance_management_list* n) :
 		instance_management(), gd(n) {
 	NEVER_NULL(gd);
 }
@@ -1170,7 +1156,8 @@ type_completion_connection_statement::check_build(context& c) const {
 // explicit template class instantiations
 
 template class node_list<const instance_base>;
-template class node_list<const guarded_definition_body>;
+template class node_list<const instance_management>;
+template class node_list<const guarded_instance_management>;
 
 //=============================================================================
 }	// end namespace parser

@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.3 2006/02/21 04:48:19 fang Exp $
+	$Id: instance.h,v 1.4 2006/07/17 02:53:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -155,23 +155,6 @@ virtual	line_position
 
 virtual	ROOT_CHECK_PROTO;
 };	// end class instance_base
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const instance_base>		instance_id_list_base;
-
-/**
-	Instance identifier list.  
- */
-class instance_id_list : public instance_id_list_base {
-protected:
-	typedef	instance_id_list_base		parent_type;
-public:
-	explicit
-	instance_id_list(const instance_base* i);
-
-	~instance_id_list();
-
-};	// end class instance_id_list
 
 //-----------------------------------------------------------------------------
 /// instance identifier with ranges
@@ -334,12 +317,13 @@ protected:
 	const excl_ptr<const char_punctuation_type>	lp;
 	const excl_ptr<const token_identifier>		index;
 	const excl_ptr<const range>			rng;
-	const excl_ptr<const definition_body>		body;
+	const excl_ptr<const instance_management_list>		body;
 	const excl_ptr<const char_punctuation_type>	rp;
 public:
 	loop_instantiation(const char_punctuation_type* l,
 		const token_identifier* i, const range* g,
-		const definition_body* b, const char_punctuation_type* r);
+		const instance_management_list* b, 
+		const char_punctuation_type* r);
 
 	~loop_instantiation();
 
@@ -357,17 +341,17 @@ public:
 
 //=============================================================================
 /// conditional instantiations in definition body
-class guarded_definition_body : public instance_management {
+class guarded_instance_management : public instance_management {
 protected:
 	const excl_ptr<const expr>	guard;	///< condition expression
 	const excl_ptr<const string_punctuation_type>	arrow;	///< right arrow
-	const excl_ptr<const definition_body>	body;
+	const excl_ptr<const instance_management_list>	body;
 public:
-	guarded_definition_body(const expr* e, 
+	guarded_instance_management(const expr* e, 
 		const string_punctuation_type* a, 
-		const definition_body* b);
+		const instance_management_list* b);
 
-	~guarded_definition_body();
+	~guarded_instance_management();
 
 	ostream&
 	what(ostream& o) const;
@@ -379,33 +363,16 @@ public:
 	rightmost(void) const;
 
 	ROOT_CHECK_PROTO;
-};	// end class guarded_definition_body
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const guarded_definition_body>
-		guarded_definition_body_list_base;
-
-/**
-	Conditional (guarded) body inside definition.  
- */
-class guarded_definition_body_list : public guarded_definition_body_list_base {
-protected:
-	typedef	guarded_definition_body_list_base		parent_type;
-public:
-	explicit
-	guarded_definition_body_list(const guarded_definition_body* g);
-
-	~guarded_definition_body_list();
-};	// end class guarded_definition_body_list
+};	// end class guarded_instance_management
 
 //-----------------------------------------------------------------------------
 /// wrapper class for conditional instantiations
 class conditional_instantiation : public instance_management {
 protected:
-	const excl_ptr<const guarded_definition_body_list>	gd;
+	const excl_ptr<const guarded_instance_management_list>	gd;
 public:
 	explicit
-	conditional_instantiation(const guarded_definition_body_list* n);
+	conditional_instantiation(const guarded_instance_management_list* n);
 
 	~conditional_instantiation();
 

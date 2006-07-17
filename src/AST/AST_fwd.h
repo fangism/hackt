@@ -1,7 +1,7 @@
 /**
 	\file "AST/AST_fwd.h"
 	Forward declarations for classes in HAC::parser.
-	$Id: AST_fwd.h,v 1.4 2006/04/12 08:53:11 fang Exp $
+	$Id: AST_fwd.h,v 1.5 2006/07/17 02:53:28 fang Exp $
  */
 
 #ifndef	__HAC_AST_AST_FWD_H__
@@ -43,12 +43,13 @@ class statement;
 class incdec_stmt;
 class assign_stmt;
 class def_body_item;
-class definition_body;
+typedef	node_list<const def_body_item>	definition_body;
 class language_body;
 class namespace_body;
 class using_namespace;
 class instance_management;
 // class template_argument_list;
+typedef	node_list<const instance_management>	instance_management_list;
 class concrete_type_ref;
 class generic_type_ref;
 
@@ -100,17 +101,17 @@ class reference_group_construction;
 //-----------------------------------------------------------------------------
 // declared in "AST/formal.h"
 class data_param_id;
-class data_param_id_list;
+typedef	node_list<const data_param_id>		data_param_id_list;
 class data_param_decl;
-class data_param_decl_list;
+typedef	node_list<const data_param_decl>	data_param_decl_list;
 class port_formal_id;
-class port_formal_id_list;
+typedef	node_list<const port_formal_id>		port_formal_id_list;
 class port_formal_decl;
-class port_formal_decl_list;
+typedef	node_list<const port_formal_decl>	port_formal_decl_list;
 class template_formal_id;
-class template_formal_id_list;
+typedef	node_list<const template_formal_id>	template_formal_id_list;
 class template_formal_decl;
-class template_formal_decl_list;
+typedef	node_list<const template_formal_decl>	template_formal_decl_list;
 struct template_formal_decl_list_pair;
 
 //-----------------------------------------------------------------------------
@@ -120,15 +121,16 @@ class instance_management;
 class alias_list;
 class actuals_base;
 class instance_base;
-class instance_id_list;
+typedef	node_list<const instance_base>		instance_id_list;
 class instance_array;
 class instance_declaration;
 class instance_connection;
 class connection_statement;
 class instance_alias;
 class loop_instantiation;
-class guarded_definition_body;
-class guarded_definition_body_list;
+class guarded_instance_management;
+typedef	node_list<const guarded_instance_management>
+				 guarded_instance_management_list;
 class conditional_instantiation;
 class type_completion_statement;
 class type_completion_connection_statement;

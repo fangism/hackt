@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.14 2006/05/08 06:12:05 fang Exp $
+	$Id: PRS.h,v 1.15 2006/07/17 02:53:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -13,6 +13,7 @@
 #include "Object/lang/bool_literal.h"
 #include "Object/lang/directive_source.h"
 #include "Object/unroll/meta_loop_base.h"
+#include "Object/unroll/meta_conditional_base.h"
 #include <string>
 #include <vector>
 #include "util/memory/chunk_map_pool_fwd.h"
@@ -365,6 +366,55 @@ public:
 	void
 	load_object(const persistent_object_manager&, istream&);
 };	// end class rule_loop
+
+//=============================================================================
+/**
+	Class for conditional rule bodies.  
+ */
+class rule_conditional : public rule, private meta_conditional_base {
+	typedef	rule_conditional		this_type;
+	typedef	rule_set::value_type		value_type;
+private:
+	rule_set				if_rules;
+	// meta_conditional_base		// no else condition needed
+	rule_set				else_rules;
+public:
+	rule_conditional();
+
+	explicit
+	rule_conditional(const guard_ptr_type&);
+
+	~rule_conditional();
+
+	ostream&
+	what(ostream&) const;
+
+	ostream&
+	dump(ostream&, const rule_dump_context&) const;
+
+	PRS_UNROLL_RULE_PROTO;
+
+	void
+	check(void) const;
+
+	excl_ptr<rule>
+	expand_complement(void);
+
+	void
+	push_back_if_clause(excl_ptr<rule>&);
+
+	void
+	import_else_clause(this_type&);
+
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
+	void
+	write_object(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object(const persistent_object_manager&, istream&);
+};	// end class rule_conditional
 
 //=============================================================================
 /**

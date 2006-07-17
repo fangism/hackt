@@ -1,0 +1,17 @@
+// "loop-09.hac"
+// copy-modified from "loop-07.hac" (transposed loop/prs)
+// should pass, and produce an inverter
+
+template <pint N>
+defproc null() {
+bool x, y;
+prs {
+(:i:N:
+	x	=> y-
+)
+}
+}
+
+null<0> none;	// no production rule
+null<3> foo;	// redundant rules
+

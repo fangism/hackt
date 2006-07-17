@@ -1,7 +1,7 @@
 /**
 	\file "AST/formal.h"
 	Definition-formal-related parser classes for HAC.  
-	$Id: formal.h,v 1.2 2005/12/13 04:15:08 fang Exp $
+	$Id: formal.h,v 1.3 2006/07/17 02:53:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_formal.h,v 1.14.40.1 2005/12/11 00:45:07 fang Exp
  */
@@ -44,23 +44,6 @@ public:
 
 };	// end class data_param_id
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const data_param_id>		data_param_id_list_base;
-
-/**
-	Data or parameter identifier list.  
- */
-class data_param_id_list : public data_param_id_list_base {
-protected:
-	typedef	data_param_id_list_base			parent_type;
-public:
-	explicit
-	data_param_id_list(const data_param_id* d);
-
-	~data_param_id_list();
-
-};	// end class data_param_id_list
-
 //-----------------------------------------------------------------------------
 /**
 	Data parameter port declarations, grouped together by type.  
@@ -93,28 +76,11 @@ public:
 };	// end class data_param_decl
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const data_param_decl>	data_param_decl_list_base;
+good_bool
+check_chan_ports(const data_param_decl_list&, context&);
 
-/**
-	Data or parameter declaration list.  
-	Consider just typedef to _base class.  
- */
-class data_param_decl_list : public data_param_decl_list_base {
-protected:
-	typedef	data_param_decl_list_base		parent_type;
-public:
-	explicit
-	data_param_decl_list(const data_param_decl* d);
-
-	~data_param_decl_list();
-
-	good_bool
-	check_chan_ports(context&) const;
-
-	good_bool
-	check_data_ports(context&) const;
-
-};	// end class data_param_decl_list
+good_bool
+check_data_ports(const data_param_decl_list&, context&);
 
 //=============================================================================
 /**
@@ -142,21 +108,6 @@ public:
 	check_build(context& c) const;
 };	// end class port_formal_id
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const port_formal_id>		port_formal_id_list_base;
-
-/// list of port-formal identifiers (optional arrays)
-class port_formal_id_list : public port_formal_id_list_base {
-protected:
-	typedef	port_formal_id_list_base		parent_type;
-public:
-	explicit
-	port_formal_id_list(const port_formal_id* p);
-
-	~port_formal_id_list();
-
-};	// end class port_formal_id_list
-
 //-----------------------------------------------------------------------------
 /**
 	Port formal declaration contains a type and identifier list.
@@ -183,25 +134,6 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class port_formal_decl
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const port_formal_decl>	port_formal_decl_list_base;
-
-/**
-	List of port-formal declarations.  
-	Later: distinguish between empty ports and NULL (unspecified ports).  
- */
-class port_formal_decl_list : public port_formal_decl_list_base {
-protected:
-	typedef	port_formal_decl_list_base		parent_type;
-public:
-	port_formal_decl_list();
-
-	explicit
-	port_formal_decl_list(const port_formal_decl* p);
-
-	~port_formal_decl_list();
-};	// end class port_formal_decl_list
 
 //=============================================================================
 /**
@@ -236,20 +168,6 @@ public:
 	check_build(context& c) const;
 };	// end class template_formal_id
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const template_formal_id>	template_formal_id_list_base;
-
-/// list of template-formal identifiers (optional arrays)
-class template_formal_id_list : public template_formal_id_list_base {
-protected:
-	typedef	template_formal_id_list_base		parent_type;
-public:
-	explicit
-	template_formal_id_list(const template_formal_id* t);
-
-	~template_formal_id_list();
-};	// end class template_formal_id_list
-
 //-----------------------------------------------------------------------------
 /**
 	template formal declaration contains a type and identifier list
@@ -281,25 +199,6 @@ public:
 	never_ptr<const object>
 	check_build(context& c) const;
 };	// end class template_formal_decl
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const template_formal_decl>
-					template_formal_decl_list_base;
-
-/**
-	Template formal declaration list.  
- */
-class template_formal_decl_list : public template_formal_decl_list_base {
-protected:
-	typedef	template_formal_decl_list_base		parent_type;
-public:
-	template_formal_decl_list();
-
-	explicit
-	template_formal_decl_list(const template_formal_decl* t);
-
-	~template_formal_decl_list();
-};	// end class template_formal_decl_list
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -5,6 +5,23 @@
 
 2006-07-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-31:
+	  AST: %s/guarded_definition_body/guarded_instance_management/
+	  Eliminated a bunch of useless node_list AST intermediate classes, 
+		substituting with node_list<...> typedefs.  
+	  Grammar: language bodies and typedefs are no longer allowed
+		inside loop/conditional scopes, only instance_management
+		items are allowed inside.  
+		NOTE: NO prs { ... } inside conditionals and loops!
+		PRS: added support for conditional blocks (optional
+			else clause) in rule lists.  (It's about time!)
+	  Object/lang/PRS.{h,cc}: new class rule_conditional for 
+		unrolling conditional scopes of PRS.  
+	  Enabled some pending test cases, and some new ones.  
+
+
+2006-07-16	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-30:
 	  Minor fixes to diagnostics for new operators, 
 		including a few test case updates.  

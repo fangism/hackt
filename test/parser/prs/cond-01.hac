@@ -1,3 +1,6 @@
+// "cond-01.hac"
+// should fail: prs forbidden inside instance_management scope
+
 template <pint N>
 defproc ass() {
 	bool x, a;

@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.14 2006/06/26 01:45:46 fang Exp $
+	$Id: PRS.cc,v 1.15 2006/07/17 02:53:29 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -28,6 +28,7 @@
 
 #include "Object/def/process_definition.h"
 #include "Object/expr/pint_const.h"
+#include "Object/expr/pbool_expr.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/data_expr.h"
@@ -56,7 +57,9 @@ namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::rule, "(prs-rule)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::literal, "(prs-literal)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::loop, "(prs-loop)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::conditional, "(prs-conditional)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::body, "(prs-body)")
+SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::guarded_body, "(prs-guarded-body)")
 SPECIALIZE_UTIL_WHAT(HAC::parser::PRS::op_loop, "(prs-op-loop)")
 }
 
@@ -68,6 +71,7 @@ using std::back_inserter;
 using entity::definition_base;
 using entity::process_definition;
 using entity::pint_scalar;
+using entity::pbool_expr;
 using entity::meta_range_expr;
 using std::find;
 using std::find_if;
@@ -358,6 +362,130 @@ loop::check_rule(context& c) const {
 }	// end method loop::check_rule
 
 //=============================================================================
+// class guarded_body method definitions
+
+guarded_body::guarded_body(const expr* g, const char_punctuation_type* a, 
+		const rule_list* r) :
+		guard(g), arrow(a), rules(r) {
+	// guard may be NULL (else-clause)
+	NEVER_NULL(arrow);
+	NEVER_NULL(rules);
+}
+
+guarded_body::~guarded_body() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(guarded_body)
+
+line_position
+guarded_body::leftmost(void) const {
+	if (guard)
+		return guard->leftmost();
+	else	return arrow->leftmost();
+}
+
+line_position
+guarded_body::rightmost(void) const {
+	return rules->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+guarded_body::return_type
+guarded_body::check_clause(context& c) const {
+	expr::meta_return_type _g(NULL);
+	entity::meta_conditional_base::guard_ptr_type bg(NULL);
+	if (guard && !guard.is_a<const token_else>()) {
+		_g = guard->check_meta_expr(c);
+		if (!_g) {
+			cerr << "Error checking guard expression of "
+				"conditional PRS.  " << where(*guard) << endl;
+			return return_type();
+		} else {
+		bg = _g.is_a<const pbool_expr>();
+		if (!bg) {
+			cerr << "Error: guard expression is not boolean.  " <<
+				where(*guard) << endl;
+			return return_type();
+		}
+		}
+	}
+	const return_type ret(new entity::PRS::rule_conditional(bg));
+	// code below mostly ripped from loop::check_rule()
+	checked_rules_type checked_rules;
+	rules->check_list(checked_rules, &body_item::check_rule, c);
+	const checked_rules_type::const_iterator
+		null_iter(find(checked_rules.begin(), checked_rules.end(), 
+			body_item::return_type()));
+	if (null_iter == checked_rules.end()) {
+		// no errors found, add them too the process definition
+		checked_rules_type::iterator i(checked_rules.begin());
+		const checked_rules_type::iterator e(checked_rules.end());
+		for ( ; i!=e; ++i) {
+			excl_ptr<entity::PRS::rule>
+				xfer(i->exclusive_release());
+//			xfer->check();		// paranoia
+			ret->push_back_if_clause(xfer);
+			// can transfer to else clause later...
+			MUST_BE_NULL(xfer);
+		}
+		return ret;
+	} else {
+		cerr << "ERROR: at least one error in conditional PRS rules.  "
+			<< where(*rules) << endl;
+		return return_type(NULL);
+	}
+}	// end guarded_body::check_clause
+
+//=============================================================================
+// class conditional method definitions
+
+conditional::conditional(const char_punctuation_type* l, 
+		const guarded_body* i, const guarded_body* e, 
+		const char_punctuation_type* r) :
+		lb(l), if_then(i), else_clause(e), rb(r) {
+	NEVER_NULL(if_then);
+	// else clause is optional
+}
+
+conditional::~conditional() { }
+
+PARSER_WHAT_DEFAULT_IMPLEMENTATION(conditional)
+
+line_position
+conditional::leftmost(void) const {
+	if (lb)	return lb->leftmost();
+	else	return if_then->leftmost();
+}
+
+line_position
+conditional::rightmost(void) const {
+	if (rb)	return rb->rightmost();
+	else if (else_clause)
+		return else_clause->rightmost();
+	else	return if_then->rightmost();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+body_item::return_type
+conditional::check_rule(context& c) const {
+	const guarded_body::return_type ic(if_then->check_clause(c));
+	if (!ic) {
+		// already have error message
+		return return_type(NULL);
+	}
+	if (else_clause) {
+		const guarded_body::return_type
+			ec(else_clause->check_clause(c));
+		if (!ec) {
+			// already have an error message
+			return return_type(NULL);
+		}
+		// transfer from one list to another
+		ic->import_else_clause(*ec);
+	}
+	return ic;
+}	// end conditional::check_rule
+
+//=============================================================================
 // class body method definitions
 
 CONSTRUCTOR_INLINE
@@ -367,8 +495,7 @@ body::body(const generic_keyword_type* t, const rule_list* r) :
 }
 
 DESTRUCTOR_INLINE
-body::~body() {
-}
+body::~body() { }
 
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(body)
 

@@ -1,7 +1,7 @@
 /**
 	\file "AST/definition_item.h"
 	Base set of classes for the HAC parser.  
-	$Id: definition_item.h,v 1.2 2005/12/13 04:15:07 fang Exp $
+	$Id: definition_item.h,v 1.3 2006/07/17 02:53:32 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition_item.h,v 1.7.48.1 2005/12/11 00:45:04 fang Exp
  */
@@ -37,23 +37,6 @@ virtual	line_position
 
 virtual	ROOT_CHECK_PROTO = 0;
 };	// end class def_body_item
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-typedef	node_list<const def_body_item>	def_body_item_list;
-
-/// definition body is just a list of definition items
-class definition_body : public def_body_item_list {
-protected:
-	typedef	def_body_item_list		parent;
-public:
-	definition_body();
-
-	explicit
-	definition_body(const def_body_item* d);
-
-	~definition_body();
-
-};	// end class definition_body
 
 //=============================================================================
 /**

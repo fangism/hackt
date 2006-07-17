@@ -1,0 +1,21 @@
+// "cond-04.hac"
+// testing nested loop and conditionals in PRS
+
+template <pint P, Q>
+defproc div() {
+bool x[1..Q-1], y[1..P-1], z[1..Q-1];
+prs {
+(:p:1..P-1:
+(:q:1..Q-1:
+	[p%q == 0 ->
+		x[q] -> y[p]-
+	[] else ->
+		y[p] -> z[q]+
+	]
+)
+)
+}
+}
+
+div<15,8> K;
+

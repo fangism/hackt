@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.h"
 	PRS-specific syntax tree classes.
-	$Id: PRS.h,v 1.4 2006/02/10 21:50:34 fang Exp $
+	$Id: PRS.h,v 1.5 2006/07/17 02:53:30 fang Exp $
 	This used to be the following before it was renamed:
 	Id: art_parser_prs.h,v 1.15.12.1 2005/12/11 00:45:09 fang Exp
  */
@@ -14,6 +14,7 @@
 #include "AST/expr_base.h"
 #include "AST/definition_item.h"
 #include "util/STL/vector_fwd.h"
+#include "util/STL/pair_fwd.h"
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
@@ -22,6 +23,7 @@ namespace entity {
 namespace PRS {
 	class rule;
 	class attribute;
+	class rule_conditional;
 }
 }
 namespace parser {
@@ -66,6 +68,12 @@ virtual	line_position
 
 virtual	PRS_ITEM_CHECK_PROTO = 0;
 };	// end class body_item
+
+//-----------------------------------------------------------------------------
+typedef	count_ptr<entity::PRS::rule_conditional>
+					guarded_body_return_type;
+
+typedef	default_vector<body_item::return_type>::type	checked_rules_type;
 
 //=============================================================================
 /**
@@ -151,8 +159,6 @@ public:
 	Repetition of production rules in a loop.  
  */
 class loop : public body_item {
-	typedef	default_vector<body_item::return_type>::type
-				checked_rules_type;
 protected:
 	const excl_ptr<const char_punctuation_type>	lp;
 	const excl_ptr<const token_identifier>	index;
@@ -177,6 +183,62 @@ public:
 
 	PRS_ITEM_CHECK_PROTO;
 };	// end class loop
+
+//=============================================================================
+/**
+	Guarded PRS body clause.  
+ */
+class guarded_body {
+	const excl_ptr<const expr>			guard;
+	const excl_ptr<const char_punctuation_type>	arrow;
+	const excl_ptr<const rule_list>			rules;
+public:
+	typedef	guarded_body_return_type		return_type;
+
+	guarded_body(const expr*, const char_punctuation_type*,
+		const rule_list*);
+	~guarded_body();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	return_type
+	check_clause(context&) const;
+
+};	// end class guarded_body
+
+//=============================================================================
+/**
+	Class for wrapping production rules inside conditionals.  
+ */
+class conditional : public body_item {
+	const excl_ptr<const char_punctuation_type>	lb;
+	const excl_ptr<const guarded_body>	if_then;
+	const excl_ptr<const guarded_body>	else_clause;
+	const excl_ptr<const char_punctuation_type>	rb;
+public:
+	conditional(const char_punctuation_type*,
+		const guarded_body*, const guarded_body*,
+		const char_punctuation_type*);
+	~conditional();
+
+	ostream&
+	what(ostream& o) const;
+
+	line_position
+	leftmost(void) const;
+
+	line_position
+	rightmost(void) const;
+
+	PRS_ITEM_CHECK_PROTO;
+};	// end class conditional
 
 //=============================================================================
 /**

@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.4 2006/01/26 19:23:05 fang Exp $
+	$Id: definition.cc,v 1.5 2006/07/17 02:53:31 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -172,7 +172,7 @@ user_data_type_signature::check_signature(context& c) const {
 	} else {
 		ndd->attach_base_data_type(bdr);
 	}
-	if (!params->check_data_ports(c).good) {
+	if (!check_data_ports(*params, c).good) {
 		cerr << "ERROR: in data ports list at " <<
 			where(*params) << endl;
 		THROW_EXIT;
@@ -485,7 +485,7 @@ user_chan_type_signature::check_signature(context& c) const {
 	} else {
 		ncd->attach_base_channel_type(bcr);
 	}
-	if (!params->check_chan_ports(c).good) {
+	if (!check_chan_ports(*params, c).good) {
 		cerr << "ERROR: in channel ports list at " <<
 			where(*params) << endl;
 		THROW_EXIT;

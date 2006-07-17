@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_conditional_base.h"
-	$Id: meta_conditional_base.h,v 1.4 2006/01/22 18:20:59 fang Exp $
+	$Id: meta_conditional_base.h,v 1.5 2006/07/17 02:53:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_CONDITIONAL_BASE_H__
@@ -24,7 +24,7 @@ using util::persistent_object_manager;
  */
 class meta_conditional_base {
 public:
-	typedef	count_ptr<pbool_expr>		guard_ptr_type;
+	typedef	count_ptr<const pbool_expr>		guard_ptr_type;
 
 protected:
 	guard_ptr_type				guard;

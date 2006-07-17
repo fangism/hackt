@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.16 2006/07/04 07:26:09 fang Exp $
+	$Id: PRS.cc,v 1.17 2006/07/17 02:53:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -24,8 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 // #include "Object/inst/alias_empty.h"
 // #include "Object/inst/instance_alias_info.h"
 
-#include "Object/expr/bool_expr.h"
-#include "Object/expr/const_param.h"
+#include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -53,6 +52,7 @@ namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::pull_up, "PRS-up")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::pull_dn, "PRS-dn")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::rule_loop, "PRS-loop")
+SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::rule_conditional, "PRS-cond")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::and_expr, "PRS-and")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::or_expr, "PRS-or")
 SPECIALIZE_UTIL_WHAT(HAC::entity::PRS::and_expr_loop, "PRS-and-loop")
@@ -66,6 +66,8 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::pull_dn, PRS_PULLDN_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::rule_loop, PRS_RULE_LOOP_TYPE_KEY, 0)
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::PRS::rule_conditional, PRS_RULE_COND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::PRS::and_expr, PRS_AND_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -712,6 +714,133 @@ pass::load_object(const persistent_object_manager& m, istream& i) {
 
 //=============================================================================
 // class prs_expr method definitions
+
+//=============================================================================
+// class rule_conditional method definitions
+
+rule_conditional::rule_conditional() : rule(), 
+		meta_conditional_base(), if_rules(), else_rules() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rule_conditional::rule_conditional(const guard_ptr_type& g) : rule(), 
+		meta_conditional_base(g), if_rules(), else_rules() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+rule_conditional::~rule_conditional() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(rule_conditional)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+rule_conditional::dump(ostream& o, const rule_dump_context& c) const {
+	NEVER_NULL(guard);
+	guard->dump(o << "[ ", entity::expr_dump_context(c))
+		<< " ->" << endl;
+	{
+		INDENT_SECTION(o);
+		if_rules.dump(o, c);
+	}
+	if (!else_rules.empty()) {
+		o << auto_indent << "[] else ->" << endl;
+	{
+		INDENT_SECTION(o);
+		else_rules.dump(o, c);
+	}}
+	return o << auto_indent << ']';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Unrolls the rules in the body of guard evaluates true.  
+ */
+good_bool
+rule_conditional::unroll(const unroll_context& c, const node_pool_type& np, 
+		PRS::footprint& pfp) const {
+	const count_ptr<const pbool_const>
+		g(guard->__unroll_resolve_rvalue(c, guard));
+	if (!g) {
+		cerr << "Error evaluating guard expression of conditional PRS."
+			<< endl;
+		return good_bool(false);
+	}
+	// no change in context necessary
+	if (g->static_constant_value()) {
+		if (!if_rules.unroll(c, np, pfp).good) {
+			cerr << "Error encountered in conditional PRS if-clause." << endl;
+			return good_bool(false);
+		}
+	} else {
+		if (!else_rules.unroll(c, np, pfp).good) {
+			cerr << "Error encountered in conditional PRS else-clause." << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_conditional::check(void) const {
+	for_each(if_rules.begin(), if_rules.end(), rule::checker());
+	for_each(else_rules.begin(), else_rules.end(), rule::checker());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+excl_ptr<rule>
+rule_conditional::expand_complement(void) {
+	if_rules.expand_complements();
+	else_rules.expand_complements();
+	return excl_ptr<rule>(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_conditional::push_back_if_clause(excl_ptr<rule>& r) {
+	NEVER_NULL(r);
+	if_rules.push_back(value_type());
+	if_rules.back() = r;
+	MUST_BE_NULL(r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Voila!  Efficient transfer of rules.  
+ */
+void
+rule_conditional::import_else_clause(this_type& t) {
+	else_rules.swap(t.if_rules);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_conditional::collect_transient_info(persistent_object_manager& m) const {
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	meta_conditional_base::collect_transient_info_base(m);
+	if_rules.collect_transient_info_base(m);
+	else_rules.collect_transient_info_base(m);
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_conditional::write_object(const persistent_object_manager& m,
+		ostream& o) const {
+	meta_conditional_base::write_object_base(m, o);
+	if_rules.write_object_base(m, o);
+	else_rules.write_object_base(m, o);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+rule_conditional::load_object(const persistent_object_manager& m, istream& i) {
+	meta_conditional_base::load_object_base(m, i);
+	if_rules.load_object_base(m, i);
+	else_rules.load_object_base(m, i);
+}
 
 //=============================================================================
 // class rule_loop method definitions
