@@ -2,7 +2,7 @@
 	"channel.hac"
 	Standard channel definitions in HAC.  
 	Q: place thes in some namespace?
-	$Id: channel.hac,v 1.5 2006/06/02 20:15:13 fang Exp $
+	$Id: channel.hac,v 1.6 2006/07/18 18:31:44 sandra Exp $
  */
 
 /*** e1of<N> definitions ********************************/
@@ -195,7 +195,7 @@ defproc eMx1ofN(c1of<N> b[M]; bool e)
 {
 }
 
-template <pint M,N>
+template <pint N,M>
 defproc aMx1ofN(c1of<N> b[M]; bool a)
 {
 }

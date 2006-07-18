@@ -1,4 +1,9 @@
 "ChangeLog"
+2006-07-18	Sandra Jackson 	<sjj3@cornell.edu>
+	* HACKT-00-01-04-main-00-79-33:
+	  Fixed a convention bug in channel.hac so that parameters
+		in template appear in the order they are added.
+
 
 2006-06-02	David Fang	<fangism@users.sourceforce.net>
 
