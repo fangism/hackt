@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.18 2006/05/06 22:08:13 fang Exp $
+ 	$Id: module.cc,v 1.19 2006/07/18 20:13:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -317,14 +317,16 @@ module::__cflat(ostream& o, const cflat_options& cf) const {
 	// our priting visitor functor
 	PRS::cflat_prs_printer cfp(o, cf);
 	const cflat_context::module_setter tmp(cfp, *this);
-	if (cf.dsim_prs)	o << "dsim {" << endl;
-	try {
-		global_state.accept(cfp);	// print!
-	} catch (...) {
-		cerr << "Caught exception during cflat PRS." << endl;
-		return good_bool(false);
+	if (cf.include_prs) {
+		if (cf.dsim_prs)	o << "dsim {" << endl;
+		try {
+			global_state.accept(cfp);	// print!
+		} catch (...) {
+			cerr << "Caught exception during cflat PRS." << endl;
+			return good_bool(false);
+		}
+		if (cf.dsim_prs)	o << "}" << endl;
 	}
-	if (cf.dsim_prs)	o << "}" << endl;
 }
 	// print the name aliases in the manner requested in cflat_options
 	// TODO: instance_visitor
