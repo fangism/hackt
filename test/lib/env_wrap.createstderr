@@ -2382,8 +2382,8 @@ In namespace "", we have: {
       }
 
     aMx1ofN = process-definition (defined) aMx1ofN<
-      pint<> M
       pint<> N
+      pint<> M
       >(
         c1of<::aMx1ofN::N> b[0..M-1]
         bool<> a
@@ -2397,8 +2397,8 @@ In namespace "", we have: {
         b = c1of<::aMx1ofN::N> b
 
       unroll sequence: 
-        pint<> M
         pint<> N
+        pint<> M
         c1of<::aMx1ofN::N> b[0..M-1]
         bool<> a
       }
