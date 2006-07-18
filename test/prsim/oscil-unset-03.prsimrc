@@ -1,0 +1,40 @@
+# "oscil-unset-01.prsimrc"
+#	$Id: oscil-unset-03.prsimrc,v 1.2 2006/07/18 04:09:44 fang Exp $
+# @haco@ oscillator.haco-a
+# testing unset vs. setf commands
+
+watchall
+set _Reset 0
+cycle
+
+set _Reset 1
+step
+queue
+assert R.x[0] 0
+# just went down
+step
+queue
+echo R.x[2]- should be in queue
+
+echo coercively set R.x[2]+, expecting warning
+setf R.x[2] 1
+
+queue
+echo queue should now contain R.x[2]+ immediately
+step
+
+queue
+echo queue should now be empty
+time
+cycle
+time
+
+echo to resume, we have to unset R.x[2]
+unset R.x[2]
+queue
+echo R.x[2]- should re-appear in queue
+
+echo now oscillation should resume
+step 15
+
+

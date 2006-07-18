@@ -1,6 +1,13 @@
 "BUGS"
 The jar of known bugs and issues.  
-	$Id: BUGS,v 1.7 2006/04/05 22:32:17 fang Exp $
+	$Id: BUGS,v 1.8 2006/07/18 04:09:08 fang Exp $
+
+editline: 2006-07-09
+	piping or redirecting script into editline-histedit
+		doesn't terminate properly on end-of-file/stream.
+	workaround: pass the -b flag (batch mode, non-interactive)
+		to bypass editline.
+
 
 minor detail in type information dumping:
 	parser/connect/130.hac

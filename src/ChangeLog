@@ -3,6 +3,44 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-32-merged-prsim-06-06:
+	  Merged prsim-06 branch.  Summary:
+	  Fixed bogus interference masking instability problem.
+	  Allow for alternate behavior of simulating unstable event, 
+		allowing dequeuing of unstable events.
+		cmds: 'untable-dequeue', 'unstable-unknown' (default)
+	  General extension to simulation to continue reasonably
+		past unstable events.  
+		'setf' command to forcefully set a node, overriding
+			any pending events.  (Human event upset.)
+		'unset' to re-evaluate pull-state of inputs to node
+			to effectively undo a coercive 'setf', corrected
+			nodes will schedule events to restore their
+			"proper values."  (Human upset tolerance.)
+	  More test cases updated and corrected.  
+
+
+2006-07-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-06:
+	  prsim: added 'unset' command to force re-evaluation of a node, 
+		useful to clear the effects of a coerced 'setf' that
+		overrode a pending event on a node, which can result
+		in a stuck state if the nodes inputs do not change.  
+		'unset' will re-enqueue an event on a node if it should
+		be transitioning to a corrected value.  
+		'unsetall' command re-evaluates ALL nodes, should the user
+			become forgetful or plain lazy.  
+	  prsim: minor fix in State::set_node_time's diagnosis of 
+		vacuous event, also forgives vacuous events caused by force.  
+	  Added test cases on ring oscillator to demonstrate:
+		test/prsim/oscil-unset-0{1,2,3}.prsimrc
+	  Status: no more work on this branch, merge.  
+		Leaving prsim developer switches in to be removed later...
+
+
 2006-07-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-31:
@@ -70,6 +108,84 @@
 
 	* HACKT-00-01-04-main-00-79-28:
 	  Added a few utility class templates to util/ library.  
+
+
+2006-07-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-05:
+	  prsim: introduced event 'force' flag to indicate that user
+		coerced a particular event.  Added support for handling
+		forced events by redirecting conflicts to pending queue.  
+	  BUG FIXED: 'dequeue_event' wasn't checking for queue-empty now that
+		events may be killed.  
+	  TODO: issue: how to recover from user-coerced event?  problem is
+		that vacuous events don't propagate so a coerced node
+		may never again be re-evaluated, resulting in a quasi-deadlock
+		'stuck' state where pull on a node takes no effect.  
+		Reminder: no support for SEUs (no intention)
+		Proposal: user must supply an 'unset' command to trigger
+			re-evaluation of a coerced node's inputs, 
+			the equivalent of releasing from coercion.  
+			An 'unset-all' command might be useful too.  
+		Can demonstrate this with ring-oscillator test cases.  
+
+
+2006-07-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-04:
+	  More improvements to be able to simulate instability scenarios
+		with different realistic behaviors, fixed ISEs.  
+	  TODO: accomodate anomalies in the event queue when user
+		coercively sets nodes with 'setf'.  Before, such commands
+		were just dropped with a warning if there was a pending event.  
+		We can now use the instability mechanism to work with this.  
+		Might add a 'force' flag as done with tools/prsim.  UTFL!
+
+
+2006-07-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-03:
+	  Fix for last patch, to get both modes of handling instabilities
+		working to not cause prsim test regressions, with a few
+		old cases updated with the correct expected behavior.
+		No more bogus interference.  (PRSIM_FIX_BOGUS_INTERFERENCE on)
+	  TODO: Some new pending test cases still need to be fixed.  
+	  TODO: *consider* replacing pending queue with pending map [node], 
+		for code simplicity, maintainability, comprehensibility,
+		and flexibility.  Will it cost performance?  Hard to say.  
+		This is where a set of benchmark tests would help.  
+
+
+2006-07-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-02:
+	  Found tools/prsim patch to fixes the false-interference problem
+		during unstable events, depending on evaluation ordering.  
+		diff -ubd -r1.10 -r.11 prs.c (2006-04-24)
+		Applied logical-equivalent patch by hand in hackt's prsim.
+		Patch is wrapped in PRSIM_FIX_BOGUS_INTERFERENCE switch, 
+		tentatively disabled until test updates are grokked.  
+	  TODO: properly cancel pending events affected by the instability.  
+
+
+2006-07-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-01:
+	  Branch for fixing prsim internals and finishing missing features.
+	  prsim: new commands
+		setf - set forcefully, overriding pending events
+		setrf - set random delay forcefully, overriding pending events
+	  prsim/Event.{h,cc}: added flags member to Event structure,
+		EventPool runs some validity checks upon destruction.  
+	  prsim/State.cc: now able to kill events on the queue, 
+		dequeue_event automatically skips over them (and frees them), 
+		set_node_time can now be forced, overriding pending events.
+		BUG FIXED: X -> X transition forgot to deallocate event.  
+		FIXED: dequeuing of unstable events is accomplished
+			using Event::kill().
+		Killed events are not shown in dump.  
+	  BUGS: noted editline EOF problem, with known workaround.
+	  Fix for false interference coming shortly.  
 
 
 2006-07-08	David Fang		<fangism@users.sourceforge.net>

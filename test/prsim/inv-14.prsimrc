@@ -1,0 +1,19 @@
+# "inv-14.prsimrc"
+# @haco@ inv.haco-a
+#	$Id: inv-14.prsimrc,v 1.2 2006/07/18 04:09:25 fang Exp $
+
+# testing the setf command
+
+watchall
+set a 0
+advance 15
+queue
+time
+
+setf c 1
+echo set c 1 accepted
+queue
+echo continuing...
+cycle
+echo now what?
+

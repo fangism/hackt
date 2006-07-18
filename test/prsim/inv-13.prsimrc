@@ -1,0 +1,28 @@
+# "inv-13.prsimrc"
+# @haco@ inv.haco-a
+#	$Id: inv-13.prsimrc,v 1.2 2006/07/18 04:09:24 fang Exp $
+
+# testing the setf command
+
+watchall
+set a 0
+advance 5
+queue
+
+setf b 0
+echo set b 0 accepted
+queue
+echo continuing...
+cycle
+echo kind of incoherent with a- and b-...
+echo what happens if we set a- now? should b+ be queued?
+# to restore correctness, yes
+
+time
+set a 0
+queue
+cycle
+echo nothing, vacuous event suppressed
+assert b 1
+assert c 0
+

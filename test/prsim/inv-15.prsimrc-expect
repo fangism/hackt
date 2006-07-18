@@ -3,27 +3,26 @@ setting 'a-' and letting propagate
 	0	a : 0
 	10	b : 1	[by a:=0]
 	20	c : 0	[by b:=1]
+time: 20
 introduce a low pulse on 'a' 
 	20	a : 1
 expect instability on b- because of a- 
 WARNING: unstable `b'-
 >> cause: `a' (val: 0)
 	25	a : 0
-WARNING: weak-interference `c'
->> cause: `b' (val: X)
-	30	b : X	[by a:=0]
-	40	c : X	[by b:=X]
+but no X's, just dequeued and requeued unstable events 
+time: 35
 bring back to known states 
-	40	a : 1
-	50	b : 0	[by a:=1]
-	60	c : 1	[by b:=0]
+	35	a : 1
+	45	b : 0	[by a:=1]
+	55	c : 1	[by b:=0]
+time: 55
 introduce a high pulse on 'a' 
-	60	a : 0
+	55	a : 0
 expect instability on b+ because of a+ 
 WARNING: unstable `b'+
 >> cause: `a' (val: 1)
-	65	a : 1
-WARNING: weak-interference `c'
->> cause: `b' (val: X)
-	70	b : X	[by a:=1]
-	80	c : X	[by b:=X]
+	60	a : 1
+no other vacuous events were generated 
+event queue:
+empty queue 

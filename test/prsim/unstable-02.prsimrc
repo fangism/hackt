@@ -1,5 +1,5 @@
 # "unstable-02.prsimrc"
-#	$Id: unstable-02.prsimrc,v 1.1 2006/07/09 02:11:50 fang Exp $
+#	$Id: unstable-02.prsimrc,v 1.2 2006/07/18 04:09:45 fang Exp $
 # @haco@ inv.haco-a
 # testing different modes of instabilities
 
@@ -27,5 +27,6 @@ echo expect instability
 advance 5
 # but again, this is reported as interference due to evaluation 
 # ordering problem of combinational gates.  
+# FIXED: HACKT-00-01-04-main-00-79-27-prsim-06-03
 queue
 

@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.12 2006/07/09 02:11:42 fang Exp $
+	$Id: Command.cc,v 1.13 2006/07/18 04:09:14 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1245,9 +1245,13 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Set, "set", simulation,
 
 /**
 	Do we need an optional time argument?
+	\param force whether or not this 'set' has precedence over 
+		pending events in queue.  
  */
+static
 int
-Set::main(State& s, const string_list& a) {
+__set_main(State& s, const string_list& a, const bool force, 
+		void (*usage)(ostream&)) {
 	const size_t asz = a.size();
 if (asz < 3 || asz > 4) {
 	usage(cerr << "usage: ");
@@ -1284,17 +1288,17 @@ if (asz < 3 || asz > 4) {
 					cerr << "Error: delay must be non-negative." << endl;
 					return Command::BADARG;
 				}
-				err = s.set_node_after(ni, val, t);
+				err = s.set_node_after(ni, val, t, force);
 			} else {
 				// schedule at absolute time
 				if (t < s.time()) {
 					cerr << "Error: time cannot be in the past." << endl;
 					return Command::BADARG;
 				}
-				err = s.set_node_time(ni, val, t);
+				err = s.set_node_time(ni, val, t, force);
 			}
 		} else {
-			err = s.set_node(ni, val);
+			err = s.set_node(ni, val, force);
 		}
 		return (err < 1) ? Command::NORMAL : Command::BADARG;
 	} else {
@@ -1304,12 +1308,97 @@ if (asz < 3 || asz > 4) {
 }
 }	// end Set::main
 
+int
+Set::main(State& s, const string_list& a) {
+	return __set_main(s, a, false, &Set::usage);
+}
+
 void
 Set::usage(ostream& o) {
 	o << "set <node> <0|F|1|T|X|U> [+delay | time]" << endl;
 	o <<
 "\tWithout delay, node is set immediately.  Relative delay into future\n"
-"\tis given by +delay, whereas an absolute time is given without \'+\'."
+"\tis given by +delay, whereas an absolute time is given without \'+\'.\n"
+"\tIf there is a pending event on the node, this command is ignored with a\n"
+"\twarning.  See also \'setf\'."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetF, "setf", simulation,
+	"same as set, but overriding pending events")
+
+int
+SetF::main(State& s, const string_list& a) {
+	return __set_main(s, a, true, &SetF::usage);
+}
+
+void
+SetF::usage(ostream& o) {
+	o << "setf <node> <0|F|1|T|X|U> [+delay | time]" << endl;
+	o <<
+"\tWithout delay, node is set immediately.  Relative delay into future\n"
+"\tis given by +delay, whereas an absolute time is given without \'+\'.\n"
+"\tThis overrides a previous pending event on the node, if any."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSet, "unset", simulation,
+	"force re-evaluation of node\'s input state, may cancel setf")
+
+int
+UnSet::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.unset_node(ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+UnSet::usage(ostream& o) {
+	o << "unset <node>" << endl;
+	o <<
+"\tUnset causes a node to be re-evaluated in terms of the pull-state of\n"
+"\tits inputs.  A node can become stuck as a result of a coerced set\n"
+"\t(setf) that overrode a pending event; \'unset\' undoes such effects\n"
+"\tand re-inserts pending events into the event queue where appropriate.\n"
+"\tSee also \'unsetall\'."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSetAll, "unsetall", simulation,
+	"force re-evaluation of all nodes\' input state, cancelling setf")
+
+int
+UnSetAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.unset_all_nodes();
+	return Command::NORMAL;
+}
+}
+
+void
+UnSetAll::usage(ostream& o) {
+	o << "unsetall" << endl;
+o <<
+"\tUnsetall causes all nodes to be re-evaluated, and clears the effects\n"
+"\tof any former coreced setf commands.  Corrected nodes will spawn\n"
+"\tnew events in the event queue.  See also \'unset\'."
 	<< endl;
 }
 
@@ -1320,9 +1409,12 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Setr, "setr", simulation,
 /**
 	NOTE: the random delay has the same distribution as the 
 	random delays in the simulator in random mode.  
+	\param force whether or not new set event has precedence over pending.  
  */
+static
 int
-Setr::main(State& s, const string_list& a) {
+__setrf_main(State& s, const string_list& a, const bool force, 
+		void (*usage)(ostream&)) {
 	const size_t asz = a.size();
 if (asz != 3) {
 	usage(cerr << "usage: ");
@@ -1344,7 +1436,7 @@ if (asz != 3) {
 	const node_index_type ni = parse_node_to_index(objname, s.get_module());
 	if (ni) {
 		const int err = s.set_node_after(ni, val,
-			State::random_delay());
+			State::random_delay(), force);
 		return (err < 1) ? Command::NORMAL : Command::BADARG;
 	} else {
 		cerr << "No such node found." << endl;
@@ -1353,11 +1445,35 @@ if (asz != 3) {
 }
 }	// end Setr::main
 
+int
+Setr::main(State& s, const string_list& a) {
+	return __setrf_main(s, a, false, &Setr::usage);
+}
+
 void
 Setr::usage(ostream& o) {
 	o << "setr <node> <0|F|1|T|X|U>" << endl;
 	o << "\tsets node at a random time in the future.\n"
-"\tNodes with already pending events in queue retain their former event."
+"\tNodes with already pending events in queue retain their former event.\n"
+"\tThis variation yields to pending events on the node, if any."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetrF, "setrf", simulation,
+	"set node to value after random delay, overriding pending events")
+
+int
+SetrF::main(State& s, const string_list& a) {
+	return __setrf_main(s, a, true, &SetrF::usage);
+}
+
+void
+SetrF::usage(ostream& o) {
+	o << "setr <node> <0|F|1|T|X|U>" << endl;
+	o << "\tsets node at a random time in the future.\n"
+"\tNodes with already pending events in queue retain their former event.\n"
+"\tThis variation overrides pending events on the node, if any."
 	<< endl;
 }
 

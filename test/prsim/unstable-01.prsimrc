@@ -1,5 +1,5 @@
 # "unstable-01.prsimrc"
-#	$Id: unstable-01.prsimrc,v 1.3 2006/07/09 02:11:49 fang Exp $
+#	$Id: unstable-01.prsimrc,v 1.4 2006/07/18 04:09:44 fang Exp $
 # @haco@ inv.haco-a
 # testing for instabilities
 # With the exception of 'echo' and 'advance' commands, 
@@ -23,4 +23,5 @@ echo expect instability
 step
 # but with old behavior, this is reported as an interference
 # because of arbitrary evaluation ordering!
+# FIXED: HACKT-00-01-04-main-00-79-27-prsim-06-03
 

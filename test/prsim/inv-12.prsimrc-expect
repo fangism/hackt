@@ -1,0 +1,14 @@
+	0	a : 0
+event queue:
+	10	b : 1
+WARNING: pending event for node `b' was overridden.
+set b 0 accepted 
+event queue:
+	5	b : 0
+continuing... 
+	5	b : 0
+	15	c : 1	[by b:=0]
+kind of incoherent with a- and b-... 
+what happens if we set a+ now? 
+	15	a : 1
+nothing, vacuous event suppressed 

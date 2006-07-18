@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.9 2006/07/09 02:11:44 fang Exp $
+	$Id: State.h,v 1.10 2006/07/18 04:09:16 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -253,6 +253,14 @@ private:
 		TIMING_DEFAULT = TIMING_UNIFORM
 	};
 
+	/**
+		Lookup table for translating pull-up/pull-dn states 
+		to next node value.  
+		Used when node is re-evaluated.  
+		Indexed by [pull-up state][pull-down state].
+	 */
+	static const char			pull_to_value[3][3];
+
 public:
 	/**
 		Instead of using circular linked lists with pointers, 
@@ -474,18 +482,25 @@ public:
 
 	int
 	set_node_time(const node_index_type, const char val, 
-		const time_type t);
+		const time_type t, const bool f);
 
 	int
 	set_node_after(const node_index_type n, const char val, 
-		const time_type t) {
-		return set_node_time(n, val, this->current_time +t);
+		const time_type t, const bool f) {
+		return set_node_time(n, val, this->current_time +t, f);
 	}
 
 	int
-	set_node(const node_index_type n, const char val) {
-		return set_node_time(n, val, this->current_time);
+	set_node(const node_index_type n, const char val,
+			const bool f) {
+		return set_node_time(n, val, this->current_time, f);
 	}
+
+	void
+	unset_node(const node_index_type);
+
+	void
+	unset_all_nodes(void);
 
 	void
 	set_node_breakpoint(const node_index_type);
@@ -663,11 +678,27 @@ private:
 		const node_index_type c, // this is the causing node
 		const rule_index_type, const char);
 
+#if PRSIM_FIX_BOGUS_INTERFERENCE
+	event_index_type
+	__allocate_pending_interference_event(
+		node_type&, const node_index_type n,
+		const node_index_type c,	// this is the causing node
+		const char);
+
+	void
+	__deallocate_pending_interference_event(const event_index_type);
+#endif
+
 	event_index_type
 	__load_allocate_event(const event_type&);
 
 	void
 	__deallocate_event(node_type&, const event_index_type);
+
+	class event_deallocator;
+
+	void
+	__deallocate_killed_event(const event_index_type);
 
 	const event_type&
 	get_event(const event_index_type) const;
@@ -702,6 +733,18 @@ private:
 	void
 	flush_pending_queue(void);
 
+	void
+	__flush_pending_event_with_interference(
+		node_type&, const event_index_type, event_type&);
+
+	void
+	__flush_pending_event_no_interference(
+		node_type&, const event_index_type, event_type&);
+
+	void
+	__flush_pending_event_replacement(
+		node_type&, const event_index_type, event_type&);
+
 	event_placeholder_type
 	dequeue_event(void);
 
@@ -718,6 +761,12 @@ private:
 	void
 	propagate_evaluation(const node_index_type, expr_index_type, 
 		char prev, char next);
+
+#if PRSIM_FIX_BOGUS_INTERFERENCE
+	void
+	kill_evaluation(const node_index_type, expr_index_type, 
+		char prev, char next);
+#endif
 
 	void
 	__diagnose_violation(ostream&, const char next, 

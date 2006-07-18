@@ -1,0 +1,14 @@
+# "inv-10.prsimrc"
+# @haco@ inv.haco-a
+#	$Id: inv-10.prsimrc,v 1.2 2006/07/18 04:09:20 fang Exp $
+
+# testing the setf command
+
+watchall
+set a 0
+advance 5
+queue
+
+set b 1
+echo should be ignored, causing exit on error
+

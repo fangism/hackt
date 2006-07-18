@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.1 2006/07/09 02:11:45 fang Exp $
+	$Id: devel_switches.h,v 1.2 2006/07/18 04:09:17 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -46,7 +46,7 @@
 	original behavior: unstable events propagate X (conservative)
 	new behavior: unstable events are just dequeued
 	Mode commands: unstable-{unknown,dequeue}.
-	Status: just begun
+	Status: implemented and basically tested
 	Goal: 1
  */
 #define	PRSIM_ALLOW_UNSTABLE_DEQUEUE			1
@@ -59,6 +59,13 @@
 	Goal: 1
  */
 #define	PRSIM_FINE_GRAIN_ERROR_CONTROL		0
+
+/**
+	Define to 1 to test fix of false interference.  
+	Status: in progress
+	Goal: 1
+ */
+#define	PRSIM_FIX_BOGUS_INTERFERENCE		1
 
 //=============================================================================
 

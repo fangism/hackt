@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.5 2006/05/06 04:18:49 fang Exp $
+	$Id: Event.h,v 1.6 2006/07/18 04:09:16 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -17,6 +17,9 @@
 #include "util/macros.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
+#include "sim/prsim/devel_switches.h"
+
+#define	DEBUG_EVENT_POOL_ALLOC				0
 
 namespace HAC {
 namespace SIM {
@@ -33,6 +36,7 @@ using util::memory::free_list_release;
 //=============================================================================
 /**
 	Based on struct prs_event (PrsEvent).  
+	NOTE: sizeof(event) should be 16B, aligned/padded.  
  */
 struct Event {
 private:
@@ -50,7 +54,15 @@ public:
 		EVENT_WEAK_INTERFERENCE = EVENT_INTERFERENCE | EVENT_WEAK
 	} event_flags_enum;
 public:
+	/**
+		Event classification table of 
+		pull-up-state vs. event pending value.  
+	 */
 	static const char		upguard[3][3];
+	/**
+		Event classification table of 
+		pull-dn-state vs. event pending value.  
+	 */
 	static const char		dnguard[3][3];
 public:
 	/**
@@ -72,12 +84,41 @@ public:
 	rule_index_type			cause_rule;
 	/**
 		The node's new value: 0, 1, 2 (X).
+		See Node::value enumeration.
 	 */
 	unsigned char			val;
-
+protected:
+	enum {
+#if PRSIM_FIX_BOGUS_INTERFERENCE
+		/**
+			Signals that event is pending interference.  
+		 */
+		EVENT_FLAG_PENDING_INTERFERENCE = 0x01,
+#endif
+		/**
+			Signals that event cancelled.  
+		 */
+		EVENT_FLAG_KILLED = 0x02,
+		/**
+			Whether or not event is coerced, say, by the user.  
+			Coerced events may require special handling.  
+		 */
+		EVENT_FLAG_FORCED = 0x04,
+		// add more as seen fit
+		EVENT_FLAGS_DEFAULT_VALUE = 0x00
+	};
+	/**
+		Additional event flags.  
+		Protected visibility to use method interface.  
+	 */
+        unsigned char			flags;
+	// note: room for one more short int
+public:
 	Event() : node(INVALID_NODE_INDEX),
 		cause_node(INVALID_NODE_INDEX), 
-		cause_rule(INVALID_RULE_INDEX) { }
+		cause_rule(INVALID_RULE_INDEX), 
+		val(0), 
+		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
 
 	/**
 		The rule index is allowed to be NULL (invalid), 
@@ -90,13 +131,42 @@ public:
 		node(n),
 		cause_node(c), 
 		cause_rule(r),
-		val(v) { }
+		val(v),
+		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
+
+	void
+	kill(void) { flags |= EVENT_FLAG_KILLED; }
+
+	bool
+	killed(void) const { return flags & EVENT_FLAG_KILLED; }
+
+	void
+	force(void) { flags |= EVENT_FLAG_FORCED; }
+
+	void
+	unforce(void) { flags &= ~EVENT_FLAG_FORCED; }
+
+	bool
+	forced(void) const { return flags & EVENT_FLAG_FORCED; }
 
 	void
 	save_state(ostream&) const;
 
 	void
 	load_state(istream&);
+
+#if PRSIM_FIX_BOGUS_INTERFERENCE
+	bool
+	pending_interference(void) const {
+		return flags & EVENT_FLAGS_DEFAULT_VALUE;
+	}
+
+	void
+	pending_interference(const bool i) {
+		if (i)	flags |= EVENT_FLAGS_DEFAULT_VALUE;
+		else	flags &= ~EVENT_FLAGS_DEFAULT_VALUE;
+	}
+#endif
 
 	static
 	ostream&
@@ -171,6 +241,13 @@ public:
 		return event_pool[i];
 	}
 
+	bool
+	check_valid_empty(void) const;
+
+#if DEBUG_EVENT_POOL_ALLOC
+	event_index_type
+	allocate(const event_type& e);
+#else
 	event_index_type
 	allocate(const event_type& e) {
 		if (UNLIKELY(free_indices.empty())) {	// UNLIKELY
@@ -185,11 +262,18 @@ public:
 			return ret;
 		}
 	}
+#endif
 
+#if DEBUG_EVENT_POOL_ALLOC
+	void
+	deallocate(const event_index_type i);
+#else
 	void
 	deallocate(const event_index_type i) {
+		INVARIANT(i);
 		free_list_release(free_indices, i);
 	}
+#endif
 
 	void
 	clear(void);
