@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.12.2.1 2006/07/10 02:28:12 fang Exp $
+	$Id: Command.cc,v 1.12.2.2 2006/07/18 01:30:25 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1340,6 +1340,65 @@ SetF::usage(ostream& o) {
 "\tWithout delay, node is set immediately.  Relative delay into future\n"
 "\tis given by +delay, whereas an absolute time is given without \'+\'.\n"
 "\tThis overrides a previous pending event on the node, if any."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSet, "unset", simulation,
+	"force re-evaluation of node\'s input state, may cancel setf")
+
+int
+UnSet::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		s.unset_node(ni);
+		return Command::NORMAL;
+	} else {
+		cerr << "No such node found." << endl;
+		return Command::BADARG;
+	}
+}
+}
+
+void
+UnSet::usage(ostream& o) {
+	o << "unset <node>" << endl;
+	o <<
+"\tUnset causes a node to be re-evaluated in terms of the pull-state of\n"
+"\tits inputs.  A node can become stuck as a result of a coerced set\n"
+"\t(setf) that overrode a pending event; \'unset\' undoes such effects\n"
+"\tand re-inserts pending events into the event queue where appropriate.\n"
+"\tSee also \'unsetall\'."
+	<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSetAll, "unsetall", simulation,
+	"force re-evaluation of all nodes\' input state, cancelling setf")
+
+int
+UnSetAll::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.unset_all_nodes();
+	return Command::NORMAL;
+}
+}
+
+void
+UnSetAll::usage(ostream& o) {
+	o << "unsetall" << endl;
+o <<
+"\tUnsetall causes all nodes to be re-evaluated, and clears the effects\n"
+"\tof any former coreced setf commands.  Corrected nodes will spawn\n"
+"\tnew events in the event queue.  See also \'unset\'."
 	<< endl;
 }
 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.15.2.5 2006/07/13 02:39:43 fang Exp $
+	$Id: State.cc,v 1.15.2.6 2006/07/18 01:30:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -115,6 +115,19 @@ public:
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const string
 State::magic_string("hackt-prsim-ckpt");
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates pull up/dn to output value.  
+	Reminder enumerations for pull-state are defined in the event_type.
+	Keep it consistent.  
+ */
+const char
+State::pull_to_value[3][3] = {
+{ node_type::LOGIC_OTHER, node_type::LOGIC_LOW, node_type::LOGIC_OTHER },
+{ node_type::LOGIC_HIGH, node_type::LOGIC_OTHER, node_type::LOGIC_OTHER },
+{ node_type::LOGIC_OTHER, node_type::LOGIC_OTHER, node_type::LOGIC_OTHER }
+};
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -702,6 +715,7 @@ State::set_node_time(const node_index_type ni, const char val,
 	node_type& n(get_node(ni));
 	const event_index_type pending = n.get_event();
 	const char last_val = n.current_value();
+#if 0
 /***
 	If node is in the event queue already and is set to the 
 	same value, then issue warning.  
@@ -712,26 +726,38 @@ State::set_node_time(const node_index_type ni, const char val,
 			"\' [interferes with pending event]" << endl;
 		return ENQUEUE_WARNING;
 	}
+#endif
+	const bool unchanged = (val == last_val);
 // If the value is the same as former value, then ignore it.
 // What if delay differs?
 // TODO: could invalidate and re-enqueue with min. time, e.g.
-	if (val == last_val) { return ENQUEUE_ACCEPT; }
+//	if (val == last_val) { return ENQUEUE_ACCEPT; }
 // If node has pending even in queue already, warn and ignore.
-	if (pending) {
-		const string objname(get_node_canonical_name(ni));
+if (pending) {
+	// does it matter whether or not last_val == val?
+	const string objname(get_node_canonical_name(ni));
 	if (f) {
-		// cancel it, but don't deallocate it until dequeued
+		// doesn't matter what what last_val was, override it
+		// even if value is the same, reschedule it
+		// cancel former event, but don't deallocate it until dequeued
 		cout << "WARNING: pending event for node `" << objname <<
 			"\' was overridden." << endl;
 		get_event(pending).kill();
 		n.clear_event();
-	} else {
+	} else if (!unchanged) {
+		// not forcing: if new value is different, issue warning
 		cout << "WARNING: pending value for node `" << objname <<
 			"\'; ignoring request" << endl;
 		return ENQUEUE_WARNING;
+	} else {
+		// ignore
+		return ENQUEUE_ACCEPT;
 	}
-	}	// end if pending
-// otherwise, enqueue the event.  
+} else if (unchanged) {
+	// drop vacuous sets
+	return ENQUEUE_ACCEPT;
+}
+	// otherwise, allocate and enqueue the event.  
 	const event_index_type ei =
 		// node cause to assign, since this is externally set
 		__allocate_event(n, ni, INVALID_NODE_INDEX, 
@@ -746,6 +772,100 @@ State::set_node_time(const node_index_type ni, const char val,
 	}
 	enqueue_event(t, ei);
 	return ENQUEUE_ACCEPT;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	In the case of nodes stuck because the user coercively set a 
+	node, this causes the named node to be re-evaluated in terms
+	of its current pull-state of its fanins which may not have changed
+	since the last time.  
+	If the appropriate event is already pending, this does nothing.  
+	If there should be an event pending (possibly cancelled or overridden
+	by a set-force, this will correct it, undoing the coercion.  
+	This should be a "safe" command -- nothing should ever go wrong.  
+	\param ni the index of the node to re-evaluate.  
+ */
+void
+State::unset_node(const node_index_type ni) {
+	STACKTRACE_VERBOSE;
+	node_type& n(get_node(ni));
+	const event_index_type pending = n.get_event();
+	// evaluate node's pull-up and pull-down
+	const expr_index_type u = n.pull_up_index;
+	const expr_index_type d = n.pull_dn_index;
+	// if there is no pull-*, it's as good as off!
+	const char pu =
+		(u ? expr_pool[u].pull_state() : char(expr_type::PULL_OFF));
+	const char pd =
+		(d ? expr_pool[d].pull_state() : char(expr_type::PULL_OFF));
+if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
+	const char new_val = pull_to_value[size_t(pu)][size_t(pd)];
+	if (pending) {
+		event_type& e(get_event(pending));
+		if (e.val != new_val) {
+			cerr << "Overriding pending event\'s value on node `"
+				<< get_node_canonical_name(ni) << "\' from " <<
+				node_type::char_to_value(e.val) << " to " <<
+				node_type::char_to_value(new_val) <<
+				", keeping the same event time." << endl;
+			e.val = new_val;
+		}
+		e.unforce();
+		// else do nothing, correct value already pending
+	} else {
+		// no event pending, can make one
+		const char current = n.current_value();
+		if (current != new_val) {
+#if 0
+			rule_index_type ri;
+			// not true, rule index may be from OR-combination...
+			if (pu == char(expr_type::PULL_ON) &&
+				pd == char(expr_type::PULL_OFF)) {
+				ri = u;
+			} else if (pd == char(expr_type::PULL_ON) &&
+				pu == char(expr_type::PULL_OFF)) {
+				ri = d;
+			} else {
+				ri = INVALID_RULE_INDEX;
+			}
+#else
+			const rule_index_type ri = INVALID_RULE_INDEX;
+			// a real rule index would help determine the delay
+			// but we don't know which delay in a multi-delay
+			// fanin to use!  Passing INVALID_RULE_INDEX
+			// will use a delay of 0.  
+#endif
+			const event_index_type ei = __allocate_event(
+				n, ni, INVALID_NODE_INDEX, // no cause
+					ri, new_val);
+			event_type& e(get_event(ei));
+			time_type t;
+			switch (new_val) {
+			case node_type::LOGIC_HIGH:
+				t = get_delay_up(e); break;
+			case node_type::LOGIC_LOW:
+				t = get_delay_dn(e); break;
+			default: t = delay_policy<time_type>::zero;
+			}
+			enqueue_event(t, ei);
+		}
+		// else node is already in correct state
+	}
+}	// else neither side is pulling, leave node as is
+}	// end State::unset_node
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Applies unset_node to all nodes.  
+ */
+void
+State::unset_all_nodes(void) {
+	node_index_type ni = FIRST_VALID_NODE;
+	const node_index_type s = node_pool.size();
+	for ( ; ni < s; ++ni) {
+		unset_node(ni);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1556,7 +1676,8 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 		}
 		// else proceed
 	} else {
-		INVARIANT(prev != pe.val || n.is_unstab());
+		// vacuous event is allowed if set was forced by user
+		INVARIANT(prev != pe.val || n.is_unstab() || force);
 	}
 #else
 	INVARIANT(prev != pe.val || n.is_unstab());

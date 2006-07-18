@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.5.8.3 2006/07/13 02:39:41 fang Exp $
+	$Id: Event.h,v 1.5.8.4 2006/07/18 01:30:26 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -142,6 +142,9 @@ public:
 
 	void
 	force(void) { flags |= EVENT_FLAG_FORCED; }
+
+	void
+	unforce(void) { flags &= ~EVENT_FLAG_FORCED; }
 
 	bool
 	forced(void) const { return flags & EVENT_FLAG_FORCED; }

@@ -3,6 +3,25 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-27-prsim-06-06:
+	  prsim: added 'unset' command to force re-evaluation of a node, 
+		useful to clear the effects of a coerced 'setf' that
+		overrode a pending event on a node, which can result
+		in a stuck state if the nodes inputs do not change.  
+		'unset' will re-enqueue an event on a node if it should
+		be transitioning to a corrected value.  
+		'unsetall' command re-evaluates ALL nodes, should the user
+			become forgetful or plain lazy.  
+	  prsim: minor fix in State::set_node_time's diagnosis of 
+		vacuous event, also forgives vacuous events caused by force.  
+	  Added test cases on ring oscillator to demonstrate:
+		test/prsim/oscil-unset-0{1,2,3}.prsimrc
+	  Status: no more work on this branch, merge.  
+		Leaving prsim developer switches in to be removed later...
+
+
 2006-07-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-27-prsim-06-05:

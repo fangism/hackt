@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.9.2.4 2006/07/12 19:16:20 fang Exp $
+	$Id: State.h,v 1.9.2.5 2006/07/18 01:30:28 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -253,6 +253,14 @@ private:
 		TIMING_DEFAULT = TIMING_UNIFORM
 	};
 
+	/**
+		Lookup table for translating pull-up/pull-dn states 
+		to next node value.  
+		Used when node is re-evaluated.  
+		Indexed by [pull-up state][pull-down state].
+	 */
+	static const char			pull_to_value[3][3];
+
 public:
 	/**
 		Instead of using circular linked lists with pointers, 
@@ -487,6 +495,12 @@ public:
 			const bool f) {
 		return set_node_time(n, val, this->current_time, f);
 	}
+
+	void
+	unset_node(const node_index_type);
+
+	void
+	unset_all_nodes(void);
 
 	void
 	set_node_breakpoint(const node_index_type);
