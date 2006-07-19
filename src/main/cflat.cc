@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.11 2006/04/28 03:20:14 fang Exp $
+	$Id: cflat.cc,v 1.12 2006/07/19 14:21:27 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -132,7 +132,7 @@ __cflat_connect(cflat::options& cf) {
 	// cf.tool_options = cflat::options::TOOL_OPTIONS_DEFAULT;
 	cf.connect_style = cflat::options::CONNECT_STYLE_CONNECT;
 	cf.include_prs = false;
-	cf.dump_self_connect = false;
+	cf.dump_self_connect = true;
 	cf.enquote_names = true;
 	cf.dump_non_bools = false;
 	cf.namespace_policy = cflat::options::NAMESPACE_POLICY_NONE;
