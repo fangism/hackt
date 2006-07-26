@@ -1,0 +1,3 @@
+Expecting ';' after import "...".
+got: datatype: bool [6:1..4]
+Caught exception from lexer, aborting parsing.

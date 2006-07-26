@@ -1,0 +1,5 @@
+// "import-017.hac"
+// testing proper token deallocation upon import error
+
+import some_identifier;
+

@@ -1,0 +1,7 @@
+// "import-016.hac"
+// testing proper token deallocation upon import error
+
+import "import-000.hac"
+
+bool q;
+

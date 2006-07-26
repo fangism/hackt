@@ -1,0 +1,7 @@
+// "import-021.hac"
+// copy-modified from "import-018.hac"
+// testing proper token deallocation upon import error
+
+import import "import-000.hac"
+
+
