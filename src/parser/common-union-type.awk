@@ -1,7 +1,8 @@
 #!/usr/bin/awk -f
 # "common-union-type.awk"
 # David Fang, 2004
-#	$Id: common-union-type.awk,v 1.5 2005/12/08 22:01:12 fang Exp $
+#	$Id: common-union-type.awk,v 1.6 2006/07/26 22:46:30 fang Exp $
+# TODO: factor most of the code out into skeleton code
 
 # CO-DEPENDENT ON:
 # parser/yacc-union-type.awk OR parser/bison-union-type.awk
@@ -375,6 +376,13 @@ if (0) {
 
 	# public virtual virtual functions
 
+	print "/**";
+	print "\tDumps symbol information, as indexed by state transition.";
+	print "\t\\param u the unionized symbol to dump.";
+	print "\t\\param i the before state value.";
+	print "\t\\param j the after state value.";
+	print "\t\\param o the output stream.";
+	print " */";
 	print "ostream&";
 	print "yy_union_resolve_dump(const YYSTYPE& u, const short i, const short j, ostream& o) {";
 	print "\tconst int k = yy_union_resolve_index(i,j);";
@@ -384,12 +392,24 @@ if (0) {
 	print "}";
 	print "";
 
+	print "/**";
+	print "\tDumps symbol information, as indexed by symbol number.";
+	print "\t\\param u the unionized symbol to dump.";
+	print "\t\\param c the symbol enumeration, as returned by yylex.";
+	print "\t\\param o the output stream.";
+	print " */";
 	print "ostream&";
 	print "yy_union_lookup_dump(const YYSTYPE& u, const int c, ostream& o) {";
 	print "\treturn (*yy_union_what_where[yy_union_lookup_index(c)])(u,o);";
 	print "}";
 	print "";
 
+	print "/**";
+	print "\tDeallocates a union symbol as indexed state transition.";
+	print "\t\\param u the unionized symbol to deallocate.";
+	print "\t\\param i the before state value.";
+	print "\t\\param j the after state value.";
+	print " */";
 	print "void";
 	print "yy_union_resolve_delete(const YYSTYPE& u, const short i, const short j) {";
 	print "\tconst int k = yy_union_resolve_index(i,j);";
@@ -399,6 +419,11 @@ if (0) {
 	print "}";
 	print "";
 
+	print "/**";
+	print "\tDeallocates a union symbol as indexed by symbol number.";
+	print "\t\\param u the unionized symbol to deallocate.";
+	print "\t\\param c the symbol enumeration, as returned by yylex.";
+	print " */";
 	print "void";
 	print "yy_union_lookup_delete(const YYSTYPE& u, const int c) {";
 	print "\tconst int i = yy_union_lookup_index(c);";

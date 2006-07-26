@@ -5,6 +5,16 @@
 
 2006-07-26	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-36:
+	  Fixed a token leak during LL scanning of import directive in lexer.
+		Thanks to Sandra for reporting.  
+		Several test cases added to test/lexer.
+	  Added some documentation to generated code for parse-symbol
+		resolution, generated from parser/common-union-type.awk.
+
+
+2006-07-26	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-35:
 	  Lookup of unqualified identifier in namespace now checks
 		open aliases and namespace (forgot before!)

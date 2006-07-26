@@ -2,7 +2,7 @@
  *	\file "lexer/hackt-lex.ll"
  *	vim: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.15 2006/07/16 03:34:54 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.16 2006/07/26 22:46:28 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -91,6 +91,7 @@ using namespace HAC::parser;
 #include "lexer/hac_lex.h"
 #include "lexer/hackt-lex-options.h"
 #include "lexer/flex_lexer_state.h"
+#include "parser/hackt-union.h"
 #include "util/stacktrace.h"
 #include "util/sstream.h"
 using flex::lexer_state;
@@ -102,6 +103,15 @@ using flex::lexer_state;
  */
 HAC::lexer::file_manager
 hackt_parse_file_manager;
+
+/// generated in "parser/hackt-union.cc" for deleting tokens
+extern
+void
+yy_union_lookup_delete(const YYSTYPE&, const int);
+
+extern
+std::ostream&
+yy_union_lookup_dump(const YYSTYPE&, const int, std::ostream&);
 
 namespace HAC {
 
@@ -291,7 +301,9 @@ MULTILINE_NEWLINE(token_position& p, const lexer_state& foo) {
 }
 
 /* checking whether or not we are at end of file, defined below */
-int hackt_at_eof(void);
+extern
+int
+hackt_at_eof(const flex::lexer_state&);
 
 }	/* end namespace lexer */
 }	/* end namespace HAC */
@@ -473,10 +485,20 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	// meh, just re-use the passed in lval, rather than local temporary
 	YYSTYPE& temp(*hackt_lval);
 	/* OK to reuse this lexer state in recursive lex */
+	{
 	const int expect_string = __hackt_lex(&temp, foo);
 	if (expect_string != STRING) {
 		cerr << "Expecting \"file\" after import." << endl;
+		if (!hackt_at_eof(foo)) {
+			yy_union_lookup_dump(temp, expect_string,
+				cerr << "got: ") << endl;
+			yy_union_lookup_delete(temp, expect_string);
+		} else {
+			// a.k.a. yytname[0]
+			cerr << "got: $end" << endl;
+		}
 		THROW_EXIT;
+	}
 	}
 	STRING_FINISH(temp, foo);
 	/* excl_ptr will delete token if unused */
@@ -486,10 +508,19 @@ IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 	
 	const string& fstr(*fsp);
 	/* claim the semicolon first before opening file */
+	{
 	const int expect_semi = __hackt_lex(&temp, foo);
 	if (expect_semi != ';') {
-		cerr << "Expecting ';' after import \"...\"." << endl;
+		cerr << "Expecting \';\' after import \"...\"." << endl;
+		if (!hackt_at_eof(foo)) {
+			yy_union_lookup_dump(temp, expect_semi,
+				cerr << "got: ") << endl;
+			yy_union_lookup_delete(temp, expect_semi);
+		} else {
+			cerr << "got: $end" << endl;
+		}
 		THROW_EXIT;
+	}
 	}
 	/* NODE_POSITION_UPDATE(*hackt_lval, foo); */
 	/* excl_ptr will delete token if unused */

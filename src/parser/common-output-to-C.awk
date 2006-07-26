@@ -1,7 +1,9 @@
 #! `which awk` -f
 # "common-output-to-C.awk"
 # by Fang
-#	$Id: common-output-to-C.awk,v 1.2 2005/05/04 17:54:14 fang Exp $
+#	$Id: common-output-to-C.awk,v 1.3 2006/07/26 22:46:29 fang Exp $
+# TODO: take advantage of string tables already present in bison parser.
+#	will save a ton of string memory.  
 
 # takes the y.output file from yacc -v and converts it into C strings
 # for use in error reporting
