@@ -3,7 +3,7 @@
 	Simple reference-count pointer class.  
 	Do not mix with non-counted pointer types.  
 
-	$Id: count_ptr.h,v 1.10 2006/04/18 18:42:46 fang Exp $
+	$Id: count_ptr.h,v 1.11 2006/07/26 19:27:44 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_COUNT_PTR_H__
@@ -365,6 +365,7 @@ public:
 		assert(dynamic_cast<S*>(this->ptr));
 	}
 
+	// don't rely on using std::rel_ops
 	template <class P>
 	bool
 	operator == (const P& p) const {
@@ -375,6 +376,30 @@ public:
 	bool
 	operator != (const P& p) const {
 		return pointer_manipulator::compare_pointers_unequal(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator < (const P& p) const {
+		return pointer_manipulator::compare_pointers_less(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator <= (const P& p) const {
+		return !pointer_manipulator::compare_pointers_less(p, ptr);
+	}
+
+	template <class P>
+	bool
+	operator > (const P& p) const {
+		return pointer_manipulator::compare_pointers_less(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator >= (const P& p) const {
+		return !pointer_manipulator::compare_pointers_less(p, ptr);
 	}
 
 	template <class S>

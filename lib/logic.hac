@@ -1,0 +1,124 @@
+/**
+	\file "logic.hac"
+	Standard and common logic gates.  
+	To consider: size/delayed versions?
+	non-CMOS logic?
+	Directive to inline instances of these definitions?
+	Convention: when inputs are commutative and associative, 
+		then bundle them into an array.  
+	$Id: logic.hac,v 1.1 2006/07/26 19:27:34 fang Exp $
+ */
+
+namespace std {
+namespace logic {
+//=============================================================================
+// COMBINATIONAL LOGIC
+/**
+	Your basic inverter.  
+	\param i input
+	\param o output
+ */
+defproc	inv(bool i, o) {
+prs {
+	i			=> o-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NAND gate.
+	\param N number of inputs
+	\param i the inputs
+	\param i nand result
+ */
+template <pint N>
+defproc	nand(bool i[N], o) {
+prs {
+	(&:j:N:	i[j] )		=> o-
+}
+}
+
+typedef	nand<2>			nand2;
+typedef	nand<3>			nand3;
+typedef	nand<4>			nand4;
+typedef	nand<5>			nand5;
+typedef	nand<6>			nand6;
+typedef	nand<7>			nand7;
+typedef	nand<8>			nand8;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOR gate.
+	\param N number of inputs
+	\param i the inputs
+	\param i nor result
+ */
+template <pint N>
+defproc	nor(bool i[N], o) {
+prs {
+	(|:j:N:	i[j] )		=> o-
+}
+}
+
+typedef	nor<2>			nor2;
+typedef	nor<3>			nor3;
+typedef	nor<4>			nor4;
+typedef	nor<5>			nor5;
+typedef	nor<6>			nor6;
+typedef	nor<7>			nor7;
+typedef	nor<8>			nor8;
+
+//=============================================================================
+// STATE-HOLDING LOGIC
+
+/**
+	Generalized inverting C-element.  
+	\param D number of pull-downs in series.  
+	\param U number of pull-ups in series.  
+	\param id inputs.
+	\param iu inputs.
+	\param o output.
+	NOTE: id not necessarily aliased to iu!
+ */
+template <pint D, U>
+defproc	gceleminv(bool id[D], iu[U], o) {
+prs {
+	(&:j:D:	id[j] )		-> o-
+	(&:j:U:	~iu[j] )	-> o+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Symmetric inverting C-element.  
+	Wrapper around generalized C-element.  
+	\param N number of inputs
+	\param i inputs
+	\param o output, completion result
+ */
+template <pint N>
+defproc celeminv(bool i[N], o) {
+	gceleminv<N, N> c(i, i, o);
+/**
+prs {
+	(&:j:N:	i[j] )		-> o-
+	(&:j:N:	~i[j] )		-> o+
+}
+**/
+}
+
+typedef	celeminv<2>		celeminv2;
+typedef	celeminv<3>		celeminv3;
+typedef	celeminv<4>		celeminv4;
+typedef	celeminv<5>		celeminv5;
+typedef	celeminv<6>		celeminv6;
+typedef	celeminv<7>		celeminv7;
+typedef	celeminv<8>		celeminv8;
+
+//-----------------------------------------------------------------------------
+// RESETTABLE STATE-HOLDING LOGIC
+
+//=============================================================================
+}	// end namespace logic
+}	// end namespace std
+

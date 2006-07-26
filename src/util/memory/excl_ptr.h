@@ -13,7 +13,7 @@
 	Be able to attach pointer to allocator? oooooo....
 	Be able to pass pointers between regions?  maybe not...
 
-	$Id: excl_ptr.h,v 1.12 2006/07/03 21:42:23 fang Exp $
+	$Id: excl_ptr.h,v 1.13 2006/07/26 19:27:45 fang Exp $
  */
 // all methods in this file are to be defined here, to be inlined
 
@@ -406,6 +406,30 @@ public:
 		return pointer_manipulator::compare_pointers_unequal(ptr, p);
 	}
 
+	template <class P>
+	bool
+	operator < (const P& p) const {
+		return pointer_manipulator::compare_pointers_less(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator <= (const P& p) const {
+		return !pointer_manipulator::compare_pointers_less(p, ptr);
+	}
+
+	template <class P>
+	bool
+	operator > (const P& p) const {
+		return pointer_manipulator::compare_pointers_less(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator >= (const P& p) const {
+		return !pointer_manipulator::compare_pointers_less(p, ptr);
+	}
+
 // permissible assignments
 
 // non-member functions
@@ -770,6 +794,7 @@ WRONG! cannot create an excl_ptr from a never_ptr!!!
 			// but this make it clear what it's intended for
 	}
 
+	// don't rely on using std::rel_ops
 	template <class P>
 	bool
 	operator == (const P& p) const {
@@ -780,6 +805,30 @@ WRONG! cannot create an excl_ptr from a never_ptr!!!
 	bool
 	operator != (const P& p) const {
 		return pointer_manipulator::compare_pointers_unequal(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator < (const P& p) const {
+		return pointer_manipulator::compare_pointers_less(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator <= (const P& p) const {
+		return !pointer_manipulator::compare_pointers_less(p, ptr);
+	}
+
+	template <class P>
+	bool
+	operator > (const P& p) const {
+		return pointer_manipulator::compare_pointers_less(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator >= (const P& p) const {
+		return !pointer_manipulator::compare_pointers_less(p, ptr);
 	}
 
 	/**
@@ -1069,6 +1118,30 @@ public:
 	bool
 	operator != (const P& p) const {
 		return pointer_manipulator::compare_pointers_unequal(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator < (const P& p) const {
+		return pointer_manipulator::compare_pointers_less(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator <= (const P& p) const {
+		return !pointer_manipulator::compare_pointers_less(p, ptr);
+	}
+
+	template <class P>
+	bool
+	operator > (const P& p) const {
+		return pointer_manipulator::compare_pointers_less(ptr, p);
+	}
+
+	template <class P>
+	bool
+	operator >= (const P& p) const {
+		return !pointer_manipulator::compare_pointers_less(p, ptr);
 	}
 
 	/**

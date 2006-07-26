@@ -1,7 +1,7 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.5 2006/02/25 04:55:02 fang Exp $
+	$Id: compile_options.h,v 1.6 2006/07/26 19:27:41 fang Exp $
  */
 
 #include <list>
@@ -28,6 +28,10 @@ public:
 	bool					dump_include_paths;
 	/// whether or not the persistent object header is dumped
 	bool					dump_object_header;
+	/// whether or not to emit make dependencies
+	bool					make_depend;
+	/// the name of the make-dependency target
+	string					make_depend_target;
 	/**
 		Q: should include paths be a part of global options?
 	 */
@@ -36,6 +40,8 @@ public:
 	compile_options() : dump_module(false),
 		dump_include_paths(false), 
 		dump_object_header(false),
+		make_depend(false),
+		make_depend_target(),
 		include_paths()
 		{ }
 

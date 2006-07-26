@@ -1,0 +1,5 @@
+// "logic_wrap.hac"
+// just tests inclusion of "logic.hac"
+
+import "logic.hac";
+

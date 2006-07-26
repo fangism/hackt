@@ -3,11 +3,24 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-35:
+	  Lookup of unqualified identifier in namespace now checks
+		open aliases and namespace (forgot before!)
+		Member lookups however are still local.  
+		Multiple candidate matches are reported as ambiguous.  
+		Added new test cases to parser/namespace/027,028.
+	  util/memory pointer classes added relational member operators.  
+	  lib: added 'logic.hac' gate library.  
+
+
 2006-07-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-34:
-	  lexer options header improvements: added support for bison-2.1.
+	  lexer options header improvements: partial support for bison-2.1.
 		really wishing for cx-parse completion...
+		NB: one test fails with bison-2.1, investigation pending.  
 
 
 2006-07-18	David Fang		<fangism@users.sourceforge.net>

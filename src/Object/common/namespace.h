@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/namespace.h"
 		in its previous life.  
-	$Id: namespace.h,v 1.6 2006/01/30 07:41:59 fang Exp $
+	$Id: namespace.h,v 1.7 2006/07/26 19:27:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_H__
@@ -26,6 +26,7 @@ USING_CONSTRUCT
 class name_space : public object, public scopespace {
 private:
 	typedef	name_space			this_type;
+	typedef	scopespace			parent_type;
 	// list of pointers to other opened namespaces (and their aliases)
 	// table of type definitions (user-defined data types)
 	// table of process definitions
@@ -137,6 +138,10 @@ public:
 
 	never_ptr<const name_space>
 	add_using_alias(const qualified_id& n, const string& a);
+
+	// overrides default
+	never_ptr<const object>
+	lookup_member(const string&) const;
 
 private:
 	never_ptr<name_space>

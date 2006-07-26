@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.18 2006/05/06 22:08:14 fang Exp $
+ 	$Id: namespace.cc,v 1.19 2006/07/26 19:27:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -131,9 +131,7 @@ scopespace::is_global_namespace(void) const {
  */
 never_ptr<const object>
 scopespace::lookup_member(const string& id) const {
-	const const_map_iterator f(used_id_map.find(id));
-	return (f != used_id_map.end()) ? f->second :
-		never_ptr<const object>(NULL);
+	return __lookup_member(id);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,6 +165,7 @@ scopespace::lookup_member_with_modify(const string& id) const {
 	(Consider making id a string? for cache-type/expr lookups?)
 	\param id the unqualified name of the object sought.  
 	\return an object with the same name, if found.  
+	NOTE: recursive through parents, but need not be.  
  */
 never_ptr<const object>
 scopespace::lookup_object(const string& id) const {
@@ -186,7 +185,7 @@ scopespace::lookup_object(const string& id) const {
 never_ptr<const object>
 scopespace::lookup_object(const qualified_id_slice& id) const {
 	typedef	never_ptr<const object>		return_type;
-	STACKTRACE("scopespace::lookup_object()");
+	STACKTRACE_VERBOSE;
 if (id.is_absolute()) {
 	const never_ptr<const scopespace> parent(get_parent());
 	if (parent)
@@ -476,6 +475,7 @@ good_bool
 scopespace::add_definition_alias(const never_ptr<const definition_base> d, 
 		const string& a) {
 	const never_ptr<const object> probe(lookup_member(a));
+		// or __lookup_member
 	if (probe) {
 		cerr << "Identifier \"" << a << "\" already taken by a ";
 		probe->what(cerr) << " in ";
@@ -816,7 +816,7 @@ name_space::name_space(const string& n) :
  */
 name_space::~name_space() {
 	// default destructors will take care of everything
-	STACKTRACE("~namespace()");
+	STACKTRACE_DTOR_VERBOSE;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1032,7 +1032,7 @@ name_space::add_open_namespace(const string& n) {
 	cerr << "In name_space::add_open_namespace(\"" << n << "\"): " << endl;
 #endif
 	never_ptr<name_space> ret;
-	const never_ptr<const object> probe(lookup_member(n));
+	const never_ptr<const object> probe(__lookup_member(n));
 	if (probe) {
 		const never_ptr<const name_space>
 			probe_ns(probe.is_a<const name_space>());
@@ -1053,8 +1053,7 @@ name_space::add_open_namespace(const string& n) {
 			cerr << n << " is already exists as subspace, "
 					"re-opening";
 #endif
-			ret = lookup_member_with_modify(n)
-				.is_a<name_space>();
+			ret = lookup_member_with_modify(n).is_a<name_space>();
 //			INVARIANT(lookup_member(n).is_a<name_space>());
 			INVARIANT(probe_ns->key == ret->key);
 		}
@@ -1143,6 +1142,7 @@ name_space::leave_namespace(void) {
 never_ptr<const name_space>
 name_space::add_using_directive(const qualified_id& n) {
 	typedef	never_ptr<const name_space>	return_type;
+	STACKTRACE_VERBOSE;
 	return_type ret;
 	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
@@ -1205,6 +1205,7 @@ name_space::add_using_directive(const qualified_id& n) {
  */
 never_ptr<const name_space>
 name_space::add_using_alias(const qualified_id& n, const string& a) {
+	STACKTRACE_VERBOSE;
 	never_ptr<const object> probe;
 	never_ptr<const name_space> ret;
 	namespace_list::const_iterator i;
@@ -1219,7 +1220,7 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	// because this method is non-const.  
 	// else it will modify the used_id_map!
 	// perhaps wrap with a probe() const method...
-	probe = lookup_member(a);
+	probe = __lookup_member(a);	// not lookup_member?
 	if (probe) {
 		probe = never_ptr<const object>(&probe->self());
 		// resolve handles
@@ -1343,7 +1344,7 @@ name_space::query_namespace_match(const qualified_id_slice& id) const {
 			// the [] operator of map<> doesn't have const 
 			// semantics, even if looking up an entry!
 			const never_ptr<const name_space>
-				next = ns->lookup_member(tid2).is_a<const name_space>();
+				next(ns->__lookup_member(tid2).is_a<const name_space>());
 			// if not found in subspaces, check aliases list
 			// or should we not search aliases?
 			ns = (next) ? next : ns->lookup_open_alias(tid2);
@@ -1391,10 +1392,10 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	never_ptr<const name_space> ns;
 	if (id.is_absolute()) {
 		ns = get_global_namespace()->
-			lookup_member(tid).is_a<const name_space>();
+			__lookup_member(tid).is_a<const name_space>();
 	} else {
 		// force use of const probe
-		const never_ptr<const object> probe(lookup_member(tid));
+		const never_ptr<const object> probe(__lookup_member(tid));
 		ns = probe.is_a<const name_space>();
 	}
 
@@ -1405,7 +1406,7 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 		NEVER_NULL(*i);
 		const token_identifier& tid2(**i);
 		const never_ptr<const name_space>
-			next = ns->lookup_member(tid2).is_a<const name_space>();
+			next(ns->__lookup_member(tid2).is_a<const name_space>());
 		// if not found in subspaces, check aliases list
 		ns = (next) ? next : ns->lookup_open_alias(tid2);
 	}
@@ -1431,8 +1432,8 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 	\param id the qualified/scoped name of the namespace to match
  */
 void
-name_space::
-query_import_namespace_match(namespace_list& m, const qualified_id& id) const {
+name_space::query_import_namespace_match(
+		namespace_list& m, const qualified_id& id) const {
 #if 0
 	cerr << endl << "query_import_namespace_match: " << id 
 		<< " in " << get_qualified_name();
@@ -1517,6 +1518,7 @@ name_space::add_definition(excl_ptr<definition_base>& db) {
 	NEVER_NULL(db);
 	const string k = db->get_name();
 	const never_ptr<const object> probe(lookup_member(k));
+		// not __lookup_member
 	if (probe) {
 		const never_ptr<const definition_base>
 			probe_def(probe.is_a<const definition_base>());
@@ -1580,6 +1582,63 @@ name_space::lookup_open_alias(const string& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Overrides scopespace's lookup_member by also searching aliases.  
+	Search open_spaces in addition to own namespace.  
+	Don't search open_aliases because those are treated
+	like member (nested) namespaces.
+	TODO: Do aliases have priority, or treated equal?
+	If treated equal, then need to detect ambiguity.  
+	Recursive search should not lookup aliases, so call __lookup_member.  
+ */
+never_ptr<const object>
+name_space::lookup_member(const string& id) const {
+	typedef	never_ptr<const object>	return_type;
+	typedef	std::set<return_type>	return_set;
+	typedef	namespace_list::const_iterator		const_iterator;
+	STACKTRACE_VERBOSE;
+	return_type o(parent_type::lookup_member(id));
+	if (o)
+		return o;
+	// else search open namespace aliases
+	return_set candidates;
+{
+	const_iterator i(open_spaces.begin()), e(open_spaces.end());
+	for ( ;i!=e; ++i) {
+		const return_type a((*i)->__lookup_member(id));
+		if (a) {
+			const bool b = candidates.insert(a).second;
+#if ENABLE_STACKTRACE
+			STACKTRACE_INDENT_PRINT("a = " << &*a << endl);
+			a->dump(cerr) << endl;
+			STACKTRACE_INDENT_PRINT("found match " << candidates.size() << endl);
+#endif
+			INVARIANT(b);
+		}
+		// else skip
+	}
+}
+	if (candidates.empty()) {
+		// no matches found
+		return return_type(NULL);
+	} else if (candidates.size() == 1) {
+		return *candidates.begin();
+	} else {
+		// multiple ambiguous matches
+		cerr << "Error: multiple matches found for \'" << id << "\'."
+			<< endl;
+		cerr << "Candidates are: " << endl;
+		typedef	return_set::const_iterator		set_iterator;
+		set_iterator i(candidates.begin()), e(candidates.end());
+		for ( ; i!=e; ++i) {
+			// dump qualified name enough?
+			(*i)->dump(cerr) << endl;
+		}
+		return return_type(NULL);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Recursive collection of all namespaces into a flat list
 	of namespace pointers.  
 	\param l the list in which to accumulate namespace pointers.  
@@ -1601,7 +1660,7 @@ name_space::collect_namespaces(namespace_collection_type& l) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Recursively collect pointer information about contituents.  
+	Recursively collect pointer information about constituents.  
  */
 void
 name_space::collect_transient_info(persistent_object_manager& m) const {

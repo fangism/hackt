@@ -1,0 +1,15 @@
+// "logic-01.hac"
+// basic logic library test instantiations
+
+import "logic.hac";
+
+// using namespace std::logic;
+open std::logic;
+
+bool i[4];
+bool o1, o2, o3;
+
+nand4		_nand4(i, o1);
+nor4		_nor4(i, o2);
+celeminv4	_c4(i, o3);
+

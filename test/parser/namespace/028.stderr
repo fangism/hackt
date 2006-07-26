@@ -1,0 +1,15 @@
+Error: multiple matches found for 'bar'.
+Candidates are: 
+process-definition (defined) bar(
+  )
+  In definition "bar", we have: {
+  unroll sequence: 
+  }
+
+process-definition (defined) bar(
+  )
+  In definition "bar", we have: {
+  unroll sequence: 
+  }
+
+concrete_type_ref: bad definition reference "bar"!  ERROR! [16:1..3]

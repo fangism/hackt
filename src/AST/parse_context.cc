@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.9 2006/01/26 21:33:25 fang Exp $
+ 	$Id: parse_context.cc,v 1.10 2006/07/26 19:27:35 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -430,7 +430,7 @@ context::get_current_fundamental_type(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Looks up a quallified identifier.  
+	Looks up a qualified identifier.  
 	Incidentally, never looks up loop variables this way, 
 		because they cannot be referenced qualified-ly.  
 	Is this comment stale?
@@ -440,6 +440,7 @@ context::get_current_fundamental_type(void) const {
 never_ptr<const object>
 context::lookup_object(const qualified_id& id) const {
 	typedef	never_ptr<const object>		return_type;
+	STACKTRACE_VERBOSE;
 	// automatically resolve object handles.  
 	return_type o(get_current_named_scope()->lookup_object(id));
 	while (o.is_a<const object_handle>())
@@ -458,7 +459,7 @@ context::lookup_object(const token_identifier& id) const {
 	STACKTRACE_VERBOSE;
 	// aww shit, have to return a never_ptr when lookup count_ptr...
 	// could spell trouble later...
-	// fortunately, is unly used locally by caller
+	// fortunately, is only used locally by caller
 	typedef	loop_var_stack_type::const_iterator const_iterator;
 	const_iterator i(loop_var_stack.begin());
 	const const_iterator e(loop_var_stack.end());
@@ -629,7 +630,7 @@ context::get_current_named_scope(void) {
 never_ptr<const instance_collection_base>
 context::add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type& a) {
-	STACKTRACE("context::add_instance(id)");
+	STACKTRACE_VERBOSE;
 	// wrapper
 	return add_instance(id, a, index_collection_item_ptr_type(NULL));
 }
@@ -662,7 +663,7 @@ context::add_instance(const token_identifier& id,
 		const relaxed_args_ptr_type& a, 
 		index_collection_item_ptr_type dim) {
 	typedef	never_ptr<const instance_collection_base>	return_type;
-	STACKTRACE("context::add_instance(id, dim)");
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(current_fundamental_type);
 	const never_ptr<scopespace>
 		current_named_scope(get_current_named_scope());
@@ -730,7 +731,7 @@ never_ptr<const instance_collection_base>
 context::add_template_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d) {
-	STACKTRACE("context::add_template_formal()");
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(current_prototype);	// valid definition_base
 	NEVER_NULL(current_fundamental_type);
 	count_ptr<const param_type_reference>
@@ -814,6 +815,7 @@ context::add_template_formal(const token_identifier& id,
 never_ptr<const instance_collection_base>
 context::add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(current_prototype);	// valid definition_base
 	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());
 		// valid port type to instantiate

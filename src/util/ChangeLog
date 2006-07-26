@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2006-07-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-35:
+	  Pointer classes added relational operator member functions
+		for actual address value comparison.  
+		No clue what relational operators were doing before!
+
+
 2006-07-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-29:

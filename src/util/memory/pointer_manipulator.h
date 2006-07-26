@@ -3,7 +3,7 @@
 	Library of pointers for explicit memory management.  
 	The pointer classes contained herein are all non-counted.  
 
-	$Id: pointer_manipulator.h,v 1.5 2005/05/10 04:51:34 fang Exp $
+	$Id: pointer_manipulator.h,v 1.6 2006/07/26 19:27:45 fang Exp $
  */
 
 #ifndef	__UTIL_MEMORY_POINTER_MANIPULATOR_H__
@@ -98,6 +98,15 @@ public:
 		return (__get_pointer(p1, __pointer_category(p1)) !=
 			__get_pointer(p2, __pointer_category(p2)));
 #endif
+	}
+
+	template <class P1, class P2>
+	inline
+	static
+	bool
+	compare_pointers_less(const P1& p1, const P2& p2) {
+		return (__get_pointer(p1, __pointer_category(p1)) <
+			__get_pointer(p2, __pointer_category(p2)));
 	}
 
 };	// end class pointer_manipulator

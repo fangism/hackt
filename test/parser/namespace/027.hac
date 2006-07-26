@@ -1,0 +1,11 @@
+// "027.hac"
+// testing lookup of typedef in namespace
+
+namespace foo {
+defproc bar() { }
+}
+
+open foo;
+
+bar BQ;
+
