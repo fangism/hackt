@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-34:
+	  lexer options header improvements: added support for bison-2.1.
+		really wishing for cx-parse completion...
+
+
 2006-07-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-33:

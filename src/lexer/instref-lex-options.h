@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: instref-lex-options.h,v 1.2 2006/01/22 06:53:10 fang Exp $
+	$Id: instref-lex-options.h,v 1.3 2006/07/26 04:11:25 fang Exp $
  */
 
 #ifndef	__LEXER_INSTREF_LEX_OPTIONS_H__
@@ -82,20 +82,31 @@
 #ifdef	YYLEX_PARAM
 // YYLEX_PARAM is a declarator, so we have to manually pass
 // in the correct argument name.
+// only bison-2.1 and up define YYBISON_VERSION (as a "string", incidentally)
+// bison-2.1 defines YYLEX differently than 2.0, *&^%$#@!
+#ifdef	YYBISON_VERSION
+// #define	yylex(x)		__instref_lex(&yylval, _lexer_state)
+#define	instref_lex(x)		__instref_lex(&instref_lval, _lexer_state)
+#else	// YYBISON_VERSION
 // #define	yylex(x, y)		__instref_lex(x, _lexer_state)
 #define	instref_lex(x, y)	__instref_lex(x, _lexer_state)
-#else
+#endif	// YYBISON_VERSION
+#else	// ifdef YYLEX_PARAM
 // #define	yylex			__instref_lex
 #define	instref_lex		__instref_lex
-#endif
+#endif	// YYLEX_PARAM
 #endif	// USING_BISON
 
 #else	// defined(LIBBOGUS)
 #if USING_BISON
+#ifdef	YYBISON_VERSION
+#define	instref_lex(x)		__instref_lex(&yylval)
+#else	// YYBISON_VERSION
 #define	instref_lex		__instref_lex
-#else
+#endif	// YYBISON_VERSION
+#else	// USING_BISON
 #define	instref_lex()		__instref_lex(&yylval)
-#endif
+#endif	// USING BISON
 #endif	// LIBBOGUS
 
 #endif	// __LEXER_INSTREF_LEX_OPTIONS_H__
