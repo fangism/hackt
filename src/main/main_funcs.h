@@ -1,7 +1,7 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.4 2006/01/25 20:26:04 fang Exp $
+	$Id: main_funcs.h,v 1.5 2006/07/27 05:55:36 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_MAIN_FUNCS_H__
@@ -15,6 +15,7 @@ namespace HAC {
 using util::good_bool;
 using util::memory::excl_ptr;
 using entity::module;
+class compile_options;		// defined in "main/compile_options.h"
 
 //=============================================================================
 extern
@@ -31,7 +32,7 @@ check_file_writeable(const char*);
 
 extern
 excl_ptr<module>
-parse_and_check(const char*);
+parse_and_check(const char*, const compile_options&);
 
 extern
 good_bool

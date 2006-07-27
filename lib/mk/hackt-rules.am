@@ -1,6 +1,6 @@
 # "mk/hackt-rules.am"
 #	vim: ft=automake
-#	$Id: hackt-rules.am,v 1.3 2006/06/26 01:45:29 fang Exp $
+#	$Id: hackt-rules.am,v 1.4 2006/07/27 05:55:31 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
@@ -11,7 +11,10 @@
 # top_builddir = ../..
 # srcdir = .
 
+# note: this example points to the builddir's binary for hackt
+# but may be altered to point to any installed binary in path
 HACKT_EXE = $(top_builddir)/src/hackt
+
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
 HACKT_COMPILE_EXE = $(HACKT_EXE) compile
 HACKT_OBJDUMP_EXE = $(HACKT_EXE) objdump
@@ -22,8 +25,14 @@ HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
 HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
 HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
+# with dependency tracking enabled by default
 .hac.haco:
-	$(HACKT_COMPILE_EXE) -I$(srcdir) $< $@
+	depbase=`echo $@ | $(SED) 's/\.haco$$//g'` ; \
+	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M "$$depbase.tmpd" $< $@ ; \
+	then $(MV) "$$depbase.tmpd" "$$depbase.depend" ; \
+	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
+	fi
+#	$(HACKT_COMPILE_EXE) -I$(srcdir) $< $@
 
 .haco.haco-u:
 	$(HACKT_UNROLL_EXE) $< $@

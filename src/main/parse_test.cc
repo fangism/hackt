@@ -6,7 +6,7 @@
 	write-out and read-in.
 	This file was born out of "art_main.cc" in earlier history.  
 
-	$Id: parse_test.cc,v 1.6 2005/12/13 04:15:47 fang Exp $
+	$Id: parse_test.cc,v 1.7 2006/07/27 05:55:37 fang Exp $
  */
 
 #include <iostream>
@@ -47,6 +47,7 @@ parse_test::parse_test() { }
 /**
 	TODO: also accept same compile flags as compile module.
 	TODO: clean up file_manager after done?
+	Does not generate make-depend.  
 	\param argc number of command-line arguments.
 	\param argv the array of string arguments.
 	\param gopt currently unused.
@@ -64,8 +65,11 @@ parse_test::main(const int argc, char* argv[],
 
 	const int index = optind;
 	// if no file given, read from stdin
+	if (index != argc) {
+		opt.source_file = argv[index];
+	}
 	const excl_ptr<module> mod =
-		parse_and_check((index != argc) ? argv[index] : NULL);
+		parse_and_check((index != argc) ? argv[index] : NULL, opt);
 	if (!mod)
 		return 1;
 	good_bool g(self_test_module(*mod));

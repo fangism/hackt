@@ -1,7 +1,7 @@
 /**
 	\file "main/compile_options.h"
 	Common compile options class.  
-	$Id: compile_options.h,v 1.6 2006/07/26 19:27:41 fang Exp $
+	$Id: compile_options.h,v 1.7 2006/07/27 05:55:36 fang Exp $
  */
 
 #include <list>
@@ -32,6 +32,10 @@ public:
 	bool					make_depend;
 	/// the name of the make-dependency target
 	string					make_depend_target;
+	/// the name of the output target
+	string					source_file;
+	/// the name of the output target
+	string					target_object;
 	/**
 		Q: should include paths be a part of global options?
 	 */
@@ -42,6 +46,8 @@ public:
 		dump_object_header(false),
 		make_depend(false),
 		make_depend_target(),
+		source_file(), 
+		target_object(), 
 		include_paths()
 		{ }
 

@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-07-27	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-79-37:
+	  Added automatic dependency generators to mk/ Makefile rules.  
+
+
 2006-07-26	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-79-35:

@@ -1,9 +1,10 @@
 /**
 	\file "lexer/file_manager.cc"
-	$Id: file_manager.cc,v 1.5 2006/01/23 20:03:39 fang Exp $
+	$Id: file_manager.cc,v 1.6 2006/07/27 05:55:34 fang Exp $
  */
 
 #include <iostream>
+#include <set>
 #include "lexer/file_manager.h"
 #include "util/unique_list.tcc"
 // #include "util/unique_stack.tcc"
@@ -14,6 +15,8 @@
 namespace HAC {
 namespace lexer {
 #include "util/using_ostream.h"
+using std::set;
+
 //=============================================================================
 // class file_position_stack method definitions
 
@@ -317,6 +320,41 @@ file_manager::dump(ostream& o) const {
 	dump_file_stack(o) << endl;
 	dump_file_names(o) << endl;
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/** 
+	List all seen files' full paths.  
+	Also prints phony targets.  
+	\param s the name of the primary source file (to exclude).
+	\param o the output stream.
+ */
+ostream&
+file_manager::make_depend(ostream& o, const string& s) const {
+	INVARIANT(o);
+	typedef	set<string>			temp_set_type;
+	typedef	temp_set_type::const_iterator	const_iterator;
+	temp_set_type deps(_fstack.get_registry().begin(),
+		_fstack.get_registry().end());
+	deps.erase(s);
+if (!deps.empty()) {
+	const const_iterator b(deps.begin()), e(deps.end());
+{
+	const_iterator i(b);
+	for ( ; i!=e; ++i) {
+		o << " \\\n\t" << *i;
+	}
+}
+	o << endl << endl;
+{
+	// phony targets
+	const_iterator i(b);
+	for ( ; i!=e; ++i) {
+		o << *i << ":\n";
+	}
+}
+}
+	return o << endl << endl;
 }
 
 //=============================================================================

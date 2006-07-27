@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-37:
+	  Added support for dependency generation during compile
+		usage: hackt compile -M <depfile>
+	  Revised lexer::file_manager, and main/compile,parse_test modules.  
+	  Added dependency information to compile_options.  
+	  .haco rules have been updated in all Makefiles in testsuite, 
+		but the .depend files are not used yet.  
+	  TODO: automate -include of all .depend files, without
+		chicken-before-egg problem.  (auto-touch .depend?)
+
+
 2006-07-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-36:

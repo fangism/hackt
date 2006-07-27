@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.11 2006/05/12 00:39:09 fang Exp $
+	$Id: compile.cc,v 1.12 2006/07/27 05:55:35 fang Exp $
  */
 
 #include <iostream>
@@ -186,8 +186,19 @@ compile::main(const int argc, char* argv[], const global_options&) {
 		if (!check_file_writeable(argv[1]).good)
 			return 1;
 	}
+
+	// dependency generation setup
+	opt.source_file = argv[0];
+	if (argc -optind >= 2) {
+		opt.target_object = argv[1];
+	} else {
+		// default: append 'o' to get object file name
+		opt.target_object = string(argv[0]) + 'o';
+	}
+
+	// parse it
 	const excl_ptr<module> mod =
-		parse_and_check(argv[0]);
+		parse_and_check(argv[0], opt);
 	if (!mod) {
 		return 1;
 	}
@@ -211,7 +222,7 @@ compile::main(const int argc, char* argv[], const global_options&) {
  */
 int
 compile::parse_command_options(const int argc, char* argv[], options& opt) {
-	static const char* optstring = "+df:hI:";
+	static const char* optstring = "+df:hI:M:";
 	int c;
 	while ((c = getopt(argc, argv, optstring)) != -1) {
 	switch (c) {
@@ -234,6 +245,10 @@ compile::parse_command_options(const int argc, char* argv[], options& opt) {
 	case 'I':
 		// no need to check validity of paths yet
 		opt.include_paths.push_back(optarg);
+		break;
+	case 'M':
+		opt.make_depend = true;
+		opt.make_depend_target = optarg;
 		break;
 	case ':':
 		cerr << "Expected but missing non-option argument." << endl;
@@ -271,6 +286,7 @@ compile::usage(void) {
 }
 	cerr << "\t-h: gives this usage messsage" << endl <<
 		"\t-I <path> : adds include path (repeatable)" << endl;
+	cerr << "\t-M <dependfile> : produces make dependency to file" << endl;
 	cerr << "\tIf no output object file is given, compiled module will not be saved."
 		<< endl;
 }

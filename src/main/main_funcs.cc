@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.9 2006/02/13 02:48:05 fang Exp $
+	$Id: main_funcs.cc,v 1.10 2006/07/27 05:55:36 fang Exp $
  */
 
 #include <iostream>
@@ -21,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "AST/root.h"	// for parser::root_body
 #include "AST/parse_context.h"		// for parser::context
+#include "main/compile_options.h"
 #include "util/getopt_portable.h"
 #include "util/persistent_object_manager.h"
 
@@ -159,7 +160,7 @@ parse_to_AST(FILE* yyin) {
  */
 static
 excl_ptr<root_body>
-parse_to_AST(const char* c) {
+parse_to_AST(const char* c, const compile_options& opt) {
 	typedef	excl_ptr<root_body>		return_type;
 	STACKTRACE_VERBOSE;
 	YYSTYPE hackt_val;		// root token (was yyval)
@@ -182,6 +183,18 @@ parse_to_AST(const char* c) {
 	}
 	} else {
 		return return_type(NULL);
+	}
+	if (opt.make_depend) {
+		const char* const md = opt.make_depend_target.c_str();
+	if (check_file_writeable(md).good) {
+		ofstream mtf(md);
+		mtf << opt.target_object << ": " << opt.source_file;
+		// list all seen files' full paths
+		hackt_parse_file_manager.make_depend(mtf, opt.source_file);
+	} else {
+		// already have error message
+		return return_type(NULL);
+	}
 	}
 }
 	if (need_to_clean_up_file_manager) {
@@ -217,11 +230,12 @@ check_AST(const root_body& r, const char* name) {
 	Parses a file and checks it.  
 	\param name the name of the top-level source file, 
 		if NULL, then will use stdin.  
+	\param opt compiler options.  
 	\return if parse and type-check are successful, then return
 		a pointer to top-level constructed module, else NULL.  
  */
 excl_ptr<module>
-parse_and_check(const char* name) {
+parse_and_check(const char* name, const compile_options& opt) {
 	typedef	excl_ptr<module>	return_type;
 	STACKTRACE_VERBOSE;
 	static const char* dflt = "-stdin-";
@@ -236,7 +250,7 @@ parse_and_check(const char* name) {
 		}
 	}
 	// error message would be nice
-	excl_ptr<root_body> AST = parse_to_AST(name);
+	excl_ptr<root_body> AST = parse_to_AST(name, opt);
 	if (!AST) return return_type(NULL);
 	// error message would be nice
 	return check_AST(*AST, name ? name : dflt);

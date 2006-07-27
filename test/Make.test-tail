@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.35 2006/07/16 20:39:54 fang Exp $
+#	$Id: Make.test-tail,v 1.36 2006/07/27 05:55:38 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -56,8 +56,20 @@ HACO_FLAGS += -I$(srcdir)
 .hac.stderr:
 	@$(TOUCH) $@
 
+# this dependency generator assymes default target suffix .haco
+# caution: concurrent builds of .haco and .depend may clobber this
+.hac.depend:
+	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M $@ $<
+
+# dependency tracking enabled by default
+# TODO: consider adding .depend to the generated dependency targets
 .hac.haco:
-	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $@
+	depbase=`echo $@ | $(SED) 's/\.haco$$//g'` ; \
+	if $(HACKT_COMPILE_EXE) $(HACO_FLAGS) -M "$$depbase.tmpd" $< $@ ; \
+	then $(MV) "$$depbase.tmpd" "$$depbase.depend" ; \
+	else $(RM) "$$depbase.tmpd" ; exit 1 ; \
+	fi
+#	$(HACKT_COMPILE_EXE) $(HACO_FLAGS) $< $@
 
 .hac.outdump:
 	$(HACKT_COMPILE_EXE) -d $(HACO_FLAGS) $< > $@ 2>&1
@@ -533,6 +545,9 @@ clean-tests-recursive:
 clean-summaries:
 	$(RM) $(CHECK_SUMMARIES)
 
+distclean-depend:
+	-$(RM_PATTERN) "*.depend"
+
 clean-compiletests:
 	-$(RM_PATTERN) "*.test"
 	-$(RM_PATTERN) "*.nowarn"
@@ -635,7 +650,7 @@ cleaner-local:
 	-$(RM_PATTERN) "*.artobj" "*.artobjunroll"
 	-$(RM_PATTERN) "*.hacktobjcreate" "*.hacktobjalloc"
 
-distclean-local: cleaner-local
+distclean-local: cleaner-local distclean-depend
 	-$(RM_PATTERN) "*.*haco*"
 
 cleaner-recursive:
@@ -649,7 +664,11 @@ cleaner-recursive:
 	done
 
 .PHONY: cleaner cleaner-local cleaner-recursive \
-	clean-tests clean-tests-recursive help-test
+	clean-tests clean-tests-recursive help-test \
+	clean-summaries clean-compiletests clean-unrolltests \
+	clean-createtests clean-alloctests \
+	clean-cflattests clean-prsimtests \
+	distclean-depend
 
 # this cheat is only needed to create auto-generated (empty) distribution files
 # dist-hook-missing: $(EXTRA_DIST)

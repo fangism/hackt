@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.16 2006/06/26 01:46:52 fang Exp $
+#	$Id: Make.test-head,v 1.17 2006/07/27 05:55:37 fang Exp $
 #	vim: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -10,6 +10,7 @@ include $(top_srcdir)/Make.stddef
 SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest .hacktsprstest \
 	.hacktcflatseutest \
+	.depend \
 	.haco .haco-u .haco-c .haco-a .prs .sprs .prsseu \
 	.prsimexpr .prsimexpr-dot .prsimexpr-ps \
 	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \

@@ -2,7 +2,7 @@
 	\file "lexer/file_manager.h"
 	Common file management facilities for including, search paths...
 	Consider making this a general util for the library.  
-	$Id: file_manager.h,v 1.6 2006/01/23 20:03:39 fang Exp $
+	$Id: file_manager.h,v 1.7 2006/07/27 05:55:35 fang Exp $
  */
 
 #ifndef	__LEXER_FILE_MANAGER_H__
@@ -81,6 +81,7 @@ struct file_position {
 	Keep track of token_position?
  */
 class file_position_stack {
+	typedef	unique_list<string>	registry_type;
 public:
 	typedef	std::default_list<file_position>::type	position_stack_type;
 	typedef	position_stack_type::const_iterator	const_iterator;
@@ -90,7 +91,7 @@ private:
 		A set is insufficient, because we want to keep order
 		to establish a map between files and indices.  
 	 */
-	unique_list<string>		_registry;
+	registry_type		_registry;
 	/**
 		Stack of file positions, implemented as a list
 		to be able to walk the stack from front to back.
@@ -112,6 +113,9 @@ public:
 
 	bool
 	push(const file_position&);
+
+	const registry_type&
+	get_registry(void) const { return _registry; }
 
 #if 0
 	bool
@@ -160,6 +164,8 @@ public:
 	opened file stack.  
 	Consider adding some sort of vector and reverse_map
 	to pair-up file-index and file-name (full path).  
+	NOTE: this is not the same as the similar class
+		util::file_manager.
  */
 class file_manager {
 	typedef	unique_list<string>	file_names_type;
@@ -253,6 +259,9 @@ public:
 	/// dump everything, for debugging
 	ostream&
 	dump(ostream&) const;
+
+	ostream&
+	make_depend(ostream&, const string&) const;
 
 };	// end class file_manager
 

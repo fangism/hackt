@@ -1,0 +1,5 @@
+"TODO"
+
+Use configure to generate Makefiles suitable for installations of hackt.  
+Distinguish between build Makefiles and install Makefiles.  
+
