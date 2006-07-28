@@ -1,5 +1,5 @@
 # "hackt.mk"
-#	$Id: hackt.mk,v 1.4 2006/07/28 09:08:17 fang Exp $
+#	$Id: hackt.mk,v 1.5 2006/07/28 21:30:03 fang Exp $
 # TODO: distinguish hackt-build.mk from hackt-inst.mk
 # point these to hackt
 top_srcdir = ../..
@@ -12,7 +12,9 @@ srcdir = .
 	.hacktcreatetest .hacktalloctest .hacktcflattest \
 	.haco .haco-u .haco-c .haco-a .prs .sprs \
 	.prsimexpr .prsimexpr-O1 .prs-dot .prs-dot-O1 \
-	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps
+	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
+	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
+	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf
 
 # note: this points to the built hackt binary, but may be overriden
 # to point to a different binary, or one in path
@@ -75,17 +77,47 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 .prs-dot-O1.prs-dot-ps:
 	dot -Tps $< -o $@
 
+.prs-dot-O1.prs-dot-fig:
+	dot -Tfig $< -o $@
+
 .prs-dot-O1.prs-neato-ps:
 	neato -Tps $< -o $@
+
+.prs-dot-O1.prs-neato-fig:
+	neato -Tfig $< -o $@
 
 .prs-dot-O1.prs-circo-ps:
 	circo -Tps $< -o $@
 
+.prs-dot-O1.prs-circo-fig:
+	circo -Tfig $< -o $@
+
 .prs-dot-O1.prs-twopi-ps:
 	twopi -Tps $< -o $@
 
+.prs-dot-O1.prs-twopi-fig:
+	twopi -Tfig $< -o $@
+
 .prs-dot-O1.prs-fdp-ps:
-	dot -Tps $< -o $@
+	fdp -Tps $< -o $@
+
+.prs-dot-O1.prs-fdp-fig:
+	fdp -Tfig $< -o $@
+
+.prs-dot-fig.prs-dot-pdf:
+	fig2dev -Lpdf $< $@
+
+.prs-neato-fig.prs-neato-pdf:
+	fig2dev -Lpdf $< $@
+
+.prs-circo-fig.prs-circo-pdf:
+	fig2dev -Lpdf $< $@
+
+.prs-twopi-fig.prs-twopi-pdf:
+	fig2dev -Lpdf $< $@
+
+.prs-fdp-fig.prs-fdp-pdf:
+	fig2dev -Lpdf $< $@
 
 all:
 
@@ -99,5 +131,6 @@ clean-local:
 	-$(RM) *.prs
 	-$(RM) *.prsimexpr*
 	-$(RM) *.prs-dot* *.prs-*-ps
+	-$(RM) *.prs-*-fig *.prs-*-pdf
 	-$(RM) *.sprs
 

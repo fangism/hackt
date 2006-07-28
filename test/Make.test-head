@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.19 2006/07/28 09:08:19 fang Exp $
+#	$Id: Make.test-head,v 1.20 2006/07/28 21:30:03 fang Exp $
 #	vim: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -11,10 +11,13 @@ SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest .hacktsprstest \
 	.hacktcflatseutest \
 	.depend \
-	.haco .haco-u .haco-c .haco-a .prs .sprs .prsseu \
+	.haco .haco-u .haco-c .haco-a \
+	.prs .sprs .prsseu \
 	.prsimexpr .prsimexpr-O1 \
 	.prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
+	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
+	.prs-dot-pdf .prs-neato-pdf .prs-circo-pdf .prs-twopi-pdf .prs-fdp-pdf \
 	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \
 	.outdump .indump .unrolldump .createdump .allocdump \
 	.haco-c-from-haco .haco-a-from-haco .haco-a-from-u \

@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.76 2006/07/28 09:08:14 fang Exp $
+#	$Id: configure.ac,v 1.77 2006/07/28 21:29:59 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -79,10 +79,8 @@ DOC_CHECK_PROG_DVIPS
 DOC_CHECK_PROG_PS2PDF
 
 # figure related stuff
-AC_CHECK_PROG([XFIG], xfig, xfig)
-AC_CHECK_PROG([TRANSFIG], transfig, transfig)
-dnl only fig2dev is needed for converting xfigs
-AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
+FANG_CHECK_PROGS_XFIG
+dnl checks for xfig, transfig, fig2dev
 
 AC_CHECK_FILES([/dev/null])
 dnl standard terminal devices for redirection (test doesn't work)
@@ -98,9 +96,6 @@ AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
 AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 
 # Lex/Yacc support
-AM_PROG_LEX
-AC_PROG_YACC
-
 HACKT_ARG_VAR_LEX
 HACKT_ARG_VAR_YACC
 HACKT_AM_CONDITIONAL_HAVE_YACC

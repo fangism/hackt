@@ -33,6 +33,8 @@ core.*
 *.prsimexpr-O1
 *.prs-dot-O1
 *.prs-*-ps
+*.prs-*-fig
+*.prs-*-pdf
 *.prsimexprdiff
 *.prsimtest
 *.prsseu

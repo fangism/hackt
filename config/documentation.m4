@@ -1,5 +1,5 @@
 dnl "config/documentation.m4"
-dnl	$Id: documentation.m4,v 1.5 2006/07/28 09:08:15 fang Exp $
+dnl	$Id: documentation.m4,v 1.6 2006/07/28 21:30:00 fang Exp $
 dnl Autoconf macros pertaining to package documentation.
 dnl This provides macros for checking for latex and related programs
 dnl that are used in building the documentation.  
@@ -131,6 +131,23 @@ AC_DEFUN([FANG_CHECK_PROGS_TETEX],
 AC_REQUIRE([DOC_CHECK_PROG_PDFLATEX])
 AC_REQUIRE([DOC_CHECK_PROG_BIBTEX])
 AC_REQUIRE([DOC_CHECK_PROG_MAKEINDEX])
+])
+
+dnl @synopsis FANG_CHECK_PROGS_XFIG
+dnl
+dnl Checks for xfig, transfig, and fig2dev.
+dnl Defines automake variable HAVE_FIG2DEV. 
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-07-28
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CHECK_PROGS_XFIG],
+[AC_CHECK_PROG([XFIG], xfig, xfig)
+AC_CHECK_PROG([TRANSFIG], transfig, transfig)
+AC_CHECK_PROG([FIG2DEV], fig2dev, fig2dev)
+AM_CONDITIONAL(HAVE_FIG2DEV, test -n "$FIG2DEV" )
 ])
 
 dnl @synopsis DOC_CHECK_PROG_DVIPS
