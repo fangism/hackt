@@ -1,7 +1,7 @@
 #!@SH_PATH@
 # "test-series.sh.in"
 # convenience script for running a sequence of tests on one input file.
-#	$Id: test-series.sh.in,v 1.9 2006/07/16 20:39:55 fang Exp $
+#	$Id: test-series.sh.in,v 1.10 2006/07/28 03:31:14 fang Exp $
 # This file originally came from "test-series.sh" in revision prehistory.  
 
 # usage: pass in the root names of the test cases (without the .hac extension)
@@ -68,8 +68,14 @@ do
 			then
 				@CALLMAKE@ $t.hacktcflattest
 			fi
+			if test ! -f $t.hacktprsdottest
+			then
+				@CALLMAKE@ $t.hacktprsdottest
+			fi
 			@ECHO@ $t.hacktcflattest
 			./$t.hacktcflattest
+			@ECHO@ $t.hacktprsdottest
+			./$t.hacktprsdottest
 		fi
 	fi
 	rm -f $t.test.nowarn

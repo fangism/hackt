@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.11 2006/07/18 04:09:16 fang Exp $
+	$Id: Node.h,v 1.12 2006/07/28 03:31:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -120,6 +120,9 @@ public:
 	get_pull_expr(const bool b) const {
 		return b ? pull_up_index : pull_dn_index;
 	}
+
+	void
+	replace_pull_index(const bool dir, const expr_index_type);
 
 	bool
 	is_unstab(void) const { return struct_flags & NODE_UNSTAB; }

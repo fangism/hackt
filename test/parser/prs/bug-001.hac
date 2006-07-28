@@ -1,0 +1,56 @@
+// "bug-001.hac"
+// opened: 20060727
+// status: fixed by HACKT-00-01-04-main-00-79-39
+
+/***
+comments:
+	discovered while trying to use "logic.cast"::celeminv2, 
+		defined as a wrapper around gceleminv.  
+
+invocation:
+	hackt prsim -fno-run -fdump-dot-struct -O1 bug-001.haco-a
+
+result:
+sim/prsim/State.cc:384: failed assertion `n.get_pull_expr(e.direction()) == i'
+
+diagnosis: expression compaction (with -O1 optimization)
+	failed to relink parent-node relationship, 
+	and was checking deallocated expression slots unnecessarily.  
+***/
+
+template <pint D, U>
+defproc gcel(bool id[D], iu[U], o) { 
+prs {   
+        (&:j:D: id[j] )         -> o-
+        (&:j:U: ~iu[j] )        -> o+
+}       
+}       
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+template <pint N>
+defproc cel(bool i[N], o) { 
+        gcel<N, N> c(i, i, o);
+/**
+// these are OK
+prs {   
+        (&:j:N: i[j] )          -> o-
+        (&:j:N: ~i[j] )         -> o+
+}       
+**/
+}       
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// this definition not reducible
+defproc foo(bool Ld, Re, xe, _rd, x) {
+prs {
+        Ld & Re & xe & x                -> _rd-
+}
+}
+
+//=============================================================================
+
+cel<2> x;
+// gcel<2,2> x;
+foo y;
+
+

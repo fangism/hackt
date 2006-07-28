@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.13 2006/07/28 01:03:16 fang Exp $
+	$Id: ExprAlloc.cc,v 1.14 2006/07/28 03:31:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -253,15 +253,21 @@ ExprAlloc::compact_expr_pools(void) {
 #endif
 		expr_type& e(st_expr_pool[n]);
 		graph_node_type& g(st_graph_node_pool[n]);
+		INVARIANT(e.wiped());
+		INVARIANT(g.wiped());
 		e = st_expr_pool[i];
 		g = st_graph_node_pool[i];
 		// TODO: this code is re-used several times in this file.  
-		// relink parent
-		{
-		graph_node_type::child_entry_type&
-			c(st_graph_node_pool[e.parent].children[g.offset]);
-		c.first = false;	// mark as expression
-		c.second = n;		// re-establish child reference
+		// relink parent, which may be node or expression
+		if (e.is_root()) {
+			node_type& nd(st_node_pool[e.parent]);
+			nd.replace_pull_index(e.direction(), n);
+		} else {
+			graph_node_type::child_entry_type&
+				c(st_graph_node_pool[e.parent]
+					.children[g.offset]);
+			c.first = false;	// mark as expression
+			c.second = n;		// re-establish child reference
 		}
 		// relink children
 		size_t j = 0;
@@ -295,6 +301,9 @@ ExprAlloc::compact_expr_pools(void) {
 	}
 	}
 #endif
+#if DEBUG_CLEANUP
+	state.dump_struct(cerr << "Final state:" << endl) << endl;
+#endif
 }	// end visit(const state_manager&)
 #undef	DEBUG_CLEANUP
 
@@ -305,8 +314,8 @@ ExprAlloc::compact_expr_pools(void) {
  */
 void
 ExprAlloc::visit(const footprint_rule& r) {
-{
 	STACKTRACE("ExprAlloc::visit(footprint_rule&)");
+{
 	(*expr_pool)[r.expr_index].accept(*this);
 	const size_t top_ex_index = ret_ex_index;
 	// r.output_index gives the local unique ID,
@@ -352,6 +361,8 @@ expr_index_type
 ExprAlloc::allocate_new_literal_expr(const node_index_type ni) {
 	// NOTE: Expr's parent and ExprGraphNode's offset
 	// fields are not set until returned to caller!
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("node id = " << ni << endl);
 	expr_index_type ret;
 	if (expr_free_list.size()) {
 		ret = free_list_acquire(expr_free_list);
@@ -406,6 +417,7 @@ ExprAlloc::allocate_new_not_expr(const expr_index_type ei) {
 void
 ExprAlloc::link_child_expr(const expr_index_type parent,
 		const expr_index_type child, const size_t offset) {
+	STACKTRACE_VERBOSE;
 	// st_expr_pool[child].parent = parent;
 	st_expr_pool[child].set_parent_expr(parent);
 	graph_node_type& child_node(st_graph_node_pool[child]);
@@ -422,6 +434,7 @@ ExprAlloc::link_child_expr(const expr_index_type parent,
  */
 expr_index_type
 ExprAlloc::allocate_new_Nary_expr(const char type, const size_t sz) {
+	STACKTRACE_VERBOSE;
 	INVARIANT(sz);
 	const expr_type temp((type == entity::PRS::PRS_AND_EXPR_TYPE_ENUM ?
 		expr_type::EXPR_AND : expr_type::EXPR_OR), sz);
@@ -476,6 +489,7 @@ ExprAlloc::fold_literal(const expr_index_type _e) {
 			replace(ln.fanout.begin(), ln.fanout.end(), ei, _e);
 			// there should be no references to 
 			// expression ei remaining
+			state.void_expr(ei);
 			free_list_release(expr_free_list, ei);
 		}	// else no excision
 		}	// end if is node_index
@@ -538,6 +552,7 @@ ExprAlloc::denormalize_negation(const expr_index_type _e) {
 				// there should be no references to 
 				// expression ei remaining
 			STACKTRACE_INDENT_PRINT("releasing " << ei << endl);
+				state.void_expr(ei);
 				free_list_release(expr_free_list, ei);
 			} else {
 				// is an expression, just keep structure
@@ -617,6 +632,7 @@ switch (type) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ExprAlloc::visit(const footprint_macro& m) {
+	STACKTRACE_VERBOSE;
 	const ExprAlloc_macro_definition_entry&
 		d(ExprAlloc_macro_registry[m.name]);
 if (d) {
@@ -637,6 +653,7 @@ if (d) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 ExprAlloc::visit(const footprint_directive& s) {
+	STACKTRACE_VERBOSE;
 	const ExprAlloc_spec_definition_entry&
 		d(ExprAlloc_spec_registry[s.name]);
 if (d) {

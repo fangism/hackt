@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.10 2006/07/18 04:09:16 fang Exp $
+	$Id: State.h,v 1.11 2006/07/28 03:31:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -419,6 +419,10 @@ public:
 
 	string
 	get_node_canonical_name(const node_index_type) const;
+
+	/// only called by ExprAlloc
+	void
+	void_expr(const expr_index_type);
 
 	rule_map_type&
 	get_rule_map(void) { return rule_map; }

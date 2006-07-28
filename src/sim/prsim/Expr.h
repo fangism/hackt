@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.5 2006/05/06 04:18:51 fang Exp $
+	$Id: Expr.h,v 1.6 2006/07/28 03:31:12 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -108,6 +108,15 @@ public:
 		// pushes the bubble: and <-> nor, nand <-> or
 		type ^= (EXPR_NOT | EXPR_AND);
 	}
+
+	// should also be called
+	void
+	wipe(void) {
+		size = 0;
+	}
+
+	bool
+	wiped(void) const { return !size; }
 
 	bool
 	is_trivial(void) const {
@@ -406,6 +415,16 @@ public:
 	const_iterator
 	end(void) const { return children.end(); }
 #endif
+
+	void
+	wipe(void) {
+		children.clear();
+	}
+
+	bool
+	wiped(void) const {
+		return children.empty();
+	}
 
 };	// end struct ExprGraphNode
 

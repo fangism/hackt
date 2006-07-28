@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.16 2006/07/18 04:09:16 fang Exp $
+	$Id: State.cc,v 1.17 2006/07/28 03:31:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -339,8 +339,21 @@ State::get_node(const node_index_type i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wipes out the indexed node, to mark as deallocated and free.  
+	Such nodes are skipped during dump.  
+	Only called by ExprAlloc.  
+ */
+void
+State::void_expr(const expr_index_type ei) {
+	expr_pool[ei].wipe();
+	expr_graph_node_pool[ei].wipe();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 State::check_node(const node_index_type i) const {
+	STACKTRACE_VERBOSE;
 	const node_type& n(node_pool[i]);
 	// check pull-up/dn if applicable
 	const expr_index_type upi = n.pull_up_index;
@@ -373,8 +386,10 @@ State::check_node(const node_index_type i) const {
  */
 void
 State::check_expr(const expr_index_type i) const {
+	STACKTRACE_VERBOSE;
 	const expr_type& e(expr_pool[i]);
 	const graph_node_type& g(expr_graph_node_pool[i]);
+if (!e.wiped()) {
 	// check parent
 	assert(e.parent);
 	if (e.is_root()) {
@@ -406,6 +421,7 @@ State::check_expr(const expr_index_type i) const {
 			assert(expr_graph_node_pool[c.second].offset == j);
 		}
 	}
+}	// else skip wiped node
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2379,8 +2395,11 @@ State::dump_struct(ostream& o) const {
 	INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
-		expr_pool[i].dump_struct(o << "expr[" << i << "]: ") << endl;
+		const expr_type& e(expr_pool[i]);
+	if (!e.wiped()) {
+		e.dump_struct(o << "expr[" << i << "]: ") << endl;
 		expr_graph_node_pool[i].dump_struct(o << '\t') << endl;
+	}
 	}
 }
 	return o;

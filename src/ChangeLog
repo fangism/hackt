@@ -5,6 +5,15 @@
 
 2006-07-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-39:
+	  Fixed latest bug with prsim -O1 expression allocation:
+		was missing relink to parent-node and also checking
+		freed expression slot unnecessarily.  
+		Added some debugging handles while we were at it.  
+
+
+2006-07-27	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-38:
 	  sim/prsim/ExprAlloc.cc: replaced assertion of macro/directive
 		existence with warning check for non-existence because

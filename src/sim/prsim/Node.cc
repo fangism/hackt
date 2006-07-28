@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.6 2006/05/06 04:18:55 fang Exp $
+	$Id: Node.cc,v 1.7 2006/07/28 03:31:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -59,6 +59,20 @@ Node::push_back_fanout(const expr_index_type ei) {
 bool
 Node::contains_fanout(const expr_index_type i) const {
 	return (std::find(fanout.begin(), fanout.end(), i) != fanout.end());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by ExprAlloc when moving expressions around.  
+	This occurs during compaction of optimized expressions.  
+ */
+void
+Node::replace_pull_index(const bool dir, const expr_index_type _new) {
+	if (dir) {
+		pull_up_index = _new;
+	} else {
+		pull_dn_index = _new;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,6 +2,12 @@
 
 2006-07-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-39:
+	  test-series.sh.in: also run .hacktprsdottest where appropriate.
+
+
+2006-07-27	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-38:
 	  Added support for testing prsimexpr and dot generation of
 		all valid (alloc/prsimrc) test cases.  
