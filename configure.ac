@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.73 2006/07/26 04:12:05 fang Exp $
+#	$Id: configure.ac,v 1.74 2006/07/28 01:03:13 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -413,6 +413,8 @@ AC_CONFIG_FILES([test/hackt-prsim-ckpt.sh],
 	[chmod +x test/hackt-prsim-ckpt.sh])
 AC_CONFIG_FILES([test/hackt-prsim-opt.sh],
 	[chmod +x test/hackt-prsim-opt.sh])
+AC_CONFIG_FILES([test/hackt-prs-dot-test.sh],
+	[chmod +x test/hackt-prs-dot-test.sh])
 AC_CONFIG_FILES([test/test-series.sh],
 	[chmod +x test/test-series.sh])
 

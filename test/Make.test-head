@@ -1,6 +1,6 @@
 # "Make.test-head"
 # include this first in every subdirectory's Makefile.am
-#	$Id: Make.test-head,v 1.17 2006/07/27 05:55:37 fang Exp $
+#	$Id: Make.test-head,v 1.18 2006/07/28 01:03:18 fang Exp $
 #	vim: ft=automake
 
 include $(top_srcdir)/Make.stddef
@@ -13,11 +13,13 @@ SUFFIXES = .hac .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.depend \
 	.haco .haco-u .haco-c .haco-a .prs .sprs .prsseu \
 	.prsimexpr .prsimexpr-dot .prsimexpr-ps \
+	.prsimexpr-O1 .prsimexpr-dot-O1 \
 	.haco-dump .haco-u-dump .haco-c-dump .haco-a-dump \
 	.outdump .indump .unrolldump .createdump .allocdump \
 	.haco-c-from-haco .haco-a-from-haco .haco-a-from-u \
 	.hacktcreatefromhacotest .hacktallocfromhacotest \
-	.prsimrc .prsimtest .prsimckpttest .prsimopttest
+	.prsimrc .prsimtest .prsimckpttest .prsimopttest \
+	.hacktprsdottest
 
 if HAVE_CFLAT
 SUFFIXES += .cast .castprs

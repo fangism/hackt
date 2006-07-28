@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-07-27	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-38:
+	  scripts/tally_tests.awk now counts skipped tests.
+
+
 2006-07-04	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-24-merged-cow-07:

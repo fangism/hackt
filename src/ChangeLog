@@ -5,6 +5,17 @@
 
 2006-07-27	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-38:
+	  sim/prsim/ExprAlloc.cc: replaced assertion of macro/directive
+		existence with warning check for non-existence because
+		not all tools will have the same set of directives.  
+	  Test suite: run prsimexpr and dot generation test with -O1
+		for validation purposes (no output comparison done).  
+	  TODO: fix -O1 consistency bug in a new test case.
+
+
+2006-07-27	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-37:
 	  Added support for dependency generation during compile
 		usage: hackt compile -M <depfile>
@@ -60,7 +71,7 @@
 	  Fixed bogus interference masking instability problem.
 	  Allow for alternate behavior of simulating unstable event, 
 		allowing dequeuing of unstable events.
-		cmds: 'untable-dequeue', 'unstable-unknown' (default)
+		cmds: 'unstable-dequeue', 'unstable-unknown' (default)
 	  General extension to simulation to continue reasonably
 		past unstable events.  
 		'setf' command to forcefully set a node, overriding

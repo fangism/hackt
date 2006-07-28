@@ -30,6 +30,8 @@ core.*
 *.prsdiff
 *.prsimexpr
 *.prsimexpr-dot
+*.prsimexpr-O1
+*.prsimexpr-dot-O1
 *.prsimexpr-ps
 *.prsimexprdiff
 *.prsimtest

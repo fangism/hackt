@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.12 2006/07/08 02:45:27 fang Exp $
+	$Id: ExprAlloc.cc,v 1.13 2006/07/28 01:03:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -619,7 +619,7 @@ void
 ExprAlloc::visit(const footprint_macro& m) {
 	const ExprAlloc_macro_definition_entry&
 		d(ExprAlloc_macro_registry[m.name]);
-	INVARIANT(d);		// was already checked during unroll
+if (d) {
 	if (!d.check_param_args(m.params).good
 			|| !d.check_node_args(m.nodes).good) {
 		cerr << "Error with PRS macro." << endl;
@@ -627,6 +627,11 @@ ExprAlloc::visit(const footprint_macro& m) {
 	} else {
 		d.main(*this, m.params, m.nodes);
 	}
+} else {
+	// b/c some macros are undefined for specific tools
+	cerr << "WARNING: ignoring unknown macro \'"
+		<< m.name << "\'." << endl;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -634,7 +639,7 @@ void
 ExprAlloc::visit(const footprint_directive& s) {
 	const ExprAlloc_spec_definition_entry&
 		d(ExprAlloc_spec_registry[s.name]);
-	INVARIANT(d);		// was already checked during unroll
+if (d) {
 	if (!d.check_param_args(s.params).good
 			|| !d.check_node_args(s.nodes).good) {
 		cerr << "Error with SPEC directive." << endl;
@@ -642,6 +647,11 @@ ExprAlloc::visit(const footprint_directive& s) {
 	} else {
 		d.main(*this, s.params, s.nodes);
 	}
+} else {
+	// b/c some directives are undefined for specific tools
+	cerr << "WARNING: ignoring unknown directive \'"
+		<< s.name << "\'." << endl;
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
