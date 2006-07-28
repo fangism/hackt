@@ -29,10 +29,10 @@ core.*
 *.prs
 *.prsdiff
 *.prsimexpr
-*.prsimexpr-dot
+*.prs-dot
 *.prsimexpr-O1
-*.prsimexpr-dot-O1
-*.prsimexpr-ps
+*.prs-dot-O1
+*.prs-*-ps
 *.prsimexprdiff
 *.prsimtest
 *.prsseu

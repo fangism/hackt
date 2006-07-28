@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.75 2006/07/28 03:31:10 fang Exp $
+#	$Id: configure.ac,v 1.76 2006/07/28 09:08:14 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -73,12 +73,9 @@ AC_PATH_PROG([PERL_PATH], perl)
 
 # documentation support, macros efined in "config/documentation.m4"
 DOC_CHECK_PROG_DOXYGEN
-DOC_CHECK_PROG_DOT
-DOC_CHECK_PROG_LATEX
-DOC_CHECK_PROG_PDFLATEX
+DOC_CHECK_PROGS_GRAPHVIZ
+FANG_CHECK_PROGS_TETEX
 DOC_CHECK_PROG_DVIPS
-DOC_CHECK_PROG_BIBTEX
-DOC_CHECK_PROG_MAKEINDEX
 DOC_CHECK_PROG_PS2PDF
 
 # figure related stuff

@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-07-28	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-40:
+	  config/documentation.m4, configure.ac:
+		added more checks for graphviz programs.  
+
+
 2006-07-27	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-38:

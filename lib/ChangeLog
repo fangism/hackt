@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-07-28	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-79-40:
+	  Makefile support for graphviz-generated PostScript targets.
+
+
 2006-07-27	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-79-37:

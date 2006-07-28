@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-prs-dot-test.sh.in"
-#	$Id: hackt-prs-dot-test.sh.in,v 1.1 2006/07/28 01:03:20 fang Exp $
+#	$Id: hackt-prs-dot-test.sh.in,v 1.2 2006/07/28 09:08:20 fang Exp $
 
 # This just produces .dot files from .haco-a files.  
 
@@ -18,7 +18,7 @@ rm -f $bldroot.prs
 if test -s $bldroot.prs
 then
 	# @ECHO@ "Running test $bldroot.hacktprsdottest."
-	rm -f $bldroot.prsimexpr-O1 $bldroot.prsimexpr-dot-O1
+	rm -f $bldroot.prsimexpr-O1 $bldroot.prs-dot-O1
 	# don't bother building in parallel
 	if ! @CALLMAKE@ $bldroot.prsimexpr-O1 > /dev/null 2>&1
 	then	
@@ -26,11 +26,11 @@ then
 		# re-run for error message
 		@CALLMAKE@ $bldroot.prsimexpr-O1
 	fi
-	if ! @CALLMAKE@ $bldroot.prsimexpr-dot-O1 > /dev/null 2>&1
+	if ! @CALLMAKE@ $bldroot.prs-dot-O1 > /dev/null 2>&1
 	then	
 		DIE=1
 		# re-run for error message
-		@CALLMAKE@ $bldroot.prsimexpr-dot-O1
+		@CALLMAKE@ $bldroot.prs-dot-O1
 	fi
 # if prerequisite fails, then skip this test
 else	

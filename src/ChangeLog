@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-40:
+	  No source revision.
+	  Makefiles and support added for advanced graphviz figure generation.
+		Automated PRS placement, baby!
+
+
 2006-07-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-39:
@@ -12,8 +20,6 @@
 		Added some debugging handles while we were at it.  
 
 
-2006-07-27	David Fang		<fangism@users.sourceforge.net>
-
 	* HACKT-00-01-04-main-00-79-38:
 	  sim/prsim/ExprAlloc.cc: replaced assertion of macro/directive
 		existence with warning check for non-existence because
@@ -22,8 +28,6 @@
 		for validation purposes (no output comparison done).  
 	  TODO: fix -O1 consistency bug in a new test case.
 
-
-2006-07-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-37:
 	  Added support for dependency generation during compile

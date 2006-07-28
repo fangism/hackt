@@ -1,5 +1,5 @@
 # "hackt.mk"
-#	$Id: hackt.mk,v 1.3 2006/07/27 05:55:32 fang Exp $
+#	$Id: hackt.mk,v 1.4 2006/07/28 09:08:17 fang Exp $
 # TODO: distinguish hackt-build.mk from hackt-inst.mk
 # point these to hackt
 top_srcdir = ../..
@@ -10,8 +10,9 @@ srcdir = .
 # automake will convert these into .SUFFIXES:
 .SUFFIXES: .hac .depend .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest \
-	.haco .haco-u .haco-c .haco-a .prs .sprs .prsimexpr .prsimexpr-dot \
-	.prsimexpr-ps
+	.haco .haco-u .haco-c .haco-a .prs .sprs \
+	.prsimexpr .prsimexpr-O1 .prs-dot .prs-dot-O1 \
+	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps
 
 # note: this points to the built hackt binary, but may be overriden
 # to point to a different binary, or one in path
@@ -60,11 +61,30 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 .haco-a.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@
 
-.haco-a.prsimexpr-dot:
+.haco-a.prsimexpr-O1:
+	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc -O1 $< > $@
+
+.haco-a.prs-dot:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct $< > $@
 
-# assumes dot found in path
-.prsimexpr-dot.prsimexpr-ps:
+.haco-a.prs-dot-O1:
+	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct -O1 $< > $@
+
+# assumes dot and friends found in path
+# uses optimized expression netlist by default
+.prs-dot-O1.prs-dot-ps:
+	dot -Tps $< -o $@
+
+.prs-dot-O1.prs-neato-ps:
+	neato -Tps $< -o $@
+
+.prs-dot-O1.prs-circo-ps:
+	circo -Tps $< -o $@
+
+.prs-dot-O1.prs-twopi-ps:
+	twopi -Tps $< -o $@
+
+.prs-dot-O1.prs-fdp-ps:
 	dot -Tps $< -o $@
 
 all:
@@ -72,15 +92,12 @@ all:
 clean: clean-local
 
 clean-local:
-	-$(RM) *.core core.*
-	-$(RM) *.noindex
-	-$(RM) *.filter *.diff *.sort *.noindex
-	-$(RM) *.indump *.outdump *.objdiff
 	-$(RM) *.haco
-	-$(RM) *.haco-u *.unrolldump *.unrolldiff
-	-$(RM) *.haco-c *.createdump *.creatediff
-	-$(RM) *.haco-a *.allocdump *.allocdiff
-	-$(RM) *.prs *.prsdiff
-	-$(RM) *.prsimexpr *.prsimexprdiff
-	-$(RM) *.prsimexpr-dot *.prsimexpr-ps
+	-$(RM) *.haco-u *.unrolldump
+	-$(RM) *.haco-c *.createdump
+	-$(RM) *.haco-a *.allocdump
+	-$(RM) *.prs
+	-$(RM) *.prsimexpr*
+	-$(RM) *.prs-dot* *.prs-*-ps
+	-$(RM) *.sprs
 

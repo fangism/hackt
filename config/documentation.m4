@@ -1,5 +1,5 @@
 dnl "config/documentation.m4"
-dnl	$Id: documentation.m4,v 1.4 2006/05/09 05:39:16 fang Exp $
+dnl	$Id: documentation.m4,v 1.5 2006/07/28 09:08:15 fang Exp $
 dnl Autoconf macros pertaining to package documentation.
 dnl This provides macros for checking for latex and related programs
 dnl that are used in building the documentation.  
@@ -41,16 +41,18 @@ AM_CONDITIONAL(HAVE_DOXYGEN, test -n "$DOXYGEN")]
 dnl @synopsis DOC_CHECK_PROG_DOT
 dnl
 dnl Checks for dot, from graphviz, from AT&T.  
+dnl Also checks for family of programs: neato, fdp, twopi, circo.  
 dnl Defines HAVE_DOT_TRUE/FALSE for automake.
 dnl Defines HAVE_DOT for doxygen configuration.  
 dnl
 dnl @category InstalledPackages
-dnl @version 2006-05-08
+dnl @version 2006-07-28
 dnl @author David Fang <fangism@users.sourceforge.net>
 dnl @license AllPermissive
 dnl
-AC_DEFUN([DOC_CHECK_PROG_DOT],
-[AC_CHECK_PROG([DOT], dot, dot)
+AC_DEFUN([DOC_CHECK_PROGS_GRAPHVIZ],
+[AC_MSG_NOTICE([Checking for installed graphviz tools...])
+AC_CHECK_PROG([DOT], dot, dot)
 AM_CONDITIONAL(HAVE_DOT, test -n "$DOT" )
 dnl HAVE_DOT and DOT_PATH are used in doxygen's configuration
 if test -n "$DOT"
@@ -60,6 +62,19 @@ then
 else
 	AC_SUBST(HAVE_DOT, "NO")
 fi
+AC_CHECK_PROG([NEATO], neato, neato)
+AM_CONDITIONAL(HAVE_NEATO, test -n "$NEATO" )
+AC_CHECK_PROG([CIRCO], circo, circo)
+AM_CONDITIONAL(HAVE_CIRCO, test -n "$CIRCO" )
+AC_CHECK_PROG([TWOPI], twopi, twopi)
+AM_CONDITIONAL(HAVE_TWOPI, test -n "$TWOPI" )
+AC_CHECK_PROG([FDP], fdp, fdp)
+AM_CONDITIONAL(HAVE_FDP, test -n "$FDP" )
+dnl interactive editors and command interpreters
+AC_CHECK_PROG([DOTTY], dotty, dotty)
+AM_CONDITIONAL(HAVE_DOTTY, test -n "$DOTTY" )
+AC_CHECK_PROG([LEFTY], lefty, lefty)
+AM_CONDITIONAL(HAVE_LEFTY, test -n "$LEFTY" )
 ])dnl
 
 dnl @synopsis DOC_CHECK_PROG_LATEX
@@ -100,6 +115,23 @@ then AC_SUBST(HAVE_PDFLATEX, "YES")
 else AC_SUBST(HAVE_PDFLATEX, "NO")
 fi
 ])dnl
+
+dnl @synopsis FANG_CHECK_PROGS_TETEX
+dnl
+dnl Checks for bunch of LaTeX-related executables in path.  
+dnl Just a wrapper to other calls.  
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-07-28
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([FANG_CHECK_PROGS_TETEX],
+[AC_REQUIRE([DOC_CHECK_PROG_LATEX])
+AC_REQUIRE([DOC_CHECK_PROG_PDFLATEX])
+AC_REQUIRE([DOC_CHECK_PROG_BIBTEX])
+AC_REQUIRE([DOC_CHECK_PROG_MAKEINDEX])
+])
 
 dnl @synopsis DOC_CHECK_PROG_DVIPS
 dnl

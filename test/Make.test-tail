@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.37 2006/07/28 01:03:18 fang Exp $
+#	$Id: Make.test-tail,v 1.38 2006/07/28 09:08:19 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -211,13 +211,13 @@ HACO_FLAGS += -I$(srcdir)
 .haco-a.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@
 
-.haco-a.prsimexpr-dot:
+.haco-a.prs-dot:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct $< > $@
 
 .haco-a.prsimexpr-O1:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc -O1 $< > $@
 
-.haco-a.prsimexpr-dot-O1:
+.haco-a.prs-dot-O1:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-dot-struct -O1 $< > $@
 
 .hac.hacktprsdottest:
@@ -233,9 +233,31 @@ HACO_FLAGS += -I$(srcdir)
 
 CLEANFILES += .hacktprsdottest
 
+# by default we produce the figures using optimized expression netlists -O1
+# All thevarious graphviz filter programs accept the DOT language for input.  
 if HAVE_DOT
-.prsimexpr-dot.prsimexpr-ps:
+.prs-dot-O1.prs-dot-ps:
 	$(DOT) -Tps $< -o $@
+endif
+
+if HAVE_NEATO
+.prs-dot-O1.prs-neato-ps:
+	$(NEATO) -Tps $< -o $@
+endif
+
+if HAVE_CIRCO
+.prs-dot-O1.prs-circo-ps:
+	$(CIRCO) -Tps $< -o $@
+endif
+
+if HAVE_TWOPI
+.prs-dot-O1.prs-twopi-ps:
+	$(TWOPI) -Tps $< -o $@
+endif
+
+if HAVE_FDP
+.prs-dot-O1.prs-fdp-ps:
+	$(FDP) -Tps $< -o $@
 endif
 
 .hac.hacktprsimexprtest:
@@ -417,18 +439,18 @@ clean-empty-cflat-prs:
 $(EMPTY_CFLAT_PRS): Makefile
 	@$(TOUCH) $@
 
-ALL_PRSIMEXPR_DOT = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr-dot) 
-ALL_PRSIMEXPR_PS = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prsimexpr-ps) 
+ALL_PRSIMEXPR_DOT = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot) 
+ALL_PRS_DOT_PS = $(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.prs-dot-ps) 
 
-all-prsimexpr-dot: $(ALL_PRSIMEXPR_DOT)
+all-prs-dot: $(ALL_PRSIMEXPR_DOT)
 
-all-prsimexpr-ps: $(ALL_PRSIMEXPR_PS)
+all-prs-dot-ps: $(ALL_PRS_DOT_PS)
 
-clean-prsimexpr-dot:
+clean-prs-dot:
 	$(RM) $(ALL_PRSIMEXPR_DOT)
 
-clean-prsimexpr-ps:
-	$(RM) $(ALL_PRSIMEXPR_PS)
+clean-prs-dot-ps:
+	$(RM) $(ALL_PRS_DOT_PS)
 
 # echo-style Makefile debugging
 echo-tests: force
@@ -620,7 +642,7 @@ clean-alloctests:
 	-$(RM_PATTERN) "*.haco-a-dump"
 	-$(RM_PATTERN) "*.alloc-from*"
 	-$(RM_PATTERN) "*.prsimexpr-O1"
-	-$(RM_PATTERN) "*.prsimexpr-dot-O1"
+	-$(RM_PATTERN) "*.prs-dot-O1"
 
 clean-cflattests:
 	-$(RM_PATTERN) "*.hacktcflattest"
@@ -634,8 +656,9 @@ clean-cflattests:
 	-$(RM_PATTERN) "*.prsseu-diff"
 	-$(RM_PATTERN) "*.prsimexpr"
 	-$(RM_PATTERN) "*.prsimexprdiff"
-	-$(RM_PATTERN) "*.prsimexpr-dot"
-	-$(RM_PATTERN) "*.prsimexpr-ps"
+	-$(RM_PATTERN) "*.prs-dot"
+	-$(RM_PATTERN) "*.prs-dot-O1"
+	-$(RM_PATTERN) "*.prs-*-ps"
 	-$(RM_PATTERN) "*.sprs"
 	-$(RM_PATTERN) "*.sprsdiff"
 	-$(RM_PATTERN) "*.sprsdiff.sort"
@@ -657,7 +680,7 @@ clean-prsimtests:
 	-$(RM_PATTERN) "*.prsimckpt-O1-dump"
 	-$(RM_PATTERN) "*.prsimopt-diff"
 	-$(RM_PATTERN) "*.prsimexpr-O1"
-	-$(RM_PATTERN) "*.prsimexpr-dot-O1"
+	-$(RM_PATTERN) "*.prs-dot-O1"
 
 # automatically removes $(CLEANFILES)
 clean-local: clean-summaries clean-compiletests clean-unrolltests \
