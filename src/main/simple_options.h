@@ -2,7 +2,7 @@
 	\file "main/simple_options.h"
 	Re-usable template function for parsing -f style command options
 	only.  This has rather limited use.  
-	$Id: simple_options.h,v 1.2 2006/01/22 06:53:12 fang Exp $
+	$Id: simple_options.h,v 1.3 2006/07/30 16:04:42 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_SIMPLE_OPTIONS_H__
@@ -11,6 +11,7 @@
 namespace HAC {
 
 /**
+	OBSOLETE: phased out in favor of util::getopt_mapped.  
 	\param Opt the options type.  
 	\param ModMap the options modifoer map type.  
  */

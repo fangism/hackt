@@ -1,7 +1,10 @@
 /**
 	\file "AST/import_root.cc"
-	$Id: import_root.cc,v 1.4 2006/01/22 06:52:53 fang Exp $
+	$Id: import_root.cc,v 1.5 2006/07/30 16:04:42 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
+#define	STACKTRACE_DTORS			(0 && ENABLE_STACKTRACE)
 
 #include <iostream>
 #include "AST/import_root.h"
@@ -13,6 +16,7 @@
 #include "Object/common/namespace.h"
 #include "common/TODO.h"
 #include "util/what.h"
+#include "util/stacktrace.h"
 
 namespace util {
 SPECIALIZE_UTIL_WHAT(HAC::parser::imported_root, "(imported-root)")
@@ -38,7 +42,12 @@ imported_root::imported_root(excl_ptr<root_body>& r,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-imported_root::~imported_root() { }
+imported_root::~imported_root() {
+	STACKTRACE_DTOR_VERBOSE;
+#if STACKTRACE_DTORS
+	STACKTRACE_INDENT_PRINT("at " << this << endl);
+#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PARSER_WHAT_DEFAULT_IMPLEMENTATION(imported_root)

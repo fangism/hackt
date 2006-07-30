@@ -1,6 +1,6 @@
 /**
 	\file "main/simple_options.tcc"
-	$Id: simple_options.tcc,v 1.3 2006/04/28 03:20:14 fang Exp $
+	$Id: simple_options.tcc,v 1.4 2006/07/30 16:04:43 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_SIMPLE_OPTIONS_TCC__
@@ -10,7 +10,7 @@
 #include "main/simple_options.h"
 #include "util/macros.h"
 #include "util/getopt_portable.h"
-#include "main/main_funcs.h"		// for unknown_option
+#include "util/getopt_mapped.h"		// for unknown_option
 
 namespace HAC {
 #include "util/using_ostream.h"
@@ -40,7 +40,7 @@ parse_simple_command_options(const int argc, char* argv[], Opt& cf,
 			cerr << "Expected but missing option-argument." << endl;
 			return 1;
 		case '?':
-			unknown_option(optopt);
+			util::unknown_option(cerr, optopt);
 			return 1;
 		default:
 			THROW_EXIT;
