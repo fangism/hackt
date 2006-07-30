@@ -3,7 +3,7 @@
 	Useful main-level functions to call.
 	Indent to hide most complexity here, exposing a bare-bones
 	set of public callable functions.  
-	$Id: main_funcs.cc,v 1.10 2006/07/27 05:55:36 fang Exp $
+	$Id: main_funcs.cc,v 1.11 2006/07/30 05:49:42 fang Exp $
  */
 
 #include <iostream>
@@ -332,20 +332,6 @@ load_module_debug(const char* fname) {
 	persistent::warn_unimplemented = true;
 	persistent_object_manager::dump_reconstruction_table = true;
 	return load_module(fname);
-}
-
-//=============================================================================
-// getopt-related utility functions
-
-/**
-	Standard bad option error message.  
- */
-void
-unknown_option(const int o) {
-       if (isprint(optopt))
-		cerr << "Unknown option `-" << char(optopt) << "'." << endl;
-	else cerr << "Unknown option character `" <<
-		reinterpret_cast<void*>(optopt) << "'." << endl;
 }
 
 //=============================================================================

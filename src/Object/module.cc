@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.19 2006/07/18 20:13:54 fang Exp $
+ 	$Id: module.cc,v 1.20 2006/07/30 05:49:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -21,6 +21,15 @@
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/lang/cflat_printer.h"
 #include "Object/expr/expr_dump_context.h"
+#include "Object/expr/const_param_expr_list.h"
+#include "Object/type/process_type_reference.h"
+#include "Object/type/canonical_type.h"
+#include "Object/def/process_definition.h"
+
+#if ENABLE_STACKTRACE
+#include "Object/common/dump_flags.h"
+#endif
+
 #include "main/cflat_options.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -282,9 +291,7 @@ module::create_unique(void) {
 	Allocates unique global entries for instance objects.  
  */
 good_bool
-module::allocate_unique(void) {
-	if (!create_unique().good)
-		return good_bool(false);
+module::__allocate_unique(void) {
 	if (!is_allocated()) {
 		STACKTRACE("not already allocated, allocating...");
 		// we've established uniqueness among public ports
@@ -304,6 +311,120 @@ module::allocate_unique(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+module::allocate_unique(void) {
+	if (!create_unique().good)
+		return good_bool(false);
+	else return __allocate_unique();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Takes process definition and unroll its contents into the top-level.  
+ */
+good_bool
+module::allocate_unique_process_type(const process_type_reference& pt) {
+	STACKTRACE_VERBOSE;
+	const canonical_process_type cpt(pt.make_canonical_type());
+	if (!cpt) {
+		cerr << "Error resolving canonical type." << endl;
+		return good_bool(false);
+	}
+	const never_ptr<const process_definition>
+		pd(cpt.get_base_def());
+	const count_ptr<const const_param_expr_list>&
+		tp(cpt.get_raw_template_params());
+	// need to import definition's local symbols (deep copy) into
+	// this temporary module's global namespace and footprint.  
+	_footprint.import_scopespace(*pd);
+#if ENABLE_STACKTRACE
+	pd->dump(cerr << "process definition: ") << endl;
+	_footprint.dump_with_collections(cerr << "module\'s footprint: ", 
+		dump_flags::default_value,
+		expr_dump_context::default_value) << endl;
+#endif
+	if (!pd->__create_complete_type(tp, _footprint).good) {
+		cerr << "Error creating complete process type." << endl;
+		return good_bool(false);
+	} else {
+#if ENABLE_STACKTRACE
+		_footprint.dump(cerr << "footprint:" << endl) << endl;
+#endif
+		return __allocate_unique();
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+module::cflat_process_type(const process_type_reference& pt, ostream& o, 
+		const cflat_options& cf) {
+	if (!allocate_unique_process_type(pt).good) {
+		cerr << "ERROR in allocating global state.  Aborting." << endl;
+		return good_bool(false);
+	}
+#if ENABLE_STACKTRACE
+	_footprint.dump_with_collections(cerr << "module\'s footprint: ", 
+		dump_flags::default_value,
+		expr_dump_context::default_value) << endl;
+#endif
+	return __cflat_rules(o, cf) && __cflat_aliases_no_import(o, cf);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+good_bool
+module::__cflat_rules(ostream& o, const cflat_options& cf) const {
+	// our priting visitor functor
+	PRS::cflat_prs_printer cfp(o, cf);
+	const cflat_context::module_setter tmp(cfp, *this);
+	if (cf.include_prs) {
+		STACKTRACE("cflatting production rules.");
+		if (cf.dsim_prs)	o << "dsim {" << endl;
+		try {
+			global_state.accept(cfp);	// print!
+			// support for top-level prs!
+			_footprint.get_prs_footprint().accept(cfp);
+		} catch (...) {
+			cerr << "Caught exception during cflat PRS." << endl;
+			return good_bool(false);
+		}
+		if (cf.dsim_prs)	o << "}" << endl;
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Top-level footprint is actually empty so we need to load it first...
+	We promise to clean it up after we're done, upon destruction
+		of the top_level_footprint_importer helper class.
+ */
+good_bool
+module::__cflat_aliases(ostream& o, const cflat_options& cf) const {
+	// TODO: instance_visitor
+	if (cf.connect_style) {
+		STACKTRACE("cflatting aliases.");
+		const top_level_footprint_importer foo(*this);
+		_footprint.cflat_aliases(o, global_state, cf);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variation assumes that the top-level footprint is already
+	loaded with instances to visit.  
+ */
+good_bool
+module::__cflat_aliases_no_import(ostream& o, const cflat_options& cf) const {
+	// TODO: instance_visitor
+	if (cf.connect_style) {
+		STACKTRACE("cflatting aliases.");
+		_footprint.cflat_aliases(o, global_state, cf);
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	The actual cflat procedure.  
 	Always prints all rules before aliases.  
@@ -312,34 +433,11 @@ module::allocate_unique(void) {
  */
 good_bool
 module::__cflat(ostream& o, const cflat_options& cf) const {
+	STACKTRACE_VERBOSE;
 	// print the production rules first, using canonical names
-{
-	// our priting visitor functor
-	PRS::cflat_prs_printer cfp(o, cf);
-	const cflat_context::module_setter tmp(cfp, *this);
-	if (cf.include_prs) {
-		if (cf.dsim_prs)	o << "dsim {" << endl;
-		try {
-			global_state.accept(cfp);	// print!
-		} catch (...) {
-			cerr << "Caught exception during cflat PRS." << endl;
-			return good_bool(false);
-		}
-		if (cf.dsim_prs)	o << "}" << endl;
-	}
-}
 	// print the name aliases in the manner requested in cflat_options
-	// TODO: instance_visitor
-	if (cf.connect_style) {
-		STACKTRACE("cflatting aliases.");
-		// top-level footprint is actually empty
-		// so we need to load it first...
-		// we promise to clean it up after we're done.
-		// This is now handled by the helper class:
-		const top_level_footprint_importer foo(*this);
-		_footprint.cflat_aliases(o, global_state, cf);
-	}
-	return good_bool(true);
+	return __cflat_rules(o, cf) &&
+		__cflat_aliases(o, cf);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

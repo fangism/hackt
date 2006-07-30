@@ -1,7 +1,7 @@
 /**
 	\file "AST/AST_fwd.h"
 	Forward declarations for classes in HAC::parser.
-	$Id: AST_fwd.h,v 1.5 2006/07/17 02:53:28 fang Exp $
+	$Id: AST_fwd.h,v 1.6 2006/07/30 05:49:10 fang Exp $
  */
 
 #ifndef	__HAC_AST_AST_FWD_H__
@@ -79,16 +79,13 @@ class typedef_alias;
 
 //-----------------------------------------------------------------------------
 // declared in "AST/expr.h"
-class inst_ref_expr;
-class id_expr;
-class range;
-class range_list;
+class inst_ref_expr;		// from "AST/expr_base.h"
+class range;			// from "AST/range.h"
+class range_list;		// from "AST/range_list.h"
 class dense_range_list;
 class unary_expr;
 class prefix_expr;
 // class postfix_expr;
-class member_expr;
-class index_expr;
 class binary_expr;
 class arith_expr;
 class relational_expr;
@@ -96,6 +93,12 @@ class logical_expr;
 class array_concatenation;
 class loop_concatenation;
 class array_construction;
+
+//-----------------------------------------------------------------------------
+// declared in "AST/reference.h"
+class id_expr;
+class member_expr;
+class index_expr;
 class reference_group_construction;
 
 //-----------------------------------------------------------------------------

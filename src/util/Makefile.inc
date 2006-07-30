@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.17 2006/07/16 03:34:57 fang Exp $
+#	$Id: Makefile.inc,v 1.18 2006/07/30 05:50:14 fang Exp $
 #	vim: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -21,6 +21,7 @@ UTIL_TCC_FILES = \
 	util/bitset.tcc \
 	util/const_assoc_query.tcc \
 	util/discrete_interval_set.tcc \
+	util/getopt_mapped.tcc \
 	util/hash_qmap.tcc \
 	util/list_vector.tcc \
 	util/memory/chunk_map_pool.tcc \
@@ -189,6 +190,7 @@ UTIL_CC_FILES = \
 	util/bitset.cc \
 	util/dirent.cc \
 	util/indent.cc \
+	util/getopt_mapped.cc \
 	util/libc.c \
 	util/named_ifstream_manager.cc \
 	util/persistent.cc \

@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.15 2006/07/16 20:39:47 fang Exp $
+	$Id: expr.cc,v 1.16 2006/07/30 05:49:12 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -21,7 +21,7 @@
 #include "AST/token.h"
 #include "AST/token_char.h"
 #include "AST/expr.h"
-#include "AST/expr_list.h"
+#include "AST/reference.h"
 #include "AST/range_list.h"
 #include "AST/node_list.tcc"
 #include "util/sublist.tcc"

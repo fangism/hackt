@@ -1,7 +1,7 @@
 /**
 	\file "main/cflat.h"
 	Interface header for cflat module.  
-	$Id: cflat.h,v 1.9 2006/04/12 08:53:20 fang Exp $
+	$Id: cflat.h,v 1.10 2006/07/30 05:49:40 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_H__
@@ -11,10 +11,17 @@
 #include "main/hackt_fwd.h"
 #include "main/options_modifier.h"
 
+namespace util {
+template <class> class getopt_map;
+}
+
 namespace HAC {
 class cflat_options;
 using std::string;
 using std::ostream;
+namespace entity {
+	class module;
+}
 //=============================================================================
 /**
 	Instance-less class.  
@@ -28,11 +35,25 @@ public:
 	/// defined in "main/cflat_options.h"
 	typedef	cflat_options			options;
 private:
+	/// the top-level options map
+	typedef	util::getopt_map<options>	master_options_map_type;
 	// derive from options_modifier_policy::register_options_modifier_base
 	class register_options_modifier;
+
+	static
+	master_options_map_type			master_options;
+
+	static
+	int
+	initialize_master_options_map(void);
+
+	static
+	const int
+	master_options_initialized;
 public:
 	static const char		name[];
 	static const char		brief_str[];
+
 
 	cflat();
 
@@ -77,6 +98,19 @@ private:
 		_dsim_prs, _no_dsim_prs,
 		_size_prs, _no_size_prs, 
 		_SEU, _no_SEU;
+
+	static
+	void
+	getopt_f_options(options&, const char*);
+
+	static
+	void
+	getopt_cflat_type_only(options&, const char*);
+
+	static
+	int
+	process_complete_type(const char*, const entity::module&, 
+		const options&);
 
 };	// end class cflat
 

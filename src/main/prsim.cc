@@ -2,7 +2,7 @@
 	\file "main/prsim.cc"
 	Traditional production rule simulator. 
 
-	$Id: prsim.cc,v 1.6 2006/05/06 04:18:42 fang Exp $
+	$Id: prsim.cc,v 1.7 2006/07/30 05:49:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -20,6 +20,7 @@
 #include "main/main_funcs.h"
 #include "main/options_modifier.tcc"
 #include "main/simple_options.tcc"
+#include "util/getopt_mapped.h"
 #include "util/persistent_object_manager.h"
 #include "sim/prsim/State.h"
 #include "sim/prsim/Command.h"
@@ -233,7 +234,7 @@ prsim::parse_command_options(const int argc, char* argv[], options& o) {
 			cerr << "Expected but missing option-argument." << endl;
 			return 1;
 		case '?':
-			unknown_option(optopt);
+			util::unknown_option(cerr, optopt);
 			return 1;
 		default:
 			THROW_EXIT;

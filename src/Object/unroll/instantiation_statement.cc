@@ -2,18 +2,18 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.13 2006/03/15 04:38:23 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.14 2006/07/30 05:49:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
 #define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
 
 // for debugging only, before inclusion of any header files
-#define	DEBUG_LIST_VECTOR_POOL				0
-#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 #define	ENABLE_STACKTRACE				0
 #define	STACKTRACE_DESTRUCTORS				(0 && ENABLE_STACKTRACE)
 #define	STACKTRACE_PERSISTENTS				(0 && ENABLE_STACKTRACE)
+#define	DEBUG_LIST_VECTOR_POOL				0
+#define	DEBUG_LIST_VECTOR_POOL_USING_STACKTRACE		0
 
 //=============================================================================
 // start of static initializations

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Reference.cc"
 	Handy functions for using compiler functions in other tools.  
-	$Id: Reference.cc,v 1.8 2006/04/23 07:37:26 fang Exp $
+	$Id: Reference.cc,v 1.9 2006/07/30 05:50:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -167,8 +167,8 @@ check_reference(const parser::inst_ref_expr& ref_tree,
 entity::meta_reference_union
 parse_and_check_reference(const char* s, const module& m) {
 	typedef	entity::meta_reference_union		return_type;
-	STACKTRACE_VERBOSE;
 	typedef	excl_ptr<parser::inst_ref_expr>		lval_ptr_type;
+	STACKTRACE_VERBOSE;
 	const lval_ptr_type ref_tree = parse_reference(s);
 	if (!ref_tree) {
 		return return_type();

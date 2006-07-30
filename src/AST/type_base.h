@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.h"
 	Base set of classes for the HAC parser.  
-	$Id: type_base.h,v 1.3 2006/01/23 22:14:40 fang Exp $
+	$Id: type_base.h,v 1.4 2006/07/30 05:49:18 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_type_base.h,v 1.6.34.1 2005/12/11 00:45:12 fang Exp
  */
@@ -11,15 +11,18 @@
 
 #include "AST/common.h"
 #include "util/memory/count_ptr.h"
+#include "util/memory/excl_ptr.h"
 
 namespace HAC {
 namespace entity {
+	class module;
 	class definition_base;
 	class fundamental_type_reference;
 }
 namespace parser {
 using entity::fundamental_type_reference;
 using util::memory::count_ptr;
+using util::memory::excl_ptr;
 //=============================================================================
 /**
 	Abstract base class for types in general (parameters, data, channel, 
@@ -49,7 +52,7 @@ virtual	line_position
 
 #define	TYPE_BASE_CHECK_PROTO						\
 	type_base::return_type						\
-	check_definition(context&) const
+	check_definition(const context&) const
 
 	/**
 		Should return valid pointer to a fundamental type definition, 
@@ -73,8 +76,16 @@ virtual ~concrete_type_ref() { }
 	PURE_VIRTUAL_NODE_METHODS
 
 virtual return_type
-	check_type(context&) const = 0;
+	check_type(const context&) const = 0;
 };      // end class concrete_type_ref
+
+//=============================================================================
+// public functions
+
+// calls yacc-generated type_parse()
+extern
+concrete_type_ref::return_type
+parse_and_check_complete_type(const char*, const entity::module&);
 
 //=============================================================================
 }	// end namespace parser

@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.15 2006/06/26 01:46:32 fang Exp $
+ 	$Id: type_reference.cc,v 1.16 2006/07/30 05:49:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -1690,7 +1690,8 @@ process_type_reference::make_instance_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-canonical_type<process_definition>
+// canonical_type<process_definition>
+canonical_process_type
 process_type_reference::make_canonical_type(void) const {
 	return base_proc_def->make_canonical_type(template_args);
 }

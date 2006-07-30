@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.12 2006/07/17 02:53:35 fang Exp $
+	$Id: instance.cc,v 1.13 2006/07/30 05:49:14 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -18,8 +18,8 @@
 #include <numeric>
 
 #include "AST/instance.h"
-#include "AST/expr.h"		// for index_expr
-#include "AST/expr_list.h"
+// #include "AST/expr.h"		// for index_expr
+#include "AST/reference.h"
 #include "AST/range_list.h"
 #include "AST/token_string.h"
 #include "AST/type.h"

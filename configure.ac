@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.77 2006/07/28 21:29:59 fang Exp $
+#	$Id: configure.ac,v 1.78 2006/07/30 05:49:07 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -440,6 +440,17 @@ AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
 
 AC_CONFIG_FILES([src/parser/instref-parse.yy:src/parser/instref-parse.yy.in],
 	[out=src/parser/instref-parse.yy
+	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
+	then
+		sed '/%pure.parser/d' $srcdir/$out.in > $out~
+	else
+		cp $srcdir/$out.in $out~
+	fi
+	scripts/replace_if_changed.sh $out~ $out
+	])
+
+AC_CONFIG_FILES([src/parser/type-parse.yy:src/parser/type-parse.yy.in],
+	[out=src/parser/type-parse.yy
 	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
 	then
 		sed '/%pure.parser/d' $srcdir/$out.in > $out~

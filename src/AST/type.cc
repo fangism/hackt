@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.4 2006/01/23 22:14:39 fang Exp $
+	$Id: type.cc,v 1.5 2006/07/30 05:49:17 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -11,16 +11,9 @@
 
 #define	ENABLE_STACKTRACE		0
 
-// rule-of-thumb for inline directives:
-// only inline constructors if you KNOW that they will not be be needed
-// outside of this module, because we don't have a means to export
-// inline methods other than defining in the header or using
-// -fkeep-inline-functions
-
 #include <exception>
 #include <iostream>
 
-#include "AST/expr_base.h"
 #include "AST/expr_list.h"
 #include "AST/type.h"
 #include "AST/identifier.h"
@@ -37,7 +30,6 @@
 #include "util/indent.h"
 #include "util/what.h"
 #include "util/stacktrace.h"
-#include "util/memory/count_ptr.tcc"
 
 // enable or disable constructor inlining, undefined at the end of file
 // leave blank do disable, define as inline to enable
@@ -109,7 +101,7 @@ type_id::rightmost(void) const {
 	\return pointer to type reference, else NULL if failure.  
  */
 type_base::return_type
-type_id::check_definition(context& c) const {
+type_id::check_definition(const context& c) const {
 	STACKTRACE("type_id::check_build()");
 	const type_base::return_type
 		d(c.lookup_definition(*base));
@@ -174,7 +166,7 @@ chan_type::attach_data_types(const data_type_ref_list* t) {
 	channel definition.  
  */
 good_bool
-chan_type::check_base_chan_type(context& c) const {
+chan_type::check_base_chan_type(const context& c) const {
 	if (dir) {
 		// do something with the direction
 		// should be NULL in this context
@@ -193,7 +185,7 @@ chan_type::check_base_chan_type(context& c) const {
 	TODO: guarantee that channels don't depend on relaxed template formals
  */
 chan_type::return_type
-chan_type::check_type(context& c) const {
+chan_type::check_type(const context& c) const {
 	const data_type_ref_list::return_type
 		ret(dtypes->check_builtin_channel_type(c));
 	if (dir)
@@ -209,6 +201,7 @@ generic_type_ref::generic_type_ref(const type_base* n,
 		const template_args_type* t, 
 		const char_punctuation_type* d) : 
 		base(n), temp_spec(t), chan_dir(d) {
+	// cerr << "new generic_type_ref @ " << this << endl;
 	NEVER_NULL(base);
 }
 
@@ -248,7 +241,7 @@ generic_type_ref::get_temp_spec(void) const {
 		else NULL (does not exit on failure).  
  */
 generic_type_ref::return_type
-generic_type_ref::check_type(context& c) const {
+generic_type_ref::check_type(const context& c) const {
 	// note: this is non-const, whereas we're returning const
 	typedef	definition_base::type_ref_ptr_type	local_return_type;
 	STACKTRACE("generic_type_ref::check_type()");
@@ -320,7 +313,7 @@ generic_type_ref::check_type(context& c) const {
 		else NULL.
  */
 never_ptr<const object>
-generic_type_ref::check_build(context& c) const {
+generic_type_ref::check_build(const context& c) const {
 	return_type ret(check_type(c));
 	if (ret)
 		c.set_current_fundamental_type(ret);
@@ -347,15 +340,15 @@ data_type_ref_list::~data_type_ref_list() { }
 		ever find a reason to change this, talk to fangism.  
  */
 data_type_ref_list::return_type
-data_type_ref_list::check_builtin_channel_type(context& c) const {
+data_type_ref_list::check_builtin_channel_type(const context& c) const {
 	typedef	list<concrete_type_ref::return_type>	checked_list_type;
 	const count_ptr<builtin_channel_type_reference>
 		ret(new builtin_channel_type_reference);
 	checked_list_type checked_types;
 	check_list(checked_types, &concrete_type_ref::check_type, c);
 	// check if it contains NULL
-	checked_list_type::const_iterator i = checked_types.begin();
-	const checked_list_type::const_iterator e = checked_types.end();
+	checked_list_type::const_iterator i(checked_types.begin());
+	const checked_list_type::const_iterator e(checked_types.end());
 	const checked_list_type::const_iterator
 		ni(find(i, e, concrete_type_ref::return_type(NULL)));
 	if (ni != checked_types.end()) {

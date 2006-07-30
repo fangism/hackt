@@ -1,10 +1,12 @@
 /**
 	\file "main/cflat_options.h"
-	$Id: cflat_options.h,v 1.9 2006/04/12 08:53:20 fang Exp $
+	$Id: cflat_options.h,v 1.10 2006/07/30 05:49:41 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_CFLAT_OPTIONS_H__
 #define	__HAC_MAIN_CFLAT_OPTIONS_H__
+
+#include <string>
 
 namespace HAC {
 
@@ -135,6 +137,21 @@ public:
 	 */
 	bool				size_prs;
 
+	/**
+		Ignore top-level instances and flatten one anonymous
+		instance of a named complete process type.  
+		Flag to do 'cast2lvs'-like behavior.  
+		Tip: protect argument with "quotes" in command-line
+			to protect shell-characters.  
+	 */
+	bool		use_referenced_type_instead_of_top_level;
+
+	/**
+		The string of the complete process type to process
+		in lieu of the top-level instance hierarchy.  
+	 */
+	std::string			named_process_type;
+
 	// ignore policies...
 	// warning flags...
 	// error flags...
@@ -150,7 +167,9 @@ public:
 		namespace_policy(NAMESPACE_POLICY_NONE), 
 		check_prs(false), wire_mode(false), 
 		csim_style_prs(false), dsim_prs(false), 
-		size_prs(false) {
+		size_prs(false), 
+		use_referenced_type_instead_of_top_level(false), 
+		named_process_type() {
 	}
 
 	~cflat_options() { }

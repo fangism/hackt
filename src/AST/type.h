@@ -1,9 +1,9 @@
 /**
 	\file "AST/type.h"
 	Base set of classes for the HAC parser.  
-	$Id: type.h,v 1.3 2006/01/23 22:14:40 fang Exp $
+	$Id: type.h,v 1.4 2006/07/30 05:49:17 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: type.h,v 1.3 2006/01/23 22:14:40 fang Exp $
+	$Id: type.h,v 1.4 2006/07/30 05:49:17 fang Exp $
  */
 
 #ifndef __HAC_AST_TYPE_H__
@@ -81,7 +81,7 @@ public:
 	~data_type_ref_list();
 
 	return_type
-	check_builtin_channel_type(context&) const;
+	check_builtin_channel_type(const context&) const;
 
 };	// end class data_type_ref_list
 
@@ -139,7 +139,7 @@ public:
 	rightmost(void) const;
 
 	return_type
-	check_type(context&) const;
+	check_type(const context&) const;
 
 };	// end class generic_type_ref
 
@@ -177,7 +177,7 @@ public:
 	rightmost(void) const;
 
 	return_type
-	check_type(context&) const;
+	check_type(const context&) const;
 
 };	// end class chan_type
 

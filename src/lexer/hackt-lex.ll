@@ -1,8 +1,8 @@
 /**
  *	\file "lexer/hackt-lex.ll"
- *	vim: ft=lex
+ *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: hackt-lex.ll,v 1.16 2006/07/26 22:46:28 fang Exp $
+ *	$Id: hackt-lex.ll,v 1.17 2006/07/30 05:49:36 fang Exp $
  *	This file was originally:
  *	Id: art++-lex.ll,v 1.17 2005/06/21 21:26:35 fang Exp
  *	in prehistory.  
@@ -417,8 +417,6 @@ STATIC		"static"
 EXPORT		"export"
 
 /* consider recording all tokens' (including punctuation) positions? */
-
-IMPORT_DIRECTIVE	{IMPORT}{WS}?{FILESTRING}
 
 /****** states ******/
 %s incomment

@@ -1,8 +1,8 @@
 /**
  *	\file "lexer/instref-lex.ll"
+ *	vi: ft=lex
  *	Will generate .cc (C++) file for the token-scanner.  
- *	$Id: instref-lex.ll,v 1.4 2006/06/26 01:46:44 fang Exp $
- *	vim: ft=lex
+ *	$Id: instref-lex.ll,v 1.5 2006/07/30 05:49:37 fang Exp $
  */
 
 /****** DEFINITIONS **********************************************************/
@@ -12,6 +12,8 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <iomanip>
+#include "util/sstream.h"
 
 #if 0
 #ifdef	LIBBOGUS
@@ -105,6 +107,7 @@ using namespace HAC::lexer;
 %}
 
 DIGIT		[0-9]
+HEXDIGIT	[0-9A-Fa-f]
 IDHEAD		[a-zA-Z_]
 IDBODY		[a-zA-Z0-9_]
 INT		{DIGIT}+
@@ -112,6 +115,7 @@ SIGN_INT	[+-]?{INT}
 EXP		[eE]{SIGN_INT}
 FRACTIONAL	"."{INT}
 FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
+HEX		0x{HEXDIGIT}+
 
 /* note: '-' signed ints are lexed as two tokens and combined in the parser
 	as a unary expr, thus, no numerical tokens in the language 
@@ -121,6 +125,7 @@ FLOAT		({INT}{FRACTIONAL}{EXP}?)|({INT}{FRACTIONAL}?{EXP})
 
 ID		{IDHEAD}{IDBODY}*
 BADID		({INT}{ID})|({FLOAT}{ID})
+BADHEX		{HEX}{ID}
 WHITESPACE	[ \t]+
 NEWLINE		"\n"
 WS		{WHITESPACE}
@@ -162,6 +167,23 @@ RANGE		".."
 	return INT;
 }
 
+{HEX}   {
+	if (token_feedback) {
+		cerr << "int = " << yytext << " " << LINE_COL(CURRENT) << endl;
+	}
+	/* TODO: error handling of value-ranges */
+	/* consider using stream conversions to avoid precision errors */
+	/* what if we need atol? */
+	HAC::entity::pint_value_type v;
+	std::istringstream iss(yytext); /* slower, but safer */
+	iss >> std::hex >> v;
+	/* could try to use faster, but unsafe istrstream (deprecated) */
+	instref_lval->_token_int = new token_int(v);
+	/* yylval->_token_int = new token_int(atoi(yytext)); */
+	TOKEN_UPDATE(__YYLEX_ARG_VOID);
+	return INT;
+}
+
 {ID}	{
 	if (token_feedback) {
 		cerr << "identifier = \"" << yytext << "\" " << 
@@ -170,6 +192,15 @@ RANGE		".."
 	yylval->_token_identifier = new token_identifier(yytext);
 	TOKEN_UPDATE(__YYLEX_ARG_VOID);
 	return ID;
+}
+
+{BADHEX}	{ 
+	hackt_parse_file_manager.dump_file_stack(cerr);
+	cerr << "bad hexadecimal integer: \"" << yytext << "\" " <<
+		LINE_COL(CURRENT) << endl;
+	TOKEN_UPDATE(__YYLEX_ARG_VOID);
+	yylval->_token_identifier = NULL;
+	THROW_EXIT;
 }
 
 {BADID}	{

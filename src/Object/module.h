@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.10 2006/04/11 07:54:38 fang Exp $
+	$Id: module.h,v 1.11 2006/07/30 05:49:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -21,6 +21,7 @@ namespace HAC {
 class cflat_options;
 
 namespace entity {
+class process_type_reference;
 using std::default_vector;
 using std::string;
 using std::ostream;
@@ -155,6 +156,10 @@ public:
 	good_bool
 	cflat(ostream&, const cflat_options&);
 
+	good_bool
+	cflat_process_type(const process_type_reference&, 
+		ostream&, const cflat_options&);
+
 	template <class Tag>
 	void
 	match_aliases(util::string_list&, const size_t) const;
@@ -166,6 +171,21 @@ private:
 	good_bool
 	__cflat(ostream&, const cflat_options&) const;
 
+	good_bool
+	__cflat_rules(ostream&, const cflat_options&) const;
+
+	good_bool
+	__cflat_aliases(ostream&, const cflat_options&) const;
+
+	good_bool
+	__cflat_aliases_no_import(ostream&, const cflat_options&) const;
+
+	good_bool
+	__allocate_unique(void);
+
+	// no needed publicly yet
+	good_bool
+	allocate_unique_process_type(const process_type_reference&);
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

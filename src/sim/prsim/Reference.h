@@ -1,8 +1,9 @@
 /**
 	\file "sim/prsim/Reference.h"
 	Interface to reference-parsing.
-	Consider making this a general function in main/main_funcs.
-	$Id: Reference.h,v 1.4 2006/04/11 07:54:47 fang Exp $
+	Consider making this a general function in main/main_funcs, 
+		or in AST/reference.h.  
+	$Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_REFERENCE_H__
@@ -12,7 +13,6 @@
 #include "sim/common.h"
 #include "util/string_fwd.h"
 #include "util/memory/excl_ptr.h"
-#include "sim/common.h"
 #include "util/STL/vector_fwd.h"
 
 namespace HAC {
@@ -27,12 +27,15 @@ namespace SIM {
 namespace PRSIM {
 using util::memory::excl_ptr;
 
+extern
 excl_ptr<parser::inst_ref_expr>
 parse_reference(const char*);
 
+extern
 entity::meta_reference_union
 check_reference(const parser::inst_ref_expr&, const entity::module&);
 
+extern
 entity::meta_reference_union
 parse_and_check_reference(const char*, const entity::module&);
 

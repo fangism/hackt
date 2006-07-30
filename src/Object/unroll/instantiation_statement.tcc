@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.16 2006/07/04 07:26:19 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17 2006/07/30 05:49:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -182,6 +182,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #if ENABLE_STACKTRACE
 	if (f) {
 		f->dump(cerr << "footprint: ") << endl;
+		cerr << "looking up: " << this->inst_base->get_name() << endl;
 	}
 #endif
 	collection_type& _inst(f ? IS_A(collection_type&, 

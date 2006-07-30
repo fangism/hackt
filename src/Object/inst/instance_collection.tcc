@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.31 2006/06/26 01:46:12 fang Exp $
+	$Id: instance_collection.tcc,v 1.32 2006/07/30 05:49:22 fang Exp $
 	TODO: trim includes
  */
 
@@ -220,13 +220,16 @@ INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Note: we don't bother copying the initial_instantiation_statement_ptr.
+	Or should we? we need it to get_type_ref(), sometimes for diagnostics
+		after deep-copying collection to footprint.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const this_type& t, 
 		const footprint& f) :
 		parent_type(t, f),
 		collection_type_manager_parent_type(t), 
-		initial_instantiation_statement_ptr() {
+		initial_instantiation_statement_ptr(
+			t.initial_instantiation_statement_ptr) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -276,6 +279,7 @@ INSTANCE_COLLECTION_CLASS::dump_formal(ostream& o) const {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 INSTANCE_COLLECTION_CLASS::get_type_ref(void) const {
+	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return initial_instantiation_statement_ptr->get_type_ref();
 }
 

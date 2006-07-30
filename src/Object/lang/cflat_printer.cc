@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.10 2006/04/23 07:37:23 fang Exp $
+	$Id: cflat_printer.cc,v 1.11 2006/07/30 05:49:26 fang Exp $
  */
 
 #include <iostream>
@@ -58,8 +58,14 @@ if (!cfopts.check_prs) {
 	// bfm[...] refers to a global_entry<bool_tag> (1-indexed)
 	// const size_t j = bfm[r.output_index-1];
 	if (cfopts.enquote_names) os << '\"';
-	sm->get_pool<bool_tag>()[
-		fpf->get_frame_map<bool_tag>()[r.output_index-1]]
+	const size_t global_bool_index =
+#if 0
+		// this is wrong in the case of top-level prs
+		fpf->get_frame_map<bool_tag>()[r.output_index-1]
+#else
+		parent_type::__lookup_global_bool_id(r.output_index);
+#endif
+	sm->get_pool<bool_tag>()[global_bool_index]
 		.dump_canonical_name(os, *fp, *sm);
 	if (cfopts.enquote_names) os << '\"';
 	os << (r.dir ? '+' : '-') << endl;

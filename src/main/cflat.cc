@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.12 2006/07/19 14:21:27 fang Exp $
+	$Id: cflat.cc,v 1.13 2006/07/30 05:49:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -19,7 +19,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/program_registry.h"
 #include "main/main_funcs.h"
 #include "main/options_modifier.tcc"
-#include "main/simple_options.tcc"
+
+#include "AST/type_base.h"
+#include "Object/type/process_type_reference.h"
+#include "common/TODO.h"
+
+#include "util/getopt_mapped.tcc"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.h"
 
@@ -28,6 +33,17 @@ using std::string;
 using util::persistent;
 using util::persistent_object_manager;
 #include "util/using_ostream.h"
+using entity::process_type_reference;
+using parser::concrete_type_ref;
+
+namespace entity {
+class module;
+}
+
+namespace parser {
+concrete_type_ref::return_type
+parse_and_check_complete_type(const char*, const entity::module&);
+}
 
 //=============================================================================
 // explicit early class instantiation for proper static initializer ordering
@@ -41,6 +57,13 @@ template class options_modifier_policy<cflat_options>;
 //=============================================================================
 // class cflat static initializers
 
+cflat::master_options_map_type
+cflat::master_options;
+
+const int
+cflat::master_options_initialized = cflat::initialize_master_options_map();
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const char
 cflat::name[] = "cflat";
 
@@ -103,6 +126,7 @@ __cflat_prsim(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+	cf.use_referenced_type_instead_of_top_level = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -122,6 +146,7 @@ __cflat_prlint(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+	cf.use_referenced_type_instead_of_top_level = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -143,6 +168,7 @@ __cflat_connect(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+	cf.use_referenced_type_instead_of_top_level = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -167,6 +193,7 @@ __cflat_lvs(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+	cf.use_referenced_type_instead_of_top_level = false;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -188,6 +215,7 @@ __cflat_wire(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+	cf.use_referenced_type_instead_of_top_level = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -207,6 +235,7 @@ __cflat_ADspice(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = true;
 	cf.size_prs = false;
+	cf.use_referenced_type_instead_of_top_level = false;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -225,6 +254,7 @@ __cflat_check(cflat::options& cf) {
 	cf.csim_style_prs = false;
 	cf.dsim_prs = false;
 	cf.size_prs = false;
+	cf.use_referenced_type_instead_of_top_level = false;
 }
 
 // end of primary modes
@@ -534,6 +564,10 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 	if (!the_module)
 		return 1;
 
+if (cf.use_referenced_type_instead_of_top_level) {
+	return process_complete_type(
+		cf.named_process_type.c_str(), *the_module, cf);
+} else {
 	if (!the_module->allocate_unique().good) {
 		cerr << "ERROR in allocating global state.  Aborting." << endl;
 		return 1;
@@ -545,7 +579,36 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 		cerr << "Error during cflat." << endl;
 		return 1;
 	}
+}
+	return 0;
+}
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+cflat::process_complete_type(const char* _type, const module& m, 
+		const cflat_options& opt) {
+	// parse the type
+	// cerr << "type string: " << cf.named_process_type.c_str() << endl;
+	const concrete_type_ref::return_type
+		t(parser::parse_and_check_complete_type(_type, m));
+	if (!t) {
+		cerr << "Error with type reference \'" <<
+			opt.named_process_type << "\'." << endl;
+		return 1;
+	}
+	const count_ptr<const process_type_reference>
+		pt(t.is_a<const process_type_reference>());
+	if (!pt) {
+		cerr << "Error: \'" << opt.named_process_type << "\' does not "
+			"refer to a process type." << endl;
+		return 1;
+	}
+	// create a temporary module for unpacking complete type's guts
+	module temp_top("<auxiliary>");
+	if (!temp_top.cflat_process_type(*pt, cout, opt).good) {
+		cerr << "Error during cflat." << endl;
+		return 1;
+	}
 	return 0;
 }
 
@@ -553,16 +616,64 @@ cflat::main(const int argc, char* argv[], const global_options&) {
 int
 cflat::parse_command_options(const int argc, char* argv[], options& cf) {
 	// using simple template function
-	return parse_simple_command_options(
-		argc, argv, cf, options_modifier_map);
+	return master_options(argc, argv, cf);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Parses -f <mode> options.
+ */
+void
+cflat::getopt_f_options(options& opt, const char* optarg) {
+	typedef options_modifier_map_type::mapped_type		mapped_type;
+	typedef options_modifier_map_type::const_iterator	const_iterator;
+	const const_iterator mi(options_modifier_map.find(optarg));
+	if (mi == options_modifier_map.end() || !mi->second) {
+		// cerr << "Invalid mode: " << optarg << endl;
+		string err("Invalid mode: ");
+		err += optarg;
+		throw util::getopt_exception(1, err);
+	} else {
+		const mapped_type& om(mi->second);
+		om(opt);	// process option
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Sets cflat mode to use single anonymous instance of type, 
+	ignoring top-level instance hierarchy.  
+ */
+void
+cflat::getopt_cflat_type_only(options& opt, const char* optarg) {
+if (opt.use_referenced_type_instead_of_top_level) {
+	throw util::getopt_exception(1, "Cannot specify more than one type.");
+} else {
+	opt.use_referenced_type_instead_of_top_level = true;
+	opt.named_process_type = optarg;	// strcpy
+	// cerr << "optarg = " << opt.named_process_type << endl;
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+int
+cflat::initialize_master_options_map(void) {
+	master_options.add_option('f', &getopt_f_options);
+	master_options.add_option('t', &getopt_cflat_type_only);
+	return 1;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: automate help.  
+ */
 void
 cflat::usage(void) {
 	cerr << "usage: " << name << " <mode> [options] <hackt-obj-infile>"
 		<< endl;
 	cerr << "options: " << endl;
+	cerr << "\t-t \"type\" : perform flattening on an instance of the named type,\n"
+		"\t\tignoring top-level instances (quotes recommended)." << endl;
 	cerr << "\t-f <mode> : applies mode-preset or individual flag modifier"
 		" (repeatable)" << endl;
 	// list modes

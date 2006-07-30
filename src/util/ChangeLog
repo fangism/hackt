@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
 
+2006-07-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-41:
+	  Added util::getopt_mapped class for generalizable getopt parsing.
+
+
 2006-07-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-35:

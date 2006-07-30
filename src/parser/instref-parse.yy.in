@@ -4,7 +4,7 @@
 	This will be used in prsim and other simulators, for example.  
 	The grammar in here is an extremely small snippet
 	of the hackt language grammar.  
-	$Id: instref-parse.yy.in,v 1.2 2006/01/22 06:53:24 fang Exp $
+	$Id: instref-parse.yy.in,v 1.3 2006/07/30 05:50:07 fang Exp $
  */
 
 %{
@@ -30,6 +30,25 @@
 #endif
 
 #include "lexer/flex_lexer_state.h"
+
+#if YYBISON
+#if defined(USING_BISON) && !USING_BISON
+#error	Inconsistency in configuration: YYBISON && !USING_BISON
+#endif
+
+#elif defined(YYBYACC) && YYBYACC
+
+#if defined(USING_BYACC) && !USING_BYACC && !USING_YACC
+// on many systems, yacc == byacc
+#error	Inconsistency in configuration: YYBYACC && !USING_BYACC && !USING_YACC
+#endif
+#else   // !YYBISON && !YYBYACC
+
+#if defined(USING_YACC) && !USING_YACC
+#error	Inconsistency in configuration: !YYBISON && !YYBYACC && !USING_YACC
+#endif
+
+#endif  // YYBISON
 
 // extern FILE* yyin;
 
@@ -245,7 +264,6 @@ void yyerror(const char* msg) {
 	const YYSTYPE* v;
 	// msg is going to be "syntax error" from y.tab.cc
 	//	very useless in general
-	// hackt_parse_file_manager.dump_file_stack(cerr);
 	cerr << "parse error: " << msg << endl;
 
 	// copied from "parser/hackt-parse.yy.in"

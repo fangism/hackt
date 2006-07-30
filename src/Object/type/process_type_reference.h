@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.6 2006/01/26 21:33:26 fang Exp $
+ 	$Id: process_type_reference.h,v 1.7 2006/07/30 05:49:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
@@ -87,7 +87,7 @@ public:
 	count_ptr<const this_type>
 	make_canonical_process_type_reference(void) const;
 
-	canonical_type<process_definition>
+	canonical_process_type
 	make_canonical_type(void) const;
 
 private:

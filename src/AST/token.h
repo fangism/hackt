@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.h"
 	Token-specific parser classes for HAC.  
-	$Id: token.h,v 1.5 2006/02/10 21:50:35 fang Exp $
+	$Id: token.h,v 1.6 2006/07/30 05:49:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.h,v 1.17.34.1 2005/12/11 00:45:11 fang Exp
  */
@@ -286,7 +286,7 @@ public:
 	~token_pbool_type();
 
 	return_type
-	check_type(context&) const;
+	check_type(const context&) const;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_pbool_type
@@ -304,7 +304,7 @@ public:
 	~token_pint_type();
 
 	return_type
-	check_type(context&) const;
+	check_type(const context&) const;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_pint_type
@@ -322,7 +322,7 @@ public:
 	~token_preal_type();
 
 	return_type
-	check_type(context&) const;
+	check_type(const context&) const;
 
 	CHUNK_MAP_POOL_DEFAULT_STATIC_DECLARATIONS(32)
 };	// end class token_preal_type

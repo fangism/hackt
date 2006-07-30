@@ -16,4 +16,5 @@ ignore
 *.cct
 hackt-parse.yy
 instref-parse.yy
+type-parse.yy
 yacc_version.h

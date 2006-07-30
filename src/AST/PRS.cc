@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.15 2006/07/17 02:53:29 fang Exp $
+	$Id: PRS.cc,v 1.16 2006/07/30 05:49:12 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -17,7 +17,7 @@
 #include <functional>
 
 #include "AST/PRS.h"
-#include "AST/expr.h"		// for id_expr
+#include "AST/reference.h"	// for id_expr
 #include "AST/expr_list.h"	// for attributes
 #include "AST/range.h"
 #include "AST/token.h"

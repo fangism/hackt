@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.24 2006/06/26 01:45:51 fang Exp $
+ 	$Id: definition.cc,v 1.25 2006/07/30 05:49:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3003,6 +3003,45 @@ process_definition::register_complete_type(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	NOTE: this can be used to unroll a process definition
+	into a top-level footprint.  
+ */
+good_bool
+process_definition::__unroll_complete_type(
+		const count_ptr<const const_param_expr_list>& p, 
+		footprint& f) const {
+	// unroll using the footprint manager
+	STACKTRACE_VERBOSE;
+	if (!f.is_unrolled()) {
+		const canonical_type_base canonical_params(p);
+		const template_actuals
+			canonical_actuals(canonical_params.get_template_params(
+				template_formals.num_strict_formals()));
+		const canonical_process_type
+			cpt(make_canonical_type(canonical_actuals));
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		const unroll_context
+			c(canonical_actuals, template_formals, &f, parent);
+#else
+		const unroll_context
+			c(canonical_actuals, template_formals, &f);
+#endif
+		if (sequential_scope::unroll(c).good) {
+			// NOTE: nothing can be done with production rules
+			// until nodes have been assigned local ID numbers
+			// in the create phase, in create_complete_type, below.
+			f.mark_unrolled();
+		} else {
+			// already have partial error message
+			// cpt.dump(cerr << "Instantiated from ") << endl;
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	This just plays the sequential instantiation record, which 
 	instantiates objects and connections.  
 	PRS/CHP etc., are unrolled during ::create_complete_type.  
@@ -3011,7 +3050,6 @@ process_definition::register_complete_type(
 good_bool
 process_definition::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
-	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
 if (defined) {
 	footprint* f;
@@ -3022,32 +3060,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
-	if (!f->is_unrolled()) {
-		const canonical_type_base canonical_params(p);
-		const template_actuals
-			canonical_actuals(canonical_params.get_template_params(
-				template_formals.num_strict_formals()));
-		const canonical_process_type
-			cpt(make_canonical_type(canonical_actuals));
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		const unroll_context
-			c(canonical_actuals, template_formals, f, parent);
-#else
-		const unroll_context
-			c(canonical_actuals, template_formals, f);
-#endif
-		if (sequential_scope::unroll(c).good) {
-			// NOTE: nothing can be done with production rules
-			// until nodes have been assigned local ID numbers
-			// in the create phase, in create_complete_type, below.
-			f->mark_unrolled();
-		} else {
-			// already have partial error message
-			// cpt.dump(cerr << "Instantiated from ") << endl;
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
+	return __unroll_complete_type(p, *f);
 } else {
 	cerr << "ERROR: cannot unroll incomplete process type " <<
 			get_qualified_name() << endl;
@@ -3059,8 +3072,61 @@ if (defined) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Create the definition footprint for a complete process_type.  
-	TODO: unroll CHP body.
+	This can be invoked as a top-level module.  
+	\pre this definition is completely defined.  
  */
+good_bool
+process_definition::__create_complete_type(
+		const count_ptr<const const_param_expr_list>& p, 
+		footprint& f) const {
+	STACKTRACE_VERBOSE;
+	// will automatically unroll first if not already unrolled
+	if (!f.is_unrolled() && !__unroll_complete_type(p, f).good) {
+		// already have error message
+		return good_bool(false);
+	}
+	if (!f.is_created()) {
+		const canonical_type_base canonical_params(p);
+		const template_actuals
+			canonical_actuals(canonical_params.get_template_params(
+				template_formals.num_strict_formals()));
+		const canonical_process_type
+			cpt(make_canonical_type(canonical_actuals));
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		const unroll_context
+			c(canonical_actuals, template_formals, &f, parent);
+#else
+		const unroll_context
+			c(canonical_actuals, template_formals, &f);
+#endif
+		// this replays internal aliases of all instances in this scope
+		// doesn't use context? what if dependent on global parameter?
+		// probably need to pass it in!
+		if (!f.create_dependent_types().good) {
+			// error message
+			return good_bool(false);
+		}
+		// after all aliases have been successfully assigned local IDs
+		// then process the PRS and CHP bodies
+		if (!prs.unroll(c, f.get_pool<bool_tag>(), 
+				f.get_prs_footprint()).good) {
+			// already have error message
+			return good_bool(false);
+		}
+		if (!spec.unroll(c, f.get_pool<bool_tag>(), 
+				f.get_spec_footprint()).good) {
+			// already have error message
+			return good_bool(false);
+		}
+		if (!chp.unroll(c, f).good) {
+			// already have error message
+			return good_bool(false);
+		}
+	}
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 process_definition::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
@@ -3074,50 +3140,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
-	// will automatically unroll first if not already unrolled
-	if (!f->is_unrolled() && !unroll_complete_type(p).good) {
-		// already have error message
-		return good_bool(false);
-	}
-	if (!f->is_created()) {
-		const canonical_type_base canonical_params(p);
-		const template_actuals
-			canonical_actuals(canonical_params.get_template_params(
-				template_formals.num_strict_formals()));
-		const canonical_process_type
-			cpt(make_canonical_type(canonical_actuals));
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		const unroll_context
-			c(canonical_actuals, template_formals, f, parent);
-#else
-		const unroll_context
-			c(canonical_actuals, template_formals, f);
-#endif
-		// this replays internal aliases of all instances in this scope
-		// doesn't use context? what if dependent on global parameter?
-		// probably need to pass it in!
-		if (!f->create_dependent_types().good) {
-			// error message
-			return good_bool(false);
-		}
-		// after all aliases have been successfully assigned local IDs
-		// then process the PRS and CHP bodies
-		if (!prs.unroll(c, f->get_pool<bool_tag>(), 
-				f->get_prs_footprint()).good) {
-			// already have error message
-			return good_bool(false);
-		}
-		if (!spec.unroll(c, f->get_pool<bool_tag>(), 
-				f->get_spec_footprint()).good) {
-			// already have error message
-			return good_bool(false);
-		}
-		if (!chp.unroll(c, *f).good) {
-			// already have error message
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
+	return __create_complete_type(p, *f);
 } else {
 	cerr << "ERROR: cannot create incomplete process type " <<
 			get_qualified_name() << endl;

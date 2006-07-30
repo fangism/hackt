@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.22 2006/06/26 01:45:52 fang Exp $
+	$Id: footprint.cc,v 1.23 2006/07/30 05:49:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -23,7 +23,12 @@
 #include "Object/common/alias_string_cache.h"
 #include "Object/common/dump_flags.h"
 #include "Object/inst/alias_printer.h"
+#if ENABLE_STACKTRACE
+#include "Object/expr/expr_dump_context.h"
+#endif
+
 #include "main/cflat_options.h"
+
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/STL/hash_map_utils.h"
@@ -230,6 +235,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		const const_instance_map_iterator
 			e(instance_collection_map.end());
 		for ( ; i!=e; i++) {
+			NEVER_NULL(i->second);
 			i->second->dump(o << auto_indent, df) << endl;
 		}
 		dump(o);
@@ -294,6 +300,8 @@ if (instance_collection_map.empty()) {
 			const count_ptr<instance_collection_base>
 			fc(icb->make_instance_collection_footprint_copy(*this));
 			NEVER_NULL(fc);
+			STACKTRACE_INDENT_PRINT(
+				"deep-copying " << fc->get_name());
 			instance_collection_map[fc->get_name()] = fc;
 		}
 		// else is not instance collection, we don't care
@@ -324,7 +332,7 @@ if (instance_collection_map.empty()) {
 		/***
 			DIRTY HACK ALERT:
 			collection wants count_ptr, but shallow pointer copy
-			comes from never_ptr!  can't mix oil and wanter!
+			comes from never_ptr!  can't mix oil and water!
 			The hack, initialize the count_ptr with count 1
 			instead of 0.  The last and only weak reference
 			will never delete.  
@@ -353,6 +361,7 @@ if (instance_collection_map.empty()) {
  */
 void
 footprint::clear_instance_collection_map(void) {
+	STACKTRACE_VERBOSE;
 	instance_collection_map.clear();
 }
 
@@ -388,7 +397,8 @@ footprint::create_dependent_types(void) {
 }
 #if ENABLE_STACKTRACE
 	dump_with_collections(STACKTRACE_STREAM << "footprint:" << endl, 
-		dump_flags::default_value) << endl;
+		dump_flags::default_value, 
+		expr_dump_context::default_value) << endl;
 #endif
 {
 	// having replayed all necessary aliases, it is safe and correct

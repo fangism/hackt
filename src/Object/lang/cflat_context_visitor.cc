@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.2 2006/04/23 07:37:23 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.3 2006/07/30 05:49:23 fang Exp $
  */
 
 #include <iostream>
@@ -20,6 +20,9 @@ namespace entity {
 
 /**
 	Frequently used, consider inlining.  
+	The footprint_frame is NOT set in the case of top-level (new supported)
+	visits (b/c type frame is not applicable), in which case, 
+	the referenced node ID *IS* the global index.  
 	\param lni is the *local* node index referenced by this
 		literal reference in this process.
 	\return The local node index is translated into a globally 
@@ -29,7 +32,12 @@ namespace entity {
 size_t
 cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
 	INVARIANT(lni);
-	return fpf->get_frame_map<bool_tag>()[lni-1];
+	// cerr << "lni = " << lni << endl;
+	if (fpf) {
+		return fpf->get_frame_map<bool_tag>()[lni-1];
+	} else {
+		return lni;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "main/main_funcs.h"
 	Prototypes of main-level functions.  
-	$Id: main_funcs.h,v 1.5 2006/07/27 05:55:36 fang Exp $
+	$Id: main_funcs.h,v 1.6 2006/07/30 05:49:42 fang Exp $
  */
 
 #ifndef	__HAC_MAIN_MAIN_FUNCS_H__
@@ -53,10 +53,6 @@ load_module(const char*);
 extern
 excl_ptr<module>
 load_module_debug(const char*);
-
-extern
-void
-unknown_option(const int);
 
 //=============================================================================
 }	// end namespace HAC

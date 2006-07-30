@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.9 2006/06/02 20:15:19 fang Exp $
+	$Id: process_definition.h,v 1.10 2006/07/30 05:49:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -116,6 +116,14 @@ public:
 
 	const footprint&
 	get_footprint(const count_ptr<const const_param_expr_list>&) const;
+
+	good_bool
+	__unroll_complete_type(const count_ptr<const const_param_expr_list>&, 
+		footprint&) const;
+
+	good_bool
+	__create_complete_type(const count_ptr<const const_param_expr_list>&, 
+		footprint&) const;
 
 	REGISTER_COMPLETE_TYPE_PROTO;
 	UNROLL_COMPLETE_TYPE_PROTO;

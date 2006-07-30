@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.6 2006/02/21 04:48:19 fang Exp $
+	$Id: token.cc,v 1.7 2006/07/30 05:49:16 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -586,7 +586,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_bool_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 type_base::return_type
-token_bool_type::check_definition(context& c) const {
+token_bool_type::check_definition(const context&) const {
 	STACKTRACE("token_bool_type::check_build()");
 	// safe to use never_ptr on address of statically allocated definition
 	return type_base::return_type(&bool_traits::built_in_definition);
@@ -605,7 +605,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_int_type)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 type_base::return_type
-token_int_type::check_definition(context& c) const {
+token_int_type::check_definition(const context&) const {
 	STACKTRACE("token_int_type::check_build()");
 	// safe to use never_ptr on address of statically allocated definition
 	return type_base::return_type(&int_traits::built_in_definition);
@@ -627,7 +627,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pbool_type)
 	Returns built-in parameter boolean type reference.  
  */
 concrete_type_ref::return_type
-token_pbool_type::check_type(context&) const {
+token_pbool_type::check_type(const context&) const {
 	return pbool_traits::built_in_type_ptr;
 }
 
@@ -647,7 +647,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_pint_type)
 	Return built-in parameter integer type reference.
  */
 concrete_type_ref::return_type
-token_pint_type::check_type(context&) const {
+token_pint_type::check_type(const context&) const {
 	return pint_traits::built_in_type_ptr;
 }
 
@@ -667,7 +667,7 @@ CHUNK_MAP_POOL_DEFAULT_STATIC_DEFINITION(token_preal_type)
 	Return built-in parameter integer type reference.
  */
 concrete_type_ref::return_type
-token_preal_type::check_type(context&) const {
+token_preal_type::check_type(const context&) const {
 	return preal_traits::built_in_type_ptr;
 }
 

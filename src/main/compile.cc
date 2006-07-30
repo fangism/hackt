@@ -3,7 +3,7 @@
 	Converts HAC source code to an object file (pre-unrolled).
 	This file was born from "art++2obj.cc" in earlier revision history.
 
-	$Id: compile.cc,v 1.12 2006/07/27 05:55:35 fang Exp $
+	$Id: compile.cc,v 1.13 2006/07/30 05:49:41 fang Exp $
  */
 
 #include <iostream>
@@ -16,6 +16,7 @@
 #include "main/compile_options.h"
 #include "lexer/file_manager.h"
 #include "util/getopt_portable.h"
+#include "util/getopt_mapped.h"
 #include "util/dirent.h"		// configured wrapper around <dirent.h>
 #include "util/attributes.h"
 
@@ -254,7 +255,7 @@ compile::parse_command_options(const int argc, char* argv[], options& opt) {
 		cerr << "Expected but missing non-option argument." << endl;
 		return 1;
 	case '?':
-		unknown_option(optopt);
+		util::unknown_option(cerr, optopt);
 		return 1;
 	default:
 		abort();

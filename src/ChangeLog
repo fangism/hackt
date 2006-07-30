@@ -3,9 +3,44 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-41:
+	  Added complete-type mini-parser parser/type-parse.yy.in, 
+		along with sidekick lexer/type-lex.ll to libhacktparsers.la
+	  cflat: added option -t <type> to ignore top-level instances and 
+		work with one unpacked instance of the named type, 
+		much like cast2lvs, but with all the general functionality
+		of the rest of hackt cflat.  Pass type name in
+		"quotes" on command-line/shell to protect template arguments.  
+	  cflat: now uses better and more general getopt_mapped parsing,
+		new in util::getopt_mapped.  
+	  entity::module: added partial internal support for processing
+		top-level PRS, at least during cflat passes.  
+	  process_definition: reuses and exposes existing code to
+		perform top-level-like unrolling and creating (for cflat -t).
+	  instance_collection.tcc: didn't used to copy the initial
+		instantiation statement ptr before, but is sometimes
+		useful for diagnostics; deep-copies don't use it.  
+	  cflat_context_visitor: __lookup_global_bool_id now uses
+		footprint_frame_ptr to determine whether or not ID already
+		belongs to global top-level, since we now can have PRS
+		in the top-level scope.  This also fixes 
+		cflat_printer::visit(footprint_rule)
+	  Const-ified parser::type type-checking prototypes, 
+		also subclasses in AST/type*.*.  
+	  instref-lex: now accepts hexadecimal constants too.  
+	  main/main_funcs.c: unknown_option moved to util/getopt_mapped.cc
+	  Split-off AST/reference.h from AST/expr.h.
+	  TODO: add top-level PRS to the front-end, write test cases.  
+	  Next (minor): relocate sim/prsim/Reference.{h,cc} into 
+		the parser/instref-parse module.  
+
+
 2006-07-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-40:
+	  "Lordy, lordy, patchlevel 40!"
 	  No source revision.
 	  Makefiles and support added for advanced graphviz figure generation.
 		Automated PRS placement, baby!
