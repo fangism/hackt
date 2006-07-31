@@ -1,0 +1,9 @@
+// "top-level-01.hac"
+// basic test of top-level production rules
+
+bool a, b;
+
+prs {
+	a -> b-
+}
+

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.16 2006/06/26 01:45:53 fang Exp $
+	$Id: footprint.h,v 1.17 2006/07/31 22:22:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -260,6 +260,9 @@ public:
 
 	void
 	import_scopespace(const scopespace&);
+
+	void
+	import_scopespace_shallow(const scopespace&);
 
 	void
 	import_hierarchical_scopespace(const scopespace&);

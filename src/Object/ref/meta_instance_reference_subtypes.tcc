@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.9 2006/06/02 04:35:17 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.10 2006/07/31 22:22:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -269,7 +269,7 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 	c.dump(cerr << "unroll_context c:" << endl) << endl;
 #endif
 	if (f) {
-		INVARIANT((*f)[_inst.get_name()]);
+		INVARIANT((*f)[inst_name]);
 	}
 	// assert not-NULL and dynamic_cast!
 	const instance_collection_generic_type&

@@ -1,46 +1,44 @@
 /**
-	\file "sim/prsim/Reference.h"
+	\file "parser/instref.h"
 	Interface to reference-parsing.
-	Consider making this a general function in main/main_funcs, 
-		or in AST/reference.h.  
-	$Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp $
+	$Id: instref.h,v 1.1 2006/07/31 22:22:41 fang Exp $
+	This file originated from "sim/prsim/Reference.h"
+	Id: Reference.h,v 1.5 2006/07/30 05:50:13 fang Exp
  */
 
-#ifndef	__HAC_SIM_PRSIM_REFERENCE_H__
-#define	__HAC_SIM_PRSIM_REFERENCE_H__
+#ifndef	__HAC_PARSER_INSTREF_H__
+#define	__HAC_PARSER_INSTREF_H__
 
 #include <iosfwd>
-#include "sim/common.h"
 #include "util/string_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/STL/vector_fwd.h"
 
 namespace HAC {
-namespace parser {
-class inst_ref_expr;
-}
 namespace entity {
 class module;
 class meta_reference_union;
 }
-namespace SIM {
-namespace PRSIM {
 using util::memory::excl_ptr;
 
+namespace parser {
+class inst_ref_expr;
+
 extern
-excl_ptr<parser::inst_ref_expr>
+excl_ptr<inst_ref_expr>
 parse_reference(const char*);
 
 extern
 entity::meta_reference_union
-check_reference(const parser::inst_ref_expr&, const entity::module&);
+check_reference(const inst_ref_expr&, const entity::module&);
 
 extern
 entity::meta_reference_union
 parse_and_check_reference(const char*, const entity::module&);
 
 extern
-node_index_type
+// node_index_type
+size_t
 parse_node_to_index(const std::string&, const entity::module&);
 
 extern
@@ -51,15 +49,15 @@ extern
 int
 parse_name_to_get_subnodes(
 	std::ostream&, const std::string&, const entity::module&, 
-	std::default_vector<node_index_type>::type&);
+	std::default_vector<size_t>::type&);
+	// node_index_type
 
 extern
 int
 parse_name_to_aliases(std::ostream&, const std::string&, const entity::module&);
 
-}	// end namespace PRSIM
-}	// end namespace SIM
+}	// end namespace parser
 }	// end namespace HAC
 
-#endif	// __HAC_SIM_PRSIM_REFERENCE_H__
+#endif	// __HAC_PARSER_INSTREF_H__
 

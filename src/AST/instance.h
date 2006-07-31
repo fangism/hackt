@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.h"
 	Instance-related parser classes for HAC.  
-	$Id: instance.h,v 1.4 2006/07/17 02:53:35 fang Exp $
+	$Id: instance.h,v 1.5 2006/07/31 22:22:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.h,v 1.16.34.1 2005/12/11 00:45:08 fang Exp
  */
@@ -11,7 +11,6 @@
 
 #include "AST/common.h"
 #include "AST/expr_list.h"
-#include "AST/root.h"
 #include "AST/definition_item.h"
 #include "util/STL/vector_fwd.h"
 #include "util/boolean_types.h"
@@ -30,12 +29,11 @@ using util::good_bool;
 	Base class for instance-related items, including declarations, 
 	arrays, connections and aliases, conditionals, loops.  
  */
-class instance_management : virtual public def_body_item, 
-		virtual public root_item {
+class instance_management : public def_body_item {
 public:
-	instance_management();
+	instance_management() : def_body_item() { }
 
-virtual	~instance_management();
+virtual	~instance_management() { }
 
 virtual	ostream&
 	what(ostream& o) const = 0;
@@ -101,22 +99,21 @@ private:
 /**
 	Abstract base class for connection statements of instantiations.  
 	Contains actuals list of arguments, just wrapped around expr_list.  
+	Not used polymorphically.  
  */
 class actuals_base {
 protected:
 	const excl_ptr<const expr_list>		actuals;
-public:
+
 	explicit
 	actuals_base(const expr_list* l);
 
-virtual	~actuals_base();
+	~actuals_base();
 
-// same virtual methods
-// virtual	ostream& what(ostream& o) const;
-virtual	line_position
+	line_position
 	leftmost(void) const;
 
-virtual	line_position
+	line_position
 	rightmost(void) const;
 
 	good_bool
@@ -127,7 +124,7 @@ virtual	line_position
 /**
 	Basic instance identifier, no trimmings, just contains an identifier.  
  */
-class instance_base : virtual public instance_management {
+class instance_base : public instance_management {
 protected:
 	/**
 		In pure instantiation context (not in declaration),

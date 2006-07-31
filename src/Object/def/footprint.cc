@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.23 2006/07/30 05:49:21 fang Exp $
+	$Id: footprint.cc,v 1.24 2006/07/31 22:22:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -266,9 +266,29 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
  */
 footprint::instance_collection_ptr_type
 footprint::operator [] (const string& k) const {
-	const const_instance_map_iterator f(instance_collection_map.find(k));
-	return (f != instance_collection_map.end()) ? f->second
-		: instance_collection_ptr_type(NULL);
+#if ENABLE_STACKTRACE
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("footprint looking up: " << k << endl);
+	dump_with_collections(cerr << "we have: " << endl,
+		dump_flags::default_value, expr_dump_context::default_value);
+
+#endif
+	const const_instance_map_iterator
+		e(instance_collection_map.end()),
+		f(instance_collection_map.find(k));
+#if ENABLE_STACKTRACE
+	const_instance_map_iterator i(instance_collection_map.begin());
+	for ( ; i!=e; ++i) {
+		cerr << "key = " << i->first << endl;
+	}
+	if (f != e) {
+		f->second->dump(cerr << "found: ", dump_flags::default_value)
+			<< endl;
+	} else {
+		cerr << "NOT FOUND" << endl;
+	}
+#endif
+	return (f != e) ? f->second : instance_collection_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -301,7 +321,7 @@ if (instance_collection_map.empty()) {
 			fc(icb->make_instance_collection_footprint_copy(*this));
 			NEVER_NULL(fc);
 			STACKTRACE_INDENT_PRINT(
-				"deep-copying " << fc->get_name());
+				"deep-copying " << fc->get_name() << endl);
 			instance_collection_map[fc->get_name()] = fc;
 		}
 		// else is not instance collection, we don't care
@@ -343,9 +363,46 @@ if (instance_collection_map.empty()) {
 			will restore and detect inconsistent pointer
 			ownership (owned and shared), resulting in 
 			fatal error.  FOILED by my own protective measures!
+
+			SOLUTION: guarantee that populating the footprint
+			with these pointers is only ever temporary and
+			never escapes to object serialization.  (Done.)
 		***/
 			static size_t one = 1;
 			instance_collection_map[pc->get_qualified_name()] =
+				count_ptr<instance_collection_base>(
+				&const_cast<physical_instance_collection&>(*pc), &one);
+		}
+		// else is not instance collection, we don't care
+	}
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Temporary hack.  
+	Hybrid of import_scopespace and import_hierarchical scopespace:
+	does shallow pointer copying (temporary), but uses unqualified
+	identifier names.  
+	Rationale: cflat on top-level prs works directly with
+		the module's global namespace collections, and thus
+		requires direct access to the collections.  
+		Promises not to modify; read-only for the sake of lookup.  
+ */
+void
+footprint::import_scopespace_shallow(const scopespace& s) {
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("at: " << this << endl);
+if (instance_collection_map.empty()) {
+	typedef	scopespace::const_map_iterator	const_map_iterator;
+	const_map_iterator si(s.id_map_begin());
+	const const_map_iterator se(s.id_map_end());
+	for ( ; si!=se; si++) {
+		const never_ptr<const physical_instance_collection>
+		pc(si->second.is_a<const physical_instance_collection>());
+		if (pc) {
+			static size_t one = 1;
+			instance_collection_map[pc->get_name()] =
 				count_ptr<instance_collection_base>(
 				&const_cast<physical_instance_collection&>(*pc), &one);
 		}

@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.16 2006/07/17 02:53:39 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.17 2006/07/31 22:22:40 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -782,6 +782,8 @@ namespace_item
 /* instance_item already includes semicolon where needed */
 	| instance_item { $$ = $1; }
 	| type_alias { $$ = $1; }
+/* new: top-level prs, chp, hse */
+	| language_body { $$ = $1; }
 	;
 
 namespace_management

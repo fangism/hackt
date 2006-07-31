@@ -3,6 +3,22 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-07-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-42:
+	  Moved sim/prsim/Reference.{h,cc} to parser/instref.h
+		and parser/instref-parse.yy.in.
+	  Grammar and AST checking supports top-level PRS.  
+	  parser::def_body_item now subtype of root_item again.  
+	  parse_context and entity::module now have a 
+		pre-unrolled PRS::rule_set (resembling process_definition).
+	  Top-level PRS are unrolled during create-phase, 
+		after create_dependent_types.  
+	  cflatting and prsim expression allocation now also traverse
+		top-level unrolled PRS.  
+	  Added only one minimal test-case.  
+
+
 2006-07-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-41:

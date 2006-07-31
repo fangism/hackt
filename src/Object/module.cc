@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.20 2006/07/30 05:49:19 fang Exp $
+ 	$Id: module.cc,v 1.21 2006/07/31 22:22:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -33,6 +33,7 @@
 #include "main/cflat_options.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
+#include "util/indent.h"
 #include "common/TODO.h"
 
 namespace util {
@@ -49,6 +50,7 @@ using util::read_value;
 using util::write_string;
 using util::read_string;
 using util::persistent_traits;
+using util::auto_indent;
 
 //=============================================================================
 // class module::top_level_footprint_importer method definitions
@@ -83,6 +85,33 @@ module::top_level_footprint_importer::~top_level_footprint_importer() {
 }
 
 //=============================================================================
+// class namespace_footprint_importer
+/**
+	Temporarily expands the footprint collection map
+	by visiting only the global namespaces and collecting its
+	instance collections.  
+	This makes a temporary shallow copy of the global_namespace's
+	instance collection pointers.  
+ */
+module::namespace_footprint_importer::namespace_footprint_importer(
+		const module& m) : fp(const_cast<footprint&>(m._footprint)) {
+	// shallow copy-ing pointers
+	fp.import_scopespace_shallow(*m.global_namespace);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Restores the previous state of the footprint's instance
+	collection map.  
+	Is necessary for the top-level footprint because
+	it temporarily violates an invariant with 
+	object ownership.  
+ */
+module::namespace_footprint_importer::~namespace_footprint_importer() {
+	fp.clear_instance_collection_map();
+}
+
+//=============================================================================
 // class module method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -92,6 +121,7 @@ module::top_level_footprint_importer::~top_level_footprint_importer() {
 module::module() :
 		persistent(), sequential_scope(),
 		name(""), global_namespace(NULL),
+		top_prs(), 
 		_footprint(), allocated(false), global_state() {
 }
 
@@ -99,6 +129,7 @@ module::module() :
 module::module(const string& s) :
 		persistent(), sequential_scope(),
 		name(s), global_namespace(new name_space("")),
+		top_prs(), 
 		_footprint(), allocated(false), global_state() {
 	NEVER_NULL(global_namespace);
 }
@@ -157,11 +188,17 @@ module::dump(ostream& o) const {
 	o << endl;
 
 	global_namespace->dump(o) << endl;
-
 	if (!is_unrolled()) {
 		o << "Sequential instance management (to unroll): " << endl;
-		return sequential_scope::dump(o,
+		sequential_scope::dump(o,
 			expr_dump_context::default_value);
+		if (!top_prs.empty()) {
+			o << auto_indent << "top-level prs:" << endl;
+			INDENT_SECTION(o);
+			const PRS::rule_dump_context rdc(*global_namespace);
+			top_prs.dump(o, rdc) << endl;
+		}
+		return o;
 	}
 	if (is_created()) {
 		o << "Created state:" << endl;
@@ -178,7 +215,16 @@ module::dump(ostream& o) const {
 		o << "Globally allocated state:" << endl;
 		global_state.dump(o, _footprint);
 	}
+	dump_top_level_unrolled_prs(o);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+module::dump_top_level_unrolled_prs(ostream& o) const {
+	// footprint::dump doesn't contain unrolled prs
+	const PRS::footprint& Pfp(_footprint.get_prs_footprint());
+	Pfp.dump(o, _footprint);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -198,6 +244,7 @@ module::unroll_module(void) {
 				<< endl;
 			return good_bool(false);
 		}
+		
 		_footprint.mark_unrolled();
 	}
 	return good_bool(true);
@@ -282,6 +329,24 @@ module::create_unique(void) {
 			// alraedy have error mesage
 			return good_bool(false);
 		}
+	{
+		// using namespace_footprint_importer is only effective
+		// with the global namespace and not deeper namespaces
+		const namespace_footprint_importer foo(*this);
+#if ENABLE_STACKTRACE
+		_footprint.dump_with_collections(
+			cerr << "module\'s footprint: ", 
+			dump_flags::default_value,
+			expr_dump_context::default_value) << endl;
+#endif
+		// will this automatically lookup global meta parameters?
+		const unroll_context c(&_footprint);
+		if (!top_prs.unroll(c, _footprint.get_pool<bool_tag>(),
+				_footprint.get_prs_footprint()).good) {
+			// already have error message
+			return good_bool(false);
+		}
+	}
 	}
 	return good_bool(true);
 }
@@ -382,6 +447,7 @@ module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 		try {
 			global_state.accept(cfp);	// print!
 			// support for top-level prs!
+			// const top_level_footprint_importer foo(*this);
 			_footprint.get_prs_footprint().accept(cfp);
 		} catch (...) {
 			cerr << "Caught exception during cflat PRS." << endl;
@@ -485,6 +551,7 @@ if (!m.register_transient_object(this,
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
 	sequential_scope::collect_transient_info_base(m);
+	top_prs.collect_transient_info_base(m);
 	_footprint.collect_transient_info_base(m);
 	global_state.collect_transient_info_base(m, _footprint);
 }
@@ -498,6 +565,7 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 	write_string(f, name);
 	m.write_pointer(f, global_namespace);
 	sequential_scope::write_object_base(m, f);
+	top_prs.write_object_base(m, f);
 	_footprint.write_object_base(m, f);
 	write_value(f, allocated);
 	global_state.write_object_base(m, f, _footprint);
@@ -511,6 +579,7 @@ module::load_object(const persistent_object_manager& m, istream& f) {
 	m.read_pointer(f, global_namespace);
 //	global_namespace->load_object(m);	// not necessary
 	sequential_scope::load_object_base(m, f);
+	top_prs.load_object_base(m, f);
 	_footprint.load_object_base(m, f);
 	read_value(f, allocated);
 	global_state.load_object_base(m, f, _footprint);

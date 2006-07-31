@@ -1,7 +1,7 @@
 /**
 	\file "AST/definition.h"
 	Definition-related parser classes for HAC.  
-	$Id: definition.h,v 1.3 2006/01/26 19:23:06 fang Exp $
+	$Id: definition.h,v 1.4 2006/07/31 22:22:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.h,v 1.17.40.1 2005/12/11 00:45:04 fang Exp
  */
@@ -429,7 +429,7 @@ public:
 /**
 	Typedef statement.  
  */
-class typedef_alias : public def_body_item, public root_item {
+class typedef_alias : public def_body_item {
 protected:
 	const excl_ptr<const template_formal_decl_list_pair>	temp_spec;
 	const excl_ptr<const generic_keyword_type>		td;

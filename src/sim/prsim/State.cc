@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.17 2006/07/28 03:31:13 fang Exp $
+	$Id: State.cc,v 1.18 2006/07/31 22:22:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -190,10 +190,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 
 	// this may throw an exception!
 	sm.accept(v);
-	// TODO: expression tree minimization pass
-	// during minimization, need to create a map from old
-	// to new indices, and keep track of unused indices
-	// for a mark-sweep-compaction into target State
+	// top-level prs in the module
+	mod.get_footprint().get_prs_footprint().accept(v);
 }	// end State::State(const module&)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

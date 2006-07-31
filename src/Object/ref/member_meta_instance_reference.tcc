@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.14 2006/04/24 00:28:07 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.15 2006/07/31 22:22:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -95,7 +95,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		expr_dump_context::default_value) << endl;
 	STACKTRACE_INDENT_PRINT("c\'s target footprint:" << endl);
 	c.get_target_footprint()->dump_with_collections(cerr, 
-		dump_flags::default_value) << endl;
+		dump_flags::default_value, 
+		expr_dump_context::default_value) << endl;
 #endif
 	// this also include member_meta_instance_references
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
@@ -223,7 +224,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
 	STACKTRACE_INDENT << "&c = " << &c << endl;
 	STACKTRACE_INDENT << "c\'s target footprint:" << endl;
 	c.get_target_footprint()->dump_with_collections(cerr, 
-		dump_flags::default_value) << endl;
+		dump_flags::default_value, 
+		expr_dump_context::default_value) << endl;
 #endif
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));

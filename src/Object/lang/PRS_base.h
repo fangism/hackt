@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_base.h"
 	Structures for production rules.
-	$Id: PRS_base.h,v 1.7 2006/02/04 06:43:17 fang Exp $
+	$Id: PRS_base.h,v 1.8 2006/07/31 22:22:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_BASE_H__
@@ -113,6 +113,9 @@ public:
 
 	void
 	compact_references(void);
+
+	void
+	append_rule(excl_ptr<rule>&);
 
 /**
 	Prototype for unroll visiting.  

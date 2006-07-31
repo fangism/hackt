@@ -1,7 +1,7 @@
 /**
 	\file "AST/definition_item.h"
 	Base set of classes for the HAC parser.  
-	$Id: definition_item.h,v 1.3 2006/07/17 02:53:32 fang Exp $
+	$Id: definition_item.h,v 1.4 2006/07/31 22:22:22 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition_item.h,v 1.7.48.1 2005/12/11 00:45:04 fang Exp
  */
@@ -9,20 +9,18 @@
 #ifndef __HAC_AST_DEFINITION_ITEM_H__
 #define __HAC_AST_DEFINITION_ITEM_H__
 
-#include "AST/common.h"
-#include "AST/node_list.h"
+#include "AST/root.h"
 
 namespace HAC {
 namespace parser {
 //=============================================================================
 /**
 	Abstract base class for items that may be found in a definition body.  
-	All definition body items are root_item.
-	Except language_body...
+	Now, all definition body items are root_item.
  */
-class def_body_item {
+class def_body_item : public root_item {
 public:
-	def_body_item() { }
+	def_body_item() : root_item() { }
 
 virtual	~def_body_item() { }
 

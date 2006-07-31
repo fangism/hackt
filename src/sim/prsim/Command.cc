@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.13 2006/07/18 04:09:14 fang Exp $
+	$Id: Command.cc,v 1.14 2006/07/31 22:22:42 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -23,7 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "sim/prsim/Command.h"
 #include "sim/prsim/State.h"
-#include "sim/prsim/Reference.h"
+#include "parser/instref.h"
 
 #include "common/TODO.h"
 #include "util/qmap.tcc"
@@ -57,6 +57,10 @@ using util::tokenize;
 using util::excl_malloc_ptr;
 using util::strings::string_to_num;
 using util::strings::eat_whitespace;
+using parser::parse_node_to_index;
+using parser::parse_name_to_what;
+using parser::parse_name_to_aliases;
+using parser::parse_name_to_get_subnodes;
 
 //=============================================================================
 // class Command method definitions

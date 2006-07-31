@@ -2,7 +2,7 @@
 	\file "AST/definition.cc"
 	Class method definitions for HAC::parser definition-related classes.
 	Organized for definition-related branches of the parse-tree classes.
-	$Id: definition.cc,v 1.5 2006/07/17 02:53:31 fang Exp $
+	$Id: definition.cc,v 1.6 2006/07/31 22:22:21 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_definition.cc,v 1.29.10.1 2005/12/11 00:45:04 fang Exp
  */
@@ -768,7 +768,7 @@ process_def::check_build(context& c) const {
 typedef_alias::typedef_alias(const template_formal_decl_list_pair* t,
 		const generic_keyword_type* k, const concrete_type_ref* b,
 		const token_identifier* i) :
-		def_body_item(), root_item(), 
+		def_body_item(), 
 		temp_spec(t), td(k), base(b), id(i) {
 	NEVER_NULL(base); NEVER_NULL(id);
 }

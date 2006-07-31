@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.11 2006/07/30 05:49:20 fang Exp $
+	$Id: module.h,v 1.12 2006/07/31 22:22:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -13,12 +13,17 @@
 #include "util/persistent.h"
 #include "Object/def/footprint.h"
 #include "Object/state_manager.h"
+#include "Object/lang/PRS_base.h"
 #include "util/tokenize_fwd.h"
 #include "util/attributes.h"
 #include "util/STL/vector_fwd.h"
 
 namespace HAC {
 class cflat_options;
+
+namespace parser {
+class context;
+}
 
 namespace entity {
 class process_type_reference;
@@ -36,6 +41,7 @@ using util::persistent_object_manager;
 	2) source-order-dependent data
  */
 class module : public persistent, public sequential_scope {
+friend class parser::context;
 	typedef	module				this_type;
 private:
 	/**
@@ -55,6 +61,15 @@ private:
 
 		~top_level_footprint_importer();
 	} __ATTRIBUTE_UNUSED__ ; // end class top_level_footprint_importer
+
+	class namespace_footprint_importer {
+		footprint&			fp;
+	public:
+		explicit
+		namespace_footprint_importer(const module&);
+
+		~namespace_footprint_importer();
+	} __ATTRIBUTE_UNUSED__ ; // end class top_level_footprint_importer
 protected:
 	/**
 		Name of the file.
@@ -67,6 +82,11 @@ protected:
 		for definitions, and nested namespaces.  
 	 */
 	excl_ptr<name_space>			global_namespace;
+
+	/**
+		Top-level production rules.  
+	 */
+	PRS::rule_set				top_prs;
 
 	/**
 		The resulting state of unique instances after unrolling
@@ -114,6 +134,9 @@ public:
 
 	ostream&
 	dump(ostream& o) const;
+
+	ostream&
+	dump_top_level_unrolled_prs(ostream&) const;
 
 	bool
 	is_unrolled(void) const {

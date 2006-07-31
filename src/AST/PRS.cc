@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.16 2006/07/30 05:49:12 fang Exp $
+	$Id: PRS.cc,v 1.17 2006/07/31 22:22:20 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -513,10 +513,6 @@ body::rightmost(void) const {
 /**
 	NOTE: remember to update return type with ROOT_CHECK_PROTO.
 	Currently, exits upon error.  
-	TODO: possibly support top-level PRS.  
-	TODO: check if this body is wrapped inside a loop/conditional scope!
-		If so, then we need to wrap all the contents inside.  
-		Consider doing this in the loop_construct instead.  
  */
 never_ptr<const object>
 body::check_build(context& c) const {
@@ -525,7 +521,7 @@ if (rules) {
 	// check context's current open definition
 	const never_ptr<definition_base> d(c.get_current_open_definition());
 	const never_ptr<process_definition> pd(d.is_a<process_definition>());
-	NEVER_NULL(pd);
+	// if !pd, then prs is in a top-level scope (outside definition)
 	checked_rules_type checked_rules;
 	rules->check_list(checked_rules, &body_item::check_rule, c);
 	const checked_rules_type::const_iterator
@@ -535,11 +531,20 @@ if (rules) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
-		for ( ; i!=e; i++) {
-			excl_ptr<entity::PRS::rule>
-				xfer(i->exclusive_release());
-//			xfer->check();		// paranoia
-			pd->add_production_rule(xfer);
+		if (pd) {
+			for ( ; i!=e; i++) {
+				excl_ptr<entity::PRS::rule>
+					xfer(i->exclusive_release());
+//				xfer->check();		// paranoia
+				pd->add_production_rule(xfer);
+			}
+		} else {
+			for ( ; i!=e; i++) {
+				excl_ptr<entity::PRS::rule>
+					xfer(i->exclusive_release());
+//				xfer->check();		// paranoia
+				c.add_top_level_production_rule(xfer);
+			}
 		}
 	} else {
 		cerr << "ERROR: at least one error in PRS body."

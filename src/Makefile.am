@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.133 2006/07/30 05:49:09 fang Exp $
+#	$Id: Makefile.am,v 1.134 2006/07/31 22:22:20 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -573,6 +573,7 @@ PARSER_H_FILES = \
 	lexer/$(HACKT_LEX_ROOT)-options.h \
 	parser/$(INSTREF_PARSE_ROOT)-real.h \
 	parser/instref-union.h \
+	parser/instref.h \
 	parser/$(INSTREF_PARSE_ROOT).output.h \
 	parser/$(INSTREF_PARSE_ROOT)-options.h \
 	lexer/$(INSTREF_LEX_ROOT)-options.h \
@@ -611,8 +612,7 @@ SIM_CC_FILES = \
 	sim/prsim/ExprAlloc.cc \
 	sim/prsim/Event.cc \
 	sim/prsim/State.cc \
-	sim/prsim/Command.cc \
-	sim/prsim/Reference.cc
+	sim/prsim/Command.cc
 
 SIM_TCC_FILES = \
 	sim/prsim/Event.tcc \
@@ -871,6 +871,7 @@ parser/$(INSTREF_PARSE_ROOT)-real.h: parser/$(INSTREF_PARSE_ROOT).h \
 		parser/instref-prefix.h
 	$(ECHO) "#include \"parser/instref-prefix.h\"" > $@
 	$(ECHO) "#include \"parser/instref-union.h\"" >> $@
+	$(ECHO) "#include \"parser/instref.h\"" >> $@
 	$(CAT) parser/$(INSTREF_PARSE_ROOT).h >> $@
 
 parser/$(TYPE_PARSE_ROOT)-real.h: parser/$(TYPE_PARSE_ROOT).h \

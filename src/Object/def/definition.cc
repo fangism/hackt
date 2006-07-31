@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.25 2006/07/30 05:49:20 fang Exp $
+ 	$Id: definition.cc,v 1.26 2006/07/31 22:22:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2918,6 +2918,7 @@ process_definition::require_signature_match(
  */
 void
 process_definition::add_production_rule(excl_ptr<PRS::rule>& r) {
+#if 0
 	NEVER_NULL(r);
 	r->check();		// paranoia
 	excl_ptr<PRS::rule> cmpl = r->expand_complement();
@@ -2929,6 +2930,9 @@ process_definition::add_production_rule(excl_ptr<PRS::rule>& r) {
 		prs.back() = cmpl;
 		INVARIANT(!cmpl);
 	}
+#else
+	prs.append_rule(r);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3122,6 +3126,7 @@ process_definition::__create_complete_type(
 			// already have error message
 			return good_bool(false);
 		}
+		// f.mark_created();	// ?
 	}
 	return good_bool(true);
 }

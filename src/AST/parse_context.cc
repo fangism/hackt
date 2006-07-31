@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.10 2006/07/26 19:27:35 fang Exp $
+ 	$Id: parse_context.cc,v 1.11 2006/07/31 22:22:24 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -74,6 +74,7 @@ context::context(module& m) :
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
+		top_prs(m.top_prs), 
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		strict_template_mode(true), 
@@ -116,6 +117,7 @@ context::context(const module& m, const bool _pub) :
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
+		top_prs(const_cast<entity::PRS::rule_set&>(m.top_prs)), // :S
 		loop_var_stack(), 
 		global_namespace(m.get_global_namespace()), 
 		strict_template_mode(true), 
@@ -859,6 +861,12 @@ void
 context::commit_definition_arity(void) {
 	INVARIANT(current_prototype);
 	current_prototype->commit_arity();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+context::add_top_level_production_rule(excl_ptr<entity::PRS::rule>& r) {
+	top_prs.append_rule(r);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

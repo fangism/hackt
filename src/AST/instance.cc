@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.13 2006/07/30 05:49:14 fang Exp $
+	$Id: instance.cc,v 1.14 2006/07/31 22:22:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -117,13 +117,15 @@ using entity::pbool_expr;
 //=============================================================================
 // class instance_management method definitions
 
+#if 0
 CONSTRUCTOR_INLINE
-instance_management::instance_management() : def_body_item(), root_item() {
+instance_management::instance_management() : def_body_item() {
 }
 
 DESTRUCTOR_INLINE
 instance_management::~instance_management() {
 }
+#endif
 
 //=============================================================================
 // class alias_list method definitions

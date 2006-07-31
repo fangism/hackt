@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.17 2006/07/17 02:53:37 fang Exp $
+	$Id: PRS.cc,v 1.18 2006/07/31 22:22:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -202,6 +202,26 @@ ostream&
 rule_set::dump(ostream& o, const rule_dump_context& c) const {
 	for_each(begin(), end(), rule::dumper(o, c));
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Appends rule by transfer of ownership, 
+	also auto-expanding complements.  
+ */
+void
+rule_set::append_rule(excl_ptr<rule>& r) {
+	NEVER_NULL(r);
+	r->check();             // paranoia
+	excl_ptr<rule> cmpl = r->expand_complement();
+	push_back(value_type());
+	back() = r;
+	INVARIANT(!r);
+	if (cmpl) {
+		push_back(value_type());
+		back() = cmpl;
+		INVARIANT(!cmpl);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
