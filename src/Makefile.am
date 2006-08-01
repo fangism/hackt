@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.134 2006/07/31 22:22:20 fang Exp $
+#	$Id: Makefile.am,v 1.135 2006/08/01 06:35:46 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -579,6 +579,7 @@ PARSER_H_FILES = \
 	lexer/$(INSTREF_LEX_ROOT)-options.h \
 	parser/$(TYPE_PARSE_ROOT)-real.h \
 	parser/type-union.h \
+	parser/type.h \
 	parser/$(TYPE_PARSE_ROOT).output.h \
 	parser/$(TYPE_PARSE_ROOT)-options.h \
 	lexer/$(TYPE_LEX_ROOT)-options.h \
@@ -594,9 +595,11 @@ PARSER_CC_FILES = \
 	lexer/hackt-lex-real.cc \
 	parser/instref-parse-real.cc \
 	parser/instref-union.cc \
+	parser/instref.cc \
 	lexer/instref-lex-real.cc \
 	parser/type-parse-real.cc \
 	parser/type-union.cc \
+	parser/type.cc \
 	lexer/type-lex-real.cc \
 	lexer/file_manager.cc \
 	lexer/yyin_manager.cc \
@@ -904,6 +907,10 @@ lexer/$(TYPE_LEX_ROOT)-real.cc: lexer/$(TYPE_LEX_ROOT).cc \
 		parser/$(TYPE_PARSE_ROOT)-real.h
 	$(ECHO) "#include \"parser/type-prefix.h\"" > $@
 	$(CAT) lexer/$(TYPE_LEX_ROOT).cc | $(PURIFY_LEXER_PIPE) >> $@
+
+$(srcdir)/lexer/instref.cc: parser/$(INSTREF_PARSE_ROOT)-real.h
+
+$(srcdir)/lexer/type.cc: parser/$(TYPE_PARSE_ROOT)-real.h
 
 # can't depend on the .output alone, not a known dependence with .y[y]
 HACKT_PARSE_OUTPUT = parser/$(HACKT_PARSE_ROOT).output

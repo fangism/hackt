@@ -1,0 +1,14 @@
+// "top-level-03.hac"
+// copy-modifed from "top-level-01.hac"
+// basic test of top-level production rules
+// DEFECT: fails because PRS languages doesn't support qualified identifiers
+// Status: issue suspeneded
+
+namespace foo {
+bool a, b;
+}
+
+prs {
+	foo::a -> foo::b-
+}
+

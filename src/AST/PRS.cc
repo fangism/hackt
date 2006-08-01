@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.17 2006/07/31 22:22:20 fang Exp $
+	$Id: PRS.cc,v 1.18 2006/08/01 06:35:48 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -539,6 +539,13 @@ if (rules) {
 				pd->add_production_rule(xfer);
 			}
 		} else {
+			if (c.get_current_namespace() != c.global_namespace) {
+				cerr << "Error: top-level PRS is only supported "
+					"in the global namespace." << endl;
+				cerr << "\tgot: prs { ... } " << where(*this)
+					<< endl;
+				THROW_EXIT;
+			}
 			for ( ; i!=e; i++) {
 				excl_ptr<entity::PRS::rule>
 					xfer(i->exclusive_release());

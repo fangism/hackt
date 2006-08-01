@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.8 2006/07/17 02:53:29 fang Exp $
+	$Id: CHP.cc,v 1.9 2006/08/01 06:35:47 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -258,8 +258,10 @@ body::check_build(context& c) const {
 			cerr << "Currently only support CHP in "
 				"process definition, bug Fang about it."
 				<< endl;
+			cerr << "\tgot: chp { ... } " << where(*this) << endl;
 			return never_ptr<const object>(NULL);
 		}
+		// also reject if current namespace is not the global one
 		const_checked_iterator loop_iter(checked_stmts.begin());
 		const const_checked_iterator e(checked_stmts.end());
 		while (loop_iter != e) {

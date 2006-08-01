@@ -5,6 +5,22 @@
 
 2006-07-31	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-43:
+	  For now, top-level PRS are only accepted in the global namespace, 
+		not in any other namespaces.  This may cause inconvenience
+		if instances in other namespaces are involved.  
+		Support could be added in future without much difficulty, 
+		but we're punting.  
+	  Moved some parser functions into separate unit to avoid
+		yacc/bison configuration issues (works with yacc again): 
+		parser/type.cc, parser/instref.cc
+	  Defect: prs-literals cannot use qualified identifiers, thus 
+		prevent access to instances in other namespaces.  
+		See test case parser/prs/top-level-03 for reference.  
+
+
+2006-07-31	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-42:
 	  Moved sim/prsim/Reference.{h,cc} to parser/instref.h
 		and parser/instref-parse.yy.in.
