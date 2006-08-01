@@ -1,7 +1,7 @@
 # "inv-16.prsimrc"
 # @haco@ inv.haco-a
 # copy-modified from "inv-14.prsimrc"
-#	$Id: inv-16.prsimrc,v 1.2 2006/07/18 04:09:34 fang Exp $
+#	$Id: inv-16.prsimrc,v 1.3 2006/08/01 18:48:11 fang Exp $
 
 # testing the setf command
 
@@ -19,5 +19,16 @@ cycle
 echo now what?
 echo when does c- get restored, because b is 1?
 echo since most vacuous events are dropped, c may be stuck...
-echo maybe need 'unset' to force a re-evaluation of fanins?
+echo 'unset' to force a re-evaluation of fanins
+
+get b
+get c
+
+unset c
+echo release c by re-evaluation
+queue
+echo end of queue
+cycle
+queue
+echo now empty queue
 

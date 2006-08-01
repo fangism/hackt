@@ -1,0 +1,9 @@
+# "nand-02.prsimrc"
+# copy-modified from "nand-01.prsimrc"
+#	$Id: nand-02.prsimrc,v 1.1 2006/08/01 18:48:11 fang Exp $
+# @haco@ nand.haco-a
+# Testing basic NAND gate, disabling weak interference warnings with mode reset
+
+mode reset
+source nand-01.prsimrc
+

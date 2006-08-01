@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.18 2006/07/31 22:22:46 fang Exp $
+	$Id: State.cc,v 1.19 2006/08/01 18:48:05 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -940,6 +940,16 @@ State::dump_breakpoints(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
+State::dump_mode(ostream& o) const {
+	o << "mode: ";
+	if (flags & FLAG_NO_WEAK_INTERFERENCE)
+		o << "reset (no weak-interference)";
+	else	o << "run (with weak-interference)";
+	return o << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
 State::dump_timing(ostream& o) const {
 	o << "timing: ";
 switch (timing_mode) {
@@ -1100,8 +1110,7 @@ for ( ; i!=e; ++i) {
 			(pull_dn_state == expr_type::PULL_WEAK);
 			// not XOR (^), see pending_weak table in prs.c
 		// issue diagnostic
-		if (!(flags & FLAG_NO_WEAK_INTERFERENCE) ||
-				!pending_weak) {
+		if (!(flags & FLAG_NO_WEAK_INTERFERENCE) || !pending_weak) {
 			cout << "WARNING: ";
 			if (pending_weak)
 				cout << "weak-";

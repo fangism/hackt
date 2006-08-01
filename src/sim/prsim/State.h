@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.11 2006/07/28 03:31:13 fang Exp $
+	$Id: State.h,v 1.12 2006/08/01 18:48:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -174,6 +174,8 @@ private:
 	enum {
 		/**
 			If true, then no weak interference is reported.  
+			no-weak-interference is 'reset' mode;
+			weak-interference is 'run' mode;
 		 */
 		FLAG_NO_WEAK_INTERFERENCE = 0x01,
 		/**
@@ -473,6 +475,15 @@ public:
 
 	void
 	reset_tcounts(void);
+
+	ostream&
+	dump_mode(ostream&) const;
+
+	void
+	set_mode_reset(void) { flags |= FLAG_NO_WEAK_INTERFERENCE; }
+
+	void
+	set_mode_run(void) { flags &= ~FLAG_NO_WEAK_INTERFERENCE; }
 
 	bool
 	pending_events(void) const { return !event_queue.empty(); }

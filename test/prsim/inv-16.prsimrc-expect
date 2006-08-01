@@ -1,0 +1,24 @@
+	0	a : 0
+	10	b : 1	[by a:=0]
+event queue:
+	20	c : 0
+time: 15
+WARNING: pending event for node `c' was overridden.
+set c 1 accepted 
+event queue:
+	15	c : 1
+continuing... 
+	15	c : 1
+now what? 
+when does c- get restored, because b is 1? 
+since most vacuous events are dropped, c may be stuck... 
+'unset' to force a re-evaluation of fanins 
+b : 1	[by a:=0]
+c : 1
+release c by re-evaluation 
+event queue:
+	25	c : 0
+end of queue 
+	25	c : 0
+event queue:
+now empty queue 

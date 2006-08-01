@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.14 2006/07/31 22:22:42 fang Exp $
+	$Id: Command.cc,v 1.15 2006/08/01 18:48:04 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1383,7 +1383,7 @@ UnSet::usage(ostream& o) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnSetAll, "unsetall", simulation,
-	"force re-evaluation of all nodes\' input state, cancelling setf")
+	"force re-evaluation of all nodes\' inputs, cancelling setf")
 
 int
 UnSetAll::main(State& s, const string_list& a) {
@@ -2518,9 +2518,43 @@ UnstableDequeue::usage(ostream& o) {
 	o << name << endl;
 	o << "Unstable events are dequeued during run-time." << endl;
 }
+#endif	// PRSIM_ALLOW_UNSTABLE_DEQUEUE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#endif	// PRSIM_ALLOW_UNSTABLE_DEQUEUE
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 
+	modes, "enable/disable weak-interference warnings")
+
+int
+SetMode::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	s.dump_mode(cout);
+} else if (a.size() == 2) {
+	static const string reset("reset");
+	static const string run("run");
+	const string& m(a.back());
+	if (m == reset) {
+		s.set_mode_reset();
+	} else if (m == run) {
+		s.set_mode_run();
+	} else {
+		usage(cerr << "usage: ");
+		return Command::BADARG;
+	}
+} else {
+	usage(cerr << "usage: ");
+	return Command::BADARG;
+}
+	return Command::NORMAL;
+}
+
+void
+SetMode::usage(ostream& o) {
+	o << "mode [reset|run]\n"
+"\t\'reset\' disables weak-interference warnings, useful during initialization\n"
+"\t\'run\' (default) enables weak-interference warnings" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 //=============================================================================
 #undef	DECLARE_AND_INITIALIZE_COMMAND_CLASS
