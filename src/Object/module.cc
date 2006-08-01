@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.21 2006/07/31 22:22:26 fang Exp $
+ 	$Id: module.cc,v 1.22 2006/08/01 18:18:21 filipp Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -225,6 +225,7 @@ module::dump_top_level_unrolled_prs(ostream& o) const {
 	// footprint::dump doesn't contain unrolled prs
 	const PRS::footprint& Pfp(_footprint.get_prs_footprint());
 	Pfp.dump(o, _footprint);
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
