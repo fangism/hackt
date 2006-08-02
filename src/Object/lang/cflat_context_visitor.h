@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/cflat_context_visitor.h"
-	$Id: cflat_context_visitor.h,v 1.2 2006/04/23 07:37:23 fang Exp $
+	$Id: cflat_context_visitor.h,v 1.3 2006/08/02 21:10:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_CONTEXT_VISITOR_H__
@@ -41,18 +41,6 @@ public:
 
 	ostream&
 	__dump_resolved_canonical_literal(ostream&, const size_t) const;
-
-#if 0
-	// from "Object/lang/cflat_printer.h"
-	ostream&
-	__dump_canonical_literal_group(ostream&,
-		const directive_node_group_type&) const ;
-
-	ostream&
-	__dump_canonical_literal_group(ostream&,
-		const directive_node_group_type&, 
-		const char* l, const char* d, const char* r) const;
-#endif
 
 };	// end class cflat_context_visitor
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_printer.cc,v 1.11 2006/07/30 05:49:26 fang Exp $
+	$Id: cflat_printer.cc,v 1.12 2006/08/02 21:10:38 fang Exp $
  */
 
 #include <iostream>
@@ -106,11 +106,15 @@ cflat_prs_printer::__dump_canonical_literal_group(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+cflat_prs_printer::__dump_resolved_literal_group(
+		const directive_node_group_type& g) const {
+	__dump_resolved_literal_group(g, "{", ",", "}");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Prints a group of nodes.  
-	By default, single nodes are not wrapped in braces, 
-	and commas are used as delimiters.  
-	Duplicate nodes are also eliminated.  
+	The node list argument contains already unresolved local IDs.  
 	\param g group argument
 	\param l left wrapper, optional
 	\param r right group wrapper, optional
@@ -120,12 +124,30 @@ void
 cflat_prs_printer::__dump_canonical_literal_group(
 		const directive_node_group_type& g, 
 		const char* l, const char* d, const char* r) const {
-	typedef	directive_node_group_type::const_iterator
-					const_iterator;
 	NEVER_NULL(d);
 	// collect resolved (unique) node IDs here:
 	directive_node_group_type s;
 	__resolve_unique_literal_group(g, s);
+	__dump_resolved_literal_group(s, l, d, r);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Prints a group of nodes.  
+	Nodes in argument list are already resolved to global IDs.  
+	By default, single nodes are not wrapped in braces, 
+	and commas are used as delimiters.  
+	Duplicate nodes are also eliminated.  
+	\param g group argument
+	\param l left wrapper, optional
+	\param r right group wrapper, optional
+	\param d group element delimiter
+ */
+void
+cflat_prs_printer::__dump_resolved_literal_group(
+		const directive_node_group_type& s, 
+		const char* l, const char* d, const char* r) const {
+	typedef	directive_node_group_type::const_iterator	const_iterator;
 	if (s.size() > 1) {
 		const_iterator i(s.begin()), e(s.end());
 		if (l)	os << l;

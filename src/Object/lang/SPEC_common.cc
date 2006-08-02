@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.3 2006/05/28 19:27:07 fang Exp $
+	$Id: SPEC_common.cc,v 1.4 2006/08/02 21:10:34 fang Exp $
  */
 
 #include <iostream>
@@ -242,9 +242,12 @@ LVS_exclhi::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
 }
 
+/**
+	Accept one argument (may be group or aggregate).  
+ */
 good_bool
 LVS_exclhi::__check_num_nodes(const char* name, const size_t s) {
-	return min_num_nodes(name, 2, s);
+	return min_num_nodes(name, 1, s);
 }
 
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_exclhi)
@@ -269,9 +272,12 @@ LVS_excllo::__check_num_params(const char* name, const size_t s) {
 	return __takes_no_params(name, s);
 }
 
+/**
+	Accept one argument (may be group or aggregate).  
+ */
 good_bool
 LVS_excllo::__check_num_nodes(const char* name, const size_t s) {
-	return min_num_nodes(name, 2, s);
+	return min_num_nodes(name, 1, s);
 }
 
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_excllo)

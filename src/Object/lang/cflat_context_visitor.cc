@@ -1,8 +1,10 @@
 /**
 	\file "Object/lang/cflat_context_visitor.cc"
 	Implementation of cflattening visitor.
-	$Id: cflat_context_visitor.cc,v 1.3 2006/07/30 05:49:23 fang Exp $
+	$Id: cflat_context_visitor.cc,v 1.4 2006/08/02 21:10:35 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include <iostream>
 #include <set>
@@ -11,6 +13,7 @@
 #include "Object/global_entry.h"
 #include "Object/state_manager.h"
 #include "Object/traits/bool_traits.h"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
@@ -31,6 +34,7 @@ namespace entity {
  */
 size_t
 cflat_context_visitor::__lookup_global_bool_id(const size_t lni) const {
+	STACKTRACE_INDENT_PRINT("lookup_global_bool_id: lni = " << lni << endl);
 	INVARIANT(lni);
 	// cerr << "lni = " << lni << endl;
 	if (fpf) {
@@ -73,11 +77,14 @@ void
 cflat_context_visitor::__resolve_unique_literal_group(
 		const directive_node_group_type& s,
 		directive_node_group_type& d) const {
-	typedef	directive_node_group_type::const_iterator
-					const_iterator;
+	typedef	directive_node_group_type::const_iterator	const_iterator;
+	STACKTRACE_BRIEF;
 	const_iterator i(s.begin()), e(s.end());
 	for ( ; i!=e; ++i) {
-		d.insert(__lookup_global_bool_id(*i));
+		const size_t j = __lookup_global_bool_id(*i);
+		STACKTRACE_INDENT_PRINT("j = " << j << endl);
+		INVARIANT(j);
+		d.insert(j);
 	}
 }
 

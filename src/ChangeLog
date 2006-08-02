@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-45:
+	  spec exclhi/lo directives now allow one argument.
+		lib: fixed the channel excl directives accordingly
+	  LVS_exclhi/lo directives now cflat output a flattened list
+		of nodes (without grouping), and filters out singletons.  
+	  Added some debugging handles to SPEC directive code.  
+
+
 2006-08-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-44:

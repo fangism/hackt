@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/cflat_printer.h"
 	Cflat printer functor.  
-	$Id: cflat_printer.h,v 1.8 2006/04/23 07:37:23 fang Exp $
+	$Id: cflat_printer.h,v 1.9 2006/08/02 21:10:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CFLAT_PRINTER_H__
@@ -53,6 +53,13 @@ public:
 
 	void
 	__dump_canonical_literal_group(const directive_node_group_type&, 
+		const char* l, const char* d, const char* r) const;
+
+	void
+	__dump_resolved_literal_group(const directive_node_group_type&) const;
+
+	void
+	__dump_resolved_literal_group(const directive_node_group_type&, 
 		const char* l, const char* d, const char* r) const;
 
 protected:

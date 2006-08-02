@@ -1,8 +1,10 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.12 2006/06/02 04:35:16 fang Exp $
+	$Id: SPEC_registry.cc,v 1.13 2006/08/02 21:10:35 fang Exp $
  */
+
+#define	ENABLE_STACKTRACE			0
 
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
@@ -19,6 +21,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "main/cflat_options.h"
 #include "common/TODO.h"
 #include "util/qmap.tcc"
+#include "util/stacktrace.h"
 
 namespace HAC {
 namespace entity {
@@ -122,6 +125,10 @@ print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes,
 	return o;
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapper using default output formatting.  
+ */
 static
 ostream&
 print_node_args_list(cflat_prs_printer& p, const node_args_type& nodes, 
@@ -144,6 +151,75 @@ default_spec_output(cflat_prs_printer& p, const param_args_type& params,
 	o << '(';
 	print_node_args_list(p, a, ", ");
 	return o << ')';
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Flattens grouped node arguments into a single flat set.  
+ */
+static
+void
+flatten_canonicalized_node_set(cflat_context_visitor& p,
+		const node_args_type& nodes, directive_node_group_type& o) {
+	typedef	node_args_type::const_iterator		const_iterator;
+	STACKTRACE_VERBOSE;
+	const_iterator i(nodes.begin());
+	const const_iterator e(nodes.end());
+	for ( ; i!=e; ++i) {
+		p.__resolve_unique_literal_group(*i, o);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// enable this when it is actually used
+/**
+	Flattens arguments into single set, eliminating duplicates.  
+	This variation prints the directive irrespective of the
+	size of the node set.  
+ */
+template <class T>
+static
+ostream&
+flatten_canonicalized_spec_output(cflat_prs_printer& p,
+		const param_args_type& params, 
+		const node_args_type& nodes) {
+	directive_node_group_type node_set;
+	flatten_canonicalized_node_set(p, nodes, node_set);
+	{
+		ostream& o(p.os);
+		o << T::name;
+		directive_base::dump_params(params, o);
+		o << '(';
+		p.__dump_resolved_literal_group(node_set, "", ",", "");
+		o << ')';
+	}
+	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This variation prints the arguments if the canonical set
+	has size greater than one.  
+ */
+template <class T>
+static
+ostream&
+flatten_canonicalized_spec_output_if_more_than_one(cflat_prs_printer& p,
+		const param_args_type& params, 
+		const node_args_type& nodes) {
+	ostream& o(p.os);
+	directive_node_group_type node_set;
+	flatten_canonicalized_node_set(p, nodes, node_set);
+	if (node_set.size() > 1) {
+		o << T::name;
+		directive_base::dump_params(params, o);
+		o << '(';
+		p.__dump_resolved_literal_group(node_set, "", ",", "");
+		o << ')';
+	}
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,6 +266,7 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(UnAliased, "unaliased")
 void
 UnAliased::main(cflat_prs_printer& p, const param_args_type&,
 		const node_args_type& n) {
+	STACKTRACE_VERBOSE;
 	if (!__main(p, n).good) {
 		cerr << "Error: detected aliased nodes during "
 			"processing of \'unaliased\' directive."
@@ -220,10 +297,15 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_excllo, "excllo")
 void
 LVS_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
 		// or other tools
+#if 0
 		default_spec_output<this_type>(p, v, a) << endl;
+#else
+		flatten_canonicalized_spec_output_if_more_than_one<this_type>(p, v, a) << endl;
+#endif
 		break;
 	default:
 		break;
@@ -238,10 +320,15 @@ LVS_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 void
 LVS_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
 		// or other tools
+#if 0
 		default_spec_output<this_type>(p, v, a) << endl;
+#else
+		flatten_canonicalized_spec_output_if_more_than_one<this_type>(p, v, a) << endl;
+#endif
 		break;
 	default:
 		break;
@@ -258,6 +345,7 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_BDD_order, "order")
 void
 LVS_BDD_order::main(cflat_prs_printer& p, const param_args_type& v, 
 		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
 		// or other tools
@@ -281,6 +369,7 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_unstaticized, "unstaticized")
 void
 LVS_unstaticized::main(cflat_prs_printer& p, const param_args_type& v,
 		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LVS:
 		// or other tools
@@ -302,6 +391,7 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(SIM_force_excllo, "mk_excllo")
 void
 SIM_force_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		// or other simulator tool
@@ -320,6 +410,7 @@ SIM_force_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 void
 SIM_force_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		// or other simulator tool
@@ -363,6 +454,7 @@ DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(layout_min_sep, "min_sep")
 void
 layout_min_sep::main(cflat_prs_printer& p, const param_args_type& v, 
 		const node_args_type& a) {
+	STACKTRACE_VERBOSE;
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_LAYOUT:
 		default_layout_spec_output<this_type>(p, v, a) << endl;
