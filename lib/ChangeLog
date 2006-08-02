@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-08-02	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-79-45:
+	  Fixed/simplified the exclhi/lo directives in "channel.hac".
+
+
 2006-07-28	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-79-40:
