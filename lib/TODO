@@ -1,5 +1,25 @@
 "TODO"
+	$Id: TODO,v 1.2 2006/08/03 01:25:54 fang Exp $
 
 Use configure to generate Makefiles suitable for installations of hackt.  
 Distinguish between build Makefiles and install Makefiles.  
+
+library catalog (documentation):
+	Use doxygen to generate standard library documentation
+	from the comments in the .hac sources.  Will probably have to
+	emit 'fake' C/C++ sources for the sake of feeding doxygen 
+	with a familiar input language.  This could be accomplished
+	by the AST front-end as a translator.  
+	(distribute the docs, auto-generation should be optional, 
+		to eliminate user-dependency on doxygen, 
+		may complicate distcheck a little.)
+
+library additions:
+	buffered logic family
+		boolean logic
+		arithmetic
+		splits
+		merges
+	memory cells
+	precharge skeletons
 

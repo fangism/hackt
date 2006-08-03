@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.31 2006/07/17 02:53:28 fang Exp $
+#	$Id: TODO,v 1.32 2006/08/03 01:25:56 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -216,6 +216,11 @@ Interactive shell:
 ===============================================================================
 compile (module):
 	-fdump-* flags
+
+===============================================================================
+translators:
+	compile source to AST and produce sources in other languages
+		such as CAST, C++ (for doxygenation) (VHDL?)
 
 ===============================================================================
 HACKT template stuff:

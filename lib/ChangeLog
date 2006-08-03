@@ -2,6 +2,14 @@
 
 2006-08-02	David Fang	<fangism@users.sourceforce.net>
 
+	* HACKT-00-01-04-main-00-79-46:
+	  Ton of comments and comment-placeholders (TODO markers).  
+	  Buffers' prs adjusted to use _c1ofN for exclusive-low-ness.
+	  Added some buffers for other used protocols and channel types.  
+
+
+2006-08-02	David Fang	<fangism@users.sourceforce.net>
+
 	* HACKT-00-01-04-main-00-79-45:
 	  Fixed/simplified the exclhi/lo directives in "channel.hac".
 

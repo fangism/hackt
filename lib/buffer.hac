@@ -1,8 +1,58 @@
+/**
+	\file "buffer.hac"
+	This file contains common definitions of QDI buffers.  
+
+	Naming coventions:
+	Protocol templates:
+		WCHB = weak-condition half-buffer
+		PCHB = precharge half-buffer
+		PCFB = precharge full-buffer
+		PCEVHB = precharge enable-valid half-buffer (+request line)
+		PCEVFB = precharge enable-valid full-buffer (+request line)
+		Variations:
+			PCEHB = precharge half-buffer, reduced stack
+			PCEFB = precharge half-buffer, reduced stack
+	Channels:
+		Channel names follow the conventions in "channel.hac".
+		'l' is always the name of the input channel
+		'r' is always the name of the output channel
+	Reset:
+		(default: reset-less)
+		rh = ?
+		rl = ?
+	Initialization: (starting with token value)
+		?
+	Namespace:
+		shall we put these in some namespace, e.g. qdi::buffers?
+
+	Q: Should we define some internal prs using std::logic?
+
+	Each definition MUST have comments summarizing usage!
+		Reset: what does it expect? what does it drive? if applicable
+	Good to know (optional): 
+		back-to-back handshake cycle time, from prsim with
+			uniform timing.  
+
+	TODO: ton of repetitive constructs in all these buffers, 
+		might be nice to factor some out into skeletons.  
+		Also would be nice to use some flattening hint/attribute
+		for these cases.  
+	$Id: buffer.hac,v 1.3 2006/08/03 01:25:54 fang Exp $
+ */
+
 import "channel.hac";
 
-// WCHB no Reset
-defproc wchb_buf(e1of2 r, l){
-e1of2 _r,_l;
+//-----------------------------------------------------------------------------
+/**
+	WCHB, reset-less.
+	Suggest name: wchb_e1ofN (upon templating)
+	TODO: template me, test me
+	\param l the input channel.
+	\param r the output channel.
+ */
+defproc wchb_buf(e1of2 l, r){
+_c1of2 _r,_l;
+bool rv;
 prs {
   r.e & l.d[0] -> _r.d[0]-
   ~r.e & ~l.d[0] -> _r.d[0]+
@@ -12,16 +62,21 @@ prs {
   ~_r.d[0] -> r.d[0]+
   _r.d[1] -> r.d[1]-
   ~_r.d[1] -> r.d[1]+
-  _r.d[0] & _r.d[1] -> _l.e-
-  ~_r.d[0] | ~_r.d[1] -> _l.e+
-  _l.e -> l.e-
-  ~_l.e -> l.e+
+  _r.d[0] & _r.d[1] -> rv-
+  ~_r.d[0] | ~_r.d[1] -> rv+
+  rv -> l.e-
+  ~rv -> l.e+
 }
 }
 
-// WCHB with Reset high
-defproc wchb_buf_rh(e1of2 r, l; bool _Reset){
-e1of2 _r,_l;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	WCHB with Reset high
+	TODO: template me, test me
+ */
+defproc wchb_buf_rh(e1of2 l, r; bool _Reset){
+_c1of2 _r,_l;
+bool rv;
 prs {
   _Reset & r.e & l.d[0] -> _r.d[0]-
   ~_Reset | (~r.e & ~l.d[0]) -> _r.d[0]+
@@ -31,16 +86,20 @@ prs {
   ~_r.d[0] -> r.d[0]+
   _r.d[1] -> r.d[1]-
   ~_r.d[1] -> r.d[1]+
-  _r.d[0] & _r.d[1] -> _l.e-
-  ~_r.d[0] | ~_r.d[1] -> _l.e+
-  _l.e -> l.e-
-  ~_l.e -> l.e+
+  _r.d[0] & _r.d[1] -> rv-
+  ~_r.d[0] | ~_r.d[1] -> rv+
+  rv -> l.e-
+  ~rv -> l.e+
 }
 }
 
-// PCHB no reset
-defproc pchb_buf(a1of2 r, l){
-a1of2 _r, _l;
+//-----------------------------------------------------------------------------
+/**
+	PCHB no reset
+	TODO: template me, test me
+ */
+defproc pchb_buf(a1of2 l, r){
+_c1of2 _r, _l;
 prs {
   r.d[0] -> _r.d[0]-
   ~r.d[0] -> _r.d[0]+
@@ -59,9 +118,13 @@ prs {
 }
 }
 
-// PCHB with Reset high
-defproc pchb_buf_rh(a1of2 r, l; bool Reset){
-a1of2 _r, _l;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	PCHB with Reset high
+	TODO: template me, test me
+ */
+defproc pchb_buf_rh(a1of2 l, r; bool Reset){
+_c1of2 _r, _l;
 prs {
   r.d[0] -> _r.d[0]-
   ~r.d[0] -> _r.d[0]+
@@ -80,10 +143,14 @@ prs {
 }
 }
 
-// PCFB no Reset
-defproc pcfb_buf(e1of2 r, l){
-e1of2 _r, _l;
-bool en;
+//-----------------------------------------------------------------------------
+/**
+	PCFB no Reset
+	TODO: template me, test me
+ */
+defproc pcfb_buf(e1of2 l, r){
+_c1of2 _r, _l;
+bool le_, en;
 prs {
   l.d[0] & r.e -> _r.d[0]-
   ~en & ~r.e -> _r.d[0]+
@@ -94,18 +161,22 @@ prs {
   _r.d[1] -> r.d[1]-
   ~_r.d[1] -> r.d[1]+
   r.d[0] | r.d[1] -> l.e-
-  ~en & ~l.d[0] & ~l.d[1] -> l.e+
-  l.e -> _l.e-
-  ~l.e -> _l.e+
-  _l.e -> en-
-  ~r.d[0] & ~ r.d[1] & ~_l.e -> en+
+  ~en & ~l.d[0] & ~l.d[1] -> l.e+		// 3P?
+  l.e -> le_-
+  ~l.e -> le_+
+  le_ -> en-
+  ~r.d[0] & ~ r.d[1] & ~le_ -> en+		// 3P?
 }
 }
 
-// PCFB with Reset high
-defproc pcfb_buf_rh(e1of2 r, l; bool _Reset){
-e1of2 _r, _l;
-bool en;
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	PCFB with Reset high
+	TODO: template me, test me
+ */
+defproc pcfb_buf_rh(e1of2 l, r; bool _Reset){
+_c1of2 _r, _l;
+bool le_, en;
 prs {
   _Reset & l.d[0] & r.e -> _r.d[0]-
   ~_Reset | (~en & ~r.e) -> _r.d[0]+
@@ -117,9 +188,111 @@ prs {
   ~_r.d[1] -> r.d[1]+
   _Reset & r.d[0] | r.d[1] -> l.e-
   ~_Reset | (~en & ~l.d[0] & ~l.d[1]) -> l.e+
-  l.e -> _l.e-
-  ~l.e -> _l.e+
-  _l.e -> en-
-  ~r.d[0] & ~ r.d[1] & ~_l.e -> en+
+  l.e -> le_-
+  ~l.e -> le_+
+  le_ -> en-
+  ~r.d[0] & ~ r.d[1] & ~le_ -> en+
 }
 }
+
+//-----------------------------------------------------------------------------
+/**
+	Reduced-stack implementation of precharge full-buffer, 
+	with enable-neutral request line.  
+	This is the reset-free template, thus requiring the environment
+	to assert the input data-rails low, and output enable low on reset.  
+	cycle time: 16T
+	Usage notes: the fanin of l.e is dynamic logic and may be
+		weak, consider driving with inverter.  
+	TODO: test me
+ */
+template <pint N>
+defproc pcefb_en1ofN(en1of<N> l, r) {
+_c1of<N> _r;
+bool _en, en;			// internal state enables
+bool lv, rv;			// validity
+
+prs {
+(:i:N:	en & l.d[i]			-> _r.d[i]-	)
+(:i:N:	~_r.d[i]			-> r.d[i]+	)
+	(|:i:N:	r.d[i]	)		-> r.n-
+	~l.n				-> lv+
+	~r.n				-> rv+
+	en & lv & rv			-> l.e-
+	~r.e & ~l.e			-> _en+
+	_en				-> en-
+
+(:i:N:	~en				-> _r.d[i]+	)
+(:i:N:	_r.d[i]				-> r.d[i]-	)
+	(&:i:N:	~r.d[i]	)		-> r.n+
+	l.n				-> lv-
+	r.n				-> rv-
+	~en & ~lv			-> l.e+
+	r.e & l.e			-> _en-
+	~_en & ~rv			-> en+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as above, but with data-rails reset low by this buffer, 
+	and input enable driven high upon reset.  
+	Also try resetting en-.
+	TODO: test me
+ */
+template <pint N>
+defproc pcefb_en1ofN_reh(en1of<N> l, r; bool _Reset) {
+_c1of<N> _r;
+bool _en, en;			// internal state enables
+bool lv, rv;			// validity
+
+prs {
+(:i:N:	~_Reset				-> _r.d[i]+	)
+	~_Reset				-> l.e+
+	~_Reset				-> en+
+
+(:i:N:	en & l.d[i]			-> _r.d[i]-	)
+(:i:N:	~_r.d[i]			-> r.d[i]+	)
+	(|:i:N:	r.d[i]	)		-> r.n-
+	~l.n				-> lv+
+	~r.n				-> rv+
+	en & lv & rv			-> l.e-
+	~r.e & ~l.e			-> _en+
+	_en & _Reset			-> en-
+
+(:i:N:	~en				-> _r.d[i]+	)
+(:i:N:	_r.d[i]				-> r.d[i]-	)
+	(&:i:N:	~r.d[i]	)		-> r.n+
+	l.n				-> lv-
+	r.n				-> rv-
+	~en & ~lv			-> l.e+
+	r.e & l.e			-> _en-
+	~_en & ~rv			-> en+
+}
+}
+
+//-----------------------------------------------------------------------------
+
+//=============================================================================
+// Far future TODO:
+
+/***
+// linear fifo compositor
+// requires nested types and typedefs, and type parameters in templates.  
+template <proc T; pint N>
+defproc fifo_linear(typename T::channel_type l, r) {
+	typedef	T				buffer_type;
+	typedef	typename T::channel_type	channel_type;
+	channel_type c[N+1];
+	c[0] = l;
+	c[N] = r;
+	T b[N];
+	(;i:N:
+		b[i](c[i], c[i+1]);
+	)
+}
+
+***/
+
+//=============================================================================
+

@@ -1,8 +1,8 @@
 /**
 	"channel.hac"
 	Standard channel definitions in HAC.  
-	Q: place thes in some namespace?
-	$Id: channel.hac,v 1.7 2006/08/02 21:10:33 fang Exp $
+	Q: place these in some namespace?  std::channel?
+	$Id: channel.hac,v 1.8 2006/08/03 01:25:54 fang Exp $
  */
 
 /*** e1of<N> definitions ********************************/

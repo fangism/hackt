@@ -5,6 +5,10 @@
 
 2006-08-02	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-46:
+	  No source revision, just library additions.  See lib/ChangeLog.
+
+
 	* HACKT-00-01-04-main-00-79-45:
 	  spec exclhi/lo directives now allow one argument.
 		lib: fixed the channel excl directives accordingly
