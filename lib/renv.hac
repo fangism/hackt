@@ -1,0 +1,59 @@
+import "channel.hac";
+
+/*------------------------------------------------------------------------
+ *
+ * 
+ *
+ *
+ *------------------------------------------------------------------------
+ */  
+
+/* The following definitions used to include the directive unstab however
+   it apparently produced no difference in behavior in cast prsim and 
+   has not been implemented in the new hackt prsim.  It has therefore 
+   been removed from the definitions.  
+   Tests in cast and hackt produced no differences.
+*/
+
+template <pint N>
+defproc rsource_e1of(e1of<N> l; bool Reset)
+  {
+    prs {
+      (:i:N: ~Reset&l.e -> l.d[i]+
+           Reset|~l.e -> l.d[i]-
+      )
+    }
+    spec {
+      mk_exclhi(l.d[0],l.d[0..N-1])
+    }
+  }
+
+typedef rsource_e1of<2> rsource_e1of2;
+typedef rsource_e1of<3> rsource_e1of3;
+typedef rsource_e1of<4> rsource_e1of4;
+typedef rsource_e1of<5> rsource_e1of5;
+typedef rsource_e1of<6> rsource_e1of6;
+typedef rsource_e1of<7> rsource_e1of7;
+typedef rsource_e1of<8> rsource_e1of8;
+
+
+template <pint N>
+defproc rsource_a1of(a1of<N> l; bool Reset)
+  {
+    prs {
+      (:i:N: ~Reset&~l.a -> l.d[i]+
+           Reset | l.a -> l.d[i]-
+      )
+    }
+    spec {
+      mk_exclhi(l.d[0],l.d[0..N-1])
+    }
+  }
+
+typedef rsource_a1of<2> rsource_a1of2;
+typedef rsource_a1of<3> rsource_a1of3;
+typedef rsource_a1of<4> rsource_a1of4;
+typedef rsource_a1of<5> rsource_a1of5;
+typedef rsource_a1of<6> rsource_a1of6;
+typedef rsource_a1of<7> rsource_a1of7;
+typedef rsource_a1of<8> rsource_a1of8;
