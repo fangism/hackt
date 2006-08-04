@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.2 2006/08/03 01:25:54 fang Exp $
+	$Id: TODO,v 1.3 2006/08/04 20:20:04 fang Exp $
 
 Use configure to generate Makefiles suitable for installations of hackt.  
 Distinguish between build Makefiles and install Makefiles.  
@@ -13,6 +13,11 @@ library catalog (documentation):
 	(distribute the docs, auto-generation should be optional, 
 		to eliminate user-dependency on doxygen, 
 		may complicate distcheck a little.)
+
+inline documentation:
+	Ideally every comment preceding a definition should confirm
+	that it is working by pointing to the relevant test cases
+	in test/lib that demonstrate it (prsim with random timing for QDI).  
 
 library additions:
 	buffered logic family
