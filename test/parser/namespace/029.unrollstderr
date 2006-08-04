@@ -1,0 +1,47 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	68
+	6	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  0 instantiation-collections
+  1 sub-namespaces
+  1 definitions
+  0 typedefs
+  Namespaces:
+    std =     In namespace "std", we have: {
+      0 parameter-collections
+      0 instantiation-collections
+      0 sub-namespaces
+      1 definitions
+      0 typedefs
+      Definitions:
+        bar = process-definition (defined) bar(
+          )
+          In definition "bar", we have: {
+          unroll sequence: 
+          }
+
+    }
+  Definitions:
+    foo = process-definition (defined) foo(
+      )
+      In definition "foo", we have: {
+      Instances:
+        x = bar<> x
+      unroll sequence: 
+        bar<> x
+      }
+
+}
+

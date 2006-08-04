@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-47:
+	  Minor bug fix: removed assertion about unique insertion
+		of using/open namespace directive, 
+		allowing redundant directives.  
+		test case: parser/namespace/029.hac
+	  scopespace::namespace_list upgraded to unique_list
+
+
 2006-08-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-46:

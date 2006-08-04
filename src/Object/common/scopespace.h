@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.12 2006/04/28 03:20:12 fang Exp $
+	$Id: scopespace.h,v 1.13 2006/08/04 02:15:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -17,6 +17,7 @@
 #include "util/STL/map_fwd.h"
 #include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
+#include "util/unique_list.h"
 
 //=============================================================================
 namespace HAC {
@@ -50,6 +51,7 @@ using util::memory::some_ptr;
 using util::memory::excl_ptr;
 using util::good_bool;
 using util::bad_bool;
+using util::unique_list;
 
 //=============================================================================
 /**
@@ -78,8 +80,9 @@ protected:	// typedefs -- keep these here for re-use
 		whole list will always be searched, if it is searched at all.  
 		These pointers are read-only, and thus not
 		owned by this namespace.  
+		20060803 - upgraded to unique_list to guarantee uniqueness.
 	 */
-	typedef list<never_ptr<const name_space> >	namespace_list;
+	typedef unique_list<never_ptr<const name_space> >	namespace_list;
 
 	/**
 		This set contains the list of identifiers for this namespace

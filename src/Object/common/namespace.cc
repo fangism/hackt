@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.19 2006/07/26 19:27:37 fang Exp $
+ 	$Id: namespace.cc,v 1.20 2006/08/04 02:15:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -1028,9 +1028,8 @@ name_space::pair_dump(ostream& o) const {
  */
 never_ptr<name_space>
 name_space::add_open_namespace(const string& n) {
-#if 0
-	cerr << "In name_space::add_open_namespace(\"" << n << "\"): " << endl;
-#endif
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("opening: " << n << endl);
 	never_ptr<name_space> ret;
 	const never_ptr<const object> probe(__lookup_member(n));
 	if (probe) {
@@ -1083,6 +1082,7 @@ name_space::add_open_namespace(const string& n) {
  */
 never_ptr<name_space>
 name_space::add_namespace(excl_ptr<name_space>& new_ns) {
+	STACKTRACE_VERBOSE;
 	const never_ptr<name_space> ret(new_ns);
 	NEVER_NULL(ret);
 	INVARIANT(new_ns.owned());
@@ -1108,6 +1108,7 @@ name_space::add_namespace(excl_ptr<name_space>& new_ns) {
  */
 never_ptr<const name_space>
 name_space::leave_namespace(void) {
+	STACKTRACE_VERBOSE;
 #if 0
 	cerr << "Beginning of name_space::leave_namespace(): " << endl;
 	dump(cerr) << endl;
@@ -1144,7 +1145,6 @@ name_space::add_using_directive(const qualified_id& n) {
 	typedef	never_ptr<const name_space>	return_type;
 	STACKTRACE_VERBOSE;
 	return_type ret;
-	namespace_list::const_iterator i;
 	namespace_list candidates;		// empty list
 
 #if 0
@@ -1155,7 +1155,7 @@ name_space::add_using_directive(const qualified_id& n) {
 	// remember: the qualified_id is a suffix to be appended onto root
 	// find it/them, record to list
 	query_import_namespace_match(candidates, n);
-	i = candidates.begin();
+	namespace_list::const_iterator i(candidates.begin());
 
 	switch (candidates.size()) {
 	// if list's size > 1, ambiguity
@@ -1434,10 +1434,8 @@ name_space::query_subnamespace_match(const qualified_id_slice& id) const {
 void
 name_space::query_import_namespace_match(
 		namespace_list& m, const qualified_id& id) const {
-#if 0
-	cerr << endl << "query_import_namespace_match: " << id 
-		<< " in " << get_qualified_name();
-#endif
+	STACKTRACE_VERBOSE;
+	STACKTRACE_INDENT_PRINT("inside " << get_qualified_name() << endl);
 	{
 		const never_ptr<const name_space>
 			ret(query_subnamespace_match(id));
@@ -1473,8 +1471,8 @@ name_space::query_import_namespace_match(
 	Currently not used.  
  */
 void
-name_space::
-find_namespace_ending_with(namespace_list& m, const qualified_id& id) const {
+name_space::find_namespace_ending_with(
+		namespace_list& m, const qualified_id& id) const {
 	// should we return first match, or all matches?
 	//	for now: first match
 	//	later, we'll complain about ambiguities that need resolving
@@ -1606,13 +1604,16 @@ name_space::lookup_member(const string& id) const {
 	for ( ;i!=e; ++i) {
 		const return_type a((*i)->__lookup_member(id));
 		if (a) {
-			const bool b = candidates.insert(a).second;
+			const bool b __ATTRIBUTE_UNUSED__ =
+				candidates.insert(a).second;
 #if ENABLE_STACKTRACE
 			STACKTRACE_INDENT_PRINT("a = " << &*a << endl);
 			a->dump(cerr) << endl;
 			STACKTRACE_INDENT_PRINT("found match " << candidates.size() << endl);
 #endif
-			INVARIANT(b);
+			// INVARIANT(b);
+			// not true, can be found through different
+			// namespace paths
 		}
 		// else skip
 	}
