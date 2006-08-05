@@ -3,10 +3,12 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.80 2006/08/04 20:20:02 fang Exp $
+#	$Id: configure.ac,v 1.81 2006/08/05 06:44:07 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
+
+# TODO: support autoconf-2.60
 
 AC_PREREQ(2.59)
 AC_INIT(hackt, 0.1.4-devel-20060804, fangism@users.sourceforge.net)

@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.10 2006/07/04 20:51:56 fang Exp $
+	$Id: README,v 1.11 2006/08/05 06:44:07 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -15,8 +15,11 @@ installed on your system:
 
 GNUmake-3.79+ is recommended
 automake-1.9+
-autoconf-2.59+
+autoconf-2.59+ [1]
 libtool-1.5+
+
+[1] Autoconf 2.60 is not quite supported yet, 
+it's known to be a little finicky in the yacc/bison department.  
 
 These may be obtained from gnu.org.  
 The first thing to do is run:
@@ -83,11 +86,12 @@ LEX configure variable.
 	same with the header file.  The yacc rules from automake/autoconf
 	do not account for this deviation.  
 
-Supported versions of bison: 1.35, 1.875, 2.0, 2.1
+Supported versions of bison: 1.35, 1.875, 2.0
 Supported versions of flex: 2.5.4, 2.5.31
 
 Unsupported versions of bison:
 	1.28 -- see comment *1
+	2.1 -- untested, support may be forthcoming
 Unsupported versions of flex:
 	2.5.33 -- fails -Wundef (__STDC_VERSION__) and -Werror (signed comp.)
 

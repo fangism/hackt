@@ -1,0 +1,84 @@
+"MAINTAINER-checklist"
+	$Id: MAINTAINER-checklist,v 1.1 2006/08/05 06:44:06 fang Exp $
+
+For developers, guidelines of things to do when checking in revisions.  
+When in doubt, email one of the 
+
+DEVELOPMENT COMMITS:
+	make && 
+	make check.log && 
+	make distcheck.log
+		This MUST pass for commits to the main trunk to guarantee
+		some sort of stability and functionality at all times.  
+		Commits along branches are more forgiving and may allow
+		for commits that transiently break things, but such known
+		breaks should be noted as such in the ChangeLog entry.  
+	src/ChangeLog is the primary source revision log and should be 
+		updated with an entry upon every commit.  The new entry should 
+		start with the new CVS Tag, incremented from the previous one.  
+		If there is no revision in the src/ directory, then just
+		note "no source revision" and reference the other locations
+		where there was a revision, e.g. test, lib, dox...
+		exception: tiny or obvious patches need not be tag-bumped
+			but should be re-tagged using last tag (cvs tag-move):
+			cvs tag -F <same tag name>
+	configure.ac:
+		The version date need not be bumped with every commit.
+		Occasionally a maintainer will bless a particular snapshot
+		with a date-bump, which says that "this snapshot has been
+		more rigorously tested than others."  
+	ChangeLog: $(top_srcdir)
+		This needs to be updated only when top-level maintainence
+			files are updated, such as automake, autoconf, 
+			configure/m4 scripts, or other organization stuff.
+
+
+BRANCH CREATION:
+	Obviously need to 'cvs tag -b <name>' to create the branch.  
+	The branch name must contain the name of the tag from which it is
+		derived, for ease of tracking.  
+		Also applies to sub-sub-branches.
+	First src/ChangeLog entry along the branch should summarize the 
+		purpose of the branch.  
+
+BRANCH MERGES: (merging branch-to-trunk)
+	CVS Tag: 
+		In addition to the tag number incrementing, the new tag on the 
+		main trunk should be suffixed with "-merged-branchname-revision"
+		to indicate up to which point of the branch has been 
+		merged to trunk.  This helps track the status of various
+		branches.  
+	src/ChangeLog:
+		The ChangeLog should state that a particular branch is 
+		terminated if no further developement is *intended* along 
+		the branch.  
+
+TRUNK MERGES: (mergine trunk-to-branch)
+	(hasn't happened yet, write later...)
+
+RELEASE-CANDIDATES:
+	(Decide whether or not they belong on branch or trunk.)
+	Tag
+
+RELEASE:
+	All COMMIT checklist items apply.  In addition:
+	configure.ac: 
+		remove the "-devel" string from the version string
+			for OFFICIAL releases (none have happened yet).  
+		bump the version date to present.  
+	branch:
+		A release series is isolated from the main development line, 
+		thus all revisions relative to a release belong on a release
+		branch.  The branch should be named with -RELEASE instead
+		of -main-xx...
+	shared library versioning: (not applicable yet)
+		bump library version numbers, following standard
+			library versioning convention (GNU libtool).  
+	ChangeLog: announce release
+	NEWS: announce release
+
+RELEASE-BRANCH COMMITS:
+	Release branches will continue to receive bug fixes and documentation
+		improvements, but no other classes of source revisions.  
+	CVS Tags: (numbering convention)
+

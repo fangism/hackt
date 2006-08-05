@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-49:
+	  No source revision, just updating top-level maintainence files
+		and noting that this snapshot doesn't quite jive with
+		autoconf-2.60 bison-2.1 yet.  Investigation and support
+		are pending.  
+
+
 2006-08-04	Sandra Jackson		<sjj3@cornell.edu>
 
 	* HACKT-00-01-04-main-00-79-48:

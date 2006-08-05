@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.32 2006/07/04 07:25:33 fang Exp $
+#	$Id: Makefile.am,v 1.33 2006/08/05 06:44:06 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -42,7 +42,14 @@ AUTO_IGNORE += aclocal.m4 libtool \
 	$(CONFIG_HEADER) \
 	distcheck.log distcheck.log.tmp
 
-doc_DATA = AUTHORS BOUNTY COPYING NEWS README TODO
+doc_DATA = \
+	AUTHORS \
+	BOUNTY \
+	CONTRIBUTORS \
+	COPYING \
+	NEWS \
+	README \
+	TODO
 
 noinst_SCRIPTS = install_transform.sh
 
@@ -51,6 +58,8 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	bootstrap \
 	BOUNTY \
 	BUILDS \
+	CONTRIBUTORS \
+	MAINTAINER-checklist \
 	$(DOXYGEN_CONFIG).in \
 	config/macro-value.h.in \
 	config/config_subst.awk \
