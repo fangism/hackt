@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-08-07	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-51:
+	  config/config_subst.awk: handle autoconf-2.60 substitution sugar.
+	  bootstrap now supports autoconf-2.60.
+
+
 2006-08-04	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-49:

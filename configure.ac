@@ -3,15 +3,14 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.82 2006/08/07 04:54:00 fang Exp $
+#	$Id: configure.ac,v 1.83 2006/08/07 16:54:05 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
 
-# TODO: support autoconf-2.60
-
 AC_PREREQ(2.59)
-AC_INIT(hackt, 0.1.4-devel-20060806, fangism@users.sourceforge.net)
+dnl also works with autoconf 2.60 now
+AC_INIT(hackt, 0.1.4-devel-20060807, fangism@users.sourceforge.net)
 dnl prefer to push this into src directory, 
 dnl and have "src/config.h" wrap around this.  
 AC_CONFIG_HEADERS([src/__config__.h])
@@ -98,6 +97,8 @@ AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
 AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 
 # Lex/Yacc support
+# note: autoconf-2.60 overrides this with its own built-in YACC check
+# but it doesn't break anything
 HACKT_ARG_VAR_LEX
 HACKT_ARG_VAR_YACC
 HACKT_AM_CONDITIONAL_HAVE_YACC

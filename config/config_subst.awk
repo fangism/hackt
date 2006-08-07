@@ -1,5 +1,5 @@
 #!/usr/bin/awk -f
-#	$Id: config_subst.awk,v 1.2 2005/11/10 02:12:58 fang Exp $
+#	$Id: config_subst.awk,v 1.3 2006/08/07 16:54:06 fang Exp $
 # script to perform config.status substitutions before it is done running
 # useful for using config.status to produce configure-time output files.  
 
@@ -17,7 +17,10 @@ BEGIN {
 }
 
 /^s,@[A-Za-z0-9_]+@/ {
+	# This is autoconf-2.59 -style substitution string.
 	if (match($0,match_var)) {
+		# autoconf-2.60 does extra substitution sugaring
+		gsub("|#_!!_#|","");
 		# strip away non-essential syntactic sugar
 		gsub("^.*@,","");
 		gsub(",;.*$","");

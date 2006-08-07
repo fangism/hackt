@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.12 2006/08/07 04:54:00 fang Exp $
+	$Id: README,v 1.13 2006/08/07 16:54:05 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -15,11 +15,8 @@ installed on your system:
 
 GNUmake-3.79+ is recommended
 automake-1.9+
-autoconf-2.59+ [1]
+autoconf-2.59+
 libtool-1.5+
-
-[1] Autoconf 2.60 is not quite supported yet, 
-it's known to be a little finicky in the yacc/bison department.  
 
 These may be obtained from gnu.org.  
 The first thing to do is run:
