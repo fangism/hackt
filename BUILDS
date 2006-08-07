@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.16 2006/08/07 04:54:00 fang Exp $
+	$Id: BUILDS,v 1.17 2006/08/07 07:22:05 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -18,14 +18,14 @@ powerpc-apple-darwin*
 
 NOTE: the following builds are on a G5 (powerpc970), but only built as 32b.  
 
-Version: hackt 0.1.4-devel-20060703
-CVS Tag: HACKT-00-01-04-main-00-79-24-merged-cow-07
-Configured with: '--with-editline' '--enable-fun' 'YACC=/usr/bin/yacc' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
+Version: hackt 0.1.4-devel-20060806
+CVS Tag: HACKT-00-01-04-main-00-79-50
+Configured with: '--with-editline' '--enable-fun' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: powerpc-apple-darwin7.9.0
 c++: g++ (GCC) 3.3 20030304 (Apple Computer, Inc. build 1640)
 config-LIBS: -ledit  -lncurses 
 lex: flex version 2.5.4
-yacc: /usr/bin/yacc
+yacc: bison (GNU Bison) 2.0
 readline: BSD EditLine (histedit interface) ver. 2.9
 
 
@@ -85,6 +85,7 @@ yacc: /usr/bin/yacc
 readline: GNU readline 5.0
 
 
+Version: hackt 0.1.4-devel-20060806
 CVS Tag: HACKT-00-01-04-main-00-79-50
 Configured with: '--enable-fun' '--with-editline' '-C'
 build-triplet: powerpc-apple-darwin8.7.0
@@ -130,8 +131,8 @@ readline: none
 ===============================================================================
 i686-linux-gnu
 
-Version: hackt 0.1.4-devel-20060703
-CVS Tag: HACKT-00-01-04-main-00-79-24-merged-cow-07
+Version: hackt 0.1.4-devel-20060806
+CVS Tag: HACKT-00-01-04-main-00-79-50
 Configured with: '--prefix=/usr/local/cad' '--with-editline=/usr/local' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: i686-pc-linux-gnu
 c++: g++ (GCC) 3.3.3 (SuSE Linux)
@@ -139,6 +140,7 @@ config-LIBS: -ledit  -lncurses
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
 readline: BSD EditLine (histedit interface) ver. 2.9
+
 
 ===============================================================================
 x86_64-suse-linux
