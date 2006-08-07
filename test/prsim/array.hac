@@ -1,0 +1,15 @@
+// "array.hac"
+// testing getall feature on arrays
+
+defproc foo(bool x[2][2]) {
+bool y[2][2];
+x[0] = y[0];
+}
+
+defproc bar(foo w[4]) {
+foo z[4];
+w[0..1] = z[0..1];
+}
+
+bar X[2];
+

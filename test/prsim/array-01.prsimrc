@@ -1,0 +1,16 @@
+# "array-01.prsimrc"
+#	$Id: array-01.prsimrc,v 1.1 2006/08/07 22:39:46 fang Exp $
+# @haco@ array.haco-a
+# testing getall
+
+getall X
+getall X[0]
+echo expect some duplicates
+# consider introducing getall-unique
+getall X[0].w
+getall X[0].w[1]
+getall X[0].w[1].x
+echo under-specified array reference!
+getall X[0].w[1].x[0]
+getall X[0].w[1].x[0][1]
+

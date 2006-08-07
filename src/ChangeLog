@@ -5,10 +5,18 @@
 
 2006-08-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-52:
+	  prsim: fixed minor 'getall' bug, now allow references to
+		arrays, even with underspecified dimensions, which will
+		collect all instances matching hierarchical prefix, 
+		and need not be dense.  Implemented
+		simple_meta_..._reference::lookup_globally_allocated_indices.
+
+
 	* HACKT-00-01-04-main-00-79-51:
 	  No source revision.
 	  Updated config substitution script to work with autoconf-2.60.
-	  No autoconf-2.60 is supported and bootstraps correctly. 
+	  Now autoconf-2.60 is supported and bootstraps correctly. 
 
 
 2006-08-06	David Fang		<fangism@users.sourceforge.net>

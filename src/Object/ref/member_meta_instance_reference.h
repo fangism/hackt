@@ -2,13 +2,12 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.10 2006/05/08 06:12:06 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.11 2006/08/07 22:39:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
 #define	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
 
-// #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/traits/class_traits_fwd.h"
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.12 2006/04/05 22:32:22 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.13 2006/08/07 22:39:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -15,6 +15,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/packed_array_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
+#include "util/STL/vector_fwd.h"
 
 namespace HAC {
 namespace entity {
@@ -131,6 +132,11 @@ virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
 
 virtual	size_t
 	lookup_globally_allocated_index(const state_manager&) const;
+
+// virtual (not necessary)
+	good_bool
+	lookup_globally_allocated_indices(const state_manager&, 
+		std::default_vector<size_t>::type&) const;
 
 private:
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.10 2006/07/31 22:22:39 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.11 2006/08/07 22:39:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -113,6 +113,9 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Collects all subnodes of this reference.  
+	If this is scalar, just visit the one, 
+	else if this is aggregate (e.g. array slice) then visit
+	all instances in range.  
  */
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 void
@@ -121,9 +124,22 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
 	const state_manager& sm(mod.get_state_manager());
-	const size_t index = _this.lookup_globally_allocated_index(sm);
-	INVARIANT(index);	// because we already checked reference?
-	sm.template collect_subentries<Tag>(v, index);
+	if (_this.dimensions()) {
+		vector<size_t> inds;
+		if (!_this.lookup_globally_allocated_indices(sm, inds).good) {
+			// got error message already
+			THROW_EXIT;
+		}
+		// else we're good
+		vector<size_t>::const_iterator i(inds.begin()), e(inds.end());
+		for ( ; i!=e; ++i) {
+			sm.template collect_subentries<Tag>(v, *i);
+		}
+	} else {
+		const size_t index = _this.lookup_globally_allocated_index(sm);
+		INVARIANT(index);	// because we already checked reference?
+		sm.template collect_subentries<Tag>(v, index);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,13 +2,14 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.20 2006/04/27 00:15:37 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.21 2006/08/07 22:39:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
 #define	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
 
 #include <iostream>
+#include <vector>
 
 #include "Object/ref/simple_meta_instance_reference.h"
 #include "Object/expr/const_range_list.h"
@@ -32,6 +33,7 @@
 
 namespace HAC {
 namespace entity {
+using std::vector;
 #include "util/using_ostream.h"
 using util::write_value;
 using util::read_value;
@@ -173,6 +175,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(
 /**
 	If this is called, we're at the top-level of the instance hierarchy.
 	This should work regardless of whether this type has substructure.  
+	Only called from top-level, context-free.  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
@@ -191,6 +194,35 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	const size_t ret = alias->instance_index;
 	INVARIANT(ret);
 	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Collects a bunch of instance alias IDs with the same hierarchical
+	prefix, including array slices.  
+	Only called from top-level, context-free.  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
+		const state_manager& sm, 
+		vector<size_t>& indices) const {
+	typedef	vector<size_t>				indices_type;
+	typedef	typename alias_collection_type::const_iterator	const_iterator;
+	alias_collection_type aliases;
+	const unroll_context dummy;	// top-level context-free
+	// remonder: call to unroll_references is virtual
+	if (this->unroll_references(dummy, aliases).bad) {
+		cerr << "Error resolving collection of aliases." << endl;
+		return good_bool(false);
+	}
+	const_iterator i(aliases.begin()), e(aliases.end());
+	for ( ; i!=e; ++i) {
+		// don't bother checking for duplicates
+		// (easy: just use std::set instead of vector)
+		indices.push_back((*i)->instance_index);
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
