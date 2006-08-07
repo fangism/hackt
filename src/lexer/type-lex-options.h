@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: type-lex-options.h,v 1.1 2006/07/30 05:49:38 fang Exp $
+	$Id: type-lex-options.h,v 1.2 2006/08/07 04:54:07 fang Exp $
  */
 
 #ifndef	__LEXER_TYPE_LEX_OPTIONS_H__
@@ -85,11 +85,9 @@
 // only bison-2.1 and up define YYBISON_VERSION (as a "string", incidentally)
 // bison-2.1 defines YYLEX differently than 2.0, *&^%$#@!
 #ifdef	YYBISON_VERSION
-// #define	yylex(x)		__type_lex(&yylval, _lexer_state)
-#define	type_lex(x)		__type_lex(&type_lval, _lexer_state)
+#define	type_lex(x, y)		__type_lex(x, _lexer_state)
 #else	// YYBISON_VERSION
-// #define	yylex(x, y)		__type_lex(x, _lexer_state)
-#define	type_lex(x, y)	__type_lex(x, _lexer_state)
+#define	type_lex(x, y)		__type_lex(x, _lexer_state)
 #endif	// YYBISON_VERSION
 #else	// ifdef YYLEX_PARAM
 // #define	yylex			__type_lex

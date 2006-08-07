@@ -4,7 +4,7 @@
 	undefined macro evaluation warnings.  
 	This is only needed because I turned on -Wundef for all 
 	translation units.  Can you say "anal-retentive?"
-	$Id: instref-lex-options.h,v 1.3 2006/07/26 04:11:25 fang Exp $
+	$Id: instref-lex-options.h,v 1.4 2006/08/07 04:54:05 fang Exp $
  */
 
 #ifndef	__LEXER_INSTREF_LEX_OPTIONS_H__
@@ -85,10 +85,8 @@
 // only bison-2.1 and up define YYBISON_VERSION (as a "string", incidentally)
 // bison-2.1 defines YYLEX differently than 2.0, *&^%$#@!
 #ifdef	YYBISON_VERSION
-// #define	yylex(x)		__instref_lex(&yylval, _lexer_state)
-#define	instref_lex(x)		__instref_lex(&instref_lval, _lexer_state)
+#define	instref_lex(x, y)	__instref_lex(x, _lexer_state)
 #else	// YYBISON_VERSION
-// #define	yylex(x, y)		__instref_lex(x, _lexer_state)
 #define	instref_lex(x, y)	__instref_lex(x, _lexer_state)
 #endif	// YYBISON_VERSION
 #else	// ifdef YYLEX_PARAM

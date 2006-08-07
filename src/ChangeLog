@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-50:
+	  Reverted earlier patch for bison-2.1, deduced that none is needed
+		and that any perceived breakage was caused by autoconf-2.60.
+	  Bison-2.1 is now supported, but autoconf-2.60 is still in jail.  
+
+
 2006-08-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-49:
