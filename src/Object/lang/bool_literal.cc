@@ -1,6 +1,6 @@
 /**
 	\file "Object/lang/bool_literal.cc"
-	$Id: bool_literal.cc,v 1.5 2006/04/12 08:53:16 fang Exp $
+	$Id: bool_literal.cc,v 1.6 2006/08/08 05:46:36 fang Exp $
  */
 
 #include "Object/lang/bool_literal.h"
@@ -64,7 +64,7 @@ bool_literal::unroll_base(const unroll_context& c) const {
 			bool_instance_alias_collection_type;
 	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
-	if (var->unroll_references(c, bc).bad) {
+	if (var->unroll_references_packed(c, bc).bad) {
 		return 0;		// INVALID_NODE_INDEX
 	}
 	INVARIANT(!bc.dimensions());    // must be scalar, checked earlier
@@ -87,7 +87,7 @@ bool_literal::unroll_group(const unroll_context& c, group_type& g) const {
 			bool_instance_alias_collection_type;
 	STACKTRACE_VERBOSE;
 	bool_instance_alias_collection_type bc;
-	if (var->unroll_references(c, bc).bad) {
+	if (var->unroll_references_packed(c, bc).bad) {
 		return good_bool(false);
 	}
 	typedef	bool_instance_alias_collection_type::const_iterator

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.21 2006/07/04 07:26:14 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22 2006/08/08 05:46:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -768,7 +768,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(
 //-----------------------------------------------------------------------------
 /**
 	Implementation partly ripped off from 
-	simple_meta_instance_reference::unroll_references_helper_no_lookup.  
+	simple_meta_instance_reference::unroll_references_packed_helper_no_lookup.  
 	Needs additional check for template formal however.  
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE

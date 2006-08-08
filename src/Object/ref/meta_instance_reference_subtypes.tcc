@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.11 2006/08/07 22:39:43 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.12 2006/08/08 05:46:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -169,7 +169,7 @@ META_INSTANCE_REFERENCE_CLASS::must_be_type_equivalent(
  */
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-META_INSTANCE_REFERENCE_CLASS::unroll_references_helper_no_lookup(
+META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper_no_lookup(
 		const unroll_context& c,
 		const instance_collection_generic_type& inst,
 		const never_ptr<const index_list_type> ind,
@@ -257,7 +257,7 @@ if (inst.get_dimensions()) {
 	}
 	return bad_bool(false);
 }
-}	// end method unroll_references_helper_no_lookup
+}	// end method unroll_references_packed_helper_no_lookup
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -265,13 +265,13 @@ if (inst.get_dimensions()) {
 		member_meta_instance_reference.
 	TODO: what about global instance references?
 	\param _inst a resolved actual instance (not formal).  
-	Called by simple_meta_instance_reference unroll_references.
+	Called by simple_meta_instance_reference unroll_references_packed.
 	This uses the footprint of the context to perform a lookup
 	translation of the definition instance to the footprint instance.  
  */
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
+META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		const unroll_context& c,
 		const instance_collection_generic_type& _inst,
 		const never_ptr<const index_list_type> ind,
@@ -291,8 +291,8 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_helper(
 	const instance_collection_generic_type&
 		inst(f ? IS_A(const instance_collection_generic_type&,
 			*(*f)[inst_name]) : _inst);
-	return unroll_references_helper_no_lookup(c, inst, ind, a);
-}	// end method unroll_references_helper
+	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
+}	// end method unroll_references_packed_helper
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -321,7 +321,7 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 		coll(IS_A(instance_collection_generic_type&, cl));
 
 	alias_collection_type this_aliases;
-	const bad_bool unroll_err(this->unroll_references(c, this_aliases));
+	const bad_bool unroll_err(this->unroll_references_packed(c, this_aliases));
 		// calls unroll_reference virtually, thus
 		// automatically handling member instance references.   
 		// will automatically size the array
@@ -335,7 +335,7 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 	alias_collection_type port_aliases;
 	// bug fixed here: 20060124 (fangism)
 	// see comment: we can just use simplified helper function
-	const bad_bool port_err(unroll_references_helper_no_lookup(
+	const bad_bool port_err(unroll_references_packed_helper_no_lookup(
 		c, coll, never_ptr<const index_list_type>(NULL), port_aliases));
 	if (port_err.bad) {
 		cerr << "ERROR unrolling member instance reference "

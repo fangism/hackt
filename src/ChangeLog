@@ -5,6 +5,17 @@
 
 2006-08-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-53:
+	  No *real* source revision.  
+	  TODO: wish for unroll_references_sloppy (not packed)
+	  s/unroll_references/unroll_references_packed/g for clarity.  
+	  lib: fixed acknowledge of inactive_reset_bitbucket_a
+	  test/lib: added source-sink pair stability tests.
+	  prsim: checkpointing now omits cause_rule because rule/expr IDs
+		are optimization-sensitive.  Cause-rules are only needed
+		for determining delays for queue scheduling anyhow.  
+
+
 	* HACKT-00-01-04-main-00-79-52:
 	  prsim: fixed minor 'getall' bug, now allow references to
 		arrays, even with underspecified dimensions, which will

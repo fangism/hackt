@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.19 2006/08/01 18:48:05 fang Exp $
+	$Id: State.cc,v 1.20 2006/08/08 05:46:44 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1025,6 +1025,7 @@ State::random_delay(void) {
 	\return absolute time of scheduled pull-up event.
 	NOTE: possible reasons for null e.cause_rule:
 		due to exclhi/exclo ring enforcement?
+	NOTE: event's cause_rule is not checkpointed.  
  */
 // inline
 State::time_type
@@ -1044,6 +1045,7 @@ return current_time +
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	NOTE: event's cause_rule is not checkpointed.  
 	\return absolute time of scheduled pull-down event.
  */
 // inline

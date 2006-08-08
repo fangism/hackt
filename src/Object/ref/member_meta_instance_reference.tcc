@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.15 2006/07/31 22:22:38 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.16 2006/08/08 05:46:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -215,7 +215,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
  */
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
+MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 		const unroll_context& c, alias_collection_type& a) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
@@ -238,11 +238,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references(
 	// copy the unroll_context *except* for the footprint pointer
 	const unroll_context cc(c.make_member_context());
 
-	// DO NOT CALL simple_meta_instance_reference::unroll_references_helper
+	// DO NOT CALL simple_meta_instance_reference::unroll_references_packed_helper
 	// because that performs an additional lookup in the context
 	// which is NOT necessary, because the member was already resolved.  
-	// instead, call unroll_references_helper_no_lookup(...)
-	return unroll_references_helper_no_lookup(
+	// instead, call unroll_references_packed_helper_no_lookup(...)
+	return unroll_references_packed_helper_no_lookup(
 		cc, *inst_base, this->array_indices, a);
 }
 

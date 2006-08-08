@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.21 2006/08/07 22:39:44 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.22 2006/08/08 05:46:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -211,8 +211,15 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	alias_collection_type aliases;
 	const unroll_context dummy;	// top-level context-free
-	// remonder: call to unroll_references is virtual
-	if (this->unroll_references(dummy, aliases).bad) {
+	// remonder: call to unroll_references_packed is virtual
+#if 0
+	if (!__unroll_generic_scalar_references(
+			*this->inst_collection_ref, this->array_indices, 
+			dummy, true, aliases).good)
+#else
+	if (this->unroll_references_packed(dummy, aliases).bad)
+#endif
+	{
 		cerr << "Error resolving collection of aliases." << endl;
 		return good_bool(false);
 	}
@@ -250,18 +257,18 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
 	Unrolls the reference into aliases.  
 	\param c the context of unrolling.
 	\param a the destination collection in which to return
-		resolved instance aliases.  
+		resolved instance aliases, must be densely packed.  
 	\return true on error, else false.
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 		const unroll_context& c, alias_collection_type& a) const {
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_INDENT, expr_dump_context::default_value) << endl;
 #endif
-	return unroll_references_helper(c, *this->inst_collection_ref,
+	return unroll_references_packed_helper(c, *this->inst_collection_ref,
 		this->array_indices, a);
 }
 
@@ -283,9 +290,24 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 	typedef instance_alias_base_ptr_type 	return_type;
 	STACKTRACE_VERBOSE;
 	alias_collection_type aliases;
+#if 0
+	const good_bool good(__unroll_generic_scalar_references(
+		inst, ind, c, lookup, aliases));
+	if (!good.good) {
+		// already have error message
+		return return_type(NULL);
+	} else if (aliases.dimensions()) {
+		cerr << "ERROR: got a " << aliases.dimensions() <<
+			"-dimension collection where a scalar was required."
+			<< endl;
+		return return_type(NULL);
+	} else {
+		return aliases.front();
+	}
+#else
 	const bad_bool bad(lookup ? 
-		unroll_references_helper(c, inst, ind, aliases) :
-		unroll_references_helper_no_lookup(c, inst, ind, aliases));
+		unroll_references_packed_helper(c, inst, ind, aliases) :
+		unroll_references_packed_helper_no_lookup(c, inst, ind, aliases));
 	if (bad.bad) {
 		return return_type(NULL);
 	} else if (aliases.dimensions()) {
@@ -296,11 +318,34 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 	} else {
 		return aliases.front();
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Called by member_instance_reference::unroll_references.
+	Same as the above, but collects a bunch of aliases, as opposed
+	to a single scalar alias.  Note the plurality in the name.  
+	\param aliases dimensionality is set by the caller (me).  
+ */
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references(
+		const instance_collection_generic_type& inst, 
+		const never_ptr<const index_list_type> ind, 
+		const unroll_context& c, 
+		const bool lookup, 
+		alias_collection_type& aliases) {
+	STACKTRACE_VERBOSE;
+	const bad_bool bad(lookup ? 
+		unroll_references_packed_helper(c, inst, ind, aliases) :
+		unroll_references_packed_helper_no_lookup(c, inst, ind, aliases));
+	// already have some error message
+	return bad;	// implicit conversion to good
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Called by member_instance_reference::unroll_references_packed.
 	This implementation should be policy-determined.  
 	\return a single instance alias to a substructure_alias.
  */
@@ -316,7 +361,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Called by member_instance_reference::unroll_references.
+	Called by member_instance_reference::unroll_references_packed.
 	This implementation should be policy-determined.  
 	\return a single instance alias to a substructure_alias.
  */

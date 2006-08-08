@@ -1,5 +1,5 @@
 # "test/prsim/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2006/08/07 22:39:45 fang Exp $
+#	$Id: Makefile.am,v 1.13 2006/08/08 05:46:56 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -39,7 +39,8 @@ HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
 
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
-EXTRA_DIST +=
+EXTRA_DIST += array-b.hac
+# array-b.hac is pending BUG fix
 
 include $(top_srcdir)/test/Make.test-tail
 

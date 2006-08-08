@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.7 2006/07/04 07:26:10 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.8 2006/08/08 05:46:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -147,7 +147,7 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
  */
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
-AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
+AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 		const unroll_context& c, alias_collection_type& a) const {
 	// collection collection type
 	typedef	std::vector<alias_collection_type>	coll_coll_type;
@@ -170,7 +170,7 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 	// std::transform pattern
 	for ( ; i!=e; ++i, ++ci) {
 		const count_ptr<const parent_type>& lv(*i);
-		if (lv->unroll_references(c, *ci).bad) {
+		if (lv->unroll_references_packed(c, *ci).bad) {
 			cerr << "Error unrolling subreference " <<
 				distance(b, i) +1 << " of ";
 			this->what(cerr) << endl;
@@ -226,7 +226,7 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_references(
 		a += *i;
 	}
 	return bad_bool(err);
-}	// end method unroll_references
+}	// end method unroll_references_packed
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE

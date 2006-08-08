@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.13 2006/08/07 22:39:43 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.14 2006/08/08 05:46:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -114,14 +114,14 @@ virtual	ostream&
 	attach_indices(excl_ptr<index_list_type>&);
 
 private:
-	using parent_type::unroll_references_helper;
+	using parent_type::unroll_references_packed_helper;
 protected:
-	using parent_type::unroll_references_helper_no_lookup;
+	using parent_type::unroll_references_packed_helper_no_lookup;
 
 public:
 	// overridden by member_meta_instance_reference
 virtual	bad_bool
-	unroll_references(const unroll_context&, alias_collection_type&) const;
+	unroll_references_packed(const unroll_context&, alias_collection_type&) const;
 
 virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 
@@ -152,6 +152,14 @@ protected:
 		const instance_collection_generic_type&, 
 		const never_ptr<const index_list_type>,
 		const unroll_context&, const bool);
+
+	static
+	good_bool
+	__unroll_generic_scalar_references(
+		const instance_collection_generic_type&, 
+		const never_ptr<const index_list_type>,
+		const unroll_context&, const bool, 
+		alias_collection_type&);
 
 	void
 	collect_transient_info_base(persistent_object_manager& ) const;

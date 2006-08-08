@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.39 2006/07/28 21:30:03 fang Exp $
+#	$Id: Make.test-tail,v 1.40 2006/08/08 05:46:45 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -360,7 +360,7 @@ CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
 	prsdiffs prsdiffs.sort prsimexprdiffs \
 	prsseudiffs prsseudiffs.sort sprsdiffs sprsdiffs.sort \
 	createfromhacodiffs allocfromhacodiffs \
-	prsimrcdiffs prsimckptdiffs
+	prsimrcdiffs prsimckptdiffs prsimoptdiffs
 # need prs summaries? nah...
 
 compilediffs: force
@@ -415,6 +415,9 @@ prsimrcdiffs: force
 
 prsimckptdiffs: force
 	-$(CAT) *.prsimckpt-diff > $@
+
+prsimoptdiffs: force
+	-$(CAT) *.prsimopt-diff > $@
 
 prsimexprdiffs: force
 	-$(CAT) *.prsimexprdiff > $@

@@ -1,0 +1,12 @@
+// "array-b.hac"
+// testing getall feature on arrays
+// try: getall x.y
+// BUG: fail because conservatively assumes y is not packed b/c not port
+// plan: introduce sloppy collections
+
+defproc foo() {
+bool y[4];
+}
+
+foo x;
+

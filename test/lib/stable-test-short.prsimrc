@@ -1,0 +1,14 @@
+# "stable-test-short.prsimrc"
+#	$Id: stable-test-short.prsimrc,v 1.1 2006/08/08 05:46:55 fang Exp $
+# common test script for stbility testing, short version
+
+timing random
+mode reset
+set _Reset 0
+cycle
+status X
+
+mode run
+set _Reset 1
+step 100000
+

@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.2 2006/07/18 04:09:17 fang Exp $
+	$Id: devel_switches.h,v 1.3 2006/08/08 05:46:45 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -62,10 +62,19 @@
 
 /**
 	Define to 1 to test fix of false interference.  
-	Status: in progress
+	Status: complete, can commit with ALLOW_UNSTABLE_DEQUEUE
 	Goal: 1
  */
 #define	PRSIM_FIX_BOGUS_INTERFERENCE		1
+
+/**
+	Define to 1 to include cause-rules in event queue checkpointing.
+	Should omit because rule/expr indices are optimization-sensitive,
+	but we want checkpoints to be optimization-agnostic.
+	Fortunately, cause_rule is only used in delay calculations.  
+	Goal: 0
+ */
+#define	PRSIM_CHECKPOINT_CAUSE_RULE		0
 
 //=============================================================================
 

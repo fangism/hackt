@@ -1,0 +1,10 @@
+// "env-source-sink-a-01.hac"
+// testing source talking to bucket
+
+import "env.hac";
+
+bool _Reset;
+a1of2 X;
+source_a1of2<4,{0,0,1,1}> S(X, _Reset);
+inactive_reset_bitbucket_a1of2 B(X, _Reset);
+

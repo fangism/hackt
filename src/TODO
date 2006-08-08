@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.32 2006/08/03 01:25:56 fang Exp $
+#	$Id: TODO,v 1.33 2006/08/08 05:46:34 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -19,6 +19,7 @@ Simulation:
 
 prsim:
 	cause-tracking (perhaps track per new value +,-,X)
+		'backtrace' <node> command will use direction-specific causes
 	direction-specific breakpoints
 	interpreter commands:
 		interp key [value]
@@ -27,13 +28,14 @@ prsim:
 				bad-argument,...
 			echo on, echo off (only heeded in batch mode)
 		watch processes and structures?
-		mode run | reset
+		'getall-unique' (remove duplicates)
 		vector support:
 			Q: do we allow nodes to belong to multiple vectors?
 				current state of old prsims cannot.
 		use getopt-style interpretation?
 	concept of environment variables?
 	far future: expression evaluation! variable expansion!
+		make use of existing interpreter functions in parser/
 	Q: should initialize clear the watching state?
 		in the old prsim, watch/break points are preserved
 		so we keep that behavior for now.  
@@ -50,7 +52,7 @@ enhancement:
 		ALL meta-language unrolling (currently done for nonmeta)
 
 ===============================================================================
-PRIORITY: MEMORY HOG
+PRIORITY HIGH: MEMORY HOG
 instance collections:
 	instance_collections and their contents are being 
 		replicated too many places.  
@@ -64,6 +66,12 @@ instance collections:
 	Possibly introduce use of placeholders.   
 	This fix will be highly invasive.  
 
+
+===============================================================================
+unroll_references:
+	all methods to date unroll packed references into a dense collection.
+	also useful would be a way to unroll sparse or sloppy reference 
+		or alias collections (e.g. prsim::getall)
 
 ===============================================================================
 command interface:

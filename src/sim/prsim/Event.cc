@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.5 2006/07/18 04:09:16 fang Exp $
+	$Id: Event.cc,v 1.6 2006/08/08 05:46:44 fang Exp $
  */
 
 #include <iostream>
@@ -71,7 +71,11 @@ void
 Event::save_state(ostream& o) const {
 	write_value(o, node);
 	write_value(o, cause_node);
+#if PRSIM_CHECKPOINT_CAUSE_RULE
+	// rule/expr IDs will vary with optimization level!
+	// don't really need: rule ID ise only used for get_delay_up/dn
 	write_value(o, cause_rule);
+#endif
 	write_value(o, val);
 	// is this necessary, or is there an invariant we can rely on?
 	write_value(o, flags);
@@ -82,7 +86,9 @@ void
 Event::load_state(istream& i) {
 	read_value(i, node);
 	read_value(i, cause_node);
+#if PRSIM_CHECKPOINT_CAUSE_RULE
 	read_value(i, cause_rule);
+#endif
 	read_value(i, val);
 	read_value(i, flags);
 }

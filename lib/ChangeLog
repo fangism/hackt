@@ -1,4 +1,10 @@
-"ChangeLog"
+"lib/ChangeLog"
+
+2006-08-07	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-79-53:
+	  Fixed acknowledge of inactive_reset_bitbucket_a1ofN.
+
 
 2006-08-04	Sandra Jackson	<sjj3@cornell.edu>
 

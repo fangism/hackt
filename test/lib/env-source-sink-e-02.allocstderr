@@ -1,0 +1,53 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	B	inactive_reset_bitbucket_e1of<2>
+	process: 2
+	bool: 1,5,2,3,4,6
+2	(top)	-	2	X	e1of<2>
+	bool: 2,3,4
+3	(top)	-	3	S	source_e<4, 2, {0,0,1,1}>
+	process: 4,5,6,7,8,2,9,10
+	bool: 1,7,8,9,10,11,12,13,14,4,15,16,2,3,17,18
+4	process	3	1	S.stc	start_cell<>
+	bool: 1,11,7,12,13,19,20
+5	process	3	2	S.sc[0]	source_cell<false>
+	bool: 1,7,8,4,13,14,21,22
+6	process	3	3	S.sc[1]	source_cell<false>
+	bool: 1,8,9,4,14,15,23,24
+7	process	3	4	S.sc[2]	source_cell<false>
+	bool: 1,9,10,4,15,16,25,26
+8	process	3	5	S.sc[3]	source_cell<false>
+	bool: 1,10,11,4,16,12,27,28
+9	process	3	7	S.r	c1of<2>
+	bool: 17,18
+10	process	3	8	S.s	e1of<4>
+	bool: 14,15,16,12,4
+[global bool entries]
+1	(top)	-	1	_Reset	
+2	(top)	-	2	X.d[0]	
+3	(top)	-	3	X.d[1]	
+4	(top)	-	4	X.e	
+5	process	1	2	B.__re	
+6	process	1	6	B._re	
+7	process	3	2	S.le[0]	
+8	process	3	3	S.le[1]	
+9	process	3	4	S.le[2]	
+10	process	3	5	S.le[3]	
+11	process	3	6	S.le[4]	
+12	process	3	7	S.l[4]	
+13	process	3	8	S.l[0]	
+14	process	3	9	S.l[1]	
+15	process	3	11	S.l[2]	
+16	process	3	12	S.l[3]	
+17	process	3	15	S.r.d[0]	
+18	process	3	16	S.r.d[1]	
+19	process	4	6	S.stc.x	
+20	process	4	7	S.stc.y	
+21	process	5	7	S.sc[0].x	
+22	process	5	8	S.sc[0].y	
+23	process	6	7	S.sc[1].x	
+24	process	6	8	S.sc[1].y	
+25	process	7	7	S.sc[2].x	
+26	process	7	8	S.sc[2].y	
+27	process	8	7	S.sc[3].x	
+28	process	8	8	S.sc[3].y	
