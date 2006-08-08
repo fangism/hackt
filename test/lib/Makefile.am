@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2006/08/08 05:46:46 fang Exp $
+#	$Id: Makefile.am,v 1.6 2006/08/08 07:22:59 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -53,7 +53,7 @@ EXTRA_DIST += README \
 	stable-test-short.prsimrc
 
 # unprocessed test cases
-EXTRA_DIST +=
+# EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 
