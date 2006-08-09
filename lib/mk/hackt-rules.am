@@ -1,6 +1,6 @@
 # "mk/hackt-rules.am"
 #	vim: ft=automake
-#	$Id: hackt-rules.am,v 1.6 2006/07/28 21:30:01 fang Exp $
+#	$Id: hackt-rules.am,v 1.7 2006/08/09 21:24:30 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
@@ -23,6 +23,7 @@ HACKT_CREATE_EXE = $(HACKT_EXE) create
 HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
 HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
 HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
+HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
 HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 # with dependency tracking enabled by default
@@ -45,6 +46,9 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 .haco-a.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
+
+.haco-a.lvsprs:
+	$(HACKT_CFLAT_LVS_EXE) $< > $@
 
 .haco-a.sprs:
 	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
@@ -120,6 +124,7 @@ clean-local:
 	-$(RM) *.haco-c *.createdump
 	-$(RM) *.haco-a *.allocdump
 	-$(RM) *.prs
+	-$(RM) *.lvsprs
 	-$(RM) *.prsimexpr*
 	-$(RM) *.prs-dot* *.prs-*-ps
 	-$(RM) *.prs-dot-fig *.prs-dot-pdf

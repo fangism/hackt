@@ -1,0 +1,14 @@
+// "lvs-order-02.hac"
+// copy-modified from "lvs-order-01.hac"
+// fails: order() doesn't accept grouped arguments... yet
+
+template <pint N>
+defproc lvs_order(bool a[N]) {
+bool b[N];
+spec {
+	order(b, a)
+}
+}
+
+lvs_order<3> foo;
+

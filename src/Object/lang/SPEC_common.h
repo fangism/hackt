@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_common.h"
 	Tool independent base-classes for macro definitions.  
-	$Id: SPEC_common.h,v 1.2 2006/04/23 07:37:22 fang Exp $
+	$Id: SPEC_common.h,v 1.3 2006/08/09 21:24:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_SPEC_COMMON_H__
@@ -60,6 +60,7 @@ DECLARE_SPEC_COMMON_STRUCT(LVS_exclhi)
 DECLARE_SPEC_COMMON_STRUCT(LVS_excllo)
 DECLARE_SPEC_COMMON_STRUCT(LVS_BDD_order)
 DECLARE_SPEC_COMMON_STRUCT(LVS_unstaticized)
+DECLARE_SPEC_COMMON_STRUCT(LVS_cross_coupled_inverters)
 DECLARE_SPEC_COMMON_STRUCT(SIM_force_exclhi)
 DECLARE_SPEC_COMMON_STRUCT(SIM_force_excllo)
 DECLARE_SPEC_COMMON_STRUCT(layout_min_sep)

@@ -1,0 +1,5 @@
+SPEC directive 'order' takes no grouped arguments.
+	got: 3 nodes in argument position 1
+Error with spec directive.
+Caught exception during cflat PRS.
+Error during cflat.

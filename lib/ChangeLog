@@ -1,5 +1,11 @@
 "lib/ChangeLog"
 
+2006-08-09	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-79-54:
+	  mk/ Makefiles now have hackt cflat-lvs (.lvsprs) rules.
+
+
 2006-08-07	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-79-53:

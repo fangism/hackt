@@ -1,0 +1,13 @@
+// "lvs-xcpl-inv-01.hac"
+// testing cross-coupled inverters
+
+defproc xcpl_inv(bool x, y) {
+spec {
+	cross_coupled_inverters(x, y)
+	exclhi(x, y)
+	excllo(x, y)
+}
+}
+
+xcpl_inv Z;
+

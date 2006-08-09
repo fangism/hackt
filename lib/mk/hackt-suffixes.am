@@ -1,12 +1,12 @@
 # "mk/hackt-suffixes.am"
 #	vim: ft=automake
-#	$Id: hackt-suffixes.am,v 1.6 2006/07/28 21:30:02 fang Exp $
+#	$Id: hackt-suffixes.am,v 1.7 2006/08/09 21:24:31 fang Exp $
 # automake-style Makefile excerpt for adding hackt suffix rules.  
 # Include this file in a Makefile.am, somewhere after SUFFIXES
 #	has already been defined.  
 # The counterpart file is "mk/hackt-rules.am".
 
-SUFFIXES += .hac .haco .depend .haco-u .haco-c .haco-a .prs .sprs \
+SUFFIXES += .hac .haco .depend .haco-u .haco-c .haco-a .prs .sprs .lvsprs \
 	.prsimexpr .prsimexpr-O1 .prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \

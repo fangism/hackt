@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.13 2006/08/02 21:10:35 fang Exp $
+	$Id: SPEC_registry.cc,v 1.14 2006/08/09 21:24:38 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -374,6 +374,24 @@ LVS_unstaticized::main(cflat_prs_printer& p, const param_args_type& v,
 	case cflat_options::TOOL_LVS:
 		// or other tools
 		default_expand_into_singles_output<this_type>(p, a);
+		break;
+	default:
+		break;
+	}
+}
+
+//-----------------------------------------------------------------------------
+DECLARE_AND_DEFINE_CFLAT_SPEC_DIRECTIVE_CLASS(LVS_cross_coupled_inverters,
+		"cross_coupled_inverters")
+
+void
+LVS_cross_coupled_inverters::main(cflat_prs_printer& p, 
+		const param_args_type& v, const node_args_type& a) {
+	STACKTRACE_VERBOSE;
+	switch (p.cfopts.primary_tool) {
+	case cflat_options::TOOL_LVS:
+		// or other tools
+		default_spec_output<this_type>(p, v, a) << endl;
 		break;
 	default:
 		break;

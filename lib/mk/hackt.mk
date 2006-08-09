@@ -1,5 +1,5 @@
 # "hackt.mk"
-#	$Id: hackt.mk,v 1.5 2006/07/28 21:30:03 fang Exp $
+#	$Id: hackt.mk,v 1.6 2006/08/09 21:24:32 fang Exp $
 # TODO: distinguish hackt-build.mk from hackt-inst.mk
 # point these to hackt
 top_srcdir = ../..
@@ -10,7 +10,7 @@ srcdir = .
 # automake will convert these into .SUFFIXES:
 .SUFFIXES: .hac .depend .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest \
-	.haco .haco-u .haco-c .haco-a .prs .sprs \
+	.haco .haco-u .haco-c .haco-a .prs .sprs .lvsprs \
 	.prsimexpr .prsimexpr-O1 .prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
@@ -28,6 +28,7 @@ HACKT_CREATE_EXE = $(HACKT_EXE) create
 HACKT_ALLOC_EXE = $(HACKT_EXE) alloc
 HACKT_CFLAT_EXE = $(HACKT_EXE) cflat
 HACKT_CFLAT_PRSIM_EXE = $(HACKT_CFLAT_EXE) prsim
+HACKT_CFLAT_LVS_EXE = $(HACKT_CFLAT_EXE) lvs
 HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 # this may be defined by the user
@@ -56,6 +57,9 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 .haco-a.prs:
 	$(HACKT_CFLAT_PRSIM_EXE) $< > $@
+
+.haco-a.lvsprs:
+	$(HACKT_CFLAT_LVS_EXE) $< > $@
 
 .haco-a.sprs:
 	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
@@ -129,6 +133,7 @@ clean-local:
 	-$(RM) *.haco-c *.createdump
 	-$(RM) *.haco-a *.allocdump
 	-$(RM) *.prs
+	-$(RM) *.lvsprs
 	-$(RM) *.prsimexpr*
 	-$(RM) *.prs-dot* *.prs-*-ps
 	-$(RM) *.prs-*-fig *.prs-*-pdf

@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.23 2006/08/01 06:35:57 fang Exp $
+#	$Id: Makefile.am,v 1.24 2006/08/09 21:24:46 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -36,7 +36,9 @@ HACKT_PARSE_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
-	top-level-01
+	top-level-01\
+	lvs-order-01 lvs-order-02 lvs-order-03 \
+	lvs-xcpl-inv-01
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -64,7 +66,9 @@ HACKT_CREATE_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11 \
 	bug-001 \
-	top-level-01
+	top-level-01 \
+	lvs-order-01 lvs-order-02 lvs-order-03 \
+	lvs-xcpl-inv-01
 
 # known defect reports: unresolved language issues
 # dealing with empty loops and negative ranges...
@@ -90,12 +94,18 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	bug-001 \
 	top-level-01
 
+HACKT_CFLAT_LVS_TEST_SUBJECTS = \
+	nand-04 \
+	lvs-order-01 lvs-order-02 lvs-order-03 \
+	lvs-xcpl-inv-01
+
 HACKT_CFLAT_SEU_TEST_SUBJECTS = \
 	spec_min_sep-01 spec_min_sep-03 spec_min_sep-04 spec_min_sep-05 \
 	spec_min_sep-06 spec_min_sep-10 spec_min_sep-11
 
 HACKT_ALLOC_TEST_SUBJECTS = \
 	$(HACKT_CFLAT_TEST_SUBJECTS) \
+	$(HACKT_CFLAT_LVS_TEST_SUBJECTS) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS)
 
 HACKT_CFLAT_SPRS_TEST_SUBJECTS = \

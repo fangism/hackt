@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.4 2006/08/02 21:10:34 fang Exp $
+	$Id: SPEC_common.cc,v 1.5 2006/08/09 21:24:36 fang Exp $
  */
 
 #include <iostream>
@@ -324,6 +324,22 @@ LVS_unstaticized::__check_num_nodes(const char* name, const size_t s) {
 
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_unstaticized)
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(LVS_unstaticized)
+
+//-----------------------------------------------------------------------------
+good_bool
+LVS_cross_coupled_inverters::__check_num_params(
+		const char* name, const size_t s) {
+	return __takes_no_params(name, s);
+}
+
+good_bool
+LVS_cross_coupled_inverters::__check_num_nodes(
+		const char* name, const size_t s) {
+	return exact_num_nodes(name, 2, s);
+}
+
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(LVS_cross_coupled_inverters)
+DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(LVS_cross_coupled_inverters)
 
 //-----------------------------------------------------------------------------
 good_bool

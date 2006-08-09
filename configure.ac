@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.83 2006/08/07 16:54:05 fang Exp $
+#	$Id: configure.ac,v 1.84 2006/08/09 21:24:29 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -92,8 +92,10 @@ dnl AC_CHECK_FILES([/dev/stdin /dev/stdout /dev/stderr])
 # NOTE: AM_CONDITIONAL is usable in generation of AC_CONFIG_FILES
 #	just use @VAR_TRUE@ instead of the if ... version in automake
 AC_CHECK_PROG([PRSIM], prsim, prsim)
+AC_CHECK_PROG([LVS], lvs, lvs)
 AC_CHECK_PROG([CFLAT], cflat, cflat)
 AM_CONDITIONAL(HAVE_PRSIM, test -n "$PRSIM" )
+AM_CONDITIONAL(HAVE_LVS, test -n "$LVS" )
 AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 
 # Lex/Yacc support
@@ -396,6 +398,8 @@ AC_CONFIG_FILES([test/hackt-alloc-expect.sh],
 	[chmod +x test/hackt-alloc-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-expect.sh],
 	[chmod +x test/hackt-cflat-expect.sh])
+AC_CONFIG_FILES([test/hackt-cflat-lvs-expect.sh],
+	[chmod +x test/hackt-cflat-lvs-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-seu-expect.sh],
 	[chmod +x test/hackt-cflat-seu-expect.sh])
 AC_CONFIG_FILES([test/hackt-cflat-sprs-expect.sh],

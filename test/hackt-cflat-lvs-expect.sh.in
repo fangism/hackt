@@ -1,0 +1,73 @@
+#!@SH_PATH@
+# "hackt-cflat-lvs-expect.sh.in"
+# copy-modified from "hackt-cflat-expect.sh.in"
+#	$Id: hackt-cflat-lvs-expect.sh.in,v 1.1 2006/08/09 21:24:43 fang Exp $
+
+# $1 is the executable for the creator (hackt alloc), expecting 2 arguments
+# $2 is the path to the source directory, which is not necessarily ./
+#	during distcheck uses _build
+# $3 is the input file name WITHOUT the .in extension
+# other subsequent arguments are ignored
+
+# if test $# -lt 3 ; then exit 1 ; fi
+
+cflat=$1
+srcroot=$2/$3
+bldroot=$3
+
+# a pre-created (already created) object file must already exist
+if test ! -s $bldroot.haco-a
+then
+	@ECHO@ "$bldroot.haco-a doesn't exist or is empty."
+	exit 1
+fi
+
+# see if it crashes first
+$cflat $bldroot.haco-a > $bldroot.lvsprs 2>&1
+err=$?
+# depending on exit status, take action
+# we now handle errors during cflat
+case $err in
+	0) break ;;
+	1) break ;;
+	*) exit 1 ;;
+esac
+
+# .allocstderr comparison file must exist
+if test ! -f $srcroot.expect-lvsprs && test ! -f $bldroot.expect-lvsprs
+then
+	@ECHO@ "Missing $srcroot.expect-lvsprs"
+	exit 1
+fi
+
+# some PRS may be empty (auto-generated)
+if test -s $srcroot.expect-lvsprs
+then
+	@DIFF@ -u $srcroot.expect-lvsprs $bldroot.lvsprs > $bldroot.lvsprsdiff
+else
+	@DIFF@ -u $bldroot.expect-lvsprs $bldroot.lvsprs > $bldroot.lvsprsdiff
+fi
+
+if test -s $bldroot.lvsprsdiff
+then
+	@ECHO@ "$bldroot.lvsprsdiff is non-empty!"
+	if test "$err" != 0
+	then
+		exit 1
+	fi
+	# additional analysis to see if is just re-ordering difference
+	if test -s $srcroot.expect-lvsprs && test -s $bldroot.lvsprs
+	then
+		@SORT@ $srcroot.expect-lvsprs > $bldroot.expect-lvsprs.sort
+		@SORT@ $bldroot.lvsprs > $bldroot.lvsprs.sort
+		@DIFF@ -u $bldroot.expect-lvsprs.sort $bldroot.lvsprs.sort \
+			> $bldroot.lvsprsdiff.sort
+		if test ! -s $bldroot.lvsprsdiff.sort
+		then
+			@ECHO@ "Only re-ordering differencies found.  (OK)"
+		fi
+	fi
+	exit 1
+@HAVE_LVS_TRUE@# could do something with lvs, but it requires tech file in path
+fi
+

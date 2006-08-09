@@ -1,0 +1,12 @@
+// "lvs-order-01.hac"
+
+defproc lvs_order(bool a, b, c) {
+bool d, e, f;
+spec {
+	order(f, e, d, c, b, a)
+}
+}
+
+lvs_order foo;
+
+
