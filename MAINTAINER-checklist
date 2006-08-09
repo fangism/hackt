@@ -1,8 +1,8 @@
 "MAINTAINER-checklist"
-	$Id: MAINTAINER-checklist,v 1.1 2006/08/05 06:44:06 fang Exp $
+	$Id: MAINTAINER-checklist,v 1.1.2.1 2006/08/09 23:48:50 fang Exp $
 
-For developers, guidelines of things to do when checking in revisions.  
-When in doubt, email one of the 
+For developers, guidelines of things TODO when checking in revisions.  
+When in doubt, email one of the maintainers.  
 
 DEVELOPMENT COMMITS:
 	make && 

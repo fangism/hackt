@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.6 2006/07/18 04:09:16 fang Exp $
+	$Id: Event.h,v 1.6.2.1 2006/08/09 23:48:55 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -89,12 +89,10 @@ public:
 	unsigned char			val;
 protected:
 	enum {
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 		/**
 			Signals that event is pending interference.  
 		 */
 		EVENT_FLAG_PENDING_INTERFERENCE = 0x01,
-#endif
 		/**
 			Signals that event cancelled.  
 		 */
@@ -155,7 +153,6 @@ public:
 	void
 	load_state(istream&);
 
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 	bool
 	pending_interference(void) const {
 		return flags & EVENT_FLAGS_DEFAULT_VALUE;
@@ -166,7 +163,6 @@ public:
 		if (i)	flags |= EVENT_FLAGS_DEFAULT_VALUE;
 		else	flags &= ~EVENT_FLAGS_DEFAULT_VALUE;
 	}
-#endif
 
 	static
 	ostream&

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.20 2006/08/08 05:46:44 fang Exp $
+	$Id: State.cc,v 1.20.2.1 2006/08/09 23:48:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -526,7 +526,6 @@ State::__allocate_event(node_type& n,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 /**
 	This is used when creating a temporary event for
 	inserting a pending event when checking for true interference.
@@ -550,7 +549,6 @@ State::__allocate_pending_interference_event(node_type& n,
 	n.set_cause_node(ci);
 	return ne;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -576,15 +574,11 @@ void
 State::__deallocate_event(node_type& n, const event_index_type i) {
 	STACKTRACE_VERBOSE_STEP;
 	DEBUG_STEP_PRINT("freeing index " << i << endl);
-#if !PRSIM_FIX_BOGUS_INTERFERENCE
-	INVARIANT(n.get_event() == i);
-#endif
 	n.clear_event();
 	event_pool.deallocate(i);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 /**
 	Special case event deallocation for a pending interfering event.  
 	This is unrelated to the actual pending event of the affected node.  
@@ -598,7 +592,6 @@ State::__deallocate_pending_interference_event(const event_index_type i) {
 	// the node's true pending event.  
 	event_pool.deallocate(i);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1127,22 +1120,17 @@ for ( ; i!=e; ++i) {
 					')' << endl;
 			}
 		}
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 		if (ev.pending_interference()) {
 			INVARIANT(_n.pending_event());
 			_n.set_cause_node(ev.cause_node);
 			_n.set_value(node_type::LOGIC_OTHER);
 			__deallocate_pending_interference_event(ne);
 		} else {
-#endif
-		ev.val = node_type::LOGIC_OTHER;
-		__flush_pending_event_with_interference(_n, ne, ev);
-#if PRSIM_FIX_BOGUS_INTERFERENCE
+			ev.val = node_type::LOGIC_OTHER;
+			__flush_pending_event_with_interference(_n, ne, ev);
 		}	// end if pending_interference
-#endif
 	} else {
 		DEBUG_STEP_PRINT("no interference." << endl);
-#if 1 && PRSIM_ALLOW_UNSTABLE_DEQUEUE && PRSIM_FIX_BOGUS_INTERFERENCE
 		const event_index_type pe = _n.get_event();
 		DEBUG_STEP_PRINT("prior enqueued event on this node (possibly killed): " <<
 			pe << endl);
@@ -1171,11 +1159,8 @@ for ( ; i!=e; ++i) {
 				// leave original event alone
 			}
 		} else {	// LIKELY(pe == ne)
-#endif
-		__flush_pending_event_no_interference(_n, ne, ev);
-#if 1 && PRSIM_ALLOW_UNSTABLE_DEQUEUE && PRSIM_FIX_BOGUS_INTERFERENCE
+			__flush_pending_event_no_interference(_n, ne, ev);
 		}	// end if (pe != ne)
-#endif
 	}	// end if may_be_pulled ...
 }	// end for all in pending_queue
 	pending_queue.clear();	// or .resize(0), same thing
@@ -1690,7 +1675,6 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	// assert: vacuous firings on the event queue, 
 	// but ONLY if unstable events don't cause vacuous events to
 	// be resheduled, e.g. pulse
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 	if (dequeue_unstable_events()) {
 		if (UNLIKELY(prev == pe.val)) {
 			// Q: or is it better to catch this before enqueuing?
@@ -1704,9 +1688,6 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 		// vacuous event is allowed if set was forced by user
 		INVARIANT(prev != pe.val || n.is_unstab() || force);
 	}
-#else
-	INVARIANT(prev != pe.val || n.is_unstab());
-#endif
 	// saved previous value above already
 	if (checking_excl()) {
 		const excl_exception
@@ -1796,7 +1777,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 }	// end method step()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_FIX_BOGUS_INTERFERENCE
+#if 0
 /**
 	This is code is invoked when cancelling events due to
 	instablity.  This will also enqueue new events in some cases where
@@ -1823,7 +1804,7 @@ State::kill_evaluation(const node_index_type ni, expr_index_type ui,
 		char prev, char next) {
 	FINISH_ME(Fang);
 }
-#endif	// PRSIM_FIX_BOGUS_INTERFERENCE
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2153,7 +2134,6 @@ State::__diagnose_violation(ostream& o, const char next,
 		const string cause_name(get_node_canonical_name(ni));
 		const string out_name(get_node_canonical_name(ui));
 
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 			// causing rule only used by propagate
 			// don't care about value, 
 			// event is for sake of checking
@@ -2166,14 +2146,8 @@ State::__diagnose_violation(ostream& o, const char next,
 					dir ? node_type::LOGIC_HIGH :	\
 						node_type::LOGIC_LOW);	\
 			enqueue_pending(pe);
-#else
-#define	INTERFERENCE_CASE_ACTION					\
-			e.val = node_type::LOGIC_OTHER;			\
-			e.cause_node = ni;
-#endif	// PRSIM_FIX_BOGUS_INTERFERENCE
 		if (instability) {
 			e.cause_node = ni;
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 			if (dequeue_unstable_events()) {
 				// let dequeuer deallocate killed events
 				const size_t pe = n.get_event();
@@ -2193,9 +2167,6 @@ State::__diagnose_violation(ostream& o, const char next,
 			} else {
 				e.val = node_type::LOGIC_OTHER;
 			}
-#else
-			e.val = node_type::LOGIC_OTHER;
-#endif	// PRSIM_ALLOW_UNSTABLE_DEQUEUE
 		}
 		if (interference) {
 			/***
@@ -2207,23 +2178,19 @@ State::__diagnose_violation(ostream& o, const char next,
 		}
 #undef	INTERFERENCE_CASE_ACTION
 		// diagnostic message
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 		// suppress message for interferences until pending queue
 		if (instability) {
-#endif
-		o << "WARNING: ";
-		if (eu & event_type::EVENT_WEAK)
-			o << "weak-";
-		o << (interference ? "interference `" : "unstable `") <<
-			out_name << "\'" << (dir ? '+' : '-') << endl;
-		o << ">> cause: `" << cause_name << "\' (val: ";
-		get_node(ni).dump_value(o) <<	// " -> " <<
-		// o << node_type::value_to_char[size_t(e.val)] <<
-			")" << endl;
-#if PRSIM_FIX_BOGUS_INTERFERENCE
+			o << "WARNING: ";
+			if (eu & event_type::EVENT_WEAK)
+				o << "weak-";
+			o << (interference ? "interference `" : "unstable `") <<
+				out_name << "\'" << (dir ? '+' : '-') << endl;
+			o << ">> cause: `" << cause_name << "\' (val: ";
+			get_node(ni).dump_value(o) <<	// " -> " <<
+			// o << node_type::value_to_char[size_t(e.val)] <<
+				")" << endl;
 		}	// end if unstable
-#endif
-	}
+	}	// end if !vacuous
 	// else vacuous is OK
 }	// end method __diagnose_violation
 

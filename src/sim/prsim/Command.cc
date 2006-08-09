@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.15 2006/08/01 18:48:04 fang Exp $
+	$Id: Command.cc,v 1.15.2.1 2006/08/09 23:48:54 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -2477,9 +2477,8 @@ NoCheckExcl::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableUnknown, "unstable-unknown", 
-	modes, "rule instabilities propagate unknowns")
+	modes, "rule instabilities propagate unknowns (default)")
 
 int
 UnstableUnknown::main(State& s, const string_list& a) {
@@ -2518,7 +2517,6 @@ UnstableDequeue::usage(ostream& o) {
 	o << name << endl;
 	o << "Unstable events are dequeued during run-time." << endl;
 }
-#endif	// PRSIM_ALLOW_UNSTABLE_DEQUEUE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 

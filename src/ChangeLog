@@ -5,6 +5,15 @@
 
 2006-08-09	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-54-prsim-07-01:
+	  This branch is for another series of prsim improvements.  
+	  Some plans are written in the TODO file.
+	  In this revision, only committed old PRSIM_ALLOW_UNSTABLE_DEQUEUE
+		and PRSIM_FIX_BOGUS_INTERFERENCE flags.  
+
+
+2006-08-09	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-54:
 	  Added LVS spec directive 'cross_coupled_inverters'.
 	  Added some base cflat lvs test cases.  

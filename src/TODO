@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.33 2006/08/08 05:46:34 fang Exp $
+#	$Id: TODO,v 1.33.2.1 2006/08/09 23:48:52 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -21,6 +21,11 @@ prsim:
 	cause-tracking (perhaps track per new value +,-,X)
 		'backtrace' <node> command will use direction-specific causes
 	direction-specific breakpoints
+	fine-grain simulator anomaly control (unstable, interference)
+		levels: ignore, warn, break
+		case: {weak-,}{unstable,interference}
+		commands: [weak-]{unstable,interference} {ignore,warn,break}
+		define 'mode run' and 'mode reset' as presets in terms of these?
 	interpreter commands:
 		interp key [value]
 			for interpreter mode flags:

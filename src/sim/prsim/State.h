@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12 2006/08/01 18:48:05 fang Exp $
+	$Id: State.h,v 1.12.2.1 2006/08/09 23:48:57 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -205,14 +205,12 @@ private:
 			Set to true to check exclusiveness of nodes.  
 		 */
 		FLAG_CHECK_EXCL = 0x40, 
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 		/**
 			Allow unstable events to be dropped off queue
 			instead of propagating unknowns.  
 			Also dequeues weakly unstable events (involving X).  
 		 */
 		FLAG_UNSTABLE_DEQUEUE = 0x80,
-#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
 		/**
@@ -608,7 +606,6 @@ public:
 	ostream&
 	dump_source_paths(ostream&) const;
 
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 	bool
 	dequeue_unstable_events(void) const {
 		return flags & FLAG_UNSTABLE_DEQUEUE;
@@ -619,7 +616,6 @@ public:
 		if (dq)	flags |= FLAG_UNSTABLE_DEQUEUE;
 		else	flags &= ~FLAG_UNSTABLE_DEQUEUE;
 	}
-#endif
 
 	void
 	append_mk_exclhi_ring(ring_set_type&);
@@ -693,7 +689,6 @@ private:
 		const node_index_type c, // this is the causing node
 		const rule_index_type, const char);
 
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
@@ -702,7 +697,6 @@ private:
 
 	void
 	__deallocate_pending_interference_event(const event_index_type);
-#endif
 
 	event_index_type
 	__load_allocate_event(const event_type&);
@@ -777,7 +771,7 @@ private:
 	propagate_evaluation(const node_index_type, expr_index_type, 
 		char prev, char next);
 
-#if PRSIM_FIX_BOGUS_INTERFERENCE
+#if 0
 	void
 	kill_evaluation(const node_index_type, expr_index_type, 
 		char prev, char next);
