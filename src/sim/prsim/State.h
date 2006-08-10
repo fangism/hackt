@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12.2.1 2006/08/09 23:48:57 fang Exp $
+	$Id: State.h,v 1.12.2.2 2006/08/10 07:18:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -172,12 +172,14 @@ private:
 		the flags member.  
 	 */
 	enum {
+#if !PRSIM_FINE_GRAIN_ERROR_CONTROL
 		/**
 			If true, then no weak interference is reported.  
 			no-weak-interference is 'reset' mode;
 			weak-interference is 'run' mode;
 		 */
 		FLAG_NO_WEAK_INTERFERENCE = 0x01,
+#endif
 		/**
 			Whether or not the simulation was stopped
 			by interrupt or event error/warning.  
@@ -228,6 +230,27 @@ private:
 		As we add more flags this will have to expand...
 	 */
 	typedef	unsigned char			flags_type;
+
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	/**
+		Policy enumeration for determining simulation behavior
+		in the event of an anomaly.  
+	 */
+	typedef enum {
+		ERROR_IGNORE = 0,
+		ERROR_WARN = 1,
+		ERROR_NOTIFY = ERROR_WARN,
+		ERROR_BREAK = 2,
+		ERROR_DEFAULT = ERROR_BREAK
+	} error_policy_enum;
+
+	/**
+		Return type to indicate whether or not to break.  
+	 */
+	typedef	bool				break_type;
+#else
+	typedef	void				break_type;
+#endif
 
 	enum {
 		/**
@@ -347,13 +370,25 @@ private:
 	// mode of operation
 	// operation flags
 	flags_type				flags;
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	error_policy_enum			unstable_policy;
+	error_policy_enum			weak_unstable_policy;
+	error_policy_enum			interference_policy;
+	error_policy_enum			weak_interference_policy;
+#endif
+	
 	/// timing mode
 	char					timing_mode;
 	// loadable random seed?
-	/// set by the SIGINT signal handler
-	/// (is this redundant with the STOP flag?)
+	/**
+		set by the SIGINT signal handler
+		(is this redundant with the STOP flag?)
+	 */
 	volatile bool				interrupted;
-	// interpreter state
+	/**
+		interpreter state for the input stream.
+		Not checkpointed, of course.  
+	 */
 	ifstream_manager			ifstreams;
 	/**
 		For efficient tracing and lookup of root rule expressions.  
@@ -478,10 +513,42 @@ public:
 	dump_mode(ostream&) const;
 
 	void
-	set_mode_reset(void) { flags |= FLAG_NO_WEAK_INTERFERENCE; }
+	set_mode_reset(void) {
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		unstable_policy = ERROR_BREAK;
+		weak_unstable_policy = ERROR_WARN;
+		interference_policy = ERROR_BREAK;
+		weak_interference_policy = ERROR_IGNORE;
+#else
+		flags |= FLAG_NO_WEAK_INTERFERENCE;
+#endif
+	}
 
 	void
-	set_mode_run(void) { flags &= ~FLAG_NO_WEAK_INTERFERENCE; }
+	set_mode_run(void) {
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		unstable_policy = ERROR_BREAK;
+		weak_unstable_policy = ERROR_WARN;
+		interference_policy = ERROR_BREAK;
+		weak_interference_policy = ERROR_WARN;
+#else
+		flags &= ~FLAG_NO_WEAK_INTERFERENCE;
+#endif
+	}
+
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	void
+	set_mode_breakall(void) {
+		unstable_policy = ERROR_BREAK;
+		weak_unstable_policy = ERROR_BREAK;
+		interference_policy = ERROR_BREAK;
+		weak_interference_policy = ERROR_BREAK;
+	}
+
+	static
+	const char*
+	error_policy_string(const error_policy_enum);
+#endif
 
 	bool
 	pending_events(void) const { return !event_queue.empty(); }
@@ -739,7 +806,7 @@ private:
 	void
 	enqueue_pending(const event_index_type);
 
-	void
+	break_type
 	flush_pending_queue(void);
 
 	void
@@ -777,11 +844,22 @@ private:
 		char prev, char next);
 #endif
 
-	void
+	break_type
 	__diagnose_violation(ostream&, const char next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
 		const node_index_type ni, const bool dir);
+
+	break_type
+	__report_instability(ostream&, const bool wk, const bool dir, 
+		const node_index_type, const event_type&) const;
+
+	break_type
+	__report_interference(ostream&, const bool wk, 
+		const node_index_type, const event_type&) const;
+
+	ostream&
+	__report_cause(ostream&, const event_type&) const;
 
 public:
 	void

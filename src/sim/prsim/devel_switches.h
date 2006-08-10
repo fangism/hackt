@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.3.2.1 2006/08/09 23:48:57 fang Exp $
+	$Id: devel_switches.h,v 1.3.2.2 2006/08/10 07:18:02 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -47,7 +47,7 @@
 	Status: not begun
 	Goal: 1
  */
-#define	PRSIM_FINE_GRAIN_ERROR_CONTROL		0
+#define	PRSIM_FINE_GRAIN_ERROR_CONTROL		1
 
 /**
 	Define to 1 to include cause-rules in event queue checkpointing.

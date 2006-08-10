@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.20.2.1 2006/08/09 23:48:56 fang Exp $
+	$Id: State.cc,v 1.20.2.2 2006/08/10 07:17:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -152,6 +152,12 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
 		flags(FLAGS_DEFAULT),
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		unstable_policy(ERROR_DEFAULT),
+		weak_unstable_policy(ERROR_DEFAULT),
+		interference_policy(ERROR_DEFAULT),
+		weak_interference_policy(ERROR_DEFAULT),
+#endif
 		timing_mode(TIMING_DEFAULT),
 		ifstreams(), 
 		__scratch_expr_trace() {
@@ -722,18 +728,6 @@ State::set_node_time(const node_index_type ni, const char val,
 	node_type& n(get_node(ni));
 	const event_index_type pending = n.get_event();
 	const char last_val = n.current_value();
-#if 0
-/***
-	If node is in the event queue already and is set to the 
-	same value, then issue warning.  
-***/
-	if (pending && val == last_val) {
-		const string objname(get_node_canonical_name(ni));
-		cout << "WARNING: ignoring set_node on `" << objname <<
-			"\' [interferes with pending event]" << endl;
-		return ENQUEUE_WARNING;
-	}
-#endif
 	const bool unchanged = (val == last_val);
 // If the value is the same as former value, then ignore it.
 // What if delay differs?
@@ -932,13 +926,38 @@ State::dump_breakpoints(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+const char*
+State::error_policy_string(const error_policy_enum e) {
+	switch (e) {
+	case ERROR_IGNORE:	return "ignore";
+	case ERROR_WARN:	return "warn";
+	case ERROR_BREAK:	return "break";
+	default:		DIE;
+	}	// end switch
+	 return NULL;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::dump_mode(ostream& o) const {
 	o << "mode: ";
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	o << "\tunstable: " <<
+		error_policy_string(unstable_policy) << endl;
+	o << "\tweak-unstable: " <<
+		error_policy_string(weak_unstable_policy) << endl;
+	o << "\tinterference: " <<
+		error_policy_string(interference_policy) << endl;
+	o << "\tweak-interference: " <<
+		error_policy_string(weak_interference_policy) << endl;
+#else
 	if (flags & FLAG_NO_WEAK_INTERFERENCE)
 		o << "reset (no weak-interference)";
 	else	o << "run (with weak-interference)";
 	return o << endl;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1074,10 +1093,13 @@ State::is_rule_expr(const expr_index_type ei) const {
 	This subroutine processes the pending queue events until cleared.  
 	Only called by step() member function.  
  */
-void
+State::break_type
 State::flush_pending_queue(void) {
 	typedef	pending_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	break_type err = false;
+#endif
 	const_iterator i(pending_queue.begin()), e(pending_queue.end());
 for ( ; i!=e; ++i) {
 	const event_index_type ne = *i;
@@ -1105,10 +1127,23 @@ for ( ; i!=e; ++i) {
 			(pull_dn_state == expr_type::PULL_WEAK);
 			// not XOR (^), see pending_weak table in prs.c
 		// issue diagnostic
-		if (!(flags & FLAG_NO_WEAK_INTERFERENCE) || !pending_weak) {
+		if (
+#if 0
+#elif PRSIM_FINE_GRAIN_ERROR_CONTROL
+			(weak_interference_policy != ERROR_IGNORE) ||
+#else
+			!(flags & FLAG_NO_WEAK_INTERFERENCE) ||
+#endif
+				!pending_weak) {
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+			err |=
+#endif
+			__report_interference(cout, pending_weak, _ni, ev);
+#if 0
 			cout << "WARNING: ";
-			if (pending_weak)
+			if (pending_weak) {
 				cout << "weak-";
+			}
 			cout << "interference `";
 			cout << get_node_canonical_name(_ni) <<
 				"\'" << endl;
@@ -1119,6 +1154,7 @@ for ( ; i!=e; ++i) {
 				get_node(ev.cause_node).dump_value(cout) <<
 					')' << endl;
 			}
+#endif
 		}
 		if (ev.pending_interference()) {
 			INVARIANT(_n.pending_event());
@@ -1164,6 +1200,9 @@ for ( ; i!=e; ++i) {
 	}	// end if may_be_pulled ...
 }	// end for all in pending_queue
 	pending_queue.clear();	// or .resize(0), same thing
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	return err;
+#endif
 }	// end method flush_pending_queue
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2095,6 +2134,93 @@ if (!n.pending_event()) {
 }	// end method propagate_evaluation
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+State::__report_cause(ostream& o, const event_type& ev) const {
+	if (ev.cause_node) {
+		o << ">> cause: `" <<
+			get_node_canonical_name(ev.cause_node) << "\' (val: ";
+		get_node(ev.cause_node).dump_value(o) << ')' << endl;
+	}
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if error causes break in events.  
+ */
+State::break_type
+State::__report_interference(ostream& o, const bool weak, 
+		const node_index_type _ni, const event_type& ev) const {
+	if (weak) {
+	if (
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		(weak_interference_policy != ERROR_IGNORE)
+#else
+		!(flags & FLAG_NO_WEAK_INTERFERENCE)
+#endif
+			) {
+		o << "WARNING: weak-interference `" <<
+			get_node_canonical_name(_ni) << "\'" << endl;
+		__report_cause(o, ev);
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		return weak_interference_policy == ERROR_BREAK;
+#endif
+	}	// endif weak_interference_policy
+	} else {	// !weak
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	if (interference_policy != ERROR_IGNORE) {
+#endif
+		o << "WARNING: interference `" <<
+			get_node_canonical_name(_ni) << "\'" << endl;
+		__report_cause(o, ev);
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		return interference_policy == ERROR_BREAK;
+	}	// endif interference_policy
+#endif
+	}	// endif weak
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	return false;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if error causes break in events.  
+ */
+State::break_type
+State::__report_instability(ostream& o, const bool weak, const bool dir, 
+		const node_index_type _ni, const event_type& ev) const {
+	if (weak) {
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	if (weak_unstable_policy != ERROR_IGNORE) {
+#endif
+		o << "WARNING: weak-unstable `" <<
+			get_node_canonical_name(_ni) << "\'" <<
+				(dir ? '+' : '-') << endl;
+		__report_cause(o, ev);
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		return weak_unstable_policy == ERROR_BREAK;
+	}	// endif weak_unstable_policy
+#endif
+	} else {	// !weak
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	if (unstable_policy != ERROR_IGNORE) {
+#endif
+		o << "WARNING: unstable `" <<
+			get_node_canonical_name(_ni) << "\'" <<
+				(dir ? '+' : '-') << endl;
+		__report_cause(o, ev);
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		return unstable_policy == ERROR_BREAK;
+	}	// endif unstable_policy
+#endif
+	}	// endif weak
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	return false;
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Helper function for repetitive diagnostic code.  
 	\param o error output stream
@@ -2105,13 +2231,17 @@ if (!n.pending_event()) {
 	\param n the node that fired
 	\param ni the node involved in event e
 	\param dir the direction of pull of the causing rule
+	\return true if error causes break.
  */
-void
+State::break_type
 State::__diagnose_violation(ostream& o, const char next, 
 		const event_index_type ei, event_type& e, 
 		const node_index_type ui, node_type& n, 
 		const node_index_type ni, const bool dir) {
 	STACKTRACE_VERBOSE;
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	break_type err = false;
+#endif
 	// something is amiss!
 	const char eu = dir ?
 		event_type::upguard[size_t(next)][size_t(e.val)] :
@@ -2180,18 +2310,29 @@ State::__diagnose_violation(ostream& o, const char next,
 		// diagnostic message
 		// suppress message for interferences until pending queue
 		if (instability) {
+#if 0
 			o << "WARNING: ";
 			if (eu & event_type::EVENT_WEAK)
 				o << "weak-";
-			o << (interference ? "interference `" : "unstable `") <<
+			o << "unstable `" <<
 				out_name << "\'" << (dir ? '+' : '-') << endl;
 			o << ">> cause: `" << cause_name << "\' (val: ";
 			get_node(ni).dump_value(o) <<	// " -> " <<
 			// o << node_type::value_to_char[size_t(e.val)] <<
 				")" << endl;
+#else
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+			err |=
+#endif
+			__report_instability(o, eu & event_type::EVENT_WEAK, 
+				dir, ui, e);
+#endif
 		}	// end if unstable
 	}	// end if !vacuous
 	// else vacuous is OK
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	return err;
+#endif
 }	// end method __diagnose_violation
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2882,6 +3023,12 @@ State::save_checkpoint(ostream& o) const {
 	}
 }
 	write_value(o, flags);
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	write_value(o, unstable_policy);
+	write_value(o, weak_unstable_policy);
+	write_value(o, interference_policy);
+	write_value(o, weak_interference_policy);
+#endif
 	write_value(o, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -3011,6 +3158,12 @@ State::load_checkpoint(istream& i) {
 	}
 }
 	read_value(i, flags);
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	read_value(i, unstable_policy);
+	read_value(i, weak_unstable_policy);
+	read_value(i, interference_policy);
+	read_value(i, weak_interference_policy);
+#endif
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -3116,6 +3269,19 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	flags_type flags;
 	read_value(i, flags);
 	o << "flags: " << size_t(flags) << endl;
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+{
+	error_policy_enum p;
+	read_value(i, p);
+	o << "unstable policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "weak-unstable policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "interference policy: " << error_policy_string(p) << endl;
+	read_value(i, p);
+	o << "weak-interference policy: " << error_policy_string(p) << endl;
+}
+#endif
 	char timing_mode;
 	read_value(i, timing_mode);
 	o << "timing mode: " << size_t(timing_mode) << endl;
