@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.20.2.2 2006/08/10 07:17:58 fang Exp $
+	$Id: State.cc,v 1.20.2.3 2006/08/10 20:22:12 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -153,10 +153,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		watch_list(), 
 		flags(FLAGS_DEFAULT),
 #if PRSIM_FINE_GRAIN_ERROR_CONTROL
-		unstable_policy(ERROR_DEFAULT),
-		weak_unstable_policy(ERROR_DEFAULT),
-		interference_policy(ERROR_DEFAULT),
-		weak_interference_policy(ERROR_DEFAULT),
+		unstable_policy(ERROR_DEFAULT_UNSTABLE),
+		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
+		interference_policy(ERROR_DEFAULT_INTERFERENCE),
+		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
 #endif
 		timing_mode(TIMING_DEFAULT),
 		ifstreams(), 
@@ -279,6 +279,7 @@ State::reset_tcounts(void) {
 	Preserve the watch/break point state.
 	\pre expressions are already properly sized.  
 	TODO: this unfortunately still preserves interpreter aliases.  
+		The 'unalias-all' command should clear all aliases.
  */
 void
 State::reset(void) {
@@ -296,6 +297,12 @@ State::reset(void) {
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
 	flags = FLAGS_DEFAULT;
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	unstable_policy = ERROR_DEFAULT_UNSTABLE;
+	weak_unstable_policy = ERROR_DEFAULT_WEAK_UNSTABLE;
+	interference_policy = ERROR_DEFAULT_INTERFERENCE;
+	weak_interference_policy = ERROR_DEFAULT_WEAK_INTERFERENCE;
+#endif
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
 	uniform_delay = time_traits::default_delay;
@@ -937,20 +944,45 @@ State::error_policy_string(const error_policy_enum e) {
 	}	// end switch
 	 return NULL;
 }
-#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Too lazy to write a map...
+ */
+State::error_policy_enum
+State::string_to_error_policy(const string& s) {
+	static const string _ignore("ignore");
+	static const string _warn("warn");
+	static const string _notify("notify");
+	static const string _break("break");
+	if (s == _ignore) {
+		return ERROR_IGNORE;
+	} else if (s == _warn || s == _notify) {
+		return ERROR_WARN;
+	} else if (s == _break) {
+		return ERROR_BREAK;
+	}
+	// else
+	return ERROR_INVALID;
+}
+
+#endif	// PRSIM_FINE_GRAIN_ERROR_CONTROL
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::dump_mode(ostream& o) const {
 	o << "mode: ";
 #if PRSIM_FINE_GRAIN_ERROR_CONTROL
-	o << "\tunstable: " <<
+	o << "\tunstable events " <<
+		(dequeue_unstable_events() ? "are dequeued" : "propagate Xs")
+			<< endl;
+	o << "\ton unstable: " <<
 		error_policy_string(unstable_policy) << endl;
-	o << "\tweak-unstable: " <<
+	o << "\ton weak-unstable: " <<
 		error_policy_string(weak_unstable_policy) << endl;
-	o << "\tinterference: " <<
+	o << "\ton interference: " <<
 		error_policy_string(interference_policy) << endl;
-	o << "\tweak-interference: " <<
+	o << "\ton weak-interference: " <<
 		error_policy_string(weak_interference_policy) << endl;
 #else
 	if (flags & FLAG_NO_WEAK_INTERFERENCE)
@@ -1756,7 +1788,13 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i(n.fanout.begin()), e(n.fanout.end());
 	for ( ; i!=e; ++i) {
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		if (UNLIKELY(propagate_evaluation(ni, *i, prev, next))) {
+			stop();
+		}
+#else
 		propagate_evaluation(ni, *i, prev, next);
+#endif
 	}
 }
 	/***
@@ -1804,7 +1842,13 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	// energy estimation?  TODO later for a different sim variant
 
 	// check and flush pending queue, spawn fanout events
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	if (UNLIKELY(flush_pending_queue())) {
+		stop();
+	}
+#else
 	flush_pending_queue();
+#endif
 
 	// check and flush pending queue against exclhi/lo events
 	flush_exclhi_queue();
@@ -1937,13 +1981,17 @@ do {
 	NOTE: the action table here depends on the expression-type's
 		subtype encoding.  For now, we use the Expr's encoding.  
  */
-void
+State::break_type
 State::propagate_evaluation(const node_index_type ni, expr_index_type ui, 
 		char prev, char next) {
 	const evaluate_return_type
 		ev_result(evaluate(ni, ui, prev, next));
 	if (!ev_result.node_index)
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		return false;
+#else
 		return;
+#endif
 	next = ev_result.root_pull;
 	ui = ev_result.node_index;
 	const expr_type* const u(ev_result.root_ex);
@@ -1965,6 +2013,9 @@ State::propagate_evaluation(const node_index_type ni, expr_index_type ui,
 		get_node_canonical_name(ui) << " with pull state " <<
 		size_t(next) << endl);
 	const event_index_type ei = n.get_event();
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	break_type err = false;
+#endif
 if (u->direction()) {
 	// pull-up
 /***
@@ -2047,6 +2098,9 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		err |=
+#endif
 		__diagnose_violation(cout, next, ei, e, ui, n, 
 			ni, u->direction());
 	}	// end if diagnostic
@@ -2126,11 +2180,17 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		err |=
+#endif
 		__diagnose_violation(cout, next, ei, e, ui, n, 
 			ni, u->direction());
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	return err;
+#endif
 }	// end method propagate_evaluation
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

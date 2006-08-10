@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.15.2.1 2006/08/09 23:48:54 fang Exp $
+	$Id: Command.cc,v 1.15.2.2 2006/08/10 20:22:11 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1221,6 +1221,7 @@ if (a.size() != 1) {
 void
 Cycle::usage(ostream& o) {
 	o << "cycle" << endl;
+	o << "Runs until event queue is empty." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2517,6 +2518,80 @@ UnstableDequeue::usage(ostream& o) {
 	o << name << endl;
 	o << "Unstable events are dequeued during run-time." << endl;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+static const char
+break_options[] = "[ignore|warn|notify|break]";
+
+static const char
+break_descriptions[] = 
+"\tignore: silently ignores violation\n"
+"\twarn: print warning without halting\n"
+"\tnotify: (same as warn)\n"
+"\tbreak: notify and halt";
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#define	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(class_name, command_key, \
+		brief_str, usage_str, func_name) 			\
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(class_name, command_key, 		\
+		modes, brief_str)					\
+									\
+int									\
+class_name::main(State& s, const string_list& a) {			\
+if (a.size() != 2) {							\
+	usage(cerr << "usage: ");					\
+	cerr << "current mode: " <<					\
+		State::error_policy_string(s.get_##func_name##_policy()) \
+		<< endl;						\
+	return Command::BADARG;						\
+} else {								\
+	const string& m(a.back());					\
+	State::error_policy_enum e = State::string_to_error_policy(m);	\
+	if (State::valid_error_policy(e)) {				\
+		s.set_##func_name##_policy(e);				\
+		return Command::NORMAL;					\
+	} else {							\
+		cerr << "bad mode: \'" << m << "\'." << endl;		\
+		usage(cerr << "usage: ");				\
+		return Command::BADARG;					\
+	}								\
+}									\
+}									\
+									\
+void									\
+class_name::usage(ostream& o) {						\
+	o << name << " " << break_options << endl;			\
+	o << usage_str << endl;						\
+	o << break_descriptions << endl;				\
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Unstable, "unstable", 
+	"alter simulation behavior on unstable", 
+	"Alters simulator behavior on an instability violation.",
+	unstable)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakUnstable, "weak-unstable", 
+	"alter simulation behavior on weak-unstable",
+	"Alters simulator behavior on a weak-instability violation.", 
+	weak_unstable)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Interference, "interference", 
+	"alter simulation behavior on interference",
+	"Alters simulator behavior on an interference violation.",
+	interference)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference", 
+	"alter simulation behavior on weak-interference",
+	"Alters simulator behavior on a weak-interference violation.",
+	weak_interference)
+
+#undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
+#endif	// PRSIM_FINE_GRAIN_ERROR_CONTROL
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 

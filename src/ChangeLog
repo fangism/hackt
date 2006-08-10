@@ -5,6 +5,20 @@
 
 2006-08-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-54-prsim-07-03:
+	  prsim: added commands 'unstable' 'weak-unstable' 'interference'
+		'weak-interference' which all take one of the arguments
+		'ignore' 'warn' 'notify' (same as warn) 'break'.
+		These commands control the simulation policy on the
+		named violations.  
+	  State.cc: corrected the default values of violation policies,
+		reset() also resets the violation policies.  
+		propagate the result of evaluation and flush_pending_queue
+			to callers to conditionally set the STOP flag.  
+	  A few test-cases updated to allow unstable behavior where intended.
+	  TODO: backtracing events and value-specific causality.
+
+
 	* HACKT-00-01-04-main-00-79-54-prsim-07-02:
 	  prsim: devel-switch: PRSIM_FINE_GRAIN_ERROR_CONTROL added:
 		be able to control whether or not diagnostic is printed

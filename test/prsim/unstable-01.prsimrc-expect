@@ -5,6 +5,7 @@ WARNING: unstable `b'-
 >> cause: `a' (val: 0)
 	5	a : 0
 	10	b : X	[by a:=0]
+initializing 
 	0	a : 0
 expect instability 
 WARNING: unstable `b'+

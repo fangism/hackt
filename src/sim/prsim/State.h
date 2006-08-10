@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12.2.2 2006/08/10 07:18:00 fang Exp $
+	$Id: State.h,v 1.12.2.3 2006/08/10 20:22:13 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -232,6 +232,7 @@ private:
 	typedef	unsigned char			flags_type;
 
 #if PRSIM_FINE_GRAIN_ERROR_CONTROL
+public:
 	/**
 		Policy enumeration for determining simulation behavior
 		in the event of an anomaly.  
@@ -241,9 +242,14 @@ private:
 		ERROR_WARN = 1,
 		ERROR_NOTIFY = ERROR_WARN,
 		ERROR_BREAK = 2,
-		ERROR_DEFAULT = ERROR_BREAK
+		ERROR_INVALID,
+		ERROR_DEFAULT_UNSTABLE = ERROR_BREAK,
+		ERROR_DEFAULT_WEAK_UNSTABLE = ERROR_WARN,
+		ERROR_DEFAULT_INTERFERENCE = ERROR_BREAK,
+		ERROR_DEFAULT_WEAK_INTERFERENCE = ERROR_WARN
 	} error_policy_enum;
 
+private:
 	/**
 		Return type to indicate whether or not to break.  
 	 */
@@ -548,6 +554,49 @@ public:
 	static
 	const char*
 	error_policy_string(const error_policy_enum);
+
+	static
+	error_policy_enum
+	string_to_error_policy(const string&);
+
+	static
+	bool
+	valid_error_policy(const error_policy_enum e) {
+		return e != ERROR_INVALID;
+	}
+
+	void
+	set_unstable_policy(const error_policy_enum e) {
+		unstable_policy = e;
+	}
+
+	void
+	set_weak_unstable_policy(const error_policy_enum e) {
+		weak_unstable_policy = e;
+	}
+
+	void
+	set_interference_policy(const error_policy_enum e) {
+		interference_policy = e;
+	}
+
+	void
+	set_weak_interference_policy(const error_policy_enum e) {
+		weak_interference_policy = e;
+	}
+
+	error_policy_enum
+	get_unstable_policy(void) const { return unstable_policy; }
+
+	error_policy_enum
+	get_weak_unstable_policy(void) const { return weak_unstable_policy; }
+
+	error_policy_enum
+	get_interference_policy(void) const { return interference_policy; }
+
+	error_policy_enum
+	get_weak_interference_policy(void) const
+		{ return weak_interference_policy; }
 #endif
 
 	bool
@@ -834,7 +883,7 @@ private:
 	evaluate(const node_index_type, expr_index_type, 
 		char prev, char next);
 
-	void
+	break_type
 	propagate_evaluation(const node_index_type, expr_index_type, 
 		char prev, char next);
 
