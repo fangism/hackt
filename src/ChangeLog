@@ -5,6 +5,18 @@
 
 2006-08-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-54-prsim-07-04:
+	  Added sim/prsim/Cause.h: for advanced cause tracking structures.
+	  PRSIM_SEPARTE_CAUSE_NODE_DIRECTION still disabled in this snapshot.
+		Much coded added to use it in Node/Event...
+	  Minor switch added and enabled: PRSIM_ASSIGN_CAUSE_ON_DEQUEUE:
+		instead of assigning cause on enqueue of event, 
+		assign the cause after event actually happens, so unstable 
+		events don't get mistakenly and prematurely assigned blame.  
+		This causes no regressions.  
+	  Next: resume cause-separation.  
+
+
 	* HACKT-00-01-04-main-00-79-54-prsim-07-03:
 	  prsim: added commands 'unstable' 'weak-unstable' 'interference'
 		'weak-interference' which all take one of the arguments

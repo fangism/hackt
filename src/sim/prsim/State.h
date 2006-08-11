@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12.2.3 2006/08/10 20:22:13 fang Exp $
+	$Id: State.h,v 1.12.2.4 2006/08/11 00:05:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -87,6 +87,7 @@ public:
 	typedef	real_time			time_type;
 	typedef	delay_policy<time_type>		time_traits;
 	typedef	NodeState			node_type;
+	typedef	node_type::event_cause_type	event_cause_type;
 	typedef	ExprState			expr_type;
 	typedef	ExprGraphNode			graph_node_type;
 	typedef	Event				event_type;
@@ -802,13 +803,21 @@ private:
 private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type&,
+#else
 		const node_index_type c, // this is the causing node
+#endif
 		const rule_index_type, const char);
 
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type&,
+#else
 		const node_index_type c,	// this is the causing node
+#endif
 		const char);
 
 	void

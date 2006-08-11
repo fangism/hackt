@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.20.2.3 2006/08/10 20:22:12 fang Exp $
+	$Id: State.cc,v 1.20.2.4 2006/08/11 00:05:47 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -515,8 +515,8 @@ State::append_check_excllo_ring(const ring_set_type& r) {
 	Should be inline only.  
 	\param n the reference to the node.
 	\param ni the referenced node's index.
-	\param ci the index of the node that caused this event to enqueue, 
-		may be INVALID_NODE_INDEX.
+	\param c the index of the node (and value) that caused this event to 
+		enqueue, may be INVALID_NODE_INDEX.
 	\param ri the index rule/expression that caused this event to fire, 
 		for the purposes of delay computation.
 	\param val the future value of the node.
@@ -526,15 +526,25 @@ State::append_check_excllo_ring(const ring_set_type& r) {
 event_index_type
 State::__allocate_event(node_type& n,
 		const node_index_type ni,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type& c,
+#else
 		const node_index_type ci, 
+#endif
 		const rule_index_type ri,
 		const char val) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!n.pending_event());
 	n.set_event(event_pool.allocate(
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		event_type(ni, c, ri, val)
+#else
 		event_type(ni, ci, ri, val)
+#endif
 		));
+#if !PRSIM_ASSIGN_CAUSE_ON_DEQUEUE
 	n.set_cause_node(ci);
+#endif
 	return n.get_event();
 }
 
@@ -551,15 +561,27 @@ State::__allocate_event(node_type& n,
 event_index_type
 State::__allocate_pending_interference_event(node_type& n,
 		const node_index_type ni,
-		const node_index_type ci, const char next) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type& c,
+#else
+		const node_index_type ci,
+#endif
+		const char next) {
 	STACKTRACE_VERBOSE;
 	// node may or may not have pending event (?)
 	// don't care about the node value
 	const event_index_type ne = event_pool.allocate(
-		event_type(ni, ci, INVALID_RULE_INDEX, next));
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		event_type(ni, c, INVALID_RULE_INDEX, next)
+#else
+		event_type(ni, ci, INVALID_RULE_INDEX, next)
+#endif
+		);
 	get_event(ne).pending_interference(true);
 	// n.set_event(ne);
+#if !PRSIM_ASSIGN_CAUSE_ON_DEQUEUE
 	n.set_cause_node(ci);
+#endif
 	return ne;
 }
 
@@ -1160,8 +1182,7 @@ for ( ; i!=e; ++i) {
 			// not XOR (^), see pending_weak table in prs.c
 		// issue diagnostic
 		if (
-#if 0
-#elif PRSIM_FINE_GRAIN_ERROR_CONTROL
+#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 			(weak_interference_policy != ERROR_IGNORE) ||
 #else
 			!(flags & FLAG_NO_WEAK_INTERFERENCE) ||
@@ -1171,22 +1192,6 @@ for ( ; i!=e; ++i) {
 			err |=
 #endif
 			__report_interference(cout, pending_weak, _ni, ev);
-#if 0
-			cout << "WARNING: ";
-			if (pending_weak) {
-				cout << "weak-";
-			}
-			cout << "interference `";
-			cout << get_node_canonical_name(_ni) <<
-				"\'" << endl;
-			if (ev.cause_node) {
-				cout << ">> cause: `" <<
-					get_node_canonical_name(ev.cause_node)
-					<< "\' (val: ";
-				get_node(ev.cause_node).dump_value(cout) <<
-					')' << endl;
-			}
-#endif
 		}
 		if (ev.pending_interference()) {
 			INVARIANT(_n.pending_event());
@@ -1772,6 +1777,9 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 			throw exex;
 		}
 	}
+#if PRSIM_ASSIGN_CAUSE_ON_DEQUEUE
+	n.set_cause_node(ci);
+#endif
 	n.set_value(pe.val);
 	// count transition only if new value is not X
 	if (pe.val != node_type::LOGIC_OTHER) {
@@ -2370,23 +2378,11 @@ State::__diagnose_violation(ostream& o, const char next,
 		// diagnostic message
 		// suppress message for interferences until pending queue
 		if (instability) {
-#if 0
-			o << "WARNING: ";
-			if (eu & event_type::EVENT_WEAK)
-				o << "weak-";
-			o << "unstable `" <<
-				out_name << "\'" << (dir ? '+' : '-') << endl;
-			o << ">> cause: `" << cause_name << "\' (val: ";
-			get_node(ni).dump_value(o) <<	// " -> " <<
-			// o << node_type::value_to_char[size_t(e.val)] <<
-				")" << endl;
-#else
 #if PRSIM_FINE_GRAIN_ERROR_CONTROL
 			err |=
 #endif
 			__report_instability(o, eu & event_type::EVENT_WEAK, 
 				dir, ui, e);
-#endif
 		}	// end if unstable
 	}	// end if !vacuous
 	// else vacuous is OK

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.12 2006/07/28 03:31:13 fang Exp $
+	$Id: Node.h,v 1.12.2.1 2006/08/11 00:05:46 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -15,6 +15,7 @@
 #include "util/attributes.h"
 #include "sim/common.h"
 #include "sim/prsim/devel_switches.h"
+#include "sim/prsim/Cause.h"
 
 namespace HAC {
 namespace SIM {
@@ -165,42 +166,6 @@ public:
 
 //=============================================================================
 /**
-	Structure for tracking event causality in greater detail.  
-	Members kept in separate arrays for better alignment.  
- */
-struct LastCause {
-	/**
-		The causing node.  
-		Indexed by node's current value.  
-	 */
-	node_index_type				caused_by_node[3];
-	/**
-		The value of the causing node.  
-		3 of 4 slots used for better padding.  
-	 */
-	unsigned char				caused_by_value[4];
-
-	/**
-		How the f-- do you initialize aggregate members?
-	 */
-	LastCause()
-		// caused_by_node({0}),
-		// caused_by_value({0})
-	{
-		// caused_by_node = {0};
-		// caused_by_value = {0};
-		// *this = {{0,0,0}, {0,0,0}};
-		caused_by_node[0] = INVALID_NODE_INDEX;
-		caused_by_node[1] = INVALID_NODE_INDEX;
-		caused_by_node[2] = INVALID_NODE_INDEX;
-		caused_by_value[0] = 0;	// don't care
-		caused_by_value[1] = 0;	// don't care
-		caused_by_value[2] = 0;	// don't care
-	}
-};	// end struct LastCause
-
-//=============================================================================
-/**
 	Structural information extended with stateful information.  
 	Size of this should be a total of 8 double-words, or 32 B.  
 	Nice and quad-word aligned.  
@@ -210,6 +175,7 @@ private:
 	typedef	NodeState			this_type;
 public:
 	typedef	Node				parent_type;
+	typedef	LastCause::event_cause_type	event_cause_type;
 
 	typedef	enum {
 		LOGIC_LOW = 0x00,		// 0
@@ -301,6 +267,23 @@ public:
 	}
 
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	/**
+		By default, uses the current value.  
+	 */
+	node_index_type
+	get_cause_node(void) const {
+		return causes.get_cause_node(value);
+	}
+
+	event_cause_type
+	get_cause(void) const {
+		return causes.get_cause(value);
+	}
+
+	event_cause_type
+	get_cause(const unsigned char v) const {
+		return causes.get_cause(v);
+	}
 #else
 	node_index_type
 	get_cause_node(void) const { return caused_by_node; }
