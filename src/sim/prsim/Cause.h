@@ -1,17 +1,15 @@
 /**
 	\file "sim/prsim/Cause.h"
 	Structure of basic node event.  
-	$Id: Cause.h,v 1.1.2.2 2006/08/11 02:05:48 fang Exp $
+	$Id: Cause.h,v 1.1.2.3 2006/08/11 22:52:00 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CAUSE_H__
 #define	__HAC_SIM_PRSIM_CAUSE_H__
 
 #include <iosfwd>
-// #include "util/macros.h"
-// #include "util/attributes.h"
 #include "sim/common.h"
-// #include "sim/prsim/devel_switches.h"
+#include "util/utypes.h"
 
 namespace HAC {
 namespace SIM {
@@ -25,11 +23,11 @@ using std::istream;
  */
 struct EventCause {
 	node_index_type				node;
-	unsigned char				val;
+	uchar					val;
 
 	EventCause() : node(INVALID_NODE_INDEX), val(0) { }
 
-	EventCause(const node_index_type n, const unsigned char v) :
+	EventCause(const node_index_type n, const uchar v) :
 		node(n), val(v) { }
 
 	/**
@@ -65,7 +63,7 @@ struct LastCause {
 		3 of 4 slots used for better padding.  
 		Indexed by node's current value. 
 	 */
-	unsigned char				caused_by_value[4];
+	uchar					caused_by_value[4];
 
 	/**
 		How the f-- do you initialize aggregate members?
@@ -90,18 +88,18 @@ struct LastCause {
 		\return the index of the last node to cause this change.
 	 */
 	node_index_type
-	get_cause_node(const unsigned char v) const {
+	get_cause_node(const uchar v) const {
 		return caused_by_node[size_t(v)];
 	}
 
 	event_cause_type
-	get_cause(const unsigned char v) const {
+	get_cause(const uchar v) const {
 		const size_t i(v);
 		return event_cause_type(caused_by_node[i], caused_by_value[i]);
 	}
 
 	void
-	set_cause(const unsigned char v, const event_cause_type& e) {
+	set_cause(const uchar v, const event_cause_type& e) {
 		const size_t i(v);
 		caused_by_node[i] = e.node;
 		caused_by_value[i] = e.val;

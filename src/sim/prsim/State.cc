@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.20.2.8 2006/08/11 21:50:08 fang Exp $
+	$Id: State.cc,v 1.20.2.9 2006/08/11 22:52:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -130,7 +130,7 @@ State::magic_string("hackt-prsim-ckpt");
 	Reminder enumerations for pull-state are defined in the event_type.
 	Keep it consistent.  
  */
-const char
+const uchar
 State::pull_to_value[3][3] = {
 { node_type::LOGIC_OTHER, node_type::LOGIC_LOW, node_type::LOGIC_OTHER },
 { node_type::LOGIC_HIGH, node_type::LOGIC_OTHER, node_type::LOGIC_OTHER },
@@ -363,7 +363,7 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 	typedef	set<event_cause_type>		event_set_type;
 	// start from the current value of the referenced node
 	const node_type* n(&get_node(ni));
-	const unsigned char v = n->current_value();
+	const uchar v = n->current_value();
 	event_cause_type e(ni, v);
 	o << "node at: `" << get_node_canonical_name(ni) <<
 		"\' : " << node_type::value_to_char[size_t(v)] << endl;
@@ -572,7 +572,7 @@ State::__allocate_event(node_type& n,
 		const node_index_type ni,
 		cause_arg_type c, 
 		const rule_index_type ri,
-		const char val) {
+		const uchar val) {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!n.pending_event());
 	n.set_event(event_pool.allocate(event_type(ni, c, ri, val)));
@@ -594,7 +594,7 @@ event_index_type
 State::__allocate_pending_interference_event(node_type& n,
 		const node_index_type ni,
 		cause_arg_type c, 
-		const char next) {
+		const uchar next) {
 	STACKTRACE_VERBOSE;
 	// node may or may not have pending event (?)
 	// don't care about the node value
@@ -767,7 +767,7 @@ State::next_event_time(void) const {
 	\return status: 0 is accepted, 1 is warning.  
  */
 int
-State::set_node_time(const node_index_type ni, const char val,
+State::set_node_time(const node_index_type ni, const uchar val,
 		const time_type t, const bool f) {
 	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("setting " << get_node_canonical_name(ni) <<
@@ -777,7 +777,7 @@ State::set_node_time(const node_index_type ni, const char val,
 	// just look it up in the node_pool
 	node_type& n(get_node(ni));
 	const event_index_type pending = n.get_event();
-	const char last_val = n.current_value();
+	const uchar last_val = n.current_value();
 	const bool unchanged = (val == last_val);
 // If the value is the same as former value, then ignore it.
 // What if delay differs?
@@ -847,12 +847,12 @@ State::unset_node(const node_index_type ni) {
 	const expr_index_type u = n.pull_up_index;
 	const expr_index_type d = n.pull_dn_index;
 	// if there is no pull-*, it's as good as off!
-	const char pu =
+	const uchar pu =
 		(u ? expr_pool[u].pull_state() : char(expr_type::PULL_OFF));
-	const char pd =
+	const uchar pd =
 		(d ? expr_pool[d].pull_state() : char(expr_type::PULL_OFF));
 if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
-	const char new_val = pull_to_value[size_t(pu)][size_t(pd)];
+	const uchar new_val = pull_to_value[size_t(pu)][size_t(pd)];
 	if (pending) {
 		event_type& e(get_event(pending));
 		if (e.val != new_val) {
@@ -867,7 +867,7 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 		// else do nothing, correct value already pending
 	} else {
 		// no event pending, can make one
-		const char current = n.current_value();
+		const uchar current = n.current_value();
 		if (current != new_val) {
 #if 0
 			rule_index_type ri;
@@ -1172,8 +1172,8 @@ for ( ; i!=e; ++i) {
 	DEBUG_STEP_PRINT("... on node " <<
 		get_node_canonical_name(_ni) << endl);
 	node_type& _n(get_node(_ni));
-	const char pull_up_state = expr_pool[_n.pull_up_index].pull_state();
-	const char pull_dn_state = expr_pool[_n.pull_dn_index].pull_state();
+	const uchar pull_up_state = expr_pool[_n.pull_up_index].pull_state();
+	const uchar pull_dn_state = expr_pool[_n.pull_dn_index].pull_state();
 	DEBUG_STEP_PRINT("current pull-states: up=" <<
 		size_t(pull_up_state) << ", dn=" <<
 		size_t(pull_dn_state) << endl);
@@ -1584,7 +1584,7 @@ for ( ; i!=e; ++i) {
  */
 State::excl_exception
 State::check_excl_rings(const node_index_type ni, const node_type& n, 
-		const char prev, const char next) {
+		const uchar prev, const uchar next) {
 	typedef	check_excl_ring_map_type::const_iterator	const_iterator;
 	typedef	lock_index_list_type::const_iterator	lock_index_iterator;
 	typedef	check_excl_lock_pool_type::reference	lock_reference;
@@ -1744,7 +1744,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
 	node_type& n(get_node(ni));
-	const char prev = n.current_value();
+	const uchar prev = n.current_value();
 	node_index_type _ci;	// just a copy
 {
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
@@ -1817,7 +1817,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	// note: pe is invalid, deallocated beyond this point, could scope it
 	// reminder: do not reference pe beyond this point (deallocated)
 	// could scope the reference to prevent it...
-	const char next = n.current_value();
+	const uchar next = n.current_value();
 	// value propagation...
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const event_cause_type new_cause(ni, next);
@@ -1926,7 +1926,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
  */
 void
 State::kill_evaluation(const node_index_type ni, expr_index_type ui, 
-		char prev, char next) {
+		uchar prev, uchar next) {
 	FINISH_ME(Fang);
 }
 #endif
@@ -1951,7 +1951,7 @@ State::kill_evaluation(const node_index_type ni, expr_index_type ui,
 // inline
 State::evaluate_return_type
 State::evaluate(const node_index_type ni, expr_index_type ui, 
-		char prev, char next) {
+		uchar prev, uchar next) {
 	STACKTRACE_VERBOSE_STEP;
 	DEBUG_STEP_PRINT("node " << ni << " from " <<
 		node_type::value_to_char[size_t(prev)] << " -> " <<
@@ -1959,7 +1959,7 @@ State::evaluate(const node_index_type ni, expr_index_type ui,
 	expr_type* u;
 	__scratch_expr_trace.clear();
 do {
-	char old_pull, new_pull;	// pulling state of the subexpression
+	uchar old_pull, new_pull;	// pulling state of the subexpression
 	u = &expr_pool[ui];
 	__scratch_expr_trace.push_back(ui);
 #if DEBUG_STEP
@@ -2027,14 +2027,14 @@ State::break_type
 State::propagate_evaluation(
 		cause_arg_type c, 
 		expr_index_type ui, 
-		char prev
+		uchar prev
 #if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, char next
+		, uchar next
 #endif 
 		) {
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	const node_index_type& ni(c.node);
-	char next;	// just local variable
+	uchar next;	// just local variable
 #else
 	const node_index_type& ni(c);
 #endif
@@ -2327,7 +2327,7 @@ State::__report_instability(ostream& o, const bool weak, const bool dir,
 	\return true if error causes break.
  */
 State::break_type
-State::__diagnose_violation(ostream& o, const char next, 
+State::__diagnose_violation(ostream& o, const uchar next, 
 		const event_index_type ei, event_type& e, 
 		const node_index_type ui, node_type& n, 
 		cause_arg_type c, 
@@ -2340,7 +2340,7 @@ State::__diagnose_violation(ostream& o, const char next,
 #endif
 	break_type err = false;
 	// something is amiss!
-	const char eu = dir ?
+	const uchar eu = dir ?
 		event_type::upguard[size_t(next)][size_t(e.val)] :
 		event_type::dnguard[size_t(next)][size_t(e.val)];
 	DEBUG_STEP_PRINT("event_update = " << size_t(eu) << endl);
@@ -2515,7 +2515,7 @@ State::dump_watched_nodes(ostream& o) const {
 	\param val node_type::LOGIC_{LOW,HIGH,OTHER}.  
  */
 ostream&
-State::status_nodes(ostream& o, const char val) const {
+State::status_nodes(ostream& o, const uchar val) const {
 	INVARIANT(node_type::is_valid_value(val));
 	const size_t ns = node_pool.size();
 	size_t i = INVALID_NODE_INDEX +1;
@@ -2773,7 +2773,7 @@ State::dump_node_fanin(ostream& o, const node_index_type ni) const {
  */
 ostream&
 State::dump_subexpr(ostream& o, const expr_index_type ei, 
-		const char ptype, const bool pr) const {
+		const uchar ptype, const bool pr) const {
 #if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;
 #endif
@@ -2783,7 +2783,7 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 	const graph_node_type& g(expr_graph_node_pool[ei]);
 	// can elaborate more on when parens are needed
 	const bool need_parens = e.parenthesize(ptype, pr);
-	const char _type = e.type;
+	const uchar _type = e.type;
 	// check if this sub-expression is a root expression by looking
 	// up the expression index in the rule_map.  
 	typedef	rule_map_type::const_iterator	rule_iterator;
@@ -3163,13 +3163,13 @@ State::load_checkpoint(istream& i) {
 	typedef node_pool_type::const_iterator	const_iterator;
 	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
 	const_iterator ni(nb);
-	const char prev = node_type::LOGIC_OTHER;
+	const uchar prev = node_type::LOGIC_OTHER;
 	for (++ni; ni!=ne; ++ni) {
 		typedef	node_type::const_fanout_iterator
 					const_fanout_iterator;
 		const node_type& n(*ni);
 		const_fanout_iterator fi(n.fanout.begin()), fe(n.fanout.end());
-		const char next = n.current_value();
+		const uchar next = n.current_value();
 		if (next != prev) {
 			const expr_index_type nj(distance(nb, ni));
 			for ( ; fi!=fe; ++fi) {
@@ -3252,11 +3252,11 @@ if (checking_excl()) {
 	typedef node_pool_type::const_iterator	const_iterator;
 	const const_iterator nb(node_pool.begin()), ne(node_pool.end());
 	const_iterator ni(nb);
-	const char prev = node_type::LOGIC_OTHER;
+	const uchar prev = node_type::LOGIC_OTHER;
 	for (++ni; ni!=ne; ++ni) {
 	// lock exclusive check rings
 		const node_type& n(*ni);
-		const char next = n.current_value();
+		const uchar next = n.current_value();
 		const excl_exception
 			e(check_excl_rings(distance(nb, ni), n, prev, next));
 		if (e.lock_id) {

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.6.2.2 2006/08/11 00:05:45 fang Exp $
+	$Id: Event.h,v 1.6.2.3 2006/08/11 22:52:01 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -15,6 +15,7 @@
 #include "util/likely.h"
 #include "util/attributes.h"
 #include "util/macros.h"
+#include "util/utypes.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
 #include "sim/prsim/devel_switches.h"
@@ -61,12 +62,12 @@ public:
 		Event classification table of 
 		pull-up-state vs. event pending value.  
 	 */
-	static const char		upguard[3][3];
+	static const uchar		upguard[3][3];
 	/**
 		Event classification table of 
 		pull-dn-state vs. event pending value.  
 	 */
-	static const char		dnguard[3][3];
+	static const uchar		dnguard[3][3];
 public:
 	/**
 		The index of the node to switch.
@@ -96,7 +97,7 @@ public:
 		The node's new value: 0, 1, 2 (X).
 		See Node::value enumeration.
 	 */
-	unsigned char			val;
+	uchar				val;
 protected:
 	enum {
 		/**
@@ -119,7 +120,7 @@ protected:
 		Additional event flags.  
 		Protected visibility to use method interface.  
 	 */
-        unsigned char			flags;
+        uchar				flags;
 	// note: room for one more short int
 public:
 	Event() : node(INVALID_NODE_INDEX),
@@ -138,12 +139,12 @@ public:
 	 */
 	Event(const node_index_type n,
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		const cause_type c, 
+		const cause_type& c, 
 #else
 		const node_index_type c, 
 #endif
 		const rule_index_type r, 
-		const unsigned char v) :
+		const uchar v) :
 		node(n),
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		cause(c), 

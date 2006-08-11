@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.6.2.1 2006/08/11 00:05:45 fang Exp $
+	$Id: Event.cc,v 1.6.2.2 2006/08/11 22:52:01 fang Exp $
  */
 
 #include <iostream>
@@ -34,7 +34,7 @@ using util::read_value;
 	First index is the guard's pulling state (F = OFF, T = ON, X = WEAK),
 	second index is the pending event state.
  */
-const char
+const uchar
 Event::upguard[3][3] = {
 	{	EVENT_VACUOUS, 		// guard F, event F: vacuous
 		EVENT_UNSTABLE,		// guard F, event T: unstable
@@ -50,7 +50,7 @@ Event::upguard[3][3] = {
 	}
 };
 
-const char
+const uchar
 Event::dnguard[3][3] = {
 	{	EVENT_UNSTABLE,		// guard F, event F: vacuous
 		EVENT_VACUOUS,		// guard F, event T: unstable

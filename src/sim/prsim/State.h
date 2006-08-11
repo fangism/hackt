@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12.2.8 2006/08/11 21:50:09 fang Exp $
+	$Id: State.h,v 1.12.2.9 2006/08/11 22:52:05 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -137,12 +137,12 @@ private:
 	struct evaluate_return_type {
 		node_index_type			node_index;
 		expr_type*			root_ex;
-		char				root_pull;
+		uchar				root_pull;
 
 		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
 
 		evaluate_return_type(const node_index_type ni,
-			expr_type* const e, const char p) :
+			expr_type* const e, const uchar p) :
 			node_index(ni), root_ex(e), root_pull(p) { }
 	};	// end struct evaluate_return_type
 private:
@@ -230,7 +230,7 @@ private:
 	/**
 		As we add more flags this will have to expand...
 	 */
-	typedef	unsigned char			flags_type;
+	typedef	uchar				flags_type;
 
 public:
 	/**
@@ -285,7 +285,7 @@ private:
 		Used when node is re-evaluated.  
 		Indexed by [pull-up state][pull-down state].
 	 */
-	static const char			pull_to_value[3][3];
+	static const uchar			pull_to_value[3][3];
 
 public:
 	/**
@@ -383,7 +383,7 @@ private:
 	error_policy_enum			weak_interference_policy;
 	
 	/// timing mode
-	char					timing_mode;
+	uchar					timing_mode;
 	// loadable random seed?
 	/**
 		set by the SIGINT signal handler
@@ -604,17 +604,17 @@ public:
 	next_event_time(void) const;
 
 	int
-	set_node_time(const node_index_type, const char val, 
+	set_node_time(const node_index_type, const uchar val, 
 		const time_type t, const bool f);
 
 	int
-	set_node_after(const node_index_type n, const char val, 
+	set_node_after(const node_index_type n, const uchar val, 
 		const time_type t, const bool f) {
 		return set_node_time(n, val, this->current_time +t, f);
 	}
 
 	int
-	set_node(const node_index_type n, const char val,
+	set_node(const node_index_type n, const uchar val,
 			const bool f) {
 		return set_node_time(n, val, this->current_time, f);
 	}
@@ -696,7 +696,7 @@ public:
 	dump_watched_nodes(ostream&) const;
 
 	ostream&
-	status_nodes(ostream&, const char) const;
+	status_nodes(ostream&, const uchar) const;
 
 	template <class L>
 	void
@@ -736,7 +736,7 @@ public:
 protected:
 	excl_exception
 	check_excl_rings(const node_index_type, const node_type&, 
-		const char prev, const char next);
+		const uchar prev, const uchar next);
 
 public:
 	bool
@@ -796,14 +796,14 @@ private:
 private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
-		cause_arg_type,	// this is the causing node
-		const rule_index_type, const char);
+		cause_arg_type,	// this is the causing node/event
+		const rule_index_type, const uchar);
 
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
-		cause_arg_type,	// this is the causing node
-		const char);
+		cause_arg_type,	// this is the causing node/event
+		const uchar);
 
 	void
 	__deallocate_pending_interference_event(const event_index_type);
@@ -875,23 +875,23 @@ private:
 
 	evaluate_return_type
 	evaluate(const node_index_type, expr_index_type, 
-		char prev, char next);
+		uchar prev, uchar next);
 
 	break_type
-	propagate_evaluation(cause_arg_type, expr_index_type, char prev
+	propagate_evaluation(cause_arg_type, expr_index_type, uchar prev
 #if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		, char next
+		, uchar next
 #endif
 		);
 
 #if 0
 	void
 	kill_evaluation(const node_index_type, expr_index_type, 
-		char prev, char next);
+		uchar prev, uchar next);
 #endif
 
 	break_type
-	__diagnose_violation(ostream&, const char next, 
+	__diagnose_violation(ostream&, const uchar next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
 		cause_arg_type, const bool dir);
@@ -949,7 +949,7 @@ public:
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
-		const char p, const bool cp = false) const;
+		const uchar p, const bool cp = false) const;
 
 	ostream&
 	dump_subexpr(ostream& o, const expr_index_type ei) const {

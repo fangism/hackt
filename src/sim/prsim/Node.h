@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.12.2.2 2006/08/11 02:05:49 fang Exp $
+	$Id: Node.h,v 1.12.2.3 2006/08/11 22:52:03 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -13,6 +13,7 @@
 #include "util/string_fwd.h"
 #include "util/macros.h"
 #include "util/attributes.h"
+#include "util/utypes.h"
 #include "sim/common.h"
 #include "sim/prsim/devel_switches.h"
 #include "sim/prsim/Cause.h"
@@ -93,7 +94,7 @@ protected:
 		The packed version is aligned to 2B (short, word) boundaries.
 		Extending classes can use these!
 	 */
-	unsigned short			struct_flags;
+	ushort				struct_flags;
 
 public:
 	typedef	fanout_array_type::const_iterator
@@ -213,14 +214,14 @@ public:
 	} state_flags_enum;
 
 public:
-	static const char		value_to_char[3];
-	static const char		invert_value[3];
+	static const uchar		value_to_char[3];
+	static const uchar		invert_value[3];
 protected:
 	/**
 		Uses enum value_enum:
 		0 = 0, 1 = 1, 2 = X, 3 = X
 	 */
-	unsigned char				value;
+	uchar					value;
 
 	/**
 		8-bit field for flagging stateful information.  
@@ -281,7 +282,7 @@ public:
 	}
 
 	event_cause_type
-	get_cause(const unsigned char v) const {
+	get_cause(const uchar v) const {
 		return causes.get_cause(v);
 	}
 #else
@@ -336,18 +337,18 @@ public:
 	void
 	clear_excl_queue(void) { state_flags &= ~NODE_EX_QUEUE; }
 
-	char
+	uchar
 	current_value(void) const { return value; }
 
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	void
-	set_value_and_cause(const unsigned char c, const event_cause_type& e) {
+	set_value_and_cause(const uchar c, const event_cause_type& e) {
 		value = c;
 		causes.set_cause(c, e);
 	}
 #else
 	void
-	set_value(const char c) { value = c; }
+	set_value(const uchar c) { value = c; }
 
 #endif
 	ostream&
@@ -362,9 +363,9 @@ public:
 	 */
 	struct status_dumper {
 		ostream&		os;
-		const char		match_val;
+		const uchar		match_val;
 
-		status_dumper(ostream& o, const char v) :
+		status_dumper(ostream& o, const uchar v) :
 			os(o), match_val(v) { }
 
 		// no copy-ctor
@@ -377,17 +378,18 @@ public:
 
 	static
 	bool
-	is_valid_value(const char c) {
-		return c >= LOGIC_LOW && c <= LOGIC_OTHER;
+	is_valid_value(const uchar c) {
+		// return c >= LOGIC_LOW && c <= LOGIC_OTHER;
+		return c <= LOGIC_OTHER;
 	}
 
 	static
-	char
+	uchar
 	char_to_value(const char);
 
 	/// \return < 0 on error, else returns 0, 1, 2
 	static
-	char
+	uchar
 	string_to_value(const std::string&);
 
 	void

@@ -5,6 +5,11 @@
 
 2006-08-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-54-prsim-07-09:
+	  Cleaned up sign-correctness of char types in prsim.
+	  Status: ready to merge to trunk.
+
+
 	* HACKT-00-01-04-main-00-79-54-prsim-07-08:
 	  Implemented and tested 'backtrace' command (sweet!).
 	  One test case added: test/prsim/oscil-backtrace-01.prsimrc
