@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.3.2.6 2006/08/11 04:49:12 fang Exp $
+	$Id: devel_switches.h,v 1.3.2.7 2006/08/11 21:50:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -36,10 +36,17 @@
 	so we can track complete cycles in backtracing critical paths.  
 	Also track unknowns for debugging bad circuits.  
 	Consequence: more memory per node, due to increased structure size.  
-	Status: in progress.
+	Status: done and tested, save for new dependent features.
 	Goal: 1
  */
 #define	PRSIM_SEPARATE_CAUSE_NODE_DIRECTION		1
+
+/**
+	Whether or not cause history should bother tracking timestamps.  
+	Might be a nice option to have as a compile-time switch.  
+	Goal: ?
+ */
+#define	PRSIM_TRACK_CAUSE_TIME				0
 
 //-----------------------------------------------------------------------------
 // ready-to-commit the flags below

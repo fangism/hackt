@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.33.2.2 2006/08/11 02:05:48 fang Exp $
+#	$Id: TODO,v 1.33.2.3 2006/08/11 21:50:07 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -18,8 +18,6 @@ Simulation:
 		counter.  
 
 prsim:
-	cause-tracking (perhaps track per new value +,-,X)
-		'backtrace' <node> command will use direction-specific causes
 	direction-specific breakpoints
 	interpreter commands:
 		interp key [value]

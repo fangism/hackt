@@ -1,0 +1,54 @@
+node at: `_Reset' : X
+(no cycle)
+node at: `_Reset' : X
+(no cycle)
+X nodes:
+
+node at: `R.x[0]' : 1
+caused by: `_Reset' : 0
+(no cycle)
+node at: `R.x[12]' : 1
+caused by: `R.x[11]' : 0
+caused by: `R.x[10]' : 1
+caused by: `R.x[9]' : 0
+caused by: `R.x[8]' : 1
+caused by: `R.x[7]' : 0
+caused by: `R.x[6]' : 1
+caused by: `R.x[5]' : 0
+caused by: `R.x[4]' : 1
+caused by: `R.x[3]' : 0
+caused by: `R.x[2]' : 1
+caused by: `R.x[1]' : 0
+caused by: `R.x[0]' : 1
+caused by: `_Reset' : 0
+(no cycle)
+expect no cycles so far 
+node at: `R.x[0]' : 1
+caused by: `R.x[12]' : 0
+caused by: `R.x[11]' : 1
+caused by: `R.x[10]' : 0
+caused by: `R.x[9]' : 1
+caused by: `R.x[8]' : 0
+caused by: `R.x[7]' : 1
+caused by: `R.x[6]' : 0
+caused by: `R.x[5]' : 1
+caused by: `R.x[4]' : 0
+caused by: `R.x[3]' : 1
+caused by: `R.x[2]' : 0
+caused by: `R.x[1]' : 1
+caused by: `R.x[0]' : 0
+caused by: `R.x[12]' : 1
+caused by: `R.x[11]' : 0
+caused by: `R.x[10]' : 1
+caused by: `R.x[9]' : 0
+caused by: `R.x[8]' : 1
+caused by: `R.x[7]' : 0
+caused by: `R.x[6]' : 1
+caused by: `R.x[5]' : 0
+caused by: `R.x[4]' : 1
+caused by: `R.x[3]' : 0
+caused by: `R.x[2]' : 1
+caused by: `R.x[1]' : 0
+caused by: `R.x[0]' : 1
+(cycle reached)
+expect cycle here 

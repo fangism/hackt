@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.20.2.7 2006/08/11 04:49:10 fang Exp $
+	$Id: State.cc,v 1.20.2.8 2006/08/11 21:50:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <functional>
 #include <string>
+#include <set>
 #include "sim/prsim/State.h"
 #include "sim/prsim/ExprAlloc.h"
 #include "sim/prsim/Event.tcc"
@@ -72,6 +73,7 @@ namespace entity { }
 
 namespace SIM {
 namespace PRSIM {
+using std::set;
 using std::string;
 using std::ostringstream;
 using std::for_each;
@@ -350,6 +352,46 @@ State::get_node(const node_index_type i) {
 	INVARIANT(i < node_pool.size());
 	return node_pool[i];
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+/**
+	Traces backwards in event history until repeat (cycle) found.  
+ */
+void
+State::backtrace_node(ostream& o, const node_index_type ni) const {
+	typedef	set<event_cause_type>		event_set_type;
+	// start from the current value of the referenced node
+	const node_type* n(&get_node(ni));
+	const unsigned char v = n->current_value();
+	event_cause_type e(ni, v);
+	o << "node at: `" << get_node_canonical_name(ni) <<
+		"\' : " << node_type::value_to_char[size_t(v)] << endl;
+	event_set_type l;
+	bool cyc = l.insert(e).second;	// return true if actually inserted
+	INVARIANT(cyc);	// not already in collection
+	INVARIANT(e.node);
+	// there's a better way to rewrite this...
+	do {
+		// print
+		n = &get_node(e.node);
+		e = n->get_cause(e.val);
+		if (e.node) {
+			o << "caused by: `" << get_node_canonical_name(e.node)
+				<< "\' : " <<
+				node_type::value_to_char[size_t(e.val)] << endl;
+			cyc = l.insert(e).second;
+		} else {
+			break;
+		}
+	} while (cyc);
+	if (e.node) {
+		o << "(cycle reached)" << endl;
+	} else {
+		o << "(no cycle)" << endl;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

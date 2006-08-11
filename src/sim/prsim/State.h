@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12.2.7 2006/08/11 04:49:11 fang Exp $
+	$Id: State.h,v 1.12.2.8 2006/08/11 21:50:09 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -459,6 +459,11 @@ public:
 
 	string
 	get_node_canonical_name(const node_index_type) const;
+
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	void
+	backtrace_node(ostream&, const node_index_type) const;
+#endif
 
 	/// only called by ExprAlloc
 	void

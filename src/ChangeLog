@@ -5,6 +5,11 @@
 
 2006-08-11	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-54-prsim-07-08:
+	  Implemented and tested 'backtrace' command (sweet!).
+	  One test case added: test/prsim/oscil-backtrace-01.prsimrc
+
+
 	* HACKT-00-01-04-main-00-79-54-prsim-07-07:
 	  Committed PRSIM_FINE_GRAIN_ERROR_CONTROL developer switch.  
 	  Next: diagnostic 'backtrace' command using direction-specific 
