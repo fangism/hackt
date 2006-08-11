@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12.2.5 2006/08/11 02:05:49 fang Exp $
+	$Id: State.h,v 1.12.2.6 2006/08/11 03:17:24 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -88,6 +88,14 @@ public:
 	typedef	delay_policy<time_type>		time_traits;
 	typedef	NodeState			node_type;
 	typedef	node_type::event_cause_type	event_cause_type;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	/**
+		NOTE: pass by event_cause_type by reference.  
+	 */
+	typedef	const event_cause_type&		cause_arg_type;
+#else
+	typedef	const node_index_type		cause_arg_type;
+#endif
 	typedef	ExprState			expr_type;
 	typedef	ExprGraphNode			graph_node_type;
 	typedef	Event				event_type;
@@ -803,21 +811,13 @@ private:
 private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		const event_cause_type&,
-#else
-		const node_index_type c, // this is the causing node
-#endif
+		cause_arg_type,	// this is the causing node
 		const rule_index_type, const char);
 
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		const event_cause_type&,
-#else
-		const node_index_type c,	// this is the causing node
-#endif
+		cause_arg_type,	// this is the causing node
 		const char);
 
 	void
@@ -846,13 +846,8 @@ private:
 	void
 	enqueue_exclhi(const time_type, const event_index_type);
 
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	void
-	enforce_exclhi(const event_cause_type&);
-#else
-	void
-	enforce_exclhi(const node_index_type);
-#endif
+	enforce_exclhi(cause_arg_type);
 
 	void
 	flush_exclhi_queue(void);
@@ -860,13 +855,8 @@ private:
 	void
 	enqueue_excllo(const time_type, const event_index_type);
 
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	void
-	enforce_excllo(const event_cause_type&);
-#else
-	void
-	enforce_excllo(const node_index_type);
-#endif
+	enforce_excllo(cause_arg_type);
 
 	void
 	flush_excllo_queue(void);
@@ -903,14 +893,11 @@ private:
 		char prev, char next);
 
 	break_type
-	propagate_evaluation(
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		const event_cause_type&, 
-#else
-		const node_index_type, 
+	propagate_evaluation(cause_arg_type, expr_index_type, char prev
+#if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		, char next
 #endif
-		expr_index_type, 
-		char prev, char next);
+		);
 
 #if 0
 	void
@@ -922,12 +909,7 @@ private:
 	__diagnose_violation(ostream&, const char next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		const event_cause_type&, 
-#else
-		const node_index_type ni,
-#endif
-		const bool dir);
+		cause_arg_type, const bool dir);
 
 	break_type
 	__report_instability(ostream&, const bool wk, const bool dir, 

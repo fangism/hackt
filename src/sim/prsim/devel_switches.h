@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.3.2.4 2006/08/11 02:05:50 fang Exp $
+	$Id: devel_switches.h,v 1.3.2.5 2006/08/11 03:17:24 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -43,15 +43,6 @@
 
 //-----------------------------------------------------------------------------
 // ready-to-commit the flags below
-
-/**
-	Define to 1 to assign the cause of a node event when the 
-	event is dequeued, as opposed to when it is enqueued.  
-	Otherwise unstable events will be wrongly attributed.  
-	Goal: 1
-	Status: ready-to-commit
- */
-#define	PRSIM_ASSIGN_CAUSE_ON_DEQUEUE		1
 
 /**
 	TODO: fine-grain control of simulator behavior on anomalous events,

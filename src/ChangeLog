@@ -5,6 +5,13 @@
 
 2006-08-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-54-prsim-07-06:
+	  Mostly aesthetic patch (minor)
+	  Committed PRSIM_ASSIGN_CAUSE_ON_DEQUEUE.  
+	  Much simplification of conditional code (SEPARATE_CAUSE_NODE_DIR).
+	  minor TODO: clean-up prsim headers and [un]signed char types.
+
+
 	* HACKT-00-01-04-main-00-79-54-prsim-07-05:
 	  Completed and enabled PRSIM_SEPARATE_CAUSE_NODE_DIRECTION patch, 
 		but code is a mess of conditional flags, needs a clean-up.  

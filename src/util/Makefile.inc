@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.18 2006/07/30 05:50:14 fang Exp $
+#	$Id: Makefile.inc,v 1.18.2.1 2006/08/11 03:17:26 fang Exp $
 #	vim: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -173,6 +173,7 @@ UTIL_HEADER_FILES = \
 	util/union_find.h \
 	util/using_istream.h \
 	util/using_ostream.h \
+	util/utypes.h \
 	util/value_saver_fwd.h \
 	util/value_saver.h \
 	util/visitee.h \

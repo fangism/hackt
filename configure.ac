@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.84 2006/08/09 21:24:29 fang Exp $
+#	$Id: configure.ac,v 1.84.2.1 2006/08/11 03:17:19 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -275,9 +275,13 @@ CXXFLAGS="$CONFTEST_CXXFLAGS"
 
 # sizeof checks, useful for checking ILP model
 AC_CHECK_SIZEOF(char)
+AC_CHECK_SIZEOF(uchar)
 AC_CHECK_SIZEOF(short)
+AC_CHECK_SIZEOF(ushort)
 AC_CHECK_SIZEOF(int)
+AC_CHECK_SIZEOF(uint)
 AC_CHECK_SIZEOF(long)
+AC_CHECK_SIZEOF(ulong)
 AC_CHECK_SIZEOF(long long)
 AC_CHECK_SIZEOF(float)
 AC_CHECK_SIZEOF(double)
