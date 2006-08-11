@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12.2.4 2006/08/11 00:05:48 fang Exp $
+	$Id: State.h,v 1.12.2.5 2006/08/11 02:05:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -846,8 +846,13 @@ private:
 	void
 	enqueue_exclhi(const time_type, const event_index_type);
 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	void
+	enforce_exclhi(const event_cause_type&);
+#else
 	void
 	enforce_exclhi(const node_index_type);
+#endif
 
 	void
 	flush_exclhi_queue(void);
@@ -855,8 +860,13 @@ private:
 	void
 	enqueue_excllo(const time_type, const event_index_type);
 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	void
+	enforce_excllo(const event_cause_type&);
+#else
 	void
 	enforce_excllo(const node_index_type);
+#endif
 
 	void
 	flush_excllo_queue(void);
@@ -893,7 +903,13 @@ private:
 		char prev, char next);
 
 	break_type
-	propagate_evaluation(const node_index_type, expr_index_type, 
+	propagate_evaluation(
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type&, 
+#else
+		const node_index_type, 
+#endif
+		expr_index_type, 
 		char prev, char next);
 
 #if 0
@@ -906,7 +922,12 @@ private:
 	__diagnose_violation(ostream&, const char next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
-		const node_index_type ni, const bool dir);
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type&, 
+#else
+		const node_index_type ni,
+#endif
+		const bool dir);
 
 	break_type
 	__report_instability(ostream&, const bool wk, const bool dir, 

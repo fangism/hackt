@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.20.2.4 2006/08/11 00:05:47 fang Exp $
+	$Id: State.cc,v 1.20.2.5 2006/08/11 02:05:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -790,7 +790,12 @@ if (pending) {
 	// otherwise, allocate and enqueue the event.  
 	const event_index_type ei =
 		// node cause to assign, since this is externally set
-		__allocate_event(n, ni, INVALID_NODE_INDEX, 
+		__allocate_event(n, ni, 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+			event_cause_type(), 
+#else
+			INVALID_NODE_INDEX, 
+#endif
 			INVALID_RULE_INDEX, val);
 #if 0
 	const event_type& e(get_event(ei));
@@ -867,7 +872,12 @@ if (pu != expr_type::PULL_OFF || pd != expr_type::PULL_OFF) {
 			// will use a delay of 0.  
 #endif
 			const event_index_type ei = __allocate_event(
-				n, ni, INVALID_NODE_INDEX, // no cause
+				n, ni,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+					event_cause_type(), 
+#else
+					INVALID_NODE_INDEX, // no cause
+#endif
 					ri, new_val);
 			event_type& e(get_event(ei));
 			time_type t;
@@ -1195,8 +1205,13 @@ for ( ; i!=e; ++i) {
 		}
 		if (ev.pending_interference()) {
 			INVARIANT(_n.pending_event());
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+			_n.set_value_and_cause(node_type::LOGIC_OTHER, 
+				ev.cause);
+#else
 			_n.set_cause_node(ev.cause_node);
 			_n.set_value(node_type::LOGIC_OTHER);
+#endif
 			__deallocate_pending_interference_event(ne);
 		} else {
 			ev.val = node_type::LOGIC_OTHER;
@@ -1469,7 +1484,13 @@ for ( ; i!=e; ++i) {
 	\param ni index of the node that changed that affects exclhi rings.  
  */
 void
-State::enforce_exclhi(const node_index_type ni) {
+State::enforce_exclhi(
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type& c
+#else
+		const node_index_type ni
+#endif
+		) {
 	/***
 		If n.exclhi and n is 0, check if any of the nodes
 		in n's exclhi rings are enabled.  
@@ -1477,6 +1498,9 @@ State::enforce_exclhi(const node_index_type ni) {
 	***/
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	const node_index_type& ni(c.node);
+#endif
 	const_iterator i(mk_exhi.begin()), e(mk_exhi.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
@@ -1497,7 +1521,12 @@ for ( ; i!=e; ++i) {
 				const event_index_type ne =
 					// the pull-up index may not necessarily
 					// correspond to the causing expression!
-					__allocate_event(er, eri, ni, 
+					__allocate_event(er, eri,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+						c,
+#else
+						ni, 
+#endif
 						// not sure...
 						// er.pull_up_index, 
 						INVALID_RULE_INDEX, 
@@ -1518,7 +1547,13 @@ for ( ; i!=e; ++i) {
 	\param ni index of the node that changed that affects excllo rings.  
  */
 void
-State::enforce_excllo(const node_index_type ni) {
+State::enforce_excllo(
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type& c
+#else
+		const node_index_type ni
+#endif
+		) {
 	/***
 		If n.excllo and n is 1, check if any of the nodes
 		in n's excllo rings are enabled.  
@@ -1526,6 +1561,9 @@ State::enforce_excllo(const node_index_type ni) {
 	***/
 	typedef	mk_excl_ring_map_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	const node_index_type& ni(c.node);
+#endif
 	const_iterator i(mk_exlo.begin()), e(mk_exlo.end());
 for ( ; i!=e; ++i) {
 	typedef	std::iterator_traits<const_iterator>::value_type::const_iterator
@@ -1545,7 +1583,12 @@ for ( ; i!=e; ++i) {
 			DEBUG_STEP_PRINT("enqueuing pull-dn event" << endl);
 				const event_index_type ne =
 					// same comment as enforce_exclhi
-					__allocate_event(er, eri, ni, 
+					__allocate_event(er, eri,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+						c, 
+#else
+						ni, 
+#endif
 						// er.pull_dn_index, 
 						INVALID_RULE_INDEX,
 						node_type::LOGIC_LOW);
@@ -1728,11 +1771,19 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	const event_type& pe(get_event(ei));
 	const bool force = pe.forced();
 	const node_index_type ni = pe.node;
-	const node_index_type ci = pe.cause_node;
-	DEBUG_STEP_PRINT("examining node: " <<
-		get_node_canonical_name(ni) << endl);
 	node_type& n(get_node(ni));
 	const char prev = n.current_value();
+	node_index_type _ci;	// just a copy
+{
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	const event_cause_type& cause(pe.cause);
+	const node_index_type& ci(cause.node);
+#else
+	const node_index_type ci = pe.cause_node;
+#endif
+	_ci = ci;
+	DEBUG_STEP_PRINT("examining node: " <<
+		get_node_canonical_name(ni) << endl);
 {
 	// event-deallocation scope (optional)
 	// const event_deallocator __d(*this, n, ei);	// auto-deallocate?
@@ -1777,31 +1828,49 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 			throw exex;
 		}
 	}
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	n.set_value_and_cause(pe.val, cause);
+#else
 #if PRSIM_ASSIGN_CAUSE_ON_DEQUEUE
 	n.set_cause_node(ci);
 #endif
 	n.set_value(pe.val);
+#endif
 	// count transition only if new value is not X
 	if (pe.val != node_type::LOGIC_OTHER) {
 		++n.tcount;
 	}
 	 __deallocate_event(n, ei);
 }
+}
 	// note: pe is invalid, deallocated beyond this point, could scope it
 	// reminder: do not reference pe beyond this point (deallocated)
 	// could scope the reference to prevent it...
 	const char next = n.current_value();
 	// value propagation...
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	const event_cause_type new_cause(ni, next);
+#endif
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i(n.fanout.begin()), e(n.fanout.end());
 	for ( ; i!=e; ++i) {
 #if PRSIM_FINE_GRAIN_ERROR_CONTROL
-		if (UNLIKELY(propagate_evaluation(ni, *i, prev, next))) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		if (UNLIKELY(propagate_evaluation(new_cause, *i, prev, next))) {
 			stop();
 		}
 #else
+		if (UNLIKELY(propagate_evaluation(ni, *i, prev, next))) {
+			stop();
+		}
+#endif
+#else
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		propagate_evaluation(new_cause, *i, prev, next);
+#else
 		propagate_evaluation(ni, *i, prev, next);
+#endif
 #endif
 	}
 }
@@ -1818,7 +1887,11 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 			DEBUG_STEP_PRINT("force pull-up" << endl);
 			const event_index_type _ne =
 				__allocate_event(n, ni, 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+					event_cause_type(), 
+#else
 					INVALID_NODE_INDEX,	// no cause
+#endif
 					n.pull_up_index, 	// cause?
 					node_type::LOGIC_HIGH);
 			enqueue_pending(_ne);
@@ -1829,7 +1902,11 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 			DEBUG_STEP_PRINT("force pull-dn" << endl);
 			const event_index_type _ne =
 				__allocate_event(n, ni, 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+					event_cause_type(), 
+#else
 					INVALID_NODE_INDEX,	// no cause
+#endif
 					n.pull_dn_index, 	// cause?
 					node_type::LOGIC_LOW);
 			enqueue_pending(_ne);
@@ -1839,12 +1916,20 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 
 	// exclhi ring enforcement
 	if (n.has_mk_exclhi() && (next == node_type::LOGIC_LOW)) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		enforce_exclhi(new_cause);
+#else
 		enforce_exclhi(ni);
+#endif
 	}	// end if (exclhi enforcement)
 
 	// excllo ring enforcement
 	if (n.has_mk_excllo() && (next == node_type::LOGIC_HIGH)) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		enforce_excllo(new_cause);
+#else
 		enforce_excllo(ni);
+#endif
 	}	// end if (excllo enforcement)
 
 	// energy estimation?  TODO later for a different sim variant
@@ -1864,7 +1949,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 
 	// return the affected node's index
 	DEBUG_STEP_PRINT("returning node index " << ni << endl);
-	return return_type(ni, ci);
+	return return_type(ni, _ci);
 }	// end method step()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1990,8 +2075,17 @@ do {
 		subtype encoding.  For now, we use the Expr's encoding.  
  */
 State::break_type
-State::propagate_evaluation(const node_index_type ni, expr_index_type ui, 
+State::propagate_evaluation(
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type& c,
+#else
+		const node_index_type ni,
+#endif
+		expr_index_type ui, 
 		char prev, char next) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	const node_index_type& ni(c.node);
+#endif
 	const evaluate_return_type
 		ev_result(evaluate(ni, ui, prev, next));
 	if (!ev_result.node_index)
@@ -2047,7 +2141,12 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("pulling up (on or weak)" << endl);
 		const event_index_type pe =
-			__allocate_event(n, ui, ni, 
+			__allocate_event(n, ui, 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+				c,
+#else
+				ni, 
+#endif
 				root_rule, next);
 		const event_type& e(get_event(pe));
 		// pe->cause = root
@@ -2075,7 +2174,12 @@ if (!n.pending_event()) {
 			"pull-up turned off, yielding to opposing pull-down."
 			<< endl);
 		const event_index_type pe =
-			__allocate_event(n, ui, ni, 
+			__allocate_event(n, ui, 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+				c,
+#else
+				ni, 
+#endif
 				root_rule, node_type::LOGIC_LOW);
 		// pe->cause = root
 		if (n.has_mk_excllo()) {
@@ -2102,7 +2206,11 @@ if (!n.pending_event()) {
 		***/
 		DEBUG_STEP_PRINT("changing pending X to 0 in queue." << endl);
 		e.val = node_type::LOGIC_LOW;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		e.cause.node = ni;
+#else
 		e.cause_node = ni;
+#endif
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
@@ -2110,7 +2218,12 @@ if (!n.pending_event()) {
 		err |=
 #endif
 		__diagnose_violation(cout, next, ei, e, ui, n, 
-			ni, u->direction());
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+			c,
+#else
+			ni, 
+#endif
+			u->direction());
 	}	// end if diagnostic
 }	// end if (!n.ex_queue)
 } else {
@@ -2129,9 +2242,13 @@ if (!n.pending_event()) {
 			then we enqueue the event somewhere.
 		***/
 		DEBUG_STEP_PRINT("pulling down (on or weak)" << endl);
-		const event_index_type pe = __allocate_event(n, ui, ni, 
-			root_rule, 
-			node_type::invert_value[size_t(next)]);
+		const event_index_type pe = __allocate_event(n, ui,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+			c,
+#else
+			ni, 
+#endif
+			root_rule, node_type::invert_value[size_t(next)]);
 		const event_type& e(get_event(pe));
 		if (n.has_mk_excllo()) {
 			// insert into exclhi queue
@@ -2156,8 +2273,12 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT(
 			"pull-down turned off, yielding to opposing pull-up."
 			<< endl);
-		const event_index_type pe =
-			__allocate_event(n, ui, ni, 
+		const event_index_type pe = __allocate_event(n, ui, 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+				c,
+#else
+				ni, 
+#endif
 				root_rule, node_type::LOGIC_HIGH);
 		// pe->cause = root
 		if (n.has_mk_exclhi()) {
@@ -2184,7 +2305,11 @@ if (!n.pending_event()) {
 		DEBUG_STEP_PRINT("changing pending X to 1 in queue." << endl);
 		// there is a pending 'X' in the queue
 		e.val = node_type::LOGIC_HIGH;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		e.cause.node = ni;
+#else
 		e.cause_node = ni;
+#endif
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
@@ -2192,7 +2317,12 @@ if (!n.pending_event()) {
 		err |=
 #endif
 		__diagnose_violation(cout, next, ei, e, ui, n, 
-			ni, u->direction());
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+			c,
+#else
+			ni, 
+#endif
+			u->direction());
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
@@ -2204,10 +2334,16 @@ if (!n.pending_event()) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::__report_cause(ostream& o, const event_type& ev) const {
-	if (ev.cause_node) {
+	const node_index_type&
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		ni(ev.cause.node);
+#else
+		ni(ev.cause_node);
+#endif
+	if (ni) {
 		o << ">> cause: `" <<
-			get_node_canonical_name(ev.cause_node) << "\' (val: ";
-		get_node(ev.cause_node).dump_value(o) << ')' << endl;
+			get_node_canonical_name(ni) << "\' (val: ";
+		get_node(ni).dump_value(o) << ')' << endl;
 	}
 	return o;
 }
@@ -2305,8 +2441,16 @@ State::break_type
 State::__diagnose_violation(ostream& o, const char next, 
 		const event_index_type ei, event_type& e, 
 		const node_index_type ui, node_type& n, 
-		const node_index_type ni, const bool dir) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const event_cause_type& c, 
+#else
+		const node_index_type ni, 
+#endif
+		const bool dir) {
 	STACKTRACE_VERBOSE;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	const node_index_type& ni(c.node);
+#endif
 #if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	break_type err = false;
 #endif
@@ -2337,15 +2481,12 @@ State::__diagnose_violation(ostream& o, const char next,
 			// event is for sake of checking
 			// check for conflicting/redundant events 
 			// on pending queue (result of instability)
-#define	INTERFERENCE_CASE_ACTION					\
-			const event_index_type pe =			\
-				__allocate_pending_interference_event(	\
-					n, ui, ni, 			\
-					dir ? node_type::LOGIC_HIGH :	\
-						node_type::LOGIC_LOW);	\
-			enqueue_pending(pe);
 		if (instability) {
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+			e.cause.node = ni;
+#else
 			e.cause_node = ni;
+#endif
 			if (dequeue_unstable_events()) {
 				// let dequeuer deallocate killed events
 				const size_t pe = n.get_event();
@@ -2372,9 +2513,18 @@ State::__diagnose_violation(ostream& o, const char next,
 				so we insert the event into pending-queue
 				to check, and punt the setting to X.  
 			***/
-			INTERFERENCE_CASE_ACTION
+			const event_index_type pe =
+				__allocate_pending_interference_event(
+					n, ui,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+					c, 
+#else
+					ni,
+#endif
+					dir ? node_type::LOGIC_HIGH :
+						node_type::LOGIC_LOW);
+			enqueue_pending(pe);
 		}
-#undef	INTERFERENCE_CASE_ACTION
 		// diagnostic message
 		// suppress message for interferences until pending queue
 		if (instability) {

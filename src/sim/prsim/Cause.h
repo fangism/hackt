@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Cause.h"
 	Structure of basic node event.  
-	$Id: Cause.h,v 1.1.2.1 2006/08/11 00:05:44 fang Exp $
+	$Id: Cause.h,v 1.1.2.2 2006/08/11 02:05:48 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CAUSE_H__
@@ -98,6 +98,13 @@ struct LastCause {
 	get_cause(const unsigned char v) const {
 		const size_t i(v);
 		return event_cause_type(caused_by_node[i], caused_by_value[i]);
+	}
+
+	void
+	set_cause(const unsigned char v, const event_cause_type& e) {
+		const size_t i(v);
+		caused_by_node[i] = e.node;
+		caused_by_value[i] = e.val;
 	}
 
 	void

@@ -5,9 +5,17 @@
 
 2006-08-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-54-prsim-07-05:
+	  Completed and enabled PRSIM_SEPARATE_CAUSE_NODE_DIRECTION patch, 
+		but code is a mess of conditional flags, needs a clean-up.  
+		No regressions caused in test suite!
+	  Next: commit PRSIM_ASSIGN_CAUSE_ON_DEQUEUE
+	  TODO: diagnostic 'backtrace' command using new features.  
+
+
 	* HACKT-00-01-04-main-00-79-54-prsim-07-04:
 	  Added sim/prsim/Cause.h: for advanced cause tracking structures.
-	  PRSIM_SEPARTE_CAUSE_NODE_DIRECTION still disabled in this snapshot.
+	  PRSIM_SEPARATE_CAUSE_NODE_DIRECTION still disabled in this snapshot.
 		Much coded added to use it in Node/Event...
 	  Minor switch added and enabled: PRSIM_ASSIGN_CAUSE_ON_DEQUEUE:
 		instead of assigning cause on enqueue of event, 

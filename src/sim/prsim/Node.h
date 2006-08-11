@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.12.2.1 2006/08/11 00:05:46 fang Exp $
+	$Id: Node.h,v 1.12.2.2 2006/08/11 02:05:49 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -339,9 +339,17 @@ public:
 	char
 	current_value(void) const { return value; }
 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	void
+	set_value_and_cause(const unsigned char c, const event_cause_type& e) {
+		value = c;
+		causes.set_cause(c, e);
+	}
+#else
 	void
 	set_value(const char c) { value = c; }
 
+#endif
 	ostream&
 	dump_value(ostream&) const;
 
