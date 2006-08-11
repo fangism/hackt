@@ -1,7 +1,7 @@
 /**
 	\file "util/numeric/sign_traits.h"
 	Template metafunctions for signedness of integer types.  
-	$Id: sign_traits.h,v 1.1 2006/07/16 03:34:59 fang Exp $
+	$Id: sign_traits.h,v 1.1.2.1 2006/08/11 04:19:28 fang Exp $
  */
 
 #ifndef	__UTIL_NUMERIC_SIGN_TRAITS_H__
@@ -9,6 +9,7 @@
 
 #include <limits>
 #include "util/inttypes.h"
+#include "util/utypes.h"
 
 namespace util {
 namespace numeric {
@@ -40,52 +41,52 @@ template <>
 struct signed_type<char> {		typedef	char		type; };
 
 template <>
-struct signed_type<unsigned char> {	typedef	char		type; };
+struct signed_type<uchar> {		typedef	char		type; };
 
 template <>
-struct unsigned_type<char> {		typedef	unsigned char	type; };
+struct unsigned_type<char> {		typedef	uchar		type; };
 
 template <>
-struct unsigned_type<unsigned char> {	typedef	unsigned char	type; };
+struct unsigned_type<uchar> {		typedef	uchar		type; };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct signed_type<short> {		typedef	short		type; };
 
 template <>
-struct signed_type<unsigned short> {	typedef	short		type; };
+struct signed_type<ushort> {		typedef	short		type; };
 
 template <>
-struct unsigned_type<short> {		typedef	unsigned short	type; };
+struct unsigned_type<short> {		typedef	ushort		type; };
 
 template <>
-struct unsigned_type<unsigned short> {	typedef	unsigned short	type; };
+struct unsigned_type<ushort> {		typedef	ushort		type; };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct signed_type<int> {		typedef	int		type; };
 
 template <>
-struct signed_type<unsigned int> {	typedef	int		type; };
+struct signed_type<uint> {		typedef	int		type; };
 
 template <>
-struct unsigned_type<int> {		typedef	unsigned int	type; };
+struct unsigned_type<int> {		typedef	uint		type; };
 
 template <>
-struct unsigned_type<unsigned int> {	typedef	unsigned int	type; };
+struct unsigned_type<uint> {		typedef	uint		type; };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <>
 struct signed_type<long> {		typedef	long		type; };
 
 template <>
-struct signed_type<unsigned long> {	typedef	long		type; };
+struct signed_type<ulong> {		typedef	long		type; };
 
 template <>
-struct unsigned_type<long> {		typedef	unsigned long	type; };
+struct unsigned_type<long> {		typedef	ulong		type; };
 
 template <>
-struct unsigned_type<unsigned long> {	typedef	unsigned long	type; };
+struct unsigned_type<ulong> {		typedef	ulong		type; };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if SIZEOF_LONG_LONG
@@ -93,17 +94,13 @@ template <>
 struct signed_type<long long> {		typedef	long long	type; };
 
 template <>
-struct signed_type<unsigned long long> {	typedef	long long	type; };
+struct signed_type<ulonglong> {		typedef	long long	type; };
 
 template <>
-struct unsigned_type<long long> {
-	typedef	unsigned long long	type;
-};
+struct unsigned_type<long long> {	typedef	ulonglong	type; };
 
 template <>
-struct unsigned_type<unsigned long long> {
-	typedef	unsigned long long	type;
-};
+struct unsigned_type<ulonglong> {	typedef	ulonglong	type; };
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.84.2.1 2006/08/11 03:17:19 fang Exp $
+#	$Id: configure.ac,v 1.84.2.2 2006/08/11 04:19:18 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -276,22 +276,41 @@ CXXFLAGS="$CONFTEST_CXXFLAGS"
 # sizeof checks, useful for checking ILP model
 AC_CHECK_SIZEOF(char)
 AC_CHECK_SIZEOF(uchar)
+AC_CHECK_SIZEOF(u_char)
 AC_CHECK_SIZEOF(short)
 AC_CHECK_SIZEOF(ushort)
+AC_CHECK_SIZEOF(u_short)
 AC_CHECK_SIZEOF(int)
 AC_CHECK_SIZEOF(uint)
+AC_CHECK_SIZEOF(u_int)
 AC_CHECK_SIZEOF(long)
 AC_CHECK_SIZEOF(ulong)
+AC_CHECK_SIZEOF(u_long)
 AC_CHECK_SIZEOF(long long)
+AC_CHECK_SIZEOF(ulonglong)
 AC_CHECK_SIZEOF(float)
 AC_CHECK_SIZEOF(double)
 AC_CHECK_SIZEOF(long double)
 AC_CHECK_SIZEOF(void*)
 AC_CHECK_SIZEOF(size_t)
+AC_CHECK_SIZEOF(int16)
+AC_CHECK_SIZEOF(uint16)
+AC_CHECK_SIZEOF(u_int16)
+AC_CHECK_SIZEOF(int16_t)
+AC_CHECK_SIZEOF(uint16_t)
+AC_CHECK_SIZEOF(u_int16_t)
+AC_CHECK_SIZEOF(int32)
+AC_CHECK_SIZEOF(uint32)
+AC_CHECK_SIZEOF(u_int32)
+AC_CHECK_SIZEOF(int32_t)
+AC_CHECK_SIZEOF(uint32_t)
+AC_CHECK_SIZEOF(u_int32_t)
 AC_CHECK_SIZEOF(int64)
 AC_CHECK_SIZEOF(uint64)
+AC_CHECK_SIZEOF(u_int64)
 AC_CHECK_SIZEOF(int64_t)
 AC_CHECK_SIZEOF(uint64_t)
+AC_CHECK_SIZEOF(u_int64_t)
 FANG_TYPE_QUAD_T_ARITHMETIC
 FANG_TYPE_U_QUAD_T_ARITHMETIC
 
