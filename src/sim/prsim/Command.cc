@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.15.2.2 2006/08/10 20:22:11 fang Exp $
+	$Id: Command.cc,v 1.15.2.3 2006/08/11 04:49:09 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -2520,7 +2520,6 @@ UnstableDequeue::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 static const char
 break_options[] = "[ignore|warn|notify|break]";
 
@@ -2531,7 +2530,6 @@ break_descriptions[] =
 "\tnotify: (same as warn)\n"
 "\tbreak: notify and halt";
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #define	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(class_name, command_key, \
 		brief_str, usage_str, func_name) 			\
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(class_name, command_key, 		\
@@ -2591,7 +2589,6 @@ DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference",
 	weak_interference)
 
 #undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
-#endif	// PRSIM_FINE_GRAIN_ERROR_CONTROL
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 

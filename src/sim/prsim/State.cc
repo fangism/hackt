@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.20.2.6 2006/08/11 03:17:22 fang Exp $
+	$Id: State.cc,v 1.20.2.7 2006/08/11 04:49:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -158,12 +158,10 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		uniform_delay(time_traits::default_delay), 
 		watch_list(), 
 		flags(FLAGS_DEFAULT),
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 		unstable_policy(ERROR_DEFAULT_UNSTABLE),
 		weak_unstable_policy(ERROR_DEFAULT_WEAK_UNSTABLE),
 		interference_policy(ERROR_DEFAULT_INTERFERENCE),
 		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
-#endif
 		timing_mode(TIMING_DEFAULT),
 		ifstreams(), 
 		__scratch_expr_trace() {
@@ -303,12 +301,10 @@ State::reset(void) {
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
 	flags = FLAGS_DEFAULT;
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	unstable_policy = ERROR_DEFAULT_UNSTABLE;
 	weak_unstable_policy = ERROR_DEFAULT_WEAK_UNSTABLE;
 	interference_policy = ERROR_DEFAULT_INTERFERENCE;
 	weak_interference_policy = ERROR_DEFAULT_WEAK_INTERFERENCE;
-#endif
 	timing_mode = TIMING_DEFAULT;
 	unwatch_all_nodes();
 	uniform_delay = time_traits::default_delay;
@@ -938,7 +934,6 @@ State::dump_breakpoints(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 const char*
 State::error_policy_string(const error_policy_enum e) {
 	switch (e) {
@@ -971,13 +966,10 @@ State::string_to_error_policy(const string& s) {
 	return ERROR_INVALID;
 }
 
-#endif	// PRSIM_FINE_GRAIN_ERROR_CONTROL
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 State::dump_mode(ostream& o) const {
 	o << "mode: ";
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	o << "\tunstable events " <<
 		(dequeue_unstable_events() ? "are dequeued" : "propagate Xs")
 			<< endl;
@@ -989,12 +981,6 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(interference_policy) << endl;
 	o << "\ton weak-interference: " <<
 		error_policy_string(weak_interference_policy) << endl;
-#else
-	if (flags & FLAG_NO_WEAK_INTERFERENCE)
-		o << "reset (no weak-interference)";
-	else	o << "run (with weak-interference)";
-	return o << endl;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1134,9 +1120,7 @@ State::break_type
 State::flush_pending_queue(void) {
 	typedef	pending_queue_type::const_iterator	const_iterator;
 	STACKTRACE_VERBOSE_STEP;
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	break_type err = false;
-#endif
 	const_iterator i(pending_queue.begin()), e(pending_queue.end());
 for ( ; i!=e; ++i) {
 	const event_index_type ne = *i;
@@ -1164,16 +1148,8 @@ for ( ; i!=e; ++i) {
 			(pull_dn_state == expr_type::PULL_WEAK);
 			// not XOR (^), see pending_weak table in prs.c
 		// issue diagnostic
-		if (
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
-			(weak_interference_policy != ERROR_IGNORE) ||
-#else
-			!(flags & FLAG_NO_WEAK_INTERFERENCE) ||
-#endif
-				!pending_weak) {
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+		if (weak_interference_policy != ERROR_IGNORE || !pending_weak) {
 			err |=
-#endif
 			__report_interference(cout, pending_weak, _ni, ev);
 		}
 		if (ev.pending_interference()) {
@@ -1226,9 +1202,7 @@ for ( ; i!=e; ++i) {
 	}	// end if may_be_pulled ...
 }	// end for all in pending_queue
 	pending_queue.clear();	// or .resize(0), same thing
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	return err;
-#endif
 }	// end method flush_pending_queue
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1810,7 +1784,6 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	typedef	node_type::const_fanout_iterator	const_iterator;
 	const_iterator i(n.fanout.begin()), e(n.fanout.end());
 	for ( ; i!=e; ++i) {
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		if (UNLIKELY(propagate_evaluation(new_cause, *i, prev))) {
 			stop();
@@ -1819,13 +1792,6 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 		if (UNLIKELY(propagate_evaluation(ni, *i, prev, next))) {
 			stop();
 		}
-#endif
-#else
-#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
-		propagate_evaluation(new_cause, *i, prev);
-#else
-		propagate_evaluation(ni, *i, prev, next);
-#endif
 #endif
 	}
 }
@@ -1880,13 +1846,9 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 	// energy estimation?  TODO later for a different sim variant
 
 	// check and flush pending queue, spawn fanout events
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	if (UNLIKELY(flush_pending_queue())) {
-		stop();
+		stop();		// set stop flag
 	}
-#else
-	flush_pending_queue();
-#endif
 
 	// check and flush pending queue against exclhi/lo events
 	flush_exclhi_queue();
@@ -2040,12 +2002,9 @@ State::propagate_evaluation(
 #else
 		ev_result(evaluate(ni, ui, prev, next));
 #endif
-	if (!ev_result.node_index)
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	if (!ev_result.node_index) {
 		return false;
-#else
-		return;
-#endif
+	}
 	next = ev_result.root_pull;
 	ui = ev_result.node_index;
 	const expr_type* const u(ev_result.root_ex);
@@ -2067,9 +2026,7 @@ State::propagate_evaluation(
 		get_node_canonical_name(ui) << " with pull state " <<
 		size_t(next) << endl);
 	const event_index_type ei = n.get_event();
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	break_type err = false;
-#endif
 if (u->direction()) {
 	// pull-up
 /***
@@ -2156,10 +2113,7 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for upguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
-		err |=
-#endif
-		__diagnose_violation(cout, next, ei, e, ui, n, 
+		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
 			c, u->direction());
 	}	// end if diagnostic
 }	// end if (!n.ex_queue)
@@ -2240,17 +2194,12 @@ if (!n.pending_event()) {
 	} else {
 		DEBUG_STEP_PRINT("checking for dnguard anomaly: guard=" <<
 			size_t(next) << ", val=" << size_t(e.val) << endl);
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
-		err |=
-#endif
-		__diagnose_violation(cout, next, ei, e, ui, n, 
+		err |= __diagnose_violation(cout, next, ei, e, ui, n, 
 			c, u->direction());
 	}	// end if diagonstic
 }	// end if (!n.ex_queue)
 }	// end if (u->direction())
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	return err;
-#endif
 }	// end method propagate_evaluation
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2278,35 +2227,21 @@ State::break_type
 State::__report_interference(ostream& o, const bool weak, 
 		const node_index_type _ni, const event_type& ev) const {
 	if (weak) {
-	if (
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
-		(weak_interference_policy != ERROR_IGNORE)
-#else
-		!(flags & FLAG_NO_WEAK_INTERFERENCE)
-#endif
-			) {
+	if (weak_interference_policy != ERROR_IGNORE) {
 		o << "WARNING: weak-interference `" <<
 			get_node_canonical_name(_ni) << "\'" << endl;
 		__report_cause(o, ev);
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 		return weak_interference_policy == ERROR_BREAK;
-#endif
 	}	// endif weak_interference_policy
 	} else {	// !weak
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	if (interference_policy != ERROR_IGNORE) {
-#endif
 		o << "WARNING: interference `" <<
 			get_node_canonical_name(_ni) << "\'" << endl;
 		__report_cause(o, ev);
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 		return interference_policy == ERROR_BREAK;
 	}	// endif interference_policy
-#endif
 	}	// endif weak
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	return false;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2317,33 +2252,23 @@ State::break_type
 State::__report_instability(ostream& o, const bool weak, const bool dir, 
 		const node_index_type _ni, const event_type& ev) const {
 	if (weak) {
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	if (weak_unstable_policy != ERROR_IGNORE) {
-#endif
 		o << "WARNING: weak-unstable `" <<
 			get_node_canonical_name(_ni) << "\'" <<
 				(dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 		return weak_unstable_policy == ERROR_BREAK;
 	}	// endif weak_unstable_policy
-#endif
 	} else {	// !weak
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	if (unstable_policy != ERROR_IGNORE) {
-#endif
 		o << "WARNING: unstable `" <<
 			get_node_canonical_name(_ni) << "\'" <<
 				(dir ? '+' : '-') << endl;
 		__report_cause(o, ev);
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 		return unstable_policy == ERROR_BREAK;
 	}	// endif unstable_policy
-#endif
 	}	// endif weak
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	return false;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2371,9 +2296,7 @@ State::__diagnose_violation(ostream& o, const char next,
 #else
 	const node_index_type& ni(c);	// alias
 #endif
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	break_type err = false;
-#endif
 	// something is amiss!
 	const char eu = dir ?
 		event_type::upguard[size_t(next)][size_t(e.val)] :
@@ -2443,17 +2366,13 @@ State::__diagnose_violation(ostream& o, const char next,
 		// diagnostic message
 		// suppress message for interferences until pending queue
 		if (instability) {
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 			err |=
-#endif
 			__report_instability(o, eu & event_type::EVENT_WEAK, 
 				dir, ui, e);
 		}	// end if unstable
 	}	// end if !vacuous
 	// else vacuous is OK
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	return err;
-#endif
 }	// end method __diagnose_violation
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3144,12 +3063,10 @@ State::save_checkpoint(ostream& o) const {
 	}
 }
 	write_value(o, flags);
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	write_value(o, unstable_policy);
 	write_value(o, weak_unstable_policy);
 	write_value(o, interference_policy);
 	write_value(o, weak_interference_policy);
-#endif
 	write_value(o, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -3279,12 +3196,10 @@ State::load_checkpoint(istream& i) {
 	}
 }
 	read_value(i, flags);
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	read_value(i, unstable_policy);
 	read_value(i, weak_unstable_policy);
 	read_value(i, interference_policy);
 	read_value(i, weak_interference_policy);
-#endif
 	read_value(i, timing_mode);
 	// interrupted flag, just ignore
 	// ifstreams? don't bother managing input stream stack.
@@ -3390,7 +3305,6 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	flags_type flags;
 	read_value(i, flags);
 	o << "flags: " << size_t(flags) << endl;
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 {
 	error_policy_enum p;
 	read_value(i, p);
@@ -3402,7 +3316,6 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	read_value(i, p);
 	o << "weak-interference policy: " << error_policy_string(p) << endl;
 }
-#endif
 	char timing_mode;
 	read_value(i, timing_mode);
 	o << "timing mode: " << size_t(timing_mode) << endl;

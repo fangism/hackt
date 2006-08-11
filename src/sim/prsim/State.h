@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12.2.6 2006/08/11 03:17:24 fang Exp $
+	$Id: State.h,v 1.12.2.7 2006/08/11 04:49:11 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -181,14 +181,12 @@ private:
 		the flags member.  
 	 */
 	enum {
-#if !PRSIM_FINE_GRAIN_ERROR_CONTROL
 		/**
-			If true, then no weak interference is reported.  
-			no-weak-interference is 'reset' mode;
-			weak-interference is 'run' mode;
+			Allow unstable events to be dropped off queue
+			instead of propagating unknowns.  
+			Also dequeues weakly unstable events (involving X).  
 		 */
-		FLAG_NO_WEAK_INTERFERENCE = 0x01,
-#endif
+		FLAG_UNSTABLE_DEQUEUE = 0x01,
 		/**
 			Whether or not the simulation was stopped
 			by interrupt or event error/warning.  
@@ -216,12 +214,6 @@ private:
 			Set to true to check exclusiveness of nodes.  
 		 */
 		FLAG_CHECK_EXCL = 0x40, 
-		/**
-			Allow unstable events to be dropped off queue
-			instead of propagating unknowns.  
-			Also dequeues weakly unstable events (involving X).  
-		 */
-		FLAG_UNSTABLE_DEQUEUE = 0x80,
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
 		/**
@@ -240,11 +232,10 @@ private:
 	 */
 	typedef	unsigned char			flags_type;
 
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 public:
 	/**
 		Policy enumeration for determining simulation behavior
-		in the event of an anomaly.  
+		in the event of a delay-insensitivity violation.  
 	 */
 	typedef enum {
 		ERROR_IGNORE = 0,
@@ -263,9 +254,6 @@ private:
 		Return type to indicate whether or not to break.  
 	 */
 	typedef	bool				break_type;
-#else
-	typedef	void				break_type;
-#endif
 
 	enum {
 		/**
@@ -385,12 +373,14 @@ private:
 	// mode of operation
 	// operation flags
 	flags_type				flags;
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
+	/// controls the simulation behavior upon instability
 	error_policy_enum			unstable_policy;
+	/// controls the simulation behavior upon weak-instability
 	error_policy_enum			weak_unstable_policy;
+	/// controls the simulation behavior upon interference
 	error_policy_enum			interference_policy;
+	/// controls the simulation behavior upon weak-interference
 	error_policy_enum			weak_interference_policy;
-#endif
 	
 	/// timing mode
 	char					timing_mode;
@@ -529,29 +519,20 @@ public:
 
 	void
 	set_mode_reset(void) {
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 		unstable_policy = ERROR_BREAK;
 		weak_unstable_policy = ERROR_WARN;
 		interference_policy = ERROR_BREAK;
 		weak_interference_policy = ERROR_IGNORE;
-#else
-		flags |= FLAG_NO_WEAK_INTERFERENCE;
-#endif
 	}
 
 	void
 	set_mode_run(void) {
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 		unstable_policy = ERROR_BREAK;
 		weak_unstable_policy = ERROR_WARN;
 		interference_policy = ERROR_BREAK;
 		weak_interference_policy = ERROR_WARN;
-#else
-		flags &= ~FLAG_NO_WEAK_INTERFERENCE;
-#endif
 	}
 
-#if PRSIM_FINE_GRAIN_ERROR_CONTROL
 	void
 	set_mode_breakall(void) {
 		unstable_policy = ERROR_BREAK;
@@ -606,7 +587,6 @@ public:
 	error_policy_enum
 	get_weak_interference_policy(void) const
 		{ return weak_interference_policy; }
-#endif
 
 	bool
 	pending_events(void) const { return !event_queue.empty(); }

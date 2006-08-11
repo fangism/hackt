@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-07:
+	  Committed PRSIM_FINE_GRAIN_ERROR_CONTROL developer switch.  
+	  Next: diagnostic 'backtrace' command using direction-specific 
+		causality of node-events.
+
+
 2006-08-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-54-prsim-07-06:
