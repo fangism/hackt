@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.21 2006/08/12 00:36:35 fang Exp $
+	$Id: State.cc,v 1.22 2006/08/12 01:00:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1023,6 +1023,7 @@ State::dump_mode(ostream& o) const {
 		error_policy_string(interference_policy) << endl;
 	o << "\ton weak-interference: " <<
 		error_policy_string(weak_interference_policy) << endl;
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
