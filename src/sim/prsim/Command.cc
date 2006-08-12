@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.15 2006/08/01 18:48:04 fang Exp $
+	$Id: Command.cc,v 1.16 2006/08/12 00:36:31 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -1221,6 +1221,7 @@ if (a.size() != 1) {
 void
 Cycle::usage(ostream& o) {
 	o << "cycle" << endl;
+	o << "Runs until event queue is empty." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1738,11 +1739,7 @@ DECLARE_AND_INITIALIZE_COMMAND_CLASS(Get, "get", info,
 	"print value of node/vector")
 
 /**
-	TODO: if instance referenced is an aggregate, 
-		then print the values of all constituents.
-		Reserve that for the getall command.
-	Status: done.
-	TODO: allow access to private members in Reference.cc.  
+	Prints current value of the named node.  
  */
 int
 Get::main(State& s, const string_list& a) {
@@ -1755,22 +1752,7 @@ if (a.size() != 2) {
 	if (ni) {
 		// we have ni = the canonically allocated index of the bool node
 		// just look it up in the node_pool
-		// const state_manager& sm(s.get_module().get_state_manager());
-#if 0
-		const State::node_type& n(s.get_node(ni));
-		n.dump_value(cout << objname << " : ") << endl;
-		const node_index_type ci = n.cause_node;
-		if (ci) {
-			const string causename(s.get_node_canonical_name(ci));
-			const State::node_type& c(s.get_node(ci));
-			c.dump_value(o << "\t[by " << causename << ":=") << ']';
-		}
-		if (s.show_tcounts()) {
-			o << "\t(" << n.tcount << " T)";
-		}
-#else
 		Step::print_watched_node(cout, s, ni, objname);
-#endif
 		return Command::NORMAL;
 	} else {
 		cerr << "No such node found." << endl;
@@ -2125,6 +2107,7 @@ if (a.size() != 1) {
 void
 Time::usage(ostream& o) {
 	o << "time" << endl;
+	o << "shows the current time" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2134,6 +2117,40 @@ Time::usage(ostream& o) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoConfirm, "noconfirm", info, 
 //	"confirm assertions silently")
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(BackTrace, "backtrace", info, 
+	"trace backwards partial event causality history")
+
+int
+BackTrace::main(State& s, const string_list& a) {
+if (a.size() != 2) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	const string& objname(a.back());
+	const node_index_type ni = parse_node_to_index(objname, s.get_module());
+	if (ni) {
+		// Step::print_watched_node(cout, s, ni, objname);
+		s.backtrace_node(cout, ni);
+		return Command::NORMAL;
+	} else {
+		return Command::BADARG;
+	}
+}
+}
+
+void
+BackTrace::usage(ostream& o) {
+	o << name << " <node>" << endl;
+	o <<
+"Traces back history of last-arriving events until cycle found.\n"
+"This is useful for finding critical paths and diagnosing instabilities."
+	<< endl;
+}
+
+#endif	// PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Watch, "watch", view, 
@@ -2477,9 +2494,8 @@ NoCheckExcl::usage(ostream& o) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(UnstableUnknown, "unstable-unknown", 
-	modes, "rule instabilities propagate unknowns")
+	modes, "rule instabilities propagate unknowns (default)")
 
 int
 UnstableUnknown::main(State& s, const string_list& a) {
@@ -2518,7 +2534,77 @@ UnstableDequeue::usage(ostream& o) {
 	o << name << endl;
 	o << "Unstable events are dequeued during run-time." << endl;
 }
-#endif	// PRSIM_ALLOW_UNSTABLE_DEQUEUE
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static const char
+break_options[] = "[ignore|warn|notify|break]";
+
+static const char
+break_descriptions[] = 
+"\tignore: silently ignores violation\n"
+"\twarn: print warning without halting\n"
+"\tnotify: (same as warn)\n"
+"\tbreak: notify and halt";
+
+#define	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(class_name, command_key, \
+		brief_str, usage_str, func_name) 			\
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(class_name, command_key, 		\
+		modes, brief_str)					\
+									\
+int									\
+class_name::main(State& s, const string_list& a) {			\
+if (a.size() != 2) {							\
+	usage(cerr << "usage: ");					\
+	cerr << "current mode: " <<					\
+		State::error_policy_string(s.get_##func_name##_policy()) \
+		<< endl;						\
+	return Command::SYNTAX;						\
+} else {								\
+	const string& m(a.back());					\
+	State::error_policy_enum e = State::string_to_error_policy(m);	\
+	if (State::valid_error_policy(e)) {				\
+		s.set_##func_name##_policy(e);				\
+		return Command::NORMAL;					\
+	} else {							\
+		cerr << "bad mode: \'" << m << "\'." << endl;		\
+		usage(cerr << "usage: ");				\
+		return Command::BADARG;					\
+	}								\
+}									\
+}									\
+									\
+void									\
+class_name::usage(ostream& o) {						\
+	o << name << " " << break_options << endl;			\
+	o << usage_str << endl;						\
+	o << break_descriptions << endl;				\
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Unstable, "unstable", 
+	"alter simulation behavior on unstable", 
+	"Alters simulator behavior on an instability violation.",
+	unstable)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakUnstable, "weak-unstable", 
+	"alter simulation behavior on weak-unstable",
+	"Alters simulator behavior on a weak-instability violation.", 
+	weak_unstable)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(Interference, "interference", 
+	"alter simulation behavior on interference",
+	"Alters simulator behavior on an interference violation.",
+	interference)
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS(WeakInterference, "weak-interference", 
+	"alter simulation behavior on weak-interference",
+	"Alters simulator behavior on a weak-interference violation.",
+	weak_interference)
+
+#undef	DECLARE_AND_DEFINE_ERROR_CONTROL_CLASS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(SetMode, "mode", 

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.h"
 	Structure for PRS expressions.  
-	$Id: Expr.h,v 1.6 2006/07/28 03:31:12 fang Exp $
+	$Id: Expr.h,v 1.7 2006/08/12 00:36:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EXPR_H__
@@ -13,6 +13,7 @@
 #include <utility>
 #include "sim/common.h"
 #include "util/macros.h"
+#include "util/utypes.h"
 
 /**
 	Define to 1 to use PULL_WEAK == 1.
@@ -36,7 +37,7 @@ using std::pair;
 	TODO: split up into structural and stateful information.  
  */
 struct Expr {
-	typedef	unsigned char		count_type;
+	typedef	uchar			count_type;
 	/**
 		There is no NODE expr, just use AND/OR of size 1.  
 		There is no NOT expr, just use and NAND/NOR of size 1.  
@@ -69,7 +70,7 @@ struct Expr {
 		a node_index_type!
 	 */
 //	const
-	unsigned char		type;
+	uchar			type;
 	/**
 		The number of children.
 		const b/c it should be set once for the duration 
@@ -82,9 +83,9 @@ struct Expr {
 public:
 	Expr();
 
-	Expr(const unsigned char, const count_type);
+	Expr(const uchar, const count_type);
 
-	Expr(const expr_index_type, const unsigned char, const count_type);
+	Expr(const expr_index_type, const uchar, const count_type);
 
 	~Expr();
 
@@ -180,10 +181,10 @@ public:
 	is_nand(void) const { return (type & EXPR_AND) && (type & EXPR_NOT); }
 
 	bool
-	parenthesize(const char, const bool) const;
+	parenthesize(const uchar, const bool) const;
 
 	/// see "Object/lang/PRS_enum.h"
-	char
+	uchar
 	to_prs_enum(void) const;
 
 	ostream&
@@ -225,7 +226,7 @@ public:
 		PULL_ON = 0x01,
 		PULL_WEAK = 0x02
 	};	// wants to be pull_enum
-	typedef	unsigned char		pull_enum;
+	typedef	uchar			pull_enum;
 
 public:
 	/**
@@ -248,7 +249,7 @@ public:
 		because they shouldn't be set until the structure is finalized
 		by the responsible State object.  
 	 */
-	ExprState(const unsigned char t, const count_type s) :
+	ExprState(const uchar t, const count_type s) :
 		parent_type(t, s) { }
 
 
@@ -344,7 +345,7 @@ public:
  */
 struct ExprGraphNode {
 	typedef	size_t			index_type;
-	typedef	unsigned char		count_type;
+	typedef	uchar			count_type;
 	/**
 		The second value can be interpreted as an index
 		to an expression or bool node.  

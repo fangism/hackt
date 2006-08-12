@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Expr.cc"
 	Expression node implementation.  
-	$Id: Expr.cc,v 1.4 2006/05/06 04:18:50 fang Exp $
+	$Id: Expr.cc,v 1.5 2006/08/12 00:36:33 fang Exp $
  */
 
 #include <iostream>
@@ -30,13 +30,13 @@ Expr::Expr() : parent(INVALID_EXPR_INDEX), type(0), size(0) { }
 /**
 	Initializes type and child-count without initializing parent index.  
  */
-Expr::Expr(const unsigned char t, const count_type s) :
+Expr::Expr(const uchar t, const count_type s) :
 	parent(INVALID_EXPR_INDEX), type(t), size(s) {
 	INVARIANT(size);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Expr::Expr(const expr_index_type p, const unsigned char t, 
+Expr::Expr(const expr_index_type p, const uchar t, 
 		const count_type s) : parent(p), type(t), size(s) {
 	INVARIANT(parent);
 	INVARIANT(size);
@@ -46,7 +46,7 @@ Expr::Expr(const expr_index_type p, const unsigned char t,
 Expr::~Expr() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-char
+uchar
 Expr::to_prs_enum(void) const {
 	if (is_not())
 		return entity::PRS::PRS_NOT_EXPR_TYPE_ENUM;
@@ -63,7 +63,7 @@ Expr::to_prs_enum(void) const {
 	\param proot
  */
 bool
-Expr::parenthesize(const char ptype, const bool proot) const {
+Expr::parenthesize(const uchar ptype, const bool proot) const {
 	const bool neg = type & EXPR_NOT;
 	const bool mismatch = (type ^ ptype) & EXPR_MASK;
 	return (size > 1 && (neg || (mismatch && !proot)));
@@ -76,7 +76,7 @@ Expr::parenthesize(const char ptype, const bool proot) const {
 ostream&
 Expr::dump_struct(ostream& o) const {
 	o << "type: ";
-	unsigned char t = type & EXPR_MASK;
+	const uchar t = type & EXPR_MASK;
 	switch (t) {
 	case EXPR_OR: o << "or<"; break;
 	case EXPR_AND: o << "and<"; break;
@@ -120,7 +120,7 @@ Expr::dump_parent_dot_edge(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 Expr::dump_type_dot_shape(ostream& o) const {
-	unsigned char t = type & EXPR_MASK;
+	const uchar t = type & EXPR_MASK;
 	switch (t) {
 	case EXPR_OR: o << "triangle"; break;
 	case EXPR_AND: o << "trapezium"; break;

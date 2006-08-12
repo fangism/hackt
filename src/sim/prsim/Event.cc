@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.cc"
 	Implementation of prsim event structures.  
-	$Id: Event.cc,v 1.6 2006/08/08 05:46:44 fang Exp $
+	$Id: Event.cc,v 1.7 2006/08/12 00:36:32 fang Exp $
  */
 
 #include <iostream>
@@ -34,7 +34,7 @@ using util::read_value;
 	First index is the guard's pulling state (F = OFF, T = ON, X = WEAK),
 	second index is the pending event state.
  */
-const char
+const uchar
 Event::upguard[3][3] = {
 	{	EVENT_VACUOUS, 		// guard F, event F: vacuous
 		EVENT_UNSTABLE,		// guard F, event T: unstable
@@ -50,7 +50,7 @@ Event::upguard[3][3] = {
 	}
 };
 
-const char
+const uchar
 Event::dnguard[3][3] = {
 	{	EVENT_UNSTABLE,		// guard F, event F: vacuous
 		EVENT_VACUOUS,		// guard F, event T: unstable
@@ -70,7 +70,11 @@ Event::dnguard[3][3] = {
 void
 Event::save_state(ostream& o) const {
 	write_value(o, node);
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	cause.save_state(o);
+#else
 	write_value(o, cause_node);
+#endif
 #if PRSIM_CHECKPOINT_CAUSE_RULE
 	// rule/expr IDs will vary with optimization level!
 	// don't really need: rule ID ise only used for get_delay_up/dn
@@ -85,7 +89,11 @@ Event::save_state(ostream& o) const {
 void
 Event::load_state(istream& i) {
 	read_value(i, node);
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	cause.load_state(i);
+#else
 	read_value(i, cause_node);
+#endif
 #if PRSIM_CHECKPOINT_CAUSE_RULE
 	read_value(i, cause_rule);
 #endif
@@ -107,7 +115,14 @@ ostream&
 Event::dump_checkpoint_state(ostream& o, istream& i) {
 	this_type temp;
 	temp.load_state(i);
-	return o << temp.node << "\t\t" << temp.cause_node << "\t\t" <<
+	return o << temp.node << "\t\t" << 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		'(' << temp.cause.node << ',' << size_t(temp.cause.val) << ')'
+		// could use Node::value_to_char[]...
+#else
+		temp.cause_node
+#endif
+		<< "\t\t" <<
 		temp.cause_rule << '\t' << size_t(temp.val);
 }
 

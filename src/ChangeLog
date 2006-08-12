@@ -3,6 +3,106 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-55-merged-prsim-07-09:
+	  Merge of -prsim-07 branch (revision -09).
+	  Summary (prsim):
+		committed old FIX_BOGUS_INTERFERENCE and
+			ALLOW_UNSTABLE_DEQUEUE flags, now permanent.  
+		Implemented fine-grain error-control, so the behavior on 
+			{weak-,}{instability,interference} may be customized:
+			policies are: ignore, warn, break.
+		mode reset and mode run are now defined in terms of these.
+		event-causality is now tracked *per value* per node
+			to distinguish last arriving inputs of
+			pull-up and pull-down transitions, 
+			flag: PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		causes are now attributed upon event dequeue, not enqueue.
+		'backtrace' command walks causal event history, 
+			useful for critical path analysis in non-random mode,
+			and QDI violations in random timing mode.  
+
+
+2006-08-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-09:
+	  Cleaned up sign-correctness of char types in prsim.
+	  Status: ready to merge to trunk.
+
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-08:
+	  Implemented and tested 'backtrace' command (sweet!).
+	  One test case added: test/prsim/oscil-backtrace-01.prsimrc
+
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-07:
+	  Committed PRSIM_FINE_GRAIN_ERROR_CONTROL developer switch.  
+	  Next: diagnostic 'backtrace' command using direction-specific 
+		causality of node-events.
+
+
+2006-08-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-06:
+	  Mostly aesthetic patch (minor)
+	  Committed PRSIM_ASSIGN_CAUSE_ON_DEQUEUE.  
+	  Much simplification of conditional code (SEPARATE_CAUSE_NODE_DIR).
+	  minor TODO: clean-up prsim headers and [un]signed char types.
+
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-05:
+	  Completed and enabled PRSIM_SEPARATE_CAUSE_NODE_DIRECTION patch, 
+		but code is a mess of conditional flags, needs a clean-up.  
+		No regressions caused in test suite!
+	  Next: commit PRSIM_ASSIGN_CAUSE_ON_DEQUEUE
+	  TODO: diagnostic 'backtrace' command using new features.  
+
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-04:
+	  Added sim/prsim/Cause.h: for advanced cause tracking structures.
+	  PRSIM_SEPARATE_CAUSE_NODE_DIRECTION still disabled in this snapshot.
+		Much coded added to use it in Node/Event...
+	  Minor switch added and enabled: PRSIM_ASSIGN_CAUSE_ON_DEQUEUE:
+		instead of assigning cause on enqueue of event, 
+		assign the cause after event actually happens, so unstable 
+		events don't get mistakenly and prematurely assigned blame.  
+		This causes no regressions.  
+	  Next: resume cause-separation.  
+
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-03:
+	  prsim: added commands 'unstable' 'weak-unstable' 'interference'
+		'weak-interference' which all take one of the arguments
+		'ignore' 'warn' 'notify' (same as warn) 'break'.
+		These commands control the simulation policy on the
+		named violations.  
+	  State.cc: corrected the default values of violation policies,
+		reset() also resets the violation policies.  
+		propagate the result of evaluation and flush_pending_queue
+			to callers to conditionally set the STOP flag.  
+	  A few test-cases updated to allow unstable behavior where intended.
+	  TODO: backtracing events and value-specific causality.
+
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-02:
+	  prsim: devel-switch: PRSIM_FINE_GRAIN_ERROR_CONTROL added:
+		be able to control whether or not diagnostic is printed
+		and whether or not to break runs for each type of 
+		violation {weak-,}{unstable,interference}.
+		Current snapshot causes no regressions with/without switch.
+	  TODO next: commands to alter behavior.
+
+
+2006-08-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-54-prsim-07-01:
+	  This branch is for another series of prsim improvements.  
+	  Some plans are written in the TODO file.
+	  In this revision, only committed old PRSIM_ALLOW_UNSTABLE_DEQUEUE
+		and PRSIM_FIX_BOGUS_INTERFERENCE flags.  
+
+
 2006-08-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-54:

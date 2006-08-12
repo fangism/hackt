@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.7 2006/07/28 03:31:13 fang Exp $
+	$Id: Node.cc,v 1.8 2006/08/12 00:36:34 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -120,10 +120,10 @@ Node::dump_fanout_dot(ostream& o, const string& s) const {
 //=============================================================================
 // class NodeState method definitions
 
-const char
+const uchar
 NodeState::value_to_char[3] = { '0', '1', 'X' };
 
-const char
+const uchar
 NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -134,7 +134,11 @@ NodeState::invert_value[3] = { LOGIC_HIGH, LOGIC_LOW, LOGIC_OTHER };
 void
 NodeState::initialize(void) {
 	event_index = INVALID_EVENT_INDEX;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	new (&causes) LastCause;	// placement construct to initialize
+#else
 	caused_by_node = INVALID_NODE_INDEX;
+#endif
 	value = LOGIC_OTHER;
 	tcount = 0;
 	state_flags |= NODE_INITIALIZE_SET_MASK;
@@ -148,7 +152,11 @@ NodeState::initialize(void) {
 void
 NodeState::reset(void) {
 	event_index = INVALID_EVENT_INDEX;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	new (&causes) LastCause;	// placement construct to initialize
+#else
 	caused_by_node = INVALID_NODE_INDEX;
+#endif
 	value = LOGIC_OTHER;
 	tcount = 0;
 	state_flags = NODE_INITIAL_STATE_FLAGS;
@@ -179,7 +187,7 @@ NodeState::dump_state(ostream& o) const {
 	NOTE: reserving H/L for weak logic levels.  
 	\return 0, 1, 2 (X), or -1 on error.  
  */
-char
+uchar
 NodeState::char_to_value(const char v) {
 	switch (v) {
 	case 'f':	// fall-through
@@ -196,7 +204,7 @@ NodeState::char_to_value(const char v) {
 	case 'u':	// fall-through
 		return LOGIC_OTHER;
 	default:
-		return -1;
+		return uchar(-1);
 	}
 }
 
@@ -206,10 +214,10 @@ NodeState::char_to_value(const char v) {
 	TODO: add synonymous character mappings.  
 	\return 0, 1, 2 (X), or -1 on error.  
  */
-char
+uchar
 NodeState::string_to_value(const string& v) {
 	if (v.length() != 1) {
-		return -1;
+		return uchar(-1);
 	} else {
 		return char_to_value(v[0]);
 	}
@@ -228,7 +236,11 @@ NodeState::save_state(ostream& o) const {
 	write_value(o, value);
 	write_value(o, state_flags);
 //	omit event index, which is reconstructed
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	causes.save_state(o);
+#else
 	write_value(o, caused_by_node);
+#endif
 	write_value(o, tcount);
 }
 
@@ -246,7 +258,11 @@ NodeState::load_state(istream& i) {
 	read_value(i, state_flags);
 //	omit event index, which is reconstructed
 	INVARIANT(event_index == INVALID_EVENT_INDEX);
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	causes.load_state(i);
+#else
 	read_value(i, caused_by_node);
+#endif
 	read_value(i, tcount);
 }
 
@@ -262,7 +278,13 @@ NodeState::dump_checkpoint_state(ostream& o, istream& i) {
 	this_type temp;
 	temp.load_state(i);
 	return temp.dump_value(o) << '\t' << size_t(temp.state_flags) <<
-		'\t' << temp.caused_by_node << '\t' << temp.tcount;
+		'\t';
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	temp.causes.dump_checkpoint_state(o);
+#else
+	o << temp.caused_by_node;
+#endif
+	o << '\t' << temp.tcount;
 }
 
 //=============================================================================

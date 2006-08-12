@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Event.h"
 	A firing event, and the queue associated therewith.  
-	$Id: Event.h,v 1.6 2006/07/18 04:09:16 fang Exp $
+	$Id: Event.h,v 1.7 2006/08/12 00:36:32 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_EVENT_H__
@@ -15,9 +15,11 @@
 #include "util/likely.h"
 #include "util/attributes.h"
 #include "util/macros.h"
+#include "util/utypes.h"
 #include "util/memory/index_pool.h"
 #include "util/memory/free_list.h"
 #include "sim/prsim/devel_switches.h"
+#include "sim/prsim/Cause.h"
 
 #define	DEBUG_EVENT_POOL_ALLOC				0
 
@@ -53,22 +55,30 @@ public:
 		EVENT_WEAK_UNSTABLE = EVENT_UNSTABLE | EVENT_WEAK,
 		EVENT_WEAK_INTERFERENCE = EVENT_INTERFERENCE | EVENT_WEAK
 	} event_flags_enum;
+
+	typedef	EventCause		cause_type;
 public:
 	/**
 		Event classification table of 
 		pull-up-state vs. event pending value.  
 	 */
-	static const char		upguard[3][3];
+	static const uchar		upguard[3][3];
 	/**
 		Event classification table of 
 		pull-dn-state vs. event pending value.  
 	 */
-	static const char		dnguard[3][3];
+	static const uchar		dnguard[3][3];
 public:
 	/**
 		The index of the node to switch.
 	 */
 	node_index_type			node;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	/**
+		The (node, value) pair that spawned this event.
+	 */
+	cause_type			cause;
+#else
 	/**
 		The index of the node that caused this event to 
 		become enqueued.  
@@ -77,6 +87,7 @@ public:
 		This index may be null/invalid.  
 	 */
 	node_index_type			cause_node;
+#endif
 	/**
 		The index of the rule expression that caused this to fire, 
 		also the source of the delay value.  
@@ -86,15 +97,13 @@ public:
 		The node's new value: 0, 1, 2 (X).
 		See Node::value enumeration.
 	 */
-	unsigned char			val;
+	uchar				val;
 protected:
 	enum {
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 		/**
 			Signals that event is pending interference.  
 		 */
 		EVENT_FLAG_PENDING_INTERFERENCE = 0x01,
-#endif
 		/**
 			Signals that event cancelled.  
 		 */
@@ -111,11 +120,15 @@ protected:
 		Additional event flags.  
 		Protected visibility to use method interface.  
 	 */
-        unsigned char			flags;
+        uchar				flags;
 	// note: room for one more short int
 public:
 	Event() : node(INVALID_NODE_INDEX),
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		cause(), 
+#else
 		cause_node(INVALID_NODE_INDEX), 
+#endif
 		cause_rule(INVALID_RULE_INDEX), 
 		val(0), 
 		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
@@ -125,11 +138,19 @@ public:
 		to indicate an external (perhaps user) cause.  
 	 */
 	Event(const node_index_type n,
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		const cause_type& c, 
+#else
 		const node_index_type c, 
+#endif
 		const rule_index_type r, 
-		const unsigned char v) :
+		const uchar v) :
 		node(n),
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		cause(c), 
+#else
 		cause_node(c), 
+#endif
 		cause_rule(r),
 		val(v),
 		flags(EVENT_FLAGS_DEFAULT_VALUE) { }
@@ -155,7 +176,6 @@ public:
 	void
 	load_state(istream&);
 
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 	bool
 	pending_interference(void) const {
 		return flags & EVENT_FLAGS_DEFAULT_VALUE;
@@ -166,7 +186,6 @@ public:
 		if (i)	flags |= EVENT_FLAGS_DEFAULT_VALUE;
 		else	flags &= ~EVENT_FLAGS_DEFAULT_VALUE;
 	}
-#endif
 
 	static
 	ostream&

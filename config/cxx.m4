@@ -1,5 +1,5 @@
 dnl "config/cxx.m4"
-dnl	$Id: cxx.m4,v 1.8 2006/05/09 05:39:14 fang Exp $
+dnl	$Id: cxx.m4,v 1.9 2006/08/12 00:36:24 fang Exp $
 dnl autoconf macros for detecting characteristics of the C++ compiler.
 dnl
 
@@ -1010,5 +1010,4 @@ AC_DEFINE(HAVE_TEMPLATE_FORMAL_BASE_CLASS, [],
         [Define if templates formal parameters may be named as base classes.])
 fi
 ])dnl
-
 

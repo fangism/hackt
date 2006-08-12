@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.h"
 	Structure of basic PRS node.  
-	$Id: Node.h,v 1.12 2006/07/28 03:31:13 fang Exp $
+	$Id: Node.h,v 1.13 2006/08/12 00:36:34 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_NODE_H__
@@ -13,8 +13,10 @@
 #include "util/string_fwd.h"
 #include "util/macros.h"
 #include "util/attributes.h"
+#include "util/utypes.h"
 #include "sim/common.h"
 #include "sim/prsim/devel_switches.h"
+#include "sim/prsim/Cause.h"
 
 namespace HAC {
 namespace SIM {
@@ -92,7 +94,7 @@ protected:
 		The packed version is aligned to 2B (short, word) boundaries.
 		Extending classes can use these!
 	 */
-	unsigned short			struct_flags;
+	ushort				struct_flags;
 
 public:
 	typedef	fanout_array_type::const_iterator
@@ -165,42 +167,6 @@ public:
 
 //=============================================================================
 /**
-	Structure for tracking event causality in greater detail.  
-	Members kept in separate arrays for better alignment.  
- */
-struct LastCause {
-	/**
-		The causing node.  
-		Indexed by node's current value.  
-	 */
-	node_index_type				caused_by_node[3];
-	/**
-		The value of the causing node.  
-		3 of 4 slots used for better padding.  
-	 */
-	unsigned char				caused_by_value[4];
-
-	/**
-		How the f-- do you initialize aggregate members?
-	 */
-	LastCause()
-		// caused_by_node({0}),
-		// caused_by_value({0})
-	{
-		// caused_by_node = {0};
-		// caused_by_value = {0};
-		// *this = {{0,0,0}, {0,0,0}};
-		caused_by_node[0] = INVALID_NODE_INDEX;
-		caused_by_node[1] = INVALID_NODE_INDEX;
-		caused_by_node[2] = INVALID_NODE_INDEX;
-		caused_by_value[0] = 0;	// don't care
-		caused_by_value[1] = 0;	// don't care
-		caused_by_value[2] = 0;	// don't care
-	}
-};	// end struct LastCause
-
-//=============================================================================
-/**
 	Structural information extended with stateful information.  
 	Size of this should be a total of 8 double-words, or 32 B.  
 	Nice and quad-word aligned.  
@@ -210,6 +176,7 @@ private:
 	typedef	NodeState			this_type;
 public:
 	typedef	Node				parent_type;
+	typedef	LastCause::event_cause_type	event_cause_type;
 
 	typedef	enum {
 		LOGIC_LOW = 0x00,		// 0
@@ -247,14 +214,14 @@ public:
 	} state_flags_enum;
 
 public:
-	static const char		value_to_char[3];
-	static const char		invert_value[3];
+	static const uchar		value_to_char[3];
+	static const uchar		invert_value[3];
 protected:
 	/**
 		Uses enum value_enum:
 		0 = 0, 1 = 1, 2 = X, 3 = X
 	 */
-	unsigned char				value;
+	uchar					value;
 
 	/**
 		8-bit field for flagging stateful information.  
@@ -301,6 +268,23 @@ public:
 	}
 
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	/**
+		By default, uses the current value.  
+	 */
+	node_index_type
+	get_cause_node(void) const {
+		return causes.get_cause_node(value);
+	}
+
+	event_cause_type
+	get_cause(void) const {
+		return causes.get_cause(value);
+	}
+
+	event_cause_type
+	get_cause(const uchar v) const {
+		return causes.get_cause(v);
+	}
 #else
 	node_index_type
 	get_cause_node(void) const { return caused_by_node; }
@@ -353,12 +337,20 @@ public:
 	void
 	clear_excl_queue(void) { state_flags &= ~NODE_EX_QUEUE; }
 
-	char
+	uchar
 	current_value(void) const { return value; }
 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 	void
-	set_value(const char c) { value = c; }
+	set_value_and_cause(const uchar c, const event_cause_type& e) {
+		value = c;
+		causes.set_cause(c, e);
+	}
+#else
+	void
+	set_value(const uchar c) { value = c; }
 
+#endif
 	ostream&
 	dump_value(ostream&) const;
 
@@ -371,9 +363,9 @@ public:
 	 */
 	struct status_dumper {
 		ostream&		os;
-		const char		match_val;
+		const uchar		match_val;
 
-		status_dumper(ostream& o, const char v) :
+		status_dumper(ostream& o, const uchar v) :
 			os(o), match_val(v) { }
 
 		// no copy-ctor
@@ -386,17 +378,18 @@ public:
 
 	static
 	bool
-	is_valid_value(const char c) {
-		return c >= LOGIC_LOW && c <= LOGIC_OTHER;
+	is_valid_value(const uchar c) {
+		// return c >= LOGIC_LOW && c <= LOGIC_OTHER;
+		return c <= LOGIC_OTHER;
 	}
 
 	static
-	char
+	uchar
 	char_to_value(const char);
 
 	/// \return < 0 on error, else returns 0, 1, 2
 	static
-	char
+	uchar
 	string_to_value(const std::string&);
 
 	void

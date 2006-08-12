@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.12 2006/08/01 18:48:05 fang Exp $
+	$Id: State.h,v 1.13 2006/08/12 00:36:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -87,6 +87,15 @@ public:
 	typedef	real_time			time_type;
 	typedef	delay_policy<time_type>		time_traits;
 	typedef	NodeState			node_type;
+	typedef	node_type::event_cause_type	event_cause_type;
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	/**
+		NOTE: pass by event_cause_type by reference.  
+	 */
+	typedef	const event_cause_type&		cause_arg_type;
+#else
+	typedef	const node_index_type		cause_arg_type;
+#endif
 	typedef	ExprState			expr_type;
 	typedef	ExprGraphNode			graph_node_type;
 	typedef	Event				event_type;
@@ -128,12 +137,12 @@ private:
 	struct evaluate_return_type {
 		node_index_type			node_index;
 		expr_type*			root_ex;
-		char				root_pull;
+		uchar				root_pull;
 
 		evaluate_return_type() : node_index(INVALID_NODE_INDEX) { }
 
 		evaluate_return_type(const node_index_type ni,
-			expr_type* const e, const char p) :
+			expr_type* const e, const uchar p) :
 			node_index(ni), root_ex(e), root_pull(p) { }
 	};	// end struct evaluate_return_type
 private:
@@ -173,11 +182,11 @@ private:
 	 */
 	enum {
 		/**
-			If true, then no weak interference is reported.  
-			no-weak-interference is 'reset' mode;
-			weak-interference is 'run' mode;
+			Allow unstable events to be dropped off queue
+			instead of propagating unknowns.  
+			Also dequeues weakly unstable events (involving X).  
 		 */
-		FLAG_NO_WEAK_INTERFERENCE = 0x01,
+		FLAG_UNSTABLE_DEQUEUE = 0x01,
 		/**
 			Whether or not the simulation was stopped
 			by interrupt or event error/warning.  
@@ -205,14 +214,6 @@ private:
 			Set to true to check exclusiveness of nodes.  
 		 */
 		FLAG_CHECK_EXCL = 0x40, 
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
-		/**
-			Allow unstable events to be dropped off queue
-			instead of propagating unknowns.  
-			Also dequeues weakly unstable events (involving X).  
-		 */
-		FLAG_UNSTABLE_DEQUEUE = 0x80,
-#endif
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
 		/**
@@ -229,7 +230,30 @@ private:
 	/**
 		As we add more flags this will have to expand...
 	 */
-	typedef	unsigned char			flags_type;
+	typedef	uchar				flags_type;
+
+public:
+	/**
+		Policy enumeration for determining simulation behavior
+		in the event of a delay-insensitivity violation.  
+	 */
+	typedef enum {
+		ERROR_IGNORE = 0,
+		ERROR_WARN = 1,
+		ERROR_NOTIFY = ERROR_WARN,
+		ERROR_BREAK = 2,
+		ERROR_INVALID,
+		ERROR_DEFAULT_UNSTABLE = ERROR_BREAK,
+		ERROR_DEFAULT_WEAK_UNSTABLE = ERROR_WARN,
+		ERROR_DEFAULT_INTERFERENCE = ERROR_BREAK,
+		ERROR_DEFAULT_WEAK_INTERFERENCE = ERROR_WARN
+	} error_policy_enum;
+
+private:
+	/**
+		Return type to indicate whether or not to break.  
+	 */
+	typedef	bool				break_type;
 
 	enum {
 		/**
@@ -261,7 +285,7 @@ private:
 		Used when node is re-evaluated.  
 		Indexed by [pull-up state][pull-down state].
 	 */
-	static const char			pull_to_value[3][3];
+	static const uchar			pull_to_value[3][3];
 
 public:
 	/**
@@ -349,13 +373,27 @@ private:
 	// mode of operation
 	// operation flags
 	flags_type				flags;
+	/// controls the simulation behavior upon instability
+	error_policy_enum			unstable_policy;
+	/// controls the simulation behavior upon weak-instability
+	error_policy_enum			weak_unstable_policy;
+	/// controls the simulation behavior upon interference
+	error_policy_enum			interference_policy;
+	/// controls the simulation behavior upon weak-interference
+	error_policy_enum			weak_interference_policy;
+	
 	/// timing mode
-	char					timing_mode;
+	uchar					timing_mode;
 	// loadable random seed?
-	/// set by the SIGINT signal handler
-	/// (is this redundant with the STOP flag?)
+	/**
+		set by the SIGINT signal handler
+		(is this redundant with the STOP flag?)
+	 */
 	volatile bool				interrupted;
-	// interpreter state
+	/**
+		interpreter state for the input stream.
+		Not checkpointed, of course.  
+	 */
 	ifstream_manager			ifstreams;
 	/**
 		For efficient tracing and lookup of root rule expressions.  
@@ -422,6 +460,11 @@ public:
 	string
 	get_node_canonical_name(const node_index_type) const;
 
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+	void
+	backtrace_node(ostream&, const node_index_type) const;
+#endif
+
 	/// only called by ExprAlloc
 	void
 	void_expr(const expr_index_type);
@@ -480,10 +523,75 @@ public:
 	dump_mode(ostream&) const;
 
 	void
-	set_mode_reset(void) { flags |= FLAG_NO_WEAK_INTERFERENCE; }
+	set_mode_reset(void) {
+		unstable_policy = ERROR_BREAK;
+		weak_unstable_policy = ERROR_WARN;
+		interference_policy = ERROR_BREAK;
+		weak_interference_policy = ERROR_IGNORE;
+	}
 
 	void
-	set_mode_run(void) { flags &= ~FLAG_NO_WEAK_INTERFERENCE; }
+	set_mode_run(void) {
+		unstable_policy = ERROR_BREAK;
+		weak_unstable_policy = ERROR_WARN;
+		interference_policy = ERROR_BREAK;
+		weak_interference_policy = ERROR_WARN;
+	}
+
+	void
+	set_mode_breakall(void) {
+		unstable_policy = ERROR_BREAK;
+		weak_unstable_policy = ERROR_BREAK;
+		interference_policy = ERROR_BREAK;
+		weak_interference_policy = ERROR_BREAK;
+	}
+
+	static
+	const char*
+	error_policy_string(const error_policy_enum);
+
+	static
+	error_policy_enum
+	string_to_error_policy(const string&);
+
+	static
+	bool
+	valid_error_policy(const error_policy_enum e) {
+		return e != ERROR_INVALID;
+	}
+
+	void
+	set_unstable_policy(const error_policy_enum e) {
+		unstable_policy = e;
+	}
+
+	void
+	set_weak_unstable_policy(const error_policy_enum e) {
+		weak_unstable_policy = e;
+	}
+
+	void
+	set_interference_policy(const error_policy_enum e) {
+		interference_policy = e;
+	}
+
+	void
+	set_weak_interference_policy(const error_policy_enum e) {
+		weak_interference_policy = e;
+	}
+
+	error_policy_enum
+	get_unstable_policy(void) const { return unstable_policy; }
+
+	error_policy_enum
+	get_weak_unstable_policy(void) const { return weak_unstable_policy; }
+
+	error_policy_enum
+	get_interference_policy(void) const { return interference_policy; }
+
+	error_policy_enum
+	get_weak_interference_policy(void) const
+		{ return weak_interference_policy; }
 
 	bool
 	pending_events(void) const { return !event_queue.empty(); }
@@ -496,17 +604,17 @@ public:
 	next_event_time(void) const;
 
 	int
-	set_node_time(const node_index_type, const char val, 
+	set_node_time(const node_index_type, const uchar val, 
 		const time_type t, const bool f);
 
 	int
-	set_node_after(const node_index_type n, const char val, 
+	set_node_after(const node_index_type n, const uchar val, 
 		const time_type t, const bool f) {
 		return set_node_time(n, val, this->current_time +t, f);
 	}
 
 	int
-	set_node(const node_index_type n, const char val,
+	set_node(const node_index_type n, const uchar val,
 			const bool f) {
 		return set_node_time(n, val, this->current_time, f);
 	}
@@ -588,7 +696,7 @@ public:
 	dump_watched_nodes(ostream&) const;
 
 	ostream&
-	status_nodes(ostream&, const char) const;
+	status_nodes(ostream&, const uchar) const;
 
 	template <class L>
 	void
@@ -608,7 +716,6 @@ public:
 	ostream&
 	dump_source_paths(ostream&) const;
 
-#if PRSIM_ALLOW_UNSTABLE_DEQUEUE
 	bool
 	dequeue_unstable_events(void) const {
 		return flags & FLAG_UNSTABLE_DEQUEUE;
@@ -619,7 +726,6 @@ public:
 		if (dq)	flags |= FLAG_UNSTABLE_DEQUEUE;
 		else	flags &= ~FLAG_UNSTABLE_DEQUEUE;
 	}
-#endif
 
 	void
 	append_mk_exclhi_ring(ring_set_type&);
@@ -630,7 +736,7 @@ public:
 protected:
 	excl_exception
 	check_excl_rings(const node_index_type, const node_type&, 
-		const char prev, const char next);
+		const uchar prev, const uchar next);
 
 public:
 	bool
@@ -690,19 +796,17 @@ private:
 private:
 	event_index_type
 	__allocate_event(node_type&, const node_index_type n,
-		const node_index_type c, // this is the causing node
-		const rule_index_type, const char);
+		cause_arg_type,	// this is the causing node/event
+		const rule_index_type, const uchar);
 
-#if PRSIM_FIX_BOGUS_INTERFERENCE
 	event_index_type
 	__allocate_pending_interference_event(
 		node_type&, const node_index_type n,
-		const node_index_type c,	// this is the causing node
-		const char);
+		cause_arg_type,	// this is the causing node/event
+		const uchar);
 
 	void
 	__deallocate_pending_interference_event(const event_index_type);
-#endif
 
 	event_index_type
 	__load_allocate_event(const event_type&);
@@ -728,7 +832,7 @@ private:
 	enqueue_exclhi(const time_type, const event_index_type);
 
 	void
-	enforce_exclhi(const node_index_type);
+	enforce_exclhi(cause_arg_type);
 
 	void
 	flush_exclhi_queue(void);
@@ -737,7 +841,7 @@ private:
 	enqueue_excllo(const time_type, const event_index_type);
 
 	void
-	enforce_excllo(const node_index_type);
+	enforce_excllo(cause_arg_type);
 
 	void
 	flush_excllo_queue(void);
@@ -745,7 +849,7 @@ private:
 	void
 	enqueue_pending(const event_index_type);
 
-	void
+	break_type
 	flush_pending_queue(void);
 
 	void
@@ -771,23 +875,37 @@ private:
 
 	evaluate_return_type
 	evaluate(const node_index_type, expr_index_type, 
-		char prev, char next);
+		uchar prev, uchar next);
 
-	void
-	propagate_evaluation(const node_index_type, expr_index_type, 
-		char prev, char next);
+	break_type
+	propagate_evaluation(cause_arg_type, expr_index_type, uchar prev
+#if !PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		, uchar next
+#endif
+		);
 
-#if PRSIM_FIX_BOGUS_INTERFERENCE
+#if 0
 	void
 	kill_evaluation(const node_index_type, expr_index_type, 
-		char prev, char next);
+		uchar prev, uchar next);
 #endif
 
-	void
-	__diagnose_violation(ostream&, const char next, 
+	break_type
+	__diagnose_violation(ostream&, const uchar next, 
 		const event_index_type, event_type&, 
 		const node_index_type ui, node_type& n, 
-		const node_index_type ni, const bool dir);
+		cause_arg_type, const bool dir);
+
+	break_type
+	__report_instability(ostream&, const bool wk, const bool dir, 
+		const node_index_type, const event_type&) const;
+
+	break_type
+	__report_interference(ostream&, const bool wk, 
+		const node_index_type, const event_type&) const;
+
+	ostream&
+	__report_cause(ostream&, const event_type&) const;
 
 public:
 	void
@@ -831,7 +949,7 @@ public:
 
 	ostream&
 	dump_subexpr(ostream&, const expr_index_type, 
-		const char p, const bool cp = false) const;
+		const uchar p, const bool cp = false) const;
 
 	ostream&
 	dump_subexpr(ostream& o, const expr_index_type ei) const {

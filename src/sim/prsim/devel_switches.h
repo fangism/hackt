@@ -11,7 +11,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.3 2006/08/08 05:46:45 fang Exp $
+	$Id: devel_switches.h,v 1.4 2006/08/12 00:36:35 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_DEVEL_SWITCHES_H__
@@ -35,43 +35,28 @@
 	Define to 1 to track node-to-node cause paths by direction, 
 	so we can track complete cycles in backtracing critical paths.  
 	Also track unknowns for debugging bad circuits.  
-	Status: not quite begun.
+	Consequence: more memory per node, due to increased structure size.  
+	Status: done and tested, save for new dependent features.
 	Goal: 1
  */
-#define	PRSIM_SEPARATE_CAUSE_NODE_DIRECTION		0
+#define	PRSIM_SEPARATE_CAUSE_NODE_DIRECTION		1
 
 /**
-	Define to 1 to enable configurable behavior of prsim
-	on an unstable event.  
-	original behavior: unstable events propagate X (conservative)
-	new behavior: unstable events are just dequeued
-	Mode commands: unstable-{unknown,dequeue}.
-	Status: implemented and basically tested
-	Goal: 1
+	Whether or not cause history should bother tracking timestamps.  
+	Might be a nice option to have as a compile-time switch.  
+	Goal: ?
  */
-#define	PRSIM_ALLOW_UNSTABLE_DEQUEUE			1
+#define	PRSIM_TRACK_CAUSE_TIME				0
 
-/**
-	TODO: fine-grain control of simulator behavior on anomalous events,
-	instability, interference: break or notify?
-	Suggestion: {unstable,interfere}-{notify,silent},{break,nobreak}.
-	Status: not begun
-	Goal: 1
- */
-#define	PRSIM_FINE_GRAIN_ERROR_CONTROL		0
-
-/**
-	Define to 1 to test fix of false interference.  
-	Status: complete, can commit with ALLOW_UNSTABLE_DEQUEUE
-	Goal: 1
- */
-#define	PRSIM_FIX_BOGUS_INTERFERENCE		1
+//-----------------------------------------------------------------------------
+// ready-to-commit the flags below
 
 /**
 	Define to 1 to include cause-rules in event queue checkpointing.
 	Should omit because rule/expr indices are optimization-sensitive,
 	but we want checkpoints to be optimization-agnostic.
 	Fortunately, cause_rule is only used in delay calculations.  
+	Relocate this comment once it is committed.  
 	Goal: 0
  */
 #define	PRSIM_CHECKPOINT_CAUSE_RULE		0

@@ -17,6 +17,7 @@ WARNING: unstable `c'+
 	15	b : 1
 event queue:
 	20	c : X
+end queue 
 	16	b : 0
 	20	c : X	[by b:=0]
 X nodes:
