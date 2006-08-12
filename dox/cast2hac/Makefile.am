@@ -1,5 +1,5 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.4 2006/06/03 05:52:28 fang Exp $
+#	$Id: Makefile.am,v 1.5 2006/08/12 18:35:20 fang Exp $
 
 PDFS = cast2hac.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -18,6 +18,7 @@ EXTRA_DIST += \
 	definitions.tex \
 	loops.tex \
 	spec.tex \
+	templates.tex \
 	types.tex \
 	typedefs.tex
 
