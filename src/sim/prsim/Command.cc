@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.16 2006/08/12 00:36:31 fang Exp $
+	$Id: Command.cc,v 1.17 2006/08/12 04:09:55 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -734,6 +734,10 @@ if (a.size() < 3) {
 void
 Alias::usage(ostream& o) {
 	o << "alias <name> <command> [args...]" << endl;
+	o <<
+"defines an alias that expands into another command and args\n"
+"Aliases may reference other aliases as long as no cycles are formed."
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -756,6 +760,7 @@ if (a.size() != 2) {
 void
 UnAlias::usage(ostream& o) {
 	o << "unalias <name>" << endl;
+	o << "undefines an existing command alias" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -778,6 +783,7 @@ if (a.size() != 1) {
 void
 UnAliasAll::usage(ostream& o) {
 	o << "unaliasall" << endl;
+	o << "undefines all existing command aliases" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -798,6 +804,7 @@ if (a.size() != 1) {
 void
 Aliases::usage(ostream& o) {
 	o << "aliases" << endl;
+	o << "lists all active defined command aliases" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -833,6 +840,7 @@ if (a.size() < 2) {
 void
 Source::usage(ostream& o) {
 	o << "source <file(s)>: " << brief << endl;
+	o << "read in and run commands from the named file(s)" << endl;
 	o << "sourcing terminates upon first error encountered." << endl;
 }
 
@@ -854,6 +862,9 @@ if (a.size() != 2) {
 void
 AddPath::usage(ostream& o) {
 	o << "addpath <path>" << endl;
+	o <<
+"adds a path to the search-list used to locate sourced command files"
+<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -874,6 +885,7 @@ if (a.size() != 1) {
 void
 Paths::usage(ostream& o) {
 	o << "paths" << endl;
+	o << "show current list of source search paths" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -889,6 +901,7 @@ Initialize::main(State& s, const string_list&) {
 void
 Initialize::usage(ostream& o) {
 	o << "initialize: " << brief << endl;
+	o << "set all nodes to unknown state and clear the event queue" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -904,6 +917,7 @@ Reset::main(State& s, const string_list&) {
 void
 Reset::usage(ostream& o) {
 	o << "reset: " << brief << endl;
+	o << "restart the entire simulation as if it was just launched" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1072,6 +1086,10 @@ if (a.size() > 2) {
 void
 Step::usage(ostream& o) {
 	o << "step [#steps]" << endl;
+	o <<
+"Advances the simulation by a number of steps (default: 1).\n"
+"Simulation will stop prematurely if any event violations are encountered."
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1154,6 +1172,10 @@ if (a.size() != 2) {
 void
 Advance::usage(ostream& o) {
 	o << "advance <time>" << endl;
+	o <<
+"Advances the simulation by the given amount of time.\n"
+"Simulation will stop prematurely if any event violations are encountered."
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1221,7 +1243,9 @@ if (a.size() != 1) {
 void
 Cycle::usage(ostream& o) {
 	o << "cycle" << endl;
-	o << "Runs until event queue is empty." << endl;
+	o << "Runs until event queue is empty.\n"
+"Simulation will stop prematurely if any event violations are encountered."
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1242,6 +1266,7 @@ if (a.size() != 1) {
 void
 Queue::usage(ostream& o) {
 	o << "queue: " << brief << endl;
+	o << "prints events pending in the event queue" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1517,6 +1542,8 @@ if (a.size() < 2) {
 void
 BreakPt::usage(ostream& o) {
 	o << "breakpt <nodes>" << endl;
+	o << "causes simulation to stop upon any transition of the named nodes"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1550,6 +1577,7 @@ if (a.size() < 2) {
 void
 NoBreakPt::usage(ostream& o) {
 	o << "nobreakpt <nodes>" << endl;
+	o << "removes named node from breakpoint list" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1584,6 +1612,7 @@ if (a.size() != 1) {
 void
 NoBreakPtAll::usage(ostream& o) {
 	o << "nobreakptall" << endl;
+	o << "clears all breakpoints" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1621,6 +1650,7 @@ if (a.size() != 1) {
 void
 Breaks::usage(ostream& o) {
 	o << "breaks";
+	o << "lists all breakpoint nodes" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1707,6 +1737,7 @@ if (a.size() != 2) {
 void
 What::usage(ostream& o) {
 	o << "what <name>" << endl;
+	o << "prints the type/size of the referenced instance(s)" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1732,6 +1763,8 @@ if (a.size() != 2) {
 void
 Who::usage(ostream& o) {
 	o << "who <name>" << endl;
+	o << "prints all aliases (equivalent names) of the referenced instance"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1764,6 +1797,10 @@ if (a.size() != 2) {
 void
 Get::usage(ostream& o) {
 	o << "get <node>" << endl;
+	o <<
+"Print the current value of the node and, if applicable, the last arriving\n"
+"signal transition that caused it to become its current value."
+	<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1797,6 +1834,8 @@ if (a.size() != 2) {
 void
 GetAll::usage(ostream& o) {
 	o << "getall <name>" << endl;
+	o << "prints the current values of all subnodes of the named structure"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1825,6 +1864,7 @@ if (a.size() != 2) {
 void
 Status::usage(ostream& o) {
 	o << "status <[0fF1tTxXuU]>" << endl;
+	o << "list all nodes with the matching current value" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1854,6 +1894,8 @@ if (a.size() != 2) {
 void
 Fanin::usage(ostream& o) {
 	o << "fanin <node>" << endl;
+	o << "print all rules and expressions that can affect this node"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1883,6 +1925,7 @@ if (a.size() != 2) {
 void
 Fanout::usage(ostream& o) {
 	o << "fanout <node>" << endl;
+	o << "print all rules affected by this node" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1910,6 +1953,8 @@ if (a.size() != 2) {
 void
 RingsMk::usage(ostream& o) {
 	o << "rings-mk <node>" << endl;
+	o << "print all forced-exclusive rings of which this node is a member"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1931,6 +1976,7 @@ if (a.size() != 1) {
 void
 AllRingsMk::usage(ostream& o) {
 	o << "allrings-mk" << endl;
+	o << "print all forced-exclusive rings" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1958,6 +2004,8 @@ if (a.size() != 2) {
 void
 RingsChk::usage(ostream& o) {
 	o << "rings-chk <node>" << endl;
+	o << "print all checked-exclusive rings of which this node is a member"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1979,6 +2027,7 @@ if (a.size() != 1) {
 void
 AllRingsChk::usage(ostream& o) {
 	o << "allrings-chk" << endl;
+	o << "print all checked-exclusive rings" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2032,6 +2081,8 @@ if (a.size() != 3) {
 void
 Assert::usage(ostream& o) {
 	o << "assert <node> <value>" << endl;
+	o << "signal an error and halt simulation if node is not at this value"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2080,6 +2131,8 @@ if (a.size() != 3) {
 void
 AssertN::usage(ostream& o) {
 	o << "assertn <node> <value>" << endl;
+	o << "signal an error and halt simulation if node is at this value"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2187,6 +2240,8 @@ if (a.size() < 2) {
 void
 Watch::usage(ostream& o) {
 	o << "watch <nodes>" << endl;
+	o << "adds node(s) to watch-list.\n"
+"Watched nodes print their transitions to stdout." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2223,6 +2278,7 @@ if (a.size() < 2) {
 void
 UnWatch::usage(ostream& o) {
 	o << "unwatch <nodes>" << endl;
+	o << "removes nodes from watch-list" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2246,6 +2302,7 @@ if (a.size() != 1) {
 void
 WatchAll::usage(ostream& o) {
 	o << "watchall" << endl;
+	o << "print all transitions to stdout." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2269,6 +2326,7 @@ if (a.size() != 1) {
 void
 UnWatchAll::usage(ostream& o) {
 	o << "unwatchall" << endl;
+	o << "clears the watch-list of nodes" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2293,6 +2351,8 @@ if (a.size() != 1) {
 void
 NoWatchAll::usage(ostream& o) {
 	o << "nowatchall" << endl;
+	o << "turns off watchall, printing only explicitly watched nodes"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2313,6 +2373,7 @@ if (a.size() != 1) {
 void
 Watches::usage(ostream& o) {
 	o << "watches";
+	o << "show list of explicitly watched nodes" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2333,6 +2394,7 @@ if (a.size() != 1) {
 void
 TCounts::usage(ostream& o) {
 	o << "tcounts" << endl;
+	o << "report transition counts of watched nodes" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2353,6 +2415,7 @@ if (a.size() != 1) {
 void
 NoTCounts::usage(ostream& o) {
 	o << "notcounts" << endl;
+	o << "suppress transition counts of watched nodes" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2373,6 +2436,7 @@ if (a.size() != 1) {
 void
 ZeroTCounts::usage(ostream& o) {
 	o << "zerotcounts" << endl;
+	o << "reset transition counts of all nodes" << endl;
 }
 
 //-----------------------------------------------------------------------------
@@ -2395,7 +2459,8 @@ if (a.size() != 1) {
 
 void
 Random::usage(ostream& o) {
-	o << "random";
+	o << "random (deprecated)";
+	o << "same as: timing random" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2410,14 +2475,16 @@ if (a.size() != 1) {
 	usage(cerr << "usage: ");
 	return Command::SYNTAX;
 } else {
-	s.norandom();		// is this "uniform" or "after"
+	s.norandom();		// is this "uniform" or "after"?
 	return Command::NORMAL;
 }
 }
 
 void
 NoRandom::usage(ostream& o) {
-	o << "norandom";
+	o << "norandom (deprecated)";
+	o << "disables random timing" << endl;
+	o << "use: timing ..." << endl;
 }
 
 #endif	// WANT_OLD_RANDOM_COMMANDS
@@ -2469,7 +2536,8 @@ if (a.size() > 1) {
 void
 CheckExcl::usage(ostream& o) {
 	o << "checkexcl" << endl;
-	o << "Enables run-time mutual exclusion checks." << endl;
+	o << "Enables run-time mutual exclusion checks.  (default:on)"
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2512,6 +2580,7 @@ void
 UnstableUnknown::usage(ostream& o) {
 	o << name << endl;
 	o << "Unstable events propagate X\'s during run-time." << endl;
+	o << "See also \'unstable-dequeue\'." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2533,6 +2602,7 @@ void
 UnstableDequeue::usage(ostream& o) {
 	o << name << endl;
 	o << "Unstable events are dequeued during run-time." << endl;
+	o << "See also \'unstable-unknown\'." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2638,6 +2708,9 @@ SetMode::usage(ostream& o) {
 	o << "mode [reset|run]\n"
 "\t\'reset\' disables weak-interference warnings, useful during initialization\n"
 "\t\'run\' (default) enables weak-interference warnings" << endl;
+	o <<
+"Instabilities and interferences still cause simulations to halt, while \n"
+"weak-instabilities trigger warnings." << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

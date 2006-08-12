@@ -22,6 +22,7 @@
 		'backtrace' command walks causal event history, 
 			useful for critical path analysis in non-random mode,
 			and QDI violations in random timing mode.  
+	  Also wrote more descriptive usage() for each prsim command.
 
 
 2006-08-11	David Fang		<fangism@users.sourceforge.net>
