@@ -1,5 +1,9 @@
 alias <name> <command> [args...]
+defines an alias that expands into another command and args
+Aliases may reference other aliases as long as no cycles are formed.
 aliases
+lists all active defined command aliases
 unalias <name>
+undefines an existing command alias
 should fail: can't override existing command 
 'alias' is already a command, cannot be used to register an alias.

@@ -1,7 +1,9 @@
 help what: 
 what <name>
+prints the type/size of the referenced instance(s)
 help who: 
 who <name>
+prints all aliases (equivalent names) of the referenced instance
 I refers to process-inst-ref inv<>
 aliases of "I":
 I 
