@@ -1,5 +1,5 @@
 # "oscil-backtrace-01.prsimrc"
-#	$Id: oscil-backtrace-01.prsimrc,v 1.2 2006/08/12 00:36:41 fang Exp $
+#	$Id: oscil-backtrace-01.prsimrc,v 1.3 2006/08/13 22:16:05 fang Exp $
 # @haco@ oscillator.haco-a
 # testing backtrace command
 
@@ -20,4 +20,6 @@ step 100
 
 backtrace R.x[0]
 echo expect cycle here
+
+assert-queue
 

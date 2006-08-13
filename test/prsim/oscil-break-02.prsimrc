@@ -1,5 +1,5 @@
 # "oscil-break-01.prsimrc"
-#	$Id: oscil-break-02.prsimrc,v 1.2 2006/05/06 04:19:34 fang Exp $
+#	$Id: oscil-break-02.prsimrc,v 1.3 2006/08/13 22:16:07 fang Exp $
 # @haco@ oscillator.haco-a
 # Testing the tcounts features, and get reporting causes
 
@@ -60,4 +60,6 @@ echo zero-ing tcounts
 tcounts
 zerotcounts
 x5
+
+assert-queue
 

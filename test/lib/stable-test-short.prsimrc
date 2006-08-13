@@ -1,5 +1,5 @@
 # "stable-test-short.prsimrc"
-#	$Id: stable-test-short.prsimrc,v 1.1 2006/08/08 05:46:55 fang Exp $
+#	$Id: stable-test-short.prsimrc,v 1.2 2006/08/13 22:16:04 fang Exp $
 # common test script for stbility testing, short version
 
 timing random
@@ -11,4 +11,6 @@ status X
 mode run
 set _Reset 1
 step 100000
+
+assert-queue
 

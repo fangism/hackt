@@ -1,5 +1,5 @@
 # "oscil-unset-01.prsimrc"
-#	$Id: oscil-unset-01.prsimrc,v 1.2 2006/07/18 04:09:37 fang Exp $
+#	$Id: oscil-unset-01.prsimrc,v 1.3 2006/08/13 22:16:09 fang Exp $
 # @haco@ oscillator.haco-a
 # testing unset vs. setf commands
 
@@ -35,4 +35,5 @@ echo R.x[1]+ should re-appear in queue
 echo now oscillation should resume
 step 15
 
+assert-queue
 

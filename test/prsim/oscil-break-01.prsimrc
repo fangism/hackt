@@ -1,5 +1,5 @@
 # "oscil-break-01.prsimrc"
-#	$Id: oscil-break-01.prsimrc,v 1.2 2006/04/03 05:30:50 fang Exp $
+#	$Id: oscil-break-01.prsimrc,v 1.3 2006/08/13 22:16:07 fang Exp $
 # @haco@ oscillator.haco-a
 # Testing breakpoint features.
 
@@ -34,4 +34,5 @@ step 20
 advance 200
 # "Un-break my heaaaaaaart, say you love me again..." (Toni Braxton)
 
+assert-queue
 

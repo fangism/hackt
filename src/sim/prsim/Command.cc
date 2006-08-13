@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.17 2006/08/12 04:09:55 fang Exp $
+	$Id: Command.cc,v 1.18 2006/08/13 22:16:03 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -2133,6 +2133,32 @@ AssertN::usage(ostream& o) {
 	o << "assertn <node> <value>" << endl;
 	o << "signal an error and halt simulation if node is at this value"
 		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(AssertQueue, "assert-queue", info, 
+	"assert that the event queue is not empty")
+
+int
+AssertQueue::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	if (s.pending_events()) {
+		return Command::NORMAL;
+	} else {
+		cout << "assert failed: expecting non-empty event queue."
+			<< endl;
+		return Command::FATAL;
+	}
+}
+}
+
+void
+AssertQueue::usage(ostream& o) {
+	o << "assert-queue" << endl;
+	o << "signal an error if the event queue is empty" << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
