@@ -1,7 +1,7 @@
 #!@SH_PATH@
 # "hackt-cflat-lvs-expect.sh.in"
 # copy-modified from "hackt-cflat-expect.sh.in"
-#	$Id: hackt-cflat-lvs-expect.sh.in,v 1.1 2006/08/09 21:24:43 fang Exp $
+#	$Id: hackt-cflat-lvs-expect.sh.in,v 1.2 2006/08/14 04:50:12 fang Exp $
 
 # $1 is the executable for the creator (hackt alloc), expecting 2 arguments
 # $2 is the path to the source directory, which is not necessarily ./
@@ -14,8 +14,10 @@
 cflat=$1
 srcroot=$2/$3
 bldroot=$3
+srcfile=$srcroot.hac
 
 # a pre-created (already created) object file must already exist
+@CALLMAKE@ $bldroot.haco-a > /dev/null 2>&1
 if test ! -s $bldroot.haco-a
 then
 	@ECHO@ "$bldroot.haco-a doesn't exist or is empty."
@@ -23,7 +25,15 @@ then
 fi
 
 # see if it crashes first
-$cflat $bldroot.haco-a > $bldroot.lvsprs 2>&1
+# NOTE: the @hflat-type@ is not a configure variable, it is used
+# to determin the mode of testing, whether or not to pass -t <type>
+type=`@GREP@ @hflat-type@ $srcfile | head -n1 | @SED@ 's/^.*-type@[ \t]*//g' | @SED@ 's/\"//g'`
+if test -n "$type"
+then
+	$cflat -t "$type" $bldroot.haco-a > $bldroot.lvsprs 2>&1
+else
+	$cflat $bldroot.haco-a > $bldroot.lvsprs 2>&1
+fi
 err=$?
 # depending on exit status, take action
 # we now handle errors during cflat

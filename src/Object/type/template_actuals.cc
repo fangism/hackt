@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.10 2006/07/04 07:26:15 fang Exp $
+	$Id: template_actuals.cc,v 1.11 2006/08/14 04:50:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -123,10 +123,11 @@ template_actuals::dump(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Unifies strict and relaxed parameters into a single list.  
-	\pre strict
+	\pre strict parameters must be resolved into consts.  
  */
 count_ptr<const const_param_expr_list>
 template_actuals::make_const_param_list(void) const {
+	STACKTRACE_VERBOSE;
 	const count_ptr<const_param_expr_list> ret(new const_param_expr_list);
 	if (strict_template_args) {
 		const count_ptr<const const_param_expr_list>

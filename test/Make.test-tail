@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.41 2006/08/09 21:24:42 fang Exp $
+#	$Id: Make.test-tail,v 1.42 2006/08/14 04:50:08 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -207,8 +207,18 @@ HACO_FLAGS += -I$(srcdir)
 		$(srcdir) $* >> $@
 	@$(CHMOD) +x $@
 
+# if the source file has a magic line @hflat-type@, then extract it
+# as the type to process for cflatting.
+# The hflat-type string must not contain any spaces!
 .haco-a.lvsprs:
-	$(HACKT_CFLAT_LVS_EXE) $< > $@
+	@srcfile=$(srcdir)/$*.hac ; \
+	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
+		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
+	if test -n "$$type" ; then \
+		$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@ ; \
+	else \
+		$(HACKT_CFLAT_LVS_EXE) $< > $@ ; \
+	fi
 
 .haco-a.prsseu:
 	$(HACKT_CFLAT_PRSIM_SEU_EXE) $< > $@

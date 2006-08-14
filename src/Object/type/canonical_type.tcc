@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.8 2006/04/24 00:28:07 fang Exp $
+	$Id: canonical_type.tcc,v 1.9 2006/08/14 04:50:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -49,6 +49,7 @@ CANONICAL_TYPE_CLASS::canonical_type() :
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d) :
 		base_type(), canonical_definition_ptr(d) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());
 }
@@ -58,6 +59,7 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d,
 		const param_list_ptr_type& p) :
 		base_type(p), canonical_definition_ptr(d) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());
 }
@@ -68,6 +70,7 @@ CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d,
 		const template_actuals& p) :
 		base_type(p.make_const_param_list()),
 		canonical_definition_ptr(d) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());
 }
@@ -83,6 +86,7 @@ CANONICAL_TYPE_CLASS::canonical_type(
 		base_type(c.get_raw_template_params()), 
 		canonical_definition_ptr(c.get_base_def()
 			.template is_a<const canonical_definition_type>()) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 }
 

@@ -1,0 +1,6 @@
+// "nand-lvs-01.hac"
+
+import "logic.hac";
+
+// @hflat-type@ "std::logic::nand<4>"
+

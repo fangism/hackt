@@ -2,7 +2,7 @@
 	\file "main/cflat.cc"
 	cflat backwards compability module.  
 
-	$Id: cflat.cc,v 1.13 2006/07/30 05:49:40 fang Exp $
+	$Id: cflat.cc,v 1.14 2006/08/14 04:50:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -584,6 +584,9 @@ if (cf.use_referenced_type_instead_of_top_level) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Useful function, keep around for re-use!
+ */
 int
 cflat::process_complete_type(const char* _type, const module& m, 
 		const cflat_options& opt) {
@@ -603,9 +606,15 @@ cflat::process_complete_type(const char* _type, const module& m,
 			"refer to a process type." << endl;
 		return 1;
 	}
+	const count_ptr<const process_type_reference>
+		rpt(pt->unroll_resolve());
+	if (!rpt) {
+		cerr << "Error resolving process type parameters." << endl;
+		return 1;
+	}
 	// create a temporary module for unpacking complete type's guts
 	module temp_top("<auxiliary>");
-	if (!temp_top.cflat_process_type(*pt, cout, opt).good) {
+	if (!temp_top.cflat_process_type(*rpt, cout, opt).good) {
 		cerr << "Error during cflat." << endl;
 		return 1;
 	}

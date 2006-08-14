@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2006/08/08 07:22:59 fang Exp $
+#	$Id: Makefile.am,v 1.7 2006/08/14 04:50:13 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -45,6 +45,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	logic-01 \
 	env-source-sink-a-01 env-source-sink-a-02 \
 	env-source-sink-e-01 env-source-sink-e-02
+
+HACKT_CFLAT_LVS_TEST_SUBJECTS = \
+	nand-lvs-01
 
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)

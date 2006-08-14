@@ -1,10 +1,14 @@
 # "hackt.mk"
-#	$Id: hackt.mk,v 1.6 2006/08/09 21:24:32 fang Exp $
+#	$Id: hackt.mk,v 1.7 2006/08/14 04:49:58 fang Exp $
 # TODO: distinguish hackt-build.mk from hackt-inst.mk
 # point these to hackt
 top_srcdir = ../..
 top_builddir = ../..
 srcdir = .
+
+SED = sed
+MV = mv -f
+RM = rm -f
 
 # suffixes used by all test directories' Makefiles
 # automake will convert these into .SUFFIXES:

@@ -5,6 +5,15 @@
 
 2006-08-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-57:
+	  cflat lvs -t bug fix: forgot to unroll the process-type-reference
+		before passing it to the creator/allocator, duh.  
+	  Updated test infrastructure for cflat-lvs-ing and added a few
+		minimal test cases using templated type to demonstrate fix.  
+
+
+2006-08-13	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-56:
 	  prsim: added command 'assert-queue' to assert that 
 		event queue is not empty, useful for test scripts for

@@ -1,0 +1,14 @@
+// "nand-08.hac"
+// should pass, testing cflat lvs -t <type>
+
+template <pint N>
+defproc nandN(bool in[N]; bool _out) {
+prs {
+	(&:i:N:	in[i] )		-> _out-
+	(|:i:N:	~in[i] )	-> _out+
+}
+}
+
+// this line used by Makefile rule for .lvsprs
+// @hflat-type@ nandN<4>
+

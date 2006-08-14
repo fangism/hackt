@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.7 2006/07/30 05:49:26 fang Exp $
+ 	$Id: process_type_reference.h,v 1.8 2006/08/14 04:50:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
@@ -69,6 +69,10 @@ public:
 	// just resolves template actuals to constants
 	count_ptr<const this_type>
 	unroll_resolve(const unroll_context&) const;
+
+	/// context-free variant
+	count_ptr<const this_type>
+	unroll_resolve(void) const;
 
 	good_bool
 	unroll_register_complete_type(void) const;

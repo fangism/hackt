@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.16 2006/07/30 05:49:30 fang Exp $
+ 	$Id: type_reference.cc,v 1.17 2006/08/14 04:50:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -1632,6 +1632,15 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Variant requiring no unroll context, e.g. top-level.
+ */
+count_ptr<const process_type_reference>
+process_type_reference::unroll_resolve(void) const {
+	return unroll_resolve(unroll_context());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prototype implementation of unrolling a complete type with
 	template actuals specified.  
 	TODO: template actuals need to be done for real...
@@ -1693,6 +1702,7 @@ process_type_reference::make_instance_collection(
 // canonical_type<process_definition>
 canonical_process_type
 process_type_reference::make_canonical_type(void) const {
+	STACKTRACE_VERBOSE;
 	return base_proc_def->make_canonical_type(template_args);
 }
 
