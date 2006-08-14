@@ -1,6 +1,6 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.19 2006/08/12 00:36:37 fang Exp $
-#	vim: ft=automake
+#	$Id: Makefile.inc,v 1.20 2006/08/14 22:32:43 fang Exp $
+#	vi: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
 UTILPROGRAMS = util/progs/readline_toy

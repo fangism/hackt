@@ -1,5 +1,5 @@
 # "Make.global"
-#	vim: ft=automake
+#	vi: ft=automake
 # Project-wide Makefile targets and dependencies.
 # Generally, it is recommended to include this Makefile last.  
 # This file may be used as an includable Makefile snippet, 
@@ -7,49 +7,85 @@
 # NOTE: standard definition macros appear in "Make.stddef" and should
 # be included *before* the inclusion of this Makefile.  
 # NOTE: the for-loop syntax used requires that SHELL = sh, not bash.
-#	$Id: Make.global,v 1.20 2006/06/26 01:45:21 fang Exp $
+#	$Id: Make.global,v 1.21 2006/08/14 22:32:36 fang Exp $
 
 # automatically runs autotools (and recursively in dubdirectories)
 reconf: force
 	autoreconf
 
 ALL_CVSIGNORE =
+# RECURSIVE_TARGETS =
+
+# blatantly copied from Makefile.in
+RECURSIVE_TARGET_SCRIPT = \
+	@failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+
 if NO_VPATH
 # .cvsignore for this project will always be semi-automatically generated
-.cvsignore: $(srcdir)/Makefile.am Makefile.in $(top_srcdir)/Make.global
+# .cvsignore is never needed for VPATH builds, duh!
+.cvsignore: $(srcdir)/Makefile.am $(top_srcdir)/Make.global
 
 # make cvsignore by default
-ALL_CVSIGNORE += cvsignore
+ALL_CVSIGNORE += cvsignore-am
 
 # phony recursive target
-cvsignore: .cvsignore force
-	@subdirs='$(SUBDIRS)'; \
-	for d in $$subdirs ; do \
-		if test $$d != . ; then \
-			if test -d $$d ; then \
-				$(MAKE) -C $$d cvsignore ; \
-			fi ; \
-		fi ; \
-	done
+cvsignore-recursive: .cvsignore force
+
+cvsignore: cvsignore-recursive
+
+cvsignore-am: .cvsignore cvsignore-local
 
 clean-cvsignore: clean-cvsignore-recursive
+
+clean-cvsignore-am: clean-cvsignore-local
 	-$(RM) .cvsignore
+
+PHONY_CVSIGNORE = clean-cvsignore-local clean-cvsignore-am cvsignore \
+	clean-cvsignore cvsignore-local cvsignore-am
 
 # extra prefix ". " needed for shell script interpretation
 # note: cd $$d; make ... will not work!
-clean-cvsignore-recursive:
-	@subdirs='$(SUBDIRS)'; \
-	for d in $$subdirs ; do \
-		if test $$d != . ; then \
-			if test -d $$d ; then \
-				$(MAKE) -C $$d clean-cvsignore ; \
-			fi ; \
-		fi ; \
-	done
+
+# automake doesn't like b/c RECURSIVE_TARGETS not defined early enough
+MORE_RECURSIVE_TARGETS += clean-cvsignore-recursive cvsignore-recursive
+
+#clean-cvsignore-recursive:
+#	@subdirs='$(SUBDIRS)'; \
+#	for d in $$subdirs ; do \
+#		if test $$d != . ; then \
+#			if test -d $$d ; then \
+#				$(MAKE) -C $$d clean-cvsignore ; \
+#			fi ; \
+#		fi ; \
+#	done
 
 DISTCLEANFILES += .cvsignore
 endif
-all: $(ALL_CVSIGNORE)
+
+all-local: $(ALL_CVSIGNORE)
 
 DISTCLEANFILES += check.log cvsdiffs
 
@@ -194,6 +230,10 @@ cvsdiffs:
 	@$(ECHO) "Sorry, no 'cvs' found in path."
 endif
 
+# general rule for recursive targets
+$(MORE_RECURSIVE_TARGETS):
+	$(RECURSIVE_TARGET_SCRIPT)
+
 # this shouldn't be parallel...
 # .NOTPARALLEL: help
 # .NOTPARALLEL unfortunately kills everything...
@@ -239,6 +279,6 @@ endif
 # standard phony target for unconditional targets
 force:
 
-.PHONY: force clean-cvsignore clean-cvsignore-recursive \
+.PHONY: force $(PHONY_CVSIGNORE) $(MORE_RECURSIVE_TARGETS) \
 	help help-local help-global
 

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-58:
+	  No source revision.
+	  Documentation updated regarding cast2hac migration from cflat.
+	  General global Makefile maintainence of cvsignore and distribution.  
+
+
 2006-08-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-57:

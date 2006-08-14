@@ -1,9 +1,9 @@
 # "Make.stddef"
-#	vim: ft=automake
+#	vi: ft=automake
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.16 2006/07/04 07:25:33 fang Exp $
+#	$Id: Make.stddef,v 1.17 2006/08/14 22:32:36 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -73,6 +73,11 @@ SPACES_TO_NEWLINE = $(AWK) -f $(top_srcdir)/test/spacestonewline.awk
 # NOTE: only directory and file names here, no wild-cards
 AUTO_IGNORE =
 
+# since automake doesn't allow appending RECURSIVE_TARGETS, we define our own:
+MORE_RECURSIVE_TARGETS = force-recursive
+force-am:
+force:
+
 # This helper script is built by the top-level Makefile
 # This is useful self-contained script for transforming program names
 # to their installed names.  
@@ -81,5 +86,8 @@ INSTALL_TRANSFORM_SH = $(top_builddir)/install_transform.sh
 # more robust way of removing patterns
 # note: pattern arguments must be wrapped in quotes, e.g. "*.o"
 RM_PATTERN = $(top_srcdir)/scripts/rm_pattern.sh
+
+# for automatic regeneration of configured files:
+RECONFIGURE = cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 # end "Make.stddef"

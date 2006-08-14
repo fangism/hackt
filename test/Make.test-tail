@@ -1,9 +1,9 @@
 # "test/Make.test-tail"
-#	vim: ft=automake
+#	vi: ft=automake
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.43 2006/08/14 05:11:29 fang Exp $
+#	$Id: Make.test-tail,v 1.44 2006/08/14 22:32:47 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test

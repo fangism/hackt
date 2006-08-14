@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.31 2006/07/28 01:03:19 fang Exp $
+#	$Id: Makefile.am,v 1.32 2006/08/14 22:32:49 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -19,6 +19,7 @@ PRECONFIGURED_TESTSCRIPTS = \
 	check-alloc-consistency.sh.in \
 	hackt-alloc-expect.sh.in \
 	hackt-cflat-expect.sh.in \
+	hackt-cflat-lvs-expect.sh.in \
 	hackt-cflat-seu-expect.sh.in \
 	hackt-cflat-sprs-expect.sh.in \
 	hackt-prsim-expr-alloc-expect.sh.in \
@@ -31,6 +32,9 @@ PRECONFIGURED_TESTSCRIPTS = \
 POSTCONFIGURED_TESTSCRIPTS = $(PRECONFIGURED_TESTSCRIPTS:.in=)
 check_SCRIPTS = $(POSTCONFIGURED_TESTSCRIPTS)
 AUTO_IGNORE += $(POSTCONFIGURED_TESTSCRIPTS)
+
+# already automatic
+# $(POSTCONFIGURE_TESTSCRIPTS): $(top_builddir)/config.status
 
 # These are useful maintainer script that we don't bother configure-generating
 NONCONFIGURED_UPDATESCRIPTS = \
@@ -45,13 +49,10 @@ NONCONFIGURED_UPDATESCRIPTS = \
 	update-expectsprs.sh \
 	update-expect-prsimrc.sh
 
-DISTCLEANFILES += $(TESTS) $(POSTCONFIGURED_TESTSCRIPTS)
-
-EXTRA_DIST += ChangeLog README TODO \
-	Make.test-head Make.test-tail \
-	$(PRECONFIGURED_TESTSCRIPTS) \
-	$(NONCONFIGURE_UPDATESCRIPTS) \
-	state_enum_filter.awk address_filter.sed \
+dist_noinst_SCRIPTS = \
+	$(NONCONFIGURED_UPDATESCRIPTS) \
+	state_enum_filter.awk \
+	address_filter.sed \
 	alloc_filter.sed \
 	POM-header-filter.awk \
 	POM-index-filter.awk \
@@ -60,9 +61,15 @@ EXTRA_DIST += ChangeLog README TODO \
 	analyze-dump-diff.awk \
 	prsimrc-filter.awk \
 	prsimrc-random-time-filter.awk \
-	spacestonewline.awk test.cvsignore
+	spacestonewline.awk
 
-all-local: $(POSTCONFIGURED_TESTSCRIPTS)
+DISTCLEANFILES += $(TESTS) $(POSTCONFIGURED_TESTSCRIPTS)
+
+EXTRA_DIST += ChangeLog README TODO test.cvsignore \
+	Make.test-head Make.test-tail
+
+# automatically distributed, via configure sources:
+#	$(PRECONFIGURED_TESTSCRIPTS)
 
 # template test Makefile
 include $(top_srcdir)/test/Make.test-tail

@@ -2,6 +2,13 @@
 
 2006-08-13	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-58:
+	  Added missing target for hackt-cflat-lvs-sh.in.
+	  Rewrote script targets for distribution.  
+
+
+2006-08-13	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-57:
 	  Modified cflat-lvs test support to take optional -t type argument
 		when the source .hac file contains a comment with 
