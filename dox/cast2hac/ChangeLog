@@ -1,5 +1,11 @@
 # "dox/cast2hac/ChangeLog"
 
+2006-08-14	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-58:
+	  Added section on cflat replacement for prsim and lvs.  
+
+
 2006-06-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-18:

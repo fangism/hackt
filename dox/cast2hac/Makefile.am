@@ -1,5 +1,5 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.5 2006/08/12 18:35:20 fang Exp $
+#	$Id: Makefile.am,v 1.6 2006/08/14 20:31:52 fang Exp $
 
 PDFS = cast2hac.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -20,7 +20,8 @@ EXTRA_DIST += \
 	spec.tex \
 	templates.tex \
 	types.tex \
-	typedefs.tex
+	typedefs.tex \
+	cflat.tex
 
 # need GNU make for the following:
 # automatically generated dependencies in this (built) dir
