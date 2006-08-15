@@ -1,5 +1,5 @@
 % "cast2hac/PRS.tex"
-%	$Id: PRS.tex,v 1.3 2006/06/27 02:33:10 fang Exp $
+%	$Id: PRS.tex,v 1.4 2006/08/15 20:05:05 fang Exp $
 
 \section{PRS}
 \label{sec:prs}
@@ -38,7 +38,51 @@ The notation \ttt{:N:} is also equivalent to \ttt{:0..N-1:}.
 \subsection{Conditional Rules}
 \label{sec:prs:conditional}
 
-Status: not sure whether or not I completed the implementation...
+In \CAST, conditional production rules could be written inside
+PRS bodies as follows:
+
+\begin{verbatim}
+prs {
+[pred ->
+  x -> y-
+]
+}
+\end{verbatim}
+
+If the predicate \tit{pred} evaluates true during the unroll compile phase, 
+then the body is processed, otherwise it is skipped.  
+In \hac, the syntax remains unchanged apart from the syntax of
+PRS expressions in the predicate.  
+\hac\ also allows an optional else clause in the conditional body:
+
+\begin{verbatim}
+[pred ->
+  x -> y-
+[] else ->
+  z -> y-
+]
+\end{verbatim}
+
+\noindent
+where in \CAST, one had to explicitly write the predicates complement
+in a separate conditional to achieve else-semantics.  
+
+In \CAST, conditional PRS bodies could appear inside instance-level 
+conditionals and loops, such as:
+
+\begin{verbatim}
+[pred ->
+  prs {
+    ...
+  }
+]
+\end{verbatim}
+
+\noindent
+however, in \hac, language bodies including PRS are forbidden
+inside loops and conditionals.  
+Use the loop and conditional constructs native to the PRS sub-language.  
+Conditional bodies and loops in the PRS may be nested inside each other.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Loop Expressions}
@@ -56,7 +100,7 @@ The LHS expression is the conjunction (AND) of nodes
 \hac\ also provides an equivalent construct:
 
 \begin{verbatim}
-(&i:N: x[i] )  -> y-
+(&:i:N: x[i] )  -> y-
 \end{verbatim}
 
 The other operator which may be used in a loop expression is \prsor\ (OR).
@@ -112,7 +156,7 @@ which would now be written in \hac:
 [after=100]  p -> q+
 \end{verbatim}
 
-Attributes appear as a semicolon-delimited, bracket-enclosed list 
+Attributes appear as a semicolon-delimited, square-bracket-enclosed list 
 of key-value pairs prefixing the rule.  
 An example of multiple attributes:
 
@@ -122,12 +166,14 @@ An example of multiple attributes:
 
 Attributes that appear before a loop-enclosed rule will apply to
 all iterations of the looped rule.  
+The expressions in attributes may be parameter-dependent or 
+induction-variable dependent, resulting in different values per iteration.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Sized literals}
 \label{sec:prs:size}
 
-Status: have yet to add.  
+Status: supported in syntax, but not used in any back-ends yet.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Miscellaneous}

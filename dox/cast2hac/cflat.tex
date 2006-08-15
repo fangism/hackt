@@ -1,5 +1,5 @@
 % "cast2hac/cflat.tex"
-%	$Id: cflat.tex,v 1.1 2006/08/14 20:31:53 fang Exp $
+%	$Id: cflat.tex,v 1.2 2006/08/15 20:05:08 fang Exp $
 
 \section{Tools}
 \label{sec:tools}
@@ -16,6 +16,8 @@ Instead of running \ttt{cflat -<mode> <castfile>}
 to produce flattened output, one now can now run
 \ttt{hackt cflat <mode> <objfile>}, where \tit{objfile} is a 
 compiled \hac\ object file.  
+For examples \ttt{cflat -prsim foo.cast} would now be run as
+\ttt{hackt cflat prsim foo.haco}.  
 
 Running \ttt{hackt cflat} with no arguments will produce a list of the various
 present modes and format flags available as command-line options.  

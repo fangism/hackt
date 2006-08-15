@@ -1,5 +1,5 @@
 % "cast2hac/loops.tex"
-%	$Id: loops.tex,v 1.3 2006/06/27 02:33:10 fang Exp $
+%	$Id: loops.tex,v 1.4 2006/08/15 20:05:09 fang Exp $
 
 \section{Loops}
 \label{sec:loops}
@@ -31,7 +31,11 @@ in the collection (Section~\ref{sec:arrays}).
 (It is highly recommended to keep declarations outside of 
 loops where possible, leaving only connection statements inside loops.)
 
-Like in \CAST, loops may be nested arbitrarily deep.  
+Like in \CAST, loops may be nested arbitrarily deep and
+may be nested with conditional bodies.  
+
+\subsection{PRS}
+\label{sec:loops:prs}
 
 Do NOT write PRS bodies inside loops, the semantics are currently
 undefined.  The PRS sub-language includes a similar loop syntax, 

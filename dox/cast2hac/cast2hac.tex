@@ -1,5 +1,5 @@
 % "cast2hac.tex"
-%	$Id: cast2hac.tex,v 1.6 2006/08/14 20:31:52 fang Exp $
+%	$Id: cast2hac.tex,v 1.7 2006/08/15 20:05:07 fang Exp $
 
 \documentclass[12pt]{article}
 
@@ -10,15 +10,17 @@
 \usepackage{ifpdf}
 \usepackage{verbatim}
 \usepackage{makeidx}
+\usepackage[inner=1.5in,outer=1in,vmargin=1in,twoside,letterpaper]{geometry}
 
 % COMPILE OPTIONS
-\ifpdf
-  \relax
-\else
-  \let\pdfoutput=\PDFoutput
-\fi
+%\ifpdf
+%  \relax
+%\else
+%  \let\pdfoutput=\PDFoutput
+%\fi
+% definition of \pdfoutput screws up geometry package
 
-\ifpdf
+% \ifpdf
 \usepackage[
 	draft=false,
 	pdftitle={CAST to HAC Migration Guide}, 
@@ -28,20 +30,11 @@
 	bookmarks, 
 	colorlinks
 	]{hyperref}
-\fi
+% \fi
 
 \bibliographystyle{plain}
 
 \makeindex
-
-% PAGE FORMATTING
-\setlength{\oddsidemargin}{.5in}
-\setlength{\evensidemargin}{0in}
-\setlength{\topmargin}{0in}
-% \setlength{\topskip}{0in}
-% \setlength{\footskip}{0in}
-\setlength{\textwidth}{6.5in}
-\setlength{\textheight}{8.5in}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \maketexdependignore{hacdef.tex}

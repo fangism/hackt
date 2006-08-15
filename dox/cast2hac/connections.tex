@@ -1,5 +1,5 @@
 % "cast2hac/connections.tex"
-%	$Id: connections.tex,v 1.2 2006/06/27 02:33:10 fang Exp $
+%	$Id: connections.tex,v 1.3 2006/08/15 20:05:08 fang Exp $
 
 \section{Connections}
 \label{sec:connections}
@@ -36,4 +36,38 @@ declaration & \CAST & \hac \\ \hline \hline
 The three invalid \hac\ examples are invalid because
 the definition of \ttt{inv} requires exactly three port arguments, 
 where only fewer were given.  
+
+The above examples show a declaration with port connection in one statement.
+\hac\ allows declarations and port connections to be decoupled, 
+so the following examples would be legal:
+
+\begin{verbatim}
+bool i, o;
+inv x;
+x(i, o);
+inv y;
+y(i, );
+y(, o);
+y( , );
+\end{verbatim}
+
+\subsection{Arrayed connections}
+\label{sec:connections:array}
+
+\hac\ forbids the declaration of an array with port connections
+in the same statement\footnote{The rationale behind this decision
+is to disambiguate sparsely indexed declarations and arrayed connections.
+Most likely, such statements would form as the result of an error
+in translating from \CAST.}.  
+For example, \ttt{inv x[4](i, o);} is invalid.  
+Given an array, one should declare the array up front and then
+connect the ports in a loop.  
+
+\begin{verbatim}
+bool i[4], o[4];
+inv x[4];
+(;j:4:
+  x[j](i[j], o[j]);
+)
+\end{verbatim}
 

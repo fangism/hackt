@@ -1,5 +1,5 @@
 % "cast2hac/templates.tex"
-%	$Id: templates.tex,v 1.3 2006/06/27 02:33:11 fang Exp $
+%	$Id: templates.tex,v 1.4 2006/08/15 20:05:10 fang Exp $
 
 \section{Templates}
 \label{sec:templates}
@@ -13,7 +13,7 @@ port sizes or implementations vary enumerably or trivially.
 The most notable differences from \CAST\ templates and \hac\ templates
 is the use of angle brackets around template arguments 
 and parameter declarations, and the grammatic location of the 
-template signature.  
+template signature\footnote{This originates from C++ template syntax.}.  
 
 In \CAST, a parameterized definition might look like this:
 
@@ -45,6 +45,17 @@ defproc array() { }
 Definitions are not the only templatable entities.  
 Section~\ref{sec:typedefs:templates} discusses how typedefs 
 can be templated in \hac.  
+
+\subsection{Instantiations}
+\label{sec:templates:inst}
+
+In \CAST, templates were instantiated by passing parameter values
+in parentheses, e.g. \ttt{e1of(2)}.
+In \hac, template parameters are passed in angle brackets, e.g.
+\ttt{e1of<2>}.  
+
+\subsection{Default Parameters}
+\label{sec:templates:default}
 
 \subsection{Relaxed Templates}
 \label{sec:templates:relaxed}
