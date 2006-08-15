@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.86 2006/08/14 22:32:37 fang Exp $
+#	$Id: configure.ac,v 1.87 2006/08/15 04:15:50 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -201,7 +201,7 @@ AC_CACHE_SAVE
 
 # additional header checks
 AC_HEADER_STDC
-AC_CHECK_HEADERS([stddef.h stdlib.h string.h unistd.h getopt.h])
+AC_CHECK_HEADERS([stddef.h stdlib.h stdint.h string.h unistd.h getopt.h])
 AC_CHECK_HEADERS(pthread.h)
 AC_CHECK_HEADERS([malloc.h])
 AC_CHECK_HEADERS([ctype.h])
