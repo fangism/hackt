@@ -1,5 +1,5 @@
 % "cast2hac.tex"
-%	$Id: cast2hac.tex,v 1.7 2006/08/15 20:05:07 fang Exp $
+%	$Id: cast2hac.tex,v 1.8 2006/08/15 20:15:55 fang Exp $
 
 \documentclass[12pt]{article}
 
@@ -10,7 +10,7 @@
 \usepackage{ifpdf}
 \usepackage{verbatim}
 \usepackage{makeidx}
-\usepackage[inner=1.5in,outer=1in,vmargin=1in,twoside,letterpaper]{geometry}
+\usepackage[left=1.5in,right=1in,vmargin=1in,twoside,letterpaper]{geometry}
 
 % COMPILE OPTIONS
 %\ifpdf
@@ -20,7 +20,8 @@
 %\fi
 % definition of \pdfoutput screws up geometry package
 
-% \ifpdf
+% old versions of latex don't jive with hyperref well, references screwed up
+\ifpdf
 \usepackage[
 	draft=false,
 	pdftitle={CAST to HAC Migration Guide}, 
@@ -30,7 +31,7 @@
 	bookmarks, 
 	colorlinks
 	]{hyperref}
-% \fi
+\fi
 
 \bibliographystyle{plain}
 
