@@ -1,0 +1,4 @@
+ERROR: arith_expr expects two pints or two preals, but got:
+	pint-val-ref at [9:3]
+	pint-relational-expr at [9:7..12]
+Error parsing guard expression at [9:3..12]

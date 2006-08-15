@@ -1,0 +1,19 @@
+// "oper-03.hac"
+// test case contributed by Nathan Smith, further reduced by Fang
+// resolution: not-a-bug
+
+defproc peanut() {
+pint N = 4;
+pint Q;
+pint x;
+[ N & 1 == Q ->
+	// parses as N & (1 == Q) by operator precedence
+	// to parse as (N & 1) == Q requires parentheses
+
+	x = 1;
+]
+}
+
+peanut crackers;
+
+
