@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.17 2006/08/07 07:22:05 fang Exp $
+	$Id: BUILDS,v 1.18 2006/08/15 05:18:47 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -162,16 +162,24 @@ yacc: bison (GNU Bison) 1.875
 readline: none
 
 ===============================================================================
-i386-freebsd-unknown
+i386-unknown-freebsd
 
-Version: hackt 0.1.4-devel-20060508
-CVS Tag: HACKT-00-01-04-main-00-79-03
-Configured with: '--disable-docs' '-C' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0'
+Version: hackt 0.1.4-devel-20060814
+CVS Tag: HACKT-00-01-04-main-00-79-58
+Configured with: '--disable-docs' '--prefix=/usr/local/compiler' '--with-readline' 'CFLAGS=-g0 -O2 -Wno-undef' 'CXXFLAGS=-g0 -O2 -Wno-undef' '-C' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0'
 build-triplet: i386-unknown-freebsd4.3
 c++: g++-3.4.0 (GCC) 3.4.0
-config-LIBS:   -lncurses 
+config-CXXFLAGS: -g0 -O2 -Wno-undef
+config-CPPFLAGS: 
+config-LDFLAGS: 
+config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
+readline: GNU readline 5.0
+
+NOTE: -g0 was required because of space limitations, and -Wno-undef worked 
+	around a false-error in configure (autoconf-2.60) dying on an
+	undefined HAVE_STDINT_H during AC_CHECK_SIZEOF.
 
 ===============================================================================
 sparc-sun-solaris2.9
