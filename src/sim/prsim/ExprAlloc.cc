@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.14 2006/07/28 03:31:12 fang Exp $
+	$Id: ExprAlloc.cc,v 1.15 2006/08/17 01:02:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -250,6 +250,18 @@ ExprAlloc::compact_expr_pools(void) {
 		const expr_index_type n = free_list_acquire(free_set);
 #if DEBUG_CLEANUP
 		cerr << "moving expr " << i << " to slot " << n << endl;
+#endif
+#if 1
+		{
+			// move rule_map_entry, if applicable
+			typedef	State::rule_map_type::iterator
+				rule_map_iterator;
+			const rule_map_iterator f(st_rule_map.find(i));
+			if (f != st_rule_map.end()) {
+				st_rule_map[n] = f->second;
+				st_rule_map.erase(f);
+			}
+		}
 #endif
 		expr_type& e(st_expr_pool[n]);
 		graph_node_type& g(st_graph_node_pool[n]);

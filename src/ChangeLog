@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-59:
+	  prsim: latent optimization bug fix, forgot to relocate rule_map
+		entry upon compaction of ExprAlloc pass.  A reduced test case 
+		is difficult to produce because it depends on how expressions 
+		happen to be allocated.  (Triggering test case is not small, 
+		and only occurred while stepping/cycling through prsim run.)
+	  Elsewhere, minor documentation updates.  
+
+
 2006-08-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-58:
