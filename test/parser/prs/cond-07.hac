@@ -1,0 +1,19 @@
+// "cond-07.hac"
+// copy-modified from "cond-06.hac"
+// extended test case
+
+defproc bar (bool q) { }
+
+template <pbool N>
+define  foo () {
+bool x, y;
+[ N ->
+        bar b[2];
+        b[0](x);
+        b[1](y);
+]
+}
+
+foo<false> f;
+foo<true> g;
+

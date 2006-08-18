@@ -1,0 +1,80 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	312
+	5	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
+	11	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	14	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
+	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	16	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	17	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
+	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  2 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar(
+      )
+      In definition "bar", we have: {
+      unroll sequence: 
+      footprint: {
+      }
+      }
+
+    foo = process-definition (defined) foo<
+      pbool<> N
+      >(
+      )
+      In definition "foo", we have: {
+      Parameters:
+        N = pbool<> N
+      Instances:
+        b = bar<> b
+      unroll sequence: 
+        pbool<> N
+        [ N ->
+          bar<> b
+        ]
+      footprint collection: {
+        <false> {
+          pbool^0 N value: ?
+          bar<> b
+        }
+        <true> {
+          pbool^0 N value: ?
+          process bar<>^0 b (instantiated) = ::foo::b 
+        }
+      }
+      }
+
+  Instances:
+    f = process foo<false>^0 f (instantiated) = ::f 
+    g = process foo<true>^0 g (instantiated) = ::g 
+}
+

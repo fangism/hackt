@@ -1,0 +1,23 @@
+// "cond-05.hac"
+// bug test case, submitted by Filipp Akopyan, reduced by Fang
+// symptom: 
+// Object/type/canonical_type.tcc:173: failed assertion `canonical_definition_ptr'
+
+// closely related:
+// Object/inst/instance_collection.tcc:1379: failed assertion `this->the_instance.valid()'
+
+// diagnosis: due to processing of uninstantiated scalar
+// status: FIXED by patch for HACKT-00-01-04-main-00-79-60
+
+defproc bar () { }
+
+template <pbool N>
+define  foo () {
+[ N ->
+        bar b;
+]
+}
+
+foo<false> f;	// was triggering problem
+foo<true> g;
+

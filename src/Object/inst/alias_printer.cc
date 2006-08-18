@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_printer.cc"
-	$Id: alias_printer.cc,v 1.2 2006/04/11 07:54:40 fang Exp $
+	$Id: alias_printer.cc,v 1.3 2006/08/18 23:56:12 fang Exp $
  */
 
 #include "Object/inst/alias_printer.h"
@@ -95,7 +95,8 @@ void
 alias_printer::__visit(const instance_alias_info<Tag>& a) {
 	typedef class_traits<Tag>		traits_type;
 	STACKTRACE_VERBOSE;
-	INVARIANT(a.valid());
+	// possibly uninstantiated because of conditionals
+if (a.valid()) {
 	ostringstream os;
 	a.dump_hierarchical_name(os, dump_flags::no_leading_scope);
 	const string& local_name(os.str());
@@ -123,6 +124,7 @@ if (this->fpf) {
 	alias_printer_recursion_policy<traits_type::has_substructure>::accept(
 		*this, e, gindex);
 	// recursion or termination
+}	// end if a.valid()
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

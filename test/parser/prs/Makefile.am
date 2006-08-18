@@ -1,5 +1,5 @@
 # "test/parser/prs/Makefile.am"
-#	$Id: Makefile.am,v 1.25 2006/08/14 04:50:15 fang Exp $
+#	$Id: Makefile.am,v 1.26 2006/08/18 23:56:14 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -25,7 +25,7 @@ HACKT_PARSE_TEST_PASSES = inv-02 inv-03 inv-06 inv-07 inv-08 inv-09 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 loop-09 \
-	cond-02 cond-03 cond-04 \
+	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 \
@@ -55,7 +55,7 @@ HACKT_CREATE_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	null-00 null-01 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-01 loop-02 loop-03 loop-04 loop-06 loop-08 loop-09 \
-	cond-02 cond-03 cond-04 \
+	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 \
@@ -83,7 +83,7 @@ HACKT_CFLAT_TEST_SUBJECTS = inv-14 inv-15 inv-16 inv-17 \
 	null-00 \
 	pal-01 pal-02 pal-03 \
 	loop-00 loop-04 loop-06 loop-08 loop-09 \
-	cond-02 cond-03 cond-04 \
+	cond-02 cond-03 cond-04 cond-05 cond-06 cond-07 \
 	short-01 short-02 short-03 short-04 short-05 \
 	echo-01 echo-05 \
 	macro-pass-01 macro-pass-02 \
@@ -119,6 +119,7 @@ HACKT_PRSIMEXPR_TEST_SUBJECTS = inv-14 \
 
 # expecting empty .prs
 EMPTY_CFLAT_PRS_TESTS += null-00 loop-00 \
+	cond-05 \
 	macro-pass-01
 
 # more output expectation files for when bison is used

@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.32 2006/07/30 05:49:22 fang Exp $
+	$Id: instance_collection.tcc,v 1.33 2006/08/18 23:56:12 fang Exp $
 	TODO: trim includes
  */
 
@@ -930,6 +930,10 @@ INSTANCE_ARRAY_CLASS::create_dependent_types(void) {
 	STACKTRACE_VERBOSE;
 	iterator i(this->collection.begin());
 	const iterator e(this->collection.end());
+if (i == e) {
+	// no instances in this collection were instantiated (conditional)
+	return good_bool(true);
+}
 if (this->has_relaxed_type()) {
 	for ( ; i!=e; i++) {
 		if (!element_type::create_dependent_types(*i).good)
@@ -1376,8 +1380,12 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::allocate_local_instance_ids(footprint& f) {
 	STACKTRACE_VERBOSE;
-	INVARIANT(this->the_instance.valid());
+if (this->the_instance.valid()) {
 	return good_bool(this->the_instance.assign_local_instance_id(f) != 0);
+} else {
+	// not instantiated due to conditional
+	return good_bool(true);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1498,6 +1506,10 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_SCALAR_CLASS::create_dependent_types(void) {
 	STACKTRACE_VERBOSE;
+if (!this->the_instance.valid()) {
+	// uninstantiated scalar because of conditional
+	return good_bool(true);
+}
 if (this->has_relaxed_type()) {
 	if (!instance_type::create_dependent_types(this->the_instance).good) {
 		return good_bool(false);
@@ -1523,12 +1535,14 @@ if (this->has_relaxed_type()) {
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 void
 INSTANCE_SCALAR_CLASS::collect_port_aliases(port_alias_tracker& t) const {
+if (this->the_instance.valid()) {
 	INVARIANT(this->the_instance.instance_index);
 	// 0 is not an acceptable index
 	t.template get_id_map<Tag>()[this->the_instance.instance_index]
 		.push_back(never_ptr<instance_type>(
 			&const_cast<instance_type&>(this->the_instance)));
 	this->the_instance.collect_port_aliases(t);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

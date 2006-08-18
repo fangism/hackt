@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-60:
+	  BUG FIX: improper handling of conditionally uninstantiated
+		instances in the create and alloc phases.  
+		Thanks to Filipp Akopyan for original test case. 
+		New (reduced) test cases: parser/prs/cond-0{5,6,7}.hac
+
+
 2006-08-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-59:

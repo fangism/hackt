@@ -1,0 +1,16 @@
+// "cond-06.hac"
+// copy-modified from "cond-05.hac"
+
+defproc bar (bool q) { }
+
+template <pbool N>
+define  foo () {
+bool x;
+[ N ->
+        bar b(x);
+]
+}
+
+foo<false> f;
+foo<true> g;
+
