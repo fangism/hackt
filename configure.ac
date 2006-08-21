@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.87 2006/08/15 04:15:50 fang Exp $
+#	$Id: configure.ac,v 1.88 2006/08/21 15:31:34 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -326,6 +326,10 @@ FANG_CHECK_READLINE
 FANG_CHECK_EDITLINE
 dnl check prototype of readline() if applicable
 FANG_CHECK_READLINE_ARG_CONST
+
+dnl check for X11 includes and libraries
+AC_PATH_X
+
 
 dnl TODO: xdr
 dnl for automake consumption

@@ -2,6 +2,12 @@
 
 2006-08-14	David Fang	<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-79-60:
+	  Added AC_PATH_X for future planning.
+
+
+2006-08-14	David Fang	<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-79-58:
 	  Makefile maintainence:
 		Fixed cvsignore target recursiveness, using Makefile.in's
