@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-08-21	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-61:
+	  Updated scripts/maintainerclobber, result is now squeaky clean!
+
+
 2006-08-14	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-60:
