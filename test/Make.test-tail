@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.44 2006/08/14 22:32:47 fang Exp $
+#	$Id: Make.test-tail,v 1.45 2006/08/22 00:12:15 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -454,6 +454,7 @@ check-summaries: $(CHECK_SUMMARIES)
 # assuming HACKT_OBJ_TEST_SUBJECTS is subset of HACKT_PARSE_TEST_SUBJECTS
 EXTRA_DIST += $(HACKT_PARSE_TEST_SUBJECTS:=.hac) \
 	$(HACKT_PARSE_TEST_FAILURES:=.stderr) \
+	$(HACKT_PARSE_TEST_WARNINGS:=.stderr) \
 	$(BISON_OUTPUTS:=.stderr.bison) \
 	$(HACKT_UNROLL_TEST_SUBJECTS:=.unrollstderr) \
 	$(HACKT_CREATE_TEST_SUBJECTS:=.createstderr) \
@@ -518,6 +519,12 @@ echo-tests: force
 
 echo-compile-passes: force
 	@$(ECHO) $(HACKT_PARSE_TEST_PASSES)
+
+echo-compile-warnings: force
+	@$(ECHO) $(HACKT_PARSE_TEST_WARNINGS)
+
+echo-compile-failures: force
+	@$(ECHO) $(HACKT_PARSE_TEST_FAILURES)
 
 echo-bison-outputs: force
 	@$(ECHO) $(BISON_OUTPUTS)

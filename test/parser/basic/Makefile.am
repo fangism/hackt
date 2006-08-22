@@ -1,5 +1,5 @@
 # "test/parser/basic/Makefile.am"
-#	$Id: Makefile.am,v 1.16 2006/08/15 21:27:26 fang Exp $
+#	$Id: Makefile.am,v 1.17 2006/08/22 00:12:16 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -15,14 +15,18 @@ HACKT_PARSE_TEST_PASSES = \
 	022 \
 	oper-01 oper-02
 
+HACKT_PARSE_TEST_WARNINGS = \
+	oper-01
 # NOTE: oper-01 passes with a warning for now
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
+	$(HACKT_PARSE_TEST_WARNINGS) \
 	$(HACKT_PARSE_TEST_PASSES)
 
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 HACKT_OBJ_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_WARNINGS) \
 	$(HACKT_PARSE_TEST_PASSES)
 
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
@@ -36,8 +40,6 @@ HACKT_CREATE_TEST_SUBJECTS = \
 BISON_OUTPUTS += 004 005 008 010 017 018 \
 	020 021
 
-# has warning
-EXTRA_DIST += oper-01.stderr
 EXTRA_DIST += TODO
 
 include $(top_srcdir)/test/Make.test-tail

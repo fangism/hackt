@@ -1,5 +1,16 @@
 # "test/ChangeLog"
 
+2006-08-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-79-61:
+	  Added make-variable HACKT_PARSE_TEST_WARNINGS for tests
+		that pass, but expect a .stderr file containing warnings.
+		The .stderr automatically added to EXTRA_DIST by Make.test-tail.
+		Recommended practice: added this variable to both
+		HACKT_PARSE_TEST_SUBJECTS and HACKT_OBJ_TEST_SUBJECTS
+		in local Makefile.am's.
+
+
 2006-08-13	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-58:

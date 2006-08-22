@@ -1,5 +1,5 @@
 # "test/parser/chp/Makefile.am"
-#	$Id: Makefile.am,v 1.10 2006/07/16 20:40:03 fang Exp $
+#	$Id: Makefile.am,v 1.11 2006/08/22 00:12:18 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -25,14 +25,19 @@ HACKT_PARSE_TEST_PASSES = \
 	070 074 075 077 078 079 \
 	080 081 082 083 084 085 086 087 088 089 \
 	090 091 092 093 094 097 098 099 \
-	100 101 102 103
+	100 102
+
+HACKT_PARSE_TEST_WARNINGS = \
+	101 103
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
+	$(HACKT_PARSE_TEST_WARNINGS) \
 	$(HACKT_PARSE_TEST_PASSES)
 
 # should be the subset of HACKT_PARSE_TEST_SUBJECTS that type-checks
 HACKT_OBJ_TEST_SUBJECTS = \
+	$(HACKT_PARSE_TEST_WARNINGS) \
 	$(HACKT_PARSE_TEST_PASSES)
 
 # should be the subset of HACKT_OBJ_TEST_SUBJECTS that passes unroll checks
@@ -57,8 +62,7 @@ HACKT_CREATE_TEST_SUBJECTS = \
 BISON_OUTPUTS += 001 003 004 019b \
 	035 055 056 059 062
 
-# pending test cases
-EXTRA_DIST += 101.stderr 103.stderr
+EXTRA_DIST +=
 
 include $(top_srcdir)/test/Make.test-tail
 
