@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.136 2006/08/12 00:36:25 fang Exp $
+#	$Id: Makefile.am,v 1.137 2006/08/23 20:57:13 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -215,7 +215,8 @@ AST_CC_FILES = \
 	AST/namespace.cc \
 	AST/statement.cc \
 	AST/import_root.cc \
-	AST/parse_context.cc
+	AST/parse_context.cc \
+	AST/sizes.cc
 
 AST_TCC_FILES = \
 	AST/node_list.tcc \
@@ -351,6 +352,7 @@ OBJECT_REF_H_FILES = \
 	Object/ref/inst_ref_implementation_fwd.h \
 	Object/ref/inst_ref_implementation.h
 
+# all these must have corresponding .h file
 OBJECT_CC_FILES = \
 	Object/common/object_base.cc \
 	Object/common/namespace.cc \
@@ -373,6 +375,7 @@ OBJECT_CC_FILES = \
 	Object/port_context.cc \
 	Object/state_manager.cc \
 	Object/global_entry_context.cc \
+	Object/sizes.cc \
 	Object/type/template_actuals.cc \
 	Object/type/canonical_type_base.cc \
 	Object/type/canonical_type.cc \
@@ -660,11 +663,13 @@ MAIN_EXEC_H_FILES = $(MAIN_EXEC_CC_FILES:.cc=.h) \
 	main/compile_options.h
 
 COMMON_H_FILES = \
+	common/sizes.h \
 	common/ICE.h \
 	common/TODO.h \
 	common/devel_switches.h
 
 COMMON_FILES = $(COMMON_H_FILES) \
+	common/sizes.cc \
 	common/ICE.cc \
 	common/TODO.cc
 

@@ -2,7 +2,7 @@
 	\file "Object/ref/references_fwd.h"
 	Foward declarations of all reference related classes, 
 	instances, values, meta, nonmeta, simple, member, aggregate...
-	$Id: references_fwd.h,v 1.2 2006/04/12 08:53:17 fang Exp $
+	$Id: references_fwd.h,v 1.3 2006/08/23 20:57:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_REFERENCES_FWD_H__
@@ -138,7 +138,6 @@ typedef member_meta_instance_reference<datastruct_tag>
 	datastruct_member_meta_instance_reference;
 
 // expressions and family
-class simple_param_meta_value_reference;
 template <class>
 class simple_meta_value_reference;
 typedef simple_meta_value_reference<pint_tag>

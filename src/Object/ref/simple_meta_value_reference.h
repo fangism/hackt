@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.12 2006/07/04 07:26:14 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.13 2006/08/23 20:57:21 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -103,10 +103,6 @@ public:
 
 	good_bool
 	initialize(const init_arg_type& i);
-
-	// try these
-	// using simple_param_meta_value_reference::may_be_initialized;
-	// using simple_param_meta_value_reference::must_be_initialized;
 
 	bool
 	may_be_initialized(void) const;

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.15 2006/04/11 07:54:43 fang Exp $
+	$Id: substructure_alias_base.h,v 1.16 2006/08/23 20:57:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -48,9 +48,10 @@ protected:
 	subinstance_manager			subinstances;
 public:
 	size_t					instance_index;
-virtual	~substructure_alias_base() { }
 
 protected:
+virtual	~substructure_alias_base() { }
+
 	substructure_alias_base() : instance_index(0) { }
 
 	/**

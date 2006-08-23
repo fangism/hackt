@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.inc,v 1.20 2006/08/14 22:32:43 fang Exp $
+#	$Id: Makefile.inc,v 1.21 2006/08/23 20:57:25 fang Exp $
 #	vi: ft=automake
 
 # dirgen is completely bogus, workaround to coerce directory generation
@@ -55,6 +55,7 @@ UTIL_TCC_FILES = \
 UTIL_HEADER_FILES = \
 	$(UTIL_TCC_FILES:.tcc=.h) \
 	util/STL/algorithm_fwd.h \
+	util/STL/back_inserter.h \
 	util/STL/allocator_fwd.h \
 	util/STL/construct_fwd.h \
 	util/STL/deque_fwd.h \
