@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.16 2006/07/04 07:26:24 fang Exp $
+	$Id: packed_array.tcc,v 1.17 2006/08/24 01:31:16 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -30,6 +30,11 @@ using std::accumulate;
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 const
 typename PACKED_ARRAY_CLASS::ones_type
+PACKED_ARRAY_CLASS::zeros(0);
+
+PACKED_ARRAY_TEMPLATE_SIGNATURE
+const
+typename PACKED_ARRAY_CLASS::ones_type
 PACKED_ARRAY_CLASS::ones(1);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -40,19 +45,7 @@ PACKED_ARRAY_CLASS::ones(1);
  */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 PACKED_ARRAY_CLASS::packed_array(const key_type& s) :
-		sizes(s), values(sizes_product(s)), offset(), coeffs(1) {
-	reset_coeffs();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Constructs a packed array with index offsets in each dimension.
-	\param s dimensions of the new array.
-	\oaram o the offset of the new array.
- */
-PACKED_ARRAY_TEMPLATE_SIGNATURE
-PACKED_ARRAY_CLASS::packed_array(const key_type& s, const key_type& o) :
-		sizes(s), values(sizes_product(s)), offset(o), coeffs(1) {
+		sizes(s), values(sizes_product(s)), coeffs(1) {
 	reset_coeffs();
 }
 
@@ -67,7 +60,7 @@ PACKED_ARRAY_TEMPLATE_SIGNATURE
 PACKED_ARRAY_CLASS::packed_array(const packed_array& a, 
 		const key_type& l, const key_type& u) :
 		sizes((INVARIANT(l <= u), u - l + ones)), 
-		values(sizes_product(sizes)), offset(), coeffs(1) {
+		values(sizes_product(sizes)), coeffs(1) {
 	// offset remains 0
 	reset_coeffs();
 	key_generator_type key_gen(l, u);
@@ -95,14 +88,14 @@ PACKED_ARRAY_CLASS::~packed_array() { }
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_CLASS::key_type
 PACKED_ARRAY_CLASS::first_key(void) const {
-	return offset;
+	return zeros;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_CLASS::key_type
 PACKED_ARRAY_CLASS::last_key(void) const {
-	return sizes +offset -ones;
+	return sizes -ones;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -141,9 +134,10 @@ PACKED_ARRAY_TEMPLATE_SIGNATURE
 bool
 PACKED_ARRAY_CLASS::range_check(const key_type& k) const {
 	index_type i = 0;
-	for ( ; i < D; i++)
-		if (k[i] -offset[i] >= sizes[i])
+	for ( ; i < D; i++) {
+		if (k[i] >= sizes[i])
 			return false;
+	}
 	return true;
 }
 
@@ -154,13 +148,8 @@ PACKED_ARRAY_CLASS::range_check(const key_type& k) const {
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_CLASS::index_type
 PACKED_ARRAY_CLASS::key_to_index(const key_type& k) const {
-	const key_type diff(k -offset);
-//	const size_t* diff_last = diff.end();
-//	--diff_last;			// this is ok
-//	const typename key_type::const_iterator
-//		diff_last(--diff.end());	// doesn't like this
-	return std::inner_product(diff.begin(), &diff.back(), coeffs.begin(), 
-		diff.back());
+	return std::inner_product(k.begin(), &k.back(), coeffs.begin(), 
+		k.back());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -197,7 +186,7 @@ PACKED_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PACKED_ARRAY_CLASS::dump(ostream& o) const {
 	o << "size = " << sizes <<
-		", offset = " << offset << ", coeffs = " << coeffs << endl;
+		", coeffs = " << coeffs << endl;
 	return dump_values(o << "values = ") << endl;
 }
 
@@ -260,6 +249,100 @@ if (d > 1) {
 }
 
 //=============================================================================
+// class packed_offset_array method definitions
+
+/**
+	Constructs a packed array with index offsets in each dimension.
+	\param s dimensions of the new array.
+	\oaram o the offset of the new array.
+ */
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+PACKED_OFFSET_ARRAY_CLASS::packed_offset_array(
+		const key_type& s, const key_type& o) :
+		parent_type(s), offset(o) {
+	parent_type::reset_coeffs();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+PACKED_OFFSET_ARRAY_CLASS::~packed_offset_array() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return index of the last element.  
+ */
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+typename PACKED_OFFSET_ARRAY_CLASS::key_type
+PACKED_OFFSET_ARRAY_CLASS::first_key(void) const {
+	return offset;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return index of the last element.  
+ */
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+typename PACKED_OFFSET_ARRAY_CLASS::key_type
+PACKED_OFFSET_ARRAY_CLASS::last_key(void) const {
+	return sizes +offset -ones;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Since key_type uses size_t (unsigned) we only need to check
+	upper bound.  
+	\return true if index key is valid.
+ */
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+bool
+PACKED_OFFSET_ARRAY_CLASS::range_check(const key_type& k) const {
+	index_type i = 0;
+	for ( ; i < D; i++) {
+		if (k[i] -offset[i] >= sizes[i])
+			return false;
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Does not range-check.
+ */
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+typename PACKED_OFFSET_ARRAY_CLASS::index_type
+PACKED_OFFSET_ARRAY_CLASS::key_to_index(const key_type& k) const {
+	const key_type diff(k -offset);
+	return std::inner_product(diff.begin(), &diff.back(), coeffs.begin(), 
+		diff.back());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+// T&
+typename PACKED_OFFSET_ARRAY_CLASS::reference
+PACKED_OFFSET_ARRAY_CLASS::operator [] (const key_type& k) {
+	return values[key_to_index(k)];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+// const T&
+typename PACKED_OFFSET_ARRAY_CLASS::const_reference
+PACKED_OFFSET_ARRAY_CLASS::operator [] (const key_type& k) const {
+	return values[key_to_index(k)];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+ostream&
+PACKED_OFFSET_ARRAY_CLASS::dump(ostream& o) const {
+	o << "size = " << sizes <<
+		", offset = " << offset << 
+		", coeffs = " << coeffs << endl;
+	return parent_type::dump_values(o << "values = ") << endl;
+}
+
+//=============================================================================
 // class packed_array_generic method definitions
 
 /**
@@ -279,7 +362,7 @@ PACKED_ARRAY_GENERIC_CLASS::ones(const size_t d) {
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 PACKED_ARRAY_GENERIC_CLASS::packed_array_generic(const size_t d) :
-		dim(d), sizes(d, 0), values(), offset(d, 0), 
+		dim(d), sizes(d, 0), values(), 
 		coeffs(d ? d-1 : d, 1) {
 }
 
@@ -293,25 +376,8 @@ PACKED_ARRAY_GENERIC_CLASS::packed_array_generic(const size_t d) :
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 PACKED_ARRAY_GENERIC_CLASS::packed_array_generic(const key_type& s) :
 		dim(s.size()), sizes(s), 
-		values(sizes_product(s)), offset(dim, 0), 
+		values(sizes_product(s)),
 		coeffs(dim ? dim-1 : dim, 1) {
-	reset_coeffs();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Constructs a packed array with index offsets in each dimension.
-	\param s dimensions of the new array.
-	\oaram o the offset of the new array.
-	\pre s and o have the same size and size is > 0.
- */
-PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
-PACKED_ARRAY_GENERIC_CLASS::packed_array_generic(
-		const key_type& s, const key_type& o) :
-		dim(s.size()), sizes(s), 
-		values(sizes_product(s)), offset(o),
-		coeffs(dim ? dim-1 : dim, 1) {
-	INVARIANT(dim == o.size());
 	reset_coeffs();
 }
 
@@ -330,7 +396,7 @@ PACKED_ARRAY_GENERIC_CLASS::packed_array_generic(
 		sizes((INVARIANT(dim == u.size()),
 			INVARIANT(l <= u),	// uses lexicographical_compare
 			u - l + key_type(dim, 1))), 
-		values(sizes_product(sizes)), offset(dim, 0), 
+		values(sizes_product(sizes)),
 		coeffs(dim ? dim-1 : dim, 1) {
 	// offset remains 0
 	reset_coeffs();
@@ -360,19 +426,14 @@ PACKED_ARRAY_GENERIC_CLASS::~packed_array_generic() { }
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_GENERIC_CLASS::key_type
 PACKED_ARRAY_GENERIC_CLASS::first_key(void) const {
-	return offset;
+	return key_type(dim, 0);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_GENERIC_CLASS::key_type
 PACKED_ARRAY_GENERIC_CLASS::last_key(void) const {
-#if 1
-	return sizes +offset -key_type(dim, 1);
-#else
-	return std::plus<key_type>(sizes, offset)();
-//	return std::minus(std::plus(sizes, offset), key_type(dim, 1));
-#endif
+	return sizes -key_type(dim, 1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -393,6 +454,7 @@ PACKED_ARRAY_GENERIC_CLASS::sizes_product(const key_type& k) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Caches the coefficients used in computing the internal index.  
+	Re-usable with or without an offset.  
  */
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 void
@@ -418,7 +480,7 @@ PACKED_ARRAY_GENERIC_CLASS::range_check(const key_type& k) const {
 //	cerr << "packed_array_generic::range_check" << endl;
 	index_type i = 0;
 	for ( ; i < index_type(dim); i++) {
-		const index_type k_diff = k[i] -offset[i];
+		const index_type k_diff = k[i];
 #if 0
 		// debugging
 		cerr << "\ti=" << i << ", " << "diff = " << k_diff <<
@@ -439,13 +501,8 @@ PACKED_ARRAY_GENERIC_CLASS::range_check(const key_type& k) const {
 PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_GENERIC_CLASS::index_type
 PACKED_ARRAY_GENERIC_CLASS::key_to_index(const key_type& k) const {
-	const key_type diff(k -offset);
-//	const size_t* diff_last = diff.end();
-//	--diff_last;			// this is ok
-//	const typename key_type::const_iterator
-//		diff_last(--diff.end());	// doesn't like this
-	return std::inner_product(diff.begin(), &diff.back(), coeffs.begin(), 
-		diff.back());
+	return std::inner_product(k.begin(), &k.back(), coeffs.begin(), 
+		k.back());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -512,7 +569,6 @@ PACKED_ARRAY_GENERIC_CLASS::resize(void) {
 	dim = 0;
 	sizes = key_type(0);
 	values.resize(1);
-	// offsets? = key_type(0)?
 	reset_coeffs();
 }
 
@@ -532,7 +588,6 @@ PACKED_ARRAY_GENERIC_CLASS::resize(const key_type& s) {
 	// this is fixed by catching the alias case in multikey_generic
 	sizes = s;
 	values.resize(sizes_product(s));
-	// offsets?
 	reset_coeffs();
 }
 
@@ -541,7 +596,7 @@ PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 ostream&
 PACKED_ARRAY_GENERIC_CLASS::dump(ostream& o) const {
 	o << "size = " << sizes <<
-		", offset = " << offset << ", coeffs = " << coeffs << endl;
+		", coeffs = " << coeffs << endl;
 	return dump_values(o << "values = ") << endl;
 }
 
@@ -612,7 +667,6 @@ ostream&
 PACKED_ARRAY_GENERIC_CLASS::write(ostream& o) const {
 	write_value(o, dim);
 	sizes.write(o);
-	offset.write(o);
 	write_sequence(o, values);
 	return o;
 }
@@ -623,9 +677,120 @@ istream&
 PACKED_ARRAY_GENERIC_CLASS::read(istream& i) {
 	read_value(i, dim);
 	sizes.read(i);
-	offset.read(i);
 	resize(sizes);		// optional
 	read_sequence_resize(i, values);
+	return i;
+}
+
+//=============================================================================
+// class packed_offset_array_generic method definitions
+
+/**
+	Constructs a packed array with index offsets in each dimension.
+	\param s dimensions of the new array.
+	\oaram o the offset of the new array.
+	\pre s and o have the same size and size is > 0.
+ */
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::packed_offset_array_generic(
+		const key_type& s, const key_type& o) :
+		parent_type(s), offset(o) {
+	INVARIANT(dim == o.size());
+	reset_coeffs();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::~packed_offset_array_generic() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return the index of the first entry, which is the offset. 
+	Useful for constructing the multikey_generator.  
+ */
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::key_type
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::first_key(void) const {
+	return offset;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::key_type
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::last_key(void) const {
+	return sizes +offset -key_type(dim, 1);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Since key_type uses size_t (unsigned) we only need to check
+	upper bound.  
+	\return true if index key is valid.
+ */
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+bool
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::range_check(const key_type& k) const {
+	index_type i = 0;
+	for ( ; i < index_type(dim); i++) {
+		const index_type k_diff = k[i] -offset[i];
+		if (k_diff >= sizes[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Does not range-check.
+ */
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::index_type
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::key_to_index(const key_type& k) const {
+	const key_type diff(k -offset);
+	return std::inner_product(diff.begin(), &diff.back(), coeffs.begin(), 
+		diff.back());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::reference
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::operator [] (const key_type& k) {
+	return values[key_to_index(k)];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::const_reference
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::operator [] (const key_type& k) const {
+	return values[key_to_index(k)];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+ostream&
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::dump(ostream& o) const {
+	o << "size = " << sizes <<
+		", offset = " << offset <<
+		", coeffs = " << coeffs << endl;
+	return dump_values(o << "values = ") << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+ostream&
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::write(ostream& o) const {
+	parent_type::write(o);
+	offset.write(o);
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+istream&
+PACKED_OFFSET_ARRAY_GENERIC_CLASS::read(istream& i) {
+	parent_type::read(i);
+	offset.read(i);
 	return i;
 }
 

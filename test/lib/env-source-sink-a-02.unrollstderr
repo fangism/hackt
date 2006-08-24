@@ -1470,7 +1470,7 @@ Persistent Object Manager text dump:
 	1466	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	1467	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	1468	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	1469	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	48
+	1469	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
 	1470	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
 	1471	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	39
 	1472	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35

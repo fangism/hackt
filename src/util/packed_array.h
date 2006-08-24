@@ -2,7 +2,7 @@
 	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.13 2006/07/04 07:26:24 fang Exp $
+	$Id: packed_array.h,v 1.14 2006/08/24 01:31:15 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -85,29 +85,28 @@ public:
 
 public:
 	/// convenient array of all 1's
+	static const ones_type				zeros;
 	static const ones_type				ones;
 
 protected:
 	/**
 		Coefficient default to 1, because used for multiplication.  
+		TODO: fix me, doesn't work for D=1.
 	 */
 	typedef	multikey<D-1,K>				coeffs_type;
 protected:
 	key_type					sizes;
 	impl_type					values;
-	key_type					offset;
 	/**
 		Cached array of transformation coefficients
 		for computing flat index.  
 	 */
 	coeffs_type					coeffs;
 public:
-	packed_array() : sizes(), values(), offset(), coeffs(1) { }
+	packed_array() : sizes(), values(), coeffs(1) { }
 
 	explicit
 	packed_array(const key_type& s);
-
-	packed_array(const key_type& s, const key_type& o);
 
 	// default copy constructor is fine
 
@@ -216,6 +215,77 @@ private:
 
 //=============================================================================
 /**
+	Packed collection that can also be offset from 0
+	in each dimension, a generalization of the above.  
+	TODO: test this class more heavily and 
+	publicize parent member functions with using declarations.
+ */
+PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
+class packed_offset_array : protected PACKED_ARRAY_CLASS {
+	typedef	PACKED_ARRAY_CLASS		parent_type;
+	typedef	PACKED_OFFSET_ARRAY_CLASS	this_type;
+public:
+	typedef	typename parent_type::key_type		key_type;
+	typedef	typename parent_type::index_type	index_type;
+	typedef	typename parent_type::reference		reference;
+	typedef	typename parent_type::const_reference	const_reference;
+protected:
+	key_type					offset;
+public:
+	packed_offset_array() : parent_type(), offset() { }
+
+	explicit
+	packed_offset_array(const key_type& s) : parent_type(s), offset() { }
+
+	packed_offset_array(const packed_offset_array& a, 
+		const key_type& l, const key_type& u) :
+		parent_type(a, l, u), offset() { }
+
+	/// new constructor using offset
+	packed_offset_array(const key_type& s, const key_type& o);
+
+	~packed_offset_array();
+
+	// overrides parent's
+	key_type
+	first_key(void) const;
+
+	key_type
+	last_key(void) const;
+
+	bool
+	range_check(const key_type&) const;
+
+protected:
+	index_type
+	key_to_index(const key_type&) const;
+
+public:
+	reference
+	operator [] (const key_type& k);
+
+	const_reference
+	operator [] (const key_type& k) const;
+
+	reference
+	at(const key_type& k) {
+		INVARIANT(range_check(k));
+		return (*this)[k];
+	}
+
+	const_reference
+	at(const key_type& k) const {
+		INVARIANT(range_check(k));
+		return (*this)[k];
+	}
+
+	ostream&
+	dump(ostream& o) const;
+
+};	// end class packed_offset_array
+
+//=============================================================================
+/**
 	Variable dimensions array.  
 	When you're too lazy to make dimension-specific arrays.  
 	This is however, generally "unsafer" and is more prone to misuse, 
@@ -260,7 +330,6 @@ protected:
 	size_type					dim;
 	key_type					sizes;
 	impl_type					values;
-	key_type					offset;
 	/**
 		Cached array of transformation coefficients
 		for computing flat index.  
@@ -268,16 +337,15 @@ protected:
 	coeffs_type					coeffs;
 public:
 	packed_array_generic() :
-		dim(0), sizes(0), values(), offset(0), coeffs(0) { }
+		dim(0), sizes(0), values(), coeffs(0) { }
 
+	explicit
 	packed_array_generic(const size_type d);
 
 	// also make generic sequence-based constructors
 
 	explicit
 	packed_array_generic(const key_type& s);
-
-	packed_array_generic(const key_type& s, const key_type& o);
 
 	// default copy constructor is fine
 
@@ -413,6 +481,86 @@ private:
 	dump_slice(ostream&, const size_type d, const size_type s) const;
 
 };	// end class packed_array_generic
+
+//=============================================================================
+PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+class packed_offset_array_generic : protected PACKED_ARRAY_GENERIC_CLASS {
+	typedef	PACKED_ARRAY_GENERIC_CLASS		parent_type;
+	typedef	PACKED_OFFSET_ARRAY_GENERIC_CLASS	this_type;
+public:
+	typedef typename parent_type::key_type		key_type;
+	typedef typename parent_type::index_type	index_type;
+	typedef typename parent_type::size_type		size_type;
+	typedef typename parent_type::reference		reference;
+	typedef typename parent_type::const_reference	const_reference;
+protected:
+	key_type					offset;
+public:
+	packed_offset_array_generic() : parent_type(), offset(0) { }
+
+	explicit
+	packed_offset_array_generic(const size_type d) :
+		parent_type(d), offset(d, 0) { }
+
+	// also make generic sequence-based constructors
+
+	explicit
+	packed_offset_array_generic(const key_type& s) :
+		parent_type(s), offset(dim, 0) { }
+
+	packed_offset_array_generic(const key_type& s, const key_type& o);
+
+	// default copy constructor is fine
+
+	/// ranged copy-constructor
+	packed_offset_array_generic(const packed_offset_array_generic& a, 
+		const key_type& l, const key_type& u) :
+		parent_type(a, l, u), offset(dim, 0) { }
+
+	~packed_offset_array_generic();
+
+protected:
+	index_type
+	key_to_index(const key_type& k) const;
+
+public:
+	key_type
+	first_key(void) const;
+
+	key_type
+	last_key(void) const;
+
+	bool
+	range_check(const key_type& k) const;
+
+	reference
+	operator [] (const key_type& k);
+
+	const_reference
+	operator [] (const key_type& k) const;
+
+	reference
+	at(const key_type& k) {
+		INVARIANT(range_check(k));
+		return (*this)[k];
+	}
+
+	const_reference
+	at(const key_type& k) const {
+		INVARIANT(range_check(k));
+		return (*this)[k];
+	}
+
+	ostream&
+	dump(ostream& o) const;
+
+	ostream&
+	write(ostream& o) const;
+
+	istream&
+	read(istream& i);
+
+};	// end class packed_offset_array_generic
 
 //=============================================================================
 }	// end namespace util

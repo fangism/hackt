@@ -31,77 +31,77 @@ Persistent Object Manager text dump:
 	27	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	30	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
 	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	37	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
 	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	39	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
 	40	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	41	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	42	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
+	44	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
 	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
 	47	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	48	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
+	51	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	53	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
 	54	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	55	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
+	58	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
 	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	60	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
 	61	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	62	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	63	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	65	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	48
 	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
 	68	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	69	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	70	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	72	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	48
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	74	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
 	75	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	76	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	77	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	79	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	79	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	48
 	80	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	81	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
 	82	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	83	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	84	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	85	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	86	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	86	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	48
 	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	88	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
 	89	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	90	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	91	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	93	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	93	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	48
 	94	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	95	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
 	96	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	97	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	98	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
 	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	100	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	56
+	100	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	48
 	101	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	102	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	101
 	103	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33

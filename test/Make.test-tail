@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.45 2006/08/22 00:12:15 fang Exp $
+#	$Id: Make.test-tail,v 1.46 2006/08/24 01:31:20 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -749,6 +749,7 @@ clean-prsimtests:
 	-$(RM_PATTERN) "*.prsimrc-diff"
 	-$(RM_PATTERN) "*.prsimckpt"
 	-$(RM_PATTERN) "*.prsimckpttest"
+	-$(RM_PATTERN) "*.prsimckpt-dump"
 	-$(RM_PATTERN) "*.prsimckpt-dupe"
 	-$(RM_PATTERN) "*.prsimckpt-outdump"
 	-$(RM_PATTERN) "*.prsimckpt-indump"

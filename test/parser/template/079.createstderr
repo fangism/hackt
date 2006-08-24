@@ -110,7 +110,7 @@ Persistent Object Manager text dump:
 	106	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	107	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	108	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	109	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	52
+	109	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	44
 	110	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	111	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	112	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	89

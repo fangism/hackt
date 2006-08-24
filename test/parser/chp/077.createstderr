@@ -29,7 +29,7 @@ Persistent Object Manager text dump:
 	25	##ADDR##	nindlist	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	34
+	28	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	26
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
 	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -39,7 +39,7 @@ Persistent Object Manager text dump:
 	35	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	34
+	38	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	26
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	40	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
 	41	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -49,7 +49,7 @@ Persistent Object Manager text dump:
 	45	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	48	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	35
+	48	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	27
 	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	44
 	51	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -59,7 +59,7 @@ Persistent Object Manager text dump:
 	55	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	56	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	35
+	58	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	27
 	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	60	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	44
 	61	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -69,7 +69,7 @@ Persistent Object Manager text dump:
 	65	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	68	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	35
+	68	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	27
 	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	44
 	71	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -79,7 +79,7 @@ Persistent Object Manager text dump:
 	75	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	76	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	78	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	78	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	30
 	79	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	80	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
 	81	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -89,7 +89,7 @@ Persistent Object Manager text dump:
 	85	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	88	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	88	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	30
 	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	90	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
 	91	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -99,7 +99,7 @@ Persistent Object Manager text dump:
 	95	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	96	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	97	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	98	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	98	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	30
 	99	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	100	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
 	101	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -109,7 +109,7 @@ Persistent Object Manager text dump:
 	105	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	106	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	107	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	108	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	108	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	30
 	109	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	110	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
 	111	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -119,7 +119,7 @@ Persistent Object Manager text dump:
 	115	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	116	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	117	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	118	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	118	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	30
 	119	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	120	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
 	121	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
@@ -129,7 +129,7 @@ Persistent Object Manager text dump:
 	125	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	126	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	127	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	128	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	38
+	128	##ADDR##	cnstpbc_	1	#HEAD#	#TAIL#	30
 	129	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	130	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	59
 	131	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33

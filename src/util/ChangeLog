@@ -2,6 +2,14 @@
 
 2006-08-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-02:
+	  Split-off packed_array into packed_offset_array, and
+		packed_array_generic into packed_offset_array_generic, 
+		where the non-offset variants assume an offest of 0's.  
+	  This saves 8B of memory per packed array when offset is
+		invariably 0.  
+
+
 	* HACKT-00-01-04-main-00-80-01:
 	  Added util/STL/back_inserter.h with valarray specialization.  
 

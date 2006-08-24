@@ -1721,7 +1721,7 @@ Persistent Object Manager text dump:
 	1717	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	1718	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	1719	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	1720	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
+	1720	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
 	1721	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
 	1722	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	52
 	1723	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33

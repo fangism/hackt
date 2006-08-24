@@ -2,7 +2,7 @@
 	\file "Object/sizes.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes.cc,v 1.2 2006/08/23 21:15:51 fang Exp $
+	$Id: sizes.cc,v 1.3 2006/08/24 01:31:13 fang Exp $
  */
 
 #include <iostream>
@@ -129,9 +129,9 @@
 #include "Object/ref/simple_nonmeta_instance_reference.h"
 #include "Object/ref/simple_nonmeta_value_reference.h"
 
-
 #include "util/multikey_map.h"
 #include "util/multikey.h"
+#include "util/packed_array.h"
 
 namespace HAC {
 namespace entity {
@@ -142,6 +142,8 @@ using util::memory::never_ptr;
 using util::memory::some_ptr;
 using util::memory::excl_ptr;
 using util::memory::count_ptr;
+using util::packed_array;
+using util::packed_array_generic;
 
 //=============================================================================
 /**
@@ -155,6 +157,10 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<excl_ptr<int> >(o);
 	__dump_class_size<some_ptr<int> >(o);
 	__dump_class_size<count_ptr<int> >(o);
+	// __dump_class_size<packed_array<1, size_t, char*> >(o);	// error
+	// TODO: need specialization on coeffs_type here
+	__dump_class_size<packed_array<4, size_t, char*> >(o);
+	__dump_class_size<packed_array_generic<size_t, char*> >(o);
 
 	o << "HAC::entity general classes:" << endl;
 	__dump_class_size<module>(o);

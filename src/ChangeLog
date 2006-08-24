@@ -5,6 +5,15 @@
 
 2006-08-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-02:
+	  util/packed_array.{h,tcc}: split-off non-offset versions
+		of packed_array classes, saving a bit of memory
+		on arrays with no offsets, such as all packed collections
+		in HAC and its intermediate forms.  
+	  Object sizes affected, and test suite has been updated
+		for all affected test cases.  
+
+
 	* HACKT-00-01-04-main-00-80-01:
 	  Diagnostics for class and structure sizes, 
 		prior to invasive surgery.
