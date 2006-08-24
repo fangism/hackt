@@ -1,13 +1,13 @@
 /**
 	\file "common/sizes.h"
 	How big is the struct?
-	$Id: sizes.h,v 1.1 2006/08/23 20:57:23 fang Exp $
+	$Id: sizes.h,v 1.2 2006/08/24 02:01:33 fang Exp $
  */
 
 #ifndef	__HAC_COMMON_SIZES_H__
 #define	__HAC_COMMON_SIZES_H__
 
-#include <iosfwd>
+#include <iostream>
 #include "util/what_fwd.h"
 
 namespace HAC {

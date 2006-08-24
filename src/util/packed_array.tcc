@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.17 2006/08/24 01:31:16 fang Exp $
+	$Id: packed_array.tcc,v 1.18 2006/08/24 02:01:34 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -284,7 +284,7 @@ PACKED_OFFSET_ARRAY_CLASS::first_key(void) const {
 PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
 typename PACKED_OFFSET_ARRAY_CLASS::key_type
 PACKED_OFFSET_ARRAY_CLASS::last_key(void) const {
-	return sizes +offset -ones;
+	return this->sizes +this->offset -parent_type::ones;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -298,7 +298,7 @@ bool
 PACKED_OFFSET_ARRAY_CLASS::range_check(const key_type& k) const {
 	index_type i = 0;
 	for ( ; i < D; i++) {
-		if (k[i] -offset[i] >= sizes[i])
+		if (k[i] -this->offset[i] >= this->sizes[i])
 			return false;
 	}
 	return true;
@@ -312,8 +312,8 @@ PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
 typename PACKED_OFFSET_ARRAY_CLASS::index_type
 PACKED_OFFSET_ARRAY_CLASS::key_to_index(const key_type& k) const {
 	const key_type diff(k -offset);
-	return std::inner_product(diff.begin(), &diff.back(), coeffs.begin(), 
-		diff.back());
+	return std::inner_product(diff.begin(), &diff.back(), 
+		this->coeffs.begin(), diff.back());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -321,7 +321,7 @@ PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
 // T&
 typename PACKED_OFFSET_ARRAY_CLASS::reference
 PACKED_OFFSET_ARRAY_CLASS::operator [] (const key_type& k) {
-	return values[key_to_index(k)];
+	return this->values[key_to_index(k)];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -329,16 +329,16 @@ PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
 // const T&
 typename PACKED_OFFSET_ARRAY_CLASS::const_reference
 PACKED_OFFSET_ARRAY_CLASS::operator [] (const key_type& k) const {
-	return values[key_to_index(k)];
+	return this->values[key_to_index(k)];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PACKED_OFFSET_ARRAY_CLASS::dump(ostream& o) const {
-	o << "size = " << sizes <<
-		", offset = " << offset << 
-		", coeffs = " << coeffs << endl;
+	o << "size = " << this->sizes <<
+		", offset = " << this->offset << 
+		", coeffs = " << this->coeffs << endl;
 	return parent_type::dump_values(o << "values = ") << endl;
 }
 
@@ -695,8 +695,8 @@ PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::packed_offset_array_generic(
 		const key_type& s, const key_type& o) :
 		parent_type(s), offset(o) {
-	INVARIANT(dim == o.size());
-	reset_coeffs();
+	INVARIANT(this->dim == o.size());
+	parent_type::reset_coeffs();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -711,14 +711,14 @@ PACKED_OFFSET_ARRAY_GENERIC_CLASS::~packed_offset_array_generic() { }
 PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::key_type
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::first_key(void) const {
-	return offset;
+	return this->offset;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::key_type
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::last_key(void) const {
-	return sizes +offset -key_type(dim, 1);
+	return this->sizes +this->offset -key_type(this->dim, 1);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -731,9 +731,9 @@ PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 bool
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::range_check(const key_type& k) const {
 	index_type i = 0;
-	for ( ; i < index_type(dim); i++) {
-		const index_type k_diff = k[i] -offset[i];
-		if (k_diff >= sizes[i]) {
+	for ( ; i < index_type(this->dim); i++) {
+		const index_type k_diff = k[i] -this->offset[i];
+		if (k_diff >= this->sizes[i]) {
 			return false;
 		}
 	}
@@ -747,33 +747,33 @@ PACKED_OFFSET_ARRAY_GENERIC_CLASS::range_check(const key_type& k) const {
 PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::index_type
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::key_to_index(const key_type& k) const {
-	const key_type diff(k -offset);
-	return std::inner_product(diff.begin(), &diff.back(), coeffs.begin(), 
-		diff.back());
+	const key_type diff(k -this->offset);
+	return std::inner_product(diff.begin(), &diff.back(), 
+		this->coeffs.begin(), diff.back());
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::reference
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::operator [] (const key_type& k) {
-	return values[key_to_index(k)];
+	return this->values[key_to_index(k)];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_OFFSET_ARRAY_GENERIC_CLASS::const_reference
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::operator [] (const key_type& k) const {
-	return values[key_to_index(k)];
+	return this->values[key_to_index(k)];
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 ostream&
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::dump(ostream& o) const {
-	o << "size = " << sizes <<
-		", offset = " << offset <<
-		", coeffs = " << coeffs << endl;
-	return dump_values(o << "values = ") << endl;
+	o << "size = " << this->sizes <<
+		", offset = " << this->offset <<
+		", coeffs = " << this->coeffs << endl;
+	return this->dump_values(o << "values = ") << endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -781,7 +781,7 @@ PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 ostream&
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::write(ostream& o) const {
 	parent_type::write(o);
-	offset.write(o);
+	this->offset.write(o);
 	return o;
 }
 
@@ -790,7 +790,7 @@ PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 istream&
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::read(istream& i) {
 	parent_type::read(i);
-	offset.read(i);
+	this->offset.read(i);
 	return i;
 }
 

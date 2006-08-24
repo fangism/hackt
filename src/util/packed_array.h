@@ -2,7 +2,7 @@
 	\file "util/packed_array.h"
 	Fake multidimensional array/block/slice, implemented as a
 	specially indexed vector.  
-	$Id: packed_array.h,v 1.14 2006/08/24 01:31:15 fang Exp $
+	$Id: packed_array.h,v 1.15 2006/08/24 02:01:33 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_H__
@@ -506,7 +506,7 @@ public:
 
 	explicit
 	packed_offset_array_generic(const key_type& s) :
-		parent_type(s), offset(dim, 0) { }
+		parent_type(s), offset(this->dim, 0) { }
 
 	packed_offset_array_generic(const key_type& s, const key_type& o);
 
@@ -515,7 +515,7 @@ public:
 	/// ranged copy-constructor
 	packed_offset_array_generic(const packed_offset_array_generic& a, 
 		const key_type& l, const key_type& u) :
-		parent_type(a, l, u), offset(dim, 0) { }
+		parent_type(a, l, u), offset(this->dim, 0) { }
 
 	~packed_offset_array_generic();
 
