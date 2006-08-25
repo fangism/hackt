@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.46 2006/08/24 01:31:20 fang Exp $
+#	$Id: Make.test-tail,v 1.47 2006/08/25 05:47:52 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -91,12 +91,22 @@ HACO_FLAGS += -I$(srcdir)
 		"\"$(HACKT_COMPILE_ERROR_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
+# dummy test for when make variable is empty
+.hacktcmpltest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(CHMOD) +x $@
+
 .hac.hacktobjtest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_OBJ_TEST_SH) "\"$(HACKT_COMPILE_EXE) $(HACO_FLAGS)\"" \
 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
 		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
+	@$(CHMOD) +x $@
+
+# dummy test for when make variable is empty
+.hacktobjtest:
+	@$(ECHO) "#!$(SHELL)" > $@
 	@$(CHMOD) +x $@
 
 .haco.haco-u:
@@ -117,6 +127,14 @@ HACO_FLAGS += -I$(srcdir)
 		"\"$(ANALYZE_DIFF_AWK)\"" \
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
+
+# dummy test for when make variable is empty
+.hacktunrolltest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(CHMOD) +x $@
+
+.unrollstderr:
+	@$(TOUCH) $@
 
 .haco-u.haco-c:
 	$(HACKT_CREATE_EXE) $< $@
@@ -140,12 +158,24 @@ HACO_FLAGS += -I$(srcdir)
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
+# dummy test for when make variable is empty
+.hacktcreatetest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(CHMOD) +x $@
+
+.createstderr:
+	@$(TOUCH) $@
+
 .hac.hacktcreatefromhacotest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_CREATE_FROM_HACO_TEST_SH) "\"$(HACKT_CREATE_EXE)\"" \
 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
 		$* "\"$(HACKT_OBJ_DIFF_FILTER)\"" >> $@
+	@$(CHMOD) +x $@
+
+.hacktcreatefromhacotest:
+	@$(ECHO) "#!$(SHELL)" > $@
 	@$(CHMOD) +x $@
 
 .haco-c.haco-a:
@@ -173,6 +203,14 @@ HACO_FLAGS += -I$(srcdir)
 		"\"$(POM_INDEX_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
 
+# dummy test for when make variable is empty
+.hacktalloctest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(CHMOD) +x $@
+
+.allocstderr:
+	@$(TOUCH) $@
+
 # does a 3-way difference test
 .hac.hacktallocfromhacotest:
 	@$(ECHO) "#!$(SHELL)" > $@
@@ -181,6 +219,11 @@ HACO_FLAGS += -I$(srcdir)
 		"\"$(HACKT_OBJDUMP_EXE)\"" $(srcdir) \
 		$* "\"$(ALLOC_FILTER)\"" >> $@
 	@$(CHMOD) +x $@
+
+.hacktallocfromhacotest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(CHMOD) +x $@
+
 
 # .hac.hacktallocfromunrolltest:
 # 	@$(ECHO) "#!$(SHELL)" > $@
@@ -198,6 +241,10 @@ HACO_FLAGS += -I$(srcdir)
 	@$(ECHO) "# \"$@\"" >> $@
 	@$(ECHO) $(HACKT_CFLAT_TEST_SH) "\"$(HACKT_CFLAT_PRSIM_EXE)\"" \
 		$(srcdir) $* >> $@
+	@$(CHMOD) +x $@
+
+.hacktcflattest:
+	@$(ECHO) "#!$(SHELL)" > $@
 	@$(CHMOD) +x $@
 
 .hac.hacktcflatlvstest:
@@ -252,8 +299,6 @@ HACO_FLAGS += -I$(srcdir)
 .hacktprsdottest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(CHMOD) +x $@
-
-CLEANFILES += .hacktprsdottest
 
 # by default we produce the figures using optimized expression netlists -O1
 # All thevarious graphviz filter programs accept the DOT language for input.  
@@ -369,6 +414,10 @@ endif
 	$(ECHO) "$(HACKT_PRSIM_CKPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@
 	@$(CHMOD) +x $@
 
+.prsimckpttest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(CHMOD) +x $@
+
 .prsimrc.prsimopttest:
 	@$(ECHO) "#!$(SHELL)" > $@
 	@$(ECHO) "# \"$@\"" >> $@
@@ -376,6 +425,22 @@ endif
 		$(AWK) '{ntok=split($$0, toks); print toks[ntok]; }'` ; \
 	$(ECHO) "$(HACKT_PRSIM_OPT_TEST_SH) \"$(HACKT_PRSIM_EXE) -b -I$(srcdir)\" $$obj $<" >> $@
 	@$(CHMOD) +x $@
+
+.prsimopttest:
+	@$(ECHO) "#!$(SHELL)" > $@
+	@$(CHMOD) +x $@
+
+
+BOGUS_TESTS = .hacktcmpltest .hacktobjtest .hacktunrolltest \
+	.hacktcreatefromhacotest .hacktcreatetest \
+	.hacktallocfromhacotest .hacktalloctest \
+	.hacktcflattest .hacktprsdottest \
+	.prsimtest .prsimckpttest .prsimopttest
+
+BOGUS_TARGETS = .hac .unrollstderr .createstderr .allocstderr \
+	$(BOGUS_TESTS)
+
+CLEANFILES += $(BOGUS_TARGETS)
 
 CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
 	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.35 2006/08/23 20:57:13 fang Exp $
+#	$Id: TODO,v 1.36 2006/08/25 05:47:42 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -95,12 +95,6 @@ built-in channel types
 	Maintain footprint collection of each type mentioned.  
 	Is there a way to name a channel's structural member, since
 		formals are not named???
-
-===============================================================================
-complete type creation: (20060128)
-	The algorithm for hierarchical ID allocation is horked.
-	Substitute ring-nodes with union-finds.  
-	[Status: complete 20060314]
 
 ===============================================================================
 loop development:
@@ -240,11 +234,7 @@ HACKT template stuff:
 ===============================================================================
 enhancements:
 
-Library/Utilities:
-ICE.h:
-	add ICE_ASSERT combined INVARIANT with ICE macro
-
-Error message:
+Diagnostics:
 	assigning already assigned variables could have more precise msg:
 		(see parser/param/048.in case)
 
@@ -290,14 +280,6 @@ parser:
 LANGUAGES:
 	Is there any need to support the addition of languages
 		with something like @LANG { ... }?
-
-PRS and CHP
-
-need to handle loops and conditionals *around* prs { ... } bodies
-	need intermediate representation support for conditional PRS (DONE)
-	Resolution (20060716):
-		prs {...} cannot appear inside loops/conditionals,
-		neither can typedefs, only instance management.  
 
 SPEC:
 	support for 'inline' attribute to flatten subinstances into 

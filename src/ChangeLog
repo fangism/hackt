@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03:
+	  Added ICE_INVARIANT macro, updated util/likely.h, 
+		updated TODO and Object/devel_switches.h
+	  Some distribution clean-up in test/ directory.
+
+
 2006-08-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-02:

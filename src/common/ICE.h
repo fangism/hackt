@@ -1,7 +1,7 @@
 /**
 	\file "common/ICE.h"
 	Macros for internal compiler errors.  
-	$Id: ICE.h,v 1.4 2005/12/13 04:15:44 fang Exp $
+	$Id: ICE.h,v 1.5 2006/08/25 05:47:46 fang Exp $
  */
 
 #ifndef	__COMMON_ICE_H__
@@ -10,6 +10,7 @@
 #include <iosfwd>
 #include "util/macros.h"
 #include "util/attributes.h"
+#include "util/likely.h"
 
 /**
 	Standard greeting for internal compiler errors.  
@@ -36,10 +37,29 @@
 	{ diagnostic }							\
 	ICE_EXIT(ostr);
 
+/**
+	When unreachable code is reached!
+ */
 #define	ICE_NEVER_CALL(ostr)						\
 	ICE_GREET(ostr);						\
 	ostr << ICE_never_call << endl;					\
 	ICE_EXIT(ostr)
+
+/**
+	More verbose assertion failures.  
+ */
+#ifdef	DISABLE_INVARIANT
+#define	ICE_INVARIANT(pred)
+#else
+#define	ICE_INVARIANT(pred)						\
+	if (UNLIKELY(!pred)) {						\
+		ICE_GREET(ostr);					\
+		std::cerr << "assert failed: `" # pred "\'" 		\
+			<< std::endl;					\
+		ICE_EXIT(std::cerr)					\
+	}
+#endif
+
 
 namespace HAC {
 

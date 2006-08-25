@@ -1,6 +1,6 @@
 to do list:
 
-#	$Id: TODO,v 1.23 2006/05/06 22:25:23 fang Exp $
+#	$Id: TODO,v 1.24 2006/08/25 05:47:40 fang Exp $
 
 this TODO list is way outdated... clean TODO list.
 Pay more attention to the src/ChangeLog.  
@@ -37,5 +37,13 @@ list of things accomplished in 0.1.3 series:
 	Documentation: add documentation headers to beginning of
 		every source file, so doxygen will create file
 		inclusion dependence graphs! (*done* -- 10/09/04)
+
+-------------------------------------------------------------------------------
+PACKAGING
+
+	Write an installed script (init.csh) that sets environment variables
+and paths automatically, adjusting library paths, MAN_PATH, etc...
+One should be able to switch between installations in different locations
+by sourcing these scripts.  
 
 -------------------------------------------------------------------------------

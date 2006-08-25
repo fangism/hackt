@@ -1,0 +1,8 @@
+"test/quarantine/README"
+
+a.k.a "The Bug Jar"
+
+This directory is for adding test cases that are currently problematic.
+Tests may be removed, preferably relocated to another test directory,
+once they have been reduced, analyzed, or fixed.  
+

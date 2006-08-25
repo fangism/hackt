@@ -1,5 +1,13 @@
 # "test/ChangeLog"
 
+2006-08-24	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03:
+	  Added quarantine directory for bug test cases.
+	  Added .*test dummy targets to Make.test-tail.
+	  Cleaning bogus suffix-only targets.  
+
+
 2006-08-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-61:

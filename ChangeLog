@@ -1,5 +1,11 @@
 "ChangeLog"
 
+2006-08-24	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03:
+	  configure.ac: added test/quarantine/Makefile to output list.
+
+
 2006-08-22	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80:

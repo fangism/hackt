@@ -3,7 +3,7 @@
 	Macros for static branch prediction.  
 	Idea from linux kernel code.  
 
-	$Id: likely.h,v 1.3 2006/02/25 04:55:03 fang Exp $
+	$Id: likely.h,v 1.4 2006/08/25 05:47:48 fang Exp $
  */
 #ifndef	__UTIL_LIKELY_H__
 #define	__UTIL_LIKELY_H__
@@ -18,12 +18,14 @@
 	I've also seen definition using !!(x)
 ***/
 #ifdef HAVE_BUILTIN_EXPECT
-	#define	LIKELY(x)	__builtin_expect(!!(x), 1)
-	#define UNLIKELY(x)	__builtin_expect(!!(x), 0)
+	#define	LIKELY(x)	__builtin_expect((x), 1)
+	#define UNLIKELY(x)	__builtin_expect((x), 0)
+/*	#define	LIKELY(x)	__builtin_expect(!!(x), 1)	*/
+/*	#define UNLIKELY(x)	__builtin_expect(!!(x), 0)	*/
 #else
 	#define	LIKELY(x)	(x)
 	#define UNLIKELY(x)	(x)
 #endif
 
-#endif	// __UTIL_LIKELY_H__
+#endif	/* __UTIL_LIKELY_H__ */
 

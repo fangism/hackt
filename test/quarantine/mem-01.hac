@@ -1,0 +1,113 @@
+/***
+	\file "mem-01.hac"
+
+REMARKS:
+For large arrays, unrolling dies running out of memory, need to investigate...
+Known to choke on 40 x 40
+
+DIAGNOSIS:
+	Too much copied instance collection information.
+
+Priority: HIGH
+
+Solution (proposed): use instance placeholders, and refactor out base info.
+***/
+
+defproc globals (
+	bool Vdd, GND, vdd, gnd, _pReset, _sReset
+	)
+{
+	vdd=Vdd;
+	GND=gnd;
+
+	prs {
+		~_pReset -> vdd+
+		vdd -> gnd-
+	}
+}
+
+
+defproc gadfly (bool d[2]; bool t,f)
+{
+	d[0]=f;
+	d[1]=t;
+}
+
+defproc ch1of2 (bool d[2]; bool t,f)
+{
+	d[0]=f;
+	d[1]=t;
+}
+defproc e1of2 (bool d[2]; bool t,f,e)
+{
+	d[0]=f;
+	d[1]=t;
+}
+defproc snicker (gadfly pb; ch1of2 b; bool w)
+{
+	prs {
+		pb.t | pb.f -> b.t-
+		pb.t | pb.f -> b.f-
+		pb.t | pb.f -> w-
+	}
+}
+
+defproc doodle (
+	snicker tusk;
+	snicker puppy;
+	snicker copy[4]
+) { }
+
+
+defproc knickknack(
+	snicker IMc1[4];
+	snicker IMc0[3];
+	snicker IMd[4][4]
+) {}
+	
+
+defproc flubflub(
+	snicker imp[5];
+	snicker demon[5];
+	snicker devil[4];
+	snicker BSD[8][4]
+) {}
+
+
+defproc ickypoo (
+	doodle sniffle[8][4];
+	knickknack whack;
+	flubflub flam;
+	snicker wor[3];
+	snicker x[2], y[6];
+	snicker cracker;
+	snicker dee[8][5], dum[8][4]
+) { }
+
+defproc hohoho (
+	globals gl;
+	e1of2 in[8][4];
+	e1of2 out[16];
+	e1of2 cin, cout;
+	e1of2 book, worm;
+	ickypoo p
+) {
+	e1of2 l[8][4][4];
+	e1of2 a[4][4], b[4][4], c[4][4], d[4][4];
+	e1of2 e[4][4], f[4][4], g[4][4], h[4][4];
+	l[0] = a;
+}
+
+// enlarge to test memory
+// 10x10 take 1G+ of memory, 
+// ~20 sec to unroll, ~30 s to create, ~35 s to alloc.
+hohoho rum[10][10];
+
+/** FILE SIZES as of HACKT-00-01-04-main-00-80-03
+-rw-r--r-- 1 user      1568 Aug 24 16:09 mem-01.hac
+-rw-r--r-- 1 user     82862 Aug 24 16:09 mem-01.haco
+-rw-r--r-- 1 user 159202524 Aug 24 16:16 mem-01.haco-a
+-rw-r--r-- 1 user 145855624 Aug 24 16:15 mem-01.haco-c
+-rw-r--r-- 1 user 137365327 Aug 24 16:10 mem-01.haco-u
+**/
+
