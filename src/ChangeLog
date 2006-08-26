@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-01:
+	  Welcome to the instance-collection rewrite branch!
+	  Plans: replace deep-copy strucutres of instance/value collections
+		with placeholders and back-references.  
+	  Benefits: reducing memory footprint (and object) by at least
+		an order of magnitude.
+	  Risks: highly invasive reworking of instance collection
+		and classes that work immediately with them.  
+	  Early revisions will attempt to mark the cuts for all affected code.
+	  This first revision DOES NOT COMPILE, welcome to the bleeding edge.
+
+
 2006-08-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03:

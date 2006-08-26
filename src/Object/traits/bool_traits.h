@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.13 2006/06/27 20:32:23 fang Exp $
+	$Id: bool_traits.h,v 1.13.8.1 2006/08/26 22:05:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -10,6 +10,7 @@
 
 #include "Object/traits/class_traits.h"
 #include "Object/traits/pbool_traits.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -53,6 +54,10 @@ struct class_traits<bool_tag> {
 
 	typedef	bool_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+#if USE_INSTANCE_PLACEHOLDERS || 1
+	typedef	datatype_instance_placeholder
+					instance_placeholder_parent_type;
+#endif
 	typedef	null_collection_type_manager<tag_type>
 					collection_type_manager_parent_type;
 	template <size_t D>

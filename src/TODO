@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.36 2006/08/25 05:47:42 fang Exp $
+#	$Id: TODO,v 1.36.2.1 2006/08/26 22:05:05 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -203,6 +203,17 @@ hackt diff (or objdiff):
 	also consider implementing this as a script in combination
 		with executable.  
 		run unix diff first, etc...
+
+REWORK:
+	give developers option whether or not to
+	derive classes safely from a common 'persistent' base?
+	Is there an alternative to remove this level of inheritance? of course.
+	Eventually replace current scheme with single-pass 
+	serialization without having to load entire binary in memory...
+	Will save considerable memory.
+
+dictionaries:
+	for strings and common value compression.  
 
 (200601--)
 Need consistency checking between different ways of generating

@@ -1,21 +1,21 @@
 /**
-	\file "Object/inst/instance_collection_base.h"
+	\file "Object/inst/instance_placeholder_base.h"
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.12.32.1 2006/08/26 22:05:09 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.1 2006/08/26 22:05:18 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
-#define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
+#ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
+#define	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
 
 #include <string>
 #include "util/macros.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -34,7 +34,7 @@ class const_range_list;
 class const_index_list;
 class param_expr;
 class const_param_expr_list;
-class physical_instance_collection;
+class physical_instance_placeholder;
 class unroll_context;
 using std::list;
 using std::istream;
@@ -46,8 +46,19 @@ using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
 
+/**
+	Physical instance hierarchy information does not belong
+	in placeholders!
+	Goal: 0
+ */
+#define	PLACEHOLDER_SUPER_INSTANCES		0
+
 //=============================================================================
 /**
+	This class was originally instance_collection_base, 
+	but it has been deemed appropriate to separate placeholders
+	(which belong in scopes) from their actual collection (in footprints).
+
 	Base class for instantiation objects.  Recall that instantiations
 	may appear both inside and outside definitions.  Instantiations
 	inside definitions will build as part of the definitions, 			whereas those outside definitions will register as actual 
@@ -68,12 +79,8 @@ using util::memory::count_ptr;
 		statements per collection, but they were removed on the
 		HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref branch.
  */
-class instance_collection_base : 
-#if !USE_INSTANCE_PLACEHOLDERS
-		public object, 
-#endif
-		public persistent {
-	typedef	instance_collection_base	this_type;
+class instance_placeholder_base : public object, public persistent {
+	typedef	instance_placeholder_base	this_type;
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
 	// should be consistent with 
@@ -88,7 +95,6 @@ public:
 	typedef	never_ptr<const substructure_alias>
 						super_instance_ptr_type;
 protected:
-#if !USE_INSTANCE_PLACEHOLDERS
 	/**
 		Back-pointer to the namespace to which this instantiation
 		belongs.  
@@ -118,19 +124,18 @@ protected:
 		Wants to be const.  
 	 */
 	size_t				dimensions;
-#else
-	// subclasses should contain reference back-links to placeholders
-#endif
 
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
 
+	// super instances do not belong in placeholders
+#if PLACEHOLDER_SUPER_INSTANCES
 	/**
 		Pointer to parent super instance.  
 		Added 2005-07-10.
 		If top-level instance item, then this is NULL.  
 		TODO: decide what to do about persistence.  
-		Does this only belong in physical_instance_collection?
+		Does this only belong in physical_instance_placeholder?
 		No, EVERYTHING may have a super, even parameters.  
 
 		2005-07-11:
@@ -144,18 +149,16 @@ protected:
 		parent and children.  
 	 */
 	super_instance_ptr_type		super_instance;
+#endif
 protected:
-#if !USE_INSTANCE_PLACEHOLDERS
 	/**
 		Private, dimensions-specific construct, intended for
 		childrens' use only.  
 	 */
 	explicit
-	instance_collection_base(const size_t d) :
-		object(), 
-		persistent(), 
-		owner(), key(), dimensions(d), 
-		super_instance() { }
+	instance_placeholder_base(const size_t d) :
+		object(), persistent(), owner(), key(), 
+		dimensions(d) { }
 
 	/**
 		Partial copy-constructor, copies everything 
@@ -163,46 +166,37 @@ protected:
 		instantiation statements), and the super_instance pointer, 
 		which should be NULL anyhow.  
 	 */
-	instance_collection_base(const this_type& t, const footprint&) :
-		object(), 
-		persistent(), 
-		owner(t.owner), key(t.key), 
-		dimensions(t.dimensions),
-		super_instance() { }
-#endif
+	instance_placeholder_base(const this_type& t, const footprint&) :
+		object(), persistent(), owner(t.owner), key(t.key), 
+		dimensions(t.dimensions) { }
 
 public:
-#if !USE_INSTANCE_PLACEHOLDERS
 	// o should be reference, not pointer
-	instance_collection_base(const scopespace& o, const string& n, 
+	instance_placeholder_base(const scopespace& o, const string& n, 
 		const size_t d);
-#endif
 
-virtual	~instance_collection_base();
+virtual	~instance_placeholder_base();
 
-#if !USE_INSTANCE_PLACEHOLDERS
 /**
+	TODO: rename this after reworking instances.
 	Makes a deep copy of the instance collection for
 	the sake of mapping in the footprint's instance collection map.
 	This does not make a precise deep copy of every field, 
 	but enough for the the unroller to work with.  
 	The footprint argument is just for distiguishing constructors.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
 #define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
-	instance_collection_base*					\
+	instance_placeholder_base*					\
 	make_instance_collection_footprint_copy(const footprint&) const
 
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 #endif
 
-#if USE_INSTANCE_PLACEHOLDERS
-virtual	size_t
-	get_dimensions(void) const = 0;
-#else
 	size_t
 	get_dimensions(void) const { return dimensions; }
-#endif
 
+#if PLACEHOLDER_SUPER_INSTANCES
 	bool
 	is_subinstance(void) const { return super_instance; }
 
@@ -214,14 +208,13 @@ virtual	size_t
 		INVARIANT(!super_instance);
 		super_instance = super_instance_ptr_type(&a);
 	}
-
-#if 0
-	good_bool
-	create_super_instance(footprint&);
 #endif
 
+	// inappropriate for placeholders
+#if 0
 virtual	bool
 	is_partially_unrolled(void) const = 0;
+#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -243,8 +236,11 @@ protected:
 	ostream&
 	dump(ostream&) const;
 
+	// NOTE: cannot dump collection anymore with placeholder decoupling
+#if 0
 	ostream&
 	dump_collection_only(ostream&) const;
+#endif
 
 public:
 	/**
@@ -276,16 +272,13 @@ virtual	string
 	ostream&
 	dump_hierarchical_name(ostream&, const dump_flags&) const;
 
+#if PLACEHOLDER_SUPER_INSTANCES
 	size_t
 	hierarchical_depth(void) const;
+#endif
 
-#if USE_INSTANCE_PLACEHOLDERS
-virtual	string
-	hash_string(void) const = 0;
-#else
 virtual	string
 	hash_string(void) const { return key; }
-#endif
 
 /**
 	Why is this a count_ptr?  because type_references can be reused
@@ -305,10 +298,8 @@ virtual	count_ptr<const fundamental_type_reference>
 	never_ptr<const definition_base>
 	get_base_def(void) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
 	owner_ptr_type
 	get_owner(void) const { return owner; }
-#endif
 
 protected:
 	// to grant access to param_value_collection
@@ -341,7 +332,7 @@ public:
 	is_template_dependent(void) const;
 
 public:
-#if !USE_INSTANCE_PLACEHOLDERS
+
 virtual	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const = 0;
 
@@ -349,7 +340,6 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const = 0;
-#endif
 
 virtual	const_index_list
 	resolve_indices(const const_index_list&) const = 0;
@@ -357,7 +347,8 @@ virtual	const_index_list
 private:
 	// utility functions for handling index collection (inlined)
 	void
-	collect_index_collection_pointers(persistent_object_manager& m) const;
+	collect_index_collection_pointers(
+		persistent_object_manager& m) const;
 
 	void
 	write_index_collection_pointers(
@@ -366,6 +357,7 @@ private:
 	void
 	load_index_collection_pointers(
 		const persistent_object_manager& m, istream&);
+
 protected:
 	// wrappers to provide consistent interface to children
 	void
@@ -379,12 +371,12 @@ protected:
 
 public:
 	/** just for convenience */
-	static const never_ptr<const instance_collection_base>	null;
-};	// end class instance_collection_base
+	static const never_ptr<const instance_placeholder_base>	null;
+};	// end class instance_placeholder_base
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
+#endif	// __HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
 
