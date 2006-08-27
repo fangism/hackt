@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.16 2006/07/30 05:49:12 fang Exp $
+	$Id: expr.cc,v 1.16.4.1 2006/08/27 07:51:49 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -28,7 +28,14 @@
 #include "AST/parse_context.h"
 
 // will need these come time for type-checking
+#include "Object/devel_switches.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder_base.h"
+#include "Object/inst/physical_instance_placeholder.h"
+#else
 #include "Object/inst/instance_collection_base.h"
+#include "Object/inst/physical_instance_collection.h"
+#endif
 #include "Object/def/definition_base.h"
 #include "Object/ref/aggregate_meta_value_reference.h"
 #include "Object/ref/aggregate_meta_instance_reference.h"
@@ -60,7 +67,6 @@
 #include "Object/type/template_actuals.h"
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/int_traits.h"
-#include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/meta_reference_union.h"
 
@@ -798,7 +804,11 @@ qualified_id::check_build(const context& c) const {
 	Performs unqualified lookup or qualified lookup of identifier.  
 	This is what id_expr::check_build() should call.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
+#endif
 qualified_id::lookup_instance(const context& c) const {
 	if (!absolute && size() == 1)
 		return c.lookup_instance(*parent_type::back());
@@ -921,17 +931,31 @@ inst_ref_expr::meta_return_type
 id_expr::check_meta_reference(const context& c) const {
 	STACKTRACE_VERBOSE;
 	// lookup_instance will check for unqualified references first
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const instance_placeholder_base>
+#else
 	const never_ptr<const instance_collection_base>
+#endif
 		o(qid->lookup_instance(c));
 	if (o) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const instance_placeholder_base>
+			inst(o.is_a<const instance_placeholder_base>());
+#else
 		const never_ptr<const instance_collection_base>
 			inst(o.is_a<const instance_collection_base>());
+#endif
 		if (inst) {
 			STACKTRACE("valid instance collection found");
 			// we found an instance which may be single
 			// or collective... info is in inst.
+#if USE_INSTANCE_PLACEHOLDERS
+			const never_ptr<const physical_instance_placeholder>
+				pinst(inst.is_a<const physical_instance_placeholder>());
+#else
 			const never_ptr<const physical_instance_collection>
 				pinst(inst.is_a<const physical_instance_collection>());
+#endif
 			if (pinst) {
 				// physical instance collection
 				return pinst->make_meta_instance_reference();
@@ -970,11 +994,20 @@ inst_ref_expr::nonmeta_return_type
 id_expr::check_nonmeta_reference(const context& c) const {
 	typedef inst_ref_expr::nonmeta_return_type	return_type;
 	STACKTRACE_VERBOSE;
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const instance_placeholder_base>
+#else
 	const never_ptr<const instance_collection_base>
+#endif
 		o(qid->lookup_instance(c));	// not ->check_build(c);
 	if (o) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const instance_placeholder_base>
+			inst(o.is_a<const instance_placeholder_base>());
+#else
 		const never_ptr<const instance_collection_base>
 			inst(o.is_a<const instance_collection_base>());
+#endif
 		if (inst) {
 			STACKTRACE("valid instance collection found");
 			// we found an instance which may be single
@@ -1295,14 +1328,22 @@ member_expr::check_meta_reference(const context& c) const {
 	// current_definition_reference, don't lookup anywhere else!
 
 	// don't use context's general lookup
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const instance_placeholder_base> member_inst;
+#else
 	never_ptr<const instance_collection_base> member_inst;
+#endif
 	// NOTE: what about typedefs?  they should lookup using
 	// canonical definitions' scopespaces... is this happening?
 if (c.is_publicly_viewable()) {
 	// FINISH_ME(Fang);
 	const never_ptr<const object>
 		probe(base_def->lookup_nonparameter_member(*member));
+#if USE_INSTANCE_PLACEHOLDERS
+	member_inst = probe.is_a<const instance_placeholder_base>();
+#else
 	member_inst = probe.is_a<const instance_collection_base>();
+#endif
 	if (!member_inst) {
 		base_def->what(cerr << "ERROR: ") << " " <<
 			base_def->get_qualified_name() << 

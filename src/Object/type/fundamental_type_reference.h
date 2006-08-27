@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.6 2006/01/26 21:33:26 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.6.48.1 2006/08/27 07:52:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -12,6 +12,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 
+#include "Object/devel_switches.h"
 #include "Object/type/type_reference_base.h"
 #include "Object/common/util_types.h"
 #include "Object/type/template_actuals.h"
@@ -23,7 +24,11 @@ class token_identifier;
 
 namespace entity {
 class definition_base;
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+#else
 class instance_collection_base;
+#endif
 class scopespace;
 class subinstance_manager;	// from "Object/inst/subinstance_manager.h"
 using parser::token_identifier;
@@ -149,10 +154,18 @@ virtual	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO = 0;
 
 public:
 
+#if USE_INSTANCE_PLACEHOLDERS
+// rename macro and function name later after committing rework
+#define	MAKE_INSTANCE_COLLECTION_PROTO					\
+	excl_ptr<instance_placeholder_base>				\
+	make_instance_collection(const never_ptr<const scopespace> s, 	\
+		const token_identifier& id, const size_t d) const
+#else
 #define	MAKE_INSTANCE_COLLECTION_PROTO					\
 	excl_ptr<instance_collection_base>				\
 	make_instance_collection(const never_ptr<const scopespace> s, 	\
 		const token_identifier& id, const size_t d) const
+#endif
 
 virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 

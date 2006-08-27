@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17 2006/06/26 01:46:13 fang Exp $
+	$Id: value_collection.h,v 1.17.8.1 2006/08/27 07:52:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -129,7 +129,9 @@ protected:
 	value_collection(const this_type& t, const footprint& f);
 
 private:
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+#endif
 
 public:
 	value_collection(const scopespace& o, const string& n, 
@@ -143,6 +145,7 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream& o) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	void
 	attach_initial_instantiation_statement(
 		const initial_instantiation_statement_ptr_type i) {
@@ -154,6 +157,7 @@ virtual	ostream&
 
 	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const;
+#endif
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;
@@ -300,7 +304,9 @@ private:
 
 	value_array(const this_type&, const footprint&);
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
+#endif
 
 public:
 	value_array(const scopespace& o, const string& n);
@@ -389,8 +395,9 @@ public:
 private:
 	value_array(const this_type&, const footprint&);
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
-
+#endif
 public:
 	~value_array();
 

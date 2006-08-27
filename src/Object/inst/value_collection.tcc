@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20 2006/06/26 01:46:14 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.1 2006/08/27 07:52:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -154,12 +154,14 @@ VALUE_COLLECTION_CLASS::what(ostream& o) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 index_collection_item_ptr_type
 VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return this->initial_instantiation_statement_ptr->get_indices();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -542,6 +544,7 @@ VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::~value_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Partial deep copy for footprint map.  
  */
@@ -551,6 +554,7 @@ VALUE_ARRAY_CLASS::make_instance_collection_footprint_copy(
 		const footprint& f) const {
 	return new this_type(*this, f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
@@ -878,6 +882,7 @@ VALUE_SCALAR_CLASS::~value_array() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Deep copy-constructor for making a footprint copy of this collection.  
  */
@@ -887,6 +892,7 @@ VALUE_SCALAR_CLASS::make_instance_collection_footprint_copy(
 		const footprint& f) const {
 	return new this_type(*this, f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.22 2006/08/08 05:46:43 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.1 2006/08/27 07:52:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -30,6 +30,9 @@
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/unroll/port_connection.h"
 #include "util/stacktrace.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -55,7 +58,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::simple_meta_instance_reference(
-		const instance_collection_ptr_type pi) :
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_ptr_type pi
+#else
+		const instance_collection_ptr_type pi
+#endif
+		) :
 		common_base_type(), 
 		parent_type(), 
 		inst_collection_ref(pi) {

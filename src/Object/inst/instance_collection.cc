@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22 2006/07/30 05:49:21 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.1 2006/08/27 07:51:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -82,6 +82,7 @@ const never_ptr<const instance_collection_base>
 instance_collection_base::null(NULL);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Instantiation base constructor.  
 	The first time an instance is declared, its dimensions are
@@ -102,6 +103,7 @@ instance_collection_base::instance_collection_base(const scopespace& o,
 		dimensions(d), 
 		super_instance() {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_collection_base::~instance_collection_base() {

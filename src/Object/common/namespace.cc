@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.20 2006/08/04 02:15:11 fang Exp $
+ 	$Id: namespace.cc,v 1.20.4.1 2006/08/27 07:51:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -41,10 +41,15 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "AST/token_string.h"
 #include "AST/identifier.h"
 
+#include "Object/devel_switches.h"
 #include "Object/common/namespace.h"
 #include "Object/common/dump_flags.h"
 #include "Object/def/typedef_base.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#else
 #include "Object/inst/physical_instance_collection.h"
+#endif
 #include "Object/inst/param_value_collection.h"
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/expr/const_range.h"
@@ -254,8 +259,13 @@ scopespace::dump_for_definitions(ostream& o) const {
 		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
+#if USE_INSTANCE_PLACEHOLDERS
+				mem_fun(&instance_placeholder_base::pair_dump, 
+					instance_placeholder_base::null), 
+#else
 				mem_fun(&instance_collection_base::pair_dump, 
 					instance_collection_base::null), 
+#endif
 				o), 
 			_Select2nd<const_bin_sort::param_bin_type::value_type>()
 		)
@@ -283,8 +293,13 @@ scopespace::dump_for_definitions(ostream& o) const {
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
+#if USE_INSTANCE_PLACEHOLDERS
+				mem_fun(&instance_placeholder_base::pair_dump, 
+					instance_placeholder_base::null), 
+#else
 				mem_fun(&instance_collection_base::pair_dump,
 					instance_collection_base::null),
+#endif
 				o), 
 			_Select2nd<const_bin_sort::inst_bin_type::value_type>()
 		)
@@ -332,12 +347,20 @@ scopespace::lookup_namespace(const qualified_id_slice& id) const {
 	\return pointer to newly created instance if successful, 
 		else NULL.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
+#endif
 scopespace::add_instance(
 		const never_ptr<instantiation_statement_base> inst_stmt, 
 		const token_identifier& id, const bool cond) {
 	STACKTRACE("scopespace::add_instance(never_ptr<inst_stmt>, id)");
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef never_ptr<const instance_placeholder_base>	return_type;
+#else
 	typedef never_ptr<const instance_collection_base>	return_type;
+#endif
 	INVARIANT(id != "");
 	NEVER_NULL(inst_stmt);
 	// inst_stmt won't have a name yet!
@@ -345,8 +368,13 @@ scopespace::add_instance(
 	const size_t dim = inst_stmt->dimensions();
 	const never_ptr<object> probe(lookup_member_with_modify(id));
 if (probe) {
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<instance_placeholder_base>
+		probe_inst(probe.is_a<instance_placeholder_base>());
+#else
 	const never_ptr<instance_collection_base>
 		probe_inst(probe.is_a<instance_collection_base>());
+#endif
 	if (probe_inst) {
 		// make sure is not a template or port formal instance!
 		// can't append to those.  
@@ -430,7 +458,11 @@ if (probe) {
 	}
 } else {
 	// didn't exist before, just create and add new instance
+#if USE_INSTANCE_PLACEHOLDERS
+	excl_ptr<instance_placeholder_base> new_inst =
+#else
 	excl_ptr<instance_collection_base> new_inst =
+#endif
 		inst_stmt->get_type_ref()->make_instance_collection(
 			never_ptr<const scopespace>(this), id, dim);
 	// attach non-const back-reference
@@ -439,7 +471,11 @@ if (probe) {
 	// instantiation_statement pointer to it.  
 	INVARIANT(inst_stmt->get_name() == id);
 	NEVER_NULL(new_inst);
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const instance_placeholder_base>
+#else
 	const never_ptr<const instance_collection_base>
+#endif
 		ret(add_instance(new_inst));
 	INVARIANT(!new_inst.owned());
 	NEVER_NULL(ret);
@@ -452,10 +488,24 @@ if (probe) {
 	The unsafe version of adding an instance_collection to the 
 	named scope space.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
-scopespace::add_instance(excl_ptr<instance_collection_base>& i) {
+#endif
+scopespace::add_instance(
+#if USE_INSTANCE_PLACEHOLDERS
+		excl_ptr<instance_placeholder_base>& i
+#else
+		excl_ptr<instance_collection_base>& i
+#endif
+		) {
 	STACKTRACE("scopespace::add_instance(excl_ptr<instance_collection_base>&)");
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef never_ptr<const instance_placeholder_base>	return_type;
+#else
 	typedef never_ptr<const instance_collection_base>	return_type;
+#endif
 	return_type ret(i);
 	NEVER_NULL(i);
 	const string id(i->get_name());
@@ -675,8 +725,13 @@ scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 		n_b(o_p.is_a<name_space>());
 	const never_ptr<definition_base>
 		d_b(o_p.is_a<definition_base>());
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<instance_placeholder_base>
+		i_b(o_p.is_a<instance_placeholder_base>());
+#else
 	const never_ptr<instance_collection_base>
 		i_b(o_p.is_a<instance_collection_base>());
+#endif
 	const string& k(i.first);
 	if (n_b) {
 		ns_bin[k] = n_b;
@@ -720,8 +775,13 @@ scopespace::const_bin_sort::operator () (
 		n_b(o_p.is_a<const name_space>());
 	const never_ptr<const definition_base>
 		d_b(o_p.is_a<const definition_base>());
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const instance_placeholder_base>
+		i_b(o_p.is_a<const instance_placeholder_base>());
+#else
 	const never_ptr<const instance_collection_base>
 		i_b(o_p.is_a<const instance_collection_base>());
+#endif
 	const string& k = i.first;
 	if (n_b) {
 		ns_bin[k] = n_b;		INVARIANT(ns_bin[k]);
@@ -933,8 +993,13 @@ name_space::dump(ostream& o) const {
 		for_each(bins.param_bin.begin(), bins.param_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
+#if USE_INSTANCE_PLACEHOLDERS
+				mem_fun(&instance_placeholder_base::pair_dump, 
+					instance_placeholder_base::null), 
+#else
 				mem_fun(&instance_collection_base::pair_dump, 
 					instance_collection_base::null), 
+#endif
 				o), 
 			_Select2nd<const_bin_sort::param_bin_type::value_type>()
 		)
@@ -993,8 +1058,13 @@ name_space::dump(ostream& o) const {
 		for_each(bins.inst_bin.begin(), bins.inst_bin.end(), 
 		unary_compose(
 			bind2nd_argval(
+#if USE_INSTANCE_PLACEHOLDERS
+				mem_fun(&instance_placeholder_base::pair_dump_top_level,
+					instance_placeholder_base::null),
+#else
 				mem_fun(&instance_collection_base::pair_dump_top_level,
 					instance_collection_base::null),
+#endif
 				o), 
 			_Select2nd<const_bin_sort::inst_bin_type::value_type>()
 		)
@@ -1747,9 +1817,18 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 		add_definition(defp);
 		INVARIANT(!defp);
 	// ownership restored here!
+#if USE_INSTANCE_PLACEHOLDER
+	} else if (o.is_a<instance_placeholder_base>()) {
+#else
 	} else if (o.is_a<instance_collection_base>()) {
+#endif
+#if USE_INSTANCE_PLACEHOLDERS
+		excl_ptr<instance_placeholder_base>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
+#else
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
+#endif
 		add_instance(icbp);
 		INVARIANT(!icbp);
 		// NEED TO GUARANTEE THAT IT IS OWNED!

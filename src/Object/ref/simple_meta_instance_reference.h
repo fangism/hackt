@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.14 2006/08/08 05:46:42 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.14.4.1 2006/08/27 07:52:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -12,6 +12,7 @@
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/packed_array_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
@@ -63,6 +64,12 @@ public:
 	/// the instance collection base type
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::instance_placeholder_type
+					instance_placeholder_type;
+	typedef	never_ptr<const instance_placeholder_type>
+					instance_placeholder_ptr_type;
+#endif
 	/// the type of alias element contained by instance collections
 	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
@@ -84,8 +91,13 @@ private:
 protected:
 	simple_meta_instance_reference();
 public:
+#if USE_INSTANCE_PLACEHOLDERS
+	explicit
+	simple_meta_instance_reference(const instance_placeholder_ptr_type);
+#else
 	explicit
 	simple_meta_instance_reference(const instance_collection_ptr_type);
+#endif
 
 virtual	~simple_meta_instance_reference();
 

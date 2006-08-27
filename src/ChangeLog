@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-02:
+	  Does not compile.
+	  Enabled USE_INSTANCE_PLACEHOLDERS switch and continued to mark code 
+		revisions to use instance-placeholders, in AST/expr, 
+		scopespace, namespace, type-reference, instance-reference.
+	  More of the same coming.  
+
+
 2006-08-25	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-01:

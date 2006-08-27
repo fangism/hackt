@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.12.32.1 2006/08/26 22:05:09 fang Exp $
+	$Id: instance_collection_base.h,v 1.12.32.2 2006/08/27 07:52:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -145,7 +145,9 @@ protected:
 	 */
 	super_instance_ptr_type		super_instance;
 protected:
-#if !USE_INSTANCE_PLACEHOLDERS
+#if USE_INSTANCE_PLACEHOLDERS
+	instance_collection_base() : persistent(), super_instance() { }
+#else
 	/**
 		Private, dimensions-specific construct, intended for
 		childrens' use only.  
@@ -261,8 +263,13 @@ virtual	ostream&
 	ostream&
 	pair_dump_top_level(ostream& o) const;
 
+#if USE_INSTANCE_PLACEHOLDERS
+virtual	const string&
+	get_name(void) const = 0;
+#else
 	const string&
 	get_name(void) const { return key; }
+#endif
 
 virtual	string
 	get_qualified_name(void) const;

@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.22 2006/06/26 01:46:12 fang Exp $
+	$Id: instance_collection.h,v 1.22.8.1 2006/08/27 07:52:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -98,6 +98,10 @@ public:
 						instance_alias_base_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::instance_placeholder_type
+					instance_placeholder_type;
+#endif
 	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
 	typedef	typename traits_type::simple_meta_instance_reference_type
@@ -122,9 +126,16 @@ protected:
 public:
 	typedef	typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	never_ptr<const instance_placeholder_type>
+				instance_placeholder_ptr_type;
+#endif
 	typedef	never_ptr<const initial_instantiation_statement_type>
 				initial_instantiation_statement_ptr_type;
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	
+#endif
 	/**
 		All collections track the first instantiation statement,
 		for the sake of deducing the type.  
@@ -134,6 +145,11 @@ protected:
 	initial_instantiation_statement_ptr_type
 					initial_instantiation_statement_ptr;
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	/// requires a back-reference to the source collection placeholder
+	explicit
+	instance_collection(const instance_placeholder_ptr_type);
+#else
 	explicit
 	instance_collection(const size_t d) :
 		parent_type(d), collection_type_manager_parent_type(),
@@ -147,6 +163,7 @@ virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 public:
 	instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
+#endif
 
 virtual	~instance_collection();
 
@@ -159,6 +176,8 @@ virtual	ostream&
 	ostream&
 	dump_formal(ostream&) const;
 
+// collections don't need any information about instantiation statements
+#if !USE_INSTANCE_PLACEHOLDERS
 	void
 	attach_initial_instantiation_statement(
 		const initial_instantiation_statement_ptr_type i) {
@@ -178,6 +197,7 @@ virtual	ostream&
 
 	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const;
+#endif
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;
@@ -355,7 +375,9 @@ private:
 
 	instance_array(const this_type&, const footprint&);
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
+#endif
 
 public:
 	instance_array(const scopespace& o, const string& n);
@@ -460,21 +482,32 @@ public:
 							instance_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename parent_type::instance_placeholder_type
+					instance_placeholder_type;
+	typedef	typename parent_type::instance_placeholder_ptr_type
+					instance_placeholder_ptr_type;
+#endif
 private:
 	instance_type					the_instance;
 
 private:
 	instance_array();
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	explicit
 	instance_array(const this_type&);
 
 	instance_array(const this_type&, const footprint&);
 
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
-
+#endif
 public:
+#if USE_INSTANCE_PLACEHOLDERS
+	instance_array(const instance_placeholder_ptr_type);
+#else
 	instance_array(const scopespace& o, const string& n);
+#endif
 
 	~instance_array();
 

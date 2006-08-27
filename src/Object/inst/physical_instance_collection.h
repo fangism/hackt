@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.14 2006/06/03 00:15:01 fang Exp $
+	$Id: physical_instance_collection.h,v 1.14.8.1 2006/08/27 07:52:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -41,6 +41,9 @@ protected:
 	typedef	parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	physical_instance_collection() : parent_type() { }
+#else
 	explicit
 	physical_instance_collection(const size_t d) : parent_type(d) { }
 
@@ -49,9 +52,12 @@ protected:
 
 	physical_instance_collection(const this_type& t, const footprint& f) :
 		parent_type(t, f) { }
+#endif
 
 private:
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+#endif
 
 public:
 virtual	~physical_instance_collection();

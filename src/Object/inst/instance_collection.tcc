@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33 2006/08/18 23:56:12 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.1 2006/08/27 07:52:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -210,6 +210,7 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
 // class instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
 		const string& n, const size_t d) :
@@ -231,6 +232,7 @@ INSTANCE_COLLECTION_CLASS::instance_collection(const this_type& t,
 		initial_instantiation_statement_ptr(
 			t.initial_instantiation_statement_ptr) {
 }
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
@@ -284,6 +286,7 @@ INSTANCE_COLLECTION_CLASS::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Ripped off from instance_collection_base::formal_size_equivalent.  
  */
@@ -293,6 +296,7 @@ INSTANCE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 	NEVER_NULL(initial_instantiation_statement_ptr);
 	return initial_instantiation_statement_ptr->get_indices();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
@@ -539,6 +543,7 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::~instance_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Partial deep copy constructor for the footprint.  
  */
@@ -548,6 +553,7 @@ INSTANCE_ARRAY_CLASS::make_instance_collection_footprint_copy(
 		const footprint& f) const {
 	return new this_type(*this, f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -1246,6 +1252,7 @@ INSTANCE_SCALAR_CLASS::instance_array() : parent_type(0), the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array(const scopespace& o, const string& n) :
 		parent_type(o, n, 0), the_instance() {
@@ -1280,12 +1287,14 @@ INSTANCE_SCALAR_CLASS::instance_array(const this_type& t) :
 		parent_type(t),
 		the_instance() {
 }
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::~instance_array() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Deep (partial) copy-constructor for footprint.  
  */
@@ -1295,6 +1304,7 @@ INSTANCE_SCALAR_CLASS::make_instance_collection_footprint_copy(
 		const footprint& f) const {
 	return new this_type(*this, f);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18 2006/08/25 05:47:44 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.1 2006/08/27 07:51:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -46,7 +46,7 @@
 	and use back-references to the placeholders.  
 	Goal: 1
  */
-#define	USE_INSTANCE_PLACEHOLDERS		0
+#define	USE_INSTANCE_PLACEHOLDERS		1
 
 //=============================================================================
 
