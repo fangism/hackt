@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17 2006/07/04 07:26:20 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.1 2006/08/28 05:10:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -24,6 +24,9 @@
 #include "Object/def/template_formals_manager.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/ref/meta_value_reference_base.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
@@ -258,7 +261,13 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 	TODO: completely rewrite this.
  */
 count_ptr<const const_param>
-unroll_context::lookup_actual(const param_value_collection& p) const {
+unroll_context::lookup_actual(
+#if USE_INSTANCE_PLACEHOLDERS
+		const param_value_placeholder& p
+#else
+		const param_value_collection& p
+#endif
+		) const {
 	typedef	count_ptr<const const_param>	return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
@@ -287,7 +296,11 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 	// not the position of the template formal in its own list
 	// but in the current context!!!
 	// very awkward...
+#if USE_INSTANCE_PLACEHOLDERS
+	const instance_placeholder_base::owner_ptr_type
+#else
 	const instance_collection_base::owner_ptr_type
+#endif
 		p_owner(p.get_owner());
 	const never_ptr<const definition_base>
 		p_def(p_owner.is_a<const definition_base>());
@@ -322,7 +335,11 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 			const count_ptr<const meta_value_reference_base>
 				self(ret.is_a<const meta_value_reference_base>());
 			if (self) {
+#if USE_INSTANCE_PLACEHOLDERS
+				const never_ptr<const param_value_placeholder>
+#else
 				const never_ptr<const param_value_collection>
+#endif
 					pbase(self->get_coll_base());
 				if (pbase == &p) {
 				// need to safeguard against self-lookup

@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.1 2006/08/27 07:52:03 fang Exp $
+	$Id: value_collection.h,v 1.17.8.2 2006/08/28 05:10:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -96,6 +96,13 @@ public:
 						const_collection_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	// TODO: rename me!
+	typedef	typename traits_type::instance_placeholder_type
+						value_placeholder_type;
+	typedef	never_ptr<const value_placeholder_type>	value_placeholder_ptr_type;
+#endif
+
 	typedef typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
 	typedef	never_ptr<const initial_instantiation_statement_type>
@@ -103,6 +110,14 @@ public:
 	typedef	typename traits_type::value_reference_collection_type
 					value_reference_collection_type;
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	/**
+		This is a back-reference to the placeholder that resides in the 
+		enclosing scopespace, that contains the basic collection information, 
+		prior to unrolling.  
+	 */
+	value_placeholder_ptr_type	source_placeholder;
+#endif
 	/**
 		TODO: 20060214: eliminate static initial value analysis?
 
@@ -123,19 +138,25 @@ protected:
 					initial_instantiation_statement_ptr;
 
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	explicit
+	value_collection(const value_placeholder_ptr_type);
+#else
 	explicit
 	value_collection(const size_t d);
 
 	value_collection(const this_type& t, const footprint& f);
+#endif
 
 private:
 #if !USE_INSTANCE_PLACEHOLDERS
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
-#endif
 
 public:
 	value_collection(const scopespace& o, const string& n, 
 		const size_t d);
+#endif
+public:
 
 virtual	~value_collection();
 
@@ -184,6 +205,15 @@ public:
 
 	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const;
+
+#if USE_INSTANCE_PLACEHOLDERS
+	// use back-link
+	const string&
+	get_name(void) const;
+
+	size_t
+	get_dimensions(void) const;
+#endif
 
 	count_ptr<meta_value_reference_base>
 	make_meta_value_reference(void) const;
@@ -236,11 +266,11 @@ protected:
 	make_nonmeta_instance_reference(void) const;
 
 public:
-
+#if !USE_INSTANCE_PLACEHOLDERS
 	static
 	this_type*
 	make_array(const scopespace& o, const string& n, const size_t d);
-
+#endif
 public:
 	void
 	collect_transient_info(persistent_object_manager& m) const;

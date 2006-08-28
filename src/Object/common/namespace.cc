@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.20.4.1 2006/08/27 07:51:53 fang Exp $
+ 	$Id: namespace.cc,v 1.20.4.2 2006/08/28 05:09:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -47,10 +47,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/def/typedef_base.h"
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/physical_instance_placeholder.h"
+#include "Object/inst/param_value_placeholder.h"
 #else
 #include "Object/inst/physical_instance_collection.h"
-#endif
 #include "Object/inst/param_value_collection.h"
+#endif
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_range_list.h"
@@ -742,8 +743,13 @@ scopespace::bin_sort::operator () (const used_id_map_type::value_type& i) {
 			alias_bin[k] = t_b;
 		else	def_bin[k] = d_b;
 	} else if (i_b) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<param_value_placeholder>
+			p_b(i_b.is_a<param_value_placeholder>());
+#else
 		const never_ptr<param_value_collection>
 			p_b(i_b.is_a<param_value_collection>());
+#endif
 		if (p_b)
 			param_bin[k] = p_b;
 		else	inst_bin[k] = i_b;
@@ -794,8 +800,13 @@ scopespace::const_bin_sort::operator () (
 			def_bin[k] = d_b;	INVARIANT(def_bin[k]);
 		}
 	} else if (i_b) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const param_value_placeholder>
+			p_b(i_b.is_a<const param_value_placeholder>());
+#else
 		const never_ptr<const param_value_collection>
 			p_b(i_b.is_a<const param_value_collection>());
+#endif
 		if (p_b) {
 			param_bin[k] = p_b;	INVARIANT(param_bin[k]);
 		} else {
@@ -1817,7 +1828,7 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 		add_definition(defp);
 		INVARIANT(!defp);
 	// ownership restored here!
-#if USE_INSTANCE_PLACEHOLDER
+#if USE_INSTANCE_PLACEHOLDERS
 	} else if (o.is_a<instance_placeholder_base>()) {
 #else
 	} else if (o.is_a<instance_collection_base>()) {

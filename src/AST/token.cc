@@ -1,7 +1,7 @@
 /**
 	\file "AST/token.cc"
 	Class method definitions for HAC::parser, related to terminal tokens.
-	$Id: token.cc,v 1.7 2006/07/30 05:49:16 fang Exp $
+	$Id: token.cc,v 1.7.4.1 2006/08/28 05:09:54 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_token.cc,v 1.36.4.1 2005/12/11 00:45:11 fang Exp
  */
@@ -25,10 +25,15 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "AST/parse_context.h"
 
 #include "Object/def/built_in_datatype_def.h"
-#include "Object/inst/instance_collection_base.h"
 #include "Object/ref/meta_instance_reference_base.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#include "Object/inst/param_value_placeholder.h"
+#else
+#include "Object/inst/instance_collection_base.h"
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/param_value_collection.h"
+#endif
 #include "Object/ref/meta_reference_union.h"
 #include "Object/ref/nonmeta_instance_reference_base.h"
 #include "Object/expr/pint_const.h"
@@ -95,8 +100,13 @@ using entity::pint_traits;
 using entity::preal_traits;
 using entity::bool_traits;
 using entity::int_traits;
+#if USE_INSTANCE_PLACEHOLDERS
+using entity::physical_instance_placeholder;
+using entity::param_value_placeholder;
+#else
 using entity::physical_instance_collection;
 using entity::param_value_collection;
+#endif
 
 //=============================================================================
 // class terminal definitions
@@ -324,18 +334,27 @@ token_identifier::check_meta_reference(const context& c) const {
 	STACKTRACE("token_identifier::check_meta_expr()");
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	const never_ptr<const instance_collection_base>
+	const context::placeholder_ptr_type
 		inst(c.lookup_instance(*this));
 	// NOTE: lookup up with unqualified identifier will check loop scope
 	//	for loop varables.  
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const physical_instance_placeholder>
+			pinst(inst.is_a<const physical_instance_placeholder>());
+#else
 		const never_ptr<const physical_instance_collection>
 			pinst(inst.is_a<const physical_instance_collection>());
+#endif
 		if (pinst) {
 			return pinst->make_meta_instance_reference();
 		} else {
+#if USE_INSTANCE_PLACEHOLDERS
+			return inst.is_a<const param_value_placeholder>()
+#else
 			return inst.is_a<const param_value_collection>()
+#endif
 				->make_meta_value_reference();
 		}
 	} else {
@@ -359,7 +378,7 @@ token_identifier::check_nonmeta_reference(const context& c) const {
 	STACKTRACE("token_identifier::check_nonmeta_expr()");
 
 	// don't look up, instantiate (checked) in the context's current scope!
-	const never_ptr<const instance_collection_base>
+	const context::placeholder_ptr_type
 		inst(c.lookup_instance(*this));
 	// problem: stack is count_ptr, incompatible with never_ptr
 	if (inst) {

@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-03:
+	  Still does not compile.
+	  Spread use of instance and value placeholders further.  
+		Affected: AST, parse_context, scopespace, namespace, 
+		definitions, lookup methods, footprint, unroll_context, 
+		instance and value references and collections, traits, 
+		instantiation statements, ...
+
+
 2006-08-26	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-02:

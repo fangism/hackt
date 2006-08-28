@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.1.2.1 2006/08/26 22:05:18 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.2 2006/08/28 05:10:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -34,6 +34,7 @@ class const_range_list;
 class const_index_list;
 class param_expr;
 class const_param_expr_list;
+class instance_collection_base;
 class physical_instance_placeholder;
 class unroll_context;
 using std::list;
@@ -187,7 +188,7 @@ virtual	~instance_placeholder_base();
  */
 #if USE_INSTANCE_PLACEHOLDERS
 #define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
-	instance_placeholder_base*					\
+	instance_collection_base*					\
 	make_instance_collection_footprint_copy(const footprint&) const
 
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;

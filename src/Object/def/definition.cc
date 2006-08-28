@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27 2006/08/14 04:49:59 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.1 2006/08/28 05:10:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -40,8 +40,13 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/type/channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/param_value_placeholder.h"
+#include "Object/inst/physical_instance_placeholder.h"
+#else
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/physical_instance_collection.h"
+#endif
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
@@ -159,7 +164,11 @@ definition_base::pair_dump(ostream& o) const {
 /**
 	Only looks up the identifier in the set of template formals.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const param_value_placeholder>
+#else
 never_ptr<const param_value_collection>
+#endif
 definition_base::lookup_template_formal(const string& id) const {
 	return template_formals.lookup_template_formal(id);
 }
@@ -289,14 +298,22 @@ definition_base::get_port_formals_manager(void) const {
 	A default lookup that always returns NULL.  
 	Overridden in process_definition.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
+#endif
 definition_base::lookup_port_formal(const string& id) const {
 	const never_ptr<const port_formals_manager>
 		pfm(get_port_formals_manager());
 	if (pfm) {
 		return pfm->lookup_port_formal(id);
 	} else {
+#if USE_INSTANCE_PLACEHOLDERS
+		return never_ptr<const instance_placeholder_base>(NULL);
+#else
 		return never_ptr<const instance_collection_base>(NULL);
+#endif
 	}
 }
 
@@ -309,7 +326,12 @@ definition_base::lookup_port_formal(const string& id) const {
  */
 size_t
 definition_base::lookup_port_formal_position(
-		const instance_collection_base& i) const {
+#if USE_INSTANE_PLACEHOLDERS
+		const instance_placeholder_base& i
+#else
+		const instance_collection_base& i
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	const never_ptr<const port_formals_manager>
 		pfm(get_port_formals_manager());
@@ -434,12 +456,20 @@ definition_base::make_fundamental_type_reference(void) const {
 		need to be non-const? storing to hash_map_of_ptr...
 		must be modifiable for used_id_map
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
+#endif
 definition_base::add_strict_template_formal(
 		const never_ptr<instantiation_statement_base> i, 
 		const token_identifier& id) {
 	STACKTRACE("definition_base::add_strict_template_formal()");
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	never_ptr<const instance_placeholder_base>	return_type;
+#else
 	typedef	never_ptr<const instance_collection_base>	return_type;
+#endif
 	// const string id(pf->get_name());	// won't have name yet!
 	// check and make sure identifier wasn't repeated in formal list!
 	{
@@ -463,9 +493,15 @@ definition_base::add_strict_template_formal(
 	NEVER_NULL(ss);
 	// this creates and adds to the definition
 	// and bi-links statement to collection
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const param_value_placeholder>
+		pf(ss->add_instance(i, id, false)
+			.is_a<const param_value_placeholder>());
+#else
 	const never_ptr<const param_value_collection>
 		pf(ss->add_instance(i, id, false)
 			.is_a<const param_value_collection>());
+#endif
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
@@ -483,12 +519,20 @@ definition_base::add_strict_template_formal(
 	Same as add_strict_template_formal, except distinguished as
 	a relaxed template formal parameter.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
+#endif
 definition_base::add_relaxed_template_formal(
 		const never_ptr<instantiation_statement_base> i, 
 		const token_identifier& id) {
 	STACKTRACE("definition_base::add_relaxed_template_formal()");
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	never_ptr<const instance_placeholder_base>	return_type;
+#else
 	typedef	never_ptr<const instance_collection_base>	return_type;
+#endif
 	{
 	const never_ptr<const object>
 		probe(lookup_member(id));
@@ -499,9 +543,15 @@ definition_base::add_relaxed_template_formal(
 	}
 	scopespace* ss = IS_A(scopespace*, this);
 	NEVER_NULL(ss);
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const param_value_placeholder>
+		pf(ss->add_instance(i, id, false)
+			.is_a<const param_value_placeholder>());
+#else
 	const never_ptr<const param_value_collection>
 		pf(ss->add_instance(i, id, false)
 			.is_a<const param_value_collection>());
+#endif
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
@@ -516,7 +566,11 @@ definition_base::add_relaxed_template_formal(
 	Only temporary.
 	Override in appropriate subclasses.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const physical_instance_placeholder>
+#else
 never_ptr<const physical_instance_collection>
+#endif
 definition_base::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& i) {
@@ -1044,8 +1098,13 @@ void
 user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	if (o.is_a<instance_collection_base>()) {
+#if USE_INSTANCE_PLACEHOLDERS
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
+#else
+		excl_ptr<instance_placeholder_base>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
+#endif
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
@@ -1397,12 +1456,26 @@ built_in_datatype_def::make_canonical_fundamental_type_reference(
 	KLUDGE: redesign interface classes, please!
 	\param f the param instance collection, will keep ownership.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
+#endif
 built_in_datatype_def::add_template_formal(
-		excl_ptr<instance_collection_base>& f) {
+#if USE_INSTANCE_PLACEHOLDERS
+		excl_ptr<instance_placeholder_base>& f
+#else
+		excl_ptr<instance_collection_base>& f
+#endif
+		) {
 	STACKTRACE("add_template_formal(excl_ptr<>)");
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const param_value_placeholder>
+		pf(f.is_a<const param_value_placeholder>());
+#else
 	const never_ptr<const param_value_collection>
 		pf(f.is_a<const param_value_collection>());
+#endif
 	NEVER_NULL(pf);
 	// check and make sure identifier wasn't repeated in formal list!
 	const never_ptr<const object>
@@ -1410,7 +1483,11 @@ built_in_datatype_def::add_template_formal(
 			pf->get_name()));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
+#if USE_INSTANCE_PLACEHOLDERS
+		return never_ptr<const instance_placeholder_base>(NULL);
+#else
 		return never_ptr<const instance_collection_base>(NULL);
+#endif
 	}
 
 // built-in definitions (int) only use strict template formals so far

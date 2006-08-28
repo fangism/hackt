@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22 2006/08/08 05:46:43 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.1 2006/08/28 05:10:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -76,7 +76,12 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
-		const value_collection_ptr_type pi) :
+#if USE_INSTANCE_PLACEHOLDERS
+		const value_placeholder_ptr_type pi
+#else
+		const value_collection_ptr_type pi
+#endif
+		) :
 		simple_meta_indexed_reference_base(), 
 		parent_type(), 
 		value_collection_ref(pi) {
@@ -86,7 +91,11 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 #if 0
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
+#if USE_INSTANCE_PLACEHOLDERS
+		const value_placeholder_ptr_type pi,
+#else
 		const value_collection_ptr_type pi,
+#endif
 		excl_ptr<index_list>& i) :
 		common_base_type(), 
 		parent_type(i, pi->current_collection_state()),
@@ -105,7 +114,11 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::~simple_meta_value_reference() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const param_value_placeholder>
+#else
 never_ptr<const param_value_collection>
+#endif
 SIMPLE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
 	return value_collection_ref;
 }

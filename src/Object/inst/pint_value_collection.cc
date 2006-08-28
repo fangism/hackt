@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.8 2006/03/16 03:40:25 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.8.28.1 2006/08/28 05:10:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
@@ -30,6 +30,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/unroll/param_instantiation_statement.h"
 #include "Object/inst/value_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholders.tcc"
+#endif
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/int_traits.h"
 
@@ -111,6 +114,9 @@ operator << (ostream& o, const pint_instance& p) {
 //=============================================================================
 // class pint_instance_collection method definitions
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class value_placeholder<pint_tag>;
+#endif
 template class value_collection<pint_tag>;
 template class value_array<pint_tag,0>;
 template class value_array<pint_tag,1>;

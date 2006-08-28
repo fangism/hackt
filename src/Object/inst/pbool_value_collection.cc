@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_pbool.cc"
 		in a previous life.  
- 	$Id: pbool_value_collection.cc,v 1.6 2006/02/21 04:48:31 fang Exp $
+ 	$Id: pbool_value_collection.cc,v 1.6.32.1 2006/08/28 05:10:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
@@ -27,6 +27,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/inst/value_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.tcc"
+#endif
 
 //=============================================================================
 // specializations in other namespace (local to this file)
@@ -143,6 +146,9 @@ operator << (ostream& o, const pbool_instance& p) {
 //=============================================================================
 // class pbool_instance_collection method definitions
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class value_placeholder<pbool_tag>;
+#endif
 template class value_collection<pbool_tag>;
 template class value_array<pbool_tag,0>;
 template class value_array<pbool_tag,1>;

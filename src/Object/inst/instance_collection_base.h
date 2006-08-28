@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.12.32.2 2006/08/27 07:52:02 fang Exp $
+	$Id: instance_collection_base.h,v 1.12.32.3 2006/08/28 05:10:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -287,8 +287,10 @@ virtual	string
 	hierarchical_depth(void) const;
 
 #if USE_INSTANCE_PLACEHOLDERS
+#if 0
 virtual	string
 	hash_string(void) const = 0;
+#endif
 #else
 virtual	string
 	hash_string(void) const { return key; }
@@ -322,8 +324,10 @@ protected:
 	bool
 	formal_size_equivalent(const this_type& b) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const = 0;
+#endif
 
 public:
 	size_t

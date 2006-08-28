@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.13 2006/04/12 08:53:18 fang Exp $
+	$Id: proc_traits.h,v 1.13.20.1 2006/08/28 05:10:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
@@ -57,6 +57,10 @@ struct class_traits<process_tag> {
 
 	typedef	process_instance_collection	instance_collection_generic_type;
 	typedef	physical_instance_collection	instance_collection_parent_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	physical_instance_placeholder	instance_placeholder_parent_type;
+	typedef	process_instance_placeholder	instance_placeholder_type;
+#endif
 	typedef	general_collection_type_manager<tag_type>
 					collection_type_manager_parent_type;
 	template <size_t D>

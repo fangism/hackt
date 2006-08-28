@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.9 2006/03/15 04:38:18 fang Exp $
+	$Id: int_instance_collection.cc,v 1.9.28.1 2006/08/28 05:10:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -33,6 +33,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/data_type_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.tcc"
+#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/int_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -76,6 +79,9 @@ operator << (ostream& o, const int_instance_alias_base& i) {
 //=============================================================================
 // explicit template instantiations
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class instance_placeholder<int_tag>;
+#endif
 template class state_instance<int_tag>;
 template class instance_pool<state_instance<int_tag> >;
 template class instance_alias_info<int_tag>;

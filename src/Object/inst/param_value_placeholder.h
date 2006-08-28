@@ -1,15 +1,15 @@
 /**
-	\file "Object/inst/param_value_collection.h"
-	Parameter instance collection classes for HAC.  
+	\file "Object/inst/param_value_placeholder.h"
+	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.13.8.2 2006/08/28 05:10:09 fang Exp $
+	$Id: param_value_placeholder.h,v 1.1.2.1 2006/08/28 05:10:09 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
-#define	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
+#ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
+#define	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
 
-#include "Object/inst/instance_collection_base.h"
+#include "Object/inst/instance_placeholder_base.h"
 #include "Object/expr/types.h"
 #include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
@@ -30,9 +30,9 @@ using util::good_bool;
 	Going to sub-type into pint and pbool.  
 	TO DO: derive from a interface for template_argument.  
  */
-class param_value_collection : public instance_collection_base {
-	typedef	param_value_collection		this_type;
-	typedef	instance_collection_base	parent_type;
+class param_value_placeholder : public instance_placeholder_base {
+	typedef	param_value_placeholder		this_type;
+	typedef	instance_placeholder_base	parent_type;
 public:
 	typedef	parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
 	typedef	parent_type::member_inst_ref_ptr_type
@@ -40,23 +40,23 @@ public:
 
 protected:
 	explicit
-	param_value_collection(const size_t d);
+	param_value_placeholder(const size_t d);
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	param_value_collection(const this_type& t, const footprint& f) :
+#if 0
+	param_value_placeholder(const this_type& t, const footprint& f) :
 		parent_type(t, f) { }
 #endif
 
-	param_value_collection(const scopespace& o, const string& n, 
+	param_value_placeholder(const scopespace& o, const string& n, 
 		const size_t d);
 
 private:
-#if !USE_INSTANCE_PLACEHOLDERS
+#if 0
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 #endif
 
 public:
-virtual	~param_value_collection();
+virtual	~param_value_placeholder();
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -134,7 +134,7 @@ virtual	good_bool
 	must_type_check_actual_param_expr(const const_param&, 
 		const unroll_context&) const = 0;
 
-// down-copied from instance_collection_base
+// down-copied from instance_placeholder_base
 protected:
 	good_bool
 	may_check_expression_dimensions(const param_expr&) const;
@@ -159,7 +159,7 @@ NOTE: these functions should only be applicable to simple_param_meta_value_refer
 /**
 	Whether or not this parameter is itself a loop index,
 	or if indexed, its indices depend on some loop index.
-	This may be applicable to instance_collection_base in general.  
+	This may be applicable to instance_placeholder_base in general.  
  */
 	bool is_loop_independent(void) const;
 
@@ -169,11 +169,11 @@ protected:
 	using parent_type::collect_transient_info_base;
 	using parent_type::write_object_base;
 	using parent_type::load_object_base;
-};	// end class param_value_collection
+};	// end class param_value_placeholder
 
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
+#endif	// __HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
 

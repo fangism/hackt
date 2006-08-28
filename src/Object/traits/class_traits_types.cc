@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.11 2006/06/26 01:46:25 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.11.8.1 2006/08/28 05:10:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -24,6 +24,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/namespace.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/param_type_reference.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_collection.h"
 #include "Object/expr/pint_const.h"
@@ -148,10 +151,20 @@ __ATTRIBUTE_UNUSED_CTOR__((int_def_width->assign_default_value(int_def_width_def
 
 // INVARIANT(__good_int_width.good);
 
+// need to fake adding the template formal and instantiating it
+// or creating a footprint?
+#if USE_INSTANCE_PLACEHOLDERS
+static excl_ptr<instance_placeholder_base>
+#else
 static excl_ptr<instance_collection_base>
+#endif
 int_def_width_base(int_def_width);
 
+#if USE_INSTANCE_PLACEHOLDERS
+static const never_ptr<const instance_placeholder_base>
+#else
 static const never_ptr<const instance_collection_base>
+#endif
 int_def_width_ref
 __ATTRIBUTE_UNUSED_CTOR__((const_cast<built_in_datatype_def&>(
 	int_traits::built_in_definition).add_template_formal(int_def_width_base)));

@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11 2006/07/31 22:22:24 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.1 2006/08/28 05:09:53 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -33,8 +33,13 @@
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#include "Object/inst/param_value_placeholder.h"
+#else
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/pint_value_collection.h"
+#endif
 #include "Object/module.h"
 
 #include "util/stacktrace.h"
@@ -47,9 +52,14 @@ namespace parser {
 using entity::object_handle;
 using entity::enum_datatype_def;
 using entity::instantiation_statement_base;
+#if USE_INSTANCE_PLACEHOLDERS
+using entity::physical_instance_placeholder;
+using entity::param_value_placeholder;
+#else
 using entity::physical_instance_collection;
-using entity::param_type_reference;
 using entity::param_value_collection;
+#endif
+using entity::param_type_reference;
 using entity::process_definition;
 using entity::user_def_chan;
 using entity::user_def_datatype;
@@ -554,11 +564,15 @@ context::lookup_definition(const qualified_id& id) const {
 	\param id the name of the instance sought.  
 	\return const pointer to the named instance sought, if found.  
  */
-never_ptr<const instance_collection_base>
+context::placeholder_ptr_type
 context::lookup_instance(const token_identifier& id) const {
 	INVARIANT(current_namespace);
 	const never_ptr<const object> o(lookup_object(id));
+#if USE_INSTANCE_PLACEHOLDERS
+	return o.is_a<const instance_placeholder_base>();
+#else
 	return o.is_a<const instance_collection_base>();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -566,11 +580,15 @@ context::lookup_instance(const token_identifier& id) const {
 	\param id the qualified name of the instance sought.  
 	\return const pointer to the named instance sought, if found.  
  */
-never_ptr<const instance_collection_base>
+context::placeholder_ptr_type
 context::lookup_instance(const qualified_id& id) const {
 	INVARIANT(current_namespace);
 	const never_ptr<const object> o(lookup_object(id));
+#if USE_INSTANCE_PLACEHOLDERS
+	return o.is_a<const instance_placeholder_base>();
+#else
 	return o.is_a<const instance_collection_base>();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -629,7 +647,7 @@ context::get_current_named_scope(void) {
 	since instances are not truly added to dynamic scopes.  
 	Make overloaded version with dimensions.  
  */
-never_ptr<const instance_collection_base>
+context::placeholder_ptr_type
 context::add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type& a) {
 	STACKTRACE_VERBOSE;
@@ -660,11 +678,11 @@ context::add_instance(const token_identifier& id,
 	\param dim the dimension specifier, may be null.  
 	\return pointer to newly created instantiation.  
  */
-never_ptr<const instance_collection_base>
+context::placeholder_ptr_type
 context::add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type& a, 
 		index_collection_item_ptr_type dim) {
-	typedef	never_ptr<const instance_collection_base>	return_type;
+	typedef	placeholder_ptr_type		return_type;
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(current_fundamental_type);
 	const never_ptr<scopespace>
@@ -729,7 +747,7 @@ context::add_instance(const token_identifier& id,
 	\param d optional default value of parameter.  
 	\sa add_instance
  */
-never_ptr<const instance_collection_base>
+context::placeholder_ptr_type
 context::add_template_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d) {
@@ -749,7 +767,7 @@ context::add_template_formal(const token_identifier& id,
 	// template formals cannot have relaxed types!
 	NEVER_NULL(inst_stmt);
 	// formal instance is constructed and added in add_instance
-	const never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 		inst_base(
 			// depends on strict_template_mode
 			(strict_template_mode) ?
@@ -768,10 +786,17 @@ context::add_template_formal(const token_identifier& id,
 
 	if (d) {
 		// need modifiable pointer to param_value_collection
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<instance_placeholder_base>
+			ib(inst_stmt->get_inst_base());
+		const never_ptr<param_value_placeholder>
+			pic(ib.is_a<param_value_placeholder>());
+#else
 		const never_ptr<instance_collection_base>
 			ib(inst_stmt->get_inst_base());
 		const never_ptr<param_value_collection>
 			pic(ib.is_a<param_value_collection>());
+#endif
 		NEVER_NULL(pic);
 		if (!pic->assign_default_value(d).good) {
 			// error: type check failed
@@ -797,7 +822,7 @@ context::add_template_formal(const token_identifier& id,
 /**
 	Wrapper for adding a non-arrayed template formal instantiation.  
  */
-never_ptr<const instance_collection_base>
+context::placeholder_ptr_type
 context::add_template_formal(const token_identifier& id, 
 		count_ptr<const param_expr> d) {
 	return add_template_formal(id, index_collection_item_ptr_type(NULL), d);
@@ -814,7 +839,7 @@ context::add_template_formal(const token_identifier& id,
 	\param id the name of the formal instance.  
 	\sa add_instance
  */
-never_ptr<const instance_collection_base>
+context::placeholder_ptr_type
 context::add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim) {
 	STACKTRACE_VERBOSE;
@@ -826,7 +851,11 @@ context::add_port_formal(const token_identifier& id,
 			current_fundamental_type, dim);
 	NEVER_NULL(inst_stmt);
 	// instance is constructed and added in add_instance
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const physical_instance_placeholder>
+#else
 	const never_ptr<const physical_instance_collection>
+#endif
 		inst_base(current_prototype->add_port_formal(inst_stmt, id));
 		// same as current_named_scope? perhaps assert check?
 
@@ -851,7 +880,7 @@ context::add_port_formal(const token_identifier& id,
 /**
 	Wrapper for adding a non-arrayed port formal instantiation.  
  */
-never_ptr<const instance_collection_base>
+context::placeholder_ptr_type
 context::add_port_formal(const token_identifier& id) {
 	return add_port_formal(id, index_collection_item_ptr_type(NULL));
 }

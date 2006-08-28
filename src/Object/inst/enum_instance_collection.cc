@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.8 2006/02/21 04:48:27 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.8.32.1 2006/08/28 05:10:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -26,6 +26,9 @@
 #include "Object/def/user_def_datatype.h"	// needed by canonical_type
 
 #include "Object/inst/instance_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.tcc"
+#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/parameterless_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -58,6 +61,9 @@ namespace entity {
 //=============================================================================
 // explicit class instantiations
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class instance_placeholder<enum_tag>;
+#endif
 template class state_instance<enum_tag>;
 template class instance_pool<state_instance<enum_tag> >;
 template class instance_alias_info<enum_tag>;

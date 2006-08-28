@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.14 2006/07/31 22:22:23 fang Exp $
+	$Id: instance.cc,v 1.14.4.1 2006/08/28 05:09:52 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -18,7 +18,6 @@
 #include <numeric>
 
 #include "AST/instance.h"
-// #include "AST/expr.h"		// for index_expr
 #include "AST/reference.h"
 #include "AST/range_list.h"
 #include "AST/token_string.h"
@@ -26,8 +25,13 @@
 #include "AST/node_list.tcc"
 #include "AST/parse_context.h"
 
+#include "Object/devel_switches.h"
 #include "Object/common/namespace.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder_base.h"
+#else
 #include "Object/inst/instance_collection_base.h"
+#endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
@@ -514,7 +518,7 @@ instance_base::check_build(context& c) const {
 	}
 #endif
 	// otherwise do nothing different from before.  
-	const never_ptr<const instance_collection_base>
+	const context::placeholder_ptr_type
 		inst(c.add_instance(*id, checked_relaxed_actuals));
 	if (!inst) {
 		cerr << "ERROR with " << *id << " at " << where(*id) << endl;
@@ -608,7 +612,11 @@ if (ranges) {
 			THROW_EXIT;
 		}
 	}
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const instance_placeholder_base>
+#else
 	const never_ptr<const instance_collection_base>
+#endif
 		t(c.add_instance(*id, checked_relaxed_actuals, d));
 	// if there was error, would've THROW_EXIT'd (temporary)
 	return t;

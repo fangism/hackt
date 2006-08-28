@@ -3,7 +3,7 @@
 	Traits and policy classes for instances.  
 	This file is included by "Object/traits/object_*_traits.h"
 	This file used to be "Object/art_object_classification_details.h".
-	$Id: class_traits.h,v 1.7 2006/04/11 07:54:45 fang Exp $
+	$Id: class_traits.h,v 1.7.20.1 2006/08/28 05:10:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_H__
@@ -13,6 +13,7 @@
 #include "Object/object_fwd.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/packed_array_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace util {
 	template <class> class union_find_derived;

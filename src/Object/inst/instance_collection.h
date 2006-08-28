@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.22.8.1 2006/08/27 07:52:00 fang Exp $
+	$Id: instance_collection.h,v 1.22.8.2 2006/08/28 05:10:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -129,13 +129,20 @@ public:
 #if USE_INSTANCE_PLACEHOLDERS
 	typedef	never_ptr<const instance_placeholder_type>
 				instance_placeholder_ptr_type;
-#endif
+#else
+	// instantiation statement pointers belong only in placeholders
 	typedef	never_ptr<const initial_instantiation_statement_type>
 				initial_instantiation_statement_ptr_type;
+#endif
 protected:
 #if USE_INSTANCE_PLACEHOLDERS
-	
-#endif
+	/**
+		This is a back-reference to the placeholder that resides
+		in the scopespace, that contains basic collection information,
+		prior to unrolling.
+	 */
+	instance_placeholder_ptr_type	source_placeholder;
+#else
 	/**
 		All collections track the first instantiation statement,
 		for the sake of deducing the type.  
@@ -144,6 +151,7 @@ protected:
 	 */
 	initial_instantiation_statement_ptr_type
 					initial_instantiation_statement_ptr;
+#endif
 protected:
 #if USE_INSTANCE_PLACEHOLDERS
 	/// requires a back-reference to the source collection placeholder
@@ -164,6 +172,7 @@ public:
 	instance_collection(const scopespace& o, const string& n, 
 		const size_t d);
 #endif
+public:
 
 virtual	~instance_collection();
 
@@ -288,9 +297,11 @@ public:
 virtual	instance_alias_base_type&
 	load_reference(istream& i) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	static
 	this_type*
 	make_array(const scopespace& o, const string& n, const size_t d);
+#endif
 
 	static
 	persistent*

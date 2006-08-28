@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.9 2006/02/26 05:19:58 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.9.30.1 2006/08/28 05:10:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -25,6 +25,9 @@
 #include "Object/persistent_type_hash.h"
 
 #include "Object/inst/instance_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.tcc"
+#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -57,6 +60,9 @@ namespace entity {
 //=============================================================================
 // explicit template class instantiations
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class instance_placeholder<datastruct_tag>;
+#endif
 template class state_instance<datastruct_tag>;
 template class instance_pool<state_instance<datastruct_tag> >;
 template class instance_alias_info<datastruct_tag>;

@@ -2,7 +2,7 @@
 	\file "Object/traits/data_traits.h"
 	Traits and policies for generic data types.  
 	This file used to be "Object/art_object_data_traits.h".
-	$Id: data_traits.h,v 1.7 2006/04/11 07:54:45 fang Exp $
+	$Id: data_traits.h,v 1.7.20.1 2006/08/28 05:10:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_DATA_TRAITS_H__
@@ -29,6 +29,10 @@ struct class_traits<datatype_tag> {
 					instantiation_statement_type;
 	typedef	datatype_instance_collection
 					instance_collection_generic_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	datatype_instance_placeholder
+					instance_placeholder_type;
+#endif
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
@@ -36,6 +40,10 @@ struct class_traits<datatype_tag> {
 	/// defined in "Object/unroll/datatype_instantiation_statement.h"
 	class instantiation_statement_type_ref_base;
 	// not used yet, may become an abstract base class of canonical_type.
+#if 0
+	typedef	canonical_generic_datatype
+					instance_placeholder_parameter_type;
+#endif
 	typedef	canonical_generic_datatype
 					instance_collection_parameter_type;
 

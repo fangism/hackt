@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.13.4.1 2006/08/27 07:51:55 fang Exp $
+	$Id: scopespace.h,v 1.13.4.2 2006/08/28 05:09:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -38,10 +38,11 @@ class definition_base;
 class typedef_base;
 #if USE_INSTANCE_PLACEHOLDERS
 class instance_placeholder_base;
+class param_value_placeholder;
 #else
 class instance_collection_base;
-#endif
 class param_value_collection;
+#endif
 using std::list;
 using std::string;
 using std::istream;
@@ -146,8 +147,13 @@ protected:
 				never_ptr<instance_collection_base> >::type
 #endif
 							inst_bin_type;
+#if USE_INSTANCE_PLACEHOLDERS
+		typedef std::default_map<string,
+				never_ptr<param_value_placeholder> >::type
+#else
 		typedef std::default_map<string,
 				never_ptr<param_value_collection> >::type
+#endif
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -186,8 +192,13 @@ protected:
 				never_ptr<const instance_collection_base> >::type
 #endif
 							inst_bin_type;
+#if USE_INSTANCE_PLACEHOLDERS
+		typedef std::default_map<string,
+				never_ptr<const param_value_placeholder> >::type
+#else
 		typedef std::default_map<string,
 				never_ptr<const param_value_collection> >::type
+#endif
 							param_bin_type;
 
 		ns_bin_type		ns_bin;

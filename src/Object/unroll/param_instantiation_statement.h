@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.9 2006/03/15 04:38:24 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.9.28.1 2006/08/28 05:10:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -54,7 +54,11 @@ protected:
 	static
 	void
 	attach_initial_instantiation_statement(
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_placeholder_type& v,
+#else
 			value_collection_generic_type& v,
+#endif
 			const never_ptr<const InstStmtType> i) {
 		v.attach_initial_instantiation_statement(i);
 	}
@@ -132,7 +136,11 @@ protected:
 	static
 	void
 	attach_initial_instantiation_statement(
+#if USE_INSTANCE_PLACEHOLDERS
+		instance_placeholder_type& v,
+#else
 		value_collection_generic_type& v,
+#endif
 		const never_ptr<const InstStmtType> i) {
 		v.attach_initial_instantiation_statement(i);
 	}
@@ -209,7 +217,11 @@ protected:
 	static
 	void
 	attach_initial_instantiation_statement(
+#if USE_INSTANCE_PLACEHOLDERS
+		instance_placeholder_type& v,
+#else
 		value_collection_generic_type& v,
+#endif
 		const never_ptr<const InstStmtType> i) {
 		v.attach_initial_instantiation_statement(i);
 	}

@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.16 2006/08/08 05:46:41 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.16.4.1 2006/08/28 05:10:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -12,6 +12,9 @@
 #include "util/what.h"
 #include "util/persistent_object_manager.h"
 #include "Object/inst/physical_instance_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#endif
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
@@ -46,7 +49,12 @@ MEMBER_INSTANCE_REFERENCE_CLASS::member_meta_instance_reference() :
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 MEMBER_INSTANCE_REFERENCE_CLASS::member_meta_instance_reference(
 		const base_inst_ptr_type& b, 
-		const instance_collection_ptr_type m) :
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_ptr_type m
+#else
+		const instance_collection_ptr_type m
+#endif
+		) :
 		parent_type(m), base_inst_ref(b) {
 }
 
@@ -118,9 +126,15 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		return return_type(NULL);
 	}
 	// assert dynamic cast
+#if USE_INSTANCE_PLACEHOLDERS
+	const physical_instance_placeholder&
+		phys_inst(IS_A(const physical_instance_placeholder&, 
+			*this->get_inst_base()));
+#else
 	const physical_instance_collection&
 		phys_inst(IS_A(const physical_instance_collection&, 
 			*this->get_inst_base()));
+#endif
 	const count_ptr<instance_collection_base>
 		resolved_instance(
 			parent_struct->lookup_port_instance(phys_inst));

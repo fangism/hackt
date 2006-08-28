@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.8 2006/06/02 20:15:18 fang Exp $
+	$Id: definition_base.h,v 1.8.8.1 2006/08/28 05:10:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -12,6 +12,7 @@
 #include "util/macros.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
+#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent.h"		// for persistent object interface
@@ -34,8 +35,14 @@ using parser::token_identifier;
 //=============================================================================
 namespace entity {
 class scopespace;
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+class physical_instance_placeholder;
+class param_value_placeholder;
+#else
 class instance_collection_base;
 class physical_instance_collection;
+#endif
 class fundamental_type_reference;
 class template_actuals;
 class const_param_expr_list;
@@ -126,7 +133,11 @@ virtual	never_ptr<const scopespace>
 virtual	void
 	commit_arity(void) { }
 
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const param_value_placeholder>
+#else
 	never_ptr<const param_value_collection>
+#endif
 	lookup_template_formal(const string& id) const;
 
 	bool
@@ -145,11 +156,19 @@ virtual	never_ptr<const scopespace>
 	get_scopespace(void) const = 0;
 
 	// non-virtual
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const param_value_placeholder>
+#else
 	never_ptr<const instance_collection_base>
+#endif
 	lookup_port_formal(const string& id) const;
 
 	size_t
+#if USE_INSTANCE_PLACEHOLDERS
+	lookup_port_formal_position(const instance_placeholder_base&) const;
+#else
 	lookup_port_formal_position(const instance_collection_base&) const;
+#endif
 
 	never_ptr<const object>
 	lookup_nonparameter_member(const string& id) const;
@@ -230,21 +249,37 @@ virtual	good_bool
 	TODO: This function should be pure virtual and belong 
 		to a different interface!
 	TODO: shouldn't argument be a param_instantiation_statement?
+	TODO: shouldn't return type be param_value_placeholder?
  */
+#if USE_INSTANCE_PLACEHOLDERS
+virtual	never_ptr<const instance_placeholder_base>
+#else
 virtual	never_ptr<const instance_collection_base>
+#endif
 	add_strict_template_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
 
+#if USE_INSTANCE_PLACEHOLDERS
+virtual	never_ptr<const instance_placeholder_base>
+#else
 virtual	never_ptr<const instance_collection_base>
+#endif
 	add_relaxed_template_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
 
+#if USE_INSTANCE_PLACEHOLDERS
+#define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
+	never_ptr<const physical_instance_placeholder>			\
+	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
+		const token_identifier&)
+#else
 #define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
 	never_ptr<const physical_instance_collection>			\
 	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
 		const token_identifier&)
+#endif
 
 /**
 	Really, only some definitions should have ports...

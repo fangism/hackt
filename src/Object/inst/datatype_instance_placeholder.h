@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_placeholder.h"
 	Instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_placeholder.h,v 1.1.2.1 2006/08/26 22:05:08 fang Exp $
+	$Id: datatype_instance_placeholder.h,v 1.1.2.2 2006/08/28 05:10:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_PLACEHOLDER_H__
@@ -37,6 +37,8 @@ protected:
 	typedef	parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
 	// is not a true canonical type, rather, a base type.  
+#endif
+#if 0
 	typedef	traits_type::instance_placeholder_parameter_type
 					instance_placeholder_parameter_type;
 #endif
@@ -47,8 +49,10 @@ protected:
 	datatype_instance_placeholder(const scopespace& o, const string& n, 
 		const size_t d);
 
+#if 0
 	datatype_instance_placeholder(const this_type& t, const footprint& f) :
 		parent_type(t, f) { }
+#endif
 public:
 
 virtual	~datatype_instance_placeholder();

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.36.2.1 2006/08/26 22:05:05 fang Exp $
+#	$Id: TODO,v 1.36.2.2 2006/08/28 05:09:50 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -51,7 +51,7 @@ enhancement:
 
 ===============================================================================
 PRIORITY HIGH: MEMORY HOG
-instance collections:
+instance collections (OVERLOADED CLASS):
 	instance_collections and their contents are being 
 		replicated too many places.  
 	Unrolled instance collections should just reference source
@@ -63,6 +63,15 @@ instance collections:
 	Member instance references? public vs. generic (private)
 	Possibly introduce use of placeholders.   
 	This fix will be highly invasive.  
+
+Once placeholders are distinguished from actualy collections, 
+	also introduce packed_array collections (in addition to the 
+	current sparse-only representations), which is useful for compacting
+	deduced dense arrays post-unrolling.  
+	Packed arrays: able to compute key from position! (huge save)
+	(prerequisite random iterable container in internal representation)
+	Compare the structure size difference.
+	Exclude those with non-zero offset?
 
 diagnostic statistics:
 	memory self-profiling statistics from pooled-allocators, etc.

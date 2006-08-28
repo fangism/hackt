@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.1 2006/08/27 07:52:01 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.2 2006/08/28 05:10:07 fang Exp $
 	TODO: trim includes
  */
 
@@ -413,6 +413,7 @@ INSTANCE_COLLECTION_CLASS::get_actual_param_list(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	\return newly constructed d-dimensional array.  
  */
@@ -431,6 +432,7 @@ INSTANCE_COLLECTION_CLASS::make_array(
 			return NULL;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

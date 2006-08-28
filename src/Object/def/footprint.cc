@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24 2006/07/31 22:22:30 fang Exp $
+	$Id: footprint.cc,v 1.24.4.1 2006/08/28 05:10:03 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -23,6 +23,9 @@
 #include "Object/common/alias_string_cache.h"
 #include "Object/common/dump_flags.h"
 #include "Object/inst/alias_printer.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#endif
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
@@ -312,8 +315,13 @@ if (instance_collection_map.empty()) {
 	const_map_iterator si(s.id_map_begin());
 	const const_map_iterator se(s.id_map_end());
 	for ( ; si!=se; si++) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const instance_placeholder_base>
+			icb(si->second.is_a<const instance_placeholder_base>());
+#else
 		const never_ptr<const instance_collection_base>
 			icb(si->second.is_a<const instance_collection_base>());
+#endif
 		if (icb) {
 			// then we need to make a deep copy of it 
 			// in our own footprint's instance collection map

@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.12 2006/04/27 00:16:07 fang Exp $
+	$Id: instantiation_statement.h,v 1.12.16.1 2006/08/28 05:10:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -21,6 +21,7 @@ using std::list;
 USING_CONSTRUCT
 struct pint_tag;
 struct pbool_tag;
+class physical_instance_collection;
 
 //=============================================================================
 #define	INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE			\
@@ -66,6 +67,11 @@ protected:
 		traits_type::instantiation_statement_type_ref_base
 							type_ref_parent_type;
 public:
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::instance_placeholder_type
+							placeholder_type;
+	typedef	never_ptr<placeholder_type>		placeholder_ptr_type;
+#endif
 	typedef	typename traits_type::instance_collection_generic_type
 							collection_type;
 	typedef	never_ptr<collection_type>		collection_ptr_type;
@@ -76,7 +82,11 @@ public:
 	typedef	instantiation_statement_base::const_relaxed_args_type
 							const_relaxed_args_type;
 protected:
-	never_ptr<collection_type>			inst_base;
+#if USE_INSTANCE_PLACEHOLDERS
+	placeholder_ptr_type			inst_base;
+#else
+	collection_ptr_type			inst_base;
+#endif
 protected:
 	instantiation_statement();
 
@@ -98,6 +108,16 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	void
+	attach_collection(const never_ptr<instance_placeholder_base> i);
+
+	never_ptr<instance_placeholder_base>
+	get_inst_base(void);
+
+	never_ptr<const instance_placeholder_base>
+	get_inst_base(void) const;
+#else
 	void
 	attach_collection(const never_ptr<instance_collection_base> i);
 
@@ -106,6 +126,7 @@ public:
 
 	never_ptr<const instance_collection_base>
 	get_inst_base(void) const;
+#endif
 
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;

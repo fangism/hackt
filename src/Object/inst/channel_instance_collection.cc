@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.10 2006/04/11 07:54:41 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.10.20.1 2006/08/28 05:10:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -24,6 +24,9 @@
 #include "Object/type/channel_type_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.tcc"
+#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -58,6 +61,9 @@ namespace entity {
 //=============================================================================
 // explicit template class instantiations
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class instance_placeholder<channel_tag>;
+#endif
 template class state_instance<channel_tag>;
 template class instance_pool<state_instance<channel_tag> >;
 template class instance_alias_info<channel_tag>;

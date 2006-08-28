@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_fwd.h"
 	Forward declarations for all instance and value collection classes.  
-	$Id: collection_fwd.h,v 1.2.20.1 2006/08/26 22:05:06 fang Exp $
+	$Id: collection_fwd.h,v 1.2.20.2 2006/08/28 05:10:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_FWD_H__
@@ -17,7 +17,7 @@ namespace entity {
 class instance_collection_base;
 class physical_instance_collection;
 class datatype_instance_collection;	// exists?
-#if USE_INSTANCE_PLACEHOLDERS || 1
+#if USE_INSTANCE_PLACEHOLDERS
 class instance_placeholder_base;
 class physical_instance_placeholder;
 class datatype_instance_placeholder;	// exists?
@@ -25,7 +25,7 @@ class datatype_instance_placeholder;	// exists?
 
 template <class>
 class instance_collection;
-#if USE_INSTANCE_PLACEHOLDERS || 1
+#if USE_INSTANCE_PLACEHOLDERS
 template <class>
 class instance_placeholder;
 #endif
@@ -49,7 +49,7 @@ typedef instance_collection<channel_tag>
 typedef instance_collection<process_tag>
 	process_instance_collection;
 
-#if USE_INSTANCE_PLACEHOLDERS || 1
+#if USE_INSTANCE_PLACEHOLDERS
 typedef instance_placeholder<bool_tag>
 	bool_instance_placeholder;
 typedef instance_placeholder<int_tag>
@@ -64,6 +64,7 @@ typedef instance_placeholder<process_tag>
 	process_instance_placeholder;
 #endif
 
+// TODO: rename to *_value_collection
 template <class>
 class value_collection;
 class param_value_collection;
@@ -74,7 +75,17 @@ typedef value_collection<pbool_tag>
 typedef value_collection<preal_tag>
 	preal_instance_collection;
 
-// what about USE_VALUE_PLACEHOLDERS?
+#if USE_INSTANCE_PLACEHOLDERS
+template <class>
+class value_placeholder;
+class param_value_placeholder;
+typedef value_placeholder<pint_tag>
+	pint_value_placeholder;
+typedef value_placeholder<pbool_tag>
+	pbool_value_placeholder;
+typedef value_placeholder<preal_tag>
+	preal_value_placeholder;
+#endif
 
 }	// end namespace entity
 }	// end namespace HAC

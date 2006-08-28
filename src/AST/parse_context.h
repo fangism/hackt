@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.9 2006/07/31 22:22:25 fang Exp $
+	$Id: parse_context.h,v 1.9.4.1 2006/08/28 05:09:53 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -17,6 +17,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "Object/common/util_types.h"
+#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/attributes.h"
 
@@ -33,7 +34,11 @@ namespace entity {
 	class process_definition_base;
 	class fundamental_type_reference;
 	class sequential_scope;
+#if USE_INSTANCE_PLACEHOLDERS
+	class instance_placeholder_base;
+#else
 	class instance_collection_base;
+#endif
 	class instance_management_base;
 	class meta_instance_reference_connection;
 	class param_expr;
@@ -72,7 +77,11 @@ using entity::channel_definition_base;
 using entity::process_definition_base;
 using entity::fundamental_type_reference;
 using entity::sequential_scope;
+#if USE_INSTANCE_PLACEHOLDERS
+using entity::instance_placeholder_base;
+#else
 using entity::instance_collection_base;
+#endif
 using entity::instance_management_base;
 using entity::meta_instance_reference_connection;
 using entity::param_expr;
@@ -120,6 +129,12 @@ class context {
 public:
 	typedef	count_ptr<const param_expr_list>	relaxed_args_ptr_type;
 	typedef list<string>			file_name_stack_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	never_ptr<const instance_placeholder_base>
+#else
+	typedef	never_ptr<const instance_collection_base>
+#endif
+						placeholder_ptr_type;
 private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
@@ -395,38 +410,39 @@ public:
 	never_ptr<const definition_base>
 	lookup_definition(const qualified_id& id) const;
 
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	lookup_instance(const token_identifier& id) const;
 
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	lookup_instance(const qualified_id& id) const;
 
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type&);
 
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type&, 
 		index_collection_item_ptr_type dim);
 
-	// should be param_value_collection
-	never_ptr<const instance_collection_base>
+	// should be param_value_placeholder
+	placeholder_ptr_type
 	add_template_formal(const token_identifier& id, 
 		count_ptr<const param_expr> d);
 
-	// should be param_value_collection
-	never_ptr<const instance_collection_base>
+	// should be param_value_placeholder
+	placeholder_ptr_type
 	add_template_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d);
 
 	// port formals are not allowed to have instance-relaxed actuals.  
-	never_ptr<const instance_collection_base>
+	// should be physical_instance_placeholder
+	placeholder_ptr_type
 	add_port_formal(const token_identifier& id);
 
 	// port formals are not allowed to have instance-relaxed actuals.  
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim);
 

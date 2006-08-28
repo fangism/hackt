@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.14 2006/07/30 05:49:31 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.14.4.1 2006/08/28 05:10:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -24,7 +24,6 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include <algorithm>
 
 #include "Object/type/fundamental_type_reference.h"
-#include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/ref/meta_instance_reference_base.h"
@@ -35,8 +34,15 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/class_traits.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.h"
+#include "Object/inst/value_placeholder.h"
+#include "Object/inst/param_value_placeholder.h"
+#else
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/value_collection.h"
+#include "Object/inst/physical_instance_collection.h"
+#endif
 
 // required by use of canonical_type
 #include "Object/def/user_def_datatype.h"
@@ -149,7 +155,11 @@ instantiation_statement_base::dump(ostream& o,
 		ra->dump(o << '<', dc) << '>';
 	}
 	o << " ";
-	never_ptr<const instance_collection_base>
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const instance_placeholder_base>
+#else
+	const never_ptr<const instance_collection_base>
+#endif
 		inst_base(get_inst_base());
 	if(inst_base) {
 		o << inst_base->get_name();
@@ -164,7 +174,11 @@ instantiation_statement_base::dump(ostream& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 instantiation_statement_base::get_name(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<const instance_placeholder_base>
+#else
 	const never_ptr<const instance_collection_base>
+#endif
 		inst_base(get_inst_base());
 	NEVER_NULL(inst_base);
 	return inst_base->get_name();

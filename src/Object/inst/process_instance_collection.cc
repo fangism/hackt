@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.11 2006/04/11 07:54:42 fang Exp $
+	$Id: process_instance_collection.cc,v 1.11.20.1 2006/08/28 05:10:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -27,6 +27,9 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholders.tcc"
+#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -65,6 +68,9 @@ namespace entity {
 //=============================================================================
 // explicit template clas instantiations
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class instance_placeholder<process_tag>;
+#endif
 template class state_instance<process_tag>;
 template class instance_pool<state_instance<process_tag> >;
 template class instance_alias_info<process_tag>;

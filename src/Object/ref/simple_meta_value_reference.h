@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.13 2006/08/23 20:57:21 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.13.2.1 2006/08/28 05:10:16 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -56,6 +56,10 @@ private:
 	typedef	expr_base_type				interface_type;
 public:
 	typedef	count_ptr<const interface_type>		init_arg_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::value_placeholder_parent_type
+						value_placeholder_parent_type;
+#endif
 	typedef	typename traits_type::value_collection_parent_type
 						value_collection_parent_type;
 	typedef	typename traits_type::value_reference_collection_type
@@ -63,6 +67,12 @@ public:
 protected:
 	typedef	typename traits_type::template value_array<0>::type
 							value_scalar_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::value_placeholder_generic_type
+							value_placeholder_type;
+	typedef	never_ptr<value_placeholder_type>
+						value_placeholder_ptr_type;
+#endif
 	typedef	typename traits_type::value_collection_generic_type
 							value_collection_type;
 	typedef	typename traits_type::const_collection_type
@@ -71,15 +81,27 @@ protected:
 							const_expr_type;
 	typedef	never_ptr<value_collection_type>
 						value_collection_ptr_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	value_placeholder_ptr_type			value_collection_ref;
+#else
 	value_collection_ptr_type			value_collection_ref;
+#endif
 private:
 	simple_meta_value_reference();
 public:
+#if USE_INSTANCE_PLACEHOLDERS
+	explicit
+	simple_meta_value_reference(const value_placeholder_ptr_type);
+
+	simple_meta_value_reference(const value_placeholder_ptr_type, 
+		excl_ptr<index_list_type>&);
+#else
 	explicit
 	simple_meta_value_reference(const value_collection_ptr_type);
 
 	simple_meta_value_reference(const value_collection_ptr_type, 
 		excl_ptr<index_list_type>&);
+#endif
 
 	~simple_meta_value_reference();
 
@@ -92,11 +114,19 @@ public:
 	good_bool
 	attach_indices(excl_ptr<index_list_type>&);
 
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const param_value_placeholder>
+	get_coll_base(void) const;
+
+	never_ptr<const value_placeholder_parent_type>
+	get_param_inst_base(void) const;
+#else
 	never_ptr<const param_value_collection>
 	get_coll_base(void) const;
 
 	never_ptr<const value_collection_parent_type>
 	get_param_inst_base(void) const;
+#endif
 
 	size_t
 	dimensions(void) const;

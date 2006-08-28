@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.1 2006/08/27 07:52:03 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.2 2006/08/28 05:10:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -109,6 +109,7 @@ operator << (ostream& o, const pint_instance& p) {
 // class value_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Private empty constructor.
  */
@@ -133,6 +134,7 @@ VALUE_COLLECTION_CLASS::value_collection(const this_type& t,
 		const footprint& f) :
 		parent_type(t, f), ival(NULL) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
@@ -452,6 +454,7 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS*
 VALUE_COLLECTION_CLASS::make_array(
@@ -467,6 +470,7 @@ VALUE_COLLECTION_CLASS::make_array(
 			return NULL;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
