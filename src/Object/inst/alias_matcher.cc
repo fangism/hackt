@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_matcher.cc"
-	$Id: alias_matcher.cc,v 1.2 2006/04/11 07:54:40 fang Exp $
+	$Id: alias_matcher.cc,v 1.3 2006/08/28 20:22:38 fang Exp $
  */
 
 #include "Object/inst/alias_matcher.h"
@@ -75,6 +75,7 @@ template <>
 struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 	/**
 		Conditional recursion.  
+		\pre alias must be valid and instantiated.
 	 */
 	template <class AliasType, class MatcherType>
 	static
@@ -83,7 +84,6 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 		typedef	typename AliasType::traits_type		traits_type;
 		typedef	typename traits_type::tag_type		Tag;
 		STACKTRACE_VERBOSE;
-		INVARIANT(a.valid());
 		ostringstream os;
 		a.dump_hierarchical_name(os, dump_flags::no_leading_scope);
 		const string& local_name(os.str());
@@ -111,7 +111,7 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<false> {
 	alias_matcher_recursion_policy<traits_type::has_substructure>
 		::accept(v, e);
 	// recursion or termination
-	}
+	}	// end method accept
 };	// end struct match_aliases_implementation_policy
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -128,6 +128,7 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 		TODO: minor optimization, stop recursion when we find an
 		alias because an instance cannot contain its own type
 		as a subinstance.  
+		\pre alias must be valid and instantiated.
 	 */
 	template <class AliasType, class MatcherType>
 	static
@@ -136,7 +137,6 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 		typedef	typename AliasType::traits_type		traits_type;
 		typedef	typename traits_type::tag_type		Tag;
 		STACKTRACE_VERBOSE;
-		INVARIANT(a.valid());
 		ostringstream os;
 		a.dump_hierarchical_name(os, dump_flags::no_leading_scope);
 		const string& local_name(os.str());
@@ -172,7 +172,7 @@ struct __VISIBILITY_HIDDEN__ match_aliases_implementation_policy<true> {
 			::accept(v, e);
 		// recursion or termination
 	}
-	}
+	}	// end method accept
 };	// end struct match_aliases_implementation_policy
 
 //=============================================================================
@@ -190,7 +190,10 @@ void
 alias_matcher<Tag>::__visit(const instance_alias_info<Tag2>& a) {
 	typedef	match_aliases_implementation_policy<is_same<Tag,Tag2>::value>
 					implementation_policy;
+if (a.valid()) {
+	// because it may be conditionally instantiated
 	implementation_policy::accept(a, *this);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

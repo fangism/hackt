@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-04:
+	  Minor bug fix in prsim's 'who' command, check that an alias
+		is actualy instantiated in the case of conditionals.  
+
+
 2006-08-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03:
