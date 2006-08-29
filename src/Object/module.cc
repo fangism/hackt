@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.22 2006/08/01 18:18:21 filipp Exp $
+ 	$Id: module.cc,v 1.23 2006/08/29 20:14:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -503,8 +503,13 @@ module::__cflat(ostream& o, const cflat_options& cf) const {
 	STACKTRACE_VERBOSE;
 	// print the production rules first, using canonical names
 	// print the name aliases in the manner requested in cflat_options
-	return __cflat_rules(o, cf) &&
-		__cflat_aliases(o, cf);
+#if 0
+	// can't depend on ordering (overloaded), my bad
+	return __cflat_rules(o, cf) && __cflat_aliases(o, cf);
+#else
+	return good_bool(__cflat_rules(o, cf).good &&
+			__cflat_aliases(o, cf).good);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
