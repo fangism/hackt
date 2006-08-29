@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.90 2006/08/25 05:47:41 fang Exp $
+#	$Id: configure.ac,v 1.91 2006/08/29 17:56:38 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -104,6 +104,7 @@ AM_CONDITIONAL(HAVE_CFLAT, test -n "$CFLAT" )
 HACKT_ARG_VAR_LEX
 HACKT_ARG_VAR_YACC
 HACKT_AM_CONDITIONAL_HAVE_YACC
+HACKT_YACC_PURE_PARSER
 HACKT_YACC_VERSION
 HACKT_LEX_VERSION
 
@@ -347,16 +348,17 @@ AC_SUBST(AUTO_LDFLAGS)
 dnl AC_SUBST(AUTO_LIBS)
 
 
+dnl NOTE USED ANY MORE
 dnl first, create a useful variable substitution script for use in config.status
-AC_CONFIG_FILES([config_subst.awk.sh:config/config_subst.awk],
-[dollar=$
-at=@
-cat > config_subst.awk.sh <<EOF
-#!$SHELL
-awk -f $srcdir/config/config_subst.awk $dollar$at
-EOF
-chmod +x config_subst.awk.sh
-])
+dnl AC_CONFIG_FILES([config_subst.awk.sh:config/config_subst.awk],
+dnl [dollar=$
+dnl at=@
+dnl cat > config_subst.awk.sh <<EOF
+dnl #!$SHELL
+dnl awk -f $srcdir/config/config_subst.awk $dollar$at
+dnl EOF
+dnl chmod +x config_subst.awk.sh
+dnl ])
 
 CONFIGDATE=`$DATE`
 AC_SUBST(CONFIGDATE)
@@ -461,50 +463,11 @@ dnl	])
 AC_CONFIG_FILES([configdate.h src/buildhost.h])
 AC_CONFIG_FILES([src/cxxflags.h src/cxx_version.h])
 AC_CONFIG_FILES([src/lexer/lex_version.h src/parser/yacc_version.h])
+AC_CONFIG_FILES([src/parser/hackt-parse.yy])
+AC_CONFIG_FILES([src/parser/instref-parse.yy])
+AC_CONFIG_FILES([src/parser/type-parse.yy])
+AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy])
 
-AC_CONFIG_FILES([src/parser/hackt-parse.yy:src/parser/hackt-parse.yy.in],
-	[out=src/parser/hackt-parse.yy
-	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
-	then
-		sed '/%pure.parser/d' $srcdir/$out.in > $out~
-	else
-		cp $srcdir/$out.in $out~
-	fi
-	scripts/replace_if_changed.sh $out~ $out
-	])
-
-AC_CONFIG_FILES([src/parser/instref-parse.yy:src/parser/instref-parse.yy.in],
-	[out=src/parser/instref-parse.yy
-	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
-	then
-		sed '/%pure.parser/d' $srcdir/$out.in > $out~
-	else
-		cp $srcdir/$out.in $out~
-	fi
-	scripts/replace_if_changed.sh $out~ $out
-	])
-
-AC_CONFIG_FILES([src/parser/type-parse.yy:src/parser/type-parse.yy.in],
-	[out=src/parser/type-parse.yy
-	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
-	then
-		sed '/%pure.parser/d' $srcdir/$out.in > $out~
-	else
-		cp $srcdir/$out.in $out~
-	fi
-	scripts/replace_if_changed.sh $out~ $out
-	])
-
-AC_CONFIG_FILES([src/util/lang/CX/cx-parse.yy:src/util/lang/CX/cx-parse.yy.in],
-	[out=src/util/lang/CX/cx-parse.yy
-	if ( ./config_subst.awk.sh -v var=HAVE_BISON_TRUE config.status | grep -q "#" )
-	then
-		sed '/%pure.parser/d' $srcdir/$out.in > $out~
-	else
-		cp $srcdir/$out.in $out~
-	fi
-	scripts/replace_if_changed.sh $out~ $out
-	])
 dnl initialize and reset header check dependencies
 dnl also depend on Makefile?
 dnl can't run make until depfiles has run! doh... work on this later...

@@ -1,5 +1,14 @@
 "ChangeLog"
 
+2006-08-29	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-05:
+	  config/lexyacc.am: defined HACKT_YACC_PURE_PARSER macro.
+	  config/config_subst.awK: not using anymore, added POSIX comment.
+		No longer depends on any posix standard behavior.
+	  configure.ac: plain AC_CONFIG_FILES output of yacc sources.  
+
+
 2006-08-24	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03:

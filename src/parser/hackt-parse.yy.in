@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.17 2006/07/31 22:22:40 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.18 2006/08/29 17:56:42 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -706,7 +706,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_expr_list>	mandatory_complex_aggregate_reference_list
 
 %start	module
-%pure_parser
+
+/* YACC_PURE_PARSER: conditionally substituted by configure */
+@YACC_PURE_PARSER@
 %%
 /******************************************************************************
 //	Grammar -- re-written to be LALR(1)

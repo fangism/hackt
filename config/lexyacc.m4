@@ -1,5 +1,5 @@
 dnl "config/lexyacc.m4"
-dnl	$Id: lexyacc.m4,v 1.3 2006/05/09 05:39:20 fang Exp $
+dnl	$Id: lexyacc.m4,v 1.4 2006/08/29 17:56:39 fang Exp $
 dnl This file contains autoconf macros related to lex and yacc, 
 dnl including bison.  
 dnl These may be slightly more specific to the HACKT project.
@@ -81,6 +81,28 @@ AM_CONDITIONAL(HAVE_BISON, echo "$YACC" | grep -q bison)
 AM_CONDITIONAL(HAVE_BYACC, echo "$YACC" | grep -q byacc)
 AM_CONDITIONAL(HAVE_YACC, echo "$YACC" | grep -v byacc | grep -q yacc)
 ])dnl
+
+dnl @synopsis HACKT_YACC_PURE
+dnl
+dnl AC_SUBST the variable YACC_PURE_PARSER for use in yacc sources
+dnl if the %pure-parser directive is supported.
+dnl
+dnl @category InstalledPackages
+dnl @version 2006-08-29
+dnl @author David Fang <fangism@users.sourceforge.net>
+dnl @license AllPermissive
+dnl
+AC_DEFUN([HACKT_YACC_PURE_PARSER],
+[AC_REQUIRE([AC_PROG_YACC])
+case $YACC in
+	dnl (
+	*bison* ) YACC_PURE_PARSER=%pure_parser ;;
+	dnl (
+	*)	YACC_PURE_PARSER="" ;;
+esac
+AC_SUBST(YACC_PURE_PARSER)
+])dnl
+
 
 dnl @synopsis HACKT_YACC_VERSION
 dnl

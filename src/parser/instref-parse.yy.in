@@ -4,7 +4,7 @@
 	This will be used in prsim and other simulators, for example.  
 	The grammar in here is an extremely small snippet
 	of the hackt language grammar.  
-	$Id: instref-parse.yy.in,v 1.5 2006/08/01 06:35:50 fang Exp $
+	$Id: instref-parse.yy.in,v 1.6 2006/08/29 17:56:44 fang Exp $
  */
 
 %{
@@ -136,7 +136,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %token	MAXIMUM_BOGOSITY
 
 %start	instref
-%pure_parser
+
+/* YACC_PURE_PARSER: conditionally substituted by configure */
+@YACC_PURE_PARSER@
 
 %%
 

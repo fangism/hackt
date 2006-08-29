@@ -5,7 +5,7 @@
 	ALERT: Make sure you are editing "parser/type-parse.yy.in"
 	and NOT the configure-generated "parser/type-parse.yy"
 	or else your changes will be clobbered during the next configure!
-	$Id: type-parse.yy.in,v 1.2 2006/08/01 06:35:53 fang Exp $
+	$Id: type-parse.yy.in,v 1.3 2006/08/29 17:56:44 fang Exp $
  */
 
 %{
@@ -298,7 +298,10 @@ yyfreestacks(const short* yyss, const short* yyssp,
 /* %type	<_expr_list>	mandatory_complex_aggregate_reference_list */
 
 %start	type_id
-%pure_parser
+
+/* YACC_PURE_PARSER: conditionally substituted by configure */
+@YACC_PURE_PARSER@
+
 %%
 /******************************************************************************
 //	Grammar
