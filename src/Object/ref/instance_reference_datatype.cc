@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.9 2006/06/26 01:46:20 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.9.8.1 2006/08/30 04:28:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -21,6 +21,9 @@
 #include "Object/inst/int_instance_collection.h"
 #include "Object/inst/enum_instance_collection.h"
 #include "Object/inst/struct_instance_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/datatype_instance_placeholder.h"
+#endif
 
 #include "Object/inst/value_collection.h"
 #include "Object/inst/pbool_instance.h"

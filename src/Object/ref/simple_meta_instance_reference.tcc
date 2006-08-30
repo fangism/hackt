@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.1 2006/08/27 07:52:04 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.2 2006/08/30 04:28:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -77,7 +77,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::~simple_meta_instance_reference() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
+#endif
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_inst_base(void) const {
 	return inst_collection_ref;
 }
@@ -287,11 +291,16 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 	\param lookup whether or not need to translate reference to
 		local instance collection to actual footprint
 		instance collection.  
+	NOTE: not used anymore with placeholders!
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_type& inst, 
+#else
 		const instance_collection_generic_type& inst, 
+#endif
 		const never_ptr<const index_list_type> ind, 
 		const unroll_context& c, 
 		const bool lookup) {
@@ -313,9 +322,15 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 		return aliases.front();
 	}
 #else
+#if USE_INSTANCE_PLACEHOLDERS
+	INVARIANT(lookup);	// until caller is re-written
+	const bad_bool
+		bad(unroll_references_packed_helper(c, inst, ind, aliases));
+#else
 	const bad_bool bad(lookup ? 
 		unroll_references_packed_helper(c, inst, ind, aliases) :
 		unroll_references_packed_helper_no_lookup(c, inst, ind, aliases));
+#endif
 	if (bad.bad) {
 		return return_type(NULL);
 	} else if (aliases.dimensions()) {
@@ -334,19 +349,30 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 	Same as the above, but collects a bunch of aliases, as opposed
 	to a single scalar alias.  Note the plurality in the name.  
 	\param aliases dimensionality is set by the caller (me).  
+	\param lookup is OBSOLETE after re-writing using placeholders.  
  */
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references(
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_type& inst, 
+#else
 		const instance_collection_generic_type& inst, 
+#endif
 		const never_ptr<const index_list_type> ind, 
 		const unroll_context& c, 
 		const bool lookup, 
 		alias_collection_type& aliases) {
 	STACKTRACE_VERBOSE;
+#if USE_INSTANCE_PLACEHOLDERS
+	INVARIANT(lookup);	// until caller is re-written
+	const bad_bool
+		bad(unroll_references_packed_helper(c, inst, ind, aliases));
+#else
 	const bad_bool bad(lookup ? 
 		unroll_references_packed_helper(c, inst, ind, aliases) :
 		unroll_references_packed_helper_no_lookup(c, inst, ind, aliases));
+#endif
 	// already have some error message
 	return bad;	// implicit conversion to good
 }

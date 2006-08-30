@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.13 2006/04/11 07:54:43 fang Exp $
+	$Id: subinstance_manager.h,v 1.13.20.1 2006/08/30 04:28:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -11,6 +11,7 @@
 #include "util/boolean_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
 #include "Object/inst/alias_visitee.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 class cflat_options;
@@ -19,6 +20,9 @@ class substructure_manager;
 class footprint;
 class instance_collection_base;
 class physical_instance_collection;
+#if USE_INSTANCE_PLACEHOLDERS
+class physical_instance_placeholder;
+#endif
 class unroll_context;
 class meta_instance_reference_base;
 class port_alias_tracker;
@@ -55,6 +59,11 @@ class subinstance_manager {
 friend class substructure_manager;
 	typedef	subinstance_manager			this_type;
 	typedef	physical_instance_collection	instance_collection_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	physical_instance_placeholder		lookup_arg_type;
+#else
+	typedef	physical_instance_collection		lookup_arg_type;
+#endif
 public:
 	typedef	count_ptr<instance_collection_type>	entry_value_type;
 	// just a synonym
@@ -94,10 +103,10 @@ public:
 
 	// TODO: assertion check that arg is a port member of this type?
 	value_type
-	lookup_port_instance(const instance_collection_type&) const;
+	lookup_port_instance(const lookup_arg_type&) const;
 
 	value_type
-	lookup_member_instance(const instance_collection_type&) const;
+	lookup_member_instance(const lookup_arg_type&) const;
 
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>

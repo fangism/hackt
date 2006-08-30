@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-04:
+	  Nope, still doesn't compile.
+	  More propagating use of instance/value placeholders.  
+	  Most affected in this revision:
+		unroll_context, value_references, instance_references, 
+		instance_alias (substructured)
+
+
 2006-08-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-03:

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.1 2006/08/28 05:10:17 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.2 2006/08/30 04:28:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -37,6 +37,9 @@
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/def/footprint.h"
 #include "Object/ref/meta_value_reference.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 
@@ -774,7 +777,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(
 	m.read_pointer(f, value_collection_ref);
 	NEVER_NULL(value_collection_ref);
 	m.load_object_once(
-		const_cast<value_collection_type*>(&*value_collection_ref));
+#if USE_INSTANCE_PLACEHOLDERS
+		const_cast<value_placeholder_type*>
+#else
+		const_cast<value_collection_type*>
+#endif
+			(&*value_collection_ref)
+		);
 	this->load_object_base(m, f);
 }
 

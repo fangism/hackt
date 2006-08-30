@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.8 2006/08/08 05:46:42 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.8.4.1 2006/08/30 04:28:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -11,6 +11,7 @@
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/meta_index_list_fwd.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 
 namespace HAC {
@@ -45,6 +46,10 @@ public:
 	/// the instance collection base type
 	typedef typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef typename traits_type::instance_placeholder_type
+					instance_placeholder_type;
+#endif
 
 	/// keep this typedef consistent with 
 	/// simple_meta_indexed_reference_base::index_list_type
@@ -84,7 +89,11 @@ protected:
 	static
 	bad_bool
 	unroll_references_packed_helper(const unroll_context&,
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_type&,
+#else
 		const instance_collection_generic_type&,
+#endif
 		const never_ptr<const index_list_type>,
 		alias_collection_type&);
 

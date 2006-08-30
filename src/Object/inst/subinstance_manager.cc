@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.17 2006/04/24 00:28:06 fang Exp $
+	$Id: subinstance_manager.cc,v 1.17.18.1 2006/08/30 04:27:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,9 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/port_context.h"
 #include "Object/common/dump_flags.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#endif
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -89,7 +92,7 @@ subinstance_manager::reserve(const size_t s) {
  */
 subinstance_manager::value_type
 subinstance_manager::lookup_port_instance(
-		const instance_collection_type& i) const {
+		const lookup_arg_type& i) const {
 	STACKTRACE_VERBOSE;
 	const size_t index = i.is_port_formal();
 	if (index > subinstance_array.size()) {
@@ -120,7 +123,7 @@ subinstance_manager::lookup_port_instance(
  */
 subinstance_manager::value_type
 subinstance_manager::lookup_member_instance(
-		const instance_collection_type& i) const {
+		const lookup_arg_type& i) const {
 	STACKTRACE_VERBOSE;
 	const size_t index = i.is_member_instance();
 	if (index > subinstance_array.size()) {

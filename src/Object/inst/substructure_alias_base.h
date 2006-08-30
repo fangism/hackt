@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.16 2006/08/23 20:57:18 fang Exp $
+	$Id: substructure_alias_base.h,v 1.16.2.1 2006/08/30 04:28:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,12 +11,17 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
 struct dump_flags;
 class instance_collection_base;
+#if USE_INSTANCE_PLACEHOLDERS
+class physical_instance_placeholder;
+#else
 class physical_instance_collection;
+#endif
 class unroll_context;
 class port_alias_tracker;
 class footprint;
@@ -40,7 +45,11 @@ private:
 	typedef	substructure_alias_base<true>	this_type;
 	typedef	subinstance_manager::connection_references_type
 						connection_references_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	physical_instance_placeholder	port_type;
+#else
 	typedef	physical_instance_collection	port_type;
+#endif
 protected:
 	/**
 		Container of sub-instances.  

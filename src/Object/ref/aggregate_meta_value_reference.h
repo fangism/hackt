@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.5 2006/07/04 07:26:12 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.5.6.1 2006/08/30 04:28:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -76,6 +76,12 @@ private:
 						value_scalar_type;
 	typedef	typename traits_type::value_collection_generic_type
 						value_collection_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::instance_placeholder_type
+						value_placeholder_type;
+	typedef	never_ptr<value_placeholder_type>
+						value_placeholder_ptr_type;
+#endif
 	typedef	typename traits_type::const_collection_type
 						const_collection_type;
 	typedef	typename traits_type::const_expr_type
@@ -103,7 +109,11 @@ public:
 	size_t
 	dimensions(void) const;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const param_value_placeholder>
+#else
 	never_ptr<const param_value_collection>
+#endif
 	get_coll_base(void) const;
 
 	good_bool

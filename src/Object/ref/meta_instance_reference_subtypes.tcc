@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.12 2006/08/08 05:46:42 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.12.4.1 2006/08/30 04:28:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -273,7 +273,11 @@ META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		const unroll_context& c,
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_type& _inst,
+#else
 		const instance_collection_generic_type& _inst,
+#endif
 		const never_ptr<const index_list_type> ind,
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
@@ -288,9 +292,16 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		INVARIANT((*f)[inst_name]);
 	}
 	// assert not-NULL and dynamic_cast!
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(f);
+	const instance_collection_generic_type&
+		inst(IS_A(const instance_collection_generic_type&,
+			*(*f)[inst_name]));
+#else
 	const instance_collection_generic_type&
 		inst(f ? IS_A(const instance_collection_generic_type&,
 			*(*f)[inst_name]) : _inst);
+#endif
 	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_packed_helper
 

@@ -1,13 +1,14 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.13 2006/04/27 00:15:37 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.13.16.1 2006/08/30 04:28:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 #define	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 
 #include <iostream>
+#include "Object/devel_switches.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
@@ -39,12 +40,21 @@ template <class> class simple_meta_instance_reference;
  */
 template <>
 struct simple_meta_instance_reference_implementation<true> {
+#if USE_INSTANCE_PLACEHOLDERS
+	template <class Tag>
+	struct instance_placeholder_type {
+		typedef	typename
+			class_traits<Tag>::instance_placeholder_type
+					type;
+	};
+#else
 	template <class Tag>
 	struct instance_collection_generic_type {
 		typedef	typename
 			class_traits<Tag>::instance_collection_generic_type
 					type;
 	};
+#endif
 
 	typedef	never_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>
@@ -61,7 +71,11 @@ static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_placeholder_type<Tag>::type& inst, 
+#else
 			instance_collection_generic_type<Tag>::type& inst, 
+#endif
 		const index_list_ptr_type ind,
 		const unroll_context& c, 
 		const bool lookup) {
@@ -97,7 +111,11 @@ static
 const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_placeholder_type<Tag>::type& inst, 
+#else
 			instance_collection_generic_type<Tag>::type& inst, 
+#endif
 		const index_list_ptr_type ind,
 		const state_manager& sm) {
 	STACKTRACE_VERBOSE;
@@ -151,12 +169,21 @@ make_port_connection(
  */
 template <>
 struct simple_meta_instance_reference_implementation<false> {
+#if USE_INSTANCE_PLACEHOLDERS
+	template <class Tag>
+	struct instance_placeholder_type {
+		typedef	typename
+			class_traits<Tag>::instance_placeholder_type
+					type;
+	};
+#else
 	template <class Tag>
 	struct instance_collection_generic_type {
 		typedef	typename
 			class_traits<Tag>::instance_collection_generic_type
 					type;
 	};
+#endif
 
 	typedef	never_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>
@@ -168,7 +195,11 @@ static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_placeholder_type<Tag>::type& inst, 
+#else
 			instance_collection_generic_type<Tag>::type& inst, 
+#endif
 		const index_list_ptr_type ind,
 		const unroll_context&, 
 		const bool) {
@@ -199,7 +230,11 @@ template <class Tag>
 static
 const footprint_frame*
 simple_lookup_footprint_frame(
+#if USE_INSTANCE_PLACEHOLDERS
+		const typename instance_placeholder_type<Tag>::type&, 
+#else
 		const typename instance_collection_generic_type<Tag>::type&, 
+#endif
 		const index_list_ptr_type,
 		const state_manager&) {
 	// ICE?

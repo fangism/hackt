@@ -1,15 +1,19 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.5 2006/07/04 07:26:20 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.5.6.1 2006/08/30 04:28:09 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/expr/pint_const.h"
 #include "Object/inst/pint_value_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 #include "Object/common/namespace.h"
 #endif
+#include "common/TODO.h"
 
 namespace HAC {
 namespace entity {
@@ -23,9 +27,10 @@ namespace entity {
  */
 unroll_context_value_resolver<pint_tag>::const_return_type
 unroll_context_value_resolver<pint_tag>::operator ()
-		(const unroll_context& c, const value_collection_type& v,
+		(const unroll_context& c, const value_placeholder_type& v,
 		value_type& i) const {
 	// hack: intercept loop variable lookups
+	// TODO: can't cast placeholder to scalar!
 	const value_scalar_type* const
 		vsp(IS_A(const value_scalar_type*, &v));
 	if (vsp && vsp->is_loop_variable()) {
@@ -39,7 +44,12 @@ unroll_context_value_resolver<pint_tag>::operator ()
 			// return std::make_pair(true, v);
 			// stupid reference-to-reference...
 			// return return_type(true, v);
+#if USE_INSTANCE_PLACEHOLDERS
+			FINISH_ME(Fang);
 			return const_return_type(true, &v);
+#else
+			return const_return_type(true, &v);
+#endif
 		}
 	}
 	// end hack
@@ -76,12 +86,18 @@ unroll_context_value_resolver<pint_tag>::operator ()
  */
 unroll_context_value_resolver<pint_tag>::value_collection_type&
 unroll_context_value_resolver<pint_tag>::operator ()
-	(const unroll_context& c, value_collection_type& v) const {
+	(const unroll_context& c, value_placeholder_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(f);
+	value_collection_type&
+		_vals(IS_A(value_collection_type&, *(*f)[v.get_name()]));
+#else
 	value_collection_type&
 		_vals(f ? IS_A(value_collection_type&, *(*f)[v.get_name()])
 			: v);
+#endif
 	return _vals;
 }
 
@@ -90,13 +106,19 @@ unroll_context_value_resolver<pint_tag>::operator ()
 
 unroll_context_value_resolver<pbool_tag>::const_return_type
 unroll_context_value_resolver<pbool_tag>::operator ()
-		(const unroll_context& c, const value_collection_type& v,
+		(const unroll_context& c, const value_placeholder_type& v,
 		value_type& i) const {
 	const footprint* const f(c.get_target_footprint());
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(f);
+	const value_collection_type*
+		_vals(IS_A(const value_collection_type*, &*(*f)[v.get_name()]));
+#else
 	const value_collection_type*
 		_vals(f ? IS_A(const value_collection_type*,
 				&*(*f)[v.get_name()])
 			: &v);
+#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	// don't expect footprint lookup to find globals, only locals
 	if (!_vals) {
@@ -117,12 +139,18 @@ unroll_context_value_resolver<pbool_tag>::operator ()
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context_value_resolver<pbool_tag>::value_collection_type&
 unroll_context_value_resolver<pbool_tag>::operator ()
-	(const unroll_context& c, value_collection_type& v) const {
+	(const unroll_context& c, value_placeholder_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(f);
+	value_collection_type&
+		_vals(IS_A(value_collection_type&, *(*f)[v.get_name()]));
+#else
 	value_collection_type&
 		_vals(f ? IS_A(value_collection_type&, *(*f)[v.get_name()])
 			: v);
+#endif
 	return _vals;
 }
 
@@ -134,13 +162,19 @@ unroll_context_value_resolver<pbool_tag>::operator ()
  */
 unroll_context_value_resolver<preal_tag>::const_return_type
 unroll_context_value_resolver<preal_tag>::operator ()
-		(const unroll_context& c, const value_collection_type& v,
+		(const unroll_context& c, const value_placeholder_type& v,
 		value_type& i) const {
 	const footprint* const f(c.get_target_footprint());
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(f);
+	const value_collection_type*
+		_vals(IS_A(const value_collection_type*, &*(*f)[v.get_name()]));
+#else
 	const value_collection_type*
 		_vals(f ? IS_A(const value_collection_type*,
 				&*(*f)[v.get_name()])
 			: &v);
+#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	// don't expect footprint lookup to find globals, only locals
 	if (!_vals) {
@@ -161,12 +195,18 @@ unroll_context_value_resolver<preal_tag>::operator ()
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context_value_resolver<preal_tag>::value_collection_type&
 unroll_context_value_resolver<preal_tag>::operator ()
-	(const unroll_context& c, value_collection_type& v) const {
+	(const unroll_context& c, value_placeholder_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(f);
+	value_collection_type&
+		_vals(IS_A(value_collection_type&, *(*f)[v.get_name()]));
+#else
 	value_collection_type&
 		_vals(f ? IS_A(value_collection_type&, *(*f)[v.get_name()])
 			: v);
+#endif
 	return _vals;
 }
 

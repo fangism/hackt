@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.14.4.1 2006/08/27 07:52:03 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.14.4.2 2006/08/30 04:28:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -21,6 +21,9 @@
 namespace HAC {
 namespace entity {
 using util::packed_array_generic;
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+#endif
 
 template <bool>	struct simple_meta_instance_reference_implementation;
 
@@ -87,7 +90,11 @@ public:
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
 private:
+#if USE_INSTANCE_PLACEHOLDERS
+	const instance_placeholder_ptr_type	inst_collection_ref;
+#else
 	const instance_collection_ptr_type	inst_collection_ref;
+#endif
 protected:
 	simple_meta_instance_reference();
 public:
@@ -107,7 +114,11 @@ virtual	~simple_meta_instance_reference();
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const instance_placeholder_base>
+#else
 	never_ptr<const instance_collection_base>
+#endif
 	get_inst_base(void) const;
 
 	ostream&
@@ -161,14 +172,22 @@ protected:
 	static
 	instance_alias_base_ptr_type
 	__unroll_generic_scalar_reference(
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_type&, 
+#else
 		const instance_collection_generic_type&, 
+#endif
 		const never_ptr<const index_list_type>,
 		const unroll_context&, const bool);
 
 	static
 	good_bool
 	__unroll_generic_scalar_references(
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_type&, 
+#else
 		const instance_collection_generic_type&, 
+#endif
 		const never_ptr<const index_list_type>,
 		const unroll_context&, const bool, 
 		alias_collection_type&);

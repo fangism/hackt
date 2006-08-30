@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.13.2.1 2006/08/28 05:10:16 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.13.2.2 2006/08/30 04:28:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -68,7 +68,7 @@ protected:
 	typedef	typename traits_type::template value_array<0>::type
 							value_scalar_type;
 #if USE_INSTANCE_PLACEHOLDERS
-	typedef	typename traits_type::value_placeholder_generic_type
+	typedef	typename traits_type::instance_placeholder_type
 							value_placeholder_type;
 	typedef	never_ptr<value_placeholder_type>
 						value_placeholder_ptr_type;
