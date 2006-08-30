@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.22 2006/08/12 01:00:51 fang Exp $
+	$Id: State.cc,v 1.23 2006/08/30 04:05:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -23,7 +23,7 @@
 #include "Object/state_manager.h"
 #include "Object/traits/classification_tags.h"
 #include "Object/global_entry.h"
-#include "common/ICE.h"
+#include "sim/ISE.h"
 #include "common/TODO.h"
 #include "util/attributes.h"
 #include "util/signal.h"
@@ -258,7 +258,7 @@ State::initialize(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
-	INVARIANT(event_pool.check_valid_empty());
+	ISE_INVARIANT(event_pool.check_valid_empty());
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
 	flags |= FLAGS_INITIALIZE_SET_MASK;
@@ -299,7 +299,7 @@ State::reset(void) {
 		const event_placeholder_type next(event_queue.pop());
 		event_pool.deallocate(next.event_index);
 	}
-	INVARIANT(event_pool.check_valid_empty());
+	ISE_INVARIANT(event_pool.check_valid_empty());
 	fill(check_exhi_ring_pool.begin(), check_exhi_ring_pool.end(), false);
 	fill(check_exlo_ring_pool.begin(), check_exlo_ring_pool.end(), false);
 	flags = FLAGS_DEFAULT;
@@ -336,8 +336,8 @@ State::head_sentinel(void) {
  */
 const State::node_type&
 State::get_node(const node_index_type i) const {
-	INVARIANT(i);
-	INVARIANT(i < node_pool.size());
+	ISE_INVARIANT(i);
+	ISE_INVARIANT(i < node_pool.size());
 	return node_pool[i];
 }
 
@@ -348,8 +348,8 @@ State::get_node(const node_index_type i) const {
  */
 State::node_type&
 State::get_node(const node_index_type i) {
-	INVARIANT(i);
-	INVARIANT(i < node_pool.size());
+	ISE_INVARIANT(i);
+	ISE_INVARIANT(i < node_pool.size());
 	return node_pool[i];
 }
 
@@ -369,8 +369,8 @@ State::backtrace_node(ostream& o, const node_index_type ni) const {
 		"\' : " << node_type::value_to_char[size_t(v)] << endl;
 	event_set_type l;
 	bool cyc = l.insert(e).second;	// return true if actually inserted
-	INVARIANT(cyc);	// not already in collection
-	INVARIANT(e.node);
+	ISE_INVARIANT(cyc);	// not already in collection
+	ISE_INVARIANT(e.node);
 	// there's a better way to rewrite this...
 	do {
 		// print
@@ -574,7 +574,7 @@ State::__allocate_event(node_type& n,
 		const rule_index_type ri,
 		const uchar val) {
 	STACKTRACE_VERBOSE;
-	INVARIANT(!n.pending_event());
+	ISE_INVARIANT(!n.pending_event());
 	n.set_event(event_pool.allocate(event_type(ni, c, ri, val)));
 	// n.set_cause_node(ci);	// now assign *after* dequeue_event
 	return n.get_event();
@@ -678,7 +678,7 @@ State::get_event(const event_index_type i) {
  */
 void
 State::enqueue_event(const time_type t, const event_index_type ei) {
-	INVARIANT(t >= current_time);
+	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" at time " << t << endl);
 	event_queue.push(event_placeholder_type(t, ei));
@@ -691,7 +691,7 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
  */
 void
 State::enqueue_exclhi(const time_type t, const event_index_type ei) {
-	INVARIANT(t >= current_time);
+	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing exclhi ID " << ei <<
 		" at time " << t << endl);
 	exclhi_queue.push_back(event_placeholder_type(t, ei));
@@ -705,7 +705,7 @@ State::enqueue_exclhi(const time_type t, const event_index_type ei) {
  */
 void
 State::enqueue_excllo(const time_type t, const event_index_type ei) {
-	INVARIANT(t >= current_time);
+	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing excllo ID " << ei <<
 		" at time " << t << endl);
 	excllo_queue.push_back(event_placeholder_type(t, ei));
@@ -1191,12 +1191,13 @@ for ( ; i!=e; ++i) {
 			(pull_dn_state == expr_type::PULL_WEAK);
 			// not XOR (^), see pending_weak table in prs.c
 		// issue diagnostic
-		if (weak_interference_policy != ERROR_IGNORE || !pending_weak) {
+		if ((weak_interference_policy != ERROR_IGNORE) ||
+				!pending_weak) {
 			err |=
 			__report_interference(cout, pending_weak, _ni, ev);
 		}
 		if (ev.pending_interference()) {
-			INVARIANT(_n.pending_event());
+			ISE_INVARIANT(_n.pending_event());
 			// always set the cause and new value together
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 			_n.set_value_and_cause(node_type::LOGIC_OTHER, 
@@ -1222,6 +1223,8 @@ for ( ; i!=e; ++i) {
 			DEBUG_STEP_PRINT("node has enqueued different event "
 				<< pe << " vs. this one " << ne << endl);
 			event_type& pv(get_event(pe));
+			// sanity: referring to same node
+			ISE_INVARIANT(pv.node == _ni);
 			// walk event_queue, find delay of the former event?
 			// inspect event values?
 			if (dequeue_unstable_events()) {
@@ -1229,7 +1232,7 @@ for ( ; i!=e; ++i) {
 				// new behavior: cancel the original event
 				// which was updated to X
 				_n.clear_event();
-				INVARIANT(pv.killed());
+				ISE_INVARIANT(pv.killed());
 				_n.set_event(ne);
 				__flush_pending_event_replacement(_n, ne, ev);
 			} else {
@@ -1271,7 +1274,7 @@ State::__flush_pending_event_with_interference(node_type& _n,
 		__deallocate_event(_n, ne);
 		break;
 	default:
-		ICE(cerr, 
+		ISE(cerr, 
 			cerr << "Invalid logic value." << endl;
 		);
 	}	// end switch
@@ -1326,7 +1329,7 @@ State::__flush_pending_event_replacement(node_type& _n,
 		// __deallocate_event(_n, ne);
 		break;
 	default:
-		ICE(cerr, 
+		ISE(cerr, 
 			cerr << "Invalid logic value." << endl;
 		);
 	}	// end switch
@@ -1593,14 +1596,14 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	if (next == node_type::LOGIC_HIGH) {
 		// need to lock
 		const const_iterator f(check_exhi.find(ni));
-		INVARIANT(f != check_exhi.end());
+		ISE_INVARIANT(f != check_exhi.end());
 		// make sure all locks are free
 		lock_index_iterator
 			i(f->second.begin()), e(f->second.end());
 		for ( ; i!=e; ++i) {
 			const lock_index_type li = *i;
-			INVARIANT(li);
-			INVARIANT(li < check_exhi_ring_pool.size());
+			ISE_INVARIANT(li);
+			ISE_INVARIANT(li < check_exhi_ring_pool.size());
 			lock_reference l(check_exhi_ring_pool[li]);
 			// set all locks
 			if (l) {
@@ -1613,14 +1616,14 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	} else if (prev == node_type::LOGIC_HIGH && next != prev) {
 		// need to unlock
 		const const_iterator f(check_exhi.find(ni));
-		INVARIANT(f != check_exhi.end());
+		ISE_INVARIANT(f != check_exhi.end());
 		// make sure all locks are free
 		lock_index_iterator
 			i(f->second.begin()), e(f->second.end());
 		for ( ; i!=e; ++i) {
 			const lock_index_type li = *i;
-			INVARIANT(li);
-			INVARIANT(li < check_exhi_ring_pool.size());
+			ISE_INVARIANT(li);
+			ISE_INVARIANT(li < check_exhi_ring_pool.size());
 			// unlock ring
 			check_exhi_ring_pool[li] = false;
 		}
@@ -1630,14 +1633,14 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	if (next == node_type::LOGIC_LOW) {
 		// need to lock
 		const const_iterator f(check_exlo.find(ni));
-		INVARIANT(f != check_exlo.end());
+		ISE_INVARIANT(f != check_exlo.end());
 		// make sure all locks are free
 		lock_index_iterator
 			i(f->second.begin()), e(f->second.end());
 		for ( ; i!=e; ++i) {
 			const lock_index_type li = *i;
-			INVARIANT(li);
-			INVARIANT(li < check_exlo_ring_pool.size());
+			ISE_INVARIANT(li);
+			ISE_INVARIANT(li < check_exlo_ring_pool.size());
 			lock_reference l(check_exlo_ring_pool[li]);
 			// set all locks
 			if (l) {
@@ -1650,14 +1653,14 @@ State::check_excl_rings(const node_index_type ni, const node_type& n,
 	} else if (prev == node_type::LOGIC_LOW && next != prev) {
 		// need to unlock
 		const const_iterator f(check_exlo.find(ni));
-		INVARIANT(f != check_exlo.end());
+		ISE_INVARIANT(f != check_exlo.end());
 		// make sure all locks are free
 		lock_index_iterator
 			i(f->second.begin()), e(f->second.end());
 		for ( ; i!=e; ++i) {
 			const lock_index_type li = *i;
-			INVARIANT(li);
-			INVARIANT(li < check_exlo_ring_pool.size());
+			ISE_INVARIANT(li);
+			ISE_INVARIANT(li < check_exlo_ring_pool.size());
 			// unlock ring
 			check_exlo_ring_pool[li] = false;
 		}
@@ -1694,7 +1697,7 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 			ring.insert(i->first);
 		}
 	}
-	INVARIANT(ring.size() > 1);
+	ISE_INVARIANT(ring.size() > 1);
 	o << "ERROR: excl" << (exex.type ? "hi" : "lo") << 
 		" violation detected!" << endl;
 	ring_set_type::const_iterator ri(ring.begin()), re(ring.end());
@@ -1726,9 +1729,9 @@ State::step_return_type
 State::step(void) THROWS_EXCL_EXCEPTION {
 	typedef	State::step_return_type		return_type;
 	STACKTRACE_VERBOSE;
-	INVARIANT(pending_queue.empty());
-	INVARIANT(exclhi_queue.empty());
-	INVARIANT(excllo_queue.empty());
+	ISE_INVARIANT(pending_queue.empty());
+	ISE_INVARIANT(exclhi_queue.empty());
+	ISE_INVARIANT(excllo_queue.empty());
 	if (event_queue.empty()) {
 		return return_type(INVALID_NODE_INDEX, INVALID_NODE_INDEX);
 	}
@@ -1786,7 +1789,7 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 		// else proceed
 	} else {
 		// vacuous event is allowed if set was forced by user
-		INVARIANT(prev != pe.val || n.is_unstab() || force);
+		ISE_INVARIANT(prev != pe.val || n.is_unstab() || force);
 	}
 	// saved previous value above already
 	if (checking_excl()) {
@@ -2062,7 +2065,7 @@ State::propagate_evaluation(
 	while (ri!=re && (rule_map.find(*ri) == rule_map.end())) { ++ri; }
 	root_rule = *ri;
 }
-	INVARIANT(root_rule);
+	ISE_INVARIANT(root_rule);
 // propagation made it to the root node, indexed by ui (now node_index_type)
 	node_type& n(get_node(ui));
 	DEBUG_STEP_PRINT("propagated to output node: " <<
@@ -2378,8 +2381,7 @@ State::__diagnose_violation(ostream& o, const uchar next,
 				const size_t pe = n.get_event();
 				DEBUG_STEP_PRINT("dequeuing unstable event " << pe << endl);
 				get_event(pe).kill();
-				// n.clear_event();
-				// or punt clearing until later?
+				n.clear_event();
 #if 0
 	{	// pardon momentary ugly indentation...
 		typedef	node_type::const_fanout_iterator	const_iterator;
@@ -2517,7 +2519,7 @@ State::dump_watched_nodes(ostream& o) const {
  */
 ostream&
 State::status_nodes(ostream& o, const uchar val) const {
-	INVARIANT(node_type::is_valid_value(val));
+	ISE_INVARIANT(node_type::is_valid_value(val));
 	const size_t ns = node_pool.size();
 	size_t i = INVALID_NODE_INDEX +1;
 	o << node_type::value_to_char[size_t(val)] << " nodes:" << endl;
@@ -2539,7 +2541,7 @@ State::check_structure(void) const {
 	STACKTRACE_VERBOSE;
 {
 	const expr_index_type exprs = expr_pool.size();
-	INVARIANT(exprs == expr_graph_node_pool.size());
+	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
 		STACKTRACE_INDENT_PRINT("checking Expr " << i << ":" << endl);
@@ -2563,8 +2565,8 @@ State::check_structure(void) const {
  */
 string
 State::get_node_canonical_name(const node_index_type i) const {
-	INVARIANT(i);
-	INVARIANT(i < node_pool.size());
+	ISE_INVARIANT(i);
+	ISE_INVARIANT(i < node_pool.size());
 	const state_manager& sm(mod.get_state_manager());
 	const entity::footprint& topfp(mod.get_footprint());
 	const global_entry_pool<bool_tag>& bp(sm.get_pool<bool_tag>());
@@ -2592,7 +2594,7 @@ State::dump_struct(ostream& o) const {
 {
 	o << "Expressions: " << endl;
 	const expr_index_type exprs = expr_pool.size();
-	INVARIANT(exprs == expr_graph_node_pool.size());
+	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
 		const expr_type& e(expr_pool[i]);
@@ -2644,7 +2646,7 @@ State::dump_struct_dot(ostream& o) const {
 {
 	o << "# Expressions: " << endl;
 	const expr_index_type exprs = expr_pool.size();
-	INVARIANT(exprs == expr_graph_node_pool.size());
+	ISE_INVARIANT(exprs == expr_graph_node_pool.size());
 	expr_index_type i = FIRST_VALID_EXPR;
 	for ( ; i<exprs; ++i) {
 		o << "EXPR_" << i << "\t[label=\"" << i << "\", shape=";
@@ -2660,6 +2662,31 @@ State::dump_struct_dot(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Print a single event.  
+ */
+ostream&
+State::dump_event(ostream& o, const event_index_type ei, 
+		const time_type t) const {
+	DEBUG_STEP_PRINT(ei);
+	const event_type& ev(get_event(ei));
+	if (!ev.killed()) {
+		o << '\t' << t << '\t' <<
+			get_node_canonical_name(ev.node) << " : " <<
+			node_type::value_to_char[ev.val] << endl;
+	}
+#if DEBUG_STEP
+	else {
+		o << '\t' << t << '\t' <<
+			get_node_canonical_name(ev.node) << " : " <<
+			node_type::value_to_char[ev.val] <<
+			'\t' << "(killed)" << endl;
+	}
+#endif
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Prints the event queue.  
  */
 ostream&
@@ -2670,21 +2697,7 @@ State::dump_event_queue(ostream& o) const {
 	const_iterator i(temp.begin()), e(temp.end());
 	o << "event queue:" << endl;
 	for ( ; i!=e; ++i) {
-		DEBUG_STEP_PRINT(i->event_index);
-		const event_type& ev(get_event(i->event_index));
-		if (!ev.killed()) {
-			o << '\t' << i->time << '\t' <<
-				get_node_canonical_name(ev.node) << " : " <<
-				node_type::value_to_char[ev.val] << endl;
-		}
-#if DEBUG_STEP
-		else {
-			o << '\t' << i->time << '\t' <<
-				get_node_canonical_name(ev.node) << " : " <<
-				node_type::value_to_char[ev.val] <<
-				'\t' << "(killed)" << endl;
-		}
-#endif
+		dump_event(o, i->event_index, i->time);
 	}
 	return o;
 }
@@ -2778,8 +2791,8 @@ State::dump_subexpr(ostream& o, const expr_index_type ei,
 #if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;
 #endif
-	INVARIANT(ei);
-	INVARIANT(ei < expr_pool.size());
+	ISE_INVARIANT(ei);
+	ISE_INVARIANT(ei < expr_pool.size());
 	const expr_type& e(expr_pool[ei]);
 	const graph_node_type& g(expr_graph_node_pool[ei]);
 	// can elaborate more on when parens are needed
@@ -2841,7 +2854,7 @@ State::dump_source_paths(ostream& o) const {
 ostream&
 State::dump_mk_excl_ring(ostream& o, const ring_set_type& r) const {
 	typedef	ring_set_type::const_iterator	const_iterator;
-	INVARIANT(r.size() > 1);
+	ISE_INVARIANT(r.size() > 1);
 	const_iterator i(r.begin()), e(r.end());
 	o << "{ ";
 	o << get_node_canonical_name(*i);
@@ -2909,7 +2922,7 @@ State::dump_node_mk_excl_rings(ostream& o, const node_index_type ni) const {
 ostream&
 State::dump_check_excl_ring(ostream& o, const lock_index_list_type& r) const {
 	typedef	lock_index_list_type::const_iterator	const_iterator;
-	INVARIANT(r.size() > 1);
+	ISE_INVARIANT(r.size() > 1);
 	const_iterator i(r.begin()), e(r.end());
 	o << "{ ";
 	o << get_node_canonical_name(*i);
@@ -3090,9 +3103,9 @@ State::save_checkpoint(ostream& o) const {
 }
 	// excl_rings -- structural only
 	// excl and pending queues should be empty!
-	INVARIANT(exclhi_queue.empty());
-	INVARIANT(excllo_queue.empty());
-	INVARIANT(pending_queue.empty());
+	ISE_INVARIANT(exclhi_queue.empty());
+	ISE_INVARIANT(excllo_queue.empty());
+	ISE_INVARIANT(pending_queue.empty());
 	write_value(o, current_time);
 	write_value(o, uniform_delay);
 {
@@ -3223,9 +3236,9 @@ State::load_checkpoint(istream& i) {
 }
 	// excl_rings -- structural only
 	// excl and pending queues should be empty!
-	INVARIANT(exclhi_queue.empty());
-	INVARIANT(excllo_queue.empty());
-	INVARIANT(pending_queue.empty());
+	ISE_INVARIANT(exclhi_queue.empty());
+	ISE_INVARIANT(excllo_queue.empty());
+	ISE_INVARIANT(pending_queue.empty());
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
 {

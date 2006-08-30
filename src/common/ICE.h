@@ -1,7 +1,7 @@
 /**
 	\file "common/ICE.h"
 	Macros for internal compiler errors.  
-	$Id: ICE.h,v 1.5 2006/08/25 05:47:46 fang Exp $
+	$Id: ICE.h,v 1.6 2006/08/30 04:05:03 fang Exp $
  */
 
 #ifndef	__COMMON_ICE_H__
@@ -52,8 +52,8 @@
 #define	ICE_INVARIANT(pred)
 #else
 #define	ICE_INVARIANT(pred)						\
-	if (UNLIKELY(!pred)) {						\
-		ICE_GREET(ostr);					\
+	if (UNLIKELY(!(pred))) {					\
+		ICE_GREET(std::cerr);					\
 		std::cerr << "assert failed: `" # pred "\'" 		\
 			<< std::endl;					\
 		ICE_EXIT(std::cerr)					\

@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.16 2006/07/16 03:34:48 fang Exp $
+ 	$Id: operators.cc,v 1.17 2006/08/30 04:04:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -1181,7 +1181,7 @@ pint_relational_expr::resolve_value(value_type& i) const {
 	const good_bool r_ret(rx->resolve_value(ri));
 	// SWITCH
 	i = (*op)(li, ri);
-	return l_ret && r_ret;
+	return good_bool(l_ret.good && r_ret.good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1776,7 +1776,7 @@ preal_relational_expr::resolve_value(value_type& i) const {
 	const good_bool r_ret(rx->resolve_value(ri));
 	// SWITCH
 	i = (*op)(li, ri);
-	return l_ret && r_ret;
+	return good_bool(l_ret.good && r_ret.good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2051,7 +2051,7 @@ pbool_logical_expr::resolve_value(value_type& i) const {
 	const good_bool l_ret(lx->resolve_value(lb));
 	const good_bool r_ret(rx->resolve_value(rb));
 	i = (*op)(lb, rb);
-	return l_ret && r_ret;
+	return good_bool(l_ret.good && r_ret.good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,7 +1,7 @@
 /**
 	\file "sim/ISE.cc"
 	String and common symbols defined for internal simulator errors.
-	$Id: ISE.cc,v 1.2 2006/07/18 04:09:12 fang Exp $
+	$Id: ISE.cc,v 1.3 2006/08/30 04:05:05 fang Exp $
  */
 
 #include <ostream>
@@ -9,6 +9,7 @@
 #include "cvstag.h"	// generated
 
 namespace HAC {
+namespace SIM {
 using std::ostream;
 using std::endl;
 
@@ -53,5 +54,6 @@ __ISE_macro_test(ostream& o) {
 }
 
 //=============================================================================
+}	// end namespace SIM
 }	// end namespace HAC
 

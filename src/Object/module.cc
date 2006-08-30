@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.23 2006/08/29 20:14:40 fang Exp $
+ 	$Id: module.cc,v 1.24 2006/08/30 04:04:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -433,7 +433,8 @@ module::cflat_process_type(const process_type_reference& pt, ostream& o,
 		dump_flags::default_value,
 		expr_dump_context::default_value) << endl;
 #endif
-	return __cflat_rules(o, cf) && __cflat_aliases_no_import(o, cf);
+	return good_bool(__cflat_rules(o, cf).good &&
+		__cflat_aliases_no_import(o, cf).good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

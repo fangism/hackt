@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.13 2006/08/12 00:36:35 fang Exp $
+	$Id: State.h,v 1.14 2006/08/30 04:05:07 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -934,6 +934,9 @@ public:
 	/// prints output in DOT form for visualization (options?)
 	ostream&
 	dump_struct_dot(ostream&) const;
+
+	ostream&
+	dump_event(ostream&, const event_index_type, const time_type) const;
 
 	ostream&
 	dump_event_queue(ostream&) const;

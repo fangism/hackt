@@ -1,0 +1,29 @@
+/**
+	\file "bad_close.hac"
+	reduced from test case reported by Filipp Akopyan
+	Description below.
+	To reproduces, compile it (.haco).  
+ */
+
+bool p;
+}	// bad close...
+
+// compiling gives:
+/**
+At: "bad_close.hac":5:
+parse error: syntax error
+parser stacks:
+state   value
+0       list<(root_item)>: ... [2:1--3:1]
+2        [218189488:0]
+in state 2, possible rules are:
+        $accept: module . $end  (0)
+acceptable tokens are: 
+        $end (shift)
+util/memory/chunk_map_pool.tcc:328: failed assertion `p < use_chunk->past_end_address()'
+**/
+
+// BUG:
+// classification: ICE on invalid
+// status: open
+

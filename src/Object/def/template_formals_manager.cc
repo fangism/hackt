@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.12 2006/07/04 07:25:49 fang Exp $
+	$Id: template_formals_manager.cc,v 1.13 2006/08/30 04:04:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -359,7 +359,7 @@ template_formals_manager::certify_template_arguments(
 			relaxed_template_formals_list) : good_bool(true));
 		// if relaxed is NULL, then accept for now
 #endif
-	return sg && rg;
+	return good_bool(sg.good && rg.good);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -398,7 +398,7 @@ template_formals_manager::must_validate_actuals(
 		partial_check_null_template_argument(
 			relaxed_template_formals_list);
 #endif
-	const good_bool ret(sg && rg);
+	const good_bool ret(sg.good && rg.good);
 	if (!ret.good) {
 		cerr << "ERROR: actual parameter types do not "
 			"completely match up against formals." << endl;

@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2006-08-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-06:
+	  util/boolean_types.h: disabled && and || overloads
+		to prevent accidental error and dependence on
+		missing sequence point.  
+
+
 2006-08-23	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-02:

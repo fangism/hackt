@@ -4,12 +4,21 @@
 	The purpose of these classes is to provide self-documenting
 	boolean values, which prevent user errors.  
 
-	$Id: boolean_types.h,v 1.5 2006/07/04 07:26:24 fang Exp $
+	$Id: boolean_types.h,v 1.6 2006/08/30 04:05:08 fang Exp $
 	"When I'm good, I'm good, but when I'm bad, I'm better." -- Mae West
  */
 
 #ifndef	__UTIL_BOOLEAN_TYPES_H__
 #define	__UTIL_BOOLEAN_TYPES_H__
+
+/**
+	Do NOT overload the && and || operators for these
+	boolean types!  The overloads do not provide short-circuit
+	semantics like the intrinsic boolean operators.  
+	A gotcha: operands to an overloaded && or || operator
+		have no definite sequence point.  
+ */
+#define	WANT_UTIL_BOOLEAN_OVERLOADS		0
 
 namespace util {
 
@@ -52,11 +61,12 @@ struct good_bool {
 
 	// no implicit conversion operator
 
-	// is this obfuscating?
+#if WANT_UTIL_BOOLEAN_OVERLOADS
 	good_bool
 	operator && (const good_bool& b) const {
 		return good_bool(this->good && b.good);
 	}
+#endif
 
 	good_bool&
 	operator &= (const good_bool& c) {
@@ -102,10 +112,12 @@ struct bad_bool {
 
 	// no implicit conversion operator
 
+#if WANT_UTIL_BOOLEAN_OVERLOADS
 	bad_bool
 	operator || (const bad_bool& b) const {
 		return bad_bool(this->bad || b.bad);
 	}
+#endif
 
 	bad_bool&
 	operator |= (const bad_bool& c) {

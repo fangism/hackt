@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/port_alias_tracker.cc"
-	$Id: port_alias_tracker.cc,v 1.11 2006/04/27 05:51:50 fang Exp $
+	$Id: port_alias_tracker.cc,v 1.12 2006/08/30 04:05:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -398,12 +398,14 @@ good_bool
 port_alias_tracker::replay_internal_aliases(substructure_alias& s) const {
 	STACKTRACE_VERBOSE;
 if (has_internal_aliases) {
-	return port_alias_tracker_base<process_tag>::__replay_aliases(s) &&
-		port_alias_tracker_base<channel_tag>::__replay_aliases(s) &&
-		port_alias_tracker_base<datastruct_tag>::__replay_aliases(s) &&
-		port_alias_tracker_base<enum_tag>::__replay_aliases(s) &&
-		port_alias_tracker_base<int_tag>::__replay_aliases(s) &&
-		port_alias_tracker_base<bool_tag>::__replay_aliases(s);
+	return good_bool(
+		port_alias_tracker_base<process_tag>::__replay_aliases(s).good &&
+		port_alias_tracker_base<channel_tag>::__replay_aliases(s).good &&
+		port_alias_tracker_base<datastruct_tag>::__replay_aliases(s).good &&
+		port_alias_tracker_base<enum_tag>::__replay_aliases(s).good &&
+		port_alias_tracker_base<int_tag>::__replay_aliases(s).good &&
+		port_alias_tracker_base<bool_tag>::__replay_aliases(s).good
+	);
 } else {
 	return good_bool(true);
 }

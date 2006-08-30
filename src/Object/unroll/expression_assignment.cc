@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.6 2006/02/21 04:48:42 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.7 2006/08/30 04:05:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -88,7 +88,8 @@ param_expression_assignment::meta_instance_reference_appender::operator () (
 			" of assign-list." << endl;
 		return bad_bool(true);
 	}
-	return ex_ass.append_simple_param_meta_value_reference(i) || b;
+	return bad_bool(ex_ass.append_simple_param_meta_value_reference(i).bad
+		|| b.bad);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,5 +1,5 @@
 # "test/quarantine/Makefile.am"
-#	$Id: Makefile.am,v 1.1 2006/08/25 05:47:54 fang Exp $
+#	$Id: Makefile.am,v 1.2 2006/08/30 04:05:09 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -33,7 +33,10 @@ HACKT_CFLAT_LVS_TEST_SUBJECTS =
 HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
-EXTRA_DIST += README
+# add test-cases here
+EXTRA_DIST += README \
+	mem-01.hac \
+	bad_close.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

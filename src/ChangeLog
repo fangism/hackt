@@ -5,9 +5,23 @@
 
 2006-08-29	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-06:
+	  BUG FIXED: prsim, State::diagnose_violation forgot to
+		wipe node's pending event upon unstable-dequeue (one-liner).
+		Test case omitted b/c difficult to reduce (random timing).  
+		This also corrects the expect-out of case prsim/inv-15.  
+	  Globally rewrote all uses of overloaded && and ||, 
+		after disabling overloads in util/boolean_types.h. 
+	  Fixed ICE_INVARIANT and ISE_INVARIANT macros.  
+		Use ISE_INVARIANT in all sim/prsim sources.
+	  TODO: debug category commands in prsim.
+
+
 	* HACKT-00-01-04-main-00-80-05:
 	  parser .yy.in files: use AC_SUBST'd @YACC_PURE_PARSER@
 		instead of old sed hack.  
+	  module::__cflat: don't depend on && operand evaluation ordering, 
+		overload lacks sequence point.  
 
 
 2006-08-28	David Fang		<fangism@users.sourceforge.net>
