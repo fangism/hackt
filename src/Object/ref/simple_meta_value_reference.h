@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.13.2.2 2006/08/30 04:28:08 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.13.2.3 2006/08/31 07:28:47 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -152,8 +152,10 @@ public:
 	bool
 	must_be_equivalent(const interface_type& ) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	good_bool
 	resolve_value(value_type& i) const;
+#endif
 
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;

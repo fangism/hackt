@@ -3,7 +3,7 @@
 	Definition port formal instance manager class.  
 	This file was "Object/def/port_formals_manager.h"
 		in a previous life.  
-	$Id: port_formals_manager.h,v 1.7 2006/04/28 03:20:13 fang Exp $
+	$Id: port_formals_manager.h,v 1.7.14.1 2006/08/31 07:28:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_H__
@@ -18,6 +18,7 @@
 #include "util/persistent_fwd.h"
 #include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace parser {
@@ -25,7 +26,12 @@ namespace parser {
 }
 //=============================================================================
 namespace entity {
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+class physical_instance_placeholder;
+#else
 class instance_collection_base;
+#endif
 class physical_instance_collection;
 class unroll_context;
 class subinstance_manager;		// basically, the port_actuals
@@ -50,9 +56,13 @@ using util::memory::never_ptr;
 	TODO: upgrade port_formals_value to physical_instance_collection?
  */
 class port_formals_manager {
-	typedef	physical_instance_collection	instance_collection_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	physical_instance_placeholder	instance_placeholder_type;
+#else
+	typedef	physical_instance_collection	instance_placeholder_type;
+#endif
 public:
-	typedef	never_ptr<const instance_collection_type>
+	typedef	never_ptr<const instance_placeholder_type>
 						port_formals_value_type;
 	/**
 		Table of port formals.

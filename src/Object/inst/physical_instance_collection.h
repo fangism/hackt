@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.14.8.1 2006/08/27 07:52:02 fang Exp $
+	$Id: physical_instance_collection.h,v 1.14.8.2 2006/08/31 07:28:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -18,6 +18,7 @@ class port_alias_tracker;
 class state_manager;
 class footprint_frame;
 class port_collection_context;
+class physical_instance_collection;
 struct alias_visitor;
 struct dump_flags;
 
@@ -72,11 +73,13 @@ public:
 virtual	ostream&
 	dump_formal(ostream&) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
 
 virtual	UNROLL_PORT_ONLY_PROTO = 0;
+#endif
 
 virtual bool
 	is_partially_unrolled(void) const = 0;
@@ -125,8 +128,10 @@ virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
 virtual	void
 	accept(alias_visitor&) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;
+#endif
 
 protected:	// propagate to children
 	using parent_type::collect_transient_info_base;

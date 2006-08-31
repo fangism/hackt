@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.2 2006/08/28 05:10:07 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.3 2006/08/31 07:28:38 fang Exp $
 	TODO: trim includes
  */
 
@@ -29,6 +29,9 @@
 #include "Object/common/extern_templates.h"
 
 #include "Object/inst/instance_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.h"
+#endif
 #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/subinstance_manager.tcc"
 #include "Object/inst/instance_pool.tcc"
@@ -252,6 +255,7 @@ INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	TODO: for port collections with relaxed types, might want to expand
 	relaxed actuals at some point for diagnostics.  
@@ -271,18 +275,25 @@ INSTANCE_COLLECTION_CLASS::dump_formal(ostream& o) const {
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Returns the type-reference given by the first instantiation
 	statement (which may be predicated).  
 	This is not guaranteed to be the *final* type of the collection.  
+	TODO: Perhaps rename this to make a clearer distinction?
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 INSTANCE_COLLECTION_CLASS::get_type_ref(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(this->source_placeholder);
+	return this->source_placeholder->get_type_ref();
+#else
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return initial_instantiation_statement_ptr->get_type_ref();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -355,6 +366,7 @@ INSTANCE_COLLECTION_CLASS::check_established_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Just creates a simple instance_reference to this collection.  
 	If indexed, the index is set by the caller.  
@@ -400,6 +412,7 @@ INSTANCE_COLLECTION_CLASS::make_member_meta_instance_reference(
 		new member_simple_meta_instance_reference_type(
 			b, never_ptr<const this_type>(this)));
 }
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -446,9 +459,15 @@ INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
 	parent_type::collect_transient_info_base(m);
 	collection_type_manager_parent_type::collect_transient_info_base(m);
+#if USE_INSTANCE_PLACEHOLDERS
+	if (this->source_placeholder) {
+		source_placeholder->collect_transient_info(m);
+	}
+#else
 	if (this->initial_instantiation_statement_ptr) {
 		initial_instantiation_statement_ptr->collect_transient_info(m);
 	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -459,7 +478,11 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::write_base()");
 	parent_type::write_object_base(m, o);
 	collection_type_manager_parent_type::write_object_base(m, o);
+#if USE_INSTANCE_PLACEHOLDERS
+	m.write_pointer(o, this->source_placeholder);
+#else
 	m.write_pointer(o, this->initial_instantiation_statement_ptr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -470,7 +493,11 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::load_base()");
 	parent_type::load_object_base(m, i);
 	collection_type_manager_parent_type::load_object_base(m, i);
+#if USE_INSTANCE_PLACEHOLDERS
+	m.read_pointer(i, this->source_placeholder);
+#else
 	m.read_pointer(i, this->initial_instantiation_statement_ptr);
+#endif
 }
 
 //=============================================================================
@@ -501,9 +528,16 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, INSTANCE_ARRAY_CLASS)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::instance_array() : parent_type(D), collection() { }
+INSTANCE_ARRAY_CLASS::instance_array() : 
+#if USE_INSTANCE_PLACEHOLDERS
+		parent_type(), 
+#else
+		parent_type(D), 
+#endif
+		collection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array(const scopespace& o, const string& n) :
 		parent_type(o, n, D), collection() {
@@ -539,6 +573,7 @@ INSTANCE_ARRAY_CLASS::instance_array(const this_type& t) :
 		collection() {
 	INVARIANT(t.collection.empty());
 }
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -869,7 +904,10 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
+	Q: is this method relevant with placeholders?
+
 	Expands this collection into a copy for a port formal.  
 	Is safe to use the initial instantiation statement because
 	public ports are unconditionally instantiated once.  
@@ -889,6 +927,7 @@ INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
 		return ret;
 	} else 	return count_ptr<physical_instance_collection>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1250,7 +1289,13 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, INSTANCE_SCALAR_CLASS)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-INSTANCE_SCALAR_CLASS::instance_array() : parent_type(0), the_instance() {
+INSTANCE_SCALAR_CLASS::instance_array() : 
+#if USE_INSTANCE_PLACEHOLDERS
+		parent_type(), 
+#else
+		parent_type(0), 
+#endif
+		the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1476,7 +1521,10 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
+	Q: is this method applicable to placeholders?
+
 	Expands this collection into a copy for a port formal.  
 	\return owned pointer to new created collection.  
  */
@@ -1493,6 +1541,7 @@ INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
 		return ret;
 	} else 	return count_ptr<physical_instance_collection>(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

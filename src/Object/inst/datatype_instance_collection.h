@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.10.8.1 2006/08/27 07:51:57 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.10.8.2 2006/08/31 07:28:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -79,8 +79,10 @@ virtual ostream&
 
 // need to do this for real... using object not parse tree
 //	bool equals_template_formal(const template_formal_decl& tf) const;
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;
+#endif
 
 virtual good_bool
 	instantiate_indices(const const_range_list& i, 

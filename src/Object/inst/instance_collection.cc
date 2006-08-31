@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.1 2006/08/27 07:51:59 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.2 2006/08/31 07:28:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -121,7 +121,11 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 	if (is_partially_unrolled()) {
 		type_dump(o);		// pure virtual
 		// if (dimensions)
+#if USE_INSTANCE_PLACEHOLDERS
+		o << '^' << get_dimensions();
+#else
 		o << '^' << dimensions;
+#endif
 	} else {
 		const param_value_collection*
 			p(IS_A(const param_value_collection*, this));
@@ -135,7 +139,11 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 			else	o << "(not unrolled yet)";
 		}
 	}
+#if USE_INSTANCE_PLACEHOLDERS
+	return o << ' ' << get_name();
+#else
 	return o << ' ' << key;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -172,6 +180,9 @@ instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 #else
 	dump_collection_only(o);
 #endif
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t dimensions = get_dimensions();
+#endif
 	if (dimensions) {
 #if 0
 		// TODO: get rid of this, and update tests
@@ -205,6 +216,10 @@ instance_collection_base::pair_dump_top_level(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 instance_collection_base::get_qualified_name(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const owner_ptr_type owner(get_owner());
+	const string key(get_name());
+#endif
 	if (owner)
 		return owner->get_qualified_name() + "::" +key;
 		// "::" should be the same as HAC::parser::scope
@@ -224,6 +239,9 @@ instance_collection_base::dump_qualified_name(ostream& o,
 		(df.show_namespace_owner ? "(ns) " : " ") <<
 		(df.show_leading_scope ? "(::)]" : "]");
 #endif
+#if USE_INSTANCE_PLACEHOLDERS
+	const owner_ptr_type owner(get_owner());
+#endif
 if (owner) {
 	const param_value_collection* const
 		p(IS_A(const param_value_collection*, this));
@@ -240,7 +258,11 @@ if (owner) {
 		owner->dump_qualified_name(o, df) << "::";
 	}
 }
+#if USE_INSTANCE_PLACEHOLDERS
+	return o << get_name();
+#else
 	return o << key;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -249,7 +271,12 @@ instance_collection_base::dump_hierarchical_name(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	if (super_instance) {
 		return super_instance->dump_hierarchical_name(o,
-			dump_flags::default_value) << '.' << key;
+			dump_flags::default_value) << '.' <<
+#if USE_INSTANCE_PLACEHOLDERS
+				get_name();
+#else
+				key;
+#endif
 	} else {
 		return dump_qualified_name(o, dump_flags::default_value);
 	}
@@ -262,7 +289,12 @@ instance_collection_base::dump_hierarchical_name(ostream& o,
 	STACKTRACE_VERBOSE;
 	if (super_instance) {
 		return super_instance->dump_hierarchical_name(o, df)
-			<< '.' << key;
+			<< '.' << 
+#if USE_INSTANCE_PLACEHOLDERS
+			get_name();
+#else
+			key;
+#endif
 	} else {
 		return dump_qualified_name(o, df);
 	}
@@ -289,10 +321,17 @@ instance_collection_base::get_base_def(void) const {
  */
 bool
 instance_collection_base::is_relaxed_template_formal(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const owner_ptr_type owner(get_owner());
+#endif
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	if (def) {
+#if USE_INSTANCE_PLACEHOLDERS
+		return def->probe_relaxed_template_formal(get_name());
+#else
 		return def->probe_relaxed_template_formal(key);
+#endif
 	} else return false;
 }
 
@@ -309,10 +348,17 @@ instance_collection_base::is_relaxed_template_formal(void) const {
  */
 size_t
 instance_collection_base::is_template_formal(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const owner_ptr_type owner(get_owner());
+#endif
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	if (def)
+#if USE_INSTANCE_PLACEHOLDERS
+		return def->lookup_template_formal_position(get_name());
+#else
 		return def->lookup_template_formal_position(key);
+#endif
 	else {
 		// owner is not a definition
 		INVARIANT(owner.is_a<const name_space>());
@@ -329,6 +375,9 @@ instance_collection_base::is_template_formal(void) const {
  */
 size_t
 instance_collection_base::is_port_formal(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const owner_ptr_type owner(get_owner());
+#endif
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
 	return def ? def->lookup_port_formal_position(*this) : 0;
@@ -368,6 +417,9 @@ instance_collection_base::is_member_instance(void) const {
  */
 bool
 instance_collection_base::is_local_to_definition(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const owner_ptr_type owner(get_owner());
+#endif
 	return owner.is_a<const definition_base>();
 }
 
@@ -394,7 +446,11 @@ instance_collection_base::port_formal_equivalent(const this_type& b) const {
 	if (!formal_size_equivalent(b))
 		return false;
 	// last, but not least, name must match
+#if USE_INSTANCE_PLACEHOLDERS
+	return get_name() == b.get_name();
+#else
 	return key == b.get_name();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -411,7 +467,13 @@ instance_collection_base::port_formal_equivalent(const this_type& b) const {
  */
 bool
 instance_collection_base::formal_size_equivalent(const this_type& b) const {
-	if (dimensions != b.dimensions) {
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t dimensions = get_dimensions();
+	const size_t bdim = b.get_dimensions();
+#else
+	const size_t bdim = b.dimensions;
+#endif
+	if (dimensions != bdim) {
 		// useful error message here: dimensions don't match
 		return false;
 	}
@@ -446,19 +508,30 @@ instance_collection_base::collect_transient_info_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Q: Where and when was the super_instance pointer tracked?
+ */
 void
 instance_collection_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	// m.write_pointer(o, super_instance);
+#else
 	m.write_pointer(o, owner);
 	write_string(o, key);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_collection_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
+#if USE_INSTANCE_PLACEHOLDERS
+	// m.read_pointer(i, super_instance);
+#else
 	m.read_pointer(i, owner);
 	read_string(i, const_cast<string&>(key));
+#endif
 }
 
 //=============================================================================

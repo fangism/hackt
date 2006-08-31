@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.1 2006/08/26 22:05:16 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.2 2006/08/31 07:28:40 fang Exp $
 	TODO: trim includes
  */
 
@@ -435,11 +435,13 @@ INSTANCE_PLACEHOLDER_CLASS::get_actual_param_list(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// re-write
 /**
 	\return newly constructed d-dimensional array.  
  */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
-INSTANCE_PLACEHOLDER_CLASS*
+typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 INSTANCE_PLACEHOLDER_CLASS::make_array(
 		const scopespace& o, const string& n, const size_t d) {
 	switch(d) {
@@ -453,15 +455,18 @@ INSTANCE_PLACEHOLDER_CLASS::make_array(
 			return NULL;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// re-write, need persistent type-key
 /**
 	initial_instantiation_statement_ptr is permitted to be NULL
 	for instance collections that belong to footprints.  
  */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 void
-INSTANCE_PLACEHOLDER_CLASS::collect_transient_info_base(
+INSTANCE_PLACEHOLDER_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 	STACKTRACE_PERSISTENT("instance_placeholder<Tag>::collect_base()");
 	parent_type::collect_transient_info_base(m);
@@ -472,11 +477,12 @@ INSTANCE_PLACEHOLDER_CLASS::collect_transient_info_base(
 		initial_instantiation_statement_ptr->collect_transient_info(m);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 void
-INSTANCE_PLACEHOLDER_CLASS::write_object_base(
+INSTANCE_PLACEHOLDER_CLASS::write_object(
 		const persistent_object_manager& m, ostream& o) const {
 	STACKTRACE_PERSISTENT("instance_placeholder<Tag>::write_base()");
 	parent_type::write_object_base(m, o);
@@ -489,7 +495,7 @@ INSTANCE_PLACEHOLDER_CLASS::write_object_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 void
-INSTANCE_PLACEHOLDER_CLASS::load_object_base(
+INSTANCE_PLACEHOLDER_CLASS::load_object(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_placeholder<Tag>::load_base()");
 	parent_type::load_object_base(m, i);

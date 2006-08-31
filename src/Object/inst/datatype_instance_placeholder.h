@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_placeholder.h"
 	Instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_placeholder.h,v 1.1.2.2 2006/08/28 05:10:04 fang Exp $
+	$Id: datatype_instance_placeholder.h,v 1.1.2.3 2006/08/31 07:28:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_PLACEHOLDER_H__
@@ -86,7 +86,7 @@ virtual ostream&
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;
 
-#if 1
+#if 0
 // this should really do the work with the collection, not placeholder
 virtual good_bool
 	instantiate_indices(const const_range_list& i, 

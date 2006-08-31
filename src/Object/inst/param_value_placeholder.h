@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.1.2.1 2006/08/28 05:10:09 fang Exp $
+	$Id: param_value_placeholder.h,v 1.1.2.2 2006/08/31 07:28:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -61,14 +61,18 @@ virtual	~param_value_placeholder();
 virtual	ostream&
 	what(ostream&) const = 0;
 
+#if 0
 virtual	bool
 	is_partially_unrolled(void) const = 0;
+#endif
 
 virtual	bool
 	is_loop_variable(void) const = 0;
 
+#if 0
 virtual	ostream&
 	dump_unrolled_values(ostream& o) const = 0;
+#endif
 
 virtual	ostream&
 	dump_formal(ostream&, const unroll_context&) const = 0;
@@ -151,8 +155,10 @@ public:
 	bool
 	is_static_constant(void) const;
 
+#if 0
 virtual	const_index_list
 	resolve_indices(const const_index_list&) const = 0;
+#endif
 
 #if 0
 NOTE: these functions should only be applicable to simple_param_meta_value_references.  

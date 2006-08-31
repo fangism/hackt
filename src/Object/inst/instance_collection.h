@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.22.8.2 2006/08/28 05:10:06 fang Exp $
+	$Id: instance_collection.h,v 1.22.8.3 2006/08/31 07:28:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -154,6 +154,8 @@ protected:
 #endif
 protected:
 #if USE_INSTANCE_PLACEHOLDERS
+	instance_collection();
+
 	/// requires a back-reference to the source collection placeholder
 	explicit
 	instance_collection(const instance_placeholder_ptr_type);
@@ -184,6 +186,17 @@ virtual	ostream&
 
 	ostream&
 	dump_formal(ostream&) const;
+
+#if USE_INSTANCE_PLACEHOLDERS
+	size_t
+	get_dimensions(void) const;
+
+	never_ptr<const scopespace>
+	get_owner(void) const;
+
+	const string&
+	get_name(void) const;
+#endif
 
 // collections don't need any information about instantiation statements
 #if !USE_INSTANCE_PLACEHOLDERS
@@ -235,6 +248,7 @@ virtual	bool
 	bad_bool
 	check_established_type(const instance_collection_parameter_type&) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const;
 
@@ -243,6 +257,7 @@ virtual	bool
 
 	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
+#endif
 
 /**
 	Prototype for instantiating alias indices during unroll phase.  
@@ -369,6 +384,12 @@ public:
 	typedef	typename collection_type::value_type	value_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename parent_type::instance_placeholder_type
+					instance_placeholder_type;
+	typedef	typename parent_type::instance_placeholder_ptr_type
+					instance_placeholder_ptr_type;
+#endif
 private:
 	typedef	typename util::multikey<D, pint_value_type>::generator_type
 							key_generator_type;
@@ -381,21 +402,30 @@ private:
 private:
 	instance_array();
 
+#if USE_INSTANCE_PLACEHOLDERS
+public:
+	explicit
+	instance_array(const instance_placeholder_ptr_type);
+#else
 	explicit
 	instance_array(const this_type&);
 
 	instance_array(const this_type&, const footprint&);
 
-#if !USE_INSTANCE_PLACEHOLDERS
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
-#endif
 
 public:
 	instance_array(const scopespace& o, const string& n);
+#endif
 	~instance_array();
 
 	ostream&
 	what(ostream& o) const;
+
+#if USE_INSTANCE_PLACEHOLDERS
+	size_t
+	get_dimensions(void) const;
+#endif
 
 	bool
 	is_partially_unrolled(void) const;
@@ -426,7 +456,9 @@ public:
 
 	UNROLL_ALIASES_PROTO;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	UNROLL_PORT_ONLY_PROTO;
+#endif
 
 	instance_alias_base_type&
 	load_reference(istream& i) const;
@@ -547,7 +579,9 @@ public:
 
 	UNROLL_ALIASES_PROTO;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	UNROLL_PORT_ONLY_PROTO;
+#endif
 
 	instance_alias_base_type&
 	load_reference(istream& i) const;

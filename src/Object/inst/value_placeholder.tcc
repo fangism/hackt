@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.1 2006/08/28 05:10:15 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.2 2006/08/31 07:28:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -29,6 +29,7 @@
 // #define EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
 #include "Object/inst/value_placeholder.h"
+#include "Object/inst/value_collection.h"	// for constructors
 #include "Object/expr/const_collection.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/param_expr.h"
@@ -456,8 +457,9 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
-VALUE_PLACEHOLDER_CLASS*
+typename VALUE_PLACEHOLDER_CLASS::value_collection_generic_type*
 VALUE_PLACEHOLDER_CLASS::make_array(
 		const scopespace& o, const string& n, const size_t D) {
 	switch (D) {
@@ -471,11 +473,12 @@ VALUE_PLACEHOLDER_CLASS::make_array(
 			return NULL;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 void
-VALUE_PLACEHOLDER_CLASS::write_object_base(
+VALUE_PLACEHOLDER_CLASS::write_object(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE("value_placeholder<>::write_object_base()");
 	parent_type::write_object_base(m, f);
@@ -486,7 +489,7 @@ VALUE_PLACEHOLDER_CLASS::write_object_base(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 void
-VALUE_PLACEHOLDER_CLASS::load_object_base(const persistent_object_manager& m, 
+VALUE_PLACEHOLDER_CLASS::load_object(const persistent_object_manager& m, 
 		istream& f) {
 	STACKTRACE("value_placeholder<>::load_object_base()");
 	parent_type::load_object_base(m, f);

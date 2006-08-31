@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.6 2006/04/28 03:20:14 fang Exp $
+	$Id: template_formals_manager.h,v 1.6.14.1 2006/08/31 07:28:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -18,12 +18,17 @@
 #include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
 //=============================================================================
 class const_param;
+#if USE_INSTANCE_PLACEHOLDERS
+class param_value_placeholder;
+#else
 class param_value_collection;
+#endif
 class dynamic_param_expr_list;
 class template_actuals;
 using std::string;
@@ -45,6 +50,11 @@ using util::memory::count_ptr;
  */
 class template_formals_manager {
 public:
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	param_value_placeholder		placeholder_type;
+#else
+	typedef	param_value_collection		placeholder_type;
+#endif
 	/**
 		Table of template formals.  
 		Needs to be ordered for argument checking, 
@@ -63,7 +73,7 @@ public:
 			that preserve specified interfaces...
 		May need hashqlist, for const-queryable hash structure!!!
 	**/
-	typedef	never_ptr<const param_value_collection>
+	typedef	never_ptr<const placeholder_type>
 					template_formals_value_type;
 	// double-maintenance...
 	typedef	HASH_MAP_NAMESPACE::hash_map<string,
@@ -104,7 +114,7 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
-	never_ptr<const param_value_collection>
+	template_formals_value_type
 	lookup_template_formal(const string& id) const;
 
 	bool
@@ -138,13 +148,11 @@ public:
 
 	// assumes already checked for conflicts!
 	void
-	add_strict_template_formal(
-		const never_ptr<const param_value_collection>);
+	add_strict_template_formal(const template_formals_value_type);
 
 	// assumes already checked for conflicts!
 	void
-	add_relaxed_template_formal(
-		const never_ptr<const param_value_collection>);
+	add_relaxed_template_formal(const template_formals_value_type);
 
 #if 0
 	// called by unroll-context

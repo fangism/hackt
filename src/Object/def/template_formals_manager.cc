@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.12 2006/07/04 07:25:49 fang Exp $
+	$Id: template_formals_manager.cc,v 1.12.6.1 2006/08/31 07:28:29 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,7 +14,11 @@
 #include "util/hash_specializations.h"	// include as early as possible
 
 #include "Object/def/template_formals_manager.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/param_value_placeholder.h"
+#else
 #include "Object/inst/param_value_collection.h"
+#endif
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
@@ -109,9 +113,9 @@ template_formals_manager::dump(ostream& o) const {
 	\param id the local name of the formal parameter.  
 	\return pointer to the formal template parameter.  
  */
-never_ptr<const param_value_collection>
+template_formals_manager::template_formals_value_type
 template_formals_manager::lookup_template_formal(const string& id) const {
-	typedef	never_ptr<const param_value_collection>	return_type;
+	typedef	template_formals_value_type	return_type;
 	const template_formals_map_type::const_iterator
 		f(template_formals_map.find(id));
 	return (f != template_formals_map.end()) ? f->second
@@ -148,7 +152,7 @@ template_formals_manager::has_relaxed_formals(void) const {
 size_t
 template_formals_manager::lookup_template_formal_position(
 		const string& id) const {
-	const never_ptr<const param_value_collection>
+	const template_formals_value_type
 		pp(lookup_template_formal(id));
 	// default, uses pointer comparison
 	if (pp) {
@@ -187,9 +191,9 @@ template_formals_manager::partial_check_null_template_argument(
 		// starting with strict formal parameters
 		template_formals_list_type::const_iterator i(l.begin());
 		for ( ; i!=l.end(); i++) {
-			const never_ptr<const param_value_collection> p(*i);
+			const template_formals_value_type p(*i);
 			NEVER_NULL(p);
-			p.must_be_a<const param_value_collection>();
+			p.must_be_a<const placeholder_type>();
 			// if any formal is missing a default value, then this 
 			// definition cannot have null template arguments
 			if (!(*p).default_value()) {
@@ -251,8 +255,8 @@ template_formals_manager::equivalent_template_formals_lists(
 	template_formals_list_type::const_iterator i(l.begin());
 	template_formals_list_type::const_iterator j(r.begin());
 	for ( ; i!=l.end() && j!=r.end(); i++, j++) {
-		const never_ptr<const param_value_collection> itf(*i);
-		const never_ptr<const param_value_collection> jtf(*j);
+		const template_formals_value_type itf(*i);
+		const template_formals_value_type jtf(*j);
 		NEVER_NULL(itf);        // template formals not optional
 		NEVER_NULL(jtf);        // template formals not optional
 		// only type and size need to be equal, not name
@@ -442,7 +446,7 @@ template_formals_manager::make_default_template_arguments(void) const {
  */
 void
 template_formals_manager::add_strict_template_formal(
-		const never_ptr<const param_value_collection> pf) {
+		const template_formals_value_type pf) {
 	NEVER_NULL(pf);
 	strict_template_formals_list.push_back(pf);
 	template_formals_map[pf->get_name()] = pf;
@@ -456,7 +460,7 @@ template_formals_manager::add_strict_template_formal(
  */
 void
 template_formals_manager::add_relaxed_template_formal(
-		const never_ptr<const param_value_collection> pf) {
+		const template_formals_value_type pf) {
 	NEVER_NULL(pf);
 	relaxed_template_formals_list.push_back(pf);
 	template_formals_map[pf->get_name()] = pf;
@@ -531,7 +535,7 @@ template_formals_manager::load_template_formals_list(
 		const template_formals_value_type inst_ptr = *iter;
 		NEVER_NULL(inst_ptr);
 		// we need to load the instantiation to use its key!
-		m.load_object_once(const_cast<param_value_collection*>(
+		m.load_object_once(const_cast<placeholder_type*>(
 			&*inst_ptr));
 		the_map[inst_ptr->get_name()] = inst_ptr;
 	}

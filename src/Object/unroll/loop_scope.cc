@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.9 2006/03/15 04:38:24 fang Exp $
+ 	$Id: loop_scope.cc,v 1.9.28.1 2006/08/31 07:28:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -97,6 +97,11 @@ loop_scope::unroll(const unroll_context& c) const {
 		return good_bool(true);
 	}
 	template_formals_manager tfm;
+#if USE_INSTANCE_PLACEHOLDERS
+	// since we need a new lookup scope that uses
+	// a placeholder for the pint variable...
+	// oh woe...
+#endif
 	const never_ptr<const pint_scalar> pvc(&*ind_var);
 	tfm.add_strict_template_formal(pvc);
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.1.2.1 2006/08/28 05:10:14 fang Exp $
+	$Id: value_placeholder.h,v 1.1.2.2 2006/08/31 07:28:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -69,6 +69,7 @@ value_placeholder<Tag>
 
 /**
 	Value placeholder class template.  
+	This class is final, no virtual functions here, no derivatives.  
  */
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 class value_placeholder :
@@ -83,6 +84,8 @@ private:
 						parent_type;
 public:
 	typedef	typename traits_type::value_type	value_type;
+	typedef	typename traits_type::value_collection_generic_type
+					value_collection_generic_type;
 	typedef	typename traits_type::simple_meta_value_reference_type
 					simple_meta_value_reference_type;
 	typedef	typename traits_type::simple_nonmeta_instance_reference_type
@@ -128,18 +131,16 @@ protected:
 	value_placeholder(const this_type& t, const footprint& f);
 
 private:
-#if !USE_INSTANCE_PLACEHOLDERS
-virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
-#endif
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
 
 public:
 	value_placeholder(const scopespace& o, const string& n, 
 		const size_t d);
 
-virtual	~value_placeholder();
+	~value_placeholder();
 
-virtual	ostream&
-	what(ostream& o) const = 0;
+	ostream&
+	what(ostream& o) const;
 
 	ostream&
 	type_dump(ostream& o) const;
@@ -163,6 +164,8 @@ virtual	bool
 virtual	ostream&
 	dump_unrolled_values(ostream& o) const = 0;
 #endif
+	bool
+	is_loop_variable(void) const;
 
 	ostream&
 	dump_formal(ostream&, const unroll_context&) const;
@@ -190,10 +193,8 @@ public:
 	good_bool
 	initialize(const init_arg_type& e);
 
-#if 0
 	good_bool
 	assign_default_value(const count_ptr<const param_expr>& p);
-#endif
 
 	count_ptr<const param_expr>
 	default_value(void) const;
@@ -211,7 +212,6 @@ public:
 #if 0
 virtual	good_bool
 	instantiate_indices(const const_range_list& i) = 0;
-#endif
 
 // possibly DEPRECATED
 #define	LOOKUP_VALUE_INDEXED_PROTO					\
@@ -226,7 +226,6 @@ virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 
-#if 0
 #define	UNROLL_LVALUE_REFERENCES_PROTO					\
 	bad_bool							\
 	unroll_lvalue_references(const multikey_index_type&, 		\
@@ -245,7 +244,7 @@ public:
 
 	static
 	// won't be this_type anymore!
-	this_type*
+	value_collection_generic_type*
 	make_array(const scopespace& o, const string& n, const size_t d);
 
 public:
@@ -254,10 +253,10 @@ public:
 
 protected:
 	void
-	write_object_base(const persistent_object_manager& m, ostream& o) const;
+	write_object(const persistent_object_manager& m, ostream& o) const;
 
 	void
-	load_object_base(const persistent_object_manager& m, istream& i);
+	load_object(const persistent_object_manager& m, istream& i);
 
 	// subclasses are responsible for implementing:
 	// write_object and load_object.

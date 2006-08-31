@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.13.16.1 2006/08/30 04:28:04 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.13.16.2 2006/08/31 07:28:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -47,14 +47,13 @@ struct simple_meta_instance_reference_implementation<true> {
 			class_traits<Tag>::instance_placeholder_type
 					type;
 	};
-#else
+#endif
 	template <class Tag>
 	struct instance_collection_generic_type {
 		typedef	typename
 			class_traits<Tag>::instance_collection_generic_type
 					type;
 	};
-#endif
 
 	typedef	never_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>
@@ -77,11 +76,35 @@ unroll_generic_scalar_substructure_reference(
 			instance_collection_generic_type<Tag>::type& inst, 
 #endif
 		const index_list_ptr_type ind,
-		const unroll_context& c, 
-		const bool lookup) {
+		const unroll_context& c
+#if !USE_INSTANCE_PLACEHOLDERS
+		, const bool lookup
+#endif
+		) {
+#if USE_INSTANCE_PLACEHOLDERS
+	return simple_meta_instance_reference<Tag>::
+		__unroll_generic_scalar_reference(inst, ind, c);
+#else
 	return simple_meta_instance_reference<Tag>::
 		__unroll_generic_scalar_reference(inst, ind, c, lookup);
+#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+// rename or overload?
+template <class Tag>
+static
+never_ptr<substructure_alias>
+unroll_generic_scalar_substructure_reference(
+		const typename
+			instance_collection_generic_type<Tag>::type& inst, 
+		const index_list_ptr_type ind,
+		const unroll_context& c) {
+	return simple_meta_instance_reference<Tag>::
+		__unroll_generic_scalar_reference_no_lookup(inst, ind, c);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -120,9 +143,15 @@ simple_lookup_footprint_frame(
 		const state_manager& sm) {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc;
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<substructure_alias>
+		alias(unroll_generic_scalar_substructure_reference<Tag>(
+			inst, ind, uc));
+#else
 	const never_ptr<substructure_alias>
 		alias(unroll_generic_scalar_substructure_reference<Tag>(
 			inst, ind, uc, true));
+#endif
 	if (!alias) {
 		cerr << "Error resolving a single instance alias." << endl;
 		return NULL;
@@ -176,14 +205,13 @@ struct simple_meta_instance_reference_implementation<false> {
 			class_traits<Tag>::instance_placeholder_type
 					type;
 	};
-#else
+#endif
 	template <class Tag>
 	struct instance_collection_generic_type {
 		typedef	typename
 			class_traits<Tag>::instance_collection_generic_type
 					type;
 	};
-#endif
 
 	typedef	never_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>
@@ -201,11 +229,30 @@ unroll_generic_scalar_substructure_reference(
 			instance_collection_generic_type<Tag>::type& inst, 
 #endif
 		const index_list_ptr_type ind,
-		const unroll_context&, 
-		const bool) {
+		const unroll_context&
+#if !USE_INSTANCE_PLACEHOLDERS
+		, const bool
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+// rename? or overload?
+template <class Tag>
+static
+never_ptr<substructure_alias>
+unroll_generic_scalar_substructure_reference(
+		const typename
+			instance_collection_generic_type<Tag>::type& inst, 
+		const index_list_ptr_type ind,
+		const unroll_context&) {
+	STACKTRACE_VERBOSE;
+	return never_ptr<substructure_alias>(NULL);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

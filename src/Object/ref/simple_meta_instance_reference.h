@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.14.4.2 2006/08/30 04:28:07 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.14.4.3 2006/08/31 07:28:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -178,7 +178,20 @@ protected:
 		const instance_collection_generic_type&, 
 #endif
 		const never_ptr<const index_list_type>,
-		const unroll_context&, const bool);
+		const unroll_context&
+#if !USE_INSTANCE_PLACEHOLDERS
+			, const bool
+#endif
+			);
+
+#if USE_INSTANCE_PLACEHOLDERS
+	static
+	instance_alias_base_ptr_type
+	__unroll_generic_scalar_reference_no_lookup(
+		const instance_collection_generic_type&, 
+		const never_ptr<const index_list_type>,
+		const unroll_context&);
+#endif
 
 	static
 	good_bool
@@ -189,8 +202,21 @@ protected:
 		const instance_collection_generic_type&, 
 #endif
 		const never_ptr<const index_list_type>,
-		const unroll_context&, const bool, 
+		const unroll_context&, 
+#if !USE_INSTANCE_PLACEHOLDERS
+		const bool, 
+#endif
 		alias_collection_type&);
+
+#if USE_INSTANCE_PLACEHOLDERS
+	static
+	good_bool
+	__unroll_generic_scalar_references_no_lookup(
+		const instance_collection_generic_type&, 
+		const never_ptr<const index_list_type>,
+		const unroll_context&, 
+		alias_collection_type&);
+#endif
 
 	void
 	collect_transient_info_base(persistent_object_manager& ) const;

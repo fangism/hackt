@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/physical_instance_placeholder.h"
-	$Id: physical_instance_placeholder.h,v 1.1.2.1 2006/08/26 22:05:19 fang Exp $
+	$Id: physical_instance_placeholder.h,v 1.1.2.2 2006/08/31 07:28:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_PLACEHOLDER_H__
@@ -14,7 +14,8 @@ namespace entity {
 class port_alias_tracker;
 class state_manager;
 class footprint_frame;
-class port_placeholder_context;
+class port_collection_context;
+class physical_instance_collection;
 struct alias_visitor;
 struct dump_flags;
 
@@ -63,14 +64,14 @@ public:
 virtual	ostream&
 	dump_formal(ostream&) const = 0;
 
-// none of the following are appropriate for placeholders
-#if 0
 #define	UNROLL_PORT_ONLY_PROTO						\
-	count_ptr<physical_instance_placeholder>			\
+	count_ptr<physical_instance_collection>				\
 	unroll_port_only(const unroll_context&) const
 
 virtual	UNROLL_PORT_ONLY_PROTO = 0;
 
+// none of the following are appropriate for placeholders
+#if 0
 virtual bool
 	is_partially_unrolled(void) const = 0;
 

@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-08-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-05:
+	  Welcome to another installment of "Does this sh-- compile yet?"
+	  More placeholders: port_formals_manager, template_formals_manager,
+		instance_collection, value_placeholders, simple and member 
+		instance_references, value_references, type_references.  
+
+
 2006-08-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-04:

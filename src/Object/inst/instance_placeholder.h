@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.1.2.2 2006/08/28 05:10:07 fang Exp $
+	$Id: instance_placeholder.h,v 1.1.2.3 2006/08/31 07:28:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -13,8 +13,8 @@
 
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
-// #include "Object/inst/physical_instance_placeholder.h"	// for macros
-#include "Object/inst/instance_placeholder_base.h"
+#include "Object/inst/physical_instance_placeholder.h"	// for macros
+// #include "Object/inst/instance_placeholder_base.h"
 #include "Object/common/multikey_index.h"
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
@@ -120,6 +120,8 @@ public:
 	typedef	typename traits_type::member_simple_meta_instance_reference_type
 				member_simple_meta_instance_reference_type;
 //	typedef	meta_instance_reference_base		meta_instance_reference_base_type;
+	typedef	typename traits_type::instance_collection_generic_type
+					instance_collection_generic_type;
 // public:
 protected:
 	typedef	typename parent_type::inst_ref_ptr_type	inst_ref_ptr_type;
@@ -159,18 +161,16 @@ protected:
 	instance_placeholder(const this_type&, const footprint&);
 
 private:
-#if USE_INSTANCE_PLACEHOLDERS
-virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
-#endif
+	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
 
 public:
 	instance_placeholder(const scopespace& o, const string& n, 
 		const size_t d);
 
-virtual	~instance_placeholder();
+	~instance_placeholder();
 
-virtual	ostream&
-	what(ostream&) const = 0;
+	ostream&
+	what(ostream&) const;
 
 	ostream&
 	type_dump(ostream&) const;
@@ -278,6 +278,8 @@ virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 #endif
 
+	UNROLL_PORT_ONLY_PROTO;
+
 #if 0
 #define	UNROLL_ALIASES_PROTO						\
 	bad_bool							\
@@ -305,22 +307,23 @@ virtual	instance_alias_base_type&
 
 	static
 	// won't be this_type anymore!
-	this_type*
+	instance_collection_generic_type*
 	make_array(const scopespace& o, const string& n, const size_t d);
 
 	static
 	persistent*
 	construct_empty(const int);
 
+public:
+	void
+	collect_transient_info(persistent_object_manager&) const;
+
 protected:
 	void
-	collect_transient_info_base(persistent_object_manager&) const;
+	write_object(const persistent_object_manager&, ostream&) const;
 
 	void
-	write_object_base(const persistent_object_manager&, ostream&) const;
-
-	void
-	load_object_base(const persistent_object_manager&, istream&);
+	load_object(const persistent_object_manager&, istream&);
 
 };	// end class instance_placeholder
 

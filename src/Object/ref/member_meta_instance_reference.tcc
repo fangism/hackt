@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.16.4.1 2006/08/28 05:10:16 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.16.4.2 2006/08/31 07:28:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -204,8 +204,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	// we look for the local alias to get the local offset!
 	const unroll_context uc;	// until we pass a global context
 	const instance_alias_base_ptr_type
+#if USE_INSTANCE_PLACEHOLDERS
+		local_alias(__unroll_generic_scalar_reference_no_lookup(
+			pi, this->array_indices, uc));
+#else
 		local_alias(__unroll_generic_scalar_reference(
 			pi, this->array_indices, uc, false));
+#endif
 	if (!local_alias) {
 		// TODO: better error message
 		cerr << "Error resolving member instance alias." << endl;
@@ -274,8 +279,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	}
 	const unroll_context cc(c.make_member_context());
 	// The following call should NOT be doing extra lookup! (pass false)
+#if USE_INSTANCE_PLACEHOLDERS
+	return __unroll_generic_scalar_reference_no_lookup(
+			*inst_base, this->array_indices, cc);
+#else
 	return __unroll_generic_scalar_reference(
 			*inst_base, this->array_indices, cc, false);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -299,9 +309,15 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 	// only the ultimate parent of the reference should use the footprint
 	// copy the unroll_context *except* for the footprint pointer
 	// The following should NOT be doing extra lookup! (pass false)
+#if USE_INSTANCE_PLACEHOLDERS
+	return parent_type::substructure_implementation_policy::
+		template unroll_generic_scalar_substructure_reference<Tag>(
+			*inst_base, this->array_indices, cc);
+#else
 	return parent_type::substructure_implementation_policy::
 		template unroll_generic_scalar_substructure_reference<Tag>(
 			*inst_base, this->array_indices, cc, false);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

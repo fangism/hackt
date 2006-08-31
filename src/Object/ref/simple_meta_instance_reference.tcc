@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.2 2006/08/30 04:28:07 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.3 2006/08/31 07:28:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -198,7 +198,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	const instance_alias_base_ptr_type
 		alias(__unroll_generic_scalar_reference(
 			*this->inst_collection_ref, this->array_indices,
-			uc, true));
+			uc
+#if !USE_INSTANCE_PLACEHOLDERS
+			, true
+#endif
+			));
 	if (!alias) {
 		cerr << "Error resolving a single instance alias." << endl;
 		return 0;
@@ -302,8 +306,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 		const instance_collection_generic_type& inst, 
 #endif
 		const never_ptr<const index_list_type> ind, 
-		const unroll_context& c, 
-		const bool lookup) {
+		const unroll_context& c
+#if !USE_INSTANCE_PLACEHOLDERS
+		, const bool lookup
+#endif
+		) {
 	typedef instance_alias_base_ptr_type 	return_type;
 	STACKTRACE_VERBOSE;
 	alias_collection_type aliases;
@@ -323,7 +330,6 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 	}
 #else
 #if USE_INSTANCE_PLACEHOLDERS
-	INVARIANT(lookup);	// until caller is re-written
 	const bad_bool
 		bad(unroll_references_packed_helper(c, inst, ind, aliases));
 #else
@@ -345,6 +351,33 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference_no_lookup(
+		const instance_collection_generic_type& inst, 
+		const never_ptr<const index_list_type> ind, 
+		const unroll_context& c) {
+	typedef instance_alias_base_ptr_type 	return_type;
+	STACKTRACE_VERBOSE;
+	alias_collection_type aliases;
+	const bad_bool
+		bad(unroll_references_packed_helper_no_lookup(
+			c, inst, ind, aliases));
+	if (bad.bad) {
+		return return_type(NULL);
+	} else if (aliases.dimensions()) {
+		cerr << "ERROR: got a " << aliases.dimensions() <<
+			"-dimension collection where a scalar was required."
+			<< endl;
+		return return_type(NULL);
+	} else {
+		return aliases.front();
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Same as the above, but collects a bunch of aliases, as opposed
 	to a single scalar alias.  Note the plurality in the name.  
@@ -361,11 +394,13 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references(
 #endif
 		const never_ptr<const index_list_type> ind, 
 		const unroll_context& c, 
+#if !USE_INSTANCE_PLACEHOLDERS
 		const bool lookup, 
+#endif
 		alias_collection_type& aliases) {
 	STACKTRACE_VERBOSE;
 #if USE_INSTANCE_PLACEHOLDERS
-	INVARIANT(lookup);	// until caller is re-written
+//	INVARIANT(lookup);	// until caller is re-written
 	const bad_bool
 		bad(unroll_references_packed_helper(c, inst, ind, aliases));
 #else
@@ -376,6 +411,21 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references(
 	// already have some error message
 	return bad;	// implicit conversion to good
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
+good_bool
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references_no_lookup(
+		const instance_collection_generic_type& inst, 
+		const never_ptr<const index_list_type> ind, 
+		const unroll_context& c, 
+		alias_collection_type& aliases) {
+	STACKTRACE_VERBOSE;
+	return unroll_references_packed_helper_no_lookup(c, inst, ind, aliases);
+	// already have some error message
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -390,7 +440,11 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	STACKTRACE_VERBOSE;
 	return __unroll_generic_scalar_reference(
 			*this->inst_collection_ref,
-			this->array_indices, c, true);
+			this->array_indices, c
+#if !USE_INSTANCE_PLACEHOLDERS
+			, true
+#endif
+			);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

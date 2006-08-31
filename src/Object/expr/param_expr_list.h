@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.11 2006/07/04 07:26:00 fang Exp $
+	$Id: param_expr_list.h,v 1.11.6.1 2006/08/31 07:28:30 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -15,13 +15,18 @@
 #include "util/boolean_types.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/excl_ptr.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
 namespace entity {
 class param_expr;
 class const_param_expr_list;
+#if USE_INSTANCE_PLACEHOLDERS
+class param_value_placeholder;
+#else
 class param_value_collection;
+#endif
 class unroll_context;
 class template_actuals;
 struct expr_dump_context;
@@ -92,7 +97,11 @@ virtual	unroll_resolve_rvalues_return_type
 
 // coordinate with template_formals_manager::template_formals_list_type
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	default_vector<never_ptr<const param_value_placeholder> >::type
+#else
 	typedef	default_vector<never_ptr<const param_value_collection> >::type
+#endif
 					template_formals_list_type;
 
 public:

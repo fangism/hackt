@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.2 2006/08/30 04:28:08 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.3 2006/08/31 07:28:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -357,6 +357,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
+// OBSOLETE
 /**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
@@ -377,6 +379,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 				cerr << "ERROR: upper != lower" << endl;
 				return good_bool(false);
 			}
+			// can no longer lookup values of placeholders
 			return value_collection_ref->lookup_value(
 				i, lower, unroll_context());
 		} else {
@@ -390,6 +393,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 		return scalar_inst->lookup_value(i, unroll_context());
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -455,8 +459,17 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// check for implicit indices, that sub-arrays are
 	// densely packed with the same dimensions.  
 	// try to form dense index list for entire collection
+#if USE_INSTANCE_PLACEHOLDERS
+	// TODO: translate placeholder to actual collection
+	// This depends on the values being unrolled in the footprint's 
+	// collection of value collections!
+	// unroll_context::lookup_value_collection
 	const const_index_list
 		r_i(value_collection_ref->resolve_indices(c_i));
+#else
+	const const_index_list
+		r_i(value_collection_ref->resolve_indices(c_i));
+#endif
 	if (r_i.empty()) {
 		cerr << "ERROR: implicitly unroll-resolving index list."
 			<< endl;

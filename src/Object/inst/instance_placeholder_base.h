@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.1.2.2 2006/08/28 05:10:08 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.3 2006/08/31 07:28:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -342,8 +342,10 @@ virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const = 0;
 
+#if 0
 virtual	const_index_list
 	resolve_indices(const const_index_list&) const = 0;
+#endif
 
 private:
 	// utility functions for handling index collection (inlined)
