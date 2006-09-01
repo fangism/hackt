@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.14 2006/06/02 20:15:20 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.14.8.1 2006/09/01 05:17:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -60,7 +60,10 @@ param_value_collection::~param_value_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
+	NOTE: can we get rid of this altogether?
+
 	For multidimensional instances, we don't keep track of initialization
 	of individual elements at compile-time, just conservatively 
 	return true, that the instance MAY be initialized.  
@@ -73,6 +76,9 @@ param_value_collection::~param_value_collection() {
  */
 bool
 param_value_collection::may_be_initialized(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t dimensions = get_dimensions();
+#endif
 	if (dimensions || is_template_formal() || is_loop_variable())
 		return true;
 	else {
@@ -88,6 +94,7 @@ param_value_collection::may_be_initialized(void) const {
 		else return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

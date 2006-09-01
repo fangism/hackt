@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.11.20.1 2006/08/28 05:10:12 fang Exp $
+	$Id: process_instance_collection.cc,v 1.11.20.2 2006/09/01 05:17:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -28,7 +28,7 @@
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
 #if USE_INSTANCE_PLACEHOLDERS
-#include "Object/inst/instance_placeholders.tcc"
+#include "Object/inst/instance_placeholder.tcc"
 #endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
@@ -46,6 +46,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_3D, "process_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_4D, "process_array_4D")
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::process_instance_placeholder, 
+	PROCESS_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 #if 0
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY, 0)

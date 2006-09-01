@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.8.8.1 2006/08/28 05:10:02 fang Exp $
+	$Id: definition_base.h,v 1.8.8.2 2006/09/01 05:17:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -157,7 +157,7 @@ virtual	never_ptr<const scopespace>
 
 	// non-virtual
 #if USE_INSTANCE_PLACEHOLDERS
-	never_ptr<const param_value_placeholder>
+	never_ptr<const instance_placeholder_base>
 #else
 	never_ptr<const instance_collection_base>
 #endif

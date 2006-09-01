@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.2 2006/08/28 05:10:13 fang Exp $
+	$Id: value_collection.h,v 1.17.8.3 2006/09/01 05:17:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -134,11 +134,14 @@ protected:
 	 */
 	count_ptr<const expr_type>		ival;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	initial_instantiation_statement_ptr_type
 					initial_instantiation_statement_ptr;
-
+#endif
 protected:
 #if USE_INSTANCE_PLACEHOLDERS
+	value_collection();
+
 	explicit
 	value_collection(const value_placeholder_ptr_type);
 #else
@@ -166,6 +169,16 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream& o) const;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	const string&
+	get_name(void) const;
+
+	never_ptr<const scopespace>
+	get_owner(void) const;
+
+	size_t
+	get_dimensions(void) const;
+#endif
 #if !USE_INSTANCE_PLACEHOLDERS
 	void
 	attach_initial_instantiation_statement(
@@ -206,17 +219,10 @@ public:
 	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const;
 
-#if USE_INSTANCE_PLACEHOLDERS
-	// use back-link
-	const string&
-	get_name(void) const;
-
-	size_t
-	get_dimensions(void) const;
-#endif
-
+#if !USE_INSTANCE_PLACEHOLDERS
 	count_ptr<meta_value_reference_base>
 	make_meta_value_reference(void) const;
+#endif
 
 	good_bool
 	initialize(const init_arg_type& e);
@@ -241,10 +247,17 @@ virtual	good_bool
 	instantiate_indices(const const_range_list& i) = 0;
 
 // possibly DEPRECATED
+#if USE_INSTANCE_PLACEHOLDERS
+// is resolved by context elsewhere, now that we have placeholders
+#define	LOOKUP_VALUE_INDEXED_PROTO					\
+	good_bool							\
+	lookup_value(value_type& v, const multikey_index_type& i) const
+#else
 #define	LOOKUP_VALUE_INDEXED_PROTO					\
 	good_bool							\
 	lookup_value(value_type& v, const multikey_index_type& i, 	\
 		const unroll_context&) const
+#endif
 
 virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
 	// need methods for looking up dense sub-collections of values?
@@ -261,9 +274,11 @@ virtual	const_index_list
 
 virtual	UNROLL_LVALUE_REFERENCES_PROTO = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 protected:
 	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const;
+#endif
 
 public:
 #if !USE_INSTANCE_PLACEHOLDERS
@@ -323,6 +338,12 @@ public:
 							const_collection_type;
 	typedef	typename traits_type::value_reference_collection_type
 					value_reference_collection_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename parent_type::value_placeholder_type
+							value_placeholder_type;
+	typedef typename parent_type::value_placeholder_ptr_type
+						value_placeholder_ptr_type;
+#endif
 private:
 	/// the collection of boolean instances
 	collection_type					collection;
@@ -332,18 +353,22 @@ private:
 
 	value_array();
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	value_array(const this_type&, const footprint&);
 
-#if !USE_INSTANCE_PLACEHOLDERS
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
-#endif
 
 public:
 	value_array(const scopespace& o, const string& n);
+#else
+public:
+	explicit
+	value_array(const value_placeholder_ptr_type);
+#endif
 	~value_array();
 
 	ostream&
-	what(ostream& ) const;
+	what(ostream&) const;
 
 	bool
 	is_partially_unrolled(void) const;
@@ -413,6 +438,12 @@ public:
 	typedef	typename traits_type::const_expr_type	const_expr_type;
 	typedef	typename traits_type::value_reference_collection_type
 					value_reference_collection_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename parent_type::value_placeholder_type
+							value_placeholder_type;
+	typedef typename parent_type::value_placeholder_ptr_type
+						value_placeholder_ptr_type;
+#endif
 private:
 	instance_type					the_instance;
 	const_expr_type					cached_value;
@@ -420,12 +451,15 @@ private:
 public:
 	value_array();
 
+#if USE_INSTANCE_PLACEHOLDERS
+	explicit
+	value_array(const value_placeholder_ptr_type);
+#else
 	value_array(const scopespace& o, const string& n);
 
 private:
 	value_array(const this_type&, const footprint&);
 
-#if !USE_INSTANCE_PLACEHOLDERS
 	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
 #endif
 public:
@@ -444,7 +478,11 @@ public:
 	dump_unrolled_values(ostream& o) const;
 
 	good_bool
-	lookup_value(value_type& i, const unroll_context&) const;
+	lookup_value(value_type& i
+#if !USE_INSTANCE_PLACEHOLDERS
+		, const unroll_context&
+#endif
+		) const;
 
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  

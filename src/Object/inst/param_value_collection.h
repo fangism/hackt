@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.13.8.2 2006/08/28 05:10:09 fang Exp $
+	$Id: param_value_collection.h,v 1.13.8.3 2006/09/01 05:17:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -85,6 +85,7 @@ virtual	count_ptr<const param_type_reference>
 // we want to dissociate values from instances
 // these should return NULL, as values are no longer instances
 public:
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	count_ptr<meta_value_reference_base>
 	make_meta_value_reference(void) const = 0;
 
@@ -96,6 +97,7 @@ public:
 	/** should just assert fail, forbid reference to param members */
 	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const;
+#endif
 
 	/** appropriate for the context of a template parameter formal */
 virtual	count_ptr<const param_expr>

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.10 2006/07/16 20:39:49 fang Exp $
+	$Id: CHP.cc,v 1.10.4.1 2006/09/01 05:17:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -715,6 +715,9 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	// using unroll_context's template_formal/actual mechanism.  
+#if USE_INSTANCE_PLACEHOLDERS
+	// TODO: replacement code
+#endif
 	template_formals_manager tfm;
 	const never_ptr<const pint_scalar> pvc(&*ind_var);
 	tfm.add_strict_template_formal(pvc);

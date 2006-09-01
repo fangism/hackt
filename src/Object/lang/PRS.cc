@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.18 2006/07/31 22:22:34 fang Exp $
+	$Id: PRS.cc,v 1.18.4.1 2006/09/01 05:17:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -942,6 +942,9 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	// in a loop:
 	// create context chain of lookup
 	//	using unroll_context's template_formal/actual mechanism.  
+#if USE_INSTANCE_PLACEHOLDERS
+	// TODO: replacement code
+#endif
 	template_formals_manager tfm;
 	const never_ptr<const pint_scalar> pvc(&*ind_var);
 	tfm.add_strict_template_formal(pvc);

@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.10.28.1 2006/08/28 05:10:03 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.10.28.2 2006/09/01 05:17:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -53,6 +53,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_3D, "bool_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_4D, "bool_array_4D")
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::bool_instance_placeholder, 
+	DBOOL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_scalar, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(

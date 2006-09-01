@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.9.30.1 2006/08/28 05:10:13 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.9.30.2 2006/09/01 05:17:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -42,6 +42,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_3D, "struct_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_4D, "struct_array_4D")
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::struct_instance_placeholder, 
+	STRUCT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::struct_scalar, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(

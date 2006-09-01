@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.16 2006/07/16 03:34:48 fang Exp $
+ 	$Id: operators.cc,v 1.16.4.1 2006/09/01 05:17:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -194,6 +194,7 @@ pint_unary_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Returns resolved value of negation expression.  
  */
@@ -205,6 +206,7 @@ pint_unary_expr::resolve_value(value_type& i) const {
 	i = (op == '-') ? -j : ~j;		// regardless of ret
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -382,6 +384,7 @@ preal_unary_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Returns resolved value of negation expression.  
  */
@@ -393,6 +396,7 @@ preal_unary_expr::resolve_value(value_type& i) const {
 	i = -j;		// regardless of ret
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -563,6 +567,7 @@ pbool_unary_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 good_bool
 pbool_unary_expr::resolve_value(value_type& i) const {
 	value_type b;
@@ -570,6 +575,7 @@ pbool_unary_expr::resolve_value(value_type& i) const {
 	i = !b;
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -817,6 +823,7 @@ pint_arith_expr::must_be_equivalent(const pint_expr& p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 good_bool
 pint_arith_expr::resolve_value(value_type& i) const {
 	static const expr_dump_context& c(expr_dump_context::default_value);
@@ -838,6 +845,7 @@ pint_arith_expr::resolve_value(value_type& i) const {
 		return good_bool(true);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1171,6 +1179,7 @@ pint_relational_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	TO DO: switch on relational expression operator.  
  */
@@ -1183,6 +1192,7 @@ pint_relational_expr::resolve_value(value_type& i) const {
 	i = (*op)(li, ri);
 	return l_ret && r_ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1420,6 +1430,7 @@ preal_arith_expr::must_be_equivalent(const preal_expr& p) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 good_bool
 preal_arith_expr::resolve_value(value_type& i) const {
 	static const expr_dump_context& c(expr_dump_context::default_value);
@@ -1441,6 +1452,7 @@ preal_arith_expr::resolve_value(value_type& i) const {
 		return good_bool(true);
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1766,6 +1778,7 @@ preal_relational_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	TO DO: switch on relational expression operator.  
  */
@@ -1778,6 +1791,7 @@ preal_relational_expr::resolve_value(value_type& i) const {
 	i = (*op)(li, ri);
 	return l_ret && r_ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -2042,6 +2056,7 @@ pbool_logical_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	TO DO: switch on logical expression operator.  
  */
@@ -2053,6 +2068,7 @@ pbool_logical_expr::resolve_value(value_type& i) const {
 	i = (*op)(lb, rb);
 	return l_ret && r_ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

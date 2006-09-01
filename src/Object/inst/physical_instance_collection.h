@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.14.8.2 2006/08/31 07:28:42 fang Exp $
+	$Id: physical_instance_collection.h,v 1.14.8.3 2006/09/01 05:17:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -18,7 +18,7 @@ class port_alias_tracker;
 class state_manager;
 class footprint_frame;
 class port_collection_context;
-class physical_instance_collection;
+class physical_instance_placeholder;
 struct alias_visitor;
 struct dump_flags;
 
@@ -72,6 +72,11 @@ public:
 
 virtual	ostream&
 	dump_formal(ostream&) const = 0;
+
+#if USE_INSTANCE_PLACEHOLDERS
+virtual	never_ptr<const physical_instance_placeholder>
+	get_placeholder_base(void) const = 0;
+#endif
 
 #if !USE_INSTANCE_PLACEHOLDERS
 #define	UNROLL_PORT_ONLY_PROTO						\

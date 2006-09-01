@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_enum.cc"
 		in a previous life.  
-	$Id: enum_instance_collection.cc,v 1.8.32.1 2006/08/28 05:10:06 fang Exp $
+	$Id: enum_instance_collection.cc,v 1.8.32.2 2006/09/01 05:17:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ENUM_INSTANCE_COLLECTION_CC__
@@ -44,6 +44,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::enum_array_3D, "enum_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::enum_array_4D, "enum_array_4D")
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::enum_instance_placeholder, 
+	ENUM_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::enum_scalar, ENUM_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(

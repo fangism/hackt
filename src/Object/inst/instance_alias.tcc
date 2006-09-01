@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.22 2006/04/24 00:28:05 fang Exp $
+	$Id: instance_alias.tcc,v 1.22.18.1 2006/09/01 05:17:33 fang Exp $
 	TODO: trim includes
  */
 
@@ -253,14 +253,24 @@ INSTANCE_ALIAS_INFO_CLASS::trace_collection(
 			pp(thisp->__trace_alias_base(sup));
 		STACKTRACE_INDENT_PRINT("looking up member: " <<
 			this->container->get_name() << endl);
+#if USE_INSTANCE_PLACEHOLDERS
+		return *pp.lookup_port_instance(
+			*this->container->get_placeholder_base());
+#else
 		return *pp.lookup_port_instance(*this->container);
+#endif
 	} else {
 		// This case cannot be reached when this is 
 		// a subinstanceless type.
 		// then we are at top-most level, terminate recursion
 		// from the type of sup, lookup the member
 		physical_instance_collection&
+#if USE_INSTANCE_PLACEHOLDERS
+			ret(*sup.lookup_port_instance(
+				*this->container->get_placeholder_base()));
+#else
 			ret(*sup.lookup_port_instance(*this->container));
+#endif
 #if ENABLE_STACKTRACE
 		ret.dump(STACKTRACE_INDENT << "ret: ",
 			dump_flags::default_value) << endl;

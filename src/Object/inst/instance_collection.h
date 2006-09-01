@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.22.8.3 2006/08/31 07:28:37 fang Exp $
+	$Id: instance_collection.h,v 1.22.8.4 2006/09/01 05:17:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -188,6 +188,14 @@ virtual	ostream&
 	dump_formal(ostream&) const;
 
 #if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const physical_instance_placeholder>
+	get_placeholder_base(void) const;
+
+	instance_placeholder_ptr_type
+	get_placeholder(void) const {
+		return this->source_placeholder;
+	}
+
 	size_t
 	get_dimensions(void) const;
 

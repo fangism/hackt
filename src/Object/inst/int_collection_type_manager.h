@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.9 2006/06/26 01:46:12 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.9.8.1 2006/09/01 05:17:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -12,6 +12,7 @@
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/expr/types.h"		// for pint_value_type
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -39,6 +40,10 @@ protected:
 					instance_collection_generic_type;
 	typedef typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef typename traits_type::instance_placeholder_type
+					instance_placeholder_type;
+#endif
 	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
 

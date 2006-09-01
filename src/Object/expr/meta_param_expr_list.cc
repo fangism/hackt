@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.18 2006/07/04 07:25:57 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.18.6.1 2006/09/01 05:17:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -405,7 +405,11 @@ if (a_size != f_size) {
 	// else a_size == 0, passed actuals list is empty, 
 	// try to fill in all default arguments
 	for ( ; f_iter!=f_end; f_iter++) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const param_value_placeholder>
+#else
 		const never_ptr<const param_value_collection>
+#endif
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		// does default expression have to be constant to be

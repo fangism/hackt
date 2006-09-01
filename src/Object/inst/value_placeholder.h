@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.1.2.2 2006/08/31 07:28:43 fang Exp $
+	$Id: value_placeholder.h,v 1.1.2.3 2006/09/01 05:17:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -212,6 +212,7 @@ public:
 #if 0
 virtual	good_bool
 	instantiate_indices(const const_range_list& i) = 0;
+#endif
 
 // possibly DEPRECATED
 #define	LOOKUP_VALUE_INDEXED_PROTO					\
@@ -219,10 +220,12 @@ virtual	good_bool
 	lookup_value(value_type& v, const multikey_index_type& i, 	\
 		const unroll_context&) const
 
-virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
+// virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
+	LOOKUP_VALUE_INDEXED_PROTO;
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 
+#if 0
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
 

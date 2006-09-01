@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.8 2006/06/26 01:46:20 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.8.8.1 2006/09/01 05:17:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -13,6 +13,7 @@
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/packed_array_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -53,18 +54,22 @@ protected:
 						parent_type;
 public:
 	/// the instance collection base type
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::instance_placeholder_type
+#else
 	typedef	typename traits_type::instance_collection_generic_type
-					instance_collection_generic_type;
+#endif
+					instance_placeholder_type;
 	/// pointer type for instance collections
-	typedef	never_ptr<const instance_collection_generic_type>
-						instance_collection_ptr_type;
+	typedef	never_ptr<const instance_placeholder_type>
+						instance_placeholder_ptr_type;
 private:
-	const instance_collection_ptr_type	inst_collection_ref;
+	const instance_placeholder_ptr_type	inst_collection_ref;
 protected:
 	simple_nonmeta_instance_reference();
 public:
 	explicit
-	simple_nonmeta_instance_reference(const instance_collection_ptr_type);
+	simple_nonmeta_instance_reference(const instance_placeholder_ptr_type);
 
 	~simple_nonmeta_instance_reference();
 
@@ -77,7 +82,7 @@ public:
 	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
-	instance_collection_ptr_type
+	instance_placeholder_ptr_type
 	get_inst_base_subtype(void) const;
 
 	good_bool

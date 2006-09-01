@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11.4.1 2006/08/28 05:09:53 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.2 2006/09/01 05:17:16 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -38,8 +38,8 @@
 #include "Object/inst/param_value_placeholder.h"
 #else
 #include "Object/inst/physical_instance_collection.h"
-#include "Object/inst/pint_value_collection.h"
 #endif
+#include "Object/inst/pint_value_collection.h"
 #include "Object/module.h"
 
 #include "util/stacktrace.h"

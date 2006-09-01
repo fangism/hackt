@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.12 2006/06/26 01:46:02 fang Exp $
+ 	$Id: meta_range.cc,v 1.12.8.1 2006/09/01 05:17:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -253,6 +253,7 @@ pint_range::unroll_resolve_range(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 good_bool
 pint_range::resolve_range(const_range& r) const {
 	if (!lower->resolve_value(r.first).good)
@@ -261,6 +262,7 @@ pint_range::resolve_range(const_range& r) const {
 		return good_bool(false);
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_index>

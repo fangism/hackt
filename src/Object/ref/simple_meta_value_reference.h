@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.13.2.3 2006/08/31 07:28:47 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.13.2.4 2006/09/01 05:17:45 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -160,10 +160,12 @@ public:
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	// why is this not available to other meta-instance-references?
 	// doesn't this need context?
 	const_index_list
 	resolve_dimensions(void) const;
+#endif
 
 	const_index_list
 	unroll_resolve_dimensions(const unroll_context&) const;

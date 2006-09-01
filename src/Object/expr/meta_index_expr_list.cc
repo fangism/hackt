@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.15 2006/06/26 01:46:01 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.15.8.1 2006/09/01 05:17:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -584,6 +584,7 @@ dynamic_meta_index_list::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	For now const_index_list constains count_ptr<const_index>, 
 	not count_const_ptr, so we have to make deep copies, 
@@ -616,6 +617,7 @@ dynamic_meta_index_list::resolve_index_list(void) const {
 	}
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

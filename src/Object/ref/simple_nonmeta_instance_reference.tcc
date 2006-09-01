@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_nonmeta_instance_reference.tcc"
 	This file was "Object/art_object_nonmeta_inst_ref.tcc"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.tcc,v 1.8 2006/06/26 01:46:21 fang Exp $
+	$Id: simple_nonmeta_instance_reference.tcc,v 1.8.8.1 2006/09/01 05:17:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_TCC__
@@ -36,7 +36,7 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::simple_nonmeta_instance_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::simple_nonmeta_instance_reference(
-		const instance_collection_ptr_type i) :
+		const instance_placeholder_ptr_type i) :
 		common_base_type(), parent_type(),
 		inst_collection_ref(i) { }
 
@@ -47,7 +47,7 @@ SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::~simple_nonmeta_instance_reference() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_NONMETA_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-typename SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::instance_collection_ptr_type
+typename SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::instance_placeholder_ptr_type
 SIMPLE_NONMETA_INSTANCE_REFERENCE_CLASS::get_inst_base_subtype(void) const {
 	return inst_collection_ref;
 }

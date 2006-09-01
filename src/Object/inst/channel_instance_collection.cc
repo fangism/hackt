@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.10.20.1 2006/08/28 05:10:04 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.10.20.2 2006/09/01 05:17:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -44,6 +44,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_3D, "channel_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_4D, "channel_array_4D")
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::channel_instance_placeholder, 
+	CHANNEL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_scalar, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(

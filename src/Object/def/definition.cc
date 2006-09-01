@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.1 2006/08/28 05:10:00 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.2 2006/09/01 05:17:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -326,7 +326,7 @@ definition_base::lookup_port_formal(const string& id) const {
  */
 size_t
 definition_base::lookup_port_formal_position(
-#if USE_INSTANE_PLACEHOLDERS
+#if USE_INSTANCE_PLACEHOLDERS
 		const instance_placeholder_base& i
 #else
 		const instance_collection_base& i
@@ -952,10 +952,18 @@ user_def_chan::attach_base_channel_type(
 	Ripped off from process_definition's.
 	Last touched: 2005-05-25.
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const physical_instance_placeholder>
+#else
 never_ptr<const physical_instance_collection>
+#endif
 user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	never_ptr<const physical_instance_placeholder>	return_type;
+#else
 	typedef	never_ptr<const physical_instance_collection>	return_type;
+#endif
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -969,7 +977,12 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 	}
 
 	const return_type pf(add_instance(f, id, false)
-		.is_a<const physical_instance_collection>());
+#if USE_INSTANCE_PLACEHOLDERS
+		.is_a<const physical_instance_placeholder>()
+#else
+		.is_a<const physical_instance_collection>()
+#endif
+		);
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
@@ -1099,11 +1112,11 @@ user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	if (o.is_a<instance_collection_base>()) {
 #if USE_INSTANCE_PLACEHOLDERS
-		excl_ptr<instance_collection_base>
-			icbp = o.is_a_xfer<instance_collection_base>();
-#else
 		excl_ptr<instance_placeholder_base>
 			icbp = o.is_a_xfer<instance_placeholder_base>();
+#else
+		excl_ptr<instance_collection_base>
+			icbp = o.is_a_xfer<instance_collection_base>();
 #endif
 		add_instance(icbp);
 		INVARIANT(!icbp);
@@ -1294,8 +1307,13 @@ channel_definition_alias::load_object(
 void
 channel_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	if (o.is_a<instance_collection_base>()) {
+#if USE_INSTANCE_PLACEHOLDERS
+		excl_ptr<instance_placeholder_base>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
+#else
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
+#endif
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
@@ -2144,11 +2162,19 @@ user_def_datatype::attach_base_data_type(
 	Shamelessly ripped off from user_def_chan's, 
 	Ripped off from process_definition's.
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const physical_instance_placeholder>
+#else
 never_ptr<const physical_instance_collection>
+#endif
 user_def_datatype::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	never_ptr<const physical_instance_placeholder>	return_type;
+#else
 	typedef	never_ptr<const physical_instance_collection>	return_type;
+#endif
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -2162,7 +2188,12 @@ user_def_datatype::add_port_formal(
 	}
 
 	const return_type pf(add_instance(f, id, false)
-		.is_a<const physical_instance_collection>());
+#if USE_INSTANCE_PLACEHOLDERS
+		.is_a<const physical_instance_placeholder>()
+#else
+		.is_a<const physical_instance_collection>()
+#endif
+		);
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
@@ -2447,8 +2478,13 @@ user_def_datatype::load_object(
 void
 user_def_datatype::load_used_id_map_object(excl_ptr<persistent>& o) {
 	if (o.is_a<instance_collection_base>()) {
+#if USE_INSTANCE_PLACEHOLDERS
+		excl_ptr<instance_placeholder_base>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
+#else
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
+#endif
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
@@ -2677,8 +2713,13 @@ void
 datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	if (o.is_a<instance_collection_base>()) {
+#if USE_INSTANCE_PLACEHOLDERS
+		excl_ptr<instance_placeholder_base>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
+#else
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
+#endif
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
@@ -2911,11 +2952,19 @@ process_definition::make_canonical_fundamental_type_reference(
 /**
 	Adds a port formal instance to this process definition.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const physical_instance_placeholder>
+#else
 never_ptr<const physical_instance_collection>
+#endif
 process_definition::add_port_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id) {
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	never_ptr<const physical_instance_placeholder>	return_type;
+#else
 	typedef	never_ptr<const physical_instance_collection>	return_type;
+#endif
 	NEVER_NULL(f);
 	// check and make sure identifier wasn't repeated in formal list!
 	{
@@ -2928,7 +2977,12 @@ process_definition::add_port_formal(
 	}
 
 	const return_type pf(add_instance(f, id, false)
-		.is_a<const physical_instance_collection>());
+#if USE_INSTANCE_PLACEHOLDERS
+		.is_a<const physical_instance_placeholder>()
+#else
+		.is_a<const physical_instance_collection>()
+#endif
+		);
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
@@ -3307,8 +3361,13 @@ void
 process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	if (o.is_a<instance_collection_base>()) {
+#if USE_INSTANCE_PLACEHOLDERS
+		excl_ptr<instance_placeholder_base>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
+#else
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
+#endif
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
@@ -3503,8 +3562,13 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 		"process_definition_alias::load_used_id_map_object()." << endl;
 #endif
 	if (o.is_a<instance_collection_base>()) {
+#if USE_INSTANCE_PLACEHOLDERS
+		excl_ptr<instance_placeholder_base>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
+#else
 		excl_ptr<instance_collection_base>
 			icbp = o.is_a_xfer<instance_collection_base>();
+#endif
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {

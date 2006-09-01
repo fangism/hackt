@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.2 2006/08/31 07:28:44 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.3 2006/09/01 05:17:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -175,7 +175,10 @@ ostream&
 VALUE_PLACEHOLDER_CLASS::dump_formal(ostream& o) const {
 	INVARIANT(this->is_template_formal());
 //	this->dump_base(o);
+	// placeholders don't have collections
+#if 0
 	this->dump_collection_only(o);
+#endif
 	expr_dump_context dc(expr_dump_context::default_value);
 	dc.enclosing_scope = this->owner;
 	if (this->dimensions) {
@@ -236,6 +239,8 @@ VALUE_PLACEHOLDER_CLASS::dump(ostream& o, const dump_flags& df) const {
 			init_def->dump(o << " (default = ", dc) << ")";
 		else    init_def->dump(o << " (init = ", dc) << ")";
 	}
+	// placeholders are not unrolled
+#if 0
 	// print out the values of instances that have been unrolled
 	if (this->is_partially_unrolled()) {
 		if (this->dimensions) {
@@ -254,6 +259,7 @@ VALUE_PLACEHOLDER_CLASS::dump(ostream& o, const dump_flags& df) const {
 			dump_unrolled_values(o);	// already endl
 		}
 	}
+#endif
 	return o;
 }
 

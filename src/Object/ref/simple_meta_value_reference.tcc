@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.3 2006/08/31 07:28:47 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.4 2006/09/01 05:17:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -341,7 +341,11 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 			}
 			// what if this references a formal parameter?
 			// then we need to get the template actuals
+#if USE_INSTANCE_PLACEHOLDERS
+			return _vals.lookup_value(i, lower);
+#else
 			return _vals.lookup_value(i, lower, c);
+#endif
 		} else {
 			cerr << "Unable to unroll-resolve array_indices!"
 				<< endl;
@@ -352,13 +356,17 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		// what if is pbool_const or pint_const?
 		const value_scalar_type&
 			scalar_inst(IS_A(const value_scalar_type&, _vals));
+#if USE_INSTANCE_PLACEHOLDERS
+		return scalar_inst.lookup_value(i);
+#else
 		return scalar_inst.lookup_value(i, c);
+#endif
 	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS
-// OBSOLETE
+// OBSOLETE, with placeholders
 /**
 	This version specifically asks for one integer value, 
 	thus the array indices must be scalar (0-D).  
@@ -396,7 +404,12 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
+	NOTE: (2006-08-31)
+	Cannot possibly resolve dimensions using placeholder
+	and without context to lookup!
+
 	Returns the dimensions of the collection in the current state, 
 	ONLY IF, the indexed reference to the current state is all valid.  
 	Otherwise, returns an empty list, which is interpreted as an error.  
@@ -430,6 +443,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
 	else return const_index_list();
 	// Elsewhere (during assign) check for initialization.  
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -464,8 +478,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// This depends on the values being unrolled in the footprint's 
 	// collection of value collections!
 	// unroll_context::lookup_value_collection
+	const count_ptr<const param_value_collection>
+		pvc(c.lookup_value_collection(*this->value_collection_ref));
+	if (!pvc) {
+		return const_index_list();
+	}
 	const const_index_list
-		r_i(value_collection_ref->resolve_indices(c_i));
+		r_i(pvc->resolve_indices(c_i));
 #else
 	const const_index_list
 		r_i(value_collection_ref->resolve_indices(c_i));
@@ -516,12 +535,24 @@ if (temp) {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: (2006-08-31)
+	This routine should be short:
+	1a) resolve value_placeholder to value_collection
+	1b) resolve indices, if applicable
+	2) lookup value
+	WTF is all this mess!?
+
+	Should care whether or not placeholder referenced is
+	template formal or induction variable, or whatever.  
+
 	Resolves a scalar or collective instance reference into a 
 	packed array of values.  
 	\param c unrolling context, may contain template actuals.
 	\return dense array of values, NULL if error.  
 		When result is scalar, always returns the const_expr_type.  
  */
+#if !USE_INSTANCE_PLACEHOLDERS
+// temporary quarantine
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const const_param>
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
@@ -723,6 +754,7 @@ if (value_collection_ref->is_template_formal()) {
 	}
 }
 }	// end method unroll_resolve_rvalues
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
