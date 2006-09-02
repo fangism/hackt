@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.11.8.1 2006/08/28 05:10:18 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.11.8.2 2006/09/02 01:10:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -142,8 +142,14 @@ dummy_bool(new pbool_const(true));
 ***/
 
 // will transfer ownership to definition
+#if USE_INSTANCE_PLACEHOLDERS
+static excl_ptr<pint_value_placeholder>
+int_def_width(new pint_value_placeholder(
+	int_traits::built_in_definition, "width", 0));
+#else
 static excl_ptr<pint_scalar>
 int_def_width(new pint_scalar(int_traits::built_in_definition, "width"));
+#endif
 
 static const good_bool
 __good_int_width
