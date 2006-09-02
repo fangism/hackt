@@ -1,0 +1,94 @@
+/**
+	\file "copy.hac"
+	Copy processes.
+	Includes:
+		Unbuffered (wire) copies.  
+		Buffered copies.
+		Buffered conditional copies (controlled).  
+	Use std::logic for C-elements?
+	Namespace: propose in std
+	$Id: copy.hac,v 1.1 2006/09/02 20:35:07 fang Exp $
+ */
+
+import "channel.hac";
+
+//=============================================================================
+/**
+	Wire-copies (slack 0) a channel to several output channels.  
+	Acknowledges are completed with a C-element.  
+	Expects inputs to be reset to known values.  Input acknowledges
+	must have equal value because the c-element does not 
+	reset its acknowledge.  
+	\param N number of rails per e1ofN channel.
+	\param M fanout, number of output channel copies.  
+	\param l the input channel
+	\param r the output channel array
+ */
+template <pint N, M>
+defproc wire_copy_e1of(e1of<N> l, r[M]) {
+bool _le;
+(;i:M:	l.d = r.d;	)
+//	celeminv<M> c( , _le);
+//	(;i:M:	c.i[i] = r[i].e;	)
+//	inv lei(_le, l.e);
+prs {
+	(&:i:M:	r[i].e	)		-> _le-
+	(&:i:M:	~r[i].e	)		-> _le+
+	_le				=> l.e-
+}
+}
+
+template <pint M>
+typedef	wire_copy_e1of<2,M>		wire_copy_e1of2;
+template <pint M>
+typedef	wire_copy_e1of<3,M>		wire_copy_e1of3;
+template <pint M>
+typedef	wire_copy_e1of<4,M>		wire_copy_e1of4;
+template <pint M>
+typedef	wire_copy_e1of<5,M>		wire_copy_e1of5;
+template <pint M>
+typedef	wire_copy_e1of<6,M>		wire_copy_e1of6;
+template <pint M>
+typedef	wire_copy_e1of<7,M>		wire_copy_e1of7;
+template <pint M>
+typedef	wire_copy_e1of<8,M>		wire_copy_e1of8;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wire-copy (slack 0) for a1ofN channels.  
+	\param N number of rails per e1ofN channel.
+	\param M fanout, number of output channel copies.  
+	\param l the input channel
+	\param r the output channel array
+ */
+template <pint N, M>
+defproc wire_copy_a1of(a1of<N> l, r[M]) {
+bool _la;
+(;i:M:	l.d = r.d;	)
+//	celeminv<M> c( , _la);
+//	(;i:M:	c.i[i] = r[i].a;	)
+//	inv lai(_la, l.a);
+prs {
+	(&:i:M:	r[i].a	)		-> _la-
+	(&:i:M:	~r[i].a	)		-> _la+
+	_la				=> l.a-
+}
+}
+
+template <pint M>
+typedef	wire_copy_a1of<2,M>		wire_copy_a1of2;
+template <pint M>
+typedef	wire_copy_a1of<3,M>		wire_copy_a1of3;
+template <pint M>
+typedef	wire_copy_a1of<4,M>		wire_copy_a1of4;
+template <pint M>
+typedef	wire_copy_a1of<5,M>		wire_copy_a1of5;
+template <pint M>
+typedef	wire_copy_a1of<6,M>		wire_copy_a1of6;
+template <pint M>
+typedef	wire_copy_a1of<7,M>		wire_copy_a1of7;
+template <pint M>
+typedef	wire_copy_a1of<8,M>		wire_copy_a1of8;
+
+//=============================================================================
+

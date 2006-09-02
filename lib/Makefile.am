@@ -1,5 +1,5 @@
 # "lib/Makefile.am"
-#	$Id: Makefile.am,v 1.9 2006/08/04 20:20:03 fang Exp $
+#	$Id: Makefile.am,v 1.10 2006/09/02 20:35:06 fang Exp $
 # Makefile for standard hackt library files.  
 # All files managed herein should be architecture-independent, 
 # and appropriate for installation in $(datadir).
@@ -21,7 +21,9 @@ dist_hacktlib_DATA = \
 	logic.hac \
 	channel.hac \
 	env.hac \
-	buffer.hac
+	buffer.hac \
+	copy.hac \
+	sync.hac
 
 # Makefile and automake templates
 dist_make_DATA = \

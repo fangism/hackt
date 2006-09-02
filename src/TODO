@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.37 2006/08/30 04:04:55 fang Exp $
+#	$Id: TODO,v 1.38 2006/09/02 20:35:10 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -72,6 +72,22 @@ instance collections:
 diagnostic statistics:
 	memory self-profiling statistics from pooled-allocators, etc.
 
+
+===============================================================================
+pie-in-the-sky:
+	be able to define prs-macros for use in being able to 
+		pass in functions into template handshaking expansions.
+	INTERFACE concept, and being able to piece implementations
+		together combinatorially.  (template madness)
+	Be able to express compositions in terms of interfaces
+		and automatically yield exponential combinations of 
+		implementations.  
+	Most of this is geared towards library development.  
+	Already library is starting to suffer from combinational explosion. 
+	One example: whether or not state-holding logic is 
+		implemented with combinational feedback.  
+	Language support for processes implementing interfaces, 
+		and telescopic refinement.  
 
 ===============================================================================
 unroll_references:

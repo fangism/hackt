@@ -1,5 +1,5 @@
 "TODO"
-	$Id: TODO,v 1.3 2006/08/04 20:20:04 fang Exp $
+	$Id: TODO,v 1.4 2006/09/02 20:35:07 fang Exp $
 
 Use configure to generate Makefiles suitable for installations of hackt.  
 Distinguish between build Makefiles and install Makefiles.  
@@ -18,6 +18,7 @@ inline documentation:
 	Ideally every comment preceding a definition should confirm
 	that it is working by pointing to the relevant test cases
 	in test/lib that demonstrate it (prsim with random timing for QDI).  
+	The pointer to the test case is a certification.  
 
 library additions:
 	buffered logic family
@@ -27,4 +28,7 @@ library additions:
 		merges
 	memory cells
 	precharge skeletons
+
+	active-high/low bool-wrapper, useful for Resets.  
+	so the direction of the a node is encoded as a type.  
 

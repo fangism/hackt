@@ -19,291 +19,600 @@ Persistent Object Manager text dump:
 	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	237
+	18	##ADDR##	procdefn	0	#HEAD#	#TAIL#	229
 	19	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
 	20	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	procdefn	0	#HEAD#	#TAIL#	266
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	26
-	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	34	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	26
-	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	42	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	44	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	48	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	49	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	50	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	51	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	35	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	46	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	48	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	51	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	58	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	59	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	62	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	64	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	66	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	67	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	69	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	70	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	72	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	73	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	74	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	76	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	77	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
-	78	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
-	79	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	80	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	82	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	61	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	65	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
+	67	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	68	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	71	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	72	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	73	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
+	74	##ADDR##	procdefn	0	#HEAD#	#TAIL#	225
+	75	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	76	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	78	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	79	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	80	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	81	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	82	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	83	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	84	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	85	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	86	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	87	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	88	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	89	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	90	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	91	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	92	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	93	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	94	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	95	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	96	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
-	97	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	98	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	99	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	100	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	101	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	102	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	103	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	104	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	105	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	110
-	106	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
-	107	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	108	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	109	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	110	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	111	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	112	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	113	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
-	114	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	115	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	116	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	117	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	118	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
+	84	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	86	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	87	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	88	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	89	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	90	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	91	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	92	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	93	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	94	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	96	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	98	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	99	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	100	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	101	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	102	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	103	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	104	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	105	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	107	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	108	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	109	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	110	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	111	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	112	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	113	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	114	##ADDR##	namespc_	0	#HEAD#	#TAIL#	225
+	115	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	50
+	116	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	117	##ADDR##	procdefn	0	#HEAD#	#TAIL#	137
+	118	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
 	119	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	120	##ADDR##	proccoll	0	#HEAD#	#TAIL#	59
-	121	##ADDR##	procdefn	0	#HEAD#	#TAIL#	225
-	122	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	123	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	124	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	125	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	120	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	121	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	122	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	123	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	124	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	125	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	126	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	127	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	128	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	129	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	130	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	131	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	132	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	133	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	134	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	135	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	136	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	137	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	138	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	139	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	140	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	141	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	142	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	143	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	144	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	145	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	146	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
-	147	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	148	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	149	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	150	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	151	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	152	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	153	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	154	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	155	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	156	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
-	157	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	158	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	159	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	160	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
-	161	##ADDR##	namespc_	0	#HEAD#	#TAIL#	129
-	162	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
-	163	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	164	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	165	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	166	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	167	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	168	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	169	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	170	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	171	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	172	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	173	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	174	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	175	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
-	176	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	177	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	178	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	179	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
-	180	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	181	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	182	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	183	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
-	184	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	185	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	186	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	187	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
-	188	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	189	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	190	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	191	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
-	192	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	193	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	194	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	195	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
-	196	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	197	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	198	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	199	##ADDR##	procdefn	0	#HEAD#	#TAIL#	224
-	200	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	201	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	202	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	203	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	204	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	205	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	206	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	207	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	208	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	209	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	132	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	133	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	134	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	135	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	136	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	137	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	138	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	139	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	140	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	141	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	142	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	143	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	144	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	145	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	146	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	147	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	148	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	149	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	150	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	151	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	152	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	153	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	154	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	155	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	156	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	157	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	158	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	159	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	160	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	161	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	162	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	163	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	164	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	165	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	166	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	167	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	168	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	169	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	170	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	171	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	172	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	173	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	174	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	175	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	176	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	177	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	178	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	179	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	180	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	181	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	182	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	183	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	184	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	185	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	186	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	187	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	188	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	189	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	190	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	191	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	192	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	193	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	194	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	195	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	196	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	197	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	198	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	199	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	200	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	201	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	202	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	203	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	204	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	205	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	206	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	207	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	208	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	209	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	210	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
-	211	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
-	212	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	213	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	214	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	215	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	216	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	217	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	218	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	219	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	220	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	221	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	222	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	223	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
-	224	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	225	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
-	226	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	227	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	228	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	229	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	230	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	231	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
-	232	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	233	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	234	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	235	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
-	236	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	237	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	238	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	239	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
-	240	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	241	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	242	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
-	243	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	244	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	245	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	246	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
-	247	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	248	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	249	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	250	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
-	251	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	252	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	211	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	212	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	213	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	214	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	215	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	216	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	217	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	47
+	218	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	219	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	220	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
+	221	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	222	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	223	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	224	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	225	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	226	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	227	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	228	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	229	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	230	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	231	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	232	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	233	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	234	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	235	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	236	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	237	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	238	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	239	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	240	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	241	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	242	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	243	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	244	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	245	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	246	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	247	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	248	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	249	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	250	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	251	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	252	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	253	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	254	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
-	255	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	256	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	257	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	258	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
-	259	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	260	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	261	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	262	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
-	263	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	264	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	265	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	266	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
-	267	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	268	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	269	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	270	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
-	271	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	272	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	273	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	274	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
-	275	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	276	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	277	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	278	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
-	279	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	280	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	254	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	255	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	256	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	257	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	258	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	259	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	260	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	261	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	262	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	263	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	264	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	265	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	266	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	267	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	268	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	269	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	270	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	271	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	272	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	273	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	274	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	275	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	276	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	277	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	278	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	279	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	280	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	281	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	282	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	283	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	284	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	285	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	286	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	287	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	288	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	289	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	290	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	291	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	292	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	293	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	294	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	295	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	296	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	297	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	298	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	299	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	300	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	301	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	302	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	282	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	283	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	284	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	285	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	286	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	287	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	288	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	289	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
+	290	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	291	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	292	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	293	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	294	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	295	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	296	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	297	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	298	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	299	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	300	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	301	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	302	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	303	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	304	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	305	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	306	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	47
+	307	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	308	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	309	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	310	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	311	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	312	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	313	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	314	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	315	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	316	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	317	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	318	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	319	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	320	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	321	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	322	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	323	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	324	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	325	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	326	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	43
+	327	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	328	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
+	329	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
+	330	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	331	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	332	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	333	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	334	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	335	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	336	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	337	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	338	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	339	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	340	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	341	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	342	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	343	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	344	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	345	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	346	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	347	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	348	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	349	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	350	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	351	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	352	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	353	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	354	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	355	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	356	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	357	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	358	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	359	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	360	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	361	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	362	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	363	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	364	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	365	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	366	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	367	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	368	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	369	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	370	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	371	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	372	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	373	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	374	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	375	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	376	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	377	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	378	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	379	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	380	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	381	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	382	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	383	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	384	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	385	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	43
+	386	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	387	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	388	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	389	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	42
+	390	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	391	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	392	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	393	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	43
+	394	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	395	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	396	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	397	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	43
+	398	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	399	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	400	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	401	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	43
+	402	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	403	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	404	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	405	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	43
+	406	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	407	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	408	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	409	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	43
+	410	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	411	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	412	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	413	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	50
+	414	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	415	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	416	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	417	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	47
+	418	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	419	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	420	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	421	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	47
+	422	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	423	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	424	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	425	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	50
+	426	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	427	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	428	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	429	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	50
+	430	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	431	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	432	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	433	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	47
+	434	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	435	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	436	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	437	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	47
+	438	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	439	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	440	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	441	##ADDR##	procdefn	0	#HEAD#	#TAIL#	224
+	442	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	443	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	444	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	445	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	446	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	447	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	448	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	449	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	450	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	451	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	452	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	453	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
+	454	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	455	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	456	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	457	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	458	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	459	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	460	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	461	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	462	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	463	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	464	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	465	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	466	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	467	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	468	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	469	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	470	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	471	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
+	472	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	473	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	50
+	474	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	475	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	476	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	477	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	50
+	478	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	479	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	480	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	481	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
+	482	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	483	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	484	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	485	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
+	486	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	487	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	488	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	489	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	47
+	490	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	491	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	492	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	493	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
+	494	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	495	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	496	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
+	497	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	498	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	499	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	500	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
+	501	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	502	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	503	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	504	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
+	505	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	506	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	507	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	508	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	41
+	509	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	510	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	511	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	512	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
+	513	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	514	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	515	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	516	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
+	517	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	518	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	519	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	520	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
+	521	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	522	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	523	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	524	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
+	525	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	526	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	527	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	528	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
+	529	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	530	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	531	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	532	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	46
+	533	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	534	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	535	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	536	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	50
+	537	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	538	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	539	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	540	##ADDR##	procdefn	0	#HEAD#	#TAIL#	134
+	541	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	26
+	542	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	543	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	544	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	545	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	546	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	547	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	548	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	549	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	550	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	551	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	552	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	26
+	553	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	554	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	555	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	556	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	557	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	558	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	559	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	560	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	561	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	562	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	563	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	564	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
+	565	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	566	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	567	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	568	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	569	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	570	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	571	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	572	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	573	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	574	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	575	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	576	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	577	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
+	578	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
+	579	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	580	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	581	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	582	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	583	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	584	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	585	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
+	586	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
+	587	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	588	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	589	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	590	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	591	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	592	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	593	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	594	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	595	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	596	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
+	597	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	598	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	599	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	600	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	601	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	602	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	603	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	604	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	605	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	606	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	607	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	608	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	609	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	610	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	611	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -324,9 +633,63 @@ In namespace "", we have: {
           0 parameter-collections
           0 instantiation-collections
           0 sub-namespaces
-          5 definitions
-          21 typedefs
+          8 definitions
+          42 typedefs
           Definitions:
+            celem = process-definition (defined) celem<
+              pint<> N
+              >(
+                bool<> i[0..N-1]
+                bool<> o
+              )
+              In definition "celem", we have: {
+              Parameters:
+                N = pint<> N
+              Instances:
+                _o = bool<> _o
+                i = bool<> i
+
+                o = bool<> o
+              unroll sequence: 
+                pint<> N
+                bool<> i[0..N-1]
+                bool<> o
+                bool<> _o
+              prs:
+                (&:j:[0..N-1]: i[$j]) -> _o-
+                (&:j:[0..N-1]: ~i[$j]) -> _o+
+                _o -> o-
+                ~_o -> o+
+              }
+
+            celem_cfb = process-definition (defined) celem_cfb<
+              pint<> N
+              >(
+                bool<> i[0..N-1]
+                bool<> o
+              )
+              In definition "celem_cfb", we have: {
+              Parameters:
+                N = pint<> N
+              Instances:
+                _o = bool<> _o
+                i = bool<> i
+
+                o = bool<> o
+              unroll sequence: 
+                pint<> N
+                bool<> i[0..N-1]
+                bool<> o
+                bool<> _o
+              prs:
+                (&:j:[0..N-1]: i[$j]) -> _o-
+                (&:j:[0..N-1]: ~i[$j]) -> _o+
+                _o -> o-
+                ~_o -> o+
+                ~o & (|:j:[0..N-1]: ~i[$j]) -> _o+
+                o & (|:j:[0..N-1]: i[$j]) -> _o-
+              }
+
             celeminv = process-definition (defined) celeminv<
               pint<> N
               >(
@@ -337,7 +700,6 @@ In namespace "", we have: {
               Parameters:
                 N = pint<> N
               Instances:
-                c = gceleminv<::std::logic::celeminv::N, ::std::logic::celeminv::N> c
                 i = bool<> i
 
                 o = bool<> o
@@ -345,38 +707,50 @@ In namespace "", we have: {
                 pint<> N
                 bool<> i[0..N-1]
                 bool<> o
-                gceleminv<::std::logic::celeminv::N, ::std::logic::celeminv::N> c
-                c (i, i, o);
+              prs:
+                (&:j:[0..N-1]: i[$j]) -> o-
+                (&:j:[0..N-1]: ~i[$j]) -> o+
               footprint collection: {
                 <4> {
                   pint^0 N value: ?
-                  process gceleminv<4, 4>^0 c (instantiated) = ::std::logic::celeminv::c (
-                    bool^1 id
-                      unrolled indices: {
-                        0 = ::std::logic::celeminv::c.iu[0] 
-                        1 = ::std::logic::celeminv::c.iu[1] 
-                        2 = ::std::logic::celeminv::c.iu[2] 
-                        3 = ::std::logic::celeminv::c.iu[3] 
-                      }
-                    bool^1 iu
-                      unrolled indices: {
-                        0 = ::std::logic::celeminv::c.iu[0] 
-                        1 = ::std::logic::celeminv::c.iu[1] 
-                        2 = ::std::logic::celeminv::c.iu[2] 
-                        3 = ::std::logic::celeminv::c.iu[3] 
-                      }
-                    bool^0 o (instantiated) = ::std::logic::celeminv::c.o 
-                  )
                   bool^1 i
                     unrolled indices: {
-                      0 = ::std::logic::celeminv::c.id[0] 
-                      1 = ::std::logic::celeminv::c.id[1] 
-                      2 = ::std::logic::celeminv::c.id[2] 
-                      3 = ::std::logic::celeminv::c.id[3] 
+                      0 = ::std::logic::celeminv::i[0] 
+                      1 = ::std::logic::celeminv::i[1] 
+                      2 = ::std::logic::celeminv::i[2] 
+                      3 = ::std::logic::celeminv::i[3] 
                     }
-                  bool^0 o (instantiated) = ::std::logic::celeminv::c.o 
+                  bool^0 o (instantiated) = ::std::logic::celeminv::o 
                 }
               }
+              }
+
+            celeminv_cfb = process-definition (defined) celeminv_cfb<
+              pint<> N
+              >(
+                bool<> i[0..N-1]
+                bool<> o
+              )
+              In definition "celeminv_cfb", we have: {
+              Parameters:
+                N = pint<> N
+              Instances:
+                i = bool<> i
+
+                o = bool<> o
+                o_ = bool<> o_
+              unroll sequence: 
+                pint<> N
+                bool<> i[0..N-1]
+                bool<> o
+                bool<> o_
+              prs:
+                (&:j:[0..N-1]: i[$j]) -> o-
+                (&:j:[0..N-1]: ~i[$j]) -> o+
+                o -> o_-
+                ~o -> o_+
+                ~o_ & (|:j:[0..N-1]: ~i[$j]) -> o+
+                o_ & (|:j:[0..N-1]: i[$j]) -> o-
               }
 
             gceleminv = process-definition (defined) gceleminv<
@@ -406,27 +780,6 @@ In namespace "", we have: {
               prs:
                 (&:j:[0..D-1]: id[$j]) -> o-
                 (&:j:[0..U-1]: ~iu[$j]) -> o+
-              footprint collection: {
-                <4, 4> {
-                  bool^1 id
-                    unrolled indices: {
-                      0 = ::std::logic::gceleminv::id[0] 
-                      1 = ::std::logic::gceleminv::id[1] 
-                      2 = ::std::logic::gceleminv::id[2] 
-                      3 = ::std::logic::gceleminv::id[3] 
-                    }
-                  bool^1 iu
-                    unrolled indices: {
-                      0 = ::std::logic::gceleminv::iu[0] 
-                      1 = ::std::logic::gceleminv::iu[1] 
-                      2 = ::std::logic::gceleminv::iu[2] 
-                      3 = ::std::logic::gceleminv::iu[3] 
-                    }
-                  pint^0 D value: ?
-                  pint^0 U value: ?
-                  bool^0 o (instantiated) = ::std::logic::gceleminv::o 
-                }
-              }
               }
 
             inv = process-definition (defined) inv(
@@ -516,20 +869,62 @@ In namespace "", we have: {
               }
 
           Typedefs:
+            celem2 = process-definition-alias: celem2
+              = celem<2>
+            celem2_cfb = process-definition-alias: celem2_cfb
+              = celem_cfb<2>
+            celem3 = process-definition-alias: celem3
+              = celem<3>
+            celem3_cfb = process-definition-alias: celem3_cfb
+              = celem_cfb<3>
+            celem4 = process-definition-alias: celem4
+              = celem<4>
+            celem4_cfb = process-definition-alias: celem4_cfb
+              = celem_cfb<4>
+            celem5 = process-definition-alias: celem5
+              = celem<5>
+            celem5_cfb = process-definition-alias: celem5_cfb
+              = celem_cfb<5>
+            celem6 = process-definition-alias: celem6
+              = celem<6>
+            celem6_cfb = process-definition-alias: celem6_cfb
+              = celem_cfb<6>
+            celem7 = process-definition-alias: celem7
+              = celem<7>
+            celem7_cfb = process-definition-alias: celem7_cfb
+              = celem_cfb<7>
+            celem8 = process-definition-alias: celem8
+              = celem<8>
+            celem8_cfb = process-definition-alias: celem8_cfb
+              = celem_cfb<8>
             celeminv2 = process-definition-alias: celeminv2
               = celeminv<2>
+            celeminv2_cfb = process-definition-alias: celeminv2_cfb
+              = celeminv_cfb<2>
             celeminv3 = process-definition-alias: celeminv3
               = celeminv<3>
+            celeminv3_cfb = process-definition-alias: celeminv3_cfb
+              = celeminv_cfb<3>
             celeminv4 = process-definition-alias: celeminv4
               = celeminv<4>
+            celeminv4_cfb = process-definition-alias: celeminv4_cfb
+              = celeminv_cfb<4>
             celeminv5 = process-definition-alias: celeminv5
               = celeminv<5>
+            celeminv5_cfb = process-definition-alias: celeminv5_cfb
+              = celeminv_cfb<5>
             celeminv6 = process-definition-alias: celeminv6
               = celeminv<6>
+            celeminv6_cfb = process-definition-alias: celeminv6_cfb
+              = celeminv_cfb<6>
             celeminv7 = process-definition-alias: celeminv7
               = celeminv<7>
+            celeminv7_cfb = process-definition-alias: celeminv7_cfb
+              = celeminv_cfb<7>
             celeminv8 = process-definition-alias: celeminv8
               = celeminv<8>
+            celeminv8_cfb = process-definition-alias: celeminv8_cfb
+              = celeminv_cfb<8>
             nand2 = process-definition-alias: nand2
               = nand<2>
             nand3 = process-definition-alias: nand3

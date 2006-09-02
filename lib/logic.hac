@@ -2,11 +2,13 @@
 	\file "logic.hac"
 	Standard and common logic gates.  
 	To consider: size/delayed versions?
-	non-CMOS logic?
+	non-CMOS logic? rather not.
 	Directive to inline instances of these definitions?
 	Convention: when inputs are commutative and associative, 
 		then bundle them into an array.  
-	$Id: logic.hac,v 1.1 2006/07/26 19:27:34 fang Exp $
+	Nomenclature:
+		cfb: explicit combinational feeedback (for state-holding)
+	$Id: logic.hac,v 1.2 2006/09/02 20:35:07 fang Exp $
  */
 
 namespace std {
@@ -91,20 +93,18 @@ prs {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Symmetric inverting C-element.  
-	Wrapper around generalized C-element.  
+	No resets.
 	\param N number of inputs
 	\param i inputs
 	\param o output, completion result
  */
 template <pint N>
 defproc celeminv(bool i[N], o) {
-	gceleminv<N, N> c(i, i, o);
-/**
+//	gceleminv<N, N> c(i, i, o);	// equivalent
 prs {
 	(&:j:N:	i[j] )		-> o-
 	(&:j:N:	~i[j] )		-> o+
 }
-**/
 }
 
 typedef	celeminv<2>		celeminv2;
@@ -115,8 +115,100 @@ typedef	celeminv<6>		celeminv6;
 typedef	celeminv<7>		celeminv7;
 typedef	celeminv<8>		celeminv8;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Symmetric inverting C-element, with explicit combinational 
+	feedback using internal inverse node.  
+	No resets.
+	\param N number of inputs
+	\param i inputs
+	\param o output, completion result
+ */
+template <pint N>
+defproc celeminv_cfb(bool i[N], o) {
+	bool o_;
+prs {
+	(&:j:N:	i[j] )		-> o-
+	(&:j:N:	~i[j] )		-> o+
+	o			=> o_-
+	~o_ & (|:j:N:	~i[j] )	-> o+
+	 o_ & (|:j:N:	 i[j] )	-> o-
+}
+}
+
+typedef	celeminv_cfb<2>		celeminv2_cfb;
+typedef	celeminv_cfb<3>		celeminv3_cfb;
+typedef	celeminv_cfb<4>		celeminv4_cfb;
+typedef	celeminv_cfb<5>		celeminv5_cfb;
+typedef	celeminv_cfb<6>		celeminv6_cfb;
+typedef	celeminv_cfb<7>		celeminv7_cfb;
+typedef	celeminv_cfb<8>		celeminv8_cfb;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Symmetric non-inverting C-element.  
+	No resets.
+	\param N number of inputs
+	\param i inputs
+	\param o output, completion result
+ */
+template <pint N>
+defproc celem(bool i[N], o) {
+	bool _o;
+prs {
+	(&:j:N:	i[j] )		-> _o-
+	(&:j:N:	~i[j] )		-> _o+
+	_o			=> o-
+}
+}
+
+typedef	celem<2>		celem2;
+typedef	celem<3>		celem3;
+typedef	celem<4>		celem4;
+typedef	celem<5>		celem5;
+typedef	celem<6>		celem6;
+typedef	celem<7>		celem7;
+typedef	celem<8>		celem8;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Symmetric non-inverting C-element, with explicit combinational 
+	feedback using internal inverse node.  
+	No resets.
+	Q: export internal node as port?
+	\param N number of inputs
+	\param i inputs
+	\param o output, completion result
+ */
+template <pint N>
+defproc celem_cfb(bool i[N], o) {
+	bool _o;
+prs {
+	(&:j:N:	i[j] )		-> _o-
+	(&:j:N:	~i[j] )		-> _o+
+	_o			=> o-
+	~o & (|:j:N:	~i[j] )	-> _o+
+	 o & (|:j:N:	 i[j] )	-> _o-
+}
+}
+
+typedef	celem_cfb<2>		celem2_cfb;
+typedef	celem_cfb<3>		celem3_cfb;
+typedef	celem_cfb<4>		celem4_cfb;
+typedef	celem_cfb<5>		celem5_cfb;
+typedef	celem_cfb<6>		celem6_cfb;
+typedef	celem_cfb<7>		celem7_cfb;
+typedef	celem_cfb<8>		celem8_cfb;
+
 //-----------------------------------------------------------------------------
 // RESETTABLE STATE-HOLDING LOGIC
+
+//=============================================================================
+// INTERFACE: define celem and celeminv as interfaces, 
+//	same with standard logic functions.  
+// IMPLEMENTATIONS: defined as implementations of interfaces
+//=============================================================================
+// TODO: recursive definitions of celem_tree and celeminv_tree
 
 //=============================================================================
 }	// end namespace logic

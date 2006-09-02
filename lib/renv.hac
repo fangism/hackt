@@ -1,3 +1,9 @@
+/**
+	\file "renv.hac"
+	Randomized sources.
+	$Id: renv.hac,v 1.2 2006/09/02 20:35:08 fang Exp $
+ */
+
 import "channel.hac";
 
 /*------------------------------------------------------------------------

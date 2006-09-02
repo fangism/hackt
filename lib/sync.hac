@@ -1,0 +1,324 @@
+/**
+	\file "sync.hac"
+	Synchronization primitives.  
+	Status: not yet tested
+
+	Incorporate into "copy.hac"?
+	Use std::logic's C-elements?
+	Buffered synchronizers.
+	namespace: async?
+ */
+
+import "channel.hac";
+import "logic.hac";
+
+//=============================================================================
+/**
+	Unpipelined (wire + C-element) synchronization of e1of1 channels.
+	\param N >= 1
+	Untested, but obvious?
+	TODO: combinational feedback variant?
+ */
+template <pint N>
+defproc wire_sync_e1of1(e1of1 L[N], R) {
+bool l[N];	// convenience aliases
+(;i:N:	L[i].e = R.e; L[i].d[0] = l[i]; )
+std::logic::celem<N> c(l, R.d[0]);
+/**
+bool _r;
+prs {
+	(:&:i:N:  L[i].d[0] )		-> _r-
+	(:&:i:N: ~L[i].d[0] )		-> _r+
+	_r				=> R.d[0]-
+}
+**/
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same with combinational feedback.  
+	Too lazy to spell out...
+ */
+template <pint N>
+defproc wire_sync_e1of1_cfb(e1of1 L[N], R) {
+bool l[N];	// convenience aliases
+(;i:N:	L[i].e = R.e; L[i].d[0] = l[i]; )
+std::logic::celem_cfb<N> c(l, R.d[0]);
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Unpipelined (wire + C-element) synchronization of a1of1 channels.
+	\param N >= 1
+	TODO: conditional specialization for N==1?
+	Untested, but obvious?
+ */
+template <pint N>
+defproc wire_sync_a1of1(a1of1 L[N], R) {
+bool l[N];	// convenience aliases
+(;i:N:	L[i].a = R.a; L[i].d[0] = l[i]; )
+std::logic::celem<N> c(l, R.d[0]);
+/**
+bool _r;
+prs {
+	(:&:i:N:  L[i].d[0] )		-> _r-
+	(:&:i:N: ~L[i].d[0] )		-> _r+
+	_r				=> R.d[0]-
+}
+**/
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same with combinational feedback.  
+	Too lazy to spell out...
+ */
+template <pint N>
+defproc wire_sync_a1of1_cfb(a1of1 L[N], R) {
+bool l[N];	// convenience aliases
+(;i:N:	L[i].a = R.a; L[i].d[0] = l[i]; )
+std::logic::celem_cfb<N> c(l, R.d[0]);
+}
+
+//=============================================================================
+/**
+	Half-buffered synchronizer of e1of1 channels.
+	\param N >= 1
+	Untested by obvious?
+ */
+template <pint N>
+defproc wchb_sync_e1of1(e1of1 L[N], R) {
+bool le;
+bool l[N];	// convenience aliases
+// bool _r;
+// (;i:N:	L[i].e = le; )
+(;i:N:	L[i].e = R.e; L[i].d[0] = l[i]; )
+std::logic::celem<N+1> c(l # {R.e}, R.d[0]);
+prs {
+/**
+	(:&:i:N:  L[i].d[0] ) &  R.e	-> _r-
+	(:&:i:N: ~L[i].d[0] ) & ~R.e	-> _r+
+	_r				=> R.d[0]-
+**/
+	R.d[0]				=> le-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same with combinational feedback.  
+ */
+template <pint N>
+defproc wchb_sync_e1of1_cfb(e1of1 L[N], R) {
+bool le;
+bool l[N];	// convenience aliases
+(;i:N:	L[i].e = R.e; L[i].d[0] = l[i]; )
+std::logic::celem_cfb<N+1> c(l # {R.e}, R.d[0]);
+prs {
+	R.d[0]				=> le-
+}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Half-buffered synchronizer of a1of1 channels.
+	NOTE: is this a.k.a. D-element?
+	\param N >= 1
+ */
+template <pint N>
+defproc wchb_sync_a1of1(a1of1 L[N], R) {
+// bool _r;
+// (;i:N:	L[i].a = R.d[0]; )
+bool _ra;
+bool l[N];	// convenience aliases
+// L.a = R.d[0];
+std::logic::celem<N+1> c(l # {_ra}, R.d[0]);
+prs {
+	R.a				=> _ra-
+/***
+	(:&:i:N:  L[i].d[0] ) &  _ra	-> _r-
+	(:&:i:N: ~L[i].d[0] ) & ~_ra	-> _r+
+	_r				=> R.d[0]-
+***/
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same with combinational feedback. 
+ */
+template <pint N>
+defproc wchb_sync_a1of1_cfb(a1of1 L[N], R) {
+bool _ra;
+bool l[N];	// convenience aliases
+(;i:N:	L[i].d[0] = l[i]; L[i].a = R.d[0]; )
+std::logic::celem_cfb<N+1> c(l # {_ra}, R.d[0]);
+prs {
+	R.a				=> _ra-
+}
+}
+
+//=============================================================================
+/**
+	Generalized unpipelined synchronizer between M inputs and N outputs.  
+	Can think of the input as a synchronization, and output as a copy.
+	When M == N, this looks like a conventional barrier.  
+	TODO: consider special-casing using wires for M==1, or N==1.
+	All of the above could be defined in terms of this generalization.  
+	\param M >= 1 the number of input channels.
+	\param N >= 1 the number of output channels. 
+ */
+template <pint M, N>
+defproc wire_barrier_e1of1(e1of1 L[M], R[N]) {
+bool l[M], re[N], le, rd;
+(;i:N:
+	L[i].d[0] = l[i];
+	L[i].e = le;
+	R[i].d[0] = rd;
+	R[i].e = re[i];
+)
+std::logic::celem<M> cl(l, rd);
+std::logic::celem<N> cr(re, le);
+/***
+bool _r, _le;
+prs {
+	(:&:i:M:  L[i].d[0] )		-> _r-
+	(:&:i:M: ~L[i].d[0] )		-> _r+
+	_r				=> R.d[0]-
+}
+prs {
+	(:&:i:N:  R[i].e )		-> _le-
+	(:&:i:N: ~R[i].e )		-> _le+
+	_le				=> L.e-
+	
+}
+***/
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same, but both C-elements with combinational feedback.  
+ */
+template <pint M, N>
+defproc wire_barrier_e1of1_cfb(e1of1 L[M], R[N]) {
+bool l[M], re[N], le, rd;
+(;i:N:
+	L[i].d[0] = l[i];
+	L[i].e = le;
+	R[i].d[0] = rd;
+	R[i].e = re[i];
+)
+std::logic::celem_cfb<M> cl(l, rd);
+std::logic::celem_cfb<N> cr(re, le);
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Generalized a1of1 barrier.  
+ */
+template <pint M, N>
+defproc wire_barrier_a1of1(a1of1 L[M], R[N]) {
+bool l[M], ra[N], rd, la;
+(;i:N:
+	L[i].d[0] = l[i];
+	L[i].a = la;
+	R[i].d[0] = rd;
+	R[i].a = ra[i];
+)
+std::logic::celem<M> cl(l, rd);
+std::logic::celem<N> cr(ra, la);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generalized a1of1 barrier, using combination feedback.  
+ */
+template <pint M, N>
+defproc wire_barrier_a1of1_cfb(a1of1 L[M], R[N]) {
+bool l[M], ra[N], rd, la;
+(;i:N:
+	L[i].d[0] = l[i];
+	L[i].a = la;
+	R[i].d[0] = rd;
+	R[i].a = ra[i];
+)
+std::logic::celem_cfb<M> cl(l, rd);
+std::logic::celem_cfb<N> cr(ra, la);
+}
+
+//=============================================================================
+/**
+	Only recommended for small values of M+N, 
+	due to monolithic stack size.  
+ */
+template <pint M, N>
+defproc wchb_barrier_e1of1(e1of1 L[M], R[N]) {
+bool l[M], re[N], rd, le;
+(;i:N:
+	L[i].d[0] = l[i];
+	L[i].e = le;
+	R[i].e = re[i];
+	R[i].d[0] = rd;
+)
+std::logic::celem<M+N> cl(l # re, rd);
+// could break this down into 2-stages of celeminv...
+prs {
+	rd			=> le-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same, with combinational feedback.  
+ */
+template <pint M, N>
+defproc wchb_barrier_e1of1_cfb(e1of1 L[M], R[N]) {
+bool l[M], re[N], rd, le;
+(;i:N:
+	L[i].d[0] = l[i];
+	L[i].e = le;
+	R[i].e = re[i];
+	R[i].d[0] = rd;
+)
+std::logic::celem_cfb<M+N> cl(l # re, rd);
+// could break this down into 2-stages of celeminv...
+prs {
+	rd			=> le-
+}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	a1of1 variant.  
+ */
+template <pint M, N>
+defproc wchb_barrier_a1of1(a1of1 L[M], R[N]) {
+bool l[M], ra[N], re, rd;
+(;i:N:	L[i].d[0] = l[i];
+	L[i].a = R[i].d[0] = rd;
+	R[i].a = ra[i];
+)
+std::logic::celem<M+1> cl(l # {re}, rd);
+std::logic::celeminv<N> cr(ra, re);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same, with combinational feedback.  
+ */
+template <pint M, N>
+defproc wchb_barrier_a1of1_cfb(a1of1 L[M], R[N]) {
+bool l[M], ra[N], re, rd;
+(;i:N:	L[i].d[0] = l[i];
+	L[i].a = R[i].d[0] = rd;
+	R[i].a = ra[i];
+)
+std::logic::celem_cfb<M+1> cl(l # {re}, rd);
+std::logic::celeminv_cfb<N> cr(ra, re);
+}
+
+//=============================================================================
+// TODO: reduced stack variants, combine R acknowledges first...
+
+//=============================================================================
+

@@ -1,5 +1,14 @@
 "lib/ChangeLog"
 
+2006-09-02	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-07:
+	  Added copy.hac: unbuffered wire-copies.
+	  Added sync.hac: synchronization primitives, both unbuffered
+		and weak-condition half-buffered.  
+	  None are tested yet.  
+
+
 2006-08-09	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-79-54:
