@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.14.4.1 2006/08/28 05:09:52 fang Exp $
+	$Id: instance.cc,v 1.14.4.2 2006/09/02 03:58:29 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -999,7 +999,8 @@ loop_instantiation::check_build(context& c) const {
 	NEVER_NULL(loop_range);
 {
 	const context::loop_var_frame _lvf(c, *index);
-	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	const meta_loop_base::ind_var_ptr_type&
+		loop_ind(_lvf.var);
 	if (!loop_ind) {
 		cerr << "Error registering loop variable: " << *index <<
 			" at " << where(*index) << endl;

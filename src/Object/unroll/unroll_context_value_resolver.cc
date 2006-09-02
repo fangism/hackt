@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.5.6.2 2006/09/02 00:46:10 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.5.6.3 2006/09/02 03:58:39 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
@@ -25,6 +25,8 @@ namespace entity {
 	TODO: use a consistent scoped lookup function (up footprints)
 		to avoid this hackery, now that we have proper placeholders.  
 	2006-09-01
+	TODO: consider when lookup is scoped and not a simple name!
+		Trace the placehlder's roots for proper name binding.  
 
 	Looks up a value for reading and resolving.  
 	\return true if lookup was resolved a loop variable.  
@@ -33,6 +35,7 @@ unroll_context_value_resolver<pint_tag>::const_return_type
 unroll_context_value_resolver<pint_tag>::operator ()
 		(const unroll_context& c, const value_placeholder_type& v,
 		value_type& i) const {
+#if !USE_INSTANCE_PLACEHOLDERS
 	// hack: intercept loop variable lookups
 	// TODO: can't cast placeholder to scalar!
 	const value_scalar_type* const
@@ -48,14 +51,12 @@ unroll_context_value_resolver<pint_tag>::operator ()
 			// return std::make_pair(true, v);
 			// stupid reference-to-reference...
 			// return return_type(true, v);
-#if USE_INSTANCE_PLACEHOLDERS
-			FINISH_ME(Fang);
 			return const_return_type(true, &v);
-#else
-			return const_return_type(true, &v);
-#endif
 		}
 	}
+#else
+	// lookup is same for all meta variable types (consistency!)
+#endif
 	// end hack
 	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS

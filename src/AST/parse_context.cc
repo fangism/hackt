@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11.4.3 2006/09/02 00:45:51 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.4 2006/09/02 03:58:30 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -35,7 +35,7 @@
 #include "Object/unroll/conditional_scope.h"
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/physical_instance_placeholder.h"
-#include "Object/inst/param_value_placeholder.h"
+#include "Object/inst/value_placeholder.h"
 #else
 #include "Object/inst/physical_instance_collection.h"
 #endif
@@ -906,9 +906,9 @@ context::add_top_level_production_rule(excl_ptr<entity::PRS::rule>& r) {
 	TODO: 2006-09-01
 	rewrite using placeholders.
  */
-count_ptr<pint_scalar>
+count_ptr<context::loop_var_placeholder_type>
 context::push_loop_var(const token_identifier& i) {
-	typedef	count_ptr<pint_scalar>	return_type;
+	typedef	count_ptr<loop_var_placeholder_type>	return_type;
 	const never_ptr<const object> probe(lookup_object(i));
 	if (probe) {
 		cerr << "Warning (promoted to error): "
@@ -919,7 +919,13 @@ context::push_loop_var(const token_identifier& i) {
 	}
 	// Technically, variable is not a true member of the scope, 
 	// nevertheless, it needs to associate with some parent scope.  
-	const return_type ret(new pint_scalar(*get_current_named_scope(), i));
+	const return_type
+		ret(new loop_var_placeholder_type(
+			*get_current_named_scope(), i
+#if USE_INSTANCE_PLACEHOLDERS
+			, 0
+#endif
+			));
 	INVARIANT(ret);
 	loop_var_stack.push_front(ret);
 	return ret;

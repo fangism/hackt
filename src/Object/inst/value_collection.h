@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.4 2006/09/02 00:46:07 fang Exp $
+	$Id: value_collection.h,v 1.17.8.5 2006/09/02 03:58:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -473,6 +473,14 @@ private:
 #endif
 public:
 	~value_array();
+
+#if USE_INSTANCE_PLACEHOLDERS
+	instance_type&
+	get_instance(void) { return this->the_instance; }
+
+	const instance_type&
+	get_instance(void) const { return this->the_instance; }
+#endif
 
 	ostream&
 	what(ostream& ) const;

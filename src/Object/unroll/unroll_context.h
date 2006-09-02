@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.8.10.2 2006/08/31 07:28:49 fang Exp $
+	$Id: unroll_context.h,v 1.8.10.3 2006/09/02 03:58:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -39,6 +39,14 @@ template <class Tag> class unroll_context_value_resolver;
 
 //=============================================================================
 /**
+	TODO: 2006-09-01, with introduction of placeholders.  
+	Defer all lookups of values to the footprint's instance/value map,
+		i.e. copy all values over to footprint, for uniformly
+		consistent lookup method.
+	Standard lookup will translate placeholder to collection/actual.  
+	Thus, remove all references and uses of template formals
+		and actuals.  
+
 	The context object used to pass around values in different scopes
 	during the unroll phases.  
 	TODO: add flow control stack, etc...

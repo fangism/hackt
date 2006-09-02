@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.9.4.2 2006/09/02 00:45:50 fang Exp $
+	$Id: CHP.cc,v 1.9.4.3 2006/09/02 03:58:28 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -95,6 +95,7 @@ using entity::process_definition;
 using entity::data_nonmeta_instance_reference;
 using entity::data_type_reference;
 using entity::pint_scalar;
+using entity::meta_loop_base;
 
 //=============================================================================
 // class statement method definitions
@@ -1081,7 +1082,7 @@ metaloop_selection::check_action(context& c) const {
 	NEVER_NULL(loop_range);
 	// induction variable scope in effect until return
 	const context::loop_var_frame _lvf(c, *index);
-	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	const meta_loop_base::ind_var_ptr_type& loop_ind(_lvf.var);
 	if (!loop_ind) {
 		cerr << "Error registering loop variable: " << *index <<
 			" at " << where(*index) << endl;

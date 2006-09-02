@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.9.4.1 2006/08/28 05:09:53 fang Exp $
+	$Id: parse_context.h,v 1.9.4.2 2006/09/02 03:58:30 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -36,6 +36,7 @@ namespace entity {
 	class sequential_scope;
 #if USE_INSTANCE_PLACEHOLDERS
 	class instance_placeholder_base;
+	template <class> class value_placeholder;
 #else
 	class instance_collection_base;
 #endif
@@ -47,7 +48,9 @@ namespace entity {
 	class loop_scope;
 	class conditional_scope;
 	struct pint_tag;
+#if !USE_INSTANCE_PLACEHOLDERS
 	template <class, size_t> class value_array;
+#endif
 namespace PRS {
 	class rule;
 	class rule_set;
@@ -79,8 +82,10 @@ using entity::fundamental_type_reference;
 using entity::sequential_scope;
 #if USE_INSTANCE_PLACEHOLDERS
 using entity::instance_placeholder_base;
+using entity::value_placeholder;
 #else
 using entity::instance_collection_base;
+using entity::value_array;
 #endif
 using entity::instance_management_base;
 using entity::meta_instance_reference_connection;
@@ -89,7 +94,6 @@ using entity::param_expr_list;
 using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
-using entity::value_array;
 using entity::loop_scope;
 using entity::conditional_scope;
 
@@ -197,8 +201,14 @@ private:
 	 */
 	entity::PRS::rule_set&			top_prs;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	value_placeholder<pint_tag>	loop_var_placeholder_type;
+	typedef	list<count_ptr<const loop_var_placeholder_type> >
+#else
 	typedef	value_array<pint_tag, 0>	pint_scalar;
+	typedef	pint_scalar			loop_var_placeholder_type;
 	typedef	list<count_ptr<const pint_scalar> >
+#endif
 						loop_var_stack_type;
 	loop_var_stack_type			loop_var_stack;
 
@@ -455,7 +465,7 @@ public:
 private:
 	// TODO:
 	// use nested struct for automatic construction/destruction matching...
-	count_ptr<pint_scalar>
+	count_ptr<loop_var_placeholder_type>
 	push_loop_var(const token_identifier&);
 
 	void
@@ -470,7 +480,7 @@ public:
 	 */
 	struct loop_var_frame {
 		context&			_context;
-		count_ptr<pint_scalar>		var;
+		count_ptr<loop_var_placeholder_type>	var;
 		loop_var_frame(context&, const token_identifier&);
 		~loop_var_frame();
 	} __ATTRIBUTE_UNUSED__;	// end struct loop_var_frame

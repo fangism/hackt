@@ -5,6 +5,16 @@
 
 2006-09-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-08:
+	  This actually compiles... but stops at many undefined references
+		to newly promised class methods.  Time to fill in the ______.
+	  meta-loop code rewritten to accommodate pint placeholders
+		using instantiation (unroll) into temporary footprint.  
+	  Future TODO: refactor context lookup, replacing formals
+		and actuals method of resolving values with more consistent
+		footprint-based lookup.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-07:
 	  Nope.
 	  Most of the mind-numbing re-coding is done, now the real work begins.

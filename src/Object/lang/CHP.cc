@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.10.4.1 2006/09/01 05:17:43 fang Exp $
+	$Id: CHP.cc,v 1.10.4.2 2006/09/02 03:58:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,7 +27,12 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/pint_value_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#include "Object/def/footprint.h"
+#endif
 #include "Object/unroll/unroll_context.h"
+#include "Object/common/dump_flags.h"
 
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -698,7 +703,6 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 		const action_ptr_type& p) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(p == this);
-	selection_list_type result;	// unroll into here
 	const_range cr;
 	if (!range->unroll_resolve_range(c, cr).good) {
 		cerr << "Error resolving range expression: ";
@@ -714,10 +718,29 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 			<< endl;
 		return action_ptr_type(NULL);
 	}
+	selection_list_type result;	// unroll into here
 	// using unroll_context's template_formal/actual mechanism.  
 #if USE_INSTANCE_PLACEHOLDERS
-	// TODO: replacement code
-#endif
+	entity::footprint f;
+	const count_ptr<pint_scalar>
+		var(initialize_footprint(f));
+	// create a temporary by unrolling the placeholder 
+	// induction variable into the footprint as an actual variable
+	pint_value_type& i(var->get_instance().value);
+		// acquire direct reference
+	unroll_context cc(&f);
+	cc.chain_context(c);
+	for (i = min; i <= max; ++i) {
+		const selection_list_type::value_type	// guarded_action
+			g(body->unroll_resolve_copy(c, body));
+		if (!g) {
+			cerr << "Error resolving metaloop_selection at "
+				"iteration " << i << "." << endl;
+			return action_ptr_type(NULL);
+		}
+		result.push_back(g);
+	}
+#else
 	template_formals_manager tfm;
 	const never_ptr<const pint_scalar> pvc(&*ind_var);
 	tfm.add_strict_template_formal(pvc);
@@ -742,6 +765,7 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 		}
 		result.push_back(g);
 	}
+#endif
 	if (selection_type) {
 		const count_ptr<deterministic_selection>
 			ret(new deterministic_selection);

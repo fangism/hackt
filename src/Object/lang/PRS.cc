@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.18.4.1 2006/09/01 05:17:44 fang Exp $
+	$Id: PRS.cc,v 1.18.4.2 2006/09/02 03:58:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -31,7 +31,12 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/inst/pint_value_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#include "Object/def/footprint.h"
+#endif
 #include "Object/def/template_formals_manager.h"
+#include "Object/common/dump_flags.h"
 #include "Object/type/template_actuals.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/persistent_type_hash.h"
@@ -943,8 +948,28 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	// create context chain of lookup
 	//	using unroll_context's template_formal/actual mechanism.  
 #if USE_INSTANCE_PLACEHOLDERS
-	// TODO: replacement code
-#endif
+	// copied from loop_scope::unroll()
+	entity::footprint f;
+	const count_ptr<pint_scalar>
+		var(initialize_footprint(f));
+	// create a temporary by unrolling the placeholder 
+	// induction variable into the footprint as an actual variable
+	pint_value_type& p(var->get_instance().value);  
+		// acquire direct reference
+	unroll_context cc(&f);
+	cc.chain_context(c);
+	for (p = min; p <= max; ++p) {
+		if (!rules.unroll(cc, np, pfp).good) {
+			cerr << "Error resolving production rule in loop:"
+				<< endl;
+			ind_var->dump_hierarchical_name(cerr,
+				dump_flags::verbose)
+				<< " = " << p << endl;
+			return good_bool(false);
+		}
+	}
+
+#else
 	template_formals_manager tfm;
 	const never_ptr<const pint_scalar> pvc(&*ind_var);
 	tfm.add_strict_template_formal(pvc);
@@ -966,6 +991,7 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 			return good_bool(false);
 		}
 	}
+#endif
 	return good_bool(true);
 }
 
@@ -1073,6 +1099,22 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	// in a loop:
 	// create context chain of lookup
 	//	using unroll_context's template_formal/actual mechanism.  
+#if USE_INSTANCE_PLACEHOLDERS
+	// copied from loop_scope::unroll()
+	entity::footprint f;
+	const count_ptr<pint_scalar>
+		var(initialize_footprint(f));
+	// create a temporary by unrolling the placeholder 
+	// induction variable into the footprint as an actual variable
+	pint_value_type& p(var->get_instance().value);  
+		// acquire direct reference
+	unroll_context cc(&f);
+	cc.chain_context(c);
+	list<size_t> expr_indices;
+	for (p = min; p <= max; ++p) {
+		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
+	}
+#else
 	template_formals_manager tfm;
 	const never_ptr<const pint_scalar> pvc(&*ind_var);
 	tfm.add_strict_template_formal(pvc);
@@ -1092,6 +1134,7 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
 		// check for errors after loop
 	}
+#endif
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(type_enum, expr_indices.size()));
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);
@@ -1100,8 +1143,9 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	if (err) {
 		cerr << "Error resolving production rule expression at:"
 			<< endl;
-		return 0;
+		return 0;	// reserved to signal error
 	} else {
+		// return the latest index
 		return pfp.current_expr_index();
 	}
 }
