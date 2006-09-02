@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.2 2006/08/31 07:28:36 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.3 2006/09/02 00:45:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -51,6 +51,9 @@
 #include "Object/inst/struct_instance_collection.h"
 #include "Object/inst/param_value_collection.h"	// for dynamic_cast
 #include "Object/common/dump_flags.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder_base.h"
+#endif
 
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -316,6 +319,7 @@ instance_collection_base::get_base_def(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Checks whether or not this is a relaxed template formal parameter.  
  */
@@ -369,6 +373,8 @@ instance_collection_base::is_template_formal(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Really, this should be in physical_instance_placeholder.  
+
 	Queries whether or not this is a port formal, by 
 	checking its membership in the owner.  
 	\return 1-indexed position into port list, else 0 if not found.
@@ -382,6 +388,7 @@ instance_collection_base::is_port_formal(void) const {
 		def(owner.is_a<const definition_base>());
 	return def ? def->lookup_port_formal_position(*this) : 0;
 }
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -460,6 +467,8 @@ instance_collection_base::port_formal_equivalent(const this_type& b) const {
 	This applies to both template formals and port formals.  
 	Is conservative, not precise, in the case where one of the
 	parameter sizes (dimension) is dynamic.  
+	In this case, the initial instantiation is guaranteed to be
+		unconditional because it is a template or port formal. 
 	\param b the other template formal instantiation to compare against.  
 	\return true if dimensionality and sizes are equal.  
 	TODO: need to account for relaxed parameters of physical
@@ -477,6 +486,10 @@ instance_collection_base::formal_size_equivalent(const this_type& b) const {
 		// useful error message here: dimensions don't match
 		return false;
 	}
+#if USE_INSTANCE_PLACEHOLDERS
+	return this->__get_placeholder_base()->formal_size_equivalent(
+			*b.__get_placeholder_base());
+#else
 	const index_collection_item_ptr_type
 		ii(this->get_initial_instantiation_indices()),
 		ji(b.get_initial_instantiation_indices());
@@ -484,6 +497,7 @@ instance_collection_base::formal_size_equivalent(const this_type& b) const {
 		return ii->must_be_formal_size_equivalent(*ji);
 	} else 	return (!ii && !ji);
 	// both NULL is ok too
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -537,10 +551,12 @@ instance_collection_base::load_object_base(
 //=============================================================================
 // class physical_instance_collection method definitions
 
+#if !USE_INSTANCE_PLACEHOLDERS
 physical_instance_collection::physical_instance_collection(
 		const scopespace& o, const string& n, const size_t d) :
 		parent_type(o, n, d) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 physical_instance_collection::~physical_instance_collection() {
@@ -556,6 +572,9 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 #endif
 	parent_type::dump_base(o, df);
 	if (is_partially_unrolled()) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const size_t dimensions = get_dimensions();
+#endif
 		if (dimensions) {
 			INDENT_SECTION(o);
 			o << auto_indent << "unrolled indices: {" << endl;
@@ -585,11 +604,13 @@ param_value_collection::make_meta_instance_reference(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 count_ptr<nonmeta_instance_reference_base>
 param_value_collection::make_nonmeta_instance_reference(void) const {
 	ICE_NEVER_CALL(cerr);
 	return count_ptr<nonmeta_instance_reference_base>(NULL);
 }
+#endif
 
 //=============================================================================
 // class datatype_instance_collection method definitions
@@ -606,10 +627,12 @@ datatype_instance_collection::datatype_instance_collection() :
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 datatype_instance_collection::datatype_instance_collection(
 		const scopespace& o, const string& n, const size_t d) :
 		parent_type(o, n, d) {
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_collection::~datatype_instance_collection() {

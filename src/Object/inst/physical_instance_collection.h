@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.14.8.3 2006/09/01 05:17:38 fang Exp $
+	$Id: physical_instance_collection.h,v 1.14.8.4 2006/09/02 00:46:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -76,8 +76,12 @@ virtual	ostream&
 #if USE_INSTANCE_PLACEHOLDERS
 virtual	never_ptr<const physical_instance_placeholder>
 	get_placeholder_base(void) const = 0;
-#endif
 
+private:
+	never_ptr<const instance_placeholder_base>
+	__get_placeholder_base(void) const;
+#endif
+public:
 #if !USE_INSTANCE_PLACEHOLDERS
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\

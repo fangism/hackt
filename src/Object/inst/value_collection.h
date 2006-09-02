@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.3 2006/09/01 05:17:41 fang Exp $
+	$Id: value_collection.h,v 1.17.8.4 2006/09/02 00:46:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -47,6 +47,7 @@ class const_range_list;
 class const_index_list;
 class scopespace;
 class unroll_context;
+class param_value_placeholder;
 template <class> class param_instantiation_statement;
 using std::list;
 using std::istream;
@@ -170,6 +171,14 @@ virtual	ostream&
 	type_dump(ostream& o) const;
 
 #if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const param_value_placeholder>
+	get_placeholder_base(void) const;
+
+	value_placeholder_ptr_type
+	get_placeholder(void) const {
+		return this->source_placeholder;
+	}
+
 	const string&
 	get_name(void) const;
 

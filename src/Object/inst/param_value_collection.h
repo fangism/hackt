@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.13.8.3 2006/09/01 05:17:37 fang Exp $
+	$Id: param_value_collection.h,v 1.13.8.4 2006/09/02 00:46:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -19,6 +19,9 @@ namespace entity {
 class const_param;
 class param_type_reference;
 class meta_value_reference_base;
+#if USE_INSTANCE_PLACEHOLDERS
+class param_value_placeholder;
+#endif
 using util::memory::count_ptr;
 using util::bad_bool;
 using util::good_bool;
@@ -39,20 +42,29 @@ public:
 						member_inst_ref_ptr_type;
 
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	param_value_collection();
+#else
 	explicit
 	param_value_collection(const size_t d);
 
-#if !USE_INSTANCE_PLACEHOLDERS
 	param_value_collection(const this_type& t, const footprint& f) :
 		parent_type(t, f) { }
-#endif
 
 	param_value_collection(const scopespace& o, const string& n, 
 		const size_t d);
+#endif
 
 private:
 #if !USE_INSTANCE_PLACEHOLDERS
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+#endif
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const instance_placeholder_base>
+	__get_placeholder_base(void) const;
+
+virtual	never_ptr<const param_value_placeholder>
+	get_placeholder_base(void) const = 0;
 #endif
 
 public:

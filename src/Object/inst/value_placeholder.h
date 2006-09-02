@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.1.2.3 2006/09/01 05:17:42 fang Exp $
+	$Id: value_placeholder.h,v 1.1.2.4 2006/09/02 00:46:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -82,6 +82,7 @@ private:
 	typedef	VALUE_PLACEHOLDER_CLASS		this_type;
 	typedef	typename traits_type::value_placeholder_parent_type
 						parent_type;
+	FRIEND_PERSISTENT_TRAITS
 public:
 	typedef	typename traits_type::value_type	value_type;
 	typedef	typename traits_type::value_collection_generic_type
@@ -125,6 +126,8 @@ protected:
 					initial_instantiation_statement_ptr;
 
 protected:
+	value_placeholder();
+
 	explicit
 	value_placeholder(const size_t d);
 

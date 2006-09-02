@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.8.28.2 2006/09/01 05:17:39 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.8.28.3 2006/09/02 00:46:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
@@ -31,7 +31,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/param_instantiation_statement.h"
 #include "Object/inst/value_collection.tcc"
 #if USE_INSTANCE_PLACEHOLDERS
-#include "Object/inst/value_placeholders.tcc"
+#include "Object/inst/value_placeholder.tcc"
 #endif
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/int_traits.h"
@@ -52,7 +52,7 @@ struct persistent_traits<HAC::entity::pint_instance_collection> {
 #if USE_INSTANCE_PLACEHOLDERS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pint_value_placeholder, 
-	PINT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+	PINT_VALUE_PLACEHOLDER_TYPE_KEY, 0)
 #endif
 const persistent::hash_key
 persistent_traits<HAC::entity::pint_instance_collection>::type_key(

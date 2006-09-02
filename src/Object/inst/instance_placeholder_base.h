@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.1.2.3 2006/08/31 07:28:40 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.4 2006/09/02 00:46:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -302,11 +302,12 @@ virtual	count_ptr<const fundamental_type_reference>
 	owner_ptr_type
 	get_owner(void) const { return owner; }
 
-protected:
 	// to grant access to param_value_collection
 	bool
 	formal_size_equivalent(const this_type& b) const;
 
+// protected:
+public:
 virtual	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const = 0;
 

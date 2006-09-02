@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.11.6.1 2006/08/31 07:28:30 fang Exp $
+	$Id: param_expr_list.h,v 1.11.6.2 2006/09/02 00:45:56 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -47,6 +47,13 @@ using util::persistent;
  */
 class param_expr_list : public persistent {
 public:
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	param_value_placeholder		placeholder_type;
+#else
+	typedef	param_value_collection		placeholder_type;
+#endif
+	typedef	never_ptr<const placeholder_type>	placeholder_ptr_type;
+
 	param_expr_list() : persistent() { }
 
 virtual	~param_expr_list() { }
@@ -97,11 +104,7 @@ virtual	unroll_resolve_rvalues_return_type
 
 // coordinate with template_formals_manager::template_formals_list_type
 protected:
-#if USE_INSTANCE_PLACEHOLDERS
-	typedef	default_vector<never_ptr<const param_value_placeholder> >::type
-#else
-	typedef	default_vector<never_ptr<const param_value_collection> >::type
-#endif
+	typedef	default_vector<placeholder_ptr_type>::type
 					template_formals_list_type;
 
 public:

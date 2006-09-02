@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_preal.cc"
 		in a previous life.  
- 	$Id: preal_value_collection.cc,v 1.3.32.2 2006/09/01 05:17:40 fang Exp $
+ 	$Id: preal_value_collection.cc,v 1.3.32.3 2006/09/02 00:46:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PREAL_VALUE_COLLECTION_CC__
@@ -28,7 +28,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/traits/preal_traits.h"
 #include "Object/inst/value_collection.tcc"
 #if USE_INSTANCE_PLACEHOLDERS
-#include "Object/inst/value_placeholders.tcc"
+#include "Object/inst/value_placeholder.tcc"
 #endif
 
 //=============================================================================
@@ -87,7 +87,7 @@ struct persistent_traits<HAC::entity::preal_instance_collection> {
 #if USE_INSTANCE_PLACEHOLDERS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::preal_value_placeholder, 
-	PREAL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+	PREAL_VALUE_PLACEHOLDER_TYPE_KEY, 0)
 #endif
 const persistent::hash_key
 persistent_traits<HAC::entity::preal_instance_collection>::type_key(

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.5.6.1 2006/08/30 04:28:09 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.5.6.2 2006/09/02 00:46:10 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
@@ -22,6 +22,10 @@ namespace entity {
 // class unroll_context_value_resolver<pint_tag> method definitions
 
 /**
+	TODO: use a consistent scoped lookup function (up footprints)
+		to avoid this hackery, now that we have proper placeholders.  
+	2006-09-01
+
 	Looks up a value for reading and resolving.  
 	\return true if lookup was resolved a loop variable.  
  */
@@ -54,10 +58,16 @@ unroll_context_value_resolver<pint_tag>::operator ()
 	}
 	// end hack
 	const footprint* const f(c.get_target_footprint());
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(f);
+	const value_collection_type*
+		_vals(IS_A(const value_collection_type*, &*(*f)[v.get_name()]));
+#else
 	const value_collection_type*
 		_vals(f ? IS_A(const value_collection_type*,
 				&*(*f)[v.get_name()])
 			: &v);
+#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	// don't expect footprint lookup to find globals, only locals
 	if (!_vals) {

@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.1 2006/08/28 05:10:03 fang Exp $
+	$Id: footprint.cc,v 1.24.4.2 2006/09/02 00:45:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -510,7 +510,11 @@ footprint::evaluate_scope_aliases(void) {
 			// but it collects everything in scope
 			// good re-use of function!
 			pic->collect_port_aliases(scope_aliases);
+#if USE_INSTANCE_PLACEHOLDERS
+			if (pic->get_placeholder_base()->is_port_formal())
+#else
 			if (pic->is_port_formal())
+#endif
 				pic->collect_port_aliases(port_aliases);
 		}
 	}
@@ -605,7 +609,12 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 		if (coll_ptr) {
 			// note: port formal is 1-indexed
 			// where as member array is 0-indexed
-			const size_t pfp = coll_ptr->is_port_formal();
+			const size_t pfp = 
+#if USE_INSTANCE_PLACEHOLDERS
+				coll_ptr->get_placeholder_base()->is_port_formal();
+#else
+				coll_ptr->is_port_formal();
+#endif
 			if (pfp) {
 				coll_ptr->assign_footprint_frame(
 					ff, pmc.member_array[pfp -1]);

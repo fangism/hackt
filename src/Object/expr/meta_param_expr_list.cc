@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.18.6.1 2006/09/01 05:17:27 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.18.6.2 2006/09/02 00:45:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -24,7 +24,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/expr_dump_context.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#else
 #include "Object/inst/param_value_collection.h"
+#endif
 #include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
 #include "common/ICE.h"
@@ -405,11 +409,7 @@ if (a_size != f_size) {
 	// else a_size == 0, passed actuals list is empty, 
 	// try to fill in all default arguments
 	for ( ; f_iter!=f_end; f_iter++) {
-#if USE_INSTANCE_PLACEHOLDERS
-		const never_ptr<const param_value_placeholder>
-#else
-		const never_ptr<const param_value_collection>
-#endif
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		// does default expression have to be constant to be
@@ -437,7 +437,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param> pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		if (pex) {
@@ -510,7 +510,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param> pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);
@@ -559,7 +559,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param>& pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);
@@ -979,7 +979,7 @@ if (a_size != f_size) {
 	// else a_size == 0, passed actuals list is empty, 
 	// try to fill in all default arguments
 	for ( ; f_iter!=f_end; f_iter++) {
-		const never_ptr<const param_value_collection>
+		placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		const count_ptr<const param_expr>
@@ -1003,7 +1003,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		if (pex) {
@@ -1063,7 +1063,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);

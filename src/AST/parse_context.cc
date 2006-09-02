@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11.4.2 2006/09/01 05:17:16 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.3 2006/09/02 00:45:51 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -462,6 +462,9 @@ context::lookup_object(const qualified_id& id) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: 2006-09-01
+	Need to rewrite loop-scope stuff, using placeholders.  
+
 	Looks up an unqualified identifier.
 	Also checks loop contexts with unualified reference.  
  */
@@ -899,6 +902,10 @@ context::add_top_level_production_rule(excl_ptr<entity::PRS::rule>& r) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: 2006-09-01
+	rewrite using placeholders.
+ */
 count_ptr<pint_scalar>
 context::push_loop_var(const token_identifier& i) {
 	typedef	count_ptr<pint_scalar>	return_type;

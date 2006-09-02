@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.3 2006/09/01 05:17:42 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.4 2006/09/02 00:46:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -175,7 +175,11 @@ VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::dump_formal(ostream& o) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	INVARIANT(this->source_placeholder->is_template_formal());
+#else
 	INVARIANT(this->is_template_formal());
+#endif
 //	this->dump_base(o);
 	this->dump_collection_only(o);
 	expr_dump_context dc(expr_dump_context::default_value);
@@ -261,7 +265,11 @@ VALUE_COLLECTION_CLASS::dump(ostream& o, const dump_flags& df) const {
 #else
 		dc.enclosing_scope = this->owner;
 #endif
+#if USE_INSTANCE_PLACEHOLDERS
+		if (this->source_placeholder->is_template_formal())
+#else
 		if (this->is_template_formal())
+#endif
 			init_def->dump(o << " (default = ", dc) << ")";
 		else    init_def->dump(o << " (init = ", dc) << ")";
 	}

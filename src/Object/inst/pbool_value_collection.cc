@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_pbool.cc"
 		in a previous life.  
- 	$Id: pbool_value_collection.cc,v 1.6.32.2 2006/09/01 05:17:38 fang Exp $
+ 	$Id: pbool_value_collection.cc,v 1.6.32.3 2006/09/02 00:46:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PBOOL_VALUE_COLLECTION_CC__
@@ -88,7 +88,7 @@ struct persistent_traits<HAC::entity::pbool_instance_collection> {
 #if USE_INSTANCE_PLACEHOLDERS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::pbool_value_placeholder, 
-	PBOOL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+	PBOOL_VALUE_PLACEHOLDER_TYPE_KEY, 0)
 #endif
 // is the following needed?
 const persistent::hash_key

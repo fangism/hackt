@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-07:
+	  Nope.
+	  Most of the mind-numbing re-coding is done, now the real work begins.
+	  Next: rewriting scoped lookup functions for unroll instance
+		and value resolution, most affected: meta-loops.  
+
+
 2006-08-31	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-06:

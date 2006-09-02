@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.12.32.4 2006/08/31 07:28:39 fang Exp $
+	$Id: instance_collection_base.h,v 1.12.32.5 2006/09/02 00:45:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -36,6 +36,9 @@ class param_expr;
 class const_param_expr_list;
 class physical_instance_collection;
 class unroll_context;
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+#endif
 using std::list;
 using std::istream;
 using std::string;
@@ -198,6 +201,14 @@ virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 #endif
 
 #if USE_INSTANCE_PLACEHOLDERS
+private:
+// this was added just to support formal_size_equivalent()...
+virtual	never_ptr<const instance_placeholder_base>
+	__get_placeholder_base(void) const = 0;
+#endif
+
+public:
+#if USE_INSTANCE_PLACEHOLDERS
 virtual	size_t
 	get_dimensions(void) const = 0;
 #else
@@ -333,6 +344,7 @@ virtual	index_collection_item_ptr_type
 #endif
 
 public:
+#if !USE_INSTANCE_PLACEHOLDERS
 	size_t
 	is_template_formal(void) const;
 
@@ -341,6 +353,7 @@ public:
 
 	size_t
 	is_port_formal(void) const;
+#endif
 
 	size_t
 	is_member_instance(void) const;
