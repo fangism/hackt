@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.22.8.4 2006/09/01 05:17:33 fang Exp $
+	$Id: instance_collection.h,v 1.22.8.5 2006/09/03 02:33:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -196,6 +196,7 @@ virtual	ostream&
 		return this->source_placeholder;
 	}
 
+#if 0
 	size_t
 	get_dimensions(void) const;
 
@@ -204,6 +205,7 @@ virtual	ostream&
 
 	const string&
 	get_name(void) const;
+#endif
 #endif
 
 // collections don't need any information about instantiation statements
@@ -320,7 +322,11 @@ public:
 virtual	instance_alias_base_type&
 	load_reference(istream& i) const = 0;
 
-#if !USE_INSTANCE_PLACEHOLDERS
+#if USE_INSTANCE_PLACEHOLDERS
+	static
+	this_type*
+	make_array(const instance_placeholder_ptr_type);
+#else
 	static
 	this_type*
 	make_array(const scopespace& o, const string& n, const size_t d);
@@ -397,6 +403,7 @@ public:
 					instance_placeholder_type;
 	typedef	typename parent_type::instance_placeholder_ptr_type
 					instance_placeholder_ptr_type;
+	enum { dimensions = D };
 #endif
 private:
 	typedef	typename util::multikey<D, pint_value_type>::generator_type
@@ -429,11 +436,6 @@ public:
 
 	ostream&
 	what(ostream& o) const;
-
-#if USE_INSTANCE_PLACEHOLDERS
-	size_t
-	get_dimensions(void) const;
-#endif
 
 	bool
 	is_partially_unrolled(void) const;
@@ -538,6 +540,7 @@ public:
 					instance_placeholder_type;
 	typedef	typename parent_type::instance_placeholder_ptr_type
 					instance_placeholder_ptr_type;
+	enum { dimensions = 0 };
 #endif
 private:
 	instance_type					the_instance;

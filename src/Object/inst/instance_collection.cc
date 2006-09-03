@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.3 2006/09/02 00:45:57 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.4 2006/09/03 02:33:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -52,7 +52,8 @@
 #include "Object/inst/param_value_collection.h"	// for dynamic_cast
 #include "Object/common/dump_flags.h"
 #if USE_INSTANCE_PLACEHOLDERS
-#include "Object/inst/instance_placeholder_base.h"
+#include "Object/inst/param_value_placeholder.h"
+#include "Object/inst/datatype_instance_placeholder.h"
 #endif
 
 #include "util/memory/count_ptr.tcc"
@@ -220,13 +221,13 @@ instance_collection_base::pair_dump_top_level(ostream& o) const {
 string
 instance_collection_base::get_qualified_name(void) const {
 #if USE_INSTANCE_PLACEHOLDERS
-	const owner_ptr_type owner(get_owner());
-	const string key(get_name());
-#endif
+	return __get_placeholder_base()->get_qualified_name();
+#else
 	if (owner)
 		return owner->get_qualified_name() + "::" +key;
 		// "::" should be the same as HAC::parser::scope
 	else return key;
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -563,6 +564,32 @@ physical_instance_collection::~physical_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+physical_instance_collection::__get_placeholder_base(void) const {
+	return get_placeholder_base();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+physical_instance_collection::get_dimensions(void) const {
+	return get_placeholder_base()->get_dimensions();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string&
+physical_instance_collection::get_name(void) const {
+	return get_placeholder_base()->get_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+physical_instance_collection::get_owner(void) const {
+	return get_placeholder_base()->get_owner();
+}
+
+#endif	// USE_INSTANCE_PLACEHOLDERS
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 #if 0
@@ -595,6 +622,11 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 //=============================================================================
 // class param_value_collection method definitions
 
+#if USE_INSTANCE_PLACEHOLDERS
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+param_value_collection::~param_value_collection() { }
+#endif
+
 #if 0
 count_ptr<meta_instance_reference_base>
 param_value_collection::make_meta_instance_reference(void) const {
@@ -611,6 +643,36 @@ param_value_collection::make_nonmeta_instance_reference(void) const {
 	return count_ptr<nonmeta_instance_reference_base>(NULL);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+param_value_collection::__get_placeholder_base(void) const {
+	return get_placeholder_base();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+size_t
+param_value_collection::get_dimensions(void) const {
+	// alternative, defer to value_array
+	return get_placeholder_base()->get_dimensions();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+const string&
+param_value_collection::get_name(void) const {
+	return get_placeholder_base()->get_name();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+never_ptr<const scopespace>
+param_value_collection::get_owner(void) const {
+	return get_placeholder_base()->get_owner();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //=============================================================================
 // class datatype_instance_collection method definitions
@@ -749,6 +811,52 @@ datatype_instance_collection::check_established_type(
 }
 
 //=============================================================================
+#if USE_INSTANCE_PLACEHOLDERS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+instance_placeholder_base::~instance_placeholder_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+string
+instance_placeholder_base::get_qualified_name(void) const {
+	if (owner)
+		return owner->get_qualified_name() + "::" +key;
+		// "::" should be the same as HAC::parser::scope
+	else return key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instance_placeholder_base::write_object_base(
+		const persistent_object_manager& m, ostream& o) const {
+	m.write_pointer(o, owner);
+	write_string(o, key);
+	write_value(o, dimensions);
+#if PLACEHOLDER_SUPER_INSTANCES
+	m.write_pointer(o, super_instance);
+#endif
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+instance_placeholder_base::load_object_base(
+		const persistent_object_manager& m, istream& i) {
+	m.read_pointer(i, owner);
+	read_string(i, key);
+	read_value(i, dimensions);
+#if PLACEHOLDER_SUPER_INSTANCES
+	m.read_pointer(i, super_instance);
+#endif
+}
+
+//=============================================================================
+physical_instance_placeholder::~physical_instance_placeholder() { }
+
+//=============================================================================
+datatype_instance_placeholder::~datatype_instance_placeholder() { }
+
+//=============================================================================
+#endif	// USE_INSTANCE_PLACEHOLDERS
 }	// end namespace entity
 }	// end namespace HAC
 

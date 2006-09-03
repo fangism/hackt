@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_list.h,v 1.7 2006/02/21 04:48:23 fang Exp $
+	$Id: meta_index_list.h,v 1.7.32.1 2006/09/03 02:33:36 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_LIST_H__
@@ -11,6 +11,7 @@
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -68,8 +69,10 @@ virtual	bool
 virtual	bool
 	is_relaxed_formal_dependent(void) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	const_index_list
 	resolve_index_list(void) const = 0;
+#endif
 
 	static
 	count_ptr<const const_index_list>

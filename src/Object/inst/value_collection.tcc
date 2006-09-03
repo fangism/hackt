@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.4 2006/09/02 00:46:08 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.5 2006/09/03 02:33:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -111,6 +111,20 @@ operator << (ostream& o, const pint_instance& p) {
 //=============================================================================
 // class value_collection method definitions
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+VALUE_COLLECTION_CLASS::value_collection() :
+		parent_type(), source_placeholder(NULL), ival(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+VALUE_COLLECTION_CLASS::value_collection(const value_placeholder_ptr_type p) :
+		parent_type(), source_placeholder(p), ival(NULL) {
+}
+
+#endif
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS
 /**

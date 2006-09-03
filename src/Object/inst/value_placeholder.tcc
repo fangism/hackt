@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.3 2006/09/01 05:17:43 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.4 2006/09/03 02:33:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -110,6 +110,12 @@ operator << (ostream& o, const pint_instance& p) {
 // class value_placeholder method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
+VALUE_PLACEHOLDER_CLASS::value_placeholder() :
+		parent_type(), ival(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Private empty constructor.
  */
@@ -141,6 +147,13 @@ VALUE_PLACEHOLDER_CLASS::value_placeholder(const this_type& t,
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 VALUE_PLACEHOLDER_CLASS::~value_placeholder() {
 //	STACKTRACE_DTOR("~value_placeholder()");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
+ostream&
+VALUE_PLACEHOLDER_CLASS::what(ostream& o) const {
+	return o << util::what<this_type>::name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

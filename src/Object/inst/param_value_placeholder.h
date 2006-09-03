@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.1.2.2 2006/08/31 07:28:41 fang Exp $
+	$Id: param_value_placeholder.h,v 1.1.2.3 2006/09/03 02:33:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -39,6 +39,8 @@ public:
 						member_inst_ref_ptr_type;
 
 protected:
+	param_value_placeholder() : parent_type() { }
+
 	explicit
 	param_value_placeholder(const size_t d);
 
@@ -79,6 +81,12 @@ virtual	ostream&
 
 virtual	ostream&
 	dump_formal(ostream&) const = 0;
+
+	bool
+	is_template_formal(void) const;
+
+	bool
+	is_relaxed_template_formal(void) const;
 
 virtual	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const = 0;

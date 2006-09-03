@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.5 2006/09/02 03:58:33 fang Exp $
+	$Id: value_collection.h,v 1.17.8.6 2006/09/03 02:33:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -179,6 +179,7 @@ virtual	ostream&
 		return this->source_placeholder;
 	}
 
+#if 0
 	const string&
 	get_name(void) const;
 
@@ -187,6 +188,7 @@ virtual	ostream&
 
 	size_t
 	get_dimensions(void) const;
+#endif
 #endif
 #if !USE_INSTANCE_PLACEHOLDERS
 	void

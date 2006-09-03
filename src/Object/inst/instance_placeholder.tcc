@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.2 2006/08/31 07:28:40 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.3 2006/09/03 02:33:41 fang Exp $
 	TODO: trim includes
  */
 
@@ -218,6 +218,12 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+INSTANCE_PLACEHOLDER_CLASS::instance_placeholder() :
+		parent_type(), initial_instantiation_statement_ptr(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 INSTANCE_PLACEHOLDER_CLASS::instance_placeholder(const scopespace& o, 
 		const string& n, const size_t d) :
 		parent_type(o, n, d), 
@@ -249,6 +255,13 @@ INSTANCE_PLACEHOLDER_CLASS::instance_placeholder(const this_type& t,
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 INSTANCE_PLACEHOLDER_CLASS::~instance_placeholder() {
 	STACKTRACE_DTOR("~instance_placeholder<>()");
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+ostream&
+INSTANCE_PLACEHOLDER_CLASS::what(ostream& o) const {
+	return o << util::what<this_type>::name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -421,6 +434,19 @@ INSTANCE_PLACEHOLDER_CLASS::make_member_meta_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Despite the name, this doesn't copy...
+	\return new instance collection for footprint.  
+ */
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+// typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
+instance_collection_base*
+INSTANCE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
+	return instance_collection_generic_type::make_array(
+		never_ptr<const this_type>(this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // inappropriate for placeholders
 #if 0
 /**
@@ -458,7 +484,6 @@ INSTANCE_PLACEHOLDER_CLASS::make_array(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 // re-write, need persistent type-key
 /**
 	initial_instantiation_statement_ptr is permitted to be NULL
@@ -468,6 +493,8 @@ INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 void
 INSTANCE_PLACEHOLDER_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
+if (m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key, 0)) {
 	STACKTRACE_PERSISTENT("instance_placeholder<Tag>::collect_base()");
 	parent_type::collect_transient_info_base(m);
 #if 0
@@ -477,7 +504,7 @@ INSTANCE_PLACEHOLDER_CLASS::collect_transient_info(
 		initial_instantiation_statement_ptr->collect_transient_info(m);
 	}
 }
-#endif
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE

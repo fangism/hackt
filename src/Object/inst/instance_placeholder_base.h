@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.1.2.4 2006/09/02 00:46:01 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.5 2006/09/03 02:33:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -152,6 +152,9 @@ protected:
 	super_instance_ptr_type		super_instance;
 #endif
 protected:
+	// dimensions unknown
+	instance_placeholder_base() :
+		object(), persistent(), owner(), key() { }
 	/**
 		Private, dimensions-specific construct, intended for
 		childrens' use only.  
@@ -184,12 +187,13 @@ virtual	~instance_placeholder_base();
 	the sake of mapping in the footprint's instance collection map.
 	This does not make a precise deep copy of every field, 
 	but enough for the the unroller to work with.  
-	The footprint argument is just for distiguishing constructors.  
+	The footprint argument WAS just for distiguishing constructors.  
+	NOTE: not any more! TODO: delete comment
  */
 #if USE_INSTANCE_PLACEHOLDERS
 #define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
 	instance_collection_base*					\
-	make_instance_collection_footprint_copy(const footprint&) const
+	make_instance_collection_footprint_copy(void) const
 
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 #endif
@@ -312,6 +316,7 @@ virtual	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const = 0;
 
 public:
+#if 0
 	size_t
 	is_template_formal(void) const;
 
@@ -320,6 +325,7 @@ public:
 
 	size_t
 	is_port_formal(void) const;
+#endif
 
 	size_t
 	is_member_instance(void) const;

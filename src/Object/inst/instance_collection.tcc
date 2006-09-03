@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.3 2006/08/31 07:28:38 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.4 2006/09/03 02:33:40 fang Exp $
 	TODO: trim includes
  */
 
@@ -213,6 +213,28 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
 // class instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	Private empty constructor.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+INSTANCE_COLLECTION_CLASS::instance_collection() :
+		parent_type(), 
+		collection_type_manager_parent_type(), 
+		source_placeholder(NULL) {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+INSTANCE_COLLECTION_CLASS::instance_collection(
+			const instance_placeholder_ptr_type p) :
+		parent_type(), 
+		collection_type_manager_parent_type(), 
+		source_placeholder(p) {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
@@ -275,6 +297,19 @@ INSTANCE_COLLECTION_CLASS::dump_formal(ostream& o) const {
 	}
 	return o;
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	Covariant return of a virtual function.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+never_ptr<const physical_instance_placeholder>
+INSTANCE_COLLECTION_CLASS::get_placeholder_base(void) const {
+	return this->source_placeholder;
+}
+
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -426,26 +461,42 @@ INSTANCE_COLLECTION_CLASS::get_actual_param_list(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
 /**
+	\param p the placeholder back-reference pointer, 
+		from which dimensions are inferred.  
 	\return newly constructed d-dimensional array.  
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS*
 INSTANCE_COLLECTION_CLASS::make_array(
-		const scopespace& o, const string& n, const size_t d) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_ptr_type p
+#else
+		const scopespace& o, const string& n, const size_t d
+#endif
+		) {
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t d = p->get_dimensions();
+#endif
 	switch(d) {
+#if USE_INSTANCE_PLACEHOLDERS
+		case 0: return new instance_array<Tag,0>(p);
+		case 1: return new instance_array<Tag,1>(p);
+		case 2: return new instance_array<Tag,2>(p);
+		case 3: return new instance_array<Tag,3>(p);
+		case 4: return new instance_array<Tag,4>(p);
+#else
 		case 0: return new instance_array<Tag,0>(o, n);
 		case 1: return new instance_array<Tag,1>(o, n);
 		case 2: return new instance_array<Tag,2>(o, n);
 		case 3: return new instance_array<Tag,3>(o, n);
 		case 4: return new instance_array<Tag,4>(o, n);
+#endif
 		default:
 			cerr << "FATAL: dimension limit is 4!" << endl;
 			return NULL;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -537,7 +588,13 @@ INSTANCE_ARRAY_CLASS::instance_array() :
 		collection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
+#if USE_INSTANCE_PLACEHOLDERS
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+INSTANCE_ARRAY_CLASS::instance_array(const instance_placeholder_ptr_type p) :
+		parent_type(p), collection() {
+}
+
+#else
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array(const scopespace& o, const string& n) :
 		parent_type(o, n, D), collection() {
@@ -1299,7 +1356,13 @@ INSTANCE_SCALAR_CLASS::instance_array() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
+#if USE_INSTANCE_PLACEHOLDERS
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+INSTANCE_SCALAR_CLASS::instance_array(const instance_placeholder_ptr_type p) :
+		parent_type(p), the_instance() {
+}
+
+#else
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array(const scopespace& o, const string& n) :
 		parent_type(o, n, 0), the_instance() {

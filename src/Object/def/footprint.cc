@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.2 2006/09/02 00:45:51 fang Exp $
+	$Id: footprint.cc,v 1.24.4.3 2006/09/03 02:33:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -326,7 +326,11 @@ if (instance_collection_map.empty()) {
 			// then we need to make a deep copy of it 
 			// in our own footprint's instance collection map
 			const count_ptr<instance_collection_base>
+#if USE_INSTANCE_PLACEHOLDERS
+			fc(icb->make_instance_collection_footprint_copy());
+#else
 			fc(icb->make_instance_collection_footprint_copy(*this));
+#endif
 			NEVER_NULL(fc);
 			STACKTRACE_INDENT_PRINT(
 				"deep-copying " << fc->get_name() << endl);

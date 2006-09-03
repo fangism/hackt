@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/physical_instance_placeholder.h"
-	$Id: physical_instance_placeholder.h,v 1.1.2.2 2006/08/31 07:28:42 fang Exp $
+	$Id: physical_instance_placeholder.h,v 1.1.2.3 2006/09/03 02:33:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_PLACEHOLDER_H__
@@ -37,14 +37,18 @@ protected:
 	typedef	parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
 protected:
+	physical_instance_placeholder() : parent_type() { }
+
 	explicit
 	physical_instance_placeholder(const size_t d) : parent_type(d) { }
 
 	physical_instance_placeholder(const scopespace& o, const string& n, 
 		const size_t d);
 
+#if 0
 	physical_instance_placeholder(const this_type& t, const footprint& f) :
 		parent_type(t, f) { }
+#endif
 
 private:
 #if USE_INSTANCE_PLACEHOLDERS
@@ -63,6 +67,9 @@ public:
 
 virtual	ostream&
 	dump_formal(ostream&) const = 0;
+
+	bool
+	is_port_formal(void) const;
 
 #define	UNROLL_PORT_ONLY_PROTO						\
 	count_ptr<physical_instance_collection>				\

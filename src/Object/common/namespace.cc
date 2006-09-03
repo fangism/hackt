@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.20.4.2 2006/08/28 05:09:56 fang Exp $
+ 	$Id: namespace.cc,v 1.20.4.3 2006/09/03 02:33:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -379,6 +379,22 @@ if (probe) {
 	if (probe_inst) {
 		// make sure is not a template or port formal instance!
 		// can't append to those.  
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const physical_instance_placeholder>
+			phi(probe_inst.is_a<const physical_instance_placeholder>());
+		const never_ptr<const param_value_placeholder>
+			pvp(probe_inst.is_a<const param_value_placeholder>());
+		if (pvp->is_template_formal()) {
+			cerr << "ERROR: cannot redeclare or append to "
+				"a template formal parameter." << endl;
+			return return_type(NULL);
+		}
+		if (phi->is_port_formal()) {
+			cerr << "ERROR: cannot redeclare or append to "
+				"a port formal instance." << endl;
+			return return_type(NULL);
+		}
+#else
 		if (probe_inst->is_template_formal()) {
 			cerr << "ERROR: cannot redeclare or append to "
 				"a template formal parameter." << endl;
@@ -389,6 +405,7 @@ if (probe) {
 				"a port formal instance." << endl;
 			return return_type(NULL);
 		}
+#endif
 		// compare types, must match!
 		// just change these to references to avoid ref_count
 		const count_ptr<const fundamental_type_reference>

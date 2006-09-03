@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.13.8.4 2006/09/02 00:46:02 fang Exp $
+	$Id: param_value_collection.h,v 1.13.8.5 2006/09/03 02:33:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -43,7 +43,7 @@ public:
 
 protected:
 #if USE_INSTANCE_PLACEHOLDERS
-	param_value_collection();
+	param_value_collection() : parent_type() { }
 #else
 	explicit
 	param_value_collection(const size_t d);
@@ -60,6 +60,16 @@ private:
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 #endif
 #if USE_INSTANCE_PLACEHOLDERS
+public:
+	size_t
+	get_dimensions(void) const;
+
+	never_ptr<const scopespace>
+	get_owner(void) const;
+
+	const string&
+	get_name(void) const;
+
 	never_ptr<const instance_placeholder_base>
 	__get_placeholder_base(void) const;
 
