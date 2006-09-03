@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.48 2006/08/25 17:15:29 fang Exp $
+#	$Id: Make.test-tail,v 1.49 2006/09/03 22:03:20 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -442,6 +442,7 @@ BOGUS_TARGETS = .hac .unrollstderr .createstderr .allocstderr \
 	$(BOGUS_TESTS)
 
 CLEANFILES += $(BOGUS_TARGETS)
+DISTHOOK_CLEANFILES += $(BOGUS_TARGETS)
 
 CHECK_SUMMARIES = compilediffs objdiffs unrolldiffs creatediffs allocdiffs \
 	unrolldiffs.noindex creatediffs.noindex allocdiffs.noindex \
@@ -868,14 +869,6 @@ cleaner-recursive:
 	clean-createtests clean-alloctests \
 	clean-cflattests clean-prsimtests \
 	distclean-depend
-
-# this cheat is only needed to create auto-generated (empty) distribution files
-# dist-hook-missing: $(EXTRA_DIST)
-#	@for f in $(EXTRA_DIST); do \
-#		if test ! -f $$f ; then \
-#			$(TOUCH) $$f ; \
-#		fi ; \
-#	done
 
 help-local: help-test
 

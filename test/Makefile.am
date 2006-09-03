@@ -1,5 +1,5 @@
 # "test/Makefile.am"
-#	$Id: Makefile.am,v 1.33 2006/08/25 05:47:53 fang Exp $
+#	$Id: Makefile.am,v 1.34 2006/09/03 22:03:22 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -71,12 +71,12 @@ EXTRA_DIST += ChangeLog README TODO test.cvsignore \
 # automatically distributed, via configure sources:
 #	$(PRECONFIGURED_TESTSCRIPTS)
 
-dist-hook:
-	bogus='$(BOGUS_TARGETS)'; \
-	distdir=$(distdir) ; \
-	for b in $$bogus ; do \
-		$(RM) -r `$(FIND) $$distdir -name "$$b"` ; \
-	done
+# dist-hook:
+# 	bogus='$(BOGUS_TARGETS)'; \
+# 	distdir=$(distdir) ; \
+# 	for b in $$bogus ; do \
+# 		$(RM) -r `$(FIND) $$distdir -name "$$b"` ; \
+# 	done
 
 
 # template test Makefile

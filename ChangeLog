@@ -1,5 +1,15 @@
 "ChangeLog"
 
+2006-09-03	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-08:
+	  Packaging improvements:
+	  Make.stddef: DISTHOOK_CLEANFILES variable for automatic 
+		distribution removal, per Makefile.  
+	  Make.global: new distdir-subdir target for manually
+		building subtree of distribution for diagnostics.  
+
+
 2006-08-29	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-05:

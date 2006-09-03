@@ -3,7 +3,7 @@
 # make-independent definitions
 # This Makefile fragment should be included as early as possible
 # by other makefiles.  
-#	$Id: Make.stddef,v 1.17 2006/08/14 22:32:36 fang Exp $
+#	$Id: Make.stddef,v 1.18 2006/09/03 22:03:18 fang Exp $
 
 # force use of the ancient canonical bourne shell, 
 # else configure may pick up bash as the shell interpreter.  
@@ -61,6 +61,9 @@ DISTCLEANFILES =
 DISTCLEANDIRS =
 EXTRA_DIST =
 TESTS =
+
+# these files are automatically removed from distribution by dist-hook
+DISTHOOK_CLEANFILES =
 
 # The following macros are custom-defined for use with this project, 
 # in particular for coupled use with Make.global.
