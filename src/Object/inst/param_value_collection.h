@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.13.8.5 2006/09/03 02:33:41 fang Exp $
+	$Id: param_value_collection.h,v 1.13.8.6 2006/09/04 05:44:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -86,8 +86,10 @@ virtual	ostream&
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	bool
 	is_loop_variable(void) const = 0;
+#endif
 
 virtual	ostream&
 	dump_unrolled_values(ostream& o) const = 0;

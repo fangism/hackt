@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.12.6.1 2006/08/31 07:28:29 fang Exp $
+	$Id: template_formals_manager.cc,v 1.12.6.2 2006/09/04 05:44:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -74,8 +74,14 @@ template_formals_manager::dump_formals_list(ostream& o,
 		// sanity check
 		// not true any more: may be loop induction variable
 		// INVARIANT((*i)->is_template_formal());
+#if USE_INSTANCE_PLACEHOLDERS
+		// not using template formals managers anymore
+		// to hack support for induction variables.  
+		INVARIANT((*i)->is_template_formal());
+#else
 		INVARIANT((*i)->is_template_formal() ||
 			(*i)->is_loop_variable());
+#endif
 		(*i)->dump_formal(o << auto_indent) << endl;
 	}
 	return o << auto_indent << '>';

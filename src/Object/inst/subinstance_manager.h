@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.13.20.1 2006/08/30 04:28:00 fang Exp $
+	$Id: subinstance_manager.h,v 1.13.20.2 2006/09/04 05:44:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -105,8 +105,11 @@ public:
 	value_type
 	lookup_port_instance(const lookup_arg_type&) const;
 
+#if 0
+	// OBSOLETE -- remove
 	value_type
 	lookup_member_instance(const lookup_arg_type&) const;
+#endif
 
 	// want to recursively expand ports when this is instantiated
 	template <class Tag>

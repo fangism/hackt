@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.4 2006/09/03 02:33:38 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.5 2006/09/04 05:44:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -133,7 +133,12 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 	} else {
 		const param_value_collection*
 			p(IS_A(const param_value_collection*, this));
-		if (p && p->is_loop_variable()) {
+#if USE_INSTANCE_PLACEHOLDERS
+		if (p && p->get_placeholder_base()->is_loop_variable())
+#else
+		if (p && p->is_loop_variable())
+#endif
+		{
 			// loop induction variables don't have unroll statements
 			o << "(loop induction pint)";
 		} else {
@@ -249,7 +254,12 @@ instance_collection_base::dump_qualified_name(ostream& o,
 if (owner) {
 	const param_value_collection* const
 		p(IS_A(const param_value_collection*, this));
-	if (p && p->is_loop_variable()) {
+#if USE_INSTANCE_PLACEHOLDERS
+	if (p && p->get_placeholder_base()->is_loop_variable())
+#else
+	if (p && p->is_loop_variable())
+#endif
+	{
 		// nothing, just print the plain key
 		// maybe '$' to indicate variable?
 		o << '$';
@@ -392,6 +402,7 @@ instance_collection_base::is_port_formal(void) const {
 #endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	\return offset into definition's subinstance array that contains
 		the member.  
@@ -417,6 +428,7 @@ instance_collection_base::is_member_instance(void) const {
 	)
 	return 0;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -823,6 +835,22 @@ instance_placeholder_base::get_qualified_name(void) const {
 		return owner->get_qualified_name() + "::" +key;
 		// "::" should be the same as HAC::parser::scope
 	else return key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if formal expressions (in declarations)
+	are provably equivalent, equating by positional parameters.  
+ */
+bool
+instance_placeholder_base::formal_size_equivalent(const this_type& b) const {
+	const index_collection_item_ptr_type
+		ii(this->get_initial_instantiation_indices()),
+		ji(b.get_initial_instantiation_indices());
+	if (ii && ji) {
+		return ii->must_be_formal_size_equivalent(*ji);
+	} else 	return (!ii && !ji);
+	// both NULL is ok too
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

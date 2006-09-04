@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.10.8.1 2006/09/01 05:17:48 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.10.8.2 2006/09/04 05:44:16 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -42,7 +42,11 @@ struct data_type_resolver {
 	typedef	typename class_traits<Tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
 	count_ptr<const data_type_reference>
-	operator () (const data_value_reference_type&) const;
+	operator () (const data_value_reference_type&
+#if USE_RESOLVED_TYPES
+		, const unroll_context&
+#endif
+		) const;
 };	// end struct data_type_resolver
 
 //=============================================================================

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.11 2006/03/15 04:38:20 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.11.28.1 2006/09/04 05:44:14 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -50,10 +50,13 @@ substructure_alias::lookup_port_instance(const port_type& inst) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// OBSOLETE -- remove
 subinstance_manager::value_type
 substructure_alias::lookup_member_instance(const port_type& inst) const {
 	return subinstances.lookup_member_instance(inst);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 never_ptr<const physical_instance_collection>

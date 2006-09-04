@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.1 2006/08/28 05:10:32 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.2 2006/09/04 05:44:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -248,6 +248,8 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
+// getting rid of this shit in favor of simpler, more consistent lookup
 /**
 	NOTE: this method is SO CRITICAL...
 	FYI: this is called by simple_meta_value_reference::unroll_resolve().
@@ -380,6 +382,7 @@ unroll_context::lookup_actual(
 		return return_type(NULL);
 	}
 }	// end method lookup_actual
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

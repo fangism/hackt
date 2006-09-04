@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.10.8.1 2006/09/01 05:17:48 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.10.8.2 2006/09/04 05:44:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -358,10 +358,24 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::is_lvalue(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	2006-09-03: re-written to lookup the corresponding footprint
+	instance, using the unrolli_context.  
+ */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const data_type_reference>
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_data_type_ref(void) const {
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_data_type_ref(
+#if USE_RESOLVED_TYPES
+		const unroll_context& c
+#else
+		void
+#endif
+		) const {
+#if USE_RESOLVED_TYPES
+	return data_type_resolver<Tag>()(*this, c);
+#else
 	return data_type_resolver<Tag>()(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.16.2.1 2006/08/30 04:28:01 fang Exp $
+	$Id: substructure_alias_base.h,v 1.16.2.2 2006/09/04 05:44:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -92,8 +92,11 @@ public:
 	subinstance_manager::value_type
 	lookup_port_instance(const port_type& i) const;
 
+#if 0
+// OBSOLETE -- remove
 	subinstance_manager::value_type
 	lookup_member_instance(const port_type& i) const;
+#endif
 
 virtual	never_ptr<const physical_instance_collection>
 	get_container_base(void) const;

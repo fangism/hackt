@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.9 2006/06/26 01:46:03 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.9.8.1 2006/09/04 05:44:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -81,7 +81,11 @@ struct data_type_resolver<pint_tag> {
 	typedef	class_traits<pint_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
 	count_ptr<const data_type_reference>
-	operator () (const data_value_reference_type&) const {
+	operator () (const data_value_reference_type&
+#if USE_RESOLVED_TYPES
+		, const unroll_context&
+#endif
+		) const {
 #if 0
 		FINISH_ME(Fang);
 		return int_traits::int32_type_ptr;
@@ -97,7 +101,11 @@ struct data_type_resolver<pbool_tag> {
 	typedef	class_traits<pbool_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
 	count_ptr<const data_type_reference>
-	operator () (const data_value_reference_type&) const {
+	operator () (const data_value_reference_type&
+#if USE_RESOLVED_TYPES
+		, const unroll_context&
+#endif
+		) const {
 		return bool_traits::built_in_type_ptr;
 	}
 };      // end struct data_type_resolver
@@ -108,7 +116,11 @@ struct data_type_resolver<preal_tag> {
 	typedef	class_traits<preal_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
 	count_ptr<const data_type_reference>
-	operator () (const data_value_reference_type&) const {
+	operator () (const data_value_reference_type&
+#if USE_RESOLVED_TYPES
+		, const unroll_context&
+#endif
+		) const {
 #if 0
 		return real_traits::built_in_type_ptr;
 #else

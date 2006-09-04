@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.5 2006/09/03 02:33:43 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.6 2006/09/04 05:44:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -179,6 +179,15 @@ index_collection_item_ptr_type
 VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return this->initial_instantiation_statement_ptr->get_indices();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+VALUE_COLLECTION_TEMPLATE_SIGNATURE
+never_ptr<const param_value_placeholder>
+VALUE_COLLECTION_CLASS::get_placeholder_base(void) const {
+	return this->source_placeholder;
 }
 #endif
 
@@ -674,6 +683,7 @@ VALUE_ARRAY_CLASS::is_partially_unrolled(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Arrays cannot be loop variables.  
  */
@@ -682,6 +692,7 @@ bool
 VALUE_ARRAY_CLASS::is_loop_variable(void) const {
 	return false;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
@@ -1038,6 +1049,7 @@ VALUE_SCALAR_CLASS::is_partially_unrolled(void) const {
 	return the_instance.instantiated;
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	NOTE: note sure if this is still valid afte rusing placeholders...
 
@@ -1058,6 +1070,7 @@ VALUE_SCALAR_CLASS::is_loop_variable(void) const {
 	return !this->owner->lookup_member(this->key);
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE

@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.6 2006/09/03 02:33:42 fang Exp $
+	$Id: value_collection.h,v 1.17.8.7 2006/09/04 05:44:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -384,8 +384,10 @@ public:
 	bool
 	is_partially_unrolled(void) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	bool
 	is_loop_variable(void) const;
+#endif
 
 	ostream&
 	dump_unrolled_values(ostream& o) const;
@@ -490,8 +492,10 @@ public:
 	bool
 	is_partially_unrolled(void) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	bool
 	is_loop_variable(void) const;
+#endif
 
 	ostream&
 	dump_unrolled_values(ostream& o) const;

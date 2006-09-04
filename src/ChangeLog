@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-10:
+	  Round 2 of defining missing functions: references, collections, 
+		placeholders and flagging some methods obsolete.  
+		Still doesn't link.
+	  Upcoming: sub-branch for refactoring type system:
+		matching "fundamental" types with placeholders, and 
+		"resolved" types with collections.  
+
+
 2006-09-02	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-09:

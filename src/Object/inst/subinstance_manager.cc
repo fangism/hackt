@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.17.18.1 2006/08/30 04:27:59 fang Exp $
+	$Id: subinstance_manager.cc,v 1.17.18.2 2006/09/04 05:44:13 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -113,6 +113,8 @@ subinstance_manager::lookup_port_instance(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+// OBSOLETE -- remove
 /**
 	This is used to lookup any instance member, public or private.
 	Q: are private instances allocated space in the subinstance array?
@@ -142,6 +144,7 @@ subinstance_manager::lookup_member_instance(
 	INVARIANT(index <= subinstance_array.size());
 	return subinstance_array[index-1];
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
