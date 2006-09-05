@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.18.6.1 2006/09/01 05:17:24 fang Exp $
+ 	$Id: basic_param.cc,v 1.18.6.1.2.1 2006/09/05 03:55:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -153,7 +153,7 @@ pbool_expr::~pbool_expr() {
 	When pint is interpreted as an int, in non-meta language...
  */
 count_ptr<const data_type_reference>
-pbool_expr::get_data_type_ref(void) const {
+pbool_expr::get_unresolved_data_type_ref(void) const {
 	return bool_traits::built_in_type_ptr;
 }
 
@@ -252,7 +252,7 @@ pint_expr::~pint_expr() {
 	TODO: return int<0>? to signal something special?
  */
 count_ptr<const data_type_reference>
-pint_expr::get_data_type_ref(void) const {
+pint_expr::get_unresolved_data_type_ref(void) const {
 	return int_traits::int32_type_ptr;
 }
 
@@ -405,7 +405,7 @@ pint_expr::must_be_equivalent_index(const meta_index_expr& i) const {
 	When pint is interpreted as an int, in non-meta language...
  */
 count_ptr<const data_type_reference>
-preal_expr::get_data_type_ref(void) const {
+preal_expr::get_unresolved_data_type_ref(void) const {
 #if 1
 	FINISH_ME_EXIT(Fang);
 	return count_ptr<const data_type_reference>(NULL);

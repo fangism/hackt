@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.9.8.2 2006/09/04 05:44:15 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.9.8.2.2.1 2006/09/05 03:55:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -181,15 +181,24 @@ template <>
 struct data_type_resolver<bool_tag> {
 	typedef	class_traits<bool_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
+#if USE_UNRESOLVED_DATA_TYPES
 	count_ptr<const data_type_reference>
-	operator () (const data_value_reference_type&
-#if USE_RESOLVED_TYPES
-			, const unroll_context&
-#endif
-			) const {
+	operator () (const data_value_reference_type&) const {
 		// easy, no parameters!
 		return bool_traits::built_in_type_ptr;
 	}
+#endif
+
+#if USE_RESOLVED_DATA_TYPES
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type&, 
+			const unroll_context&) const {
+		// easy, no parameters!
+		// TODO: return a canonical data type
+		return bool_traits::built_in_type_ptr;
+	}
+#endif
+
 };	// end class data_type_resolver
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -197,18 +206,22 @@ template <>
 struct data_type_resolver<int_tag> {
 	typedef	class_traits<int_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
-#if USE_RESOLVED_TYPES
+#if USE_RESOLVED_DATA_TYPES
 	typedef	class_traits<int_tag>::instance_collection_generic_type
 					instance_collection_type;
 #endif
 
+#if USE_UNRESOLVED_DATA_TYPES
 	count_ptr<const data_type_reference>
-	operator () (const data_value_reference_type& d
-#if USE_RESOLVED_TYPES
-			, const unroll_context& c
+	operator () (const data_value_reference_type& d) const {
+		return d.get_inst_base_subtype()->get_type_ref_subtype();
+	}
 #endif
-			) const {
-#if USE_RESOLVED_TYPES
+
+#if USE_RESOLVED_DATA_TYPES
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type& d, 
+			const unroll_context& c) const {
 		// need to do some real work... 
 		// extract parameter from collection
 		// which needs to be translated from the placeholder
@@ -219,10 +232,8 @@ struct data_type_resolver<int_tag> {
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
 		return dc->get_resolved_type();
-#else
-		return d.get_inst_base_subtype()->get_type_ref_subtype();
-#endif
 	}
+#endif
 };	// end class data_type_resolver
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -235,15 +246,20 @@ struct data_type_resolver<enum_tag> {
 		If they ever are, then properly lookup the 
 		unrolled collection to deduce the type.  
 	 */
+#if USE_UNRESOLVED_DATA_TYPES
 	count_ptr<const data_type_reference>
-	operator () (const data_value_reference_type& d
-#if USE_RESOLVED_TYPES
-			, const unroll_context&
-#endif
-			) const {
+	operator () (const data_value_reference_type& d) const {
 		// leverange enum_instance_collection?
 		return d.get_inst_base_subtype()->get_type_ref_subtype();
 	}
+#endif
+
+#if USE_RESOLVED_DATA_TYPES
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type& d, 
+			const unroll_context& c) const;
+#endif
+
 };	// end class data_type_resolver
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -255,15 +271,21 @@ struct data_type_resolver<datastruct_tag> {
 		User defined data-types may be context-dependent, 
 		depending on template parameters.  
 	 */
+#if USE_UNRESOLVED_DATA_TYPES
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type& d
-#if USE_RESOLVED_TYPES
-			, const unroll_context&
-#endif
 			) const {
 		// leverange struct_instance_collection?
 		return d.get_inst_base_subtype()->get_type_ref_subtype();
 	}
+#endif
+
+#if USE_RESOLVED_DATA_TYPES
+	count_ptr<const data_type_reference>
+	operator () (const data_value_reference_type& d, 
+			const unroll_context& c) const;
+#endif
+
 };	// end class data_type_resolver
 
 //=============================================================================

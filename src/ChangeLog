@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-01:
+	  This mini-branch for rework of get_data_type_ref().
+		First we make a distinction between unresolved (fundamental)
+		and resolved (canonical) types.  
+	  Renamed functions for clear distinction.
+	  This revision has enabled the old unresolved types and left the
+		newly proposed resolved types switched off.  
+		They will be needed in the future for checking when unrolling
+		CHP footprints.  
+
+
 2006-09-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-10:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/data_nonmeta_instance_reference.h"
-	$Id: data_nonmeta_instance_reference.h,v 1.3.8.1 2006/09/04 05:44:15 fang Exp $
+	$Id: data_nonmeta_instance_reference.h,v 1.3.8.1.2.1 2006/09/05 03:55:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_DATA_NONMETA_INSTANCE_REFERENCE_H__
@@ -32,11 +32,15 @@ public:
 
 virtual	~data_nonmeta_instance_reference() { }
 
+#if USE_UNRESOLVED_DATA_TYPES
 virtual	count_ptr<const data_type_reference>
-#if USE_RESOLVED_TYPES
-	get_data_type_ref(const unroll_context&) const = 0;
-#else
-	get_data_type_ref(void) const = 0;
+	get_unresolved_data_type_ref(void) const = 0;
+#endif
+
+#if USE_RESOLVED_DATA_TYPES
+// should be canonical data type
+virtual	count_ptr<const data_type_reference>
+	get_resolved_data_type_ref(void) const = 0;
 #endif
 
 virtual	bool
