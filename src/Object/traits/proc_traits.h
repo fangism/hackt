@@ -2,7 +2,7 @@
 	\file "Object/traits/proc_traits.h"
 	Traits and policies for processes.  
 	This file used to be "Object/art_object_proc_traits.h".
-	$Id: proc_traits.h,v 1.13.20.1 2006/08/28 05:10:27 fang Exp $
+	$Id: proc_traits.h,v 1.13.20.1.2.1 2006/09/05 23:32:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PROC_TRAITS_H__
@@ -94,6 +94,10 @@ struct class_traits<process_tag> {
 	typedef	canonical_process_type	instance_collection_parameter_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef	canonical_process_type		resolved_type_ref_type;
+	// pointer not necessary
+#endif
 };	// end struct class_traits<process_tag>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

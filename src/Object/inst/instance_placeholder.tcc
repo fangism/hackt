@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.3.2.1 2006/09/05 17:53:39 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.3.2.2 2006/09/05 23:32:18 fang Exp $
 	TODO: trim includes
  */
 
@@ -340,7 +340,8 @@ INSTANCE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
+#if USE_RESOLVED_DATA_TYPES && 0
+// do we really want this here?
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename INSTANCE_PLACEHOLDER_CLASS::type_ref_ptr_type
 INSTANCE_PLACEHOLDER_CLASS::get_resolved_type_ref_subtype(void) const {

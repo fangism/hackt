@@ -5,6 +5,21 @@
 
 2006-09-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-03:
+	  Enabled USE_RESOLVED_DATA_TYPES (which really should be renamed
+		USE_RESOLVED_NONMETA_TYPES) in devel_switches.
+	  Bunch of missing definition (for next revision).  
+	  data_expr::get_resolved_data_type_ref 
+		now returns canonical_generic_type.
+	  data_type_resolver<>::operator(...)
+		now returns canonical_generic_datatype.
+	  Old get_canonical_type renamed to __get_raw_type because they
+		only work with internal collection parameters, not canonical.
+	  instance_reference_datatype.cc: implemented resolving
+		of canonical types based on resolved collection.  
+	  *_traits.h: class-traits new member: resolved_type_ref_type.
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-02:
 	  Mostly renamed get_type_ref to get_unresolved_type_ref
 		for clarity (b/c it took me an hour to read what I wrote...).

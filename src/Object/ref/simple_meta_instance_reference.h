@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.14.4.3.2.1 2006/09/05 17:53:55 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.14.4.3.2.2 2006/09/05 23:32:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -120,6 +120,13 @@ virtual	ostream&
 	never_ptr<const instance_collection_base>
 #endif
 	get_inst_base(void) const;
+
+#if USE_INSTANCE_PLACEHOLDERS
+	instance_placeholder_ptr_type
+	get_inst_base_subtype(void) const {
+		return this->inst_collection_ref;
+	}
+#endif
 
 	ostream&
 	dump_type_size(ostream&) const;

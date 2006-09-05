@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.9 2006/06/26 01:46:11 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.9.10.1 2006/09/05 23:32:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -15,6 +15,7 @@
 #include "Object/type/canonical_type.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 #if	ENABLE_STACKTRACE
 #include "util/stacktrace.h"
@@ -66,6 +67,7 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
+#if 1
 	type_ref_ptr_type
 	get_type(void) const {
 		return this->type_parameter.make_type_reference();
@@ -76,8 +78,22 @@ protected:
 	get_type(const instance_collection_generic_type&) const {
 		return this->type_parameter.make_type_reference();
 	}
+#endif
 
 public:
+#if USE_RESOLVED_DATA_TYPES
+	const instance_collection_parameter_type&
+	__get_raw_type(void) const {
+#if ENABLE_STACKTRACE
+		const instance_collection_parameter_type&
+			ret(this->type_parameter);
+		ret.dump(STACKTRACE_INDENT << "canonical type: ") << endl;
+		return ret;
+#else
+		return this->type_parameter;
+#endif
+	}
+#else	// USE_RESOLVED_DATA_TYPES
 	const instance_collection_parameter_type&
 	get_canonical_type(void) const {
 #if ENABLE_STACKTRACE
@@ -89,6 +105,7 @@ public:
 		return this->type_parameter;
 #endif
 	}
+#endif	// USE_RESOLVED_DATA_TYPES
 
 	bool
 	is_relaxed_type(void) const;

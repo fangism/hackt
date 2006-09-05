@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/data_nonmeta_instance_reference.h"
-	$Id: data_nonmeta_instance_reference.h,v 1.3.8.1.2.1 2006/09/05 03:55:54 fang Exp $
+	$Id: data_nonmeta_instance_reference.h,v 1.3.8.1.2.2 2006/09/05 23:32:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_DATA_NONMETA_INSTANCE_REFERENCE_H__
@@ -9,6 +9,9 @@
 #include "Object/ref/nonmeta_instance_reference_base.h"
 #include "util/memory/count_ptr.h"
 #include "Object/devel_switches.h"
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/type/canonical_type_fwd.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -38,9 +41,9 @@ virtual	count_ptr<const data_type_reference>
 #endif
 
 #if USE_RESOLVED_DATA_TYPES
-// should be canonical data type
-virtual	count_ptr<const data_type_reference>
-	get_resolved_data_type_ref(void) const = 0;
+// should match with prototype defined in "Object/expr/data_expr.h"
+virtual	canonical_generic_datatype
+	get_resolved_data_type_ref(const unroll_context&) const = 0;
 #endif
 
 virtual	bool

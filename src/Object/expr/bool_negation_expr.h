@@ -3,7 +3,7 @@
 	Class definitions for boolean negation expression.
 	NOTE: this file was spanwed off of "Object/art_object_data_expr.h"
 		for revision history tracking purposes.  
-	$Id: bool_negation_expr.h,v 1.7.10.1 2006/09/05 03:55:43 fang Exp $
+	$Id: bool_negation_expr.h,v 1.7.10.2 2006/09/05 23:32:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BOOL_NEGATION_EXPR_H__
@@ -45,6 +45,9 @@ public:
 	dimensions(void) const { return 0; }
 
 	GET_UNRESOLVED_DATA_TYPE_REF_PROTO;
+#if USE_RESOLVED_DATA_TYPES
+	GET_RESOLVED_DATA_TYPE_REF_PROTO;
+#endif
 
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
 protected:

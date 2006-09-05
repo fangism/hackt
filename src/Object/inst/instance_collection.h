@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.22.8.5.2.1 2006/09/05 17:53:34 fang Exp $
+	$Id: instance_collection.h,v 1.22.8.5.2.2 2006/09/05 23:32:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -88,6 +88,10 @@ private:
 public:
 	typedef	typename traits_type::type_ref_type	type_ref_type;
 	typedef	typename traits_type::type_ref_ptr_type	type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef	typename traits_type::resolved_type_ref_type
+						resolved_type_ref_type;
+#endif
 	typedef	typename traits_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
 	typedef	typename traits_type::instance_alias_info_type
@@ -239,8 +243,14 @@ virtual	bool
 	count_ptr<const fundamental_type_reference>
 	get_unresolved_type_ref(void) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	type_ref_ptr_type
 	get_type_ref_subtype(void) const;
+#endif
+#if USE_RESOLVED_DATA_TYPES
+	resolved_type_ref_type
+	get_resolved_type(void) const;
+#endif
 
 	bool
 	must_be_collectibly_type_equivalent(const this_type&) const;

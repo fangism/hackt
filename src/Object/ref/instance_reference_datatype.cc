@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.9.8.2.2.2 2006/09/05 17:53:51 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.9.8.2.2.3 2006/09/05 23:32:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -23,6 +23,9 @@
 #include "Object/inst/struct_instance_collection.h"
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/datatype_instance_placeholder.h"
+#endif
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/def/datatype_definition_base.h"
 #endif
 
 #include "Object/inst/value_collection.h"
@@ -190,12 +193,11 @@ struct data_type_resolver<bool_tag> {
 #endif
 
 #if USE_RESOLVED_DATA_TYPES
-	count_ptr<const data_type_reference>
+	canonical_generic_datatype
 	operator () (const data_value_reference_type&, 
 			const unroll_context&) const {
-		// easy, no parameters!
-		// TODO: return a canonical data type
-		return bool_traits::built_in_type_ptr;
+		return canonical_generic_datatype(
+			bool_traits::built_in_type_ptr->get_base_datatype_def());
 	}
 #endif
 
@@ -219,19 +221,22 @@ struct data_type_resolver<int_tag> {
 #endif
 
 #if USE_RESOLVED_DATA_TYPES
-	count_ptr<const data_type_reference>
+	// traits_type::resolved_type_ref
+	canonical_generic_datatype
 	operator () (const data_value_reference_type& d, 
 			const unroll_context& c) const {
 		// need to do some real work... 
 		// extract parameter from collection
 		// which needs to be translated from the placeholder
 		const count_ptr<const physical_instance_collection>
-			pc(c.lookup_instance_collection(d));
+			pc(c.lookup_instance_collection(
+				*d.get_inst_base_subtype()));
 		NEVER_NULL(pc);		// for now
 		const count_ptr<const instance_collection_type>
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
-		return dc->get_resolved_type();
+		return data_type_reference::make_canonical_int_type_ref(
+			dc->__get_raw_type());
 	}
 #endif
 };	// end class data_type_resolver
@@ -241,6 +246,10 @@ template <>
 struct data_type_resolver<enum_tag> {
 	typedef	class_traits<enum_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef	class_traits<enum_tag>::instance_collection_generic_type
+					instance_collection_type;
+#endif
 	/**
 		Technically, enum types are not context dependent... yet.
 		If they ever are, then properly lookup the 
@@ -255,9 +264,22 @@ struct data_type_resolver<enum_tag> {
 #endif
 
 #if USE_RESOLVED_DATA_TYPES
-	count_ptr<const data_type_reference>
+	/**
+		This is a bit overkill... until enum types are actually
+		template dependent (possible in future).  
+	 */
+	canonical_generic_datatype
 	operator () (const data_value_reference_type& d, 
-			const unroll_context& c) const;
+			const unroll_context& c) const {
+		const count_ptr<const physical_instance_collection>
+			pc(c.lookup_instance_collection(
+				*d.get_inst_base_subtype()));
+		NEVER_NULL(pc);		// for now
+		const count_ptr<const instance_collection_type>
+			dc(pc.is_a<const instance_collection_type>());
+		NEVER_NULL(dc);		// for now
+		return dc->get_resolved_type();
+	}
 #endif
 
 };	// end class data_type_resolver
@@ -267,6 +289,10 @@ template <>
 struct data_type_resolver<datastruct_tag> {
 	typedef	class_traits<datastruct_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef	class_traits<datastruct_tag>::instance_collection_generic_type
+					instance_collection_type;
+#endif
 	/**
 		User defined data-types may be context-dependent, 
 		depending on template parameters.  
@@ -281,9 +307,18 @@ struct data_type_resolver<datastruct_tag> {
 #endif
 
 #if USE_RESOLVED_DATA_TYPES
-	count_ptr<const data_type_reference>
+	canonical_generic_datatype
 	operator () (const data_value_reference_type& d, 
-			const unroll_context& c) const;
+			const unroll_context& c) const {
+		const count_ptr<const physical_instance_collection>
+			pc(c.lookup_instance_collection(
+				*d.get_inst_base_subtype()));
+		NEVER_NULL(pc);		// for now
+		const count_ptr<const instance_collection_type>
+			dc(pc.is_a<const instance_collection_type>());
+		NEVER_NULL(dc);		// for now
+		return dc->get_resolved_type();
+	}
 #endif
 
 };	// end class data_type_resolver

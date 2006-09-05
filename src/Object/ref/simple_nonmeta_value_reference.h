@@ -3,7 +3,7 @@
 	Classes related to nonmeta (data) instance reference expressions. 
 	This file was reincarnated from
 		"Object/art_object_nonmeta_value_reference.h"
-	$Id: simple_nonmeta_value_reference.h,v 1.10.8.2.2.1 2006/09/05 03:55:56 fang Exp $
+	$Id: simple_nonmeta_value_reference.h,v 1.10.8.2.2.2 2006/09/05 23:32:21 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_H__
@@ -131,6 +131,9 @@ public:
 	dimensions(void) const;
 
 	GET_UNRESOLVED_DATA_TYPE_REF_PROTO;
+#if USE_RESOLVED_DATA_TYPES
+	GET_RESOLVED_DATA_TYPE_REF_PROTO;
+#endif
 
 	bool
 	is_lvalue(void) const;

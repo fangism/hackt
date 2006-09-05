@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.10.8.2.2.1 2006/09/05 03:55:56 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.10.8.2.2.2 2006/09/05 23:32:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -31,6 +31,10 @@
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/unroll/unroll_context.h"
+#endif
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/type/canonical_type.h"
+#include "Object/def/datatype_definition_base.h"
 #endif
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
@@ -373,7 +377,7 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_unresolved_data_type_ref(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_RESOLVED_DATA_TYPES
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-count_ptr<const data_type_reference>
+canonical_generic_datatype
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_resolved_data_type_ref(
 		const unroll_context& c) const {
 	return data_type_resolver<Tag>()(*this, c);
