@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.4 2006/09/03 02:33:44 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.4.2.1 2006/09/05 17:53:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -295,7 +295,7 @@ VALUE_PLACEHOLDER_CLASS::get_param_type_ref(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
-VALUE_PLACEHOLDER_CLASS::get_type_ref(void) const {
+VALUE_PLACEHOLDER_CLASS::get_unresolved_type_ref(void) const {
 	return get_param_type_ref();
 }
 

@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.1.2.5 2006/09/02 00:46:00 fang Exp $
+	$Id: instance_placeholder.h,v 1.1.2.5.2.1 2006/09/05 17:53:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -210,10 +210,11 @@ virtual	bool
 	// this could just return hard-coded built-in type...
 	// this returns the type as given by the first instantiation statement
 	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
+	get_unresolved_type_ref(void) const;
 
+	// same thing, but covariant return type
 	type_ref_ptr_type
-	get_type_ref_subtype(void) const;
+	get_unresolved_type_ref_subtype(void) const;
 
 	bool
 	must_be_collectibly_type_equivalent(const this_type&) const;

@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.1.2.6 2006/09/04 05:44:13 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.6.2.1 2006/09/05 17:53:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -298,7 +298,7 @@ virtual	string
 	instantiation statement.  
  */
 virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	get_unresolved_type_ref(void) const = 0;
 
 	never_ptr<const definition_base>
 	get_base_def(void) const;

@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.9.4.3.2.1 2006/09/05 03:55:36 fang Exp $
+	$Id: CHP.cc,v 1.9.4.3.2.2 2006/09/05 17:53:28 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -767,7 +767,7 @@ communication::get_channel_direction(
 	NEVER_NULL(inst_base);
 	// get type reference
 	const count_ptr<const channel_type_reference_base>
-		type_ref(inst_base->get_type_ref()
+		type_ref(inst_base->get_unresolved_type_ref()
 			.is_a<const channel_type_reference_base>());
 	NEVER_NULL(type_ref);
 	return type_ref->get_direction();

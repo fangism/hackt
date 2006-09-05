@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.22.8.5 2006/09/03 02:33:39 fang Exp $
+	$Id: instance_collection.h,v 1.22.8.5.2.1 2006/09/05 17:53:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -237,7 +237,7 @@ virtual	bool
 	// this could just return hard-coded built-in type...
 	// this returns the type as given by the first instantiation statement
 	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
+	get_unresolved_type_ref(void) const;
 
 	type_ref_ptr_type
 	get_type_ref_subtype(void) const;
@@ -271,6 +271,8 @@ virtual	bool
 
 /**
 	Prototype for instantiating alias indices during unroll phase.  
+	NOTE: context shouldn't be necessary at the collection, 
+	only needed to resolved placeholders!
  */
 #define	INSTANTIATE_INDICES_PROTO					\
 	good_bool							\

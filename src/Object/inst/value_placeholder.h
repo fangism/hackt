@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.1.2.4 2006/09/02 00:46:08 fang Exp $
+	$Id: value_placeholder.h,v 1.1.2.4.2.1 2006/09/05 17:53:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -185,7 +185,7 @@ public:
 
 	// PROBLEM: built-in? needs to be consistent
 	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
+	get_unresolved_type_ref(void) const;
 
 	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const;

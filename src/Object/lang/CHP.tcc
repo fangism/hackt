@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.8.8.1.2.1 2006/09/05 03:55:53 fang Exp $
+	$Id: CHP.tcc,v 1.8.8.1.2.2 2006/09/05 17:53:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -48,7 +48,7 @@ channel_send::add_expressions(const L& l) {
 #endif
 		inst_base(chan->get_inst_base_subtype());
 	const count_ptr<const channel_type_reference_base>
-		type_ref(inst_base->get_type_ref()
+		type_ref(inst_base->get_unresolved_type_ref()
 			.template is_a<const channel_type_reference_base>());
 	// critical that this next pointer only exists locally 
 	// see channel_type_reference::resolve_builtin_channel_type
@@ -135,7 +135,7 @@ channel_receive::add_references(const L& l) {
 #endif
 		inst_base(chan->get_inst_base_subtype());
 	const count_ptr<const channel_type_reference_base>
-		type_ref(inst_base->get_type_ref()
+		type_ref(inst_base->get_unresolved_type_ref()
 			.template is_a<const channel_type_reference_base>());
 	// critical that this next pointer only exists locally 
 	// see channel_type_reference::resolve_builtin_channel_type

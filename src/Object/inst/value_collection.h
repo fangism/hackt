@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.7 2006/09/04 05:44:14 fang Exp $
+	$Id: value_collection.h,v 1.17.8.7.2.1 2006/09/05 17:53:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -225,7 +225,7 @@ public:
 
 	// PROBLEM: built-in? needs to be consistent
 	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
+	get_unresolved_type_ref(void) const;
 
 	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const;

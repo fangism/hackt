@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.4 2006/09/03 02:33:40 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.4.2.1 2006/09/05 17:53:36 fang Exp $
 	TODO: trim includes
  */
 
@@ -321,10 +321,10 @@ INSTANCE_COLLECTION_CLASS::get_placeholder_base(void) const {
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
-INSTANCE_COLLECTION_CLASS::get_type_ref(void) const {
+INSTANCE_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
 #if USE_INSTANCE_PLACEHOLDERS
 	NEVER_NULL(this->source_placeholder);
-	return this->source_placeholder->get_type_ref();
+	return this->source_placeholder->get_unresolved_type_ref();
 #else
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return initial_instantiation_statement_ptr->get_type_ref();

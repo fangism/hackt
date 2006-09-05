@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.12.16.1 2006/08/28 05:10:29 fang Exp $
+	$Id: instantiation_statement.h,v 1.12.16.1.2.1 2006/09/05 17:53:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -130,6 +130,9 @@ public:
 
 	count_ptr<const fundamental_type_reference>
 	get_type_ref(void) const;
+
+	type_ref_ptr_type
+	get_type_ref_subtype(void) const;
 
 	const_relaxed_args_type
 	get_relaxed_actuals(void) const;

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.9.8.2.2.1 2006/09/05 03:55:55 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.9.8.2.2.2 2006/09/05 17:53:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -214,7 +214,7 @@ struct data_type_resolver<int_tag> {
 #if USE_UNRESOLVED_DATA_TYPES
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type& d) const {
-		return d.get_inst_base_subtype()->get_type_ref_subtype();
+		return d.get_inst_base_subtype()->get_unresolved_type_ref_subtype();
 	}
 #endif
 
@@ -250,7 +250,7 @@ struct data_type_resolver<enum_tag> {
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type& d) const {
 		// leverange enum_instance_collection?
-		return d.get_inst_base_subtype()->get_type_ref_subtype();
+		return d.get_inst_base_subtype()->get_unresolved_type_ref_subtype();
 	}
 #endif
 
@@ -276,7 +276,7 @@ struct data_type_resolver<datastruct_tag> {
 	operator () (const data_value_reference_type& d
 			) const {
 		// leverange struct_instance_collection?
-		return d.get_inst_base_subtype()->get_type_ref_subtype();
+		return d.get_inst_base_subtype()->get_unresolved_type_ref_subtype();
 	}
 #endif
 
