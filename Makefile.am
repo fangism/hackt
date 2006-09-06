@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.33 2006/08/05 06:44:06 fang Exp $
+#	$Id: Makefile.am,v 1.34 2006/09/06 20:07:33 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -59,7 +59,8 @@ EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	BOUNTY \
 	BUILDS \
 	CONTRIBUTORS \
-	MAINTAINER-checklist \
+	README.CVS \
+	README.maintainer \
 	$(DOXYGEN_CONFIG).in \
 	config/macro-value.h.in \
 	config/config_subst.awk \
