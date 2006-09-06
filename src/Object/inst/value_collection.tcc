@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.6 2006/09/04 05:44:14 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.7 2006/09/06 04:19:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -341,7 +341,7 @@ VALUE_COLLECTION_CLASS::get_param_type_ref(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
-VALUE_COLLECTION_CLASS::get_type_ref(void) const {
+VALUE_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
 	return get_param_type_ref();
 }
 

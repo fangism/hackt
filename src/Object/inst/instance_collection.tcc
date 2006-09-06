@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.4 2006/09/03 02:33:40 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.5 2006/09/06 04:19:45 fang Exp $
 	TODO: trim includes
  */
 
@@ -321,10 +321,10 @@ INSTANCE_COLLECTION_CLASS::get_placeholder_base(void) const {
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
-INSTANCE_COLLECTION_CLASS::get_type_ref(void) const {
+INSTANCE_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
 #if USE_INSTANCE_PLACEHOLDERS
 	NEVER_NULL(this->source_placeholder);
-	return this->source_placeholder->get_type_ref();
+	return this->source_placeholder->get_unresolved_type_ref();
 #else
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return initial_instantiation_statement_ptr->get_type_ref();
@@ -345,11 +345,22 @@ INSTANCE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
 INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
 	return collection_type_manager_parent_type::get_type(*this);
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0 && USE_RESOLVED_DATA_TYPES
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+typename INSTANCE_COLLECTION_CLASS::resolved_type_ref_type
+INSTANCE_COLLECTION_CLASS::get_resolved_canonical_type(void) const {
+	return collection_type_manager_parent_type::get_resolved_canonical_type(*this);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1053,7 +1064,11 @@ if (this->has_relaxed_type()) {
 	// type of container is already strict, 
 	// evaluate it once and re-use it when replaying internal aliases
 	const typename parent_type::instance_collection_parameter_type
+#if USE_RESOLVED_DATA_TYPES
+		t(collection_type_manager_parent_type::__get_raw_type());
+#else
 		t(collection_type_manager_parent_type::get_canonical_type());
+#endif
 	if (!create_definition_footprint(t).good) {
 		return good_bool(false);
 	}
@@ -1640,7 +1655,11 @@ if (this->has_relaxed_type()) {
 	}
 } else {
 	const typename parent_type::instance_collection_parameter_type
+#if USE_RESOLVED_DATA_TYPES
+		t(collection_type_manager_parent_type::__get_raw_type());
+#else
 		t(collection_type_manager_parent_type::get_canonical_type());
+#endif
 	if (!create_definition_footprint(t).good) {
 		return good_bool(false);
 	}

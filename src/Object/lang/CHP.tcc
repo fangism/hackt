@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.8.8.1 2006/09/02 00:46:09 fang Exp $
+	$Id: CHP.tcc,v 1.8.8.2 2006/09/06 04:19:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -48,7 +48,7 @@ channel_send::add_expressions(const L& l) {
 #endif
 		inst_base(chan->get_inst_base_subtype());
 	const count_ptr<const channel_type_reference_base>
-		type_ref(inst_base->get_type_ref()
+		type_ref(inst_base->get_unresolved_type_ref()
 			.template is_a<const channel_type_reference_base>());
 	// critical that this next pointer only exists locally 
 	// see channel_type_reference::resolve_builtin_channel_type
@@ -78,12 +78,14 @@ channel_send::add_expressions(const L& l) {
 			// TODO: consider using a predicated copy_if functor?
 			NEVER_NULL(*ei);
 			const count_ptr<const data_type_reference>
-				etype((*ei)->get_data_type_ref());
+				etype((*ei)->get_unresolved_data_type_ref());
 			if (!etype) {
 				cerr << "Error resolving expression " << i <<
 					" in send expression list.  " << endl;
 				return good_bool(false);
 			}
+			// type-equivalence is conservative because
+			// no unroll_context information is available.  
 			// was (...may_be_connectibly_type_equivalent())
 			if (!(*ti)->may_be_assignably_type_equivalent(*etype))
 			{
@@ -133,7 +135,7 @@ channel_receive::add_references(const L& l) {
 #endif
 		inst_base(chan->get_inst_base_subtype());
 	const count_ptr<const channel_type_reference_base>
-		type_ref(inst_base->get_type_ref()
+		type_ref(inst_base->get_unresolved_type_ref()
 			.template is_a<const channel_type_reference_base>());
 	// critical that this next pointer only exists locally 
 	// see channel_type_reference::resolve_builtin_channel_type
@@ -165,7 +167,7 @@ channel_receive::add_references(const L& l) {
 				sdir(*ei);
 			NEVER_NULL(sdir);
 			const count_ptr<const data_type_reference>
-				etype(sdir->get_data_type_ref());
+				etype(sdir->get_unresolved_data_type_ref());
 			if (!etype) {
 				cerr << "Error resolving reference " << i <<
 					" in receive list.  " << endl;

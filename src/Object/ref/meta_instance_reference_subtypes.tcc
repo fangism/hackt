@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.12.4.1 2006/08/30 04:28:06 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.12.4.2 2006/09/06 04:19:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -55,9 +55,9 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 		return false;
 	}
 	const count_ptr<const fundamental_type_reference>
-		ltr(this->get_type_ref());
+		ltr(this->get_unresolved_type_ref());
 	const count_ptr<const fundamental_type_reference>
-		rtr(rr->get_type_ref());
+		rtr(rr->get_unresolved_type_ref());
 	const bool type_eq = ltr->may_be_connectibly_type_equivalent(*rtr);
 	// if base types differ, then cannot be equivalent
 	if (!type_eq) {

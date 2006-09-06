@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.17.2.1 2006/08/31 07:28:48 fang Exp $
+ 	$Id: type_reference.cc,v 1.17.2.2 2006/09/06 04:20:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -706,10 +706,27 @@ data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
 	const fundamental_type_reference::template_args_ptr_type
 		width_params(new const_param_expr_list(
 			count_ptr<const pint_const>(new pint_const(w))));
-	const template_actuals tpl(width_params, 
-		template_actuals::arg_list_ptr_type());
+	const template_actuals
+		tpl(width_params, template_actuals::arg_list_ptr_type());
 	return new data_type_reference(never_ptr<const built_in_datatype_def>(
 		&int_traits::built_in_definition), tpl);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+canonical_generic_datatype
+data_type_reference::make_canonical_int_type_ref(const pint_value_type w) {
+	INVARIANT(w >= 0);
+	// is an excl_ptr, incidentally
+	const fundamental_type_reference::template_args_ptr_type
+		width_params(new const_param_expr_list(
+			count_ptr<const pint_const>(new pint_const(w))));
+	const template_actuals
+		tpl(width_params, template_actuals::arg_list_ptr_type());
+	return canonical_generic_datatype(
+		never_ptr<const built_in_datatype_def>(
+			&int_traits::built_in_definition),
+		tpl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

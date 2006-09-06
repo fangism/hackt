@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.8 2006/06/26 01:46:13 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.8.8.1 2006/09/06 04:19:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -11,6 +11,7 @@
 #include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -39,6 +40,10 @@ protected:
 					instance_collection_parameter_type;
 	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef typename traits_type::resolved_type_ref_type
+					resolved_type_ref_type;
+#endif
 
 	/**
 		The type parameter is ONLY a definition.
@@ -56,18 +61,23 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if 0
-	type_ref_ptr_type
-	get_type(void) const;
-#endif
-	
-	// workadound for int
+#if !USE_INSTANCE_PLACEHOLDERS
+	// workaround for int
 	type_ref_ptr_type
 	get_type(const instance_collection_generic_type&) const;
+#endif
 
 public:
+#if USE_RESOLVED_DATA_TYPES
+	const instance_collection_parameter_type&
+	__get_raw_type(void) const { return this->type_parameter; }
+
+	resolved_type_ref_type
+	get_resolved_canonical_type(void) const;
+#else
 	const instance_collection_parameter_type&
 	get_canonical_type(void) const { return this->type_parameter; }
+#endif
 
 	bool
 	is_relaxed_type(void) const { return false; }

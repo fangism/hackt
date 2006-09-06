@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17.4.1 2006/08/28 05:10:30 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17.4.2 2006/09/06 04:20:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -172,6 +172,16 @@ INSTANTIATION_STATEMENT_CLASS::get_inst_base(void) const {
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 INSTANTIATION_STATEMENT_CLASS::get_type_ref(void) const {
+	return type_ref_parent_type::get_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Covariant return version.  
+ */
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+typename INSTANTIATION_STATEMENT_CLASS::type_ref_ptr_type
+INSTANTIATION_STATEMENT_CLASS::get_type_ref_subtype(void) const {
 	return type_ref_parent_type::get_type();
 }
 

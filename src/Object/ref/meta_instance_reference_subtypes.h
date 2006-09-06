@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.8.4.1 2006/08/30 04:28:06 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.8.4.2 2006/09/06 04:19:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -68,7 +68,7 @@ virtual	size_t
 
 	// consider sub-typing?
 virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	get_unresolved_type_ref(void) const = 0;
 
 virtual bad_bool
 	unroll_references_packed(const unroll_context&,

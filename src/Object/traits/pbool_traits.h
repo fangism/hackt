@@ -2,7 +2,7 @@
 	\file "Object/traits/pbool_traits.h"
 	Traits and policies for parameter booleans.  
 	This file used to be "Object/art_object_pbool_traits.h".
-	$Id: pbool_traits.h,v 1.12.8.1 2006/08/28 05:10:23 fang Exp $
+	$Id: pbool_traits.h,v 1.12.8.2 2006/09/06 04:20:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PBOOL_TRAITS_H__
@@ -74,6 +74,11 @@ struct class_traits<pbool_tag> {
 	typedef	param_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	// distinguish between meta-type and nonmeta-type
+	// typedef	canonical_generic_datatype	resolved_type_ref_type;
+	// pointer not necessary
+#endif
 
 	/**
 		Replacement for built-in type pointer.  

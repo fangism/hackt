@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.11 2006/04/11 07:54:44 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.11.20.1 2006/09/06 04:19:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -77,7 +77,7 @@ virtual	never_ptr<const definition_base>
 	get_base_def(void) const = 0;
 
 virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	get_unresolved_type_ref(void) const = 0;
 
 
 // what kind of type equivalence?

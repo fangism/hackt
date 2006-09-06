@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.10.8.1 2006/09/01 05:17:35 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.10.8.2 2006/09/06 04:19:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -63,6 +63,7 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::load_object_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 typename INT_COLLECTION_TYPE_MANAGER_CLASS::type_ref_ptr_type
 INT_COLLECTION_TYPE_MANAGER_CLASS::get_type(
@@ -86,6 +87,7 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::get_type(
 			.template is_a<const data_type_reference>();
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

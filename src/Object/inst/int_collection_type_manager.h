@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.9.8.1 2006/09/01 05:17:35 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.9.8.2 2006/09/06 04:19:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -46,6 +46,10 @@ protected:
 #endif
 	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef typename traits_type::resolved_type_ref_type
+					resolved_type_ref_type;
+#endif
 
 	/**
 		Type is a constant integer.  
@@ -70,16 +74,28 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
+#if 0
 	type_ref_ptr_type
 	get_type(void) const;
-	
+#endif
+
+#if !USE_INSTANCE_PLACEHOLDERS
 	// because we may need to extract from the index_collection
 	type_ref_ptr_type
 	get_type(const instance_collection_generic_type&) const;
+#endif
 
 public:
+#if USE_RESOLVED_DATA_TYPES
+	const instance_collection_parameter_type&
+	__get_raw_type(void) const { return type_parameter; }
+
+	resolved_type_ref_type
+	get_resolved_canonical_type(void) const;
+#else
 	const instance_collection_parameter_type&
 	get_canonical_type(void) const { return type_parameter; }
+#endif
 
 	bool
 	is_relaxed_type(void) const { return false; }

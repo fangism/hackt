@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.137.2.2 2006/08/28 05:09:49 fang Exp $
+#	$Id: Makefile.am,v 1.137.2.3 2006/09/06 04:19:28 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -553,6 +553,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/process_type_reference.h \
 	Object/type/type_reference_base.h \
 	Object/type/canonical_type_fwd.h \
+	Object/type/canonical_generic_datatype.h \
 	Object/unroll/unroll_fwd.h \
 	Object/unroll/alias_connection.h \
 	Object/unroll/aliases_connection_base.h \

@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.5 2006/08/08 05:46:38 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.5.4.1 2006/09/06 04:19:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -75,7 +75,7 @@ public:
 	get_base_def(void) const;
 
 	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const;
+	get_unresolved_type_ref(void) const;
 
 	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO;
 

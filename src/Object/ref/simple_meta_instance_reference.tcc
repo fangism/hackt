@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.3 2006/08/31 07:28:46 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.4 2006/09/06 04:19:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -122,7 +122,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 ostream&
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump_type_size(ostream& o) const {
-	this->get_type_ref()->dump(o);
+	this->get_unresolved_type_ref()->dump(o);
 	const size_t d = this->dimensions();
 	if (d) {
 		o << '{' << d << "-dim}";
@@ -152,8 +152,8 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_base_def(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
-SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_type_ref(void) const {
-	return this->inst_collection_ref->get_type_ref();
+SIMPLE_META_INSTANCE_REFERENCE_CLASS::get_unresolved_type_ref(void) const {
+	return this->inst_collection_ref->get_unresolved_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

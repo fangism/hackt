@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.6 2006/01/22 18:20:13 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.6.50.1 2006/09/06 04:19:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINTANCE_MANAGER_TCC__
@@ -38,30 +38,50 @@ subinstance_manager::unroll_port_instances(
 					instance_collection_parameter_type;
 	typedef	typename collection_type::type_ref_ptr_type
 						type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef	typename collection_type::resolved_type_ref_type
+						resolved_type_ref_type;
+#endif
 	typedef	typename type_ref_ptr_type::element_type
 						type_ref_pointee_type;
 	STACKTRACE_VERBOSE;
 	INVARIANT(this->empty());
+#if USE_RESOLVED_DATA_TYPES
+	const resolved_type_ref_type
+		resolved_super_type(inst.get_resolved_canonical_type());
+		// TODO: this needs to print error message on failure?
+#else
 	const type_ref_ptr_type unresolved_super_type(inst.get_type());
 	NEVER_NULL(unresolved_super_type);
 	const type_ref_ptr_type
 		resolved_super_type(unresolved_super_type->unroll_resolve(c));
+#endif
 	if (!resolved_super_type) {
+#if USE_RESOLVED_DATA_TYPES
+		cerr << "Error resolving type during "
+			"subinstance_manager::unroll_port_instances: <type>"
+				<< endl;
+#else
 		unresolved_super_type->dump(
 			cerr << "Error resolving type during "
 				"subinstance_manager::unroll_port_instances: ")
 				<< endl;
+#endif
 		THROW_EXIT;
 	}
 #if 0
 	unresolved_super_type->dump(cerr << "unresolved type: ") << endl;
 	resolved_super_type->dump(cerr << "resolved type:   ") << endl;
 #endif
+#if USE_RESOLVED_DATA_TYPES
+	resolved_super_type.unroll_port_instances(c, *this);
+#else
 	INVARIANT(resolved_super_type->is_resolved());
 	const instance_collection_parameter_type
 		canonical_super_type(resolved_super_type->
 			make_canonical_type());
 	canonical_super_type.unroll_port_instances(c, *this);
+#endif
 }
 
 //=============================================================================

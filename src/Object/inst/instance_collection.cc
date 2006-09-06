@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.5 2006/09/04 05:44:09 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.6 2006/09/06 04:19:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -142,8 +142,9 @@ instance_collection_base::dump_collection_only(ostream& o) const {
 			// loop induction variables don't have unroll statements
 			o << "(loop induction pint)";
 		} else {
+			// TODO: use the collection's resolved type
 			const count_ptr<const fundamental_type_reference>
-				t(get_type_ref());
+				t(get_unresolved_type_ref());
 			if (t)	t->dump(o);
 			else	o << "(not unrolled yet)";
 		}
@@ -323,10 +324,12 @@ instance_collection_base::hierarchical_depth(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Return's the type's base definition.
+	TODO: far future, types may be template parameters, 
+		which makes the base definition argument-dependent.  
  */
 never_ptr<const definition_base>
 instance_collection_base::get_base_def(void) const {
-	return get_type_ref()->get_base_def();
+	return get_unresolved_type_ref()->get_base_def();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -455,9 +458,9 @@ bool
 instance_collection_base::port_formal_equivalent(const this_type& b) const {
 	// first make sure base types are equivalent.  
 	const count_ptr<const fundamental_type_reference>
-		t_type(get_type_ref());
+		t_type(get_unresolved_type_ref());
 	const count_ptr<const fundamental_type_reference>
-		b_type(b.get_type_ref());
+		b_type(b.get_unresolved_type_ref());
 	if (!t_type->may_be_connectibly_type_equivalent(*b_type)) {
 		// then their instantiation types differ
 		return false;
@@ -825,6 +828,11 @@ datatype_instance_collection::check_established_type(
 //=============================================================================
 #if USE_INSTANCE_PLACEHOLDERS
 
+instance_placeholder_base::instance_placeholder_base(
+		const scopespace& s, const string& k, const size_t d) :
+		owner(&s), key(k), dimensions(d) {
+}
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_placeholder_base::~instance_placeholder_base() { }
 
@@ -878,9 +886,23 @@ instance_placeholder_base::load_object_base(
 }
 
 //=============================================================================
+// class physical_instance_placeholder method definitions
+
+physical_instance_placeholder::physical_instance_placeholder(
+		const scopespace& s, const string& k, const size_t d) :
+		parent_type(s, k, d) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 physical_instance_placeholder::~physical_instance_placeholder() { }
 
 //=============================================================================
+// class datatype_instance_placeholder method definitions
+
+datatype_instance_placeholder::datatype_instance_placeholder(
+		const scopespace& s, const string& k, const size_t d) :
+		parent_type(s, k, d) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_placeholder::~datatype_instance_placeholder() { }
 
 //=============================================================================

@@ -2,7 +2,7 @@
 	\file "Object/traits/preal_traits.h"
 	Traits and policies for parameter floats.  
 	This file used to be "Object/art_object_preal_traits.h".
-	$Id: preal_traits.h,v 1.7.8.1 2006/08/28 05:10:26 fang Exp $
+	$Id: preal_traits.h,v 1.7.8.2 2006/09/06 04:20:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PREAL_TRAITS_H__
@@ -79,6 +79,11 @@ struct class_traits<preal_tag> {
 	typedef	param_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	// distinguish between meta-type and nonmeta-type
+	// typedef	canonical_generic_datatype	resolved_type_ref_type;
+	// pointer not necessary
+#endif
 
 	/**
 		Replacement for built-in type pointer.  

@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.9 2006/03/15 04:38:21 fang Exp $
+	$Id: canonical_type.cc,v 1.9.28.1 2006/09/06 04:20:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -211,6 +211,10 @@ check_footprint_policy<user_def_datatype>::operator () (
 //=============================================================================
 template
 canonical_user_def_data_type::canonical_type(const canonical_generic_datatype&);
+#if USE_RESOLVED_DATA_TYPES
+template
+canonical_generic_datatype::canonical_type(const canonical_user_def_data_type&);
+#endif
 
 template class canonical_type<datatype_definition_base>;
 template class canonical_type<user_def_datatype>;

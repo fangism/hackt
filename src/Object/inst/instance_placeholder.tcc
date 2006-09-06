@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.3 2006/09/03 02:33:41 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.4 2006/09/06 04:19:46 fang Exp $
 	TODO: trim includes
  */
 
@@ -311,9 +311,20 @@ INSTANCE_PLACEHOLDER_CLASS::dump_formal(ostream& o) const {
  */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
-INSTANCE_PLACEHOLDER_CLASS::get_type_ref(void) const {
+INSTANCE_PLACEHOLDER_CLASS::get_unresolved_type_ref(void) const {
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return this->initial_instantiation_statement_ptr->get_type_ref();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Covariant return version.  
+ */
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+typename INSTANCE_PLACEHOLDER_CLASS::type_ref_ptr_type
+INSTANCE_PLACEHOLDER_CLASS::get_unresolved_type_ref_subtype(void) const {
+	NEVER_NULL(this->initial_instantiation_statement_ptr);
+	return this->initial_instantiation_statement_ptr->get_type_ref_subtype();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -327,16 +338,19 @@ INSTANCE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 	return this->initial_instantiation_statement_ptr->get_indices();
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// what to do with these?
-#if 0
-INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
-typename INSTANCE_PLACEHOLDER_CLASS::type_ref_ptr_type
-INSTANCE_PLACEHOLDER_CLASS::get_type_ref_subtype(void) const {
-	return collection_type_manager_parent_type::get_type(*this);
-}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES && 0
+// do we really want this here?
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+typename INSTANCE_PLACEHOLDER_CLASS::type_ref_ptr_type
+INSTANCE_PLACEHOLDER_CLASS::get_resolved_type_ref_subtype(void) const {
+	return collection_type_manager_parent_type::get_type(*this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
 	Must match exact type, i.e. be connectibly type equivalent.  
 	Includes relaxed parameters, if applicable.  

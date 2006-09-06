@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.9.4.3 2006/09/02 03:58:28 fang Exp $
+	$Id: CHP.cc,v 1.9.4.4 2006/09/06 04:19:28 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -421,7 +421,7 @@ guarded_command::check_guarded_action(context& c) const {
 	static const bool_traits::type_ref_ptr_type&
 		bool_type_ptr(bool_traits::built_in_type_ptr);
 	const count_ptr<const data_type_reference>
-		gtype(checked_guard->get_data_type_ref());
+		gtype(checked_guard->get_unresolved_data_type_ref());
 	if (!gtype) {
 		cerr << "Error resolving guard type at " << where(*guard)
 			<< endl;
@@ -599,7 +599,7 @@ binary_assignment::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	const count_ptr<const data_type_reference>
-		ltype(lref->get_data_type_ref());
+		ltype(lref->get_unresolved_data_type_ref());
 	if (!ltype) {
 		// may be template-dependent, but shouldn't be null
 		cerr << "Error resolving type of lval at " <<
@@ -607,7 +607,7 @@ binary_assignment::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	const count_ptr<const data_type_reference>
-		rtype(rv->get_data_type_ref());
+		rtype(rv->get_unresolved_data_type_ref());
 	if (!rtype) {
 		// may be template-dependent, but shouldn't be null
 		cerr << "Error resolving type of rval at " <<
@@ -691,7 +691,7 @@ bool_assignment::check_action(context& c) const {
 	// wait, there is no rvalue in this assignment, it is implicit
 	// in the direction (dir: +/-) field.  
 	const count_ptr<const data_type_reference>
-		ltype(lref->get_data_type_ref());
+		ltype(lref->get_unresolved_data_type_ref());
 	if (!ltype) {
 		// may be template-dependent, but shouldn't be null
 		cerr << "Error resolving type of lval at " <<
@@ -767,7 +767,7 @@ communication::get_channel_direction(
 	NEVER_NULL(inst_base);
 	// get type reference
 	const count_ptr<const channel_type_reference_base>
-		type_ref(inst_base->get_type_ref()
+		type_ref(inst_base->get_unresolved_type_ref()
 			.is_a<const channel_type_reference_base>());
 	NEVER_NULL(type_ref);
 	return type_ref->get_direction();

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.2 2006/09/04 05:44:03 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.3 2006/09/06 04:19:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -57,7 +57,18 @@
 	Depends on USE_INSTANCE_PLACEHOLDERS.
 	Goal: 1
  */
-#define	USE_RESOLVED_TYPES		(0 && USE_INSTANCE_PLACEHOLDERS)
+#define	USE_RESOLVED_DATA_TYPES		(1 && USE_INSTANCE_PLACEHOLDERS)
+
+/**
+	Define to 1 if we want to be able to infer the fundamental
+	(pre-unroll-resolved) data type of a nonmeta data expression.
+	This is used to type-check (nonmeta) CHP expressions.  
+	This option is not exclusive with USE_RESOLVED_DATA_TYPES.  
+	Without this, check is just deferred until unroll-time.  
+	Goal: 1
+	Status: 'probably' OK to keep, but will wait until testing
+ */
+#define	USE_UNRESOLVED_DATA_TYPES	(1 && USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 

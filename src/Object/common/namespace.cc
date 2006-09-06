@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.20.4.3 2006/09/03 02:33:28 fang Exp $
+ 	$Id: namespace.cc,v 1.20.4.4 2006/09/06 04:19:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -409,7 +409,7 @@ if (probe) {
 		// compare types, must match!
 		// just change these to references to avoid ref_count
 		const count_ptr<const fundamental_type_reference>
-			old_type(probe_inst->get_type_ref());
+			old_type(probe_inst->get_unresolved_type_ref());
 		const count_ptr<const fundamental_type_reference>
 			new_type(inst_stmt->get_type_ref());
 		// 2005-07-08 decision: 

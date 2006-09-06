@@ -6,7 +6,7 @@
 		on the HACXX-00-01-04-main-00-48-connect-01 branch, 
 		branch revision -11.
 	TODO: future rename this file to nonmeta_expr_base.h
-	$Id: data_expr.h,v 1.7.8.1 2006/09/04 05:44:06 fang Exp $
+	$Id: data_expr.h,v 1.7.8.2 2006/09/06 04:19:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_DATA_EXPR_H__
@@ -17,6 +17,9 @@
 // unroll_resolve_copy is only needed because CHP assignments
 // are not (yet) subtyped, if we ever update this, we can trim here
 #include "Object/devel_switches.h"
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/type/canonical_type_fwd.h"
+#endif
 
 #define	USE_DATA_EXPR_EQUIVALENCE	0
 
@@ -52,17 +55,33 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
-#if USE_RESOLVED_TYPES
-#define	GET_DATA_TYPE_REF_PROTO						\
-	count_ptr<const data_type_reference>				\
-	get_data_type_ref(const unroll_context&) const
+// TODO: rename to get_canonical_type_ref()
+#if 0
+#if USE_RESOLVED_DATA_TYPES
+#define	GET_UNRESOLVED_DATA_TYPE_REF_ARG	c
+#define	GET_UNRESOLVED_DATA_TYPE_REF_PARAM	const unroll_context& GET_UNRESOLVED_DATA_TYPE_REF_ARG
 #else
-#define	GET_DATA_TYPE_REF_PROTO						\
-	count_ptr<const data_type_reference>				\
-	get_data_type_ref(void) const
+#define	GET_UNRESOLVED_DATA_TYPE_REF_ARG
+#define	GET_UNRESOLVED_DATA_TYPE_REF_PARAM	void
+#endif
 #endif
 
-virtual	GET_DATA_TYPE_REF_PROTO = 0;
+#if USE_UNRESOLVED_DATA_TYPES
+#define	GET_UNRESOLVED_DATA_TYPE_REF_PROTO				\
+	count_ptr<const data_type_reference>				\
+	get_unresolved_data_type_ref(void) const
+
+virtual	GET_UNRESOLVED_DATA_TYPE_REF_PROTO = 0;
+#endif
+
+#if USE_RESOLVED_DATA_TYPES
+// should be canonical data type
+#define	GET_RESOLVED_DATA_TYPE_REF_PROTO				\
+	canonical_generic_datatype					\
+	get_resolved_data_type_ref(const unroll_context&) const
+
+virtual	GET_RESOLVED_DATA_TYPE_REF_PROTO = 0;
+#endif
 
 #if USE_DATA_EXPR_EQUIVALENCE
 #define	DATA_EXPR_MAY_EQUIVALENCE_PROTO					\
