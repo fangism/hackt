@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.4.2.2 2006/09/05 23:32:18 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.4.2.3 2006/09/06 04:02:31 fang Exp $
 	TODO: trim includes
  */
 
@@ -350,6 +350,15 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
 INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
 	return collection_type_manager_parent_type::get_type(*this);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0 && USE_RESOLVED_DATA_TYPES
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+typename INSTANCE_COLLECTION_CLASS::resolved_type_ref_type
+INSTANCE_COLLECTION_CLASS::get_resolved_canonical_type(void) const {
+	return collection_type_manager_parent_type::get_resolved_canonical_type(*this);
 }
 #endif
 

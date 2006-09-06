@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.22.8.5.2.2 2006/09/05 23:32:18 fang Exp $
+	$Id: instance_collection.h,v 1.22.8.5.2.3 2006/09/06 04:02:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -248,8 +248,7 @@ virtual	bool
 	get_type_ref_subtype(void) const;
 #endif
 #if USE_RESOLVED_DATA_TYPES
-	resolved_type_ref_type
-	get_resolved_type(void) const;
+	using collection_type_manager_parent_type::get_resolved_canonical_type;
 #endif
 
 	bool

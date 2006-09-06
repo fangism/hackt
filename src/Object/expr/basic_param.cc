@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.18.6.1.2.1 2006/09/05 03:55:40 fang Exp $
+ 	$Id: basic_param.cc,v 1.18.6.1.2.2 2006/09/06 04:02:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -43,6 +43,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 	// for aggregate_value_references' base
 #include "Object/ref/aggregate_meta_value_reference.h"
 #include "Object/ref/meta_value_reference.h"
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/type/canonical_generic_datatype.h"
+#endif
 
 #include "common/TODO.h"
 
@@ -158,6 +161,14 @@ pbool_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+canonical_generic_datatype
+pbool_expr::get_resolved_data_type_ref(const unroll_context&) const {
+	return bool_traits::built_in_type_ptr->make_canonical_type();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pbool_expr::may_be_equivalent_generic(const param_expr& p) const {
 	STACKTRACE("pbool_expr::may_be_equivalent_generic()");
@@ -255,6 +266,17 @@ count_ptr<const data_type_reference>
 pint_expr::get_unresolved_data_type_ref(void) const {
 	return int_traits::int32_type_ptr;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+/**
+	TODO: write a built_in_resolved_type for pint.
+ */
+canonical_generic_datatype
+pint_expr::get_resolved_data_type_ref(const unroll_context&) const {
+	return int_traits::magic_int_type_ptr->make_canonical_type();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -413,6 +435,18 @@ preal_expr::get_unresolved_data_type_ref(void) const {
 	return bool_traits::built_in_type_ptr;
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+/**
+	Shouldn't be called, don't have nonmeta reals yet...
+ */
+canonical_generic_datatype
+preal_expr::get_resolved_data_type_ref(const unroll_context&) const {
+	FINISH_ME_EXIT(Fang);
+	return canonical_generic_datatype();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

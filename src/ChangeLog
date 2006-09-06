@@ -5,6 +5,17 @@
 
 2006-09-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-04:
+	  Finished implementing a draft of USE_RESOLVED_DATA_TYPES, 
+		includes instance_collection::get_resolved_canonical_type(), 
+		and related canonical type functions in the nonmeta
+		instance and value reference classes and type managers. 
+	  Added type/canonical_generic_datatype.h for convenience.
+	  Unable to test until all undefined references are resolved, 
+		so going to merge branch (and pray) and revert entire 
+		branch later if all else fails.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-03:
 	  Enabled USE_RESOLVED_DATA_TYPES (which really should be renamed
 		USE_RESOLVED_NONMETA_TYPES) in devel_switches.

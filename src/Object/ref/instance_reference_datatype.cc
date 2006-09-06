@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference_datatype.cc"
 	Method definitions for datatype instance reference classes.
 	This file was reincarnated from "Object/art_object_inst_ref_data.cc".
-	$Id: instance_reference_datatype.cc,v 1.9.8.2.2.3 2006/09/05 23:32:20 fang Exp $
+	$Id: instance_reference_datatype.cc,v 1.9.8.2.2.4 2006/09/06 04:02:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_DATATYPE_CC__
@@ -25,7 +25,7 @@
 #include "Object/inst/datatype_instance_placeholder.h"
 #endif
 #if USE_RESOLVED_DATA_TYPES
-#include "Object/def/datatype_definition_base.h"
+#include "Object/type/canonical_generic_datatype.h"
 #endif
 
 #include "Object/inst/value_collection.h"
@@ -55,7 +55,11 @@
 #include "Object/inst/general_collection_type_manager.h"
 #include "Object/inst/null_collection_type_manager.h"
 #include "Object/inst/int_collection_type_manager.h"
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/inst/parameterless_collection_type_manager.tcc"
+#else
 #include "Object/inst/parameterless_collection_type_manager.h"
+#endif
 #include "Object/unroll/port_connection_base.h"
 
 namespace util {
@@ -278,7 +282,7 @@ struct data_type_resolver<enum_tag> {
 		const count_ptr<const instance_collection_type>
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
-		return dc->get_resolved_type();
+		return dc->get_resolved_canonical_type();
 	}
 #endif
 
@@ -317,7 +321,7 @@ struct data_type_resolver<datastruct_tag> {
 		const count_ptr<const instance_collection_type>
 			dc(pc.is_a<const instance_collection_type>());
 		NEVER_NULL(dc);		// for now
-		return dc->get_resolved_type();
+		return dc->get_resolved_canonical_type();
 	}
 #endif
 

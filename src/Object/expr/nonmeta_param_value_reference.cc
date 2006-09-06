@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.9.8.1.2.2 2006/09/05 23:32:12 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.9.8.1.2.3 2006/09/06 04:02:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -41,8 +41,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/preal_instance.h"
 #if USE_RESOLVED_DATA_TYPES
-#include "Object/type/canonical_type.h"
-#include "Object/expr/const_param_expr_list.h"
+#include "Object/type/canonical_generic_datatype.h"
 #endif
 #include "common/TODO.h"
 #include "util/stacktrace.h"

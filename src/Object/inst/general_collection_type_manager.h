@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.9.10.1 2006/09/05 23:32:17 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.9.10.2 2006/09/06 04:02:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -50,6 +50,10 @@ protected:
 					type_ref_ptr_type;
 	typedef	typename type_ref_ptr_type::element_type
 					type_ref_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef typename traits_type::resolved_type_ref_type
+					resolved_type_ref_type;
+#endif
 
 	/**
 		General type reference pointer for the collection.  
@@ -67,12 +71,14 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if 1
+#if 0
 	type_ref_ptr_type
 	get_type(void) const {
 		return this->type_parameter.make_type_reference();
 	}
-	
+#endif
+
+#if !USE_INSTANCE_PLACEHOLDERS
 	// problem: channels have both built-in and user-defined types.  
 	type_ref_ptr_type
 	get_type(const instance_collection_generic_type&) const {
@@ -92,6 +98,11 @@ public:
 #else
 		return this->type_parameter;
 #endif
+	}
+
+	resolved_type_ref_type
+	get_resolved_canonical_type(void) const {
+		return this->type_parameter;
 	}
 #else	// USE_RESOLVED_DATA_TYPES
 	const instance_collection_parameter_type&

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.8.10.1 2006/09/05 23:32:19 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.8.10.2 2006/09/06 04:02:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -60,10 +60,12 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&) { }
 
-#if 1
+#if 0
 	const type_ref_ptr_type&
 	get_type(void) const;
-	
+#endif
+
+#if !USE_INSTANCE_PLACEHOLDERS
 	const type_ref_ptr_type&
 	get_type(const instance_collection_generic_type&) const {
 		return this->get_type();
@@ -82,10 +84,8 @@ public:
 		return instance_collection_parameter_type();
 	}
 
-#if 0
 	resolved_type_ref_type
 	get_resolved_canonical_type(void) const;
-#endif
 #else
 	instance_collection_parameter_type
 	get_canonical_type(void) const {
