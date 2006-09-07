@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2006/08/14 04:50:13 fang Exp $
+#	$Id: Makefile.am,v 1.8 2006/09/07 00:41:15 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -13,6 +13,7 @@ HACO_FLAGS += -I$(top_srcdir)/lib
 HACKT_PARSE_TEST_PASSES = \
 	logic_wrap \
 	channel_wrap env_wrap buffer_wrap \
+	alternator_wrap \
 	e1of1-01 \
 	source-01 \
 	e1ofN-01 e1ofN-02 \
@@ -37,14 +38,28 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	e1ofN-01 e1ofN-02 \
 	logic-01 \
 	env-source-sink-a-01 env-source-sink-a-02 \
-	env-source-sink-e-01 env-source-sink-e-02
+	env-source-sink-e-01 env-source-sink-e-02 \
+	alternator-onehot_counter-01 alternator-onehot_counter-02 \
+	env-cmos-source-sink-e-01 \
+	env-cmos-source-sink-e-02 \
+	env-cmos-source-sink-e-03 \
+	env-cmos-source-sink-a-01 \
+	env-cmos-source-sink-a-02 \
+	env-cmos-source-sink-a-03
 
 # .prsimrc inputs (no suffix)
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	e1ofN-01 e1ofN-02 \
 	logic-01 \
 	env-source-sink-a-01 env-source-sink-a-02 \
-	env-source-sink-e-01 env-source-sink-e-02
+	env-source-sink-e-01 env-source-sink-e-02 \
+	alternator-onehot_counter-01 alternator-onehot_counter-02 \
+	env-cmos-source-sink-e-01 \
+	env-cmos-source-sink-e-02 \
+	env-cmos-source-sink-e-03 \
+	env-cmos-source-sink-a-01 \
+	env-cmos-source-sink-a-02 \
+	env-cmos-source-sink-a-03
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 	nand-lvs-01
@@ -53,7 +68,8 @@ HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIMRC_TEST_SCRIPTS_BASES)
 HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES = $(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES)
 
 EXTRA_DIST += README \
-	stable-test-short.prsimrc
+	stable-test-short.prsimrc \
+	stable-test-medium.prsimrc
 
 # unprocessed test cases
 # EXTRA_DIST +=

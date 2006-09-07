@@ -1,0 +1,111 @@
+/**
+	\file "alternator.hac"
+	vi: ft=cpp
+	Library for alternator structures and ring-counted structures.
+	Everything defined in here is CMOS-implementable and may be
+	used to synthesize netlists of environment sources.  
+	2-way alternators use a dual-rail bit as a state variable whereas
+	N-way alternators will use some sort of one-hot counter.  
+	Splits and merges useful for constructing tree-fifos.  
+	$Id: alternator.hac,v 1.1 2006/09/07 00:41:13 fang Exp $
+ */
+
+import "channel.hac";
+	// for c1of<N>
+
+//=============================================================================
+/**
+	Single slice of a one-hot incrementer.  
+	To use this stage, you have ot take the conjunction of
+	two adjacent stages s[i-1] & s[i] to form a one-hot code.  
+	This basic cell is written this way to allow for general uses
+	of the state bits.  
+	\param inc the increment/advance signal, 
+		may be considered an active low acknowledge 
+		or active high request into the cell.  
+	\param _si state-bit from i-2 stage.
+	\param sj state-bit from i-1 stage.
+	\param _sk this state-bit.
+	\param sk this state-bit.
+	\param _sl state-bit from i+1 stage.
+	\param _Reset reset this state-bit to inactive.
+ */
+defproc onehot_stage(
+		bool inc, 
+		_si, sj, _sk, sk, _sl, 
+		_Reset) {
+	prs {
+		// unfortunately need _Reset
+		_Reset & inc & sj & _si			-> _sk-
+		~_sk					-> sk+
+		~inc & ~sj & ~_sl			-> _sk+
+		_sk					-> sk-
+		~_Reset					-> _sk+
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Variant of onehot_stage that initializes with the token.  
+	Same parameters.  
+	\param Reset resets the state-bit to active.  
+ */
+defproc onehot_stage_init(
+		bool inc, 
+		_si, sj, _sk, sk, _sl, 
+		Reset) {
+	prs {
+		inc & sj & _si				-> _sk-
+		~_sk					-> sk+
+		~inc & ~sj & ~_sl			-> _sk+
+		_sk					-> sk-
+		Reset					-> _sk-
+	}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Weak-condition onehot counter, cycles through 1ofN rails.  
+	Example of use of onehot_stages to form a counter.  
+	reset: inc may be either active or inactive on reset.  
+	HSE: 
+	Tested: test/lib/alternator-onehot_counter-01.
+	Tested: test/lib/alternator-onehot_counter-02.
+	Metrics: inc to out latency is 4 transitions.  
+	\param N must be > 2 (for now).
+	\param inc is effectively an active-low output acknowledge or 
+		active-high input request.  
+ */
+template <pint N>
+defproc	onehot_counter(
+		bool inc;		// can be .e of e1ofN channel
+		c1of<N> o;		// for exclhi
+		bool _Reset, Reset) {
+	// bool Reset;	// locally generated
+	bool _s[N], s[N], _o[N];
+	onehot_stage_init i0(inc, _s[N-2], s[N-1], _s[0], s[0], _s[1], Reset);
+	onehot_stage i[1..N-1];
+	(;j:1..N-1:
+		i[j](inc, _s[(N+j-2)%N], s[j-1],
+			_s[j], s[j], _s[(j+1)%N], _Reset);
+	)
+prs {
+	// ring of AND-gates to generate one-hot signal
+	// _Reset				=> Reset-
+	(:j:N:
+		s[j] & s[(j+1)%N]		=> _o[j]-
+		_o[j]				=> o.d[j]-
+	)
+}
+}
+
+// need different definition for onehot_counter2;
+typedef	onehot_counter<3>		onehot_counter3;
+typedef	onehot_counter<4>		onehot_counter4;
+typedef	onehot_counter<5>		onehot_counter5;
+typedef	onehot_counter<6>		onehot_counter6;
+typedef	onehot_counter<7>		onehot_counter7;
+typedef	onehot_counter<8>		onehot_counter8;
+
+//-----------------------------------------------------------------------------
+

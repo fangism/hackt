@@ -3,7 +3,7 @@
 
 import "env.hac";
 
-bool _Reset;
+bool _Reset, Reset;
 a1of2 X;
 source_a1of2<4,{0,0,1,1}> S(X, _Reset);
 bitbucket_a1of2 B(X, _Reset);

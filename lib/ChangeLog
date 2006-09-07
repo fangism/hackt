@@ -1,5 +1,16 @@
 "lib/ChangeLog"
 
+2006-09-06	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-10:
+	  Added: "alternator.hac" base definitions for template cells to 
+		be used in counters and alternators.  
+	  env.hac: defined CMOS-implementable sources for environment
+		using new (CMOS) alternator cells.
+		Rewrote bitbuckets to be CMOS implementable.  
+	  New and revised definitions have been tested in test/lib.
+
+
 2006-09-02	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-07:
