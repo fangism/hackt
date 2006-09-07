@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.1.2.8 2006/09/07 06:46:46 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.9 2006/09/07 21:34:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -174,11 +174,11 @@ protected:
 		object(), persistent(), owner(t.owner), key(t.key), 
 		dimensions(t.dimensions) { }
 
-public:
 	// o should be reference, not pointer
 	instance_placeholder_base(const scopespace& o, const string& n, 
 		const size_t d);
 
+public:
 virtual	~instance_placeholder_base();
 
 /**
@@ -333,8 +333,10 @@ public:
 	is_member_instance(void) const;
 #endif
 
+#if 0
 	bool
 	is_local_to_definition(void) const;
+#endif
 
 	bool
 	port_formal_equivalent(const this_type& b) const;

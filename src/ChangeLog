@@ -5,6 +5,12 @@
 
 2006-09-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-13:
+	  Switched off more compile-time (pre-unroll) resolve functions.
+	  More missing definitions filled in for placeholder classes.
+	  Few more rounds before all undefined references resolved...
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-12:
 	  Implemented more dump/get_name category methods for placeholders,
 		and marked others obsolete or unused.  

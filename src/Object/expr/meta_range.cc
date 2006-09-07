@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.12.8.1 2006/09/01 05:17:27 fang Exp $
+ 	$Id: meta_range.cc,v 1.12.8.2 2006/09/07 21:34:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -525,11 +525,13 @@ const_range::unroll_resolve_range(const unroll_context&, const_range& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 good_bool
 const_range::resolve_range(const_range& r) const {
 	r = *this;
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -540,6 +542,7 @@ const_range::unroll_resolve_index(const unroll_context& c) const {
 	return count_ptr<const_index>(new const_range(*this));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	\return deep copy of this constant range, always succeeds.  
  */
@@ -547,6 +550,7 @@ count_ptr<const_index>
 const_range::resolve_index(void) const {
 	return count_ptr<const_index>(new const_range(*this));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_index>
@@ -615,6 +619,7 @@ meta_range_expr::unroll_resolve_index(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	\return a resolve constant range, or NULL if resolution fails.  
  */
@@ -626,6 +631,7 @@ meta_range_expr::resolve_index(void) const {
 		return_type(new const_range(tmp)) :
 		return_type(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

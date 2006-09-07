@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.h"
-	$Id: meta_loop_base.h,v 1.4.50.1 2006/09/02 03:58:38 fang Exp $
+	$Id: meta_loop_base.h,v 1.4.50.2 2006/09/07 21:34:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_H__
@@ -29,6 +29,9 @@ using util::persistent_object_manager;
 //=============================================================================
 /**
 	Base structure for meta-language loop construct.  
+	May need to derive from scopespace after introducing placeholders
+		to distinguish from collections and make footprint lookup 
+		consistent in the unroll_context.  
  */
 class meta_loop_base {
 public:

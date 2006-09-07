@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.7 2006/09/07 06:46:42 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.8 2006/09/07 21:34:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -335,6 +335,7 @@ instance_collection_base::hierarchical_depth(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Return's the type's base definition.
 	TODO: far future, types may be template parameters, 
@@ -344,6 +345,7 @@ never_ptr<const definition_base>
 instance_collection_base::get_base_def(void) const {
 	return get_unresolved_type_ref()->get_base_def();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS
@@ -949,6 +951,27 @@ instance_placeholder_base::formal_size_equivalent(const this_type& b) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Return's the type's base definition.
+	TODO: far future, types may be template parameters, 
+		which makes the base definition argument-dependent.  
+ */
+never_ptr<const definition_base>
+instance_placeholder_base::get_base_def(void) const {
+	return get_unresolved_type_ref()->get_base_def();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Don't bother visting the owner because collecting
+	is traversed top-down.  
+ */
+void
+instance_placeholder_base::collect_transient_info_base(
+		persistent_object_manager& m) const {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_placeholder_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
@@ -976,6 +999,14 @@ instance_placeholder_base::load_object_base(
 // class param_value_placeholder method definitions
 // should this go in "param_value_collection.cc" ... whatever.
 
+param_value_placeholder::param_value_placeholder(
+		const scopespace& s, const string& k, const size_t d) :
+		parent_type(s, k, d) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+param_value_placeholder::~param_value_placeholder() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Queries whether or not this is a template formal, by 
 	checking its membership in the owner.  

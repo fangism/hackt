@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.12.32.8 2006/09/07 06:46:45 fang Exp $
+	$Id: instance_collection_base.h,v 1.12.32.9 2006/09/07 21:34:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -326,8 +326,10 @@ virtual	string
 virtual	count_ptr<const fundamental_type_reference>
 	get_unresolved_type_ref(void) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	never_ptr<const definition_base>
 	get_base_def(void) const;
+#endif
 
 #if USE_INSTANCE_PLACEHOLDERS
 virtual	owner_ptr_type
