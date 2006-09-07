@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-12:
+	  Implemented more dump/get_name category methods for placeholders,
+		and marked others obsolete or unused.  
+	  Implemented instance/parameter formal queries.  
+	  Re-implemented simple_meta_value_reference::unroll_resolve_rvalues
+		*much* more cleanly than before.  
+
+
 2006-09-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-11-merged-type-04:

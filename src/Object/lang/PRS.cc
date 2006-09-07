@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.18.4.2 2006/09/02 03:58:36 fang Exp $
+	$Id: PRS.cc,v 1.18.4.3 2006/09/07 06:46:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -962,9 +962,14 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 		if (!rules.unroll(cc, np, pfp).good) {
 			cerr << "Error resolving production rule in loop:"
 				<< endl;
+#if USE_INSTANCE_PLACEHOLDERS
+			ind_var->dump_qualified_name(cerr, dump_flags::verbose)
+				<< " = " << p << endl;
+#else
 			ind_var->dump_hierarchical_name(cerr,
 				dump_flags::verbose)
 				<< " = " << p << endl;
+#endif
 			return good_bool(false);
 		}
 	}

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.4 2006/09/06 04:19:57 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.5 2006/09/07 06:46:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -105,6 +105,9 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 	if (c.include_type_info)
 		this->what(o) << " ";
 	NEVER_NULL(this->inst_collection_ref);
+#if USE_INSTANCE_PLACEHOLDERS
+#define	dump_hierarchical_name		dump_qualified_name
+#endif
 	if (c.enclosing_scope) {
 		this->inst_collection_ref->dump_hierarchical_name(o,
 			dump_flags::no_definition_owner);
@@ -112,6 +115,9 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::dump(ostream& o,
 		this->inst_collection_ref->dump_hierarchical_name(o,
 			dump_flags::default_value);
 	}
+#if USE_INSTANCE_PLACEHOLDERS
+#undef	dump_hierarchical_name
+#endif
 	return simple_meta_indexed_reference_base::dump_indices(o, c);
 }
 

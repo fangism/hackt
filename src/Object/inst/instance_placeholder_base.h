@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.1.2.7 2006/09/06 04:19:46 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.8 2006/09/07 06:46:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -265,17 +265,20 @@ virtual	ostream&
 	const string&
 	get_name(void) const { return key; }
 
-virtual	string
+// virtual
+	string
 	get_qualified_name(void) const;
 
 	ostream&
 	dump_qualified_name(ostream&, const dump_flags&) const;
 
+#if 0
 	ostream&
 	dump_hierarchical_name(ostream&) const;
 
 	ostream&
 	dump_hierarchical_name(ostream&, const dump_flags&) const;
+#endif
 
 #if PLACEHOLDER_SUPER_INSTANCES
 	size_t

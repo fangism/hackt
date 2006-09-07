@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.10.8.3 2006/09/06 04:19:58 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.10.8.4 2006/09/07 06:46:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -331,6 +331,9 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->what(o) << " ";
 	}
 	NEVER_NULL(this->value_collection_ref);
+#if USE_INSTANCE_PLACEHOLDERS
+#define	dump_hierarchical_name	dump_qualified_name
+#endif
 	if (c.enclosing_scope) {
 		this->value_collection_ref->dump_hierarchical_name(o,
 			dump_flags::no_definition_owner);
@@ -338,6 +341,9 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->value_collection_ref->dump_hierarchical_name(o,
 			dump_flags::default_value);
 	}
+#if USE_INSTANCE_PLACEHOLDERS
+#undef	dump_hierarchical_name
+#endif
 	return simple_nonmeta_instance_reference_base::dump_indices(o, c);
 }
 

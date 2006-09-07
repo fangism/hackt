@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.5 2006/09/06 04:19:45 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.6 2006/09/07 06:46:44 fang Exp $
 	TODO: trim includes
  */
 
@@ -758,7 +758,11 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			const bool attached(new_elem->attach_actuals(actuals));
 			if (!attached) {
 				cerr << "ERROR: attaching relaxed actuals to "
+#if USE_INSTANCE_PLACEHOLDERS
+					<< this->source_placeholder->get_qualified_name() <<
+#else
 					<< this->get_qualified_name() <<
+#endif
 					key_gen << endl;
 				err = true;
 			}
@@ -767,7 +771,12 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			// found one that already exists!
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen << " of ";
-			what(cerr) << ' ' << this->get_qualified_name() <<
+			what(cerr) << ' ' <<
+#if USE_INSTANCE_PLACEHOLDERS
+				this->source_placeholder->get_qualified_name() <<
+#else
+				this->get_qualified_name() <<
+#endif
 				" already instantiated!" << endl;
 			err = true;
 		}
@@ -846,9 +855,13 @@ INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
 	const const_iterator it(this->collection.find(index));
 	if (it == this->collection.end()) {
 		this->type_dump(
-			cerr << "ERROR: reference to uninstantiated ") <<
-			" " << this->get_qualified_name() << " at index: " <<
-			index << endl;
+			cerr << "ERROR: reference to uninstantiated ") << " "
+#if USE_INSTANCE_PLACEHOLDERS
+				<< this->source_placeholder->get_qualified_name()
+#else
+				<< this->get_qualified_name()
+#endif
+				<< " at index: " << index << endl;
 		return ptr_return_type(NULL);
 	}
 	const element_type& b(*it);
@@ -860,9 +873,13 @@ INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
 		// remove the blank we added?
 		// not necessary, but could keep the collection "clean"
 		this->type_dump(
-			cerr << "ERROR: reference to uninstantiated ") <<
-			" " << this->get_qualified_name() << " at index: " <<
-			index << endl;
+			cerr << "ERROR: reference to uninstantiated ") << " "
+#if USE_INSTANCE_PLACEHOLDERS
+				<< this->source_placeholder->get_qualified_name()
+#else
+				<< this->get_qualified_name()
+#endif
+				<< " at index: " << index << endl;
 		return ptr_return_type(NULL);
 	}
 }
@@ -1499,7 +1516,12 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		this->the_instance.attach_actuals(actuals) : true);
 	if (!attached) {
 		cerr << "ERROR: attaching relaxed actuals to scalar ";
-		this->type_dump(cerr) << " " << this->get_qualified_name()
+		this->type_dump(cerr) << " " <<
+#if USE_INSTANCE_PLACEHOLDERS
+			this->source_placeholder->get_qualified_name()
+#else
+			this->get_qualified_name()
+#endif
 			<< endl;
 	}
 	return good_bool(attached);

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.4 2006/09/01 05:17:46 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.5 2006/09/07 06:46:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -143,6 +143,9 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->what(o) << " ";
 	}
 	NEVER_NULL(this->value_collection_ref);
+#if USE_INSTANCE_PLACEHOLDERS
+#define	dump_hierarchical_name	dump_qualified_name
+#endif
 	if (c.enclosing_scope) {
 		this->value_collection_ref->dump_hierarchical_name(o,
 			dump_flags::no_definition_owner);
@@ -150,6 +153,9 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->value_collection_ref->dump_hierarchical_name(o,
 			dump_flags::default_value);
 	}
+#if USE_INSTANCE_PLACEHOLDERS
+#undef	dump_hierarchical_name
+#endif
 	return simple_meta_indexed_reference_base::dump_indices(o, c);
 }
 
@@ -551,8 +557,6 @@ if (temp) {
 	\return dense array of values, NULL if error.  
 		When result is scalar, always returns the const_expr_type.  
  */
-#if !USE_INSTANCE_PLACEHOLDERS
-// temporary quarantine
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const const_param>
 SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
@@ -567,6 +571,21 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 #endif
 	// this replaces template formal references with template
 	// actuals from the context where necessary (2005-06-30)
+#if USE_INSTANCE_PLACEHOLDERS
+	// this is where argument-dependent lookup occurs
+	const count_ptr<const param_value_collection>
+		cpptr(c.lookup_value_collection(*value_collection_ref));
+	if (!cpptr) {
+		cerr << "Error unroll-resolving parameter values." << endl;
+		return return_type(NULL);
+	}
+	const count_ptr<const value_collection_type>
+		ce(cpptr.template is_a<const value_collection_type>());
+	INVARIANT(ce);
+	const value_collection_type& vcref(*ce);
+	// resolve indices
+	// lookup values
+#else
 if (value_collection_ref->is_template_formal()) {
 	const count_ptr<const const_param>
 		// beware mutual recursion...
@@ -636,6 +655,7 @@ if (value_collection_ref->is_template_formal()) {
 		return count_ptr<const_expr_type>(new const_expr_type(cv));
 	}
 	const value_collection_type& vcref(*_r.second);
+#endif	// USE_INSTANCE_PLACEHOLDERS
 	if (vcref.get_dimensions()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
@@ -710,7 +730,12 @@ if (value_collection_ref->is_template_formal()) {
 			// using local value is necessary because bool's 
 			// reference is std::_Bit_reference.
 			value_type val;
-			if (!vcref.lookup_value(val, key_gen, c).good) {
+#if USE_INSTANCE_PLACEHOLDERS
+			if (!vcref.lookup_value(val, key_gen).good)
+#else
+			if (!vcref.lookup_value(val, key_gen, c).good)
+#endif
+			{
 #if 0
 				// callee already has error message
 				cerr << "ERROR: looking up index " <<
@@ -742,7 +767,11 @@ if (value_collection_ref->is_template_formal()) {
 		const never_ptr<const value_scalar_type>
 			ps(IS_A(const value_scalar_type*, &vcref));
 		INVARIANT(ps);
+#if USE_INSTANCE_PLACEHOLDERS
+		const bad_bool valid(ps->lookup_value(_val));
+#else
 		const bad_bool valid(ps->lookup_value(_val, c));
+#endif
 		if (valid.bad) {
 			cerr << "ERROR: in unroll_resolve-ing "
 				"simple_meta_value_reference, "
@@ -752,9 +781,10 @@ if (value_collection_ref->is_template_formal()) {
 			return return_type(new const_expr_type(_val));
 		}
 	}
+#if !USE_INSTANCE_PLACEHOLDERS
 }
+#endif
 }	// end method unroll_resolve_rvalues
-#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

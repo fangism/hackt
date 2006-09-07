@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.6 2006/09/06 04:19:44 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.7 2006/09/07 06:46:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -210,6 +210,7 @@ instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 ostream&
 instance_collection_base::pair_dump(ostream& o) const {
 	o << auto_indent << get_name() << " = ";
@@ -222,8 +223,10 @@ instance_collection_base::pair_dump_top_level(ostream& o) const {
 	o << auto_indent << get_name() << " = ";
 	return dump(o, dump_flags::verbose) << endl;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 string
 instance_collection_base::get_qualified_name(void) const {
 #if USE_INSTANCE_PLACEHOLDERS
@@ -279,6 +282,7 @@ if (owner) {
 	return o << key;
 #endif
 }
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -293,7 +297,12 @@ instance_collection_base::dump_hierarchical_name(ostream& o) const {
 				key;
 #endif
 	} else {
+#if USE_INSTANCE_PLACEHOLDERS
+		return __get_placeholder_base()->
+			dump_qualified_name(o, dump_flags::default_value);
+#else
 		return dump_qualified_name(o, dump_flags::default_value);
+#endif
 	}
 }
 
@@ -311,7 +320,11 @@ instance_collection_base::dump_hierarchical_name(ostream& o,
 			key;
 #endif
 	} else {
+#if USE_INSTANCE_PLACEHOLDERS
+		return __get_placeholder_base()->dump_qualified_name(o, df);
+#else
 		return dump_qualified_name(o, df);
+#endif
 	}
 }
 
@@ -847,6 +860,80 @@ instance_placeholder_base::get_qualified_name(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	We catch a special case: when we refer to induction variables, 
+	we drop any qualifiers.  
+ */
+ostream&
+instance_placeholder_base::dump_qualified_name(ostream& o, 
+		const dump_flags& df) const {
+#if 0
+	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
+		(df.show_namespace_owner ? "(ns) " : " ") <<
+		(df.show_leading_scope ? "(::)]" : "]");
+#endif
+if (owner) {
+	const param_value_placeholder* const
+		p(IS_A(const param_value_placeholder*, this));
+	if (p && p->is_loop_variable()) {
+		// nothing, just print the plain key
+		// maybe '$' to indicate variable?
+		o << '$';
+	} else if (owner.is_a<const definition_base>() &&
+			df.show_definition_owner) {
+		owner->dump_qualified_name(o, df) << "::";
+	} else if (owner.is_a<const name_space>() &&
+			(df.show_namespace_owner ||
+			!owner->is_global_namespace())) {
+		owner->dump_qualified_name(o, df) << "::";
+	}
+}
+	return o << key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_placeholder_base::pair_dump(ostream& o) const {
+	o << auto_indent << get_name() << " = ";
+	return dump(o, dump_flags::no_owners) << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_placeholder_base::pair_dump_top_level(ostream& o) const {
+	o << auto_indent << get_name() << " = ";
+	return dump(o, dump_flags::verbose) << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+instance_placeholder_base::dump(ostream& o) const {
+	return dump_base(o, dump_flags::default_value);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Overridden by param_value_placeholder?
+ */
+ostream&
+instance_placeholder_base::dump_base(ostream& o, const dump_flags& df) const {
+	// dump_collection_only(o);
+	get_unresolved_type_ref()->dump(o) << get_qualified_name();
+	if (dimensions) {
+		o << "^" << dimensions;
+	}
+	o << endl;
+#if 0
+	if (dimensions) {
+		o << endl;
+	} else {
+		// the list contains exactly one instantiation statement
+	}
+#endif
+	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return true if formal expressions (in declarations)
 	are provably equivalent, equating by positional parameters.  
  */
@@ -886,6 +973,34 @@ instance_placeholder_base::load_object_base(
 }
 
 //=============================================================================
+// class param_value_placeholder method definitions
+// should this go in "param_value_collection.cc" ... whatever.
+
+/**
+	Queries whether or not this is a template formal, by 
+	checking its membership in the owner.  
+	\return 0 (false) if is not a template formal, 
+		otherwise returns the position (1-indexed)
+		of the instance referenced, 
+		useful for determining template parameter equivalence.  
+	TODO: is there potential confusion here if the key shadows
+		a declaration else where?
+ */
+size_t
+param_value_placeholder::is_template_formal(void) const {
+	const never_ptr<const definition_base>
+		def(owner.is_a<const definition_base>());
+	if (def)
+		return def->lookup_template_formal_position(key);
+	else {
+		// owner is not a definition
+		INVARIANT(owner.is_a<const name_space>());
+		// is owned by a namespace, i.e. actually instantiated
+		return 0;
+	}
+}
+
+//=============================================================================
 // class physical_instance_placeholder method definitions
 
 physical_instance_placeholder::physical_instance_placeholder(
@@ -894,6 +1009,28 @@ physical_instance_placeholder::physical_instance_placeholder(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 physical_instance_placeholder::~physical_instance_placeholder() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
+/**
+	Really, this should be in physical_instance_placeholder.  
+
+	Queries whether or not this is a port formal, by 
+	checking its membership in the owner.  
+	\return 1-indexed position into port list, else 0 if not found.
+ */
+size_t
+physical_instance_placeholder::is_port_formal(void) const {
+	const never_ptr<const definition_base>
+		def(owner.is_a<const definition_base>());
+	return def->lookup_port_formal_position(*this);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ostream&
+physical_instance_placeholder::dump(ostream& o, const dump_flags& df) const {
+	return parent_type::dump_base(o, df);
+	// cannot possibly be unrolled
+}
 
 //=============================================================================
 // class datatype_instance_placeholder method definitions

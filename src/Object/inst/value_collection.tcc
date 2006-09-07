@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.7 2006/09/06 04:19:50 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.8 2006/09/07 06:46:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -192,6 +192,7 @@ VALUE_COLLECTION_CLASS::get_placeholder_base(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	This variant is called by template_formal_manager::dump_*.  
  */
@@ -231,8 +232,10 @@ VALUE_COLLECTION_CLASS::dump_formal(ostream& o) const {
 	}
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	This variant is used when there is an unroll_context available.  
 	Intended for diagnostic use, printing resolved dimensions
@@ -268,6 +271,7 @@ if (this->dimensions)
 }
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -735,7 +739,11 @@ VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 		element_type& pi = collection[key_gen];
 		if (pi.instantiated) {
 			cerr << "ERROR: Index " << key_gen << " of " <<
+#if USE_INSTANCE_PLACEHOLDERS
+				this->source_placeholder->get_qualified_name() <<
+#else
 				this->get_qualified_name() <<
+#endif
 				" already instantiated!" << endl;
 			ret.good = false;
 			// THROW_EXIT;
@@ -862,8 +870,12 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 	} else {
 		cerr << "ERROR: reference to uninitialized " <<
 			traits_type::tag_name << ' ' <<
-			this->get_qualified_name() << " at index: " <<
-			i << endl;
+#if USE_INSTANCE_PLACEHOLDERS
+			this->source_placeholder->get_qualified_name() <<
+#else
+			this->get_qualified_name() <<
+#endif
+			" at index: " << i << endl;
 	}
 	return good_bool(pi.valid);
 }

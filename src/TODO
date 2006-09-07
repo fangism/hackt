@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.36.2.2 2006/08/28 05:09:50 fang Exp $
+#	$Id: TODO,v 1.36.2.3 2006/09/07 06:46:40 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -72,6 +72,10 @@ Once placeholders are distinguished from actualy collections,
 	(prerequisite random iterable container in internal representation)
 	Compare the structure size difference.
 	Exclude those with non-zero offset?
+	IDEA: use a flat sorted-vector representation of map,
+		and perform lookups using std::binary_search (lexicographical)
+		on random-access iterators.  
+		Should take far less memory than red-black tree (true map).
 
 diagnostic statistics:
 	memory self-profiling statistics from pooled-allocators, etc.

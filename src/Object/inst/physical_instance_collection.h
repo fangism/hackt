@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.14.8.5 2006/09/03 02:33:42 fang Exp $
+	$Id: physical_instance_collection.h,v 1.14.8.6 2006/09/07 06:46:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -70,8 +70,10 @@ public:
 	ostream&
 	dump(ostream&, const dump_flags&) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	ostream&
 	dump_formal(ostream&) const = 0;
+#endif
 
 #if USE_INSTANCE_PLACEHOLDERS
 	size_t

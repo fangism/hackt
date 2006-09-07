@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.3 2006/09/03 02:33:30 fang Exp $
+	$Id: footprint.cc,v 1.24.4.4 2006/09/07 06:46:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -348,6 +348,8 @@ if (instance_collection_map.empty()) {
 	as a result of collating over all namespaces.  
 	Called by top-level module only.
 	TODO: Arg -- code duplication -- clean later.  
+	TODO: this won't be necessary once placeholders and collections
+		are decoupled.  
  */
 void
 footprint::import_hierarchical_scopespace(const scopespace& s) {
@@ -381,7 +383,11 @@ if (instance_collection_map.empty()) {
 			never escapes to object serialization.  (Done.)
 		***/
 			static size_t one = 1;
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_collection_map[pc->get_placeholder_base()->get_qualified_name()] =
+#else
 			instance_collection_map[pc->get_qualified_name()] =
+#endif
 				count_ptr<instance_collection_base>(
 				&const_cast<physical_instance_collection&>(*pc), &one);
 		}

@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.1.2.4 2006/09/06 04:19:48 fang Exp $
+	$Id: param_value_placeholder.h,v 1.1.2.5 2006/09/07 06:46:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -82,7 +82,7 @@ virtual	ostream&
 virtual	ostream&
 	dump_formal(ostream&) const = 0;
 
-	bool
+	size_t
 	is_template_formal(void) const;
 
 	bool
