@@ -5,6 +5,15 @@
 
 2006-09-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-16:
+	  Completed unroll_context::lookup_{value,instance}_collection, 
+		the last undefined references... defined!
+	  Fixed minor type in is_loop_variable.  
+	  Tests: lexer/ is clean, parser/basic bombs as expected.
+	  Upcoming: sub-branch to rework module since top-level instances
+		are now relocated to footprint.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-15:
 	  Only two undefined references left!!!
 	  Implemented most of remaining definitions, many copy-modified

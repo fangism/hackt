@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.9 2006/09/08 03:43:09 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.10 2006/09/08 23:21:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -1128,15 +1128,17 @@ param_value_placeholder::may_be_initialized(void) const {
 	At compile time, we don't keep track of arrays, thus
 	one cannot conclude that a member of an array is definitely 
 	initialized.  
+	Can just conservatively return false, for all laziness.
 	\sa may_be_initialized
  */
 bool
 param_value_placeholder::must_be_initialized(void) const {
+	STACKTRACE_VERBOSE;
 	if (dimensions)
 		return false;
-	else if (is_template_formal() || is_loop_variable())
+	else if (is_template_formal() || is_loop_variable()) {
 		return true;
-	else {
+	} else {
 		// is not a template formal, thus we interpret
 		// the "default_value" field as a one-time initialization
 		// value.  

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.2 2006/09/04 05:44:17 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.3 2006/09/08 23:21:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -25,7 +25,9 @@
 #include "Object/expr/param_expr_list.h"
 #include "Object/ref/meta_value_reference_base.h"
 #if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
+#include "Object/inst/physical_instance_collection.h"
 #endif
 #include "common/ICE.h"
 #include "common/TODO.h"
@@ -246,6 +248,62 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 #endif
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	Only lookup footprints, not scopespaces!
+	No need to determine whether or not instance is formal.  
+	However, lookup of instance_reference must remain in context, 
+	and not go outside scope!  (as far as unrolling is concerned)
+ */
+count_ptr<physical_instance_collection>
+unroll_context::lookup_instance_collection(
+		const physical_instance_placeholder& p) const {
+	typedef	count_ptr<physical_instance_collection>	return_type;
+	if (target_footprint) {
+		// TODO: error-handle qualified lookups?
+		const return_type
+			ret((*target_footprint)[p.get_name()]
+				.is_a<physical_instance_collection>());
+		if (ret)
+			return ret;
+	}
+	if (next) {
+		// this might be a loop or other local scope.  
+		return next->lookup_instance_collection(p);
+	}
+	return return_type(NULL);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	Only lookup footprints, not scopespaces!
+	No need to determine whether or not instance is formal.  
+	However, lookup of instance_reference must remain in context, 
+	and not go outside scope!  (as far as unrolling is concerned)
+ */
+count_ptr<param_value_collection>
+unroll_context::lookup_value_collection(
+		const param_value_placeholder& p) const {
+	typedef	count_ptr<param_value_collection>	return_type;
+	if (target_footprint) {
+		// TODO: error-handle qualified lookups?
+		const return_type
+			ret((*target_footprint)[p.get_name()]
+				.is_a<param_value_collection>());
+		if (ret)
+			return ret;
+	}
+	if (next) {
+		// this might be a loop or other local scope.  
+		return next->lookup_value_collection(p);
+	}
+	return return_type(NULL);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS

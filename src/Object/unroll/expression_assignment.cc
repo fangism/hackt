@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.6 2006/02/21 04:48:42 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.6.32.1 2006/09/08 23:21:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -121,7 +121,7 @@ param_expression_assignment::validate_reference_is_uninitialized(
 	if (s->must_be_initialized()) {
 		// definitely initialized or formal
 		cerr << "ERROR: expression " << size() +1 <<
-			"is already initialized!" << endl;
+			" is already initialized!" << endl;
 		// don't care if it's same value... still an error
 		return good_bool(false);
 	} else	return good_bool(true);

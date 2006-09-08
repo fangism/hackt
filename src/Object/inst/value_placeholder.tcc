@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.7 2006/09/08 03:43:16 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.8 2006/09/08 23:21:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -295,8 +295,9 @@ VALUE_PLACEHOLDER_CLASS::type_dump(ostream& o) const {
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 bool
 VALUE_PLACEHOLDER_CLASS::is_loop_variable(void) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(this->owner);
-	return !this->dimensions && this->owner->lookup_member(this->key);
+	return !this->dimensions && !this->owner->lookup_member(this->key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
