@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/physical_instance_placeholder.h"
-	$Id: physical_instance_placeholder.h,v 1.1.2.4 2006/09/07 06:46:50 fang Exp $
+	$Id: physical_instance_placeholder.h,v 1.1.2.5 2006/09/08 03:43:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_PLACEHOLDER_H__
@@ -76,6 +76,9 @@ virtual	ostream&
 	unroll_port_only(const unroll_context&) const
 
 virtual	UNROLL_PORT_ONLY_PROTO = 0;
+
+	bool
+	port_formal_equivalent(const this_type&) const;
 
 // none of the following are appropriate for placeholders
 #if 0

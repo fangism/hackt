@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.1.2.6 2006/09/06 04:19:46 fang Exp $
+	$Id: instance_placeholder.h,v 1.1.2.7 2006/09/08 03:43:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -79,10 +79,6 @@ class instance_placeholder :
 	public class_traits<Tag>::collection_type_manager_parent_type
 #endif
 {
-#if PLACEHOLDER_SUPER_INSTANCES
-friend	class class_traits<Tag>::collection_type_manager_parent_type;
-friend	class subinstance_manager;
-#endif
 public:
 	typedef	class_traits<Tag>			traits_type;
 private:

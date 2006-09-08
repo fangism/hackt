@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.1.2.9 2006/09/07 21:34:28 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.1.2.10 2006/09/08 03:43:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -46,13 +46,6 @@ using util::persistent;
 using util::persistent_object_manager;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
-
-/**
-	Physical instance hierarchy information does not belong
-	in placeholders!
-	Goal: 0
- */
-#define	PLACEHOLDER_SUPER_INSTANCES		0
 
 //=============================================================================
 /**
@@ -129,28 +122,6 @@ protected:
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
 
-	// super instances do not belong in placeholders
-#if PLACEHOLDER_SUPER_INSTANCES
-	/**
-		Pointer to parent super instance.  
-		Added 2005-07-10.
-		If top-level instance item, then this is NULL.  
-		TODO: decide what to do about persistence.  
-		Does this only belong in physical_instance_placeholder?
-		No, EVERYTHING may have a super, even parameters.  
-
-		2005-07-11:
-		NOTE: this field is maintained persistently in a
-		less-than-usual fashion.  It is the responsibility of the
-		super instance (parent) alias to write and restore its
-		back-link (to itself) to its children.  
-		Thus, the persistent object manager will not touch
-		this field, however, it should be noted that
-		restoration will have to be well ordered between
-		parent and children.  
-	 */
-	super_instance_ptr_type		super_instance;
-#endif
 protected:
 	// dimensions unknown
 	instance_placeholder_base() :
@@ -200,20 +171,6 @@ virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 
 	size_t
 	get_dimensions(void) const { return dimensions; }
-
-#if PLACEHOLDER_SUPER_INSTANCES
-	bool
-	is_subinstance(void) const { return super_instance; }
-
-	const super_instance_ptr_type&
-	get_super_instance(void) const { return super_instance; }
-
-	void
-	relink_super_instance(const substructure_alias& a) {
-		INVARIANT(!super_instance);
-		super_instance = super_instance_ptr_type(&a);
-	}
-#endif
 
 	// inappropriate for placeholders
 #if 0
@@ -280,11 +237,6 @@ virtual	ostream&
 	dump_hierarchical_name(ostream&, const dump_flags&) const;
 #endif
 
-#if PLACEHOLDER_SUPER_INSTANCES
-	size_t
-	hierarchical_depth(void) const;
-#endif
-
 virtual	string
 	hash_string(void) const { return key; }
 
@@ -338,11 +290,15 @@ public:
 	is_local_to_definition(void) const;
 #endif
 
+#if 0
 	bool
 	port_formal_equivalent(const this_type& b) const;
+#endif
 
+#if 0
 	bool
 	is_template_dependent(void) const;
+#endif
 
 public:
 

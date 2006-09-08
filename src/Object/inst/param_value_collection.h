@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.13.8.9 2006/09/08 02:06:52 fang Exp $
+	$Id: param_value_collection.h,v 1.13.8.10 2006/09/08 03:43:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -83,8 +83,10 @@ virtual	~param_value_collection();
 virtual	ostream&
 	what(ostream&) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	bool
 	is_partially_unrolled(void) const = 0;
+#endif
 
 #if !USE_INSTANCE_PLACEHOLDERS
 virtual	bool
@@ -125,10 +127,14 @@ public:
 	make_member_meta_instance_reference(const inst_ref_ptr_type& b) const;
 #endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	/** appropriate for the context of a template parameter formal */
 virtual	count_ptr<const param_expr>
 	default_value(void) const = 0;
+#endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
+// screw compile-time analysis
 /**
 	A parameter is considered "usable" if it is either initialized
 	to another expression, or it is a template formal.  
@@ -150,9 +156,12 @@ virtual	count_ptr<const param_expr>
 
 virtual	good_bool
 	assign_default_value(const count_ptr<const param_expr>& p) = 0;
+#endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	bool
 	template_formal_equivalent(const this_type&) const;
+#endif
 
 // used by param_expr_list::certify_template_arguments
 virtual	good_bool

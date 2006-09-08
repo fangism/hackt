@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.9 2006/09/08 02:06:53 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.10 2006/09/08 03:43:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -283,6 +283,7 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::dump(ostream& o, const dump_flags& df) const {
 	parent_type::dump_base(o, df);
+#if !USE_INSTANCE_PLACEHOLDERS
 	const count_ptr<const param_expr>
 		init_def(this->default_value());
 	if (init_def) {
@@ -300,8 +301,11 @@ VALUE_COLLECTION_CLASS::dump(ostream& o, const dump_flags& df) const {
 			init_def->dump(o << " (default = ", dc) << ")";
 		else    init_def->dump(o << " (init = ", dc) << ")";
 	}
+#endif
 	// print out the values of instances that have been unrolled
+#if !USE_INSTANCE_PLACEHOLDERS
 	if (this->is_partially_unrolled()) {
+#endif
 #if USE_INSTANCE_PLACEHOLDERS
 		if (this->source_placeholder->get_dimensions())
 #else
@@ -322,7 +326,9 @@ VALUE_COLLECTION_CLASS::dump(ostream& o, const dump_flags& df) const {
 			// suppress indent
 			dump_unrolled_values(o);	// already endl
 		}
+#if !USE_INSTANCE_PLACEHOLDERS
 	}
+#endif
 	return o;
 }
 
@@ -350,6 +356,7 @@ VALUE_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Initializes a parameter instance with an expression, 
 	for the sake of COMPILE-TIME analysis only.
@@ -433,6 +440,7 @@ count_ptr<const typename VALUE_COLLECTION_CLASS::expr_type>
 VALUE_COLLECTION_CLASS::initial_value(void) const {
 	return ival;
 }
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS
@@ -1074,6 +1082,7 @@ bool
 VALUE_SCALAR_CLASS::is_partially_unrolled(void) const {
 	return the_instance.instantiated;
 }
+
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS
 /**

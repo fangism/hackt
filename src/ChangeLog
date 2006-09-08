@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-15:
+	  Only two undefined references left!!!
+	  Implemented most of remaining definitions, many copy-modified
+		from param_value_collection to param_value_placeholder, 
+		including many boolean query functions.  
+	  Got rid of PLACEHOLDER_SUPER_INSTANCES switch.   
+	  Many other methods commented out from old instance and value
+		collection headers and modules, now obsolete w/ placeholders.  
+
+
 2006-09-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-14:

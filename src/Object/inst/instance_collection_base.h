@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.12.32.9 2006/09/07 21:34:27 fang Exp $
+	$Id: instance_collection_base.h,v 1.12.32.10 2006/09/08 03:43:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -233,8 +233,10 @@ virtual	size_t
 	create_super_instance(footprint&);
 #endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	bool
 	is_partially_unrolled(void) const = 0;
+#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -340,9 +342,11 @@ virtual	owner_ptr_type
 #endif
 
 protected:
+#if !USE_INSTANCE_PLACEHOLDERS
 	// to grant access to param_value_collection
 	bool
 	formal_size_equivalent(const this_type& b) const;
+#endif
 
 #if !USE_INSTANCE_PLACEHOLDERS
 virtual	index_collection_item_ptr_type
@@ -367,8 +371,10 @@ public:
 	bool
 	is_local_to_definition(void) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	bool
 	port_formal_equivalent(const this_type& b) const;
+#endif
 
 	bool
 	is_template_dependent(void) const;

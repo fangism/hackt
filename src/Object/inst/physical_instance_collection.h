@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.14.8.6 2006/09/07 06:46:49 fang Exp $
+	$Id: physical_instance_collection.h,v 1.14.8.7 2006/09/08 03:43:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -101,8 +101,10 @@ public:
 virtual	UNROLL_PORT_ONLY_PROTO = 0;
 #endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual bool
 	is_partially_unrolled(void) const = 0;
+#endif
 
 virtual ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const = 0;

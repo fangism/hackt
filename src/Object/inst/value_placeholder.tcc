@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.6 2006/09/08 02:06:55 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.7 2006/09/08 03:43:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -354,7 +354,6 @@ VALUE_PLACEHOLDER_CLASS::initialize(const init_arg_type& e) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 /**
 	Assigning default value(s) to parameters is only valid
 	in the context of template-formal parameters.  
@@ -365,12 +364,11 @@ VALUE_PLACEHOLDER_CLASS::assign_default_value(
 		const count_ptr<const param_expr>& p) {
 	const count_ptr<const expr_type> i(p.template is_a<const expr_type>());
 	if (i && may_type_check_actual_param_expr(*i).good) {
-		ival = i;
+		this->ival = i;
 		return good_bool(true);
 	}
 	else return good_bool(false);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

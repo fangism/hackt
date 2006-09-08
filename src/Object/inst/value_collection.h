@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.10 2006/09/08 02:06:53 fang Exp $
+	$Id: value_collection.h,v 1.17.8.11 2006/09/08 03:43:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -237,6 +237,7 @@ public:
 	make_meta_value_reference(void) const;
 #endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	good_bool
 	initialize(const init_arg_type& e);
 
@@ -248,6 +249,7 @@ public:
 
 	count_ptr<const expr_type>
 	initial_value(void) const;
+#endif
 
 	good_bool
 	may_type_check_actual_param_expr(const param_expr&) const;

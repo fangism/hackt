@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.4 2006/09/06 04:19:46 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.5 2006/09/08 03:43:12 fang Exp $
 	TODO: trim includes
  */
 
@@ -399,6 +399,26 @@ INSTANCE_PLACEHOLDER_CLASS::check_established_type(
 	return collection_type_manager_parent_type::check_type(t);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	TODO: make packed array!
+ */
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+count_ptr<physical_instance_collection>
+INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
+	const count_ptr<instance_collection_generic_type>
+		ret(instance_collection_generic_type::make_array(
+			never_ptr<const this_type>(this)));
+	INVARIANT(this->initial_instantiation_statement_ptr);
+	if (this->initial_instantiation_statement_ptr->
+			instantiate_port(c, *ret).good) {
+		return ret;
+	} else {
+		return count_ptr<physical_instance_collection>(NULL);
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

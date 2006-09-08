@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.14.8.3 2006/09/08 02:06:51 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.14.8.4 2006/09/08 03:43:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -102,6 +102,7 @@ param_value_collection::may_be_initialized(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	At compile time, we don't keep track of arrays, thus
 	one cannot conclude that a member of an array is definitely 
@@ -135,8 +136,10 @@ param_value_collection::must_be_initialized(void) const {
 		else return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	For two template formals to be equivalent, their
 	type and size must match, names need not.  
@@ -164,8 +167,7 @@ param_value_collection::template_formal_equivalent(const this_type& b) const {
 	// then compare sizes and dimensionality
 	return formal_size_equivalent(b);
 }
-
-
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
