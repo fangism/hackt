@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.17.8.9 2006/09/07 06:46:50 fang Exp $
+	$Id: value_collection.h,v 1.17.8.10 2006/09/08 02:06:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -294,7 +294,11 @@ protected:
 #endif
 
 public:
-#if !USE_INSTANCE_PLACEHOLDERS
+#if USE_INSTANCE_PLACEHOLDERS
+	static
+	this_type*
+	make_array(const value_placeholder_ptr_type);
+#else
 	static
 	this_type*
 	make_array(const scopespace& o, const string& n, const size_t d);

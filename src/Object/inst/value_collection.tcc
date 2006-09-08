@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.8 2006/09/07 06:46:50 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.9 2006/09/08 02:06:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -545,23 +545,37 @@ if (!m.register_transient_object(this,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS*
 VALUE_COLLECTION_CLASS::make_array(
-		const scopespace& o, const string& n, const size_t D) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const value_placeholder_ptr_type p
+#else
+		const scopespace& o, const string& n, const size_t D
+#endif
+		) {
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t D = p->get_dimensions();
+#endif
 	switch (D) {
+#if USE_INSTANCE_PLACEHOLDERS
+		case 0:	return new value_array<Tag,0>(p);
+		case 1:	return new value_array<Tag,1>(p);
+		case 2:	return new value_array<Tag,2>(p);
+		case 3:	return new value_array<Tag,3>(p);
+		case 4:	return new value_array<Tag,4>(p);
+#else
 		case 0:	return new value_array<Tag,0>(o, n);
 		case 1:	return new value_array<Tag,1>(o, n);
 		case 2:	return new value_array<Tag,2>(o, n);
 		case 3:	return new value_array<Tag,3>(o, n);
 		case 4:	return new value_array<Tag,4>(o, n);
+#endif
 		default:
 			cerr << "FATAL: dimension limit is 4!" << endl;
 			return NULL;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
@@ -1063,7 +1077,7 @@ VALUE_SCALAR_CLASS::is_partially_unrolled(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS
 /**
-	NOTE: note sure if this is still valid afte rusing placeholders...
+	NOTE: note sure if this is still valid after using placeholders...
 
 	This is a loop variable if the parent scopespace
 	doesn't not contain it!

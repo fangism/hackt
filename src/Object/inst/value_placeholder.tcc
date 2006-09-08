@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.5 2006/09/06 04:19:50 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.6 2006/09/08 02:06:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -170,14 +170,12 @@ VALUE_PLACEHOLDER_CLASS::what(ostream& o) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 index_collection_item_ptr_type
 VALUE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return this->initial_instantiation_statement_ptr->get_indices();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -281,6 +279,24 @@ VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 ostream&
 VALUE_PLACEHOLDER_CLASS::type_dump(ostream& o) const {
 	return o << traits_type::tag_name;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This code is ported from the old value_scalar::is_loop_variable.
+	TODO: think of a better way to determine scope of variable.
+	Perhaps loop scopes should be subscopes, because they spawn
+	temporary local footprints. 
+	The old method just looked up the variable key in the parent
+	scope: if it was not found, then it was deduced a loop-variable.  
+	Really lookup is only necessary for pints.  
+	How hideous this is.  
+ */
+VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
+bool
+VALUE_PLACEHOLDER_CLASS::is_loop_variable(void) const {
+	NEVER_NULL(this->owner);
+	return !this->dimensions && this->owner->lookup_member(this->key);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -473,6 +489,19 @@ if (!m.register_transient_object(this,
 	}
 }
 // else already visited
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Despite the name, this doesn't copy...
+	\return new instance collection for footprint.  
+ */
+VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
+// typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
+instance_collection_base*
+VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
+	return value_collection_generic_type::make_array(
+		never_ptr<const this_type>(this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

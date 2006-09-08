@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.14.8.2 2006/09/02 00:46:01 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.14.8.3 2006/09/08 02:06:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -324,6 +324,7 @@ param_value_collection::must_check_expression_dimensions(
 }	// end method param_value_collection::must_check_expression_dimensions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 bool
 param_value_collection::is_static_constant(void) const {
 #if USE_INSTANCE_PLACEHOLDERS
@@ -346,6 +347,7 @@ param_value_collection::is_static_constant(void) const {
 		else return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

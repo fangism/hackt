@@ -5,6 +5,13 @@
 
 2006-09-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-14:
+	  Marked more obsolete functions, and defined more missing references.
+	  Considering doing-away with pre-unroll-time 'may-analyses'
+		and forget about trying to catch errors earlier than necessary.
+		Minimize the risk of reject-valid or accept-invalid.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-13:
 	  Switched off more compile-time (pre-unroll) resolve functions.
 	  More missing definitions filled in for placeholder classes.

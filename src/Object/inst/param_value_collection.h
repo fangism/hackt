@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_collection.h,v 1.13.8.8 2006/09/07 06:46:47 fang Exp $
+	$Id: param_value_collection.h,v 1.13.8.9 2006/09/08 02:06:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_H__
@@ -172,12 +172,14 @@ protected:
 		const unroll_context&) const;
 
 public:
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	whether or not this can be resolved to some static constant value.
 	Will also need two flavors.  
  */
 	bool
 	is_static_constant(void) const;
+#endif
 
 virtual	const_index_list
 	resolve_indices(const const_index_list&) const = 0;

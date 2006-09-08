@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.5 2006/09/07 06:46:53 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.6 2006/09/08 02:06:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -227,17 +227,32 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This may return false conservatively to defer the checking
+	of an expression until unroll time.  
+	No need to do extra work here.  
+ */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	return false;
+#else
 	if (this->array_indices)
 		return false;
 	else if (this->value_collection_ref->get_dimensions())
 		return false;
 	else	return this->value_collection_ref->is_static_constant();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: 2006-09-07
+	This will be better implemented one we distinguish placeholders
+	from value collections, with with a given context, also track
+	a poison bit for the propagation of relaxed dependencies.  
+ */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_relaxed_formal_dependent(void) const {

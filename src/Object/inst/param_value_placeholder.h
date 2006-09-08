@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.1.2.5 2006/09/07 06:46:49 fang Exp $
+	$Id: param_value_placeholder.h,v 1.1.2.6 2006/09/08 02:06:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -159,12 +159,14 @@ protected:
 		const unroll_context&) const;
 
 public:
+#if 0
 /**
 	whether or not this can be resolved to some static constant value.
 	Will also need two flavors.  
  */
 	bool
 	is_static_constant(void) const;
+#endif
 
 #if 0
 virtual	const_index_list
