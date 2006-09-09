@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.18 2006/08/13 22:16:03 fang Exp $
+	$Id: Command.cc,v 1.19 2006/09/09 06:59:17 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -2514,6 +2514,45 @@ NoRandom::usage(ostream& o) {
 }
 
 #endif	// WANT_OLD_RANDOM_COMMANDS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(EvalOrder, "eval-order", modes, 
+	"shuffle (or not) the evaluation ordering of fanouts")
+
+int
+EvalOrder::main(State& s, const string_list& a) {
+if (a.size() == 1) {
+	cout << "Fanout evaluation ordering is " <<
+		(s.eval_ordering_is_random() ? "random" : "in-order") <<
+		"." << endl;
+	return Command::NORMAL;
+} else if (a.size() == 2) {
+	static const string random("random");
+	static const string inorder("inorder");
+	if (a.back() == random) {
+		s.set_eval_ordering_random();
+		return Command::NORMAL;
+	} else if (a.back() == inorder) {
+		s.set_eval_ordering_inorder();
+		return Command::NORMAL;
+	} else {
+		usage(cerr << "usage: ");
+		return Command::BADARG;
+	}
+} else {
+	usage(cerr);
+	return Command::SYNTAX;
+}
+}
+
+void
+EvalOrder::usage(ostream& o) {
+	o << "eval-order [random|inorder]" << endl <<
+"\tinorder - (default) evaluates fanout in sequential order of visit\n"
+"\trandom - randomizes the evaluation ordering of fanouts, useful for \n"
+"\t\temulating arbitration of forced exclusive rules with the same fanin."
+	<< endl;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 DECLARE_AND_INITIALIZE_COMMAND_CLASS(Timing, "timing", modes, 

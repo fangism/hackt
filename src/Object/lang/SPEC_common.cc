@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_common.cc,v 1.5 2006/08/09 21:24:36 fang Exp $
+	$Id: SPEC_common.cc,v 1.6 2006/09/09 06:59:15 fang Exp $
  */
 
 #include <iostream>
@@ -349,12 +349,19 @@ SIM_force_exclhi::__check_num_params(const char* name, const size_t s) {
 
 good_bool
 SIM_force_exclhi::__check_num_nodes(const char* name, const size_t s) {
-	return min_num_nodes(name, 2, s);
+	return min_num_nodes(name, 1, s);
 }
 
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(SIM_force_exclhi)
-// make sure node arguments aren't actually aliased?
+// TODO: make sure node arguments aren't actually aliased?
+#if 0
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(SIM_force_exclhi)
+#else
+good_bool
+SIM_force_exclhi::__check_node_args(const char* name, const node_args_type& a) {
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
@@ -364,12 +371,19 @@ SIM_force_excllo::__check_num_params(const char* name, const size_t s) {
 
 good_bool
 SIM_force_excllo::__check_num_nodes(const char* name, const size_t s) {
-	return min_num_nodes(name, 2, s);
+	return min_num_nodes(name, 1, s);
 }
 
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_PARAMS(SIM_force_excllo)
-// make sure node arguments aren't actually aliased?
+// TODO: make sure node arguments aren't actually aliased?
+#if 0
 DEFINE_DEFAULT_SPEC_DIRECTIVE_CHECK_NODES(SIM_force_excllo)
+#else
+good_bool
+SIM_force_excllo::__check_node_args(const char* name, const node_args_type& a) {
+	return good_bool(true);
+}
+#endif
 
 //-----------------------------------------------------------------------------
 /**

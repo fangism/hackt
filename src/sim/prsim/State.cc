@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.23 2006/08/30 04:05:06 fang Exp $
+	$Id: State.cc,v 1.24 2006/09/09 06:59:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -166,7 +166,8 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 		weak_interference_policy(ERROR_DEFAULT_WEAK_INTERFERENCE),
 		timing_mode(TIMING_DEFAULT),
 		ifstreams(), 
-		__scratch_expr_trace() {
+		__scratch_expr_trace(),
+		__shuffle_indices(0) {
 	const state_manager& sm(mod.get_state_manager());
 	const global_entry_pool<bool_tag>&
 		bool_pool(sm.get_pool<bool_tag>());
@@ -180,6 +181,7 @@ State::State(const entity::module& m, const ExprAllocFlags& f) :
 
 	// not expect expression-trees deeper than 8, but is growable
 	__scratch_expr_trace.reserve(8);
+	__shuffle_indices.reserve(32);
 	// then go through all processes to generate expressions
 #if 0
 	const global_entry_pool<process_tag>&
@@ -1828,7 +1830,18 @@ State::step(void) THROWS_EXCL_EXCEPTION {
 #endif
 {
 	typedef	node_type::const_fanout_iterator	const_iterator;
-	const_iterator i(n.fanout.begin()), e(n.fanout.end());
+	const_iterator i, e;
+if (eval_ordering_is_random()) {
+	__shuffle_indices.clear();
+	std::copy(n.fanout.begin(), n.fanout.end(), 
+		std::back_inserter(__shuffle_indices));
+	std::random_shuffle(__shuffle_indices.begin(), __shuffle_indices.end());
+	i = __shuffle_indices.begin();
+	e = __shuffle_indices.end();
+} else {
+	i = n.fanout.begin();
+	e = n.fanout.end();
+}
 	for ( ; i!=e; ++i) {
 #if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
 		if (UNLIKELY(propagate_evaluation(new_cause, *i, prev))) {
@@ -2723,7 +2736,6 @@ State::dump_node_value(ostream& o, const node_index_type ni) const {
  */
 ostream&
 State::dump_node_fanout(ostream& o, const node_index_type ni) const {
-	typedef	node_type::fanout_array_type	fanout_array_type;
 	typedef	fanout_array_type::const_iterator	const_iterator;
 #if DEBUG_FANOUT
 	STACKTRACE_VERBOSE;

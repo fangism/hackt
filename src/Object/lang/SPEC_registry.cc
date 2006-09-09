@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/SPEC_registry.cc"
 	Definitions of spec directives belong here.  
-	$Id: SPEC_registry.cc,v 1.14 2006/08/09 21:24:38 fang Exp $
+	$Id: SPEC_registry.cc,v 1.15 2006/09/09 06:59:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -216,7 +216,7 @@ flatten_canonicalized_spec_output_if_more_than_one(cflat_prs_printer& p,
 		o << T::name;
 		directive_base::dump_params(params, o);
 		o << '(';
-		p.__dump_resolved_literal_group(node_set, "", ",", "");
+		p.__dump_resolved_literal_group(node_set, "", ", ", "");
 		o << ')';
 	}
 	return o;
@@ -413,7 +413,12 @@ SIM_force_exclhi::main(cflat_prs_printer& p, const param_args_type& v,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		// or other simulator tool
+#if 0
 		default_spec_output<this_type>(p, v, a) << endl;
+#else
+		flatten_canonicalized_spec_output_if_more_than_one<this_type>
+			(p, v, a) << endl;
+#endif
 		break;
 	default:
 		break;
@@ -432,7 +437,12 @@ SIM_force_excllo::main(cflat_prs_printer& p, const param_args_type& v,
 	switch (p.cfopts.primary_tool) {
 	case cflat_options::TOOL_PRSIM:
 		// or other simulator tool
+#if 0
 		default_spec_output<this_type>(p, v, a) << endl;
+#else
+		flatten_canonicalized_spec_output_if_more_than_one<this_type>
+			(p, v, a) << endl;
+#endif
 		break;
 	default:
 		break;

@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.14 2006/08/30 04:05:07 fang Exp $
+	$Id: State.h,v 1.15 2006/09/09 06:59:19 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -214,6 +214,11 @@ private:
 			Set to true to check exclusiveness of nodes.  
 		 */
 		FLAG_CHECK_EXCL = 0x40, 
+		/**
+			If true, then evaluate the fanouts in random order, 
+			useful for arbitration in certain instances.  
+		 */
+		FLAG_RANDOM_FANOUT_EVALUATION_ORDERING = 0x80,
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
 		/**
@@ -306,6 +311,7 @@ protected:
 	typedef	vector<event_queue_type::value_type>
 						temp_queue_type;
 	typedef	vector<expr_index_type>		expr_trace_type;
+	typedef	node_type::fanout_array_type	fanout_array_type;
 	/**
 		Exclusive checks are implemented as lock flags.  
 		reminder: this is specialized in STL :)
@@ -400,6 +406,12 @@ private:
 		Should not be maintained for state checkpointing.  
 	 */
 	expr_trace_type				__scratch_expr_trace;
+	/**
+		Auxiliary array for in-place random reordering
+		of fanout indices for evaluation.  
+		Never maintained for checkpointing.  
+	 */
+	fanout_array_type			__shuffle_indices;
 public:
 	/**
 		Signal handler class that binds the State reference
@@ -515,6 +527,21 @@ public:
 
 	void
 	clear_show_tcounts(void) { flags &= ~FLAG_SHOW_TCOUNTS; }
+
+	bool
+	eval_ordering_is_random(void) const {
+		return flags & FLAG_RANDOM_FANOUT_EVALUATION_ORDERING;
+	}
+
+	void
+	set_eval_ordering_random(void) {
+		flags |= FLAG_RANDOM_FANOUT_EVALUATION_ORDERING;
+	}
+
+	void
+	set_eval_ordering_inorder(void) {
+		flags &= ~FLAG_RANDOM_FANOUT_EVALUATION_ORDERING;
+	}
 
 	void
 	reset_tcounts(void);

@@ -1,6 +1,6 @@
 /**
 	\file "sim/prsim/ExprAlloc.cc"
-	$Id: ExprAlloc.cc,v 1.15 2006/08/17 01:02:13 fang Exp $
+	$Id: ExprAlloc.cc,v 1.16 2006/09/09 06:59:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1016,12 +1016,25 @@ SIM_force_exclhi::main(visitor_type& v, const param_args_type& params,
 	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	const_iterator i(nodes.begin()), e(nodes.end());
 	ring_set_type r;
+#if 1
+	for ( ; i!=e; ++i) {
+		typedef	const_iterator::value_type::const_iterator
+					index_iterator;
+		index_iterator ii(i->begin()), ie(i->end());
+		for ( ; ii!=ie; ++ii) {
+			const node_index_type ni =
+				v.__lookup_global_bool_id(*ii);
+			r.insert(ni);
+		}
+	}
+#else
 	for ( ; i!=e; ++i) {
 		INVARIANT(i->size() == 1);
 		const node_index_type ni =
 			v.__lookup_global_bool_id(*i->begin());
 		r.insert(ni);
 	}
+#endif
 	INVARIANT(r.size() > 1);
 	v.state.append_mk_exclhi_ring(r);
 	INVARIANT(r.empty());
@@ -1044,12 +1057,25 @@ SIM_force_excllo::main(visitor_type& v, const param_args_type& params,
 	typedef	visitor_type::state_type::ring_set_type	ring_set_type;
 	ring_set_type r;
 	const_iterator i(nodes.begin()), e(nodes.end());
+#if 1
+	for ( ; i!=e; ++i) {
+		typedef	const_iterator::value_type::const_iterator
+					index_iterator;
+		index_iterator ii(i->begin()), ie(i->end());
+		for ( ; ii!=ie; ++ii) {
+			const node_index_type ni =
+				v.__lookup_global_bool_id(*ii);
+			r.insert(ni);
+		}
+	}
+#else
 	for ( ; i!=e; ++i) {
 		INVARIANT(i->size() == 1);
 		const node_index_type ni =
 			v.__lookup_global_bool_id(*i->begin());
 		r.insert(ni);
 	}
+#endif
 	INVARIANT(r.size() > 1);
 	v.state.append_mk_excllo_ring(r);
 	INVARIANT(r.empty());

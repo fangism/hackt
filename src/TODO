@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.38 2006/09/02 20:35:10 fang Exp $
+#	$Id: TODO,v 1.39 2006/09/09 06:59:15 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -72,6 +72,16 @@ instance collections:
 diagnostic statistics:
 	memory self-profiling statistics from pooled-allocators, etc.
 
+
+===============================================================================
+preprocessor:
+	equivalent of compile -E with conventional compilers
+	using -I include paths
+	flatten the input into one file, just echoing contents recursively
+	implementation: recursive reentrant lexer, 
+		using unique file-manager again.
+	Doesn't check grammar, just echoes input to stdout.  
+	support #line directives, perhaps just // comments? (enter/leave)
 
 ===============================================================================
 pie-in-the-sky:

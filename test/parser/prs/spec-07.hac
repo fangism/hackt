@@ -1,5 +1,9 @@
 // "spec-07.hac"
 // copy-modified from "spec-06.hac"
+
+// UPDATE: HACKT-0000-01-04-main-00-80-11
+// mk_exclhi now takes arbitrary groupings of nodes in flattened outpu
+
 // should fail, this macro doesn't take (non-singular) grouped arguments
 // possible enhancement request: 
 // This test case does not die until cflatting when all nodes have
