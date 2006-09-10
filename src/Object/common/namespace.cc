@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.20.4.4 2006/09/06 04:19:32 fang Exp $
+ 	$Id: namespace.cc,v 1.20.4.5 2006/09/10 03:53:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -384,15 +384,19 @@ if (probe) {
 			phi(probe_inst.is_a<const physical_instance_placeholder>());
 		const never_ptr<const param_value_placeholder>
 			pvp(probe_inst.is_a<const param_value_placeholder>());
+		if (pvp) {
 		if (pvp->is_template_formal()) {
 			cerr << "ERROR: cannot redeclare or append to "
 				"a template formal parameter." << endl;
 			return return_type(NULL);
 		}
+		} else {
+			NEVER_NULL(phi);
 		if (phi->is_port_formal()) {
 			cerr << "ERROR: cannot redeclare or append to "
 				"a port formal instance." << endl;
 			return return_type(NULL);
+		}
 		}
 #else
 		if (probe_inst->is_template_formal()) {
@@ -1402,7 +1406,7 @@ name_space::add_using_alias(const qualified_id& n, const string& a) {
 	This variation includes the invoking namespace in the pattern match.  
 	Now honors the absolute flag of the qualified_id to start search
 	from global namespace.  
-	TO DO: re-use query_subnamespace_match
+	TODO: re-use query_subnamespace_match
 	\param id the qualified/scoped name of the namespace to match.
 	\return pointer to found namespace.
  */
@@ -1861,7 +1865,7 @@ name_space::load_used_id_map_object(excl_ptr<persistent>& o) {
 		INVARIANT(!icbp);
 		// NEED TO GUARANTEE THAT IT IS OWNED!
 	} else {
-		o->what(cerr << "TO DO: define method for adding ")
+		o->what(cerr << "TODO: define method for adding ")
 			<< " back to namespace." << endl;
 	}
 }

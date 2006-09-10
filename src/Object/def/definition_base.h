@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.8.8.2 2006/09/01 05:17:22 fang Exp $
+	$Id: definition_base.h,v 1.8.8.3 2006/09/10 03:53:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -81,7 +81,15 @@ public:
 
 	typedef	template_actuals	make_type_ptr_type;
 	typedef	template_actuals	make_type_arg_type;
-
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	instance_placeholder_base	placeholder_base_type;
+	typedef	param_value_placeholder		value_placeholder_type;
+	typedef	physical_instance_placeholder	instance_placeholder_type;
+#else
+	typedef	instance_collection_base	placeholder_base_type;
+	typedef	param_value_collection		value_placeholder_type;
+	typedef	physical_instance_collection	instance_placeholder_type;
+#endif
 protected:
 	template_formals_manager	template_formals;
 
@@ -133,11 +141,7 @@ virtual	never_ptr<const scopespace>
 virtual	void
 	commit_arity(void) { }
 
-#if USE_INSTANCE_PLACEHOLDERS
-	never_ptr<const param_value_placeholder>
-#else
-	never_ptr<const param_value_collection>
-#endif
+	never_ptr<const value_placeholder_type>
 	lookup_template_formal(const string& id) const;
 
 	bool
@@ -156,19 +160,11 @@ virtual	never_ptr<const scopespace>
 	get_scopespace(void) const = 0;
 
 	// non-virtual
-#if USE_INSTANCE_PLACEHOLDERS
-	never_ptr<const instance_placeholder_base>
-#else
-	never_ptr<const instance_collection_base>
-#endif
+	never_ptr<const placeholder_base_type>
 	lookup_port_formal(const string& id) const;
 
 	size_t
-#if USE_INSTANCE_PLACEHOLDERS
-	lookup_port_formal_position(const instance_placeholder_base&) const;
-#else
-	lookup_port_formal_position(const instance_collection_base&) const;
-#endif
+	lookup_port_formal_position(const instance_placeholder_type&) const;
 
 	never_ptr<const object>
 	lookup_nonparameter_member(const string& id) const;
@@ -251,35 +247,20 @@ virtual	good_bool
 	TODO: shouldn't argument be a param_instantiation_statement?
 	TODO: shouldn't return type be param_value_placeholder?
  */
-#if USE_INSTANCE_PLACEHOLDERS
-virtual	never_ptr<const instance_placeholder_base>
-#else
-virtual	never_ptr<const instance_collection_base>
-#endif
+virtual	never_ptr<const value_placeholder_type>
 	add_strict_template_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
 
-#if USE_INSTANCE_PLACEHOLDERS
-virtual	never_ptr<const instance_placeholder_base>
-#else
-virtual	never_ptr<const instance_collection_base>
-#endif
+virtual	never_ptr<const value_placeholder_type>
 	add_relaxed_template_formal(
 		const never_ptr<instantiation_statement_base> f, 
 		const token_identifier& id);
 
-#if USE_INSTANCE_PLACEHOLDERS
 #define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
-	never_ptr<const physical_instance_placeholder>			\
+	never_ptr<const instance_placeholder_type>			\
 	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
 		const token_identifier&)
-#else
-#define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
-	never_ptr<const physical_instance_collection>			\
-	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
-		const token_identifier&)
-#endif
 
 /**
 	Really, only some definitions should have ports...

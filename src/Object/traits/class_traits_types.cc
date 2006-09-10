@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.11.8.2 2006/09/02 01:10:58 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.11.8.3 2006/09/10 03:53:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -160,14 +160,14 @@ __ATTRIBUTE_UNUSED_CTOR__((int_def_width->assign_default_value(int_def_width_def
 // need to fake adding the template formal and instantiating it
 // or creating a footprint?
 #if USE_INSTANCE_PLACEHOLDERS
-static excl_ptr<instance_placeholder_base>
+static excl_ptr<param_value_placeholder>
 #else
 static excl_ptr<instance_collection_base>
 #endif
 int_def_width_base(int_def_width);
 
 #if USE_INSTANCE_PLACEHOLDERS
-static const never_ptr<const instance_placeholder_base>
+static const never_ptr<const param_value_placeholder>
 #else
 static const never_ptr<const instance_collection_base>
 #endif

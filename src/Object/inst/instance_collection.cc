@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.10 2006/09/08 23:21:13 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.11 2006/09/10 03:53:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -869,10 +869,19 @@ instance_placeholder_base::instance_placeholder_base(
 instance_placeholder_base::~instance_placeholder_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Do we want the leading "::" of the global scope?
+ */
 string
 instance_placeholder_base::get_qualified_name(void) const {
+#if 1
+	if (owner && !owner->is_global_namespace())
+#else
 	if (owner)
+#endif
+	{
 		return owner->get_qualified_name() + "::" +key;
+	}
 		// "::" should be the same as HAC::parser::scope
 	else return key;
 }
@@ -936,11 +945,11 @@ instance_placeholder_base::dump(ostream& o) const {
 ostream&
 instance_placeholder_base::dump_base(ostream& o, const dump_flags& df) const {
 	// dump_collection_only(o);
-	get_unresolved_type_ref()->dump(o) << get_qualified_name();
+	get_unresolved_type_ref()->dump(o) << " " << get_qualified_name();
 	if (dimensions) {
 		o << "^" << dimensions;
 	}
-	o << endl;
+	// o << endl;
 #if 0
 	if (dimensions) {
 		o << endl;
@@ -1339,7 +1348,7 @@ size_t
 physical_instance_placeholder::is_port_formal(void) const {
 	const never_ptr<const definition_base>
 		def(owner.is_a<const definition_base>());
-	return def->lookup_port_formal_position(*this);
+	return def ? def->lookup_port_formal_position(*this) : 0;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

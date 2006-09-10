@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-17:
+	  In case you missed the fact: everything compiles/links (finally).  
+	  All test/lexer and test/parser/basic *compile* tests pass.
+		Minor obvious fixes applied to namespace, definition.  
+	  All unroll tests expected to fail until top-level module class
+		is reworked in the upcoming branch.  
+	  Next: fix/address all compile-phase regressions (many).  
+
+
 2006-09-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-16:
