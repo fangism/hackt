@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.5 2006/09/08 03:43:12 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.6 2006/09/10 18:58:19 fang Exp $
 	TODO: trim includes
  */
 
@@ -528,7 +528,7 @@ void
 INSTANCE_PLACEHOLDER_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key, 0)) {
+		persistent_traits<this_type>::type_key)) {
 	STACKTRACE_PERSISTENT("instance_placeholder<Tag>::collect_base()");
 	parent_type::collect_transient_info_base(m);
 #if 0

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.8 2006/09/08 23:21:14 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.9 2006/09/10 18:58:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -475,8 +475,9 @@ VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 void
 VALUE_PLACEHOLDER_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
+	// don't bother with dimensions... will be reloaded.
 if (!m.register_transient_object(this,
-		persistent_traits<this_type>::type_key, this->dimensions)) {
+		persistent_traits<this_type>::type_key)) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);

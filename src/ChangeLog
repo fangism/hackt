@@ -3,6 +3,15 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-18:
+	  Fixed placeholder persistence and reconstruction.  
+	  Next: update the use of unroll_context for template parameter
+		substitution, since all values need to be looked-up in
+		footprints now.  
+
+
 2006-09-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-17:
