@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.8.6.1 2006/08/30 04:28:04 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.8.6.2 2006/09/11 22:31:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -112,6 +112,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 /**
 	This is only for the sake of static compile-time
 	initialization analysis which is just sugar-coating.  
@@ -123,6 +124,7 @@ good_bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::initialize(const init_arg_type&) {
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -187,6 +189,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 /**
 	Don't bother checking at parse time, leave until unroll time.  
 	\pre no subreferences may be NULL, array must be non-empty.
@@ -223,6 +226,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
 	}
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

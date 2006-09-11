@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_relational_expr.h"
 	Boolean relations between real-valued parameters.  
-	$Id: preal_relational_expr.h,v 1.8 2006/07/16 03:34:52 fang Exp $
+	$Id: preal_relational_expr.h,v 1.8.4.1 2006/09/11 22:30:58 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_RELATIONAL_EXPR_H__
@@ -83,11 +83,13 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	bool
 	is_static_constant(void) const;

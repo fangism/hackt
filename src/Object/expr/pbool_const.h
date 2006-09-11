@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.14 2006/07/04 07:26:00 fang Exp $
+	$Id: pbool_const.h,v 1.14.6.1 2006/09/11 22:30:44 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
@@ -61,11 +61,13 @@ public:
 	const_range_list
 	static_constant_dimensions(void) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return true; }
 
 	bool
 	must_be_initialized(void) const { return true; }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }

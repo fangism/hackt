@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.1.2.7 2006/09/08 03:43:11 fang Exp $
+	$Id: instance_placeholder.h,v 1.1.2.8 2006/09/11 22:31:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -167,6 +167,9 @@ public:
 		const size_t d);
 
 	~instance_placeholder();
+
+	instance_collection_generic_type*
+	make_collection(void) const;
 
 	ostream&
 	what(ostream&) const;

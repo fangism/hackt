@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.9 2006/09/10 18:58:20 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.10 2006/09/11 22:31:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -49,6 +49,9 @@
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+#include "Object/unroll/expression_assignment.h"
+#endif
 
 #include "common/ICE.h"
 
@@ -153,7 +156,12 @@ VALUE_PLACEHOLDER_CLASS::~value_placeholder() {
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 ostream&
 VALUE_PLACEHOLDER_CLASS::what(ostream& o) const {
+#if 0
 	return o << util::what<this_type>::name();
+#else
+	return o << traits_type::tag_name << " " << this->dimensions <<
+		"-D (placeholder)";
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -465,6 +473,63 @@ VALUE_PLACEHOLDER_CLASS::must_type_check_actual_param_expr(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Despite the name, this doesn't copy...
+	\return new instance collection for footprint.  
+ */
+VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
+// typename VALUE_PLACEHOLDER_CLASS::instance_collection_generic_type*
+instance_collection_base*
+VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
+	return this->make_collection();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
+typename VALUE_PLACEHOLDER_CLASS::value_collection_generic_type*
+VALUE_PLACEHOLDER_CLASS::make_collection(void) const {
+	return value_collection_generic_type::make_array(
+		never_ptr<const this_type>(this));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
+good_bool
+VALUE_PLACEHOLDER_CLASS::unroll_assign_formal_parameter(
+		const unroll_context& c, 
+		const count_ptr<const param_expr>& e) const {
+	STACKTRACE_VERBOSE;
+	// safe to instantiate the initial statement because
+	// template formals are unconditional and packed
+	const good_bool
+		g(this->initial_instantiation_statement_ptr->unroll(c).good);
+	INVARIANT(g.good);
+	count_ptr<const expr_type> p(NULL);
+	if (e) {
+		p = e.template is_a<const expr_type>();
+		if (!p) {
+			cerr << "ERROR: parameter type mismatch." << endl;
+			// TODO: more verbose error message
+			return good_bool(false);
+		}
+	} else if (this->ival) {
+		// check default expression
+		p = this->ival;
+	} else {
+		cerr << "ERROR: template argument missing where "
+			"no default is provided by the formal declaration."
+			<< endl;
+		return good_bool(false);
+	}
+	// create an auxiliary expression assignment statement
+	const simple_meta_value_reference_type
+		lv(never_ptr<const this_type>(this));
+	return expression_assignment<Tag>::__unroll(c, lv, p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	No need to virtualize this method as long as 
 	the dimension-specific subclasses have no pointers that 
 	need to be visited.  
@@ -490,38 +555,6 @@ if (!m.register_transient_object(this,
 }
 // else already visited
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Despite the name, this doesn't copy...
-	\return new instance collection for footprint.  
- */
-VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
-// typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
-instance_collection_base*
-VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
-	return value_collection_generic_type::make_array(
-		never_ptr<const this_type>(this));
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
-typename VALUE_PLACEHOLDER_CLASS::value_collection_generic_type*
-VALUE_PLACEHOLDER_CLASS::make_array(
-		const scopespace& o, const string& n, const size_t D) {
-	switch (D) {
-		case 0:	return new value_array<Tag,0>(o, n);
-		case 1:	return new value_array<Tag,1>(o, n);
-		case 2:	return new value_array<Tag,2>(o, n);
-		case 3:	return new value_array<Tag,3>(o, n);
-		case 4:	return new value_array<Tag,4>(o, n);
-		default:
-			cerr << "FATAL: dimension limit is 4!" << endl;
-			return NULL;
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE

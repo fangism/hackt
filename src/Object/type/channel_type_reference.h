@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference.h,v 1.5 2006/01/22 18:20:43 fang Exp $
+ 	$Id: channel_type_reference.h,v 1.5.50.1 2006/09/11 22:31:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_H__
@@ -93,8 +93,10 @@ public:
 	make_canonical_type(void) const;
 
 private:
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context
 	make_unroll_context(void) const;
+#endif
 
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			

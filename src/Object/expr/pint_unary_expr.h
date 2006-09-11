@@ -3,7 +3,7 @@
 	Unary negation of meta integer.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_unary_expr.h,v 1.11 2006/07/16 03:34:52 fang Exp $
+	$Id: pint_unary_expr.h,v 1.11.4.1 2006/09/11 22:30:55 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_UNARY_EXPR_H__
@@ -48,11 +48,13 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return ex->may_be_initialized(); }
 
 	bool
 	must_be_initialized(void) const { return ex->must_be_initialized(); }
+#endif
 
 	bool
 	is_static_constant(void) const;

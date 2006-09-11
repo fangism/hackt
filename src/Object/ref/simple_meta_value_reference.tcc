@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.6 2006/09/08 02:06:55 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.7 2006/09/11 22:31:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -201,6 +201,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 /**
 	IMPORTANT: This initialization is only for static analysis and is
 	not the actual initialization that takes place during unrolling.  
@@ -225,6 +226,7 @@ bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
 	return this->value_collection_ref->must_be_initialized();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -889,9 +891,18 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 		const unroll_context& c, 
 		value_reference_collection_type& a) const {
 	STACKTRACE_VERBOSE;
+#if USE_INSTANCE_PLACEHOLDERS
+	const count_ptr<value_collection_type>
+		vals_ptr(c.lookup_value_collection(
+			*this->value_collection_ref)
+				.template is_a<value_collection_type>());
+	NEVER_NULL(vals_ptr);
+	value_collection_type& _vals(*vals_ptr);
+#else
 	value_collection_type&
 		_vals(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref));
+#endif
 if (_vals.get_dimensions()) {
 	STACKTRACE("is array");
 	const_index_list cil;

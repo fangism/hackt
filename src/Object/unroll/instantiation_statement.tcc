@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17.4.2 2006/09/06 04:20:08 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17.4.3 2006/09/11 22:31:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -35,8 +35,10 @@
 #include "Object/expr/const_range_list.h"
 #include "Object/def/footprint.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/common/dump_flags.h"
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.h"
+#include "Object/inst/value_placeholder.h"
 #endif
 
 #include "util/what.tcc"
@@ -212,6 +214,7 @@ good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	typedef	typename type_ref_ptr_type::element_type	element_type;
 	STACKTRACE_VERBOSE;
+#if !USE_INSTANCE_PLACEHOLDERS
 	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS
 	// beware top-level unrolling!!! TODO: fix
@@ -224,12 +227,35 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	}
 #endif
 #endif
+#endif
+
 #if USE_INSTANCE_PLACEHOLDERS
 	// TODO: currently will not work with instances inside namespaces
 	// may require qualified names in top-level footprint search!
+	count_ptr<collection_type>
+		inst_ptr(c.lookup_collection(*this->inst_base)
+			.template is_a<collection_type>());
+	if (!inst_ptr) {
+#if 0
+		this->inst_base->dump(cerr << "ERROR: ", dump_flags::verbose)
+			<< " not found." << endl;
+		return good_bool(false);
+#else
+		// then we need to instantiate it
+		inst_ptr = count_ptr<collection_type>(
+			IS_A(collection_type*,
+				this->inst_base->make_collection()));
+		NEVER_NULL(inst_ptr);
+		c.instantiate_collection(inst_ptr);
+		// could handle first-time type checking work here...
+#endif
+	}
+	collection_type& _inst(*inst_ptr);
+#if 0
 	collection_type& _inst(IS_A(collection_type&, 
 		*(*f)[this->inst_base->get_name()]));
 	// failed dynamic cast will throw a bad_cast
+#endif
 #else
 	collection_type& _inst(f ? IS_A(collection_type&, 
 			*(*f)[this->inst_base->get_name()])
@@ -321,7 +347,11 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		STACKTRACE_INDENT_PRINT("&_inst = " << &_inst << endl);
 		return type_ref_parent_type::instantiate_indices_with_actuals(
 				_inst, crl, 
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+				c, 
+#else
 				final_type_ref.make_unroll_context(), 
+#endif
 				relaxed_const_actuals);
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
@@ -390,7 +420,12 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				coll, crl, ft.make_unroll_context(), 
+				coll, crl,
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+				c, 
+#else
+				ft.make_unroll_context(), 
+#endif
 				relaxed_const_actuals);
 	} else {
 		// consider different message

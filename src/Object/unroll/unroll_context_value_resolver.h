@@ -4,7 +4,7 @@
 	resolution.  
 	NOTE: method definitions moved to .cc file to prevent premature
 	instantiation before complete types are available.  
-	$Id: unroll_context_value_resolver.h,v 1.8.10.1 2006/08/30 04:28:09 fang Exp $
+	$Id: unroll_context_value_resolver.h,v 1.8.10.2 2006/09/11 22:31:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_VALUE_RESOLVER_H__
@@ -52,8 +52,14 @@ public:
 	operator () (const unroll_context& c, const value_placeholder_type& v,
 			value_type& i) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	value_collection_type&
-	operator () (const unroll_context& c, value_placeholder_type& v) const;
+	operator () (const unroll_context& c, 
+#if USE_INSTANCE_PLACEHOLDERS
+			const
+#endif
+			value_placeholder_type& v) const;
+#endif
 
 };	// end class value_resolver
 
@@ -84,8 +90,15 @@ public:
 	operator () (const unroll_context& c, const value_placeholder_type& v,
 			value_type& i) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	value_collection_type&
-	operator () (const unroll_context& c, value_placeholder_type& v) const;
+	operator () (const unroll_context& c,
+#if USE_INSTANCE_PLACEHOLDERS
+			const
+#endif
+			value_placeholder_type& v) const;
+#endif
+
 };	// end class value_resolver
 
 //-----------------------------------------------------------------------------
@@ -115,8 +128,14 @@ public:
 	operator () (const unroll_context& c, const value_placeholder_type& v,
 			value_type& i) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	value_collection_type&
-	operator () (const unroll_context& c, value_placeholder_type& v) const;
+	operator () (const unroll_context& c,
+#if USE_INSTANCE_PLACEHOLDERS
+			const
+#endif
+			value_placeholder_type& v) const;
+#endif
 
 };	// end class value_resolver
 

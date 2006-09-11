@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.13 2006/07/04 07:25:55 fang Exp $
+	$Id: const_param_expr_list.h,v 1.13.6.1 2006/09/11 22:30:25 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -97,11 +97,13 @@ public:
 	bool
 	is_all_true(const parent_type&);
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	bool
 	may_be_equivalent(const param_expr_list& p) const;
@@ -130,6 +132,12 @@ public:
 	unroll_resolve_rvalues_return_type
 	unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const param_expr_list>&) const;
+
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+	good_bool
+	unroll_assign_formal_parameters(const unroll_context&, 
+		const template_formals_list_type&) const;
+#endif
 
 	good_bool
 	certify_template_arguments(const template_formals_list_type&);

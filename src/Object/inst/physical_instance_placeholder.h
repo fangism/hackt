@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/physical_instance_placeholder.h"
-	$Id: physical_instance_placeholder.h,v 1.1.2.5 2006/09/08 03:43:14 fang Exp $
+	$Id: physical_instance_placeholder.h,v 1.1.2.6 2006/09/11 22:31:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_PLACEHOLDER_H__
@@ -50,7 +50,7 @@ protected:
 		parent_type(t, f) { }
 #endif
 
-private:
+protected:
 #if USE_INSTANCE_PLACEHOLDERS
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 #endif

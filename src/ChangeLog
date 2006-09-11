@@ -1,7 +1,61 @@
 "ChangeLog"
 
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
-# This version tag is used in building "main/version.cc".
+# This version tag is used in building "cvstag.h" for version identification.
+
+2006-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-merged-template-02:
+	  Child branch merge: rework unroll_context, disabled some
+		static analysis, tested template typedef parameter unrolling,
+		disabled tests after compile-phase.
+
+
+2006-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-18-template-02:
+	  Tests: temporarily disabled all tests except for pre-unroll
+		compile-phase tests.
+	  Compile-time regressions ALL addressed/fixed, 
+		very few tests updated as a result of new diagnostic messages.  
+	  Rewrote parts of unroll instantiation for template parameters
+		using the new target-footprint.  Part of 
+		unroll_context_value_resolved phased out.  
+	  Unrolling a collection for the first time adds it to the 
+		footprint in instantiation_statement::unroll.  
+	  TODO: later, distinguish modifiable from non-modifiable 
+		out-of-scope footprints in the unroll-context.
+	  Status: ok to merge to parent branch, then start trying 
+		unroll testing one-by-one, rework top-level module.
+
+
+2006-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-18-template-01:
+	  Sub-branch for rewriting unroll_context to not embed 
+		template actuals and formals, but rather lookup 
+		all values and instances in the footprint.
+		Consequently, template-parameter substitution (in typedefs)
+		will need to create a temporary footprint for the purpose
+		of value expansion.  
+	  Disabled pre-unroll static analysis of initialization state
+		with switch: ENABLE_STATIC_ANALYSIS (0).
+		Now value_placeholder pointee of value_references may be const.
+	  New switch: RESOLVE_VALUES_WITH_FOOTPRINT (1)
+		unroll_context no longer distinguishes formals from 
+		non-formals and loads all value_collections into the
+		invoking footprint, done at the beginning of 
+		complete-type unrolling/creation.  
+	  Possible flag: certify_template_* methods as obsolete, 
+		since formal-actual default value filling and type-checking
+		can now be done in 
+		param_expr_list::unroll_assign_formal_parameters.  
+	  Refactored some code in expression_assignment class template.  
+	  TODO: add parent_namespace ctor parameter back to unroll_context
+		to support out-of-scope lookups again, but will need
+		mechanism for qualified placeholder lookups in namespaces, 
+		once we rework the top-level module.  
+
 
 2006-09-10	David Fang		<fangism@users.sourceforge.net>
 

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.3 2006/09/08 23:21:17 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.4 2006/09/11 22:31:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -41,7 +41,10 @@ namespace entity {
 // class unroll_context method definitions
 
 unroll_context::unroll_context() :
-		next(), template_args(), template_formals(),
+		next(),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(),
+#endif
 		target_footprint(NULL)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
@@ -50,7 +53,10 @@ unroll_context::unroll_context() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::unroll_context(footprint* const f) :
-		next(), template_args(), template_formals(), 
+		next(),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
+#endif
 		target_footprint(f)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
@@ -59,6 +65,7 @@ unroll_context::unroll_context(footprint* const f) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Construct a context (translator) between actuals and formals.  
  */
@@ -111,11 +118,13 @@ unroll_context::unroll_context(const template_actuals& a,
 #endif
 		{
 }
+#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::~unroll_context() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	What does it mean whe n one level is empty, but the next pointer
 	points to a continuation?  Shouldn't allow that to happen...
@@ -124,6 +133,7 @@ bool
 unroll_context::empty(void) const {
 	return (!template_args && !template_formals);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -135,12 +145,14 @@ unroll_context::dump(ostream& o) const {
 #if STACKTRACE_DUMP
 	STACKTRACE_VERBOSE;
 #endif
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	o << "formals: ";
 	if (template_formals)
 		template_formals->dump(o);
 	else	o << "(none)";
 	o << endl << "actuals: ";
 	template_args.dump(o);
+#endif
 	if (target_footprint)
 		target_footprint->dump_with_collections(
 			cerr << endl << "footprint: ",
@@ -218,6 +230,7 @@ unroll_context::make_member_context(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Used only for looking up loop variables.  
 	Must get the scope correct, check the template formals manager, 
@@ -248,6 +261,7 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 #endif
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_INSTANCE_PLACEHOLDERS
@@ -261,6 +275,7 @@ count_ptr<physical_instance_collection>
 unroll_context::lookup_instance_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
+	STACKTRACE_VERBOSE;
 	if (target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
@@ -289,6 +304,10 @@ count_ptr<param_value_collection>
 unroll_context::lookup_value_collection(
 		const param_value_placeholder& p) const {
 	typedef	count_ptr<param_value_collection>	return_type;
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	dump(cerr << "looking up in context:") << endl;
+#endif
 	if (target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
@@ -304,6 +323,43 @@ unroll_context::lookup_value_collection(
 	return return_type(NULL);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+count_ptr<physical_instance_collection>
+unroll_context::lookup_collection(
+		const physical_instance_placeholder& p) const {
+	return lookup_instance_collection(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<param_value_collection>
+unroll_context::lookup_collection(
+		const param_value_placeholder& p) const {
+	return lookup_value_collection(p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	TODO: fix so that target (instantiating) footprints (writable)
+	can be distinguished from read-only footprints.  
+ */
+void
+unroll_context::instantiate_collection(
+		const count_ptr<instance_collection_base>& p) const {
+	footprint* f = target_footprint;
+	never_ptr<const this_type> c(this);
+	while (!f && c) {
+		c = c->next;
+		f = c->target_footprint;
+	}
+	NEVER_NULL(f);
+	const good_bool g(f->register_collection(p));
+	INVARIANT(g.good);
+}
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS

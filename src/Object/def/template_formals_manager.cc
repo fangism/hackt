@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.12.6.2 2006/09/04 05:44:04 fang Exp $
+	$Id: template_formals_manager.cc,v 1.12.6.3 2006/09/11 22:30:19 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -376,7 +376,7 @@ template_formals_manager::certify_template_arguments(
 /**
 	Validating finally resolved (constant) template actuals
 	against template formal parameters.
-	\param t the template actuals must contain only constants.  
+	\param t the template actuals must contain only resolved constants.  
  */
 good_bool
 template_formals_manager::must_validate_actuals(
@@ -386,7 +386,12 @@ template_formals_manager::must_validate_actuals(
 		Need to construct a temporary context for situations where
 		the formal parameters themselves depend on earlier actuals.  
 	***/
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+	unroll_context c;
+	unroll_formal_parameters(c, t);
+#else
 	const unroll_context c(t, *this);
+#endif
 	const count_ptr<const param_expr_list> spl(t.get_strict_args());
 	const count_ptr<const const_param_expr_list>
 		cspl(spl.is_a<const const_param_expr_list>());
@@ -471,6 +476,58 @@ template_formals_manager::add_relaxed_template_formal(
 	relaxed_template_formals_list.push_back(pf);
 	template_formals_map[pf->get_name()] = pf;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+/**
+	Helper function for unrolling and assigning actual values to
+	template formal parameters.  
+	\pre formals and actuals already size/type checked.  
+ */
+good_bool
+template_formals_manager::__unroll_formal_parameters(
+		const unroll_context& c, 
+		const template_formals_list_type& formals, 
+		const template_actuals::const_arg_list_ptr_type& v) {
+	typedef	template_actuals::const_arg_list_ptr_type
+			actual_values_ptr_type;
+	// typedef	actual_values_ptr_type::element_type::const_iterator
+	//			const_actual_iterator;
+	typedef	template_formals_list_type::const_iterator
+				const_formal_iterator;
+	STACKTRACE_VERBOSE;
+	bool good = true;
+	if (v) {
+		return v->unroll_assign_formal_parameters(c, formals);
+#if 0
+		const_formal_iterator iter(formals.begin()), end(formals.end());
+		// const_actual_iterator a_iter(v->begin()), a_end(v->end());
+		for ( ; iter!=end; ++iter, ++a_iter) {
+			good &= (*iter)->unroll_assign_formal_parameter(
+				c, *a_iter).good;
+		}
+		INVARIANT(a_iter == a_end);
+#endif
+	}
+	return good_bool(good);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This unrolls and assigns actual values to formal template parameters.  
+	\pre Formals vs. actuals already type/size checked by caller.  
+ */
+good_bool
+template_formals_manager::unroll_formal_parameters(
+		const unroll_context& c, const template_actuals& a) const {
+	STACKTRACE_VERBOSE;
+	return good_bool(
+		__unroll_formal_parameters(c, strict_template_formals_list, 
+			a.get_strict_args()).good &&
+		__unroll_formal_parameters(c, relaxed_template_formals_list, 
+			a.get_relaxed_args()).good);
+}
+#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

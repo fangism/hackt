@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.5 2006/06/26 01:46:27 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.5.8.1 2006/09/11 22:31:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -151,6 +151,7 @@ canonical_generic_chan_type::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 unroll_context
 canonical_generic_chan_type::make_unroll_context(void) const {
 	if (canonical_definition_ptr) {
@@ -161,6 +162,7 @@ canonical_generic_chan_type::make_unroll_context(void) const {
 		return unroll_context();
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

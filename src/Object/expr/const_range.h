@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.10.6.1 2006/09/07 21:34:22 fang Exp $
+	$Id: const_range.h,v 1.10.6.2 2006/09/11 22:30:26 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__
@@ -124,11 +124,13 @@ public:
 	bool
 	operator == (const const_range& c) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return !empty(); }
 
 	bool
 	must_be_initialized(void) const { return !empty(); }
+#endif
 
 	bool
 	is_sane(void) const;

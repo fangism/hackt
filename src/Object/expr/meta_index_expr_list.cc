@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.15.8.2 2006/09/03 02:33:35 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.15.8.3 2006/09/11 22:30:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -244,6 +244,7 @@ const_index_list::push_back(const const_index_ptr_type& i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 const_index_list::may_be_initialized(void) const {
 	return true;
@@ -254,6 +255,7 @@ bool
 const_index_list::must_be_initialized(void) const {
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -534,6 +536,7 @@ dynamic_meta_index_list::dimensions_collapsed(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 dynamic_meta_index_list::may_be_initialized(void) const {
 	const_iterator i(begin());
@@ -556,6 +559,7 @@ dynamic_meta_index_list::must_be_initialized(void) const {
 	}
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

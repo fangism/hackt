@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.11 2006/09/10 03:53:14 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.12 2006/09/11 22:31:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -1099,6 +1099,7 @@ param_value_placeholder::template_formal_equivalent(const this_type& b) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 /**
 	NOTE: just copied from param_value_collection.
 	NOTE: can we get rid of this altogether?
@@ -1160,6 +1161,7 @@ param_value_placeholder::must_be_initialized(void) const {
 		else return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1394,6 +1396,13 @@ datatype_instance_placeholder::datatype_instance_placeholder(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_placeholder::~datatype_instance_placeholder() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+datatype_instance_collection*
+datatype_instance_placeholder::make_collection(void) const {
+	return IS_A(datatype_instance_collection*,
+		make_instance_collection_footprint_copy());
+}
 
 //=============================================================================
 #endif	// USE_INSTANCE_PLACEHOLDERS

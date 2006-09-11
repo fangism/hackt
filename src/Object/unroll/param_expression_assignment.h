@@ -3,7 +3,7 @@
 	Declarations for classes related to connection of 
 	assignments of parameters.
 	This file came from "Object/art_object_assign.h" in a previous life.  
-	$Id: param_expression_assignment.h,v 1.6 2006/02/21 04:48:44 fang Exp $
+	$Id: param_expression_assignment.h,v 1.6.32.1 2006/09/11 22:31:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_EXPRESSION_ASSIGNMENT_H__
@@ -11,6 +11,7 @@
 
 #include "util/boolean_types.h"
 #include "Object/unroll/instance_management_base.h"
+#include "Object/devel_switches.h"
 #include "util/memory/count_ptr.h"
 
 namespace HAC {
@@ -86,8 +87,10 @@ protected:
 	validate_dimensions_match(const dest_const_ptr_type&, 
 		const size_t ) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	good_bool
 	validate_reference_is_uninitialized(const dest_const_ptr_type&) const;
+#endif
 
 };	// end class param_expression_assignment
 

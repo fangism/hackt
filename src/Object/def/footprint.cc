@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.4 2006/09/07 06:46:40 fang Exp $
+	$Id: footprint.cc,v 1.24.4.5 2006/09/11 22:30:17 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -439,6 +439,23 @@ footprint::clear_instance_collection_map(void) {
 	STACKTRACE_VERBOSE;
 	instance_collection_map.clear();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	TODO: qualified names needed for top-level footprint. 
+	\pre Not already registered.  
+ */
+good_bool
+footprint::register_collection(const count_ptr<instance_collection_base>& p) {
+	NEVER_NULL(p);
+	const string key(p->get_name());
+	INVARIANT(instance_collection_map.find(key)
+		== instance_collection_map.end());
+	instance_collection_map[key] = p;
+	return good_bool(true);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

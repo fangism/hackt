@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.3 2006/09/10 03:53:11 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.4 2006/09/11 22:30:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2222,12 +2222,23 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_user_def_data_type
 			cpt(make_canonical_type(canonical_actuals));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context c(f);
+		// no parent b/c doing away with lookup of globals, 
+		// when we do, need to chain the context with parent...
+		if (!template_formals.unroll_formal_parameters(
+				c, canonical_actuals).good) {
+			cerr << "ERROR: unrolling template formals." << endl;
+			return good_bool(false);
+		}
+#else
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		const unroll_context
 			c(canonical_actuals, template_formals, f, parent);
 #else
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
+#endif
 #endif
 #if 0 && ENABLE_STACKTRACE
 		STACKTRACE_INDENT << "new context c @ " << &c << endl;
@@ -2280,12 +2291,23 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_user_def_data_type
 			cpt(make_canonical_type(canonical_actuals));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context c(f);
+		// no parent b/c doing away with lookup of globals, 
+		// when we do, need to chain the context with parent...
+		if (!template_formals.unroll_formal_parameters(
+				c, canonical_actuals).good) {
+			cerr << "ERROR: unrolling template formals." << endl;
+			return good_bool(false);
+		}
+#else
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		const unroll_context
 			c(canonical_actuals, template_formals, f, parent);
 #else
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
+#endif
 #endif
 		// this replays internal aliases of all instances in this scope
 		if (!f->create_dependent_types().good) {
@@ -3029,12 +3051,23 @@ process_definition::__unroll_complete_type(
 				template_formals.num_strict_formals()));
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context c(&f);
+		// no parent b/c doing away with lookup of globals, 
+		// when we do, need to chain the context with parent...
+		if (!template_formals.unroll_formal_parameters(
+				c, canonical_actuals).good) {
+			cerr << "ERROR: unrolling template formals." << endl;
+			return good_bool(false);
+		}
+#else
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		const unroll_context
 			c(canonical_actuals, template_formals, &f, parent);
 #else
 		const unroll_context
 			c(canonical_actuals, template_formals, &f);
+#endif
 #endif
 		if (sequential_scope::unroll(c).good) {
 			// NOTE: nothing can be done with production rules
@@ -3102,12 +3135,23 @@ process_definition::__create_complete_type(
 				template_formals.num_strict_formals()));
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context c(&f);
+		// no parent b/c doing away with lookup of globals, 
+		// when we do, need to chain the context with parent...
+		if (!template_formals.unroll_formal_parameters(
+				c, canonical_actuals).good) {
+			cerr << "ERROR: unrolling template formals." << endl;
+			return good_bool(false);
+		}
+#else
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		const unroll_context
 			c(canonical_actuals, template_formals, &f, parent);
 #else
 		const unroll_context
 			c(canonical_actuals, template_formals, &f);
+#endif
 #endif
 		// this replays internal aliases of all instances in this scope
 		// doesn't use context? what if dependent on global parameter?
@@ -3350,6 +3394,7 @@ process_definition_alias::make_fundamental_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_process_type
 process_definition_alias::make_canonical_type(const template_actuals& a) const {
+	STACKTRACE_VERBOSE;
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
@@ -3363,6 +3408,7 @@ process_definition_alias::make_canonical_type(const template_actuals& a) const {
 count_ptr<const process_type_reference>
 process_definition_alias::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
+	STACKTRACE_VERBOSE;
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));

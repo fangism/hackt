@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_range.h,v 1.8.8.1 2006/09/07 21:34:26 fang Exp $
+	$Id: pint_range.h,v 1.8.8.2 2006/09/11 22:30:53 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RANGE_H__
@@ -55,11 +55,13 @@ public:
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	bool
 	is_sane(void) const;
