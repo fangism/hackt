@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.8 2006/09/07 00:41:15 fang Exp $
+#	$Id: Makefile.am,v 1.9 2006/09/11 18:40:50 sandra Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -18,6 +18,7 @@ HACKT_PARSE_TEST_PASSES = \
 	source-01 \
 	e1ofN-01 e1ofN-02 \
 	logic-01 \
+	channel-01 \
 	env-source-sink-a-01 env-source-sink-a-02 \
 	env-source-sink-e-01 env-source-sink-e-02
 
@@ -37,6 +38,7 @@ HACKT_ALLOC_TEST_SUBJECTS = $(HACKT_CREATE_TEST_SUBJECTS)
 HACKT_PRSIMRC_TEST_SUBJECTS = \
 	e1ofN-01 e1ofN-02 \
 	logic-01 \
+	channel-01 \
 	env-source-sink-a-01 env-source-sink-a-02 \
 	env-source-sink-e-01 env-source-sink-e-02 \
 	alternator-onehot_counter-01 alternator-onehot_counter-02 \
@@ -51,6 +53,7 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	e1ofN-01 e1ofN-02 \
 	logic-01 \
+	channel-01 \
 	env-source-sink-a-01 env-source-sink-a-02 \
 	env-source-sink-e-01 env-source-sink-e-02 \
 	alternator-onehot_counter-01 alternator-onehot_counter-02 \

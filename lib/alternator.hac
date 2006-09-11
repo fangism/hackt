@@ -7,7 +7,7 @@
 	2-way alternators use a dual-rail bit as a state variable whereas
 	N-way alternators will use some sort of one-hot counter.  
 	Splits and merges useful for constructing tree-fifos.  
-	$Id: alternator.hac,v 1.1 2006/09/07 00:41:13 fang Exp $
+	$Id: alternator.hac,v 1.2 2006/09/11 18:39:26 sandra Exp $
  */
 
 import "channel.hac";
@@ -107,5 +107,35 @@ typedef	onehot_counter<6>		onehot_counter6;
 typedef	onehot_counter<7>		onehot_counter7;
 typedef	onehot_counter<8>		onehot_counter8;
 
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+/*
+	Alternator cell
+	Behavior: Eats every other token it receives
+*/
+defproc alt(e1of1 l, r; bool _Reset)
+  {
+    bool v,_v,u,_u;
+    a1of1 _l,_r;
+    prs{
+      ~_Reset | (~r.e & ~l.d[0]) -> _r.d[0]+
+      _Reset & l.e & v & r.e & l.d[0] -> _r.d[0]-
+      ~_Reset | (~r.e & ~l.d[0]) | (~_v & ~l.d[0]) -> _u+
+      _Reset & r.e & l.d[0] -> _u-
+      ~_r.d[0] -> r.d[0]+
+      _r.d[0] -> r.d[0]-
+      ~_u -> u+
+      _u -> u-
+      ~_u -> _l.a+
+      _u -> _l.a-
+      ~_l.a -> l.e+
+      _l.a -> l.e-
+      ~_Reset | (~l.e & ~r.d[0] & ~_u) -> v+
+      _Reset & _l.a & r.d[0] & u -> v-
+      ~v -> _v+
+      v -> _v-
+    }
+  }
 //-----------------------------------------------------------------------------
 
