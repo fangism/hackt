@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-11	Sandra Jackson		<sjj3@cornell.edu>
+
+	* HACKT-00-01-04-main-00-80-12:
+	  No source revision: just lib/alternator.hac update, including
+		a few test/lib test dump updates.
+
+
 2006-09-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-11:

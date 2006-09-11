@@ -1,5 +1,11 @@
 "lib/ChangeLog"
 
+2006-09-11	Sandra Jackson	<sjj3@cornell.edu>
+
+	* HACKT-00-01-04-main-00-80-12:
+	  alternator.hac: Added draft of alternating token-eater 'alt'.
+
+
 2006-09-06	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-10:
