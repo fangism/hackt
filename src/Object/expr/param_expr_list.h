@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.11.6.2 2006/09/02 00:45:56 fang Exp $
+	$Id: param_expr_list.h,v 1.11.6.2.4.1 2006/09/11 02:39:02 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -76,11 +76,13 @@ virtual	excl_ptr<param_expr_list>
 virtual	count_ptr<const param_expr>
 	operator [] (const size_t) const = 0;
 
+#if ENABLE_STATIC_ANALYSIS
 virtual	bool
 	may_be_initialized(void) const = 0;
 
 virtual	bool
 	must_be_initialized(void) const = 0;
+#endif
 
 virtual	bool
 	may_be_equivalent(const param_expr_list& p) const = 0;
@@ -108,6 +110,12 @@ protected:
 					template_formals_list_type;
 
 public:
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+virtual	good_bool
+	unroll_assign_formal_parameters(const unroll_context&, 
+		const template_formals_list_type&) const = 0;
+#endif
+
 virtual	good_bool
 	certify_template_arguments(const template_formals_list_type&) = 0;
 

@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: channel_type_reference_base.h,v 1.6 2006/01/26 21:33:26 fang Exp $
+ 	$Id: channel_type_reference_base.h,v 1.6.52.1 2006/09/11 02:39:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CHANNEL_TYPE_REFERENCE_BASE_H__
@@ -78,8 +78,10 @@ virtual	UNROLL_PORT_INSTANCES_PROTO = 0;
 virtual	never_ptr<const builtin_channel_type_reference>
 	resolve_builtin_channel_type(void) const = 0;
 
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 virtual	unroll_context
 	make_unroll_context(void) const = 0;
+#endif
 
 	// should be pure virtual, just declare for now
 virtual	canonical_type<channel_definition_base>

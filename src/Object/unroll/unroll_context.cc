@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.3 2006/09/08 23:21:17 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.3.2.1 2006/09/11 02:39:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -41,7 +41,10 @@ namespace entity {
 // class unroll_context method definitions
 
 unroll_context::unroll_context() :
-		next(), template_args(), template_formals(),
+		next(),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(),
+#endif
 		target_footprint(NULL)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
@@ -50,7 +53,10 @@ unroll_context::unroll_context() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::unroll_context(footprint* const f) :
-		next(), template_args(), template_formals(), 
+		next(),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
+#endif
 		target_footprint(f)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
@@ -59,6 +65,7 @@ unroll_context::unroll_context(footprint* const f) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Construct a context (translator) between actuals and formals.  
  */
@@ -111,11 +118,13 @@ unroll_context::unroll_context(const template_actuals& a,
 #endif
 		{
 }
+#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::~unroll_context() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	What does it mean whe n one level is empty, but the next pointer
 	points to a continuation?  Shouldn't allow that to happen...
@@ -124,6 +133,7 @@ bool
 unroll_context::empty(void) const {
 	return (!template_args && !template_formals);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -135,12 +145,14 @@ unroll_context::dump(ostream& o) const {
 #if STACKTRACE_DUMP
 	STACKTRACE_VERBOSE;
 #endif
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	o << "formals: ";
 	if (template_formals)
 		template_formals->dump(o);
 	else	o << "(none)";
 	o << endl << "actuals: ";
 	template_args.dump(o);
+#endif
 	if (target_footprint)
 		target_footprint->dump_with_collections(
 			cerr << endl << "footprint: ",
@@ -218,6 +230,7 @@ unroll_context::make_member_context(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Used only for looking up loop variables.  
 	Must get the scope correct, check the template formals manager, 
@@ -248,6 +261,7 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 #endif
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_INSTANCE_PLACEHOLDERS

@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.8 2006/07/16 03:34:52 fang Exp $
+	$Id: preal_arith_expr.h,v 1.8.8.1 2006/09/11 02:39:14 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -78,6 +78,7 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const
 		{ return lx->may_be_initialized() && rx->may_be_initialized(); }
@@ -86,6 +87,7 @@ public:
 	must_be_initialized(void) const {
 		return lx->must_be_initialized() && rx->must_be_initialized();
 	}
+#endif
 
 	bool
 	is_static_constant(void) const;

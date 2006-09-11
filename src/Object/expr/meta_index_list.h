@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_list.h,v 1.7.32.1 2006/09/03 02:33:36 fang Exp $
+	$Id: meta_index_list.h,v 1.7.32.1.4.1 2006/09/11 02:38:53 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_LIST_H__
@@ -57,11 +57,13 @@ virtual	size_t
 virtual	size_t
 	dimensions_collapsed(void) const = 0;
 
+#if ENABLE_STATIC_ANALYSIS
 virtual	bool
 	may_be_initialized(void) const = 0;
 
 virtual	bool
 	must_be_initialized(void) const = 0;
+#endif
 
 virtual	bool
 	is_static_constant(void) const = 0;

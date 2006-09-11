@@ -1,6 +1,8 @@
 // "013.hac" should fail, use of initialized parameter variable, not formal
 // this file was copied over from an old version of 004.hac, 
 // which was later modified to pass type-checking.  
+// NOTE: having disabled pre-unroll static analysis, this passes compiling
+// but eventually fails at unroll-time.  
 
 pint N;
 pint M = N;

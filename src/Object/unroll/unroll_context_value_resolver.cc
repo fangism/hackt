@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.5.6.3 2006/09/02 03:58:39 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.5.6.3.4.1 2006/09/11 02:39:38 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
@@ -97,7 +97,11 @@ unroll_context_value_resolver<pint_tag>::operator ()
  */
 unroll_context_value_resolver<pint_tag>::value_collection_type&
 unroll_context_value_resolver<pint_tag>::operator ()
-	(const unroll_context& c, value_placeholder_type& v) const {
+		(const unroll_context& c, 
+#if USE_INSTANCE_PLACEHOLDERS
+			const 
+#endif
+			value_placeholder_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS
@@ -150,7 +154,11 @@ unroll_context_value_resolver<pbool_tag>::operator ()
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context_value_resolver<pbool_tag>::value_collection_type&
 unroll_context_value_resolver<pbool_tag>::operator ()
-	(const unroll_context& c, value_placeholder_type& v) const {
+		(const unroll_context& c,
+#if USE_INSTANCE_PLACEHOLDERS
+			const 
+#endif
+			value_placeholder_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS
@@ -206,7 +214,11 @@ unroll_context_value_resolver<preal_tag>::operator ()
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context_value_resolver<preal_tag>::value_collection_type&
 unroll_context_value_resolver<preal_tag>::operator ()
-	(const unroll_context& c, value_placeholder_type& v) const {
+		(const unroll_context& c,
+#if USE_INSTANCE_PLACEHOLDERS
+			const 
+#endif
+			value_placeholder_type& v) const {
 	// no specialization, can't assign to loop vars.  
 	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS

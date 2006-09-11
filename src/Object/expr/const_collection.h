@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.12 2006/07/04 07:25:52 fang Exp $
+	$Id: const_collection.h,v 1.12.10.1 2006/09/11 02:38:44 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include "Object/expr/types.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/STL/construct_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
@@ -133,11 +134,13 @@ public:
 	value_type
 	operator [] (const key_type&) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return true; }
 
 	bool
 	must_be_initialized(void) const { return true; }
+#endif
 
 	// required by pint_expr or pbool_expr
 	bool

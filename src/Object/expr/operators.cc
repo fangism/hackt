@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.16.4.1 2006/09/01 05:17:27 fang Exp $
+ 	$Id: operators.cc,v 1.16.4.1.4.1 2006/09/11 02:39:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -1079,6 +1079,7 @@ pint_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 pint_relational_expr::may_be_initialized(void) const {
 	return lx->may_be_initialized() && rx->may_be_initialized();
@@ -1089,6 +1090,7 @@ bool
 pint_relational_expr::must_be_initialized(void) const {
 	return lx->must_be_initialized() && rx->must_be_initialized();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -1678,6 +1680,7 @@ preal_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 preal_relational_expr::may_be_initialized(void) const {
 	return lx->may_be_initialized() && rx->may_be_initialized();
@@ -1688,6 +1691,7 @@ bool
 preal_relational_expr::must_be_initialized(void) const {
 	return lx->must_be_initialized() && rx->must_be_initialized();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

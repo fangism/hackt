@@ -5,6 +5,34 @@
 
 2006-09-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-18-template-01:
+	  Sub-branch for rewriting unroll_context to not embed 
+		template actuals and formals, but rather lookup 
+		all values and instances in the footprint.
+		Consequently, template-parameter substitution (in typedefs)
+		will need to create a temporary footprint for the purpose
+		of value expansion.  
+	  Disabled pre-unroll static analysis of initialization state
+		with switch: ENABLE_STATIC_ANALYSIS (0).
+		Now value_placeholder pointee of value_references may be const.
+	  New switch: RESOLVE_VALUES_WITH_FOOTPRINT (1)
+		unroll_context no longer distinguishes formals from 
+		non-formals and loads all value_collections into the
+		invoking footprint, done at the beginning of 
+		complete-type unrolling/creation.  
+	  Possible flag: certify_template_* methods as obsolete, 
+		since formal-actual default value filling and type-checking
+		can now be done in 
+		param_expr_list::unroll_assign_formal_parameters.  
+	  Refactored some code in expression_assignment class template.  
+	  TODO: add parent_namespace ctor parameter back to unroll_context
+		to support out-of-scope lookups again, but will need
+		mechanism for qualified placeholder lookups in namespaces, 
+		once we rework the top-level module.  
+
+
+2006-09-10	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-18:
 	  Fixed placeholder persistence and reconstruction.  
 	  Next: update the use of unroll_context for template parameter

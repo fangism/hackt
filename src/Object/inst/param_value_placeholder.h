@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.1.2.6 2006/09/08 02:06:53 fang Exp $
+	$Id: param_value_placeholder.h,v 1.1.2.6.2.1 2006/09/11 02:39:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -16,6 +16,7 @@
 
 namespace HAC {
 namespace entity {
+class param_expr;
 class const_param;
 class param_type_reference;
 class meta_value_reference_base;
@@ -116,6 +117,7 @@ public:
 virtual	count_ptr<const param_expr>
 	default_value(void) const = 0;
 
+#if ENABLE_STATIC_ANALYSIS
 /**
 	A parameter is considered "usable" if it is either initialized
 	to another expression, or it is a template formal.  
@@ -134,6 +136,7 @@ virtual	count_ptr<const param_expr>
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 virtual	good_bool
 	assign_default_value(const count_ptr<const param_expr>& p) = 0;
@@ -148,6 +151,12 @@ virtual	good_bool
 virtual	good_bool
 	must_type_check_actual_param_expr(const const_param&, 
 		const unroll_context&) const = 0;
+
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+virtual	good_bool
+	unroll_assign_formal_parameter(const unroll_context&, 
+		const count_ptr<const param_expr>&) const = 0;
+#endif
 
 // down-copied from instance_placeholder_base
 protected:

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.18.6.2 2006/09/02 00:45:53 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.18.6.2.4.1 2006/09/11 02:38:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -175,6 +175,7 @@ const_param_expr_list::is_all_true(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 const_param_expr_list::may_be_initialized(void) const {
 	return true;
@@ -185,6 +186,7 @@ bool
 const_param_expr_list::must_be_initialized(void) const {
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -483,7 +485,7 @@ if (a_size != f_size) {
 	}
 	return good_bool(true);
 }
-}
+}	// end method certify_template_arguments
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -582,6 +584,56 @@ if (a_size != f_size) {
 	return good_bool(true);
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+/**
+	This combines the functionality of certify_template_actuals
+	with unroll_resolve_rvalues, in addition to instantiating
+	template formal parameters in the context's footprint. 
+	Q: should this expect prior type-checking or perform it here?
+ */
+good_bool
+const_param_expr_list::unroll_assign_formal_parameters(
+		const unroll_context& c,
+		const template_formals_list_type& tfl) const {
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	typedef template_formals_list_type::const_iterator
+			const_formal_iterator;
+	const const_formal_iterator f_begin(tfl.begin()), f_end(tfl.end());
+	const_formal_iterator f_iter(f_begin);
+	const_iterator p_iter(begin());
+	const const_iterator p_end(end());
+	INVARIANT(a_size <= f_size);
+	// may try to fill in all default arguments
+	for ( ; p_iter!=p_end; ++f_iter, ++p_iter) {
+		const placeholder_ptr_type pinst(*f_iter);
+		NEVER_NULL(pinst);
+		// instantiate and assign
+		if (!pinst->unroll_assign_formal_parameter(c, *p_iter).good) {
+			cerr << "ERROR: with template actual at position "
+				<< distance(f_begin, f_iter)+1 << endl;
+			return good_bool(false);
+		}
+	}
+	// if there are any trailing unspecified parameters, 
+	// try to find default values for them.  
+	for ( ; f_iter != f_end; ++f_iter) {
+		const placeholder_ptr_type pinst(*f_iter);
+		NEVER_NULL(pinst);
+		if (!pinst->unroll_assign_formal_parameter(
+				c, value_type(NULL)).good) {
+			cerr << "ERROR: with default parameter at position "
+				<< distance(f_begin, f_iter)+1 << endl;
+			return good_bool(false);
+		}
+	}
+	// if it fails, then list will be incomplete.  
+	// if this point is reached, then fill-in was successfull
+	return good_bool(true);
+}	// end method unroll_assign_formal_parameters
+#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -793,6 +845,7 @@ dynamic_param_expr_list::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 dynamic_param_expr_list::may_be_initialized(void) const {
 	const_iterator i(begin());
@@ -819,6 +872,7 @@ dynamic_param_expr_list::must_be_initialized(void) const {
 	}
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -1081,6 +1135,54 @@ if (a_size != f_size) {
 	return good_bool(true);
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+/**
+	Code carbon-copied from
+	const_param_expr_list::unroll_assign_formal_parameters.  
+ */
+good_bool
+dynamic_param_expr_list::unroll_assign_formal_parameters(
+		const unroll_context& c,
+		const template_formals_list_type& tfl) const {
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	typedef template_formals_list_type::const_iterator
+			const_formal_iterator;
+	const const_formal_iterator f_begin(tfl.begin()), f_end(tfl.end());
+	const_formal_iterator f_iter(f_begin);
+	const_iterator p_iter(begin());
+	const const_iterator p_end(end());
+	INVARIANT(a_size <= f_size);
+	// may try to fill in all default arguments
+	for ( ; p_iter!=p_end; ++f_iter, ++p_iter) {
+		const placeholder_ptr_type pinst(*f_iter);
+		NEVER_NULL(pinst);
+		// instantiate and assign
+		if (!pinst->unroll_assign_formal_parameter(c, *p_iter).good) {
+			cerr << "ERROR: with template actual at position "
+				<< distance(f_begin, f_iter)+1 << endl;
+			return good_bool(false);
+		}
+	}
+	// if there are any trailing unspecified parameters, 
+	// try to find default values for them.  
+	for ( ; f_iter != f_end; ++f_iter) {
+		const placeholder_ptr_type pinst(*f_iter);
+		NEVER_NULL(pinst);
+		if (!pinst->unroll_assign_formal_parameter(
+				c, value_type(NULL)).good) {
+			cerr << "ERROR: with default parameter at position "
+				<< distance(f_begin, f_iter)+1 << endl;
+			return good_bool(false);
+		}
+	}
+	// if it fails, then list will be incomplete.  
+	// if this point is reached, then fill-in was successfull
+	return good_bool(true);
+}	// end method unroll_assign_formal_parameters
+#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

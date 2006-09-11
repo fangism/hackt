@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.8.10.4 2006/09/08 23:21:18 fang Exp $
+	$Id: unroll_context.h,v 1.8.10.4.2.1 2006/09/11 02:39:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -11,8 +11,10 @@
 #include <iosfwd>
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
-#include "Object/type/template_actuals.h"
 #include "Object/devel_switches.h"
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+#include "Object/type/template_actuals.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -29,9 +31,11 @@ class physical_instance_placeholder;
 #endif
 class physical_instance_collection;
 class param_value_collection;
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 struct pint_tag;
 struct pbool_tag;
 template <class, size_t> class value_array;
+#endif
 using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -57,6 +61,7 @@ template <class Tag> class unroll_context_value_resolver;
  */
 class unroll_context {
 	typedef	unroll_context				this_type;
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	/**
 		If true, then the template args are a copy of the 
 		template actuals, not just a pointer hitherto.  
@@ -74,6 +79,7 @@ class unroll_context {
 	 */
 	typedef	template_actuals			template_args_type;
 	typedef	value_array<pint_tag, 0>		pint_scalar;
+#endif
 	template <class Tag> friend class unroll_context_value_resolver;
 private:
 	/**
@@ -83,12 +89,14 @@ private:
 		(Enforce by comparing stack addresses?)
 	 */
 	never_ptr<const unroll_context>			next;
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	/**
 		INVARIANT: template_args and template_formals are either
 		both NULL or both valid at all times.  
 	 */
 	template_args_type				template_args;
 	never_ptr<const template_formals_manager>	template_formals;
+#endif
 
 	/**
 		If set to non-NULL, this is used to translate
@@ -96,6 +104,12 @@ private:
 		to definition-footprint's actual instance-collection.  
 	 */
 	footprint*					target_footprint;
+
+	/**
+		NOTE: 2006-09-10
+		TODO: consider a read-only source footprint, because now
+		other nested scopes use footprints for unrolling.  
+	**/
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	never_ptr<const name_space>			parent_namespace;
 #endif
@@ -106,6 +120,7 @@ public:
 	explicit
 	unroll_context(footprint* const);
 
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context(const template_actuals&,
 		const template_formals_manager&);
 
@@ -118,11 +133,14 @@ public:
 
 	unroll_context(const template_actuals&,
 		const template_formals_manager&, const this_type&);
+#endif
 
 	~unroll_context();
 
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	bool
 	empty(void) const;
+#endif
 
 	ostream&
 	dump(ostream&) const;
@@ -145,8 +163,10 @@ public:
 	void
 	chain_context(const this_type&);
 
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	bool
 	have_template_actuals(void) const { return template_args; }
+#endif
 
 #if USE_INSTANCE_PLACEHOLDERS
 	count_ptr<physical_instance_collection>
@@ -164,9 +184,12 @@ public:
 	lookup_actual(const param_value_collection&) const;
 #endif
 
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 protected:
+	// flagged: OBSOLETE
 	count_ptr<const pint_const>
 	lookup_loop_var(const pint_scalar&) const;
+#endif
 
 private:
 	static

@@ -3,7 +3,7 @@
 	Classes related to constant parameter expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param.h,v 1.11 2006/07/04 07:25:54 fang Exp $
+	$Id: const_param.h,v 1.11.10.1 2006/09/11 02:38:46 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_H__
@@ -51,11 +51,13 @@ virtual	bool
 virtual	const_range_list
 	static_constant_dimensions(void) const = 0;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return true; }
 
 	bool
 	must_be_initialized(void) const { return true; }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }

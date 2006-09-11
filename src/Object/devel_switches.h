@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.3 2006/09/06 04:19:30 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.3.2.1 2006/09/11 02:38:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -38,6 +38,9 @@
 	Define to 1 to enable lookup of global meta parameter values.
 	Affects "Object/unroll/unroll_context_value_resolver.cc".
 	Goal: to be decided by language spec.
+	NOTE: 20060-09-10
+	This may no longer be an issue once all values are resolved
+		through footprints with the switch below.  
  */
 #define	LOOKUP_GLOBAL_META_PARAMETERS		1
 
@@ -69,6 +72,22 @@
 	Status: 'probably' OK to keep, but will wait until testing
  */
 #define	USE_UNRESOLVED_DATA_TYPES	(1 && USE_INSTANCE_PLACEHOLDERS)
+
+/**
+	All values, including template parameters shall be resolved
+	through footprints.  
+	Unroll_context will no longer use template_formals and actuals
+	directly.  
+	Goal: 1
+ */
+#define	RESOLVE_VALUES_WITH_FOOTPRINT	(1 && USE_INSTANCE_PLACEHOLDERS)
+
+/**
+	Define to 0 to disable compile-time (pre-unroll) analysis
+	of expressions and value references.  
+	Goal: 0
+ */
+#define	ENABLE_STATIC_ANALYSIS		(0 && !USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 

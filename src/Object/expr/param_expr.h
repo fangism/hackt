@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.13 2006/07/04 07:25:58 fang Exp $
+	$Id: param_expr.h,v 1.13.10.1 2006/09/11 02:39:01 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -13,6 +13,7 @@
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/memory/excl_ptr.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -53,12 +54,14 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
+#if ENABLE_STATIC_ANALYSIS
 /** is initialized if is resolved to constant or some other formal */
 virtual bool
 	may_be_initialized(void) const = 0;
 
 virtual bool
 	must_be_initialized(void) const = 0;
+#endif
 
 virtual bool
 	may_be_equivalent_generic(const this_type&) const = 0;

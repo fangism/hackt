@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.1.2.5 2006/09/06 04:19:50 fang Exp $
+	$Id: value_placeholder.h,v 1.1.2.5.2.1 2006/09/11 02:39:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -228,6 +228,12 @@ virtual	good_bool
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+	good_bool
+	unroll_assign_formal_parameter(const unroll_context&, 
+		const count_ptr<const param_expr>&) const;
+#endif
+
 #if 0
 virtual	const_index_list
 	resolve_indices(const const_index_list& l) const = 0;
@@ -246,13 +252,13 @@ protected:
 	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const;
 
+#if 0
 public:
-
 	static
 	// won't be this_type anymore!
 	value_collection_generic_type*
 	make_array(const scopespace& o, const string& n, const size_t d);
-
+#endif
 public:
 	void
 	collect_transient_info(persistent_object_manager& m) const;

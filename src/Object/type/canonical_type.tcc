@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.9 2006/08/14 04:50:02 fang Exp $
+	$Id: canonical_type.tcc,v 1.9.6.1 2006/09/11 02:39:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -119,6 +119,7 @@ CANONICAL_TYPE_CLASS::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	TODO: FIX ME
 	BUG!? template-params are constructed ephemerally!
@@ -133,6 +134,7 @@ CANONICAL_TYPE_CLASS::make_unroll_context(void) const {
 	return unroll_context(this->get_template_params(), 
 		canonical_definition_ptr->get_template_formals_manager());
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

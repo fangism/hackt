@@ -2,7 +2,7 @@
 	\file "Object/unroll/expression_assignment.cc"
 	Method definitions pertaining to connections and assignments.  
 	This file was moved from "Object/art_object_assign.cc".
- 	$Id: expression_assignment.cc,v 1.6.32.1 2006/09/08 23:21:15 fang Exp $
+ 	$Id: expression_assignment.cc,v 1.6.32.1.2.1 2006/09/11 02:39:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_CC__
@@ -111,6 +111,7 @@ param_expression_assignment::validate_dimensions_match(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 /**
 	Checks that the referenced instance is not already initialized.
 	Only checks for scalars and not multidimensional collections.  
@@ -126,6 +127,7 @@ param_expression_assignment::validate_reference_is_uninitialized(
 		return good_bool(false);
 	} else	return good_bool(true);
 }
+#endif
 
 //=============================================================================
 // explicit template instantiation

@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference_base.h"
-	$Id: meta_value_reference_base.h,v 1.2.32.1 2006/08/28 05:10:16 fang Exp $
+	$Id: meta_value_reference_base.h,v 1.2.32.1.4.1 2006/09/11 02:39:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_BASE_H__
@@ -50,8 +50,10 @@ virtual	never_ptr<const param_value_collection>
 #endif
 	get_coll_base(void) const = 0;
 
+#if ENABLE_STATIC_ANALYSIS
 virtual	bool
 	must_be_initialized(void) const = 0;
+#endif
 
 };	// end class meta_value_reference_base
 

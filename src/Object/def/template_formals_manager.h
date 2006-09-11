@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.6.14.1 2006/08/31 07:28:29 fang Exp $
+	$Id: template_formals_manager.h,v 1.6.14.1.4.1 2006/09/11 02:38:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -29,8 +29,11 @@ class param_value_placeholder;
 #else
 class param_value_collection;
 #endif
+class param_expr_list;
 class dynamic_param_expr_list;
+class const_param_expr_list;
 class template_actuals;
+class unroll_context;
 using std::string;
 using std::istream;
 using std::ostream;
@@ -161,7 +164,18 @@ public:
 	resolve_template_actual(const param_value_collection&, 
 		const template_actuals&) const;
 #endif
-
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+	good_bool
+	unroll_formal_parameters(const unroll_context&,
+		const template_actuals&) const;
+private:
+	static
+	good_bool
+	__unroll_formal_parameters(const unroll_context&,
+		const template_formals_list_type&, 
+		const count_ptr<const param_expr_list>&);
+#endif
+public:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;
 

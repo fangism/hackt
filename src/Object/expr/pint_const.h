@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.13 2006/07/04 07:26:03 fang Exp $
+	$Id: pint_const.h,v 1.13.10.1 2006/09/11 02:39:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -64,11 +64,13 @@ public:
 	const_range_list
 	static_constant_dimensions(void) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return true; }
 
 	bool
 	must_be_initialized(void) const { return true; }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }

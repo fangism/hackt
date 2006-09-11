@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.12 2006/07/16 03:34:51 fang Exp $
+	$Id: pint_relational_expr.h,v 1.12.8.1 2006/09/11 02:39:12 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
@@ -85,11 +85,13 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	bool
 	is_static_constant(void) const;
