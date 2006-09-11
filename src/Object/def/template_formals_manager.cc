@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.12.6.2.4.1 2006/09/11 02:38:40 fang Exp $
+	$Id: template_formals_manager.cc,v 1.12.6.2.4.2 2006/09/11 22:03:54 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -520,6 +520,7 @@ template_formals_manager::__unroll_formal_parameters(
 good_bool
 template_formals_manager::unroll_formal_parameters(
 		const unroll_context& c, const template_actuals& a) const {
+	STACKTRACE_VERBOSE;
 	return good_bool(
 		__unroll_formal_parameters(c, strict_template_formals_list, 
 			a.get_strict_args()).good &&

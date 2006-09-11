@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.6 2006/09/10 18:58:19 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.6.2.1 2006/09/11 22:03:59 fang Exp $
 	TODO: trim includes
  */
 
@@ -258,10 +258,19 @@ INSTANCE_PLACEHOLDER_CLASS::~instance_placeholder() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: if this->dimensions hasn't been reconstructed from 
+	deserialization, then it may be reported as uninitialized garbage.  
+ */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_PLACEHOLDER_CLASS::what(ostream& o) const {
+#if 0
 	return o << util::what<this_type>::name();
+#else
+	return o << traits_type::tag_name << " " << this->dimensions <<
+		"-D (placeholder)";
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -476,6 +485,13 @@ INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 // typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 instance_collection_base*
 INSTANCE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
+	return this->make_collection();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
+INSTANCE_PLACEHOLDER_CLASS::make_collection(void) const {
 	return instance_collection_generic_type::make_array(
 		never_ptr<const this_type>(this));
 }

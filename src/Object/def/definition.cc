@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.3.2.1 2006/09/11 02:38:38 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.3.2.2 2006/09/11 22:03:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3394,6 +3394,7 @@ process_definition_alias::make_fundamental_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_process_type
 process_definition_alias::make_canonical_type(const template_actuals& a) const {
+	STACKTRACE_VERBOSE;
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
@@ -3407,6 +3408,7 @@ process_definition_alias::make_canonical_type(const template_actuals& a) const {
 count_ptr<const process_type_reference>
 process_definition_alias::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
+	STACKTRACE_VERBOSE;
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));

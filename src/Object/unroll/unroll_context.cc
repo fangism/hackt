@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.3.2.1 2006/09/11 02:39:37 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.3.2.2 2006/09/11 22:04:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -275,6 +275,7 @@ count_ptr<physical_instance_collection>
 unroll_context::lookup_instance_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
+	STACKTRACE_VERBOSE;
 	if (target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
@@ -303,6 +304,10 @@ count_ptr<param_value_collection>
 unroll_context::lookup_value_collection(
 		const param_value_placeholder& p) const {
 	typedef	count_ptr<param_value_collection>	return_type;
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	dump(cerr << "looking up in context:") << endl;
+#endif
 	if (target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
@@ -318,6 +323,43 @@ unroll_context::lookup_value_collection(
 	return return_type(NULL);
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+count_ptr<physical_instance_collection>
+unroll_context::lookup_collection(
+		const physical_instance_placeholder& p) const {
+	return lookup_instance_collection(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<param_value_collection>
+unroll_context::lookup_collection(
+		const param_value_placeholder& p) const {
+	return lookup_value_collection(p);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	TODO: fix so that target (instantiating) footprints (writable)
+	can be distinguished from read-only footprints.  
+ */
+void
+unroll_context::instantiate_collection(
+		const count_ptr<instance_collection_base>& p) const {
+	footprint* f = target_footprint;
+	never_ptr<const this_type> c(this);
+	while (!f && c) {
+		c = c->next;
+		f = c->target_footprint;
+	}
+	NEVER_NULL(f);
+	const good_bool g(f->register_collection(p));
+	INVARIANT(g.good);
+}
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !USE_INSTANCE_PLACEHOLDERS

@@ -1,7 +1,25 @@
 "ChangeLog"
 
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
-# This version tag is used in building "main/version.cc".
+# This version tag is used in building "cvstag.h" for version identification.
+
+2006-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-18-template-02:
+	  Tests: temporarily disabled all tests except for pre-unroll
+		compile-phase tests.
+	  Compile-time regressions ALL addressed/fixed, 
+		very few tests updated as a result of new diagnostic messages.  
+	  Rewrote parts of unroll instantiation for template parameters
+		using the new target-footprint.  Part of 
+		unroll_context_value_resolved phased out.  
+	  Unrolling a collection for the first time adds it to the 
+		footprint in instantiation_statement::unroll.  
+	  TODO: later, distinguish modifiable from non-modifiable 
+		out-of-scope footprints in the unroll-context.
+	  Status: ok to merge to parent branch, then start trying 
+		unroll testing one-by-one, rework top-level module.
+
 
 2006-09-10	David Fang		<fangism@users.sourceforge.net>
 

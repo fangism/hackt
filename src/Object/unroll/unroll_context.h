@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.8.10.4.2.1 2006/09/11 02:39:37 fang Exp $
+	$Id: unroll_context.h,v 1.8.10.4.2.2 2006/09/11 22:04:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -26,6 +26,7 @@ class footprint;
 class template_actuals;
 class template_formals_manager;
 #if USE_INSTANCE_PLACEHOLDERS
+class instance_collection_base;
 class param_value_placeholder;
 class physical_instance_placeholder;
 #endif
@@ -169,11 +170,23 @@ public:
 #endif
 
 #if USE_INSTANCE_PLACEHOLDERS
+	void
+	instantiate_collection(
+		const count_ptr<instance_collection_base>&) const;
+
 	count_ptr<physical_instance_collection>
 	lookup_instance_collection(const physical_instance_placeholder&) const;
 
 	count_ptr<param_value_collection>
 	lookup_value_collection(const param_value_placeholder&) const;
+
+	/// overloaded name call-forwarding for the lazy...
+	count_ptr<physical_instance_collection>
+	lookup_collection(const physical_instance_placeholder& p) const;
+
+	/// overloaded name call-forwarding for the lazy...
+	count_ptr<param_value_collection>
+	lookup_collection(const param_value_placeholder& p) const;
 #endif
 
 #if USE_INSTANCE_PLACEHOLDERS

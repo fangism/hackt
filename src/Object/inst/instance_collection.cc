@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.11.2.1 2006/09/11 02:39:18 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.11.2.2 2006/09/11 22:03:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -1396,6 +1396,13 @@ datatype_instance_placeholder::datatype_instance_placeholder(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 datatype_instance_placeholder::~datatype_instance_placeholder() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+datatype_instance_collection*
+datatype_instance_placeholder::make_collection(void) const {
+	return IS_A(datatype_instance_collection*,
+		make_instance_collection_footprint_copy());
+}
 
 //=============================================================================
 #endif	// USE_INSTANCE_PLACEHOLDERS

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.5.6.3.4.1 2006/09/11 02:39:38 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.5.6.3.4.2 2006/09/11 22:04:17 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
@@ -90,6 +90,7 @@ unroll_context_value_resolver<pint_tag>::operator ()
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Looks up a value-collection for modification purposes.  
 	Does NOT perform lookup of globals, because globals
@@ -115,6 +116,7 @@ unroll_context_value_resolver<pint_tag>::operator ()
 #endif
 	return _vals;
 }
+#endif
 
 //-----------------------------------------------------------------------------
 // class unroll_context_value_resolver<pbool_tag> method definitions
@@ -152,6 +154,7 @@ unroll_context_value_resolver<pbool_tag>::operator ()
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 unroll_context_value_resolver<pbool_tag>::value_collection_type&
 unroll_context_value_resolver<pbool_tag>::operator ()
 		(const unroll_context& c,
@@ -172,6 +175,7 @@ unroll_context_value_resolver<pbool_tag>::operator ()
 #endif
 	return _vals;
 }
+#endif
 
 //-----------------------------------------------------------------------------
 /**
@@ -212,6 +216,7 @@ unroll_context_value_resolver<preal_tag>::operator ()
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 unroll_context_value_resolver<preal_tag>::value_collection_type&
 unroll_context_value_resolver<preal_tag>::operator ()
 		(const unroll_context& c,
@@ -232,6 +237,7 @@ unroll_context_value_resolver<preal_tag>::operator ()
 #endif
 	return _vals;
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity
