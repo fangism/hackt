@@ -3,7 +3,7 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
-2006-09-11	Sandra Jackson		<sjj3@cornell.edu>
+2006-09-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-13:
 	  No source revision: added lib/split.hac with a few tests.  
