@@ -5,6 +5,12 @@
 
 2006-09-11	Sandra Jackson		<sjj3@cornell.edu>
 
+	* HACKT-00-01-04-main-00-80-13:
+	  No source revision: added lib/split.hac with a few tests.  
+
+
+2006-09-11	Sandra Jackson		<sjj3@cornell.edu>
+
 	* HACKT-00-01-04-main-00-80-12:
 	  No source revision: just lib/alternator.hac update, including
 		a few test/lib test dump updates.
