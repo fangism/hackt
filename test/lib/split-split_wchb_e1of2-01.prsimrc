@@ -1,0 +1,7 @@
+# ""split-split_wchb_e1of2-01.prsimrc"
+#	$Id: split-split_wchb_e1of2-01.prsimrc,v 1.1 2006/09/12 07:00:43 fang Exp $
+# @haco@ split-split_wchb_e1of2-01.haco-a
+# testing stability of general half-buffered split template
+
+source stable-test-medium.prsimrc
+
