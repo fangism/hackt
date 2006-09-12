@@ -1,0 +1,84 @@
+/**
+	\file "lib/split.hac"
+	$Id: split.hac,v 1.1 2006/09/12 07:00:30 fang Exp $
+	Controlled split processes.  
+	Contains buffered and unbuffered splits.  
+ */
+
+import "channel.hac";
+import "logic.hac";
+
+//=============================================================================
+/**
+	Unpipelined M-way e1ofN channel split.  
+ */
+template <pint N, M>
+defproc split_wire_e1of (e1of<N> L; e1of<M> C; e1of<N> R[M]; bool _Reset) {
+	// TODO: finish me
+}
+
+//=============================================================================
+/**
+	Controlled and half-buffered M-way split of e1ofN channels.  
+	Reset: expects input rails low, output acknowledges don't matter.
+	Tests: "split-plit_wchb_e1of2-0{1,2}.{hac,prsimrc}"
+	\param N the number of rails of channel
+	\param M the number of ways to split output
+	\param L the input channel
+	\param C the control channel
+	\param R the set of output channels
+ */
+template <pint N, M>
+defproc split_wchb_e1of (e1of<N> L; e1of<M> C; e1of<N> R[M]; bool _Reset) {
+_c1of<N> _r[M];
+L.e = C.e;
+std::logic::nand<N> rv[M];		// monolithic
+bool ov[M];
+(;j:M:
+	rv[j](_r[j].d, ov[j]);
+)
+std::logic::nor<M> _lv(ov, L.e);	// monolithic
+prs {
+(:i:N:
+(:j:M:
+	~_Reset				-> _r[j].d[i]+
+	 R[j].e &  L.d[i] &  C.d[j]	-> _r[j].d[i]-
+	~R[j].e & ~L.d[i] & ~C.d[j]	-> _r[j].d[i]+
+	_r[j].d[i]			=> R[j].d[i]-
+)
+)
+}
+}
+
+template <pint M>
+typedef	split_wchb_e1of<1,M>		split_wchb_e1of1;
+
+template <pint M>
+typedef	split_wchb_e1of<2,M>		split_wchb_e1of2;
+
+template <pint M>
+typedef	split_wchb_e1of<3,M>		split_wchb_e1of3;
+
+template <pint M>
+typedef	split_wchb_e1of<4,M>		split_wchb_e1of4;
+
+template <pint M>
+typedef	split_wchb_e1of<5,M>		split_wchb_e1of5;
+
+template <pint M>
+typedef	split_wchb_e1of<6,M>		split_wchb_e1of6;
+
+template <pint M>
+typedef	split_wchb_e1of<7,M>		split_wchb_e1of7;
+
+template <pint M>
+typedef	split_wchb_e1of<8,M>		split_wchb_e1of8;
+
+//=============================================================================
+// TODO: split_pchb family
+
+//=============================================================================
+// TODO: split_pcfb family
+
+//=============================================================================
+
