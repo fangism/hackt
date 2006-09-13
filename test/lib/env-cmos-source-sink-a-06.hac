@@ -1,0 +1,11 @@
+// "env-cmos-source-sink-a-06.hac"
+// testing CMOS source talking to CMOS bucket
+
+import "env.hac";
+
+bool _Reset, Reset;
+a1of2 X;
+cmos_source_a1of2<2,{0,1}> S(X, _Reset, Reset);
+inactive_reset_bitbucket_a1of2 B(X, _Reset);	// works
+// bitbucket_a1of2 B(X, _Reset);		// doesn't work :(
+

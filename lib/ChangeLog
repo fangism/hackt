@@ -1,5 +1,13 @@
 "lib/ChangeLog"
 
+2006-09-13	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-15:
+	  env.hac: CMOS sources now work for all N > 0, 
+		except that for N==2, need inactive R.e on reset.
+	  Added more test cases, and removed some useless ones.  
+
+
 2006-09-12	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-14:

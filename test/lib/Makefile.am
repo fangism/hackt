@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.12 2006/09/13 02:28:53 fang Exp $
+#	$Id: Makefile.am,v 1.13 2006/09/13 05:40:46 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -17,9 +17,7 @@ HACKT_PARSE_TEST_PASSES = \
 	e1of1-01 \
 	source-01 \
 	e1ofN-01 e1ofN-02 \
-	logic-01 \
-	env-source-sink-a-01 env-source-sink-a-02 \
-	env-source-sink-e-01 env-source-sink-e-02
+	logic-01
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \
@@ -40,12 +38,16 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	env-source-sink-a-01 env-source-sink-a-02 \
 	env-source-sink-e-01 env-source-sink-e-02 \
 	alternator-onehot_counter-01 alternator-onehot_counter-02 \
-	env-cmos-source-sink-e-01 \
-	env-cmos-source-sink-e-02 \
-	env-cmos-source-sink-e-03 \
-	env-cmos-source-sink-a-01 \
-	env-cmos-source-sink-a-02 \
-	env-cmos-source-sink-a-03 \
+	alternator-onehot_counter-03 alternator-onehot_counter-04 \
+	alternator-onehot_counter-05 alternator-onehot_counter-06 \
+	env-cmos-source-sink-e-01 env-cmos-source-sink-e-02 \
+	env-cmos-source-sink-e-03 env-cmos-source-sink-e-04 \
+	env-cmos-source-sink-e-05 env-cmos-source-sink-e-06 \
+	env-cmos-source-sink-e-07 \
+	env-cmos-source-sink-a-01 env-cmos-source-sink-a-02 \
+	env-cmos-source-sink-a-03 env-cmos-source-sink-a-04 \
+	env-cmos-source-sink-a-05 env-cmos-source-sink-a-06 \
+	env-cmos-source-sink-a-07 \
 	split-split_wchb_e1of2-01 \
 	split-split_wchb_e1of2-02 \
 	alternator-1of2-01 \
@@ -64,12 +66,16 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	env-source-sink-a-01 env-source-sink-a-02 \
 	env-source-sink-e-01 env-source-sink-e-02 \
 	alternator-onehot_counter-01 alternator-onehot_counter-02 \
-	env-cmos-source-sink-e-01 \
-	env-cmos-source-sink-e-02 \
-	env-cmos-source-sink-e-03 \
-	env-cmos-source-sink-a-01 \
-	env-cmos-source-sink-a-02 \
-	env-cmos-source-sink-a-03 \
+	alternator-onehot_counter-03 alternator-onehot_counter-04 \
+	alternator-onehot_counter-05 alternator-onehot_counter-06 \
+	env-cmos-source-sink-e-01 env-cmos-source-sink-e-02 \
+	env-cmos-source-sink-e-03 env-cmos-source-sink-e-04 \
+	env-cmos-source-sink-e-05 env-cmos-source-sink-e-06 \
+	env-cmos-source-sink-e-07 \
+	env-cmos-source-sink-a-01 env-cmos-source-sink-a-02 \
+	env-cmos-source-sink-a-03 env-cmos-source-sink-a-04 \
+	env-cmos-source-sink-a-05 env-cmos-source-sink-a-06 \
+	env-cmos-source-sink-a-07 \
 	split-split_wchb_e1of2-01 \
 	split-split_wchb_e1of2-02 \
 	alternator-1of2-01 \

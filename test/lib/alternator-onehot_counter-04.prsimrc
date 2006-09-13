@@ -1,0 +1,7 @@
+# "alternator-onehot_counter-04.prsimrc"
+#	$Id: alternator-onehot_counter-04.prsimrc,v 1.1 2006/09/13 05:40:51 fang Exp $
+# @haco@ alternator-onehot_counter-04.haco-a
+# testing stability of source-sink pair
+
+source stable-test-medium.prsimrc
+
