@@ -1,5 +1,12 @@
 # "src/util/ChangeLog"
 
+2006-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-14:
+	  util/numeric/sign_traits.h: avoid repeated specialization
+		for 64 longs.  
+
+
 2006-08-29	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-06:

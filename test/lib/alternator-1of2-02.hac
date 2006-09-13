@@ -1,0 +1,14 @@
+// "alternator-1of2.hac"
+
+import "alternator.hac";
+import "env.hac";
+
+e1of2 X;
+c1of2 x;
+X.d = x.d;
+bool _Reset, Reset;
+alternator_source_1of2 S(X.e, x, _Reset, Reset);
+// inactive_reset_bitbucket_e1of2 B(X, _Reset);
+bitbucket_e1of2 B(X, _Reset);
+
+

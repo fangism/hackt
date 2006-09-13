@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-12	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-14:
+	  Minor grammar update: allow trailing else clause of conditional
+		instantiations bodies.  TODO: fix check.
+	  lib: wrote more alternator cell definitions.
+
+
 2006-09-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-13:

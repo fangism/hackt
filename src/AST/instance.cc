@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.14 2006/07/31 22:22:23 fang Exp $
+	$Id: instance.cc,v 1.15 2006/09/13 02:28:49 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -22,6 +22,7 @@
 #include "AST/reference.h"
 #include "AST/range_list.h"
 #include "AST/token_string.h"
+#include "AST/token.h"			// for token_else
 #include "AST/type.h"
 #include "AST/node_list.tcc"
 #include "AST/parse_context.h"
@@ -33,7 +34,7 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/ref/meta_value_reference_base.h"
-#include "Object/expr/pbool_expr.h"
+#include "Object/expr/pbool_const.h"
 #include "Object/expr/meta_range_expr.h"
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
@@ -113,6 +114,7 @@ using entity::loop_scope;
 using entity::conditional_scope;
 using entity::pint_scalar;
 using entity::pbool_expr;
+using entity::pbool_const;
 
 //=============================================================================
 // class instance_management method definitions
@@ -1035,16 +1037,26 @@ guarded_instance_management::rightmost(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Is else clause handled?
+ */
 never_ptr<const object>
 guarded_instance_management::check_build(context& c) const {
 	typedef	never_ptr<const object>		return_type;
+	count_ptr<const pbool_expr> guard_expr(NULL);
+if (guard && !guard.is_a<const token_else>()) {
 	const expr::meta_return_type g(guard->check_meta_expr(c));
-	const count_ptr<pbool_expr> guard_expr(g.is_a<pbool_expr>());
+	guard_expr = g.is_a<const pbool_expr>();
 	if (!guard_expr) {
 		cerr << "Error parsing guard expression at " <<
 			where(*guard) << endl;
 		THROW_EXIT;
 	}
+} else {
+	// trailing else clause is always evaluated true
+	guard_expr = count_ptr<const pbool_expr>(new pbool_const(true));
+}
+	NEVER_NULL(guard_expr);
 	excl_ptr<conditional_scope>
 		ls(new conditional_scope(guard_expr));
 	NEVER_NULL(ls);

@@ -37,7 +37,8 @@
 		might be nice to factor some out into skeletons.  
 		Also would be nice to use some flattening hint/attribute
 		for these cases.  
-	$Id: buffer.hac,v 1.4 2006/09/02 20:35:07 fang Exp $
+	TODO: buffers with initial-value tokens
+	$Id: buffer.hac,v 1.5 2006/09/13 02:28:46 fang Exp $
  */
 
 import "channel.hac";

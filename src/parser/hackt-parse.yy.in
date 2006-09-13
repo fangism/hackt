@@ -11,7 +11,7 @@
 
 	NOTE: ancient versions of yacc reject // end-of-line comments
 
-	$Id: hackt-parse.yy.in,v 1.18 2006/08/29 17:56:42 fang Exp $
+	$Id: hackt-parse.yy.in,v 1.19 2006/09/13 02:28:51 fang Exp $
 	This file was formerly known as:
 	Id: hackt-parse.yy,v 1.2 2005/11/10 02:13:09 fang Exp
 	Id: art++-parse.yy,v 1.25 2005/07/20 21:00:59 fang Exp
@@ -590,7 +590,9 @@ yyfreestacks(const short* yyss, const short* yyssp,
 %type	<_alias_list>	alias_list nonempty_alias_list
 %type	<_expr_list>	connection_actuals_list
 %type	<_guarded_instance_management_list>	guarded_instance_management_list
+%type	<_guarded_instance_management_list>	guarded_instance_management_list_unmatched
 %type	<_guarded_instance_management>	guarded_instance_management
+%type	<_guarded_instance_management>	instance_management_else_clause
 %type	<_language_body>	language_body
 %type	<_chp_stmt_list>	chp_body chp_body_optional
 %type	<_chp_stmt_list>	full_chp_body_item_list
@@ -1398,16 +1400,29 @@ connection_actuals_list
 	;
 
 guarded_instance_management_list
-	: guarded_instance_management_list THICKBAR guarded_instance_management
+	: guarded_instance_management_list_unmatched THICKBAR instance_management_else_clause
+		{ $$ = $1; APPEND_LIST($1, $2, $3); }
+	| guarded_instance_management_list_unmatched
+		{ $$ = $1; }
+	;
+
+guarded_instance_management_list_unmatched
+	: guarded_instance_management_list_unmatched
+		THICKBAR guarded_instance_management
 		{ $$ = $1; APPEND_LIST($1, $2, $3); }
 	| guarded_instance_management
 		{ $$ = new guarded_instance_management_list($1); }
 	;
 
-/* any else clause? */
-/* semantics: must guards be mutually exclusive? else-if semantics? */
+/* semantics: must guards be mutually exclusive? */
+/* sequential else-if semantics? */
 guarded_instance_management
 	: expr RARROW instance_management_list
+		{ $$ = new guarded_instance_management($1, $2, $3); }
+	;
+
+instance_management_else_clause
+	: ELSE RARROW instance_management_list
 		{ $$ = new guarded_instance_management($1, $2, $3); }
 	;
 

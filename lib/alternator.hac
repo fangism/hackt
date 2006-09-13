@@ -7,7 +7,7 @@
 	2-way alternators use a dual-rail bit as a state variable whereas
 	N-way alternators will use some sort of one-hot counter.  
 	Splits and merges useful for constructing tree-fifos.  
-	$Id: alternator.hac,v 1.2 2006/09/11 18:39:26 sandra Exp $
+	$Id: alternator.hac,v 1.3 2006/09/13 02:28:46 fang Exp $
  */
 
 import "channel.hac";
@@ -65,14 +65,108 @@ defproc onehot_stage_init(
 
 //-----------------------------------------------------------------------------
 /**
+	Half of an alternator, symmetric.
+	This acts as one side of a toggle counter.  
+	\param inc the request to advance or toggle
+	\param x, y dual-rail state variables
+	\param _o1 local inverted output rail
+	\param o output rails
+ */
+defproc symmetric_alternator_stage(
+		bool inc,
+		x[2], y[2],
+		_o1, o[2],
+		_Reset) {
+prs {
+	~_Reset					-> _o1+
+	// set-phase affects y
+	inc & x[0]				-> y[0]-
+	~y[0] & ~(inc & x[1])			-> y[1]+	// x-coupled
+	x[0] & y[1] & _Reset			-> _o1-
+	~_o1					-> o[1]+
+
+	// reset-phase affects x
+	o[1] & y[1]				-> x[0]-
+	~inc & ~x[0] & ~(o[0] & y[0])		-> x[1]+	// x-coupled
+	~x[0] & ~y[0]				-> _o1+
+	_o1 & x[1]				-> o[1]-
+}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Size-2 one-hot counter (special case)
+	Reset: outputs data rails low, doesn't care about inc signal.
+	Test: "alternator-1of2-0{1,2}.{hac,prsimrc}"
+	HSE: *[[inc];O.0+;[~inc];O.0-;[inc];O.1+;[~inc];O.1-]
+	\param inc active-high increment request (or active-low ack)
+	\param o the 1of2 output.
+ */
+defproc alternator_source_1of2(
+		bool inc;
+		c1of2 o;
+		bool _Reset, Reset) {
+c1of2 x;	// exclhi dual-rail state-variable
+c1of2 y;	// exclhi dual-rail state-variable
+_c1of2 _o;
+symmetric_alternator_stage s[2];
+	s[0](inc, x.d, y.d, _o.d[1], o.d, _Reset);
+	s[1](inc, {x.d[1], x.d[0]}, {y.d[1], y.d[0]}, _o.d[0],
+		{o.d[1], o.d[0]}, _Reset);
+prs {
+	Reset					-> o.d[0]-
+//	Reset					-> o.d[1]-	// not needed
+
+	Reset					-> x.d[0]-
+	~_Reset					-> x.d[1]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[1]-
+	~_Reset					-> y.d[0]+
+
+/**
+	// All the following production rules have been folded into:
+	// symmetric_alterator_stage, above.
+	// The full expansion is left here for clarity.  
+
+	~_Reset					-> _o.d[1]+
+	~_Reset					-> _o.d[0]+
+	// set-phase affects y
+	inc & x.d[0]				-> y.d[0]-
+	~y.d[0] & ~(inc & x.d[1])		-> y.d[1]+	// x-coupled
+	x.d[0] & y.d[1] & _Reset		-> _o.d[1]-
+	~_o.d[1]				-> o.d[1]+
+
+	// reset-phase affects x
+	o.d[1] & y.d[1]				-> x.d[0]-
+	~inc & ~x.d[0] & ~(o.d[0] & y.d[0])	-> x.d[1]+	// x-coupled
+	~x.d[0] & ~y.d[0]			-> _o.d[1]+
+	_o.d[1] & x.d[1]			-> o.d[1]-
+
+	// set-phase affects y
+	inc & x.d[1]				-> y.d[1]-
+	~y.d[1] & ~(inc & x.d[0])		-> y.d[0]+	// x-coupled
+	x.d[1] & y.d[0] & _Reset		-> _o.d[0]-
+	~_o.d[0]				-> o.d[0]+
+
+	// reset-phase affects x
+	o.d[0] & y.d[0]				-> x.d[1]-
+	~inc & ~x.d[1] & ~(o.d[1] & y.d[1])	-> x.d[0]+	// x-coupled
+	~x.d[1] & ~y.d[1]			-> _o.d[0]+
+	_o.d[0] & x.d[0]			-> o.d[0]-
+**/
+}
+}
+
+//-----------------------------------------------------------------------------
+/**
 	Weak-condition onehot counter, cycles through 1ofN rails.  
 	Example of use of onehot_stages to form a counter.  
 	reset: inc may be either active or inactive on reset.  
-	HSE: 
+	HSE: *[[inc];O.0+;[~inc];O.0-;[inc];O.1+;[~inc];O.1-;...]
 	Tested: test/lib/alternator-onehot_counter-01.
 	Tested: test/lib/alternator-onehot_counter-02.
 	Metrics: inc to out latency is 4 transitions.  
-	\param N must be > 2 (for now).
+	\param N the number of values to cycle through (> 0).  
 	\param inc is effectively an active-low output acknowledge or 
 		active-high input request.  
  */
@@ -82,6 +176,7 @@ defproc	onehot_counter(
 		c1of<N> o;		// for exclhi
 		bool _Reset, Reset) {
 	// bool Reset;	// locally generated
+[(N > 2) ->
 	bool _s[N], s[N], _o[N];
 	onehot_stage_init i0(inc, _s[N-2], s[N-1], _s[0], s[0], _s[1], Reset);
 	onehot_stage i[1..N-1];
@@ -89,17 +184,35 @@ defproc	onehot_counter(
 		i[j](inc, _s[(N+j-2)%N], s[j-1],
 			_s[j], s[j], _s[(j+1)%N], _Reset);
 	)
+[] N == 2 ->
+	// special case alternator
+	alternator_source_1of2 a(inc, o, _Reset, Reset);
+[] N == 1 ->
+	bool _r;
+]
 prs {
+[(N > 2) ->
 	// ring of AND-gates to generate one-hot signal
 	// _Reset				=> Reset-
 	(:j:N:
 		s[j] & s[(j+1)%N]		=> _o[j]-
 		_o[j]				=> o.d[j]-
 	)
+	// TODO: rewrite as trailing else clause
+[] else ->
+	[ N == 1 ->
+		// extremely fast source
+		~_Reset					-> _r+
+		~inc					-> _r+
+		inc & _Reset				-> _r-
+		_r					=> o.d[0]-
+	]
+]
 }
 }
 
-// need different definition for onehot_counter2;
+typedef	onehot_counter<1>		onehot_counter1;
+typedef	alternator_source_1of2		onehot_counter2;
 typedef	onehot_counter<3>		onehot_counter3;
 typedef	onehot_counter<4>		onehot_counter4;
 typedef	onehot_counter<5>		onehot_counter5;
@@ -108,34 +221,224 @@ typedef	onehot_counter<7>		onehot_counter7;
 typedef	onehot_counter<8>		onehot_counter8;
 
 //-----------------------------------------------------------------------------
-
-//-----------------------------------------------------------------------------
 /*
-	Alternator cell
+	Alternator cell.
 	Behavior: Eats every other token it receives
+	Reset: this seems to require r.e high (inactive) during reset.  
+	NOTE: untested, appears unstable from brief testing.  
+	Replaced by "wchb_alternator_eater_2", below.  
+	Sandra, you maintaining this one?
 */
 defproc alt(e1of1 l, r; bool _Reset)
   {
     bool v,_v,u,_u;
-    a1of1 _l,_r;
+    bool _le, _rd;
     prs{
-      ~_Reset | (~r.e & ~l.d[0]) -> _r.d[0]+
-      _Reset & l.e & v & r.e & l.d[0] -> _r.d[0]-
+      ~_Reset | (~r.e & ~l.d[0]) -> _rd+
+      _Reset & l.e & v & r.e & l.d[0] -> _rd-
       ~_Reset | (~r.e & ~l.d[0]) | (~_v & ~l.d[0]) -> _u+
       _Reset & r.e & l.d[0] -> _u-
-      ~_r.d[0] -> r.d[0]+
-      _r.d[0] -> r.d[0]-
+      ~_rd -> r.d[0]+
+      _rd -> r.d[0]-
       ~_u -> u+
       _u -> u-
-      ~_u -> _l.a+
-      _u -> _l.a-
-      ~_l.a -> l.e+
-      _l.a -> l.e-
+      ~_u -> _le+
+      _u -> _le-
+      ~_le -> l.e+
+      _le -> l.e-
       ~_Reset | (~l.e & ~r.d[0] & ~_u) -> v+
-      _Reset & _l.a & r.d[0] & u -> v-
+      _Reset & _le & r.d[0] & u -> v-
       ~v -> _v+
       v -> _v-
     }
   }
+
+//-----------------------------------------------------------------------------
+/**
+	Buffer that eats every other token.  
+	"One for you, one for me..."
+	Application: forms frequency divider when cascaded serially.
+	HSE: [[Re&Ld];Rd+;Le-;[~Re&~Ld];Rd-;Le+;[Ld];Le-;[~Ld];Le+]
+	Other rehufflings may be possible.
+
+	Reset: L.e is high, R.d[0] is low, don't care about R.e
+	Tests: alternator-wchb_eater-0{1,2}.{hac,prsimrc}
+	\param L input channel.
+	\param R output channel, every other token.  
+ */
+defproc wchb_alternator_eater_2(e1of1 L, R; bool _Reset, Reset) {
+c1of2 x, y;
+_c1of2 _o;
+bool r1;
+prs {
+	Reset					-> R.d[0]-
+
+	Reset					-> x.d[0]-
+	~_Reset					-> x.d[1]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[1]-
+	~_Reset					-> y.d[0]+
+
+	~_Reset					-> _o.d[1]+
+	~_Reset					-> _o.d[0]+
+
+	// set-phase affects y
+	L.d[0] & x.d[1]				-> y.d[1]-
+	~y.d[1] & ~(L.d[0] & x.d[0])		-> y.d[0]+	// x-coupled
+	R.e & x.d[1] & y.d[0] & _Reset		-> _o.d[0]-
+	~_o.d[0]				-> R.d[0]+
+	R.d[0] | r1				-> L.e-
+
+	// reset-phase affects x
+	R.d[0] & y.d[0]				-> x.d[1]-
+	~L.d[0] & ~x.d[1] & ~(r1 & y.d[1])	-> x.d[0]+	// x-coupled
+	~R.e & ~x.d[1] & ~y.d[1]		-> _o.d[0]+
+	_o.d[0] & x.d[0]			-> R.d[0]-
+	~R.d[0] & ~r1				-> L.e+
+
+	// set-phase affects y
+	L.d[0] & x.d[0]				-> y.d[0]-
+	~y.d[0] & ~(L.d[0] & x.d[1])		-> y.d[1]+	// x-coupled
+	x.d[0] & y.d[1] & _Reset		-> _o.d[1]-
+	~_o.d[1]				-> r1+
+
+	// reset-phase affects x
+	r1 & y.d[1]				-> x.d[0]-
+	~L.d[0] & ~x.d[0] & ~(R.d[0] & y.d[0])	-> x.d[1]+	// x-coupled
+	~x.d[0] & ~y.d[0]			-> _o.d[1]+
+	_o.d[1] & x.d[1]			-> r1-
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Same as the above, but eats first token b/c reset in different phase.  
+	"One for me, one for you..."
+	HSE: [[Ld];Le-;[~Ld];Le+;[Re&Ld];Rd+;Le-;[~Re&~Ld];Rd-;Le+]
+	Reset: L.e is high, R.d[0] is low, R.e must be high (inactive)!
+	Test: alternator-wchb_eater-03.{hac,prsimrc}
+ */
+defproc wchb_alternator_eater_2_eatfirst(e1of1 L, R; bool _Reset, Reset) {
+c1of2 x, y;
+_c1of2 _o;
+bool r1;
+prs {
+	Reset					-> R.d[0]-
+	Reset					-> r1-
+
+	Reset					-> x.d[1]-
+	~_Reset					-> x.d[0]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[0]-
+	~_Reset					-> y.d[1]+
+
+	~_Reset					-> _o.d[1]+
+	~_Reset					-> _o.d[0]+
+
+	// set-phase affects y
+	L.d[0] & x.d[1]				-> y.d[1]-
+	~y.d[1] & ~(L.d[0] & x.d[0])		-> y.d[0]+	// x-coupled
+	R.e & x.d[1] & y.d[0] & _Reset		-> _o.d[0]-
+	~_o.d[0]				-> R.d[0]+
+	R.d[0] | r1				-> L.e-
+
+	// reset-phase affects x
+	R.d[0] & y.d[0]				-> x.d[1]-
+	~L.d[0] & ~x.d[1] & ~(r1 & y.d[1])	-> x.d[0]+	// x-coupled
+	~R.e & ~x.d[1] & ~y.d[1]		-> _o.d[0]+
+	_o.d[0] & x.d[0]			-> R.d[0]-
+	~R.d[0] & ~r1				-> L.e+
+
+	// set-phase affects y
+	L.d[0] & x.d[0]				-> y.d[0]-
+	~y.d[0] & ~(L.d[0] & x.d[1])		-> y.d[1]+	// x-coupled
+	x.d[0] & y.d[1] & _Reset		-> _o.d[1]-
+	~_o.d[1]				-> r1+
+
+	// reset-phase affects x
+	r1 & y.d[1]				-> x.d[0]-
+	~L.d[0] & ~x.d[0] & ~(R.d[0] & y.d[0])	-> x.d[1]+	// x-coupled
+	~x.d[0] & ~y.d[0]			-> _o.d[1]+
+	_o.d[1] & x.d[1]			-> r1-
+}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Serial chain of wchb_alternator_eaters, where each stage
+	eats every other token.  
+	a.k.a. Frequency-divider.  
+	Reset: requires R.e to be high (inactive)
+	Test: alternator-wchb_eater-04.{hac,prsimrc}
+	\pint N number of divider stages
+	\param L input channel
+	\param R output channel at 1/2^N frequency
+ */
+template <pint N>
+defproc alternator_eater_chain(e1of1 L, R; bool _Reset, Reset) {
+e1of1 M[N+1];
+M[0] = L;
+M[N] = R;
+// wchb_alternator_eater_2 e[N];	// doesn't reset properly
+wchb_alternator_eater_2_eatfirst e[N];
+(;i:N:
+	e[i](M[i], M[i+1], _Reset, Reset);
+)
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Splitting alternator.
+	Application: tree-FIFO! round-robin scheduling.  
+	HSE: *[[R0e&Ld];R0d+;Le-;[~R0e&~Ld];R0d-;Le+;
+		[R1e&Ld];R1d+;Le-;[~R1e&~Ld];R1d-;Le+]
+	Reset: R.e doesn't matter
+	Test: alternator-wchb_split-0{1,2}.{hac,prsimrc}
+ */
+defproc wchb_alternator_split_2(e1of1 L, R[2]; bool _Reset, Reset) {
+c1of2 x, y;
+_c1of2 _o;
+prs {
+	Reset					-> R[0].d[0]-
+//	Reset					-> R[1].d[0]-	// not needed
+
+	Reset					-> x.d[0]-
+	~_Reset					-> x.d[1]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[1]-
+	~_Reset					-> y.d[0]+
+
+	~_Reset					-> _o.d[1]+
+	~_Reset					-> _o.d[0]+
+	// set-phase affects y
+	L.d[0] & x.d[0]				-> y.d[0]-
+	~y.d[0] & ~(L.d[0] & x.d[1])		-> y.d[1]+	// x-coupled
+	R[1].e & x.d[0] & y.d[1] & _Reset	-> _o.d[1]-
+	~_o.d[1]				-> R[1].d[0]+
+	R[0].d[0] | R[1].d[0]			-> L.e-
+
+	// reset-phase affects x
+	R[1].d[0] & y.d[1]			-> x.d[0]-
+	~L.d[0] & ~x.d[0] & ~(R[0].d[0] & y.d[0])
+						-> x.d[1]+	// x-coupled
+	~R[1].e & ~x.d[0] & ~y.d[0]		-> _o.d[1]+
+	_o.d[1] & x.d[1]			-> R[1].d[0]-
+	~R[0].d[0] & ~R[1].d[0]			-> L.e+
+
+	// set-phase affects y
+	L.d[0] & x.d[1]				-> y.d[1]-
+	~y.d[1] & ~(L.d[0] & x.d[0])		-> y.d[0]+	// x-coupled
+	R[0].e & x.d[1] & y.d[0] & _Reset	-> _o.d[0]-
+	~_o.d[0]				-> R[0].d[0]+
+
+	// reset-phase affects x
+	R[0].d[0] & y.d[0]			-> x.d[1]-
+	~L.d[0] & ~x.d[1] & ~(R[1].d[0] & y.d[1])
+						-> x.d[0]+	// x-coupled
+	~R[0].e & ~x.d[1] & ~y.d[1]		-> _o.d[0]+
+	_o.d[0] & x.d[0]			-> R[0].d[0]-
+}
+}
+
 //-----------------------------------------------------------------------------
 

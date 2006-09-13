@@ -1,0 +1,6 @@
+# "alternator-wchb_split-01.prsimrc"
+#	$Id: alternator-wchb_split-01.prsimrc,v 1.1 2006/09/13 02:29:11 fang Exp $
+# @haco@ alternator-wchb_split-01.haco-a
+
+source stable-test-medium.prsimrc
+

@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.11 2006/09/12 07:00:39 fang Exp $
+#	$Id: Makefile.am,v 1.12 2006/09/13 02:28:53 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -47,7 +47,15 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	env-cmos-source-sink-a-02 \
 	env-cmos-source-sink-a-03 \
 	split-split_wchb_e1of2-01 \
-	split-split_wchb_e1of2-02
+	split-split_wchb_e1of2-02 \
+	alternator-1of2-01 \
+	alternator-1of2-02 \
+	alternator-wchb_eater-01 \
+	alternator-wchb_eater-02 \
+	alternator-wchb_eater-03 \
+	alternator-wchb_eater-04 \
+	alternator-wchb_split-01 \
+	alternator-wchb_split-02
 
 # .prsimrc inputs (no suffix)
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
@@ -63,7 +71,15 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	env-cmos-source-sink-a-02 \
 	env-cmos-source-sink-a-03 \
 	split-split_wchb_e1of2-01 \
-	split-split_wchb_e1of2-02
+	split-split_wchb_e1of2-02 \
+	alternator-1of2-01 \
+	alternator-1of2-02 \
+	alternator-wchb_eater-01 \
+	alternator-wchb_eater-02 \
+	alternator-wchb_eater-03 \
+	alternator-wchb_eater-04 \
+	alternator-wchb_split-01 \
+	alternator-wchb_split-02
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 	nand-lvs-01

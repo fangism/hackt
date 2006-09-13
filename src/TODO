@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.39 2006/09/09 06:59:15 fang Exp $
+#	$Id: TODO,v 1.40 2006/09/13 02:28:48 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -53,6 +53,16 @@ enhancement:
 		Just first-come-first-serve, construct map in object header.  
 	unroll-resolving: use copy-on-write pattern for
 		ALL meta-language unrolling (currently done for nonmeta)
+
+===============================================================================
+conditional instance management: (BUG, easy)
+	guards need to be evaluated in sequential else-if
+		(currently does NOT work)
+	with sequential else-if evaluation 
+		token_else should return a pbool_const(true) 
+		for simplicity and avoid special casing.
+	grammar guarantees that else clause may only trail
+	also implement same semantics for PRS conditionals
 
 ===============================================================================
 PRIORITY HIGH: MEMORY HOG
