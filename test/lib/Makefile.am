@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2006/09/14 05:50:07 fang Exp $
+#	$Id: Makefile.am,v 1.15 2006/09/14 22:07:17 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -55,7 +55,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	alternator-wchb_split-01 alternator-wchb_split-02 \
 	alternator-wchb_split-03 alternator-wchb_split-04 \
 	alternator-wchb_split-05 alternator-wchb_split-06 \
-	alternator-lock-01
+	alternator-lock-01 \
+	alternator-wchb_merge-01 alternator-wchb_merge-02 \
+	alternator-wchb_merge-03
 
 # .prsimrc inputs (no suffix)
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
@@ -81,7 +83,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	alternator-wchb_split-01 alternator-wchb_split-02 \
 	alternator-wchb_split-03 alternator-wchb_split-04 \
 	alternator-wchb_split-05 alternator-wchb_split-06 \
-	alternator-lock-01
+	alternator-lock-01 \
+	alternator-wchb_merge-01 alternator-wchb_merge-02 \
+	alternator-wchb_merge-03
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 	nand-lvs-01

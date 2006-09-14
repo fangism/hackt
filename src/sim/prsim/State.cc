@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.24 2006/09/09 06:59:18 fang Exp $
+	$Id: State.cc,v 1.25 2006/09/14 22:07:15 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -1710,9 +1710,11 @@ State::inspect_excl_exception(const excl_exception& exex, ostream& o) const {
 	}
 	o << "but node `" << get_node_canonical_name(exex.node_id) <<
 		"\' tried to become " << (exex.type ? 1 : 0) << "." << endl;
-	o << "The simulator state is no longer coherent; "
+	o << "The simulator\'s excl-check-lock state is no longer coherent; "
 		"do not bother trying to continue the simulation, "
 		"but you may further inspect the state." << endl;
+	o << "You probably want to disable excl-checking with `nocheckexcl\' "
+		"if you wish to continue the simulation." << endl;
 }	// end method State::inspect_excl_exception
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

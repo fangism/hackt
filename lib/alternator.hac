@@ -7,7 +7,7 @@
 	2-way alternators use a dual-rail bit as a state variable whereas
 	N-way alternators will use some sort of one-hot counter.  
 	Splits and merges useful for constructing tree-fifos.  
-	$Id: alternator.hac,v 1.5 2006/09/14 05:50:03 fang Exp $
+	$Id: alternator.hac,v 1.6 2006/09/14 22:07:12 fang Exp $
  */
 
 import "channel.hac";
@@ -160,6 +160,7 @@ prs {
 //-----------------------------------------------------------------------------
 /**
 	Half of a symmetric lock implementation.  
+	Used in definition of alternator_lock_1of2.
  */
 defproc alternator_half_lock(
 		bool inc[2], x[2], y[2], _o[2], o[2], _Reset) {
@@ -184,8 +185,9 @@ prs {
 /**
 	Passes one value through at a time betwen two rails in alternation.  
 	No single side can psss through consecutive times.  
-	Reset: inputs low
-	Test:
+	Reset: inputs low, this will hold _o high on reset.
+	Test: alternator-lock-01.{hac,prsimrc}
+	TODO: consider lower latency reshuffling.
 	HSE: *[[inc0];O.0+;[~inc0];O.0-;[inc1];O.1+;[~inc1];O.1-]
 	\param inc active-high inputs (or active-low ack)
 	\param o the 1of2 output, like a pair of active-high acknowledges.
@@ -311,6 +313,7 @@ typedef	onehot_counter<8>		onehot_counter8;
 //-----------------------------------------------------------------------------
 // TODO: onehot_lock
 // passes one value though at a time in round-robin fashion.
+// in the fashion of alternator_lock_1of2
 
 //-----------------------------------------------------------------------------
 /**
@@ -530,73 +533,130 @@ R = M[K];	// connect outputs
 
 //=============================================================================
 /**
-	Merging alternator.
-	Application: tree-FIFO! round-robin commit.  
-	HSE: *[[Re&L0d];Rd+;L0e-;[~Re&~L0d];Rd-;L0e+;
-		[Re&L1d];Rd+;L1e-;[~Re&~L1d];Rd-;L1e+]
-	Reset: R.e doesn't matter
-	Test: 
-	\param L input channels
-	\param R output channel
-defproc wchb_alternator_merge_2(e1of1 L[2], R; bool _Reset, Reset) {
-c1of2 x, y;
-_c1of2 _o;
-// bool _r;
-c1of2 r;	// rename to rr to avoid case-sensitivity issues
+	Passes one value through at a time betwen two rails in alternation.  
+	No single side can psss through consecutive times.  
+	Reset: inputs low
+	Test: alternator-wchb_merge-0{1,2}.{hac,prsimrc}
+	TODO: lower latency version, this one sucks: 6T
+	HSE: *[[inc0];O.0+;[~inc0];O.0-;[inc1];O.1+;[~inc1];O.1-]
+	\param inc active-high inputs (or active-low ack)
+	\param o the 1of2 output, like a pair of active-high acknowledges.
+ */
+defproc wchb_alternator_merge_2x1of1(
+		a1of1 L[2];
+		e1of1 R;
+		bool _Reset, Reset) {
+c1of2 x;	// exclhi dual-rail state-variable
+c1of2 y;	// exclhi dual-rail state-variable
+bool _o[2];	// are these excl?
+bool _r;
 prs {
-//	Reset					-> R[0].d[0]-
+	~_Reset					-> L[1].a+
+//	Reset					-> o.d[0]-	// not needed
 
 	Reset					-> x.d[0]-
 	~_Reset					-> x.d[1]+
 	// the following two resets only needed for active-acknowledge on reset
-	Reset					-> y.d[0]-	// d[1]
-	~_Reset					-> y.d[1]+	// d[0]
+	Reset					-> y.d[0]-
+	~_Reset					-> y.d[1]+
 
-//	~_Reset					-> L[0].e+
-	Reset					-> L[0].e-
-	~_Reset					-> r.d[0]+
-//	~_Reset					-> _r+
-	~_Reset					-> _o.d[1]+
-	~_Reset					-> _o.d[0]+
+	// All the following production rules have been folded into:
+	// symmetric_alterator_stage, above.
+	// The full expansion is left here for clarity.  
+
+	~_Reset					-> _o[1]+
+	~_Reset					-> _o[0]+
 
 	// set-phase affects y
 	L[1].d[0] & x.d[0]			-> y.d[0]-
 	~y.d[0] & ~(L[0].d[0] & x.d[1])		-> y.d[1]+	// x-coupled
-	R.e & x.d[0] & y.d[1] & _Reset		-> _o.d[1]-	// _o.d[1]
-	~_o.d[1]				-> R.d[0]+
-	~_o.d[1]				-> r.d[1]+
-	r.d[1] & y.d[1]				-> L[1].e-
+	R.e & x.d[0] & y.d[1] & _Reset		-> _o[1]-
+	~_o[1]					-> L[1].a+
+	L[0].a & L[1].a				-> _r-
+	~_r					-> R.d[0]+
 
 	// reset-phase affects x
-	R.d[0] & y.d[1]				-> x.d[0]-
-	~L[1].d[0] & ~x.d[0] & ~(R.d[0] & y.d[0])
+	L[1].a & y.d[1]				-> x.d[0]-
+	~L[1].d[0] & ~x.d[0] & ~(L[0].a & y.d[0])
 						-> x.d[1]+	// x-coupled
-	~R.e & ~x.d[0] & ~y.d[0]		-> _o.d[1]+	// _o.d[1]
-	_o.d[1] & x.d[1] & _o.d[0]		-> R.d[0]-	// _o.d[0]?
-	_o.d[1] & x.d[1]			-> r.d[1]-
-//	_r					-> R.d[0]-
-	~r.d[1]					-> L[1].e+	// need x.d?
+	~R.e & ~x.d[0] & ~y.d[0]		-> _o[0]+
+	_o[0] & x.d[1]				-> L[0].a-
+	~L[0].a | ~L[1].a			-> _r+
+	_r					-> R.d[0]-
 
 	// set-phase affects y
 	L[0].d[0] & x.d[1]			-> y.d[1]-
 	~y.d[1] & ~(L[1].d[0] & x.d[0])		-> y.d[0]+	// x-coupled
-	R.e & x.d[1] & y.d[0] & _Reset		-> _o.d[0]-	// _o.d[0]
-	~_o.d[0]				-> R.d[0]+
-	~_o.d[0]				-> r.d[0]+
-//	~_r					-> R.d[0]+
-	r.d[0] & y.d[0]				-> L[0].e-
+	R.e & x.d[1] & y.d[0] & _Reset		-> _o[0]-
+	~_o[0]					-> L[0].a+
 
 	// reset-phase affects x
-	R.d[0] & y.d[0]				-> x.d[1]-
-	~L[0].d[0] & ~x.d[1] & ~(R.d[0] & y.d[1])
+	L[0].a & y.d[0]				-> x.d[1]-
+	~L[0].d[0] & ~x.d[1] & ~(L[1].a & y.d[1])
 						-> x.d[0]+	// x-coupled
-	~R.e & ~x.d[1] & ~y.d[1]		-> _o.d[0]+	// _o.d[0]
-	_o.d[0] & x.d[0] & _o.d[1]		-> R.d[0]-	// _o.d[1]?
-	_o.d[0] & x.d[0]			-> r.d[0]-	// need x.d?
-	~r.d[0]					-> L[0].e+
+	~R.e & ~x.d[1] & ~y.d[1]		-> _o[1]+
+	_o[1] & x.d[0]				-> L[1].a-
+
 }
 }
+
+//-----------------------------------------------------------------------------
+/**
+	Wrapper to use e1of1 interfaces.  
  */
+defproc wchb_alternator_merge_2xe1of1(
+		e1of1 L[2], R;
+		bool _Reset, Reset) {
+a1of1 ll[2];
+(;i:2:	L[i].d = ll[i].d;	)
+wchb_alternator_merge_2x1of1 M(ll, R, _Reset, Reset);
+prs {
+(:i:2:
+	ll[i].a					=> L[i].e-
+)
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Wrapper to use a1of1 interfaces.  
+ */
+defproc wchb_alternator_merge_2xa1of1(
+		a1of1 L[2], R;
+		bool _Reset, Reset) {
+e1of1 rr;
+R.d = rr.d;
+wchb_alternator_merge_2x1of1 M(L, rr, _Reset, Reset);
+prs {
+	R.a					=> rr.e-
+}
+}
+
+//-----------------------------------------------------------------------------
+/**
+	Depth K alternating merger.  
+	Merges to 2^K channels in alternation.  
+	Order is funky though.  
+	TODO: experiment with self-recursive definition.  
+	Reset: R.e needs to be high (inactive)
+	Test: alternator-wchb_merge-0{...}.{hac,prsimrc}
+	\param K depth of splitter tree.  K >= 1.
+ */
+template <pint K>
+defproc wchb_alternator_merge_2_tree(e1of1 L[1<<K], R; bool _Reset, Reset) {
+// this requires a sparse instantiation to construct a tree
+e1of1 M[1][1];
+M[0][0] = R;
+(;k:K:
+	// build the tree one level at a time
+	e1of1 M[k+1..k+1][1<<(k+1)];
+	wchb_alternator_merge_2xe1of1 S[k..k][1<<k];
+(;l:1<<k:
+	S[k][l](M[k+1][2*l..2*l+1], M[k][l], _Reset, Reset);
+)
+)
+L = M[K];	// connect outputs
+}
 
 //-----------------------------------------------------------------------------
 /**
@@ -617,6 +677,18 @@ L[1].a = SR[1].d[0];
 wchb_alternator_split_2 S(SL, SR, _Reset, Reset);
 }
  */
+
+//-----------------------------------------------------------------------------
+/**
+	Tree FIFO.  
+	Test: untested
+ */
+template <pint K>
+defproc wchb_tree_fifo_e1of1(e1of1 L, R; bool _Reset, Reset) {
+e1of1 I[1<<K];
+wchb_alternator_split_2_tree<K> S(L, I, _Reset, Reset);
+wchb_alternator_merge_2_tree<K> M(I, R, _Reset, Reset);
+}
 
 //-----------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.40 2006/09/13 02:28:48 fang Exp $
+#	$Id: TODO,v 1.41 2006/09/14 22:07:14 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -20,6 +20,7 @@ Simulation:
 prsim:
 	category of 'debug' commands for inspecting state, etc...
 	direction-specific breakpoints
+	deadlock diagnosis, akin to backtrace, but using fanin state analysis
 	interpreter commands:
 		interp key [value]
 			for interpreter mode flags:
