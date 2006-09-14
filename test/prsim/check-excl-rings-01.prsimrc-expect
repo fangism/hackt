@@ -10,4 +10,5 @@ ring-state:
 	x : 1
 	y : 0
 but node `y' tried to become 1.
-The simulator state is no longer coherent; do not bother trying to continue the simulation, but you may further inspect the state.
+The simulator's excl-check-lock state is no longer coherent; do not bother trying to continue the simulation, but you may further inspect the state.
+You probably want to disable excl-checking with `nocheckexcl' if you wish to continue the simulation.
