@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.13 2006/09/13 05:40:46 fang Exp $
+#	$Id: Makefile.am,v 1.14 2006/09/14 05:50:07 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -48,16 +48,14 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	env-cmos-source-sink-a-03 env-cmos-source-sink-a-04 \
 	env-cmos-source-sink-a-05 env-cmos-source-sink-a-06 \
 	env-cmos-source-sink-a-07 \
-	split-split_wchb_e1of2-01 \
-	split-split_wchb_e1of2-02 \
-	alternator-1of2-01 \
-	alternator-1of2-02 \
-	alternator-wchb_eater-01 \
-	alternator-wchb_eater-02 \
-	alternator-wchb_eater-03 \
-	alternator-wchb_eater-04 \
-	alternator-wchb_split-01 \
-	alternator-wchb_split-02
+	split-split_wchb_e1of2-01 split-split_wchb_e1of2-02 \
+	alternator-1of2-01 alternator-1of2-02 \
+	alternator-wchb_eater-01 alternator-wchb_eater-02 \
+	alternator-wchb_eater-03 alternator-wchb_eater-04 \
+	alternator-wchb_split-01 alternator-wchb_split-02 \
+	alternator-wchb_split-03 alternator-wchb_split-04 \
+	alternator-wchb_split-05 alternator-wchb_split-06 \
+	alternator-lock-01
 
 # .prsimrc inputs (no suffix)
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
@@ -76,16 +74,14 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	env-cmos-source-sink-a-03 env-cmos-source-sink-a-04 \
 	env-cmos-source-sink-a-05 env-cmos-source-sink-a-06 \
 	env-cmos-source-sink-a-07 \
-	split-split_wchb_e1of2-01 \
-	split-split_wchb_e1of2-02 \
-	alternator-1of2-01 \
-	alternator-1of2-02 \
-	alternator-wchb_eater-01 \
-	alternator-wchb_eater-02 \
-	alternator-wchb_eater-03 \
-	alternator-wchb_eater-04 \
-	alternator-wchb_split-01 \
-	alternator-wchb_split-02
+	split-split_wchb_e1of2-01 split-split_wchb_e1of2-02 \
+	alternator-1of2-01 alternator-1of2-02 \
+	alternator-wchb_eater-01 alternator-wchb_eater-02 \
+	alternator-wchb_eater-03 alternator-wchb_eater-04 \
+	alternator-wchb_split-01 alternator-wchb_split-02 \
+	alternator-wchb_split-03 alternator-wchb_split-04 \
+	alternator-wchb_split-05 alternator-wchb_split-06 \
+	alternator-lock-01
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 	nand-lvs-01

@@ -2,6 +2,17 @@
 
 2006-09-13	David Fang	<fangism@users.sourceforce.net>
 
+	* HACKT-00-01-04-main-00-80-16:
+	  Added an alternator-lock that passes one of several
+		sources through in round-robin order (alternation).  
+		This will be the basis for alternator merges.  
+	  Updated the reset initial phase of alternator-eaters to 
+		work with environment resets in general.
+	  Also updated initial reset phase of alternating splitters.  
+	  Added binary alternating split tree definition.
+	  Next: finish alternating merger, construct tree FIFO.  
+
+
 	* HACKT-00-01-04-main-00-80-15:
 	  env.hac: CMOS sources now work for all N > 0, 
 		except that for N==2, need inactive R.e on reset.

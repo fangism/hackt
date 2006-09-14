@@ -1,0 +1,16 @@
+// "alternator-wchb_split-06.hac"
+// multi-level split trees, trying different output reset
+
+import "alternator.hac";
+import "env.hac";
+
+e1of1 L, R[32];
+bool _Reset, Reset;
+wchb_alternator_split_2_tree<5>
+	X(L, R, _Reset, Reset);
+source_e<1,1,{0}> s(L, _Reset);
+bitbucket_e1of<1> b[32];
+(;i:32:
+	b[i](R[i], _Reset);
+)
+

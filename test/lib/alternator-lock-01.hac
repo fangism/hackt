@@ -1,0 +1,13 @@
+// "alternator-lock-01.hac"
+
+import "alternator.hac";
+import "env.hac";
+
+bool _Reset, Reset;
+a1of1 L[2];
+_c1of2 c({L[0].a, L[1].a});
+alternator_lock_1of2 A({L[0].d[0], L[1].d[0]}, c, _Reset, Reset);
+cmos_source_a<1,1,{0}>
+	S0(L[0], _Reset, Reset),
+	S1(L[1], _Reset, Reset);
+

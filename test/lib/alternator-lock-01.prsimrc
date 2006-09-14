@@ -1,0 +1,6 @@
+# "alternator-lock-01.prsimrc"
+#	$Id: alternator-lock-01.prsimrc,v 1.1 2006/09/14 05:50:09 fang Exp $
+# @haco@ alternator-lock-01.haco-a
+
+source stable-test-medium.prsimrc
+
