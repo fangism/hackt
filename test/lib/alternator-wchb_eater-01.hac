@@ -5,7 +5,7 @@ import "env.hac";
 
 e1of1 L, R;
 bool _Reset, Reset;
-wchb_alternator_eater_2 X(L, R, _Reset, Reset);
+wchb_alternator_eater_2_slow X(L, R, _Reset, Reset);
 source_e<1,1,{0}> s(L, _Reset);
 inactive_reset_bitbucket_e1of<1> b(R, _Reset);
 

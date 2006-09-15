@@ -1,11 +1,11 @@
-// "alternator-wchb_eater-04.hac"
+// "alternator-wchb_eater-05.hac"
 
 import "alternator.hac";
 import "env.hac";
 
 e1of1 L, R;
 bool _Reset, Reset;
-alternator_eater_chain_slow<4> X(L, R, _Reset, Reset);
+wchb_alternator_eater_2_fast X(L, R, _Reset, Reset);
 source_e<1,1,{0}> s(L, _Reset);
 inactive_reset_bitbucket_e1of<1> b(R, _Reset);
 

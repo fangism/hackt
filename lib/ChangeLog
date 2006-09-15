@@ -1,5 +1,16 @@
 "lib/ChangeLog"
 
+2006-09-15	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-18:
+	  alternator.hac: onehot_stage reduced a pull-up rule,
+		implemented faster alternators with better concurrency
+		and lower latency, includes source, lock, and eater.  
+		Tree fifo draft works, but has long latency split/merge.
+	  Next: faster split and merge alternators (latency too 
+		horrendous as is).
+
+
 2006-09-14	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-17:

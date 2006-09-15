@@ -7,7 +7,7 @@
 	2-way alternators use a dual-rail bit as a state variable whereas
 	N-way alternators will use some sort of one-hot counter.  
 	Splits and merges useful for constructing tree-fifos.  
-	$Id: alternator.hac,v 1.6 2006/09/14 22:07:12 fang Exp $
+	$Id: alternator.hac,v 1.7 2006/09/15 10:30:26 fang Exp $
  */
 
 import "channel.hac";
@@ -38,7 +38,7 @@ defproc onehot_stage(
 		// unfortunately need _Reset
 		_Reset & inc & sj & _si			-> _sk-
 		~_sk					-> sk+
-		~inc & ~sj & ~_sl			-> _sk+
+		~inc & ~_sl				-> _sk+	// no ~sj
 		_sk					-> sk-
 		~_Reset					-> _sk+
 	}
@@ -57,7 +57,7 @@ defproc onehot_stage_init(
 	prs {
 		inc & sj & _si				-> _sk-
 		~_sk					-> sk+
-		~inc & ~sj & ~_sl			-> _sk+
+		~inc & ~_sl				-> _sk+ // no ~sj
 		_sk					-> sk-
 		Reset					-> _sk-
 	}
@@ -67,6 +67,7 @@ defproc onehot_stage_init(
 /**
 	Half of an alternator, symmetric.
 	This acts as one side of a toggle counter.  
+	This is OBSOLETED by the superior variation, below.  
 	\param inc the request to advance or toggle
 	\param x, y dual-rail state variables
 	\param _o1 local inverted output rail
@@ -93,6 +94,39 @@ prs {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Half of an alternator, 2-way symmetric.  
+	Faster, smaller, and lower latency than the other version.  
+	Latency: inc => o+ (2T)
+	\param inc the request to advance or toggle
+	\param x, y dual-rail state variables
+	\param _o1 local inverted output rail
+	\param o output rails
+ */
+defproc symmetric_alternator_stage_fast(
+		bool inc,
+		x[2], y[2],
+		o[2],
+		_Reset) {
+bool _o;
+prs {
+	~_Reset					-> _o+
+
+	// set-phase affects y
+	inc & x[0]				-> y[0]-
+	inc & x[0] & _Reset			-> _o-
+	~y[0] & ~(inc & x[1])			-> y[1]+	// x-coupled
+	~_o					-> o[0]+
+
+	// reset-phase affects x
+	o[1] & y[1]				-> x[0]-
+	~inc					-> _o+
+	~inc & ~x[0] & ~(o[0] & y[0])		-> x[1]+	// x-coupled
+	_o					-> o[0]-
+}
+}
+
 //-----------------------------------------------------------------------------
 /**
 	Size-2 one-hot counter (special case)
@@ -102,7 +136,7 @@ prs {
 	\param inc active-high increment request (or active-low ack)
 	\param o the 1of2 output.
  */
-defproc alternator_source_1of2(
+defproc alternator_source_1of2_slow(
 		bool inc;
 		c1of2 o;
 		bool _Reset, Reset) {
@@ -159,10 +193,75 @@ prs {
 
 //-----------------------------------------------------------------------------
 /**
+	Source that alternates between two values.  
+	Smaller, faster, lower latency, simply superior.  
+	Latency: inc -> o+ (2T), ~inc -> o- (2T)
+	Reset: inc may be either high or low on reset, doesn't matter.
+	Initial: first rail raised will be o.d[0].
+	\param inc the increment input signal.
+	\param o the dual-rail output.  
+ */
+defproc alternator_source_1of2_fast(
+		bool inc;
+		c1of2 o;
+		bool _Reset, Reset) {
+c1of2 x;	// exclhi dual-rail state-variable
+c1of2 y;	// exclhi dual-rail state-variable
+// _c1of2 _o;
+symmetric_alternator_stage_fast s[2];
+	s[0](inc, x.d, y.d, o.d, _Reset);
+	s[1](inc, {x.d[1], x.d[0]}, {y.d[1], y.d[0]}, 
+		{o.d[1], o.d[0]}, _Reset);
+prs {
+	Reset					-> x.d[1]-
+	~_Reset					-> x.d[0]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[0]-
+	~_Reset					-> y.d[1]+
+
+	// All the following production rules have been folded into:
+	// symmetric_alterator_stage, above.
+	// The full expansion is left here for clarity.  
+/**
+	~_Reset					-> _o.d[1]+
+	~_Reset					-> _o.d[0]+
+
+	// set-phase affects y
+	inc & x.d[0] & _Reset			-> y.d[0]-
+	inc & x.d[0] & _Reset			-> _o.d[0]-
+	~_o.d[0]				-> o.d[0]+
+	~y.d[0] & ~(inc & x.d[1])		-> y.d[1]+	// x-coupled
+
+	// reset-phase affects x
+	o.d[1] & y.d[1]				-> x.d[0]-
+	~inc					-> _o.d[0]+
+	_o.d[0]					-> o.d[0]-
+	~inc & ~x.d[0] & ~(o.d[0] & y.d[0])	-> x.d[1]+	// x-coupled
+
+	// set-phase affects y
+	inc & x.d[1] & _Reset			-> _o.d[1]-
+	inc & x.d[1] & _Reset			-> y.d[1]-
+	~_o.d[1]				-> o.d[1]+
+	~y.d[1] & ~(inc & x.d[0])		-> y.d[0]+	// x-coupled
+
+	// reset-phase affects x
+	o.d[0] & y.d[0]				-> x.d[1]-
+	~inc					-> _o.d[1]+
+	_o.d[1]					-> o.d[1]-
+	~inc & ~x.d[1] & ~(o.d[1] & y.d[1])	-> x.d[0]+	// x-coupled
+**/
+}
+}
+
+// typedef	alternator_source_1of2_slow	alternator_source_1of2;
+typedef	alternator_source_1of2_fast	alternator_source_1of2;
+
+//-----------------------------------------------------------------------------
+/**
 	Half of a symmetric lock implementation.  
 	Used in definition of alternator_lock_1of2.
  */
-defproc alternator_half_lock(
+defproc alternator_half_lock_slow(
 		bool inc[2], x[2], y[2], _o[2], o[2], _Reset) {
 prs {
 
@@ -181,10 +280,37 @@ prs {
 }
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Half of a symmetric lock implementation.  
+	Lower latency version.  
+	Latency: inc -> o+ (2T)
+	Used in definition of alternator_lock_1of2.
+ */
+defproc alternator_half_lock_fast(
+		bool i[2], x[2], y[2], o[2], _Reset) {
+bool _o;
+prs {
+	~_Reset					-> _o+
+
+	// reset-phase affects x
+	~x[1] & ~i[1] & ~y[0]			-> _o+		// eww, 3p
+	_o & y[1]				-> o[0]-
+	o[1] & y[1]				-> x[0]-
+	~o[0] & ~x[0] & ~(o[0] & y[0])		-> x[1]+	// x-coupled
+
+	// set-phase affects y
+	i[0] & x[1] & y[1]			-> _o-
+	~_o					-> o[0]+
+	o[0] & x[1]				-> y[1]-
+	~y[1] & ~(o[1] & x[0])			-> y[0]+	// x-coupled
+}
+}
+
 //-----------------------------------------------------------------------------
 /**
 	Passes one value through at a time betwen two rails in alternation.  
-	No single side can psss through consecutive times.  
+	No single side can pass through consecutive times.  
 	Reset: inputs low, this will hold _o high on reset.
 	Test: alternator-lock-01.{hac,prsimrc}
 	TODO: consider lower latency reshuffling.
@@ -192,14 +318,14 @@ prs {
 	\param inc active-high inputs (or active-low ack)
 	\param o the 1of2 output, like a pair of active-high acknowledges.
  */
-defproc alternator_lock_1of2(
+defproc alternator_lock_1of2_slow(
 		bool inc[2];
 		_c1of2 o;
 		bool _Reset, Reset) {
 c1of2 x;	// exclhi dual-rail state-variable
 c1of2 y;	// exclhi dual-rail state-variable
 bool _o[2];
-alternator_half_lock s[2];
+alternator_half_lock_slow s[2];
 	s[0](inc, x.d, y.d, _o, o.d, _Reset);
 	s[1]({inc[1], inc[0]}, {x.d[1], x.d[0]}, {y.d[1], y.d[0]},
 		{_o[1], _o[0]}, {o.d[1], o.d[0]}, _Reset);
@@ -246,6 +372,75 @@ prs {
 ***/
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Passes one value through at a time betwen two rails in alternation.  
+	No single side can pass through consecutive times.  
+	Reset: inputs low, this will hold _o high on reset.
+	Test: alternator-lock-02.{hac,prsimrc}
+	HSE: *[[inc0];O.0+;[~inc0];O.0-;[inc1];O.1+;[~inc1];O.1-]
+	\param inc active-high inputs (or active-low ack)
+	\param o the 1of2 output, like a pair of active-high acknowledges.
+ */
+defproc alternator_lock_1of2_fast(
+		bool inc[2];
+		_c1of2 o;
+		bool _Reset, Reset) {
+c1of2 x;	// exclhi dual-rail state-variable
+c1of2 y;	// exclhi dual-rail state-variable
+// bool _o[2];
+alternator_half_lock_fast s[2];
+	s[0](inc, x.d, y.d, o.d, _Reset);
+	s[1]({inc[1], inc[0]}, {x.d[1], x.d[0]}, {y.d[1], y.d[0]},
+		{o.d[1], o.d[0]}, _Reset);
+spec {
+	exclhi(inc)
+}
+prs {
+
+	Reset					-> x.d[0]-
+	~_Reset					-> x.d[1]+
+	Reset					-> y.d[0]-
+	~_Reset					-> y.d[1]+
+	Reset					-> o.d[0]-
+	~_Reset					-> o.d[1]+
+/**
+	// All the following production rules have been folded into:
+	// symmetric_alterator_stage, above.
+	// The full expansion is left here for clarity.  
+
+	~_Reset					-> _o[0]+
+	~_Reset					-> _o[1]+
+
+	// set-phase affects y
+	inc[1] & x.d[0] & y.d[0]		-> _o[1]-
+	~_o[1]					-> o.d[1]+
+	o.d[1] & x.d[0]				-> y.d[0]-
+	~y.d[0] & ~(o.d[0] & x.d[1])		-> y.d[1]+	// x-coupled
+
+	// reset-phase affects x
+	~x.d[1] & ~inc[1] & ~y.d[0]		-> _o[0]+	// eww, 3p
+	_o[0] & y.d[1]				-> o.d[0]-
+	o.d[1] & y.d[1]				-> x.d[0]-
+	~o.d[0] & ~x.d[0] & ~(o.d[0] & y.d[0])	-> x.d[1]+	// x-coupled
+
+	// set-phase affects y
+	inc[0] & x.d[1] & y.d[1]		-> _o[0]-
+	~_o[0]					-> o.d[0]+
+	o.d[0] & x.d[1]				-> y.d[1]-
+	~y.d[1] & ~(o.d[1] & x.d[0])		-> y.d[0]+	// x-coupled
+
+	// reset-phase affects x
+	~x.d[0] & ~inc[0] & ~y.d[1]		-> _o[1]+	// eww, 3p
+	_o[1] & y.d[0]				-> o.d[1]-
+	o.d[0] & y.d[0]				-> x.d[1]-
+	~o.d[1] & ~x.d[1] & ~(o.d[1] & y.d[1])	-> x.d[0]+	// x-coupled
+**/
+}
+}
+
+typedef	alternator_lock_1of2_fast	alternator_lock_1of2;
 
 //-----------------------------------------------------------------------------
 /**
@@ -328,7 +523,7 @@ typedef	onehot_counter<8>		onehot_counter8;
 	\param L input channel.
 	\param R output channel, every other token.  
  */
-defproc wchb_alternator_eater_2(e1of1 L, R; bool _Reset, Reset) {
+defproc wchb_alternator_eater_2_slow(e1of1 L, R; bool _Reset, Reset) {
 c1of2 x, y;
 _c1of2 _o;
 bool r1;
@@ -374,6 +569,68 @@ prs {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Buffer that eats every other token.  
+	"One for you, one for me..."
+	Application: forms frequency divider when cascaded serially.
+	HSE: [[Re&Ld];Rd+;Le-;[~Re&~Ld];Rd-;Le+;[Ld];Le-;[~Ld];Le+]
+	Other rehufflings may be possible.
+	Latency: 
+	Reset: 
+	Tests: alternator-wchb_eater-0{1,2}.{hac,prsimrc}
+	\param L input channel.
+	\param R output channel, every other token.  
+ */
+defproc wchb_alternator_eater_2_fast(e1of1 L, R; bool _Reset, Reset) {
+c1of2 x, y;
+_c1of2 _o;
+bool r1;
+spec {
+	exclhi(R.d[0], r1)
+}
+prs {
+	Reset					-> x.d[1]-
+	~_Reset					-> x.d[0]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[1]-
+	~_Reset					-> y.d[0]+
+
+	Reset					-> R.d[0]-
+
+	~_Reset					-> _o.d[1]+
+	~_Reset					-> _o.d[0]+
+
+	// set-phase affects y
+	R.e & L.d[0] & x.d[0] & y.d[0]		-> _o.d[0]-
+	~_o.d[0]				-> R.d[0]+
+	R.d[0]					-> L.e-
+	R.d[0] & x.d[0]				-> y.d[0]-
+	~y.d[0] & ~(r1 & x.d[1])		-> y.d[1]+	// x-coupled
+
+	// reset-phase affects x
+	~R.e & ~L.d[0] & ~y.d[0]		-> _o.d[0]+
+	_o.d[0] & y.d[1]			-> R.d[0]-
+	~R.d[0] & ~r1				-> L.e+
+	L.e & y.d[1] & _o.d[0]			-> x.d[0]-
+	~x.d[0] & ~(L.e & y.d[0] & _o.d[1])	-> x.d[1]+	// x-coupled
+
+	// set-phase affects y
+	L.d[0] & x.d[1] & y.d[1]		-> _o.d[1]-	// y.d[1]?
+	~_o.d[1]				-> r1+
+	r1					-> L.e-
+	r1 & x.d[1]				-> y.d[1]-
+	~y.d[1] & ~(R.d[0] & x.d[0])		-> y.d[0]+	// x-coupled
+
+	// reset-phase affects x
+	~L.d[0] & ~y.d[1]			-> _o.d[1]+
+	_o.d[1] & y.d[0]			-> r1-		// y.d[0]?
+//	~R.d[0] & ~r1				-> L.e+		// dupl.
+	L.e & y.d[0] & _o.d[1]			-> x.d[1]-
+	~x.d[1] & ~(L.e & y.d[1])		-> x.d[0]+	// x-coupled
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Same as the above, but eats first token b/c reset in different phase.  
 	"One for me, one for you..."
 	(Can't think of a good reason where one would use this, but it's here.)
@@ -381,7 +638,8 @@ prs {
 	Reset: L.e is high, R.d[0] is low, R.e must be high (inactive)!
 	Test: alternator-wchb_eater-03.{hac,prsimrc}
  */
-defproc wchb_alternator_eater_2_eatfirst(e1of1 L, R; bool _Reset, Reset) {
+defproc wchb_alternator_eater_2_slow_eatfirst(
+		e1of1 L, R; bool _Reset, Reset) {
 c1of2 x, y;
 _c1of2 _o;
 bool r1;
@@ -438,11 +696,34 @@ prs {
 	\param R output channel at 1/2^N frequency
  */
 template <pint N>
-defproc alternator_eater_chain(e1of1 L, R; bool _Reset, Reset) {
+defproc alternator_eater_chain_slow(e1of1 L, R; bool _Reset, Reset) {
 e1of1 M[N+1];
 M[0] = L;
 M[N] = R;
-wchb_alternator_eater_2 e[N];
+wchb_alternator_eater_2_slow e[N];
+(;i:N:
+	e[i](M[i], M[i+1], _Reset, Reset);
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serial chain of wchb_alternator_eaters, where each stage
+	eats every other token.  
+	a.k.a. Frequency-divider.  
+	This variation is faster, and lower latency.  
+	Reset: doesn't care what R.e is on reset
+	Test: alternator-wchb_eater-0{5,6}.{hac,prsimrc}
+	\pint N number of divider stages
+	\param L input channel
+	\param R output channel at 1/2^N frequency
+ */
+template <pint N>
+defproc alternator_eater_chain_fast(e1of1 L, R; bool _Reset, Reset) {
+e1of1 M[N+1];
+M[0] = L;
+M[N] = R;
+wchb_alternator_eater_2_fast e[N];
 (;i:N:
 	e[i](M[i], M[i+1], _Reset, Reset);
 )

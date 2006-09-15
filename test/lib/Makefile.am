@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.15 2006/09/14 22:07:17 fang Exp $
+#	$Id: Makefile.am,v 1.16 2006/09/15 10:30:27 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -50,14 +50,17 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	env-cmos-source-sink-a-07 \
 	split-split_wchb_e1of2-01 split-split_wchb_e1of2-02 \
 	alternator-1of2-01 alternator-1of2-02 \
+	alternator-1of2-03 alternator-1of2-04 \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
 	alternator-wchb_eater-03 alternator-wchb_eater-04 \
+	alternator-wchb_eater-05 alternator-wchb_eater-06 \
 	alternator-wchb_split-01 alternator-wchb_split-02 \
 	alternator-wchb_split-03 alternator-wchb_split-04 \
 	alternator-wchb_split-05 alternator-wchb_split-06 \
-	alternator-lock-01 \
+	alternator-lock-01 alternator-lock-02 \
 	alternator-wchb_merge-01 alternator-wchb_merge-02 \
-	alternator-wchb_merge-03
+	alternator-wchb_merge-03 \
+	alternator-wchb_tree_fifo-01
 
 # .prsimrc inputs (no suffix)
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
@@ -78,14 +81,17 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	env-cmos-source-sink-a-07 \
 	split-split_wchb_e1of2-01 split-split_wchb_e1of2-02 \
 	alternator-1of2-01 alternator-1of2-02 \
+	alternator-1of2-03 alternator-1of2-04 \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
 	alternator-wchb_eater-03 alternator-wchb_eater-04 \
+	alternator-wchb_eater-05 alternator-wchb_eater-06 \
 	alternator-wchb_split-01 alternator-wchb_split-02 \
 	alternator-wchb_split-03 alternator-wchb_split-04 \
 	alternator-wchb_split-05 alternator-wchb_split-06 \
-	alternator-lock-01 \
+	alternator-lock-01 alternator-lock-02 \
 	alternator-wchb_merge-01 alternator-wchb_merge-02 \
-	alternator-wchb_merge-03
+	alternator-wchb_merge-03 \
+	alternator-wchb_tree_fifo-01
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 	nand-lvs-01
