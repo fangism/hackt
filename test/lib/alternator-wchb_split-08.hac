@@ -1,13 +1,13 @@
-// "alternator-wchb_split-01.hac"
+// "alternator-wchb_split-08.hac"
 
 import "alternator.hac";
 import "env.hac";
 
 e1of1 L, R[2];
 bool _Reset, Reset;
-wchb_alternator_split_2_slow X(L, R, _Reset, Reset);
+wchb_alternator_split_2_fast X(L, R, _Reset, Reset);
 source_e<1,1,{0}> s(L, _Reset);
-inactive_reset_bitbucket_e1of<1>
+bitbucket_e1of<1>
 	b0(R[0], _Reset), 
 	b1(R[1], _Reset);
 

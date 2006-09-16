@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.h"
 	The state of the prsim simulator.  
-	$Id: State.h,v 1.15 2006/09/09 06:59:19 fang Exp $
+	$Id: State.h,v 1.16 2006/09/16 20:47:54 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_STATE_H__
@@ -219,6 +219,11 @@ private:
 			useful for arbitration in certain instances.  
 		 */
 		FLAG_RANDOM_FANOUT_EVALUATION_ORDERING = 0x80,
+		/**
+			If true, dump every event as it is enqueued in
+			the primary event queue.  
+		 */
+		FLAG_WATCH_QUEUE = 0x100,
 		/// initial flags
 		FLAGS_DEFAULT = FLAG_CHECK_EXCL,
 		/**
@@ -235,7 +240,7 @@ private:
 	/**
 		As we add more flags this will have to expand...
 	 */
-	typedef	uchar				flags_type;
+	typedef	ushort				flags_type;
 
 public:
 	/**
@@ -710,6 +715,15 @@ public:
 
 	bool
 	is_watching_node(const node_index_type) const;
+
+	void
+	watch_event_queue(void) { flags |= FLAG_WATCH_QUEUE; }
+
+	void
+	nowatch_event_queue(void) { flags &= ~FLAG_WATCH_QUEUE; }
+
+	bool
+	watching_event_queue(void) const { return flags & FLAG_WATCH_QUEUE; }
 
 	/// for any user-defined structures from the .hac
 	void

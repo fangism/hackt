@@ -6,7 +6,7 @@ import "env.hac";
 
 e1of1 L, M[2], R[4];
 bool _Reset, Reset;
-wchb_alternator_split_2
+wchb_alternator_split_2_slow
 	X(L, M, _Reset, Reset),
 	Y(M[0], R[0..1], _Reset, Reset),
 	Z(M[1], R[2..3], _Reset, Reset);

@@ -1,4 +1,4 @@
-// "alternator-wchb_merge-03.hac"
+// "alternator-wchb_merge-06.hac"
 
 import "alternator.hac";
 import "env.hac";
@@ -6,10 +6,9 @@ import "env.hac";
 e1of1 L[8];
 e1of1 R;
 bool _Reset, Reset;
-wchb_alternator_merge_2_tree_slow<3> X(L, R, _Reset, Reset);
+wchb_alternator_merge_2_tree_fast<3> X(L, R, _Reset, Reset);
 source_e<1,1,{0}> s[8];
 (;i:8:	s[i](L[i], _Reset);	)
 inactive_reset_bitbucket_e1of<1>
-// bitbucket_e1of<1>			// doesn't work
 	b(R, _Reset);
 

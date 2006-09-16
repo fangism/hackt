@@ -1,0 +1,13 @@
+// "alternator-wchb_tree_fifo-04.hac"
+// using CMOS source, also for the sake of measuring cycle-time.
+
+import "alternator.hac";
+import "env.hac";
+
+e1of1 L, R;
+bool _Reset, Reset;
+wchb_tree_fifo_e1of1_fast<3> X(L, R, _Reset, Reset);
+cmos_source_e<1,1,{0}> s(L, _Reset, Reset);
+bitbucket_e1of<1>
+	b(R, _Reset);
+

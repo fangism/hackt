@@ -1,0 +1,6 @@
+# "alternator-wchb_merge-05.prsimrc"
+#	$Id: alternator-wchb_merge-05.prsimrc,v 1.1 2006/09/16 20:48:01 fang Exp $
+# @haco@ alternator-wchb_merge-05.haco-a
+
+source stable-test-medium.prsimrc
+

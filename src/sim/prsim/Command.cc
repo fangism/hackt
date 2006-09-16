@@ -8,7 +8,7 @@
 	TODO: consider using some form of auto-indent
 		in the help-system.  
 
-	$Id: Command.cc,v 1.19 2006/09/09 06:59:17 fang Exp $
+	$Id: Command.cc,v 1.20 2006/09/16 20:47:52 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -2398,8 +2398,52 @@ if (a.size() != 1) {
 
 void
 Watches::usage(ostream& o) {
-	o << "watches";
+	o << "watches" << endl;
 	o << "show list of explicitly watched nodes" << endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(WatchQueue, "watch-queue", view,
+	"print each event as it is enqueued into the event queue")
+
+int
+WatchQueue::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.watch_event_queue();
+	return Command::NORMAL;
+}
+}
+
+void
+WatchQueue::usage(ostream& o) {
+	o << "watch-queue" << endl;
+	o << "Print events as they are inserted into the event queue."
+		<< endl;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+DECLARE_AND_INITIALIZE_COMMAND_CLASS(NoWatchQueue, "nowatch-queue", view,
+	"silence enqueuing into the event queue (default)")
+
+int
+NoWatchQueue::main(State& s, const string_list& a) {
+if (a.size() != 1) {
+	usage(cerr << "usage: ");
+	return Command::SYNTAX;
+} else {
+	s.nowatch_event_queue();
+	return Command::NORMAL;
+}
+}
+
+void
+NoWatchQueue::usage(ostream& o) {
+	o << "nowatch-queue" << endl;
+	o << "Silence events as they are inserted into the event queue."
+		<< endl;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

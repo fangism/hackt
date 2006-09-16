@@ -1,12 +1,12 @@
-// "alternator-wchb_tree_fifo-01.hac"
+// "alternator-wchb_tree_fifo-03.hac"
 
 import "alternator.hac";
 import "env.hac";
 
 e1of1 L, R;
 bool _Reset, Reset;
-wchb_tree_fifo_e1of1_slow<3> X(L, R, _Reset, Reset);
+wchb_tree_fifo_e1of1_fast<3> X(L, R, _Reset, Reset);
 source_e<1,1,{0}> s(L, _Reset);
-inactive_reset_bitbucket_e1of<1>
+bitbucket_e1of<1>
 	b(R, _Reset);
 

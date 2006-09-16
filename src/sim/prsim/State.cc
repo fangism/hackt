@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.25 2006/09/14 22:07:15 fang Exp $
+	$Id: State.cc,v 1.26 2006/09/16 20:47:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -683,6 +683,9 @@ State::enqueue_event(const time_type t, const event_index_type ei) {
 	ISE_INVARIANT(t >= current_time);
 	DEBUG_STEP_PRINT("enqueuing event ID " << ei <<
 		" at time " << t << endl);
+	if (watching_event_queue()) {
+		dump_event(cout << "enqueued:", ei, t);
+	}
 	event_queue.push(event_placeholder_type(t, ei));
 }
 
@@ -2688,6 +2691,8 @@ State::dump_event(ostream& o, const event_index_type ei,
 		o << '\t' << t << '\t' <<
 			get_node_canonical_name(ev.node) << " : " <<
 			node_type::value_to_char[ev.val] << endl;
+		// can't deduce casue because cause is not assigned
+		// until event is dequeued.  
 	}
 #if DEBUG_STEP
 	else {

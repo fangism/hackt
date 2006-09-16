@@ -1,5 +1,14 @@
 "lib/ChangeLog"
 
+2006-09-16	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-19:
+	  alternator.hac: implemented fast alternator bucket, 
+		low latency alternating merge, and
+		low latency binary tree fifo (all e1of1).  
+		All new tests passed.  
+
+
 2006-09-15	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-18:

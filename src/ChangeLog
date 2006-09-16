@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-19:
+	  prsim: added 'watch-queue' and 'nowatch-queue' view commands
+		to see events as they are enqueued into event queue.  
+	  lib: implemented fast merge alternator and tree-fifos
+
+
 2006-09-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-18:

@@ -6,7 +6,7 @@ import "env.hac";
 a1of1 L[2];
 e1of1 R;
 bool _Reset, Reset;
-wchb_alternator_merge_2x1of1 X(L, R, _Reset, Reset);
+wchb_alternator_merge_2x1of1_slow X(L, R, _Reset, Reset);
 source_a<1,1,{0}>
 	s0(L[0], _Reset),
 	s1(L[1], _Reset);
