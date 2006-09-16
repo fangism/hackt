@@ -8,6 +8,7 @@
 	* HACKT-00-01-04-main-00-80-19:
 	  prsim: added 'watch-queue' and 'nowatch-queue' view commands
 		to see events as they are enqueued into event queue.  
+	  don't crash on 'who' on bad argument.  
 	  lib: implemented fast merge alternator and tree-fifos
 
 

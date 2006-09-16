@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.1 2006/08/01 06:35:52 fang Exp $
+	$Id: instref.cc,v 1.2 2006/09/16 22:06:59 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -258,8 +258,15 @@ parse_name_to_get_subnodes(ostream& o, const string& n, const module& m,
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r) {
+	if (!r || !r.inst_ref()) {
 		return 1;
+#if 0
+	} else if (r.inst_ref()->dimensions()) {
+		o << "Error: referenced instance must be a single (scalar)."
+			<< endl;
+		return 1;
+#endif
+	// TODO: allow non-scalar collections, sloppy arrays, etc...
 	} else {
 		entry_collection e;
 		r.inst_ref()->collect_subentries(m, e);
@@ -282,7 +289,11 @@ parse_name_to_aliases(ostream& o, const string& n, const module& m) {
 	typedef	inst_ref_expr::meta_return_type		checked_ref_type;
 	STACKTRACE_VERBOSE;
 	const checked_ref_type r(parse_and_check_reference(n.c_str(), m));
-	if (!r) {
+	if (!r || !r.inst_ref()) {
+		return 1;
+	} else if (r.inst_ref()->dimensions()) {
+		o << "Error: referenced instance must be a single (scalar)."
+			<< endl;
 		return 1;
 	} else {
 		string_list aliases;
