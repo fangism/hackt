@@ -1,7 +1,8 @@
 # "env-source-sink-a-01.prsimrc"
-#	$Id: env-source-sink-a-01.prsimrc,v 1.1 2006/08/08 05:46:47 fang Exp $
+#	$Id: env-source-sink-a-01.prsimrc,v 1.2 2006/09/17 23:39:30 fang Exp $
 # @haco@ env-source-sink-a-01.haco-a
 # testing stability of source-sink pair
 
 source stable-test-short.prsimrc
+source reset-test-short.prsimrc
 

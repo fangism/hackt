@@ -1,0 +1,24 @@
+# "reset-test.prsimrc"
+#	$Id: reset-test.prsimrc,v 1.1 2006/09/17 23:39:34 fang Exp $
+# common test script for stbility testing, short version
+
+# The purpose of this test is to check the stability of the system during
+# and initially coming out of reset.  
+# This test should be silent.
+# Run this test repeatedly to use different random seeds
+
+initialize
+timing random
+mode reset
+set _Reset 0
+set Reset 1
+cycle
+# status X
+
+mode run
+set _Reset 1
+set Reset 0
+step 1000
+
+assert-queue
+

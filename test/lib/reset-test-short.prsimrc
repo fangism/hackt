@@ -1,0 +1,16 @@
+# "reset-test-short.prsimrc"
+#	$Id: reset-test-short.prsimrc,v 1.1 2006/09/17 23:39:34 fang Exp $
+# common test script for stbility testing, short version
+
+source reset-test.prsimrc
+source reset-test.prsimrc
+source reset-test.prsimrc
+source reset-test.prsimrc
+source reset-test.prsimrc
+
+source reset-test.prsimrc
+source reset-test.prsimrc
+source reset-test.prsimrc
+source reset-test.prsimrc
+source reset-test.prsimrc
+

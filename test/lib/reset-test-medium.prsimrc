@@ -1,0 +1,18 @@
+# "reset-test-medium.prsimrc"
+#	$Id: reset-test-medium.prsimrc,v 1.1 2006/09/17 23:39:34 fang Exp $
+# common test script for stbility testing, short version
+
+# each 'short' test runs 20x, so tatal is 200
+
+source reset-test-short.prsimrc
+source reset-test-short.prsimrc
+source reset-test-short.prsimrc
+source reset-test-short.prsimrc
+source reset-test-short.prsimrc
+
+source reset-test-short.prsimrc
+source reset-test-short.prsimrc
+source reset-test-short.prsimrc
+source reset-test-short.prsimrc
+source reset-test-short.prsimrc
+

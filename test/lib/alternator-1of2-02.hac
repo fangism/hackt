@@ -8,7 +8,7 @@ c1of2 x;
 X.d = x.d;
 bool _Reset, Reset;
 alternator_source_1of2_slow S(X.e, x, _Reset, Reset);
-// inactive_reset_bitbucket_e1of2 B(X, _Reset);
-bitbucket_e1of2 B(X, _Reset);
+inactive_reset_bitbucket_e1of2 B(X, _Reset);	// required!
+// bitbucket_e1of2 B(X, _Reset);		// doesn't work
 
 

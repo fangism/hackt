@@ -10,7 +10,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.8 2006/09/16 20:47:50 fang Exp $
+	$Id: alternator.hac,v 1.9 2006/09/17 23:39:01 fang Exp $
  */
 
 import "channel.hac";
@@ -132,8 +132,10 @@ prs {
 
 //-----------------------------------------------------------------------------
 /**
+	OBSOLETE.
 	Size-2 one-hot counter (special case)
-	Reset: outputs data rails low, doesn't care about inc signal.
+	Reset: outputs data rails low, doesn't care about inc signal, 
+		requires inc to be HIGH on reset!
 	Test: "alternator-1of2-0{1,2}.{hac,prsimrc}"
 	HSE: *[[inc];O.0+;[~inc];O.0-;[inc];O.1+;[~inc];O.1-]
 	\param inc active-high increment request (or active-low ack)
@@ -291,10 +293,9 @@ prs {
 	Used in definition of alternator_lock_1of2.
  */
 defproc alternator_half_lock_fast(
-		bool i[2], x[2], y[2], o[2], _Reset) {
-bool _o;
+		bool i[2], x[2], y[2], _o, o[2], _Reset) {
 prs {
-	~_Reset					-> _o+
+	// ~_Reset					-> _o+
 
 	// reset-phase affects x
 	~x[1] & ~i[1] & ~y[0]			-> _o+		// eww, 3p
@@ -305,7 +306,7 @@ prs {
 	// set-phase affects y
 	i[0] & x[1] & y[1]			-> _o-
 	~_o					-> o[0]+
-	o[0] & x[1]				-> y[1]-
+	o[0] & x[1] & _Reset			-> y[1]-
 	~y[1] & ~(o[1] & x[0])			-> y[0]+	// x-coupled
 }
 }
@@ -381,9 +382,11 @@ prs {
 	Passes one value through at a time betwen two rails in alternation.  
 	No single side can pass through consecutive times.  
 	This can also be connected as an alternating active (a1of1's) 
-	bucket that consumes tokens in round-robin.  
+		bucket that consumes tokens in round-robin.  
+		It actively 'requests' for one input at a time.  
 	Reset: inputs low, this will hold _o high on reset.
 	Test: alternator-lock-02.{hac,prsimrc}
+		Has some potential troubles during reset!!!
 	HSE: *[[inc0];O.0+;[~inc0];O.0-;[inc1];O.1+;[~inc1];O.1-]
 	\param inc active-high inputs (or active-low ack)
 	\param o the 1of2 output, like a pair of active-high acknowledges.
@@ -394,34 +397,33 @@ defproc alternator_lock_1of2_fast(
 		bool _Reset, Reset) {
 c1of2 x;	// exclhi dual-rail state-variable
 c1of2 y;	// exclhi dual-rail state-variable
-// bool _o[2];
+bool _o[2];
 alternator_half_lock_fast s[2];
-	s[0](inc, x.d, y.d, o.d, _Reset);
+	s[0](inc, x.d, y.d, _o[0], o.d, _Reset);
 	s[1]({inc[1], inc[0]}, {x.d[1], x.d[0]}, {y.d[1], y.d[0]},
-		{o.d[1], o.d[0]}, _Reset);
-spec {
-	exclhi(inc)
-}
+		_o[1], {o.d[1], o.d[0]}, _Reset);
+// spec { exclhi(inc) }		// not necessarily true on reset
 prs {
+	Reset					-> x.d[1]-
+	~_Reset					-> x.d[0]+
+	Reset					-> y.d[1]-
+	~_Reset					-> y.d[0]+
 
-	Reset					-> x.d[0]-
-	~_Reset					-> x.d[1]+
-	Reset					-> y.d[0]-
-	~_Reset					-> y.d[1]+
-	Reset					-> o.d[0]-
+	~_Reset					-> o.d[0]+
 	~_Reset					-> o.d[1]+
+
+	~_Reset					-> _o[0]+
+	Reset					-> _o[1]-
 /**
 	// All the following production rules have been folded into:
 	// symmetric_alterator_stage, above.
 	// The full expansion is left here for clarity.  
 
-	~_Reset					-> _o[0]+
-	~_Reset					-> _o[1]+
-
 	// set-phase affects y
 	inc[1] & x.d[0] & y.d[0]		-> _o[1]-
 	~_o[1]					-> o.d[1]+
-	o.d[1] & x.d[0]				-> y.d[0]-
+	// *here* on reset
+	o.d[1] & x.d[0] & _Reset		-> y.d[0]-
 	~y.d[0] & ~(o.d[0] & x.d[1])		-> y.d[1]+	// x-coupled
 
 	// reset-phase affects x
@@ -835,6 +837,10 @@ wchb_alternator_eater_2_fast e[N];
 }
 
 //=============================================================================
+// TODO: alternator_repeater (opposite of eater, spawns 2-for-1)
+// application, generating on-chip patterns with slow off-chip triggers
+
+//=============================================================================
 /**
 	Splitting alternator.
 	This is OBSOLETED by the faster version below.  
@@ -1010,11 +1016,13 @@ R = M[K];	// connect outputs
 
 //=============================================================================
 /**
+	This is OBSOLETE, use the 2xe1of1_fast version instead.  
 	Passes one value through at a time betwen two rails in alternation.  
-	No single side can psss through consecutive times.  
-	Reset: inputs low
+	No single side can pass through consecutive times.  
+	This definition is based on alternator_lock_1of2_slow.
+	Reset: expects input data low, ...
 	Test: alternator-wchb_merge-0{1,2}.{hac,prsimrc}
-	TODO: lower latency version, this one sucks: 6T
+	Forward latency: L -> R (6T, sucks)
 	HSE: *[[inc0];O.0+;[~inc0];O.0-;[inc1];O.1+;[~inc1];O.1-]
 	\param inc active-high inputs (or active-low ack)
 	\param o the 1of2 output, like a pair of active-high acknowledges.
@@ -1028,8 +1036,7 @@ c1of2 y;	// exclhi dual-rail state-variable
 bool _o[2];	// are these excl?
 bool _r;
 prs {
-	~_Reset					-> L[1].a+
-//	Reset					-> o.d[0]-	// not needed
+	Reset					-> L[1].a-
 
 	Reset					-> x.d[0]-
 	~_Reset					-> x.d[1]+
@@ -1047,7 +1054,7 @@ prs {
 	// set-phase affects y
 	L[1].d[0] & x.d[0]			-> y.d[0]-
 	~y.d[0] & ~(L[0].d[0] & x.d[1])		-> y.d[1]+	// x-coupled
-	R.e & x.d[0] & y.d[1] & _Reset		-> _o[1]-
+	R.e & x.d[0] & y.d[1]			-> _o[1]-
 	~_o[1]					-> L[1].a+
 	L[0].a & L[1].a				-> _r-
 	~_r					-> R.d[0]+
@@ -1064,7 +1071,7 @@ prs {
 	// set-phase affects y
 	L[0].d[0] & x.d[1]			-> y.d[1]-
 	~y.d[1] & ~(L[1].d[0] & x.d[0])		-> y.d[0]+	// x-coupled
-	R.e & x.d[1] & y.d[0] & _Reset		-> _o[0]-
+	R.e & x.d[1] & y.d[0]			-> _o[0]-
 	~_o[0]					-> L[0].a+
 
 	// reset-phase affects x

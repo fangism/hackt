@@ -1,5 +1,13 @@
 # "test/ChangeLog"
 
+2006-09-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-21:
+	  Made lib tests more rigorous by repeatedly running repeated
+		short test of stability initially coming out of reset.
+		This detected some errors not previously detected.  
+
+
 2006-08-24	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03:

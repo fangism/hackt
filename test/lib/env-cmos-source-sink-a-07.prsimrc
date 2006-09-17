@@ -1,7 +1,8 @@
 # "env-cmos-source-sink-a-07.prsimrc"
-#	$Id: env-cmos-source-sink-a-07.prsimrc,v 1.1 2006/09/13 05:41:02 fang Exp $
+#	$Id: env-cmos-source-sink-a-07.prsimrc,v 1.2 2006/09/17 23:39:28 fang Exp $
 # @haco@ env-cmos-source-sink-a-07.haco-a
 # testing stability of source-sink pair
 
 source stable-test-medium.prsimrc
+source reset-test-medium.prsimrc
 

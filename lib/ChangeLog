@@ -1,5 +1,15 @@
 "lib/ChangeLog"
 
+2006-09-17	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-21:
+	  Detected and fixed potential one-time instabilities on
+		several lock, source, and merge alternators, by
+		reshuffling the reset phase.  
+		Thanks to new reset-tests in test/lib, 
+		now called by old tests and will appear in all new tests.  
+
+
 2006-09-16	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-20:

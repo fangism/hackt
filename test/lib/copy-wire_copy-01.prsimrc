@@ -1,7 +1,8 @@
 # "copy-wire_copy-01.prsimrc"
-#	$Id: copy-wire_copy-01.prsimrc,v 1.1 2006/09/17 06:48:59 fang Exp $
+#	$Id: copy-wire_copy-01.prsimrc,v 1.2 2006/09/17 23:39:24 fang Exp $
 # @haco@ copy-wire_copy-01.haco-a
 # testing stability of general half-buffered split template
 
 source stable-test-short.prsimrc
+source reset-test-short.prsimrc
 
