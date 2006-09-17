@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.41 2006/09/14 22:07:14 fang Exp $
+#	$Id: TODO,v 1.42 2006/09/17 06:48:45 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -43,6 +43,14 @@ prsim:
 		rewrite event queuing system to go through
 			a pending map first before entering queue.
 		rationale: current algorithm is a mess of cases.
+	checking: mode to verify that all rules are CMOS implementable
+	minor bug: fanout prints duplicate rules because literal
+		may appear in different branches of same rule.  
+		fix: collect unique-list (or set), then print
+	prs2spice replacement
+	a way to manually size prs, using annotation file...
+	far future: sprsim (sizing simulator, with self-sizing!)
+		constraint solving...
 
 enhancement:
 	macro/spec/attribute strings need to be compressed or stored in some 
@@ -93,6 +101,19 @@ preprocessor:
 		using unique file-manager again.
 	Doesn't check grammar, just echoes input to stdout.  
 	support #line directives, perhaps just // comments? (enter/leave)
+
+===============================================================================
+production rule templates and macro types
+	be able to define functions and patterns of rules for
+		simple construction of buffered functions.  
+	likewise be able to define and pass these trivial variations
+		as compile-time arguments, macro-meta-programming.  
+		template PRS can be defined in terms of these macros
+		which are substituted upon instantiation.  
+		e.g. celeminv_n(a,b) : a & b
+			celeminv_p(a,b) : ~a & ~b
+		makes for combination composition...
+	need notion of unit (true) and null (false) constants.
 
 ===============================================================================
 pie-in-the-sky:

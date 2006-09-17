@@ -2,6 +2,11 @@
 
 2006-09-16	David Fang	<fangism@users.sourceforce.net>
 
+	* HACKT-00-01-04-main-00-80-20:
+	  merge.hac: (new) basic wchb merges, tested.
+	  copy.hac: added and tested  basic buffered copies
+
+
 	* HACKT-00-01-04-main-00-80-19:
 	  alternator.hac: implemented fast alternator bucket, 
 		low latency alternating merge, and

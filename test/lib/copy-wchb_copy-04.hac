@@ -1,0 +1,15 @@
+// "copy-wchb_copy-04.hac"
+
+import "copy.hac";
+import "env.hac";
+
+bool _Reset, Reset;
+a1of3 L, R[3];
+cmos_source_a<3,3,{0,1,2}> S(L, _Reset, Reset);
+wchb_copy_a1of3<3> C(L, R, _Reset);
+inactive_reset_bitbucket_a1of3 B[3];
+(;i:3:
+	B[i](R[i], _Reset);
+)
+
+

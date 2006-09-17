@@ -1,0 +1,7 @@
+# "merge-merge_wchb_e1of2-01.prsimrc"
+#	$Id: merge-merge_wchb_a1of2-01.prsimrc,v 1.1 2006/09/17 06:49:13 fang Exp $
+# @haco@ merge-merge_wchb_e1of2-01.haco-a
+# testing stability of general half-buffered merge template
+
+source stable-test-medium.prsimrc
+

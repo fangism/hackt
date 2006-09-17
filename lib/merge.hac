@@ -1,0 +1,150 @@
+/**
+	\file "lib/merge.hac"
+	Controlled merge processes.
+	$Id: merge.hac,v 1.1 2006/09/17 06:48:44 fang Exp $
+ */
+
+import "channel.hac";
+import "logic.hac";
+
+//=============================================================================
+/**
+	Controlled merge of e1ofN channels.  
+	Reset: expects input rails low, sets input enables high, 
+		output enables don't matter.  
+	HSE (for all i):
+		*[[Re&L[i]&C.i];Rd+;L[i].e-;Ce-
+		[~Re&~L[i]&~C.i];Rd-;L[i].e+;Ce+]
+	Test: merge-merge_wchb_e1of2-0{1,2}.{hac,prsimrc}
+	\param N number of rails per channel
+	\param M number of input channels
+	\param L input channels
+	\param C input select control
+	\param R output channel
+ */
+template <pint N, M>
+defproc merge_wchb_e1of (
+		e1of<N> L[M]; e1of<M> C; e1of<N> R;
+		bool _Reset) {
+_c1of<N> _r;
+bool rv, _ce;
+_c1of<M> le;
+(;m:M:	le.d[m] = L[m].e;	)
+std::logic::nand<N> v(_r.d, rv);
+prs {
+(:n:N:
+	~_Reset					-> _r.d[n]+
+(:m:M:
+	 R.e &  L[m].d[n] &  C.d[m] &  C.e &  L[m].e
+						-> _r.d[n]-	// ick, 5n!
+	~R.e & ~L[m].d[n] & ~C.d[m] & ~C.e & ~L[m].e
+						-> _r.d[n]+	// ick, 5p!
+)
+	_r.d[n]					=> R.d[n]-
+)
+(:m:M:
+	~_Reset					-> L[m].e+
+	 rv &  C.d[m]				-> L[m].e-
+	~rv & ~C.d[m]				-> L[m].e+	// dynamic!
+)
+	(&:m:M: L[m].e )			=> _ce-		// nand-M
+	_ce					=> C.e-
+}
+}
+
+template <pint M>
+typedef	merge_wchb_e1of<1, M>		merge_wchb_e1of1;
+template <pint M>
+typedef	merge_wchb_e1of<2, M>		merge_wchb_e1of2;
+template <pint M>
+typedef	merge_wchb_e1of<3, M>		merge_wchb_e1of3;
+template <pint M>
+typedef	merge_wchb_e1of<4, M>		merge_wchb_e1of4;
+template <pint M>
+typedef	merge_wchb_e1of<5, M>		merge_wchb_e1of5;
+template <pint M>
+typedef	merge_wchb_e1of<6, M>		merge_wchb_e1of6;
+template <pint M>
+typedef	merge_wchb_e1of<7, M>		merge_wchb_e1of7;
+template <pint M>
+typedef	merge_wchb_e1of<8, M>		merge_wchb_e1of8;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Controlled merge of a1ofN channels.  
+	Reset: expects input rails low, sets input acks low, 
+		output acks don't matter.  
+	HSE (for all i):
+		*[[~Ra&L[i]&C.i];Rd+;L[i].a+;Ca+
+		[Ra&~L[i]&~C.i];Rd-;L[i].a-;Ca-]
+	Test: merge-merge_wchb_e1of2-0{3,4}.{hac,prsimrc}
+	\param N number of rails per channel
+	\param M number of input channels
+	\param L input channels
+	\param C input select control
+	\param R output channel
+ */
+template <pint N, M>
+defproc merge_wchb_a1of (
+		a1of<N> L[M]; a1of<M> C; a1of<N> R;
+		bool _Reset) {
+_c1of<N> _r;
+bool rv;
+bool en, le[M];
+std::logic::nand<N> v(_r.d, rv);
+spec {
+	excllo(le)
+}
+prs {
+	~_Reset					-> en+
+	~R.a & ~C.a				-> en+
+	 R.a &  C.a & _Reset			-> en-
+(:n:N:
+	~_Reset					-> _r.d[n]+
+(:m:M:
+	 en &  L[m].d[n] &  C.d[m] &  le[m]	-> _r.d[n]-
+	~en & ~L[m].d[n] & ~C.d[m] & ~le[m]	-> _r.d[n]+
+)
+	_r.d[n]					=> R.d[n]-
+)
+(:m:M:
+	~_Reset					-> le[m]+
+	 rv &  C.d[m]				-> le[m]-
+	~rv & ~C.d[m]				-> le[m]+
+	le[m]					=> L[m].a-
+)
+	(&:m:M: le[m] )				=> C.a-		// nand-M
+}
+}
+
+template <pint M>
+typedef	merge_wchb_a1of<1, M>		merge_wchb_a1of1;
+template <pint M>
+typedef	merge_wchb_a1of<2, M>		merge_wchb_a1of2;
+template <pint M>
+typedef	merge_wchb_a1of<3, M>		merge_wchb_a1of3;
+template <pint M>
+typedef	merge_wchb_a1of<4, M>		merge_wchb_a1of4;
+template <pint M>
+typedef	merge_wchb_a1of<5, M>		merge_wchb_a1of5;
+template <pint M>
+typedef	merge_wchb_a1of<6, M>		merge_wchb_a1of6;
+template <pint M>
+typedef	merge_wchb_a1of<7, M>		merge_wchb_a1of7;
+template <pint M>
+typedef	merge_wchb_a1of<8, M>		merge_wchb_a1of8;
+
+//=============================================================================
+// TODO: merge_pchb_e1of
+
+//=============================================================================
+// TODO: merge_pcfb_e1of
+
+//=============================================================================
+// TODO: merge_pcevhb_e1of
+
+//=============================================================================
+// TODO: merge_pcevfb_e1of
+
+//=============================================================================
+

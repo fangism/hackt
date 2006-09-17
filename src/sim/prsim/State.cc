@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.26 2006/09/16 20:47:53 fang Exp $
+	$Id: State.cc,v 1.27 2006/09/17 06:48:46 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -3160,14 +3160,21 @@ State::save_checkpoint(ostream& o) const {
  */
 bool
 State::load_checkpoint(istream& i) {
+	static const char bad_ckpt[] = 
+		"ERROR: not a valid hackt prsim checkpoint file.";
 	initialize();		// start by initializing everything
 	// or reset(); ?
+try {
 	string header_check;
 	read_value(i, header_check);
 	if (header_check != magic_string) {
-		cerr << "ERROR: not a hackt prsim checkpoint file." << endl;
+		cerr << bad_ckpt << endl;
 		return true;
 	}
+} catch (...) {
+	cerr << bad_ckpt << endl;
+	return true;
+}
 {
 	// node_pool
 	size_t s;
@@ -3299,8 +3306,9 @@ if (checking_excl()) {
 	}
 }
 {
-	read_value(i, header_check);
-	if (header_check != magic_string) {
+	string temp;
+	read_value(i, temp);
+	if (temp != magic_string) {
 		cerr << "ERROR: detected checkpoint misalignment!" << endl;
 		return true;
 	}

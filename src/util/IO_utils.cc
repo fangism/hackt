@@ -1,7 +1,7 @@
 /**
 	\file "util/IO_utils.cc"
 	Utility function definitions (for non-templates only). 
-	$Id: IO_utils.cc,v 1.5 2005/06/21 21:26:36 fang Exp $
+	$Id: IO_utils.cc,v 1.6 2006/09/17 06:48:48 fang Exp $
  */
 
 #include <cassert>
@@ -11,7 +11,10 @@
 
 
 //=============================================================================
-// arbitrary sanity check
+/**
+	arbitrary sanity check.
+	Feel free to extend this limit.  
+ */
 #define STRING_LIMIT		256
 
 //=============================================================================
@@ -82,7 +85,12 @@ void
 write_string(ostream& f, const string& s) {
 	const string::size_type len = s.length();
 		// excludes null-termination
-	assert(len < STRING_LIMIT);	// sanity check, not a real limit
+	if (len >= STRING_LIMIT) {
+		// sanity check, not a real limit
+		cerr << "FATAL: writing string length (" << len <<
+			") exceeded maximum (" << STRING_LIMIT << ")." << endl;
+		throw std::exception();
+	}
 	// careful: raw memory write
 	write_value(f, len);
 //	assert(len >= 0);		// unsigned, always true
@@ -105,12 +113,14 @@ read_string(istream& f, string& s) {
 	read_value(f, len);
 //	assert(len >= 0);		// unsigned, always true
 	if (len >= STRING_LIMIT) {
-		cerr << "read_string(): got len = " << len << ", WTF?" << endl;
-		assert(len < STRING_LIMIT);
 		// sanity check, not a real limit
+		cerr << "FATAL: reading string length (" << len <<
+			") exceeded maximum (" << STRING_LIMIT << ")." << endl;
+		throw std::exception();
 	}
 if (len) {
 	if (len -1 > def_size) {
+		// TODO: use excl_array_ptr<>
 		// too big for default
 		char* const big_buf = new char [len+1];	// extra space for \0
 		assert(big_buf);

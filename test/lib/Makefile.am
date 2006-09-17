@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.17 2006/09/16 20:47:55 fang Exp $
+#	$Id: Makefile.am,v 1.18 2006/09/17 06:48:49 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -49,6 +49,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	env-cmos-source-sink-a-05 env-cmos-source-sink-a-06 \
 	env-cmos-source-sink-a-07 \
 	split-split_wchb_e1of2-01 split-split_wchb_e1of2-02 \
+	merge-merge_wchb_e1of2-01 merge-merge_wchb_e1of2-02 \
+	merge-merge_wchb_a1of2-01 merge-merge_wchb_a1of2-02 \
 	alternator-1of2-01 alternator-1of2-02 \
 	alternator-1of2-03 alternator-1of2-04 \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
@@ -67,7 +69,11 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	alternator-wchb_merge-06 alternator-wchb_merge-07 \
 	alternator-wchb_tree_fifo-01 \
 	alternator-wchb_tree_fifo-02 alternator-wchb_tree_fifo-03 \
-	alternator-wchb_tree_fifo-04
+	alternator-wchb_tree_fifo-04 \
+	copy-wire_copy-01 copy-wire_copy-02 \
+	copy-wire_copy-03 copy-wire_copy-04 \
+	copy-wchb_copy-01 copy-wchb_copy-02 \
+	copy-wchb_copy-03 copy-wchb_copy-04
 
 # .prsimrc inputs (no suffix)
 HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
@@ -87,6 +93,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	env-cmos-source-sink-a-05 env-cmos-source-sink-a-06 \
 	env-cmos-source-sink-a-07 \
 	split-split_wchb_e1of2-01 split-split_wchb_e1of2-02 \
+	merge-merge_wchb_e1of2-01 merge-merge_wchb_e1of2-02 \
+	merge-merge_wchb_a1of2-01 merge-merge_wchb_a1of2-02 \
 	alternator-1of2-01 alternator-1of2-02 \
 	alternator-1of2-03 alternator-1of2-04 \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
@@ -105,7 +113,11 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	alternator-wchb_merge-06 alternator-wchb_merge-07 \
 	alternator-wchb_tree_fifo-01 \
 	alternator-wchb_tree_fifo-02 alternator-wchb_tree_fifo-03 \
-	alternator-wchb_tree_fifo-04
+	alternator-wchb_tree_fifo-04 \
+	copy-wire_copy-01 copy-wire_copy-02 \
+	copy-wire_copy-03 copy-wire_copy-04 \
+	copy-wchb_copy-01 copy-wchb_copy-02 \
+	copy-wchb_copy-03 copy-wchb_copy-04
 
 HACKT_CFLAT_LVS_TEST_SUBJECTS = \
 	nand-lvs-01

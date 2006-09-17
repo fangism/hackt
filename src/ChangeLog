@@ -5,6 +5,14 @@
 
 2006-09-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-20:
+	  prsim: load_checkpoint catches exception thrown from bad 
+		read_string, in case of invalid checkpoint file.
+		Also udpated util/IO_utils.cc.
+	  More notes in TODO.
+	  lib: implemented merge and buffered-copies
+
+
 	* HACKT-00-01-04-main-00-80-19:
 	  prsim: added 'watch-queue' and 'nowatch-queue' view commands
 		to see events as they are enqueued into event queue.  

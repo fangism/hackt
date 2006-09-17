@@ -1,0 +1,7 @@
+# "copy-wire_copy-04.prsimrc"
+#	$Id: copy-wire_copy-04.prsimrc,v 1.1 2006/09/17 06:49:11 fang Exp $
+# @haco@ copy-wire_copy-04.haco-a
+# testing stability of general half-buffered split template
+
+source stable-test-short.prsimrc
+

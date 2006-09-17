@@ -1,6 +1,6 @@
 /**
 	\file "lib/split.hac"
-	$Id: split.hac,v 1.1 2006/09/12 07:00:30 fang Exp $
+	$Id: split.hac,v 1.2 2006/09/17 06:48:44 fang Exp $
 	Controlled split processes.  
 	Contains buffered and unbuffered splits.  
  */
@@ -11,16 +11,17 @@ import "logic.hac";
 //=============================================================================
 /**
 	Unpipelined M-way e1ofN channel split.  
- */
 template <pint N, M>
 defproc split_wire_e1of (e1of<N> L; e1of<M> C; e1of<N> R[M]; bool _Reset) {
 	// TODO: finish me
 }
+ */
 
 //=============================================================================
 /**
 	Controlled and half-buffered M-way split of e1ofN channels.  
-	Reset: expects input rails low, output acknowledges don't matter.
+	Reset: expects input rails low, output acknowledges don't matter, 
+		L.e will be high.
 	Tests: "split-plit_wchb_e1of2-0{1,2}.{hac,prsimrc}"
 	\param N the number of rails of channel
 	\param M the number of ways to split output
@@ -74,11 +75,20 @@ typedef	split_wchb_e1of<7,M>		split_wchb_e1of7;
 template <pint M>
 typedef	split_wchb_e1of<8,M>		split_wchb_e1of8;
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: split_wchb_a1of
+
 //=============================================================================
 // TODO: split_pchb family
 
 //=============================================================================
 // TODO: split_pcfb family
+
+//=============================================================================
+// TODO: split_pcevhb family
+
+//=============================================================================
+// TODO: split_pcevfb family
 
 //=============================================================================
 

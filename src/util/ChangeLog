@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2006-09-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-20:
+	  util/IO_utils.cc: instead of assert-failing long strings, 
+		throw an exception to give the rest of the program a chance
+		to continue.  
+
+
 2006-09-12	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-14:

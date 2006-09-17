@@ -4,10 +4,11 @@
 	Includes:
 		Unbuffered (wire) copies.  
 		Buffered copies.
+			TODO: different templates besides WCHB
 		Buffered conditional copies (controlled).  
 	Use std::logic for C-elements?
 	Namespace: propose in std
-	$Id: copy.hac,v 1.1 2006/09/02 20:35:07 fang Exp $
+	$Id: copy.hac,v 1.2 2006/09/17 06:48:43 fang Exp $
  */
 
 import "channel.hac";
@@ -19,6 +20,8 @@ import "channel.hac";
 	Expects inputs to be reset to known values.  Input acknowledges
 	must have equal value because the c-element does not 
 	reset its acknowledge.  
+	Reset: data-rails don't care, L.e resets to whatever the R.e's
+		are when they all match (and they must).  
 	\param N number of rails per e1ofN channel.
 	\param M fanout, number of output channel copies.  
 	\param l the input channel
@@ -27,7 +30,7 @@ import "channel.hac";
 template <pint N, M>
 defproc wire_copy_e1of(e1of<N> l, r[M]) {
 bool _le;
-(;i:M:	l.d = r.d;	)
+(;i:M:	l.d = r[i].d;	)
 //	celeminv<M> c( , _le);
 //	(;i:M:	c.i[i] = r[i].e;	)
 //	inv lei(_le, l.e);
@@ -38,6 +41,8 @@ prs {
 }
 }
 
+template <pint M>
+typedef	wire_copy_e1of<1,M>		wire_copy_e1of1;
 template <pint M>
 typedef	wire_copy_e1of<2,M>		wire_copy_e1of2;
 template <pint M>
@@ -56,7 +61,9 @@ typedef	wire_copy_e1of<8,M>		wire_copy_e1of8;
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Wire-copy (slack 0) for a1ofN channels.  
-	\param N number of rails per e1ofN channel.
+	Reset: data-rails don't care, L.a resets to whatever the R.a's
+		are when they all match (and they must).  
+	\param N number of rails per a1ofN channel.
 	\param M fanout, number of output channel copies.  
 	\param l the input channel
 	\param r the output channel array
@@ -64,7 +71,7 @@ typedef	wire_copy_e1of<8,M>		wire_copy_e1of8;
 template <pint N, M>
 defproc wire_copy_a1of(a1of<N> l, r[M]) {
 bool _la;
-(;i:M:	l.d = r.d;	)
+(;i:M:	l.d = r[i].d;	)
 //	celeminv<M> c( , _la);
 //	(;i:M:	c.i[i] = r[i].a;	)
 //	inv lai(_la, l.a);
@@ -75,6 +82,8 @@ prs {
 }
 }
 
+template <pint M>
+typedef	wire_copy_a1of<1,M>		wire_copy_a1of1;
 template <pint M>
 typedef	wire_copy_a1of<2,M>		wire_copy_a1of2;
 template <pint M>
@@ -89,6 +98,99 @@ template <pint M>
 typedef	wire_copy_a1of<7,M>		wire_copy_a1of7;
 template <pint M>
 typedef	wire_copy_a1of<8,M>		wire_copy_a1of8;
+
+//=============================================================================
+/**
+	Weak-condition buffered copy, for e1ofN channels.
+	NOTE: there are many ways of implementing this, depending
+		on where the completion occurs.  
+	Here the output acknowledge completion is folded into the
+		evaluation of the _r rail.  
+	Reset: expects input L.d low, R.e's can be any, L.e is high.
+	\param N number of rails in e1ofN channel
+	\param M number of output copies
+	\param L input channel
+	\param R output channel array
+ */
+template <pint N, M>
+defproc wchb_copy_e1of(e1of<N> L, R[M]; bool _Reset) {
+bool _le;
+c1of<N> RR;
+_c1of<N> _r;
+(;i:M:	RR.d = R[i].d;	)
+prs {
+(:j:N:
+	~_Reset				-> _r.d[j]+
+	(&:i:M:	 R[i].e	) &  L.d[j]	-> _r.d[j]-
+	(&:i:M:	~R[i].e	) & ~L.d[j]	-> _r.d[j]+
+	_r.d[j]				=> RR.d[j]-	// drive me!
+)
+	(&:j:N: _r.d[j] )		=> _le-		// nand
+	_le				=> L.e-
+}
+}
+
+template <pint M>
+typedef	wchb_copy_e1of<1,M>		wchb_copy_e1of1;
+template <pint M>
+typedef	wchb_copy_e1of<2,M>		wchb_copy_e1of2;
+template <pint M>
+typedef	wchb_copy_e1of<3,M>		wchb_copy_e1of3;
+template <pint M>
+typedef	wchb_copy_e1of<4,M>		wchb_copy_e1of4;
+template <pint M>
+typedef	wchb_copy_e1of<5,M>		wchb_copy_e1of5;
+template <pint M>
+typedef	wchb_copy_e1of<6,M>		wchb_copy_e1of6;
+template <pint M>
+typedef	wchb_copy_e1of<7,M>		wchb_copy_e1of7;
+template <pint M>
+typedef	wchb_copy_e1of<8,M>		wchb_copy_e1of8;
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Weak-condition buffered copy, for a1ofN channels.
+	Reset: expects input L.d low, R.a's can be any, L.a is low.
+	\param N number of rails in e1ofN channel
+	\param M number of output copies
+	\param L input channel
+	\param R output channel array
+ */
+template <pint N, M>
+defproc wchb_copy_a1of(a1of<N> L, R[M]; bool _Reset) {
+bool re;
+c1of<N> RR;
+_c1of<N> _r;
+(;i:M:	RR.d = R[i].d;	)
+prs {
+	(&:i:M:	 R[i].a	)		-> re-
+	(&:i:M:	~R[i].a	)		-> re+
+(:j:N:
+	~_Reset				-> _r.d[j]+
+	 re &  L.d[j]			-> _r.d[j]-
+	~re & ~L.d[j]			-> _r.d[j]+
+	_r.d[j]				=> RR.d[j]-	// drive me!
+)
+	(&:j:N: _r.d[j] )		=> L.a-		// nand
+}
+}
+
+template <pint M>
+typedef	wchb_copy_a1of<1,M>		wchb_copy_a1of1;
+template <pint M>
+typedef	wchb_copy_a1of<2,M>		wchb_copy_a1of2;
+template <pint M>
+typedef	wchb_copy_a1of<3,M>		wchb_copy_a1of3;
+template <pint M>
+typedef	wchb_copy_a1of<4,M>		wchb_copy_a1of4;
+template <pint M>
+typedef	wchb_copy_a1of<5,M>		wchb_copy_a1of5;
+template <pint M>
+typedef	wchb_copy_a1of<6,M>		wchb_copy_a1of6;
+template <pint M>
+typedef	wchb_copy_a1of<7,M>		wchb_copy_a1of7;
+template <pint M>
+typedef	wchb_copy_a1of<8,M>		wchb_copy_a1of8;
 
 //=============================================================================
 

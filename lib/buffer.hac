@@ -12,6 +12,9 @@
 		Variations:
 			PCEHB = precharge half-buffer, reduced stack
 			PCEFB = precharge half-buffer, reduced stack
+	Resets: (proposed)
+		active (if receiver is acknowledging to take-away data)
+		passive (if receiver is acknowledging to wait for data)
 	Channels:
 		Channel names follow the conventions in "channel.hac".
 		'l' is always the name of the input channel
@@ -38,7 +41,7 @@
 		Also would be nice to use some flattening hint/attribute
 		for these cases.  
 	TODO: buffers with initial-value tokens
-	$Id: buffer.hac,v 1.5 2006/09/13 02:28:46 fang Exp $
+	$Id: buffer.hac,v 1.6 2006/09/17 06:48:43 fang Exp $
  */
 
 import "channel.hac";
