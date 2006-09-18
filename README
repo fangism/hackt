@@ -1,5 +1,5 @@
 "README"
-	$Id: README,v 1.14 2006/09/06 20:07:33 fang Exp $
+	$Id: README,v 1.15 2006/09/18 02:26:45 fang Exp $
 
 Welcome to HACKT (Hierarchical Asynchronous Circuit Kompiler Toolkit),
 a compiler suite for asynchronous system design!  
@@ -64,7 +64,7 @@ LEX configure variable.
 	same with the header file.  The yacc rules from automake/autoconf
 	do not account for this deviation.  
 
-Supported versions of bison: 1.35, 1.875, 2.0, 2.1
+Supported versions of bison: 1.35, 1.875, 2.0, 2.1, 2.3
 Supported versions of flex: 2.5.4, 2.5.31
 
 Unsupported versions of bison:
