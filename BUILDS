@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.19 2006/08/21 15:31:33 fang Exp $
+	$Id: BUILDS,v 1.20 2006/09/18 01:48:41 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -131,16 +131,19 @@ readline: none
 ===============================================================================
 i686-linux-gnu
 
-Version: hackt 0.1.4-devel-20060806
-CVS Tag: HACKT-00-01-04-main-00-79-50
+Version: hackt 0.1.4-devel-20060913
+CVS Tag: HACKT-00-01-04-main-00-80-21
 Configured with: '--prefix=/usr/local/cad' '--with-editline=/usr/local' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: i686-pc-linux-gnu
 c++: g++ (GCC) 3.3.3 (SuSE Linux)
 config-LIBS: -ledit  -lncurses 
 lex: flex version 2.5.4
 yacc: bison (GNU Bison) 1.875
-readline: BSD EditLine (histedit interface) ver. 2.9
+readline: GNU readline 4.3
 
+still works with:
+readline: BSD EditLine (histedit interface) ver. 2.9
+	(last confirmed: HACKT-00-01-04-main-00-79-50)
 
 ===============================================================================
 x86_64-suse-linux
@@ -164,8 +167,8 @@ readline: none
 ===============================================================================
 i386-unknown-freebsd
 
-Version: hackt 0.1.4-devel-20060814
-CVS Tag: HACKT-00-01-04-main-00-79-58
+Version: hackt 0.1.4-devel-20060913
+CVS Tag: HACKT-00-01-04-main-00-80-21
 Configured with: '--disable-docs' '--prefix=/usr/local/compiler' '--with-readline' 'CFLAGS=-g0 -O2 -Wno-undef' 'CXXFLAGS=-g0 -O2 -Wno-undef' '-C' 'CC=ccache gcc-3.4.0' 'CXX=ccache g++-3.4.0'
 build-triplet: i386-unknown-freebsd4.3
 c++: g++-3.4.0 (GCC) 3.4.0
