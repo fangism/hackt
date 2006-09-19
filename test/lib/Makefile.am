@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.19 2006/09/17 23:39:06 fang Exp $
+#	$Id: Makefile.am,v 1.20 2006/09/19 04:11:48 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -56,6 +56,10 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
 	alternator-wchb_eater-03 alternator-wchb_eater-04 \
 	alternator-wchb_eater-05 alternator-wchb_eater-06 \
+	alternator-wchb_repeater-01 alternator-wchb_repeater-02 \
+	alternator-wchb_repeater-03 alternator-wchb_repeater-04 \
+	alternator-wchb_repeater-05 alternator-wchb_repeater-06 \
+	alternator-wchb_repeater-07 alternator-wchb_repeater-08 \
 	alternator-wchb_split-01 alternator-wchb_split-02 \
 	alternator-wchb_split-03 alternator-wchb_split-04 \
 	alternator-wchb_split-05 alternator-wchb_split-06 \
@@ -100,6 +104,10 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
 	alternator-wchb_eater-03 alternator-wchb_eater-04 \
 	alternator-wchb_eater-05 alternator-wchb_eater-06 \
+	alternator-wchb_repeater-01 alternator-wchb_repeater-02 \
+	alternator-wchb_repeater-03 alternator-wchb_repeater-04 \
+	alternator-wchb_repeater-05 alternator-wchb_repeater-06 \
+	alternator-wchb_repeater-07 alternator-wchb_repeater-08 \
 	alternator-wchb_split-01 alternator-wchb_split-02 \
 	alternator-wchb_split-03 alternator-wchb_split-04 \
 	alternator-wchb_split-05 alternator-wchb_split-06 \

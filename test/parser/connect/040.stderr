@@ -1,1 +1,2 @@
 ERROR: cannot take the member of a 1-dimension array, must be scalar!  (for now...)  [17:1..11]
+got: ::load.::bundle::c[0..0].egg_array

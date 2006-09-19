@@ -1,0 +1,11 @@
+// "alternator-wchb_repeater-04.hac"
+
+import "alternator.hac";
+import "env.hac";
+
+e1of1 L, R;
+bool _Reset, Reset;
+wchb_alternator_repeater_2_merge X(L, R, _Reset, Reset);
+source_e<1,1,{0}> s(L, _Reset);
+bitbucket_e1of<1> b(R, _Reset);
+

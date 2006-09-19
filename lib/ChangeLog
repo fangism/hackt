@@ -1,5 +1,16 @@
 "lib/ChangeLog"
 
+2006-09-18	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-22:
+	  alternator.hac: definitions for token repeaters, 2-for-1 producers, 
+		two different reshufflings, both decent, one more intuitive.
+		Also defined their chains tor 2^K repeaters.  
+	  env.hac: 'ev'-style buckets added, wrapped around e1of1 buckets, 
+		also includes inactive_reset variants.  
+	  Also started mpl/ directory for template metaprogramming constructs.  
+
+
 2006-09-17	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-21:

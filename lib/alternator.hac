@@ -10,7 +10,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.9 2006/09/17 23:39:01 fang Exp $
+	$Id: alternator.hac,v 1.10 2006/09/19 04:11:42 fang Exp $
  */
 
 import "channel.hac";
@@ -837,8 +837,165 @@ wchb_alternator_eater_2_fast e[N];
 }
 
 //=============================================================================
-// TODO: alternator_repeater (opposite of eater, spawns 2-for-1)
-// application, generating on-chip patterns with slow off-chip triggers
+/**
+	Buffer that produces two sequential output tokens, per input token.  
+	Application: on-chip token burst generation.  
+	HSE: [[Re&Ld];Rd+;Le-;[~Re];Rd-;Le+;[Ld];Rd+;[~Re&~Ld];Rd-;Le+]
+	Latency: L -> R (2T), when token is passed through.  
+	Reset: 
+	Tests:
+	\param L input channel.
+	\param R output channel, used twice per input token.  
+ */
+defproc wchb_alternator_repeater_2_lazy(e1of1 L, R; bool _Reset, Reset) {
+c1of2 x, y;
+bool _o;
+prs {
+	Reset					-> x.d[1]-
+	~_Reset					-> x.d[0]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[1]-
+	~_Reset					-> y.d[0]+
+
+	Reset					-> R.d[0]-
+	~_Reset					-> L.e+
+
+	~_Reset					-> _o+
+
+	// set-phase affects y
+	R.e & L.d[0] & x.d[0] & y.d[0]		-> _o-
+	~_o					-> R.d[0]+
+	R.d[0] & x.d[0]				-> y.d[0]-
+	~y.d[0] & ~(R.d[0] & x.d[1])		-> y.d[1]+	// x-coupled
+	R.d[0] & y.d[1]				-> L.e-
+
+	// reset-phase affects x (don't wait for ~L.d[0])
+	~L.d[0] & ~R.e & ~y.d[0] & ~x.d[1]	-> _o+
+	_o & y.d[1]				-> R.d[0]-
+	y.d[1] & _o				-> x.d[0]-
+	~R.d[0] & ~x.d[0] & ~(L.e & y.d[0] & _o)
+						-> x.d[1]+	// x-coupled
+
+	// set-phase affects y
+	R.e & x.d[1] & y.d[1] & _Reset		-> _o-
+//	~_o					-> R.d[0]+	// dupl.
+	R.d[0] & x.d[1]				-> y.d[1]-
+	~y.d[1] & ~(R.d[0] & x.d[0])		-> y.d[0]+	// x-coupled
+
+	// reset-phase affects x
+	~R.e & ~y.d[1] & ~x.d[0]		-> _o+
+	_o & y.d[0] & x.d[1]			-> R.d[0]-
+	~R.d[0] & ~y.d[1]			-> L.e+	
+	L.e & y.d[0] & _o			-> x.d[1]-
+	~R.d[0] & ~x.d[1] & ~(_o & y.d[1])	-> x.d[0]+	// x-coupled
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Another token repeater.  
+	Derived from wchb_merge_alternator_2xe1of1_fast.
+	HSE: [[Re&Ld];Le-;Rd+;[~Re];Le+;Rd-;[Re];Rd+;[~Re];Rd-]
+	Reset:
+	Latency: L -> R (2T)
+	Tests:
+ */
+defproc wchb_alternator_repeater_2_merge(e1of1 L, R; bool _Reset, Reset) {
+c1of2 x, y;
+bool _o[2], o[2];
+_o[0] = L.e;
+spec {
+	excllo(_o)
+}
+prs {
+	Reset					-> x.d[0]-
+	~_Reset					-> x.d[1]+
+	Reset					-> y.d[0]-
+	~_Reset					-> y.d[1]+
+
+	~_Reset					-> _o[0]+
+	~_Reset					-> _o[1]+
+	Reset					-> o[0]-
+	Reset					-> o[1]-
+
+	~_o[0] | ~_o[1]				-> R.d[0]+
+	 _o[0] &  _o[1]				-> R.d[0]-
+
+	// set-phase affects y
+	R.e & x.d[0] & y.d[0] & _Reset		-> _o[1]-
+	~_o[1]					-> o[1]+
+	x.d[0] & o[1]				-> y.d[0]-
+	~y.d[0] & ~(x.d[1] & o[0])		-> y.d[1]+	// x-coupled
+
+	// reset-phase affects x
+	~R.e & ~x.d[1] & ~y.d[0]		-> _o[1]+	// eww, 3p
+	_o[1] & y.d[1]				-> o[1]-
+	_o[1] & y.d[1]				-> x.d[0]-
+	~o[1] & ~x.d[0] & ~(_o[0] & y.d[0])	-> x.d[1]+	// x-coupled
+
+	// set-phase affects y
+	R.e & L.d[0] & x.d[1] & y.d[1]		-> _o[0]-
+	~_o[0]					-> o[0]+
+	x.d[1] & o[0]				-> y.d[1]-
+	~y.d[1] & ~(x.d[0] & o[1])		-> y.d[0]+	// x-coupled
+
+	// reset-phase affects x
+	~R.e & ~L.d[0] & ~x.d[0] & ~y.d[1]	-> _o[0]+	// eww, 4p
+	_o[0] & y.d[0]				-> o[0]-
+	_o[0] & y.d[0]				-> x.d[1]-
+	~o[0] & ~x.d[1] & ~(_o[1] & y.d[1])	-> x.d[0]+	// x-coupled
+}
+}
+
+/**
+	We default to using the merge-based implementation.  
+ */
+typedef	wchb_alternator_repeater_2_merge	wchb_alternator_repeater_2;
+
+//-----------------------------------------------------------------------------
+/**
+	Serial chain of wchb_alternator_repeaters, where each stage
+	produces two output tokens per input.  
+	a.k.a. Frequency-multiplier, token burst generator.  
+	Reset: doesn't care what R.e is on reset
+	Test: alternator-wchb_repeater-0{5,6}.{hac,prsimrc}
+	\pint N number of repeater stages
+	\param L input channel
+	\param R output channel
+ */
+template <pint N>
+defproc alternator_repeater_chain_lazy(e1of1 L, R; bool _Reset, Reset) {
+e1of1 M[N+1];
+M[0] = L;
+M[N] = R;
+wchb_alternator_repeater_2_lazy e[N];
+(;i:N:
+	e[i](M[i], M[i+1], _Reset, Reset);
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Serial chain of wchb_alternator_repeaters, where each stage
+	produces two output tokens per input.  
+	Reset: doesn't care what R.e is on reset
+	Test: alternator-wchb_repeater-0{7,8}.{hac,prsimrc}
+	\pint N number of repeater stages
+	\param L input channel
+	\param R output channel
+ */
+template <pint N>
+defproc alternator_repeater_chain_merge(e1of1 L, R; bool _Reset, Reset) {
+e1of1 M[N+1];
+M[0] = L;
+M[N] = R;
+wchb_alternator_repeater_2_merge e[N];
+(;i:N:
+	e[i](M[i], M[i+1], _Reset, Reset);
+)
+}
+
+typedef	alternator_repeater_chain_merge		alternator_repeater_chain;
 
 //=============================================================================
 /**
@@ -1116,13 +1273,6 @@ prs {
 	~_Reset					-> x.d[1]+
 	Reset					-> y.d[0]-
 	~_Reset					-> y.d[1]+
-
-	~_Reset					-> L[0].e+
-	~_Reset					-> L[1].e+
-
-	// All the following production rules have been folded into:
-	// symmetric_alterator_stage, above.
-	// The full expansion is left here for clarity.  
 
 	~_Reset					-> _o[0]+
 	~_Reset					-> _o[1]+

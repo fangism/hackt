@@ -1,0 +1,8 @@
+# "alternator-wchb_repeater-04.pprsimrc"
+#	$Id: alternator-wchb_repeater-04.prsimrc,v 1.1 2006/09/19 04:11:51 fang Exp $
+# @haco@ alternator-wchb_repeater-04.haco-a
+# testing stability of token repeater process
+
+source stable-test-medium.prsimrc
+source reset-test-medium.prsimrc
+

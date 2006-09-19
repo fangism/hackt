@@ -3,6 +3,13 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-09-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-22:
+	  Better diagnostic message for: "can't take member of non-scalar."
+	  lib: new alternator repeater definitions, see lib/ChangeLog.  
+
+
 2006-09-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-21:

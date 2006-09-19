@@ -1,5 +1,6 @@
 /**
 	\file "copy.hac"
+	vi: ft=cpp
 	Copy processes.
 	Includes:
 		Unbuffered (wire) copies.  
@@ -8,7 +9,7 @@
 		Buffered conditional copies (controlled).  
 	Use std::logic for C-elements?
 	Namespace: propose in std
-	$Id: copy.hac,v 1.2 2006/09/17 06:48:43 fang Exp $
+	$Id: copy.hac,v 1.3 2006/09/19 04:11:42 fang Exp $
  */
 
 import "channel.hac";
@@ -98,6 +99,18 @@ template <pint M>
 typedef	wire_copy_a1of<7,M>		wire_copy_a1of7;
 template <pint M>
 typedef	wire_copy_a1of<8,M>		wire_copy_a1of8;
+
+//-----------------------------------------------------------------------------
+/**
+// TODO: template metafunction for product of meta-values arrays.  
+// will depend on "mpl/arith.hac"
+// also possible to define recursively
+template <pint N, M, F[M]>
+defproc wire_copy_tree_e1of(e1of<N> L, R[mpl::product<M,F>::value]) {
+}
+
+// also define wchb_copy_tree()
+**/
 
 //=============================================================================
 /**

@@ -1,0 +1,7 @@
+"lib/mpl/README"
+
+This directory is for the template metaprogramming library,
+use to perform compile-time computations.  
+The definitions contained herein are inspired by C++ template
+metaprogramming techniques and their manifestations in libraries.  
+
