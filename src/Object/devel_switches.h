@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.4 2006/09/11 22:30:14 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.4.2.1 2006/09/19 03:23:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -88,6 +88,13 @@
 	Goal: 0
  */
 #define	ENABLE_STATIC_ANALYSIS		(0 && !USE_INSTANCE_PLACEHOLDERS)
+
+/**
+	Define to 1 to derive module from process_definition, 
+	re-using many of the facilities already available.  
+	Goal: 1
+ */
+#define	MODULE_PROCESS			(1 && USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 

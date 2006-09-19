@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.4 2006/09/11 22:31:22 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.4.2.1 2006/09/19 03:23:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -349,12 +349,13 @@ unroll_context::lookup_collection(
 void
 unroll_context::instantiate_collection(
 		const count_ptr<instance_collection_base>& p) const {
+	STACKTRACE_VERBOSE;
 	footprint* f = target_footprint;
 	never_ptr<const this_type> c(this);
-	while (!f && c) {
-		c = c->next;
+	do {
 		f = c->target_footprint;
-	}
+		c = c->next;
+	} while (!f && c);
 	NEVER_NULL(f);
 	const good_bool g(f->register_collection(p));
 	INVARIANT(g.good);
