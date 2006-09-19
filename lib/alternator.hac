@@ -10,7 +10,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.10 2006/09/19 04:11:42 fang Exp $
+	$Id: alternator.hac,v 1.11 2006/09/19 21:06:39 fang Exp $
  */
 
 import "channel.hac";
@@ -1083,7 +1083,7 @@ prs {
 	~_Reset					-> _o.d[1]+
 	~_Reset					-> _o.d[0]+
 
-	// NOTE: production rules are symmetric
+	// NOTE: production rules are symmetric, except for generation of L.e
 	// set-phase affects y
 	R[1].e & L.d[0] & x.d[0] & y.d[0]	-> _o.d[1]-
 	~_o.d[1]				-> R[1].d[0]+
@@ -1113,6 +1113,80 @@ prs {
 	_o.d[0] & y.d[0]			-> x.d[1]-
 	~R[0].d[0] & ~x.d[1] & ~(_o.d[1] & y.d[1])
 						-> x.d[0]+	// x-coupled
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generalization splitting alternator for e1ofN channels.  
+	Definition based on "wchb_alternator_split_2_fast".  
+	Reset: expects input data low, sends L.e+, R.e doesn't matter
+	Test: alternator-wchb_split-{11,12}.{hac,prsimrc}
+	HSE: (same as the e1of1 version)
+	\param N the number of channel rails.  
+ */
+template <pint N>
+defproc wchb_alternator_split_2xe1of(e1of<N> L, R[2]; bool _Reset, Reset) {
+c1of2 x, y;
+_c1of<N> _o[2];
+c1of2 rv;
+prs {
+(:j:2:
+(:n:N:
+	Reset					-> R[j].d[n]-
+	~_Reset					-> _o[n].d[j]+
+)
+)
+
+	Reset					-> x.d[0]-
+	~_Reset					-> x.d[1]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[0]-	// d[1]
+	~_Reset					-> y.d[1]+	// d[0]
+
+	// data rail completions
+(:j:2:
+	Reset					-> rv.d[j]-
+	// need to strengthen with y.d[j] before responding to environment!
+	(&:n:N: _o[j].d[n] ) & y.d[j]		-> rv.d[j]-
+	(|:n:N: ~_o[j].d[n] )			-> rv.d[j]+
+)
+	(|:j:2: rv.d[j] )			=> L.e-
+
+	// NOTE: production rules are symmetric
+	// set-phase affects y
+(:n:N:
+	R[1].e & L.d[n] & x.d[0] & y.d[0]	-> _o[1].d[n]-
+	~_o[1].d[n]				-> R[1].d[n]+
+)
+	R[0].e & rv.d[1] & x.d[0]		-> y.d[0]-	// R.e to check R.d-
+	~L.e & ~y.d[0] & ~(rv.d[0] & x.d[1] & R[1].e)
+						-> y.d[1]+	// x-coupled
+
+	// reset-phase affects x
+(:n:N:
+	~R[1].e & ~L.d[n]			-> _o[1].d[n]+	// ~y.d[0]?
+	_o[1].d[n] & y.d[1]			-> R[1].d[n]-	// unchecked
+)
+	L.e & y.d[1]				-> x.d[0]-
+	~rv.d[1] & ~x.d[0] & ~(L.e & y.d[0])	-> x.d[1]+	// x-coupled
+
+	// set-phase affects y
+(:n:N:
+	R[0].e & L.d[n] & x.d[1] & y.d[1]	-> _o[0].d[n]-
+	~_o[0].d[n]				-> R[0].d[n]+
+)
+	R[1].e & rv.d[0] & x.d[1]		-> y.d[1]-	// R.e to check R.d-
+	~L.e & ~y.d[1] & ~(rv.d[1] & x.d[0] & R[0].e)
+						-> y.d[0]+	// x-coupled
+
+	// reset-phase affects x
+(:n:N:
+	~R[0].e & ~L.d[n]			-> _o[0].d[n]+
+	_o[0].d[n] & y.d[0]			-> R[0].d[n]-
+)
+	L.e & y.d[0]				-> x.d[1]-
+	~rv.d[0] & ~x.d[1] & ~(L.e & y.d[1])	-> x.d[0]+	// x-coupled
 }
 }
 
@@ -1164,6 +1238,33 @@ M[0][0] = L;
 	// build the tree one level at a time
 	e1of1 M[k+1..k+1][1<<(k+1)];
 	wchb_alternator_split_2_fast S[k..k][1<<k];
+(;l:1<<k:
+	S[k][l](M[k][l], M[k+1][2*l..2*l+1], _Reset, Reset);
+)
+)
+R = M[K];	// connect outputs
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Depth K alternating e1ofN splitter, low latency version.  
+	Splits to 2^K channels in alternation.  
+	Order is funky though.  
+	TODO: experiment with self-recursive definition.  
+	Forward latency: 2T per stage, so 2K
+	Reset: R.e's don't matter
+	Test: alternator-wchb_split-{13,14}.{hac,prsimrc}
+	\param K depth of splitter tree.  K >= 1.
+ */
+template <pint N, K>
+defproc wchb_alternator_split_2_tree_e1of(
+		e1of<N> L, R[1<<K]; bool _Reset, Reset) {
+// this requires a sparse instantiation to construct a tree
+e1of<N> M[1][1];
+M[0][0] = L;
+(;k:K:
+	e1of<N> M[k+1..k+1][1<<(k+1)];
+	wchb_alternator_split_2xe1of<N> S[k..k][1<<k];
 (;l:1<<k:
 	S[k][l](M[k][l], M[k+1][2*l..2*l+1], _Reset, Reset);
 )
@@ -1289,7 +1390,7 @@ prs {
 	~y.d[0] & ~(x.d[1] & o[0])		-> y.d[1]+	// x-coupled
 
 	// reset-phase affects x
-	~R.e & ~i[1] & ~x.d[1] & ~y.d[0]	-> _o[1]+	// eww, 3p
+	~R.e & ~i[1] & ~x.d[1] & ~y.d[0]	-> _o[1]+	// eww, 4p
 	_o[1] & y.d[1]				-> o[1]-
 	_o[1] & y.d[1]				-> x.d[0]-
 	~o[1] & ~x.d[0] & ~(_o[0] & y.d[0])	-> x.d[1]+	// x-coupled
@@ -1301,11 +1402,95 @@ prs {
 	~y.d[1] & ~(x.d[0] & o[1])		-> y.d[0]+	// x-coupled
 
 	// reset-phase affects x
-	~R.e & ~i[0] & ~x.d[0] & ~y.d[1]	-> _o[0]+	// eww, 3p
+	~R.e & ~i[0] & ~x.d[0] & ~y.d[1]	-> _o[0]+	// eww, 4p
 	_o[0] & y.d[0]				-> o[0]-
 	_o[0] & y.d[0]				-> x.d[1]-
 	~o[0] & ~x.d[1] & ~(_o[1] & y.d[1])	-> x.d[0]+	// x-coupled
 
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This merges tokens from two e1ofN input in alternating sequence.  
+	Based on wchb_alternator_merge_2_fast, with trivial modification.
+	This starts by passing L[0] through first.  
+	HSE: same
+	Reset: expect L.d data low on reset, and R.e doesn't matter.
+	Test: alternator-wchb_merge-0{8,9}.{hac,prsimrc}
+	Forward latency: L -> R (2T)
+ */
+template <pint N>
+defproc wchb_alternator_merge_2xe1of(
+		e1of<N> L[2];
+		e1of<N> R;
+		bool _Reset, Reset) {
+c1of2 x;	// exclhi dual-rail state-variable
+c1of2 y;	// exclhi dual-rail state-variable
+_c1of<N> _o[2];
+bool ov[2];
+bool i[2][N];
+i[0] = L[0].d;
+i[1] = L[1].d;
+// _o[0] = L[0].e;
+// _o[1] = L[1].e;
+spec {
+	excllo(L[0].e, L[1].e)
+	exclhi(ov)
+}
+prs {
+	Reset					-> x.d[0]-
+	~_Reset					-> x.d[1]+
+	Reset					-> y.d[0]-
+	~_Reset					-> y.d[1]+
+
+(:j:2:
+(:n:N:
+	~_Reset					-> _o[j].d[n]+
+)
+	Reset					-> ov[j]-
+)
+
+(:n:N:
+	~_o[0].d[n] | ~_o[1].d[n]		-> R.d[n]+
+	 _o[0].d[n] &  _o[1].d[n]		-> R.d[n]-
+)
+(:j:2:
+	 ov[j]					=> L[j].e-
+)
+
+	// set-phase affects y
+(:n:N:
+	R.e & i[1][n] & x.d[0] & y.d[0]		-> _o[1].d[n]-
+)
+	(|:n:N: ~_o[1].d[n] )			-> ov[1]+
+	x.d[0] & ov[1]				-> y.d[0]-
+	~L[1].e & ~y.d[0] & ~(x.d[1] & ov[0])	-> y.d[1]+	// x-coupled
+
+	// reset-phase affects x
+(:n:N:
+	~R.e & ~i[1][n] & ~x.d[1] & ~y.d[0]	-> _o[1].d[n]+	// eww, 4p
+)
+	(&:n:N: _o[1].d[n] ) & y.d[1]		-> ov[1]-
+	L[1].e & y.d[1]				-> x.d[0]-
+	~ov[1] & ~x.d[0] & ~(L[0].e & y.d[0])	-> x.d[1]+	// x-coupled
+	// need ~ov?
+
+	// set-phase affects y
+(:n:N:
+	R.e & i[0][n] & x.d[1] & y.d[1]		-> _o[0].d[n]-
+)
+	(|:n:N: ~_o[0].d[n] )			-> ov[0]+
+	x.d[1] & ov[0]				-> y.d[1]-
+	~L[0].e & ~y.d[1] & ~(x.d[0] & ov[1])	-> y.d[0]+	// x-coupled
+
+	// reset-phase affects x
+(:n:N:
+	~R.e & ~i[0][n] & ~x.d[0] & ~y.d[1]	-> _o[0].d[n]+	// eww, 4p
+)
+	(&:n:N: _o[0].d[n] ) & y.d[0]		-> ov[0]-
+	L[0].e & y.d[0]				-> x.d[1]-
+	~ov[0] & ~x.d[1] & ~(L[1].e & y.d[1])	-> x.d[0]+	// x-coupled
 }
 }
 
@@ -1374,7 +1559,7 @@ L = M[K];	// connect inputs
 	Merges to 2^K channels in alternation.  
 	Order is funky though.  
 	TODO: experiment with self-recursive definition.  
-	Reset: expects L.d data low,  R.e can be any.
+	Reset: expects L.d data low, provides L.e+, R.e can be any.
 	Test: alternator-wchb_merge-0{6,7}.{hac,prsimrc}
 	\param K depth of splitter tree.  K >= 1.
  */
@@ -1388,6 +1573,33 @@ M[0][0] = R;
 	// build the tree one level at a time
 	e1of1 M[k+1..k+1][1<<(k+1)];
 	wchb_alternator_merge_2xe1of1_fast S[k..k][1<<k];
+(;l:1<<k:
+	S[k][l](M[k+1][2*l..2*l+1], M[k][l], _Reset, Reset);
+)
+)
+L = M[K];	// connect inputs
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Depth K alternating merger for e1ofN channels.  
+	Merges to 2^K channels in alternation.  
+	Order is funky though.  
+	TODO: experiment with self-recursive definition.  
+	Reset: expects L.d data low, provides L.e+, R.e can be any.
+	Test: alternator-wchb_merge-{10,11}.{hac,prsimrc}
+	\param K depth of splitter tree.  K >= 1.
+ */
+template <pint N, K>
+defproc wchb_alternator_merge_2_tree_e1of(
+		e1of<N> L[1<<K], R; bool _Reset, Reset) {
+// this requires a sparse instantiation to construct a tree
+e1of<N> M[1][1];
+M[0][0] = R;
+(;k:K:
+	// build the tree one level at a time
+	e1of<N> M[k+1..k+1][1<<(k+1)];
+	wchb_alternator_merge_2xe1of<N> S[k..k][1<<k];
 (;l:1<<k:
 	S[k][l](M[k+1][2*l..2*l+1], M[k][l], _Reset, Reset);
 )
@@ -1435,7 +1647,7 @@ wchb_alternator_merge_2_tree_slow<K> M(I, R, _Reset, Reset);
 	Tree FIFO.  
 	Reset: expect L.d data low, R.e can be any
 	Cycle time: 14 T with slow non-CMOS source, 
-		10 T with fast CMOS sources.  
+		10 T with fast CMOS sources (internal handshake limit).  
 	Forward latency: L -> R (2K split + 2K merge = 4K T) (fast!)
 	Test: alternator-wchb_tree_fifo-0{2,3,4}.{hac,prsimrc}
  */
@@ -1444,6 +1656,22 @@ defproc wchb_tree_fifo_e1of1_fast(e1of1 L, R; bool _Reset, Reset) {
 e1of1 I[1<<K];
 wchb_alternator_split_2_tree_fast<K> S(L, I, _Reset, Reset);
 wchb_alternator_merge_2_tree_fast<K> M(I, R, _Reset, Reset);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Tree FIFO of e1ofN channels.  
+	Reset: expect L.d data low, R.e can be any
+	Cycle time: 14 T with slow CMOS source, 
+		10 T with fast CMOS sources (internal handshake limit).  
+	Forward latency: L -> R (2K split + 2K merge = 4K T) (fast!)
+	Test: alternator-wchb_tree_fifo-0{5,6,7}.{hac,prsimrc}
+ */
+template <pint N, K>
+defproc wchb_tree_fifo_e1of(e1of<N> L, R; bool _Reset, Reset) {
+e1of<N> I[1<<K];
+wchb_alternator_split_2_tree_e1of<N,K> S(L, I, _Reset, Reset);
+wchb_alternator_merge_2_tree_e1of<N,K> M(I, R, _Reset, Reset);
 }
 
 //-----------------------------------------------------------------------------

@@ -7,3 +7,7 @@ lettersize and geometry, for the sake of consistency.
 
 Figures, figures, figures.  
 
+lib/ documentation directory
+send lib/*.hac sources through filter to make them look like C++ source, 
+then run doxygen on them to generate PDF and HTML.  
+

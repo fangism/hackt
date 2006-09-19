@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.27 2006/09/17 06:48:46 fang Exp $
+	$Id: State.cc,v 1.28 2006/09/19 21:06:43 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -2690,16 +2690,30 @@ State::dump_event(ostream& o, const event_index_type ei,
 	if (!ev.killed()) {
 		o << '\t' << t << '\t' <<
 			get_node_canonical_name(ev.node) << " : " <<
-			node_type::value_to_char[ev.val] << endl;
-		// can't deduce casue because cause is not assigned
-		// until event is dequeued.  
+			node_type::value_to_char[ev.val];
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		if (ev.cause.node) {
+			o << '\t' << "[from " <<
+			get_node_canonical_name(ev.cause.node) << ":=" <<
+			node_type::value_to_char[ev.cause.val] << "]";
+		}
+#endif
+		o << endl;
 	}
 #if DEBUG_STEP
 	else {
 		o << '\t' << t << '\t' <<
 			get_node_canonical_name(ev.node) << " : " <<
-			node_type::value_to_char[ev.val] <<
-			'\t' << "(killed)" << endl;
+			node_type::value_to_char[ev.val];
+#if PRSIM_SEPARATE_CAUSE_NODE_DIRECTION
+		if (ev.cause.node) {
+			o << '\t' << "[from " <<
+			get_node_canonical_name(ev.cause.node) << ":=" <<
+			node_type::value_to_char[ev.cause.val] << "]";
+		}
+#endif
+			'\t' << "(killed)";
+		o << endl;
 	}
 #endif
 	return o;

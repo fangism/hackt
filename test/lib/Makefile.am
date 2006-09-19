@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.20 2006/09/19 04:11:48 fang Exp $
+#	$Id: Makefile.am,v 1.21 2006/09/19 21:06:46 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -65,15 +65,21 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	alternator-wchb_split-05 alternator-wchb_split-06 \
 	alternator-wchb_split-07 alternator-wchb_split-08 \
 	alternator-wchb_split-09 alternator-wchb_split-10 \
+	alternator-wchb_split-11 alternator-wchb_split-12 \
+	alternator-wchb_split-13 alternator-wchb_split-14 \
 	alternator-lock-01 alternator-lock-02 \
 	alternator-bucket-01 \
 	alternator-wchb_merge-01 alternator-wchb_merge-02 \
 	alternator-wchb_merge-03 \
 	alternator-wchb_merge-04 alternator-wchb_merge-05 \
 	alternator-wchb_merge-06 alternator-wchb_merge-07 \
+	alternator-wchb_merge-08 alternator-wchb_merge-09 \
+	alternator-wchb_merge-10 alternator-wchb_merge-11 \
 	alternator-wchb_tree_fifo-01 \
 	alternator-wchb_tree_fifo-02 alternator-wchb_tree_fifo-03 \
 	alternator-wchb_tree_fifo-04 \
+	alternator-wchb_tree_fifo-05 alternator-wchb_tree_fifo-06 \
+	alternator-wchb_tree_fifo-07 \
 	copy-wire_copy-01 copy-wire_copy-02 \
 	copy-wire_copy-03 copy-wire_copy-04 \
 	copy-wchb_copy-01 copy-wchb_copy-02 \
@@ -113,15 +119,21 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	alternator-wchb_split-05 alternator-wchb_split-06 \
 	alternator-wchb_split-07 alternator-wchb_split-08 \
 	alternator-wchb_split-09 alternator-wchb_split-10 \
+	alternator-wchb_split-11 alternator-wchb_split-12 \
+	alternator-wchb_split-13 alternator-wchb_split-14 \
 	alternator-lock-01 alternator-lock-02 \
 	alternator-bucket-01 \
 	alternator-wchb_merge-01 alternator-wchb_merge-02 \
 	alternator-wchb_merge-03 \
 	alternator-wchb_merge-04 alternator-wchb_merge-05 \
 	alternator-wchb_merge-06 alternator-wchb_merge-07 \
+	alternator-wchb_merge-08 alternator-wchb_merge-09 \
+	alternator-wchb_merge-10 alternator-wchb_merge-11 \
 	alternator-wchb_tree_fifo-01 \
 	alternator-wchb_tree_fifo-02 alternator-wchb_tree_fifo-03 \
 	alternator-wchb_tree_fifo-04 \
+	alternator-wchb_tree_fifo-05 alternator-wchb_tree_fifo-06 \
+	alternator-wchb_tree_fifo-07 \
 	copy-wire_copy-01 copy-wire_copy-02 \
 	copy-wire_copy-03 copy-wire_copy-04 \
 	copy-wchb_copy-01 copy-wchb_copy-02 \

@@ -9,14 +9,14 @@ time: 10
 b- should enqueue c+ 
 	10	b : 0
 event queue:
-	20	c : 1
+	20	c : 1	[from b:=0]
 time: 15
 introduce high-glitch on b, should cause instability 
 WARNING: unstable `c'+
 >> cause: `b' (val: 1)
 	15	b : 1
 event queue:
-	20	c : X
+	20	c : X	[from b:=0]
 end queue 
 	16	b : 0
 	20	c : X	[by b:=0]

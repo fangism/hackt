@@ -15,7 +15,7 @@
 	130	_Reset : 1
 	140	R.x[0] : 0	[by _Reset:=1]
 event queue:
-	150	R.x[1] : 1
+	150	R.x[1] : 1	[from R.x[0]:=0]
 R.x[1]+ should be in queue 
 coercively set R.x[1]-, expecting warning 
 WARNING: pending event for node `R.x[1]' was overridden.

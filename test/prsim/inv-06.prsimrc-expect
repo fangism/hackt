@@ -1,6 +1,6 @@
 	0	a : 1
 event queue:
-	10	b : 0
+	10	b : 0	[from a:=1]
 expecting warning: ignoring set command, b- already pending 
 Currently, a warning will terminate interpretation of the script 
 until we enable fine-grain warning control. 

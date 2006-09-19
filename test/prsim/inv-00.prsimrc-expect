@@ -8,7 +8,7 @@ event queue:
 	0	a : 0
 expect to see c- in queue, b+ just happened 
 event queue:
-	20	c : 0
+	20	c : 0	[from b:=1]
 queue should be empty after step 
 event queue:
 time should be 20 
@@ -19,7 +19,7 @@ event queue:
 	20	a : 1
 expect to see c+ in queue, b- just happened 
 event queue:
-	40	c : 1
+	40	c : 1	[from b:=0]
 queue should be empty after step 
 event queue:
 time should be 40 
@@ -35,7 +35,7 @@ WARNING: weak-interference `c'
 >> cause: `b' (val: X)
 expect to see c:x in queue, b:x just happened 
 event queue:
-	60	c : X
+	60	c : X	[from b:=X]
 queue should be empty after step 
 event queue:
 time should be 60 

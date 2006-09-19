@@ -1,6 +1,6 @@
 	0	a : 0
 event queue:
-	10	b : 1
+	10	b : 1	[from a:=0]
 WARNING: pending event for node `b' was overridden.
 set b 0 accepted 
 event queue:

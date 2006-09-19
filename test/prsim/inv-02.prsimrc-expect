@@ -8,19 +8,19 @@ event queue:
 time: 105
 expect to see b+ in queue 
 event queue:
-	110	b : 1
+	110	b : 1	[from a:=0]
 time: 110
 should stop before b executes (still in queue) 
 event queue:
-	110	b : 1
+	110	b : 1	[from a:=0]
 time: 115
 'c-' should now be in queue 
 event queue:
-	120	c : 0
+	120	c : 0	[from b:=1]
 time: 120
 'c-' should still be in queue 
 event queue:
-	120	c : 0
+	120	c : 0	[from b:=1]
 time: 125
 queue is empty now 
 event queue:

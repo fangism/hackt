@@ -5,7 +5,7 @@ WARNING: unstable `b'-
 >> cause: `a' (val: 0)
 	5	a : 0
 event queue:
-	15	b : 1
+	15	b : 1	[from a:=0]
 expect empty queue 
 end of queue 
 	0	a : 0
@@ -14,7 +14,7 @@ WARNING: unstable `b'+
 >> cause: `a' (val: 1)
 	5	a : 1
 event queue:
-	15	b : 0
+	15	b : 0	[from a:=1]
 end of queue 
 	15	b : 0	[by a:=1]
 	25	c : 1	[by b:=0]
