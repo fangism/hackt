@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.11.8.3 2006/09/10 03:53:15 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.11.8.3.4.1 2006/09/28 19:50:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -26,6 +26,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/param_type_reference.h"
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
+#endif
+#if MODULE_PROCESS
+#include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/param_instantiation_statement.h"
+#include "Object/expr/meta_range_list.h"
 #endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_collection.h"
@@ -156,6 +161,24 @@ __good_int_width
 __ATTRIBUTE_UNUSED_CTOR__((int_def_width->assign_default_value(int_def_width_default)));
 
 // INVARIANT(__good_int_width.good);
+
+#if MODULE_PROCESS
+/**
+	Since we unroll all template formals now, we need an initial
+	instantiation statement per formal parameter.  
+ */
+static const excl_ptr<pint_instantiation_statement>
+width_inst = fundamental_type_reference::make_instantiation_statement(
+		int_def_width->get_unresolved_type_ref(),
+		index_collection_item_ptr_type(NULL)
+	).is_a_xfer<pint_instantiation_statement>();
+
+static const size_t int_inst_base_receipt =
+	(width_inst->attach_collection(int_def_width), 0);
+
+static const size_t width_receipt = 
+	(int_def_width->attach_initial_instantiation_statement(width_inst), 0);
+#endif
 
 // need to fake adding the template formal and instantiating it
 // or creating a footprint?

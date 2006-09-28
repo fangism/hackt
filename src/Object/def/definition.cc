@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.4.2.1 2006/09/28 06:23:17 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.4.2.2 2006/09/28 19:50:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3051,6 +3051,7 @@ process_definition::register_complete_type(
 /**
 	NOTE: this can be used to unroll a process definition
 	into a top-level footprint.  
+	NOTE: this is also intended for a top-level module to invoke.  
  */
 good_bool
 process_definition::__unroll_complete_type(

@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.18.6.3 2006/09/11 22:30:35 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.18.6.3.2.1 2006/09/28 19:50:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -597,6 +597,7 @@ good_bool
 const_param_expr_list::unroll_assign_formal_parameters(
 		const unroll_context& c,
 		const template_formals_list_type& tfl) const {
+	STACKTRACE_VERBOSE;
 	const size_t a_size = size();
 	const size_t f_size = tfl.size();
 	typedef template_formals_list_type::const_iterator

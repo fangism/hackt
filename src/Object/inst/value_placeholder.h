@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.1.2.6 2006/09/11 22:31:06 fang Exp $
+	$Id: value_placeholder.h,v 1.1.2.6.2.1 2006/09/28 19:50:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -155,8 +155,8 @@ public:
 	attach_initial_instantiation_statement(
 		const initial_instantiation_statement_ptr_type i) {
 		NEVER_NULL(i);
-		if (!initial_instantiation_statement_ptr) {
-			initial_instantiation_statement_ptr = i;
+		if (!this->initial_instantiation_statement_ptr) {
+			this->initial_instantiation_statement_ptr = i;
 		}
 	}
 

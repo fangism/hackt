@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.17.2.3 2006/09/11 22:31:17 fang Exp $
+ 	$Id: type_reference.cc,v 1.17.2.3.2.1 2006/09/28 19:50:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -357,6 +357,10 @@ data_type_reference::is_accepted_in_channel(void) const {
  */
 good_bool
 data_type_reference::must_be_valid(void) const {
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump(cerr << "whoami: ") << endl;
+#endif
 	return base_type_def->get_template_formals_manager()
 		.must_validate_actuals(template_args);
 }

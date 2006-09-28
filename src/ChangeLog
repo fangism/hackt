@@ -5,6 +5,20 @@
 
 2006-09-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03:
+	  module: now using process_definition::__unroll_complete_type()
+	  completed value_placeholder::dump()
+	  Some trouble with unroll-assigning formal parameters because
+		not all definition types have footprints!
+		This causes assert fail where expecting footprint, obviously.
+	  Object/traits/class_traits_type.cc:
+		mutually attached pint_instantiation_statement to 
+		pint_value_placeholder for the int::width template formal.
+	  Next: make definitions have footprints [manager], even the 
+		simple built-in ones, for the sake of consistency, 
+		will probably do on branch.
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-02:
 	  More #if MODULE_PROCESS implementation code.
 	  It compiles, but don't expect it to run successfully yet!

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.10 2006/09/08 03:43:16 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.10.4.1 2006/09/28 19:50:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -563,6 +563,7 @@ VALUE_COLLECTION_CLASS::make_array(
 #endif
 		) {
 #if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(p);
 	const size_t D = p->get_dimensions();
 #endif
 	switch (D) {
@@ -581,6 +582,7 @@ VALUE_COLLECTION_CLASS::make_array(
 #endif
 		default:
 			cerr << "FATAL: dimension limit is 4!" << endl;
+			// THROW_EXIT;
 			return NULL;
 	}
 }

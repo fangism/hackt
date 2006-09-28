@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17.4.3 2006/09/11 22:31:20 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17.4.3.2.1 2006/09/28 19:50:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -214,6 +214,7 @@ good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	typedef	typename type_ref_ptr_type::element_type	element_type;
 	STACKTRACE_VERBOSE;
+	NEVER_NULL(this->inst_base);
 #if !USE_INSTANCE_PLACEHOLDERS
 	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS

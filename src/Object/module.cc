@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.22.10.1 2006/09/28 06:23:13 fang Exp $
+ 	$Id: module.cc,v 1.22.10.2 2006/09/28 19:50:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -51,6 +51,13 @@ using util::write_string;
 using util::read_string;
 using util::persistent_traits;
 using util::auto_indent;
+
+//=============================================================================
+/**
+	Just a convenience definition.  
+ */
+static 
+const count_ptr<const const_param_expr_list> null_module_params(NULL);
 
 //=============================================================================
 // class module::top_level_footprint_importer method definitions
@@ -161,16 +168,14 @@ module::~module() {
 #if MODULE_PROCESS
 const footprint&
 module::get_footprint(void) const {
-	static const count_ptr<const const_param_expr_list> _null(NULL);
-	// return parent_type::get_footprint(_null);
+	// return parent_type::get_footprint(null_module_params);
 	return footprint_map.only();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 footprint&
 module::get_footprint(void) {
-	static const count_ptr<const const_param_expr_list> _null(NULL);
-	// return parent_type::get_footprint(_null);
+	// return parent_type::get_footprint(null_module_params);
 	return footprint_map.only();
 }
 #endif
@@ -300,12 +305,16 @@ module::is_unrolled(void) const {
 good_bool
 module::unroll_module(void) {
 	STACKTRACE("module::unroll_module()");
+#if MODULE_PROCESS
+	if (!parent_type::__unroll_complete_type(
+			null_module_params, get_footprint()).good) {
+		cerr << "Error encountered during module::unroll." << endl;
+		return good_bool(false);
+	}
+#else
 	if (!is_unrolled()) {
 		STACKTRACE("not already unrolled, unrolling...");
 		// start with blank context
-#if MODULE_PROCESS
-		// HERE
-#else
 		unroll_context c;
 		if (!sequential_scope::unroll(c).good) {
 			cerr << "Error encountered during module::unroll."
@@ -313,8 +322,8 @@ module::unroll_module(void) {
 			return good_bool(false);
 		}
 		_footprint.mark_unrolled();
-#endif
 	}
+#endif
 	return good_bool(true);
 }
 

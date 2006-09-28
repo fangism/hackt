@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.12 2006/09/11 22:31:04 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.12.2.1 2006/09/28 19:50:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -917,6 +917,19 @@ if (owner) {
 }
 	return o << key;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	This should really just be folded into children-class methods...
+ */
+ostream&
+instance_placeholder_base::dump_base(ostream& o) const {
+	get_type_ref()->dump(o);
+	o << ' ' << key;
+	return o;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
