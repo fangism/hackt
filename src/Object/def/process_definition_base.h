@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition_base.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_base.h,v 1.5.58.1 2006/09/28 22:37:30 fang Exp $
+	$Id: process_definition_base.h,v 1.5.58.2 2006/09/28 23:35:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_BASE_H__
@@ -10,7 +10,6 @@
 
 #include "Object/def/definition_base.h"
 #include "Object/type/canonical_type_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -48,11 +47,6 @@ virtual	MAKE_CANONICAL_PROCESS_TYPE_REFERENCE_PROTO = 0;
 	make_canonical_type(const template_actuals&) const
 
 virtual	MAKE_CANONICAL_PROCESS_TYPE_PROTO = 0;
-
-#if DEFINITION_FOOTPRINTS
-virtual	good_bool
-	must_be_valid_template_actuals(const template_actuals&) const = 0;
-#endif
 
 // inherited pure virtuals are still pure virtuals
 protected:

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.4.2.2.2.1 2006/09/28 22:37:24 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.4.2.2.2.2 2006/09/28 23:35:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -774,11 +774,7 @@ user_def_chan::user_def_chan() :
 		key(), parent(), 
 		base_chan_type_ref(), 
 		port_formals(), 
-		send_chp(), recv_chp()
-#if DEFINITION_FOOTPRINTS
-		, footprint_map()
-#endif
-		{
+		send_chp(), recv_chp() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -791,11 +787,7 @@ user_def_chan::user_def_chan(const never_ptr<const name_space> o,
 		key(name), parent(o), 
 		base_chan_type_ref(), 
 		port_formals(), 
-		send_chp(), recv_chp()
-#if DEFINITION_FOOTPRINTS
-		, footprint_map()
-#endif
-		{
+		send_chp(), recv_chp() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -977,44 +969,19 @@ user_def_chan::register_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-#if DEFINITION_FOOTPRINTS
-good_bool
-user_def_chan::must_be_valid_template_actuals(
-		const template_actuals& a) const {
-#if 0
-	footprint* const f = &footprint_map[a.make_const_param_list()];
-	const unroll_context c(f);
-#else
-	// use a temporary footprint for the purposes of validating
-	// the template parameters, but write the real footprint
-	// when it comes time to unroll the complete type.  
-	footprint f;
-	const unroll_context c(&f);
-#endif
-	return template_formals.must_validate_actuals(a, c);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
 user_def_chan::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
-#if DEFINITION_FOOTPRINTS
-#else
 	// nothing until this has a footprint manager
 	return good_bool(true);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
 user_def_chan::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
-#if DEFINITION_FOOTPRINTS
-#else
 	// nothing until this has a footprint manager
 	return good_bool(true);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -2191,6 +2158,7 @@ const footprint&
 user_def_datatype::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		if (p->size() != footprint_map.arity()) {
 			ICE(cerr, 
@@ -2203,6 +2171,9 @@ user_def_datatype::get_footprint(
 	} else {
 		return footprint_map.only();
 	}
+#else
+	return footprint_map[p];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2213,6 +2184,7 @@ void
 user_def_datatype::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		footprint& f = footprint_map[*p];
@@ -2228,6 +2200,9 @@ user_def_datatype::register_complete_type(
 		}
 		// else it was already registered
 	}
+#else
+	footprint_map[p].import_scopespace(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2240,15 +2215,6 @@ user_def_datatype::unroll_complete_type(
 	STACKTRACE_VERBOSE;
 if (defined) {
 	footprint* const f = &footprint_map[p];
-#if 0
-	if (p) {
-		INVARIANT(p->size() == footprint_map.arity());
-		f = &footprint_map[*p];
-	} else {
-		INVARIANT(!footprint_map.arity());
-		f = &footprint_map.only();
-	}
-#endif
 	if (!f->is_unrolled()) {
 		const canonical_type_base canonical_params(p);
 		const template_actuals
@@ -2305,7 +2271,8 @@ user_def_datatype::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -2313,6 +2280,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
+#endif
 	// will automatically unroll first if not already unrolled
 	if (!f->is_unrolled() && !unroll_complete_type(p).good) {
 		// already have error message
@@ -3043,6 +3011,7 @@ const footprint&
 process_definition::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		if (p->size() != footprint_map.arity()) {
 			ICE(cerr, 
@@ -3055,6 +3024,9 @@ process_definition::get_footprint(
 	} else {
 		return footprint_map.only();
 	}
+#else
+	return footprint_map[p];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3065,6 +3037,7 @@ void
 process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	// this has a fooprint manager
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
@@ -3081,6 +3054,9 @@ process_definition::register_complete_type(
 		}
 		// else it was already registered
 	}
+#else
+	footprint_map[p].import_scopespace(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3240,7 +3216,8 @@ process_definition::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* const f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -3248,6 +3225,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
+#endif
 	return __create_complete_type(p, *f);
 } else {
 	cerr << "ERROR: cannot create incomplete process type " <<

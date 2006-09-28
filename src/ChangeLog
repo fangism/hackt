@@ -5,6 +5,13 @@
 
 2006-09-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03-definition-02:
+	  Cleaned out traces of DEFINITION_FOOTPRINT.  
+	  Added missing type-dump in instance_placeholder::dump_formal().
+	  Made more use of footprint_manager::operator[ptr-to-expr-list].
+	  Next: merge branch, and return to module dump, using footprint.
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03-definition-01:
 	  Mini-experimental branch testing the implications of adding
 		footprints to all non-alias definition types.  

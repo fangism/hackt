@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.17.2.3.2.1.2.1 2006/09/28 22:37:34 fang Exp $
+ 	$Id: type_reference.cc,v 1.17.2.3.2.1.2.2 2006/09/28 23:35:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -358,12 +358,8 @@ data_type_reference::is_accepted_in_channel(void) const {
 good_bool
 data_type_reference::must_be_valid(void) const {
 	STACKTRACE_VERBOSE;
-#if DEFINITION_FOOTPRINTS
-	return base_type_def->must_be_valid_template_actuals(template_args);
-#else
 	return base_type_def->get_template_formals_manager()
 		.must_validate_actuals(template_args);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1329,12 +1325,8 @@ channel_type_reference::is_canonical(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 channel_type_reference::must_be_valid(void) const {
-#if DEFINITION_FOOTPRINTS
-	return base_chan_def->must_be_valid_template_actuals(template_args);
-#else
 	return base_chan_def->get_template_formals_manager()
 		.must_validate_actuals(template_args);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1666,12 +1658,8 @@ process_type_reference::is_accepted_in_channel(void) const {
  */
 good_bool
 process_type_reference::must_be_valid(void) const {
-#if DEFINITION_FOOTPRINTS
-	return base_proc_def->must_be_valid_template_actuals(template_args);
-#else
 	return base_proc_def->get_template_formals_manager()
 		.must_validate_actuals(template_args);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
