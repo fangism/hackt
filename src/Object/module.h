@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.12.10.1 2006/09/19 03:23:50 fang Exp $
+	$Id: module.h,v 1.12.10.2 2006/09/28 06:23:14 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -44,10 +44,13 @@ using util::persistent_object_manager;
 	A module contains two parts:
 	1) order-independent data
 	2) source-order-dependent data
+	NOTE: this is not used polymorphically with its process_definition
+		parent_type.
  */
 class module :
 #if MODULE_PROCESS
 	public process_definition
+	// base needs to be accessible when dynamic_casting from persistent
 #else
 	public persistent, public sequential_scope
 #endif
@@ -55,6 +58,10 @@ class module :
 friend class parser::context;
 	typedef	module				this_type;
 private:
+#if MODULE_PROCESS
+	typedef	process_definition		parent_type;
+#endif
+#if !MODULE_PROCESS
 	/**
 		Local footprint manager for temporary expansion of the 
 		top-level footprint.
@@ -81,6 +88,7 @@ private:
 
 		~namespace_footprint_importer();
 	} __ATTRIBUTE_UNUSED__ ; // end class top_level_footprint_importer
+#endif
 protected:
 #if !MODULE_PROCESS
 	/**
@@ -181,6 +189,11 @@ public:
 #if MODULE_PROCESS
 	const footprint&
 	get_footprint(void) const;
+private:
+	footprint&
+	get_footprint(void);
+
+public:
 #else
 	const footprint&
 	get_footprint(void) const { return _footprint; }

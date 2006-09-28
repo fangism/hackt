@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-02:
+	  More #if MODULE_PROCESS implementation code.
+	  It compiles, but don't expect it to run successfully yet!
+	  Next: rewrite module methods to re-use process_definition code.
+
+
 2006-09-18	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-01:

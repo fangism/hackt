@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.22 2006/08/01 18:18:21 filipp Exp $
+ 	$Id: module.cc,v 1.22.10.1 2006/09/28 06:23:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -55,6 +55,7 @@ using util::auto_indent;
 //=============================================================================
 // class module::top_level_footprint_importer method definitions
 
+#if !MODULE_PROCESS
 /**
 	Temporarily expands the footprint collection map
 	by visiting all namespaces and collecting their
@@ -110,6 +111,7 @@ module::namespace_footprint_importer::namespace_footprint_importer(
 module::namespace_footprint_importer::~namespace_footprint_importer() {
 	fp.clear_instance_collection_map();
 }
+#endif	// MODULE_PROCESS
 
 //=============================================================================
 // class module method definitions
@@ -119,18 +121,34 @@ module::namespace_footprint_importer::~namespace_footprint_importer() {
 	Private empty constructor.
  */
 module::module() :
+#if MODULE_PROCESS
+		process_definition(), 
+#else
 		persistent(), sequential_scope(),
-		name(""), global_namespace(NULL),
+		name(""), 
+#endif
+		global_namespace(NULL),
+#if !MODULE_PROCESS
 		top_prs(), 
-		_footprint(), allocated(false), global_state() {
+		_footprint(), 
+#endif
+		allocated(false), global_state() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 module::module(const string& s) :
+#if MODULE_PROCESS
+		process_definition(s), 
+#else
 		persistent(), sequential_scope(),
-		name(s), global_namespace(new name_space("")),
+		name(s), 
+#endif
+		global_namespace(new name_space("")),
+#if !MODULE_PROCESS
 		top_prs(), 
-		_footprint(), allocated(false), global_state() {
+		_footprint(), 
+#endif
+		allocated(false), global_state() {
 	NEVER_NULL(global_namespace);
 }
 
@@ -138,6 +156,24 @@ module::module(const string& s) :
 module::~module() {
 	STACKTRACE_DTOR("~module()");
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MODULE_PROCESS
+const footprint&
+module::get_footprint(void) const {
+	static const count_ptr<const const_param_expr_list> _null(NULL);
+	// return parent_type::get_footprint(_null);
+	return footprint_map.only();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+footprint&
+module::get_footprint(void) {
+	static const count_ptr<const const_param_expr_list> _null(NULL);
+	// return parent_type::get_footprint(_null);
+	return footprint_map.only();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -180,7 +216,12 @@ module::what(ostream& o) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 module::dump(ostream& o) const {
-	o << "In module created from: " << name;
+	o << "In module created from: "
+#if MODULE_PROCESS
+		<< key;
+#else
+		<< name;
+#endif
 	if (is_unrolled())
 		o << " (unrolled)";
 	if (is_created())
@@ -192,14 +233,20 @@ module::dump(ostream& o) const {
 		o << "Sequential instance management (to unroll): " << endl;
 		sequential_scope::dump(o,
 			expr_dump_context::default_value);
-		if (!top_prs.empty()) {
+#if !MODULE_PROCESS
+		const PRS::rule_set& prs(top_prs);
+#endif
+		if (!prs.empty()) {
 			o << auto_indent << "top-level prs:" << endl;
 			INDENT_SECTION(o);
 			const PRS::rule_dump_context rdc(*global_namespace);
-			top_prs.dump(o, rdc) << endl;
+			prs.dump(o, rdc) << endl;
 		}
 		return o;
 	}
+#if MODULE_PROCESS
+	const footprint& _footprint(get_footprint());
+#endif
 	if (is_created()) {
 		o << "Created state:" << endl;
 		_footprint.dump(o) << endl;
@@ -223,10 +270,27 @@ module::dump(ostream& o) const {
 ostream&
 module::dump_top_level_unrolled_prs(ostream& o) const {
 	// footprint::dump doesn't contain unrolled prs
+#if MODULE_PROCESS
+	const footprint& _footprint(get_footprint());
+#endif
 	const PRS::footprint& Pfp(_footprint.get_prs_footprint());
 	Pfp.dump(o, _footprint);
 	return o;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MODULE_PROCESS
+bool
+module::is_created(void) const {
+	return get_footprint().is_created();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+bool
+module::is_unrolled(void) const {
+	return get_footprint().is_unrolled();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -239,14 +303,17 @@ module::unroll_module(void) {
 	if (!is_unrolled()) {
 		STACKTRACE("not already unrolled, unrolling...");
 		// start with blank context
+#if MODULE_PROCESS
+		// HERE
+#else
 		unroll_context c;
 		if (!sequential_scope::unroll(c).good) {
 			cerr << "Error encountered during module::unroll."
 				<< endl;
 			return good_bool(false);
 		}
-		
 		_footprint.mark_unrolled();
+#endif
 	}
 	return good_bool(true);
 }
@@ -257,6 +324,7 @@ module::unroll_module(void) {
 	This replays internal aliases from the leaf-most types up.  
 	This routine is modeled after footprint::create_dependent_types.  
 	Need to figure out why we can't just use that...
+	TODO: reuse process_definition::create_dependent_type.
  */
 good_bool
 module::create_dependent_types(void) {
@@ -287,6 +355,9 @@ module::create_dependent_types(void) {
 		}
 	}
 }
+#if MODULE_PROCESS
+	footprint& _footprint(get_footprint());
+#endif
 {
 	// after replaying internal aliases, we can now assign instance_id's
 	const collection_iterator
@@ -301,13 +372,15 @@ module::create_dependent_types(void) {
 	}
 }
 {
+#if !MODULE_PROCESS
 	const top_level_footprint_importer foo(*this);
+#endif
 	_footprint.evaluate_scope_aliases();
 	_footprint.mark_created();
 }
 	return good_bool(true);
 #endif
-}
+}	// end method create_dependent_types
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -331,9 +404,14 @@ module::create_unique(void) {
 			return good_bool(false);
 		}
 	{
+#if MODULE_PROCESS
+		footprint& _footprint(get_footprint());
+#else
 		// using namespace_footprint_importer is only effective
 		// with the global namespace and not deeper namespaces
 		const namespace_footprint_importer foo(*this);
+		const PRS::rule_set& prs(top_prs);
+#endif
 #if ENABLE_STACKTRACE
 		_footprint.dump_with_collections(
 			cerr << "module\'s footprint: ", 
@@ -342,7 +420,7 @@ module::create_unique(void) {
 #endif
 		// will this automatically lookup global meta parameters?
 		const unroll_context c(&_footprint);
-		if (!top_prs.unroll(c, _footprint.get_pool<bool_tag>(),
+		if (!prs.unroll(c, _footprint.get_pool<bool_tag>(),
 				_footprint.get_prs_footprint()).good) {
 			// already have error message
 			return good_bool(false);
@@ -363,6 +441,9 @@ module::__allocate_unique(void) {
 		// we've established uniqueness among public ports
 		// now go through footprint and recursively allocate
 		// substructures in the footprint.  
+#if MODULE_PROCESS
+		const footprint& _footprint(get_footprint());
+#endif
 		if (!_footprint.expand_unique_subinstances(global_state).good) {
 			return good_bool(false);
 		}
@@ -402,6 +483,9 @@ module::allocate_unique_process_type(const process_type_reference& pt) {
 		tp(cpt.get_raw_template_params());
 	// need to import definition's local symbols (deep copy) into
 	// this temporary module's global namespace and footprint.  
+#if MODULE_PROCESS
+	footprint& _footprint(get_footprint());
+#endif
 	_footprint.import_scopespace(*pd);
 #if ENABLE_STACKTRACE
 	pd->dump(cerr << "process definition: ") << endl;
@@ -449,6 +533,9 @@ module::__cflat_rules(ostream& o, const cflat_options& cf) const {
 			global_state.accept(cfp);	// print!
 			// support for top-level prs!
 			// const top_level_footprint_importer foo(*this);
+#if MODULE_PROCESS
+			const footprint& _footprint(get_footprint());
+#endif
 			_footprint.get_prs_footprint().accept(cfp);
 		} catch (...) {
 			cerr << "Caught exception during cflat PRS." << endl;
@@ -470,7 +557,11 @@ module::__cflat_aliases(ostream& o, const cflat_options& cf) const {
 	// TODO: instance_visitor
 	if (cf.connect_style) {
 		STACKTRACE("cflatting aliases.");
+#if MODULE_PROCESS
+		const footprint& _footprint(get_footprint());
+#else
 		const top_level_footprint_importer foo(*this);
+#endif
 		_footprint.cflat_aliases(o, global_state, cf);
 	}
 	return good_bool(true);
@@ -486,6 +577,9 @@ module::__cflat_aliases_no_import(ostream& o, const cflat_options& cf) const {
 	// TODO: instance_visitor
 	if (cf.connect_style) {
 		STACKTRACE("cflatting aliases.");
+#if MODULE_PROCESS
+		const footprint& _footprint(get_footprint());
+#endif
 		_footprint.cflat_aliases(o, global_state, cf);
 	}
 	return good_bool(true);
@@ -551,9 +645,14 @@ if (!m.register_transient_object(this,
 	STACKTRACE_PERSISTENT("module::collect_transient_info()");
 	global_namespace->collect_transient_info(m);
 	// the list itself is a statically allocated member
+#if MODULE_PROCESS
+	parent_type::collect_transient_info_base(m);
+	const footprint& _footprint(get_footprint());
+#else
 	sequential_scope::collect_transient_info_base(m);
 	top_prs.collect_transient_info_base(m);
 	_footprint.collect_transient_info_base(m);
+#endif
 	global_state.collect_transient_info_base(m, _footprint);
 }
 // else already visited
@@ -563,11 +662,18 @@ if (!m.register_transient_object(this,
 void
 module::write_object(const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT("module::write_object()");
+#if !MODULE_PROCESS
 	write_string(f, name);
+#endif
 	m.write_pointer(f, global_namespace);
+#if MODULE_PROCESS
+	parent_type::write_object_base(m, f);
+	const footprint& _footprint(get_footprint());
+#else
 	sequential_scope::write_object_base(m, f);
 	top_prs.write_object_base(m, f);
 	_footprint.write_object_base(m, f);
+#endif
 	write_value(f, allocated);
 	global_state.write_object_base(m, f, _footprint);
 }
@@ -576,12 +682,19 @@ module::write_object(const persistent_object_manager& m, ostream& f) const {
 void
 module::load_object(const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT("module::load_object()");
+#if !MODULE_PROCESS
 	read_string(f, name);
+#endif
 	m.read_pointer(f, global_namespace);
 //	global_namespace->load_object(m);	// not necessary
+#if MODULE_PROCESS
+	parent_type::load_object_base(m, f);
+	const footprint& _footprint(get_footprint());
+#else
 	sequential_scope::load_object_base(m, f);
 	top_prs.load_object_base(m, f);
 	_footprint.load_object_base(m, f);
+#endif
 	read_value(f, allocated);
 	global_state.load_object_base(m, f, _footprint);
 }

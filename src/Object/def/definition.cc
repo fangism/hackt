@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.4 2006/09/11 22:30:16 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.4.2.1 2006/09/28 06:23:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -119,7 +119,6 @@ definition_base::null(NULL);
 /**
 	Definition basic constructor.  
  */
-inline
 definition_base::definition_base() :
 		persistent(), object(), 
 		template_formals(), 
@@ -128,7 +127,6 @@ definition_base::definition_base() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
 definition_base::~definition_base() {
 	STACKTRACE_DTOR("~definition_base()");
 #if 0
@@ -2677,6 +2675,22 @@ process_definition::process_definition() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	This constructor is reserved for the module.  
+ */
+process_definition::process_definition(const string& s) :
+		definition_base(), 
+		process_definition_base(),
+		scopespace(),
+		sequential_scope(), 
+		key(s), 
+		parent(), 
+		port_formals(), 
+		prs(), chp(), 
+		footprint_map() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Constructor for a process definition symbol table entry.  
 	TODO: when is the footprint_map's arity set? after adding 
 		template-formal parameter.  
@@ -3210,10 +3224,8 @@ if (defined) {
 	with the persistent object manager.  
  */
 void
-process_definition::collect_transient_info(persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
+process_definition::collect_transient_info_base(
+		persistent_object_manager& m) const {
 #if 0
 	cerr << "registering definition: " << key << endl;
 #endif
@@ -3231,6 +3243,15 @@ if (!m.register_transient_object(this,
 	spec.collect_transient_info_base(m);
 	footprint_map.collect_transient_info_base(m);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::collect_transient_info(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3238,7 +3259,7 @@ if (!m.register_transient_object(this,
 	Not recursive, manager will call this once.  
  */
 void
-process_definition::write_object(
+process_definition::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	write_string(f, key);
@@ -3257,7 +3278,14 @@ process_definition::write_object(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_definition::load_object(
+process_definition::write_object(
+		const persistent_object_manager& m, ostream& f) const {
+	write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::load_object_base(
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	read_string(f, const_cast<string&>(key));
@@ -3272,6 +3300,13 @@ process_definition::load_object(
 	chp.load_object_base(m, f);
 	spec.load_object_base(m, f);
 	footprint_map.load_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::load_object(
+		const persistent_object_manager& m, istream& f) {
+	load_object_base(m, f);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
