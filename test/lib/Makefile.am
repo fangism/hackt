@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.21 2006/09/19 21:06:46 fang Exp $
+#	$Id: Makefile.am,v 1.22 2006/09/28 03:36:21 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -56,6 +56,9 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
 	alternator-wchb_eater-03 alternator-wchb_eater-04 \
 	alternator-wchb_eater-05 alternator-wchb_eater-06 \
+	alternator-wchb_eater-07 alternator-wchb_eater-08 \
+	alternator-wchb_eater-09 alternator-wchb_eater-10 \
+	alternator-wchb_eater-11 alternator-wchb_eater-12 \
 	alternator-wchb_repeater-01 alternator-wchb_repeater-02 \
 	alternator-wchb_repeater-03 alternator-wchb_repeater-04 \
 	alternator-wchb_repeater-05 alternator-wchb_repeater-06 \
@@ -69,6 +72,8 @@ HACKT_PRSIMRC_TEST_SUBJECTS = \
 	alternator-wchb_split-13 alternator-wchb_split-14 \
 	alternator-lock-01 alternator-lock-02 \
 	alternator-bucket-01 \
+	alternator-bucket-02 \
+	alternator-bucket-03 \
 	alternator-wchb_merge-01 alternator-wchb_merge-02 \
 	alternator-wchb_merge-03 \
 	alternator-wchb_merge-04 alternator-wchb_merge-05 \
@@ -110,6 +115,9 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	alternator-wchb_eater-01 alternator-wchb_eater-02 \
 	alternator-wchb_eater-03 alternator-wchb_eater-04 \
 	alternator-wchb_eater-05 alternator-wchb_eater-06 \
+	alternator-wchb_eater-07 alternator-wchb_eater-08 \
+	alternator-wchb_eater-09 alternator-wchb_eater-10 \
+	alternator-wchb_eater-11 alternator-wchb_eater-12 \
 	alternator-wchb_repeater-01 alternator-wchb_repeater-02 \
 	alternator-wchb_repeater-03 alternator-wchb_repeater-04 \
 	alternator-wchb_repeater-05 alternator-wchb_repeater-06 \
@@ -123,6 +131,8 @@ HACKT_PRSIMRC_TEST_SCRIPTS_BASES = \
 	alternator-wchb_split-13 alternator-wchb_split-14 \
 	alternator-lock-01 alternator-lock-02 \
 	alternator-bucket-01 \
+	alternator-bucket-02 \
+	alternator-bucket-03 \
 	alternator-wchb_merge-01 alternator-wchb_merge-02 \
 	alternator-wchb_merge-03 \
 	alternator-wchb_merge-04 alternator-wchb_merge-05 \

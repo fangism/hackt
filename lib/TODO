@@ -1,8 +1,14 @@
 "TODO"
-	$Id: TODO,v 1.4 2006/09/02 20:35:07 fang Exp $
+	$Id: TODO,v 1.5 2006/09/28 03:36:18 fang Exp $
 
 Use configure to generate Makefiles suitable for installations of hackt.  
 Distinguish between build Makefiles and install Makefiles.  
+
+file organization:
+	push definitions into smaller files into subdirectories
+	to avoid polluting the global "file namespace"
+	which can cause unexpected including of files outside the library.  
+	(If user names her file "channel.hac"...)
 
 library catalog (documentation):
 	Use doxygen to generate standard library documentation

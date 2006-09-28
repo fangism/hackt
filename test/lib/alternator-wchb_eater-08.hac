@@ -1,0 +1,11 @@
+// "alternator-wchb_eater-08.hac"
+
+import "alternator.hac";
+import "env.hac";
+
+e1of3 L, R;
+bool _Reset, Reset;
+wchb_alternator_eater_2_e1of<3> X(L, R, _Reset, Reset);
+cmos_source_e<7,3,{0,0,0,1,1,1,1}> s(L, _Reset, Reset);
+bitbucket_e1of<3> b(R, _Reset);
+

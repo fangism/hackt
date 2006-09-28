@@ -1,5 +1,5 @@
 # "dox/cast2hac/Makefile.am"
-#	$Id: Makefile.am,v 1.6 2006/08/14 20:31:52 fang Exp $
+#	$Id: Makefile.am,v 1.7 2006/09/28 03:36:15 fang Exp $
 
 PDFS = cast2hac.pdf
 PSS = $(PDFS:.pdf=.ps)
@@ -16,6 +16,7 @@ EXTRA_DIST += \
 	arrays.tex \
 	connections.tex \
 	definitions.tex \
+	instances.tex \
 	loops.tex \
 	spec.tex \
 	templates.tex \

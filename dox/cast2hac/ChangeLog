@@ -1,5 +1,11 @@
 # "dox/cast2hac/ChangeLog"
 
+2006-09-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-24:
+	  Little note about forbidding anonymous instances.  
+
+
 2006-08-14	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-79-58:

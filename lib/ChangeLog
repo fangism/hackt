@@ -1,5 +1,12 @@
 "lib/ChangeLog"
 
+2006-09-27	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-24:
+	  Alternating buckets generalized to Nxe1of1,
+		and token eaters generalized to e1ofN channels.  
+
+
 2006-09-19	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-23:

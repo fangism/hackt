@@ -10,7 +10,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.11 2006/09/19 21:06:39 fang Exp $
+	$Id: alternator.hac,v 1.12 2006/09/28 03:36:18 fang Exp $
  */
 
 import "channel.hac";
@@ -551,6 +551,87 @@ prs {
 
 //-----------------------------------------------------------------------------
 /**
+	NOTE: this is just a plain onehot-stage with 
+	an additional inverter!
+	\param B if additional guard is neded on _sk+ (for N >= 3)
+ */
+template <pbool B>
+defproc alternator_bucket_passive_e1of1_element(
+		e1of1 L;
+		bool _si, sj, _sk, sk, _sl;
+		bool _Reset) {
+prs {
+	~_Reset					-> _sk+
+
+	L.d[0] & sj & _si			-> _sk-
+	~_sk					-> sk+
+	sk					-> L.e-
+[B ->
+	~L.d[0] & ~_sl & ~sj			-> _sk+	
+[] else ->
+	~L.d[0] & ~_sl				-> _sk+	
+]
+	_sk					-> sk-
+	~sk					-> L.e+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	NOTE: this is just a plain onehot-stage with 
+	an additional inverter!
+	\param B if additional guard is neded on _sk+ (for N >= 3)
+ */
+template <pbool B>
+defproc alternator_bucket_passive_e1of1_element_init(
+		e1of1 L;
+		bool _si, sj, _sk, sk, _sl;
+		bool Reset) {
+prs {
+	Reset					-> _sk-
+
+	L.d[0] & sj & _si			-> _sk-
+	~_sk					-> sk+
+	sk					-> L.e-
+[B ->
+	~L.d[0] & ~_sl & ~sj			-> _sk+	
+[] else ->
+	~L.d[0] & ~_sl				-> _sk+	
+]
+	_sk					-> sk-
+	~sk					-> L.e+
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This process consumes tokens from several inputs in successive order
+	by acknowledging one input at a time.
+	NOTE: channels are acknowledge in order, but the acknowledges 
+	themselves may overlap momentarily!  Holy concurrency, Batman!
+	This starts by consuming the L[0] token first.  
+	HSE: *[[L0d];L0e-;[~L0d];L0e+;[L1d];L1e-;[~L1d];[L1e+];...]
+	Reset: Expects L[].d low on reset
+	Test: alternator-bucket-0{2,3}.{hac,prsimrc}
+	TODO: wrapper definition to generalize for all N < 0.
+	Acknowledge latency: 3T
+	\param N > 2, number of input channels.
+	\param L input channels.
+ */
+template <pint N>
+defproc alternator_bucket_passive_e1of1(e1of1 L[N]; bool _Reset, Reset) {
+	bool _s[N], s[N];
+	alternator_bucket_passive_e1of1_element_init<(N>3)>
+		i0(L[N-1], _s[N-2], s[N-1], _s[0], s[0], _s[1], Reset);
+	alternator_bucket_passive_e1of1_element<(N>3)> i[1..N-1];
+	(;j:1..N-1:
+		i[j](L[j-1], _s[(N+j-2)%N], s[j-1],
+			_s[j], s[j], _s[(j+1)%N], _Reset);
+	)
+}
+
+//-----------------------------------------------------------------------------
+/**
 	Weak-condition onehot counter, cycles through 1ofN rails.  
 	Example of use of onehot_stages to form a counter.  
 	reset: inc may be either active or inactive on reset.  
@@ -567,7 +648,6 @@ defproc	onehot_counter(
 		bool inc;		// can be .e of e1ofN channel
 		c1of<N> o;		// for exclhi
 		bool _Reset, Reset) {
-	// bool Reset;	// locally generated
 [(N > 2) ->
 	bool _s[N], s[N], _o[N];
 	onehot_stage_init i0(inc, _s[N-2], s[N-1], _s[0], s[0], _s[1], Reset);
@@ -738,6 +818,75 @@ prs {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	2-way alternation, eating every other token on e1ofN channel.  
+	HSE: [[Re&Ld];Rd+;Le-;[~Re&~Ld];Rd-;Le+;[Ld];Le-;[~Ld];Le+]
+	Latency: L -> R (2T), when token is passed through.  
+	Reset: expects L.d low, R.e can be either high or low.
+	Tests: alternator-wchb_eater-0{7,8}.{hac,prsimrc}
+	\param L input channel.
+	\param R output channel, every other token.  
+ */
+template <pint N>
+defproc wchb_alternator_eater_2_e1of(e1of<N> L, R; bool _Reset, Reset) {
+c1of2 x, y;
+_c1of<N+1> _o;
+bool rv;
+bool rN;
+spec {
+	exclhi(rv, rN)		// kinda creates another redundant ring
+}
+prs {
+	Reset					-> x.d[1]-
+	~_Reset					-> x.d[0]+
+	// the following two resets only needed for active-acknowledge on reset
+	Reset					-> y.d[1]-
+	~_Reset					-> y.d[0]+
+
+(:i:N:
+	Reset					-> R.d[i]-
+	~_Reset					-> _o.d[i]+
+)
+	~_Reset					-> _o.d[N]+
+	Reset					-> rv-
+
+	// set-phase affects y
+(:i:N:
+	R.e & L.d[i] & x.d[0] & y.d[0]		-> _o.d[i]-
+	~_o.d[i]				-> R.d[i]+
+)
+	(|:i:N: ~_o.d[i] )			-> rv+
+	rv					-> L.e-
+	rv & x.d[0]				-> y.d[0]-
+	~L.e & ~y.d[0] & ~(R.e & rN & x.d[1])	-> y.d[1]+	// x-coupled
+
+	// reset-phase affects x
+(:i:N:
+	~R.e & ~L.d[i] & ~y.d[0]		-> _o.d[i]+
+	_o.d[i] & y.d[1]			-> R.d[i]-
+)
+	(&:i:N: _o.d[i] ) & y.d[1]		-> rv-
+	~rv & ~rN				-> L.e+
+	L.e & y.d[1]				-> x.d[0]-
+	~x.d[0] & ~(L.e & y.d[0])		-> x.d[1]+	// x-coupled
+
+	// set-phase affects y
+	(|:i:N: L.d[i] ) & x.d[1] & y.d[1]	-> _o.d[N]-
+	~_o.d[N]				-> rN+
+	rN					-> L.e-
+	R.e & rN & x.d[1]			-> y.d[1]-	// need R.e
+	~L.e & ~y.d[1] & ~(rv & x.d[0])		-> y.d[0]+	// x-coupled
+
+	// reset-phase affects x
+	(&:i:N: ~L.d[i] ) & ~y.d[1]		-> _o.d[N]+	// UGH!
+	_o.d[N] & y.d[0]			-> rN-
+//	~R.d[0] & ~rN				-> L.e+		// dupl.
+	L.e & y.d[0]				-> x.d[1]-
+	~x.d[1] & ~(L.e & y.d[1])		-> x.d[0]+	// x-coupled
+}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Same as the above, but eats first token b/c reset in different phase.  
 	"One for me, one for you..."
 	(Can't think of a good reason where one would use this, but it's here.)
@@ -796,7 +945,9 @@ prs {
 	Serial chain of wchb_alternator_eaters, where each stage
 	eats every other token.  
 	a.k.a. Frequency-divider.  
-	Reset: requires R.e to be high (inactive)
+	Each stage is WCHB-style.  
+	Reset: expects Ld low, sends Le high,
+		requires R.e to be high (inactive)
 	Test: alternator-wchb_eater-04.{hac,prsimrc}
 	\pint N number of divider stages
 	\param L input channel
@@ -818,10 +969,12 @@ wchb_alternator_eater_2_slow e[N];
 	Serial chain of wchb_alternator_eaters, where each stage
 	eats every other token.  
 	a.k.a. Frequency-divider.  
+	Each stage is WCHB-style.  
 	This variation is faster, and lower latency.  
-	Reset: doesn't care what R.e is on reset
-	Test: alternator-wchb_eater-0{5,6}.{hac,prsimrc}
-	\pint N number of divider stages
+	Reset: expects Ld low, sends Le high,
+		doesn't care what R.e is on reset
+	Test: alternator-wchb_eater-{09,10}.{hac,prsimrc}
+	\param N number of divider stages
 	\param L input channel
 	\param R output channel at 1/2^N frequency
  */
@@ -832,6 +985,27 @@ M[0] = L;
 M[N] = R;
 wchb_alternator_eater_2_fast e[N];
 (;i:N:
+	e[i](M[i], M[i+1], _Reset, Reset);
+)
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Generalized token eater chain for e1ofN.  
+	Each stage is WCHB-style.  
+	Reset: expects Ld low, sends Le high,
+		doesn't care what R.e is on reset
+	Test: alternator-wchb_eater-{11,12}.{hac,prsimrc}
+	\param N number of rails in channel
+	\param S number of stages
+ */
+template <pint N, S>
+defproc alternator_eater_chain_e1of(e1of<N> L, R; bool _Reset, Reset) {
+e1of<N> M[S+1];
+M[0] = L;
+M[S] = R;
+wchb_alternator_eater_2_e1of<N> e[S];
+(;i:S:
 	e[i](M[i], M[i+1], _Reset, Reset);
 )
 }
@@ -896,9 +1070,9 @@ prs {
 	Another token repeater.  
 	Derived from wchb_merge_alternator_2xe1of1_fast.
 	HSE: [[Re&Ld];Le-;Rd+;[~Re];Le+;Rd-;[Re];Rd+;[~Re];Rd-]
-	Reset:
+	Reset: expects input data low, gives L.e high, R.e can be any
 	Latency: L -> R (2T)
-	Tests:
+	Tests: alternator-wchb_repeater-{03,04}.{hac,prsimrc}
  */
 defproc wchb_alternator_repeater_2_merge(e1of1 L, R; bool _Reset, Reset) {
 c1of2 x, y;
