@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.4.2.2 2006/09/28 19:50:29 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.4.2.3 2006/09/28 23:55:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -835,6 +835,7 @@ user_def_chan::dump(ostream& o) const {
 			INDENT_SECTION(o);
 			recv_chp.dump(o << auto_indent, dc) << endl;
 		}
+		// TODO: dump footprints?
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
 }
@@ -2157,6 +2158,7 @@ const footprint&
 user_def_datatype::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		if (p->size() != footprint_map.arity()) {
 			ICE(cerr, 
@@ -2169,6 +2171,9 @@ user_def_datatype::get_footprint(
 	} else {
 		return footprint_map.only();
 	}
+#else
+	return footprint_map[p];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2179,6 +2184,7 @@ void
 user_def_datatype::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		footprint& f = footprint_map[*p];
@@ -2194,6 +2200,9 @@ user_def_datatype::register_complete_type(
 		}
 		// else it was already registered
 	}
+#else
+	footprint_map[p].import_scopespace(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2205,14 +2214,7 @@ user_def_datatype::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
-	if (p) {
-		INVARIANT(p->size() == footprint_map.arity());
-		f = &footprint_map[*p];
-	} else {
-		INVARIANT(!footprint_map.arity());
-		f = &footprint_map.only();
-	}
+	footprint* const f = &footprint_map[p];
 	if (!f->is_unrolled()) {
 		const canonical_type_base canonical_params(p);
 		const template_actuals
@@ -2269,7 +2271,8 @@ user_def_datatype::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -2277,6 +2280,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
+#endif
 	// will automatically unroll first if not already unrolled
 	if (!f->is_unrolled() && !unroll_complete_type(p).good) {
 		// already have error message
@@ -3007,6 +3011,7 @@ const footprint&
 process_definition::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		if (p->size() != footprint_map.arity()) {
 			ICE(cerr, 
@@ -3019,6 +3024,9 @@ process_definition::get_footprint(
 	} else {
 		return footprint_map.only();
 	}
+#else
+	return footprint_map[p];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3029,6 +3037,7 @@ void
 process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	// this has a fooprint manager
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
@@ -3045,6 +3054,9 @@ process_definition::register_complete_type(
 		}
 		// else it was already registered
 	}
+#else
+	footprint_map[p].import_scopespace(*this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3110,7 +3122,8 @@ process_definition::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* const f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -3118,6 +3131,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
+#endif
 	return __unroll_complete_type(p, *f);
 } else {
 	cerr << "ERROR: cannot unroll incomplete process type " <<
@@ -3202,7 +3216,8 @@ process_definition::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* const f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -3210,6 +3225,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
+#endif
 	return __create_complete_type(p, *f);
 } else {
 	cerr << "ERROR: cannot create incomplete process type " <<

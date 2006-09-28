@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.17.2.3.2.1 2006/09/28 19:50:38 fang Exp $
+ 	$Id: type_reference.cc,v 1.17.2.3.2.2 2006/09/28 23:55:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -358,9 +358,6 @@ data_type_reference::is_accepted_in_channel(void) const {
 good_bool
 data_type_reference::must_be_valid(void) const {
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	this->dump(cerr << "whoami: ") << endl;
-#endif
 	return base_type_def->get_template_formals_manager()
 		.must_validate_actuals(template_args);
 }
@@ -1681,7 +1678,7 @@ process_type_reference::make_unroll_context(void) const {
 /**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
-	NOTE: this procudure will be the model for data and channel types'
+	NOTE: this procedure will be the model for data and channel types'
 		unroll_resolve, so perfect this first!
 	TODO: resolve data-type aliases (may already be done now)
 	\return a copy of itself, but with type parameters resolved, 
