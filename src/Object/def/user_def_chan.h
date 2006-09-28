@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.8 2006/06/02 20:15:19 fang Exp $
+	$Id: user_def_chan.h,v 1.8.16.1 2006/09/28 22:37:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_CHAN_H__
@@ -13,6 +13,9 @@
 #include "Object/unroll/sequential_scope.h"
 #include "Object/def/port_formals_manager.h"
 #include "Object/lang/CHP.h"
+#if DEFINITION_FOOTPRINTS
+#include "Object/def/footprint_manager.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -40,6 +43,9 @@ protected:
 	port_formals_manager			port_formals;
 	CHP::action_sequence			send_chp;
 	CHP::action_sequence			recv_chp;
+#if DEFINITION_FOOTPRINTS
+	mutable footprint_manager		footprint_map;
+#endif
 private:
 	user_def_chan();
 public:
@@ -103,6 +109,11 @@ public:
 	REGISTER_COMPLETE_TYPE_PROTO;
 	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
+
+#if DEFINITION_FOOTPRINTS
+	good_bool
+	must_be_valid_template_actuals(const template_actuals&) const;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS

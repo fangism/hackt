@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.4.2.2 2006/09/28 19:50:29 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.4.2.2.2.1 2006/09/28 22:37:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -774,7 +774,11 @@ user_def_chan::user_def_chan() :
 		key(), parent(), 
 		base_chan_type_ref(), 
 		port_formals(), 
-		send_chp(), recv_chp() {
+		send_chp(), recv_chp()
+#if DEFINITION_FOOTPRINTS
+		, footprint_map()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -787,7 +791,11 @@ user_def_chan::user_def_chan(const never_ptr<const name_space> o,
 		key(name), parent(o), 
 		base_chan_type_ref(), 
 		port_formals(), 
-		send_chp(), recv_chp() {
+		send_chp(), recv_chp()
+#if DEFINITION_FOOTPRINTS
+		, footprint_map()
+#endif
+		{
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -835,6 +843,7 @@ user_def_chan::dump(ostream& o) const {
 			INDENT_SECTION(o);
 			recv_chp.dump(o << auto_indent, dc) << endl;
 		}
+		// TODO: dump footprints?
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
 }
@@ -968,19 +977,44 @@ user_def_chan::register_complete_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+#if DEFINITION_FOOTPRINTS
+good_bool
+user_def_chan::must_be_valid_template_actuals(
+		const template_actuals& a) const {
+#if 0
+	footprint* const f = &footprint_map[a.make_const_param_list()];
+	const unroll_context c(f);
+#else
+	// use a temporary footprint for the purposes of validating
+	// the template parameters, but write the real footprint
+	// when it comes time to unroll the complete type.  
+	footprint f;
+	const unroll_context c(&f);
+#endif
+	return template_formals.must_validate_actuals(a, c);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
 user_def_chan::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
+#if DEFINITION_FOOTPRINTS
+#else
 	// nothing until this has a footprint manager
 	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
 user_def_chan::create_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
+#if DEFINITION_FOOTPRINTS
+#else
 	// nothing until this has a footprint manager
 	return good_bool(true);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
@@ -2205,7 +2239,8 @@ user_def_datatype::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* const f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -2213,6 +2248,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
+#endif
 	if (!f->is_unrolled()) {
 		const canonical_type_base canonical_params(p);
 		const template_actuals
@@ -3110,7 +3146,8 @@ process_definition::unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* const f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -3118,6 +3155,7 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
+#endif
 	return __unroll_complete_type(p, *f);
 } else {
 	cerr << "ERROR: cannot unroll incomplete process type " <<

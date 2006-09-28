@@ -2,7 +2,7 @@
 	\file "Object/def/datatype_definition_base.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: datatype_definition_base.h,v 1.5 2006/01/22 18:19:31 fang Exp $
+	$Id: datatype_definition_base.h,v 1.5.58.1 2006/09/28 22:37:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DATATYPE_DEFINITION_BASE_H__
@@ -10,6 +10,8 @@
 
 #include "Object/def/definition_base.h"
 #include "Object/type/canonical_type_fwd.h"
+#include "Object/devel_switches.h"
+
 
 namespace HAC {
 namespace entity {
@@ -58,6 +60,11 @@ virtual	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO = 0;
 	make_canonical_type(const template_actuals&) const
 
 virtual	MAKE_CANONICAL_DATA_TYPE_PROTO = 0;
+
+#if DEFINITION_FOOTPRINTS
+virtual	good_bool
+	must_be_valid_template_actuals(const template_actuals&) const = 0;
+#endif
 
 virtual	good_bool
 	require_signature_match(

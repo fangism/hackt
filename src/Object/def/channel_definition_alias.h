@@ -2,7 +2,7 @@
 	\file "Object/def/channel_definition_alias.h"
 	Definition-related HAC object classes.  
 	This file came from "art_object_definition_chan.h".
-	$Id: channel_definition_alias.h,v 1.7 2006/06/02 20:15:16 fang Exp $
+	$Id: channel_definition_alias.h,v 1.7.16.1 2006/09/28 22:37:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_CHANNEL_DEFINITION_ALIAS_H__
@@ -70,6 +70,11 @@ public:
 	REGISTER_COMPLETE_TYPE_PROTO;
 	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
+
+#if DEFINITION_FOOTPRINTS
+	good_bool
+	must_be_valid_template_actuals(const template_actuals&) const;
+#endif
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

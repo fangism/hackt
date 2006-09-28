@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.10.10.1 2006/09/28 06:23:19 fang Exp $
+	$Id: process_definition.h,v 1.10.10.1.2.1 2006/09/28 22:37:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -139,6 +139,11 @@ public:
 	UNROLL_COMPLETE_TYPE_PROTO;
 	CREATE_COMPLETE_TYPE_PROTO;
 // methods for object file I/O
+
+#if DEFINITION_FOOTPRINTS
+	good_bool
+	must_be_valid_template_actuals(const template_actuals&) const;
+#endif
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

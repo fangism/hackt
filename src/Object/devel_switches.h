@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.4.2.1 2006/09/19 03:23:49 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.4.2.1.2.1 2006/09/28 22:37:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -95,6 +95,16 @@
 	Goal: 1
  */
 #define	MODULE_PROCESS			(1 && USE_INSTANCE_PLACEHOLDERS)
+
+/**
+	Define to 1 to give every definition type a footprint
+	and/or footprint_manager.
+	Rationale: since all parameter unrollings (local and formal)
+	now take place in a footprint, this will make functions
+	more self-consistent.  
+	Goal: 1?
+ */
+#define	DEFINITION_FOOTPRINTS		(0 && USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 

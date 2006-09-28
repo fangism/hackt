@@ -5,6 +5,17 @@
 
 2006-09-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03-definition-01:
+	  Mini-experimental branch testing the implications of adding
+		footprints to all non-alias definition types.  
+	  Discovered one-line solution to footprint problem --
+		make a temporary for validating template parameters!
+		See template_formals_manager::must_validate_actuals().
+	  Going to revert most abandoned revisions.  
+
+
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03:
 	  module: now using process_definition::__unroll_complete_type()
 	  completed value_placeholder::dump()

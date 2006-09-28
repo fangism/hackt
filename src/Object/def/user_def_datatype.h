@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_datatype.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: user_def_datatype.h,v 1.9 2006/06/02 20:15:20 fang Exp $
+	$Id: user_def_datatype.h,v 1.9.16.1 2006/09/28 22:37:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_DATATYPE_H__
@@ -98,6 +98,11 @@ public:
 	MAKE_CANONICAL_DATA_TYPE_REFERENCE_PROTO;
 
 	MAKE_CANONICAL_DATA_TYPE_PROTO;
+
+#if DEFINITION_FOOTPRINTS
+	good_bool
+	must_be_valid_template_actuals(const template_actuals&) const;
+#endif
 
 	const footprint&
 	get_footprint(const count_ptr<const const_param_expr_list>&) const;

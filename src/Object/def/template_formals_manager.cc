@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.12.6.3 2006/09/11 22:30:19 fang Exp $
+	$Id: template_formals_manager.cc,v 1.12.6.3.4.1 2006/09/28 22:37:31 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -25,6 +25,9 @@
 #include "Object/type/template_actuals.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -385,9 +388,14 @@ template_formals_manager::must_validate_actuals(
 	/***
 		Need to construct a temporary context for situations where
 		the formal parameters themselves depend on earlier actuals.  
+		Use a temporary footprint for the purposes of validating
+		template parameters, but write the real (definition
+		looked-up) footprint when it comes time to unroll/instantiate
+		the complete type.  
 	***/
 #if RESOLVE_VALUES_WITH_FOOTPRINT
-	unroll_context c;
+	footprint f;
+	unroll_context c(&f);
 	unroll_formal_parameters(c, t);
 #else
 	const unroll_context c(t, *this);
