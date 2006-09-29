@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.5 2006/09/11 22:30:17 fang Exp $
+	$Id: footprint.cc,v 1.24.4.5.2.1 2006/09/29 03:25:04 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -239,7 +239,12 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			e(instance_collection_map.end());
 		for ( ; i!=e; i++) {
 			NEVER_NULL(i->second);
-			i->second->dump(o << auto_indent, df) << endl;
+			o << auto_indent;
+#if USE_INSTANCE_PLACEHOLDERS
+			// print the key first
+			o << i->first << " = ";
+#endif
+			i->second->dump(o, df) << endl;
 		}
 		dump(o);
 		port_aliases.dump(o);
@@ -448,8 +453,11 @@ footprint::clear_instance_collection_map(void) {
  */
 good_bool
 footprint::register_collection(const count_ptr<instance_collection_base>& p) {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
+	// will want hash_string() or get_footprint_key()
 	const string key(p->get_name());
+	STACKTRACE_INDENT_PRINT("whoami: \"" << key << "\"" << endl);
 	INVARIANT(instance_collection_map.find(key)
 		== instance_collection_map.end());
 	instance_collection_map[key] = p;
@@ -796,6 +804,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		NEVER_NULL(coll_ptr);
 		// need to load the collection to get its key.  
 		m.load_object_once(coll_ptr);
+		// TODO: replace with get_footprint_key()!
 		instance_collection_map[coll_ptr->get_name()] = coll_ptr;
 	}
 }

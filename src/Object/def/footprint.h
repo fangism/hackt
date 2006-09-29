@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.17.4.1 2006/09/11 22:30:18 fang Exp $
+	$Id: footprint.h,v 1.17.4.1.2.1 2006/09/29 03:25:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -213,6 +213,9 @@ private:
 public:
 	footprint();
 	~footprint();
+
+	size_t
+	map_size(void) const { return instance_collection_map.size(); }
 
 	bool
 	is_unrolled(void) const { return unrolled; }

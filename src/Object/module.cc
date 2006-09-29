@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.22.10.2 2006/09/28 19:50:28 fang Exp $
+ 	$Id: module.cc,v 1.22.10.3 2006/09/29 03:25:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -234,6 +234,9 @@ module::dump(ostream& o) const {
 	o << endl;
 
 	global_namespace->dump(o) << endl;
+#if MODULE_PROCESS
+	const footprint& _footprint(get_footprint());
+#endif
 	if (!is_unrolled()) {
 		o << "Sequential instance management (to unroll): " << endl;
 		sequential_scope::dump(o,
@@ -250,7 +253,19 @@ module::dump(ostream& o) const {
 		return o;
 	}
 #if MODULE_PROCESS
-	const footprint& _footprint(get_footprint());
+	else {
+#if 0
+		if (_footprint.map_size()) {
+			// is unrolled
+			INDENT_SECTION(o);
+			_footprint.dump(
+				o << auto_indent << "footprint: ") << endl;
+		}
+#else
+		footprint_map.dump(o, expr_dump_context::default_value)
+			<< endl;
+#endif
+	}
 #endif
 	if (is_created()) {
 		o << "Created state:" << endl;

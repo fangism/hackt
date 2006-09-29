@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.6 2006/09/07 06:46:44 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.6.4.1 2006/09/29 03:25:07 fang Exp $
 	TODO: trim includes
  */
 
@@ -557,6 +557,11 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 	collection_type_manager_parent_type::load_object_base(m, i);
 #if USE_INSTANCE_PLACEHOLDERS
 	m.read_pointer(i, this->source_placeholder);
+	// TODO: need to load in advance to make the key available
+	// what about placeholder's parent namespaces???
+	NEVER_NULL(this->source_placeholder);
+	m.load_object_once(const_cast<instance_placeholder_type*>(
+		&*this->source_placeholder));
 #else
 	m.read_pointer(i, this->initial_instantiation_statement_ptr);
 #endif

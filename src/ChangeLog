@@ -5,6 +5,20 @@
 
 2006-09-28	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-05:
+	  module: dump is done, and looks satisfactory.
+	  footprint::dump now prints the key too.  
+	  {instance,value}_collection::load_object():
+		now loads the placeholder so that its key is available.
+		However, their parent namespaces aren't guaranteed yet! (TODO)
+	  Next: use get_footprint_key() instead get_name() for footprint
+		collection maps, to allow top-level instances residing
+		in namespaces to be given qualified ID string.  
+	  Goal: get parser/basic cases to work satisfactorily.
+
+
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-04-merged-definition-02:
 	  Merge, minor.  
 	  TODO: module should dump footprint when unrolled.
