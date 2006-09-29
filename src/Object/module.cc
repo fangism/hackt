@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.22.10.3 2006/09/29 03:25:03 fang Exp $
+ 	$Id: module.cc,v 1.22.10.4 2006/09/29 21:40:32 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -510,7 +510,9 @@ module::allocate_unique_process_type(const process_type_reference& pt) {
 #if MODULE_PROCESS
 	footprint& _footprint(get_footprint());
 #endif
+#if !MODULE_PROCESS
 	_footprint.import_scopespace(*pd);
+#endif
 #if ENABLE_STACKTRACE
 	pd->dump(cerr << "process definition: ") << endl;
 	_footprint.dump_with_collections(cerr << "module\'s footprint: ", 

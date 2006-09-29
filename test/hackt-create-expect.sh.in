@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-create-expect.sh.in"
-#	$Id: hackt-create-expect.sh.in,v 1.7 2006/01/30 07:42:07 fang Exp $
+#	$Id: hackt-create-expect.sh.in,v 1.7.50.1 2006/09/29 21:40:49 fang Exp $
 
 # $1 is the executable for the creator (hackt create), expecting 2 arguments
 # $2 is the executable for reading in the object file, (probably hackt objdump)
@@ -73,8 +73,8 @@ then
 		@CAT@ $bldroot.createdump.filter | \
 			$indfilter > $bldroot.createdump.noindex
 		@DIFF@ -buw $bldroot.createstderr.noindex \
-			$bldroot.createdump.noindex 2>&1 | \
-			@CAT@ > $bldroot.creatediff.noindex
+			$bldroot.createdump.noindex > \
+			$bldroot.creatediff.noindex 2>&1
 		$analdiff -v quiet=0 $bldroot.creatediff.noindex
 	fi
 	rm -f $bldroot.createanal

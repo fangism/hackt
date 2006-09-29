@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.12.32.10 2006/09/08 03:43:10 fang Exp $
+	$Id: instance_collection_base.h,v 1.12.32.10.4.1 2006/09/29 21:40:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -281,6 +281,9 @@ virtual	ostream&
 #if USE_INSTANCE_PLACEHOLDERS
 virtual	const string&
 	get_name(void) const = 0;
+
+	string
+	get_footprint_key(void) const;
 #else
 	const string&
 	get_name(void) const { return key; }

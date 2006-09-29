@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.4.2.3 2006/09/28 23:55:27 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.4.2.4 2006/09/29 21:40:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -2201,7 +2201,11 @@ user_def_datatype::register_complete_type(
 		// else it was already registered
 	}
 #else
+#if USE_INSTANCE_PLACEHOLDERS
+	footprint_map[p];
+#else
 	footprint_map[p].import_scopespace(*this);
+#endif
 #endif
 }
 
@@ -3055,7 +3059,11 @@ process_definition::register_complete_type(
 		// else it was already registered
 	}
 #else
+#if USE_INSTANCE_PLACEHOLDERS
+	footprint_map[p];
+#else
 	footprint_map[p].import_scopespace(*this);
+#endif
 #endif
 }
 

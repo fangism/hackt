@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-09-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-06:
+	  Implemented get_footprint_key(), but still has leading "::"
+		for qualified names (who cares? clean it later)
+	  footprint::dump_with_collections is now sorted alphabetically.
+	  Removed any uses of footprint::import_scopespace.
+	  Updated most parser/basic test cases, 
+		  one more regression left in parser/basic.
+
+
 2006-09-28	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-05:

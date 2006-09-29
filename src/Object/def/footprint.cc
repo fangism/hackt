@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.5.2.1 2006/09/29 03:25:04 fang Exp $
+	$Id: footprint.cc,v 1.24.4.5.2.2 2006/09/29 21:40:36 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <set>				// to sort keys
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
@@ -47,6 +48,7 @@ using util::read_value;
 using util::auto_indent;
 using std::ostream_iterator;
 using std::copy;
+using std::set;
 using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
 
 //=============================================================================
@@ -237,6 +239,21 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			i(instance_collection_map.begin());
 		const const_instance_map_iterator
 			e(instance_collection_map.end());
+#if USE_INSTANCE_PLACEHOLDERS
+		set<string> keys;
+		for ( ; i!=e; ++i) {
+			keys.insert(i->first);
+		}
+		set<string>::const_iterator
+			ii(keys.begin()), ee(keys.end());
+		for ( ; ii!=ee; ++ii) {
+			const const_instance_map_iterator
+				j(instance_collection_map.find(*ii));
+			NEVER_NULL(j->second);
+			o << auto_indent << j->first << " = ";
+			j->second->dump(o, df) << endl;
+		}
+#else
 		for ( ; i!=e; i++) {
 			NEVER_NULL(i->second);
 			o << auto_indent;
@@ -246,6 +263,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 #endif
 			i->second->dump(o, df) << endl;
 		}
+#endif
 		dump(o);
 		port_aliases.dump(o);
 #if ENABLE_STACKTRACE
@@ -300,6 +318,7 @@ footprint::operator [] (const string& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MODULE_PROCESS
 /**
 	This copies instance_collections (physical and parameter)
 	into its own map.  
@@ -345,8 +364,10 @@ if (instance_collection_map.empty()) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MODULE_PROCESS
 /**
 	The difference is that the key used for the collection
 	map is a hierarchical (qualified) name to avoid collisions
@@ -400,8 +421,10 @@ if (instance_collection_map.empty()) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MODULE_PROCESS
 /**
 	Temporary hack.  
 	Hybrid of import_scopespace and import_hierarchical scopespace:
@@ -433,6 +456,7 @@ if (instance_collection_map.empty()) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -456,7 +480,7 @@ footprint::register_collection(const count_ptr<instance_collection_base>& p) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(p);
 	// will want hash_string() or get_footprint_key()
-	const string key(p->get_name());
+	const string key(p->get_footprint_key());
 	STACKTRACE_INDENT_PRINT("whoami: \"" << key << "\"" << endl);
 	INVARIANT(instance_collection_map.find(key)
 		== instance_collection_map.end());
@@ -805,7 +829,7 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		// need to load the collection to get its key.  
 		m.load_object_once(coll_ptr);
 		// TODO: replace with get_footprint_key()!
-		instance_collection_map[coll_ptr->get_name()] = coll_ptr;
+		instance_collection_map[coll_ptr->get_footprint_key()] = coll_ptr;
 	}
 }
 	footprint_base<process_tag>::_pool.load_object_base(m, i);

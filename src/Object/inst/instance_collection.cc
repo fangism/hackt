@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.12.2.1 2006/09/28 19:50:32 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.12.2.2 2006/09/29 21:40:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -230,6 +230,17 @@ ostream&
 instance_collection_base::pair_dump_top_level(ostream& o) const {
 	o << auto_indent << get_name() << " = ";
 	return dump(o, dump_flags::verbose) << endl;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+string
+instance_collection_base::get_footprint_key(void) const {
+	const never_ptr<const instance_placeholder_base>
+		p(__get_placeholder_base());
+	NEVER_NULL(p);
+	return p->get_footprint_key();
 }
 #endif
 
@@ -649,7 +660,11 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 #endif
 		if (dimensions) {
 			INDENT_SECTION(o);
+#if USE_INSTANCE_PLACEHOLDERS
+			o << auto_indent << "{" << endl;
+#else
 			o << auto_indent << "unrolled indices: {" << endl;
+#endif
 			{
 				// INDENT_SECTION macro not making unique IDs
 				INDENT_SECTION(o);
@@ -658,7 +673,10 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 			o << auto_indent << "}";        // << endl;
 		} else {
 			// else nothing to say, just one scalar instance
-			dump_unrolled_instances(o << " (instantiated)", df);
+#if !USE_INSTANCE_PLACEHOLDERS
+			o << " (instantiated)";
+#endif
+			dump_unrolled_instances(o, df);
 		}
 #if !USE_INSTANCE_PLACEHOLDERS
 	}
@@ -919,6 +937,19 @@ if (owner) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Footprint key only needs qualifiers for instance placeholders
+	belonging to non-global namespaces.  
+ */
+string
+instance_placeholder_base::get_footprint_key(void) const {
+	const never_ptr<const name_space> ns(owner.is_a<const name_space>());
+	if (ns && ns->get_parent())
+		return ns->get_qualified_name() + "::" + key;
+	else return key;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
 /**
 	This should really just be folded into children-class methods...
@@ -1026,6 +1057,11 @@ instance_placeholder_base::load_object_base(
 	m.read_pointer(i, owner);
 	read_string(i, key);
 	read_value(i, dimensions);
+#if 1
+	// need this to guarantee that hierarchical name is
+	// available when re-constructing footprints' instance collections.  
+	m.load_object_once(const_cast<scopespace*>(&*owner));
+#endif
 }
 
 //=============================================================================
