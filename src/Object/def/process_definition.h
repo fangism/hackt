@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.10 2006/07/30 05:49:21 fang Exp $
+	$Id: process_definition.h,v 1.10.4.1 2006/10/01 21:14:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -34,7 +34,6 @@ class process_definition : public process_definition_base, public scopespace,
 	public sequential_scope {
 private:
 	typedef	process_definition		this_type;
-public:
 protected:
 	const string		key;		// inherited
 //	used_id_map_type	used_id_map;	// inherited
@@ -45,8 +44,14 @@ protected:
 	CHP::concurrent_actions			chp;
 	SPEC::directives_set			spec;
 	mutable footprint_manager		footprint_map;
-private:
+protected:
 	process_definition();
+
+#if MODULE_PROCESS
+	// only intended for module
+	explicit
+	process_definition(const string& s); 
+#endif
 public:
 	process_definition(const never_ptr<const name_space> o,
 		const string& s); 
@@ -117,6 +122,11 @@ public:
 	const footprint&
 	get_footprint(const count_ptr<const const_param_expr_list>&) const;
 
+protected:
+	footprint&
+	get_footprint(const count_ptr<const const_param_expr_list>&);
+
+public:
 	good_bool
 	__unroll_complete_type(const count_ptr<const const_param_expr_list>&, 
 		footprint&) const;
@@ -132,6 +142,16 @@ public:
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS
+
+protected:
+	void
+	collect_transient_info_base(persistent_object_manager&) const;
+
+	void
+	write_object_base(const persistent_object_manager&, ostream&) const;
+
+	void
+	load_object_base(const persistent_object_manager&, istream&);
 
 private:
 	void

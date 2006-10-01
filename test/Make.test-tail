@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.48.2.1 2006/09/11 22:31:26 fang Exp $
+#	$Id: Make.test-tail,v 1.48.2.2 2006/10/01 21:14:28 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -541,10 +541,10 @@ HACKT_PRS_DOT_TEST_SUBJECTS += $(HACKT_ALLOC_TEST_SUBJECTS)
 HACKT_PRS_DOT_TEST_SUBJECTS += $(HACKT_PRSIMRC_TEST_SUBJECTS)
 
 TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \
-	$(HACKT_OBJ_TEST_SUBJECTS:=.hacktobjtest)
+	$(HACKT_OBJ_TEST_SUBJECTS:=.hacktobjtest) \
+	$(HACKT_UNROLL_TEST_SUBJECTS:=.hacktunrolltest)
 
 # temporarily disabled on branch until features restored
-#	$(HACKT_UNROLL_TEST_SUBJECTS:=.hacktunrolltest) \
 #	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatetest) \
 #	$(HACKT_CREATE_TEST_SUBJECTS:=.hacktcreatefromhacotest) \
 #	$(HACKT_ALLOC_TEST_SUBJECTS:=.hacktalloctest) \

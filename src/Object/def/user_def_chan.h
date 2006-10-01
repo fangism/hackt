@@ -2,7 +2,7 @@
 	\file "Object/def/user_def_chan.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h". 
-	$Id: user_def_chan.h,v 1.8 2006/06/02 20:15:19 fang Exp $
+	$Id: user_def_chan.h,v 1.8.8.1 2006/10/01 21:14:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_USER_DEF_CHAN_H__

@@ -3,6 +3,97 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-20-merged-module-06:
+	  Merged revisions from -module child branch.
+	  Summary: module has been defined to use process_definition's 
+		facilities for more consistent unrolling implementation.
+		Haven't handled module 'create' phase yet.  
+	  Next: revise instantiations of template and port formals
+		to avoid double instantiations, i.e. ports are implicitly
+		unrolled before body sequential instance management.  
+
+
+2006-09-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-06:
+	  Implemented get_footprint_key(), but still has leading "::"
+		for qualified names (who cares? clean it later)
+	  footprint::dump_with_collections is now sorted alphabetically.
+	  Removed any uses of footprint::import_scopespace.
+	  Updated most parser/basic test cases, 
+		  one more regression left in parser/basic.
+
+
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-05:
+	  module: dump is done, and looks satisfactory.
+	  footprint::dump now prints the key too.  
+	  {instance,value}_collection::load_object():
+		now loads the placeholder so that its key is available.
+		However, their parent namespaces aren't guaranteed yet! (TODO)
+	  Next: use get_footprint_key() instead get_name() for footprint
+		collection maps, to allow top-level instances residing
+		in namespaces to be given qualified ID string.  
+	  Goal: get parser/basic cases to work satisfactorily.
+
+
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-04-merged-definition-02:
+	  Merge, minor.  
+	  TODO: module should dump footprint when unrolled.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03-definition-02:
+	  Cleaned out traces of DEFINITION_FOOTPRINT.  
+	  Added missing type-dump in instance_placeholder::dump_formal().
+	  Made more use of footprint_manager::operator[ptr-to-expr-list].
+	  Next: merge branch, and return to module dump, using footprint.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03-definition-01:
+	  Mini-experimental branch testing the implications of adding
+		footprints to all non-alias definition types.  
+	  Discovered one-line solution to footprint problem --
+		make a temporary for validating template parameters!
+		See template_formals_manager::must_validate_actuals().
+	  Going to revert most abandoned revisions.  
+
+
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03:
+	  module: now using process_definition::__unroll_complete_type()
+	  completed value_placeholder::dump()
+	  Some trouble with unroll-assigning formal parameters because
+		not all definition types have footprints!
+		This causes assert fail where expecting footprint, obviously.
+	  Object/traits/class_traits_type.cc:
+		mutually attached pint_instantiation_statement to 
+		pint_value_placeholder for the int::width template formal.
+	  Next: make definitions have footprints [manager], even the 
+		simple built-in ones, for the sake of consistency, 
+		will probably do on branch.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-02:
+	  More #if MODULE_PROCESS implementation code.
+	  It compiles, but don't expect it to run successfully yet!
+	  Next: rewrite module methods to re-use process_definition code.
+
+
+2006-09-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-01:
+	  This child branch intended to refactor the module class to 
+		work like a process_definition (nullary_template)
+		and reuse the same functionality.
+	  This revision only changed the module.h header, and does not compile.
+
+
 2006-09-11	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-19-merged-template-02:

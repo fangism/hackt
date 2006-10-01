@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.10 2006/09/11 22:31:06 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.11 2006/10/01 21:14:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -193,7 +193,8 @@ VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 ostream&
 VALUE_PLACEHOLDER_CLASS::dump_formal(ostream& o) const {
 	INVARIANT(this->is_template_formal());
-//	this->dump_base(o);
+	// this->dump_base(o);
+	this->get_unresolved_type_ref()->dump(o) << ' ' << key;
 	// placeholders don't have collections
 #if 0
 	this->dump_collection_only(o);
@@ -487,12 +488,17 @@ VALUE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const {
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename VALUE_PLACEHOLDER_CLASS::value_collection_generic_type*
 VALUE_PLACEHOLDER_CLASS::make_collection(void) const {
+	NEVER_NULL(this);	// WTF?
 	return value_collection_generic_type::make_array(
 		never_ptr<const this_type>(this));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if RESOLVE_VALUES_WITH_FOOTPRINT
+/**
+	\param c the unroll_context in which to instantiate the parameter.
+	\param e the value to assign to the parameter (optional).
+ */
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
 good_bool
 VALUE_PLACEHOLDER_CLASS::unroll_assign_formal_parameter(
@@ -501,6 +507,7 @@ VALUE_PLACEHOLDER_CLASS::unroll_assign_formal_parameter(
 	STACKTRACE_VERBOSE;
 	// safe to instantiate the initial statement because
 	// template formals are unconditional and packed
+	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	const good_bool
 		g(this->initial_instantiation_statement_ptr->unroll(c).good);
 	INVARIANT(g.good);
@@ -549,9 +556,10 @@ if (!m.register_transient_object(this,
 	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
-	if (this->initial_instantiation_statement_ptr) {
+	NEVER_NULL(this->initial_instantiation_statement_ptr);
+//	if (this->initial_instantiation_statement_ptr) {
 		initial_instantiation_statement_ptr->collect_transient_info(m);
-	}
+//	}
 }
 // else already visited
 }

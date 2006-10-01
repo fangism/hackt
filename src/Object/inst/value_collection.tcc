@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.10 2006/09/08 03:43:16 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.11 2006/10/01 21:14:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -563,6 +563,7 @@ VALUE_COLLECTION_CLASS::make_array(
 #endif
 		) {
 #if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(p);
 	const size_t D = p->get_dimensions();
 #endif
 	switch (D) {
@@ -581,6 +582,7 @@ VALUE_COLLECTION_CLASS::make_array(
 #endif
 		default:
 			cerr << "FATAL: dimension limit is 4!" << endl;
+			// THROW_EXIT;
 			return NULL;
 	}
 }
@@ -610,6 +612,11 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 	m.read_pointer(f, ival);
 #if USE_INSTANCE_PLACEHOLDERS
 	m.read_pointer(f, this->source_placeholder);
+	// TODO: need to load in advance to make the key available
+	// what about placeholder's parent namespaces???
+	NEVER_NULL(this->source_placeholder);
+	m.load_object_once(const_cast<value_placeholder_type*>(
+		&*this->source_placeholder));
 #else
 	m.read_pointer(f, this->initial_instantiation_statement_ptr);
 #endif
@@ -627,7 +634,7 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 __SELF_CHUNK_MAP_POOL_STATIC_INIT(EMPTY_ARG, typename, VALUE_ARRAY_CLASS)
-        
+
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 __CHUNK_MAP_POOL_ROBUST_STATIC_GET_POOL(EMPTY_ARG, typename, VALUE_ARRAY_CLASS)
 
@@ -636,7 +643,7 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_NEW(EMPTY_ARG, VALUE_ARRAY_CLASS)
 
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 __CHUNK_MAP_POOL_ROBUST_OPERATOR_PLACEMENT_NEW(EMPTY_ARG, VALUE_ARRAY_CLASS)
-        
+
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, VALUE_ARRAY_CLASS)
 #endif  // POOL_ALLOCATE_VALUE_COLLECTIONS
@@ -645,31 +652,31 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, VALUE_ARRAY_CLASS)
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array() :
 #if USE_INSTANCE_PLACEHOLDERS
-		parent_type(), 
+	parent_type(), 
 #else
-		parent_type(D), 
+	parent_type(D), 
 #endif
-		collection(), cached_values(D) {
+	collection(), cached_values(D) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_INSTANCE_PLACEHOLDERS
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array(const value_placeholder_ptr_type p) :
-		parent_type(p), collection(), cached_values(D) {
+	parent_type(p), collection(), cached_values(D) {
 }
 
 #else	// USE_INSTANCE_PLACEHOLDERS
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array(const scopespace& o, const string& n) :
-		parent_type(o, n, D), collection(), cached_values(D) {
-	// until we eliminate that field from instance_collection_base
+	parent_type(o, n, D), collection(), cached_values(D) {
+// until we eliminate that field from instance_collection_base
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	Partial copy constructor for the footprint use.  
- */
+Partial copy constructor for the footprint use.  
+*/
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array(const this_type& t, const footprint& f) :
 		parent_type(t, f), collection(t.collection), 
@@ -1125,6 +1132,7 @@ VALUE_SCALAR_CLASS::dump_unrolled_values(ostream& o) const {
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
+	STACKTRACE_VERBOSE;
 	INVARIANT (r.empty());
 	// 0-D, or scalar
 	if (the_instance.instantiated) {

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.4 2006/09/11 22:31:22 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.5 2006/10/01 21:14:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -279,7 +279,7 @@ unroll_context::lookup_instance_collection(
 	if (target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
-			ret((*target_footprint)[p.get_name()]
+			ret((*target_footprint)[p.get_footprint_key()]
 				.is_a<physical_instance_collection>());
 		if (ret)
 			return ret;
@@ -311,7 +311,7 @@ unroll_context::lookup_value_collection(
 	if (target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
-			ret((*target_footprint)[p.get_name()]
+			ret((*target_footprint)[p.get_footprint_key()]
 				.is_a<param_value_collection>());
 		if (ret)
 			return ret;
@@ -349,12 +349,13 @@ unroll_context::lookup_collection(
 void
 unroll_context::instantiate_collection(
 		const count_ptr<instance_collection_base>& p) const {
+	STACKTRACE_VERBOSE;
 	footprint* f = target_footprint;
 	never_ptr<const this_type> c(this);
-	while (!f && c) {
-		c = c->next;
+	do {
 		f = c->target_footprint;
-	}
+		c = c->next;
+	} while (!f && c);
 	NEVER_NULL(f);
 	const good_bool g(f->register_collection(p));
 	INVARIANT(g.good);
@@ -387,7 +388,8 @@ unroll_context::lookup_actual(
 	typedef	count_ptr<const const_param>	return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("looking up: " << p.get_name() << endl);
+	STACKTRACE_INDENT_PRINT("looking up: " <<
+		p.get_footprint_key() << endl);
 	dump(cerr << "with: ") << endl;
 #endif
 	INVARIANT(!empty());
@@ -402,7 +404,7 @@ unroll_context::lookup_actual(
 			const footprint* const tfp = get_target_footprint();
 			NEVER_NULL(tfp);
 			const count_ptr<instance_collection_base>
-				ic((*tfp)[p.get_name()]);
+				ic((*tfp)[p.get_footprint_key()]);
 			NEVER_NULL(ic);
 			FINISH_ME_EXIT(Fang);
 		}
@@ -428,6 +430,7 @@ unroll_context::lookup_actual(
 	// why don't we just search up the context chain until
 	// we find the matching template formals reference?
 	if (template_formals == &p_tfm) {
+		// template formal names are never qualified
 		const size_t index(p_tfm.lookup_template_formal_position(
 			p.get_name()));
 		INVARIANT(index);

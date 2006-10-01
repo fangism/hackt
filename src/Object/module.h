@@ -1,19 +1,24 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.12 2006/07/31 22:22:27 fang Exp $
+	$Id: module.h,v 1.12.4.1 2006/10/01 21:13:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
 #define	__HAC_OBJECT_MODULE_H__
 
 #include <string>
+#include "Object/devel_switches.h"
 #include "Object/common/util_types.h"
 #include "Object/unroll/sequential_scope.h"
 #include "util/persistent.h"
 #include "Object/def/footprint.h"
 #include "Object/state_manager.h"
+#if MODULE_PROCESS
+#include "Object/def/process_definition.h"
+#else
 #include "Object/lang/PRS_base.h"
+#endif
 #include "util/tokenize_fwd.h"
 #include "util/attributes.h"
 #include "util/STL/vector_fwd.h"
@@ -39,11 +44,24 @@ using util::persistent_object_manager;
 	A module contains two parts:
 	1) order-independent data
 	2) source-order-dependent data
+	NOTE: this is not used polymorphically with its process_definition
+		parent_type.
  */
-class module : public persistent, public sequential_scope {
+class module :
+#if MODULE_PROCESS
+	public process_definition
+	// base needs to be accessible when dynamic_casting from persistent
+#else
+	public persistent, public sequential_scope
+#endif
+{
 friend class parser::context;
 	typedef	module				this_type;
 private:
+#if MODULE_PROCESS
+	typedef	process_definition		parent_type;
+#endif
+#if !MODULE_PROCESS
 	/**
 		Local footprint manager for temporary expansion of the 
 		top-level footprint.
@@ -70,12 +88,15 @@ private:
 
 		~namespace_footprint_importer();
 	} __ATTRIBUTE_UNUSED__ ; // end class top_level_footprint_importer
+#endif
 protected:
+#if !MODULE_PROCESS
 	/**
 		Name of the file.
 		If blank, then was from -stdin- or -cin-.  
 	 */
 	string					name;
+#endif
 
 	/**
 		The root namespace object contains information
@@ -83,6 +104,7 @@ protected:
 	 */
 	excl_ptr<name_space>			global_namespace;
 
+#if !MODULE_PROCESS
 	/**
 		Top-level production rules.  
 	 */
@@ -93,7 +115,7 @@ protected:
 		and creation.  
 	 */
 	footprint				_footprint;
-
+#endif
 	/**
 		Whether or not the global instances have been allocated
 		in the state_manager.  
@@ -138,6 +160,13 @@ public:
 	ostream&
 	dump_top_level_unrolled_prs(ostream&) const;
 
+#if MODULE_PROCESS
+	bool
+	is_unrolled(void) const;
+
+	bool
+	is_created(void) const;
+#else
 	bool
 	is_unrolled(void) const {
 		return _footprint.is_unrolled();
@@ -147,6 +176,7 @@ public:
 	is_created(void) const {
 		return _footprint.is_created();
 	}
+#endif
 
 	bool
 	is_allocated(void) const {
@@ -156,8 +186,18 @@ public:
 	const state_manager&
 	get_state_manager(void) const { return global_state; }
 
+#if MODULE_PROCESS
+	const footprint&
+	get_footprint(void) const;
+private:
+	footprint&
+	get_footprint(void);
+
+public:
+#else
 	const footprint&
 	get_footprint(void) const { return _footprint; }
+#endif
 
 	/**
 		Note: sequential scope has a const-version of this, 
@@ -216,7 +256,7 @@ public:
 };	// end class module
 
 //=============================================================================
-
+#if 0
 /**
 	The final unit of compilation that links together
 	one or more modules.  
@@ -240,6 +280,7 @@ public:
 	merge_module(module& m);
 
 };	// end class multi_module
+#endif
 
 //=============================================================================
 }	// end namespace entity

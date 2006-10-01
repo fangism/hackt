@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.tcc"
 	Template method definitions for the module class.
-	$Id: module.tcc,v 1.5 2006/04/11 07:54:38 fang Exp $
+	$Id: module.tcc,v 1.5.20.1 2006/10/01 21:13:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_TCC__
@@ -42,9 +42,16 @@ void
 module::match_aliases(util::string_list& a, const size_t i) const {
 	INVARIANT(this->is_allocated());
 	typedef	alias_matcher<Tag>		matcher_type;
-	matcher_type m(this->global_state, this->_footprint, NULL, a, i);
+#if MODULE_PROCESS
+	const footprint& _fp(get_footprint());
+#else
+	const footprint& _fp(_footprint);	// alias
+#endif
+	matcher_type m(this->global_state, _fp, NULL, a, i);
+#if !MODULE_PROCESS
 	const top_level_footprint_importer temp(*this);
-	_footprint.accept(m);
+#endif
+	_fp.accept(m);
 }
 
 //=============================================================================
