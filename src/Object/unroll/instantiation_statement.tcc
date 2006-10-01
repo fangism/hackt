@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17.4.3.2.1 2006/09/28 19:50:40 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17.4.3.2.2 2006/10/01 20:54:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -214,6 +214,10 @@ good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	typedef	typename type_ref_ptr_type::element_type	element_type;
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_INDENT << "statement: ",
+		expr_dump_context::default_value) << endl;
+#endif
 	NEVER_NULL(this->inst_base);
 #if !USE_INSTANCE_PLACEHOLDERS
 	const footprint* const f(c.get_target_footprint());
@@ -233,6 +237,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #if USE_INSTANCE_PLACEHOLDERS
 	// TODO: currently will not work with instances inside namespaces
 	// may require qualified names in top-level footprint search!
+	// TODO: this is a modifying lookup, using target_footprint
 	count_ptr<collection_type>
 		inst_ptr(c.lookup_collection(*this->inst_base)
 			.template is_a<collection_type>());

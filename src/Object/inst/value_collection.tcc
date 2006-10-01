@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.10.4.2 2006/09/29 03:25:08 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.10.4.3 2006/10/01 20:54:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -1132,6 +1132,7 @@ VALUE_SCALAR_CLASS::dump_unrolled_values(ostream& o) const {
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
+	STACKTRACE_VERBOSE;
 	INVARIANT (r.empty());
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
