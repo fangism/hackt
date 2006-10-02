@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.14.4.2 2006/09/02 03:58:29 fang Exp $
+	$Id: instance.cc,v 1.14.4.3 2006/10/02 03:18:51 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -175,11 +175,23 @@ alias_list::rightmost(void) const {
 	\return newly allocated expression assignment object if
 		successfully type-checked, else NULL.  
  */
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<const entity::param_expression_assignment>
+#else
 excl_ptr<const entity::param_expression_assignment>
+#endif
 alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<const entity::param_expression_assignment>
+#else
 	typedef	excl_ptr<const entity::param_expression_assignment>
+#endif
 							const_return_type;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<entity::param_expression_assignment>
+#else
 	typedef	excl_ptr<entity::param_expression_assignment>
+#endif
 							return_type;
 	typedef	checked_meta_exprs_type::value_type	checked_expr_ptr_type;
 // experimenting
@@ -256,10 +268,19 @@ alias_list::make_param_assignment(const checked_meta_exprs_type& temp) {
 	Creates an alias connection object, given a list of instance
 	references.  Performs type-checking.
  */
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<const entity::aliases_connection_base>
+#else
 excl_ptr<const entity::aliases_connection_base>
+#endif
 alias_list::make_alias_connection(const checked_meta_refs_type& temp) {
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef count_ptr<const aliases_connection_base> const_return_type;
+	typedef count_ptr<aliases_connection_base> 	return_type;
+#else
 	typedef excl_ptr<const aliases_connection_base> const_return_type;
 	typedef excl_ptr<aliases_connection_base> 	return_type;
+#endif
 	checked_meta_refs_type::const_iterator i(temp.begin());
 	INVARIANT(temp.size() > 1);          // else what are you connecting?
 	const count_ptr<const meta_instance_reference_base>
@@ -333,8 +354,13 @@ if (size() > 0) {		// non-empty
 		// or already param_expr in the case of some constants.
 		// However, only the last item may be a constant.  
 
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const param_expression_assignment>
+			exass(make_param_assignment(checked_exprs));
+#else
 		excl_ptr<const param_expression_assignment>
 			exass = make_param_assignment(checked_exprs);
+#endif
 
 		// if all is well, then add this new list to the context's
 		// current scope.  
@@ -356,20 +382,28 @@ if (size() > 0) {		// non-empty
 		INVARIANT(first_obj->second);
 		checked_meta_refs_type checked_refs;
 		expr_list::select_checked_meta_refs(temp, checked_refs);
-
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const aliases_connection_base>
+			connection(make_alias_connection(checked_refs));
+#else
 		excl_ptr<const aliases_connection_base>
 			connection = make_alias_connection(checked_refs);
+#endif
 		// also type-checks connections
 		if (!connection) {
 			cerr << "HALT: at least one error in connection list.  "
 				<< where(*this) << endl;
 			THROW_EXIT;
 		} else {
+#if REF_COUNT_INSTANCE_MANAGEMENT
+			c.add_connection(connection);
+#else
 			excl_ptr<const meta_instance_reference_connection>
 				ircp = connection.as_a_xfer<const meta_instance_reference_connection>();
 			c.add_connection(ircp);
 			INVARIANT(!ircp);
 			INVARIANT(!connection.owned());
+#endif
 		}
 	}
 } else {
@@ -735,19 +769,29 @@ instance_connection::check_build(context& c) const {
 	expr_list::checked_meta_refs_type temp;
 	if (actuals_base::check_actuals(temp, c).good) {
 
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	const count_ptr<const connection_statement::result_type>
+		port_con(connection_statement::make_port_connection(
+			temp, inst_ref));
+#else
 	excl_ptr<const connection_statement::result_type>
 		port_con = connection_statement::make_port_connection(
 			temp, inst_ref);
+#endif
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
 			<< where(*this) << endl;
 		THROW_EXIT;
 	} else {
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		c.add_connection(port_con);
+#else
 		excl_ptr<const meta_instance_reference_connection>
 			ircp = port_con.as_a_xfer<const meta_instance_reference_connection>();
 		c.add_connection(ircp);
 		INVARIANT(!ircp);
 		INVARIANT(!port_con.owned());	// explicit transfer
+#endif
 	}
 	} else {
 		cerr << "ERROR in object_list produced at "
@@ -792,15 +836,28 @@ connection_statement::rightmost(void) const {
 	\param temp the list of checked references.
 	\param ir the invoking instance to which port should connect.
  */
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<const connection_statement::result_type>
+#else
 excl_ptr<const connection_statement::result_type>
+#endif
 connection_statement::make_port_connection(
 		const expr_list::checked_meta_refs_type& _temp,
 		const count_ptr<const inst_ref_arg_type>& ir) {
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<const result_type>	const_return_type;
+	typedef	count_ptr<result_type>		return_type;
+#else
 	typedef	excl_ptr<const result_type>	const_return_type;
 	typedef	excl_ptr<result_type>		return_type;
+#endif
 	typedef	expr_list::checked_meta_refs_type		ref_list_type;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	return_type ret(meta_instance_reference_base::make_port_connection(ir));
+#else
 	return_type ret =
 		meta_instance_reference_base::make_port_connection(ir);
+#endif
 	NEVER_NULL(ret);
 	never_ptr<const definition_base>
 		base_def(ir->get_base_def());
@@ -856,18 +913,27 @@ connection_statement::check_build(context& c) const {
 	expr_list::checked_meta_refs_type temp;
 	if (actuals_base::check_actuals(temp, c).good) {
 	// useless return value, expect an object_list on object_stack
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	const count_ptr<const result_type>
+		port_con(make_port_connection(temp, inst_ref));
+#else
 	excl_ptr<const result_type>
 		port_con = make_port_connection(temp, inst_ref);
+#endif
 	if (!port_con) {
 		cerr << "HALT: at least one error in port connection list.  "
 			<< where(*this) << endl;
 		THROW_EXIT;
 	} else {
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		c.add_connection(port_con);
+#else
 		excl_ptr<const meta_instance_reference_connection>
 			ircp = port_con.as_a_xfer<const meta_instance_reference_connection>();
 		c.add_connection(ircp);
 		INVARIANT(!ircp);
 		INVARIANT(!port_con.owned());	// explicit transfer
+#endif
 	}
 	} else {
 		cerr << "ERROR in object_list produced at "
@@ -1006,7 +1072,12 @@ loop_instantiation::check_build(context& c) const {
 			" at " << where(*index) << endl;
 		THROW_EXIT;
 	}
-	excl_ptr<loop_scope> ls(new loop_scope(loop_ind, loop_range));
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	const count_ptr<loop_scope>
+#else
+	excl_ptr<loop_scope>
+#endif
+		ls(new loop_scope(loop_ind, loop_range));
 	NEVER_NULL(ls);
 {
 	const context::loop_scope_frame _lsf(c, ls);
@@ -1054,7 +1125,11 @@ guarded_instance_management::check_build(context& c) const {
 			where(*guard) << endl;
 		THROW_EXIT;
 	}
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	count_ptr<conditional_scope>
+#else
 	excl_ptr<conditional_scope>
+#endif
 		ls(new conditional_scope(guard_expr));
 	NEVER_NULL(ls);
 {

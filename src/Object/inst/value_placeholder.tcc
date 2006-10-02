@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.11 2006/10/01 21:14:22 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.12 2006/10/02 03:19:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -176,6 +176,25 @@ VALUE_PLACEHOLDER_CLASS::what(ostream& o) const {
 #endif
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Associates this instance placeholder with an
+	initial instantiation statement pointer. 
+	For port placeholders, this is the only instantiation statement.
+	For others, it's just a hint for the initial type, 
+		and may not even be used.  
+ */
+VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
+void
+VALUE_PLACEHOLDER_CLASS::attach_initial_instantiation_statement(
+		const count_ptr<const instantiation_statement_base>& i) {
+	if (!this->initial_instantiation_statement_ptr) {
+		this->initial_instantiation_statement_ptr =
+			i.template is_a<const initial_instantiation_statement_type>();
+	}
+	NEVER_NULL(this->initial_instantiation_statement_ptr);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_PLACEHOLDER_TEMPLATE_SIGNATURE
@@ -507,9 +526,14 @@ VALUE_PLACEHOLDER_CLASS::unroll_assign_formal_parameter(
 	STACKTRACE_VERBOSE;
 	// safe to instantiate the initial statement because
 	// template formals are unconditional and packed
+#if PLACEHOLDER_PORT_INDICES
+	// create auxiliary instantiation statement...
+	const good_bool g(inst_stmt.unroll(c).good);
+#else
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	const good_bool
 		g(this->initial_instantiation_statement_ptr->unroll(c).good);
+#endif
 	INVARIANT(g.good);
 	count_ptr<const expr_type> p(NULL);
 	if (e) {

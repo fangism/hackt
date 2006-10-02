@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.13.16.2 2006/08/31 07:28:44 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.13.16.3 2006/10/02 03:19:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -13,6 +13,9 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
 #include "Object/ref/simple_meta_indexed_reference_base.h"
+#if REF_COUNT_INSTANCE_MANAGEMENT
+#include "Object/ref/meta_instance_reference_base.h"
+#endif
 #include "Object/inst/instance_alias.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.h"
@@ -183,11 +186,12 @@ member_lookup_footprint_frame(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 static
-excl_ptr<port_connection_base>
+meta_instance_reference_base::port_connection_ptr_type
 make_port_connection(
 	const count_ptr<const simple_meta_instance_reference<Tag> >& r) {
 	NEVER_NULL(r);
-	return excl_ptr<port_connection_base>(new port_connection<Tag>(r));
+	return meta_instance_reference_base::port_connection_ptr_type(
+		new port_connection<Tag>(r));
 }
 
 };	// end struct simple_meta_instance_reference_implementation<true>
@@ -306,12 +310,12 @@ member_lookup_footprint_frame(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 static
-excl_ptr<port_connection_base>
+meta_instance_reference_base::port_connection_ptr_type
 make_port_connection(
 	const count_ptr<const simple_meta_instance_reference<Tag> >& r) {
 	NEVER_NULL(r);
 	ICE_NEVER_CALL(cerr);
-	return excl_ptr<port_connection_base>(NULL);
+	return meta_instance_reference_base::port_connection_ptr_type(NULL);
 }
 
 };	// end struct simple_meta_instance_reference_implementation<false>

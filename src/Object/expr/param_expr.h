@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.13.6.1 2006/09/11 22:30:42 fang Exp $
+	$Id: param_expr.h,v 1.13.6.2 2006/10/02 03:19:07 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -40,6 +40,12 @@ using util::memory::excl_ptr;
  */
 class param_expr : virtual public persistent {
 	typedef	param_expr			this_type;
+public:
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<param_expression_assignment>	assignment_ptr_type;
+#else
+	typedef	excl_ptr<param_expression_assignment>	assignment_ptr_type;
+#endif
 protected:
 	param_expr() : persistent() { }
 public:
@@ -80,7 +86,7 @@ virtual	count_ptr<const const_param>
 	static_constant_param(void) const = 0;
 
 	static
-	excl_ptr<param_expression_assignment>
+	assignment_ptr_type
 	make_param_expression_assignment(const count_ptr<const this_type>&);
 
 	static
@@ -95,13 +101,20 @@ virtual	count_ptr<const const_param>
 	struct unroller;
 
 private:
-virtual	excl_ptr<param_expression_assignment>
-	make_param_expression_assignment_private(
-		const count_ptr<const this_type>&) const = 0;
+#define	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO				\
+	assignment_ptr_type						\
+	make_param_expression_assignment_private(			\
+		const count_ptr<const param_expr>&) const
 
-virtual	count_ptr<aggregate_meta_value_reference_base>
-	make_aggregate_meta_value_reference_private(
-		const count_ptr<const this_type>&) const = 0;
+virtual	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO = 0;
+
+#define	MAKE_AGGREGATE_META_VALUE_REFERENCE_PROTO			\
+	count_ptr<aggregate_meta_value_reference_base>			\
+	make_aggregate_meta_value_reference_private(			\
+		const count_ptr<const param_expr>&) const
+
+virtual	MAKE_AGGREGATE_META_VALUE_REFERENCE_PROTO = 0;
+
 };	// end class param_expr
 
 //=============================================================================

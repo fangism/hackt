@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.18.6.3 2006/09/11 22:30:22 fang Exp $
+ 	$Id: basic_param.cc,v 1.18.6.4 2006/10/02 03:19:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -103,13 +103,17 @@ REQUIRES_STACKTRACE_STATIC_INIT
 	NOTE: the check for may_be_initialized is optional, just an
 		attempt to catch obvious errors earlier.  
  */
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 param_expr::make_param_expression_assignment(
 		const count_ptr<const param_expr>& p) {
-	typedef	excl_ptr<param_expression_assignment>	return_type;
 	NEVER_NULL(p);
 #if ENABLE_STATIC_ANALYSIS
 	if (!p->may_be_initialized()) {
+		typedef	assignment_ptr_type		return_type;
 		p->dump(cerr << "ERROR: rhs of expr-assignment is "
 			"not initialized or dependent on formals: ",
 			expr_dump_context::error_mode) << endl;
@@ -232,10 +236,14 @@ pbool_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 pbool_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
-	typedef	excl_ptr<param_expression_assignment>	return_type;
+	typedef	assignment_ptr_type		return_type;
 	INVARIANT(p == this);
 	return return_type(
 		new pbool_expression_assignment(p.is_a<const this_type>()));
@@ -360,10 +368,14 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 pint_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
-	typedef	excl_ptr<param_expression_assignment>	return_type;
+	typedef	assignment_ptr_type		return_type;
 	INVARIANT(p == this);
 	return return_type(
 		new pint_expression_assignment(p.is_a<const pint_expr>()));
@@ -504,10 +516,14 @@ preal_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 preal_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
-	typedef	excl_ptr<param_expression_assignment>	return_type;
+	typedef	assignment_ptr_type		return_type;
 	INVARIANT(p == this);
 	return return_type(
 		new preal_expression_assignment(p.is_a<const preal_expr>()));
@@ -682,7 +698,11 @@ pint_const::range_size_equivalent(const const_index& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 pint_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return pint_expr::make_param_expression_assignment_private(p);
@@ -822,7 +842,11 @@ pbool_const::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 pbool_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return pbool_expr::make_param_expression_assignment_private(p);
@@ -981,7 +1005,11 @@ preal_const::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 preal_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return preal_expr::make_param_expression_assignment_private(p);

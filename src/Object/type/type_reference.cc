@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.17.2.4 2006/10/01 21:14:24 fang Exp $
+ 	$Id: type_reference.cc,v 1.17.2.5 2006/10/02 03:19:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -176,7 +176,7 @@ fundamental_type_reference::is_resolved(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
@@ -186,7 +186,7 @@ fundamental_type_reference::make_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) {
@@ -437,12 +437,12 @@ data_type_reference::merge_relaxed_actuals(
 /**
 	Returns a newly constructed data instantiation statement object.
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 data_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
-	return excl_ptr<instantiation_statement_base>(
+	return instantiation_statement_ptr_type(
 		new data_instantiation_statement(
 			t.is_a<const data_type_reference>(), d, a));
 }
@@ -1167,13 +1167,13 @@ builtin_channel_type_reference::unroll_resolve(const unroll_context& c) const {
 		for making instantiation statements?
 	(2005-05-28: decide later)
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 builtin_channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
 	// technically built-in channel types never have relaxed actuals...
-	return excl_ptr<instantiation_statement_base>(
+	return instantiation_statement_ptr_type(
 		new channel_instantiation_statement(
 			t.is_a<const this_type>(), d, a));
 }
@@ -1482,12 +1482,12 @@ channel_type_reference::merge_relaxed_actuals(
 /**
 	Returns a newly constructed channel instantiation statement object.
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
-	return excl_ptr<instantiation_statement_base>(
+	return instantiation_statement_ptr_type(
 		new channel_instantiation_statement(
 			t.is_a<const this_type>(), d, a));
 }
@@ -1764,12 +1764,12 @@ process_type_reference::merge_relaxed_actuals(
 /**
 	Returns a newly constructed process instantiation statement object.
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 process_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
-	return excl_ptr<instantiation_statement_base>(
+	return instantiation_statement_ptr_type(
 		new process_instantiation_statement(
 			t.is_a<const process_type_reference>(), d, a));
 }
@@ -1983,12 +1983,12 @@ param_type_reference::is_accepted_in_channel(void) const {
 /**
 	Returns a newly constructed param instantiation statement object.
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
-	typedef	excl_ptr<instantiation_statement_base>	return_type;
+	typedef	instantiation_statement_ptr_type	return_type;
 	static const pbool_traits::type_ref_ptr_type&
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&

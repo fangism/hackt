@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.8.4.1 2006/09/06 04:19:53 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.8.4.2 2006/10/02 03:19:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -274,11 +274,11 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::append_meta_instance_reference(
 	Aggregates are non-scalar, and hence, cannot be ported!
  */
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-excl_ptr<port_connection_base>
+typename AGGREGATE_META_INSTANCE_REFERENCE_CLASS::port_connection_ptr_type
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::make_port_connection_private(
 		const count_ptr<const meta_instance_reference_base>&) const {
 	ICE_NEVER_CALL(cerr);
-	return excl_ptr<port_connection_base>(NULL);
+	return port_connection_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

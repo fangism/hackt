@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.14.4.4 2006/09/06 04:19:56 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.14.4.5 2006/10/02 03:19:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -89,6 +89,8 @@ public:
 	/// pointer type for instance collections
 	typedef	never_ptr<const instance_collection_generic_type>
 						instance_collection_ptr_type;
+	typedef	typename parent_type::port_connection_ptr_type
+						port_connection_ptr_type;
 private:
 #if USE_INSTANCE_PLACEHOLDERS
 	const instance_placeholder_ptr_type	inst_collection_ref;
@@ -169,8 +171,7 @@ virtual	size_t
 		std::default_vector<size_t>::type&) const;
 
 private:
-
-	excl_ptr<port_connection_base>
+	port_connection_ptr_type
 	make_port_connection_private(
 		const count_ptr<const meta_instance_reference_base>&) const;
 

@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.13.4.2 2006/08/28 05:09:58 fang Exp $
+	$Id: scopespace.h,v 1.13.4.3 2006/10/02 03:19:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -309,7 +309,12 @@ public:
 #else
 	never_ptr<const instance_collection_base>
 #endif
-	add_instance(const never_ptr<instantiation_statement_base> i, 
+	add_instance(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& i, 
+#else
+		const never_ptr<instantiation_statement_base> i, 
+#endif
 		const token_identifier& id, const bool);
 
 	good_bool

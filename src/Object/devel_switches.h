@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.5 2006/10/01 21:13:44 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.6 2006/10/02 03:18:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -79,6 +79,7 @@
 	Unroll_context will no longer use template_formals and actuals
 	directly.  
 	Goal: 1
+	Status: still undergoing testing as development continues
  */
 #define	RESOLVE_VALUES_WITH_FOOTPRINT	(1 && USE_INSTANCE_PLACEHOLDERS)
 
@@ -86,6 +87,7 @@
 	Define to 0 to disable compile-time (pre-unroll) analysis
 	of expressions and value references.  
 	Goal: 0
+	Status: stable, committable up-branch.
  */
 #define	ENABLE_STATIC_ANALYSIS		(0 && !USE_INSTANCE_PLACEHOLDERS)
 
@@ -93,8 +95,46 @@
 	Define to 1 to derive module from process_definition, 
 	re-using many of the facilities already available.  
 	Goal: 1
+	Status: so far unroll phase testing and regression fixing has begun, 
+		haven't started create-phase work yet.  
  */
 #define	MODULE_PROCESS			(1 && USE_INSTANCE_PLACEHOLDERS)
+
+/**
+	Define to 1 to reference-count instance-management statements.  
+ */
+#define	REF_COUNT_INSTANCE_MANAGEMENT	1
+
+/**
+	Define to 1 to put instantiation statements *owned* (as opposed 
+	to just referenced) in the placeholders themselves.  
+	Rationale: avoid duplicate instantiation without hacking in
+	special-case code, also a simplification.  
+	Need this for forward calls to get_unresolved_type_ref().  
+	NOTE: the placeholders and instantiation statements cyclicly
+		reference each other (not a problem).  
+	Problem: excl_ptr (ports) vs. never_ptr (locals)?
+	Prerequisite solution: 
+		reference-count instance-management statements (above)
+		Back-reference to placeholder are always weak (never_ptr).
+	Goal: ?
+	Status: experimental
+ */
+#define	PLACEHOLDERS_OWN_INSTANTIATIONS	(0 && USE_INSTANCE_PLACEHOLDERS)
+
+/**
+	Define to 1 for placeholders to *include* port indices 
+	instead of including a reference to an unroll statement.
+	At unroll time, an auxiliary unroll statement will be formed
+	and processed.  
+	This also means port instantiations will not be added to sequential
+	scopes, but rather, implicitly unrolled at the ports.  
+	Rationale: code simplification, and reduces duplicate
+		instantiation of ports.  
+	Goal: ?
+	Status: experimental
+ */
+#define	PLACEHOLDER_PORT_INDICES	(0 && USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 

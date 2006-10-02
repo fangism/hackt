@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.13.6.1 2006/09/11 22:30:51 fang Exp $
+	$Id: pint_const.h,v 1.13.6.2 2006/10/02 03:19:10 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -142,9 +142,7 @@ public:
 	LESS_OPERATOR_PROTO;
 
 private:
-	excl_ptr<param_expression_assignment>
-	make_param_expression_assignment_private(
-		const count_ptr<const param_expr>& p) const;
+	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

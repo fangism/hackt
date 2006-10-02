@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.9.4.2 2006/09/02 03:58:30 fang Exp $
+	$Id: parse_context.h,v 1.9.4.3 2006/10/02 03:18:54 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -347,10 +347,22 @@ public:
 		const token_identifier& id);
 
 	void
-	add_connection(excl_ptr<const meta_instance_reference_connection>& c);
+	add_connection(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const meta_instance_reference_connection>&
+#else
+		excl_ptr<const meta_instance_reference_connection>& c
+#endif
+		);
 
 	void
-	add_assignment(excl_ptr<const param_expression_assignment>& a);
+	add_assignment(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const param_expression_assignment>&
+#else
+		excl_ptr<const param_expression_assignment>& a
+#endif
+		);
 
 	never_ptr<const scopespace>
 	get_current_named_scope(void) const;
@@ -492,7 +504,11 @@ public:
 	 */
 	struct loop_scope_frame {
 		context&			_context;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		loop_scope_frame(context&, const count_ptr<loop_scope>&);
+#else
 		loop_scope_frame(context&, excl_ptr<loop_scope>&);
+#endif
 		~loop_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 
@@ -502,7 +518,12 @@ public:
 	struct conditional_scope_frame {
 		context&			_context;
 		const bool			parent_cond;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		conditional_scope_frame(context&, 
+			const count_ptr<conditional_scope>&);
+#else
 		conditional_scope_frame(context&, excl_ptr<conditional_scope>&);
+#endif
 		~conditional_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 

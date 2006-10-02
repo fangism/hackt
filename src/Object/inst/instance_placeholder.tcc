@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.8 2006/10/01 21:14:18 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.9 2006/10/02 03:19:16 fang Exp $
 	TODO: trim includes
  */
 
@@ -340,6 +340,25 @@ INSTANCE_PLACEHOLDER_CLASS::get_unresolved_type_ref_subtype(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Associates this instance placeholder with an
+	initial instantiation statement pointer. 
+	For port placeholders, this is the only instantiation statement.
+	For others, it's just a hint for the initial type, 
+		and may not even be used.  
+ */
+INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
+void
+INSTANCE_PLACEHOLDER_CLASS::attach_initial_instantiation_statement(
+		const count_ptr<const instantiation_statement_base>& i) {
+	if (!this->initial_instantiation_statement_ptr) {
+		this->initial_instantiation_statement_ptr =
+			i.template is_a<const initial_instantiation_statement_type>();
+	}
+	NEVER_NULL(this->initial_instantiation_statement_ptr);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Ripped off from instance_placeholder_base::formal_size_equivalent.  
  */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
@@ -348,7 +367,6 @@ INSTANCE_PLACEHOLDER_CLASS::get_initial_instantiation_indices(void) const {
 	NEVER_NULL(this->initial_instantiation_statement_ptr);
 	return this->initial_instantiation_statement_ptr->get_indices();
 }
-
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_RESOLVED_DATA_TYPES && 0

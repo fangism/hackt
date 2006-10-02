@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.1.2.9 2006/10/01 21:14:17 fang Exp $
+	$Id: instance_placeholder.h,v 1.1.2.10 2006/10/02 03:19:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -135,7 +135,11 @@ protected:
 public:
 	typedef	typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<const initial_instantiation_statement_type>
+#else
 	typedef	never_ptr<const initial_instantiation_statement_type>
+#endif
 				initial_instantiation_statement_ptr_type;
 protected:
 	/**
@@ -144,7 +148,11 @@ protected:
 		Scalars instance collections need this too because
 		of the possibility of relaxed template arguments.  
 	 */
+#if PLACEHOLDERS_OWN_INSTANTIATIONS
+	excl_ptr<const initial_instantiation_statement_type>
+#else
 	initial_instantiation_statement_ptr_type
+#endif
 					initial_instantiation_statement_ptr;
 protected:
 	instance_placeholder();
@@ -182,13 +190,16 @@ public:
 
 	void
 	attach_initial_instantiation_statement(
-		const initial_instantiation_statement_ptr_type i) {
-		NEVER_NULL(i);
-		if (!this->initial_instantiation_statement_ptr)
-			this->initial_instantiation_statement_ptr = i;
-		// else skip
-	}
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const instantiation_statement_base>& i
+#elif PLACEHOLDERS_OWN_INSTANTIATIONS
+		excl_ptr<const initial_instantiation_statement_type>& i
+#else
+		const initial_instantiation_statement_ptr_type i
+#endif
+		);
 
+#if 0
 	/**
 		CAVEAT: this statement could be conditional.  
 	 */
@@ -196,6 +207,7 @@ public:
 	get_initial_instantiation_statement(void) const {
 		return this->initial_instantiation_statement_ptr;
 	}
+#endif
 
 	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const;

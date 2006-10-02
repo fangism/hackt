@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.6.48.1 2006/08/27 07:52:06 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.6.48.2 2006/10/02 03:19:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -66,6 +66,12 @@ public:
 	typedef	template_actuals::arg_list_ptr_type	template_args_ptr_type;
 	typedef	template_actuals::const_arg_list_ptr_type
 						const_template_args_ptr_type;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<instantiation_statement_base>
+#else
+	typedef	excl_ptr<instantiation_statement_base>
+#endif
+					instantiation_statement_ptr_type;
 protected:
 	/// set of template parameters passed to this type
 	template_actuals			template_args;
@@ -130,21 +136,21 @@ virtual bool
 	merge_relaxed_actuals(const const_template_args_ptr_type&) const
 
 	static	
-	excl_ptr<instantiation_statement_base>
+	instantiation_statement_ptr_type
 	make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type&);
 
 	static	
-	excl_ptr<instantiation_statement_base>
+	instantiation_statement_ptr_type
 	make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d);
 
 private:
 #define	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO			\
-	excl_ptr<instantiation_statement_base>				\
+	instantiation_statement_ptr_type				\
 	make_instantiation_statement_private(				\
 		const count_ptr<const fundamental_type_reference>& t, 	\
 		const index_collection_item_ptr_type& d, 		\

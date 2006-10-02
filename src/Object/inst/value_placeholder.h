@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.1.2.7 2006/10/01 21:14:21 fang Exp $
+	$Id: value_placeholder.h,v 1.1.2.8 2006/10/02 03:19:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -101,7 +101,11 @@ public:
 
 	typedef typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<const initial_instantiation_statement_type>
+#else
 	typedef	never_ptr<const initial_instantiation_statement_type>
+#endif
 				initial_instantiation_statement_ptr_type;
 	typedef	typename traits_type::value_reference_collection_type
 					value_reference_collection_type;
@@ -122,7 +126,11 @@ protected:
 	 */
 	count_ptr<const expr_type>		ival;
 
+#if PLACEHOLDERS_OWN_INSTANTIATIONS
+	excl_ptr<const initial_instantiation_statement_type>
+#else
 	initial_instantiation_statement_ptr_type
+#endif
 					initial_instantiation_statement_ptr;
 
 protected:
@@ -153,12 +161,14 @@ public:
 
 	void
 	attach_initial_instantiation_statement(
-		const initial_instantiation_statement_ptr_type i) {
-		NEVER_NULL(i);
-		if (!this->initial_instantiation_statement_ptr) {
-			this->initial_instantiation_statement_ptr = i;
-		}
-	}
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const instantiation_statement_base>& i
+#elif PLACEHOLDERS_OWN_INSTANTIATIONS
+		excl_ptr<const initial_instantiation_statement_type>& i
+#else
+		const initial_instantiation_statement_ptr_type i
+#endif
+		);
 
 	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const;

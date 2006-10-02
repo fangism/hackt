@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.5 2006/09/07 06:46:52 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.22.4.6 2006/10/02 03:19:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -471,7 +471,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-excl_ptr<port_connection_base>
+typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::port_connection_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::make_port_connection_private(
 		const count_ptr<const meta_instance_reference_base>& r) const {
 	INVARIANT(r == this);

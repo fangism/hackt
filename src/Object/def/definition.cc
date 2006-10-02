@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.5 2006/10/01 21:13:54 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.6 2006/10/02 03:19:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -439,7 +439,11 @@ definition_base::make_fundamental_type_reference(void) const {
  */
 never_ptr<const definition_base::value_placeholder_type>
 definition_base::add_strict_template_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& i, 
+#else
 		const never_ptr<instantiation_statement_base> i, 
+#endif
 		const token_identifier& id) {
 	STACKTRACE("definition_base::add_strict_template_formal()");
 	typedef	never_ptr<const value_placeholder_type>	return_type;
@@ -488,7 +492,11 @@ definition_base::add_strict_template_formal(
  */
 never_ptr<const definition_base::value_placeholder_type>
 definition_base::add_relaxed_template_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& i, 
+#else
 		const never_ptr<instantiation_statement_base> i, 
+#endif
 		const token_identifier& id) {
 	STACKTRACE("definition_base::add_relaxed_template_formal()");
 	typedef	never_ptr<const value_placeholder_type>	return_type;
@@ -521,8 +529,12 @@ definition_base::add_relaxed_template_formal(
  */
 never_ptr<const definition_base::instance_placeholder_type>
 definition_base::add_port_formal(
-		const never_ptr<instantiation_statement_base> f, 
-		const token_identifier& i) {
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>&, 
+#else
+		const never_ptr<instantiation_statement_base>, 
+#endif
+		const token_identifier&) {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -903,7 +915,12 @@ user_def_chan::attach_base_channel_type(
 	Last touched: 2005-05-25.
  */
 never_ptr<const definition_base::instance_placeholder_type>
-user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f, 
+user_def_chan::add_port_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& f, 
+#else
+		const never_ptr<instantiation_statement_base> f, 
+#endif
 		const token_identifier& id) {
 	typedef	never_ptr<const instance_placeholder_type>	return_type;
 	NEVER_NULL(f);
@@ -2073,7 +2090,11 @@ user_def_datatype::attach_base_data_type(
  */
 never_ptr<const definition_base::instance_placeholder_type>
 user_def_datatype::add_port_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& f, 
+#else
 		const never_ptr<instantiation_statement_base> f, 
+#endif
 		const token_identifier& id) {
 	typedef	never_ptr<const instance_placeholder_type>	return_type;
 	NEVER_NULL(f);
@@ -2885,7 +2906,11 @@ process_definition::make_canonical_fundamental_type_reference(
  */
 never_ptr<const definition_base::instance_placeholder_type>
 process_definition::add_port_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& f, 
+#else
 		const never_ptr<instantiation_statement_base> f, 
+#endif
 		const token_identifier& id) {
 	typedef	never_ptr<const instance_placeholder_type>	return_type;
 	NEVER_NULL(f);

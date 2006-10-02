@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_instance_reference.h,v 1.5.4.1 2006/09/06 04:19:52 fang Exp $
+	$Id: aggregate_meta_instance_reference.h,v 1.5.4.2 2006/10/02 03:19:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_H__
@@ -46,6 +46,8 @@ public:
 					instance_collection_generic_type;
 	typedef	count_ptr<const parent_type>		subreference_ptr_type;
 	typedef	std::vector<subreference_ptr_type>	subreference_array_type;
+	typedef	typename parent_type::port_connection_ptr_type
+						port_connection_ptr_type;
 private:
 	typedef	typename subreference_array_type::const_iterator
 							const_iterator;
@@ -96,7 +98,7 @@ private:
 	using parent_type::unroll_references_packed_helper_no_lookup;
 
 private:
-	excl_ptr<port_connection_base>
+	port_connection_ptr_type
 	make_port_connection_private(
 		const count_ptr<const meta_instance_reference_base>&) const;
 

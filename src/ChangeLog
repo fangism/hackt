@@ -5,6 +5,16 @@
 
 2006-10-01	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-21:
+	  Switched over all instance-management pointers to reference-count.
+	  Intent: remove template and port formal instantiation statements 
+		from sequential-scopes, only using in placeholders.  
+	  Targeting one remaining regression in parser/basic.
+	  Next: don't add template/port formal statements to seq.-scope.
+
+
+2006-10-01	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-20-merged-module-06:
 	  Merged revisions from -module child branch.
 	  Summary: module has been defined to use process_definition's 

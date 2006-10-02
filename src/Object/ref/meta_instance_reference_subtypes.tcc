@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.12.4.2 2006/09/06 04:19:56 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.12.4.3 2006/10/02 03:19:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -402,9 +402,9 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-excl_ptr<aliases_connection_base>
+meta_instance_reference_base::alias_connection_ptr_type
 META_INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
-	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+	return alias_connection_ptr_type(new alias_connection_type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

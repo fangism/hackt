@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.11.20.1 2006/09/06 04:19:55 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.11.20.2 2006/10/02 03:19:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -16,6 +16,7 @@
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
 // #include "util/STL/vector_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -57,6 +58,18 @@ using util::persistent;
 class meta_instance_reference_base : virtual public persistent {
 	typedef	meta_instance_reference_base		this_type;
 public:
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<aliases_connection_base>
+						alias_connection_ptr_type;
+	typedef	count_ptr<port_connection_base>
+						port_connection_ptr_type;
+#else
+	typedef	excl_ptr<aliases_connection_base>
+						aliases_connection_ptr_type;
+	typedef	excl_ptr<port_connection_base>
+						port_connection_ptr_type;
+#endif
+public:
 	meta_instance_reference_base() : persistent() { }
 
 virtual	~meta_instance_reference_base() { }
@@ -94,7 +107,7 @@ virtual	bool
 		NOTE: connections are only made in the meta-language.  
 	 */
 	static
-	excl_ptr<aliases_connection_base>
+	alias_connection_ptr_type
 	make_aliases_connection(
 		const count_ptr<const this_type>&);
 
@@ -104,7 +117,7 @@ virtual	bool
 		const count_ptr<const this_type>&);
 
 	static
-	excl_ptr<port_connection_base>
+	port_connection_ptr_type
 	make_port_connection(
 		const count_ptr<const this_type>&);
 
@@ -145,13 +158,13 @@ virtual	COLLECT_ALIASES_PROTO = 0;
 virtual	COLLECT_SUBENTRIES_PROTO = 0;
 
 private:
-virtual	excl_ptr<aliases_connection_base>
+virtual	alias_connection_ptr_type
 	make_aliases_connection_private(void) const = 0;
 
 virtual	count_ptr<aggregate_meta_instance_reference_base>
 	make_aggregate_meta_instance_reference_private(void) const = 0;
 
-virtual	excl_ptr<port_connection_base>
+virtual	port_connection_ptr_type
 	make_port_connection_private(
 		const count_ptr<const this_type>&) const = 0;
 

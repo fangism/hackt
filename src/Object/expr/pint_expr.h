@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.11.6.3 2006/09/11 22:30:52 fang Exp $
+	$Id: pint_expr.h,v 1.11.6.4 2006/10/02 03:19:11 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -147,13 +147,8 @@ protected:
 	// using index_parent_type::unroll_resolve_copy;
 
 protected:
-	excl_ptr<param_expression_assignment>
-	make_param_expression_assignment_private(
-		const count_ptr<const param_expr>&) const;
-
-	count_ptr<aggregate_meta_value_reference_base>
-	make_aggregate_meta_value_reference_private(
-		const count_ptr<const param_expr>&) const;
+	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO;
+	MAKE_AGGREGATE_META_VALUE_REFERENCE_PROTO;
 
 };	// end class pint_expr
 

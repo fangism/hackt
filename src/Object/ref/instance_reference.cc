@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.18 2006/07/04 07:26:14 fang Exp $
+ 	$Id: instance_reference.cc,v 1.18.6.1 2006/10/02 03:19:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -116,7 +116,7 @@ using util::persistent_traits;
 /**
 	Wrapped interface to constructing type-specific alias connections.  
  */
-excl_ptr<aliases_connection_base>
+meta_instance_reference_base::alias_connection_ptr_type
 meta_instance_reference_base::make_aliases_connection(
 		const count_ptr<const this_type>& i) {
 	NEVER_NULL(i);
@@ -138,7 +138,7 @@ meta_instance_reference_base::make_aggregate_meta_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<port_connection_base>
+meta_instance_reference_base::port_connection_ptr_type
 meta_instance_reference_base::make_port_connection(
 		const count_ptr<const meta_instance_reference_base>& r) {
 	return r->make_port_connection_private(r);
