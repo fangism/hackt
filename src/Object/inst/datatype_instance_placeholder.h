@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_placeholder.h"
 	Instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_placeholder.h,v 1.1.2.6 2006/10/02 03:19:14 fang Exp $
+	$Id: datatype_instance_placeholder.h,v 1.1.2.7 2006/10/03 02:46:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_PLACEHOLDER_H__
@@ -70,8 +70,6 @@ virtual	void
 	attach_initial_instantiation_statement(
 #if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<const instantiation_statement_base>&
-#elif PLACEHOLDERS_OWN_INSTANTIATIONS
-		excl_ptr<const data_instantiation_statement>&
 #else
 		const never_ptr<const data_instantiation_statement>
 #endif

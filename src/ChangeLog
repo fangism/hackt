@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-22:
+	  New switch SEQUENTIAL_SCOPE_INCLUDES_FORMALS -> 0:
+		Defined to zero to separate formal instantiations out.
+		Punted removing port formals instantiations for now.  
+	  Cleaned out PLACEHOLDERS_OWN_INSTANTIATIONS use (abandoned).  
+	  Batch of unroll-expect tests updated in parser/{namespace,param}.
+		Still some regressions to fix.  
+
+
 2006-10-01	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-21:

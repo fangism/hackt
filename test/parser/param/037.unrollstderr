@@ -5,34 +5,35 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	230
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	5	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	7	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	11	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	12	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	14	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	20	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	26	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	27	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	27	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -46,10 +47,10 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        M = pint<> M (init = N)
-        N = pint<> N (init = 5)
-        a = pbool<> a (init = true)
-        b = pbool<> b (init = a)
+        M = pint<> ::bogus::M
+        N = pint<> ::bogus::N
+        a = pbool<> ::bogus::a
+        b = pbool<> ::bogus::b
       unroll sequence: 
         pint<> N
         N = 5;
@@ -60,14 +61,17 @@ In namespace "", we have: {
         pbool<> b
         b = a;
       footprint: {
-        pint^0 M value: 5
-        pint^0 N value: 5
-        pbool^0 a value: 1
-        pbool^0 b value: 1
+        M = pint^0 value: 5
+        N = pint^0 value: 5
+        a = pbool^0 value: 1
+        b = pbool^0 value: 1
       }
       }
 
   Instances:
-    x = process bogus<>^0 x (instantiated) = ::x 
+    x = bogus<> x
 }
 
+footprint: {
+  x = process bogus<>^0 = ::x 
+}

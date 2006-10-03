@@ -4,49 +4,54 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	7	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	8	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	10	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
-	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	21	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	43	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	48	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	49	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	50	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -56,14 +61,21 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    a = pint^0 a (init = -3809) value: -3809
-    w = pint^0 w (init = ::y^::z) value: 3746
-    x = pint^1 x
-      unrolled index-value pairs: {
-        0 = 65261
-        1 = 45071
-      }
-    y = pint^0 y (init = ::x[0]&-3809) value: 61453
-    z = pint^0 z (init = 57005|::x[1]) value: 65199
+    a = pint<> a
+    w = pint<> w
+    x = pint<> x^1
+    y = pint<> y
+    z = pint<> z
 }
 
+footprint: {
+  a = pint^0 value: -3809
+  w = pint^0 value: 3746
+  x = pint^1
+    unrolled index-value pairs: {
+      0 = 65261
+      1 = 45071
+    }
+  y = pint^0 value: 61453
+  z = pint^0 value: 65199
+}

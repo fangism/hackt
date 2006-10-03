@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.6 2006/10/02 03:18:55 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.7 2006/10/03 02:46:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -102,39 +102,23 @@
 
 /**
 	Define to 1 to reference-count instance-management statements.  
+	Rationale: don't want duplicate instantiations of ports, 
+		placeholders owning instantiation-statements make it 
+		difficult to back-reference non-ports' placeholders
+		without ownership conflicts.  
+	Goal: 1
+	Status: in-place, just needs to undergo heavy testing.  
  */
 #define	REF_COUNT_INSTANCE_MANAGEMENT	1
 
 /**
-	Define to 1 to put instantiation statements *owned* (as opposed 
-	to just referenced) in the placeholders themselves.  
-	Rationale: avoid duplicate instantiation without hacking in
-	special-case code, also a simplification.  
-	Need this for forward calls to get_unresolved_type_ref().  
-	NOTE: the placeholders and instantiation statements cyclicly
-		reference each other (not a problem).  
-	Problem: excl_ptr (ports) vs. never_ptr (locals)?
-	Prerequisite solution: 
-		reference-count instance-management statements (above)
-		Back-reference to placeholder are always weak (never_ptr).
-	Goal: ?
-	Status: experimental
+	Define to 0 to remove formal instance management (template, port)
+	from the main body of sequential unrolling.  
+	Rationale: remove duplicates
+	Goal: 0
+	Status:
  */
-#define	PLACEHOLDERS_OWN_INSTANTIATIONS	(0 && USE_INSTANCE_PLACEHOLDERS)
-
-/**
-	Define to 1 for placeholders to *include* port indices 
-	instead of including a reference to an unroll statement.
-	At unroll time, an auxiliary unroll statement will be formed
-	and processed.  
-	This also means port instantiations will not be added to sequential
-	scopes, but rather, implicitly unrolled at the ports.  
-	Rationale: code simplification, and reduces duplicate
-		instantiation of ports.  
-	Goal: ?
-	Status: experimental
- */
-#define	PLACEHOLDER_PORT_INDICES	(0 && USE_INSTANCE_PLACEHOLDERS)
+#define	SEQUENTIAL_SCOPE_INCLUDES_FORMALS	0
 
 //=============================================================================
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.1.2.8 2006/10/02 03:19:19 fang Exp $
+	$Id: value_placeholder.h,v 1.1.2.9 2006/10/03 02:46:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -126,11 +126,7 @@ protected:
 	 */
 	count_ptr<const expr_type>		ival;
 
-#if PLACEHOLDERS_OWN_INSTANTIATIONS
-	excl_ptr<const initial_instantiation_statement_type>
-#else
 	initial_instantiation_statement_ptr_type
-#endif
 					initial_instantiation_statement_ptr;
 
 protected:
@@ -163,8 +159,6 @@ public:
 	attach_initial_instantiation_statement(
 #if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<const instantiation_statement_base>& i
-#elif PLACEHOLDERS_OWN_INSTANTIATIONS
-		excl_ptr<const initial_instantiation_statement_type>& i
 #else
 		const initial_instantiation_statement_ptr_type i
 #endif

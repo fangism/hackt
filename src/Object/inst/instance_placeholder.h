@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.1.2.10 2006/10/02 03:19:15 fang Exp $
+	$Id: instance_placeholder.h,v 1.1.2.11 2006/10/03 02:46:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -148,11 +148,7 @@ protected:
 		Scalars instance collections need this too because
 		of the possibility of relaxed template arguments.  
 	 */
-#if PLACEHOLDERS_OWN_INSTANTIATIONS
-	excl_ptr<const initial_instantiation_statement_type>
-#else
 	initial_instantiation_statement_ptr_type
-#endif
 					initial_instantiation_statement_ptr;
 protected:
 	instance_placeholder();
@@ -192,8 +188,6 @@ public:
 	attach_initial_instantiation_statement(
 #if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<const instantiation_statement_base>& i
-#elif PLACEHOLDERS_OWN_INSTANTIATIONS
-		excl_ptr<const initial_instantiation_statement_type>& i
 #else
 		const initial_instantiation_statement_ptr_type i
 #endif

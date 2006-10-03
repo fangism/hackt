@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
 	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
@@ -44,7 +44,6 @@ In namespace "", we have: {
         a = bool<> ::ass::a
         x = bool<> ::ass::x
       unroll sequence: 
-        pint<> N
         bool<> x
         bool<> a
         [ N!=0&&N!=1 ->

@@ -4,23 +4,23 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	56
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	13	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	17	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	18	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	189
+	19	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	20	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 	22	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
@@ -57,6 +57,15 @@ Persistent Object Manager text dump:
 	53	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	54	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	58	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	59	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	61	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	62	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	63	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	64	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	180
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -66,24 +75,35 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    a = pint^0 a value: 0
-    b = pint^0 b value: 1
-    c = pint^0 c value: 2
-    d = pint^0 d value: 3
-    e = pint^0 e value: 4
-    f = pint^0 f value: 5
-    g = pint^0 g value: 6
-    h = pint^0 h value: 7
-    x = pint^3 x
-      unrolled index-value pairs: {
-        [0][0][0] = 0
-        [0][0][1] = 1
-        [0][1][0] = 2
-        [0][1][1] = 3
-        [1][0][0] = 4
-        [1][0][1] = 5
-        [1][1][0] = 6
-        [1][1][1] = 7
-      }
+    a = pint<> a
+    b = pint<> b
+    c = pint<> c
+    d = pint<> d
+    e = pint<> e
+    f = pint<> f
+    g = pint<> g
+    h = pint<> h
+    x = pint<> x^3
 }
 
+footprint: {
+  a = pint^0 value: 0
+  b = pint^0 value: 1
+  c = pint^0 value: 2
+  d = pint^0 value: 3
+  e = pint^0 value: 4
+  f = pint^0 value: 5
+  g = pint^0 value: 6
+  h = pint^0 value: 7
+  x = pint^3
+    unrolled index-value pairs: {
+      [0][0][0] = 0
+      [0][0][1] = 1
+      [0][1][0] = 2
+      [0][1][1] = 3
+      [1][0][0] = 4
+      [1][0][1] = 5
+      [1][1][0] = 6
+      [1][1][1] = 7
+    }
+}

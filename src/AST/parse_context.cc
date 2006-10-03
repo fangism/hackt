@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11.4.6 2006/10/02 03:18:52 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.7 2006/10/03 02:46:30 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -854,6 +854,7 @@ context::add_template_formal(const token_identifier& id,
 			THROW_EXIT;
 		}
 	}
+#if SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	const never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 	NEVER_NULL(seq_scope);
@@ -866,8 +867,9 @@ context::add_template_formal(const token_identifier& id,
 	NEVER_NULL(seq_scope);
 	seq_scope->append_instance_management(imb);
 #endif
+#endif	// SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	return inst_base;
-}
+}	// end context::add_template_formal()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -921,6 +923,7 @@ context::add_port_formal(const token_identifier& id,
 		type_error_count++;
 		THROW_EXIT;
 	}
+#if 1 || SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	const never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 	NEVER_NULL(seq_scope);
@@ -933,8 +936,9 @@ context::add_port_formal(const token_identifier& id,
 	NEVER_NULL(seq_scope);
 	seq_scope->append_instance_management(imb);
 #endif
+#endif	// SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	return inst_base;
-}
+}	// end context::add_port_formal()
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -5,25 +5,31 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	198
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	31
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	18	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	55
-	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	24	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -37,17 +43,16 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        M = pint<> M (init = 2)
-        foo = pint<> foo
-
+        M = pint<> ::bogus::M
+        foo = pint<> ::bogus::foo^1
       unroll sequence: 
         pint<> M
         M = 2;
-        pint<> foo[0..1]
+        pint<> foo[0..M-1]
         foo[0] = M;
       footprint: {
-        pint^0 M value: 2
-        pint^1 foo
+        M = pint^0 value: 2
+        foo = pint^1
           unrolled index-value pairs: {
             0 = 2
             1 = ?
@@ -56,6 +61,9 @@ In namespace "", we have: {
       }
 
   Instances:
-    x = process bogus<>^0 x (instantiated) = ::x 
+    x = bogus<> x
 }
 
+footprint: {
+  x = process bogus<>^0 = ::x 
+}
