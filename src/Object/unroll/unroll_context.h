@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.8.10.5 2006/09/11 22:31:22 fang Exp $
+	$Id: unroll_context.h,v 1.8.10.5.6.1 2006/10/03 21:58:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -103,13 +103,31 @@ private:
 		If set to non-NULL, this is used to translate
 		from placeholder instance collection reference 
 		to definition-footprint's actual instance-collection.  
+		This footprint is only used for instantiating.  
+		This is propagated to children contexts for convenience
+		and efficiently referencing the instantiating context.  
 	 */
 	footprint*					target_footprint;
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	/**
+		The lookup-only footprint associated with this context.  
+		Failure to find lookup something here will continue
+		looking up the parent context.  
+		Lookup and value assignments are permitted, just not 
+		instantiations.  
+		This may point to the same footprint as the target footprint.
+	 */
+	const footprint*				lookup_footprint;
+#endif
 
 	/**
 		NOTE: 2006-09-10
 		TODO: consider a read-only source footprint, because now
 		other nested scopes use footprints for unrolling.  
+		Q: is this still used with the new footprint-based
+		lookup method, and with a module footprint
+		containing all top-level (all namespaces') collections?
+		This may be obsolete.  
 	**/
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	never_ptr<const name_space>			parent_namespace;
@@ -146,9 +164,11 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	// may bcome obsolete
 	const footprint*
 	get_target_footprint(void) const;
+#endif
 
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	never_ptr<const name_space>

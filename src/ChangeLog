@@ -5,6 +5,18 @@
 
 2006-10-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-01:
+	  unroll_context: separate footprints for looking up, 
+		one for instantiating and modifying, the other for 
+		just read-only lookups, which may search out-of-context.  
+	  Some expected momentary regressions in parser/param.  
+	  Marked unroll_context::get_target_footprint() obsolete.  
+	  Next: distinguish lvalue from rvalue lookups.  
+		Then chain the contexts (global) appropriately.  
+
+
+2006-10-03	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-23:
 	  Debugging fixes: be able to partially dump collection before
 		its type has been completely resolved.  

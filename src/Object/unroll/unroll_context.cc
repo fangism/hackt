@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.5 2006/10/01 21:14:27 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.5.2.1 2006/10/03 21:58:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -46,6 +46,9 @@ unroll_context::unroll_context() :
 		template_args(), template_formals(),
 #endif
 		target_footprint(NULL)
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, lookup_footprint(NULL)
+#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
 #endif
@@ -58,6 +61,9 @@ unroll_context::unroll_context(footprint* const f) :
 		template_args(), template_formals(), 
 #endif
 		target_footprint(f)
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, lookup_footprint(f)
+#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
 #endif
@@ -153,11 +159,20 @@ unroll_context::dump(ostream& o) const {
 	o << endl << "actuals: ";
 	template_args.dump(o);
 #endif
-	if (target_footprint)
-		target_footprint->dump_with_collections(
-			cerr << endl << "footprint: ",
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	if (lookup_footprint) {
+		lookup_footprint->dump_with_collections(
+			cerr << endl << "target footprint: ",
 			dump_flags::default_value, 
 			expr_dump_context::default_value);
+	}
+#endif
+	if (target_footprint) {
+		target_footprint->dump_with_collections(
+			cerr << endl << "target footprint: ",
+			dump_flags::default_value, 
+			expr_dump_context::default_value);
+	}
 #if 1
 	// chain dump:
 	if (next) {
@@ -169,7 +184,9 @@ unroll_context::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
+	OBSOLETE: after introducing separate target and lookup footprints.
 	20051011: Fixed bug where loop context would fail to 
 		translate instance reference correctly because
 		target_footprint of innermost context was NULL.  
@@ -199,6 +216,7 @@ unroll_context::get_target_footprint(void) const {
 	}
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if LOOKUP_GLOBAL_META_PARAMETERS
@@ -270,12 +288,20 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 	No need to determine whether or not instance is formal.  
 	However, lookup of instance_reference must remain in context, 
 	and not go outside scope!  (as far as unrolling is concerned)
+	NOTE: looking up of instances should only use the target-footprint, 
+		and NOT the lookup-footprint.  
+		Lookup should never look out-of-context.  
  */
 count_ptr<physical_instance_collection>
 unroll_context::lookup_instance_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
 	STACKTRACE_VERBOSE;
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	NEVER_NULL(target_footprint);
+	return (*target_footprint)[p.get_footprint_key()]
+		.is_a<physical_instance_collection>();
+#else
 	if (target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
@@ -289,8 +315,9 @@ unroll_context::lookup_instance_collection(
 		return next->lookup_instance_collection(p);
 	}
 	return return_type(NULL);
-}
 #endif
+}
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_INSTANCE_PLACEHOLDERS
@@ -299,6 +326,9 @@ unroll_context::lookup_instance_collection(
 	No need to determine whether or not instance is formal.  
 	However, lookup of instance_reference must remain in context, 
 	and not go outside scope!  (as far as unrolling is concerned)
+	NOTE: rvalues may lookup parent contexts, 
+		but lvalues may NOT.  
+	TODO: distinguish lvalue from rvalue lookups?
  */
 count_ptr<param_value_collection>
 unroll_context::lookup_value_collection(
@@ -308,6 +338,15 @@ unroll_context::lookup_value_collection(
 #if ENABLE_STACKTRACE
 	dump(cerr << "looking up in context:") << endl;
 #endif
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	if (lookup_footprint) {
+		const return_type
+			ret((*lookup_footprint)[p.get_footprint_key()]
+				.is_a<param_value_collection>());
+		if (ret)
+			return ret;
+	}
+#else
 	if (target_footprint) {
 		// TODO: error-handle qualified lookups?
 		const return_type
@@ -316,13 +355,14 @@ unroll_context::lookup_value_collection(
 		if (ret)
 			return ret;
 	}
+#endif
 	if (next) {
 		// this might be a loop or other local scope.  
 		return next->lookup_value_collection(p);
 	}
 	return return_type(NULL);
 }
-#endif
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if USE_INSTANCE_PLACEHOLDERS
