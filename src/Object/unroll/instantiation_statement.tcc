@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17.4.5 2006/10/02 03:19:39 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17.4.6 2006/10/03 19:41:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -255,6 +255,8 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 			IS_A(collection_type*,
 				this->inst_base->make_collection()));
 		NEVER_NULL(inst_ptr);
+		// NOTE: instantiated here just registers the footprint entry, 
+		// but type is still incomplete until type committed, below.  
 		c.instantiate_collection(inst_ptr);
 		// could handle first-time type checking work here...
 #endif

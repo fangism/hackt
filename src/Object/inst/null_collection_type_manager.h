@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.8.8.1 2006/09/06 04:19:48 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.8.8.2 2006/10/03 19:41:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -92,6 +92,8 @@ public:
 		return instance_collection_parameter_type();
 	}
 #endif
+	bool
+	is_complete_type(void) const { return true; }
 
 	bool
 	is_relaxed_type(void) const { return false; }

@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.13 2006/10/03 02:46:45 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.14 2006/10/03 19:41:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -575,10 +575,11 @@ if (!m.register_transient_object(this,
 	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
-	NEVER_NULL(this->initial_instantiation_statement_ptr);
-//	if (this->initial_instantiation_statement_ptr) {
+	// NEVER_NULL(this->initial_instantiation_statement_ptr);
+	// not true for loop-induction variables!
+	if (this->initial_instantiation_statement_ptr) {
 		initial_instantiation_statement_ptr->collect_transient_info(m);
-//	}
+	}
 }
 // else already visited
 }

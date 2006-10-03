@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.tcc,v 1.9 2006/06/26 01:46:11 fang Exp $
+	$Id: general_collection_type_manager.tcc,v 1.9.8.1 2006/10/03 19:41:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_TCC__
@@ -73,6 +73,16 @@ GENERAL_COLLECTION_TYPE_MANAGER_CLASS::get_type(void) const {
 	return this->type_parameter;
 }
 #endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return true if the type is complete.
+ */
+GENERAL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
+bool
+GENERAL_COLLECTION_TYPE_MANAGER_CLASS::is_complete_type(void) const {
+	return this->type_parameter;
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 GENERAL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.9.8.1 2006/09/06 04:19:44 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.9.8.2 2006/10/03 19:41:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -117,6 +117,9 @@ public:
 #endif
 	}
 #endif	// USE_RESOLVED_DATA_TYPES
+
+	bool
+	is_complete_type(void) const;
 
 	bool
 	is_relaxed_type(void) const;

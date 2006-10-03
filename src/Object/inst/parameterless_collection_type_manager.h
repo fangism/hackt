@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.8.8.1 2006/09/06 04:19:49 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.8.8.2 2006/10/03 19:41:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -78,6 +78,8 @@ public:
 	const instance_collection_parameter_type&
 	get_canonical_type(void) const { return this->type_parameter; }
 #endif
+	bool
+	is_complete_type(void) const { return this->type_parameter; }
 
 	bool
 	is_relaxed_type(void) const { return false; }

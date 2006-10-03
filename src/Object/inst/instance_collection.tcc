@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.7 2006/10/01 21:14:14 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.8 2006/10/03 19:41:38 fang Exp $
 	TODO: trim includes
  */
 
@@ -708,6 +708,7 @@ INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ', df);
+
 	return os << endl;
 }
 
@@ -1472,11 +1473,14 @@ INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o,
 		const dump_flags& df) const {
+if (this->the_instance.container) {
 	// no auto-indent, continued on same line
 	// see physical_instance_collection::dump for reason why
+//	if (this->the_instance.container->is_complete_type()) {
 	if (this->the_instance.container->has_relaxed_type()) {
 		this->the_instance.dump_actuals(o);
 	}
+//	}
 #if 0
 	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
 		(df.show_namespace_owner ? "(ns) " : " ") <<
@@ -1486,6 +1490,11 @@ INSTANCE_SCALAR_CLASS::dump_unrolled_instances(ostream& o,
 	if (this->the_instance.instance_index)
 		o << " (" << this->the_instance.instance_index << ')';
 	this->the_instance.dump_ports(o << ' ', df);
+} else {
+	// this only happens when dumping the collection before
+	// it is complete.
+	o << "[null container]";
+}
 	return o;
 }
 
