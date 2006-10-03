@@ -5,6 +5,12 @@
 
 2006-10-03	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-02:
+	  Now distinguishing lvalue from rvalue lookups, using the switch
+		RVALUE_LVALUE_LOOKUPS in Object/devel_switches.h.
+	  Next: chain context to make top-level context searchable.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-01:
 	  unroll_context: separate footprints for looking up, 
 		one for instantiating and modifying, the other for 

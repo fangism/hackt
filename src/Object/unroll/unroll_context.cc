@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.5.2.1 2006/10/03 21:58:44 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.5.2.2 2006/10/03 23:13:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -331,8 +331,12 @@ unroll_context::lookup_instance_collection(
 	TODO: distinguish lvalue from rvalue lookups?
  */
 count_ptr<param_value_collection>
-unroll_context::lookup_value_collection(
-		const param_value_placeholder& p) const {
+#if RVALUE_LVALUE_LOOKUPS
+unroll_context::lookup_rvalue_collection
+#else
+unroll_context::lookup_value_collection
+#endif
+		(const param_value_placeholder& p) const {
 	typedef	count_ptr<param_value_collection>	return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
@@ -358,10 +362,44 @@ unroll_context::lookup_value_collection(
 #endif
 	if (next) {
 		// this might be a loop or other local scope.  
+#if RVALUE_LVALUE_LOOKUPS
+		return next->lookup_rvalue_collection(p);
+#else
 		return next->lookup_value_collection(p);
+#endif
 	}
 	return return_type(NULL);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RVALUE_LVALUE_LOOKUPS
+/**
+	Lookup reserved for lvalues, which uses the target footprint.  
+ */
+count_ptr<param_value_collection>
+unroll_context::lookup_lvalue_collection(
+		const param_value_placeholder& p) const {
+	typedef	count_ptr<param_value_collection>	return_type;
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	dump(cerr << "looking up in context:") << endl;
+#endif
+	// use the first context with a valid target footprint
+	// do not use parents' target footprints
+	if (target_footprint) {
+		// TODO: error-handle qualified lookups?
+		const return_type
+			ret((*target_footprint)[p.get_footprint_key()]
+				.is_a<param_value_collection>());
+		if (ret)
+			return ret;
+	} else if (next) {
+		// this might be a loop or other local scope.  
+		return next->lookup_lvalue_collection(p);
+	}
+	return return_type(NULL);
+}
+#endif	// RVALUE_LVALUE_LOOKUPS
 #endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -376,7 +414,12 @@ unroll_context::lookup_collection(
 count_ptr<param_value_collection>
 unroll_context::lookup_collection(
 		const param_value_placeholder& p) const {
+#if RVALUE_LVALUE_LOOKUPS
+	// defaults to using rvalue lookup, is this "the right thing"?
+	return lookup_rvalue_collection(p);
+#else
 	return lookup_value_collection(p);
+#endif
 }
 #endif
 

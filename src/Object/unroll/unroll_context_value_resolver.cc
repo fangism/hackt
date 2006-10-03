@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.5.6.4.6.1 2006/10/03 21:58:46 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.5.6.4.6.2 2006/10/03 23:13:25 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
@@ -17,6 +17,9 @@
 
 namespace HAC {
 namespace entity {
+#if RVALUE_LVALUE_LOOKUPS
+#define	lookup_value_collection		lookup_rvalue_collection
+#endif
 
 //=============================================================================
 // class unroll_context_value_resolver<pint_tag> method definitions

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.8.2.1 2006/10/03 21:58:38 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.8.2.2 2006/10/03 23:13:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -139,7 +139,7 @@
 	Goal: 1
 	Status:
  */
-#define	RVALUE_LVALUE_LOOKUPS	(0 && SRC_DSET_UNROLL_CONTEXT_FOOTPRINTS)
+#define	RVALUE_LVALUE_LOOKUPS	(1 && SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS)
 
 //=============================================================================
 
