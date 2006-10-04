@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.18 2006/08/01 06:35:48 fang Exp $
+	$Id: PRS.cc,v 1.19 2006/10/04 23:18:23 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -260,7 +260,7 @@ rule::check_rule(context& c) const {
 				new entity::PRS::pull_dn(g, *o, arrow_type)));
 	NEVER_NULL(ret);
 	if (attribs) {
-		entity::PRS::attribute_list_type&
+		entity::PRS::rule_attribute_list_type&
 			atts(ret->get_attribute_list());
 		attribs->check_list(atts, &attribute::check, c);
 		if (find(atts.begin(), atts.end(), false) != atts.end()) {

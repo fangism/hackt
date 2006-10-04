@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.18 2006/07/31 22:22:34 fang Exp $
+	$Id: PRS.cc,v 1.19 2006/10/04 23:18:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -374,7 +374,7 @@ pull_base::pull_base(const prs_expr_ptr_type& g,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_base::pull_base(const prs_expr_ptr_type& g, 
-		const bool_literal& o, const attribute_list_type& l) :
+		const bool_literal& o, const rule_attribute_list_type& l) :
 		rule(), guard(g), output(o), cmpl(false), attributes(l) {
 	NEVER_NULL(guard);
 }
@@ -393,7 +393,8 @@ pull_base::dump_base(ostream& o, const rule_dump_context& c,
 			((cmpl) ? comp_arrow : norm_arrow), c) << dir;
 	if (!attributes.empty()) {
 		o << " [";
-		typedef	attribute_list_type::const_iterator	const_iterator;
+		typedef	rule_attribute_list_type::const_iterator
+							const_iterator;
 		const_iterator i(attributes.begin());
 		const const_iterator e(attributes.end());
 		for ( ; i!=e; ++i) {
@@ -422,7 +423,6 @@ pull_base::check(void) const {
 	\param pfp the production rule footprint in which to add
 		newly resolved production rules.  
 	\param dir is the direction, true for up, false for down.
-	TODO: process attributes
  */
 good_bool
 pull_base::unroll_base(const unroll_context& c, const node_pool_type& np, 
@@ -447,7 +447,7 @@ pull_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	footprint_rule&
 		r(pfp.push_back_rule(guard_expr_index, output_node_index, dir));
 {
-	typedef	attribute_list_type::const_iterator	const_iterator;
+	typedef	rule_attribute_list_type::const_iterator	const_iterator;
 	const_iterator i(attributes.begin());
 	const const_iterator e(attributes.end());
 	for ( ; i!=e; ++i) {
@@ -520,7 +520,7 @@ pull_up::pull_up(const prs_expr_ptr_type& g,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_up::pull_up(const prs_expr_ptr_type& g, const bool_literal& o,
-		const attribute_list_type& l) :
+		const rule_attribute_list_type& l) :
 		pull_base(g, o, l) {
 }
 
@@ -604,7 +604,7 @@ pull_dn::pull_dn(const prs_expr_ptr_type& g,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 pull_dn::pull_dn(const prs_expr_ptr_type& g, const bool_literal& o,
-		const attribute_list_type& l) :
+		const rule_attribute_list_type& l) :
 		pull_base(g, o, l) {
 }
 

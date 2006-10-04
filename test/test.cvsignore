@@ -28,6 +28,7 @@ core.*
 *.castprs
 *.prs
 *.prsdiff
+*.lvssprs
 *.lvsprs
 *.lvsprsdiff
 *.prsimexpr

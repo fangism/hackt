@@ -1,0 +1,12 @@
+// "macro-pass-05.hac"
+// copy-modified from "macro-pass-03.hac"
+// pass: takes optional length parameter
+
+defproc passn(bool g, s, d) {
+prs {
+	passn<44,3>(g, s, d)
+}
+}
+
+passn x;
+

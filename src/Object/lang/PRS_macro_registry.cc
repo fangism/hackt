@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_registry.cc"
 	Macro definitions belong here.  
-	$Id: PRS_macro_registry.cc,v 1.8 2006/04/23 07:37:21 fang Exp $
+	$Id: PRS_macro_registry.cc,v 1.9 2006/10/04 23:18:27 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -203,7 +203,7 @@ DECLARE_AND_DEFINE_CFLAT_PRS_MACRO_CLASS(PassP, "passp")
 		after 0 ~g & s -> d+
  */
 void
-PassN::main(cflat_prs_printer& p, const param_args_type&, 
+PassN::main(cflat_prs_printer& p, const param_args_type& params, 
 		const node_args_type& nodes) {
 	ostream& o(p.os);
 	switch (p.cfopts.primary_tool) {
@@ -217,7 +217,11 @@ PassN::main(cflat_prs_printer& p, const param_args_type&,
 		o << '-' << endl;
 		break;
 	case cflat_options::TOOL_LVS:
-		o << "passn(";
+		o << "passn";
+		if (p.cfopts.size_prs && params.front()) {
+			print_param_args_list(p, params);
+		}
+		o << "(";
 		print_node_args_list(p, nodes, ", ");
 		o << ')' << endl;
 		break;
@@ -228,7 +232,7 @@ PassN::main(cflat_prs_printer& p, const param_args_type&,
 }
 
 void
-PassP::main(cflat_prs_printer& p, const param_args_type&, 
+PassP::main(cflat_prs_printer& p, const param_args_type& params, 
 		const node_args_type& nodes) {
 	ostream& o(p.os);
 	switch (p.cfopts.primary_tool) {
@@ -242,7 +246,11 @@ PassP::main(cflat_prs_printer& p, const param_args_type&,
 		o << '+' << endl;
 		break;
 	case cflat_options::TOOL_LVS:
-		o << "passp(";
+		o << "passp";
+		if (p.cfopts.size_prs && params.front()) {
+			print_param_args_list(p, params);
+		}
+		o << "(";
 		print_node_args_list(p, nodes, ", ");
 		o << ')' << endl;
 		break;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.15 2006/07/17 02:53:38 fang Exp $
+	$Id: PRS.h,v 1.16 2006/10/04 23:18:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -149,7 +149,7 @@ public:
 };	// end class attribute
 
 //-----------------------------------------------------------------------------
-typedef	std::vector<attribute>		attribute_list_type;
+typedef	std::vector<attribute>		rule_attribute_list_type;
 
 //=============================================================================
 class pull_base : public rule {
@@ -170,14 +170,14 @@ protected:
 		Attribute list.  
 		Want to make this a pointer for efficient duplication?
 	 */
-	attribute_list_type		attributes;
+	rule_attribute_list_type	attributes;
 
 	pull_base();
 
 	pull_base(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
 	pull_base(const prs_expr_ptr_type&, const bool_literal&, 
-		const attribute_list_type&);
+		const rule_attribute_list_type&);
 
 public:
 	// because we go through an intermediate count_ptr, dtor needs to 
@@ -204,10 +204,10 @@ protected:
 public:
 
 	// for convenience
-	attribute_list_type&
+	rule_attribute_list_type&
 	get_attribute_list(void) { return attributes; }
 
-	const attribute_list_type&
+	const rule_attribute_list_type&
 	get_attribute_list(void) const { return attributes; }
 
 	void
@@ -227,7 +227,7 @@ public:
 	pull_up(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
 	pull_up(const prs_expr_ptr_type&, const bool_literal&, 
-		const attribute_list_type&);
+		const rule_attribute_list_type&);
 
 	~pull_up();
 
@@ -263,7 +263,7 @@ public:
 	pull_dn(const prs_expr_ptr_type&, const bool_literal&, const bool);
 
 	pull_dn(const prs_expr_ptr_type&, const bool_literal&, 
-		const attribute_list_type&);
+		const rule_attribute_list_type&);
 
 	~pull_dn();
 

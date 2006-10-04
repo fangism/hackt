@@ -1,6 +1,6 @@
 # "mk/hackt-rules.am"
 #	vi: ft=automake
-#	$Id: hackt-rules.am,v 1.8 2006/08/14 22:32:38 fang Exp $
+#	$Id: hackt-rules.am,v 1.9 2006/10/04 23:18:21 fang Exp $
 # The rules portion of the hackt automake template.
 # The counterpart of this file is "mk/hackt-suffixes.am".
 # Include this file after suffixes have been included.  
@@ -52,6 +52,9 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 .haco-a.sprs:
 	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
+
+.haco-a.lvssprs:
+	$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@
 
 # note: does not use optimization
 .haco-a.prsimexpr:
@@ -124,6 +127,7 @@ clean-local:
 	-$(RM) *.haco-c *.createdump
 	-$(RM) *.haco-a *.allocdump
 	-$(RM) *.prs
+	-$(RM) *.lvssprs
 	-$(RM) *.lvsprs
 	-$(RM) *.prsimexpr*
 	-$(RM) *.prs-dot* *.prs-*-ps

@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.49 2006/09/03 22:03:20 fang Exp $
+#	$Id: Make.test-tail,v 1.50 2006/10/04 23:18:31 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -265,6 +265,16 @@ HACO_FLAGS += -I$(srcdir)
 		$(HACKT_CFLAT_LVS_EXE) -t $$type $< > $@ ; \
 	else \
 		$(HACKT_CFLAT_LVS_EXE) $< > $@ ; \
+	fi
+
+.haco-a.lvssprs:
+	@srcfile=$(srcdir)/$*.hac ; \
+	type=`$(CAT) $$srcfile | $(GREP) "@hflat-type@" | $(HEAD) -n1 | \
+		$(SED) 's/^.*-type@[ \t]*//g' | $(SED) 's/\"//g'` ; \
+	if test -n "$$type" ; then \
+		$(HACKT_CFLAT_LVS_EXE) -fsizes -t $$type $< > $@ ; \
+	else \
+		$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@ ; \
 	fi
 
 .haco-a.prsseu:
@@ -793,6 +803,7 @@ clean-cflattests:
 	-$(RM_PATTERN) "*.prs"
 	-$(RM_PATTERN) "*.prsdiff"
 	-$(RM_PATTERN) "*.prsdiff.sort"
+	-$(RM_PATTERN) "*.lvssprs"
 	-$(RM_PATTERN) "*.lvsprs"
 	-$(RM_PATTERN) "*.lvsprsdiff"
 	-$(RM_PATTERN) "*.lvsprsdiff.sort"

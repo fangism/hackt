@@ -1,0 +1,12 @@
+// "macro-pass-07.hac"
+// copy-modified from "macro-pass-05.hac"
+// pass: takes optional length parameter, can be floating-point
+
+defproc passn(bool g, s, d) {
+prs {
+	passn<10.6,2.5>(g, s, d)
+}
+}
+
+passn x;
+

@@ -1,0 +1,85 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
+	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	291
+	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	57
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+
+In module created from: ##FILE## (unrolled) (created)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  1 definitions
+  0 typedefs
+  Definitions:
+    passn = process-definition (defined) passn(
+        bool<> g
+        bool<> s
+        bool<> d
+      )
+      In definition "passn", we have: {
+      Instances:
+        d = bool<> d
+        g = bool<> g
+        s = bool<> s
+      unroll sequence: 
+        bool<> g
+        bool<> s
+        bool<> d
+      prs:
+        passn<44,3>(g,s,d)
+      footprint: {
+        bool^0 d (instantiated) = ::passn::d (1) 
+        bool^0 g (instantiated) = ::passn::g (2) 
+        bool^0 s (instantiated) = ::passn::s (3) 
+        bool instance pool:
+        1	::passn::d
+        2	::passn::g
+        3	::passn::s
+        resolved macros:
+        passn<44,3>(g,s,d)
+      }
+      }
+
+  Instances:
+    x = process passn<>^0 x (instantiated) = ::x (1) (
+      bool^0 g (instantiated) = ::x.g (1) 
+      bool^0 s (instantiated) = ::x.s (2) 
+      bool^0 d (instantiated) = ::x.d (3) 
+    )
+}
+
+Created state:
+process instance pool:
+1	::x
+bool instance pool:
+1	::x.g
+2	::x.s
+3	::x.d
+

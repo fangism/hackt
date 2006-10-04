@@ -1,0 +1,12 @@
+// "macro-pass-06.hac"
+// copy-modified from "macro-pass-05.hac"
+// fail: too many parameters.  
+
+defproc passn(bool g, s, d) {
+prs {
+	passn<44,3,19>(g, s, d)
+}
+}
+
+passn x;
+

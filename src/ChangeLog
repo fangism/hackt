@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "main/version.cc".
 
+2006-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-25:
+	  Requested by Virantha: 
+		sized pass-gate, so passn/passp now take
+		optional width, length parameters: e.g. passn<5,2}(x,y,z)
+		Only cflat lvs -fsizs produces sized output so far. 
+	  lib/mk Makefiles added support to make .lvssprs (sized lvsprs).
+	  New test cases added.  
+	  minor: renamed PRS::attribute_list_type -> rule_attribute_list_type.
+
+
 2006-09-27	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-24:

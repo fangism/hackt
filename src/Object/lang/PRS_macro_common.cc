@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS_macro_common.cc"
 	Definition of tool-independent parts of PRS macro classes.  
-	$Id: PRS_macro_common.cc,v 1.2 2006/04/23 07:37:21 fang Exp $
+	$Id: PRS_macro_common.cc,v 1.3 2006/10/04 23:18:27 fang Exp $
  */
 
 #include <iostream>
@@ -9,12 +9,16 @@
 #include <set>
 #include "Object/lang/PRS_macro_common.h"
 #include "util/memory/count_ptr.h"
+#include "util/attributes.h"
+#include "Object/expr/preal_const.h"
+#include "Object/expr/pint_const.h"
 
 namespace HAC {
 namespace entity {
 namespace PRS {
 namespace macros {
 #include "util/using_ostream.h"
+using util::memory::count_ptr;
 
 //=============================================================================
 // helper functions common to many macros' check functions
@@ -45,6 +49,22 @@ __no_grouped_node_args(const char* name, const node_args_type& a) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 good_bool
+__optional_width_length_params(const char* m, const size_t s) {
+	if (s > 2) {
+		cerr << "Error: the \'" << m <<
+			"\' macro takes 0-2 parameters." << endl;
+		return good_bool(false);
+	} else {
+		return good_bool(true);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static
+good_bool
+__takes_no_parameters(const char* m, const size_t s) __ATTRIBUTE_UNUSED__;
+
+good_bool
 __takes_no_parameters(const char* m, const size_t s) {
 	if (s) {
 		cerr << "Error: the \'" << m <<
@@ -56,8 +76,72 @@ __takes_no_parameters(const char* m, const size_t s) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static
 good_bool
+__takes_no_parameters(const char* m, const param_args_type& p) __ATTRIBUTE_UNUSED__;
+
+good_bool
 __takes_no_parameters(const char* m, const param_args_type& p) {
 	return __takes_no_parameters(m, p.size());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\ret 'good' if value is > 0
+	\param v pointer to value to check.
+	\pre v must be non-NULL.
+ */
+static
+good_bool
+__param_must_be_positive(const param_args_type::value_type& v) {
+	NEVER_NULL(v);
+	const count_ptr<const preal_const>
+		r(v.is_a<const preal_const>());
+	const count_ptr<const pint_const>
+		z(v.is_a<const pint_const>());
+	if (r) {
+		const preal_value_type S = r->static_constant_value();
+		if (S <= 0.0) {
+			cerr << "Error: value must be positive, "
+				"but got: " << S << "." << endl;
+			return good_bool(false);
+		} else {
+			return good_bool(true);
+		}
+	} else if (z) {
+		const pint_value_type S = z->static_constant_value();
+		if (S < 1) {
+			cerr << "Error: value must be positive, "
+				"but got: " << S << "." << endl;
+			return good_bool(false);
+		} else {
+			return good_bool(true);
+		}
+	} else {
+		cerr << "Error: expected int or real value." << endl;
+		return good_bool(false);
+	}
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\pre p has 0 or 1 parameters, this only checks the first.  
+ */
+static
+good_bool
+__optional_width_length_must_be_positive(
+		const char* m, const param_args_type& p) {
+	bool err = false;
+	param_args_type::const_iterator i(p.begin()), e(p.end());
+	for ( ; i!=e; ++i) {
+		const count_ptr<const const_param>& s(*i);
+		if (s && !__param_must_be_positive(s).good) {
+			err = true;
+		}
+	}
+	if (err) {
+		cerr << "Error in \'" << m << "\' macro." << endl;
+		return good_bool(false);
+	}
+	return good_bool(true);
 }
 
 //=============================================================================
@@ -111,22 +195,22 @@ DEFINE_DEFAULT_PRS_MACRO_CHECK_NODES(Echo)
 
 good_bool
 PassN::__check_num_params(const char* name, const size_t n) {
-	return __takes_no_parameters(name, n);
+	return __optional_width_length_params(name, n);
 }
 
 good_bool
 PassP::__check_num_params(const char* name, const size_t n) {
-	return __takes_no_parameters(name, n);
+	return __optional_width_length_params(name, n);
 }
 
 good_bool
 PassN::__check_param_args(const char* name, const param_args_type& p) {
-	return __takes_no_parameters(name, p);
+	return __optional_width_length_must_be_positive(name, p);
 }
 
 good_bool
 PassP::__check_param_args(const char* name, const param_args_type& p) {
-	return __takes_no_parameters(name, p);
+	return __optional_width_length_must_be_positive(name, p);
 }
 
 /**

@@ -1,5 +1,5 @@
 # "hackt.mk"
-#	$Id: hackt.mk,v 1.7 2006/08/14 04:49:58 fang Exp $
+#	$Id: hackt.mk,v 1.8 2006/10/04 23:18:21 fang Exp $
 # TODO: distinguish hackt-build.mk from hackt-inst.mk
 # point these to hackt
 top_srcdir = ../..
@@ -14,7 +14,7 @@ RM = rm -f
 # automake will convert these into .SUFFIXES:
 .SUFFIXES: .hac .depend .hacktcmpltest .hacktobjtest .hacktunrolltest \
 	.hacktcreatetest .hacktalloctest .hacktcflattest \
-	.haco .haco-u .haco-c .haco-a .prs .sprs .lvsprs \
+	.haco .haco-u .haco-c .haco-a .prs .sprs .lvsprs .lvssprs \
 	.prsimexpr .prsimexpr-O1 .prs-dot .prs-dot-O1 \
 	.prs-dot-ps .prs-neato-ps .prs-circo-ps .prs-twopi-ps .prs-fdp-ps \
 	.prs-dot-fig .prs-neato-fig .prs-circo-fig .prs-twopi-fig .prs-fdp-fig \
@@ -67,6 +67,9 @@ HACKT_PRSIM_EXE = $(HACKT_EXE) prsim
 
 .haco-a.sprs:
 	$(HACKT_CFLAT_PRSIM_EXE) -fsizes $< > $@
+
+.haco-a.lvssprs:
+	$(HACKT_CFLAT_LVS_EXE) -fsizes $< > $@
 
 .haco-a.prsimexpr:
 	$(HACKT_PRSIM_EXE) -fno-run -fdump-expr-alloc $< > $@
@@ -138,6 +141,7 @@ clean-local:
 	-$(RM) *.haco-a *.allocdump
 	-$(RM) *.prs
 	-$(RM) *.lvsprs
+	-$(RM) *.lvssprs
 	-$(RM) *.prsimexpr*
 	-$(RM) *.prs-dot* *.prs-*-ps
 	-$(RM) *.prs-*-fig *.prs-*-pdf

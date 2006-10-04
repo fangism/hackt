@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.42 2006/09/17 06:48:45 fang Exp $
+#	$Id: TODO,v 1.43 2006/10/04 23:18:22 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -47,10 +47,19 @@ prsim:
 	minor bug: fanout prints duplicate rules because literal
 		may appear in different branches of same rule.  
 		fix: collect unique-list (or set), then print
-	prs2spice replacement
-	a way to manually size prs, using annotation file...
+
+sized PRS tools:
+prs2spice replacement
+	a way to manually size prs, using separate annotation file...
+		* be able to label rules and reference literals of rule
+		* be able to reference and resize rules of a particular def.
+		* be able to resize rules of referenced *instances* (override)
+		* be able to size rules semi-automatically depending on fanout
 	far future: sprsim (sizing simulator, with self-sizing!)
 		constraint solving...
+
+rule attributes (proposed):
+	weak feedback (cross-coupled interference case)
 
 enhancement:
 	macro/spec/attribute strings need to be compressed or stored in some 
@@ -347,6 +356,13 @@ LANGUAGES:
 SPEC:
 	support for 'inline' attribute to flatten subinstances into 
 		current definition scope (and give equivalent aliases)
+
+PRS:
+	(Virantha)
+	literal attributes, like transistor sizing, but also generalized
+		to key-value pairs to give transistor attributes.
+		Currently, literals support expr-list arguments, 
+		would need to update grammar and support in IR.  
 
 ===============================================================================
 Expression resolutions:
