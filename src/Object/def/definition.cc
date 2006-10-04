@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.6 2006/10/02 03:19:01 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.6.2.1 2006/10/04 04:15:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -988,7 +988,8 @@ user_def_chan::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
 user_def_chan::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing until this has a footprint manager
 	return good_bool(true);
 }
@@ -996,7 +997,8 @@ user_def_chan::unroll_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
 user_def_chan::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing until this has a footprint manager
 	return good_bool(true);
 }
@@ -1189,14 +1191,16 @@ channel_definition_alias::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 channel_definition_alias::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 channel_definition_alias::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1460,7 +1464,8 @@ built_in_datatype_def::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 built_in_datatype_def::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing, built-in types have no footprint manater
 	return good_bool(true);
 }
@@ -1468,7 +1473,8 @@ built_in_datatype_def::unroll_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 built_in_datatype_def::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing, built-in types have no footprint manater
 	return good_bool(true);
 }
@@ -1840,7 +1846,8 @@ enum_datatype_def::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 enum_datatype_def::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing, doesn't have a footprint manager
 	return good_bool(true);
 }
@@ -1848,7 +1855,8 @@ enum_datatype_def::unroll_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 enum_datatype_def::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing, doesn't have a footprint manager
 	return good_bool(true);
 }
@@ -2236,7 +2244,8 @@ user_def_datatype::register_complete_type(
  */
 good_bool
 user_def_datatype::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
 	footprint* const f = &footprint_map[p];
@@ -2248,7 +2257,7 @@ if (defined) {
 		const canonical_user_def_data_type
 			cpt(make_canonical_type(canonical_actuals));
 #if RESOLVE_VALUES_WITH_FOOTPRINT
-		const unroll_context c(f);
+		const unroll_context c(f, &top);
 		// no parent b/c doing away with lookup of globals, 
 		// when we do, need to chain the context with parent...
 		if (!template_formals.unroll_formal_parameters(
@@ -2293,7 +2302,8 @@ if (defined) {
  */
 good_bool
 user_def_datatype::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
 	footprint* f = &footprint_map[p];
@@ -2307,7 +2317,7 @@ if (defined) {
 	}
 #endif
 	// will automatically unroll first if not already unrolled
-	if (!f->is_unrolled() && !unroll_complete_type(p).good) {
+	if (!f->is_unrolled() && !unroll_complete_type(p, top).good) {
 		// already have error message
 		return good_bool(false);
 	}
@@ -2319,7 +2329,7 @@ if (defined) {
 		const canonical_user_def_data_type
 			cpt(make_canonical_type(canonical_actuals));
 #if RESOLVE_VALUES_WITH_FOOTPRINT
-		const unroll_context c(f);
+		const unroll_context c(f, &top);
 		// no parent b/c doing away with lookup of globals, 
 		// when we do, need to chain the context with parent...
 		if (!template_formals.unroll_formal_parameters(
@@ -2337,7 +2347,7 @@ if (defined) {
 #endif
 #endif
 		// this replays internal aliases of all instances in this scope
-		if (!f->create_dependent_types().good) {
+		if (!f->create_dependent_types(top).good) {
 			// error message
 			return good_bool(false);
 		}
@@ -2585,7 +2595,8 @@ datatype_definition_alias::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 datatype_definition_alias::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
@@ -2593,7 +2604,8 @@ datatype_definition_alias::unroll_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 datatype_definition_alias::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
@@ -3101,7 +3113,8 @@ process_definition::register_complete_type(
 good_bool
 process_definition::__unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
-		footprint& f) const {
+		footprint& f, 
+		const footprint& top) const {
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
 	if (!f.is_unrolled()) {
@@ -3112,7 +3125,7 @@ process_definition::__unroll_complete_type(
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
 #if RESOLVE_VALUES_WITH_FOOTPRINT
-		const unroll_context c(&f);
+		const unroll_context c(&f, &top);
 		// no parent b/c doing away with lookup of globals, 
 		// when we do, need to chain the context with parent...
 		if (!template_formals.unroll_formal_parameters(
@@ -3152,7 +3165,8 @@ process_definition::__unroll_complete_type(
  */
 good_bool
 process_definition::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
 	footprint* const f = &footprint_map[p];
@@ -3165,7 +3179,7 @@ if (defined) {
 		f = &footprint_map.only();
 	}
 #endif
-	return __unroll_complete_type(p, *f);
+	return __unroll_complete_type(p, *f, top);
 } else {
 	cerr << "ERROR: cannot unroll incomplete process type " <<
 			get_qualified_name() << endl;
@@ -3183,10 +3197,11 @@ if (defined) {
 good_bool
 process_definition::__create_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
-		footprint& f) const {
+		footprint& f, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	// will automatically unroll first if not already unrolled
-	if (!f.is_unrolled() && !__unroll_complete_type(p, f).good) {
+	if (!f.is_unrolled() && !__unroll_complete_type(p, f, top).good) {
 		// already have error message
 		return good_bool(false);
 	}
@@ -3198,7 +3213,7 @@ process_definition::__create_complete_type(
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
 #if RESOLVE_VALUES_WITH_FOOTPRINT
-		const unroll_context c(&f);
+		const unroll_context c(&f, &top);
 		// no parent b/c doing away with lookup of globals, 
 		// when we do, need to chain the context with parent...
 		if (!template_formals.unroll_formal_parameters(
@@ -3218,7 +3233,7 @@ process_definition::__create_complete_type(
 		// this replays internal aliases of all instances in this scope
 		// doesn't use context? what if dependent on global parameter?
 		// probably need to pass it in!
-		if (!f.create_dependent_types().good) {
+		if (!f.create_dependent_types(top).good) {
 			// error message
 			return good_bool(false);
 		}
@@ -3246,7 +3261,8 @@ process_definition::__create_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 process_definition::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
 	footprint* const f = &footprint_map[p];
@@ -3259,7 +3275,7 @@ if (defined) {
 		f = &footprint_map.only();
 	}
 #endif
-	return __create_complete_type(p, *f);
+	return __create_complete_type(p, *f, top);
 } else {
 	cerr << "ERROR: cannot create incomplete process type " <<
 			get_qualified_name() << endl;

@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.9.28.3 2006/09/07 06:46:54 fang Exp $
+ 	$Id: loop_scope.cc,v 1.9.28.3.8.1 2006/10/04 04:16:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -110,8 +110,12 @@ loop_scope::unroll(const unroll_context& c) const {
 	// induction variable into the footprint as an actual variable
 	pint_value_type& p(var->get_instance().value);
 		// acquire direct reference
+#if 0
 	unroll_context cc(&f);
 	cc.chain_context(c);
+#else
+	const unroll_context cc(&f, c);
+#endif
 	for (p = min; p <= max; ++p) {
 		if (!parent_type::unroll(cc).good) {
 			cerr << "Error resolving loop-body during iteration: ";

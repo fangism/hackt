@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-03:
+	  propagated top-level footprint down through entire
+		unroll call subgraph to be able to lookup
+		out-of-scope global parameters.  Tons of prototypes updated.
+	  unroll_context::lookup_rvalue_collection():
+		now tries to lookup top_footprint for globals.  
+	  Regressions fixed: parser/param/06{6,7,8,9}, few more left in param/.
+	  DO: Cleanup references to "replay_&" methods (delete the obsolete).
+
+
 2006-10-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-02:

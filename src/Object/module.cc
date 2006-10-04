@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.22.4.1 2006/10/01 21:13:45 fang Exp $
+ 	$Id: module.cc,v 1.22.4.1.2.1 2006/10/04 04:15:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -321,8 +321,9 @@ good_bool
 module::unroll_module(void) {
 	STACKTRACE("module::unroll_module()");
 #if MODULE_PROCESS
+	footprint& f(get_footprint());
 	if (!parent_type::__unroll_complete_type(
-			null_module_params, get_footprint()).good) {
+			null_module_params, f, f).good) {
 		cerr << "Error encountered during module::unroll." << endl;
 		return good_bool(false);
 	}
@@ -352,6 +353,15 @@ module::unroll_module(void) {
  */
 good_bool
 module::create_dependent_types(void) {
+#if MODULE_PROCESS
+	footprint& f(get_footprint());
+	if (!parent_type::__create_complete_type(
+			null_module_params, f, f).good) {
+		cerr << "Error during create_unique." << endl;
+		return good_bool(false);
+	}
+	return good_bool(true);
+#else
 #if 0
 	// enabling this requires changes in the end of ::create_unique
 	// this doesn't quite work the way I expected it...
@@ -404,6 +414,7 @@ module::create_dependent_types(void) {
 }
 	return good_bool(true);
 #endif
+#endif
 }	// end method create_dependent_types
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -443,7 +454,7 @@ module::create_unique(void) {
 			expr_dump_context::default_value) << endl;
 #endif
 		// will this automatically lookup global meta parameters?
-		const unroll_context c(&_footprint);
+		const unroll_context c(&_footprint, &_footprint);
 		if (!prs.unroll(c, _footprint.get_pool<bool_tag>(),
 				_footprint.get_prs_footprint()).good) {
 			// already have error message
@@ -519,7 +530,7 @@ module::allocate_unique_process_type(const process_type_reference& pt) {
 		dump_flags::default_value,
 		expr_dump_context::default_value) << endl;
 #endif
-	if (!pd->__create_complete_type(tp, _footprint).good) {
+	if (!pd->__create_complete_type(tp, _footprint, _footprint).good) {
 		cerr << "Error creating complete process type." << endl;
 		return good_bool(false);
 	} else {

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.8.10.5.6.2 2006/10/03 23:13:24 fang Exp $
+	$Id: unroll_context.h,v 1.8.10.5.6.3 2006/10/04 04:16:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -119,8 +119,13 @@ private:
 	 */
 	const footprint*				lookup_footprint;
 #endif
+	/**
+		Special top-level footprint for global parameter lookups.  
+	 */
+	const footprint*				top_footprint;
 
 	/**
+		OBSOLETE.
 		NOTE: 2006-09-10
 		TODO: consider a read-only source footprint, because now
 		other nested scopes use footprints for unrolling.  
@@ -133,11 +138,18 @@ private:
 	never_ptr<const name_space>			parent_namespace;
 #endif
 public:
+#if 0
 	// parameterless types and entity::module need this
 	unroll_context();
 
+	/// only called from the top-level module
 	explicit
 	unroll_context(footprint* const);
+#endif
+	// called by top-module
+	unroll_context(footprint* const, const footprint* const);
+	// called by everything else
+	unroll_context(footprint* const, const unroll_context&);
 
 #if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context(const template_actuals&,
@@ -169,6 +181,9 @@ public:
 	const footprint*
 	get_target_footprint(void) const;
 #endif
+
+	const footprint*
+	get_top_footprint(void) const { return top_footprint; }
 
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	never_ptr<const name_space>

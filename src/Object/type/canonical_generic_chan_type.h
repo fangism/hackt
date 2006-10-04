@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.6.8.1 2006/09/11 22:31:12 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.6.8.1.6.1 2006/10/04 04:15:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -141,10 +141,10 @@ public:
 
 	// like fundamental_type_reference::unroll_register_complete_type()
 	good_bool
-	unroll_definition_footprint(void) const;
+	unroll_definition_footprint(const footprint&) const;
 
 	good_bool
-	create_definition_footprint(void) const;
+	create_definition_footprint(const footprint&) const;
 
 	using base_type::combine_relaxed_actuals;
 	using base_type::match_relaxed_actuals;

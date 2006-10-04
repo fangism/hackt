@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.8.8.2 2006/10/03 19:41:40 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.8.8.2.2.1 2006/10/04 04:15:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -20,6 +20,7 @@ using std::ostream;
 using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
+class footprint;
 template <class> class class_traits;
 
 //=============================================================================
@@ -88,7 +89,8 @@ public:
 	static
 	good_bool
 	create_definition_footprint(
-			const instance_collection_parameter_type& t) {
+			const instance_collection_parameter_type& t, 
+			const footprint& top) {
 		return good_bool(true);
 	}
 

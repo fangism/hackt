@@ -2,7 +2,7 @@
 	\file "Object/traits/class_traits.cc"
 	Traits and policy classes for instances.  
 	This file used to be "Object/art_object_classification_details.cc".
-	$Id: class_traits.cc,v 1.7 2006/03/15 04:38:21 fang Exp $
+	$Id: class_traits.cc,v 1.7.38.1 2006/10/04 04:15:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_CC__
@@ -67,7 +67,7 @@ class_traits<preal_tag>::value_type_name[] = "real-value";
  */
 unroll_context
 null_parameter_type::make_unroll_context(void) const {
-	return unroll_context();
+	return unroll_context(NULL, NULL);
 }
 
 //=============================================================================

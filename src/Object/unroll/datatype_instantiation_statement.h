@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.9.8.2 2006/10/02 03:19:36 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.9.8.2.2.1 2006/10/04 04:16:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -28,6 +28,7 @@ namespace entity {
 class param_expr_list;
 class const_param_expr_list;
 class unroll_context;
+class footprint;
 using util::persistent_object_manager;
 #include "util/using_ostream.h"
 
@@ -131,8 +132,9 @@ protected:
 	static
 	good_bool
 	commit_type_first_time(instance_collection_generic_type& v,
-			const instance_collection_parameter_type& t) {
-		if (t.is_strict() && !t.unroll_definition_footprint().good) {
+			const instance_collection_parameter_type& t, 
+			const footprint& top) {
+		if (t.is_strict() && !t.unroll_definition_footprint(top).good) {
 			return good_bool(false);
 		}
 		return v.establish_collection_type(t);
@@ -141,7 +143,8 @@ protected:
 	static
 	good_bool
 	commit_type_check(instance_collection_generic_type& v,
-			const instance_collection_parameter_type& t) {
+			const instance_collection_parameter_type& t, 
+			const footprint& top) {
 		return v.check_established_type(t);
 	}
 

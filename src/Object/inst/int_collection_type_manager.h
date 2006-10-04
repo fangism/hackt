@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.9.8.3 2006/10/03 19:41:39 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.9.8.3.2.1 2006/10/04 04:15:33 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -16,6 +16,7 @@
 
 namespace HAC {
 namespace entity {
+class footprint;
 using std::istream;
 using std::ostream;
 #include "util/using_ostream.h"
@@ -109,7 +110,8 @@ public:
 	static
 	good_bool
 	create_definition_footprint(
-			const instance_collection_parameter_type& t) {
+			const instance_collection_parameter_type& t, 
+			const footprint& top) {
 		return good_bool(true);
 	}
 

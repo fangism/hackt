@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.9.8.2 2006/10/03 19:41:35 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.9.8.2.2.1 2006/10/04 04:15:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -127,8 +127,9 @@ public:
 	static
 	good_bool
 	create_definition_footprint(
-			const instance_collection_parameter_type& t) {
-		return t.create_definition_footprint();
+			const instance_collection_parameter_type& t, 
+			const footprint& top) {
+		return t.create_definition_footprint(top);
 	}
 
 protected:

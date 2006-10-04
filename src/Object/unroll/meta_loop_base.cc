@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.4.50.1 2006/09/02 03:58:38 fang Exp $
+	$Id: meta_loop_base.cc,v 1.4.50.1.10.1 2006/10/04 04:16:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -62,8 +62,9 @@ meta_loop_base::initialize_footprint(footprint& f) const {
 		pis(pint_traits::built_in_type_ptr, 
 			index_collection_item_ptr_type());
 	// fake a context, no additional information necessary to instantiate
-	const unroll_context temp(&f);
+	const unroll_context temp(&f, &f);
 	const good_bool g(pis.unroll(temp));
+	// doesn't assign init. value
 	INVARIANT(g.good);
 	const count_ptr<pint_scalar>
 		ret(f[ind_var->get_name()].is_a<pint_scalar>());

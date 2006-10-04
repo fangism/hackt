@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17.4.6 2006/10/03 19:41:44 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17.4.6.2.1 2006/10/04 04:16:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -199,6 +199,7 @@ INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: rewrite cleaner after reworking code (2006-10-03)
 	Interprets a physical instantiation statement and instantiates
 	the members of the collection specified.  
 	(this will require some serious specialization)
@@ -220,6 +221,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #if ENABLE_STACKTRACE
 	this->dump(STACKTRACE_INDENT << "statement: ",
 		expr_dump_context::default_value) << endl;
+	c.dump(cerr << "context: ") << endl;
 #endif
 	NEVER_NULL(this->inst_base);
 #if !USE_INSTANCE_PLACEHOLDERS
@@ -292,7 +294,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		}
 		// note: commit_type_first_time also unrolls the complete type
 		if (!type_ref_parent_type::commit_type_first_time(
-				_inst, cft).good) {
+				_inst, cft, *c.get_top_footprint()).good) {
 			type_ref_parent_type::get_type()->dump(
 				cerr << "Instantiated from: ") << endl;
 			return good_bool(false);
@@ -322,7 +324,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	// 2005-07-07: answer is above under "HACK"
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
-			_inst, final_type_ref));
+			_inst, final_type_ref, *c.get_top_footprint()));
 	// should be optimized away where there is no type-check to be done
 	if (!tc.good) {
 		cerr << "ERROR: type-mismatch during " <<
@@ -399,11 +401,13 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	const instance_collection_parameter_type
 		ft(type_ref_parent_type::get_canonical_type(c));
 	// ft will either be strict or relaxed.  
-	type_ref_parent_type::commit_type_first_time(coll, ft);
+	type_ref_parent_type::commit_type_first_time(
+		coll, ft, *c.get_top_footprint());
 	// no need to re-evaluate type, since get_resolved_type is
 	// (for now) the same as unroll_type_reference.
 	const bool good __ATTRIBUTE_UNUSED_CTOR__((
-		type_ref_parent_type::commit_type_check(coll, ft).good));
+		type_ref_parent_type::commit_type_check(
+			coll, ft, *c.get_top_footprint()).good));
 	INVARIANT(good);
 	// everything below is copied from unroll(), above
 	// TODO: factor out common code.  

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.9.28.2 2006/10/02 03:19:40 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.9.28.2.2.1 2006/10/04 04:16:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -82,7 +82,8 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -90,7 +91,8 @@ protected:
 	static
 	good_bool
 	commit_type_first_time(value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no-op
 		return good_bool(true);
 	}
@@ -169,7 +171,8 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -177,7 +180,8 @@ protected:
 	static
 	good_bool
 	commit_type_first_time(value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no-op
 		return good_bool(true);
 	}
@@ -255,7 +259,8 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -263,7 +268,8 @@ protected:
 	static
 	good_bool
 	commit_type_first_time(value_collection_generic_type&, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no-op
 		return good_bool(true);
 	}

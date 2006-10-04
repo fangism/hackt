@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.7.30.1 2006/09/06 04:19:44 fang Exp $
+	$Id: alias_empty.tcc,v 1.7.30.1.8.1 2006/10/04 04:15:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -91,7 +91,8 @@ instance_alias_info_empty::dump_complete_type(const AliasType& _alias,
  */
 template <class AliasType>
 good_bool
-instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {
+instance_alias_info_empty::create_dependent_types(const AliasType& _alias, 
+		const footprint& top) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef typename container_type::instance_collection_parameter_type
 				complete_type_type;
@@ -109,7 +110,7 @@ instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {
 		return good_bool(false);
 	}
 	else if (!container_type::collection_type_manager_parent_type
-			::create_definition_footprint(_type).good) {
+			::create_definition_footprint(_type, top).good) {
 		// have error message already
 		_alias.dump_hierarchical_name(cerr << "Instantiated by: ", 
 			dump_flags::default_value) << endl;

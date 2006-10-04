@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.16.4.2.10.1 2006/10/03 21:58:39 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.16.4.2.10.2 2006/10/04 04:15:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -200,7 +200,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	// now need to compute the offset into the corresponding 
 	// footprint_frame_map
 	// we look for the local alias to get the local offset!
-	const unroll_context uc;	// until we pass a global context
+	const unroll_context uc(NULL, NULL);
+		// until we pass a global context
 	const instance_alias_base_ptr_type
 #if USE_INSTANCE_PLACEHOLDERS
 		local_alias(__unroll_generic_scalar_reference_no_lookup(
