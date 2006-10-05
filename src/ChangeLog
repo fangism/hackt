@@ -5,6 +5,12 @@
 
 2006-10-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-25:
+	  dynamic_meta_index_list updated to take const meta_index_expr.  
+	  unroll test updates:
+		parser/array (all complete), parser/process (partial)
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-24-merged-context-04:
 	  Merged context-related fixes from child-branch.
 		Summary: unroll_context now has separate footprints

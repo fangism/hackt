@@ -1,4 +1,4 @@
-ERROR: Index [5] of int_array_1D ::blah already instantiated!
-ERROR: Index [6] of int_array_1D ::blah already instantiated!
+ERROR: Index [5] of int_array_1D blah already instantiated!
+ERROR: Index [6] of int_array_1D blah already instantiated!
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

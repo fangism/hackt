@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.15.8.4 2006/10/05 01:15:31 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.15.8.5 2006/10/05 01:57:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -504,7 +504,7 @@ dynamic_meta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-dynamic_meta_index_list::push_back(const count_ptr<meta_index_expr>& i) {
+dynamic_meta_index_list::push_back(const count_ptr<const meta_index_expr>& i) {
 	NEVER_NULL(i);
 	if (i->dimensions() != 0) {
 		cerr << "i->dimensions = " << i->dimensions() << endl;
@@ -671,14 +671,14 @@ dynamic_meta_index_list::unroll_resolve_indices(const unroll_context& c) const {
 	const const_iterator e(end());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
-		// shouldn't all these be const?
-		const count_ptr<meta_index_expr> ind(*i);
-		const count_ptr<const_index> c_ind(ind.is_a<const_index>());
+		const count_ptr<const meta_index_expr> ind(*i);
+		const count_ptr<const const_index>
+			c_ind(ind.is_a<const const_index>());
 		if (c_ind) {
 			// direct reference copy
 			ret.push_back(c_ind);
 		} else {
-			const count_ptr<const_index>
+			const count_ptr<const const_index>
 				r_ind(ind->unroll_resolve_index(c));
 			if (r_ind) {
 				ret.push_back(r_ind);
