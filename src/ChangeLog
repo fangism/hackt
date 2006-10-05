@@ -20,7 +20,7 @@
 	  unroll_context::lookup_rvalue_collection():
 		now tries to lookup top_footprint for globals.  
 	  Regressions fixed: parser/param/06{6,7,8,9}, few more left in param/.
-	  DO: Cleanup references to "replay_&" methods (delete the obsolete).
+	  DO: Cleanup references to "replay_*" methods (delete the obsolete).
 
 
 2006-10-03	David Fang		<fangism@users.sourceforge.net>
