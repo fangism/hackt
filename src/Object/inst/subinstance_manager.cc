@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.17.18.3 2006/10/05 01:15:37 fang Exp $
+	$Id: subinstance_manager.cc,v 1.17.18.4 2006/10/05 03:32:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -62,7 +62,13 @@ if (subinstance_array.empty()) {
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
+#if USE_INSTANCE_PLACEHOLDERS
+		// unqualified name is sufficient
+		o << auto_indent << (*i)->get_name() << " = ";
+		(*i)->dump(o, df) << endl;
+#else
 		(*i)->dump(o << auto_indent, df) << endl;
+#endif
 	}
 	}
 	return o << auto_indent << ')';
@@ -111,40 +117,6 @@ subinstance_manager::lookup_port_instance(
 	INVARIANT(index <= subinstance_array.size());
 	return subinstance_array[index-1];
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-// OBSOLETE -- remove
-/**
-	This is used to lookup any instance member, public or private.
-	Q: are private instances allocated space in the subinstance array?
-	NOTE: this code is a dead-end, do NOT call this.  
-	Reason: cannot lookup the subinstance index of a private instance
-		using the unroll/create information.  Such information
-		is only available after global allocation.  
- */
-subinstance_manager::value_type
-subinstance_manager::lookup_member_instance(
-		const lookup_arg_type& i) const {
-	STACKTRACE_VERBOSE;
-	const size_t index = i.is_member_instance();
-	if (index > subinstance_array.size()) {
-	ICE(cerr, 
-		cerr << "got member index of " << index
-			<< " when limit is " << subinstance_array.size()
-			<< endl;
-		i.dump(cerr << "\twhile looking up: ", 
-			dump_flags::verbose) << endl;
-//		cerr << "Here\'s the complete dump of this subinstance set: "
-//			"at " << this << endl;
-//		dump(cerr) << endl;
-	)
-	}
-	INVARIANT(index);
-	INVARIANT(index <= subinstance_array.size());
-	return subinstance_array[index-1];
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

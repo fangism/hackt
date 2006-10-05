@@ -5,53 +5,54 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
-	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
-	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
-	12	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
 	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -67,20 +68,20 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = ick<> a
-        b = ick<> b
+        a = ick<> ::foo::a
+        b = ick<> ::foo::b
       unroll sequence: 
         ick<> a
         ick<> b
         a = b;
       footprint: {
-        process ick<>^0 a (instantiated) = ::foo::b (
-          process oof<>^0 m (instantiated) = ::foo::a.m 
-          process oof<>^0 n (instantiated) = ::foo::a.n 
+        a = process ick<>^0 = ::foo::b (
+          m = process oof<>^0 = ::foo::a.m 
+          n = process oof<>^0 = ::foo::a.n 
         )
-        process ick<>^0 b (instantiated) = ::foo::b (
-          process oof<>^0 m (instantiated) = ::foo::a.m 
-          process oof<>^0 n (instantiated) = ::foo::a.n 
+        b = process ick<>^0 = ::foo::b (
+          m = process oof<>^0 = ::foo::a.m 
+          n = process oof<>^0 = ::foo::a.n 
         )
       }
       }
@@ -91,14 +92,14 @@ In namespace "", we have: {
       )
       In definition "ick", we have: {
       Instances:
-        m = oof<> m
-        n = oof<> n
+        m = oof<> ::ick::m
+        n = oof<> ::ick::n
       unroll sequence: 
         oof<> m
         oof<> n
       footprint: {
-        process oof<>^0 m (instantiated) = ::ick::m 
-        process oof<>^0 n (instantiated) = ::ick::n 
+        m = process oof<>^0 = ::ick::m 
+        n = process oof<>^0 = ::ick::n 
       }
       }
 
@@ -111,15 +112,18 @@ In namespace "", we have: {
       }
 
   Instances:
-    poo = process foo<>^0 poo (instantiated) = ::poo (
-      process ick<>^0 a (instantiated) = ::poo.a (
-        process oof<>^0 m (instantiated) = ::poo.a.m 
-        process oof<>^0 n (instantiated) = ::poo.a.n 
-      )
-      process ick<>^0 b (instantiated) = ::poo.b (
-        process oof<>^0 m (instantiated) = ::poo.b.m 
-        process oof<>^0 n (instantiated) = ::poo.b.n 
-      )
-    )
+    poo = foo<> poo
 }
 
+footprint: {
+  poo = process foo<>^0 = ::poo (
+    a = process ick<>^0 = ::poo.a (
+      m = process oof<>^0 = ::poo.a.m 
+      n = process oof<>^0 = ::poo.a.n 
+    )
+    b = process ick<>^0 = ::poo.b (
+      m = process oof<>^0 = ::poo.b.m 
+      n = process oof<>^0 = ::poo.b.n 
+    )
+  )
+}

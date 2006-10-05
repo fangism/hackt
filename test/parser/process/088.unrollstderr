@@ -5,16 +5,16 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	228
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -22,36 +22,37 @@ Persistent Object Manager text dump:
 	18	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
-	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -67,19 +68,19 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> x
-        y = foo<> y
+        x = foo<> ::bar::x
+        y = foo<> ::bar::y
       unroll sequence: 
         foo<> x
         foo<> y
       footprint: {
-        process foo<>^0 x (instantiated) = ::bar::x (
-          bool^0 a (instantiated) = ::bar::x.a 
-          bool^0 b (instantiated) = ::bar::x.b 
+        x = process foo<>^0 = ::bar::x (
+          a = bool^0 = ::bar::x.a 
+          b = bool^0 = ::bar::x.b 
         )
-        process foo<>^0 y (instantiated) = ::bar::y (
-          bool^0 a (instantiated) = ::bar::y.a 
-          bool^0 b (instantiated) = ::bar::y.b 
+        y = process foo<>^0 = ::bar::y (
+          a = bool^0 = ::bar::y.a 
+          b = bool^0 = ::bar::y.b 
         )
       }
       }
@@ -90,10 +91,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
-        c = bool<> c
-        d = bool<> d
+        a = bool<> ::foo::a
+        b = bool<> ::foo::b
+        c = bool<> ::foo::c
+        d = bool<> ::foo::d
       unroll sequence: 
         bool<> a
         bool<> b
@@ -102,23 +103,26 @@ In namespace "", we have: {
         c = a;
         d = b;
       footprint: {
-        bool^0 a (instantiated) = ::foo::a 
-        bool^0 b (instantiated) = ::foo::b 
-        bool^0 c (instantiated) = ::foo::a 
-        bool^0 d (instantiated) = ::foo::b 
+        a = bool^0 = ::foo::a 
+        b = bool^0 = ::foo::b 
+        c = bool^0 = ::foo::a 
+        d = bool^0 = ::foo::b 
       }
       }
 
   Instances:
-    poo = process bar<>^0 poo (instantiated) = ::poo (
-      process foo<>^0 x (instantiated) = ::poo.x (
-        bool^0 a (instantiated) = ::poo.x.a 
-        bool^0 b (instantiated) = ::poo.x.b 
-      )
-      process foo<>^0 y (instantiated) = ::poo.y (
-        bool^0 a (instantiated) = ::poo.y.a 
-        bool^0 b (instantiated) = ::poo.y.b 
-      )
-    )
+    poo = bar<> poo
 }
 
+footprint: {
+  poo = process bar<>^0 = ::poo (
+    x = process foo<>^0 = ::poo.x (
+      a = bool^0 = ::poo.x.a 
+      b = bool^0 = ::poo.x.b 
+    )
+    y = process foo<>^0 = ::poo.y (
+      a = bool^0 = ::poo.y.a 
+      b = bool^0 = ::poo.y.b 
+    )
+  )
+}

@@ -5,6 +5,14 @@
 
 2006-10-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-26:
+	  Fixed subinstance_manager::dump to print port keys first.  
+		Updated bunch of parser/process test cases.
+		Remain regressions: ICE-on-valid, rejects-valid
+	  TODO: unroll ports up-front in processes, and remove from 
+		body sequential scope.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-25:
 	  dynamic_meta_index_list updated to take const meta_index_expr.  
 	  unroll test updates:
