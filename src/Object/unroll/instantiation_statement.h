@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.12.16.2 2006/09/06 04:20:07 fang Exp $
+	$Id: instantiation_statement.h,v 1.12.16.2.8.1 2006/10/05 00:59:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -70,7 +70,7 @@ public:
 #if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename traits_type::instance_placeholder_type
 							placeholder_type;
-	typedef	never_ptr<placeholder_type>		placeholder_ptr_type;
+	typedef	never_ptr<const placeholder_type>	placeholder_ptr_type;
 #endif
 	typedef	typename traits_type::instance_collection_generic_type
 							collection_type;
@@ -96,6 +96,13 @@ public:
 	instantiation_statement(const type_ref_ptr_type& t, 
 		const index_collection_item_ptr_type& i);
 
+#if USE_INSTANCE_PLACEHOLDERS
+	instantiation_statement(
+		const placeholder_ptr_type p,
+		const type_ref_ptr_type& t, 
+		const index_collection_item_ptr_type& i);
+#endif
+
 	instantiation_statement(const type_ref_ptr_type& t, 
 		const index_collection_item_ptr_type& i, 
 		const const_relaxed_args_type&);
@@ -110,10 +117,7 @@ public:
 
 #if USE_INSTANCE_PLACEHOLDERS
 	void
-	attach_collection(const never_ptr<instance_placeholder_base> i);
-
-	never_ptr<instance_placeholder_base>
-	get_inst_base(void);
+	attach_collection(const never_ptr<const instance_placeholder_base>);
 
 	never_ptr<const instance_placeholder_base>
 	get_inst_base(void) const;

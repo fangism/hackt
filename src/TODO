@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.36.2.3 2006/09/07 06:46:40 fang Exp $
+#	$Id: TODO,v 1.36.2.3.8.1 2006/10/05 00:58:49 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -51,6 +51,8 @@ enhancement:
 
 ===============================================================================
 PRIORITY HIGH: MEMORY HOG
+	in progress...
+
 instance collections (OVERLOADED CLASS):
 	instance_collections and their contents are being 
 		replicated too many places.  

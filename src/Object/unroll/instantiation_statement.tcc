@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17.4.6.2.1 2006/10/04 04:16:03 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17.4.6.2.2 2006/10/05 00:59:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -90,6 +90,17 @@ INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
+		const placeholder_ptr_type p, 
+		const type_ref_ptr_type& t, 
+		const index_collection_item_ptr_type& i) :
+		parent_type(i), type_ref_parent_type(t), inst_base(p) {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 		const type_ref_ptr_type& t, 
@@ -126,14 +137,14 @@ INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 void
 INSTANTIATION_STATEMENT_CLASS::attach_collection(
 #if USE_INSTANCE_PLACEHOLDERS
-		const never_ptr<instance_placeholder_base> i
+		const never_ptr<const instance_placeholder_base> i
 #else
 		const never_ptr<instance_collection_base> i
 #endif
 		) {
 	INVARIANT(!this->inst_base);
 #if USE_INSTANCE_PLACEHOLDERS
-	const never_ptr<placeholder_type> c(i.template is_a<placeholder_type>());
+	const placeholder_ptr_type c(i.template is_a<const placeholder_type>());
 #else
 	const never_ptr<collection_type> c(i.template is_a<collection_type>());
 #endif
@@ -146,20 +157,22 @@ INSTANTIATION_STATEMENT_CLASS::attach_collection(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 #if USE_INSTANCE_PLACEHOLDERS
-never_ptr<instance_placeholder_base>
+never_ptr<const instance_placeholder_base>
 #else
 never_ptr<instance_collection_base>
 #endif
 INSTANTIATION_STATEMENT_CLASS::get_inst_base(void) {
 	NEVER_NULL(this->inst_base);
 #if USE_INSTANCE_PLACEHOLDERS
-	return this->inst_base.template as_a<instance_placeholder_base>();
+	return this->inst_base.template as_a<const instance_placeholder_base>();
 #else
 	return this->inst_base.template as_a<instance_collection_base>();
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE

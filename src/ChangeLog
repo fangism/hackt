@@ -5,6 +5,14 @@
 
 2006-10-04	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-04:
+	  Fixed last remaining unroll regressions in parser/param, 
+		just had to make loop variable valid after instantiation.  
+	  Instantiation statements now take const placeholders.  
+	  Expurgated "replay_*" in instance_alias and hierarchy.
+	  Ready to merge branch up.
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-03:
 	  propagated top-level footprint down through entire
 		unroll call subgraph to be able to lookup

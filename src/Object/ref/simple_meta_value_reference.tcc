@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.7.6.2 2006/10/03 23:13:19 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.7.6.3 2006/10/05 00:58:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -344,6 +344,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		_v(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref, i));
 		// stupid gcc-3.3 needs .operator()...
+	// TODO: eliminate this pair-return hack, don't need w/ placeholders
 	if (_v.first) {
 		// then our work is done, 
 		// i has already been set as a loop variable
@@ -357,6 +358,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 	const value_collection_type& _vals(*_v.second);
 
 	if (this->array_indices) {
+		STACKTRACE_INDENT_PRINT("checking indices..." << endl);
 		const const_index_list
 			indices(this->array_indices->unroll_resolve_indices(c));
 		if (!indices.empty()) {
@@ -381,6 +383,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 			return good_bool(false);
 		}
 	} else {
+		STACKTRACE_INDENT_PRINT("is scalar..." << endl);
 		// assert dynamic cast
 		// what if is pbool_const or pint_const?
 		const value_scalar_type&

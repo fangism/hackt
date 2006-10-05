@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.5.2.3 2006/10/04 04:16:07 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.5.2.4 2006/10/05 00:59:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -224,10 +224,14 @@ unroll_context::dump(ostream& o) const {
 	}
 	}
 	if (top_footprint) {
+	if (top_footprint != lookup_footprint) {
 		top_footprint->dump_with_collections(
 			cerr << endl << "top footprint: " << endl,
 			dump_flags::default_value, 
 			expr_dump_context::default_value);
+	} else {
+		cerr << endl << "(top == lookup)" << endl;
+	}
 	}
 #if 1
 	// chain dump:
@@ -400,13 +404,17 @@ unroll_context::lookup_value_collection
 	dump(cerr << "looking up \"" << key << "\" in context:") << endl;
 #endif
 #if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	// should really only lookup rvalues with this...
+	// target footprint should be covered (and searched last)
 	if (lookup_footprint) {
 		STACKTRACE_INDENT_PRINT("trying lookup_footprint..." << endl);
 		const return_type
 			ret((*lookup_footprint)[key]
 				.is_a<param_value_collection>());
-		if (ret)
+		if (ret) {
+			STACKTRACE_INDENT_PRINT("found it." << endl);
 			return ret;
+		}
 	}
 #else
 	if (target_footprint && target_footprint != lookup_footprint) {
@@ -415,8 +423,10 @@ unroll_context::lookup_value_collection
 		const return_type
 			ret((*target_footprint)[key]
 				.is_a<param_value_collection>());
-		if (ret)
+		if (ret) {
+			STACKTRACE_INDENT_PRINT("found it." << endl);
 			return ret;
+		}
 	}
 #endif
 	if (top_footprint && top_footprint != lookup_footprint) {
@@ -424,16 +434,20 @@ unroll_context::lookup_value_collection
 		const return_type
 			ret((*top_footprint)[key]
 				.is_a<param_value_collection>());
-		if (ret)
+		if (ret) {
+			STACKTRACE_INDENT_PRINT("found it." << endl);
 			return ret;
+		}
 	}
 	if (next) {
 		// this might be a loop or other local scope.  
 #if RVALUE_LVALUE_LOOKUPS
 		const return_type
 			ret(next->lookup_rvalue_collection(p));
-		if (ret)
+		if (ret) {
+			STACKTRACE_INDENT_PRINT("found it." << endl);
 			return ret;
+		}
 #else
 		return next->lookup_value_collection(p);
 #endif

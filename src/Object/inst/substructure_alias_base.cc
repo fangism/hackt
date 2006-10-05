@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.cc"
-	$Id: substructure_alias_base.cc,v 1.11.28.1.10.1 2006/10/04 04:15:40 fang Exp $
+	$Id: substructure_alias_base.cc,v 1.11.28.1.10.2 2006/10/05 00:58:56 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -92,14 +92,6 @@ void
 substructure_alias::allocate_subinstances(footprint& f) {
 	return subinstances.allocate(f);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-good_bool
-substructure_alias::replay_substructure_aliases(const footprint& top) const {
-	return subinstances.replay_internal_aliases(top);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

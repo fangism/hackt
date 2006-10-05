@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.9.28.1 2006/08/28 05:10:30 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.9.28.1.10.1 2006/10/05 00:59:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -68,15 +68,12 @@ virtual	~instantiation_statement_base();
 
 virtual	void
 #if USE_INSTANCE_PLACEHOLDERS
-	attach_collection(const never_ptr<instance_placeholder_base> i) = 0;
+	attach_collection(const never_ptr<const instance_placeholder_base>) = 0;
 #else
 	attach_collection(const never_ptr<instance_collection_base> i) = 0;
 #endif
 
 #if USE_INSTANCE_PLACEHOLDERS
-virtual	never_ptr<instance_placeholder_base>
-	get_inst_base(void) = 0;
-
 virtual	never_ptr<const instance_placeholder_base>
 	get_inst_base(void) const = 0;
 #else

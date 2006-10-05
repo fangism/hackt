@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.11 2006/10/01 21:14:20 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.11.2.1 2006/10/05 00:58:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -851,6 +851,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 		, const unroll_context& c
 #endif
 		) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(D == i.dimensions());
 #if !USE_INSTANCE_PLACEHOLDERS
 	if (this->owner.template is_a<const definition_base>()) {
@@ -1178,11 +1179,14 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v
 		, const unroll_context& c
 #endif
 		) const {
+	STACKTRACE_VERBOSE;
 #if USE_INSTANCE_PLACEHOLDERS
 	if (this->the_instance.valid) {
 		v = this->the_instance.value;
+		STACKTRACE_INDENT_PRINT("valid scalar." << endl);
 		return good_bool(true);
 	} else {
+		STACKTRACE_INDENT_PRINT("invalid scalar." << endl);
 		return good_bool(false);
 	}
 #else

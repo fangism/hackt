@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/subinstance_manager.h"
-	$Id: subinstance_manager.h,v 1.13.20.2.10.1 2006/10/04 04:15:39 fang Exp $
+	$Id: subinstance_manager.h,v 1.13.20.2.10.2 2006/10/05 00:58:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_H__
@@ -129,11 +129,6 @@ public:
 
 	void
 	allocate(footprint&);
-
-#if 0
-	good_bool
-	replay_internal_aliases(const footprint&) const;
-#endif
 
 	void
 	construct_port_context(port_member_context&, 
