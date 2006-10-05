@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.7 2006/10/05 05:02:56 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.8 2006/10/05 18:34:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -450,6 +450,7 @@ unroll_context::lookup_value_collection
 		}
 	}
 #endif
+	// TODO: shouldn't top-footprint be checked last???
 	if (top_footprint && top_footprint != lookup_footprint) {
 		STACKTRACE_INDENT_PRINT("trying top_footprint..." << endl);
 		const return_type

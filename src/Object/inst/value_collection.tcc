@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.12 2006/10/05 01:15:40 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.13 2006/10/05 18:34:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -1138,7 +1138,13 @@ VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
 		// should never happen... but just in case
-		cerr << "ERROR: Already instantiated!" << endl;
+#if USE_INSTANCE_PLACEHOLDERS
+		this->source_placeholder->dump(cerr << "ERROR: ", 
+				dump_flags::default_value) <<
+			" is already instantiated!" << endl;
+#else
+		cerr << "ERROR: already instantiated!" << endl;
+#endif
 		return good_bool(false);
 		// THROW_EXIT;
 	}
