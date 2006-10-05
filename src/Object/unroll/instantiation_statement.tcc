@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17.4.7 2006/10/05 01:15:52 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.17.4.8 2006/10/05 05:02:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -408,6 +408,9 @@ good_bool
 INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		physical_instance_collection& p) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	c.dump(cerr << "context: ") << endl;
+#endif
 	// dynamic cast assertion, until we fix class hierarchy
 	collection_type& coll(IS_A(collection_type&, p));
 	INVARIANT(!coll.is_partially_unrolled());

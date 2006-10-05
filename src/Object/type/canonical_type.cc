@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.9.28.2 2006/09/11 22:31:12 fang Exp $
+	$Id: canonical_type.cc,v 1.9.28.3 2006/10/05 05:02:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -95,11 +95,15 @@ struct unroll_port_instances_policy<process_definition> {
 			pf(p.canonical_definition_ptr->get_port_formals());
 #if RESOLVE_VALUES_WITH_FOOTPRINT
 		// template formals/actuals included in footprint already
-		pf.unroll_ports(c, sub);
+
+		const footprint&
+			f(p.canonical_definition_ptr->get_footprint(
+				p.param_list_ptr));
+		const unroll_context cc(&f, c);
 #else
 		const unroll_context cc(p.make_unroll_context());
-		pf.unroll_ports(cc, sub);
 #endif
+		pf.unroll_ports(cc, sub);
 	}
 };	// end struct unroll_port_instances_policy
 

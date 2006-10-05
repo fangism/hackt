@@ -4,17 +4,17 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	336
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	332
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	32
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -26,24 +26,26 @@ Persistent Object Manager text dump:
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	27	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
+	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	63
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	31	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	75
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	63
+	32	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -60,32 +62,30 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> ::foo::N
       Instances:
-        a = int<::foo::N> a
-        blah = int<::foo::N> blah
-
+        a = int<::foo::N> ::foo::a
+        blah = int<::foo::N> ::foo::blah^1
       unroll sequence: 
-        pint<> N
         int<::foo::N> a
         int<::foo::N> blah[0..2]
         blah[1] = a;
       footprint collection: {
         <8> {
-          pint^0 N value: ?
-          int<8>^0 a (instantiated) = ::foo::a 
-          int<8>^1 blah
-            unrolled indices: {
+          N = pint^0 value: 8
+          a = int<8>^0 = ::foo::a 
+          blah = int<8>^1
+            {
               0 = ::foo::blah[0] 
               1 = ::foo::a 
               2 = ::foo::blah[2] 
             }
         }
         <11> {
-          pint^0 N value: ?
-          int<11>^0 a (instantiated) = ::foo::a 
-          int<11>^1 blah
-            unrolled indices: {
+          N = pint^0 value: 11
+          a = int<11>^0 = ::foo::a 
+          blah = int<11>^1
+            {
               0 = ::foo::blah[0] 
               1 = ::foo::a 
               2 = ::foo::blah[2] 
@@ -95,11 +95,15 @@ In namespace "", we have: {
       }
 
   Instances:
-    achoo = process foo<11>^0 achoo (instantiated) = ::achoo (
-      int<11>^0 a (instantiated) = ::achoo.a 
-    )
-    poo = process foo<8>^0 poo (instantiated) = ::poo (
-      int<8>^0 a (instantiated) = ::poo.a 
-    )
+    achoo = foo<11> achoo
+    poo = foo<8> poo
 }
 
+footprint: {
+  achoo = process foo<11>^0 = ::achoo (
+    a = int<11>^0 = ::achoo.a 
+  )
+  poo = process foo<8>^0 = ::poo (
+    a = int<8>^0 = ::poo.a 
+  )
+}

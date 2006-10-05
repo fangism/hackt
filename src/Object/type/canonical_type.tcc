@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.9.2.3 2006/10/05 01:15:49 fang Exp $
+	$Id: canonical_type.tcc,v 1.9.2.4 2006/10/05 05:02:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -208,6 +208,10 @@ CANONICAL_TYPE_CLASS::type_mismatch_error(ostream& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+/**
+	This is only applicable to process_definitions.
+	Don't delete this, good for reference.  
+ */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 const footprint&
 CANONICAL_TYPE_CLASS::get_definition_footprint(void) const {
@@ -226,6 +230,7 @@ CANONICAL_TYPE_CLASS::get_definition_footprint(void) const {
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 good_bool
 CANONICAL_TYPE_CLASS::unroll_definition_footprint(const footprint& top) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(this->is_strict());
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
@@ -241,6 +246,7 @@ CANONICAL_TYPE_CLASS::unroll_definition_footprint(const footprint& top) const {
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 good_bool
 CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(this->is_strict());
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
@@ -314,6 +320,7 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 void
 CANONICAL_TYPE_CLASS::unroll_port_instances(const unroll_context& c, 
 		subinstance_manager& sub) const {
+	STACKTRACE_VERBOSE;
 	unroll_port_instances_policy<DefType>()(*this, c, sub);
 }
 

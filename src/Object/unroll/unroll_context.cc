@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.6 2006/10/05 01:15:53 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.7 2006/10/05 05:02:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -87,6 +87,27 @@ unroll_context::unroll_context(footprint* const f,
 		lookup_footprint(f), 
 #endif
 		top_footprint(t)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Read-only context, no target footprint
+ */
+unroll_context::unroll_context(const footprint* const f, 
+		const unroll_context& c) :
+		next(&c),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
+#endif
+		target_footprint(NULL),
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		lookup_footprint(f), 
+#endif
+		top_footprint(c.top_footprint)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
 #endif

@@ -4,12 +4,12 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	224
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	216
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	29
+	8	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
@@ -32,15 +32,16 @@ Persistent Object Manager text dump:
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	33	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	63
-	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
+	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	54
+	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -58,22 +59,19 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        M = pint<> M
-        N = pint<> N
+        M = pint<> ::bar::M
+        N = pint<> ::bar::N
       Instances:
-        x = int<::bar::M> x
-
+        x = int<::bar::M> ::bar::x^1
       unroll sequence: 
-        pint<> M
-        pint<> N
         int<::bar::M> x[0..N-1]
         x[0] = x[N-1];
       footprint collection: {
         <3, 2> {
-          pint^0 M value: ?
-          pint^0 N value: ?
-          int<3>^1 x
-            unrolled indices: {
+          M = pint^0 value: 3
+          N = pint^0 value: 2
+          x = int<3>^1
+            {
               0 = ::bar::x[1] 
               1 = ::bar::x[1] 
             }
@@ -82,12 +80,15 @@ In namespace "", we have: {
       }
 
   Instances:
-    poo = process bar<3, 2>^0 poo (instantiated) = ::poo (
-      int<3>^1 x
-        unrolled indices: {
-          0 = ::poo.x[0] 
-          1 = ::poo.x[1] 
-        }
-    )
+    poo = bar<3, 2> poo
 }
 
+footprint: {
+  poo = process bar<3, 2>^0 = ::poo (
+    x = int<3>^1
+      {
+        0 = ::poo.x[0] 
+        1 = ::poo.x[1] 
+      }
+  )
+}

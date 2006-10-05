@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-27:
+	  canonical_type::unroll_port_instances():
+		opened up read-only reference to footprint to provide
+		context for template-dependent port instantiations.  
+		Nice that footprint contains the necessary values!
+	  Updated another batch of parser/process test cases, 
+		two unroll regressions remain therein.  
+	  TODO: unroll ports up-front, remove from body sequential scope.  
+
+
 2006-10-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-26:

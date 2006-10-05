@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.8.10.6 2006/10/05 01:15:53 fang Exp $
+	$Id: unroll_context.h,v 1.8.10.7 2006/10/05 05:02:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -148,6 +148,8 @@ public:
 #endif
 	// called by top-module
 	unroll_context(footprint* const, const footprint* const);
+	// read-only footrint, no target
+	unroll_context(const footprint* const, const unroll_context&);
 	// called by everything else
 	unroll_context(footprint* const, const unroll_context&);
 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.6.48.2 2006/10/05 01:15:47 fang Exp $
+	$Id: canonical_type.h,v 1.6.48.3 2006/10/05 05:02:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -125,8 +125,11 @@ public:
 	unroll_port_instances(const unroll_context&,
 		subinstance_manager&) const;
 
+#if 0
+	// don't delete, useful for copying
 	const footprint&
 	get_definition_footprint(void) const;
+#endif
 
 	// like fundamental_type_reference::unroll_register_complete_type()
 	good_bool
