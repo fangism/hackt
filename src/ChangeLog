@@ -3,6 +3,54 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-24-merged-context-04:
+	  Merged context-related fixes from child-branch.
+		Summary: unroll_context now has separate footprints
+			for different purposes: top-level, target, lookup.  
+			top-level is just another lookup.  
+	  Next: continue updating all unroll regression tests.
+
+
+2006-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-04:
+	  Fixed last remaining unroll regressions in parser/param, 
+		just had to make loop variable valid after instantiation.  
+	  Instantiation statements now take const placeholders.  
+	  Expurgated "replay_*" in instance_alias and hierarchy.
+	  Ready to merge branch up.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-03:
+	  propagated top-level footprint down through entire
+		unroll call subgraph to be able to lookup
+		out-of-scope global parameters.  Tons of prototypes updated.
+	  unroll_context::lookup_rvalue_collection():
+		now tries to lookup top_footprint for globals.  
+	  Regressions fixed: parser/param/06{6,7,8,9}, few more left in param/.
+	  DO: Cleanup references to "replay_*" methods (delete the obsolete).
+
+
+2006-10-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-02:
+	  Now distinguishing lvalue from rvalue lookups, using the switch
+		RVALUE_LVALUE_LOOKUPS in Object/devel_switches.h.
+	  Next: chain context to make top-level context searchable.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-01:
+	  unroll_context: separate footprints for looking up, 
+		one for instantiating and modifying, the other for 
+		just read-only lookups, which may search out-of-context.  
+	  Some expected momentary regressions in parser/param.  
+	  Marked unroll_context::get_target_footprint() obsolete.  
+	  Next: distinguish lvalue from rvalue lookups.  
+		Then chain the contexts (global) appropriately.  
+
+
 2006-10-03	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-23:

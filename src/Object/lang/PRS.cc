@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.18.4.3 2006/09/07 06:46:51 fang Exp $
+	$Id: PRS.cc,v 1.18.4.4 2006/10/05 01:15:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -956,8 +956,12 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	// induction variable into the footprint as an actual variable
 	pint_value_type& p(var->get_instance().value);  
 		// acquire direct reference
+#if 0
 	unroll_context cc(&f);
 	cc.chain_context(c);
+#else
+	const unroll_context cc(&f, c);
+#endif
 	for (p = min; p <= max; ++p) {
 		if (!rules.unroll(cc, np, pfp).good) {
 			cerr << "Error resolving production rule in loop:"
@@ -1113,8 +1117,12 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	// induction variable into the footprint as an actual variable
 	pint_value_type& p(var->get_instance().value);  
 		// acquire direct reference
+#if 0
 	unroll_context cc(&f);
 	cc.chain_context(c);
+#else
+	const unroll_context cc(&f, c);
+#endif
 	list<size_t> expr_indices;
 	for (p = min; p <= max; ++p) {
 		expr_indices.push_back(body_expr->unroll(cc, np, pfp));

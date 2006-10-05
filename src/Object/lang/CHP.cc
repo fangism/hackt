@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.10.4.2 2006/09/02 03:58:35 fang Exp $
+	$Id: CHP.cc,v 1.10.4.3 2006/10/05 01:15:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -728,8 +728,12 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 	// induction variable into the footprint as an actual variable
 	pint_value_type& i(var->get_instance().value);
 		// acquire direct reference
+#if 0
 	unroll_context cc(&f);
 	cc.chain_context(c);
+#else
+	const unroll_context cc(&f, c);
+#endif
 	for (i = min; i <= max; ++i) {
 		const selection_list_type::value_type	// guarded_action
 			g(body->unroll_resolve_copy(c, body));

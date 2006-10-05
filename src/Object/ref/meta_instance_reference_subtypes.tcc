@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.12.4.3 2006/10/02 03:19:28 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.12.4.4 2006/10/05 01:15:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -281,6 +281,14 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		const never_ptr<const index_list_type> ind,
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
+#if USE_INSTANCE_PLACEHOLDERS
+	const count_ptr<physical_instance_collection>
+		inst_p(c.lookup_instance_collection(_inst));
+	NEVER_NULL(inst_p);
+	// assert dynamic_cast
+	const instance_collection_generic_type&
+		inst(IS_A(const instance_collection_generic_type&, *inst_p));
+#else
 	const footprint* const f(c.get_target_footprint());
 	const string& inst_name(_inst.get_name());
 #if ENABLE_STACKTRACE
@@ -302,6 +310,7 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		inst(f ? IS_A(const instance_collection_generic_type&,
 			*(*f)[inst_name]) : _inst);
 #endif
+#endif	// USE_INSTANCE_PLACEHOLDERS
 	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_packed_helper
 

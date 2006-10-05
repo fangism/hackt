@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.8.10.5 2006/09/11 22:31:22 fang Exp $
+	$Id: unroll_context.h,v 1.8.10.6 2006/10/05 01:15:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -103,23 +103,53 @@ private:
 		If set to non-NULL, this is used to translate
 		from placeholder instance collection reference 
 		to definition-footprint's actual instance-collection.  
+		This footprint is only used for instantiating.  
+		This is propagated to children contexts for convenience
+		and efficiently referencing the instantiating context.  
 	 */
 	footprint*					target_footprint;
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	/**
+		The lookup-only footprint associated with this context.  
+		Failure to find lookup something here will continue
+		looking up the parent context.  
+		Lookup and value assignments are permitted, just not 
+		instantiations.  
+		This may point to the same footprint as the target footprint.
+	 */
+	const footprint*				lookup_footprint;
+#endif
+	/**
+		Special top-level footprint for global parameter lookups.  
+	 */
+	const footprint*				top_footprint;
 
 	/**
+		OBSOLETE.
 		NOTE: 2006-09-10
 		TODO: consider a read-only source footprint, because now
 		other nested scopes use footprints for unrolling.  
+		Q: is this still used with the new footprint-based
+		lookup method, and with a module footprint
+		containing all top-level (all namespaces') collections?
+		This may be obsolete.  
 	**/
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	never_ptr<const name_space>			parent_namespace;
 #endif
 public:
+#if 0
 	// parameterless types and entity::module need this
 	unroll_context();
 
+	/// only called from the top-level module
 	explicit
 	unroll_context(footprint* const);
+#endif
+	// called by top-module
+	unroll_context(footprint* const, const footprint* const);
+	// called by everything else
+	unroll_context(footprint* const, const unroll_context&);
 
 #if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context(const template_actuals&,
@@ -146,9 +176,14 @@ public:
 	ostream&
 	dump(ostream&) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	// may bcome obsolete
 	const footprint*
 	get_target_footprint(void) const;
+#endif
+
+	const footprint*
+	get_top_footprint(void) const { return top_footprint; }
 
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	never_ptr<const name_space>
@@ -177,8 +212,16 @@ public:
 	count_ptr<physical_instance_collection>
 	lookup_instance_collection(const physical_instance_placeholder&) const;
 
+#if RVALUE_LVALUE_LOOKUPS
+	count_ptr<param_value_collection>
+	lookup_lvalue_collection(const param_value_placeholder&) const;
+
+	count_ptr<param_value_collection>
+	lookup_rvalue_collection(const param_value_placeholder&) const;
+#else
 	count_ptr<param_value_collection>
 	lookup_value_collection(const param_value_placeholder&) const;
+#endif
 
 	/// overloaded name call-forwarding for the lazy...
 	count_ptr<physical_instance_collection>

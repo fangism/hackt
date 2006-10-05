@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11.4.7 2006/10/03 02:46:30 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.8 2006/10/05 01:15:20 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -779,7 +779,6 @@ context::add_instance(const token_identifier& id,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
-	TODO: write it, finish it -- what about arrays?
 	Using the current_type_reference, adds a template formal parameter.  
 	Is like add_instance, above.  
 	If already exists, then checks against previous formal declaration.  
@@ -815,6 +814,7 @@ context::add_template_formal(const token_identifier& id,
 	// template formals cannot have relaxed types!
 	NEVER_NULL(inst_stmt);
 	// formal instance is constructed and added in add_instance
+	// TODO: pass default-value to add_template_formal... (2006-10-04)
 	placeholder_ptr_type
 		inst_base(
 			// depends on strict_template_mode
@@ -835,10 +835,10 @@ context::add_template_formal(const token_identifier& id,
 	if (d) {
 		// need modifiable pointer to param_value_collection
 #if USE_INSTANCE_PLACEHOLDERS
-		const never_ptr<instance_placeholder_base>
+		const never_ptr<const instance_placeholder_base>
 			ib(inst_stmt->get_inst_base());
-		const never_ptr<param_value_placeholder>
-			pic(ib.is_a<param_value_placeholder>());
+		const never_ptr<const param_value_placeholder>
+			pic(ib.is_a<const param_value_placeholder>());
 #else
 		const never_ptr<instance_collection_base>
 			ib(inst_stmt->get_inst_base());
@@ -846,7 +846,10 @@ context::add_template_formal(const token_identifier& id,
 			pic(ib.is_a<param_value_collection>());
 #endif
 		NEVER_NULL(pic);
-		if (!pic->assign_default_value(d).good) {
+		// TODO: when I have time, propagate the changes
+		// to make this const-correct...
+		if (!const_cast<param_value_placeholder&>(*pic).
+				assign_default_value(d).good) {
 			// error: type check failed
 			cerr << "ERROR assigning default value to " << id <<
 				", type/size mismatch!  " << where(id) << endl;

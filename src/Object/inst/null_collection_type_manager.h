@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.8.8.2 2006/10/03 19:41:40 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.8.8.3 2006/10/05 01:15:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -20,7 +20,7 @@ using std::ostream;
 using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
-
+class footprint;
 template <class> class class_traits;
 
 //=============================================================================
@@ -102,7 +102,8 @@ public:
 	static
 	good_bool
 	create_definition_footprint(
-			const instance_collection_parameter_type& t) {
+			const instance_collection_parameter_type& t, 
+			const footprint& top) {
 		return good_bool(true);
 	}
 

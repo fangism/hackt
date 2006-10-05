@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.17.18.2 2006/09/04 05:44:13 fang Exp $
+	$Id: subinstance_manager.cc,v 1.17.18.3 2006/10/05 01:15:37 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -213,25 +213,6 @@ subinstance_manager::connect_port_aliases_recursive(this_type& r) {
 			// already have error message?
 			return good_bool(false);
 		}	// else good to continue
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Copied from footprint::create_dependent_types
-	and module::create_dependent_types.
-	TODO: rename call to create_dependent_types...
- */
-good_bool
-subinstance_manager::replay_internal_aliases(void) const {
-	STACKTRACE_VERBOSE;
-	const_iterator i(subinstance_array.begin());
-	const const_iterator e(subinstance_array.end());
-	for ( ; i!=e ; i++) {
-		// creating dependent types also connects internal aliases
-		if (!(*i)->create_dependent_types().good)
-			return good_bool(false);
 	}
 	return good_bool(true);
 }

@@ -2,7 +2,7 @@
 	\file "Object/inst/physical_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life.  
-	$Id: physical_instance_collection.h,v 1.14.8.7 2006/09/08 03:43:14 fang Exp $
+	$Id: physical_instance_collection.h,v 1.14.8.8 2006/10/05 01:15:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_COLLECTION_H__
@@ -123,7 +123,7 @@ virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
 
 #define	CREATE_DEPENDENT_TYPES_PROTO					\
 	good_bool							\
-	create_dependent_types(void)
+	create_dependent_types(const footprint&)
 
 virtual	CREATE_DEPENDENT_TYPES_PROTO = 0;
 

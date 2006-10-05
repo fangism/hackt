@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.10.8.4 2006/09/07 06:46:54 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.10.8.5 2006/10/05 01:15:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -160,7 +160,11 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 		data_value_type _val;
 #if USE_INSTANCE_PLACEHOLDERS
 		const count_ptr<const param_value_collection>
+#if RVALUE_LVALUE_LOOKUPS
+			pvc(c.lookup_rvalue_collection(vc));
+#else
 			pvc(c.lookup_value_collection(vc));
+#endif
 		if (!pvc) {
 			return return_type(NULL);
 		}
@@ -188,8 +192,10 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	This may be obsolete with the use of placeholders.  
+	Well, is it?
  */
 static
 return_type
@@ -239,8 +245,13 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		// simple_meta_value_reference::unroll_resolve_rvalues
 #if USE_INSTANCE_PLACEHOLDERS
 		const count_ptr<const param_value_collection>
+#if RVALUE_LVALUE_LOOKUPS
+			pvc(c.lookup_rvalue_collection(
+				*_this.value_collection_ref));
+#else
 			pvc(c.lookup_value_collection(
 				*_this.value_collection_ref));
+#endif
 		if (!pvc) {
 			return error;
 		}

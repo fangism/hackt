@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.13.16.3 2006/10/02 03:19:24 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.13.16.4 2006/10/05 01:15:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -145,7 +145,7 @@ simple_lookup_footprint_frame(
 		const index_list_ptr_type ind,
 		const state_manager& sm) {
 	STACKTRACE_VERBOSE;
-	const unroll_context uc;
+	const unroll_context uc(NULL, NULL);
 #if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<substructure_alias>
 		alias(unroll_generic_scalar_substructure_reference<Tag>(

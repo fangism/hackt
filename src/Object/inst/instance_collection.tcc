@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.8 2006/10/03 19:41:38 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.9 2006/10/05 01:15:36 fang Exp $
 	TODO: trim includes
  */
 
@@ -1064,7 +1064,7 @@ INSTANCE_ARRAY_CLASS::connect_port_aliases_recursive(
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_ARRAY_CLASS::create_dependent_types(void) {
+INSTANCE_ARRAY_CLASS::create_dependent_types(const footprint& top) {
 	STACKTRACE_VERBOSE;
 	iterator i(this->collection.begin());
 	const iterator e(this->collection.end());
@@ -1074,7 +1074,7 @@ if (i == e) {
 }
 if (this->has_relaxed_type()) {
 	for ( ; i!=e; i++) {
-		if (!element_type::create_dependent_types(*i).good)
+		if (!element_type::create_dependent_types(*i, top).good)
 			return good_bool(false);
 		element_type& ii(const_cast<element_type&>(
 			AS_A(const element_type&, *i)));
@@ -1092,7 +1092,7 @@ if (this->has_relaxed_type()) {
 #else
 		t(collection_type_manager_parent_type::get_canonical_type());
 #endif
-	if (!create_definition_footprint(t).good) {
+	if (!create_definition_footprint(t, top).good) {
 		return good_bool(false);
 	}
 	for ( ; i!=e; i++) {
@@ -1679,14 +1679,15 @@ INSTANCE_SCALAR_CLASS::connect_port_aliases_recursive(
  */
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-INSTANCE_SCALAR_CLASS::create_dependent_types(void) {
+INSTANCE_SCALAR_CLASS::create_dependent_types(const footprint& top) {
 	STACKTRACE_VERBOSE;
 if (!this->the_instance.valid()) {
 	// uninstantiated scalar because of conditional
 	return good_bool(true);
 }
 if (this->has_relaxed_type()) {
-	if (!instance_type::create_dependent_types(this->the_instance).good) {
+	if (!instance_type::create_dependent_types(
+			this->the_instance, top).good) {
 		return good_bool(false);
 	}
 } else {
@@ -1696,7 +1697,7 @@ if (this->has_relaxed_type()) {
 #else
 		t(collection_type_manager_parent_type::get_canonical_type());
 #endif
-	if (!create_definition_footprint(t).good) {
+	if (!create_definition_footprint(t, top).good) {
 		return good_bool(false);
 	}
 }

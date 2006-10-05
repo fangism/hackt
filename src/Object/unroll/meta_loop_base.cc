@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.4.50.1 2006/09/02 03:58:38 fang Exp $
+	$Id: meta_loop_base.cc,v 1.4.50.2 2006/10/05 01:15:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -58,17 +58,22 @@ meta_loop_base::~meta_loop_base() { }
  */
 count_ptr<pint_scalar>
 meta_loop_base::initialize_footprint(footprint& f) const {
+	// temporary instantiation statement
+	const never_ptr<const pint_value_placeholder> ivr(&*ind_var);
 	const pint_instantiation_statement
-		pis(pint_traits::built_in_type_ptr, 
+		pis(ivr, pint_traits::built_in_type_ptr, 
 			index_collection_item_ptr_type());
 	// fake a context, no additional information necessary to instantiate
-	const unroll_context temp(&f);
+	const unroll_context temp(&f, &f);
 	const good_bool g(pis.unroll(temp));
+	// doesn't assign init. value
 	INVARIANT(g.good);
 	const count_ptr<pint_scalar>
 		ret(f[ind_var->get_name()].is_a<pint_scalar>());
 	NEVER_NULL(ret);
 	// other back-linking collection to placeholder? for diagnostics?
+	// assign it some value to make it valid
+	ret->get_instance() = 0;
 	return ret;
 }
 #endif

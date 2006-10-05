@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.8 2006/10/03 19:41:33 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.9 2006/10/05 01:15:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -127,9 +127,19 @@
 	This needs to be done before we chain contexts to prevent
 	accidental instantiation in the wrong context.  
 	Goal: 1
+	Status: partially in-place
+ */
+#define	SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS	(1 && USE_INSTANCE_PLACEHOLDERS)
+
+/**
+	Define to 1 to distinguish lvalue from rvalue lookups at unroll time.
+	Rationale: global (out-of-scope) values may be only referenced 
+		read-only, while local (target footprint) values may be
+		modified.  
+	Goal: 1
 	Status:
  */
-#define	SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS	0
+#define	RVALUE_LVALUE_LOOKUPS	(1 && SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS)
 
 //=============================================================================
 

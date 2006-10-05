@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.16.2.2 2006/09/04 05:44:14 fang Exp $
+	$Id: substructure_alias_base.h,v 1.16.2.3 2006/10/05 01:15:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -83,9 +83,6 @@ virtual	~substructure_alias_base() { }
 
 	void
 	allocate_subinstances(footprint&);
-
-	good_bool
-	replay_substructure_aliases(void) const;
 
 public:
 	// just a forwarded call
@@ -184,14 +181,6 @@ protected:
 	 */
 	void
 	restore_parent_child_links(void) { }
-
-	/**
-		No-op, because this has no substructure.  
-	 */
-	good_bool
-	replay_substructure_aliases(void) const {
-		return good_bool(true);
-	}
 
 public:
 	ostream&

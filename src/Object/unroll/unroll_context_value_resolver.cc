@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.5.6.4 2006/09/11 22:31:23 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.5.6.5 2006/10/05 01:15:53 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
@@ -17,6 +17,9 @@
 
 namespace HAC {
 namespace entity {
+#if RVALUE_LVALUE_LOOKUPS
+#define	lookup_value_collection		lookup_rvalue_collection
+#endif
 
 //=============================================================================
 // class unroll_context_value_resolver<pint_tag> method definitions
@@ -58,17 +61,18 @@ unroll_context_value_resolver<pint_tag>::operator ()
 	// lookup is same for all meta variable types (consistency!)
 #endif
 	// end hack
-	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS
-	NEVER_NULL(f);
-	const value_collection_type*
-		_vals(IS_A(const value_collection_type*, &*(*f)[v.get_name()]));
+	const count_ptr<const value_collection_type>
+		val_p(c.lookup_value_collection(v).
+			is_a<const value_collection_type>());
+	const value_collection_type* _vals(&*val_p);
 #else
+	const footprint* const f(c.get_target_footprint());
+	NEVER_NULL(f);
 	const value_collection_type*
 		_vals(f ? IS_A(const value_collection_type*,
 				&*(*f)[v.get_name()])
 			: &v);
-#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	// don't expect footprint lookup to find globals, only locals
 	if (!_vals) {
@@ -85,6 +89,7 @@ unroll_context_value_resolver<pint_tag>::operator ()
 	}
 #else
 	INVARIANT(_vals);
+#endif
 #endif
 	return const_return_type(false, _vals);
 }
@@ -104,12 +109,14 @@ unroll_context_value_resolver<pint_tag>::operator ()
 #endif
 			value_placeholder_type& v) const {
 	// no specialization, can't assign to loop vars.  
-	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS
-	NEVER_NULL(f);
+	const count_ptr<param_value_collection>
+		val_p(c.lookup_value_collection(v));
 	value_collection_type&
-		_vals(IS_A(value_collection_type&, *(*f)[v.get_name()]));
+		_vals(IS_A(value_collection_type*, *val_p));
 #else
+	const footprint* const f(c.get_target_footprint());
+	NEVER_NULL(f);
 	value_collection_type&
 		_vals(f ? IS_A(value_collection_type&, *(*f)[v.get_name()])
 			: v);
@@ -125,17 +132,18 @@ unroll_context_value_resolver<pbool_tag>::const_return_type
 unroll_context_value_resolver<pbool_tag>::operator ()
 		(const unroll_context& c, const value_placeholder_type& v,
 		value_type& i) const {
-	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS
-	NEVER_NULL(f);
-	const value_collection_type*
-		_vals(IS_A(const value_collection_type*, &*(*f)[v.get_name()]));
+	// this will lookup globals already...
+	const count_ptr<const value_collection_type>
+		val_p(c.lookup_value_collection(v).
+			is_a<const value_collection_type>());
+	const value_collection_type* _vals(&*val_p);
 #else
+	const footprint* const f(c.get_target_footprint());
 	const value_collection_type*
 		_vals(f ? IS_A(const value_collection_type*,
 				&*(*f)[v.get_name()])
 			: &v);
-#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	// don't expect footprint lookup to find globals, only locals
 	if (!_vals) {
@@ -150,6 +158,7 @@ unroll_context_value_resolver<pbool_tag>::operator ()
 #else
 	INVARIANT(_vals);
 #endif
+#endif	// USE_INSTANCE_PLACEHOLDERS
 	return const_return_type(false, _vals);
 }
 
@@ -187,17 +196,19 @@ unroll_context_value_resolver<preal_tag>::const_return_type
 unroll_context_value_resolver<preal_tag>::operator ()
 		(const unroll_context& c, const value_placeholder_type& v,
 		value_type& i) const {
-	const footprint* const f(c.get_target_footprint());
 #if USE_INSTANCE_PLACEHOLDERS
-	NEVER_NULL(f);
-	const value_collection_type*
-		_vals(IS_A(const value_collection_type*, &*(*f)[v.get_name()]));
+	// this will lookup globals already...
+	const count_ptr<const value_collection_type>
+		val_p(c.lookup_value_collection(v).
+			is_a<const value_collection_type>());
+	const value_collection_type* _vals(&*val_p);
 #else
+	const footprint* const f(c.get_target_footprint());
+	NEVER_NULL(f);
 	const value_collection_type*
 		_vals(f ? IS_A(const value_collection_type*,
 				&*(*f)[v.get_name()])
 			: &v);
-#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 	// don't expect footprint lookup to find globals, only locals
 	if (!_vals) {
@@ -211,6 +222,7 @@ unroll_context_value_resolver<preal_tag>::operator ()
 	}
 #else
 	INVARIANT(_vals);
+#endif
 #endif
 	return const_return_type(false, _vals);
 }

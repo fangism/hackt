@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.8.28.1 2006/09/06 04:19:43 fang Exp $
+	$Id: alias_empty.h,v 1.8.28.2 2006/10/05 01:15:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -116,7 +116,7 @@ public:
 	template <class AliasType>
 	static
 	good_bool
-	create_dependent_types(const AliasType&);
+	create_dependent_types(const AliasType&, const footprint&);
 
 	// called by footprint_frame::dump_footprint.
 	template <class AliasType>

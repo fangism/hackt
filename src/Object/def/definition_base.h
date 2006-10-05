@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.8.8.4 2006/10/02 03:19:04 fang Exp $
+	$Id: definition_base.h,v 1.8.8.5 2006/10/05 01:15:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -47,6 +47,7 @@ class fundamental_type_reference;
 class template_actuals;
 class const_param_expr_list;
 class port_formals_manager;
+class footprint;
 struct dump_flags;
 using std::string;
 using std::istream;
@@ -287,15 +288,23 @@ virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
 	register_complete_type(						\
 		const count_ptr<const const_param_expr_list>&) const
 
+/**
+	Need footprint argument to pass top-level footprint.  
+ */
 #define	UNROLL_COMPLETE_TYPE_PROTO					\
 	good_bool							\
 	unroll_complete_type(						\
-		const count_ptr<const const_param_expr_list>&) const
+		const count_ptr<const const_param_expr_list>&, 		\
+			const footprint&) const
 
+/**
+	Need footprint argument to pass top-level footprint.  
+ */
 #define	CREATE_COMPLETE_TYPE_PROTO					\
 	good_bool							\
 	create_complete_type(						\
-		const count_ptr<const const_param_expr_list>&) const
+		const count_ptr<const const_param_expr_list>&,		\
+			const footprint&) const
 
 protected:
 	void

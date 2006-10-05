@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.16.4.2 2006/08/31 07:28:45 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.16.4.3 2006/10/05 01:15:43 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -102,9 +102,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	this->dump(STACKTRACE_INDENT << "ref: ",
 		expr_dump_context::default_value) << endl;
 	STACKTRACE_INDENT_PRINT("c\'s target footprint:" << endl);
-	c.get_target_footprint()->dump_with_collections(cerr, 
-		dump_flags::default_value, 
-		expr_dump_context::default_value) << endl;
+	c.dump(cerr) << endl;
 #endif
 	// this also include member_meta_instance_references
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
@@ -202,7 +200,8 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	// now need to compute the offset into the corresponding 
 	// footprint_frame_map
 	// we look for the local alias to get the local offset!
-	const unroll_context uc;	// until we pass a global context
+	const unroll_context uc(NULL, NULL);
+		// until we pass a global context
 	const instance_alias_base_ptr_type
 #if USE_INSTANCE_PLACEHOLDERS
 		local_alias(__unroll_generic_scalar_reference_no_lookup(
@@ -242,9 +241,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 		expr_dump_context::default_value) << endl;
 	STACKTRACE_INDENT << "&c = " << &c << endl;
 	STACKTRACE_INDENT << "c\'s target footprint:" << endl;
-	c.get_target_footprint()->dump_with_collections(cerr, 
-		dump_flags::default_value, 
-		expr_dump_context::default_value) << endl;
+	c.dump(cerr) << endl;
 #endif
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));

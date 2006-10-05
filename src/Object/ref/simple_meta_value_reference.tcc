@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.7 2006/09/11 22:31:10 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.8 2006/10/05 01:15:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -330,7 +330,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_equivalent(
 	Now checks unroll context to see if the referenced
 	value collection belongs to a complete type (definition) scope.  
 	\return good if resolution succeeds.
-	NOTE: loop induction variables (pint) do not exist in footprint!
+	NOTE: loop induction variables (pint) do not exist in footprint! (yet)
+		but NOW they will...
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
@@ -343,14 +344,21 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		_v(unroll_context_value_resolver<Tag>().operator()
 			(c, *value_collection_ref, i));
 		// stupid gcc-3.3 needs .operator()...
+	// TODO: eliminate this pair-return hack, don't need w/ placeholders
 	if (_v.first) {
 		// then our work is done, 
 		// i has already been set as a loop variable
 		return good_bool(true);
 	}
+	if (!_v.second) {
+		cerr << "Failed to resolve value reference: ";
+		this->dump(cerr, expr_dump_context::default_value) << endl;
+		return good_bool(false);
+	}
 	const value_collection_type& _vals(*_v.second);
 
 	if (this->array_indices) {
+		STACKTRACE_INDENT_PRINT("checking indices..." << endl);
 		const const_index_list
 			indices(this->array_indices->unroll_resolve_indices(c));
 		if (!indices.empty()) {
@@ -375,6 +383,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 			return good_bool(false);
 		}
 	} else {
+		STACKTRACE_INDENT_PRINT("is scalar..." << endl);
 		// assert dynamic cast
 		// what if is pbool_const or pint_const?
 		const value_scalar_type&
@@ -502,7 +511,12 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// collection of value collections!
 	// unroll_context::lookup_value_collection
 	const count_ptr<const param_value_collection>
+#if RVALUE_LVALUE_LOOKUPS
+		pvc(c.lookup_rvalue_collection(*this->value_collection_ref));
+		// is it ok to always lookup rvalue for dimension resolving?
+#else
 		pvc(c.lookup_value_collection(*this->value_collection_ref));
+#endif
 	if (!pvc) {
 		return const_index_list();
 	}
@@ -591,7 +605,11 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 #if USE_INSTANCE_PLACEHOLDERS
 	// this is where argument-dependent lookup occurs
 	const count_ptr<const param_value_collection>
+#if RVALUE_LVALUE_LOOKUPS
+		cpptr(c.lookup_rvalue_collection(*value_collection_ref));
+#else
 		cpptr(c.lookup_value_collection(*value_collection_ref));
+#endif
 	if (!cpptr) {
 		cerr << "Error unroll-resolving parameter values." << endl;
 		return return_type(NULL);
@@ -893,8 +911,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 	STACKTRACE_VERBOSE;
 #if USE_INSTANCE_PLACEHOLDERS
 	const count_ptr<value_collection_type>
-		vals_ptr(c.lookup_value_collection(
-			*this->value_collection_ref)
+		vals_ptr(
+#if RVALUE_LVALUE_LOOKUPS
+			c.lookup_lvalue_collection
+#else
+			c.lookup_value_collection
+#endif
+			(*this->value_collection_ref)
 				.template is_a<value_collection_type>());
 	NEVER_NULL(vals_ptr);
 	value_collection_type& _vals(*vals_ptr);

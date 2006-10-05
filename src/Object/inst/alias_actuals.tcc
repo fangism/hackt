@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.11.28.1 2006/09/06 04:19:43 fang Exp $
+	$Id: alias_actuals.tcc,v 1.11.28.2 2006/10/05 01:15:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -80,7 +80,8 @@ instance_alias_info_actuals::complete_type_actuals(
  */
 template <class AliasType>
 good_bool
-instance_alias_info_actuals::create_dependent_types(const AliasType& _alias) {
+instance_alias_info_actuals::create_dependent_types(const AliasType& _alias, 
+		const footprint& top) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef	typename container_type::instance_collection_parameter_type
 				complete_type_type;
@@ -94,7 +95,7 @@ instance_alias_info_actuals::create_dependent_types(const AliasType& _alias) {
 		return good_bool(false);
 	}
 	else if (!container_type::collection_type_manager_parent_type
-			::create_definition_footprint(_type).good) {
+			::create_definition_footprint(_type, top).good) {
 		// have error message already
 		_alias.dump_hierarchical_name(cerr << "Instantiated by: ")
 			<< endl;

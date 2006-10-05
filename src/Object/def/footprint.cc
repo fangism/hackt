@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.6 2006/10/01 21:13:56 fang Exp $
+	$Id: footprint.cc,v 1.24.4.7 2006/10/05 01:15:30 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -496,7 +496,7 @@ footprint::register_collection(const count_ptr<instance_collection_base>& p) {
 	(called by process_definition::create)
  */
 good_bool
-footprint::create_dependent_types(void) {
+footprint::create_dependent_types(const footprint& top) {
 	STACKTRACE_VERBOSE;
 	const instance_map_iterator
 		// b(instance_collection_map.begin()),
@@ -514,7 +514,7 @@ footprint::create_dependent_types(void) {
 			pic(i->second.is_a<physical_instance_collection>());
 		// not only does this create dependent types, but it also
 		// replays all internal aliases as well.
-		if (pic && !pic->create_dependent_types().good) {
+		if (pic && !pic->create_dependent_types(top).good) {
 			return good_bool(false);
 		}
 	}
