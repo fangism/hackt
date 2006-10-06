@@ -4,14 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -35,6 +35,8 @@ Persistent Object Manager text dump:
 	31	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	35	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -44,17 +46,21 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    j = pint^1 j
-      unrolled index-value pairs: {
-        0 = 1
-        1 = 2
-      }
+    j = pint<> j^1
   Instances:
-    x = bool^1 x
-      unrolled indices: {
-        0 = ::x[0] 
-        1 = ::x[1] 
-        2 = ::x[2] 
-      }
+    x = bool<> x^1
 }
 
+footprint: {
+  j = pint^1
+    unrolled index-value pairs: {
+      0 = 1
+      1 = 2
+    }
+  x = bool^1
+    {
+      0 = ::x[0] 
+      1 = ::x[1] 
+      2 = ::x[2] 
+    }
+}

@@ -4,12 +4,12 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	102
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -62,14 +62,11 @@ In namespace "", we have: {
       )
       In definition "crazy_inv", we have: {
       Parameters:
-        M = pint<> M
-        N = pint<> N
+        M = pint<> ::crazy_inv::M
+        N = pint<> ::crazy_inv::N
       Instances:
-        a = bool<> a
-
+        a = bool<> ::crazy_inv::a^2
       unroll sequence: 
-        pint<> N
-        pint<> M
         bool<> a[0..N-1][0..M-1]
       prs:
         a[0][0] -> a[0][1]-
@@ -78,3 +75,5 @@ In namespace "", we have: {
 
 }
 
+footprint: {
+}

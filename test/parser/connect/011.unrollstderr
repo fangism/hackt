@@ -4,20 +4,22 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	123
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
-	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	98
-	10	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	proccoll	1	#HEAD#	#TAIL#	111
+	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -36,17 +38,21 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<>^1 bar
-      unrolled indices: {
-        0 = ::bar[0] 
-        1 = ::bar[1] 
-        2 = ::bar[2] 
-      }
-    blah = process foo<>^1 blah
-      unrolled indices: {
-        0 = ::bar[0] 
-        1 = ::bar[1] 
-        2 = ::bar[2] 
-      }
+    bar = foo<> bar^1
+    blah = foo<> blah^1
 }
 
+footprint: {
+  bar = process foo<>^1
+    {
+      0 = ::bar[0] 
+      1 = ::bar[1] 
+      2 = ::bar[2] 
+    }
+  blah = process foo<>^1
+    {
+      0 = ::bar[0] 
+      1 = ::bar[1] 
+      2 = ::bar[2] 
+    }
+}

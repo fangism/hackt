@@ -4,17 +4,18 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	7	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	10	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -24,10 +25,13 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    x = bool^1 x
-      unrolled indices: {
-        0 = ::x[0] 
-        1 = ::x[1] 
-      }
+    x = bool<> x^1
 }
 
+footprint: {
+  x = bool^1
+    {
+      0 = ::x[0] 
+      1 = ::x[1] 
+    }
+}

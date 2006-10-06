@@ -4,20 +4,24 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	35
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	35
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	35
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	36
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -30,9 +34,15 @@ In namespace "", we have: {
     int32 = datatype-definition-alias: int32
       = int<32>
   Instances:
-    fe = int<32>^0 fe (instantiated) = ::fe 
-    fi = int<32>^0 fi (instantiated) = ::fi 
-    fo = int<32>^0 fo (instantiated) = ::fo 
-    fum = int<32>^0 fum (instantiated) = ::fum 
+    fe = int32<> fe
+    fi = int32<> fi
+    fo = int32<> fo
+    fum = int32<> fum
 }
 
+footprint: {
+  fe = int<32>^0 = ::fe 
+  fi = int<32>^0 = ::fi 
+  fo = int<32>^0 = ::fo 
+  fum = int<32>^0 = ::fum 
+}

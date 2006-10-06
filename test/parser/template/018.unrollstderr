@@ -4,15 +4,15 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	99
-	4	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	29
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	10	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	14	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
@@ -20,7 +20,7 @@ Persistent Object Manager text dump:
 	16	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	19	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
@@ -45,16 +45,15 @@ In namespace "", we have: {
       )
       In definition "the_matrix", we have: {
       Parameters:
-        M = pint<> M
-
-        N = pint<> N
+        M = pint<> ::the_matrix::M^2
+        N = pint<> ::the_matrix::N
       Instances:
-        first = int<::the_matrix::M[0][0]> first
+        first = int<::the_matrix::M[0][0]> ::the_matrix::first
       unroll sequence: 
-        pint<> N
-        pint<> M[0..N-1][0..N-1]
         int<::the_matrix::M[0][0]> first
       }
 
 }
 
+footprint: {
+}

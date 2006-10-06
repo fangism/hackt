@@ -4,45 +4,47 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	236
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	228
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	37	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	39	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -61,34 +63,36 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        X = pint<> X
-        Y = pint<> Y
+        X = pint<> ::bar::X
+        Y = pint<> ::bar::Y
       Instances:
-        a = int<::bar::X> a
-        b = int<::bar::Y> b
+        a = int<::bar::X> ::bar::a
+        b = int<::bar::Y> ::bar::b
       unroll sequence: 
-        pint<> X
-        pint<> Y
         int<::bar::X> a
         int<::bar::Y> b
       footprint collection: {
         <2, 3> {
-          pint^0 X value: ?
-          pint^0 Y value: ?
-          int<2>^0 a (instantiated) = ::bar::a 
-          int<3>^0 b (instantiated) = ::bar::b 
+          X = pint^0 value: 2
+          Y = pint^0 value: 3
+          a = int<2>^0 = ::bar::a 
+          b = int<3>^0 = ::bar::b 
         }
       }
       }
 
   Instances:
-    w = process bar<2, 3>^0 w (instantiated) = ::w (
-      int<2>^0 a (instantiated) = ::z.a 
-      int<3>^0 b (instantiated) = ::w.b 
-    )
-    z = process bar<2, 3>^0 z (instantiated) = ::z (
-      int<2>^0 a (instantiated) = ::z.a 
-      int<3>^0 b (instantiated) = ::z.b 
-    )
+    w = bar<2, 3> w
+    z = bar<2, 3> z
 }
 
+footprint: {
+  w = process bar<2, 3>^0 = ::w (
+    a = int<2>^0 = ::z.a 
+    b = int<3>^0 = ::w.b 
+  )
+  z = process bar<2, 3>^0 = ::z (
+    a = int<2>^0 = ::z.a 
+    b = int<3>^0 = ::z.b 
+  )
+}

@@ -4,10 +4,10 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	440
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	436
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
@@ -19,38 +19,41 @@ Persistent Object Manager text dump:
 	15	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	19	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
 	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	23	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	27	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	26	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
 	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	40	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	43	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
 	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	chancoll	0	#HEAD#	#TAIL#	55
-	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -67,11 +70,10 @@ In namespace "", we have: {
       )
       In definition "send_me", we have: {
       Parameters:
-        B = pint<> B
+        B = pint<> ::send_me::B
       Instances:
-        b = chan!(int<32>) b
+        b = chan!(int<32>) ::send_me::b
       unroll sequence: 
-        pint<> B
         chan!(int<32>) b
       chp:
         concurrent: {
@@ -81,29 +83,34 @@ In namespace "", we have: {
         }
       footprint collection: {
         <123> {
-          pint^0 B value: ?
-          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b 
+          B = pint^0 value: 123
+          b = channel chan!(int<32>)^0 = ::send_me::b 
         }
         <456> {
-          pint^0 B value: ?
-          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b 
+          B = pint^0 value: 456
+          b = channel chan!(int<32>)^0 = ::send_me::b 
         }
         <789> {
-          pint^0 B value: ?
-          channel chan!(int<32>)^0 b (instantiated) = ::send_me::b 
+          B = pint^0 value: 789
+          b = channel chan!(int<32>)^0 = ::send_me::b 
         }
       }
       }
 
   Instances:
-    X = process send_me<123>^0 X (instantiated) = ::X (
-      channel chan!(int<32>)^0 b (instantiated) = ::X.b 
-    )
-    Y = process send_me<456>^0 Y (instantiated) = ::Y (
-      channel chan!(int<32>)^0 b (instantiated) = ::Y.b 
-    )
-    Z = process send_me<789>^0 Z (instantiated) = ::Z (
-      channel chan!(int<32>)^0 b (instantiated) = ::Z.b 
-    )
+    X = send_me<123> X
+    Y = send_me<456> Y
+    Z = send_me<789> Z
 }
 
+footprint: {
+  X = process send_me<123>^0 = ::X (
+    b = channel chan!(int<32>)^0 = ::X.b 
+  )
+  Y = process send_me<456>^0 = ::Y (
+    b = channel chan!(int<32>)^0 = ::Y.b 
+  )
+  Z = process send_me<789>^0 = ::Z (
+    b = channel chan!(int<32>)^0 = ::Z.b 
+  )
+}

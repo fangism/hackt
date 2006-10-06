@@ -5,11 +5,11 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	204
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -20,28 +20,31 @@ Persistent Object Manager text dump:
 	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -57,8 +60,8 @@ In namespace "", we have: {
       )
       In definition "inv", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
+        a = bool<> ::inv::a
+        b = bool<> ::inv::b
       unroll sequence: 
         bool<> a
         bool<> b
@@ -66,20 +69,25 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        bool^0 a (instantiated) = ::inv::a 
-        bool^0 b (instantiated) = ::inv::b 
+        a = bool^0 = ::inv::a 
+        b = bool^0 = ::inv::b 
       }
       }
 
   Instances:
-    A = process inv<>^0 A (instantiated) = ::A (
-      bool^0 a (instantiated) = ::A.a 
-      bool^0 b (instantiated) = ::B.b 
-    )
-    B = process inv<>^0 B (instantiated) = ::B (
-      bool^0 a (instantiated) = ::B.a 
-      bool^0 b (instantiated) = ::B.b 
-    )
-    z = bool^0 z (instantiated) = ::A.b 
+    A = inv<> A
+    B = inv<> B
+    z = bool<> z
 }
 
+footprint: {
+  A = process inv<>^0 = ::A (
+    a = bool^0 = ::A.a 
+    b = bool^0 = ::B.b 
+  )
+  B = process inv<>^0 = ::B (
+    a = bool^0 = ::B.a 
+    b = bool^0 = ::B.b 
+  )
+  z = bool^0 = ::A.b 
+}

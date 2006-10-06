@@ -4,39 +4,42 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	7	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	64
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	13	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	16	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	pblgcexp	0	#HEAD#	#TAIL#	22
+	19	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
+	20	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	pblgcexp	0	#HEAD#	#TAIL#	22
-	26	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
-	27	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	28	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
-	32	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	pireltex	0	#HEAD#	#TAIL#	22
+	25	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	32	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -46,14 +49,19 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    M = pint^0 M (init = 2) value: 2
-    N = pint^0 N (init = 3) value: 3
+    M = pint<> M
+    N = pint<> N
   Instances:
-    b = bool^1 b
-      unrolled indices: {
-        0 = ::b[0] 
-        6 = ::b[6] 
-        12 = ::b[12] 
-      }
+    b = bool<> b^1
 }
 
+footprint: {
+  M = pint^0 value: 2
+  N = pint^0 value: 3
+  b = bool^1
+    {
+      0 = ::b[0] 
+      6 = ::b[6] 
+      12 = ::b[12] 
+    }
+}

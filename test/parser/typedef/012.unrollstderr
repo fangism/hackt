@@ -4,52 +4,55 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	52
+	3	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	48
 	4	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	448
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	440
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	24	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	26	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	52
+	27	##ADDR##	proctpdf	0	#HEAD#	#TAIL#	48
 	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	31	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	32	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	46	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	33	##ADDR##	procplch	0	#HEAD#	#TAIL#	34
+	34	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -66,23 +69,21 @@ In namespace "", we have: {
       )
       In definition "array2d", we have: {
       Parameters:
-        M = pint<> M
-        N = pint<> N
+        M = pint<> ::array2d::M
+        N = pint<> ::array2d::N
       unroll sequence: 
-        pint<> N
-        pint<> M
       footprint collection: {
         <1, 12> {
-          pint^0 M value: ?
-          pint^0 N value: ?
+          M = pint^0 value: 12
+          N = pint^0 value: 1
         }
         <3, 3> {
-          pint^0 M value: ?
-          pint^0 N value: ?
+          M = pint^0 value: 3
+          N = pint^0 value: 3
         }
         <10, 1> {
-          pint^0 M value: ?
-          pint^0 N value: ?
+          M = pint^0 value: 1
+          N = pint^0 value: 10
         }
       }
       }
@@ -97,8 +98,13 @@ In namespace "", we have: {
       >
       = array2d<1, ::row::Q>
   Instances:
-    the_col = process array2d<10, 1>^0 the_col (instantiated) = ::the_col 
-    the_matrix = process array2d<3, 3>^0 the_matrix (instantiated) = ::the_matrix 
-    the_row = process array2d<1, 12>^0 the_row (instantiated) = ::the_row 
+    the_col = col<10> the_col
+    the_matrix = array2d<3, 3> the_matrix
+    the_row = row<12> the_row
 }
 
+footprint: {
+  the_col = process array2d<10, 1>^0 = ::the_col 
+  the_matrix = process array2d<3, 3>^0 = ::the_matrix 
+  the_row = process array2d<1, 12>^0 = ::the_row 
+}

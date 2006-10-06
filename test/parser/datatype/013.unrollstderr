@@ -6,12 +6,13 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
 	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	21
-	5	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -36,6 +37,9 @@ In namespace "", we have: {
       0 typedefs
     }
   Instances:
-    x = int<32>^0 x (instantiated) = ::x 
+    x = int<32> x
 }
 
+footprint: {
+  x = int<32>^0 = ::x 
+}

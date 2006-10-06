@@ -4,19 +4,19 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
-	4	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	88
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	30
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
@@ -34,12 +34,11 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        W = pint<> W
-        Z = pint<> Z (init = W)
+        W = pint<> ::foo::W
+        Z = pint<> ::foo::Z
       Instances:
-        my_int = int<::foo::Z> my_int
+        my_int = int<::foo::Z> ::foo::my_int
       unroll sequence: 
-        pint<> W
         pint<> Z
         Z = W;
         int<::foo::Z> my_int
@@ -47,3 +46,5 @@ In namespace "", we have: {
 
 }
 
+footprint: {
+}

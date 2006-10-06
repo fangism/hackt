@@ -4,80 +4,84 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	605
-	5	##ADDR##	chancoll	2	#HEAD#	#TAIL#	40
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	597
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	27
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	19	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	CHPsend_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	schnnref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	nindlist	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	chancoll	2	#HEAD#	#TAIL#	132
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	31	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	chancoll	2	#HEAD#	#TAIL#	132
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	37	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	39	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	40	##ADDR##	chancoll	2	#HEAD#	#TAIL#	132
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	43	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	chancoll	2	#HEAD#	#TAIL#	132
-	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	49	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	52	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	chancoll	2	#HEAD#	#TAIL#	132
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	58	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	59	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	chancoll	2	#HEAD#	#TAIL#	132
-	62	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	64	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	65	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	66	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	68	##ADDR##	chancoll	2	#HEAD#	#TAIL#	132
-	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	72	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	73	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	74	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	75	##ADDR##	chancoll	2	#HEAD#	#TAIL#	132
+	25	##ADDR##	narithex	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	57	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	59	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	62	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	63	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	64	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	67	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	68	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	69	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	71	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	72	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	73	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	74	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	75	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
 	76	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	77	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	80	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -95,14 +99,11 @@ In namespace "", we have: {
       )
       In definition "send_indexed", we have: {
       Parameters:
-        I = pint<> I
-        J = pint<> J
+        I = pint<> ::send_indexed::I
+        J = pint<> ::send_indexed::J
       Instances:
-        out = chan!(int<32>) out
-
+        out = chan!(int<32>) ::send_indexed::out^2
       unroll sequence: 
-        pint<> I
-        pint<> J
         chan!(int<32>) out[0..1][0..1]
       chp:
         concurrent: {
@@ -112,88 +113,94 @@ In namespace "", we have: {
         }
       footprint collection: {
         <0, 0> {
-          channel chan!(int<32>)^2 out
-            unrolled indices: {
+          I = pint^0 value: 0
+          J = pint^0 value: 0
+          out = channel chan!(int<32>)^2
+            {
               [0][0] = ::send_indexed::out[0][0] 
               [0][1] = ::send_indexed::out[0][1] 
               [1][0] = ::send_indexed::out[1][0] 
               [1][1] = ::send_indexed::out[1][1] 
             }
-          pint^0 I value: ?
-          pint^0 J value: ?
         }
         <0, 1> {
-          channel chan!(int<32>)^2 out
-            unrolled indices: {
+          I = pint^0 value: 0
+          J = pint^0 value: 1
+          out = channel chan!(int<32>)^2
+            {
               [0][0] = ::send_indexed::out[0][0] 
               [0][1] = ::send_indexed::out[0][1] 
               [1][0] = ::send_indexed::out[1][0] 
               [1][1] = ::send_indexed::out[1][1] 
             }
-          pint^0 I value: ?
-          pint^0 J value: ?
         }
         <1, 0> {
-          channel chan!(int<32>)^2 out
-            unrolled indices: {
+          I = pint^0 value: 1
+          J = pint^0 value: 0
+          out = channel chan!(int<32>)^2
+            {
               [0][0] = ::send_indexed::out[0][0] 
               [0][1] = ::send_indexed::out[0][1] 
               [1][0] = ::send_indexed::out[1][0] 
               [1][1] = ::send_indexed::out[1][1] 
             }
-          pint^0 I value: ?
-          pint^0 J value: ?
         }
         <1, 1> {
-          channel chan!(int<32>)^2 out
-            unrolled indices: {
+          I = pint^0 value: 1
+          J = pint^0 value: 1
+          out = channel chan!(int<32>)^2
+            {
               [0][0] = ::send_indexed::out[0][0] 
               [0][1] = ::send_indexed::out[0][1] 
               [1][0] = ::send_indexed::out[1][0] 
               [1][1] = ::send_indexed::out[1][1] 
             }
-          pint^0 I value: ?
-          pint^0 J value: ?
         }
       }
       }
 
   Instances:
-    bar = process send_indexed<1, 1>^0 bar (instantiated) = ::bar (
-      channel chan!(int<32>)^2 out
-        unrolled indices: {
-          [0][0] = ::bar.out[0][0] 
-          [0][1] = ::bar.out[0][1] 
-          [1][0] = ::bar.out[1][0] 
-          [1][1] = ::bar.out[1][1] 
-        }
-    )
-    foo = process send_indexed<0, 0>^0 foo (instantiated) = ::foo (
-      channel chan!(int<32>)^2 out
-        unrolled indices: {
-          [0][0] = ::foo.out[0][0] 
-          [0][1] = ::foo.out[0][1] 
-          [1][0] = ::foo.out[1][0] 
-          [1][1] = ::foo.out[1][1] 
-        }
-    )
-    ick = process send_indexed<0, 1>^0 ick (instantiated) = ::ick (
-      channel chan!(int<32>)^2 out
-        unrolled indices: {
-          [0][0] = ::ick.out[0][0] 
-          [0][1] = ::ick.out[0][1] 
-          [1][0] = ::ick.out[1][0] 
-          [1][1] = ::ick.out[1][1] 
-        }
-    )
-    poo = process send_indexed<1, 0>^0 poo (instantiated) = ::poo (
-      channel chan!(int<32>)^2 out
-        unrolled indices: {
-          [0][0] = ::poo.out[0][0] 
-          [0][1] = ::poo.out[0][1] 
-          [1][0] = ::poo.out[1][0] 
-          [1][1] = ::poo.out[1][1] 
-        }
-    )
+    bar = send_indexed<1, 1> bar
+    foo = send_indexed<0, 0> foo
+    ick = send_indexed<0, 1> ick
+    poo = send_indexed<1, 0> poo
 }
 
+footprint: {
+  bar = process send_indexed<1, 1>^0 = ::bar (
+    out = channel chan!(int<32>)^2
+      {
+        [0][0] = ::bar.out[0][0] 
+        [0][1] = ::bar.out[0][1] 
+        [1][0] = ::bar.out[1][0] 
+        [1][1] = ::bar.out[1][1] 
+      }
+  )
+  foo = process send_indexed<0, 0>^0 = ::foo (
+    out = channel chan!(int<32>)^2
+      {
+        [0][0] = ::foo.out[0][0] 
+        [0][1] = ::foo.out[0][1] 
+        [1][0] = ::foo.out[1][0] 
+        [1][1] = ::foo.out[1][1] 
+      }
+  )
+  ick = process send_indexed<0, 1>^0 = ::ick (
+    out = channel chan!(int<32>)^2
+      {
+        [0][0] = ::ick.out[0][0] 
+        [0][1] = ::ick.out[0][1] 
+        [1][0] = ::ick.out[1][0] 
+        [1][1] = ::ick.out[1][1] 
+      }
+  )
+  poo = process send_indexed<1, 0>^0 = ::poo (
+    out = channel chan!(int<32>)^2
+      {
+        [0][0] = ::poo.out[0][0] 
+        [0][1] = ::poo.out[0][1] 
+        [1][0] = ::poo.out[1][0] 
+        [1][1] = ::poo.out[1][1] 
+      }
+  )
+}

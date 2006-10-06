@@ -4,21 +4,21 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	80
-	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
-	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	76
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	76
+	10	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	11	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	17	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -36,8 +36,8 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        A = pint<> A
-        B = pint<> B
+        A = pint<> ::bar::A
+        B = pint<> ::bar::B
       }
 
     foo = process-definition (defined) foo<>
@@ -47,13 +47,14 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        W = pint<> W
+        W = pint<> ::foo::W
       Instances:
-        my_bar = bar<0><::foo::W> my_bar
+        my_bar = bar<0><::foo::W> ::foo::my_bar
       unroll sequence: 
-        pint<> W
         bar<0><::foo::W> my_bar
       }
 
 }
 
+footprint: {
+}

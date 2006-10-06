@@ -1,5 +1,5 @@
 # "test/lib/Makefile.am"
-#	$Id: Makefile.am,v 1.7 2006/08/14 04:50:13 fang Exp $
+#	$Id: Makefile.am,v 1.7.2.1 2006/10/06 00:42:40 fang Exp $
 # Test auto-Makefile for prsim.  
 
 include $(top_srcdir)/test/Make.test-head
@@ -16,9 +16,7 @@ HACKT_PARSE_TEST_PASSES = \
 	e1of1-01 \
 	source-01 \
 	e1ofN-01 e1ofN-02 \
-	logic-01 \
-	env-source-sink-a-01 env-source-sink-a-02 \
-	env-source-sink-e-01 env-source-sink-e-02
+	logic-01
 
 HACKT_PARSE_TEST_SUBJECTS = \
 	$(HACKT_PARSE_TEST_FAILURES) \

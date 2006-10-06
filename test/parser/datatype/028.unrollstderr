@@ -18,3 +18,5 @@ In namespace "", we have: {
       { one, bar, three,  }
 }
 
+footprint: {
+}

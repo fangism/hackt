@@ -4,24 +4,25 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	201
-	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	9	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	11	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	12	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	16	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -36,9 +37,9 @@ In namespace "", we have: {
       )
       In definition "assignme", we have: {
       Parameters:
-        c = pbool<> c
+        c = pbool<> ::assignme::c
       Instances:
-        b = bool<> b
+        b = bool<> ::assignme::b
       unroll sequence: 
         bool<> b
         pbool<> c
@@ -49,14 +50,17 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        bool^0 b (instantiated) = ::assignme::b 
-        pbool^0 c value: ?
+        b = bool^0 = ::assignme::b 
+        c = pbool^0 value: ?
       }
       }
 
   Instances:
-    X = process assignme<>^0 X (instantiated) = ::X (
-      bool^0 b (instantiated) = ::X.b 
-    )
+    X = assignme<> X
 }
 
+footprint: {
+  X = process assignme<>^0 = ::X (
+    b = bool^0 = ::X.b 
+  )
+}

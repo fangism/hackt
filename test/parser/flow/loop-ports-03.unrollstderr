@@ -5,38 +5,38 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	182
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	192
-	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
-	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	202
-	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	16	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	198
+	16	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	17	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	28	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	proccoll	1	#HEAD#	#TAIL#	34
+	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	34	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	35	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	36	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
@@ -48,15 +48,16 @@ Persistent Object Manager text dump:
 	44	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	81
-	50	##ADDR##	proccoll	1	#HEAD#	#TAIL#	59
+	49	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	72
+	50	##ADDR##	proccoll	1	#HEAD#	#TAIL#	49
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	54	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	55	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -73,18 +74,16 @@ In namespace "", we have: {
       )
       In definition "ch1of", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> ::ch1of::N
       Instances:
-        d = bool<> d
-
+        d = bool<> ::ch1of::d^1
       unroll sequence: 
-        pint<> N
         bool<> d[0..N-1]
       footprint collection: {
         <4> {
-          pint^0 N value: ?
-          bool^1 d
-            unrolled indices: {
+          N = pint^0 value: 4
+          d = bool^1
+            {
               0 = ::ch1of::d[0] 
               1 = ::ch1of::d[1] 
               2 = ::ch1of::d[2] 
@@ -99,11 +98,11 @@ In namespace "", we have: {
       )
       In definition "dcelm", we have: {
       Instances:
-        a = bool<> a
+        a = bool<> ::dcelm::a
       unroll sequence: 
         bool<> a
       footprint: {
-        bool^0 a (instantiated) = ::dcelm::a 
+        a = bool^0 = ::dcelm::a 
       }
       }
 
@@ -111,9 +110,8 @@ In namespace "", we have: {
       )
       In definition "lut", we have: {
       Instances:
-        ad = ch1of<4> ad
-        ce = dcelm<> ce
-
+        ad = ch1of<4> ::lut::ad
+        ce = dcelm<> ::lut::ce^1
       unroll sequence: 
         ch1of<4> ad
         dcelm<> ce[0..0]
@@ -121,25 +119,28 @@ In namespace "", we have: {
           ce[$b] (ad.d[$b/4]);
         )
       footprint: {
-        process ch1of<4>^0 ad (instantiated) = ::lut::ad (
-          bool^1 d
-            unrolled indices: {
+        ad = process ch1of<4>^0 = ::lut::ad (
+          d = bool^1
+            {
               0 = ::lut::ce[0].a 
               1 = ::lut::ad.d[1] 
               2 = ::lut::ad.d[2] 
               3 = ::lut::ad.d[3] 
             }
         )
-        process dcelm<>^1 ce
-          unrolled indices: {
+        ce = process dcelm<>^1
+          {
             0 = ::lut::ce[0] (
-              bool^0 a (instantiated) = ::lut::ce[0].a 
+              a = bool^0 = ::lut::ce[0].a 
             )
           }
       }
       }
 
   Instances:
-    l = process lut<>^0 l (instantiated) = ::l 
+    l = lut<> l
 }
 
+footprint: {
+  l = process lut<>^0 = ::l 
+}

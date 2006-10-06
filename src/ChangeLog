@@ -5,6 +5,21 @@
 
 2006-10-05	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-28:
+	  No source revision, just massive regression test updating.
+		Updated most tests in suite, leaving a few known regressions
+		to be tackled one at a time.  
+	  Summary of remaining (unroll) regressions:
+		parser/namespace: (1) should qualify typename with namespace
+		parser/process: (2) default parameter expressions need to be
+			positionally *substituted* before resolving.
+		parser/template: (4) same as process/, 
+			(2) different diagnostic message,
+			(9) ICE: footprint key arity mismatch.
+		Total cases remaining: 18
+	  This has to be the most boring task for this project...
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-27:
 	  canonical_type::unroll_port_instances():
 		opened up read-only reference to footprint to provide

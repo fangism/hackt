@@ -4,31 +4,33 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
-	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
-	11	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
-	12	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
-	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	13	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -38,11 +40,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    W = pint^1 W
-      unrolled index-value pairs: {
-        0 = 0
-        1 = 1
-      }
+    W = pint<> W^1
   Definitions:
     foo = process-definition (defined) foo<
       pint<> N[0..1]
@@ -50,22 +48,28 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> N
-
+        N = pint<> ::foo::N^1
       unroll sequence: 
-        pint<> N[0..1]
       footprint collection: {
         <{0,1}> {
-          pint^1 N
+          N = pint^1
             unrolled index-value pairs: {
-              0 = ?
-              1 = ?
+              0 = 0
+              1 = 1
             }
         }
       }
       }
 
   Instances:
-    bar = process foo<{0,1}>^0 bar (instantiated) = ::bar 
+    bar = foo<::W> bar
 }
 
+footprint: {
+  W = pint^1
+    unrolled index-value pairs: {
+      0 = 0
+      1 = 1
+    }
+  bar = process foo<{0,1}>^0 = ::bar 
+}

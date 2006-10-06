@@ -4,23 +4,23 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
-	3	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	45
@@ -41,6 +41,14 @@ Persistent Object Manager text dump:
 	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -50,13 +58,23 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    a = bool^0 a (instantiated) = ::h 
-    b = bool^0 b (instantiated) = ::h 
-    c = bool^0 c (instantiated) = ::h 
-    d = bool^0 d (instantiated) = ::h 
-    e = bool^0 e (instantiated) = ::h 
-    f = bool^0 f (instantiated) = ::h 
-    g = bool^0 g (instantiated) = ::h 
-    h = bool^0 h (instantiated) = ::h 
+    a = bool<> a
+    b = bool<> b
+    c = bool<> c
+    d = bool<> d
+    e = bool<> e
+    f = bool<> f
+    g = bool<> g
+    h = bool<> h
 }
 
+footprint: {
+  a = bool^0 = ::h 
+  b = bool^0 = ::h 
+  c = bool^0 = ::h 
+  d = bool^0 = ::h 
+  e = bool^0 = ::h 
+  f = bool^0 = ::h 
+  g = bool^0 = ::h 
+  h = bool^0 = ::h 
+}

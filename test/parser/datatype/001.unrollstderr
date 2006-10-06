@@ -4,16 +4,18 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -23,7 +25,11 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    x = int<32>^0 x (instantiated) = ::x 
-    y = bool^0 y (instantiated) = ::y 
+    x = int<32> x
+    y = bool<> y
 }
 
+footprint: {
+  x = int<32>^0 = ::x 
+  y = bool^0 = ::y 
+}

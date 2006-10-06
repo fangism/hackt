@@ -4,10 +4,10 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	252
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	244
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
@@ -15,60 +15,65 @@ Persistent Object Manager text dump:
 	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	14	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	36
-	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
-	36	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	42	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	43	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	48	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	56
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	34	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	43	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	45	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	50	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	51	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	50	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	55	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	60	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	63	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
-	64	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	55	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	56	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	59	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	60	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	61	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	66	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	67	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	71	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	72	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	56
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -78,12 +83,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    p = pint^1 p
-      unrolled index-value pairs: {
-        0 = 1
-        1 = 0
-        2 = 1
-      }
+    p = pint<> p^1
   Definitions:
     ass = process-definition (defined) ass<
       pint<> N
@@ -95,43 +95,52 @@ In namespace "", we have: {
       )
       In definition "ass", we have: {
       Parameters:
-        N = pint<> N
-        d = pint<> d
-
+        N = pint<> ::ass::N
+        d = pint<> ::ass::d^1
       Instances:
-        x = bool<> x
-        y = bool<> y
-        z = bool<> z
+        x = bool<> ::ass::x
+        y = bool<> ::ass::y
+        z = bool<> ::ass::z
       unroll sequence: 
-        pint<> N
-        pint<> d[0..N-1]
         bool<> x
         bool<> y
         bool<> z
       footprint collection: {
         <3, {1,0,1}> {
-          pint^0 N value: ?
-          pint^1 d
+          N = pint^0 value: 3
+          d = pint^1
             unrolled index-value pairs: {
-              0 = ?
-              1 = ?
-              2 = ?
+              0 = 1
+              1 = 0
+              2 = 1
             }
-          bool^0 x (instantiated) = ::ass::x 
-          bool^0 y (instantiated) = ::ass::y 
-          bool^0 z (instantiated) = ::ass::z 
+          x = bool^0 = ::ass::x 
+          y = bool^0 = ::ass::y 
+          z = bool^0 = ::ass::z 
         }
       }
       }
 
   Instances:
-    a = bool^0 a (instantiated) = ::myass.x 
-    b = bool^0 b (instantiated) = ::myass.y 
-    c = bool^0 c (instantiated) = ::myass.z 
-    myass = process ass<3, {1,0,1}>^0 myass (instantiated) = ::myass (
-      bool^0 x (instantiated) = ::myass.x 
-      bool^0 y (instantiated) = ::myass.y 
-      bool^0 z (instantiated) = ::myass.z 
-    )
+    a = bool<> a
+    b = bool<> b
+    c = bool<> c
+    myass = ass<3, ::p> myass
 }
 
+footprint: {
+  a = bool^0 = ::myass.x 
+  b = bool^0 = ::myass.y 
+  c = bool^0 = ::myass.z 
+  myass = process ass<3, {1,0,1}>^0 = ::myass (
+    x = bool^0 = ::myass.x 
+    y = bool^0 = ::myass.y 
+    z = bool^0 = ::myass.z 
+  )
+  p = pint^1
+    unrolled index-value pairs: {
+      0 = 1
+      1 = 0
+      2 = 1
+    }
+}

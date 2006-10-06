@@ -5,11 +5,11 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	92
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -19,17 +19,17 @@ Persistent Object Manager text dump:
 	15	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	142
-	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	18	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	19	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	20	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	31	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -76,27 +76,27 @@ Persistent Object Manager text dump:
 	72	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	73	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	74	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
-	75	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	76	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	77	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	79	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	80	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
-	81	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	82	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	83	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
-	84	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	85	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	75	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	76	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	77	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	78	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	79	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	80	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	81	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	82	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	83	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	84	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	85	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	86	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	87	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	89	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	91	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	92	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	93	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	88	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	89	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	90	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	91	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	92	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	93	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	94	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	95	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	96	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	97	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	98	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -127,27 +127,27 @@ Persistent Object Manager text dump:
 	123	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	124	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	125	##ADDR##	procdefn	0	#HEAD#	#TAIL#	150
-	126	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	127	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	128	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	129	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	130	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	131	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
-	132	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	133	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	134	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
-	135	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	136	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	126	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	127	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	128	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	129	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	130	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	131	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	132	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	133	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	134	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	135	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	136	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	137	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	138	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	139	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	140	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	141	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	142	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	143	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	144	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	139	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	140	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	141	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	142	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	143	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	144	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	145	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	146	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	146	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	147	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
 	148	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	149	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -188,8 +188,8 @@ In namespace "", we have: {
       )
       In definition "inv", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
+        a = bool<> ::inv::a
+        b = bool<> ::inv::b
       unroll sequence: 
         bool<> a
         bool<> b
@@ -205,11 +205,11 @@ In namespace "", we have: {
       )
       In definition "xor2_ver1", we have: {
       Instances:
-        a = bool<> a
-        a_ = bool<> a_
-        b = bool<> b
-        b_ = bool<> b_
-        c = bool<> c
+        a = bool<> ::xor2_ver1::a
+        a_ = bool<> ::xor2_ver1::a_
+        b = bool<> ::xor2_ver1::b
+        b_ = bool<> ::xor2_ver1::b_
+        c = bool<> ::xor2_ver1::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -232,13 +232,13 @@ In namespace "", we have: {
       )
       In definition "xor2_ver2", we have: {
       Instances:
-        a = bool<> a
-        a_ = bool<> a_
-        ai = inv<> ai
-        b = bool<> b
-        b_ = bool<> b_
-        bi = inv<> bi
-        c = bool<> c
+        a = bool<> ::xor2_ver2::a
+        a_ = bool<> ::xor2_ver2::a_
+        ai = inv<> ::xor2_ver2::ai
+        b = bool<> ::xor2_ver2::b
+        b_ = bool<> ::xor2_ver2::b_
+        bi = inv<> ::xor2_ver2::bi
+        c = bool<> ::xor2_ver2::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -261,13 +261,13 @@ In namespace "", we have: {
       )
       In definition "xor2_ver3", we have: {
       Instances:
-        a = bool<> a
-        a_ = bool<> a_
-        ai = inv<> ai
-        b = bool<> b
-        b_ = bool<> b_
-        bi = inv<> bi
-        c = bool<> c
+        a = bool<> ::xor2_ver3::a
+        a_ = bool<> ::xor2_ver3::a_
+        ai = inv<> ::xor2_ver3::ai
+        b = bool<> ::xor2_ver3::b
+        b_ = bool<> ::xor2_ver3::b_
+        bi = inv<> ::xor2_ver3::bi
+        c = bool<> ::xor2_ver3::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -285,3 +285,5 @@ In namespace "", we have: {
 
 }
 
+footprint: {
+}

@@ -4,99 +4,102 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	65
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	263
-	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	218
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
-	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	procdefn	0	#HEAD#	#TAIL#	218
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	37	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
-	41	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	218
+	20	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	28	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	procdefn	0	#HEAD#	#TAIL#	218
+	42	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	44	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	48	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	50	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	51	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
-	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	55	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	PRSmacro	0	#HEAD#	#TAIL#	49
+	50	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	52	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	56	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	28
 	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	59	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	60	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	66	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	63	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	66	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	35
-	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	76	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	77	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	79	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	82	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
-	83	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	84	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	85	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	86	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	89	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
+	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	75	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	76	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	77	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	78	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	79	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	80	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	82	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	83	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	84	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	85	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	86	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	89	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	90	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	91	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	92	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	94	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	95	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	91	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	94	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	95	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	96	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	97	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	98	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -113,9 +116,9 @@ In namespace "", we have: {
       )
       In definition "passn", we have: {
       Instances:
-        d = bool<> d
-        g = bool<> g
-        s = bool<> s
+        d = bool<> ::passn::d
+        g = bool<> ::passn::g
+        s = bool<> ::passn::s
       unroll sequence: 
         bool<> g
         bool<> s
@@ -123,9 +126,9 @@ In namespace "", we have: {
       prs:
         passn(g,s,d)
       footprint: {
-        bool^0 d (instantiated) = ::passn::d 
-        bool^0 g (instantiated) = ::passn::g 
-        bool^0 s (instantiated) = ::passn::s 
+        d = bool^0 = ::passn::d 
+        g = bool^0 = ::passn::g 
+        s = bool^0 = ::passn::s 
       }
       }
 
@@ -137,12 +140,12 @@ In namespace "", we have: {
       )
       In definition "passnp", we have: {
       Instances:
-        _g = bool<> _g
-        d = bool<> d
-        g = bool<> g
-        n = passn<> n
-        p = passp<> p
-        s = bool<> s
+        _g = bool<> ::passnp::_g
+        d = bool<> ::passnp::d
+        g = bool<> ::passnp::g
+        n = passn<> ::passnp::n
+        p = passp<> ::passnp::p
+        s = bool<> ::passnp::s
       unroll sequence: 
         bool<> g
         bool<> _g
@@ -153,20 +156,20 @@ In namespace "", we have: {
         passp<> p
         p (_g, s, d);
       footprint: {
-        bool^0 d (instantiated) = ::passnp::n.d 
-        bool^0 g (instantiated) = ::passnp::n.g 
-        process passn<>^0 n (instantiated) = ::passnp::n (
-          bool^0 g (instantiated) = ::passnp::n.g 
-          bool^0 s (instantiated) = ::passnp::p.s 
-          bool^0 d (instantiated) = ::passnp::p.d 
+        _g = bool^0 = ::passnp::p.g 
+        d = bool^0 = ::passnp::n.d 
+        g = bool^0 = ::passnp::n.g 
+        n = process passn<>^0 = ::passnp::n (
+          g = bool^0 = ::passnp::n.g 
+          s = bool^0 = ::passnp::p.s 
+          d = bool^0 = ::passnp::p.d 
         )
-        process passp<>^0 p (instantiated) = ::passnp::p (
-          bool^0 g (instantiated) = ::passnp::p.g 
-          bool^0 s (instantiated) = ::passnp::p.s 
-          bool^0 d (instantiated) = ::passnp::p.d 
+        p = process passp<>^0 = ::passnp::p (
+          g = bool^0 = ::passnp::p.g 
+          s = bool^0 = ::passnp::p.s 
+          d = bool^0 = ::passnp::p.d 
         )
-        bool^0 s (instantiated) = ::passnp::n.s 
-        bool^0 _g (instantiated) = ::passnp::p.g 
+        s = bool^0 = ::passnp::n.s 
       }
       }
 
@@ -177,9 +180,9 @@ In namespace "", we have: {
       )
       In definition "passp", we have: {
       Instances:
-        d = bool<> d
-        g = bool<> g
-        s = bool<> s
+        d = bool<> ::passp::d
+        g = bool<> ::passp::g
+        s = bool<> ::passp::s
       unroll sequence: 
         bool<> g
         bool<> s
@@ -187,28 +190,33 @@ In namespace "", we have: {
       prs:
         passp(g,s,d)
       footprint: {
-        bool^0 d (instantiated) = ::passp::d 
-        bool^0 g (instantiated) = ::passp::g 
-        bool^0 s (instantiated) = ::passp::s 
+        d = bool^0 = ::passp::d 
+        g = bool^0 = ::passp::g 
+        s = bool^0 = ::passp::s 
       }
       }
 
   Instances:
-    _n_ = process passn<>^0 _n_ (instantiated) = ::_n_ (
-      bool^0 g (instantiated) = ::_n_.g 
-      bool^0 s (instantiated) = ::_n_.s 
-      bool^0 d (instantiated) = ::_n_.d 
-    )
-    _np_ = process passnp<>^0 _np_ (instantiated) = ::_np_ (
-      bool^0 g (instantiated) = ::_np_.g 
-      bool^0 _g (instantiated) = ::_np_._g 
-      bool^0 s (instantiated) = ::_np_.s 
-      bool^0 d (instantiated) = ::_np_.d 
-    )
-    _p_ = process passp<>^0 _p_ (instantiated) = ::_p_ (
-      bool^0 g (instantiated) = ::_p_.g 
-      bool^0 s (instantiated) = ::_p_.s 
-      bool^0 d (instantiated) = ::_p_.d 
-    )
+    _n_ = passn<> _n_
+    _np_ = passnp<> _np_
+    _p_ = passp<> _p_
 }
 
+footprint: {
+  _n_ = process passn<>^0 = ::_n_ (
+    g = bool^0 = ::_n_.g 
+    s = bool^0 = ::_n_.s 
+    d = bool^0 = ::_n_.d 
+  )
+  _np_ = process passnp<>^0 = ::_np_ (
+    g = bool^0 = ::_np_.g 
+    _g = bool^0 = ::_np_._g 
+    s = bool^0 = ::_np_.s 
+    d = bool^0 = ::_np_.d 
+  )
+  _p_ = process passp<>^0 = ::_p_ (
+    g = bool^0 = ::_p_.g 
+    s = bool^0 = ::_p_.s 
+    d = bool^0 = ::_p_.d 
+  )
+}

@@ -5,43 +5,46 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	202
-	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	7	##ADDR##	chandefn	0	#HEAD#	#TAIL#	82
-	8	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	18	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	8	##ADDR##	chandefn	0	#HEAD#	#TAIL#	82
+	9	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	22	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	23	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	24	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	25	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	31	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	32	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	33	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
-	35	##ADDR##	chancoll	0	#HEAD#	#TAIL#	51
-	36	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
-	40	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	chancoll	0	#HEAD#	#TAIL#	38
+	25	##ADDR##	chancoll	0	#HEAD#	#TAIL#	38
+	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	schnmref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	40	##ADDR##	chancoll	0	#HEAD#	#TAIL#	38
+	41	##ADDR##	chancoll	0	#HEAD#	#TAIL#	38
+	42	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
+	43	##ADDR##	chancoll	0	#HEAD#	#TAIL#	42
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -57,14 +60,14 @@ In namespace "", we have: {
       )
       In definition "chan_proc", we have: {
       Instances:
-        L = fake_chan<>? L
-        R = fake_chan<>! R
+        L = fake_chan<>? ::chan_proc::L
+        R = fake_chan<>! ::chan_proc::R
       unroll sequence: 
         fake_chan<>? L
         fake_chan<>! R
       footprint: {
-        channel fake_chan<>?^0 L (instantiated) = ::chan_proc::L 
-        channel fake_chan<>!^0 R (instantiated) = ::chan_proc::R 
+        L = channel fake_chan<>?^0 = ::chan_proc::L 
+        R = channel fake_chan<>!^0 = ::chan_proc::R 
       }
       }
 
@@ -78,19 +81,24 @@ In namespace "", we have: {
       )
       In channel definition "fake_chan", we have: {
       Instances:
-        d = int<32> d
-        e = bool<> e
+        d = int<32> ::fake_chan::d
+        e = bool<> ::fake_chan::e
       unroll sequence: 
         int<32> d
         bool<> e
       }
 
   Instances:
-    P = process chan_proc<>^0 P (instantiated) = ::P (
-      channel fake_chan<>?^0 L (instantiated) = ::P.L 
-      channel fake_chan<>!^0 R (instantiated) = ::P.R 
-    )
-    X = channel fake_chan<>^0 X (instantiated) = ::P.L 
-    Y = channel fake_chan<>^0 Y (instantiated) = ::P.R 
+    P = chan_proc<> P
+    X = fake_chan<> X
+    Y = fake_chan<> Y
 }
 
+footprint: {
+  P = process chan_proc<>^0 = ::P (
+    L = channel fake_chan<>?^0 = ::P.L 
+    R = channel fake_chan<>!^0 = ::P.R 
+  )
+  X = channel fake_chan<>^0 = ::P.L 
+  Y = channel fake_chan<>^0 = ::P.R 
+}

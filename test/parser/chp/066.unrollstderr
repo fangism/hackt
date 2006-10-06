@@ -5,31 +5,31 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	125
-	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	16	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	21	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	30	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	20
@@ -62,13 +62,12 @@ In namespace "", we have: {
       )
       In definition "metalooptest", we have: {
       Parameters:
-        p = pint<> p (init = 13)
+        p = pint<> ::metalooptest::p
       Instances:
-        L = chan?(int<4>) L
-        R = chan!(bool<>) R
-        b = bool<> b
-
-        l = int<4> l
+        L = chan?(int<4>) ::metalooptest::L
+        R = chan!(bool<>) ::metalooptest::R
+        b = bool<> ::metalooptest::b^1
+        l = int<4> ::metalooptest::l
       unroll sequence: 
         chan?(int<4>) L
         chan!(bool<>) R
@@ -92,3 +91,5 @@ In namespace "", we have: {
 
 }
 
+footprint: {
+}

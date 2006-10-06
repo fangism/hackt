@@ -5,13 +5,13 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	13	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
@@ -30,12 +30,12 @@ Persistent Object Manager text dump:
 	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	29	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	37	##ADDR##	PRSor___	0	#HEAD#	#TAIL#	20
@@ -51,12 +51,12 @@ Persistent Object Manager text dump:
 	47	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	48	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
-	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	54	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	50	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	51	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	52	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	53	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	56	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	57	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	58	##ADDR##	PRSand__	0	#HEAD#	#TAIL#	20
@@ -85,9 +85,9 @@ In namespace "", we have: {
       )
       In definition "nor2_ver1", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
-        c = bool<> c
+        a = bool<> ::nor2_ver1::a
+        b = bool<> ::nor2_ver1::b
+        c = bool<> ::nor2_ver1::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -104,9 +104,9 @@ In namespace "", we have: {
       )
       In definition "nor2_ver2", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
-        c = bool<> c
+        a = bool<> ::nor2_ver2::a
+        b = bool<> ::nor2_ver2::b
+        c = bool<> ::nor2_ver2::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -123,9 +123,9 @@ In namespace "", we have: {
       )
       In definition "nor2_ver3", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
-        c = bool<> c
+        a = bool<> ::nor2_ver3::a
+        b = bool<> ::nor2_ver3::b
+        c = bool<> ::nor2_ver3::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -137,3 +137,5 @@ In namespace "", we have: {
 
 }
 
+footprint: {
+}
