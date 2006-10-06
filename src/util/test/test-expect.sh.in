@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "test-expect.sh.in"
-#	$Id: test-expect.sh.in,v 1.6 2006/10/06 03:30:18 fang Exp $
+#	$Id: test-expect.sh.in,v 1.7 2006/10/06 03:33:46 fang Exp $
 # This file came from "test-expect.sh" in revision prehistory.  
 
 # $1 is the executable, expecting no input
@@ -8,7 +8,7 @@
 #	during distcheck uses _build
 
 cmd=$1
-filter="@SED@ $2/../../../test/address_filter.sed"
+filter="@SED@ -f $2/../../../test/address_filter.sed"
 srcroot=$2/$1
 bldroot=$1
 morefilter=$srcroot.morefilter.sh
