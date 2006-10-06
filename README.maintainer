@@ -1,5 +1,5 @@
 "README.maintainer"
-	$Id: README.maintainer,v 1.1 2006/09/06 20:07:34 fang Exp $
+	$Id: README.maintainer,v 1.2 2006/10/06 03:30:09 fang Exp $
 
 This document provide some useful information for HACKT developers, 
 also useful to some of those who wish to contribute or modify the sources.  
@@ -100,6 +100,9 @@ BRANCH CREATION:
 		Also applies to sub-sub-branches.
 	First src/ChangeLog entry along the branch should summarize the 
 		purpose of the branch.  
+	Add a one-line entry about the branch to the BRANCHES file
+		and commit that to the MAIN TRUNK, so there's a record
+		of the branches existence.  
 
 BRANCH MERGES: (merging branch-to-trunk)
 	CVS Tag: 
@@ -112,6 +115,9 @@ BRANCH MERGES: (merging branch-to-trunk)
 		The ChangeLog should state that a particular branch is 
 		terminated if no further developement is *intended* along 
 		the branch.  
+	BRANCHES: if this is the last merge of the branch to trunk, 
+		then retire the branch by deleting its entry from this file.
+
 
 TRUNK MERGES: (mergine trunk-to-branch)
 	(hasn't happened yet, write later...)

@@ -1,5 +1,12 @@
 "ChangeLog"
 
+2006-10-05	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-26:
+	  Added BRANCHES file for tracking purposes.  
+	  Updated branch-related notes in README.maintainer.
+
+
 2006-09-03	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-08:

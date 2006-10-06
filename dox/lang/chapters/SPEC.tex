@@ -1,5 +1,5 @@
 % "chapters/SPEC.tex"
-%	$Id: SPEC.tex,v 1.1 2006/02/04 19:55:57 fang Exp $
+%	$Id: SPEC.tex,v 1.2 2006/10/06 03:30:10 fang Exp $
 
 \chapter{SPEC Directives}
 \label{sec:spec}
@@ -9,4 +9,18 @@ in the \ttt{spec} sub-language.
 
 Someone should write the various spec directives up, ahem!
 
+\begin{itemize}
+\item \ttt{exclhi} --- specifies that group of nodes are 
+	mutually exclusive high, i.e. only one member of he group can be
+	logic high at \emph{any} time.  For simulators, this produces
+	a run-time check directive.  For verifiers, like \ttt{lvs}, 
+	this may help with worst-case charge-sharing analysis.  
+\item \ttt{excllo} --- analogous to \ttt{exclhi} but for logic low
+\item \ttt{mk_exclhi} --- coercively forces (in simulation) only
+	one node of the set to be high at a time.  If a member of the
+	set is already high, then it blocks the others.  
+	This is useful for arbitration.  
+\item \ttt{mk_excllo} --- analogous to \ttt{mk_exclhi}
+\item \ttt{cross-coupled}
+\end{itemize}
 

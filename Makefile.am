@@ -2,7 +2,7 @@
 #
 # Process this file with "automake" to generate "Makefile.in".
 #
-#	$Id: Makefile.am,v 1.34 2006/09/06 20:07:33 fang Exp $
+#	$Id: Makefile.am,v 1.35 2006/10/06 03:30:08 fang Exp $
 
 include $(top_srcdir)/Make.stddef
 
@@ -57,6 +57,7 @@ noinst_SCRIPTS = install_transform.sh
 EXTRA_DIST += Make.stddef Make.global local.cvsignore \
 	bootstrap \
 	BOUNTY \
+	BRANCHES \
 	BUILDS \
 	CONTRIBUTORS \
 	README.CVS \

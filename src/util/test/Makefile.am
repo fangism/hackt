@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.47 2006/05/09 05:39:24 fang Exp $
+#	$Id: Makefile.am,v 1.48 2006/10/06 03:30:15 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -12,6 +12,8 @@ AUTOMAKE_OPTIONS += subdir-objects
 
 SUFFIXES = .test .ii .i .hii .hhii .tccii
 TEST_EXPECT_SH = test-expect.sh
+
+all: $(TEST_EXPECT_SH)
 
 check_SCRIPTS = $(TEST_EXPECT_SH)
 
@@ -233,6 +235,9 @@ AM_CXXFLAGS = $(MORE_CXXFLAGS)
 EXTRA_DIST += README test-expect.sh.in local.cvsignore \
 	$(noinst_PROGRAMS:=.stderr) \
 	$(MOREFILTER_TESTS:=.morefilter.sh)
+
+# test-expect.sh: $(top_builddir)/config.status test-expect.sh.in
+#	cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@
 
 CLEANFILES += \
 	$(noinst_PROGRAMS:=.test) \
