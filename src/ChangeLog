@@ -5,6 +5,12 @@
 
 2006-10-06	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-27:
+	  sim/prsim/Cause.h: initialize the unused padding character
+		because it is written out to binary checkpoint, and
+		is required to match for deterministic diffing.
+	  sim/prsim: other files added some debugging hooks (disabled)
+
 	* HACKT-00-01-04-main-00-80-26:
 	  No source revision.  Packaging matters.  
 	  util/test/Makefile.am, test-expect.sh.in:

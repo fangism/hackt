@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Cause.h"
 	Structure of basic node event.  
-	$Id: Cause.h,v 1.2 2006/08/12 00:36:29 fang Exp $
+	$Id: Cause.h,v 1.3 2006/10/06 23:38:51 fang Exp $
  */
 
 #ifndef	__HAC_SIM_PRSIM_CAUSE_H__
@@ -81,6 +81,9 @@ struct LastCause {
 		caused_by_value[0] = 0;	// don't care
 		caused_by_value[1] = 0;	// don't care
 		caused_by_value[2] = 0;	// don't care
+		caused_by_value[3] = 0;	// really don't care
+		// but needs to be initialized else binary will be
+		// non-deterministic
 	}
 
 	/**

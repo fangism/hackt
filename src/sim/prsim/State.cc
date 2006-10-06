@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/State.cc"
 	Implementation of prsim simulator state.  
-	$Id: State.cc,v 1.28 2006/09/19 21:06:43 fang Exp $
+	$Id: State.cc,v 1.29 2006/10/06 23:38:53 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -67,6 +67,11 @@
 	Until that day, we won't worry about it.  
  */
 #define	CHECKPOINT_RULE_STATE_MAP		0
+
+/**
+	For debugging only.  To clearly see section breaks.  
+ */
+#define	EXTRA_ALIGN_MARKERS			0
 
 namespace HAC {
 namespace entity { }
@@ -3094,6 +3099,12 @@ State::dump_node_check_excl_rings(ostream& o, const node_index_type ni) const {
  */
 bool
 State::save_checkpoint(ostream& o) const {
+#if EXTRA_ALIGN_MARKERS
+	static const short sep = 0xFFFF;
+#define	WRITE_ALIGN_MARKER		write_value(o, sep);
+#else
+#define	WRITE_ALIGN_MARKER		{}
+#endif
 	write_value(o, magic_string);
 {
 	// node_pool
@@ -3109,6 +3120,7 @@ State::save_checkpoint(ostream& o) const {
 #endif
 	);
 }
+	WRITE_ALIGN_MARKER
 	// graph_pool -- structural only
 {
 #if CHECKPOINT_RULE_STATE_MAP
@@ -3134,6 +3146,7 @@ State::save_checkpoint(ostream& o) const {
 		event_pool[i->event_index].save_state(o);
 	}
 }
+	WRITE_ALIGN_MARKER
 	// excl_rings -- structural only
 	// excl and pending queues should be empty!
 	ISE_INVARIANT(exclhi_queue.empty());
@@ -3141,6 +3154,7 @@ State::save_checkpoint(ostream& o) const {
 	ISE_INVARIANT(pending_queue.empty());
 	write_value(o, current_time);
 	write_value(o, uniform_delay);
+	WRITE_ALIGN_MARKER
 {
 	// watch_list? yes, because needs to be kept consistent with nodes
 	typedef	watch_list_type::const_iterator		const_iterator;
@@ -3151,6 +3165,7 @@ State::save_checkpoint(ostream& o) const {
 		i->second.save_state(o);
 	}
 }
+	WRITE_ALIGN_MARKER
 	write_value(o, flags);
 	write_value(o, unstable_policy);
 	write_value(o, weak_unstable_policy);
@@ -3174,6 +3189,13 @@ State::save_checkpoint(ostream& o) const {
  */
 bool
 State::load_checkpoint(istream& i) {
+#if EXTRA_ALIGN_MARKERS
+	static const short sep = 0xFFFF;
+#define	READ_ALIGN_MARKER						\
+	{ short x; read_value(i, x); INVARIANT(x == sep); }
+#else
+#define	READ_ALIGN_MARKER		{}
+#endif
 	static const char bad_ckpt[] = 
 		"ERROR: not a valid hackt prsim checkpoint file.";
 	initialize();		// start by initializing everything
@@ -3211,6 +3233,7 @@ try {
 		j->load_state(i);
 	}
 #endif
+	READ_ALIGN_MARKER		// sanity alignment check
 }{
 	// to reconstruct from nodes only, we perform propagation evaluation
 	// on every node, as if it had just fired out of X state.  
@@ -3274,6 +3297,7 @@ try {
 		enqueue_event(t, __load_allocate_event(ev));
 	}
 }
+	READ_ALIGN_MARKER		// sanity alignment check
 	// excl_rings -- structural only
 	// excl and pending queues should be empty!
 	ISE_INVARIANT(exclhi_queue.empty());
@@ -3281,6 +3305,7 @@ try {
 	ISE_INVARIANT(pending_queue.empty());
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
+	READ_ALIGN_MARKER
 {
 	// watch_list? yes, because needs to be kept consistent with nodes
 	size_t s;
@@ -3291,6 +3316,7 @@ try {
 		watch_list[k].load_state(i);
 	}
 }
+	READ_ALIGN_MARKER		// sanity alignment check
 	read_value(i, flags);
 	read_value(i, unstable_policy);
 	read_value(i, weak_unstable_policy);
@@ -3339,6 +3365,9 @@ if (checking_excl()) {
  */
 ostream&
 State::dump_checkpoint(ostream& o, istream& i) {
+#if EXTRA_ALIGN_MARKERS
+	static const short sep = 0xFFFF;
+#endif
 	string header_check;
 	read_value(i, header_check);
 	o << "header string: " << header_check << endl;
@@ -3353,6 +3382,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 		node_type::dump_checkpoint_state(o << j << '\t', i) << endl;
 	}
 }
+	READ_ALIGN_MARKER		// sanity alignment check
 	// graph_pool -- structural only
 {
 #if CHECKPOINT_RULE_STATE_MAP
@@ -3382,11 +3412,13 @@ State::dump_checkpoint(ostream& o, istream& i) {
 		event_type::dump_checkpoint_state(o, i) << endl;
 	}
 }
+	READ_ALIGN_MARKER		// sanity alignment check
 	time_type current_time, uniform_delay;
 	read_value(i, current_time);
 	read_value(i, uniform_delay);
 	o << "current time: " << current_time << endl;
 	o << "uniform delay: " << uniform_delay << endl;
+	READ_ALIGN_MARKER
 {
 	// watch_list? yes, because needs to be kept consistent with nodes
 	size_t s;
@@ -3399,6 +3431,7 @@ State::dump_checkpoint(ostream& o, istream& i) {
 		watch_entry::dump_checkpoint_state(o, i) << endl;
 	}
 }
+	READ_ALIGN_MARKER		// sanity alignment check
 	flags_type flags;
 	read_value(i, flags);
 	o << "flags: " << size_t(flags) << endl;
@@ -3420,6 +3453,8 @@ State::dump_checkpoint(ostream& o, istream& i) {
 	o << "footer string: " << header_check << endl;
 	return o;
 }	// end State::dump_checkpoint
+
+#undef	READ_ALIGN_MARKER
 
 //=============================================================================
 // struct watch_entry method definitions

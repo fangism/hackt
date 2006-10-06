@@ -1,7 +1,7 @@
 /**
 	\file "sim/prsim/Node.cc"
 	Implementation of PRS node.  
-	$Id: Node.cc,v 1.8 2006/08/12 00:36:34 fang Exp $
+	$Id: Node.cc,v 1.9 2006/10/06 23:38:52 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -23,6 +23,11 @@ using std::ostream_iterator;
 using std::string;
 using util::write_value;
 using util::read_value;
+
+/**
+	For debugging only.  Clearly see node boundaries.  
+ */
+#define	NODE_ALIGN_MARKERS				0
 
 //=============================================================================
 // class Node method definitions
@@ -233,6 +238,10 @@ NodeState::string_to_value(const string& v) {
  */
 void
 NodeState::save_state(ostream& o) const {
+#if NODE_ALIGN_MARKERS
+	static const char cc = 0xCC;
+	write_value(o, cc);
+#endif
 	write_value(o, value);
 	write_value(o, state_flags);
 //	omit event index, which is reconstructed
@@ -242,6 +251,10 @@ NodeState::save_state(ostream& o) const {
 	write_value(o, caused_by_node);
 #endif
 	write_value(o, tcount);
+#if NODE_ALIGN_MARKERS
+	static const char dd = 0xDD;
+	write_value(o, dd);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -254,6 +267,10 @@ NodeState::save_state(ostream& o) const {
 void
 NodeState::load_state(istream& i) {
 	INVARIANT(value == LOGIC_OTHER);
+#if NODE_ALIGN_MARKERS
+	char dd;
+	read_value(i, dd);
+#endif
 	read_value(i, value);
 	read_value(i, state_flags);
 //	omit event index, which is reconstructed
@@ -264,6 +281,9 @@ NodeState::load_state(istream& i) {
 	read_value(i, caused_by_node);
 #endif
 	read_value(i, tcount);
+#if NODE_ALIGN_MARKERS
+	read_value(i, dd);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

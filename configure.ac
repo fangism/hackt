@@ -3,7 +3,7 @@
 # (Prior to 2005/06/19, this file was "configure.in", 
 #	in case one should want to trace back the CVS revision history.)
 #
-#	$Id: configure.ac,v 1.94 2006/10/06 05:50:31 fang Exp $
+#	$Id: configure.ac,v 1.95 2006/10/06 23:38:50 fang Exp $
 
 # Hint: Try running "autoscan" for suggestions on what should go in here.  
 # Results of autoscan appear in "configure.scan".  
@@ -54,6 +54,7 @@ AC_CHECK_PROG([DIFF], diff, diff)
 AC_CHECK_PROG([PATCH], patch, patch)
 AC_CHECK_PROG([FIND], find, find)
 AC_CHECK_PROG([GREP], grep, grep)
+AC_CHECK_PROG([HEXDUMP], hexdump, hexdump)
 AC_CHECK_PROG([ECHO], echo, echo)
 AC_CHECK_PROG([SORT], sort, sort)
 AC_CHECK_PROG([CUT], cut, cut)
