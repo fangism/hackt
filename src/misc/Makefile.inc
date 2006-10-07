@@ -1,7 +1,7 @@
 # "misc/Makefile.inc"
 #	vim: ft=automake
 # includable auto-Makefile snippet
-#	$Id: Makefile.inc,v 1.4 2006/06/26 01:46:45 fang Exp $
+#	$Id: Makefile.inc,v 1.5 2006/10/07 16:35:29 fang Exp $
 
 # variables conditionally defined and provided in this Makefile
 FUNPROGRAMS =
@@ -39,7 +39,7 @@ EXTRA_DIST += misc/README \
 
 misc/sudoku-test.sh:
 	@$(ECHO) #!$(SHELL) > $@
-	@$(ECHO) sudoku-solver $(srcdir)/misc/sudoku-sample.txt >> $@
+	@$(ECHO) ./sudoku-solver $(srcdir)/misc/sudoku-sample.txt >> $@
 	@$(CHMOD) +x $@
 
 CLEANFILES += misc/sudoku-test.sh
