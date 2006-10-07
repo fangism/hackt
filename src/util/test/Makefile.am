@@ -1,5 +1,5 @@
 # "src/util/test/Makefile.am"
-#	$Id: Makefile.am,v 1.48 2006/10/06 03:30:15 fang Exp $
+#	$Id: Makefile.am,v 1.49 2006/10/07 20:58:29 fang Exp $
 # NOTE: none of the tests in this directory should depend on ANY
 # external package libraries or headers, so we coercively set
 # LIBS and LDFLAGS to empty, which is normally bad policy for the
@@ -13,7 +13,7 @@ AUTOMAKE_OPTIONS += subdir-objects
 SUFFIXES = .test .ii .i .hii .hhii .tccii
 TEST_EXPECT_SH = test-expect.sh
 
-all: $(TEST_EXPECT_SH)
+all-local: $(TEST_EXPECT_SH)
 
 check_SCRIPTS = $(TEST_EXPECT_SH)
 
