@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.8.6.1 2006/09/11 22:30:28 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.8.6.1.8.1 2006/10/07 04:55:29 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -15,6 +15,7 @@
 
 namespace HAC {
 namespace entity {
+class const_param_expr_list;
 using std::vector;
 
 //=============================================================================
@@ -29,6 +30,7 @@ friend class const_param_expr_list;
 protected:
 	typedef	vector<count_ptr<const param_expr> >	parent_type;
 public:
+	typedef parent_type::value_type			value_type;
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
 	typedef parent_type::reverse_iterator		reverse_iterator;
@@ -37,14 +39,23 @@ public:
 	dynamic_param_expr_list();
 
 	explicit
+	dynamic_param_expr_list(const value_type&);
+
+	dynamic_param_expr_list(const const_param_expr_list&);
+
+	dynamic_param_expr_list(const const_param_expr_list&, const size_t);
+
+	explicit
 	dynamic_param_expr_list(const size_t);
 
 // lazy: use default copy constructor
 //	dynamic_param_expr_list(const dynamic_param_expr_list& pl);
 	~dynamic_param_expr_list();
 
+#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	count_ptr<param_expr_list>
 	copy(void) const;
+#endif
 
 	size_t
 	size(void) const;
@@ -55,8 +66,13 @@ public:
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
 
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	count_ptr<const_param_expr_list>
+	make_const_param_expr_list(void) const;
+#else
 	excl_ptr<param_expr_list>
 	make_copy(void) const;
+#endif
 
 	count_ptr<const param_expr>
 	operator [] (const size_t) const;

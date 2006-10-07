@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.4.50.2 2006/10/05 01:15:52 fang Exp $
+	$Id: meta_loop_base.cc,v 1.4.50.2.2.1 2006/10/07 04:56:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -16,7 +16,11 @@
 #include "Object/unroll/instantiation_statement_base.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/param_instantiation_statement.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#else
 #include "Object/expr/param_expr_list.h"
+#endif
 #include "Object/expr/meta_range_list.h"
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"

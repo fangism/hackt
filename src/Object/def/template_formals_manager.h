@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.6.14.2 2006/09/11 22:30:21 fang Exp $
+	$Id: template_formals_manager.h,v 1.6.14.2.8.1 2006/10/07 04:55:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -173,7 +173,12 @@ private:
 	good_bool
 	__unroll_formal_parameters(const unroll_context&,
 		const template_formals_list_type&, 
-		const count_ptr<const param_expr_list>&);
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+		const count_ptr<const dynamic_param_expr_list>&
+#else
+		const count_ptr<const param_expr_list>&
+#endif
+		);
 #endif
 public:
 	void

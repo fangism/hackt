@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.18.6.4 2006/10/01 21:14:11 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.18.6.4.4.1 2006/10/07 04:55:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -18,6 +18,9 @@
 // start of static initializations
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
+
+#include <algorithm>
+#include <iterator>
 
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/const_param_expr_list.h"
@@ -92,10 +95,12 @@ const_param_expr_list::~const_param_expr_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 count_ptr<param_expr_list>
 const_param_expr_list::copy(void) const {
 	return count_ptr<param_expr_list>(new this_type(*this));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
@@ -138,12 +143,14 @@ const_param_expr_list::size(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 excl_ptr<param_expr_list>
 const_param_expr_list::make_copy(void) const {
 	return excl_ptr<param_expr_list>(
 		new const_param_expr_list(*this));
 	// use default copy constructor
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const param_expr>
@@ -377,6 +384,17 @@ const_param_expr_list::must_be_equivalent(const this_type& cpl) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+count_ptr<dynamic_param_expr_list>
+const_param_expr_list::to_dynamic_list(void) const {
+	const count_ptr<dynamic_param_expr_list>
+		ret(new dynamic_param_expr_list);
+	std::copy(begin(), end(), std::back_inserter(*ret));
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#else
 /**
 	\return newly allocated copy of itself, always succeeds.  
 	Eventually will add some context argument, though it is not needed
@@ -480,6 +498,7 @@ if (a_size != f_size) {
 			} else {
 				// else, actually assign it a copy in the list
 				*p_iter = default_expr;
+				// TODO: positional parameter substitution
 			}
 		}
 	}
@@ -529,6 +548,7 @@ if (a_size != f_size) {
 	return good_bool(true);
 }
 }
+#endif	// ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -586,7 +606,7 @@ if (a_size != f_size) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if RESOLVE_VALUES_WITH_FOOTPRINT
+#if RESOLVE_VALUES_WITH_FOOTPRINT && !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 /**
 	This combines the functionality of certify_template_actuals
 	with unroll_resolve_rvalues, in addition to instantiating
@@ -741,6 +761,12 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dynamic_param_expr_list::dynamic_param_expr_list(const value_type& p) :
+		param_expr_list(), parent_type() {
+	push_back(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::dynamic_param_expr_list(const size_t s) :
 		param_expr_list(), parent_type() {
 	util::reserve(AS_A(parent_type&, *this), s);
@@ -766,10 +792,12 @@ dynamic_param_expr_list::~dynamic_param_expr_list() {
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_param_expr_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 count_ptr<param_expr_list>
 dynamic_param_expr_list::copy(void) const {
 	return count_ptr<param_expr_list>(new this_type(*this));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -796,12 +824,34 @@ dynamic_param_expr_list::size(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+/**
+	\return a const_param_expr_list if all elements successfully
+		dynamic_cast to const_params.  
+ */
+count_ptr<const_param_expr_list>
+dynamic_param_expr_list::make_const_param_expr_list(void) const {
+	typedef	count_ptr<const_param_expr_list>	return_type;
+	const count_ptr<const_param_expr_list> ret(new const_param_expr_list);
+	const_iterator i(begin()), e(end());
+	for ( ; i!=e; ++i) {
+		const count_ptr<const const_param>
+			cp(i->is_a<const const_param>());
+		if (!cp)
+			return return_type(NULL);
+		ret->push_back(cp);
+	}
+	return ret;
+}
+
+#else
 excl_ptr<param_expr_list>
 dynamic_param_expr_list::make_copy(void) const {
 	return excl_ptr<param_expr_list>(
 		new dynamic_param_expr_list(*this));
 	// use default copy constructor
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const param_expr>
@@ -1084,7 +1134,23 @@ if (a_size != f_size) {
 				return good_bool(false);
 			} else {
 				// else, actually assign it a copy in the list
+				// TODO: positional parameter substitution!
 				*p_iter = default_expr;
+/***
+	Example of default positional parameter substitution:
+		template <pint D, E=D+1>
+		defproc foo() { }
+
+		template <pint M>
+		defproc bar(foo<M, > x) { }	// <-- HERE
+		// shouldn't expand to <M, D+1>, but <M, M+1>
+		// D should be substituted for the parameter expression
+		// in the same position as D.
+		// Likewise, 
+		template <pint M>
+		defproc bar(foo<2*M, > x) { }
+		// should be expanded as <2*M, (2*M)+1>
+***/
 			}
 		}
 	}

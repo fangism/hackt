@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.5 2006/06/26 01:46:28 fang Exp $
+	$Id: canonical_type_base.cc,v 1.5.20.1 2006/10/07 04:55:37 fang Exp $
  */
 
 #include <algorithm>
@@ -9,11 +9,16 @@
 #include "Object/type/template_actuals.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#endif
 #include "Object/expr/expr_dump_context.h"
 #include "util/memory/count_ptr.tcc"
 
 namespace HAC {
 namespace entity {
+using std::copy;
+using std::back_inserter;
 //=============================================================================
 // class canonical_type_base method definitions
 
@@ -35,6 +40,20 @@ template_actuals
 canonical_type_base::get_template_params(const size_t num_strict) const {
 	if (!param_list_ptr)
 		return template_actuals();
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	const template_actuals::arg_list_ptr_type
+		sp(new template_actuals::expr_list_type());
+	copy(param_list_ptr->begin(), param_list_ptr->begin() +num_strict, 
+		back_inserter(*sp));
+	const size_t s = param_list_ptr->size();
+	const template_actuals::arg_list_ptr_type
+		rp((num_strict < s) ?
+			new template_actuals::expr_list_type() : NULL);
+	if (rp) {
+		copy(param_list_ptr->begin() +num_strict,
+			param_list_ptr->begin() +s, back_inserter(*rp));
+	}
+#else
 	const param_list_ptr_type
 		sp(new param_list_type(
 			param_list_ptr->begin(),
@@ -45,6 +64,7 @@ canonical_type_base::get_template_params(const size_t num_strict) const {
 			new param_list_type(
 			param_list_ptr->begin() +num_strict,
 			param_list_ptr->begin() +s) : NULL);
+#endif
 	return template_actuals(sp, rp);
 }
 

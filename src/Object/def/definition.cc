@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.7 2006/10/05 01:15:27 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.7.2.1 2006/10/07 04:55:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -51,7 +51,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/expr_dump_context.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#else
 #include "Object/expr/param_expr_list.h"
+#endif
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/common/namespace.h"

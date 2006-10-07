@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.11.8.5 2006/10/02 03:19:32 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.11.8.5.4.1 2006/10/07 04:55:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -26,6 +26,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/param_type_reference.h"
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
+#endif
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
 #endif
 #if MODULE_PROCESS
 #include "Object/unroll/instantiation_statement.h"

@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-01:
+	  Branch objectives:
+		phase out use of param_expr_list as a base class 
+		of dynamic_param_expr_list, which simplifies life greatly.
+		Goal: perform positional parameter substitution on
+		default template parameter expressions, at compile time.  
+	  This revision: no new regressions, same ones.  
+	  Next: default param substitution.  
+
+
 2006-10-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-28:

@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/empty_instantiation_statement_type_ref_base.h"
-	$Id: empty_instantiation_statement_type_ref_base.h,v 1.2 2006/03/15 04:38:23 fang Exp $
+	$Id: empty_instantiation_statement_type_ref_base.h,v 1.2.40.1 2006/10/07 04:55:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EMPTY_INSTANTIATION_STATEMENT_TYPE_REF_BASE_H__
@@ -30,7 +30,13 @@ using util::memory::count_ptr;
  */
 class empty_instantiation_statement_type_ref_base {
 public:
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	// TODO: use typedef
+	typedef	count_ptr<const dynamic_param_expr_list>
+						const_relaxed_args_type;
+#else
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+#endif
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
 	typedef	null_parameter_type	instance_collection_parameter_type;

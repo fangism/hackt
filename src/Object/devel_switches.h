@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.9 2006/10/05 01:15:23 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.9.2.1 2006/10/07 04:55:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -140,6 +140,14 @@
 	Status:
  */
 #define	RVALUE_LVALUE_LOOKUPS	(1 && SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS)
+
+/**
+	Define to 1 to always compile objects using dynamic_param_expr_lists.
+	This takes care of a reject-valid bug (never tripped)
+	and greatly simplifies expression substitution.  
+	Goal: 1
+ */
+#define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	1
 
 //=============================================================================
 
