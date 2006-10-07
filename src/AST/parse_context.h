@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.9.4.3.4.2 2006/10/07 20:08:19 fang Exp $
+	$Id: parse_context.h,v 1.9.4.3.4.3 2006/10/07 22:09:31 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -173,18 +173,22 @@ private:
 			are modifiable.  
 	 */
 	stack<never_ptr<name_space> >	namespace_stack;
-#define current_namespace	namespace_stack.top()
 
 	/**
 		Pointer to the current definition that is open for 
 		modification, intended for adding items to the body.  
 		One pointer is sufficient for all definitions because
 		only one definition can be open at a time.  
+		Until now! (2006-10-07)
 		Never delete's because the definition has already 
 		been registered to some scopespace that owns it.  
 		Q: is this made redundant by current_scope?
 	 */
+#if SUPPORT_NESTED_DEFINITIONS
+	stack<never_ptr<definition_base> >	open_definition_stack;
+#else
 	never_ptr<definition_base>	current_open_definition;
+#endif
 
 	/**
 		This pointer is the scratch space for constructing
@@ -210,7 +214,6 @@ private:
 		Remember to push NULL initially.  
 	 */
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
-#define	current_sequential_scope		sequential_scope_stack.top()
 
 	/**
 		TODO: should just contain reference to module...
@@ -380,6 +383,11 @@ public:
 #endif
 		);
 
+	never_ptr<sequential_scope>
+	get_current_sequential_scope(void) const {
+		return sequential_scope_stack.top();
+	}
+
 	never_ptr<const scopespace>
 	get_current_named_scope(void) const;
 
@@ -388,7 +396,7 @@ public:
 
 	never_ptr<const name_space>
 	get_current_namespace(void) const
-		{ return current_namespace; }
+		{ return namespace_stack.top(); }
 
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);
@@ -407,7 +415,11 @@ public:
 
 	never_ptr<definition_base>
 	get_current_open_definition(void) const {
+#if SUPPORT_NESTED_DEFINITIONS
+		return open_definition_stack.top();
+#else
 		return current_open_definition;
+#endif
 	}
 
 #if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT

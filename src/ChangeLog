@@ -5,8 +5,15 @@
 
 2006-10-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-03:
+	  Top-level module is now registered with the parse_context as the
+		outer-most open definition (now implemented as stack).
+	  Other minor clean-ups in parse_context.{h,tcc,cc}.
+	  Next: pass parent template contexts for default substitution.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-02:
-	  Start of bunch of rewritten code (disabled) to rework
+	  Start of bunch of rewritten code (currently disabled) to rework
 		positional template parameter substitution.
 	  Head start on param_expr::substitute_positional_parameters()
 		in method hierarchy.  

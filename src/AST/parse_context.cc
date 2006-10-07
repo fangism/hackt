@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11.4.8.2.2 2006/10/07 20:08:18 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.8.2.3 2006/10/07 22:09:30 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -46,6 +46,7 @@
 #include "Object/inst/pint_value_collection.h"
 #include "Object/module.h"
 
+#include "common/ICE.h"
 #include "util/stacktrace.h"
 #include "util/memory/count_ptr.tcc"
 
@@ -84,7 +85,11 @@ context::context(module& m) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
+#if SUPPORT_NESTED_DEFINITIONS
+		open_definition_stack(), 
+#else
 		current_open_definition(NULL), 
+#endif
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
@@ -102,12 +107,16 @@ context::context(module& m) :
 
 	// perhaps verify that g is indeed global?  can't be any namespace
 	namespace_stack.push(global_namespace);
+#if SUPPORT_NESTED_DEFINITIONS
+	// now using top-level as a process definition!
+	open_definition_stack.push(never_ptr<definition_base>(&m));
+#endif
 	// remember that the creator of the global namespace is responsible
 	// for deleting it.  
 	sequential_scope_stack.push(never_ptr<sequential_scope>(&m));
 
 	// "current_namespace" is macro-defined to namespace_stack.top()
-	NEVER_NULL(current_namespace);	// make sure allocated properly
+	NEVER_NULL(get_current_namespace());	// make sure allocated properly
 	NEVER_NULL(global_namespace);	// same pointer
 
 	// Q: should built-ins be in a super namespace about the globals?
@@ -131,7 +140,11 @@ context::context(const module& m, const bool _pub) :
 		indent(0),		// reset formatting indentation
 		type_error_count(0), 	// type-check error count
 		namespace_stack(), 
+#if SUPPORT_NESTED_DEFINITIONS
+		open_definition_stack(), 
+#else
 		current_open_definition(NULL), 
+#endif
 		current_prototype(NULL), 
 		current_fundamental_type(NULL), 
 		sequential_scope_stack(), 
@@ -147,9 +160,14 @@ context::context(const module& m, const bool _pub) :
 		view_all_publicly(_pub)
 		{
 	namespace_stack.push(global_namespace);
+#if SUPPORT_NESTED_DEFINITIONS
+	// now using top-level as a process definition!
+	// load NULL because this is a read-only use of the module
+	open_definition_stack.push(never_ptr<definition_base>(NULL));
+#endif
 	// NOTE: we don't bother loading the module's sequential scope
 	// because it should not be used in a read-only context.  
-	NEVER_NULL(current_namespace);	// make sure allocated properly
+	NEVER_NULL(get_current_namespace());	// make sure allocated properly
 	NEVER_NULL(global_namespace);	// same pointer
 }
 
@@ -183,11 +201,11 @@ context::open_namespace(const token_identifier& id) {
 	current_namespace->dump(cerr) << endl;
 #endif
 	const never_ptr<name_space>
-		insub(current_namespace->add_open_namespace(id));
+		insub(namespace_stack.top()->add_open_namespace(id));
 
 #if 0
 	cerr << "After add_open_namespace(), " << endl;
-	current_namespace->dump(cerr) << endl;
+	get_current_namespace()->dump(cerr) << endl;
 #endif
 
 	// caution: assigning to NULL may ruin the context!
@@ -216,12 +234,12 @@ context::open_namespace(const token_identifier& id) {
 void
 context::close_namespace(void) {
 	never_ptr<const name_space>
-		new_top(current_namespace->leave_namespace());
+		new_top(namespace_stack.top()->leave_namespace());
 	indent--;
 	// null out member pointers to other sub structures: 
 	//	types, definitions...
 	namespace_stack.pop();
-	INVARIANT(current_namespace == new_top);
+	INVARIANT(get_current_namespace() == new_top);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -233,7 +251,7 @@ context::close_namespace(void) {
 void
 context::using_namespace(const qualified_id& id) {
 	never_ptr<const name_space> ret =
-		current_namespace->add_using_directive(id);
+		namespace_stack.top()->add_using_directive(id);
 	if (!ret) {
 		type_error_count++;
 		cerr << where(id) << endl;
@@ -250,7 +268,7 @@ context::using_namespace(const qualified_id& id) {
 void
 context::alias_namespace(const qualified_id& id, const string& a) {
 	const never_ptr<const name_space>
-		ret(current_namespace->add_using_alias(id, a));
+		ret(namespace_stack.top()->add_using_alias(id, a));
 	if (!ret) {
 		type_error_count++;
 		cerr << where(id) << endl;
@@ -265,7 +283,7 @@ context::alias_namespace(const qualified_id& id, const string& a) {
  */
 never_ptr<const name_space>
 context::top_namespace(void) const {
-	return current_namespace;
+	return get_current_namespace();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -278,7 +296,7 @@ never_ptr<definition_base>
 context::add_declaration(excl_ptr<definition_base>& d) {
 	// careful, passing by reference may breaks some invariant!
 	const never_ptr<definition_base>
-		ret(current_namespace->add_definition(d));
+		ret(namespace_stack.top()->add_definition(d));
 	if (!ret) {
 		// something went wrong
 		type_error_count++;
@@ -312,7 +330,7 @@ context::add_declaration(excl_ptr<definition_base>& d) {
 void
 context::open_enum_definition(const token_identifier& ename) {
 	const never_ptr<enum_datatype_def>
-		ed(current_namespace->lookup_member_with_modify(ename)
+		ed(get_current_namespace()->lookup_member_with_modify(ename)
 				.is_a<enum_datatype_def>());
 	if (ed) {
 		if (ed->is_defined()) {
@@ -320,8 +338,12 @@ context::open_enum_definition(const token_identifier& ename) {
 				"redefinition at " << where(ename) << endl;
 			THROW_EXIT;
 		}
-		INVARIANT(!current_open_definition);	// sanity check
+#if SUPPORT_NESTED_DEFINITIONS
+		open_definition_stack.push(ed);
+#else
+		INVARIANT(!get_current_open_definition());	// sanity check
 		current_open_definition = ed;
+#endif
 		ed->mark_defined();
 		indent++;
 	} else {
@@ -344,7 +366,7 @@ context::open_enum_definition(const token_identifier& ename) {
 good_bool
 context::add_enum_member(const token_identifier& em) {
 	const never_ptr<enum_datatype_def>
-		ed(current_open_definition.is_a<enum_datatype_def>());
+		ed(get_current_open_definition().is_a<enum_datatype_def>());
 	if (!ed) {
 		cerr << "expected current_open_definition to be "
 			"enum_datatype_def!  FATAL ERROR." << endl;
@@ -366,7 +388,11 @@ context::add_enum_member(const token_identifier& em) {
  */
 void
 context::close_enum_definition(void) {
+#if SUPPORT_NESTED_DEFINITIONS
+	open_definition_stack.pop();
+#else
 	current_open_definition = never_ptr<definition_base>(NULL);
+#endif
 	indent--;
 }
 
@@ -379,7 +405,11 @@ context::close_enum_definition(void) {
 inline
 void
 context::close_current_definition(void) {
+#if SUPPORT_NESTED_DEFINITIONS
+	open_definition_stack.pop();
+#else
 	current_open_definition = never_ptr<definition_base>(NULL);
+#endif
 	indent--;
 }
 
@@ -405,6 +435,13 @@ never_ptr<const template_formals_manager>
 parse_context::get_parent_template_context(void) const {
 	typedef	never_ptr<const template_formals_manager>	return_type;
 	// TODO: use module as current definition! (MODULE_PROCESS)
+#if SUPPORT_NESTED_DEFINITIONS
+	const never_ptr<const definition_base>
+		current_open_definition(get_current_open_definition());
+	NEVER_NULL(current_open_definition);
+	return return_type(current_open_definition->
+		get_template_formals_manager());
+#else
 	if (current_open_definition)
 		return return_type(current_open_definition->
 			get_template_formals_manager());
@@ -413,6 +450,7 @@ parse_context::get_parent_template_context(void) const {
 			get_template_formals_manager());
 	}
 	// else defer to module...
+#endif
 }
 #endif
 
@@ -548,12 +586,12 @@ context::add_connection(
 #endif
 		) {
 #if REF_COUNT_INSTANCE_MANAGEMENT
-	current_sequential_scope->append_instance_management(c);
+	get_current_sequential_scope()->append_instance_management(c);
 #else
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
 	STACKTRACE("context::add_connection()");
 	im_pointer_type imb(c);	// is not const, should be transferrable
-	current_sequential_scope->append_instance_management(imb);
+	get_current_sequential_scope()->append_instance_management(imb);
 	INVARIANT(!imb);
 #endif
 }
@@ -575,12 +613,12 @@ context::add_assignment(
 #endif
 		) {
 #if REF_COUNT_INSTANCE_MANAGEMENT
-	current_sequential_scope->append_instance_management(c);
+	get_current_sequential_scope()->append_instance_management(c);
 #else
 	typedef	excl_ptr<const instance_management_base> im_pointer_type;
 	STACKTRACE("context::add_assignment()");
 	im_pointer_type imb(c);
-	current_sequential_scope->append_instance_management(imb);
+	get_current_sequential_scope()->append_instance_management(imb);
 	INVARIANT(!imb);
 #endif
 }
@@ -592,7 +630,7 @@ context::add_assignment(
  */
 never_ptr<const definition_base>
 context::lookup_definition(const token_identifier& id) const {
-	INVARIANT(current_namespace);
+	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 	return o.is_a<const definition_base>();
 }
@@ -606,7 +644,7 @@ context::lookup_definition(const token_identifier& id) const {
  */
 never_ptr<const definition_base>
 context::lookup_definition(const qualified_id& id) const {
-	INVARIANT(current_namespace);
+	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 	return o.is_a<const definition_base>();
 }
@@ -618,7 +656,7 @@ context::lookup_definition(const qualified_id& id) const {
  */
 context::placeholder_ptr_type
 context::lookup_instance(const token_identifier& id) const {
-	INVARIANT(current_namespace);
+	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 #if USE_INSTANCE_PLACEHOLDERS
 	return o.is_a<const instance_placeholder_base>();
@@ -634,7 +672,7 @@ context::lookup_instance(const token_identifier& id) const {
  */
 context::placeholder_ptr_type
 context::lookup_instance(const qualified_id& id) const {
-	INVARIANT(current_namespace);
+	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
 #if USE_INSTANCE_PLACEHOLDERS
 	return o.is_a<const instance_placeholder_base>();
@@ -659,14 +697,28 @@ context::get_current_named_scope(void) const {
 		return current_prototype.is_a<const scopespace>();
 		// return never_ptr<const definition_base>(current_prototype);
 			// .as_a<scopespace>();
-	else if (current_open_definition) {
+	else if (get_current_open_definition()) {
 		// no longer a static cast
 		const never_ptr<const scopespace>
-			ret(current_open_definition.is_a<const scopespace>());
+			ret(get_current_open_definition()
+				.is_a<const scopespace>());
 		INVARIANT(ret);
+#if SUPPORT_NESTED_DEFINITIONS
+		if (ret.is_a<const module>()) {
+			// top-level module does not count as a named scope
+			return namespace_stack.top().as_a<scopespace>();
+		} else {
+			return ret;
+		}
+#else
 		return ret;
-	} else
-		return current_namespace.as_a<scopespace>();
+#endif
+	} else {
+#if SUPPORT_NESTED_DEFINITIONS
+		ICE(cerr, cerr << "Reached the unreachable code!" << endl;)
+#endif
+		return namespace_stack.top().as_a<scopespace>();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -681,14 +733,27 @@ context::get_current_named_scope(void) const {
 never_ptr<scopespace>
 context::get_current_named_scope(void) {
 	// what about current_prototype?
-	if (current_open_definition) {
+	if (get_current_open_definition()) {
 		// used to be static cast
 		const never_ptr<scopespace>
-			ret(current_open_definition.is_a<scopespace>());
+			ret(get_current_open_definition().is_a<scopespace>());
 		INVARIANT(ret);
+#if SUPPORT_NESTED_DEFINITIONS
+		if (ret.is_a<module>()) {
+			// top-level module does not count as a named scope
+			return namespace_stack.top().as_a<scopespace>();
+		} else {
+			return ret;
+		}
+#else
 		return ret;
-	} else
-		return current_namespace.as_a<scopespace>();
+#endif
+	} else {
+#if SUPPORT_NESTED_DEFINITIONS
+		ICE(cerr, cerr << "Reached the unreachable code!" << endl;)
+#endif
+		return namespace_stack.top().as_a<scopespace>();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -782,16 +847,16 @@ context::add_instance(const token_identifier& id,
 	}
 
 #if REF_COUNT_INSTANCE_MANAGEMENT
-	NEVER_NULL(current_sequential_scope);
-	current_sequential_scope->append_instance_management(inst_stmt);
+	NEVER_NULL(get_current_sequential_scope());
+	get_current_sequential_scope()->append_instance_management(inst_stmt);
 #else
 	{
 	excl_ptr<const instance_management_base>
 		imb = inst_stmt.as_a_xfer<const instance_management_base>();
 	NEVER_NULL(imb);
 	INVARIANT(!inst_stmt);
-	NEVER_NULL(current_sequential_scope);
-	current_sequential_scope->append_instance_management(imb);
+	NEVER_NULL(get_current_sequential_scope());
+	get_current_sequential_scope()->append_instance_management(imb);
 	INVARIANT(!imb);
 	}
 #endif
@@ -1121,13 +1186,13 @@ context::loop_scope_frame::loop_scope_frame(context& c,
 		) : _context(c) {
 #if REF_COUNT_INSTANCE_MANAGEMENT
 	NEVER_NULL(l);
-	_context.current_sequential_scope->append_instance_management(l);
+	_context.get_current_sequential_scope()->append_instance_management(l);
 	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));
 #else
 	const never_ptr<sequential_scope> lss(l);
 	excl_ptr<const instance_management_base>
 		imb = l.as_a_xfer<const instance_management_base>();
-	_context.current_sequential_scope->append_instance_management(imb);
+	_context.get_current_sequential_scope()->append_instance_management(imb);
 	MUST_BE_NULL(l);
 	MUST_BE_NULL(imb);
 	_context.sequential_scope_stack.push(lss);
@@ -1160,13 +1225,13 @@ context::conditional_scope_frame::conditional_scope_frame(context& c,
 		_context(c), parent_cond(c.in_conditional_scope) {
 #if REF_COUNT_INSTANCE_MANAGEMENT
 	NEVER_NULL(l);
-	_context.current_sequential_scope->append_instance_management(l);
+	_context.get_current_sequential_scope()->append_instance_management(l);
 	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));
 #else
 	const never_ptr<sequential_scope> lss(l);
 	excl_ptr<const instance_management_base>
 		imb = l.as_a_xfer<const instance_management_base>();
-	_context.current_sequential_scope->append_instance_management(imb);
+	_context.get_current_sequential_scope()->append_instance_management(imb);
 	MUST_BE_NULL(l);
 	MUST_BE_NULL(imb);
 	_context.sequential_scope_stack.push(lss);

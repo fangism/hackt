@@ -1,6 +1,6 @@
 // "top-level-02.hac"
 // copy-modfied from "top-level-01.hac"
-// should fail: can't top-levle in sub-namespace
+// should fail: can't top-level in sub-namespace
 
 
 namespace foo {
