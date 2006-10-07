@@ -5,6 +5,12 @@
 
 2006-10-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-04:
+	  Parser fixed to allow concatenation expressions in
+		template argument lists.  
+	  One test case updated: parser/template/048.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-03:
 	  Top-level module is now registered with the parse_context as the
 		outer-most open definition (now implemented as stack).
@@ -48,8 +54,9 @@
 			positionally *substituted* before resolving.
 		parser/template: (4) same as process/, 
 			(2) different diagnostic message,
-			(9) ICE: footprint key arity mismatch.
-		Total cases remaining: 18
+			(10) ICE: footprint key arity mismatch
+				in template, connect.
+		Total cases remaining: 19
 	  This has to be the most boring task for this project...
 
 
