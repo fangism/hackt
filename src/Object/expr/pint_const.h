@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pint_const.h,v 1.13.6.2 2006/10/02 03:19:10 fang Exp $
+	$Id: pint_const.h,v 1.13.6.2.4.1 2006/10/07 20:08:35 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_CONST_H__
@@ -138,6 +138,10 @@ public:
 
 	using pint_expr::unroll_resolve_copy;
 	UNROLL_RESOLVE_COPY_PINT_PROTO;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO;
+#endif
 
 	LESS_OPERATOR_PROTO;
 

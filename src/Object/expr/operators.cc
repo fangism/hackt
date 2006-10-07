@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.16.4.2 2006/09/11 22:30:41 fang Exp $
+ 	$Id: operators.cc,v 1.16.4.2.8.1 2006/10/07 20:08:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -265,6 +265,21 @@ pint_unary_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const param_expr>
+pint_unary_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	// TODO: finish me
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -446,6 +461,21 @@ preal_unary_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const param_expr>
+preal_unary_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	// TODO: finish me
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 preal_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -621,6 +651,21 @@ pbool_unary_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const pbool_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const param_expr>
+pbool_unary_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	// TODO: finish me
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -937,6 +982,21 @@ pint_arith_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const param_expr>
+pint_arith_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	// TODO: finish me
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_arith_expr::collect_transient_info(persistent_object_manager& m) const {
 if (!m.register_transient_object(this, 
@@ -1248,6 +1308,21 @@ pint_relational_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const param_expr>
+pint_relational_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	// TODO: finish me
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -1533,6 +1608,21 @@ preal_arith_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const preal_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const param_expr>
+preal_arith_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	// TODO: finish me
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1837,6 +1927,21 @@ preal_relational_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const param_expr>
+preal_relational_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	// TODO: finish me
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 preal_relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -2123,6 +2228,21 @@ pbool_logical_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const pbool_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const param_expr>
+pbool_logical_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	// TODO: finish me
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

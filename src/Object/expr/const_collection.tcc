@@ -2,7 +2,7 @@
 	\file "Object/expr/const_collection.tcc"
 	Class implementation of collections of expression constants.  
 	This file was moved from "Object/expr/const_collection.cc"
- 	$Id: const_collection.tcc,v 1.17 2006/07/04 07:25:53 fang Exp $
+ 	$Id: const_collection.tcc,v 1.17.18.1 2006/10/07 20:08:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_CONST_COLLECTION_TCC__
@@ -324,6 +324,22 @@ CONST_COLLECTION_CLASS::unroll_resolve_value(
 	return good_bool(true);
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return itself, there's nothing to substitute.
+ */
+CONST_COLLECTION_TEMPLATE_SIGNATURE
+count_ptr<const param_expr>
+CONST_COLLECTION_CLASS::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

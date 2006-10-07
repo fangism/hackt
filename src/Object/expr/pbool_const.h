@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: pbool_const.h,v 1.14.6.2 2006/10/02 03:19:08 fang Exp $
+	$Id: pbool_const.h,v 1.14.6.2.4.1 2006/10/07 20:08:33 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_CONST_H__
@@ -105,6 +105,10 @@ public:
 	using pbool_expr::unroll_resolve_copy;
 
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO;
+#endif
 
 	LESS_OPERATOR_PROTO;
 

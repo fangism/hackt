@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.7.2.1 2006/10/07 04:55:22 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.7.2.2 2006/10/07 20:08:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -1616,8 +1616,8 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
 /**
 	This implementation is deprecated, no longer constructing
 	param_type_reference, always using built-in types
-	declared in "Object/art_object_{pint,pbool}_traits.h",
-	initialized in "Object/art_built_ins.cc".
+	declared in "Object/traits/{pint,pbool}_traits.h",
+	initialized in "Object/traits/class_traits_types.cc".
 	\param ta template arguments are never used.  
  */
 definition_base::type_ref_ptr_type

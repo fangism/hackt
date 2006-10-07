@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.9.2.1 2006/10/07 04:55:19 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.9.2.2 2006/10/07 20:08:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -127,7 +127,7 @@
 	This needs to be done before we chain contexts to prevent
 	accidental instantiation in the wrong context.  
 	Goal: 1
-	Status: partially in-place
+	Status: complete, just needs complete testing
  */
 #define	SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS	(1 && USE_INSTANCE_PLACEHOLDERS)
 
@@ -137,7 +137,7 @@
 		read-only, while local (target footprint) values may be
 		modified.  
 	Goal: 1
-	Status:
+	Status: looks good so far, awaiting complete testing
  */
 #define	RVALUE_LVALUE_LOOKUPS	(1 && SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS)
 
@@ -146,8 +146,30 @@
 	This takes care of a reject-valid bug (never tripped)
 	and greatly simplifies expression substitution.  
 	Goal: 1
+	Status: looks ok, didn't cause new regressions, awaiting full tests
+	TODO: also consider doing something similar for
+		meta-index-lists and meta-range-lists.  
+	It is do-able, now that we've eliminated much static analysis
+		at compile time.  
  */
 #define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	1
+
+/**
+	Define to 1 to pass parent template formal context down to
+		subsequent template-dependents for the purposes of 
+		default template parameter positional substitution.
+	Caveat: prototypes' formals may not match those of the
+		corresponding definition's formals!
+	Goal: 1
+ */
+#define	MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT	(0 && MODULE_PROCESS)
+
+/**
+	Define to 1 to perform positional parameter substitution
+	of default expressions of templates.  
+	Goal: 1
+ */
+#define	SUBSTITUTE_DEFAULT_PARAMETERS	(0 && ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST && USE_INSTANCE_PLACEHOLDERS && MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT)
 
 //=============================================================================
 

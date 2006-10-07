@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11.4.8.2.1 2006/10/07 04:55:17 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.8.2.2 2006/10/07 20:08:18 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -398,6 +398,23 @@ context::get_current_prototype(void) {
  */
 never_ptr<const definition_base>
 context::get_current_prototype(void) const { return current_prototype; }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT
+never_ptr<const template_formals_manager>
+parse_context::get_parent_template_context(void) const {
+	typedef	never_ptr<const template_formals_manager>	return_type;
+	// TODO: use module as current definition! (MODULE_PROCESS)
+	if (current_open_definition)
+		return return_type(current_open_definition->
+			get_template_formals_manager());
+	else if (current_prototype) {
+		return return_type(&current_prototype->
+			get_template_formals_manager());
+	}
+	// else defer to module...
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

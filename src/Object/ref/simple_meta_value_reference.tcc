@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.8 2006/10/05 01:15:44 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.8.2.1 2006/10/07 20:08:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -835,6 +835,30 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 	return this->unroll_resolve_rvalues(c, p)
 		.template is_a<const expr_base_type>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const param_expr>
+SIMPLE_META_VALUE_REFERENCE_CLASS::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const param_expr>& p) const {
+	INVARIANT(p == this);
+	const never_ptr<const definition_base>
+		owner(this->value_collection_ref->get_owner().
+			template is_a<const definition_base>());
+	value_placeholder_ptr_type ret_pl(this->value_collection_ref);
+	if (owner && (&f == &owner->get_template_formals_manager())) {
+		// then we perform substitution
+	} else {
+	}
+	// TODO: FINISH ME
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

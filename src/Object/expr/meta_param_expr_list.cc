@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.18.6.4.4.1 2006/10/07 04:55:30 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.18.6.4.4.2 2006/10/07 20:08:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -1157,7 +1157,7 @@ if (a_size != f_size) {
 	// end of checking reached, everything passed
 	return good_bool(true);
 }
-}
+}	// end method certify_template_arguments
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
