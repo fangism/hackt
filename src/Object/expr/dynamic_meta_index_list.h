@@ -3,7 +3,7 @@
 	Dynamic meta parameter index list class.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_meta_index_list.h,v 1.7.32.3.2.1 2006/10/08 05:52:35 fang Exp $
+	$Id: dynamic_meta_index_list.h,v 1.7.32.3.2.2 2006/10/08 20:57:36 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_META_INDEX_LIST_H__
@@ -27,14 +27,19 @@ using util::memory::count_ptr;
 class dynamic_meta_index_list : public meta_index_list, 
 		private vector<count_ptr<const meta_index_expr> > {
 	typedef	dynamic_meta_index_list			this_type;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	struct positional_substituter;
+#endif
 protected:
 	typedef	vector<count_ptr<const meta_index_expr> >	parent_type;
 public:
 	typedef	parent_type::value_type			value_type;
+	typedef	parent_type::const_reference		const_reference;
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
 	typedef parent_type::reverse_iterator		reverse_iterator;
 	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
+	typedef parent_type::allocator_type		allocator_type;
 public:
 	dynamic_meta_index_list();
 
@@ -55,7 +60,7 @@ public:
 	using parent_type::rend;
 
 	void
-	push_back(const count_ptr<const meta_index_expr>&);
+	push_back(const value_type&);
 
 /** NOT THE SAME **/
 	size_t

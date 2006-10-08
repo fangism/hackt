@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.18.6.4.4.2 2006/10/07 20:08:30 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.18.6.4.4.3 2006/10/08 20:57:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -1073,7 +1073,11 @@ dynamic_param_expr_list::unroll_resolve_rvalues(const unroll_context& c,
  */
 good_bool
 dynamic_param_expr_list::certify_template_arguments(
-		const template_formals_list_type& tfl) {
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+		const template_formals_manager& tfm, 
+#endif
+		const template_formals_list_type& tfl
+		) {
 	const size_t a_size = size();
 	const size_t f_size = tfl.size();
 	template_formals_list_type::const_iterator f_iter(tfl.begin());
@@ -1107,9 +1111,8 @@ if (a_size != f_size) {
 		// need method to check param_value_collection against param_expr
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
-		const count_ptr<const param_expr> pex(*p_iter);
-		const placeholder_ptr_type
-			pinst(*f_iter);
+		const count_ptr<const param_expr>& pex(*p_iter);
+		const placeholder_ptr_type pinst(*f_iter);
 		NEVER_NULL(pinst);
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
@@ -1135,7 +1138,20 @@ if (a_size != f_size) {
 			} else {
 				// else, actually assign it a copy in the list
 				// TODO: positional parameter substitution!
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+				*p_iter = default_expr->
+					substitute_default_positional_parameters(
+						tfm, *this, default_expr);
+				if (!*p_iter) {
+					cerr << "Error substituting default "
+						"expression at position " <<
+						distance(tfl.begin(), f_iter)+1
+						<< endl;
+					return good_bool(false);
+				}
+#else
 				*p_iter = default_expr;
+#endif
 /***
 	Example of default positional parameter substitution:
 		template <pint D, E=D+1>

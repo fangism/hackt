@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.13.2.1 2006/10/07 04:55:33 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.13.2.2 2006/10/08 20:57:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -897,7 +897,20 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 #endif	// USE_INSTANCE_PLACEHOLDERS
 	// else is top-level
 	const key_type index(i);
-	const element_type& pi(collection[index]);
+	typedef	typename collection_type::const_iterator	const_iterator;
+	const const_iterator f(collection.find(index));
+	if (f == collection.end()) {
+		cerr << "ERROR: reference to uninstantiated " <<
+			traits_type::tag_name << ' ' <<
+#if USE_INSTANCE_PLACEHOLDERS
+			this->source_placeholder->get_qualified_name() <<
+#else
+			this->get_qualified_name() <<
+#endif
+			" at index: " << i << endl;
+		return good_bool(false);
+	}
+	const element_type& pi(f->second);
 	if (pi.valid) {
 		v = pi.value;
 	} else {

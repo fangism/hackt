@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.8.6.2 2006/09/11 22:31:08 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.8.6.2.8.1 2006/10/08 20:57:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -638,6 +638,60 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 	return this->unroll_resolve_rvalues(c, p)
 		.template is_a<const expr_base_type>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Bound transformer functor.  
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+struct AGGREGATE_META_VALUE_REFERENCE_CLASS::positional_substituter {
+	typedef	count_ptr<const expr_base_type>	return_type;
+	const template_formals_manager&		formals;
+	const dynamic_param_expr_list&		exprs;
+
+	positional_substituter(const template_formals_manager& f, 
+			const dynamic_param_expr_list& e) :
+			formals(f), exprs(e) {
+	}
+
+	return_type
+	operator () (const return_type& p) {
+		return p->substitute_default_positional_parameters(
+				formals, exprs, p);
+	}
+
+};	// end class positional_substituter
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Performs default parameter expression substitution
+	copy-on-write if any substitutions occurred.  
+ */
+AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const typename AGGREGATE_META_VALUE_REFERENCE_CLASS::expr_base_type>
+AGGREGATE_META_VALUE_REFERENCE_CLASS::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const expr_base_type>& p) const {
+	typedef	count_ptr<const expr_base_type>		return_type;
+	INVARIANT(p == this);
+	const count_ptr<this_type> temp(new this_type);
+	NEVER_NULL(temp);
+	util::reserve(temp->subreferences, subreferences.size());
+		// pre-allocate
+	transform(subreferences.begin(), subreferences.end(), 
+		back_inserter(temp->subreferences),
+		positional_substituter(f, e));
+	if (equal(subreferences.begin(), subreferences.end(), 
+			temp->subreferences.begin())) {
+		// no substitutions, return this
+		return p;
+	} else {
+		return temp;
+	}
+}
+#endif	// SUBSTITUTE_DEFAULT_PARAMETERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE

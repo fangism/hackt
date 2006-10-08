@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.5.6.2.8.2 2006/10/08 05:52:55 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.5.6.2.8.3 2006/10/08 20:57:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -94,6 +94,9 @@ private:
 						value_collection_ptr_type;
 	typedef	typename subreferences_array_type::const_iterator
 						const_iterator;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	struct positional_substituter;
+#endif
 private:
 	subreferences_array_type		subreferences;
 public:

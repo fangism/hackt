@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.18.6.1.4.1 2006/10/08 03:31:18 fang Exp $
+ 	$Id: instance_reference.cc,v 1.18.6.1.4.2 2006/10/08 20:57:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -152,6 +152,13 @@ meta_instance_reference_base::make_port_connection(
  */
 simple_meta_indexed_reference_base::simple_meta_indexed_reference_base() :
 		array_indices(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_meta_indexed_reference_base::simple_meta_indexed_reference_base(
+		indices_ptr_arg_type i) :
+		array_indices(i) {
 	// no assert
 }
 

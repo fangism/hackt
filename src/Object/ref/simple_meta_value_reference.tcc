@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.8.2.3 2006/10/08 05:52:58 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.8.2.4 2006/10/08 20:57:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -97,7 +97,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 #if USE_INSTANCE_PLACEHOLDERS
@@ -105,13 +104,11 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 #else
 		const value_collection_ptr_type pi,
 #endif
-		excl_ptr<index_list>& i) :
-		common_base_type(), 
-		parent_type(i, pi->current_collection_state()),
-		interface_type(), 
+		indices_ptr_arg_type i) :
+		simple_meta_indexed_reference_base(i), 
+		parent_type(), 
 		value_collection_ref(pi) {
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -796,7 +793,8 @@ if (value_collection_ref->is_template_formal()) {
 		if (lookup_err.bad) {
 			// discard incomplete results
 			cerr << "ERROR: in unroll_resolve-ing "
-				"simple_meta_instance_reference." << endl;
+				"simple_meta_value_reference: ";
+			this->dump(cerr, expr_dump_context::default_value) << endl;
 			return return_type(NULL);
 		} else {
 			// safe up-cast
@@ -816,7 +814,8 @@ if (value_collection_ref->is_template_formal()) {
 		if (valid.bad) {
 			cerr << "ERROR: in unroll_resolve-ing "
 				"simple_meta_value_reference, "
-				"uninitialized value." << endl;
+				"uninitialized value: ";
+			this->dump(cerr, expr_dump_context::default_value) << endl;
 			return return_type(NULL);
 		} else {
 			return return_type(new const_expr_type(_val));
@@ -900,8 +899,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::substitute_default_positional_parameters(
 					"indexed complex expressions!" << endl;
 				return return_type(NULL);
 			} else {
-				return return_type(new this_type(
-					ref->value_collection_ref, ind));
+				return repl;
 			}
 		}
 	} else {

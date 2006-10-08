@@ -5,6 +5,20 @@
 
 2006-10-08	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-07:
+	  Completed default positional parameter substitution.  (YES!)
+		Added some new test cases for some obtuse uses of this.  
+		Corresponding test cases updated.  
+	  Fixed diagnostic messages about uninstantiated references.  
+		This knocks off all regressions related to this, leaving:
+		parser/namespace: (1) should qualify typename with namespace
+		parser/template:
+			(10) ICE: footprint key arity mismatch
+				in template/, connect/.
+		Total: 11 remaining.
+	  Some clean-ups might be in order before merging to parent branch.
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-06:
 	  First round of implementing default positional parameter 
 		substitution in expression hierarchy, enabled.

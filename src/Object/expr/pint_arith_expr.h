@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.12.4.1.8.2 2006/10/08 05:52:41 fang Exp $
+	$Id: pint_arith_expr.h,v 1.12.4.1.8.3 2006/10/08 20:57:43 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -25,6 +25,8 @@ using util::memory::count_ptr;
 //=============================================================================
 /**
 	Binary arithmetic expression accepts ints and returns an int.  
+	TODO: replace binary_arithmetic_operation with 
+		non-virtual function pointers.  
  */
 class pint_arith_expr : public pint_expr {
 	typedef	pint_arith_expr			this_type;

@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.16.4.2.8.2 2006/10/08 05:52:37 fang Exp $
+ 	$Id: operators.cc,v 1.16.4.2.8.3 2006/10/08 20:57:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -818,6 +818,17 @@ pint_arith_expr::pint_arith_expr(const operand_ptr_type& l, const char o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_arith_expr::pint_arith_expr(const operand_ptr_type& l, const op_type* o,
+		const operand_ptr_type& r) :
+		lx(l), rx(r), op(o) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(pint_arith_expr)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1033,7 +1044,7 @@ pint_arith_expr::substitute_default_positional_parameters(
 		if (rlx == lx && rrx == rx) {
 			return p;
 		} else {
-			return return_type(new this_type(rlx, op, rlx));
+			return return_type(new this_type(rlx, op, rrx));
 		}
 	} else {
 		return return_type(NULL);
@@ -1372,7 +1383,7 @@ pint_relational_expr::substitute_default_positional_parameters(
 		if (rlx == lx && rrx == rx) {
 			return p;
 		} else {
-			return return_type(new this_type(rlx, op, rlx));
+			return return_type(new this_type(rlx, op, rrx));
 		}
 	} else {
 		return return_type(NULL);
@@ -1697,7 +1708,7 @@ preal_arith_expr::substitute_default_positional_parameters(
 		if (rlx == lx && rrx == rx) {
 			return p;
 		} else {
-			return return_type(new this_type(rlx, op, rlx));
+			return return_type(new this_type(rlx, op, rrx));
 		}
 	} else {
 		return return_type(NULL);
@@ -2027,7 +2038,7 @@ preal_relational_expr::substitute_default_positional_parameters(
 		if (rlx == lx && rrx == rx) {
 			return p;
 		} else {
-			return return_type(new this_type(rlx, op, rlx));
+			return return_type(new this_type(rlx, op, rrx));
 		}
 	} else {
 		return return_type(NULL);
@@ -2342,7 +2353,7 @@ pbool_logical_expr::substitute_default_positional_parameters(
 		if (rlx == lx && rrx == rx) {
 			return p;
 		} else {
-			return return_type(new this_type(rlx, op, rlx));
+			return return_type(new this_type(rlx, op, rrx));
 		}
 	} else {
 		return return_type(NULL);
