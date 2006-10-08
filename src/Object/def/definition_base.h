@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.8.8.5.2.1 2006/10/08 03:31:15 fang Exp $
+	$Id: definition_base.h,v 1.8.8.5.2.2 2006/10/08 21:27:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -204,32 +204,17 @@ public:
 virtual	CERTIFY_PORT_ACTUALS_PROTO = 0;
 
 public:
-#if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT
-/**
-	NOTE: this only works with immediate parent!
- */
-#define	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO				\
-	definition_base::type_ref_ptr_type				\
-	make_fundamental_type_reference(make_type_arg_type ta, 		\
-		const template_formals_manager&) const
-#else
 #define	MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO				\
 	definition_base::type_ref_ptr_type				\
 	make_fundamental_type_reference(make_type_arg_type ta) const
-#endif
 
 // proposing to replace set_context_fundamental_type with the following:
 virtual MAKE_FUNDAMENTAL_TYPE_REFERENCE_PROTO = 0;
 
 	// overloaded for no template argument, for convenience, 
 	// but must check that everything has default arguments!
-#if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT
-	definition_base::type_ref_ptr_type
-	make_fundamental_type_reference(const template_formals_manager&) const;
-#else
 	definition_base::type_ref_ptr_type
 	make_fundamental_type_reference(void) const;
-#endif
 // why virtual? special cases for built-in types?
 
 /**

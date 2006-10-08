@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.9.4.3.4.3 2006/10/07 22:09:31 fang Exp $
+	$Id: parse_context.h,v 1.9.4.3.4.4 2006/10/08 21:27:02 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -47,9 +47,6 @@ namespace entity {
 	class dynamic_param_expr_list;
 #else
 	class param_expr_list;
-#endif
-#if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT
-	class template_formals_manager;
 #endif
 	class param_expression_assignment;
 	class loop_scope;
@@ -421,11 +418,6 @@ public:
 		return current_open_definition;
 #endif
 	}
-
-#if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT
-	never_ptr<const template_formals_manager>
-	get_parent_template_context(void) const;
-#endif
 
 	/**
 		Manages current type of instantiation on stack.  

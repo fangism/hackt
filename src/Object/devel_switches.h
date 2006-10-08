@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.9.2.5 2006/10/08 05:52:30 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.9.2.6 2006/10/08 21:27:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -170,7 +170,7 @@
 	Goal: 1
 	Status: not begun
  */
-#define	ALWAYS_USE_DYNAMIC_INDEX_LIST		(1 && !ENABLE_STATIC_ANALYSIS)
+#define	ALWAYS_USE_DYNAMIC_INDEX_LIST		(0 && !ENABLE_STATIC_ANALYSIS)
 
 /**
 	Define to 1 to allow the parse_context class to support 
@@ -184,20 +184,10 @@
 #define	SUPPORT_NESTED_DEFINITIONS	(1 && MODULE_PROCESS)
 
 /**
-	Define to 1 to pass parent template formal context down to
-		subsequent template-dependents for the purposes of 
-		default template parameter positional substitution.
-	Caveat: prototypes' formals may not match those of the
-		corresponding definition's formals!
-	Goal: 0
-	Abandoned.  
- */
-#define	MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT	(0 && SUPPORT_NESTED_DEFINITIONS)
-
-/**
 	Define to 1 to perform positional parameter substitution
 	of default expressions of templates.  
 	Goal: 1
+	Status: Tested and ready to commit up.  
  */
 #define	SUBSTITUTE_DEFAULT_PARAMETERS	(1 && ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST && USE_INSTANCE_PLACEHOLDERS)
 
