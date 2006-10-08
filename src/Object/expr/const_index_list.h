@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.10.8.2 2006/09/11 22:30:24 fang Exp $
+	$Id: const_index_list.h,v 1.10.8.2.8.1 2006/10/08 05:52:34 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -117,6 +117,10 @@ public:
 #if 0
 	bool
 	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
+#endif
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_INDEX_LIST_PROTO;
 #endif
 
 	multikey_index_type

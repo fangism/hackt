@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_list.h,v 1.7.32.2 2006/09/11 22:30:34 fang Exp $
+	$Id: meta_index_list.h,v 1.7.32.2.8.1 2006/10/08 05:52:37 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_LIST_H__
@@ -19,6 +19,10 @@ namespace entity {
 class const_index_list;
 class unroll_context;
 struct expr_dump_context;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+class template_formals_manager;
+class dynamic_param_expr_list;
+#endif
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -84,9 +88,15 @@ virtual	const_index_list
 virtual	const_index_list
 	unroll_resolve_indices(const unroll_context&) const = 0;
 
-#if 0
-virtual	bool
-	resolve_multikey(excl_ptr<multikey_index_type>& k) const = 0;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+#define	SUBSTITUTE_DEFAULT_PARAMETERS_INDEX_LIST_PROTO			\
+	count_ptr<const meta_index_list>				\
+	substitute_default_positional_parameters(			\
+		const template_formals_manager&, 			\
+		const dynamic_param_expr_list&,				\
+		const count_ptr<const meta_index_list>&) const
+
+virtual	SUBSTITUTE_DEFAULT_PARAMETERS_INDEX_LIST_PROTO = 0;
 #endif
 
 virtual	bool

@@ -3,6 +3,14 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-06:
+	  First round of implementing default positional parameter 
+		substitution in expression hierarchy, enabled.
+	  Does not link, as some needed definitions are still missing.  
+
+
 2006-10-07	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-05:

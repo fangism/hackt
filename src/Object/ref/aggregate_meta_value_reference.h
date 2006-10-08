@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.5.6.2.8.1 2006/10/07 20:08:42 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.5.6.2.8.2 2006/10/08 05:52:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -179,11 +179,13 @@ public:
 		const count_ptr<const expr_base_type>&) const;
 
 #if SUBSTITUTE_DEFAULT_PARAMETERS
-        count_ptr<const param_expr>
+        count_ptr<const expr_base_type>
         substitute_default_positional_parameters(
                 const template_formals_manager&,
                 const dynamic_param_expr_list&,
-                const count_ptr<const param_expr>&) const;
+                const count_ptr<const expr_base_type>&) const;
+
+	using expr_base_type::substitute_default_positional_parameters;
 #endif
 protected:
 	using expr_base_type::unroll_resolve_rvalues;

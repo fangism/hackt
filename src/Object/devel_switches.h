@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.9.2.4 2006/10/08 03:31:13 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.9.2.5 2006/10/08 05:52:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -159,7 +159,7 @@
 	simple_meta_indexed_reference_base.  
 	Simplifies unrolling, and more consistent.  
 	Goal: 1?
-	Status: in progress
+	Status: committed, basic tested.
  */
 #define	REF_COUNT_ARRAY_INDICES			1
 
@@ -190,6 +190,7 @@
 	Caveat: prototypes' formals may not match those of the
 		corresponding definition's formals!
 	Goal: 0
+	Abandoned.  
  */
 #define	MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT	(0 && SUPPORT_NESTED_DEFINITIONS)
 
@@ -198,7 +199,7 @@
 	of default expressions of templates.  
 	Goal: 1
  */
-#define	SUBSTITUTE_DEFAULT_PARAMETERS	(0 && ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST && USE_INSTANCE_PLACEHOLDERS)
+#define	SUBSTITUTE_DEFAULT_PARAMETERS	(1 && ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST && USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 

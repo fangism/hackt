@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: preal_expr.h,v 1.6.6.4 2006/10/02 03:19:12 fang Exp $
+	$Id: preal_expr.h,v 1.6.6.4.4.1 2006/10/08 05:52:51 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_EXPR_H__
@@ -122,6 +122,21 @@ virtual	count_ptr<const const_param>
 	UNROLL_RESOLVE_COPY_REAL_PROTO;
 
 virtual UNROLL_RESOLVE_COPY_PREAL_PROTO = 0;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+#define	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO			\
+	count_ptr<const preal_expr>					\
+	substitute_default_positional_parameters(			\
+		const template_formals_manager&,			\
+		const dynamic_param_expr_list&,				\
+		const count_ptr<const preal_expr>&) const
+
+	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO;
+
+virtual SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO = 0;
+#endif
+
+
 protected:
 	using real_expr::unroll_resolve_copy;
 

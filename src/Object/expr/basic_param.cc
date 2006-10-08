@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.18.6.4.4.1 2006/10/07 20:08:23 fang Exp $
+ 	$Id: basic_param.cc,v 1.18.6.4.4.2 2006/10/08 05:52:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -736,11 +736,11 @@ pint_const::unroll_resolve_rvalues(const unroll_context&,
 /**
 	\return itself, there's nothing to substitute.
  */
-count_ptr<const param_expr>
+count_ptr<const pint_expr>
 pint_const::substitute_default_positional_parameters(
 		const template_formals_manager& f, 
 		const dynamic_param_expr_list& e,
-		const count_ptr<const param_expr>& p) const {
+		const count_ptr<const pint_expr>& p) const {
 	INVARIANT(p == this);
 	return p;
 }
@@ -908,11 +908,11 @@ pbool_const::unroll_resolve_rvalues(const unroll_context& c,
 /**
 	\return itself, there's nothing to substitute.
  */
-count_ptr<const param_expr>
+count_ptr<const pbool_expr>
 pbool_const::substitute_default_positional_parameters(
 		const template_formals_manager& f, 
 		const dynamic_param_expr_list& e,
-		const count_ptr<const param_expr>& p) const {
+		const count_ptr<const pbool_expr>& p) const {
 	INVARIANT(p == this);
 	return p;
 }
@@ -1097,11 +1097,11 @@ preal_const::unroll_resolve_copy(const unroll_context& c,
 /**
 	\return itself, there's nothing to substitute.
  */
-count_ptr<const param_expr>
+count_ptr<const preal_expr>
 preal_const::substitute_default_positional_parameters(
 		const template_formals_manager& f, 
 		const dynamic_param_expr_list& e,
-		const count_ptr<const param_expr>& p) const {
+		const count_ptr<const preal_expr>& p) const {
 	INVARIANT(p == this);
 	return p;
 }

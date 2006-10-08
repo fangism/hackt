@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.12.6.1.8.1 2006/10/07 20:08:25 fang Exp $
+	$Id: const_collection.h,v 1.12.6.1.8.2 2006/10/08 05:52:32 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -181,12 +181,13 @@ public:
 		const count_ptr<const expr_base_type>&) const;
 
 #if SUBSTITUTE_DEFAULT_PARAMETERS
-//	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO;
-	count_ptr<const param_expr>
+	count_ptr<const expr_base_type>
 	substitute_default_positional_parameters(
 		const template_formals_manager&,
 		const dynamic_param_expr_list&,
-		const count_ptr<const param_expr>&) const;
+		const count_ptr<const expr_base_type>&) const;
+
+	using expr_base_type::substitute_default_positional_parameters;
 #endif
 
 	this_type

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.13.2.5.8.2 2006/10/08 03:31:20 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.13.2.5.8.3 2006/10/08 05:52:56 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -208,11 +208,12 @@ public:
 		const count_ptr<const expr_base_type>&) const;
 
 #if SUBSTITUTE_DEFAULT_PARAMETERS
-        count_ptr<const param_expr>
+        count_ptr<const expr_base_type>
         substitute_default_positional_parameters(
                 const template_formals_manager&,
                 const dynamic_param_expr_list&,
-                const count_ptr<const param_expr>&) const;
+                const count_ptr<const expr_base_type>&) const;
+	using parent_type::substitute_default_positional_parameters;
 #endif
 protected:
 	using parent_type::unroll_resolve_rvalues;
