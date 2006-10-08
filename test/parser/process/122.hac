@@ -1,0 +1,24 @@
+// "122.hac" should pass, will recursively instantiate ports
+// copy-modified from "121.hac"
+// slightly crazy...
+
+pint G[6];
+G = {6,5,4,3,2,1};
+
+template <pint D, E=G[D]>
+defproc foo(bool a[D]) { }
+
+template <pint M, N>
+defproc bar(foo<M+N, > x[N]) { }
+
+bar<3,2> poo;
+
+/**
+expecting:
+bar<3,2> poo (
+	foo<5, > x[2], which becomes
+	foo<5,D[5]> x[2], which becomes
+	foo<5,1> x[2]
+)
+**/
+

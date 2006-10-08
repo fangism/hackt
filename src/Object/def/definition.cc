@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.7 2006/10/05 01:15:27 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.8 2006/10/08 21:51:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -51,7 +51,11 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/expr_dump_context.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#else
 #include "Object/expr/param_expr_list.h"
+#endif
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/common/namespace.h"
@@ -1612,8 +1616,8 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
 /**
 	This implementation is deprecated, no longer constructing
 	param_type_reference, always using built-in types
-	declared in "Object/art_object_{pint,pbool}_traits.h",
-	initialized in "Object/art_built_ins.cc".
+	declared in "Object/traits/{pint,pbool}_traits.h",
+	initialized in "Object/traits/class_traits_types.cc".
 	\param ta template arguments are never used.  
  */
 definition_base::type_ref_ptr_type

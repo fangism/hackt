@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.18.6.4 2006/10/02 03:19:06 fang Exp $
+ 	$Id: basic_param.cc,v 1.18.6.5 2006/10/08 21:51:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -236,6 +236,21 @@ pbool_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Forwarding function.  
+ */
+count_ptr<const param_expr>
+pbool_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const param_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if REF_COUNT_INSTANCE_MANAGEMENT
 count_ptr<param_expression_assignment>
 #else
@@ -358,6 +373,7 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 		.is_a<const const_index>();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need this as a final unique overrider of virtual grandparent.  
  */
@@ -366,6 +382,34 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const nonmeta_index_expr_base>& b) const {
 	return unroll_resolve_copy(c, b.is_a<const this_type>());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Forwarding function.  
+ */
+count_ptr<const param_expr>
+pint_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const param_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Forwarding function.  
+ */
+count_ptr<const meta_index_expr>
+pint_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if REF_COUNT_INSTANCE_MANAGEMENT
@@ -514,6 +558,21 @@ preal_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const real_expr>& b) const {
 	return unroll_resolve_copy(c, b.is_a<const this_type>());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Forwarding function.  
+ */
+count_ptr<const param_expr>
+preal_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const param_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if REF_COUNT_INSTANCE_MANAGEMENT
@@ -732,6 +791,21 @@ pint_const::unroll_resolve_rvalues(const unroll_context&,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return itself, there's nothing to substitute.
+ */
+count_ptr<const pint_expr>
+pint_const::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pint_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_index>
 pint_const::unroll_resolve_index(const unroll_context&) const {
 	return count_ptr<const_index>(new pint_const(*this));
@@ -887,6 +961,21 @@ pbool_const::unroll_resolve_rvalues(const unroll_context& c,
 	INVARIANT(p == this);
 	return p.is_a<const pbool_const>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return itself, there's nothing to substitute.
+ */
+count_ptr<const pbool_expr>
+pbool_const::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pbool_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1061,6 +1150,21 @@ preal_const::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return itself, there's nothing to substitute.
+ */
+count_ptr<const preal_expr>
+preal_const::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const preal_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

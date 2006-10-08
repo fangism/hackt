@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.11.2.2 2006/10/05 01:15:49 fang Exp $
+	$Id: template_actuals.cc,v 1.11.2.3 2006/10/08 21:52:21 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,6 +17,9 @@
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#endif
 #include "Object/expr/expr_dump_context.h"
 #if RESOLVE_VALUES_WITH_FOOTPRINT
 #include "Object/def/footprint.h"
@@ -133,16 +136,27 @@ template_actuals::make_const_param_list(void) const {
 	STACKTRACE_VERBOSE;
 	const count_ptr<const_param_expr_list> ret(new const_param_expr_list);
 	if (strict_template_args) {
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+		const count_ptr<const const_param_expr_list>
+			csa(strict_template_args->make_const_param_expr_list());
+#else
 		const count_ptr<const const_param_expr_list>
 			csa(strict_template_args.
 				is_a<const const_param_expr_list>());
+#endif
 		INVARIANT(csa);
 		copy(csa->begin(), csa->end(), back_inserter(*ret));
 	}
 	if (relaxed_template_args) {
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+		const count_ptr<const const_param_expr_list>
+			rsa(relaxed_template_args->
+				make_const_param_expr_list());
+#else
 		const count_ptr<const const_param_expr_list>
 			rsa(relaxed_template_args.
 				is_a<const const_param_expr_list>());
+#endif
 		INVARIANT(rsa);
 		copy(rsa->begin(), rsa->end(), back_inserter(*ret));
 	}
@@ -241,12 +255,21 @@ template_actuals::get_relaxed_args(void) const {
 		defaulting template parameters.  
 		Template formals are NOT available here, 
 		so we must require the caller to provide them in context.  
+	TODO: return resolved_template_actuals instead, for use
+		with canonical_type_base.  
  */
 template_actuals
 template_actuals::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_STREAM << "actuals: ") << endl;
+#endif
 	bool err = false;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	param_expr_list::unroll_resolve_rvalues_return_type sr, rr;
+#else
 	const_arg_list_ptr_type sr, rr;
+#endif
 	if (strict_template_args) {
 		sr = strict_template_args->unroll_resolve_rvalues(c, 
 			strict_template_args);
@@ -269,7 +292,14 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 			err = true;
 		}
 	}
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	const_arg_list_ptr_type csr, crr;
+	if (sr) csr = sr->to_dynamic_list();
+	if (rr) crr = rr->to_dynamic_list();
+	return err ? this_type() : this_type(csr, crr);
+#else
 	return err ? this_type() : this_type(sr, rr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

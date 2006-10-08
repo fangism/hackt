@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.9.4.3 2006/10/02 03:18:54 fang Exp $
+	$Id: parse_context.h,v 1.9.4.4 2006/10/08 21:51:46 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -43,7 +43,11 @@ namespace entity {
 	class instance_management_base;
 	class meta_instance_reference_connection;
 	class param_expr;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	class dynamic_param_expr_list;
+#else
 	class param_expr_list;
+#endif
 	class param_expression_assignment;
 	class loop_scope;
 	class conditional_scope;
@@ -90,7 +94,11 @@ using entity::value_array;
 using entity::instance_management_base;
 using entity::meta_instance_reference_connection;
 using entity::param_expr;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+using entity::dynamic_param_expr_list;
+#else
 using entity::param_expr_list;
+#endif
 using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
@@ -131,7 +139,12 @@ class token_paramtype;
  */
 class context {
 public:
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	typedef	count_ptr<const dynamic_param_expr_list>
+							relaxed_args_ptr_type;
+#else
 	typedef	count_ptr<const param_expr_list>	relaxed_args_ptr_type;
+#endif
 	typedef list<string>			file_name_stack_type;
 #if USE_INSTANCE_PLACEHOLDERS
 	typedef	never_ptr<const instance_placeholder_base>
@@ -157,18 +170,22 @@ private:
 			are modifiable.  
 	 */
 	stack<never_ptr<name_space> >	namespace_stack;
-#define current_namespace	namespace_stack.top()
 
 	/**
 		Pointer to the current definition that is open for 
 		modification, intended for adding items to the body.  
 		One pointer is sufficient for all definitions because
 		only one definition can be open at a time.  
+		Until now! (2006-10-07)
 		Never delete's because the definition has already 
 		been registered to some scopespace that owns it.  
 		Q: is this made redundant by current_scope?
 	 */
+#if SUPPORT_NESTED_DEFINITIONS
+	stack<never_ptr<definition_base> >	open_definition_stack;
+#else
 	never_ptr<definition_base>	current_open_definition;
+#endif
 
 	/**
 		This pointer is the scratch space for constructing
@@ -194,7 +211,6 @@ private:
 		Remember to push NULL initially.  
 	 */
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
-#define	current_sequential_scope		sequential_scope_stack.top()
 
 	/**
 		TODO: should just contain reference to module...
@@ -364,6 +380,11 @@ public:
 #endif
 		);
 
+	never_ptr<sequential_scope>
+	get_current_sequential_scope(void) const {
+		return sequential_scope_stack.top();
+	}
+
 	never_ptr<const scopespace>
 	get_current_named_scope(void) const;
 
@@ -372,7 +393,7 @@ public:
 
 	never_ptr<const name_space>
 	get_current_namespace(void) const
-		{ return current_namespace; }
+		{ return namespace_stack.top(); }
 
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);
@@ -391,7 +412,11 @@ public:
 
 	never_ptr<definition_base>
 	get_current_open_definition(void) const {
+#if SUPPORT_NESTED_DEFINITIONS
+		return open_definition_stack.top();
+#else
 		return current_open_definition;
+#endif
 	}
 
 	/**

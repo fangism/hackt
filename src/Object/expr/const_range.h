@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.10.6.2 2006/09/11 22:30:26 fang Exp $
+	$Id: const_range.h,v 1.10.6.3 2006/10/08 21:52:00 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__
@@ -172,6 +172,9 @@ public:
 	unroll_resolve_index(const unroll_context&) const;
 
 	UNROLL_RESOLVE_COPY_META_INDEX_PROTO;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO;
+#endif
 protected:
 	using meta_index_expr::unroll_resolve_copy;
 public:

@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.8.4.3 2006/10/02 03:19:27 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.8.4.4 2006/10/08 21:52:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -94,14 +94,22 @@ protected:
 #else
 		const instance_collection_generic_type&,
 #endif
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>&,
+#else
 		const never_ptr<const index_list_type>,
+#endif
 		alias_collection_type&);
 
 	static
 	bad_bool
 	unroll_references_packed_helper_no_lookup(const unroll_context&,
 		const instance_collection_generic_type&,
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>&,
+#else
 		const never_ptr<const index_list_type>,
+#endif
 		alias_collection_type&);
 
 	COLLECT_ALIASES_PROTO;

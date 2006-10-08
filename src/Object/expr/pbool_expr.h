@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.11.6.4 2006/10/02 03:19:09 fang Exp $
+	$Id: pbool_expr.h,v 1.11.6.5 2006/10/08 21:52:05 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -122,6 +122,20 @@ virtual	count_ptr<const const_param>
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
 
 virtual	UNROLL_RESOLVE_COPY_PBOOL_PROTO = 0;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+#define SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO			\
+	count_ptr<const pbool_expr>					\
+	substitute_default_positional_parameters(			\
+		const template_formals_manager&,			\
+		const dynamic_param_expr_list&,				\
+		const count_ptr<const pbool_expr>&) const
+
+	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO;
+
+virtual SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO = 0;
+#endif
+
 protected:
 	using bool_expr::unroll_resolve_copy;
 

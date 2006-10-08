@@ -1,5 +1,5 @@
 # "test/parser/process/Makefile.am"
-#	$Id: Makefile.am,v 1.14 2006/05/31 18:15:12 fang Exp $
+#	$Id: Makefile.am,v 1.14.8.1 2006/10/08 21:52:46 fang Exp $
 
 include $(top_srcdir)/test/Make.test-head
 
@@ -23,7 +23,8 @@ HACKT_PARSE_TEST_PASSES = \
 	080 081 081a 082 083 084 085 086 087 088 \
 	094 095 096 097 098 099 \
 	100 101 102 103 104 105 106 107 108 109 \
-	110 111 112 113 114 115 116 117 118
+	110 111 112 113 114 115 116 117 118 \
+	121 122
 
 # 107,109: known bugs in progress
 # 089-093: known bugs, haven't decided when to reject
@@ -88,6 +89,9 @@ EMPTY_CFLAT_PRS_TESTS += \
 # more output expectation files for when bison is used
 BISON_OUTPUTS += 001 002 003 004 005 006 007 008 009 010 \
 	011 012 013 014 015 016 017 018 019 021 023
+
+# tests pending new features
+EXTRA_DIST += 119.hac 120.hac
 
 include $(top_srcdir)/test/Make.test-tail
 

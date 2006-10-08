@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.5.6.2 2006/09/11 22:31:07 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.5.6.3 2006/10/08 21:52:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -25,6 +25,10 @@ class expr_dump_context;
 class const_param;
 class const_range_list;
 class param_value_collection;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+class template_formals_manager;
+class dynamic_param_expr_list;
+#endif
 using std::istream;
 using std::ostream;
 using util::memory::never_ptr;
@@ -90,6 +94,9 @@ private:
 						value_collection_ptr_type;
 	typedef	typename subreferences_array_type::const_iterator
 						const_iterator;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	struct positional_substituter;
+#endif
 private:
 	subreferences_array_type		subreferences;
 public:
@@ -173,6 +180,16 @@ public:
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+        count_ptr<const expr_base_type>
+        substitute_default_positional_parameters(
+                const template_formals_manager&,
+                const dynamic_param_expr_list&,
+                const count_ptr<const expr_base_type>&) const;
+
+	using expr_base_type::substitute_default_positional_parameters;
+#endif
 protected:
 	using expr_base_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_copy;

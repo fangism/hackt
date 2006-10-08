@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pbool_logical_expr.h,v 1.12.4.1 2006/09/11 22:30:46 fang Exp $
+	$Id: pbool_logical_expr.h,v 1.12.4.2 2006/10/08 21:52:05 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_LOGICAL_EXPR_H__
@@ -129,6 +129,12 @@ public:
 		const count_ptr<const pbool_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO;
+	using parent_type::substitute_default_positional_parameters;
+#endif
+
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

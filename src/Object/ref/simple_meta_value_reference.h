@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.13.2.5 2006/09/11 22:31:09 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.13.2.6 2006/10/08 21:52:17 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -22,6 +22,11 @@ class const_param;
 class const_index_list;
 class const_range_list;
 class unroll_context;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+class param_expr;
+class template_formals_manager;
+class dynamic_param_expr_list;
+#endif
 using util::good_bool;
 using util::bad_bool;
 
@@ -55,6 +60,7 @@ private:
 	typedef	simple_meta_indexed_reference_base	common_base_type;
 	typedef	expr_base_type				interface_type;
 public:
+	typedef	common_base_type::indices_ptr_arg_type	indices_ptr_arg_type;
 	typedef	count_ptr<const interface_type>		init_arg_type;
 #if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename traits_type::value_placeholder_parent_type
@@ -97,13 +103,13 @@ public:
 	simple_meta_value_reference(const value_placeholder_ptr_type);
 
 	simple_meta_value_reference(const value_placeholder_ptr_type, 
-		excl_ptr<index_list_type>&);
+		indices_ptr_arg_type);
 #else
 	explicit
 	simple_meta_value_reference(const value_collection_ptr_type);
 
 	simple_meta_value_reference(const value_collection_ptr_type, 
-		excl_ptr<index_list_type>&);
+		indices_ptr_arg_type);
 #endif
 
 	~simple_meta_value_reference();
@@ -115,7 +121,7 @@ public:
 	dump(ostream& o, const expr_dump_context&) const;
 
 	good_bool
-	attach_indices(excl_ptr<index_list_type>&);
+	attach_indices(indices_ptr_arg_type);
 
 #if USE_INSTANCE_PLACEHOLDERS
 	never_ptr<const param_value_placeholder>
@@ -200,6 +206,15 @@ public:
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+        count_ptr<const expr_base_type>
+        substitute_default_positional_parameters(
+                const template_formals_manager&,
+                const dynamic_param_expr_list&,
+                const count_ptr<const expr_base_type>&) const;
+	using parent_type::substitute_default_positional_parameters;
+#endif
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

@@ -3,6 +3,93 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-29-merged--exprlist-08:
+	  Child branch merge.
+	  Summary:
+		Now always use dynamic_param_expr_list instead of 
+			abstract param_expr_list with template arguments.  
+		Perform proper default positional template parameter
+			substitution at compile time, which fixes
+			half of the remaining unroll regressions.  
+		Various diagnostic message improvements.  
+		references' array_indices are now reference-counted for ease.
+		Parser fix: array-concatenations are permitted in 
+			template argument lists.  
+	  Next: fix template arity mismatch ICEs.  
+
+
+2006-10-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-08:
+	  Cleaned up abandoned revisions. 
+	  End of this branch, merge up.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-07:
+	  Completed default positional parameter substitution.  (YES!)
+		Added some new test cases for some obtuse uses of this.  
+		Corresponding test cases updated.  
+	  Fixed diagnostic messages about uninstantiated references.  
+		This knocks off all regressions related to this, leaving:
+		parser/namespace: (1) should qualify typename with namespace
+		parser/template:
+			(10) ICE: footprint key arity mismatch
+				in template/, connect/.
+		Total: 11 remaining.
+	  Some clean-ups might be in order before merging to parent branch.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-06:
+	  First round of implementing default positional parameter 
+		substitution in expression hierarchy, enabled.
+	  Does not link, as some needed definitions are still missing.  
+
+
+2006-10-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-05:
+	  Now ref-counting array_indices (of meta_indexed_references).
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-04:
+	  Parser fixed to allow concatenation expressions in
+		template argument lists.  
+	  One test case updated: parser/template/048.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-03:
+	  Top-level module is now registered with the parse_context as the
+		outer-most open definition (now implemented as stack).
+	  Other minor clean-ups in parse_context.{h,tcc,cc}.
+	  Next: pass parent template contexts for default substitution.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-02:
+	  Start of bunch of rewritten code (currently disabled) to rework
+		positional template parameter substitution.
+	  Head start on param_expr::substitute_positional_parameters()
+		in method hierarchy.  
+	  Plan: perform substitution by passing parent template context
+		at the time the fundamental type reference is created.
+	  Next: parse_context clean-ups to be able to use top-level
+		module as a definition, to simplify passing of (null)
+		template formals.  Will need an open definition stack.  
+		
+
+2006-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-01:
+	  Branch objectives:
+		phase out use of param_expr_list as a base class 
+		of dynamic_param_expr_list, which simplifies life greatly.
+		Goal: perform positional parameter substitution on
+		default template parameter expressions, at compile time.  
+	  This revision: no new regressions, same ones.  
+	  Next: default param substitution.  
+
+
 2006-10-05	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-28:
@@ -15,8 +102,9 @@
 			positionally *substituted* before resolving.
 		parser/template: (4) same as process/, 
 			(2) different diagnostic message,
-			(9) ICE: footprint key arity mismatch.
-		Total cases remaining: 18
+			(10) ICE: footprint key arity mismatch
+				in template, connect.
+		Total cases remaining: 19
 	  This has to be the most boring task for this project...
 
 

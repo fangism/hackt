@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.16.4.2 2006/09/11 22:30:41 fang Exp $
+ 	$Id: operators.cc,v 1.16.4.3 2006/10/08 21:52:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -265,6 +265,32 @@ pint_unary_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const pint_expr>
+pint_unary_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pint_expr>& p) const {
+	typedef	count_ptr<const pint_expr>		return_type;
+	INVARIANT(p == this);
+	const return_type
+		rex(ex->substitute_default_positional_parameters(f, e, ex));
+	if (rex) {
+		if (rex == ex) {
+			return p;
+		} else {
+			return return_type(new this_type(rex, op));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -446,6 +472,32 @@ preal_unary_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const preal_expr>
+preal_unary_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const preal_expr>& p) const {
+	typedef	count_ptr<const preal_expr>		return_type;
+	INVARIANT(p == this);
+	const return_type
+		rex(ex->substitute_default_positional_parameters(f, e, ex));
+	if (rex) {
+		if (rex == ex) {
+			return p;
+		} else {
+			return return_type(new this_type(rex, op));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 preal_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -623,6 +675,32 @@ pbool_unary_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const pbool_expr>
+pbool_unary_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_expr>		return_type;
+	INVARIANT(p == this);
+	const return_type
+		rex(ex->substitute_default_positional_parameters(f, e, ex));
+	if (rex) {
+		if (rex == ex) {
+			return p;
+		} else {
+			return return_type(new this_type(rex, op));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pbool_unary_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -732,6 +810,17 @@ pint_arith_expr::~pint_arith_expr() {
 pint_arith_expr::pint_arith_expr(const operand_ptr_type& l, const char o,
 		const operand_ptr_type& r) :
 		lx(l), rx(r), op(op_map[o]) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+pint_arith_expr::pint_arith_expr(const operand_ptr_type& l, const op_type* o,
+		const operand_ptr_type& r) :
+		lx(l), rx(r), op(o) {
 	NEVER_NULL(op);
 	NEVER_NULL(lx);
 	NEVER_NULL(rx);
@@ -935,6 +1024,33 @@ pint_arith_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const pint_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const pint_expr>
+pint_arith_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pint_expr>& p) const {
+	typedef	count_ptr<const pint_expr>		return_type;
+	INVARIANT(p == this);
+	const return_type
+		rlx(lx->substitute_default_positional_parameters(f, e, lx)),
+		rrx(rx->substitute_default_positional_parameters(f, e, rx));
+	if (rlx && rrx) {
+		if (rlx == lx && rrx == rx) {
+			return p;
+		} else {
+			return return_type(new this_type(rlx, op, rrx));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1248,6 +1364,34 @@ pint_relational_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const pbool_expr>
+pint_relational_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_expr>		return_type;
+	typedef	count_ptr<const pint_expr>		operand_type;
+	INVARIANT(p == this);
+	const operand_type
+		rlx(lx->substitute_default_positional_parameters(f, e, lx)),
+		rrx(rx->substitute_default_positional_parameters(f, e, rx));
+	if (rlx && rrx) {
+		if (rlx == lx && rrx == rx) {
+			return p;
+		} else {
+			return return_type(new this_type(rlx, op, rrx));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 pint_relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -1345,6 +1489,17 @@ preal_arith_expr::preal_arith_expr() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_arith_expr::~preal_arith_expr() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+preal_arith_expr::preal_arith_expr(const operand_ptr_type& l, const op_type* o,
+		const operand_ptr_type& r) :
+		lx(l), rx(r), op(o) {
+	NEVER_NULL(op);
+	NEVER_NULL(lx);
+	NEVER_NULL(rx);
+	INVARIANT(lx->dimensions() == 0);
+	INVARIANT(rx->dimensions() == 0);
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 preal_arith_expr::preal_arith_expr(const operand_ptr_type& l, const char o,
@@ -1533,6 +1688,33 @@ preal_arith_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const preal_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const preal_expr>
+preal_arith_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const preal_expr>& p) const {
+	typedef	count_ptr<const preal_expr>		return_type;
+	INVARIANT(p == this);
+	const return_type
+		rlx(lx->substitute_default_positional_parameters(f, e, lx)),
+		rrx(rx->substitute_default_positional_parameters(f, e, rx));
+	if (rlx && rrx) {
+		if (rlx == lx && rrx == rx) {
+			return p;
+		} else {
+			return return_type(new this_type(rlx, op, rrx));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1837,6 +2019,34 @@ preal_relational_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const pbool_expr>
+preal_relational_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_expr>		return_type;
+	typedef	count_ptr<const preal_expr>		operand_type;
+	INVARIANT(p == this);
+	const operand_type
+		rlx(lx->substitute_default_positional_parameters(f, e, lx)),
+		rrx(rx->substitute_default_positional_parameters(f, e, rx));
+	if (rlx && rrx) {
+		if (rlx == lx && rrx == rx) {
+			return p;
+		} else {
+			return return_type(new this_type(rlx, op, rrx));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 preal_relational_expr::collect_transient_info(
 		persistent_object_manager& m) const {
@@ -2123,6 +2333,33 @@ pbool_logical_expr::unroll_resolve_copy(const unroll_context& c,
 		const count_ptr<const pbool_expr>& p) const {
 	return __unroll_resolve_rvalue(c, p);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+count_ptr<const pbool_expr>
+pbool_logical_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pbool_expr>& p) const {
+	typedef	count_ptr<const pbool_expr>		return_type;
+	INVARIANT(p == this);
+	const return_type
+		rlx(lx->substitute_default_positional_parameters(f, e, lx)),
+		rrx(rx->substitute_default_positional_parameters(f, e, rx));
+	if (rlx && rrx) {
+		if (rlx == lx && rrx == rx) {
+			return p;
+		} else {
+			return return_type(new this_type(rlx, op, rrx));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

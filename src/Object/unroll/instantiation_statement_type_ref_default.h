@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.8.28.3 2006/10/05 01:15:52 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.8.28.4 2006/10/08 21:52:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -47,7 +47,13 @@ public:
 					instance_collection_generic_type;
 	typedef	typename class_traits<Tag>::instance_collection_parameter_type
 					instance_collection_parameter_type;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	// TODO: use typedef
+	typedef	count_ptr<const dynamic_param_expr_list>
+						const_relaxed_args_type;
+#else
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+#endif
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
 	typedef	count_ptr<const const_param_expr_list>
 					instance_relaxed_actuals_type;

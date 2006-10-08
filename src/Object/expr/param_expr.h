@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.13.6.2 2006/10/02 03:19:07 fang Exp $
+	$Id: param_expr.h,v 1.13.6.3 2006/10/08 21:52:04 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -24,6 +24,10 @@ class const_param;
 class const_range_list;
 class unroll_context;
 struct expr_dump_context;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+class template_formals_manager;
+class dynamic_param_expr_list;
+#endif
 using util::persistent;
 using std::ostream;
 using util::memory::count_ptr;
@@ -99,6 +103,25 @@ virtual	count_ptr<const const_param>
 
 	// helper functor, defined in "Object/expr/param_expr_functor.h"
 	struct unroller;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Performs copy-on-write expression substitution.  
+	If the referenced value placeholder
+	is a template formal member of the template_formal_manager, 
+	then substitute using the expression corresponding to 
+	its positional index, indexed into the dynamic_param_expr_list.
+	Otherwise return itself, unmodified.  
+ */
+#define	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO				\
+	count_ptr<const param_expr>					\
+	substitute_default_positional_parameters(			\
+		const template_formals_manager&,			\
+		const dynamic_param_expr_list&,				\
+		const count_ptr<const param_expr>&) const
+
+virtual	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO = 0;
+#endif
 
 private:
 #define	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO				\

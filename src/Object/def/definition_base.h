@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.8.8.5 2006/10/05 01:15:30 fang Exp $
+	$Id: definition_base.h,v 1.8.8.6 2006/10/08 21:51:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__

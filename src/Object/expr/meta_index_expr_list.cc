@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.15.8.5 2006/10/05 01:57:03 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.15.8.6 2006/10/08 21:52:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -409,6 +409,21 @@ const_index_list::must_be_equivalent_indices(const meta_index_list& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return shallow copy of self, no substitutions.  
+ */
+count_ptr<const meta_index_list>
+const_index_list::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_list>& l) const {
+	INVARIANT(l == this);
+	return l;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively visits pointer list to register expression
 	objects with the persistent object manager.
@@ -690,6 +705,52 @@ dynamic_meta_index_list::unroll_resolve_indices(const unroll_context& c) const {
 	}
 	return ret;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Visibility hidden is ok.  
+	Copied from meta_value_reference::positional_substituter.
+	Consider making this a helper class template.  
+ */
+struct dynamic_meta_index_list::positional_substituter {
+	typedef count_ptr<const meta_index_expr>	return_type;
+	const template_formals_manager&		formals;
+	const dynamic_param_expr_list&		exprs;
+
+	positional_substituter(const template_formals_manager& f,
+			const dynamic_param_expr_list& e) :
+			formals(f), exprs(e) {
+	}
+
+	return_type
+	operator () (const return_type& p) {
+		return p->substitute_default_positional_parameters(
+				formals, exprs, p);
+	}
+
+};      // end class positional_substituter
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const meta_index_list>
+dynamic_meta_index_list::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_list>& l) const {
+	INVARIANT(l == this);
+	const count_ptr<this_type> temp(new this_type);
+	NEVER_NULL(temp);
+	util::reserve(*temp, parent_type::size());
+	transform(begin(), end(), back_inserter(*temp),
+		positional_substituter(f, e));
+	if (equal(begin(), end(), temp->begin())) {
+		// no substitutions, return this
+		return l;
+	} else {
+		return temp;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

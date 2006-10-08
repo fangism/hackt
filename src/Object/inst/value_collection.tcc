@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.20.8.13 2006/10/05 18:34:20 fang Exp $
+ 	$Id: value_collection.tcc,v 1.20.8.14 2006/10/08 21:52:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -50,6 +50,9 @@
 #include "Object/ref/data_nonmeta_instance_reference.h"
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
+#endif
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
 #endif
 
 #include "common/ICE.h"
@@ -894,7 +897,20 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 #endif	// USE_INSTANCE_PLACEHOLDERS
 	// else is top-level
 	const key_type index(i);
-	const element_type& pi(collection[index]);
+	typedef	typename collection_type::const_iterator	const_iterator;
+	const const_iterator f(collection.find(index));
+	if (f == collection.end()) {
+		cerr << "ERROR: reference to uninstantiated " <<
+			traits_type::tag_name << ' ' <<
+#if USE_INSTANCE_PLACEHOLDERS
+			this->source_placeholder->get_qualified_name() <<
+#else
+			this->get_qualified_name() <<
+#endif
+			" at index: " << i << endl;
+		return good_bool(false);
+	}
+	const element_type& pi(f->second);
 	if (pi.valid) {
 		v = pi.value;
 	} else {

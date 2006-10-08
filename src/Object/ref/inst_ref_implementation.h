@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.13.16.4 2006/10/05 01:15:42 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.13.16.5 2006/10/08 21:52:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -58,9 +58,15 @@ struct simple_meta_instance_reference_implementation<true> {
 					type;
 	};
 
-	typedef	never_ptr<
+#if REF_COUNT_ARRAY_INDICES
+	typedef	const count_ptr<
+		const simple_meta_indexed_reference_base::index_list_type>&
+				index_list_ptr_arg_type;
+#else
+	typedef	const never_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>
-				index_list_ptr_type;
+				index_list_ptr_arg_type;
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -78,7 +84,7 @@ unroll_generic_scalar_substructure_reference(
 #else
 			instance_collection_generic_type<Tag>::type& inst, 
 #endif
-		const index_list_ptr_type ind,
+		index_list_ptr_arg_type ind,
 		const unroll_context& c
 #if !USE_INSTANCE_PLACEHOLDERS
 		, const bool lookup
@@ -102,7 +108,7 @@ never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
 			instance_collection_generic_type<Tag>::type& inst, 
-		const index_list_ptr_type ind,
+		index_list_ptr_arg_type ind,
 		const unroll_context& c) {
 	return simple_meta_instance_reference<Tag>::
 		__unroll_generic_scalar_reference_no_lookup(inst, ind, c);
@@ -142,7 +148,7 @@ simple_lookup_footprint_frame(
 #else
 			instance_collection_generic_type<Tag>::type& inst, 
 #endif
-		const index_list_ptr_type ind,
+		index_list_ptr_arg_type ind,
 		const state_manager& sm) {
 	STACKTRACE_VERBOSE;
 	const unroll_context uc(NULL, NULL);
@@ -217,9 +223,15 @@ struct simple_meta_instance_reference_implementation<false> {
 					type;
 	};
 
-	typedef	never_ptr<
+#if REF_COUNT_ARRAY_INDICES
+	typedef	const count_ptr<
+		const simple_meta_indexed_reference_base::index_list_type>&
+				index_list_ptr_arg_type;
+#else
+	typedef	const never_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>
-				index_list_ptr_type;
+				index_list_ptr_arg_type;
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -232,7 +244,7 @@ unroll_generic_scalar_substructure_reference(
 #else
 			instance_collection_generic_type<Tag>::type& inst, 
 #endif
-		const index_list_ptr_type ind,
+		index_list_ptr_arg_type ind,
 		const unroll_context&
 #if !USE_INSTANCE_PLACEHOLDERS
 		, const bool
@@ -251,7 +263,7 @@ never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
 			instance_collection_generic_type<Tag>::type& inst, 
-		const index_list_ptr_type ind,
+		index_list_ptr_arg_type ind,
 		const unroll_context&) {
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
@@ -286,7 +298,7 @@ simple_lookup_footprint_frame(
 #else
 		const typename instance_collection_generic_type<Tag>::type&, 
 #endif
-		const index_list_ptr_type,
+		index_list_ptr_arg_type,
 		const state_manager&) {
 	// ICE?
 	return NULL;

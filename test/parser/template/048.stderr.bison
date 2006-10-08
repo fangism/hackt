@@ -5,7 +5,7 @@ state	value
 #STATE#	(null) 
 #STATE#	list<(root_item)>: (process-prototype) ... [5:1..13]
 #STATE#	(qualified-id) [7:1..3]
-#STATE#	list<(expr)>: int: 11 ... [7:4..7]
+#STATE#	list<(expr)>: (array-concatenation) ... [7:4..7]
 #STATE#	< [7:8]
 #STATE#	> [7:9]
 in state #STATE#, possible rules are:

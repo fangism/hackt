@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.18.4.1 2006/09/02 03:58:29 fang Exp $
+	$Id: PRS.cc,v 1.18.4.2 2006/10/08 21:51:44 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -42,6 +42,9 @@
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"	// for conversion
 #include "Object/ref/meta_reference_union.h"
+#if SUPPORT_NESTED_DEFINITIONS
+#include "Object/module.h"
+#endif
 
 #include "common/TODO.h"
 
@@ -532,7 +535,12 @@ if (rules) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
-		if (pd) {
+#if SUPPORT_NESTED_DEFINITIONS
+		if (pd && !pd.is_a<module>())
+#else
+		if (pd)
+#endif
+		{
 			for ( ; i!=e; i++) {
 				excl_ptr<entity::PRS::rule>
 					xfer(i->exclusive_release());

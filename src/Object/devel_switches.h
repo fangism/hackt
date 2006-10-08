@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.9 2006/10/05 01:15:23 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.10 2006/10/08 21:51:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -127,7 +127,7 @@
 	This needs to be done before we chain contexts to prevent
 	accidental instantiation in the wrong context.  
 	Goal: 1
-	Status: partially in-place
+	Status: complete, just needs complete testing
  */
 #define	SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS	(1 && USE_INSTANCE_PLACEHOLDERS)
 
@@ -137,9 +137,59 @@
 		read-only, while local (target footprint) values may be
 		modified.  
 	Goal: 1
-	Status:
+	Status: looks good so far, awaiting complete testing
  */
 #define	RVALUE_LVALUE_LOOKUPS	(1 && SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS)
+
+/**
+	Define to 1 to always compile objects using dynamic_param_expr_lists.
+	This takes care of a reject-valid bug (never tripped)
+	and greatly simplifies expression substitution.  
+	Goal: 1
+	Status: looks ok, didn't cause new regressions, awaiting full tests
+	TODO: also consider doing something similar for
+		meta-index-lists and meta-range-lists.  
+	It is do-able, now that we've eliminated much static analysis
+		at compile time.  
+ */
+#define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	(1 && !ENABLE_STATIC_ANALYSIS)
+
+/**
+	Define to 1 to reference count index lists of 
+	simple_meta_indexed_reference_base.  
+	Simplifies unrolling, and more consistent.  
+	Goal: 1?
+	Status: committed, basic tested.
+ */
+#define	REF_COUNT_ARRAY_INDICES			1
+
+/**
+	Define to 1 to use dynamic_meta_index_list instead of
+	abstract meta_index_list, again because we don't need
+	compile-time static analysis anymore.
+	Goal: 1
+	Status: not begun
+ */
+#define	ALWAYS_USE_DYNAMIC_INDEX_LIST		(0 && !ENABLE_STATIC_ANALYSIS)
+
+/**
+	Define to 1 to allow the parse_context class to support 
+	nested outstanding definitions.  
+	Useful for allowing top-level scope to be considered a
+	definition, where module <= process_definition.  
+	Also allows future support for nested definitions. 
+	Goal: 1
+	Status: complete, basically tested.
+ */
+#define	SUPPORT_NESTED_DEFINITIONS	(1 && MODULE_PROCESS)
+
+/**
+	Define to 1 to perform positional parameter substitution
+	of default expressions of templates.  
+	Goal: 1
+	Status: Tested and ready to commit up.  
+ */
+#define	SUBSTITUTE_DEFAULT_PARAMETERS	(1 && ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST && USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 

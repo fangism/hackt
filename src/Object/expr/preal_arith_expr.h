@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.8.4.1 2006/09/11 22:30:56 fang Exp $
+	$Id: preal_arith_expr.h,v 1.8.4.2 2006/10/08 21:52:08 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -67,6 +67,9 @@ public:
 	preal_arith_expr(const operand_ptr_type& l, const char o, 
 		const operand_ptr_type& r);
 
+	preal_arith_expr(const operand_ptr_type& l, const op_type* o, 
+		const operand_ptr_type& r);
+
 	~preal_arith_expr();
 
 	ostream&
@@ -127,6 +130,11 @@ public:
 		const count_ptr<const preal_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO;
+	using parent_type::substitute_default_positional_parameters;
+#endif
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

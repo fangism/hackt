@@ -1,4 +1,5 @@
-Error: indices out of range of pint-val-ref.  got: [0..3]
+ERROR: reference to uninstantiated pint ::ass::d at index: [3]
+ERROR: in unroll_resolve-ing simple_meta_value_reference: ::ass::d[0..::ass::N]
 ERROR in expression 3 of param expr list: pint-val-ref ::ass::d[0..::ass::N]
 ERROR in dynamic_param_expr_list::unroll_resolve_rvalues()
 ERROR in resolving strict template actuals.

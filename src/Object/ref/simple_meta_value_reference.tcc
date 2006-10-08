@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.8 2006/10/05 01:15:44 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.9 2006/10/08 21:52:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -40,12 +40,18 @@
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
 #endif
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+#include "Object/expr/dynamic_param_expr_list.h"
+#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/common/extern_templates.h"
 
+#if REF_COUNT_ARRAY_INDICES
+#include "util/memory/count_ptr.tcc"
+#endif
 #include "util/multikey.h"
 #include "util/packed_array.tcc"
 #include "util/macros.h"
@@ -91,7 +97,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 #if USE_INSTANCE_PLACEHOLDERS
@@ -99,13 +104,11 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 #else
 		const value_collection_ptr_type pi,
 #endif
-		excl_ptr<index_list>& i) :
-		common_base_type(), 
-		parent_type(i, pi->current_collection_state()),
-		interface_type(), 
+		indices_ptr_arg_type i) :
+		simple_meta_indexed_reference_base(i), 
+		parent_type(), 
 		value_collection_ref(pi) {
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -176,11 +179,11 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Copy-reduced from simple_meta_indexed_reference_base.
+	\param i pointer to indices, passed by reference, ref-counted.  
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(
-		excl_ptr<index_list_type>& i) {
+SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 	INVARIANT(!array_indices);
 	NEVER_NULL(i);
 	// dimension-check:
@@ -790,7 +793,8 @@ if (value_collection_ref->is_template_formal()) {
 		if (lookup_err.bad) {
 			// discard incomplete results
 			cerr << "ERROR: in unroll_resolve-ing "
-				"simple_meta_instance_reference." << endl;
+				"simple_meta_value_reference: ";
+			this->dump(cerr, expr_dump_context::default_value) << endl;
 			return return_type(NULL);
 		} else {
 			// safe up-cast
@@ -810,7 +814,8 @@ if (value_collection_ref->is_template_formal()) {
 		if (valid.bad) {
 			cerr << "ERROR: in unroll_resolve-ing "
 				"simple_meta_value_reference, "
-				"uninitialized value." << endl;
+				"uninitialized value: ";
+			this->dump(cerr, expr_dump_context::default_value) << endl;
 			return return_type(NULL);
 		} else {
 			return return_type(new const_expr_type(_val));
@@ -835,6 +840,80 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 	return this->unroll_resolve_rvalues(c, p)
 		.template is_a<const expr_base_type>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return expression with any positional parameters substituted.  
+ */
+SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+count_ptr<const typename SIMPLE_META_VALUE_REFERENCE_CLASS::expr_base_type>
+SIMPLE_META_VALUE_REFERENCE_CLASS::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const expr_base_type>& p) const {
+	typedef	count_ptr<const expr_base_type>		return_type;
+	INVARIANT(p == this);
+	const never_ptr<const definition_base>
+		owner(this->value_collection_ref->get_owner().
+			template is_a<const definition_base>());
+	// substitute index expressions first (move this to base class method)
+	indices_ptr_type ind(this->array_indices);
+	if (ind) {
+		ind = ind->substitute_default_positional_parameters(f, e, ind);
+		if (!ind) {
+			cerr << "Error substituting positional parameters in "
+				"index list." << endl;
+			return return_type(NULL);
+		}
+	}
+
+	if (owner && (&f == &owner->get_template_formals_manager())) {
+		// then we perform expression substitution on the base
+		const size_t offset =
+			this->value_collection_ref->is_template_formal();
+		INVARIANT(offset);	// must be template formal
+		const return_type
+			repl(e[offset-1].template is_a<const expr_base_type>());
+		NEVER_NULL(repl);
+		// is it a simple, scalar, meta_value_reference
+		// or something more complicated?
+		// more complicated requires support for indexed aggregates
+		const count_ptr<const this_type>
+			ref(repl.template is_a<const this_type>());
+		if (ref) {
+			if (ref->dimensions() || ref->array_indices) {
+				FINISH_ME(Fang);
+				cerr << "Need to add support for "
+					"indexed aggregates!" << endl;
+				return return_type(NULL);
+			} else {
+				// is simple, scalar reference
+				return return_type(new this_type(
+					ref->value_collection_ref, ind));
+			}
+		} else {
+			if (ind) {
+				FINISH_ME(Fang);
+				cerr << "Need to add support for "
+					"indexed complex expressions!" << endl;
+				return return_type(NULL);
+			} else {
+				return repl;
+			}
+		}
+	} else {
+		// base does not reference formal
+		if (ind == this->array_indices) {
+			// LIKELY.  then nothing was substituted
+			return p;
+		} else {
+			return return_type(new this_type(
+				this->value_collection_ref, ind));
+		}
+	}
+}
+#endif	// SUBSTITUTE_DEFAULT_PARAMETERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.12.8.3 2006/09/11 22:30:37 fang Exp $
+ 	$Id: meta_range.cc,v 1.12.8.4 2006/10/08 21:52:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -278,6 +278,33 @@ pint_range::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const const_index>(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+count_ptr<const meta_index_expr>
+pint_range::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_expr>& i) const {
+	typedef	count_ptr<const meta_index_expr>	return_type;
+	NEVER_NULL(i);
+	INVARIANT(i == this);
+	const count_ptr<const pint_expr>
+		lb(lower->substitute_default_positional_parameters(f, e, lower)),
+		ub(upper->substitute_default_positional_parameters(f, e, upper));
+	if (lb && ub) {
+		if (lb == lower && ub == upper) {
+			// return copy of self, unsubstituted
+			return i;
+		} else {
+			// something was different, return new range
+			return return_type(new this_type(lb, ub));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -561,6 +588,19 @@ const_range::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p.is_a<const const_range>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+count_ptr<const meta_index_expr>
+const_range::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_expr>& i) const {
+	NEVER_NULL(i);
+	INVARIANT(i == this);
+	return i;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
