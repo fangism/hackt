@@ -1,5 +1,5 @@
 "BUILDS"
-	$Id: BUILDS,v 1.23 2006/10/07 16:39:38 fang Exp $
+	$Id: BUILDS,v 1.24 2006/10/08 03:13:33 fang Exp $
 
 This file lists issues with building on known configurations.  
 If your configuration is not listed here, we simply haven't tested yet.  
@@ -29,14 +29,14 @@ yacc: bison (GNU Bison) 2.0
 readline: BSD EditLine (histedit interface) ver. 2.9
 
 
-Version: hackt 0.1.4-devel-20060913
-CVS Tag: HACKT-00-01-04-main-00-80-21
+Version: hackt 0.1.4-devel-20061006
+CVS Tag: HACKT-00-01-04-main-00-80-27
 Configured with: '--enable-fun' '--with-readline=/sw' '-C' 'CC=ccache gcc' 'CXX=ccache g++'
 build-triplet: powerpc-apple-darwin8.5.0
 c++: powerpc-apple-darwin8-g++-4.0.1 (GCC) 4.0.1 (Apple Computer, Inc. build 5250)
 config-LIBS:  -lreadline -lncurses 
 lex: flex version 2.5.4
-yacc: bison (GNU Bison) 2.0
+yacc: bison (GNU Bison) 2.1
 readline: GNU readline 4.3
 
 
