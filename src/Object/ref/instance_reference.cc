@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.18.6.1 2006/10/02 03:19:25 fang Exp $
+ 	$Id: instance_reference.cc,v 1.18.6.1.4.1 2006/10/08 03:31:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -188,8 +188,7 @@ simple_meta_indexed_reference_base::dump_indices(ostream& o,
 	\return true if successful, else false.  
  */
 good_bool
-simple_meta_indexed_reference_base::attach_indices(
-		excl_ptr<index_list_type>& i) {
+simple_meta_indexed_reference_base::attach_indices(indices_ptr_arg_type i) {
 	/**
 		We used to perform static checks for index collisions, 
 		but there was little benefit in catching early errors, 
@@ -236,8 +235,14 @@ simple_meta_indexed_reference_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, array_indices);
 	// must load the indices early?
-	if (array_indices)
+	if (array_indices) {
+#if REF_COUNT_ARRAY_INDICES
+		m.load_object_once(
+			const_cast<index_list_type*>(&*array_indices));
+#else
 		m.load_object_once(array_indices);
+#endif
+	}
 }
 
 //=============================================================================

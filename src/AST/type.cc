@@ -1,7 +1,7 @@
 /**
 	\file "AST/type.cc"
 	Class method definitions for type specifier classes.  
-	$Id: type.cc,v 1.5 2006/07/30 05:49:17 fang Exp $
+	$Id: type.cc,v 1.5.16.1 2006/10/08 03:31:11 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_base.cc,v 1.29.10.1 2005/12/11 00:45:02 fang Exp
  */
@@ -258,6 +258,11 @@ generic_type_ref::check_type(const context& c) const {
 	}
 
 	// check template arguments, if given
+#if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT
+	const template_formals_manager&
+		tfm(c.get_current_open_definition()->
+			get_template_formals_manager());
+#endif
 	local_return_type type_ref;
 	if (temp_spec) {
 		STACKTRACE("checking template arguments (temp_spec)");
@@ -265,7 +270,11 @@ generic_type_ref::check_type(const context& c) const {
 		// type-argument placeholders.  
 		const template_argument_list_pair::return_type
 			tpl(temp_spec->check_template_args(c));
+#if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT
+		type_ref = d->make_fundamental_type_reference(tpl, tfm);
+#else
 		type_ref = d->make_fundamental_type_reference(tpl);
+#endif
 	} else {
 		STACKTRACE("empty template arguments (!temp_spec)");
 		// if no args are supplied, 
@@ -277,7 +286,11 @@ generic_type_ref::check_type(const context& c) const {
 				where(*this) << endl;
 			return return_type(NULL);
 		} else {
+#if MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT
+			type_ref = d->make_fundamental_type_reference(tfm);
+#else
 			type_ref = d->make_fundamental_type_reference();
+#endif
 		}
 	}
 	if (chan_dir) {

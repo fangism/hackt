@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.14.4.5 2006/10/02 03:19:29 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.14.4.5.4.1 2006/10/08 03:31:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -13,7 +13,6 @@
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/devel_switches.h"
-#include "util/memory/excl_ptr.h"
 #include "util/packed_array_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
 #include "util/STL/vector_fwd.h"
@@ -64,6 +63,8 @@ protected:
 					substructure_implementation_policy;
 public:
 	typedef	simple_meta_indexed_reference_base	common_base_type;
+	typedef	common_base_type::indices_ptr_type	indices_ptr_type;
+	typedef	common_base_type::indices_ptr_arg_type	indices_ptr_arg_type;
 	/// the instance collection base type
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
@@ -143,7 +144,7 @@ virtual	ostream&
 	dimensions(void) const;
 
 	good_bool
-	attach_indices(excl_ptr<index_list_type>&);
+	attach_indices(indices_ptr_arg_type);
 
 private:
 	using parent_type::unroll_references_packed_helper;
@@ -185,7 +186,11 @@ protected:
 #else
 		const instance_collection_generic_type&, 
 #endif
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>&,
+#else
 		const never_ptr<const index_list_type>,
+#endif
 		const unroll_context&
 #if !USE_INSTANCE_PLACEHOLDERS
 			, const bool
@@ -197,9 +202,13 @@ protected:
 	instance_alias_base_ptr_type
 	__unroll_generic_scalar_reference_no_lookup(
 		const instance_collection_generic_type&, 
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>&,
+#else
 		const never_ptr<const index_list_type>,
-		const unroll_context&);
 #endif
+		const unroll_context&);
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 	static
 	good_bool
@@ -209,7 +218,11 @@ protected:
 #else
 		const instance_collection_generic_type&, 
 #endif
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>&,
+#else
 		const never_ptr<const index_list_type>,
+#endif
 		const unroll_context&, 
 #if !USE_INSTANCE_PLACEHOLDERS
 		const bool, 
@@ -221,10 +234,14 @@ protected:
 	good_bool
 	__unroll_generic_scalar_references_no_lookup(
 		const instance_collection_generic_type&, 
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>&,
+#else
 		const never_ptr<const index_list_type>,
+#endif
 		const unroll_context&, 
 		alias_collection_type&);
-#endif
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 	void
 	collect_transient_info_base(persistent_object_manager& ) const;

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.22.4.8.2.1 2006/10/07 20:08:45 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.22.4.8.2.2 2006/10/08 03:31:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -46,6 +46,9 @@
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/common/extern_templates.h"
 
+#if REF_COUNT_ARRAY_INDICES
+#include "util/memory/count_ptr.tcc"
+#endif
 #include "util/multikey.h"
 #include "util/packed_array.tcc"
 #include "util/macros.h"
@@ -176,11 +179,11 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Copy-reduced from simple_meta_indexed_reference_base.
+	\param i pointer to indices, passed by reference, ref-counted.  
  */
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(
-		excl_ptr<index_list_type>& i) {
+SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 	INVARIANT(!array_indices);
 	NEVER_NULL(i);
 	// dimension-check:
@@ -851,10 +854,26 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::substitute_default_positional_parameters(
 	const never_ptr<const definition_base>
 		owner(this->value_collection_ref->get_owner().
 			template is_a<const definition_base>());
-	value_placeholder_ptr_type ret_pl(this->value_collection_ref);
+	// substitute index expressions first
+	indices_ptr_type ind;
+	if (this->array_indices) {
+		ind = this->array_indices->
+			substitute_default_positional_parameters(f, e, 
+				this->array_indices);
+		NEVER_NULL(ind);
+	}
+
 	if (owner && (&f == &owner->get_template_formals_manager())) {
-		// then we perform substitution
+		// then we perform expression substitution on the base
+		const size_t offset =
+			this->value_collection_ref->is_template_formal();
+		INVARIANT(offset);	// must be template formal
+		const count_ptr<const param_expr>& repl(e[offset-1]);
+		// is it a simple, scalar, meta_value_reference
+		// or something more complicated?
+		// more complicated requires support for indexed aggregates
 	} else {
+		// base does not reference formal
 	}
 	// TODO: FINISH ME
 }

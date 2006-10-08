@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.13.2.5.8.1 2006/10/07 20:08:44 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.13.2.5.8.2 2006/10/08 03:31:20 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -60,6 +60,7 @@ private:
 	typedef	simple_meta_indexed_reference_base	common_base_type;
 	typedef	expr_base_type				interface_type;
 public:
+	typedef	common_base_type::indices_ptr_arg_type	indices_ptr_arg_type;
 	typedef	count_ptr<const interface_type>		init_arg_type;
 #if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename traits_type::value_placeholder_parent_type
@@ -102,13 +103,13 @@ public:
 	simple_meta_value_reference(const value_placeholder_ptr_type);
 
 	simple_meta_value_reference(const value_placeholder_ptr_type, 
-		excl_ptr<index_list_type>&);
+		indices_ptr_arg_type);
 #else
 	explicit
 	simple_meta_value_reference(const value_collection_ptr_type);
 
 	simple_meta_value_reference(const value_collection_ptr_type, 
-		excl_ptr<index_list_type>&);
+		indices_ptr_arg_type);
 #endif
 
 	~simple_meta_value_reference();
@@ -120,7 +121,7 @@ public:
 	dump(ostream& o, const expr_dump_context&) const;
 
 	good_bool
-	attach_indices(excl_ptr<index_list_type>&);
+	attach_indices(indices_ptr_arg_type);
 
 #if USE_INSTANCE_PLACEHOLDERS
 	never_ptr<const param_value_placeholder>

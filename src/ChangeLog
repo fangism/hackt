@@ -5,6 +5,10 @@
 
 2006-10-07	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-05:
+	  Now ref-counting array_indices (of meta_indexed_references).
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-04:
 	  Parser fixed to allow concatenation expressions in
 		template argument lists.  

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.18.2.9.2.3 2006/10/07 22:09:32 fang Exp $
+	$Id: devel_switches.h,v 1.18.2.9.2.4 2006/10/08 03:31:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -152,7 +152,25 @@
 	It is do-able, now that we've eliminated much static analysis
 		at compile time.  
  */
-#define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	1
+#define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	(1 && !ENABLE_STATIC_ANALYSIS)
+
+/**
+	Define to 1 to reference count index lists of 
+	simple_meta_indexed_reference_base.  
+	Simplifies unrolling, and more consistent.  
+	Goal: 1?
+	Status: in progress
+ */
+#define	REF_COUNT_ARRAY_INDICES			1
+
+/**
+	Define to 1 to use dynamic_meta_index_list instead of
+	abstract meta_index_list, again because we don't need
+	compile-time static analysis anymore.
+	Goal: 1
+	Status: not begun
+ */
+#define	ALWAYS_USE_DYNAMIC_INDEX_LIST		(1 && !ENABLE_STATIC_ANALYSIS)
 
 /**
 	Define to 1 to allow the parse_context class to support 
@@ -171,16 +189,16 @@
 		default template parameter positional substitution.
 	Caveat: prototypes' formals may not match those of the
 		corresponding definition's formals!
-	Goal: 1
+	Goal: 0
  */
-#define	MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT	(0 && MODULE_PROCESS)
+#define	MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT	(0 && SUPPORT_NESTED_DEFINITIONS)
 
 /**
 	Define to 1 to perform positional parameter substitution
 	of default expressions of templates.  
 	Goal: 1
  */
-#define	SUBSTITUTE_DEFAULT_PARAMETERS	(0 && ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST && USE_INSTANCE_PLACEHOLDERS && MAKE_TYPE_WITH_PARENT_TEMPLATE_CONTEXT)
+#define	SUBSTITUTE_DEFAULT_PARAMETERS	(0 && ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST && USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 
