@@ -5,7 +5,17 @@
 
 2006-10-08	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-80-03-instance-00-29-merged--exprlist-08:
+	* HACKT-00-01-04-main-00-80-03-instance-00-30:
+	  Fixed some of remaining regressions (3 down):
+		Do not try to lookup footprint with incomplete (not strict)
+		type because wrong arity, instead create an auxiliary footprint
+		(of parameters) for the purposes of unrolling ports.  
+	  Remaining regressions (template):
+		Footprint isn't being correctly unrolled when unrolling an
+		instance with a relaxed template argument.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-29-merged-exprlist-08:
 	  Child branch merge.
 	  Summary:
 		Now always use dynamic_param_expr_list instead of 
