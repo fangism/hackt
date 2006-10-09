@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17.6.8 2006/10/05 18:34:21 fang Exp $
+	$Id: unroll_context.cc,v 1.17.6.9 2006/10/09 21:09:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -135,7 +135,31 @@ unroll_context::unroll_context(footprint* const f,
 		{
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intended for contexts used for unrolling temporary footprints.  
+	In such cases, we don't want to unroll into the parent context's
+	footprint.  
+ */
+unroll_context::unroll_context(footprint* const f, 
+		const unroll_context& c, 
+		const auxiliary_target_tag) :
+		next(&c),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
 #endif
+		target_footprint(f),
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		lookup_footprint(f), 
+#endif
+		top_footprint(c.top_footprint)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
+}
+
+#endif	// if 0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !RESOLVE_VALUES_WITH_FOOTPRINT

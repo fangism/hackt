@@ -3,6 +3,17 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-31:
+	  Fixed remaining ICE regressions in template:
+		incomplete relaxed type was unrolling into the wrong footprint,
+		so we've forced such unrolls to go into a temporary
+		auxiliary footprint, until type is (strictly) complete.  
+	  One more trivial regression remains (qualified typename),
+		before proceeding to create phase.
+
+
 2006-10-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-30:

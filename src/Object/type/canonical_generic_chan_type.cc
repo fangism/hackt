@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.5.8.2 2006/10/05 01:15:46 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.5.8.3 2006/10/09 21:09:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -26,6 +26,7 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
 #include "common/TODO.h"
+#include "common/ICE.h"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -62,6 +63,17 @@ canonical_generic_chan_type::canonical_type(
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+canonical_generic_chan_type::canonical_type(
+		const this_type& d,
+		const const_param_list_ptr_type& p) :
+		base_type(), canonical_definition_ptr(), datatype_list(), 
+		direction() {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(

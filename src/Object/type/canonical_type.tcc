@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.9.2.4 2006/10/05 05:02:54 fang Exp $
+	$Id: canonical_type.tcc,v 1.9.2.5 2006/10/09 21:09:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -59,6 +59,21 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d,
 		const param_list_ptr_type& p) :
 		base_type(p), canonical_definition_ptr(d) {
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(canonical_definition_ptr);
+	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param p relaxed template arguments to append.  
+	TODO: check correct number of parameters?
+ */
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+CANONICAL_TYPE_CLASS::canonical_type(const this_type& t,
+		const const_param_list_ptr_type& p) :
+		base_type(t.param_list_ptr, p),
+		canonical_definition_ptr(t.canonical_definition_ptr) {
 	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());

@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.9.28.4 2006/10/09 03:12:50 fang Exp $
+	$Id: canonical_type.cc,v 1.9.28.5 2006/10/09 21:09:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -93,6 +93,7 @@ struct unroll_port_instances_policy<process_definition> {
 	operator () (const canonical_process_type& p, 
 			const unroll_context& c,
 			subinstance_manager& sub) const {
+		STACKTRACE_VERBOSE;
 		// modeled after process_type_reference::unroll_port_instances()
 		const port_formals_manager&
 			pf(p.canonical_definition_ptr->get_port_formals());
@@ -105,12 +106,14 @@ struct unroll_port_instances_policy<process_definition> {
 		the purpose of unrolling ports.  
 ***/
 	if (p.is_strict()) {
+		STACKTRACE_INDENT_PRINT("have strict type." << endl);
 		const footprint&
 			f(p.canonical_definition_ptr->get_footprint(
 				p.param_list_ptr));
 		const unroll_context cc(&f, c);
 		pf.unroll_ports(cc, sub);
 	} else {
+		STACKTRACE_INDENT_PRINT("have relaxed type." << endl);
 		// unroll temporary footprint using partial template params
 		NEVER_NULL(p.param_list_ptr);
 		typedef	count_ptr<const dynamic_param_expr_list>
@@ -118,7 +121,8 @@ struct unroll_port_instances_policy<process_definition> {
 		const params_ptr_type d(p.param_list_ptr->to_dynamic_list());
 		const template_actuals a(d, params_ptr_type(NULL));
 		footprint f;
-		const unroll_context cc(&f, c);
+		const unroll_context
+			cc(&f, c, unroll_context::auxiliary_target_tag());
 		if (p.canonical_definition_ptr->get_template_formals_manager()
 				.unroll_formal_parameters(cc, a).good) {
 			pf.unroll_ports(cc, sub);

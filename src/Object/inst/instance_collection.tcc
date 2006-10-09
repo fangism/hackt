@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.33.2.9 2006/10/05 01:15:36 fang Exp $
+	$Id: instance_collection.tcc,v 1.33.2.10 2006/10/09 21:09:42 fang Exp $
 	TODO: trim includes
  */
 
@@ -724,19 +724,26 @@ good_bool
 INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
 		const instance_relaxed_actuals_type& actuals, 
 		const unroll_context& c) {
-	STACKTRACE("instance_array<Tag,D>::instantiate_indices()");
+	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 	if (!ranges.is_valid()) {
 		ranges.dump(cerr << "ERROR: invalid instantiation range list: ",
 			expr_dump_context::default_value) << endl;
 		return good_bool(false);
 	}
+#if USE_RESOLVED_DATA_TYPES
+	// for process only (or anything with relaxed typing)
+	if (!collection_type_manager_parent_type::
+			complete_type_definition_footprint(actuals).good) {
+		return good_bool(false);
+	}
+#endif
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
 	multikey_generator<D, pint_value_type> key_gen;
 #if ENABLE_STACKTRACE
-	ranges.dump(STACKTRACE_INDENT,
+	ranges.dump(STACKTRACE_INDENT << "range: ",
 		expr_dump_context::default_value) << endl;
 #endif
 	ranges.make_multikey_generator(key_gen);
@@ -789,7 +796,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		key_gen++;
 	} while (key_gen != key_gen.get_lower_corner());
 	return good_bool(!err);
-}
+}	// end method instantiate_indices
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1515,7 +1522,7 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 		const const_range_list& r, 
 		const instance_relaxed_actuals_type& actuals, 
 		const unroll_context& c) {
-	STACKTRACE("instance_array<Tag,0>::instantiate_indices()");
+	STACKTRACE_VERBOSE;
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
 	INVARIANT(r.empty());
 	if (this->the_instance.valid()) {
@@ -1526,6 +1533,13 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 	}
 	// here we need an explicit instantiation (recursive)
 	this->the_instance.instantiate(never_ptr<const this_type>(this), c);
+#if USE_RESOLVED_DATA_TYPES
+	// for process only (or anything with relaxed typing)
+	if (!collection_type_manager_parent_type::
+			complete_type_definition_footprint(actuals).good) {
+		return good_bool(false);
+	}
+#endif
 	const bool attached(actuals ?
 		this->the_instance.attach_actuals(actuals) : true);
 	if (!attached) {

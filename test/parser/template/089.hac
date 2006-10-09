@@ -1,0 +1,10 @@
+// "089.hac" should pass
+// copy-modified from "061.hac"
+// make sure unrolling relaxed types correctly into auxiliary footprints
+
+template <pint Q><pint R>
+defproc foo() { }
+
+foo<5> dar;
+foo<5> ear;
+

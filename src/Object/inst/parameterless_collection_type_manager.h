@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.8.8.3 2006/10/05 01:15:37 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.8.8.4 2006/10/09 21:09:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -12,14 +12,17 @@
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/devel_switches.h"
+#include "util/memory/pointer_classes_fwd.h"
 
 namespace HAC {
 namespace entity {
+class const_param_expr_list;
 using std::istream;
 using std::ostream;
 using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
+using util::memory::count_ptr;
 class footprint;
 template <class> class class_traits;
 
@@ -75,6 +78,12 @@ public:
 
 	resolved_type_ref_type
 	get_resolved_canonical_type(void) const;
+
+	good_bool
+	complete_type_definition_footprint(
+			const count_ptr<const const_param_expr_list>& r) const {
+		return good_bool(true);
+	}
 #else
 	const instance_collection_parameter_type&
 	get_canonical_type(void) const { return this->type_parameter; }

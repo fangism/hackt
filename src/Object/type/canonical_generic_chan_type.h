@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.6.8.2 2006/10/05 01:15:47 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.6.8.3 2006/10/09 21:09:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -73,6 +73,13 @@ public:
 	explicit
 	canonical_type(const canonical_definition_ptr_type, 
 		const char dir);
+
+#if USE_RESOLVED_DATA_TYPES
+	// dummy prototype, not supposed to be used (never relaxed!)
+	// called from "Object/inst/general_collection_type_manager.h"
+	canonical_type(const this_type&, 
+		const const_param_list_ptr_type&);
+#endif
 
 	canonical_type(const canonical_definition_ptr_type, 
 		const param_list_ptr_type&, const char dir);

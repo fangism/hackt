@@ -1,0 +1,10 @@
+// "088.hac"
+
+template <pint N, D[N]>
+defproc foo() { }
+
+template <pint N, D[N]>
+defproc bar(foo<2*N, D#D> x) { }
+
+bar<2,{0,1}> X;
+

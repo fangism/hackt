@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.6.48.3 2006/10/05 05:02:54 fang Exp $
+	$Id: canonical_type.h,v 1.6.48.4 2006/10/09 21:09:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -71,6 +71,9 @@ public:
 
 	canonical_type(const canonical_definition_ptr_type, 
 		const param_list_ptr_type&);
+
+	// used to append relaxed template arguments
+	canonical_type(const this_type&, const const_param_list_ptr_type&);
 
 	canonical_type(const canonical_definition_ptr_type, 
 		const template_actuals&);

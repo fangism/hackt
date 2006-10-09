@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.9.8.3 2006/10/05 01:15:36 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.9.8.4 2006/10/09 21:09:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -28,6 +28,7 @@ using std::ostream;
 using util::good_bool;
 using util::bad_bool;
 using util::persistent_object_manager;
+class const_param_expr_list;
 template <class> class class_traits;
 
 //=============================================================================
@@ -103,6 +104,20 @@ public:
 	resolved_type_ref_type
 	get_resolved_canonical_type(void) const {
 		return this->type_parameter;
+	}
+
+	good_bool
+	complete_type_definition_footprint(
+			const count_ptr<const const_param_expr_list>& r) const {
+		if (this->is_relaxed_type() && r) {
+			const instance_collection_parameter_type
+				ct(this->type_parameter, r);
+			const footprint fake_top;
+			// don't have top-level footprint handy, need it?
+			return ct.unroll_definition_footprint(fake_top);
+		} else {
+			return good_bool(true);
+		}
 	}
 #else	// USE_RESOLVED_DATA_TYPES
 	const instance_collection_parameter_type&

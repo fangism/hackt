@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.5.8.1 2006/10/08 21:52:20 fang Exp $
+	$Id: canonical_type_base.cc,v 1.5.8.2 2006/10/09 21:09:50 fang Exp $
  */
 
 #include <algorithm>
@@ -27,6 +27,22 @@ canonical_type_base::canonical_type_base() : param_list_ptr(NULL) { }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
 canonical_type_base::canonical_type_base(const const_param_list_ptr_type& p) :
 		param_list_ptr(p) { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - _
+/**
+	Concatenates expression lists into one.  
+ */
+canonical_type_base::canonical_type_base(const const_param_list_ptr_type& p, 
+		const const_param_list_ptr_type& r) :
+		param_list_ptr(p) {
+	if (p && r) {
+		const param_list_ptr_type
+			temp(new const_param_expr_list(*param_list_ptr));
+		NEVER_NULL(temp);
+		copy(r->begin(), r->end(), back_inserter(*temp));
+		param_list_ptr = temp;
+	}
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_type_base::~canonical_type_base() { }

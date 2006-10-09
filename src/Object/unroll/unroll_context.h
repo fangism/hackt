@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.8.10.7 2006/10/05 05:02:58 fang Exp $
+	$Id: unroll_context.h,v 1.8.10.8 2006/10/09 21:09:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -138,6 +138,12 @@ private:
 	never_ptr<const name_space>			parent_namespace;
 #endif
 public:
+	/**
+		Constructor selection tag for the sake of 
+		explicitly redirecting the target footprint, in the case
+		of unrolling into an auxiliary footprint.  
+	 */
+	struct auxiliary_target_tag {};
 #if 0
 	// parameterless types and entity::module need this
 	unroll_context();
@@ -152,6 +158,9 @@ public:
 	unroll_context(const footprint* const, const unroll_context&);
 	// called by everything else
 	unroll_context(footprint* const, const unroll_context&);
+	// called for auxiliary footprint unrolling
+	unroll_context(footprint* const, const unroll_context&, 
+		const auxiliary_target_tag);
 
 #if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context(const template_actuals&,

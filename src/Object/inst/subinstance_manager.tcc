@@ -1,11 +1,11 @@
 /**
 	\file "Object/inst/subinstance_manager.tcc"
 	Template method definitions for subinstance_manager.  
-	$Id: subinstance_manager.tcc,v 1.6.50.1 2006/09/06 04:19:49 fang Exp $
+	$Id: subinstance_manager.tcc,v 1.6.50.2 2006/10/09 21:09:45 fang Exp $
  */
 
-#ifndef	__HAC_OBJECT_INST_SUBINTANCE_MANAGER_TCC__
-#define	__HAC_OBJECT_INST_SUBINTANCE_MANAGER_TCC__
+#ifndef	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
+#define	__HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
 
 #include <iostream>
 #include "Object/inst/subinstance_manager.h"
@@ -74,6 +74,10 @@ subinstance_manager::unroll_port_instances(
 	resolved_super_type->dump(cerr << "resolved type:   ") << endl;
 #endif
 #if USE_RESOLVED_DATA_TYPES
+	// NOTE: this resolved type may be incomplete (relaxed)
+#if ENABLE_STACKTRACE
+	resolved_super_type.dump(STACKTRACE_INDENT << "super type: ") << endl;
+#endif
 	resolved_super_type.unroll_port_instances(c, *this);
 #else
 	INVARIANT(resolved_super_type->is_resolved());
@@ -88,5 +92,5 @@ subinstance_manager::unroll_port_instances(
 }	// end namespace entity
 }	// end namespace HAC
 
-#endif	// __HAC_OBJECT_INST_SUBINTANCE_MANAGER_TCC__
+#endif	// __HAC_OBJECT_INST_SUBINSTANCE_MANAGER_TCC__
 
