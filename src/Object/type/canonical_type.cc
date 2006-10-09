@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.9.28.3 2006/10/05 05:02:53 fang Exp $
+	$Id: canonical_type.cc,v 1.9.28.4 2006/10/09 03:12:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -86,6 +86,9 @@ struct unroll_port_instances_policy<user_def_chan> {
 //-----------------------------------------------------------------------------
 template <>
 struct unroll_port_instances_policy<process_definition> {
+	/**
+		Is this missing the top-level const footprint&?
+	 */
 	void
 	operator () (const canonical_process_type& p, 
 			const unroll_context& c,
@@ -95,15 +98,41 @@ struct unroll_port_instances_policy<process_definition> {
 			pf(p.canonical_definition_ptr->get_port_formals());
 #if RESOLVE_VALUES_WITH_FOOTPRINT
 		// template formals/actuals included in footprint already
-
+/***
+	Problem: when type is incomplete, we can't access a footprint
+	because relaxed actuals are missing but required.
+	Solution: since read-only footprint is only needed for
+		the purpose of unrolling ports.  
+***/
+	if (p.is_strict()) {
 		const footprint&
 			f(p.canonical_definition_ptr->get_footprint(
 				p.param_list_ptr));
 		const unroll_context cc(&f, c);
+		pf.unroll_ports(cc, sub);
+	} else {
+		// unroll temporary footprint using partial template params
+		NEVER_NULL(p.param_list_ptr);
+		typedef	count_ptr<const dynamic_param_expr_list>
+			params_ptr_type;
+		const params_ptr_type d(p.param_list_ptr->to_dynamic_list());
+		const template_actuals a(d, params_ptr_type(NULL));
+		footprint f;
+		const unroll_context cc(&f, c);
+		if (p.canonical_definition_ptr->get_template_formals_manager()
+				.unroll_formal_parameters(cc, a).good) {
+			pf.unroll_ports(cc, sub);
+		} else {
+			cerr << "FATAL: unexpected error unrolling temporary "
+				"parameter-only footprint." << endl;
+			p.dump(cerr << "with canonical type: ") << endl;
+			THROW_EXIT;
+		}
+	}
 #else
 		const unroll_context cc(p.make_unroll_context());
-#endif
 		pf.unroll_ports(cc, sub);
+#endif
 	}
 };	// end struct unroll_port_instances_policy
 
