@@ -67,8 +67,8 @@ In namespace "", we have: {
       )
       In definition "lt", we have: {
       Instances:
-        p = pb<> ::lt::p^1
-        x = bool<> ::lt::x
+        p = pb<> lt::p^1
+        x = bool<> lt::x
       unroll sequence: 
         bool<> x
         pb<> p[0..::N-1]
@@ -94,7 +94,7 @@ In namespace "", we have: {
       )
       In definition "pb", we have: {
       Instances:
-        t = bool<> ::pb::t
+        t = bool<> pb::t
       unroll sequence: 
         bool<> t
       footprint: {

@@ -41,7 +41,7 @@ In namespace "", we have: {
       )
       In definition "inv", we have: {
       Instances:
-        a = bool<> ::inv::a^1
+        a = bool<> inv::a^1
       unroll sequence: 
         bool<> a[0..1]
       prs:

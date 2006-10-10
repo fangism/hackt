@@ -65,8 +65,8 @@ In namespace "", we have: {
       )
       In definition "lut", we have: {
       Instances:
-        p = pbit<> ::lut::p
-        pbint = pbitint<> ::lut::pbint
+        p = pbit<> lut::p
+        pbint = pbitint<> lut::pbint
       unroll sequence: 
         pbitint<> pbint
         pbit<> p
@@ -90,7 +90,7 @@ In namespace "", we have: {
       )
       In definition "pbit", we have: {
       Instances:
-        t = bool<> ::pbit::t
+        t = bool<> pbit::t
       unroll sequence: 
         bool<> t
       footprint: {
@@ -103,7 +103,7 @@ In namespace "", we have: {
       )
       In definition "pbitint", we have: {
       Instances:
-        pb = pbit<> ::pbitint::pb
+        pb = pbit<> pbitint::pb
       unroll sequence: 
         pbit<> pb
       footprint: {

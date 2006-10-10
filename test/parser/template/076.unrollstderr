@@ -135,13 +135,13 @@ In namespace "", we have: {
       )
       In definition "ass", we have: {
       Parameters:
-        N = pint<> ::ass::N
-        d = pint<> ::ass::d^1
+        N = pint<> ass::N
+        d = pint<> ass::d^1
       Instances:
-        myfoo = foo<::ass::N, 3, ::ass::d> ::ass::myfoo
-        x = bool<> ::ass::x
-        y = bool<> ::ass::y
-        z = bool<> ::ass::z
+        myfoo = foo<::ass::N, 3, ::ass::d> ass::myfoo
+        x = bool<> ass::x
+        y = bool<> ass::y
+        z = bool<> ass::z
       unroll sequence: 
         bool<> x
         bool<> y
@@ -178,12 +178,12 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        M = pint<> ::foo::M
-        N = pint<> ::foo::N
-        d = pint<> ::foo::d^1
+        M = pint<> foo::M
+        N = pint<> foo::N
+        d = pint<> foo::d^1
       Instances:
-        r = bool<> ::foo::r
-        s = bool<> ::foo::s
+        r = bool<> foo::r
+        s = bool<> foo::s
       unroll sequence: 
         bool<> r
         bool<> s

@@ -78,13 +78,13 @@ In namespace "", we have: {
       )
       In definition "one_shot", we have: {
       Parameters:
-        X = pint<> ::one_shot::X
-        Y = pint<> ::one_shot::Y
+        X = pint<> one_shot::X
+        Y = pint<> one_shot::Y
       Instances:
-        L = chan?(bool<>) ::one_shot::L
-        R = chan!(bool<>) ::one_shot::R
-        x = int<::one_shot::Y> ::one_shot::x
-        z = int<::one_shot::X> ::one_shot::z
+        L = chan?(bool<>) one_shot::L
+        R = chan!(bool<>) one_shot::R
+        x = int<::one_shot::Y> one_shot::x
+        z = int<::one_shot::X> one_shot::z
       unroll sequence: 
         chan?(bool<>) L
         chan!(bool<>) R

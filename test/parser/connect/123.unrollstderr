@@ -43,8 +43,8 @@ In namespace "", we have: {
       )
       In definition "array", we have: {
       Instances:
-        composite = bool<> ::array::composite
-        x = bool<> ::array::x
+        composite = bool<> array::composite
+        x = bool<> array::x
       unroll sequence: 
         bool<> x
         bool<> composite
@@ -59,7 +59,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        p = array<> ::foo::p
+        p = array<> foo::p
       unroll sequence: 
         array<> p
       footprint: {

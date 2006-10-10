@@ -25,7 +25,7 @@ In namespace "", we have: {
       )
       In definition "food", we have: {
       Instances:
-        sleep = int<32> ::food::sleep
+        sleep = int<32> food::sleep
       }
 
 }

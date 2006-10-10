@@ -59,7 +59,7 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        q = bool<> ::bar::q
+        q = bool<> bar::q
       unroll sequence: 
         bool<> q
       footprint: {
@@ -73,10 +73,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pbool<> ::foo::N
+        N = pbool<> foo::N
       Instances:
-        b = bar<> ::foo::b
-        x = bool<> ::foo::x
+        b = bar<> foo::b
+        x = bool<> foo::x
       unroll sequence: 
         bool<> x
         [ N ->

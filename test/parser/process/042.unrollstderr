@@ -30,8 +30,8 @@ In namespace "", we have: {
       )
       In definition "fang", we have: {
       Instances:
-        food = int<32> ::fang::food
-        now = bool<> ::fang::now
+        food = int<32> fang::food
+        now = bool<> fang::now
       }
 
 }

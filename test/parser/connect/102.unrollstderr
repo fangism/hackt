@@ -63,11 +63,11 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        X = pint<> ::bar::X
-        Y = pint<> ::bar::Y
+        X = pint<> bar::X
+        Y = pint<> bar::Y
       Instances:
-        a = int<::bar::X> ::bar::a
-        b = int<::bar::Y> ::bar::b
+        a = int<::bar::X> bar::a
+        b = int<::bar::Y> bar::b
       unroll sequence: 
         int<::bar::X> a
         int<::bar::Y> b

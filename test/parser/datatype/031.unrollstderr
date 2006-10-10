@@ -35,8 +35,8 @@ In namespace "", we have: {
       )
       In datatype definition "my_data", we have: {
       Instances:
-        x = int<8> ::my_data::x
-        y = bool<> ::my_data::y
+        x = int<8> my_data::x
+        y = bool<> my_data::y
       unroll sequence: 
         int<8> x
         bool<> y

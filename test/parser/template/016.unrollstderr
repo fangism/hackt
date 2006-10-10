@@ -37,9 +37,9 @@ In namespace "", we have: {
       )
       In definition "something_wide", we have: {
       Parameters:
-        W = pint<> ::something_wide::W (default = ::default_width)
+        W = pint<> something_wide::W (default = ::default_width)
       Instances:
-        wide_int = int<::something_wide::W> ::something_wide::wide_int
+        wide_int = int<::something_wide::W> something_wide::wide_int
       unroll sequence: 
         int<::something_wide::W> wide_int
       }

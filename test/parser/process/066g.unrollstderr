@@ -68,8 +68,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = ick<> ::foo::a
-        b = ick<> ::foo::b
+        a = ick<> foo::a
+        b = ick<> foo::b
       unroll sequence: 
         ick<> a
         ick<> b
@@ -92,8 +92,8 @@ In namespace "", we have: {
       )
       In definition "ick", we have: {
       Instances:
-        m = oof<> ::ick::m
-        n = oof<> ::ick::n
+        m = oof<> ick::m
+        n = oof<> ick::n
       unroll sequence: 
         oof<> m
         oof<> n

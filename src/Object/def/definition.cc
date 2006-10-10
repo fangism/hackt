@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.9 2006/10/09 03:12:49 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.10 2006/10/10 04:44:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -353,7 +353,7 @@ string
 definition_base::get_qualified_name(void) const {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
-	if (parent)
+	if (parent && !parent->is_global_namespace())
 		return parent->get_qualified_name() +scope +key;
 	else return key;
 }
@@ -865,9 +865,13 @@ user_def_chan::get_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 user_def_chan::get_qualified_name(void) const {
+#if 0
 	if (parent)
 		return parent->get_qualified_name() + scope + key;
 	else return string(scope) + key;
+#else
+	return definition_base::get_qualified_name();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1709,9 +1713,13 @@ enum_datatype_def::get_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 enum_datatype_def::get_qualified_name(void) const {
+#if 0
 	if (parent)
 		return parent->get_qualified_name() + scope + key;
 	else	return string(scope) + key;
+#else
+	return definition_base::get_qualified_name();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2041,9 +2049,13 @@ user_def_datatype::get_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 user_def_datatype::get_qualified_name(void) const {
+#if 0
 	if (parent)
 		return parent->get_qualified_name() + scope + key;
 	else return string(scope) + key;
+#else
+	return datatype_definition_base::get_qualified_name();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2828,7 +2840,11 @@ process_definition::get_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 process_definition::get_qualified_name(void) const {
+#if 0
 	return parent->get_qualified_name() + scope + key;
+#else
+	return definition_base::get_qualified_name();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

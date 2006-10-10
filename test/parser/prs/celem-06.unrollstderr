@@ -84,10 +84,10 @@ In namespace "", we have: {
       )
       In definition "celemNinv", we have: {
       Parameters:
-        N = pint<> ::celemNinv::N
+        N = pint<> celemNinv::N
       Instances:
-        _o = bool<> ::celemNinv::_o
-        a = bool<> ::celemNinv::a^1
+        _o = bool<> celemNinv::_o
+        a = bool<> celemNinv::a^1
       unroll sequence: 
         bool<> a[0..N-1]
         bool<> _o

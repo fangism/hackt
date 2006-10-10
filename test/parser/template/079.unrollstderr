@@ -303,9 +303,9 @@ In namespace "", we have: {
       )
       In definition "ch1of", we have: {
       Parameters:
-        N = pint<> ::ch1of::N
+        N = pint<> ch1of::N
       Instances:
-        d = bool<> ::ch1of::d^1
+        d = bool<> ch1of::d^1
       unroll sequence: 
         bool<> d[0..N-1]
       }
@@ -318,10 +318,10 @@ In namespace "", we have: {
       )
       In definition "e1of", we have: {
       Parameters:
-        N = pint<> ::e1of::N
+        N = pint<> e1of::N
       Instances:
-        d = bool<> ::e1of::d^1
-        e = bool<> ::e1of::e
+        d = bool<> e1of::d^1
+        e = bool<> e1of::e
       unroll sequence: 
         bool<> d[0..N-1]
         bool<> e
@@ -346,10 +346,10 @@ In namespace "", we have: {
       )
       In definition "e1of2", we have: {
       Instances:
-        d = bool<> ::e1of2::d^1
-        e = bool<> ::e1of2::e
-        f = bool<> ::e1of2::f
-        t = bool<> ::e1of2::t
+        d = bool<> e1of2::d^1
+        e = bool<> e1of2::e
+        f = bool<> e1of2::f
+        t = bool<> e1of2::t
       unroll sequence: 
         bool<> d[0..1]
         bool<> t
@@ -379,12 +379,12 @@ In namespace "", we have: {
       )
       In definition "globals", we have: {
       Instances:
-        GND = bool<> ::globals::GND
-        Vdd = bool<> ::globals::Vdd
-        _pReset = bool<> ::globals::_pReset
-        _sReset = bool<> ::globals::_sReset
-        gnd = bool<> ::globals::gnd
-        vdd = bool<> ::globals::vdd
+        GND = bool<> globals::GND
+        Vdd = bool<> globals::Vdd
+        _pReset = bool<> globals::_pReset
+        _sReset = bool<> globals::_sReset
+        gnd = bool<> globals::gnd
+        vdd = bool<> globals::vdd
       unroll sequence: 
         bool<> Vdd
         bool<> GND
@@ -413,12 +413,12 @@ In namespace "", we have: {
       )
       In definition "pseudo_rsource_e1of2a", we have: {
       Parameters:
-        v = pint<> ::pseudo_rsource_e1of2a::v^1
+        v = pint<> pseudo_rsource_e1of2a::v^1
       Instances:
-        g = globals<> ::pseudo_rsource_e1of2a::g
-        l = e1of2<> ::pseudo_rsource_e1of2a::l
-        s = e1of<2> ::pseudo_rsource_e1of2a::s
-        src = source_e<5, 2, ::pseudo_rsource_e1of2a::v> ::pseudo_rsource_e1of2a::src
+        g = globals<> pseudo_rsource_e1of2a::g
+        l = e1of2<> pseudo_rsource_e1of2a::l
+        s = e1of<2> pseudo_rsource_e1of2a::s
+        src = source_e<5, 2, ::pseudo_rsource_e1of2a::v> pseudo_rsource_e1of2a::src
       unroll sequence: 
         globals<> g
         e1of2<> l
@@ -499,12 +499,12 @@ In namespace "", we have: {
       )
       In definition "source_e", we have: {
       Parameters:
-        M = pint<> ::source_e::M
-        N = pint<> ::source_e::N
-        d = pint<> ::source_e::d^1
+        M = pint<> source_e::M
+        N = pint<> source_e::N
+        d = pint<> source_e::d^1
       Instances:
-        g = globals<> ::source_e::g
-        rr = e1of<::source_e::M> ::source_e::rr
+        g = globals<> source_e::g
+        rr = e1of<::source_e::M> source_e::rr
       unroll sequence: 
         globals<> g
         e1of<::source_e::M> rr

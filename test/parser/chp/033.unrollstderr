@@ -50,10 +50,10 @@ In namespace "", we have: {
       )
       In definition "adjacent_diff", we have: {
       Instances:
-        L = chan?(int<32>, int<32>) ::adjacent_diff::L
-        R = chan!(int<32>) ::adjacent_diff::R
-        x = int<32> ::adjacent_diff::x
-        z = int<32> ::adjacent_diff::z
+        L = chan?(int<32>, int<32>) adjacent_diff::L
+        R = chan!(int<32>) adjacent_diff::R
+        x = int<32> adjacent_diff::x
+        z = int<32> adjacent_diff::z
       unroll sequence: 
         chan?(int<32>, int<32>) L
         chan!(int<32>) R

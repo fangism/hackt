@@ -52,9 +52,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> ::foo::N
+        N = pint<> foo::N
       Instances:
-        a = bool<> ::foo::a^1
+        a = bool<> foo::a^1
       unroll sequence: 
         bool<> a[0..N-1]
         a[0] = a[N-1];

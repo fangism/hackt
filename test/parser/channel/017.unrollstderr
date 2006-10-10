@@ -62,9 +62,9 @@ In namespace "", we have: {
       )
       In channel definition "my_vewwy_first_e1of2", we have: {
       Instances:
-        e = bool<> ::my_vewwy_first_e1of2::e
-        f = bool<> ::my_vewwy_first_e1of2::f
-        t = bool<> ::my_vewwy_first_e1of2::t
+        e = bool<> my_vewwy_first_e1of2::e
+        f = bool<> my_vewwy_first_e1of2::f
+        t = bool<> my_vewwy_first_e1of2::t
       unroll sequence: 
         bool<> t
         bool<> f

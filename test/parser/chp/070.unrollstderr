@@ -46,10 +46,10 @@ In namespace "", we have: {
       )
       In definition "assignme", we have: {
       Parameters:
-        W = pint<> ::assignme::W
-        c = pint<> ::assignme::c
+        W = pint<> assignme::W
+        c = pint<> assignme::c
       Instances:
-        b = int<::assignme::W> ::assignme::b
+        b = int<::assignme::W> assignme::b
       unroll sequence: 
         int<::assignme::W> b
         pint<> c

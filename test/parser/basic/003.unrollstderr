@@ -28,10 +28,10 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        parser = int<32> ::rajit::parser
+        parser = int<32> rajit::parser
     }
 }
 
 footprint: {
-  ::rajit::parser = int<32>^0 = ::rajit::parser 
+  rajit::parser = int<32>^0 = ::rajit::parser 
 }

@@ -54,7 +54,7 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> ::bar::x^2
+        x = foo<> bar::x^2
       unroll sequence: 
         foo<> x[0..1][0..1]
         x[0][1] = x[1][0];
@@ -73,7 +73,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> ::foo::a^2
+        a = bool<> foo::a^2
       unroll sequence: 
         bool<> a[0..1][0..1]
         a[0][0] = a[1][1];

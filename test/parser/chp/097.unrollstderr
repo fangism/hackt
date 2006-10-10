@@ -47,10 +47,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        w = int<32> ::foo::w
-        x = int<32> ::foo::x
-        y = int<32> ::foo::y
-        z = int<32> ::foo::z
+        w = int<32> foo::w
+        x = int<32> foo::x
+        y = int<32> foo::y
+        z = int<32> foo::z
       unroll sequence: 
         int<32> x
         int<32> y

@@ -261,11 +261,11 @@ In namespace "", we have: {
       )
       In definition "assign_me", we have: {
       Parameters:
-        B = pbool<> ::assign_me::B^1
-        M = pint<> ::assign_me::M
-        N = pint<> ::assign_me::N
+        B = pbool<> assign_me::B^1
+        M = pint<> assign_me::M
+        N = pint<> assign_me::N
       Instances:
-        b = chan!(bool<>) ::assign_me::b
+        b = chan!(bool<>) assign_me::b
       unroll sequence: 
         chan!(bool<>) b
       chp:

@@ -42,9 +42,9 @@ In namespace "", we have: {
       )
       In definition "nand2", we have: {
       Instances:
-        a = bool<> ::nand2::a
-        b = bool<> ::nand2::b
-        c = bool<> ::nand2::c
+        a = bool<> nand2::a
+        b = bool<> nand2::b
+        c = bool<> nand2::c
       unroll sequence: 
         bool<> a
         bool<> b

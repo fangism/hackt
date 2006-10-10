@@ -40,9 +40,9 @@ In namespace "", we have: {
       )
       In definition "sink_source", we have: {
       Instances:
-        S = chan?(bool<>) ::sink_source::S
-        T = chan!(bool<>) ::sink_source::T
-        b = bool<> ::sink_source::b
+        S = chan?(bool<>) sink_source::S
+        T = chan!(bool<>) sink_source::T
+        b = bool<> sink_source::b
       unroll sequence: 
         chan?(bool<>) S
         chan!(bool<>) T

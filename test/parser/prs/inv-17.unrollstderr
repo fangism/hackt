@@ -40,8 +40,8 @@ In namespace "", we have: {
       )
       In definition "silly_inv", we have: {
       Instances:
-        a = bool<> ::silly_inv::a
-        b = bool<> ::silly_inv::b
+        a = bool<> silly_inv::a
+        b = bool<> silly_inv::b
       unroll sequence: 
         bool<> a
         bool<> b

@@ -39,7 +39,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32> ::bar::foo
+        foo = int<32> bar::foo
     }
     ick =     In namespace "ick", we have: {
       0 parameter-collections
@@ -48,14 +48,14 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32> ::ick::foo
+        foo = int<32> ick::foo
     }
   Instances:
     foo = int<32> foo
 }
 
 footprint: {
-  ::bar::foo = int<32>^0 = ::bar::foo 
-  ::ick::foo = int<32>^0 = ::ick::foo 
+  bar::foo = int<32>^0 = ::bar::foo 
   foo = int<32>^0 = ::foo 
+  ick::foo = int<32>^0 = ::ick::foo 
 }

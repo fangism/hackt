@@ -83,11 +83,11 @@ In namespace "", we have: {
       )
       In definition "echo", we have: {
       Instances:
-        p = bool<> ::echo::p
-        q = bool<> ::echo::q
-        r = bool<> ::echo::r
-        s = bool<> ::echo::s
-        z = bool<> ::echo::z
+        p = bool<> echo::p
+        q = bool<> echo::q
+        r = bool<> echo::r
+        s = bool<> echo::s
+        z = bool<> echo::z
       unroll sequence: 
         bool<> p
         bool<> q

@@ -48,7 +48,7 @@ In namespace "", we have: {
       )
       In definition "wrap", we have: {
       Instances:
-        a = bool<> ::wrap::a^1
+        a = bool<> wrap::a^1
       unroll sequence: 
         bool<> a[0..1]
       footprint: {

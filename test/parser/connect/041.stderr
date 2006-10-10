@@ -1,1 +1,1 @@
-ERROR: process-definition ::egg has no public member named "yellow" at [19:20..25]
+ERROR: process-definition egg has no public member named "yellow" at [19:20..25]

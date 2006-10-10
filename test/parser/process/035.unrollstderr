@@ -23,7 +23,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        bar = pint<> ::foo::bar^1
+        bar = pint<> foo::bar^1
       }
 
 }

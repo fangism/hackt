@@ -70,7 +70,7 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> ::bar::x^1
+        x = foo<> bar::x^1
       unroll sequence: 
         foo<> x[0..2]
         x[0].a[0] = x[2].a[0] = x[0].a[2] = x[2].a[2];
@@ -110,7 +110,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> ::foo::a^1
+        a = bool<> foo::a^1
       unroll sequence: 
         bool<> a[0..2]
       footprint: {

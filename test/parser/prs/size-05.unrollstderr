@@ -90,12 +90,12 @@ In namespace "", we have: {
       )
       In definition "sized_prs", we have: {
       Parameters:
-        ten = pint<> ::sized_prs::ten
-        tenf = preal<> ::sized_prs::tenf
-        threef = preal<> ::sized_prs::threef
+        ten = pint<> sized_prs::ten
+        tenf = preal<> sized_prs::tenf
+        threef = preal<> sized_prs::threef
       Instances:
-        a = bool<> ::sized_prs::a
-        b = bool<> ::sized_prs::b
+        a = bool<> sized_prs::a
+        b = bool<> sized_prs::b
       unroll sequence: 
         bool<> a
         bool<> b

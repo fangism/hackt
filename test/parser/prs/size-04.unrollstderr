@@ -64,8 +64,8 @@ In namespace "", we have: {
       )
       In definition "sized_prs", we have: {
       Instances:
-        a = bool<> ::sized_prs::a
-        b = bool<> ::sized_prs::b
+        a = bool<> sized_prs::a
+        b = bool<> sized_prs::b
       unroll sequence: 
         bool<> a
         bool<> b

@@ -50,8 +50,8 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        a = int<32> ::bar::a
-        b = int<32> ::bar::b
+        a = int<32> bar::a
+        b = int<32> bar::b
       unroll sequence: 
         int<32> a
         int<32> b

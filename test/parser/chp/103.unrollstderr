@@ -82,16 +82,16 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        A = chan?(bool<>) ::foo::A
-        B = chan?(bool<>) ::foo::B
-        C = chan!(bool<>) ::foo::C
-        D = chan!(bool<>) ::foo::D
-        E = chan!(bool<>) ::foo::E
-        F = chan!(bool<>) ::foo::F
-        a = bool<> ::foo::a
-        b = bool<> ::foo::b
-        y = bool<> ::foo::y
-        z = bool<> ::foo::z
+        A = chan?(bool<>) foo::A
+        B = chan?(bool<>) foo::B
+        C = chan!(bool<>) foo::C
+        D = chan!(bool<>) foo::D
+        E = chan!(bool<>) foo::E
+        F = chan!(bool<>) foo::F
+        a = bool<> foo::a
+        b = bool<> foo::b
+        y = bool<> foo::y
+        z = bool<> foo::z
       unroll sequence: 
         chan?(bool<>) A
         chan?(bool<>) B

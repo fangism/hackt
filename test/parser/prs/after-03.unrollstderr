@@ -51,10 +51,10 @@ In namespace "", we have: {
       )
       In definition "afterburn", we have: {
       Parameters:
-        D = pint<> ::afterburn::D
+        D = pint<> afterburn::D
       Instances:
-        a = bool<> ::afterburn::a
-        b = bool<> ::afterburn::b
+        a = bool<> afterburn::a
+        b = bool<> afterburn::b
       unroll sequence: 
         bool<> a
         bool<> b

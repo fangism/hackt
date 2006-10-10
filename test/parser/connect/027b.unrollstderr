@@ -50,8 +50,8 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        a = bool<> ::bar::a
-        b = bool<> ::bar::b^1
+        a = bool<> bar::a
+        b = bool<> bar::b^1
       unroll sequence: 
         bool<> a
         bool<> b[0..1]

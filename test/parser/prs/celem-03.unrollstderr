@@ -56,8 +56,8 @@ In namespace "", we have: {
       )
       In definition "celem2inv", we have: {
       Instances:
-        _o = bool<> ::celem2inv::_o
-        a = bool<> ::celem2inv::a^1
+        _o = bool<> celem2inv::_o
+        a = bool<> celem2inv::a^1
       unroll sequence: 
         bool<> a[0..1]
         bool<> _o

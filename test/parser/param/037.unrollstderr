@@ -47,10 +47,10 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        M = pint<> ::bogus::M
-        N = pint<> ::bogus::N
-        a = pbool<> ::bogus::a
-        b = pbool<> ::bogus::b
+        M = pint<> bogus::M
+        N = pint<> bogus::N
+        a = pbool<> bogus::a
+        b = pbool<> bogus::b
       unroll sequence: 
         pint<> N
         N = 5;

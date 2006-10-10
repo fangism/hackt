@@ -40,9 +40,9 @@ In namespace "", we have: {
       )
       In definition "buffer", we have: {
       Instances:
-        S = chan?(bool<>) ::buffer::S
-        T = chan!(bool<>) ::buffer::T
-        b = bool<> ::buffer::b
+        S = chan?(bool<>) buffer::S
+        T = chan!(bool<>) buffer::T
+        b = bool<> buffer::b
       unroll sequence: 
         chan?(bool<>) S
         chan!(bool<>) T

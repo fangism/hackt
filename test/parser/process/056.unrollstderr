@@ -33,7 +33,7 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> ::bar::x^1
+        x = foo<> bar::x^1
       unroll sequence: 
         foo<> x[0..1]
       footprint: {

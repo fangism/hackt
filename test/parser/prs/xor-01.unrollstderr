@@ -188,8 +188,8 @@ In namespace "", we have: {
       )
       In definition "inv", we have: {
       Instances:
-        a = bool<> ::inv::a
-        b = bool<> ::inv::b
+        a = bool<> inv::a
+        b = bool<> inv::b
       unroll sequence: 
         bool<> a
         bool<> b
@@ -205,11 +205,11 @@ In namespace "", we have: {
       )
       In definition "xor2_ver1", we have: {
       Instances:
-        a = bool<> ::xor2_ver1::a
-        a_ = bool<> ::xor2_ver1::a_
-        b = bool<> ::xor2_ver1::b
-        b_ = bool<> ::xor2_ver1::b_
-        c = bool<> ::xor2_ver1::c
+        a = bool<> xor2_ver1::a
+        a_ = bool<> xor2_ver1::a_
+        b = bool<> xor2_ver1::b
+        b_ = bool<> xor2_ver1::b_
+        c = bool<> xor2_ver1::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -232,13 +232,13 @@ In namespace "", we have: {
       )
       In definition "xor2_ver2", we have: {
       Instances:
-        a = bool<> ::xor2_ver2::a
-        a_ = bool<> ::xor2_ver2::a_
-        ai = inv<> ::xor2_ver2::ai
-        b = bool<> ::xor2_ver2::b
-        b_ = bool<> ::xor2_ver2::b_
-        bi = inv<> ::xor2_ver2::bi
-        c = bool<> ::xor2_ver2::c
+        a = bool<> xor2_ver2::a
+        a_ = bool<> xor2_ver2::a_
+        ai = inv<> xor2_ver2::ai
+        b = bool<> xor2_ver2::b
+        b_ = bool<> xor2_ver2::b_
+        bi = inv<> xor2_ver2::bi
+        c = bool<> xor2_ver2::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -261,13 +261,13 @@ In namespace "", we have: {
       )
       In definition "xor2_ver3", we have: {
       Instances:
-        a = bool<> ::xor2_ver3::a
-        a_ = bool<> ::xor2_ver3::a_
-        ai = inv<> ::xor2_ver3::ai
-        b = bool<> ::xor2_ver3::b
-        b_ = bool<> ::xor2_ver3::b_
-        bi = inv<> ::xor2_ver3::bi
-        c = bool<> ::xor2_ver3::c
+        a = bool<> xor2_ver3::a
+        a_ = bool<> xor2_ver3::a_
+        ai = inv<> xor2_ver3::ai
+        b = bool<> xor2_ver3::b
+        b_ = bool<> xor2_ver3::b_
+        bi = inv<> xor2_ver3::bi
+        c = bool<> xor2_ver3::c
       unroll sequence: 
         bool<> a
         bool<> b

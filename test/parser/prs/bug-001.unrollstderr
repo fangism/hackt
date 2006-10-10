@@ -160,11 +160,11 @@ In namespace "", we have: {
       )
       In definition "cel", we have: {
       Parameters:
-        N = pint<> ::cel::N
+        N = pint<> cel::N
       Instances:
-        c = gcel<::cel::N, ::cel::N> ::cel::c
-        i = bool<> ::cel::i^1
-        o = bool<> ::cel::o
+        c = gcel<::cel::N, ::cel::N> cel::c
+        i = bool<> cel::i^1
+        o = bool<> cel::o
       unroll sequence: 
         bool<> i[0..N-1]
         bool<> o
@@ -205,11 +205,11 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        Ld = bool<> ::foo::Ld
-        Re = bool<> ::foo::Re
-        _rd = bool<> ::foo::_rd
-        x = bool<> ::foo::x
-        xe = bool<> ::foo::xe
+        Ld = bool<> foo::Ld
+        Re = bool<> foo::Re
+        _rd = bool<> foo::_rd
+        x = bool<> foo::x
+        xe = bool<> foo::xe
       unroll sequence: 
         bool<> Ld
         bool<> Re
@@ -237,12 +237,12 @@ In namespace "", we have: {
       )
       In definition "gcel", we have: {
       Parameters:
-        D = pint<> ::gcel::D
-        U = pint<> ::gcel::U
+        D = pint<> gcel::D
+        U = pint<> gcel::U
       Instances:
-        id = bool<> ::gcel::id^1
-        iu = bool<> ::gcel::iu^1
-        o = bool<> ::gcel::o
+        id = bool<> gcel::id^1
+        iu = bool<> gcel::iu^1
+        o = bool<> gcel::o
       unroll sequence: 
         bool<> id[0..D-1]
         bool<> iu[0..U-1]

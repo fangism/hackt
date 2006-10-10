@@ -31,8 +31,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        bar = pint<> ::foo::bar
-        jinx = pbool<> ::foo::jinx^1
+        bar = pint<> foo::bar
+        jinx = pbool<> foo::jinx^1
       }
 
 }

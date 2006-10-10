@@ -30,7 +30,7 @@ In namespace "", we have: {
       )
       In datatype definition "my_data", we have: {
       Instances:
-        x = int<28> ::my_data::x
+        x = int<28> my_data::x
       unroll sequence: 
         int<28> x
       }

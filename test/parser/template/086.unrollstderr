@@ -66,8 +66,8 @@ In namespace "", we have: {
       )
       In definition "internal", we have: {
       Parameters:
-        A = pint<> ::internal::A^1
-        N = pint<> ::internal::N
+        A = pint<> internal::A^1
+        N = pint<> internal::N
       unroll sequence: 
       footprint collection: {
         <1, {1}> {
@@ -87,10 +87,10 @@ In namespace "", we have: {
       )
       In definition "use_the_source", we have: {
       Parameters:
-        A = pint<> ::use_the_source::A^1
-        N = pint<> ::use_the_source::N
+        A = pint<> use_the_source::A^1
+        N = pint<> use_the_source::N
       Instances:
-        s = internal<::use_the_source::N, ::use_the_source::A> ::use_the_source::s
+        s = internal<::use_the_source::N, ::use_the_source::A> use_the_source::s
       unroll sequence: 
         internal<::use_the_source::N, ::use_the_source::A> s
       footprint collection: {

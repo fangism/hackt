@@ -37,9 +37,9 @@ In namespace "", we have: {
       )
       In definition "assignme", we have: {
       Parameters:
-        c = pbool<> ::assignme::c
+        c = pbool<> assignme::c
       Instances:
-        b = bool<> ::assignme::b
+        b = bool<> assignme::b
       unroll sequence: 
         bool<> b
         pbool<> c

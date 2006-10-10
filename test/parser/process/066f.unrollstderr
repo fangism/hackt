@@ -42,8 +42,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = ick<> ::foo::a
-        b = ick<> ::foo::b
+        a = ick<> foo::a
+        b = ick<> foo::b
       unroll sequence: 
         ick<> a
         ick<> b

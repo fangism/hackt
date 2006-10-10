@@ -236,9 +236,9 @@ In namespace "", we have: {
       )
       In definition "ch1of", we have: {
       Parameters:
-        N = pint<> ::ch1of::N
+        N = pint<> ch1of::N
       Instances:
-        d = bool<> ::ch1of::d^1
+        d = bool<> ch1of::d^1
       unroll sequence: 
         bool<> d[0..N-1]
       footprint collection: {
@@ -284,9 +284,9 @@ In namespace "", we have: {
       )
       In definition "ch_1of", we have: {
       Parameters:
-        N = pint<> ::ch_1of::N
+        N = pint<> ch_1of::N
       Instances:
-        d = bool<> ::ch_1of::d^1
+        d = bool<> ch_1of::d^1
       unroll sequence: 
         bool<> d[0..N-1]
       footprint collection: {
@@ -333,10 +333,10 @@ In namespace "", we have: {
       )
       In definition "dcelm", we have: {
       Instances:
-        _out = bool<> ::dcelm::_out
-        a = bool<> ::dcelm::a
-        b = bool<> ::dcelm::b
-        out = bool<> ::dcelm::out
+        _out = bool<> dcelm::_out
+        a = bool<> dcelm::a
+        b = bool<> dcelm::b
+        out = bool<> dcelm::out
       unroll sequence: 
         bool<> a
         bool<> b
@@ -359,11 +359,11 @@ In namespace "", we have: {
       )
       In definition "lut", we have: {
       Instances:
-        _ad = ch_1of<4> ::lut::_ad^1
-        _d = ch_1of<16> ::lut::_d
-        ad = ch1of<4> ::lut::ad^1
-        ce = dcelm<> ::lut::ce^1
-        d = ch1of<16> ::lut::d
+        _ad = ch_1of<4> lut::_ad^1
+        _d = ch_1of<16> lut::_d
+        ad = ch1of<4> lut::ad^1
+        ce = dcelm<> lut::ce^1
+        d = ch1of<16> lut::d
       unroll sequence: 
         ch_1of<4> _ad[0..1]
         ch1of<4> ad[0..1]

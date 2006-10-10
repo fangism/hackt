@@ -71,10 +71,10 @@ In namespace "", we have: {
       )
       In definition "lvs_order", we have: {
       Parameters:
-        N = pint<> ::lvs_order::N
+        N = pint<> lvs_order::N
       Instances:
-        a = bool<> ::lvs_order::a^1
-        b = bool<> ::lvs_order::b^1
+        a = bool<> lvs_order::a^1
+        b = bool<> lvs_order::b^1
       unroll sequence: 
         bool<> a[0..N-1]
         bool<> b[0..N-1]

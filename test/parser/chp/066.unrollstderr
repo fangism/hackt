@@ -62,12 +62,12 @@ In namespace "", we have: {
       )
       In definition "metalooptest", we have: {
       Parameters:
-        p = pint<> ::metalooptest::p
+        p = pint<> metalooptest::p
       Instances:
-        L = chan?(int<4>) ::metalooptest::L
-        R = chan!(bool<>) ::metalooptest::R
-        b = bool<> ::metalooptest::b^1
-        l = int<4> ::metalooptest::l
+        L = chan?(int<4>) metalooptest::L
+        R = chan!(bool<>) metalooptest::R
+        b = bool<> metalooptest::b^1
+        l = int<4> metalooptest::l
       unroll sequence: 
         chan?(int<4>) L
         chan!(bool<>) R

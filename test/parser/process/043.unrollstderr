@@ -37,10 +37,10 @@ In namespace "", we have: {
       )
       In definition "fang", we have: {
       Instances:
-        food = int<32> ::fang::food
-        free = int<32> ::fang::free
-        now = bool<> ::fang::now
-        right = bool<> ::fang::right
+        food = int<32> fang::food
+        free = int<32> fang::free
+        now = bool<> fang::now
+        right = bool<> fang::right
       }
 
 }

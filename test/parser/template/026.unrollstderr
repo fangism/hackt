@@ -38,8 +38,8 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        J = pint<> ::bar::J
-        K = pint<> ::bar::K
+        J = pint<> bar::J
+        K = pint<> bar::K
       unroll sequence: 
         pint<> J
         J = K;
@@ -53,9 +53,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        A = pbool<> ::foo::A
-        J = pint<> ::foo::J
-        K = pint<> ::foo::K
+        A = pbool<> foo::A
+        J = pint<> foo::J
+        K = pint<> foo::K
       unroll sequence: 
         pint<> J
         J = K;

@@ -71,8 +71,8 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> ::bar::x
-        y = foo<> ::bar::y
+        x = foo<> bar::x
+        y = foo<> bar::y
       unroll sequence: 
         foo<> x
         foo<> y
@@ -94,10 +94,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> ::foo::a
-        b = bool<> ::foo::b
-        c = bool<> ::foo::c
-        d = bool<> ::foo::d
+        a = bool<> foo::a
+        b = bool<> foo::b
+        c = bool<> foo::c
+        d = bool<> foo::d
       unroll sequence: 
         bool<> a
         bool<> b

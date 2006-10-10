@@ -39,10 +39,10 @@ In namespace "", we have: {
       )
       In channel definition "mychan", we have: {
       Instances:
-        a = bool<> ::mychan::a
-        b = bool<> ::mychan::b
-        c = bool<> ::mychan::c
-        d = bool<> ::mychan::d
+        a = bool<> mychan::a
+        b = bool<> mychan::b
+        c = bool<> mychan::c
+        d = bool<> mychan::d
       unroll sequence: 
         bool<> a
         bool<> b

@@ -27,8 +27,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        bar = pint<> ::foo::bar^1
-        food = pint<> ::foo::food^2
+        bar = pint<> foo::bar^1
+        food = pint<> foo::food^2
       }
 
 }

@@ -59,10 +59,10 @@ In namespace "", we have: {
       )
       In definition "e1of", we have: {
       Parameters:
-        N = pint<> ::e1of::N
+        N = pint<> e1of::N
       Instances:
-        d = bool<> ::e1of::d^1
-        e = bool<> ::e1of::e
+        d = bool<> e1of::d^1
+        e = bool<> e1of::e
       unroll sequence: 
         bool<> d[0..N-1]
         bool<> e

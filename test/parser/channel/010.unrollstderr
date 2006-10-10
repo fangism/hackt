@@ -32,8 +32,8 @@ In namespace "", we have: {
       )
       In channel definition "mychan", we have: {
       Instances:
-        e = myenum<> ::mychan::e
-        f = myenum<> ::mychan::f
+        e = myenum<> mychan::e
+        f = myenum<> mychan::f
       unroll sequence: 
         myenum<> e
         myenum<> f

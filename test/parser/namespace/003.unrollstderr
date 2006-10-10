@@ -39,7 +39,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        meow = int<32> ::cat::meow
+        meow = int<32> cat::meow
     }
     dog =     In namespace "dog", we have: {
       0 parameter-collections
@@ -48,13 +48,13 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        moo = int<32> ::dog::moo
-        woof = int<32> ::dog::woof
+        moo = int<32> dog::moo
+        woof = int<32> dog::woof
     }
 }
 
 footprint: {
-  ::cat::meow = int<32>^0 = ::cat::meow 
-  ::dog::moo = int<32>^0 = ::dog::moo 
-  ::dog::woof = int<32>^0 = ::dog::woof 
+  cat::meow = int<32>^0 = ::cat::meow 
+  dog::moo = int<32>^0 = ::dog::moo 
+  dog::woof = int<32>^0 = ::dog::woof 
 }

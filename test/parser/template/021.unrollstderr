@@ -43,9 +43,9 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        N = pint<> ::bar::N
+        N = pint<> bar::N
       Instances:
-        ick = int<::bar::N> ::bar::ick
+        ick = int<::bar::N> bar::ick
       }
 
     foo = process-definition (declared) foo<
@@ -55,9 +55,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> ::foo::N
+        N = pint<> foo::N
       Instances:
-        arg = int<32> ::foo::arg^1
+        arg = int<32> foo::arg^1
       }
 
 }

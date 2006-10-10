@@ -46,8 +46,8 @@ In namespace "", we have: {
       )
       In definition "null", we have: {
       Instances:
-        o = bool<> ::null::o
-        z = bool<> ::null::z^1
+        o = bool<> null::o
+        z = bool<> null::z^1
       unroll sequence: 
         bool<> z[0..1]
         bool<> o

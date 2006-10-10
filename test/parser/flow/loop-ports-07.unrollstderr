@@ -50,7 +50,7 @@ In namespace "", we have: {
       )
       In definition "ass", we have: {
       Instances:
-        q = bool<> ::ass::q^1
+        q = bool<> ass::q^1
       unroll sequence: 
         bool<> q[0..1]
       footprint: {

@@ -68,13 +68,13 @@ In namespace "", we have: {
       )
       In definition "sum_diff", we have: {
       Instances:
-        L1 = chan?(int<32>) ::sum_diff::L1
-        L2 = chan?(int<32>) ::sum_diff::L2
-        M = chan(int<32>) ::sum_diff::M
-        R = chan!(int<32>) ::sum_diff::R
-        w = int<32> ::sum_diff::w
-        x = int<32> ::sum_diff::x
-        z = int<32> ::sum_diff::z
+        L1 = chan?(int<32>) sum_diff::L1
+        L2 = chan?(int<32>) sum_diff::L2
+        M = chan(int<32>) sum_diff::M
+        R = chan!(int<32>) sum_diff::R
+        w = int<32> sum_diff::w
+        x = int<32> sum_diff::x
+        z = int<32> sum_diff::z
       unroll sequence: 
         chan?(int<32>) L1
         chan?(int<32>) L2

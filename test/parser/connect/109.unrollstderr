@@ -95,11 +95,11 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        X = pint<> ::bar::X
-        Y = pint<> ::bar::Y
+        X = pint<> bar::X
+        Y = pint<> bar::Y
       Instances:
-        a = foo<::bar::X> ::bar::a
-        b = foo<::bar::Y> ::bar::b
+        a = foo<::bar::X> bar::a
+        b = foo<::bar::Y> bar::b
       unroll sequence: 
         foo<::bar::X> a
         foo<::bar::Y> b
@@ -125,7 +125,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        A = pint<> ::foo::A
+        A = pint<> foo::A
       unroll sequence: 
       footprint collection: {
         <2> {

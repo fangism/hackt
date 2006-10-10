@@ -85,9 +85,9 @@ In namespace "", we have: {
       )
       In definition "nor2_ver1", we have: {
       Instances:
-        a = bool<> ::nor2_ver1::a
-        b = bool<> ::nor2_ver1::b
-        c = bool<> ::nor2_ver1::c
+        a = bool<> nor2_ver1::a
+        b = bool<> nor2_ver1::b
+        c = bool<> nor2_ver1::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -104,9 +104,9 @@ In namespace "", we have: {
       )
       In definition "nor2_ver2", we have: {
       Instances:
-        a = bool<> ::nor2_ver2::a
-        b = bool<> ::nor2_ver2::b
-        c = bool<> ::nor2_ver2::c
+        a = bool<> nor2_ver2::a
+        b = bool<> nor2_ver2::b
+        c = bool<> nor2_ver2::c
       unroll sequence: 
         bool<> a
         bool<> b
@@ -123,9 +123,9 @@ In namespace "", we have: {
       )
       In definition "nor2_ver3", we have: {
       Instances:
-        a = bool<> ::nor2_ver3::a
-        b = bool<> ::nor2_ver3::b
-        c = bool<> ::nor2_ver3::c
+        a = bool<> nor2_ver3::a
+        b = bool<> nor2_ver3::b
+        c = bool<> nor2_ver3::c
       unroll sequence: 
         bool<> a
         bool<> b

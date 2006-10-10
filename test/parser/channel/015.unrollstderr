@@ -50,10 +50,10 @@ In namespace "", we have: {
       )
       In channel definition "mychan", we have: {
       Parameters:
-        J = pint<> ::mychan::J^1
-        K = pint<> ::mychan::K
+        J = pint<> mychan::J^1
+        K = pint<> mychan::K
       Instances:
-        i = int<::mychan::J[1]> ::mychan::i
+        i = int<::mychan::J[1]> mychan::i
       unroll sequence: 
         int<::mychan::J[1]> i
       }

@@ -98,10 +98,10 @@ In namespace "", we have: {
       )
       In definition "nor", we have: {
       Parameters:
-        N = pint<> ::nor::N
+        N = pint<> nor::N
       Instances:
-        in = bool<> ::nor::in^1
-        out = bool<> ::nor::out
+        in = bool<> nor::in^1
+        out = bool<> nor::out
       unroll sequence: 
         bool<> in[0..N-1]
         bool<> out

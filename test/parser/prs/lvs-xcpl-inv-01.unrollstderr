@@ -44,8 +44,8 @@ In namespace "", we have: {
       )
       In definition "xcpl_inv", we have: {
       Instances:
-        x = bool<> ::xcpl_inv::x
-        y = bool<> ::xcpl_inv::y
+        x = bool<> xcpl_inv::x
+        y = bool<> xcpl_inv::y
       unroll sequence: 
         bool<> x
         bool<> y

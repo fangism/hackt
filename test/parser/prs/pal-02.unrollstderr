@@ -64,8 +64,8 @@ In namespace "", we have: {
       )
       In definition "matrix_array", we have: {
       Instances:
-        _o = bool<> ::matrix_array::_o
-        in = bool<> ::matrix_array::in^2
+        _o = bool<> matrix_array::_o
+        in = bool<> matrix_array::in^2
       unroll sequence: 
         bool<> in[0..3][0..3]
         bool<> _o

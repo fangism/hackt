@@ -29,8 +29,8 @@ In namespace "", we have: {
       )
       In definition "empty", we have: {
       Instances:
-        L = chan?(bool<>) ::empty::L
-        R = chan!(bool<>) ::empty::R
+        L = chan?(bool<>) empty::L
+        R = chan!(bool<>) empty::R
       unroll sequence: 
         chan?(bool<>) L
         chan!(bool<>) R

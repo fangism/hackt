@@ -56,12 +56,12 @@ In namespace "", we have: {
       )
       In definition "adjacent_diff", we have: {
       Parameters:
-        W = pint<> ::adjacent_diff::W
+        W = pint<> adjacent_diff::W
       Instances:
-        L = chan?(int<::adjacent_diff::W>) ::adjacent_diff::L
-        R = chan!(int<::adjacent_diff::W>) ::adjacent_diff::R
-        x = int<::adjacent_diff::W> ::adjacent_diff::x
-        z = int<::adjacent_diff::W> ::adjacent_diff::z
+        L = chan?(int<::adjacent_diff::W>) adjacent_diff::L
+        R = chan!(int<::adjacent_diff::W>) adjacent_diff::R
+        x = int<::adjacent_diff::W> adjacent_diff::x
+        z = int<::adjacent_diff::W> adjacent_diff::z
       unroll sequence: 
         chan?(int<::adjacent_diff::W>) L
         chan!(int<::adjacent_diff::W>) R

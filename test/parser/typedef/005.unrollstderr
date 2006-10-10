@@ -46,19 +46,19 @@ In namespace "", we have: {
           )
           In definition "foo", we have: {
           Instances:
-            a = bool<> ::fang::foo::a
-            b = bool<> ::fang::foo::b
-            c = bool<> ::fang::foo::c
+            a = bool<> fang::foo::a
+            b = bool<> fang::foo::b
+            c = bool<> fang::foo::c
           }
 
       Instances:
-        crazy = bool<> ::fang::crazy
+        crazy = bool<> fang::crazy
     }
   Instances:
     tada = bool<> tada
 }
 
 footprint: {
-  ::fang::crazy = bool^0 = ::fang::crazy 
+  fang::crazy = bool^0 = ::fang::crazy 
   tada = bool^0 = ::tada 
 }

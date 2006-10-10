@@ -1,4 +1,4 @@
-ERROR: cannot unroll incomplete process type ::chan_proc
+ERROR: cannot unroll incomplete process type chan_proc
 Instantiated from: chan_proc<>
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

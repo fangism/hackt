@@ -68,10 +68,10 @@ In namespace "", we have: {
       )
       In definition "ass", we have: {
       Parameters:
-        N = pint<> ::ass::N
+        N = pint<> ass::N
       Instances:
-        l = bool<> ::ass::l^1
-        r = bool<> ::ass::r
+        l = bool<> ass::l^1
+        r = bool<> ass::r
       unroll sequence: 
         bool<> l[0..N-1]
         bool<> r

@@ -99,10 +99,10 @@ In namespace "", we have: {
       )
       In definition "send_indexed", we have: {
       Parameters:
-        I = pint<> ::send_indexed::I
-        J = pint<> ::send_indexed::J
+        I = pint<> send_indexed::I
+        J = pint<> send_indexed::J
       Instances:
-        out = chan!(int<32>) ::send_indexed::out^2
+        out = chan!(int<32>) send_indexed::out^2
       unroll sequence: 
         chan!(int<32>) out[0..1][0..1]
       chp:

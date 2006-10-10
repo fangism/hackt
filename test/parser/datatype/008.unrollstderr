@@ -34,7 +34,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32> ::A::foo
+        foo = int<32> A::foo
     }
     B =     In namespace "B", we have: {
       0 parameter-collections
@@ -43,11 +43,11 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        foo = int<32> ::B::foo
+        foo = int<32> B::foo
     }
 }
 
 footprint: {
-  ::A::foo = int<32>^0 = ::A::foo 
-  ::B::foo = int<32>^0 = ::B::foo 
+  A::foo = int<32>^0 = ::A::foo 
+  B::foo = int<32>^0 = ::B::foo 
 }

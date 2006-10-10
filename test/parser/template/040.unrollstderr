@@ -39,7 +39,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        Q = pint<> ::foo::Q (default = ::D)
+        Q = pint<> foo::Q (default = ::D)
       unroll sequence: 
       footprint collection: {
         <13> {

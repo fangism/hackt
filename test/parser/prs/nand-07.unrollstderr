@@ -76,10 +76,10 @@ In namespace "", we have: {
       )
       In definition "nandN", we have: {
       Parameters:
-        N = pint<> ::nandN::N
+        N = pint<> nandN::N
       Instances:
-        _out = bool<> ::nandN::_out
-        in = bool<> ::nandN::in^1
+        _out = bool<> nandN::_out
+        in = bool<> nandN::in^1
       unroll sequence: 
         bool<> in[0..N-1]
         bool<> _out

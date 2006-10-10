@@ -43,9 +43,9 @@ In namespace "", we have: {
       )
       In channel definition "mychan", we have: {
       Instances:
-        i = int<32> ::mychan::i
-        j = int<32> ::mychan::j
-        k = int<16> ::mychan::k
+        i = int<32> mychan::i
+        j = int<32> mychan::j
+        k = int<16> mychan::k
       unroll sequence: 
         int<32> i
         int<32> j

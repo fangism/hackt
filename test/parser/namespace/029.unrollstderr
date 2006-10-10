@@ -38,9 +38,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        x = bar<> ::foo::x
+        x = std::bar<> foo::x
       unroll sequence: 
-        bar<> x
+        std::bar<> x
       }
 
 }

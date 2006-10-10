@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.5.8.3 2006/10/09 21:09:46 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.5.8.4 2006/10/10 04:44:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -139,7 +139,7 @@ canonical_generic_chan_type::dump(ostream& o) const {
 #if STACKTRACE_DUMPS
 		STACKTRACE_INDENT_PRINT("user-def-chan" << endl);
 #endif
-		o << canonical_definition_ptr->get_name();
+		o << canonical_definition_ptr->get_qualified_name();
 		base_type::dump_template_args(o,
 			canonical_definition_ptr->num_strict_formals());
 		return channel_type_reference_base::dump_direction(o,direction);

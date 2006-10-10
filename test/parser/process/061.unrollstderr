@@ -50,10 +50,10 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        M = pint<> ::bar::M
-        N = pint<> ::bar::N
+        M = pint<> bar::M
+        N = pint<> bar::N
       Instances:
-        x = int<::bar::M> ::bar::x^1
+        x = int<::bar::M> bar::x^1
       unroll sequence: 
         int<::bar::M> x[0..N-1]
       footprint collection: {

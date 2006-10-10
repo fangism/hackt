@@ -44,8 +44,8 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        M = pint<> ::bogus::M
-        foo = pint<> ::bogus::foo^1
+        M = pint<> bogus::M
+        foo = pint<> bogus::foo^1
       unroll sequence: 
         pint<> M
         M = 2;

@@ -2279,9 +2279,9 @@ In namespace "", we have: {
       )
       In definition "_c1of", we have: {
       Parameters:
-        N = pint<> ::_c1of::N
+        N = pint<> _c1of::N
       Instances:
-        d = bool<> ::_c1of::d^1
+        d = bool<> _c1of::d^1
       unroll sequence: 
         bool<> d[0..N-1]
       spec:
@@ -2296,10 +2296,10 @@ In namespace "", we have: {
       )
       In definition "a1of", we have: {
       Parameters:
-        N = pint<> ::a1of::N
+        N = pint<> a1of::N
       Instances:
-        a = bool<> ::a1of::a
-        d = bool<> ::a1of::d^1
+        a = bool<> a1of::a
+        d = bool<> a1of::d^1
       unroll sequence: 
         bool<> d[0..N-1]
         bool<> a
@@ -2313,8 +2313,8 @@ In namespace "", we have: {
       )
       In definition "a1of1d", we have: {
       Instances:
-        a = bool<> ::a1of1d::a
-        d = bool<> ::a1of1d::d
+        a = bool<> a1of1d::a
+        d = bool<> a1of1d::d
       unroll sequence: 
         bool<> d
         bool<> a
@@ -2330,12 +2330,12 @@ In namespace "", we have: {
       )
       In definition "a1of2tf", we have: {
       Instances:
-        a = bool<> ::a1of2tf::a
-        d = bool<> ::a1of2tf::d^1
-        f = bool<> ::a1of2tf::f
-        o = bool<> ::a1of2tf::o
-        t = bool<> ::a1of2tf::t
-        z = bool<> ::a1of2tf::z
+        a = bool<> a1of2tf::a
+        d = bool<> a1of2tf::d^1
+        f = bool<> a1of2tf::f
+        o = bool<> a1of2tf::o
+        t = bool<> a1of2tf::t
+        z = bool<> a1of2tf::z
       unroll sequence: 
         bool<> d[0..1]
         bool<> z
@@ -2358,11 +2358,11 @@ In namespace "", we have: {
       )
       In definition "aMx1ofN", we have: {
       Parameters:
-        M = pint<> ::aMx1ofN::M
-        N = pint<> ::aMx1ofN::N
+        M = pint<> aMx1ofN::M
+        N = pint<> aMx1ofN::N
       Instances:
-        a = bool<> ::aMx1ofN::a
-        b = c1of<::aMx1ofN::N> ::aMx1ofN::b^1
+        a = bool<> aMx1ofN::a
+        b = c1of<::aMx1ofN::N> aMx1ofN::b^1
       unroll sequence: 
         c1of<::aMx1ofN::N> b[0..M-1]
         bool<> a
@@ -2377,11 +2377,11 @@ In namespace "", we have: {
       )
       In definition "an1of", we have: {
       Parameters:
-        N = pint<> ::an1of::N
+        N = pint<> an1of::N
       Instances:
-        a = bool<> ::an1of::a
-        d = bool<> ::an1of::d^1
-        n = bool<> ::an1of::n
+        a = bool<> an1of::a
+        d = bool<> an1of::d^1
+        n = bool<> an1of::n
       unroll sequence: 
         bool<> d[0..N-1]
         bool<> a
@@ -2399,11 +2399,11 @@ In namespace "", we have: {
       )
       In definition "av1of", we have: {
       Parameters:
-        N = pint<> ::av1of::N
+        N = pint<> av1of::N
       Instances:
-        a = bool<> ::av1of::a
-        d = bool<> ::av1of::d^1
-        v = bool<> ::av1of::v
+        a = bool<> av1of::a
+        d = bool<> av1of::d^1
+        v = bool<> av1of::v
       unroll sequence: 
         bool<> d[0..N-1]
         bool<> a
@@ -2421,14 +2421,14 @@ In namespace "", we have: {
       )
       In definition "bitbucket_Mxa1of", we have: {
       Parameters:
-        M = pint<> ::bitbucket_Mxa1of::M
-        N = pint<> ::bitbucket_Mxa1of::N
+        M = pint<> bitbucket_Mxa1of::M
+        N = pint<> bitbucket_Mxa1of::N
       Instances:
-        _Reset = bool<> ::bitbucket_Mxa1of::_Reset
-        ba = bitbucket_a1of<::bitbucket_Mxa1of::N> ::bitbucket_Mxa1of::ba^1
-        r = a1of<::bitbucket_Mxa1of::N> ::bitbucket_Mxa1of::r^1
-        s = a1of<::bitbucket_Mxa1of::N> ::bitbucket_Mxa1of::s^1
-        sa = bool<> ::bitbucket_Mxa1of::sa
+        _Reset = bool<> bitbucket_Mxa1of::_Reset
+        ba = bitbucket_a1of<::bitbucket_Mxa1of::N> bitbucket_Mxa1of::ba^1
+        r = a1of<::bitbucket_Mxa1of::N> bitbucket_Mxa1of::r^1
+        s = a1of<::bitbucket_Mxa1of::N> bitbucket_Mxa1of::s^1
+        sa = bool<> bitbucket_Mxa1of::sa
       unroll sequence: 
         a1of<::bitbucket_Mxa1of::N> r[0..(M-1)-1]
         bool<> _Reset
@@ -2456,14 +2456,14 @@ In namespace "", we have: {
       )
       In definition "bitbucket_Mxe1of", we have: {
       Parameters:
-        M = pint<> ::bitbucket_Mxe1of::M
-        N = pint<> ::bitbucket_Mxe1of::N
+        M = pint<> bitbucket_Mxe1of::M
+        N = pint<> bitbucket_Mxe1of::N
       Instances:
-        _Reset = bool<> ::bitbucket_Mxe1of::_Reset
-        be = bitbucket_e1of<::bitbucket_Mxe1of::N> ::bitbucket_Mxe1of::be^1
-        r = e1of<::bitbucket_Mxe1of::N> ::bitbucket_Mxe1of::r^1
-        s = e1of<::bitbucket_Mxe1of::N> ::bitbucket_Mxe1of::s^1
-        se = bool<> ::bitbucket_Mxe1of::se
+        _Reset = bool<> bitbucket_Mxe1of::_Reset
+        be = bitbucket_e1of<::bitbucket_Mxe1of::N> bitbucket_Mxe1of::be^1
+        r = e1of<::bitbucket_Mxe1of::N> bitbucket_Mxe1of::r^1
+        s = e1of<::bitbucket_Mxe1of::N> bitbucket_Mxe1of::s^1
+        se = bool<> bitbucket_Mxe1of::se
       unroll sequence: 
         e1of<::bitbucket_Mxe1of::N> r[0..(M-1)-1]
         bool<> _Reset
@@ -2490,12 +2490,12 @@ In namespace "", we have: {
       )
       In definition "bitbucket_a1of", we have: {
       Parameters:
-        N = pint<> ::bitbucket_a1of::N
+        N = pint<> bitbucket_a1of::N
       Instances:
-        _Reset = bool<> ::bitbucket_a1of::_Reset
-        __la = bool<> ::bitbucket_a1of::__la
-        _la = bool<> ::bitbucket_a1of::_la
-        l = a1of<::bitbucket_a1of::N> ::bitbucket_a1of::l
+        _Reset = bool<> bitbucket_a1of::_Reset
+        __la = bool<> bitbucket_a1of::__la
+        _la = bool<> bitbucket_a1of::_la
+        l = a1of<::bitbucket_a1of::N> bitbucket_a1of::l
       unroll sequence: 
         a1of<::bitbucket_a1of::N> l
         bool<> _Reset
@@ -2518,12 +2518,12 @@ In namespace "", we have: {
       )
       In definition "bitbucket_e1of", we have: {
       Parameters:
-        N = pint<> ::bitbucket_e1of::N
+        N = pint<> bitbucket_e1of::N
       Instances:
-        _Reset = bool<> ::bitbucket_e1of::_Reset
-        __le = bool<> ::bitbucket_e1of::__le
-        _le = bool<> ::bitbucket_e1of::_le
-        l = e1of<::bitbucket_e1of::N> ::bitbucket_e1of::l
+        _Reset = bool<> bitbucket_e1of::_Reset
+        __le = bool<> bitbucket_e1of::__le
+        _le = bool<> bitbucket_e1of::_le
+        l = e1of<::bitbucket_e1of::N> bitbucket_e1of::l
       unroll sequence: 
         e1of<::bitbucket_e1of::N> l
         bool<> _Reset
@@ -2545,9 +2545,9 @@ In namespace "", we have: {
       )
       In definition "c1of", we have: {
       Parameters:
-        N = pint<> ::c1of::N
+        N = pint<> c1of::N
       Instances:
-        d = bool<> ::c1of::d^1
+        d = bool<> c1of::d^1
       unroll sequence: 
         bool<> d[0..N-1]
       spec:
@@ -2572,10 +2572,10 @@ In namespace "", we have: {
       )
       In definition "e1of", we have: {
       Parameters:
-        N = pint<> ::e1of::N
+        N = pint<> e1of::N
       Instances:
-        d = bool<> ::e1of::d^1
-        e = bool<> ::e1of::e
+        d = bool<> e1of::d^1
+        e = bool<> e1of::e
       unroll sequence: 
         bool<> d[0..N-1]
         bool<> e
@@ -2608,8 +2608,8 @@ In namespace "", we have: {
       )
       In definition "e1of1d", we have: {
       Instances:
-        d = bool<> ::e1of1d::d
-        e = bool<> ::e1of1d::e
+        d = bool<> e1of1d::d
+        e = bool<> e1of1d::e
       unroll sequence: 
         bool<> d
         bool<> e
@@ -2625,12 +2625,12 @@ In namespace "", we have: {
       )
       In definition "e1of2tf", we have: {
       Instances:
-        d = bool<> ::e1of2tf::d^1
-        e = bool<> ::e1of2tf::e
-        f = bool<> ::e1of2tf::f
-        o = bool<> ::e1of2tf::o
-        t = bool<> ::e1of2tf::t
-        z = bool<> ::e1of2tf::z
+        d = bool<> e1of2tf::d^1
+        e = bool<> e1of2tf::e
+        f = bool<> e1of2tf::f
+        o = bool<> e1of2tf::o
+        t = bool<> e1of2tf::t
+        z = bool<> e1of2tf::z
       unroll sequence: 
         bool<> d[0..1]
         bool<> z
@@ -2653,11 +2653,11 @@ In namespace "", we have: {
       )
       In definition "eMx1ofN", we have: {
       Parameters:
-        M = pint<> ::eMx1ofN::M
-        N = pint<> ::eMx1ofN::N
+        M = pint<> eMx1ofN::M
+        N = pint<> eMx1ofN::N
       Instances:
-        b = c1of<::eMx1ofN::N> ::eMx1ofN::b^1
-        e = bool<> ::eMx1ofN::e
+        b = c1of<::eMx1ofN::N> eMx1ofN::b^1
+        e = bool<> eMx1ofN::e
       unroll sequence: 
         c1of<::eMx1ofN::N> b[0..M-1]
         bool<> e
@@ -2672,11 +2672,11 @@ In namespace "", we have: {
       )
       In definition "en1of", we have: {
       Parameters:
-        N = pint<> ::en1of::N
+        N = pint<> en1of::N
       Instances:
-        d = bool<> ::en1of::d^1
-        e = bool<> ::en1of::e
-        n = bool<> ::en1of::n
+        d = bool<> en1of::d^1
+        e = bool<> en1of::e
+        n = bool<> en1of::n
       unroll sequence: 
         bool<> d[0..N-1]
         bool<> e
@@ -2694,11 +2694,11 @@ In namespace "", we have: {
       )
       In definition "ev1of", we have: {
       Parameters:
-        N = pint<> ::ev1of::N
+        N = pint<> ev1of::N
       Instances:
-        d = bool<> ::ev1of::d^1
-        e = bool<> ::ev1of::e
-        v = bool<> ::ev1of::v
+        d = bool<> ev1of::d^1
+        e = bool<> ev1of::e
+        v = bool<> ev1of::v
       unroll sequence: 
         bool<> d[0..N-1]
         bool<> e
@@ -2715,11 +2715,11 @@ In namespace "", we have: {
       )
       In definition "inactive_reset_bitbucket_a1of", we have: {
       Parameters:
-        N = pint<> ::inactive_reset_bitbucket_a1of::N
+        N = pint<> inactive_reset_bitbucket_a1of::N
       Instances:
-        _Reset = bool<> ::inactive_reset_bitbucket_a1of::_Reset
-        _ra = bool<> ::inactive_reset_bitbucket_a1of::_ra
-        r = a1of<::inactive_reset_bitbucket_a1of::N> ::inactive_reset_bitbucket_a1of::r
+        _Reset = bool<> inactive_reset_bitbucket_a1of::_Reset
+        _ra = bool<> inactive_reset_bitbucket_a1of::_ra
+        r = a1of<::inactive_reset_bitbucket_a1of::N> inactive_reset_bitbucket_a1of::r
       unroll sequence: 
         a1of<::inactive_reset_bitbucket_a1of::N> r
         bool<> _Reset
@@ -2739,12 +2739,12 @@ In namespace "", we have: {
       )
       In definition "inactive_reset_bitbucket_e1of", we have: {
       Parameters:
-        N = pint<> ::inactive_reset_bitbucket_e1of::N
+        N = pint<> inactive_reset_bitbucket_e1of::N
       Instances:
-        _Reset = bool<> ::inactive_reset_bitbucket_e1of::_Reset
-        __re = bool<> ::inactive_reset_bitbucket_e1of::__re
-        _re = bool<> ::inactive_reset_bitbucket_e1of::_re
-        r = e1of<::inactive_reset_bitbucket_e1of::N> ::inactive_reset_bitbucket_e1of::r
+        _Reset = bool<> inactive_reset_bitbucket_e1of::_Reset
+        __re = bool<> inactive_reset_bitbucket_e1of::__re
+        _re = bool<> inactive_reset_bitbucket_e1of::_re
+        r = e1of<::inactive_reset_bitbucket_e1of::N> inactive_reset_bitbucket_e1of::r
       unroll sequence: 
         e1of<::inactive_reset_bitbucket_e1of::N> r
         bool<> _Reset
@@ -2769,18 +2769,18 @@ In namespace "", we have: {
       )
       In definition "source_a", we have: {
       Parameters:
-        M = pint<> ::source_a::M
-        N = pint<> ::source_a::N
-        d = pint<> ::source_a::d^1
+        M = pint<> source_a::M
+        N = pint<> source_a::N
+        d = pint<> source_a::d^1
       Instances:
-        _Reset = bool<> ::source_a::_Reset
-        l = bool<> ::source_a::l^1
-        le = bool<> ::source_a::le^1
-        r = c1of<::source_a::M> ::source_a::r
-        rr = a1of<::source_a::M> ::source_a::rr
-        s = e1of<::source_a::N> ::source_a::s
-        sc = source_cell<false> ::source_a::sc^1
-        stc = start_cell<> ::source_a::stc
+        _Reset = bool<> source_a::_Reset
+        l = bool<> source_a::l^1
+        le = bool<> source_a::le^1
+        r = c1of<::source_a::M> source_a::r
+        rr = a1of<::source_a::M> source_a::rr
+        s = e1of<::source_a::N> source_a::s
+        sc = source_cell<false> source_a::sc^1
+        stc = start_cell<> source_a::stc
       unroll sequence: 
         a1of<::source_a::M> rr
         bool<> _Reset
@@ -2824,17 +2824,17 @@ In namespace "", we have: {
       )
       In definition "source_cell", we have: {
       Parameters:
-        start = pbool<> ::source_cell::start
+        start = pbool<> source_cell::start
       Instances:
-        _Reset = bool<> ::source_cell::_Reset
-        l = bool<> ::source_cell::l
-        le = bool<> ::source_cell::le
-        r = bool<> ::source_cell::r
-        re = bool<> ::source_cell::re
-        s = bool<> ::source_cell::s
-        se = bool<> ::source_cell::se
-        x = bool<> ::source_cell::x
-        y = bool<> ::source_cell::y
+        _Reset = bool<> source_cell::_Reset
+        l = bool<> source_cell::l
+        le = bool<> source_cell::le
+        r = bool<> source_cell::r
+        re = bool<> source_cell::re
+        s = bool<> source_cell::s
+        se = bool<> source_cell::se
+        x = bool<> source_cell::x
+        y = bool<> source_cell::y
       unroll sequence: 
         bool<> l
         bool<> le
@@ -2881,18 +2881,18 @@ In namespace "", we have: {
       )
       In definition "source_e", we have: {
       Parameters:
-        M = pint<> ::source_e::M
-        N = pint<> ::source_e::N
-        d = pint<> ::source_e::d^1
+        M = pint<> source_e::M
+        N = pint<> source_e::N
+        d = pint<> source_e::d^1
       Instances:
-        _Reset = bool<> ::source_e::_Reset
-        l = bool<> ::source_e::l^1
-        le = bool<> ::source_e::le^1
-        r = c1of<::source_e::M> ::source_e::r
-        rr = e1of<::source_e::M> ::source_e::rr
-        s = e1of<::source_e::N> ::source_e::s
-        sc = source_cell<false> ::source_e::sc^1
-        stc = start_cell<> ::source_e::stc
+        _Reset = bool<> source_e::_Reset
+        l = bool<> source_e::l^1
+        le = bool<> source_e::le^1
+        r = c1of<::source_e::M> source_e::r
+        rr = e1of<::source_e::M> source_e::rr
+        s = e1of<::source_e::N> source_e::s
+        sc = source_cell<false> source_e::sc^1
+        stc = start_cell<> source_e::stc
       unroll sequence: 
         e1of<::source_e::M> rr
         bool<> _Reset
@@ -2993,13 +2993,13 @@ In namespace "", we have: {
       )
       In definition "start_cell", we have: {
       Instances:
-        _Reset = bool<> ::start_cell::_Reset
-        l = bool<> ::start_cell::l
-        le = bool<> ::start_cell::le
-        r = bool<> ::start_cell::r
-        re = bool<> ::start_cell::re
-        x = bool<> ::start_cell::x
-        y = bool<> ::start_cell::y
+        _Reset = bool<> start_cell::_Reset
+        l = bool<> start_cell::l
+        le = bool<> start_cell::le
+        r = bool<> start_cell::r
+        re = bool<> start_cell::re
+        x = bool<> start_cell::x
+        y = bool<> start_cell::y
       unroll sequence: 
         bool<> l
         bool<> le

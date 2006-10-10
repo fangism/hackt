@@ -51,9 +51,9 @@ In namespace "", we have: {
       )
       In definition "assign_me", we have: {
       Parameters:
-        B = pbool<> ::assign_me::B
+        B = pbool<> assign_me::B
       Instances:
-        b = bool<> ::assign_me::b
+        b = bool<> assign_me::b
       unroll sequence: 
         bool<> b
       chp:

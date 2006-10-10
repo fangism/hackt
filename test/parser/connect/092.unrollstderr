@@ -44,8 +44,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        A = pint<> ::foo::A
-        B = pint<> ::foo::B
+        A = pint<> foo::A
+        B = pint<> foo::B
       }
 
   Instances:

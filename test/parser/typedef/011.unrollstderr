@@ -39,8 +39,8 @@ In namespace "", we have: {
       )
       In definition "array2d", we have: {
       Parameters:
-        M = pint<> ::array2d::M
-        N = pint<> ::array2d::N
+        M = pint<> array2d::M
+        N = pint<> array2d::N
       }
 
   Typedefs:

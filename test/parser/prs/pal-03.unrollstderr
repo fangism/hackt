@@ -102,11 +102,11 @@ In namespace "", we have: {
       )
       In definition "matrix_array", we have: {
       Parameters:
-        M = pint<> ::matrix_array::M
-        N = pint<> ::matrix_array::N
+        M = pint<> matrix_array::M
+        N = pint<> matrix_array::N
       Instances:
-        _o = bool<> ::matrix_array::_o
-        in = bool<> ::matrix_array::in^2
+        _o = bool<> matrix_array::_o
+        in = bool<> matrix_array::in^2
       unroll sequence: 
         bool<> in[0..M-1][0..N-1]
         bool<> _o

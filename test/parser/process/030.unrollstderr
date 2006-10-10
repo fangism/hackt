@@ -28,9 +28,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        bar = pint<> ::foo::bar
-        blah = pint<> ::foo::blah
-        none = pint<> ::foo::none
+        bar = pint<> foo::bar
+        blah = pint<> foo::blah
+        none = pint<> foo::none
       }
 
 }

@@ -66,10 +66,10 @@ In namespace "", we have: {
       )
       In definition "one_shot", we have: {
       Instances:
-        L = chan?(int<32>) ::one_shot::L
-        R = chan!(int<32>) ::one_shot::R
-        x = int<32> ::one_shot::x
-        z = int<32> ::one_shot::z
+        L = chan?(int<32>) one_shot::L
+        R = chan!(int<32>) one_shot::R
+        x = int<32> one_shot::x
+        z = int<32> one_shot::z
       unroll sequence: 
         chan?(int<32>) L
         chan!(int<32>) R

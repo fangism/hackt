@@ -36,8 +36,8 @@ In namespace "", we have: {
       )
       In definition "myinverter", we have: {
       Instances:
-        a = bool<> ::myinverter::a
-        b = bool<> ::myinverter::b
+        a = bool<> myinverter::a
+        b = bool<> myinverter::b
       unroll sequence: 
         bool<> a
         bool<> b

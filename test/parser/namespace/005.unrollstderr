@@ -44,12 +44,12 @@ In namespace "", we have: {
               0 definitions
               0 typedefs
               Instances:
-                whazzup = int<32> ::yo::yo::yo::whazzup
+                whazzup = int<32> yo::yo::yo::whazzup
             }
         }
     }
 }
 
 footprint: {
-  ::yo::whazzup = int<32>^0 = ::yo::yo::yo::whazzup 
+  yo::whazzup = int<32>^0 = ::yo::yo::yo::whazzup 
 }

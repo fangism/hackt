@@ -84,15 +84,15 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        A = chan?(int<32>) ::foo::A
-        B = chan?(int<32>) ::foo::B
-        C = chan!(int<32>) ::foo::C
-        D = chan!(int<32>) ::foo::D
-        E = chan!(int<32>) ::foo::E
-        F = chan!(int<32>) ::foo::F
-        a = int<32> ::foo::a
-        b = int<32> ::foo::b
-        z = int<32> ::foo::z
+        A = chan?(int<32>) foo::A
+        B = chan?(int<32>) foo::B
+        C = chan!(int<32>) foo::C
+        D = chan!(int<32>) foo::D
+        E = chan!(int<32>) foo::E
+        F = chan!(int<32>) foo::F
+        a = int<32> foo::a
+        b = int<32> foo::b
+        z = int<32> foo::z
       unroll sequence: 
         chan?(int<32>) A
         chan?(int<32>) B

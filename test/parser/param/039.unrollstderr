@@ -38,8 +38,8 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        bar = pint<> ::bogus::bar^1
-        foo = pint<> ::bogus::foo
+        bar = pint<> bogus::bar^1
+        foo = pint<> bogus::foo
       unroll sequence: 
         pint<> foo
         foo = 3;

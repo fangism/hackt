@@ -84,10 +84,10 @@ In namespace "", we have: {
       )
       In definition "groupie", we have: {
       Instances:
-        p = bool<> ::groupie::p
-        q = bool<> ::groupie::q
-        r = bool<> ::groupie::r
-        x = bool<> ::groupie::x^1
+        p = bool<> groupie::p
+        q = bool<> groupie::q
+        r = bool<> groupie::r
+        x = bool<> groupie::x^1
       unroll sequence: 
         bool<> p
         bool<> q

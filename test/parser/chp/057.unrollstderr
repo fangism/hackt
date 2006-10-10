@@ -55,12 +55,12 @@ In namespace "", we have: {
       )
       In definition "split_bool_soup", we have: {
       Instances:
-        A = chan?(bool<>) ::split_bool_soup::A
-        B = chan?(bool<>) ::split_bool_soup::B
-        G = chan?(bool<>) ::split_bool_soup::G
-        Z = chan!(bool<>) ::split_bool_soup::Z
-        g = bool<> ::split_bool_soup::g
-        x = bool<> ::split_bool_soup::x
+        A = chan?(bool<>) split_bool_soup::A
+        B = chan?(bool<>) split_bool_soup::B
+        G = chan?(bool<>) split_bool_soup::G
+        Z = chan!(bool<>) split_bool_soup::Z
+        g = bool<> split_bool_soup::g
+        x = bool<> split_bool_soup::x
       unroll sequence: 
         chan?(bool<>) A
         chan?(bool<>) B

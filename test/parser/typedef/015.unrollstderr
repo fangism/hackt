@@ -53,9 +53,9 @@ In namespace "", we have: {
       )
       In definition "baz", we have: {
       Instances:
-        x = bool<> ::baz::x
-        y = bool<> ::baz::y
-        z = bool<> ::baz::z
+        x = bool<> baz::x
+        y = bool<> baz::y
+        z = bool<> baz::z
       unroll sequence: 
         bool<> x
         bool<> y

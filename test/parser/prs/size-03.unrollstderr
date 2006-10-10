@@ -55,10 +55,10 @@ In namespace "", we have: {
       )
       In definition "size_test", we have: {
       Parameters:
-        P = pint<> ::size_test::P
+        P = pint<> size_test::P
       Instances:
-        a = bool<> ::size_test::a
-        b = bool<> ::size_test::b
+        a = bool<> size_test::a
+        b = bool<> size_test::b
       unroll sequence: 
         bool<> a
         bool<> b

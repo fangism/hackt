@@ -53,10 +53,10 @@ In namespace "", we have: {
       )
       In definition "fangism", we have: {
       Parameters:
-        K = pint<> ::fangism::K
-        N = pint<> ::fangism::N
+        K = pint<> fangism::K
+        N = pint<> fangism::N
       Instances:
-        ick = int<::fangism::K> ::fangism::ick^1
+        ick = int<::fangism::K> fangism::ick^1
       }
 
   Typedefs:

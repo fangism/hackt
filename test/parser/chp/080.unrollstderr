@@ -70,9 +70,9 @@ In namespace "", we have: {
       )
       In definition "send_me", we have: {
       Parameters:
-        B = pint<> ::send_me::B
+        B = pint<> send_me::B
       Instances:
-        b = chan!(int<32>) ::send_me::b
+        b = chan!(int<32>) send_me::b
       unroll sequence: 
         chan!(int<32>) b
       chp:

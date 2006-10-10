@@ -118,11 +118,11 @@ In namespace "", we have: {
       )
       In definition "send_indexed", we have: {
       Parameters:
-        I = pint<> ::send_indexed::I
-        J = pint<> ::send_indexed::J
-        x = pint<> ::send_indexed::x^1
+        I = pint<> send_indexed::I
+        J = pint<> send_indexed::J
+        x = pint<> send_indexed::x^1
       Instances:
-        out = chan!(int<32>) ::send_indexed::out
+        out = chan!(int<32>) send_indexed::out
       unroll sequence: 
         chan!(int<32>) out
         pint<> x[0..1]

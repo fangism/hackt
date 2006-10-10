@@ -72,7 +72,7 @@ In namespace "", we have: {
       )
       In definition "basket", we have: {
       Instances:
-        egg_array = egg<> ::basket::egg_array
+        egg_array = egg<> basket::egg_array
       unroll sequence: 
         egg<> egg_array
       footprint: {
@@ -87,7 +87,7 @@ In namespace "", we have: {
       )
       In definition "bundle", we have: {
       Instances:
-        c = basket<> ::bundle::c
+        c = basket<> bundle::c
       unroll sequence: 
         basket<> c
       footprint: {
@@ -104,7 +104,7 @@ In namespace "", we have: {
       )
       In definition "egg", we have: {
       Instances:
-        yolk = int<32> ::egg::yolk
+        yolk = int<32> egg::yolk
       unroll sequence: 
         int<32> yolk
       footprint: {

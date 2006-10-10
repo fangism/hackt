@@ -40,8 +40,8 @@ In namespace "", we have: {
       )
       In definition "sink", we have: {
       Instances:
-        S = chan(bool<>) ::sink::S
-        b = bool<> ::sink::b
+        S = chan(bool<>) sink::S
+        b = bool<> sink::b
       unroll sequence: 
         chan(bool<>) S
         bool<> b
@@ -58,7 +58,7 @@ In namespace "", we have: {
       )
       In definition "source", we have: {
       Instances:
-        S = chan(bool<>) ::source::S
+        S = chan(bool<>) source::S
       unroll sequence: 
         chan(bool<>) S
       chp:

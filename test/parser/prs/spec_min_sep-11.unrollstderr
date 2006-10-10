@@ -59,10 +59,10 @@ In namespace "", we have: {
       )
       In definition "ass", we have: {
       Instances:
-        a = bool<> ::ass::a
-        b = bool<> ::ass::b
-        c = bool<> ::ass::c
-        q = bool<> ::ass::q
+        a = bool<> ass::a
+        b = bool<> ass::b
+        c = bool<> ass::c
+        q = bool<> ass::q
       unroll sequence: 
         bool<> q
         bool<> a

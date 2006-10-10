@@ -35,8 +35,8 @@ In namespace "", we have: {
       )
       In definition "inv", we have: {
       Instances:
-        a = bool<> ::inv::a
-        b = bool<> ::inv::b
+        a = bool<> inv::a
+        b = bool<> inv::b
       unroll sequence: 
         bool<> a
         bool<> b

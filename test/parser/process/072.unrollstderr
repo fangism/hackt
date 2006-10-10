@@ -59,10 +59,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> ::foo::N
+        N = pint<> foo::N
       Instances:
-        a = int<::foo::N> ::foo::a
-        b = int<::foo::N> ::foo::b
+        a = int<::foo::N> foo::a
+        b = int<::foo::N> foo::b
       unroll sequence: 
         int<::foo::N> a
         int<::foo::N> b

@@ -41,15 +41,23 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        fancier_array = int<32> ::more_arrays::fancier_array^3
-        fancy_array = int<32> ::more_arrays::fancy_array^2
+        fancier_array = int<32> more_arrays::fancier_array^3
+        fancy_array = int<32> more_arrays::fancy_array^2
     }
   Instances:
     good_array = int<32> good_array^1
 }
 
 footprint: {
-  ::more_arrays::fancier_array = int<32>^3
+  good_array = int<32>^1
+    {
+      0 = ::good_array[0] 
+      1 = ::good_array[1] 
+      2 = ::good_array[2] 
+      3 = ::good_array[3] 
+      4 = ::good_array[4] 
+    }
+  more_arrays::fancier_array = int<32>^3
     {
       [0][0][1] = ::more_arrays::fancier_array[0][0][1] 
       [0][0][2] = ::more_arrays::fancier_array[0][0][2] 
@@ -92,7 +100,7 @@ footprint: {
       [3][4][1] = ::more_arrays::fancier_array[3][4][1] 
       [3][4][2] = ::more_arrays::fancier_array[3][4][2] 
     }
-  ::more_arrays::fancy_array = int<32>^2
+  more_arrays::fancy_array = int<32>^2
     {
       [0][0] = ::more_arrays::fancy_array[0][0] 
       [0][1] = ::more_arrays::fancy_array[0][1] 
@@ -109,13 +117,5 @@ footprint: {
       [4][0] = ::more_arrays::fancy_array[4][0] 
       [4][1] = ::more_arrays::fancy_array[4][1] 
       [4][2] = ::more_arrays::fancy_array[4][2] 
-    }
-  good_array = int<32>^1
-    {
-      0 = ::good_array[0] 
-      1 = ::good_array[1] 
-      2 = ::good_array[2] 
-      3 = ::good_array[3] 
-      4 = ::good_array[4] 
     }
 }

@@ -238,11 +238,11 @@ In namespace "", we have: {
       )
       In definition "compute_me", we have: {
       Parameters:
-        B = pint<> ::compute_me::B^1
-        M = pint<> ::compute_me::M
-        N = pint<> ::compute_me::N
+        B = pint<> compute_me::B^1
+        M = pint<> compute_me::M
+        N = pint<> compute_me::N
       Instances:
-        b = int<16> ::compute_me::b
+        b = int<16> compute_me::b
       unroll sequence: 
         int<16> b
       chp:

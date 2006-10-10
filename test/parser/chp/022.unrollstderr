@@ -68,10 +68,10 @@ In namespace "", we have: {
       )
       In definition "one_shot", we have: {
       Instances:
-        L = chan?(bool<>) ::one_shot::L
-        R = chan!(bool<>) ::one_shot::R
-        x = int<32> ::one_shot::x
-        z = int<32> ::one_shot::z
+        L = chan?(bool<>) one_shot::L
+        R = chan!(bool<>) one_shot::R
+        x = int<32> one_shot::x
+        z = int<32> one_shot::z
       unroll sequence: 
         chan?(bool<>) L
         chan!(bool<>) R

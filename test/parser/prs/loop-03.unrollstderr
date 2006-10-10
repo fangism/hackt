@@ -117,10 +117,10 @@ In namespace "", we have: {
       )
       In definition "triangle", we have: {
       Parameters:
-        N = pint<> ::triangle::N
+        N = pint<> triangle::N
       Instances:
-        _out = bool<> ::triangle::_out
-        in = bool<> ::triangle::in^3
+        _out = bool<> triangle::_out
+        in = bool<> triangle::in^3
       unroll sequence: 
         bool<> in[0..N-1][0..N-1][0..N-1]
         bool<> _out

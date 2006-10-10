@@ -72,10 +72,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> ::foo::N^1
+        N = pint<> foo::N^1
       Instances:
-        a = bool<> ::foo::a^1
-        b = bool<> ::foo::b^1
+        a = bool<> foo::a^1
+        b = bool<> foo::b^1
       unroll sequence: 
         bool<> a[0..N[0]-1]
         bool<> b[0..N[1]-1]

@@ -30,7 +30,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> ::foo::N
+        N = pint<> foo::N
       unroll sequence: 
       footprint collection: {
         <13> {

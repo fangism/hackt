@@ -56,9 +56,9 @@ In namespace "", we have: {
       )
       In definition "send_me", we have: {
       Parameters:
-        B = pbool<> ::send_me::B
+        B = pbool<> send_me::B
       Instances:
-        b = chan!(bool<>) ::send_me::b
+        b = chan!(bool<>) send_me::b
       unroll sequence: 
         chan!(bool<>) b
       chp:

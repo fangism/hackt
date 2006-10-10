@@ -40,8 +40,8 @@ In namespace "", we have: {
       )
       In definition "aftershave", we have: {
       Instances:
-        a = bool<> ::aftershave::a
-        b = bool<> ::aftershave::b
+        a = bool<> aftershave::a
+        b = bool<> aftershave::b
       unroll sequence: 
         bool<> a
         bool<> b

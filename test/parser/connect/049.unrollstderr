@@ -89,10 +89,10 @@ In namespace "", we have: {
       )
       In definition "portaproc", we have: {
       Instances:
-        b = bool<> ::portaproc::b
-        c = bool<> ::portaproc::c^1
-        i = int<32> ::portaproc::i
-        j = int<32> ::portaproc::j^1
+        b = bool<> portaproc::b
+        c = bool<> portaproc::c^1
+        i = int<32> portaproc::i
+        j = int<32> portaproc::j^1
       unroll sequence: 
         bool<> b
         bool<> c[0..3]

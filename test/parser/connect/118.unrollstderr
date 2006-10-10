@@ -52,7 +52,7 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        a = bool<> ::bar::a
+        a = bool<> bar::a
       unroll sequence: 
         bool<> a
       footprint: {

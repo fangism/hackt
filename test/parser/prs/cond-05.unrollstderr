@@ -54,9 +54,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pbool<> ::foo::N
+        N = pbool<> foo::N
       Instances:
-        b = bar<> ::foo::b
+        b = bar<> foo::b
       unroll sequence: 
         [ N ->
           bar<> b

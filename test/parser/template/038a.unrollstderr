@@ -1,4 +1,4 @@
-ERROR: cannot unroll incomplete process type ::foo
+ERROR: cannot unroll incomplete process type foo
 Instantiated from: foo<12, 12+1, (12+1)*2>
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

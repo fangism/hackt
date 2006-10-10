@@ -623,7 +623,7 @@ In namespace "", we have: {
       )
       In definition "basket", we have: {
       Instances:
-        egg_array = egg<> ::basket::egg_array^1
+        egg_array = egg<> basket::egg_array^1
       unroll sequence: 
         egg<> egg_array[0..11]
       footprint: {
@@ -688,9 +688,9 @@ In namespace "", we have: {
       )
       In definition "bundle", we have: {
       Instances:
-        a = basket<> ::bundle::a
-        b = basket<> ::bundle::b
-        c = basket<> ::bundle::c^1
+        a = basket<> bundle::a
+        b = basket<> bundle::b
+        c = basket<> bundle::c^1
       unroll sequence: 
         basket<> a
         basket<> b
@@ -1132,8 +1132,8 @@ In namespace "", we have: {
       )
       In definition "egg", we have: {
       Instances:
-        white = bool<> ::egg::white
-        yolk = int<32> ::egg::yolk
+        white = bool<> egg::white
+        yolk = int<32> egg::yolk
       unroll sequence: 
         bool<> white
         int<32> yolk

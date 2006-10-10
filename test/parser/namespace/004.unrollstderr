@@ -215,10 +215,10 @@ In namespace "", we have: {
             }
         }
       Instances:
-        foo = int<32> ::cornell::foo
+        foo = int<32> cornell::foo
     }
 }
 
 footprint: {
-  ::cornell::foo = int<32>^0 = ::cornell::foo 
+  cornell::foo = int<32>^0 = ::cornell::foo 
 }

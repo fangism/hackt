@@ -63,9 +63,9 @@ In namespace "", we have: {
       )
       In definition "assign_me", we have: {
       Parameters:
-        B = pint<> ::assign_me::B
+        B = pint<> assign_me::B
       Instances:
-        b = int<32> ::assign_me::b
+        b = int<32> assign_me::b
       unroll sequence: 
         int<32> b
       chp:

@@ -83,11 +83,11 @@ In namespace "", we have: {
       )
       In definition "baz", we have: {
       Parameters:
-        N = pint<> ::baz::N
+        N = pint<> baz::N
       Instances:
-        x = bool<> ::baz::x
-        y = bool<> ::baz::y
-        z = bool<> ::baz::z^1
+        x = bool<> baz::x
+        y = bool<> baz::y
+        z = bool<> baz::z^1
       unroll sequence: 
         bool<> x
         bool<> y

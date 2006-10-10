@@ -56,11 +56,11 @@ In namespace "", we have: {
       )
       In definition "crazy_inv", we have: {
       Parameters:
-        I = pint<> ::crazy_inv::I
-        J = pint<> ::crazy_inv::J
-        N = pint<> ::crazy_inv::N
+        I = pint<> crazy_inv::I
+        J = pint<> crazy_inv::J
+        N = pint<> crazy_inv::N
       Instances:
-        a = bool<> ::crazy_inv::a^1
+        a = bool<> crazy_inv::a^1
       unroll sequence: 
         bool<> a[0..N-1]
       prs:

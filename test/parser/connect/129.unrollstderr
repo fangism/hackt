@@ -359,10 +359,10 @@ In namespace "", we have: {
       )
       In definition "e1of2", we have: {
       Instances:
-        d = bool<> ::e1of2::d^1
-        e = bool<> ::e1of2::e
-        f = bool<> ::e1of2::f
-        t = bool<> ::e1of2::t
+        d = bool<> e1of2::d^1
+        e = bool<> e1of2::e
+        f = bool<> e1of2::f
+        t = bool<> e1of2::t
       unroll sequence: 
         bool<> d[0..1]
         bool<> t
@@ -399,11 +399,11 @@ In namespace "", we have: {
       )
       In definition "merge", we have: {
       Instances:
-        a = e1of2<> ::merge::a
-        b = e1of2<> ::merge::b
-        c = e1of2<> ::merge::c
-        g = globals<> ::merge::g
-        x = e1of2<> ::merge::x
+        a = e1of2<> merge::a
+        b = e1of2<> merge::b
+        c = e1of2<> merge::c
+        g = globals<> merge::g
+        x = e1of2<> merge::x
       unroll sequence: 
         globals<> g
         e1of2<> a
@@ -461,8 +461,8 @@ In namespace "", we have: {
       )
       In definition "source_e1of2_1", we have: {
       Instances:
-        g = globals<> ::source_e1of2_1::g
-        r = e1of2<> ::source_e1of2_1::r
+        g = globals<> source_e1of2_1::g
+        r = e1of2<> source_e1of2_1::r
       unroll sequence: 
         globals<> g
         e1of2<> r
@@ -490,11 +490,11 @@ In namespace "", we have: {
       )
       In definition "split4", we have: {
       Instances:
-        a = e1of2<> ::split4::a
-        b = e1of2<> ::split4::b
-        c = e1of2<> ::split4::c
-        g = globals<> ::split4::g
-        l = e1of2<> ::split4::l
+        a = e1of2<> split4::a
+        b = e1of2<> split4::b
+        c = e1of2<> split4::c
+        g = globals<> split4::g
+        l = e1of2<> split4::l
       unroll sequence: 
         globals<> g
         e1of2<> l
@@ -552,8 +552,8 @@ In namespace "", we have: {
       )
       In definition "upcopy", we have: {
       Instances:
-        l = e1of2<> ::upcopy::l
-        r = e1of2<> ::upcopy::r
+        l = e1of2<> upcopy::l
+        r = e1of2<> upcopy::r
       unroll sequence: 
         e1of2<> l
         e1of2<> r

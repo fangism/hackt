@@ -47,8 +47,8 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        a = bool<> ::bar::a
-        b = bool<> ::bar::b
+        a = bool<> bar::a
+        b = bool<> bar::b
       unroll sequence: 
         bool<> a
         bool<> b

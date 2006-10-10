@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-32:
+	  Updated dumping of qualified names to definition names.  
+		Could make definition_base::get_qualified_name() non-virtual.
+	  Bunch of tests updated because of key-name reordering, 
+		and mostly trivial string substitution.  
+	  This takes care of the last of the remaining unroll regressions!
+
+
 2006-10-09	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-31:

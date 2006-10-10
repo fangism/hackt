@@ -104,12 +104,12 @@ In namespace "", we have: {
       )
       In definition "send_indexed", we have: {
       Parameters:
-        I = pint<> ::send_indexed::I
-        x = pint<> ::send_indexed::x^1
+        I = pint<> send_indexed::I
+        x = pint<> send_indexed::x^1
       Instances:
-        index = chan?(int<1>) ::send_indexed::index
-        out = chan!(int<32>) ::send_indexed::out^1
-        y = int<1> ::send_indexed::y
+        index = chan?(int<1>) send_indexed::index
+        out = chan!(int<32>) send_indexed::out^1
+        y = int<1> send_indexed::y
       unroll sequence: 
         chan?(int<1>) index
         chan!(int<32>) out[0..1]

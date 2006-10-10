@@ -38,9 +38,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> ::foo::N
+        N = pint<> foo::N
       Instances:
-        bar = int<32> ::foo::bar^1
+        bar = int<32> foo::bar^1
       unroll sequence: 
         int<32> bar[0..2*N+1-1]
       }

@@ -76,10 +76,10 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        D = pint<> ::bar::D^1
-        N = pint<> ::bar::N
+        D = pint<> bar::D^1
+        N = pint<> bar::N
       Instances:
-        x = foo<2*::bar::N, ::bar::D # ::bar::D> ::bar::x
+        x = foo<2*::bar::N, ::bar::D # ::bar::D> bar::x
       unroll sequence: 
         foo<2*::bar::N, ::bar::D # ::bar::D> x
       footprint collection: {
@@ -102,8 +102,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        D = pint<> ::foo::D^1
-        N = pint<> ::foo::N
+        D = pint<> foo::D^1
+        N = pint<> foo::N
       unroll sequence: 
       footprint collection: {
         <4, {0,1,0,1}> {

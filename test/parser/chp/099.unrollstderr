@@ -71,10 +71,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        w = int<32> ::foo::w
-        x = bool<> ::foo::x
-        y = int<32> ::foo::y
-        z = bool<> ::foo::z
+        w = int<32> foo::w
+        x = bool<> foo::x
+        y = int<32> foo::y
+        z = bool<> foo::z
       unroll sequence: 
         bool<> x
         bool<> z

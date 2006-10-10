@@ -38,7 +38,7 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> ::foo::a^1
+        a = bool<> foo::a^1
       unroll sequence: 
         bool<> a[0..1]
         a[0] = a[1];

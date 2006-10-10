@@ -38,7 +38,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        parser = int<32> ::rajit::parser
+        parser = int<32> rajit::parser
     }
   Instances:
     N = int<32> N
@@ -46,7 +46,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  ::rajit::parser = int<32>^0 = ::rajit::parser 
   N = int<32>^0 = ::N 
   Q = bool^0 = ::Q 
+  rajit::parser = int<32>^0 = ::rajit::parser 
 }

@@ -81,8 +81,8 @@ In namespace "", we have: {
       )
       In definition "e1of2", we have: {
       Instances:
-        d = bool<> ::e1of2::d^1
-        e = bool<> ::e1of2::e
+        d = bool<> e1of2::d^1
+        e = bool<> e1of2::e
       unroll sequence: 
         bool<> d[0..1]
         bool<> e
@@ -102,10 +102,10 @@ In namespace "", we have: {
       )
       In definition "wchb_e1of2", we have: {
       Instances:
-        L = e1of2<> ::wchb_e1of2::L
-        R = e1of2<> ::wchb_e1of2::R
-        _r = bool<> ::wchb_e1of2::_r
-        l1 = bool<> ::wchb_e1of2::l1
+        L = e1of2<> wchb_e1of2::L
+        R = e1of2<> wchb_e1of2::R
+        _r = bool<> wchb_e1of2::_r
+        l1 = bool<> wchb_e1of2::l1
       unroll sequence: 
         e1of2<> L
         e1of2<> R

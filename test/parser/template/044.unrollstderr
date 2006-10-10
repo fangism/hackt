@@ -33,8 +33,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        Q = pint<> ::foo::Q (default = 5)
-        R = pint<> ::foo::R
+        Q = pint<> foo::Q (default = 5)
+        R = pint<> foo::R
       }
 
   Instances:

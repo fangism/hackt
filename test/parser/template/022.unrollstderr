@@ -31,8 +31,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        A = pint<> ::foo::A^1
-        N = pint<> ::foo::N
+        A = pint<> foo::A^1
+        N = pint<> foo::N
       }
 
 }

@@ -59,8 +59,8 @@ In namespace "", we have: {
       )
       In definition "chan_proc", we have: {
       Instances:
-        L = fake_chan<> ::chan_proc::L
-        R = fake_chan<> ::chan_proc::R
+        L = fake_chan<> chan_proc::L
+        R = fake_chan<> chan_proc::R
       unroll sequence: 
         fake_chan<> L
         fake_chan<> R
@@ -80,8 +80,8 @@ In namespace "", we have: {
       )
       In channel definition "fake_chan", we have: {
       Instances:
-        d = int<32> ::fake_chan::d
-        e = bool<> ::fake_chan::e
+        d = int<32> fake_chan::d
+        e = bool<> fake_chan::e
       unroll sequence: 
         int<32> d
         bool<> e

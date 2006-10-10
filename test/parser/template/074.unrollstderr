@@ -95,12 +95,12 @@ In namespace "", we have: {
       )
       In definition "ass", we have: {
       Parameters:
-        N = pint<> ::ass::N
-        d = pint<> ::ass::d^1
+        N = pint<> ass::N
+        d = pint<> ass::d^1
       Instances:
-        x = bool<> ::ass::x
-        y = bool<> ::ass::y
-        z = bool<> ::ass::z
+        x = bool<> ass::x
+        y = bool<> ass::y
+        z = bool<> ass::z
       unroll sequence: 
         bool<> x
         bool<> y

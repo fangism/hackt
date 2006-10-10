@@ -71,9 +71,9 @@ In namespace "", we have: {
       )
       In definition "passn", we have: {
       Instances:
-        d = bool<> ::passn::d
-        g = bool<> ::passn::g
-        s = bool<> ::passn::s
+        d = bool<> passn::d
+        g = bool<> passn::g
+        s = bool<> passn::s
       unroll sequence: 
         bool<> g
         bool<> s
@@ -90,12 +90,12 @@ In namespace "", we have: {
       )
       In definition "passnp", we have: {
       Instances:
-        _g = bool<> ::passnp::_g
-        d = bool<> ::passnp::d
-        g = bool<> ::passnp::g
-        n = passn<> ::passnp::n
-        p = passp<> ::passnp::p
-        s = bool<> ::passnp::s
+        _g = bool<> passnp::_g
+        d = bool<> passnp::d
+        g = bool<> passnp::g
+        n = passn<> passnp::n
+        p = passp<> passnp::p
+        s = bool<> passnp::s
       unroll sequence: 
         bool<> g
         bool<> _g
@@ -114,9 +114,9 @@ In namespace "", we have: {
       )
       In definition "passp", we have: {
       Instances:
-        d = bool<> ::passp::d
-        g = bool<> ::passp::g
-        s = bool<> ::passp::s
+        d = bool<> passp::d
+        g = bool<> passp::g
+        s = bool<> passp::s
       unroll sequence: 
         bool<> g
         bool<> s

@@ -42,10 +42,10 @@ In namespace "", we have: {
       )
       In definition "testing", we have: {
       Instances:
-        p = bool<> ::testing::p
-        q = bool<> ::testing::q
-        r = bool<> ::testing::r
-        s = bool<> ::testing::s
+        p = bool<> testing::p
+        q = bool<> testing::q
+        r = bool<> testing::r
+        s = bool<> testing::s
       unroll sequence: 
         bool<> p
         bool<> q

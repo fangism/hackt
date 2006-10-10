@@ -58,10 +58,10 @@ In namespace "", we have: {
       )
       In definition "metalooptest", we have: {
       Instances:
-        L = chan?(int<4>) ::metalooptest::L
-        R = chan!(bool<>) ::metalooptest::R
-        b = bool<> ::metalooptest::b^1
-        l = int<4> ::metalooptest::l
+        L = chan?(int<4>) metalooptest::L
+        R = chan!(bool<>) metalooptest::R
+        b = bool<> metalooptest::b^1
+        l = int<4> metalooptest::l
       unroll sequence: 
         chan?(int<4>) L
         chan!(bool<>) R

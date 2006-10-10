@@ -56,9 +56,9 @@ In namespace "", we have: {
       )
       In definition "groupie", we have: {
       Instances:
-        p = bool<> ::groupie::p
-        q = bool<> ::groupie::q
-        r = bool<> ::groupie::r
+        p = bool<> groupie::p
+        q = bool<> groupie::q
+        r = bool<> groupie::r
       unroll sequence: 
         bool<> p
         bool<> q

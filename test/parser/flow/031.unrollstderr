@@ -89,10 +89,10 @@ In namespace "", we have: {
       )
       In definition "prime_array", we have: {
       Parameters:
-        P = pint<> ::prime_array::P
+        P = pint<> prime_array::P
       Instances:
-        composite = bool<> ::prime_array::composite
-        x = bool<> ::prime_array::x^1
+        composite = bool<> prime_array::composite
+        x = bool<> prime_array::x^1
       unroll sequence: 
         bool<> x[0..P+1-1]
         bool<> composite

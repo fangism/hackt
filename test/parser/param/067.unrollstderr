@@ -53,7 +53,7 @@ In namespace "", we have: {
           )
           In definition "foo", we have: {
           Parameters:
-            N = pint<> ::bar::foo::N^1
+            N = pint<> bar::foo::N^1
           unroll sequence: 
             pint<> N[0..::Q-1]
             N[0] = 11;
@@ -79,10 +79,10 @@ In namespace "", we have: {
 
     }
   Instances:
-    f = foo<> f
+    f = bar::foo<> f
 }
 
 footprint: {
   Q = pint^0 value: 13
-  f = process foo<>^0 = ::f 
+  f = process bar::foo<>^0 = ::f 
 }

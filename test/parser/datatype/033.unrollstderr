@@ -45,12 +45,12 @@ In namespace "", we have: {
       )
       In datatype definition "my_data", we have: {
       Instances:
-        fee = bool<> ::my_data::fee
-        fi = bool<> ::my_data::fi
-        fo = bool<> ::my_data::fo
-        fum = bool<> ::my_data::fum^1
-        x = int<8> ::my_data::x
-        y = bool<> ::my_data::y
+        fee = bool<> my_data::fee
+        fi = bool<> my_data::fi
+        fo = bool<> my_data::fo
+        fum = bool<> my_data::fum^1
+        x = int<8> my_data::x
+        y = bool<> my_data::y
       unroll sequence: 
         int<8> x
         bool<> y

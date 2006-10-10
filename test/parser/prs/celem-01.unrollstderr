@@ -56,9 +56,9 @@ In namespace "", we have: {
       )
       In definition "celem2inv", we have: {
       Instances:
-        _o = bool<> ::celem2inv::_o
-        a = bool<> ::celem2inv::a
-        b = bool<> ::celem2inv::b
+        _o = bool<> celem2inv::_o
+        a = bool<> celem2inv::a
+        b = bool<> celem2inv::b
       unroll sequence: 
         bool<> a
         bool<> b

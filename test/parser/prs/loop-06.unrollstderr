@@ -52,10 +52,10 @@ In namespace "", we have: {
       )
       In definition "null", we have: {
       Parameters:
-        N = pint<> ::null::N
+        N = pint<> null::N
       Instances:
-        x = bool<> ::null::x
-        y = bool<> ::null::y
+        x = bool<> null::x
+        y = bool<> null::y
       unroll sequence: 
         bool<> x
         bool<> y

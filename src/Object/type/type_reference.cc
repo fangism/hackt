@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.17.2.7 2006/10/08 21:52:22 fang Exp $
+ 	$Id: type_reference.cc,v 1.17.2.8 2006/10/10 04:44:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -127,7 +127,11 @@ fundamental_type_reference::~fundamental_type_reference() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
+#if 0
 	return template_args.dump(o << get_base_def()->get_name());
+#else
+	return template_args.dump(o << get_base_def()->get_qualified_name());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

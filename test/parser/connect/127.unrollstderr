@@ -77,8 +77,8 @@ In namespace "", we have: {
       )
       In definition "ar", we have: {
       Instances:
-        y = bool<> ::ar::y
-        z = bool<> ::ar::z
+        y = bool<> ar::y
+        z = bool<> ar::z
       unroll sequence: 
         bool<> y
         bool<> z
@@ -94,8 +94,8 @@ In namespace "", we have: {
       )
       In definition "array", we have: {
       Instances:
-        composite = bool<> ::array::composite
-        x = bool<> ::array::x
+        composite = bool<> array::composite
+        x = bool<> array::x
       unroll sequence: 
         bool<> x
         bool<> composite
@@ -111,8 +111,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        k = array<> ::foo::k
-        r = ar<> ::foo::r
+        k = array<> foo::k
+        r = ar<> foo::r
       unroll sequence: 
         ar<> r
         array<> k

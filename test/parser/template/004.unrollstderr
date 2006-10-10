@@ -42,9 +42,9 @@ In namespace "", we have: {
       )
       In definition "array_me", we have: {
       Parameters:
-        A = pint<> ::array_me::A^1
-        B = pint<> ::array_me::B^1
-        N = pint<> ::array_me::N
+        A = pint<> array_me::A^1
+        B = pint<> array_me::B^1
+        N = pint<> array_me::N
       }
 
 }

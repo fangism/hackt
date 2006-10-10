@@ -100,12 +100,12 @@ In namespace "", we have: {
       )
       In definition "div", we have: {
       Parameters:
-        P = pint<> ::div::P
-        Q = pint<> ::div::Q
+        P = pint<> div::P
+        Q = pint<> div::Q
       Instances:
-        x = bool<> ::div::x^1
-        y = bool<> ::div::y^1
-        z = bool<> ::div::z^1
+        x = bool<> div::x^1
+        y = bool<> div::y^1
+        z = bool<> div::z^1
       unroll sequence: 
         bool<> x[1..Q-1]
         bool<> y[1..P-1]

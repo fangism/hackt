@@ -74,9 +74,9 @@ In namespace "", we have: {
       )
       In definition "ch1of", we have: {
       Parameters:
-        N = pint<> ::ch1of::N
+        N = pint<> ch1of::N
       Instances:
-        d = bool<> ::ch1of::d^1
+        d = bool<> ch1of::d^1
       unroll sequence: 
         bool<> d[0..N-1]
       footprint collection: {
@@ -98,7 +98,7 @@ In namespace "", we have: {
       )
       In definition "dcelm", we have: {
       Instances:
-        a = bool<> ::dcelm::a
+        a = bool<> dcelm::a
       unroll sequence: 
         bool<> a
       footprint: {
@@ -110,8 +110,8 @@ In namespace "", we have: {
       )
       In definition "lut", we have: {
       Instances:
-        ad = ch1of<4> ::lut::ad
-        ce = dcelm<> ::lut::ce^1
+        ad = ch1of<4> lut::ad
+        ce = dcelm<> lut::ce^1
       unroll sequence: 
         ch1of<4> ad
         dcelm<> ce[0..0]

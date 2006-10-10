@@ -95,8 +95,8 @@ In namespace "", we have: {
       )
       In definition "wrap", we have: {
       Instances:
-        a = bool<> ::wrap::a
-        b = bool<> ::wrap::b
+        a = bool<> wrap::a
+        b = bool<> wrap::b
       unroll sequence: 
         bool<> a
         bool<> b

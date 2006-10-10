@@ -64,10 +64,10 @@ In namespace "", we have: {
       )
       In definition "weakness", we have: {
       Instances:
-        a = bool<> ::weakness::a
-        b = bool<> ::weakness::b
-        c = bool<> ::weakness::c
-        d = bool<> ::weakness::d
+        a = bool<> weakness::a
+        b = bool<> weakness::b
+        c = bool<> weakness::c
+        d = bool<> weakness::d
       unroll sequence: 
         bool<> a
         bool<> b

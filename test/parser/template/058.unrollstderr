@@ -34,10 +34,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        W = pint<> ::foo::W
-        Z = pint<> ::foo::Z
+        W = pint<> foo::W
+        Z = pint<> foo::Z
       Instances:
-        my_int = int<::foo::Z> ::foo::my_int
+        my_int = int<::foo::Z> foo::my_int
       unroll sequence: 
         pint<> Z
         Z = W;

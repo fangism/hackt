@@ -36,8 +36,8 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Parameters:
-        A = pint<> ::bar::A
-        B = pint<> ::bar::B
+        A = pint<> bar::A
+        B = pint<> bar::B
       }
 
     foo = process-definition (defined) foo<>
@@ -47,9 +47,9 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        W = pint<> ::foo::W
+        W = pint<> foo::W
       Instances:
-        my_bar = bar<0><::foo::W> ::foo::my_bar
+        my_bar = bar<0><::foo::W> foo::my_bar
       unroll sequence: 
         bar<0><::foo::W> my_bar
       }

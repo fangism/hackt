@@ -54,7 +54,7 @@ In namespace "", we have: {
       )
       In definition "ch1of1", we have: {
       Instances:
-        d = bool<> ::ch1of1::d
+        d = bool<> ch1of1::d
       unroll sequence: 
         bool<> d
       footprint: {
@@ -67,7 +67,7 @@ In namespace "", we have: {
       )
       In definition "dcelm", we have: {
       Instances:
-        a = bool<> ::dcelm::a
+        a = bool<> dcelm::a
       unroll sequence: 
         bool<> a
       footprint: {
@@ -79,8 +79,8 @@ In namespace "", we have: {
       )
       In definition "lut", we have: {
       Instances:
-        ad = ch1of1<> ::lut::ad
-        ce = dcelm<> ::lut::ce
+        ad = ch1of1<> lut::ad
+        ce = dcelm<> lut::ce
       unroll sequence: 
         ch1of1<> ad
         dcelm<> ce

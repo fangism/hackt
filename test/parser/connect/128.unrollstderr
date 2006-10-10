@@ -120,7 +120,7 @@ In namespace "", we have: {
       )
       In definition "e1of2", we have: {
       Instances:
-        d = bool<> ::e1of2::d
+        d = bool<> e1of2::d
       unroll sequence: 
         bool<> d
       footprint: {
@@ -132,12 +132,12 @@ In namespace "", we have: {
       )
       In definition "funit", we have: {
       Instances:
-        a0copy = pupcopy<> ::funit::a0copy
-        aa = e1of2<> ::funit::aa
-        g = globals<> ::funit::g
-        lt = pand<> ::funit::lt
-        pa0 = e1of2<> ::funit::pa0
-        pnd = pand<> ::funit::pnd
+        a0copy = pupcopy<> funit::a0copy
+        aa = e1of2<> funit::aa
+        g = globals<> funit::g
+        lt = pand<> funit::lt
+        pa0 = e1of2<> funit::pa0
+        pnd = pand<> funit::pnd
       unroll sequence: 
         globals<> g
         e1of2<> aa
@@ -193,8 +193,8 @@ In namespace "", we have: {
       )
       In definition "pand", we have: {
       Instances:
-        a = e1of2<> ::pand::a
-        g = globals<> ::pand::g
+        a = e1of2<> pand::a
+        g = globals<> pand::g
       unroll sequence: 
         globals<> g
         e1of2<> a
@@ -212,8 +212,8 @@ In namespace "", we have: {
       )
       In definition "pupcopy", we have: {
       Instances:
-        r = e1of2<> ::pupcopy::r
-        rp = e1of2<> ::pupcopy::rp
+        r = e1of2<> pupcopy::r
+        rp = e1of2<> pupcopy::rp
       unroll sequence: 
         e1of2<> r
         e1of2<> rp

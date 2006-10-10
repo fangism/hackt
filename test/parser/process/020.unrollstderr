@@ -29,9 +29,9 @@ In namespace "", we have: {
       )
       In definition "barbar", we have: {
       Parameters:
-        milk = pint<> ::barbar::milk
-        tea = pint<> ::barbar::tea
-        water = pbool<> ::barbar::water^1
+        milk = pint<> barbar::milk
+        tea = pint<> barbar::tea
+        water = pbool<> barbar::water^1
       }
 
 }

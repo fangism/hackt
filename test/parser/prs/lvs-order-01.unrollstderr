@@ -57,12 +57,12 @@ In namespace "", we have: {
       )
       In definition "lvs_order", we have: {
       Instances:
-        a = bool<> ::lvs_order::a
-        b = bool<> ::lvs_order::b
-        c = bool<> ::lvs_order::c
-        d = bool<> ::lvs_order::d
-        e = bool<> ::lvs_order::e
-        f = bool<> ::lvs_order::f
+        a = bool<> lvs_order::a
+        b = bool<> lvs_order::b
+        c = bool<> lvs_order::c
+        d = bool<> lvs_order::d
+        e = bool<> lvs_order::e
+        f = bool<> lvs_order::f
       unroll sequence: 
         bool<> a
         bool<> b

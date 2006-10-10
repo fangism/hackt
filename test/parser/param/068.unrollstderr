@@ -43,9 +43,9 @@ Persistent Object Manager text dump:
 	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
-	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -62,17 +62,17 @@ In namespace "", we have: {
       2 definitions
       0 typedefs
       Parameters:
-        Q = pint<> ::bar::Q
+        Q = pint<> bar::Q
       Definitions:
         foo = process-definition (defined) foo(
           )
           In definition "foo", we have: {
           Instances:
-            zoo = ick<::bar::Q> ::bar::foo::zoo^1
+            zoo = bar::ick<::bar::Q> bar::foo::zoo^1
           unroll sequence: 
-            ick<::bar::Q> zoo[0..::bar::Q-1]
+            bar::ick<::bar::Q> zoo[0..::bar::Q-1]
           footprint: {
-            zoo = process ick<2>^1
+            zoo = process bar::ick<2>^1
               {
                 0 = ::bar::foo::zoo[0] 
                 1 = ::bar::foo::zoo[1] 
@@ -86,9 +86,9 @@ In namespace "", we have: {
           )
           In definition "ick", we have: {
           Parameters:
-            X = pint<> ::bar::ick::X
+            X = pint<> bar::ick::X
           Instances:
-            z = bool<> ::bar::ick::z^1
+            z = bool<> bar::ick::z^1
           unroll sequence: 
             bool<> z[0..X-1]
           footprint collection: {
@@ -105,10 +105,10 @@ In namespace "", we have: {
 
     }
   Instances:
-    f = foo<> f
+    f = bar::foo<> f
 }
 
 footprint: {
-  ::bar::Q = pint^0 value: 2
-  f = process foo<>^0 = ::f 
+  bar::Q = pint^0 value: 2
+  f = process bar::foo<>^0 = ::f 
 }

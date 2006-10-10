@@ -57,8 +57,8 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        Q = pint<> ::foo::Q
-        R = pint<> ::foo::R
+        Q = pint<> foo::Q
+        R = pint<> foo::R
       unroll sequence: 
       footprint collection: {
         <5, 3> {

@@ -60,10 +60,10 @@ In namespace "", we have: {
       )
       In definition "ass", we have: {
       Parameters:
-        N = pint<> ::ass::N
+        N = pint<> ass::N
       Instances:
-        a = bool<> ::ass::a
-        x = bool<> ::ass::x
+        a = bool<> ass::a
+        x = bool<> ass::x
       unroll sequence: 
         bool<> x
         bool<> a
