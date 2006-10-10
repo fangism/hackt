@@ -95,25 +95,25 @@ In namespace "", we have: {
       footprint collection: {
         <3> {
           N = pint^0 value: 3
-          x = bool^0 = ::baz::x 
-          y = bool^0 = ::baz::y 
+          x = bool^0 = baz::x 
+          y = bool^0 = baz::y 
           z = bool^1
             {
-              0 = ::baz::z[0] 
-              1 = ::baz::z[1] 
-              2 = ::baz::z[2] 
+              0 = baz::z[0] 
+              1 = baz::z[1] 
+              2 = baz::z[2] 
             }
         }
         <4> {
           N = pint^0 value: 4
-          x = bool^0 = ::baz::x 
-          y = bool^0 = ::baz::y 
+          x = bool^0 = baz::x 
+          y = bool^0 = baz::y 
           z = bool^1
             {
-              0 = ::baz::z[0] 
-              1 = ::baz::z[1] 
-              2 = ::baz::z[2] 
-              3 = ::baz::z[3] 
+              0 = baz::z[0] 
+              1 = baz::z[1] 
+              2 = baz::z[2] 
+              3 = baz::z[3] 
             }
         }
       }
@@ -123,32 +123,32 @@ In namespace "", we have: {
     zab = process-definition-alias: zab<
       pint<> N
       >
-      = baz<::zab::N>
+      = baz<zab::N>
   Instances:
     P = baz<4> P
     Q = zab<3> Q
 }
 
 footprint: {
-  P = process baz<4>^0 = ::P (
-    x = bool^0 = ::P.x 
-    y = bool^0 = ::P.y 
+  P = process baz<4>^0 = P (
+    x = bool^0 = P.x 
+    y = bool^0 = P.y 
     z = bool^1
       {
-        0 = ::P.z[0] 
-        1 = ::P.z[1] 
-        2 = ::P.z[2] 
-        3 = ::Q.z[2] 
+        0 = P.z[0] 
+        1 = P.z[1] 
+        2 = P.z[2] 
+        3 = Q.z[2] 
       }
   )
-  Q = process baz<3>^0 = ::Q (
-    x = bool^0 = ::Q.x 
-    y = bool^0 = ::Q.y 
+  Q = process baz<3>^0 = Q (
+    x = bool^0 = Q.x 
+    y = bool^0 = Q.y 
     z = bool^1
       {
-        0 = ::Q.z[0] 
-        1 = ::Q.z[1] 
-        2 = ::Q.z[2] 
+        0 = Q.z[0] 
+        1 = Q.z[1] 
+        2 = Q.z[2] 
       }
   )
 }

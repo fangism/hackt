@@ -98,19 +98,19 @@ In namespace "", we have: {
         int<32> i
         int<32> j[0..1]
       footprint: {
-        b = bool^0 = ::portaproc::b 
+        b = bool^0 = portaproc::b 
         c = bool^1
           {
-            0 = ::portaproc::c[0] 
-            1 = ::portaproc::c[1] 
-            2 = ::portaproc::c[2] 
-            3 = ::portaproc::c[3] 
+            0 = portaproc::c[0] 
+            1 = portaproc::c[1] 
+            2 = portaproc::c[2] 
+            3 = portaproc::c[3] 
           }
-        i = int<32>^0 = ::portaproc::i 
+        i = int<32>^0 = portaproc::i 
         j = int<32>^1
           {
-            0 = ::portaproc::j[0] 
-            1 = ::portaproc::j[1] 
+            0 = portaproc::j[0] 
+            1 = portaproc::j[1] 
           }
       }
       }
@@ -124,53 +124,53 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = bool^0 = ::p[0].b 
+  a = bool^0 = p[0].b 
   p = process portaproc<>^1
     {
-      0 = ::p[0] (
-        b = bool^0 = ::p[0].b 
+      0 = p[0] (
+        b = bool^0 = p[0].b 
         c = bool^1
           {
-            0 = ::p[0].c[0] 
-            1 = ::p[0].c[1] 
-            2 = ::p[0].c[2] 
-            3 = ::p[0].c[3] 
+            0 = p[0].c[0] 
+            1 = p[0].c[1] 
+            2 = p[0].c[2] 
+            3 = p[0].c[3] 
           }
-        i = int<32>^0 = ::p[0].i 
+        i = int<32>^0 = p[0].i 
         j = int<32>^1
           {
-            0 = ::p[0].j[0] 
-            1 = ::p[0].j[1] 
+            0 = p[0].j[0] 
+            1 = p[0].j[1] 
           }
       )
-      1 = ::p[1] (
-        b = bool^0 = ::p[1].b 
+      1 = p[1] (
+        b = bool^0 = p[1].b 
         c = bool^1
           {
-            0 = ::p[1].c[0] 
-            1 = ::p[1].c[1] 
-            2 = ::p[1].c[2] 
-            3 = ::p[1].c[3] 
+            0 = p[1].c[0] 
+            1 = p[1].c[1] 
+            2 = p[1].c[2] 
+            3 = p[1].c[3] 
           }
-        i = int<32>^0 = ::p[1].i 
+        i = int<32>^0 = p[1].i 
         j = int<32>^1
           {
-            0 = ::p[1].j[0] 
-            1 = ::p[1].j[1] 
+            0 = p[1].j[0] 
+            1 = p[1].j[1] 
           }
       )
     }
-  q = int<32>^0 = ::p[0].i 
+  q = int<32>^0 = p[0].i 
   r = int<32>^1
     {
-      0 = ::p[0].j[0] 
-      1 = ::p[0].j[1] 
+      0 = p[0].j[0] 
+      1 = p[0].j[1] 
     }
   x = bool^1
     {
-      0 = ::p[0].c[0] 
-      1 = ::p[0].c[1] 
-      2 = ::p[0].c[2] 
-      3 = ::p[0].c[3] 
+      0 = p[0].c[0] 
+      1 = p[0].c[1] 
+      2 = p[0].c[2] 
+      3 = p[0].c[3] 
     }
 }

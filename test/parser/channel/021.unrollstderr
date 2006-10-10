@@ -27,5 +27,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foobar = channel chan(ick<>)^0 = ::foobar 
+  foobar = channel chan(ick<>)^0 = foobar 
 }

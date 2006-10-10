@@ -146,10 +146,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           d = bool^1
             {
-              0 = ::ch1of::d[0] 
-              1 = ::ch1of::d[1] 
-              2 = ::ch1of::d[2] 
-              3 = ::ch1of::d[3] 
+              0 = ch1of::d[0] 
+              1 = ch1of::d[1] 
+              2 = ch1of::d[2] 
+              3 = ch1of::d[3] 
             }
         }
       }
@@ -170,9 +170,9 @@ In namespace "", we have: {
         bool<> b
         bool<> c
       footprint: {
-        a = bool^0 = ::dcelm::a 
-        b = bool^0 = ::dcelm::b 
-        c = bool^0 = ::dcelm::c 
+        a = bool^0 = dcelm::a 
+        b = bool^0 = dcelm::b 
+        c = bool^0 = dcelm::c 
       }
       }
 
@@ -189,96 +189,96 @@ In namespace "", we have: {
           ce[$b] (ad.d[$b/4], ad.d[$b%4], );
         )
       footprint: {
-        ad = process ch1of<4>^0 = ::lut::ad (
+        ad = process ch1of<4>^0 = lut::ad (
           d = bool^1
             {
-              0 = ::lut::ce[8].b 
-              1 = ::lut::ce[9].b 
-              2 = ::lut::ce[11].a 
-              3 = ::lut::ce[15].a 
+              0 = lut::ce[8].b 
+              1 = lut::ce[9].b 
+              2 = lut::ce[11].a 
+              3 = lut::ce[15].a 
             }
         )
         ce = process dcelm<>^1
           {
-            0 = ::lut::ce[0] (
-              a = bool^0 = ::lut::ce[0].b 
-              b = bool^0 = ::lut::ce[1].a 
-              c = bool^0 = ::lut::ce[0].c 
+            0 = lut::ce[0] (
+              a = bool^0 = lut::ce[0].b 
+              b = bool^0 = lut::ce[1].a 
+              c = bool^0 = lut::ce[0].c 
             )
-            1 = ::lut::ce[1] (
-              a = bool^0 = ::lut::ce[2].a 
-              b = bool^0 = ::lut::ce[4].a 
-              c = bool^0 = ::lut::ce[1].c 
+            1 = lut::ce[1] (
+              a = bool^0 = lut::ce[2].a 
+              b = bool^0 = lut::ce[4].a 
+              c = bool^0 = lut::ce[1].c 
             )
-            2 = ::lut::ce[2] (
-              a = bool^0 = ::lut::ce[3].a 
-              b = bool^0 = ::lut::ce[6].b 
-              c = bool^0 = ::lut::ce[2].c 
+            2 = lut::ce[2] (
+              a = bool^0 = lut::ce[3].a 
+              b = bool^0 = lut::ce[6].b 
+              c = bool^0 = lut::ce[2].c 
             )
-            3 = ::lut::ce[3] (
-              a = bool^0 = ::lut::ce[4].b 
-              b = bool^0 = ::lut::ce[7].b 
-              c = bool^0 = ::lut::ce[3].c 
+            3 = lut::ce[3] (
+              a = bool^0 = lut::ce[4].b 
+              b = bool^0 = lut::ce[7].b 
+              c = bool^0 = lut::ce[3].c 
             )
-            4 = ::lut::ce[4] (
-              a = bool^0 = ::lut::ce[5].a 
-              b = bool^0 = ::lut::ce[8].b 
-              c = bool^0 = ::lut::ce[4].c 
+            4 = lut::ce[4] (
+              a = bool^0 = lut::ce[5].a 
+              b = bool^0 = lut::ce[8].b 
+              c = bool^0 = lut::ce[4].c 
             )
-            5 = ::lut::ce[5] (
-              a = bool^0 = ::lut::ce[5].b 
-              b = bool^0 = ::lut::ce[6].a 
-              c = bool^0 = ::lut::ce[5].c 
+            5 = lut::ce[5] (
+              a = bool^0 = lut::ce[5].b 
+              b = bool^0 = lut::ce[6].a 
+              c = bool^0 = lut::ce[5].c 
             )
-            6 = ::lut::ce[6] (
-              a = bool^0 = ::lut::ce[7].a 
-              b = bool^0 = ::lut::ce[8].a 
-              c = bool^0 = ::lut::ce[6].c 
+            6 = lut::ce[6] (
+              a = bool^0 = lut::ce[7].a 
+              b = bool^0 = lut::ce[8].a 
+              c = bool^0 = lut::ce[6].c 
             )
-            7 = ::lut::ce[7] (
-              a = bool^0 = ::lut::ce[9].b 
-              b = bool^0 = ::lut::ce[11].b 
-              c = bool^0 = ::lut::ce[7].c 
+            7 = lut::ce[7] (
+              a = bool^0 = lut::ce[9].b 
+              b = bool^0 = lut::ce[11].b 
+              c = bool^0 = lut::ce[7].c 
             )
-            8 = ::lut::ce[8] (
-              a = bool^0 = ::lut::ce[9].a 
-              b = bool^0 = ::lut::ce[12].b 
-              c = bool^0 = ::lut::ce[8].c 
+            8 = lut::ce[8] (
+              a = bool^0 = lut::ce[9].a 
+              b = bool^0 = lut::ce[12].b 
+              c = bool^0 = lut::ce[8].c 
             )
-            9 = ::lut::ce[9] (
-              a = bool^0 = ::lut::ce[10].a 
-              b = bool^0 = ::lut::ce[13].b 
-              c = bool^0 = ::lut::ce[9].c 
+            9 = lut::ce[9] (
+              a = bool^0 = lut::ce[10].a 
+              b = bool^0 = lut::ce[13].b 
+              c = bool^0 = lut::ce[9].c 
             )
-            10 = ::lut::ce[10] (
-              a = bool^0 = ::lut::ce[10].b 
-              b = bool^0 = ::lut::ce[11].a 
-              c = bool^0 = ::lut::ce[10].c 
+            10 = lut::ce[10] (
+              a = bool^0 = lut::ce[10].b 
+              b = bool^0 = lut::ce[11].a 
+              c = bool^0 = lut::ce[10].c 
             )
-            11 = ::lut::ce[11] (
-              a = bool^0 = ::lut::ce[14].b 
-              b = bool^0 = ::lut::ce[12].a 
-              c = bool^0 = ::lut::ce[11].c 
+            11 = lut::ce[11] (
+              a = bool^0 = lut::ce[14].b 
+              b = bool^0 = lut::ce[12].a 
+              c = bool^0 = lut::ce[11].c 
             )
-            12 = ::lut::ce[12] (
-              a = bool^0 = ::lut::ce[13].a 
-              b = bool^0 = ::lut::ce[12].b 
-              c = bool^0 = ::lut::ce[12].c 
+            12 = lut::ce[12] (
+              a = bool^0 = lut::ce[13].a 
+              b = bool^0 = lut::ce[12].b 
+              c = bool^0 = lut::ce[12].c 
             )
-            13 = ::lut::ce[13] (
-              a = bool^0 = ::lut::ce[14].a 
-              b = bool^0 = ::lut::ce[13].b 
-              c = bool^0 = ::lut::ce[13].c 
+            13 = lut::ce[13] (
+              a = bool^0 = lut::ce[14].a 
+              b = bool^0 = lut::ce[13].b 
+              c = bool^0 = lut::ce[13].c 
             )
-            14 = ::lut::ce[14] (
-              a = bool^0 = ::lut::ce[15].a 
-              b = bool^0 = ::lut::ce[14].b 
-              c = bool^0 = ::lut::ce[14].c 
+            14 = lut::ce[14] (
+              a = bool^0 = lut::ce[15].a 
+              b = bool^0 = lut::ce[14].b 
+              c = bool^0 = lut::ce[14].c 
             )
-            15 = ::lut::ce[15] (
-              a = bool^0 = ::lut::ce[15].b 
-              b = bool^0 = ::lut::ce[15].b 
-              c = bool^0 = ::lut::ce[15].c 
+            15 = lut::ce[15] (
+              a = bool^0 = lut::ce[15].b 
+              b = bool^0 = lut::ce[15].b 
+              c = bool^0 = lut::ce[15].c 
             )
           }
       }
@@ -289,5 +289,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  l = process lut<>^0 = ::l 
+  l = process lut<>^0 = l 
 }

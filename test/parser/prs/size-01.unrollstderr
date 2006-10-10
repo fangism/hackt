@@ -52,8 +52,8 @@ In namespace "", we have: {
         a<10> -> b-
         ~a<10> -> b+
       footprint: {
-        a = bool^0 = ::size_test::a 
-        b = bool^0 = ::size_test::b 
+        a = bool^0 = size_test::a 
+        b = bool^0 = size_test::b 
       }
       }
 
@@ -62,8 +62,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  x = process size_test<>^0 = ::x (
-    a = bool^0 = ::x.a 
-    b = bool^0 = ::x.b 
+  x = process size_test<>^0 = x (
+    a = bool^0 = x.a 
+    b = bool^0 = x.b 
   )
 }

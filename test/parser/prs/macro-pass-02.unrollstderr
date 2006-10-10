@@ -126,9 +126,9 @@ In namespace "", we have: {
       prs:
         passn(g,s,d)
       footprint: {
-        d = bool^0 = ::passn::d 
-        g = bool^0 = ::passn::g 
-        s = bool^0 = ::passn::s 
+        d = bool^0 = passn::d 
+        g = bool^0 = passn::g 
+        s = bool^0 = passn::s 
       }
       }
 
@@ -156,20 +156,20 @@ In namespace "", we have: {
         passp<> p
         p (_g, s, d);
       footprint: {
-        _g = bool^0 = ::passnp::p.g 
-        d = bool^0 = ::passnp::n.d 
-        g = bool^0 = ::passnp::n.g 
-        n = process passn<>^0 = ::passnp::n (
-          g = bool^0 = ::passnp::n.g 
-          s = bool^0 = ::passnp::p.s 
-          d = bool^0 = ::passnp::p.d 
+        _g = bool^0 = passnp::p.g 
+        d = bool^0 = passnp::n.d 
+        g = bool^0 = passnp::n.g 
+        n = process passn<>^0 = passnp::n (
+          g = bool^0 = passnp::n.g 
+          s = bool^0 = passnp::p.s 
+          d = bool^0 = passnp::p.d 
         )
-        p = process passp<>^0 = ::passnp::p (
-          g = bool^0 = ::passnp::p.g 
-          s = bool^0 = ::passnp::p.s 
-          d = bool^0 = ::passnp::p.d 
+        p = process passp<>^0 = passnp::p (
+          g = bool^0 = passnp::p.g 
+          s = bool^0 = passnp::p.s 
+          d = bool^0 = passnp::p.d 
         )
-        s = bool^0 = ::passnp::n.s 
+        s = bool^0 = passnp::n.s 
       }
       }
 
@@ -190,9 +190,9 @@ In namespace "", we have: {
       prs:
         passp(g,s,d)
       footprint: {
-        d = bool^0 = ::passp::d 
-        g = bool^0 = ::passp::g 
-        s = bool^0 = ::passp::s 
+        d = bool^0 = passp::d 
+        g = bool^0 = passp::g 
+        s = bool^0 = passp::s 
       }
       }
 
@@ -203,20 +203,20 @@ In namespace "", we have: {
 }
 
 footprint: {
-  _n_ = process passn<>^0 = ::_n_ (
-    g = bool^0 = ::_n_.g 
-    s = bool^0 = ::_n_.s 
-    d = bool^0 = ::_n_.d 
+  _n_ = process passn<>^0 = _n_ (
+    g = bool^0 = _n_.g 
+    s = bool^0 = _n_.s 
+    d = bool^0 = _n_.d 
   )
-  _np_ = process passnp<>^0 = ::_np_ (
-    g = bool^0 = ::_np_.g 
-    _g = bool^0 = ::_np_._g 
-    s = bool^0 = ::_np_.s 
-    d = bool^0 = ::_np_.d 
+  _np_ = process passnp<>^0 = _np_ (
+    g = bool^0 = _np_.g 
+    _g = bool^0 = _np_._g 
+    s = bool^0 = _np_.s 
+    d = bool^0 = _np_.d 
   )
-  _p_ = process passp<>^0 = ::_p_ (
-    g = bool^0 = ::_p_.g 
-    s = bool^0 = ::_p_.s 
-    d = bool^0 = ::_p_.d 
+  _p_ = process passp<>^0 = _p_ (
+    g = bool^0 = _p_.g 
+    s = bool^0 = _p_.s 
+    d = bool^0 = _p_.d 
   )
 }

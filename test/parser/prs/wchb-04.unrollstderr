@@ -309,9 +309,9 @@ In namespace "", we have: {
         a & b -> _o-
         ~a & ~b -> _o+
       footprint: {
-        _o = bool^0 = ::celem2inv::_o 
-        a = bool^0 = ::celem2inv::a 
-        b = bool^0 = ::celem2inv::b 
+        _o = bool^0 = celem2inv::_o 
+        a = bool^0 = celem2inv::a 
+        b = bool^0 = celem2inv::b 
       }
       }
 
@@ -329,10 +329,10 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            0 = ::e1of2::d[0] 
-            1 = ::e1of2::d[1] 
+            0 = e1of2::d[0] 
+            1 = e1of2::d[1] 
           }
-        e = bool^0 = ::e1of2::e 
+        e = bool^0 = e1of2::e 
       }
       }
 
@@ -351,8 +351,8 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = ::inv::a 
-        b = bool^0 = ::inv::b 
+        a = bool^0 = inv::a 
+        b = bool^0 = inv::b 
       }
       }
 
@@ -374,9 +374,9 @@ In namespace "", we have: {
         a & b -> _o-
         ~a | ~b -> _o+
       footprint: {
-        _o = bool^0 = ::nand2::_o 
-        a = bool^0 = ::nand2::a 
-        b = bool^0 = ::nand2::b 
+        _o = bool^0 = nand2::_o 
+        a = bool^0 = nand2::a 
+        b = bool^0 = nand2::b 
       }
       }
 
@@ -423,69 +423,69 @@ In namespace "", we have: {
         nand2<> __la__
         __la__ = la;
       footprint: {
-        L = process e1of2<>^0 = ::wchb_e1of2::L (
+        L = process e1of2<>^0 = wchb_e1of2::L (
           d = bool^1
             {
-              0 = ::wchb_e1of2::l0.a 
-              1 = ::wchb_e1of2::l1.a 
+              0 = wchb_e1of2::l0.a 
+              1 = wchb_e1of2::l1.a 
             }
-          e = bool^0 = ::wchb_e1of2::re.b 
+          e = bool^0 = wchb_e1of2::re.b 
         )
-        R = process e1of2<>^0 = ::wchb_e1of2::R (
+        R = process e1of2<>^0 = wchb_e1of2::R (
           d = bool^1
             {
-              0 = ::wchb_e1of2::r0.b 
-              1 = ::wchb_e1of2::r1.b 
+              0 = wchb_e1of2::r0.b 
+              1 = wchb_e1of2::r1.b 
             }
-          e = bool^0 = ::wchb_e1of2::l0.b 
+          e = bool^0 = wchb_e1of2::l0.b 
         )
-        __l1__ = process celem2inv<>^0 = ::wchb_e1of2::l1 (
-          a = bool^0 = ::wchb_e1of2::__l1__.a 
-          b = bool^0 = ::wchb_e1of2::__l1__.b 
-          _o = bool^0 = ::wchb_e1of2::__la__.b 
+        __l1__ = process celem2inv<>^0 = wchb_e1of2::l1 (
+          a = bool^0 = wchb_e1of2::__l1__.a 
+          b = bool^0 = wchb_e1of2::__l1__.b 
+          _o = bool^0 = wchb_e1of2::__la__.b 
         )
-        __la__ = process nand2<>^0 = ::wchb_e1of2::la (
-          a = bool^0 = ::wchb_e1of2::__la__.a 
-          b = bool^0 = ::wchb_e1of2::__la__.b 
-          _o = bool^0 = ::wchb_e1of2::__la__._o 
+        __la__ = process nand2<>^0 = wchb_e1of2::la (
+          a = bool^0 = wchb_e1of2::__la__.a 
+          b = bool^0 = wchb_e1of2::__la__.b 
+          _o = bool^0 = wchb_e1of2::__la__._o 
         )
-        __r0__ = process inv<>^0 = ::wchb_e1of2::r0 (
-          a = bool^0 = ::wchb_e1of2::__la__.a 
-          b = bool^0 = ::wchb_e1of2::__r0__.b 
+        __r0__ = process inv<>^0 = wchb_e1of2::r0 (
+          a = bool^0 = wchb_e1of2::__la__.a 
+          b = bool^0 = wchb_e1of2::__r0__.b 
         )
         _r = bool^1
           {
-            0 = ::wchb_e1of2::l0._o 
-            1 = ::wchb_e1of2::l1._o 
+            0 = wchb_e1of2::l0._o 
+            1 = wchb_e1of2::l1._o 
           }
-        l0 = process celem2inv<>^0 = ::wchb_e1of2::l0 (
-          a = bool^0 = ::wchb_e1of2::l0.a 
-          b = bool^0 = ::wchb_e1of2::l1.b 
-          _o = bool^0 = ::wchb_e1of2::la.a 
+        l0 = process celem2inv<>^0 = wchb_e1of2::l0 (
+          a = bool^0 = wchb_e1of2::l0.a 
+          b = bool^0 = wchb_e1of2::l1.b 
+          _o = bool^0 = wchb_e1of2::la.a 
         )
-        l1 = process celem2inv<>^0 = ::wchb_e1of2::l1 (
-          a = bool^0 = ::wchb_e1of2::__l1__.a 
-          b = bool^0 = ::wchb_e1of2::__l1__.b 
-          _o = bool^0 = ::wchb_e1of2::la.b 
+        l1 = process celem2inv<>^0 = wchb_e1of2::l1 (
+          a = bool^0 = wchb_e1of2::__l1__.a 
+          b = bool^0 = wchb_e1of2::__l1__.b 
+          _o = bool^0 = wchb_e1of2::la.b 
         )
-        la = process nand2<>^0 = ::wchb_e1of2::la (
-          a = bool^0 = ::wchb_e1of2::__r0__.a 
-          b = bool^0 = ::wchb_e1of2::__l1__._o 
-          _o = bool^0 = ::wchb_e1of2::__la__._o 
+        la = process nand2<>^0 = wchb_e1of2::la (
+          a = bool^0 = wchb_e1of2::__r0__.a 
+          b = bool^0 = wchb_e1of2::__l1__._o 
+          _o = bool^0 = wchb_e1of2::__la__._o 
         )
-        r0 = process inv<>^0 = ::wchb_e1of2::r0 (
-          a = bool^0 = ::wchb_e1of2::la.a 
-          b = bool^0 = ::wchb_e1of2::__r0__.b 
+        r0 = process inv<>^0 = wchb_e1of2::r0 (
+          a = bool^0 = wchb_e1of2::la.a 
+          b = bool^0 = wchb_e1of2::__r0__.b 
         )
-        r1 = process inv<>^0 = ::wchb_e1of2::r1 (
-          a = bool^0 = ::wchb_e1of2::l1._o 
-          b = bool^0 = ::wchb_e1of2::r1.b 
+        r1 = process inv<>^0 = wchb_e1of2::r1 (
+          a = bool^0 = wchb_e1of2::l1._o 
+          b = bool^0 = wchb_e1of2::r1.b 
         )
-        re = process inv<>^0 = ::wchb_e1of2::re (
-          a = bool^0 = ::wchb_e1of2::la._o 
-          b = bool^0 = ::wchb_e1of2::re.b 
+        re = process inv<>^0 = wchb_e1of2::re (
+          a = bool^0 = wchb_e1of2::la._o 
+          b = bool^0 = wchb_e1of2::re.b 
         )
-        rv = bool^0 = ::wchb_e1of2::re.a 
+        rv = bool^0 = wchb_e1of2::re.a 
       }
       }
 
@@ -497,56 +497,56 @@ In namespace "", we have: {
 }
 
 footprint: {
-  B = process wchb_e1of2<>^0 = ::B (
-    L = process e1of2<>^0 = ::b.L (
+  B = process wchb_e1of2<>^0 = B (
+    L = process e1of2<>^0 = b.L (
       d = bool^1
         {
-          0 = ::B.L.d[0] 
-          1 = ::B.L.d[1] 
+          0 = B.L.d[0] 
+          1 = B.L.d[1] 
         }
-      e = bool^0 = ::B.L.e 
+      e = bool^0 = B.L.e 
     )
-    R = process e1of2<>^0 = ::b.R (
+    R = process e1of2<>^0 = b.R (
       d = bool^1
         {
-          0 = ::B.R.d[0] 
-          1 = ::B.R.d[1] 
+          0 = B.R.d[0] 
+          1 = B.R.d[1] 
         }
-      e = bool^0 = ::B.R.e 
+      e = bool^0 = B.R.e 
     )
   )
-  L = process e1of2<>^0 = ::b.L (
+  L = process e1of2<>^0 = b.L (
     d = bool^1
       {
-        0 = ::B.L.d[0] 
-        1 = ::B.L.d[1] 
+        0 = B.L.d[0] 
+        1 = B.L.d[1] 
       }
-    e = bool^0 = ::B.L.e 
+    e = bool^0 = B.L.e 
   )
-  R = process e1of2<>^0 = ::b.R (
+  R = process e1of2<>^0 = b.R (
     d = bool^1
       {
-        0 = ::B.R.d[0] 
-        1 = ::B.R.d[1] 
+        0 = B.R.d[0] 
+        1 = B.R.d[1] 
       }
-    e = bool^0 = ::B.R.e 
+    e = bool^0 = B.R.e 
   )
-  b = process wchb_e1of2<>^0 = ::B (
-    L = process e1of2<>^0 = ::b.L (
+  b = process wchb_e1of2<>^0 = B (
+    L = process e1of2<>^0 = b.L (
       d = bool^1
         {
-          0 = ::L.d[0] 
-          1 = ::L.d[1] 
+          0 = L.d[0] 
+          1 = L.d[1] 
         }
-      e = bool^0 = ::L.e 
+      e = bool^0 = L.e 
     )
-    R = process e1of2<>^0 = ::b.R (
+    R = process e1of2<>^0 = b.R (
       d = bool^1
         {
-          0 = ::R.d[0] 
-          1 = ::R.d[1] 
+          0 = R.d[0] 
+          1 = R.d[1] 
         }
-      e = bool^0 = ::R.e 
+      e = bool^0 = R.e 
     )
   )
 }

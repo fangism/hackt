@@ -61,11 +61,11 @@ In namespace "", we have: {
         bool<> y
         x.a = y;
       footprint: {
-        x = process foo<>^0 = ::bar::x (
-          a = bool^0 = ::bar::y 
-          b = bool^0 = ::bar::x.b 
+        x = process foo<>^0 = bar::x (
+          a = bool^0 = bar::y 
+          b = bool^0 = bar::x.b 
         )
-        y = bool^0 = ::bar::y 
+        y = bool^0 = bar::y 
       }
       }
 
@@ -81,8 +81,8 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = ::foo::a 
-        b = bool^0 = ::foo::b 
+        a = bool^0 = foo::a 
+        b = bool^0 = foo::b 
       }
       }
 
@@ -91,11 +91,11 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process bar<>^0 = ::poo (
-    x = process foo<>^0 = ::poo.x (
-      a = bool^0 = ::poo.x.a 
-      b = bool^0 = ::poo.x.b 
+  poo = process bar<>^0 = poo (
+    x = process foo<>^0 = poo.x (
+      a = bool^0 = poo.x.a 
+      b = bool^0 = poo.x.b 
     )
-    y = bool^0 = ::poo.y 
+    y = bool^0 = poo.y 
   )
 }

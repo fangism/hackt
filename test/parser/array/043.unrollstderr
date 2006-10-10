@@ -43,10 +43,10 @@ In namespace "", we have: {
 footprint: {
   w = bool^1
     {
-      0 = ::x 
-      1 = ::y 
+      0 = x 
+      1 = y 
     }
-  x = bool^0 = ::x 
-  y = bool^0 = ::y 
-  z = bool^0 = ::z 
+  x = bool^0 = x 
+  y = bool^0 = y 
+  z = bool^0 = z 
 }

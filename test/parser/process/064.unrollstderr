@@ -68,36 +68,36 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        foo<::bar::M> x[0..N-1]
+        foo<bar::M> x[0..N-1]
       )
       In definition "bar", we have: {
       Parameters:
         M = pint<> bar::M
         N = pint<> bar::N
       Instances:
-        x = foo<::bar::M> bar::x^1
+        x = foo<bar::M> bar::x^1
       unroll sequence: 
-        foo<::bar::M> x[0..N-1]
+        foo<bar::M> x[0..N-1]
       footprint collection: {
         <3, 2> {
           M = pint^0 value: 3
           N = pint^0 value: 2
           x = process foo<3>^1
             {
-              0 = ::bar::x[0] (
+              0 = bar::x[0] (
                 a = bool^1
                   {
-                    0 = ::bar::x[0].a[0] 
-                    1 = ::bar::x[0].a[1] 
-                    2 = ::bar::x[0].a[2] 
+                    0 = bar::x[0].a[0] 
+                    1 = bar::x[0].a[1] 
+                    2 = bar::x[0].a[2] 
                   }
               )
-              1 = ::bar::x[1] (
+              1 = bar::x[1] (
                 a = bool^1
                   {
-                    0 = ::bar::x[1].a[0] 
-                    1 = ::bar::x[1].a[1] 
-                    2 = ::bar::x[1].a[2] 
+                    0 = bar::x[1].a[0] 
+                    1 = bar::x[1].a[1] 
+                    2 = bar::x[1].a[2] 
                   }
               )
             }
@@ -122,9 +122,9 @@ In namespace "", we have: {
           D = pint^0 value: 3
           a = bool^1
             {
-              0 = ::foo::a[0] 
-              1 = ::foo::a[1] 
-              2 = ::foo::a[2] 
+              0 = foo::a[0] 
+              1 = foo::a[1] 
+              2 = foo::a[2] 
             }
         }
       }
@@ -135,23 +135,23 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process bar<3, 2>^0 = ::poo (
+  poo = process bar<3, 2>^0 = poo (
     x = process foo<3>^1
       {
-        0 = ::poo.x[0] (
+        0 = poo.x[0] (
           a = bool^1
             {
-              0 = ::poo.x[0].a[0] 
-              1 = ::poo.x[0].a[1] 
-              2 = ::poo.x[0].a[2] 
+              0 = poo.x[0].a[0] 
+              1 = poo.x[0].a[1] 
+              2 = poo.x[0].a[2] 
             }
         )
-        1 = ::poo.x[1] (
+        1 = poo.x[1] (
           a = bool^1
             {
-              0 = ::poo.x[1].a[0] 
-              1 = ::poo.x[1].a[1] 
-              2 = ::poo.x[1].a[2] 
+              0 = poo.x[1].a[0] 
+              1 = poo.x[1].a[1] 
+              2 = poo.x[1].a[2] 
             }
         )
       }

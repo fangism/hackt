@@ -70,9 +70,9 @@ In namespace "", we have: {
       spec:
         min_sep<15>({p,q},r)
       footprint: {
-        p = bool^0 = ::groupie::p 
-        q = bool^0 = ::groupie::q 
-        r = bool^0 = ::groupie::r 
+        p = bool^0 = groupie::p 
+        q = bool^0 = groupie::q 
+        r = bool^0 = groupie::r 
       }
       }
 
@@ -83,15 +83,15 @@ In namespace "", we have: {
 }
 
 footprint: {
-  b = bool^0 = ::g.p 
-  g = process groupie<>^0 = ::g (
-    p = bool^0 = ::g.q 
-    q = bool^0 = ::g.q 
-    r = bool^0 = ::g.r 
+  b = bool^0 = g.p 
+  g = process groupie<>^0 = g (
+    p = bool^0 = g.q 
+    q = bool^0 = g.q 
+    r = bool^0 = g.r 
   )
-  h = process groupie<>^0 = ::h (
-    p = bool^0 = ::h.p 
-    q = bool^0 = ::h.q 
-    r = bool^0 = ::h.r 
+  h = process groupie<>^0 = h (
+    p = bool^0 = h.p 
+    q = bool^0 = h.q 
+    r = bool^0 = h.r 
   )
 }

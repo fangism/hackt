@@ -67,9 +67,9 @@ In namespace "", we have: {
         a & b -> _o-
         ~a & ~b -> _o+
       footprint: {
-        _o = bool^0 = ::celem2inv::_o 
-        a = bool^0 = ::celem2inv::a 
-        b = bool^0 = ::celem2inv::b 
+        _o = bool^0 = celem2inv::_o 
+        a = bool^0 = celem2inv::a 
+        b = bool^0 = celem2inv::b 
       }
       }
 
@@ -78,9 +78,9 @@ In namespace "", we have: {
 }
 
 footprint: {
-  c = process celem2inv<>^0 = ::c (
-    a = bool^0 = ::c.a 
-    b = bool^0 = ::c.b 
-    _o = bool^0 = ::c._o 
+  c = process celem2inv<>^0 = c (
+    a = bool^0 = c.a 
+    b = bool^0 = c.b 
+    _o = bool^0 = c._o 
   )
 }

@@ -52,11 +52,11 @@ In namespace "", we have: {
       footprint: {
         r = bool^1
           {
-            0 = ::foo::r[0] 
-            1 = ::foo::r[1] 
+            0 = foo::r[0] 
+            1 = foo::r[1] 
           }
-        x = int<32>^0 = ::foo::x 
-        y = bool^0 = ::foo::y 
+        x = int<32>^0 = foo::x 
+        y = bool^0 = foo::y 
       }
       }
 
@@ -65,11 +65,11 @@ In namespace "", we have: {
 }
 
 footprint: {
-  burp = process foo<>^0 = ::burp (
+  burp = process foo<>^0 = burp (
     r = bool^1
       {
-        0 = ::burp.r[0] 
-        1 = ::burp.r[1] 
+        0 = burp.r[0] 
+        1 = burp.r[1] 
       }
   )
 }

@@ -44,8 +44,8 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        composite = bool^0 = ::array::composite 
-        x = bool^0 = ::array::composite 
+        composite = bool^0 = array::composite 
+        x = bool^0 = array::composite 
       }
       }
 
@@ -54,7 +54,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  p = process array<>^0 = ::p (
-    x = bool^0 = ::p.x 
+  p = process array<>^0 = p (
+    x = bool^0 = p.x 
   )
 }

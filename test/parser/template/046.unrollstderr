@@ -43,5 +43,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar = process foo<13>^0 = ::bar 
+  bar = process foo<13>^0 = bar 
 }

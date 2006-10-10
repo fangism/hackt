@@ -50,8 +50,8 @@ In namespace "", we have: {
         int<8> x
         bool<> y
       footprint: {
-        x = int<8>^0 = ::my_data::x 
-        y = bool^0 = ::my_data::y 
+        x = int<8>^0 = my_data::x 
+        y = bool^0 = my_data::y 
       }
       }
 
@@ -60,8 +60,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  Q = struct my_data<>^0 = ::Q (
-    x = int<8>^0 = ::Q.x 
-    y = bool^0 = ::Q.y 
+  Q = struct my_data<>^0 = Q (
+    x = int<8>^0 = Q.x 
+    y = bool^0 = Q.y 
   )
 }

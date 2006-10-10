@@ -90,9 +90,9 @@ In namespace "", we have: {
         A = pint<> use_the_source::A^1
         N = pint<> use_the_source::N
       Instances:
-        s = internal<::use_the_source::N, ::use_the_source::A> use_the_source::s
+        s = internal<use_the_source::N, use_the_source::A> use_the_source::s
       unroll sequence: 
-        internal<::use_the_source::N, ::use_the_source::A> s
+        internal<use_the_source::N, use_the_source::A> s
       footprint collection: {
         <1, {1}> {
           A = pint^1
@@ -100,7 +100,7 @@ In namespace "", we have: {
               0 = 1
             }
           N = pint^0 value: 1
-          s = process internal<1, {1}>^0 = ::use_the_source::s 
+          s = process internal<1, {1}>^0 = use_the_source::s 
         }
       }
       }
@@ -110,5 +110,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  luke = process use_the_source<1, {1}>^0 = ::luke 
+  luke = process use_the_source<1, {1}>^0 = luke 
 }

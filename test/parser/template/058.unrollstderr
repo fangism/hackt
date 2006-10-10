@@ -37,11 +37,11 @@ In namespace "", we have: {
         W = pint<> foo::W
         Z = pint<> foo::Z
       Instances:
-        my_int = int<::foo::Z> foo::my_int
+        my_int = int<foo::Z> foo::my_int
       unroll sequence: 
         pint<> Z
         Z = W;
-        int<::foo::Z> my_int
+        int<foo::Z> my_int
       }
 
 }

@@ -75,13 +75,13 @@ In namespace "", we have: {
         ick<> b
         a = b;
       footprint: {
-        a = process ick<>^0 = ::foo::b (
-          m = process oof<>^0 = ::foo::a.m 
-          n = process oof<>^0 = ::foo::a.n 
+        a = process ick<>^0 = foo::b (
+          m = process oof<>^0 = foo::a.m 
+          n = process oof<>^0 = foo::a.n 
         )
-        b = process ick<>^0 = ::foo::b (
-          m = process oof<>^0 = ::foo::a.m 
-          n = process oof<>^0 = ::foo::a.n 
+        b = process ick<>^0 = foo::b (
+          m = process oof<>^0 = foo::a.m 
+          n = process oof<>^0 = foo::a.n 
         )
       }
       }
@@ -98,8 +98,8 @@ In namespace "", we have: {
         oof<> m
         oof<> n
       footprint: {
-        m = process oof<>^0 = ::ick::m 
-        n = process oof<>^0 = ::ick::n 
+        m = process oof<>^0 = ick::m 
+        n = process oof<>^0 = ick::n 
       }
       }
 
@@ -116,14 +116,14 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process foo<>^0 = ::poo (
-    a = process ick<>^0 = ::poo.a (
-      m = process oof<>^0 = ::poo.a.m 
-      n = process oof<>^0 = ::poo.a.n 
+  poo = process foo<>^0 = poo (
+    a = process ick<>^0 = poo.a (
+      m = process oof<>^0 = poo.a.m 
+      n = process oof<>^0 = poo.a.n 
     )
-    b = process ick<>^0 = ::poo.b (
-      m = process oof<>^0 = ::poo.b.m 
-      n = process oof<>^0 = ::poo.b.n 
+    b = process ick<>^0 = poo.b (
+      m = process oof<>^0 = poo.b.m 
+      n = process oof<>^0 = poo.b.n 
     )
   )
 }

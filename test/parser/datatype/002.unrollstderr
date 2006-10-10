@@ -46,10 +46,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = int<32>^0 = ::a 
-  b = int<32>^0 = ::b 
-  c = int<32>^0 = ::c 
-  x = bool^0 = ::x 
-  y = bool^0 = ::y 
-  z = bool^0 = ::z 
+  a = int<32>^0 = a 
+  b = int<32>^0 = b 
+  c = int<32>^0 = c 
+  x = bool^0 = x 
+  y = bool^0 = y 
+  z = bool^0 = z 
 }

@@ -62,17 +62,17 @@ In namespace "", we have: {
         x = bool<> lt::x
       unroll sequence: 
         bool<> x
-        bool<> p[0..::N-1]
-        (;i:[0..::N-1]:
+        bool<> p[0..N-1]
+        (;i:[0..N-1]:
           p[$i] = x;
         )
       footprint: {
         p = bool^1
           {
-            0 = ::lt::x 
-            1 = ::lt::x 
+            0 = lt::x 
+            1 = lt::x 
           }
-        x = bool^0 = ::lt::x 
+        x = bool^0 = lt::x 
       }
       }
 
@@ -82,5 +82,5 @@ In namespace "", we have: {
 
 footprint: {
   N = pint^0 value: 2
-  l = process lt<>^0 = ::l 
+  l = process lt<>^0 = l 
 }

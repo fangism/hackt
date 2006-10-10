@@ -95,40 +95,40 @@ In namespace "", we have: {
       pint<> M
       pint<> N
       >(
-        foo<::bar::M+::bar::N, ::G[::bar::M+::bar::N]> x[0..N-1]
+        foo<bar::M+bar::N, G[bar::M+bar::N]> x[0..N-1]
       )
       In definition "bar", we have: {
       Parameters:
         M = pint<> bar::M
         N = pint<> bar::N
       Instances:
-        x = foo<::bar::M+::bar::N, ::G[::bar::M+::bar::N]> bar::x^1
+        x = foo<bar::M+bar::N, G[bar::M+bar::N]> bar::x^1
       unroll sequence: 
-        foo<::bar::M+::bar::N, ::G[::bar::M+::bar::N]> x[0..N-1]
+        foo<bar::M+bar::N, G[bar::M+bar::N]> x[0..N-1]
       footprint collection: {
         <3, 2> {
           M = pint^0 value: 3
           N = pint^0 value: 2
           x = process foo<5, 1>^1
             {
-              0 = ::bar::x[0] (
+              0 = bar::x[0] (
                 a = bool^1
                   {
-                    0 = ::bar::x[0].a[0] 
-                    1 = ::bar::x[0].a[1] 
-                    2 = ::bar::x[0].a[2] 
-                    3 = ::bar::x[0].a[3] 
-                    4 = ::bar::x[0].a[4] 
+                    0 = bar::x[0].a[0] 
+                    1 = bar::x[0].a[1] 
+                    2 = bar::x[0].a[2] 
+                    3 = bar::x[0].a[3] 
+                    4 = bar::x[0].a[4] 
                   }
               )
-              1 = ::bar::x[1] (
+              1 = bar::x[1] (
                 a = bool^1
                   {
-                    0 = ::bar::x[1].a[0] 
-                    1 = ::bar::x[1].a[1] 
-                    2 = ::bar::x[1].a[2] 
-                    3 = ::bar::x[1].a[3] 
-                    4 = ::bar::x[1].a[4] 
+                    0 = bar::x[1].a[0] 
+                    1 = bar::x[1].a[1] 
+                    2 = bar::x[1].a[2] 
+                    3 = bar::x[1].a[3] 
+                    4 = bar::x[1].a[4] 
                   }
               )
             }
@@ -138,14 +138,14 @@ In namespace "", we have: {
 
     foo = process-definition (defined) foo<
       pint<> D
-      pint<> E (default = ::G[D])
+      pint<> E (default = G[D])
       >(
         bool<> a[0..D-1]
       )
       In definition "foo", we have: {
       Parameters:
         D = pint<> foo::D
-        E = pint<> foo::E (default = ::G[D])
+        E = pint<> foo::E (default = G[D])
       Instances:
         a = bool<> foo::a^1
       unroll sequence: 
@@ -156,11 +156,11 @@ In namespace "", we have: {
           E = pint^0 value: 1
           a = bool^1
             {
-              0 = ::foo::a[0] 
-              1 = ::foo::a[1] 
-              2 = ::foo::a[2] 
-              3 = ::foo::a[3] 
-              4 = ::foo::a[4] 
+              0 = foo::a[0] 
+              1 = foo::a[1] 
+              2 = foo::a[2] 
+              3 = foo::a[3] 
+              4 = foo::a[4] 
             }
         }
       }
@@ -180,27 +180,27 @@ footprint: {
       4 = 2
       5 = 1
     }
-  poo = process bar<3, 2>^0 = ::poo (
+  poo = process bar<3, 2>^0 = poo (
     x = process foo<5, 1>^1
       {
-        0 = ::poo.x[0] (
+        0 = poo.x[0] (
           a = bool^1
             {
-              0 = ::poo.x[0].a[0] 
-              1 = ::poo.x[0].a[1] 
-              2 = ::poo.x[0].a[2] 
-              3 = ::poo.x[0].a[3] 
-              4 = ::poo.x[0].a[4] 
+              0 = poo.x[0].a[0] 
+              1 = poo.x[0].a[1] 
+              2 = poo.x[0].a[2] 
+              3 = poo.x[0].a[3] 
+              4 = poo.x[0].a[4] 
             }
         )
-        1 = ::poo.x[1] (
+        1 = poo.x[1] (
           a = bool^1
             {
-              0 = ::poo.x[1].a[0] 
-              1 = ::poo.x[1].a[1] 
-              2 = ::poo.x[1].a[2] 
-              3 = ::poo.x[1].a[3] 
-              4 = ::poo.x[1].a[4] 
+              0 = poo.x[1].a[0] 
+              1 = poo.x[1].a[1] 
+              2 = poo.x[1].a[2] 
+              3 = poo.x[1].a[3] 
+              4 = poo.x[1].a[4] 
             }
         )
       }

@@ -120,7 +120,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> a
       footprint: {
-        a = bool^0 = ::bar::a 
+        a = bool^0 = bar::a 
       }
       }
 
@@ -133,8 +133,8 @@ In namespace "", we have: {
       unroll sequence: 
         bar<> b
       footprint: {
-        b = process bar<>^0 = ::foo::b (
-          a = bool^0 = ::foo::b.a 
+        b = process bar<>^0 = foo::b (
+          a = bool^0 = foo::b.a 
         )
       }
       }
@@ -148,9 +148,9 @@ In namespace "", we have: {
       unroll sequence: 
         foo<> x
       footprint: {
-        x = process foo<>^0 = ::ick::x (
-          b = process bar<>^0 = ::ick::x.b (
-            a = bool^0 = ::ick::x.b.a 
+        x = process foo<>^0 = ick::x (
+          b = process bar<>^0 = ick::x.b (
+            a = bool^0 = ick::x.b.a 
           )
         )
       }
@@ -168,36 +168,36 @@ In namespace "", we have: {
 }
 
 footprint: {
-  j = process foo<>^0 = ::j (
-    b = process bar<>^0 = ::m.x.b (
-      a = bool^0 = ::q.a 
+  j = process foo<>^0 = j (
+    b = process bar<>^0 = m.x.b (
+      a = bool^0 = q.a 
     )
   )
-  k = process foo<>^0 = ::j (
-    b = process bar<>^0 = ::n.x.b (
-      a = bool^0 = ::p.a 
+  k = process foo<>^0 = j (
+    b = process bar<>^0 = n.x.b (
+      a = bool^0 = p.a 
     )
   )
-  m = process ick<>^0 = ::n (
-    x = process foo<>^0 = ::j (
-      b = process bar<>^0 = ::n.x.b (
-        a = bool^0 = ::q.a 
+  m = process ick<>^0 = n (
+    x = process foo<>^0 = j (
+      b = process bar<>^0 = n.x.b (
+        a = bool^0 = q.a 
       )
     )
   )
-  n = process ick<>^0 = ::n (
-    x = process foo<>^0 = ::k (
-      b = process bar<>^0 = ::n.x.b (
-        a = bool^0 = ::p.a 
+  n = process ick<>^0 = n (
+    x = process foo<>^0 = k (
+      b = process bar<>^0 = n.x.b (
+        a = bool^0 = p.a 
       )
     )
   )
-  p = process bar<>^0 = ::k.b (
-    a = bool^0 = ::q.a 
+  p = process bar<>^0 = k.b (
+    a = bool^0 = q.a 
   )
-  q = process bar<>^0 = ::j.b (
-    a = bool^0 = ::q.a 
+  q = process bar<>^0 = j.b (
+    a = bool^0 = q.a 
   )
-  x = bool^0 = ::p.a 
-  y = bool^0 = ::q.a 
+  x = bool^0 = p.a 
+  y = bool^0 = q.a 
 }

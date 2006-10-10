@@ -46,7 +46,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  blah = int<32>^0 = ::blah 
-  copier = int<32>^0 = ::blah 
-  sneeze = int<32>^0 = ::blah 
+  blah = int<32>^0 = blah 
+  copier = int<32>^0 = blah 
+  sneeze = int<32>^0 = blah 
 }

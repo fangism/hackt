@@ -60,9 +60,9 @@ In namespace "", we have: {
         M = pint<> bar::M
         N = pint<> bar::N
       Instances:
-        x = int<::bar::M> bar::x^1
+        x = int<bar::M> bar::x^1
       unroll sequence: 
-        int<::bar::M> x[0..N-1]
+        int<bar::M> x[0..N-1]
         x[0] = x[N-1];
       footprint collection: {
         <3, 2> {
@@ -70,8 +70,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           x = int<3>^1
             {
-              0 = ::bar::x[1] 
-              1 = ::bar::x[1] 
+              0 = bar::x[1] 
+              1 = bar::x[1] 
             }
         }
       }
@@ -82,5 +82,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process bar<3, 2>^0 = ::poo 
+  poo = process bar<3, 2>^0 = poo 
 }

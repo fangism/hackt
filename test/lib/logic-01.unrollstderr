@@ -568,44 +568,44 @@ In namespace "", we have: {
 }
 
 footprint: {
-  _c4 = process std::logic::celeminv<4>^0 = ::_c4 (
+  _c4 = process std::logic::celeminv<4>^0 = _c4 (
     i = bool^1
       {
-        0 = ::_c4.i[0] 
-        1 = ::_c4.i[1] 
-        2 = ::_c4.i[2] 
-        3 = ::_c4.i[3] 
+        0 = _c4.i[0] 
+        1 = _c4.i[1] 
+        2 = _c4.i[2] 
+        3 = _c4.i[3] 
       }
-    o = bool^0 = ::_c4.o 
+    o = bool^0 = _c4.o 
   )
-  _nand4 = process std::logic::nand<4>^0 = ::_nand4 (
+  _nand4 = process std::logic::nand<4>^0 = _nand4 (
     i = bool^1
       {
-        0 = ::_nor4.i[0] 
-        1 = ::_nor4.i[1] 
-        2 = ::_nor4.i[2] 
-        3 = ::_nor4.i[3] 
+        0 = _nor4.i[0] 
+        1 = _nor4.i[1] 
+        2 = _nor4.i[2] 
+        3 = _nor4.i[3] 
       }
-    o = bool^0 = ::_nand4.o 
+    o = bool^0 = _nand4.o 
   )
-  _nor4 = process std::logic::nor<4>^0 = ::_nor4 (
+  _nor4 = process std::logic::nor<4>^0 = _nor4 (
     i = bool^1
       {
-        0 = ::_c4.i[0] 
-        1 = ::_c4.i[1] 
-        2 = ::_c4.i[2] 
-        3 = ::_c4.i[3] 
+        0 = _c4.i[0] 
+        1 = _c4.i[1] 
+        2 = _c4.i[2] 
+        3 = _c4.i[3] 
       }
-    o = bool^0 = ::_nor4.o 
+    o = bool^0 = _nor4.o 
   )
   i = bool^1
     {
-      0 = ::_nor4.i[0] 
-      1 = ::_nor4.i[1] 
-      2 = ::_nor4.i[2] 
-      3 = ::_nor4.i[3] 
+      0 = _nor4.i[0] 
+      1 = _nor4.i[1] 
+      2 = _nor4.i[2] 
+      3 = _nor4.i[3] 
     }
-  o1 = bool^0 = ::_nand4.o 
-  o2 = bool^0 = ::_nor4.o 
-  o3 = bool^0 = ::_c4.o 
+  o1 = bool^0 = _nand4.o 
+  o2 = bool^0 = _nor4.o 
+  o3 = bool^0 = _c4.o 
 }

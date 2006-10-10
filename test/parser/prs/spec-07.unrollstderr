@@ -54,10 +54,10 @@ In namespace "", we have: {
       spec:
         mk_exclhi(p,q,{r,s})
       footprint: {
-        p = bool^0 = ::testing::p 
-        q = bool^0 = ::testing::q 
-        r = bool^0 = ::testing::r 
-        s = bool^0 = ::testing::s 
+        p = bool^0 = testing::p 
+        q = bool^0 = testing::q 
+        r = bool^0 = testing::r 
+        s = bool^0 = testing::s 
       }
       }
 
@@ -66,5 +66,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  t = process testing<>^0 = ::t 
+  t = process testing<>^0 = t 
 }

@@ -86,20 +86,20 @@ In namespace "", we have: {
         x (z.a, , z.c);
         z (x.c, , z.a);
       footprint: {
-        x = process foo<>^0 = ::bar::x (
-          a = bool^0 = ::bar::x.a 
-          b = bool^0 = ::bar::x.b 
-          c = bool^0 = ::bar::x.a 
+        x = process foo<>^0 = bar::x (
+          a = bool^0 = bar::x.a 
+          b = bool^0 = bar::x.b 
+          c = bool^0 = bar::x.a 
         )
-        y = process foo<>^0 = ::bar::y (
-          a = bool^0 = ::bar::y.a 
-          b = bool^0 = ::bar::y.b 
-          c = bool^0 = ::bar::y.c 
+        y = process foo<>^0 = bar::y (
+          a = bool^0 = bar::y.a 
+          b = bool^0 = bar::y.b 
+          c = bool^0 = bar::y.c 
         )
-        z = process foo<>^0 = ::bar::z (
-          a = bool^0 = ::bar::x.a 
-          b = bool^0 = ::bar::z.b 
-          c = bool^0 = ::bar::x.a 
+        z = process foo<>^0 = bar::z (
+          a = bool^0 = bar::x.a 
+          b = bool^0 = bar::z.b 
+          c = bool^0 = bar::x.a 
         )
       }
       }
@@ -119,9 +119,9 @@ In namespace "", we have: {
         bool<> b
         bool<> c
       footprint: {
-        a = bool^0 = ::foo::a 
-        b = bool^0 = ::foo::b 
-        c = bool^0 = ::foo::c 
+        a = bool^0 = foo::a 
+        b = bool^0 = foo::b 
+        c = bool^0 = foo::c 
       }
       }
 
@@ -130,11 +130,11 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process bar<>^0 = ::poo (
-    y = process foo<>^0 = ::poo.y (
-      a = bool^0 = ::poo.y.a 
-      b = bool^0 = ::poo.y.b 
-      c = bool^0 = ::poo.y.c 
+  poo = process bar<>^0 = poo (
+    y = process foo<>^0 = poo.y (
+      a = bool^0 = poo.y.a 
+      b = bool^0 = poo.y.b 
+      c = bool^0 = poo.y.c 
     )
   )
 }

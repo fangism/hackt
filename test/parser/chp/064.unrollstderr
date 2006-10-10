@@ -89,22 +89,22 @@ In namespace "", we have: {
     adjacent_diff = process-definition (defined) adjacent_diff<
       pint<> W
       >(
-        chan?(int<::adjacent_diff::W>) L
-        chan!(int<::adjacent_diff::W>) R
+        chan?(int<adjacent_diff::W>) L
+        chan!(int<adjacent_diff::W>) R
       )
       In definition "adjacent_diff", we have: {
       Parameters:
         W = pint<> adjacent_diff::W
       Instances:
-        L = chan?(int<::adjacent_diff::W>) adjacent_diff::L
-        R = chan!(int<::adjacent_diff::W>) adjacent_diff::R
-        x = int<::adjacent_diff::W> adjacent_diff::x
-        z = int<::adjacent_diff::W> adjacent_diff::z
+        L = chan?(int<adjacent_diff::W>) adjacent_diff::L
+        R = chan!(int<adjacent_diff::W>) adjacent_diff::R
+        x = int<adjacent_diff::W> adjacent_diff::x
+        z = int<adjacent_diff::W> adjacent_diff::z
       unroll sequence: 
-        chan?(int<::adjacent_diff::W>) L
-        chan!(int<::adjacent_diff::W>) R
-        int<::adjacent_diff::W> x
-        int<::adjacent_diff::W> z
+        chan?(int<adjacent_diff::W>) L
+        chan!(int<adjacent_diff::W>) R
+        int<adjacent_diff::W> x
+        int<adjacent_diff::W> z
       chp:
         concurrent: {
           sequential: {
@@ -115,11 +115,11 @@ In namespace "", we have: {
         }
       footprint collection: {
         <12> {
-          L = channel chan?(int<12>)^0 = ::adjacent_diff::L 
-          R = channel chan!(int<12>)^0 = ::adjacent_diff::R 
+          L = channel chan?(int<12>)^0 = adjacent_diff::L 
+          R = channel chan!(int<12>)^0 = adjacent_diff::R 
           W = pint^0 value: 12
-          x = int<12>^0 = ::adjacent_diff::x 
-          z = int<12>^0 = ::adjacent_diff::z 
+          x = int<12>^0 = adjacent_diff::x 
+          z = int<12>^0 = adjacent_diff::z 
         }
       }
       }
@@ -131,10 +131,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  A = channel chan(int<12>)^0 = ::differ.L 
-  B = channel chan(int<12>)^0 = ::differ.R 
-  differ = process adjacent_diff<12>^0 = ::differ (
-    L = channel chan?(int<12>)^0 = ::differ.L 
-    R = channel chan!(int<12>)^0 = ::differ.R 
+  A = channel chan(int<12>)^0 = differ.L 
+  B = channel chan(int<12>)^0 = differ.R 
+  differ = process adjacent_diff<12>^0 = differ (
+    L = channel chan?(int<12>)^0 = differ.L 
+    R = channel chan!(int<12>)^0 = differ.R 
   )
 }

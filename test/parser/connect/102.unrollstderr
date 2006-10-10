@@ -58,25 +58,25 @@ In namespace "", we have: {
       pint<> X
       pint<> Y
       >(
-        int<::bar::X> a
-        int<::bar::Y> b
+        int<bar::X> a
+        int<bar::Y> b
       )
       In definition "bar", we have: {
       Parameters:
         X = pint<> bar::X
         Y = pint<> bar::Y
       Instances:
-        a = int<::bar::X> bar::a
-        b = int<::bar::Y> bar::b
+        a = int<bar::X> bar::a
+        b = int<bar::Y> bar::b
       unroll sequence: 
-        int<::bar::X> a
-        int<::bar::Y> b
+        int<bar::X> a
+        int<bar::Y> b
       footprint collection: {
         <2, 3> {
           X = pint^0 value: 2
           Y = pint^0 value: 3
-          a = int<2>^0 = ::bar::a 
-          b = int<3>^0 = ::bar::b 
+          a = int<2>^0 = bar::a 
+          b = int<3>^0 = bar::b 
         }
       }
       }
@@ -87,12 +87,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  w = process bar<2, 3>^0 = ::w (
-    a = int<2>^0 = ::z.a 
-    b = int<3>^0 = ::w.b 
+  w = process bar<2, 3>^0 = w (
+    a = int<2>^0 = z.a 
+    b = int<3>^0 = w.b 
   )
-  z = process bar<2, 3>^0 = ::z (
-    a = int<2>^0 = ::z.a 
-    b = int<3>^0 = ::z.b 
+  z = process bar<2, 3>^0 = z (
+    a = int<2>^0 = z.a 
+    b = int<3>^0 = z.b 
   )
 }

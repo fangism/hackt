@@ -73,12 +73,12 @@ In namespace "", we have: {
       spec:
         order(f,e,d,c,b,a)
       footprint: {
-        a = bool^0 = ::lvs_order::a 
-        b = bool^0 = ::lvs_order::b 
-        c = bool^0 = ::lvs_order::c 
-        d = bool^0 = ::lvs_order::d 
-        e = bool^0 = ::lvs_order::e 
-        f = bool^0 = ::lvs_order::f 
+        a = bool^0 = lvs_order::a 
+        b = bool^0 = lvs_order::b 
+        c = bool^0 = lvs_order::c 
+        d = bool^0 = lvs_order::d 
+        e = bool^0 = lvs_order::e 
+        f = bool^0 = lvs_order::f 
       }
       }
 
@@ -87,9 +87,9 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foo = process lvs_order<>^0 = ::foo (
-    a = bool^0 = ::foo.a 
-    b = bool^0 = ::foo.b 
-    c = bool^0 = ::foo.c 
+  foo = process lvs_order<>^0 = foo (
+    a = bool^0 = foo.a 
+    b = bool^0 = foo.b 
+    c = bool^0 = foo.c 
   )
 }

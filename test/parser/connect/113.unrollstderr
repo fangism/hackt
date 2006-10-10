@@ -54,8 +54,8 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            0 = ::wrap::a[0] 
-            1 = ::wrap::a[1] 
+            0 = wrap::a[0] 
+            1 = wrap::a[1] 
           }
       }
       }
@@ -66,18 +66,18 @@ In namespace "", we have: {
 }
 
 footprint: {
-  j = process wrap<>^0 = ::k (
+  j = process wrap<>^0 = k (
     a = bool^1
       {
-        0 = ::j.a[1] 
-        1 = ::j.a[1] 
+        0 = j.a[1] 
+        1 = j.a[1] 
       }
   )
-  k = process wrap<>^0 = ::k (
+  k = process wrap<>^0 = k (
     a = bool^1
       {
-        0 = ::j.a[0] 
-        1 = ::j.a[1] 
+        0 = j.a[0] 
+        1 = j.a[1] 
       }
   )
 }

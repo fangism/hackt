@@ -84,15 +84,15 @@ In namespace "", we have: {
       footprint collection: {
         <123> {
           B = pint^0 value: 123
-          b = channel chan!(int<32>)^0 = ::send_me::b 
+          b = channel chan!(int<32>)^0 = send_me::b 
         }
         <456> {
           B = pint^0 value: 456
-          b = channel chan!(int<32>)^0 = ::send_me::b 
+          b = channel chan!(int<32>)^0 = send_me::b 
         }
         <789> {
           B = pint^0 value: 789
-          b = channel chan!(int<32>)^0 = ::send_me::b 
+          b = channel chan!(int<32>)^0 = send_me::b 
         }
       }
       }
@@ -104,13 +104,13 @@ In namespace "", we have: {
 }
 
 footprint: {
-  X = process send_me<123>^0 = ::X (
-    b = channel chan!(int<32>)^0 = ::X.b 
+  X = process send_me<123>^0 = X (
+    b = channel chan!(int<32>)^0 = X.b 
   )
-  Y = process send_me<456>^0 = ::Y (
-    b = channel chan!(int<32>)^0 = ::Y.b 
+  Y = process send_me<456>^0 = Y (
+    b = channel chan!(int<32>)^0 = Y.b 
   )
-  Z = process send_me<789>^0 = ::Z (
-    b = channel chan!(int<32>)^0 = ::Z.b 
+  Z = process send_me<789>^0 = Z (
+    b = channel chan!(int<32>)^0 = Z.b 
   )
 }

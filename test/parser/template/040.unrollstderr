@@ -34,12 +34,12 @@ In namespace "", we have: {
     D = pint<> D
   Definitions:
     foo = process-definition (defined) foo<
-      pint<> Q (default = ::D)
+      pint<> Q (default = D)
       >(
       )
       In definition "foo", we have: {
       Parameters:
-        Q = pint<> foo::Q (default = ::D)
+        Q = pint<> foo::Q (default = D)
       unroll sequence: 
       footprint collection: {
         <13> {
@@ -49,10 +49,10 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = foo<::D> bar
+    bar = foo<D> bar
 }
 
 footprint: {
   D = pint^0 value: 13
-  bar = process foo<13>^0 = ::bar 
+  bar = process foo<13>^0 = bar 
 }

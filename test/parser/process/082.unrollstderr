@@ -93,20 +93,20 @@ In namespace "", we have: {
         foo<> z
         x.a = z.a = x.c = z.c;
       footprint: {
-        x = process foo<>^0 = ::bar::x (
-          a = bool^0 = ::bar::x.c 
-          b = bool^0 = ::bar::x.b 
-          c = bool^0 = ::bar::z.c 
+        x = process foo<>^0 = bar::x (
+          a = bool^0 = bar::x.c 
+          b = bool^0 = bar::x.b 
+          c = bool^0 = bar::z.c 
         )
-        y = process foo<>^0 = ::bar::y (
-          a = bool^0 = ::bar::y.a 
-          b = bool^0 = ::bar::y.b 
-          c = bool^0 = ::bar::y.c 
+        y = process foo<>^0 = bar::y (
+          a = bool^0 = bar::y.a 
+          b = bool^0 = bar::y.b 
+          c = bool^0 = bar::y.c 
         )
-        z = process foo<>^0 = ::bar::z (
-          a = bool^0 = ::bar::x.c 
-          b = bool^0 = ::bar::z.b 
-          c = bool^0 = ::bar::z.c 
+        z = process foo<>^0 = bar::z (
+          a = bool^0 = bar::x.c 
+          b = bool^0 = bar::z.b 
+          c = bool^0 = bar::z.c 
         )
       }
       }
@@ -126,9 +126,9 @@ In namespace "", we have: {
         bool<> b
         bool<> c
       footprint: {
-        a = bool^0 = ::foo::a 
-        b = bool^0 = ::foo::b 
-        c = bool^0 = ::foo::c 
+        a = bool^0 = foo::a 
+        b = bool^0 = foo::b 
+        c = bool^0 = foo::c 
       }
       }
 
@@ -137,21 +137,21 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process bar<>^0 = ::poo (
-    x = process foo<>^0 = ::poo.x (
-      a = bool^0 = ::poo.x.a 
-      b = bool^0 = ::poo.x.b 
-      c = bool^0 = ::poo.x.c 
+  poo = process bar<>^0 = poo (
+    x = process foo<>^0 = poo.x (
+      a = bool^0 = poo.x.a 
+      b = bool^0 = poo.x.b 
+      c = bool^0 = poo.x.c 
     )
-    y = process foo<>^0 = ::poo.y (
-      a = bool^0 = ::poo.y.a 
-      b = bool^0 = ::poo.y.b 
-      c = bool^0 = ::poo.y.c 
+    y = process foo<>^0 = poo.y (
+      a = bool^0 = poo.y.a 
+      b = bool^0 = poo.y.b 
+      c = bool^0 = poo.y.c 
     )
-    z = process foo<>^0 = ::poo.z (
-      a = bool^0 = ::poo.z.a 
-      b = bool^0 = ::poo.z.b 
-      c = bool^0 = ::poo.z.c 
+    z = process foo<>^0 = poo.z (
+      a = bool^0 = poo.z.a 
+      b = bool^0 = poo.z.b 
+      c = bool^0 = poo.z.c 
     )
   )
 }

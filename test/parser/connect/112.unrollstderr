@@ -101,8 +101,8 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = ::wrap::a 
-        b = bool^0 = ::wrap::b 
+        a = bool^0 = wrap::a 
+        b = bool^0 = wrap::b 
       }
       }
 
@@ -118,24 +118,24 @@ In namespace "", we have: {
 }
 
 footprint: {
-  j = process wrap<>^0 = ::k (
-    a = bool^0 = ::j.b 
-    b = bool^0 = ::z 
+  j = process wrap<>^0 = k (
+    a = bool^0 = j.b 
+    b = bool^0 = z 
   )
-  k = process wrap<>^0 = ::k (
-    a = bool^0 = ::j.b 
-    b = bool^0 = ::j.b 
+  k = process wrap<>^0 = k (
+    a = bool^0 = j.b 
+    b = bool^0 = j.b 
   )
-  l = process wrap<>^0 = ::l (
-    a = bool^0 = ::m.a 
-    b = bool^0 = ::m.b 
+  l = process wrap<>^0 = l (
+    a = bool^0 = m.a 
+    b = bool^0 = m.b 
   )
-  m = process wrap<>^0 = ::m (
-    a = bool^0 = ::m.b 
-    b = bool^0 = ::m.b 
+  m = process wrap<>^0 = m (
+    a = bool^0 = m.b 
+    b = bool^0 = m.b 
   )
-  w = bool^0 = ::m.b 
-  x = bool^0 = ::l.a 
-  y = bool^0 = ::l.b 
-  z = bool^0 = ::m.b 
+  w = bool^0 = m.b 
+  x = bool^0 = l.a 
+  y = bool^0 = l.b 
+  z = bool^0 = m.b 
 }

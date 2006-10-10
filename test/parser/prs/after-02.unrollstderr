@@ -49,8 +49,8 @@ In namespace "", we have: {
         a -> b- [after=12; ]
         ~a -> b+ [after=12; ]
       footprint: {
-        a = bool^0 = ::aftershave::a 
-        b = bool^0 = ::aftershave::b 
+        a = bool^0 = aftershave::a 
+        b = bool^0 = aftershave::b 
       }
       }
 
@@ -59,5 +59,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  xyz = process aftershave<>^0 = ::xyz 
+  xyz = process aftershave<>^0 = xyz 
 }

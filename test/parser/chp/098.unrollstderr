@@ -84,10 +84,10 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        w = int<32>^0 = ::foo::w 
-        x = int<32>^0 = ::foo::x 
-        y = int<32>^0 = ::foo::y 
-        z = int<32>^0 = ::foo::z 
+        w = int<32>^0 = foo::w 
+        x = int<32>^0 = foo::x 
+        y = int<32>^0 = foo::y 
+        z = int<32>^0 = foo::z 
       }
       }
 
@@ -96,5 +96,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  f = process foo<>^0 = ::f 
+  f = process foo<>^0 = f 
 }

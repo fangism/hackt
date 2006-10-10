@@ -70,6 +70,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  p = process foo<12, 34>^0 = ::p 
-  q = process foo<12, 13>^0 = ::q 
+  p = process foo<12, 34>^0 = p 
+  q = process foo<12, 13>^0 = q 
 }

@@ -93,5 +93,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  x = process bogus<2>^0 = ::x 
+  x = process bogus<2>^0 = x 
 }

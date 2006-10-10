@@ -69,12 +69,12 @@ In namespace "", we have: {
         bool<> b
         bool<> c
       spec:
-        min_sep<::blah>(a,b)
+        min_sep<blah>(a,b)
       footprint: {
-        a = bool^0 = ::ass::a 
-        b = bool^0 = ::ass::b 
-        c = bool^0 = ::ass::c 
-        q = bool^0 = ::ass::q 
+        a = bool^0 = ass::a 
+        b = bool^0 = ass::b 
+        c = bool^0 = ass::c 
+        q = bool^0 = ass::q 
       }
       }
 
@@ -85,8 +85,8 @@ In namespace "", we have: {
 
 footprint: {
   blah = pint^0 value: 5
-  myass = process ass<>^0 = ::myass (
-    q = bool^0 = ::myass.q 
+  myass = process ass<>^0 = myass (
+    q = bool^0 = myass.q 
   )
-  x = bool^0 = ::myass.q 
+  x = bool^0 = myass.q 
 }

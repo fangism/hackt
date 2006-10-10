@@ -99,13 +99,13 @@ In namespace "", we have: {
         <4> {
           M = pint^0 value: 4
           N = pint^0 value: 4
-          _o = bool^0 = ::celemNinv::_o 
+          _o = bool^0 = celemNinv::_o 
           a = bool^1
             {
-              0 = ::celemNinv::a[0] 
-              1 = ::celemNinv::a[1] 
-              2 = ::celemNinv::a[2] 
-              3 = ::celemNinv::a[3] 
+              0 = celemNinv::a[0] 
+              1 = celemNinv::a[1] 
+              2 = celemNinv::a[2] 
+              3 = celemNinv::a[3] 
             }
         }
       }
@@ -116,14 +116,14 @@ In namespace "", we have: {
 }
 
 footprint: {
-  c = process celemNinv<4>^0 = ::c (
+  c = process celemNinv<4>^0 = c (
     a = bool^1
       {
-        0 = ::c.a[0] 
-        1 = ::c.a[1] 
-        2 = ::c.a[2] 
-        3 = ::c.a[3] 
+        0 = c.a[0] 
+        1 = c.a[1] 
+        2 = c.a[2] 
+        3 = c.a[3] 
       }
-    _o = bool^0 = ::c._o 
+    _o = bool^0 = c._o 
   )
 }

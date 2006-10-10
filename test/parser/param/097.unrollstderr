@@ -75,11 +75,11 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = foo<{ { { 0, 1 }, { 2, 3 } }, ::y }> bar
+    bar = foo<{ { { 0, 1 }, { 2, 3 } }, y }> bar
 }
 
 footprint: {
-  bar = process foo<{{{0,1},{2,3}},{{3,2},{1,0}}}>^0 = ::bar 
+  bar = process foo<{{{0,1},{2,3}},{{3,2},{1,0}}}>^0 = bar 
   y = pint^2
     unrolled index-value pairs: {
       [0][0] = 3

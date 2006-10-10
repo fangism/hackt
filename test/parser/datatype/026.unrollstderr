@@ -25,5 +25,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar = enum foo^0 = ::bar 
+  bar = enum foo^0 = bar 
 }

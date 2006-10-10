@@ -42,7 +42,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  blah = bool^0 = ::blah 
-  copier = bool^0 = ::blah 
-  sneeze = bool^0 = ::blah 
+  blah = bool^0 = blah 
+  copier = bool^0 = blah 
+  sneeze = bool^0 = blah 
 }

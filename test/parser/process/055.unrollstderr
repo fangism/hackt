@@ -55,18 +55,18 @@ In namespace "", we have: {
         foo<> x
         foo<> y
       footprint: {
-        x = process foo<>^0 = ::bar::x (
+        x = process foo<>^0 = bar::x (
           a = bool^1
             {
-              0 = ::bar::x.a[0] 
-              1 = ::bar::x.a[1] 
+              0 = bar::x.a[0] 
+              1 = bar::x.a[1] 
             }
         )
-        y = process foo<>^0 = ::bar::y (
+        y = process foo<>^0 = bar::y (
           a = bool^1
             {
-              0 = ::bar::y.a[0] 
-              1 = ::bar::y.a[1] 
+              0 = bar::y.a[0] 
+              1 = bar::y.a[1] 
             }
         )
       }
@@ -83,8 +83,8 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            0 = ::foo::a[0] 
-            1 = ::foo::a[1] 
+            0 = foo::a[0] 
+            1 = foo::a[1] 
           }
       }
       }
@@ -94,19 +94,19 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process bar<>^0 = ::poo (
-    x = process foo<>^0 = ::poo.x (
+  poo = process bar<>^0 = poo (
+    x = process foo<>^0 = poo.x (
       a = bool^1
         {
-          0 = ::poo.x.a[0] 
-          1 = ::poo.x.a[1] 
+          0 = poo.x.a[0] 
+          1 = poo.x.a[1] 
         }
     )
-    y = process foo<>^0 = ::poo.y (
+    y = process foo<>^0 = poo.y (
       a = bool^1
         {
-          0 = ::poo.y.a[0] 
-          1 = ::poo.y.a[1] 
+          0 = poo.y.a[0] 
+          1 = poo.y.a[1] 
         }
     )
   )

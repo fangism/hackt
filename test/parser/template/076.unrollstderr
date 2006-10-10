@@ -138,7 +138,7 @@ In namespace "", we have: {
         N = pint<> ass::N
         d = pint<> ass::d^1
       Instances:
-        myfoo = foo<::ass::N, 3, ::ass::d> ass::myfoo
+        myfoo = foo<ass::N, 3, ass::d> ass::myfoo
         x = bool<> ass::x
         y = bool<> ass::y
         z = bool<> ass::z
@@ -146,7 +146,7 @@ In namespace "", we have: {
         bool<> x
         bool<> y
         bool<> z
-        foo<::ass::N, 3, ::ass::d> myfoo
+        foo<ass::N, 3, ass::d> myfoo
         myfoo (x, y);
       footprint collection: {
         <3, {1,0,1}> {
@@ -157,13 +157,13 @@ In namespace "", we have: {
               1 = 0
               2 = 1
             }
-          myfoo = process foo<3, 3, {1,0,1}>^0 = ::ass::myfoo (
-            r = bool^0 = ::ass::myfoo.r 
-            s = bool^0 = ::ass::myfoo.s 
+          myfoo = process foo<3, 3, {1,0,1}>^0 = ass::myfoo (
+            r = bool^0 = ass::myfoo.r 
+            s = bool^0 = ass::myfoo.s 
           )
-          x = bool^0 = ::ass::myfoo.r 
-          y = bool^0 = ::ass::myfoo.s 
-          z = bool^0 = ::ass::z 
+          x = bool^0 = ass::myfoo.r 
+          y = bool^0 = ass::myfoo.s 
+          z = bool^0 = ass::z 
         }
       }
       }
@@ -197,8 +197,8 @@ In namespace "", we have: {
               1 = 0
               2 = 1
             }
-          r = bool^0 = ::foo::r 
-          s = bool^0 = ::foo::s 
+          r = bool^0 = foo::r 
+          s = bool^0 = foo::s 
         }
       }
       }
@@ -207,17 +207,17 @@ In namespace "", we have: {
     a = bool<> a
     b = bool<> b
     c = bool<> c
-    myass = ass<3, ::p> myass
+    myass = ass<3, p> myass
 }
 
 footprint: {
-  a = bool^0 = ::myass.x 
-  b = bool^0 = ::myass.y 
-  c = bool^0 = ::myass.z 
-  myass = process ass<3, {1,0,1}>^0 = ::myass (
-    x = bool^0 = ::myass.x 
-    y = bool^0 = ::myass.y 
-    z = bool^0 = ::myass.z 
+  a = bool^0 = myass.x 
+  b = bool^0 = myass.y 
+  c = bool^0 = myass.z 
+  myass = process ass<3, {1,0,1}>^0 = myass (
+    x = bool^0 = myass.x 
+    y = bool^0 = myass.y 
+    z = bool^0 = myass.z 
   )
   p = pint^1
     unrolled index-value pairs: {

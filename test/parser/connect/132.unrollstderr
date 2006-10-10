@@ -77,12 +77,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = bool^0 = ::h 
-  b = bool^0 = ::h 
-  c = bool^0 = ::h 
-  d = bool^0 = ::h 
-  e = bool^0 = ::h 
-  f = bool^0 = ::h 
-  g = bool^0 = ::h 
-  h = bool^0 = ::h 
+  a = bool^0 = h 
+  b = bool^0 = h 
+  c = bool^0 = h 
+  d = bool^0 = h 
+  e = bool^0 = h 
+  f = bool^0 = h 
+  g = bool^0 = h 
+  h = bool^0 = h 
 }

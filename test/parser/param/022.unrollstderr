@@ -1,5 +1,5 @@
 ERROR: reference to uninitialized pint milk at index: [3]
 Error resolving indices of pint-val-ref
-ERROR: failed to resolve source values of pint-val-ref ::milk[::milk[::milk[::milk[::milk[0]]]]] in pint assignment.
+ERROR: failed to resolve source values of pint-val-ref milk[milk[milk[milk[milk[0]]]]] in pint assignment.
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

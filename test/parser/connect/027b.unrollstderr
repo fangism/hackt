@@ -56,11 +56,11 @@ In namespace "", we have: {
         bool<> a
         bool<> b[0..1]
       footprint: {
-        a = bool^0 = ::bar::a 
+        a = bool^0 = bar::a 
         b = bool^1
           {
-            0 = ::bar::b[0] 
-            1 = ::bar::b[1] 
+            0 = bar::b[0] 
+            1 = bar::b[1] 
           }
       }
       }
@@ -71,13 +71,13 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foo = bool^0 = ::none.b[0] 
-  none = process bar<>^0 = ::none (
-    a = bool^0 = ::foo 
+  foo = bool^0 = none.b[0] 
+  none = process bar<>^0 = none (
+    a = bool^0 = foo 
     b = bool^1
       {
-        0 = ::none.b[0] 
-        1 = ::none.b[1] 
+        0 = none.b[0] 
+        1 = none.b[1] 
       }
   )
 }

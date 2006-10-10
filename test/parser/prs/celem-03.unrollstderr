@@ -65,11 +65,11 @@ In namespace "", we have: {
         (&:i:[0..1]: a[$i]) -> _o-
         (&:i:[0..1]: ~a[$i]) -> _o+
       footprint: {
-        _o = bool^0 = ::celem2inv::_o 
+        _o = bool^0 = celem2inv::_o 
         a = bool^1
           {
-            0 = ::celem2inv::a[0] 
-            1 = ::celem2inv::a[1] 
+            0 = celem2inv::a[0] 
+            1 = celem2inv::a[1] 
           }
       }
       }
@@ -79,12 +79,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  c = process celem2inv<>^0 = ::c (
+  c = process celem2inv<>^0 = c (
     a = bool^1
       {
-        0 = ::c.a[0] 
-        1 = ::c.a[1] 
+        0 = c.a[0] 
+        1 = c.a[1] 
       }
-    _o = bool^0 = ::c._o 
+    _o = bool^0 = c._o 
   )
 }

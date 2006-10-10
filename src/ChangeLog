@@ -5,6 +5,15 @@
 
 2006-10-10	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-33:
+	  Another round of dump output updating, finally gotten rid
+		of leading "::" in qualified names consistently, 
+		in dump_qualified_name() and dump_hierarchical_name().
+	  Tons of test outputs updated accordingly.  
+	  No unroll regressions left.  
+	  Next: onto create phase regression testing.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-32:
 	  Updated dumping of qualified names to definition names.  
 		Could make definition_base::get_qualified_name() non-virtual.

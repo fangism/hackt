@@ -56,7 +56,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> a
       footprint: {
-        a = bool^0 = ::bar::a 
+        a = bool^0 = bar::a 
       }
       }
 
@@ -68,12 +68,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  p = process bar<>^0 = ::q (
-    a = bool^0 = ::p.a 
+  p = process bar<>^0 = q (
+    a = bool^0 = p.a 
   )
-  q = process bar<>^0 = ::q (
-    a = bool^0 = ::p.a 
+  q = process bar<>^0 = q (
+    a = bool^0 = p.a 
   )
-  x = bool^0 = ::p.a 
-  y = bool^0 = ::q.a 
+  x = bool^0 = p.a 
+  y = bool^0 = q.a 
 }

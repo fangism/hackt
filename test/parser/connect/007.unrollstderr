@@ -54,8 +54,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  fe = int<32>^0 = ::fi 
-  fi = int<32>^0 = ::fo 
-  fo = int<32>^0 = ::fo 
-  fum = int<32>^0 = ::fi 
+  fe = int<32>^0 = fi 
+  fi = int<32>^0 = fo 
+  fo = int<32>^0 = fo 
+  fum = int<32>^0 = fi 
 }

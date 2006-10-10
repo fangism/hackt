@@ -53,8 +53,8 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = ::bar::a 
-        b = bool^0 = ::bar::b 
+        a = bool^0 = bar::a 
+        b = bool^0 = bar::b 
       }
       }
 
@@ -64,9 +64,9 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foo = bool^0 = ::none.b 
-  none = process bar<>^0 = ::none (
-    a = bool^0 = ::foo 
-    b = bool^0 = ::none.b 
+  foo = bool^0 = none.b 
+  none = process bar<>^0 = none (
+    a = bool^0 = foo 
+    b = bool^0 = none.b 
   )
 }

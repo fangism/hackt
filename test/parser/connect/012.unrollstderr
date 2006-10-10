@@ -45,14 +45,14 @@ In namespace "", we have: {
 footprint: {
   bar = process foo<>^1
     {
-      0 = ::blah[0] 
-      1 = ::blah[1] 
-      2 = ::blah[2] 
+      0 = blah[0] 
+      1 = blah[1] 
+      2 = blah[2] 
     }
   blah = process foo<>^1
     {
-      0 = ::blah[0] 
-      1 = ::blah[1] 
-      2 = ::blah[2] 
+      0 = blah[0] 
+      1 = blah[1] 
+      2 = blah[2] 
     }
 }

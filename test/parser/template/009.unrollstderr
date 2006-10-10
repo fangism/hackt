@@ -49,10 +49,10 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = foo<::W> bar
+    bar = foo<W> bar
 }
 
 footprint: {
   W = pint^0 value: 42
-  bar = process foo<42>^0 = ::bar 
+  bar = process foo<42>^0 = bar 
 }

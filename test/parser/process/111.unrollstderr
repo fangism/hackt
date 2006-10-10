@@ -67,8 +67,8 @@ In namespace "", we have: {
         foo<> y
         x = y;
       footprint: {
-        x = process foo<>^0 = ::bar::y 
-        y = process foo<>^0 = ::bar::y 
+        x = process foo<>^0 = bar::y 
+        y = process foo<>^0 = bar::y 
       }
       }
 
@@ -83,8 +83,8 @@ In namespace "", we have: {
         bool<> b
         a = b;
       footprint: {
-        a = bool^0 = ::foo::b 
-        b = bool^0 = ::foo::b 
+        a = bool^0 = foo::b 
+        b = bool^0 = foo::b 
       }
       }
 
@@ -99,8 +99,8 @@ In namespace "", we have: {
         bar<> q
         p = q;
       footprint: {
-        p = process bar<>^0 = ::ick::q 
-        q = process bar<>^0 = ::ick::q 
+        p = process bar<>^0 = ick::q 
+        q = process bar<>^0 = ick::q 
       }
       }
 
@@ -109,5 +109,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process ick<>^0 = ::poo 
+  poo = process ick<>^0 = poo 
 }

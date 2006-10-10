@@ -56,6 +56,6 @@ In namespace "", we have: {
 
 footprint: {
   bar::foo = int<32>^0 = ::bar::foo 
-  foo = int<32>^0 = ::foo 
+  foo = int<32>^0 = foo 
   ick::foo = int<32>^0 = ::ick::foo 
 }

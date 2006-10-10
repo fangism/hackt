@@ -71,8 +71,8 @@ In namespace "", we have: {
         bool<> composite
         x = composite;
       footprint: {
-        composite = bool^0 = ::array::composite 
-        x = bool^0 = ::array::composite 
+        composite = bool^0 = array::composite 
+        x = bool^0 = array::composite 
       }
       }
 
@@ -88,11 +88,11 @@ In namespace "", we have: {
         array<> p
         p = q;
       footprint: {
-        p = process array<>^0 = ::foo::q (
-          x = bool^0 = ::foo::p.x 
+        p = process array<>^0 = foo::q (
+          x = bool^0 = foo::p.x 
         )
-        q = process array<>^0 = ::foo::q (
-          x = bool^0 = ::foo::p.x 
+        q = process array<>^0 = foo::q (
+          x = bool^0 = foo::p.x 
         )
       }
       }
@@ -103,12 +103,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  s = process array<>^0 = ::x.q (
-    x = bool^0 = ::s.x 
+  s = process array<>^0 = x.q (
+    x = bool^0 = s.x 
   )
-  x = process foo<>^0 = ::x (
-    q = process array<>^0 = ::x.q (
-      x = bool^0 = ::s.x 
+  x = process foo<>^0 = x (
+    q = process array<>^0 = x.q (
+      x = bool^0 = s.x 
     )
   )
 }

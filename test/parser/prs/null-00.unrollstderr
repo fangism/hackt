@@ -52,8 +52,8 @@ In namespace "", we have: {
           x -> y-
         )
       footprint: {
-        x = bool^0 = ::null::x 
-        y = bool^0 = ::null::y 
+        x = bool^0 = null::x 
+        y = bool^0 = null::y 
       }
       }
 
@@ -62,5 +62,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foo = process null<>^0 = ::foo 
+  foo = process null<>^0 = foo 
 }

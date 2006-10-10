@@ -79,10 +79,10 @@ In namespace "", we have: {
         c -> d- [after=20; weak=1; ]
         ~c -> d+ [after=20; weak=1; ]
       footprint: {
-        a = bool^0 = ::weakness::a 
-        b = bool^0 = ::weakness::b 
-        c = bool^0 = ::weakness::c 
-        d = bool^0 = ::weakness::d 
+        a = bool^0 = weakness::a 
+        b = bool^0 = weakness::b 
+        c = bool^0 = weakness::c 
+        d = bool^0 = weakness::d 
       }
       }
 
@@ -91,8 +91,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  xyz = process weakness<>^0 = ::xyz (
-    a = bool^0 = ::xyz.a 
-    b = bool^0 = ::xyz.b 
+  xyz = process weakness<>^0 = xyz (
+    a = bool^0 = xyz.a 
+    b = bool^0 = xyz.b 
   )
 }

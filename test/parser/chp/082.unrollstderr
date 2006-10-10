@@ -283,7 +283,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 2
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <2, {0,1}, 1> {
           B = pint^1
@@ -293,7 +293,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 2
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <3, {4,9,16}, 0> {
           B = pint^1
@@ -304,7 +304,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 3
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <3, {4,9,16}, 1> {
           B = pint^1
@@ -315,7 +315,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 3
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <3, {4,9,16}, 2> {
           B = pint^1
@@ -326,7 +326,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 2
           N = pint^0 value: 3
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <6, {0,1,4,9,16,25}, 0> {
           B = pint^1
@@ -340,7 +340,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 0
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <6, {0,1,4,9,16,25}, 1> {
           B = pint^1
@@ -354,7 +354,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 1
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <6, {0,1,4,9,16,25}, 2> {
           B = pint^1
@@ -368,7 +368,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 2
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <6, {0,1,4,9,16,25}, 3> {
           B = pint^1
@@ -382,7 +382,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 3
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <6, {0,1,4,9,16,25}, 4> {
           B = pint^1
@@ -396,7 +396,7 @@ In namespace "", we have: {
             }
           M = pint^0 value: 4
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
         <6, {0,1,4,9,16,25}, 5> {
           B = pint^1
@@ -410,23 +410,23 @@ In namespace "", we have: {
             }
           M = pint^0 value: 5
           N = pint^0 value: 6
-          b = channel chan!(int<16>)^0 = ::compute_me::b 
+          b = channel chan!(int<16>)^0 = compute_me::b 
         }
       }
       }
 
   Instances:
-    y2_0 = compute_me<2, ::x[0..1], 0> y2_0
-    y2_1 = compute_me<2, ::x[0..1], 1> y2_1
-    y3_0 = compute_me<3, ::x[2..4], 0> y3_0
-    y3_1 = compute_me<3, ::x[2..4], 1> y3_1
-    y3_2 = compute_me<3, ::x[2..4], 2> y3_2
-    y6_0 = compute_me<6, ::x, 0> y6_0
-    y6_1 = compute_me<6, ::x, 1> y6_1
-    y6_2 = compute_me<6, ::x, 2> y6_2
-    y6_3 = compute_me<6, ::x, 3> y6_3
-    y6_4 = compute_me<6, ::x, 4> y6_4
-    y6_5 = compute_me<6, ::x, 5> y6_5
+    y2_0 = compute_me<2, x[0..1], 0> y2_0
+    y2_1 = compute_me<2, x[0..1], 1> y2_1
+    y3_0 = compute_me<3, x[2..4], 0> y3_0
+    y3_1 = compute_me<3, x[2..4], 1> y3_1
+    y3_2 = compute_me<3, x[2..4], 2> y3_2
+    y6_0 = compute_me<6, x, 0> y6_0
+    y6_1 = compute_me<6, x, 1> y6_1
+    y6_2 = compute_me<6, x, 2> y6_2
+    y6_3 = compute_me<6, x, 3> y6_3
+    y6_4 = compute_me<6, x, 4> y6_4
+    y6_5 = compute_me<6, x, 5> y6_5
 }
 
 footprint: {
@@ -439,37 +439,37 @@ footprint: {
       4 = 16
       5 = 25
     }
-  y2_0 = process compute_me<2, {0,1}, 0>^0 = ::y2_0 (
-    b = channel chan!(int<16>)^0 = ::y2_0.b 
+  y2_0 = process compute_me<2, {0,1}, 0>^0 = y2_0 (
+    b = channel chan!(int<16>)^0 = y2_0.b 
   )
-  y2_1 = process compute_me<2, {0,1}, 1>^0 = ::y2_1 (
-    b = channel chan!(int<16>)^0 = ::y2_1.b 
+  y2_1 = process compute_me<2, {0,1}, 1>^0 = y2_1 (
+    b = channel chan!(int<16>)^0 = y2_1.b 
   )
-  y3_0 = process compute_me<3, {4,9,16}, 0>^0 = ::y3_0 (
-    b = channel chan!(int<16>)^0 = ::y3_0.b 
+  y3_0 = process compute_me<3, {4,9,16}, 0>^0 = y3_0 (
+    b = channel chan!(int<16>)^0 = y3_0.b 
   )
-  y3_1 = process compute_me<3, {4,9,16}, 1>^0 = ::y3_1 (
-    b = channel chan!(int<16>)^0 = ::y3_1.b 
+  y3_1 = process compute_me<3, {4,9,16}, 1>^0 = y3_1 (
+    b = channel chan!(int<16>)^0 = y3_1.b 
   )
-  y3_2 = process compute_me<3, {4,9,16}, 2>^0 = ::y3_2 (
-    b = channel chan!(int<16>)^0 = ::y3_2.b 
+  y3_2 = process compute_me<3, {4,9,16}, 2>^0 = y3_2 (
+    b = channel chan!(int<16>)^0 = y3_2.b 
   )
-  y6_0 = process compute_me<6, {0,1,4,9,16,25}, 0>^0 = ::y6_0 (
-    b = channel chan!(int<16>)^0 = ::y6_0.b 
+  y6_0 = process compute_me<6, {0,1,4,9,16,25}, 0>^0 = y6_0 (
+    b = channel chan!(int<16>)^0 = y6_0.b 
   )
-  y6_1 = process compute_me<6, {0,1,4,9,16,25}, 1>^0 = ::y6_1 (
-    b = channel chan!(int<16>)^0 = ::y6_1.b 
+  y6_1 = process compute_me<6, {0,1,4,9,16,25}, 1>^0 = y6_1 (
+    b = channel chan!(int<16>)^0 = y6_1.b 
   )
-  y6_2 = process compute_me<6, {0,1,4,9,16,25}, 2>^0 = ::y6_2 (
-    b = channel chan!(int<16>)^0 = ::y6_2.b 
+  y6_2 = process compute_me<6, {0,1,4,9,16,25}, 2>^0 = y6_2 (
+    b = channel chan!(int<16>)^0 = y6_2.b 
   )
-  y6_3 = process compute_me<6, {0,1,4,9,16,25}, 3>^0 = ::y6_3 (
-    b = channel chan!(int<16>)^0 = ::y6_3.b 
+  y6_3 = process compute_me<6, {0,1,4,9,16,25}, 3>^0 = y6_3 (
+    b = channel chan!(int<16>)^0 = y6_3.b 
   )
-  y6_4 = process compute_me<6, {0,1,4,9,16,25}, 4>^0 = ::y6_4 (
-    b = channel chan!(int<16>)^0 = ::y6_4.b 
+  y6_4 = process compute_me<6, {0,1,4,9,16,25}, 4>^0 = y6_4 (
+    b = channel chan!(int<16>)^0 = y6_4.b 
   )
-  y6_5 = process compute_me<6, {0,1,4,9,16,25}, 5>^0 = ::y6_5 (
-    b = channel chan!(int<16>)^0 = ::y6_5.b 
+  y6_5 = process compute_me<6, {0,1,4,9,16,25}, 5>^0 = y6_5 (
+    b = channel chan!(int<16>)^0 = y6_5.b 
   )
 }

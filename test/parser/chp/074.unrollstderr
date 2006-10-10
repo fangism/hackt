@@ -65,11 +65,11 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           B = pbool^0 value: 0
-          b = bool^0 = ::assign_me::b 
+          b = bool^0 = assign_me::b 
         }
         <true> {
           B = pbool^0 value: 1
-          b = bool^0 = ::assign_me::b 
+          b = bool^0 = assign_me::b 
         }
       }
       }
@@ -80,10 +80,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  X = process assign_me<true>^0 = ::X (
-    b = bool^0 = ::X.b 
+  X = process assign_me<true>^0 = X (
+    b = bool^0 = X.b 
   )
-  Y = process assign_me<false>^0 = ::Y (
-    b = bool^0 = ::Y.b 
+  Y = process assign_me<false>^0 = Y (
+    b = bool^0 = Y.b 
   )
 }

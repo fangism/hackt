@@ -67,7 +67,7 @@ In namespace "", we have: {
         }
         <true> {
           N = pbool^0 value: 1
-          b = process bar<>^0 = ::foo::b 
+          b = process bar<>^0 = foo::b 
         }
       }
       }
@@ -78,6 +78,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  f = process foo<false>^0 = ::f 
-  g = process foo<true>^0 = ::g 
+  f = process foo<false>^0 = f 
+  g = process foo<true>^0 = g 
 }

@@ -61,9 +61,9 @@ In namespace "", we have: {
         bool<> y
         bool<> z
       footprint: {
-        x = bool^0 = ::baz::x 
-        y = bool^0 = ::baz::y 
-        z = bool^0 = ::baz::z 
+        x = bool^0 = baz::x 
+        y = bool^0 = baz::y 
+        z = bool^0 = baz::z 
       }
       }
 
@@ -73,14 +73,14 @@ In namespace "", we have: {
 }
 
 footprint: {
-  P = process baz<>^0 = ::P (
-    x = bool^0 = ::P.x 
-    y = bool^0 = ::P.y 
-    z = bool^0 = ::Q.y 
+  P = process baz<>^0 = P (
+    x = bool^0 = P.x 
+    y = bool^0 = P.y 
+    z = bool^0 = Q.y 
   )
-  Q = process baz<>^0 = ::Q (
-    x = bool^0 = ::Q.x 
-    y = bool^0 = ::Q.y 
-    z = bool^0 = ::Q.z 
+  Q = process baz<>^0 = Q (
+    x = bool^0 = Q.x 
+    y = bool^0 = Q.y 
+    z = bool^0 = Q.z 
   )
 }

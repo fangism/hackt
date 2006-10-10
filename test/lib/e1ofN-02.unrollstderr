@@ -684,7 +684,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::aMx1ofN::N> b[0..M-1]
+        c1of<aMx1ofN::N> b[0..M-1]
         bool<> a
       )
       In definition "aMx1ofN", we have: {
@@ -693,9 +693,9 @@ In namespace "", we have: {
         N = pint<> aMx1ofN::N
       Instances:
         a = bool<> aMx1ofN::a
-        b = c1of<::aMx1ofN::N> aMx1ofN::b^1
+        b = c1of<aMx1ofN::N> aMx1ofN::b^1
       unroll sequence: 
-        c1of<::aMx1ofN::N> b[0..M-1]
+        c1of<aMx1ofN::N> b[0..M-1]
         bool<> a
       }
 
@@ -781,51 +781,51 @@ In namespace "", we have: {
           N = pint^0 value: 1
           d = bool^1
             {
-              0 = ::e1of::d[0] 
+              0 = e1of::d[0] 
             }
-          e = bool^0 = ::e1of::e 
+          e = bool^0 = e1of::e 
         }
         <2> {
           N = pint^0 value: 2
           d = bool^1
             {
-              0 = ::e1of::d[0] 
-              1 = ::e1of::d[1] 
+              0 = e1of::d[0] 
+              1 = e1of::d[1] 
             }
-          e = bool^0 = ::e1of::e 
+          e = bool^0 = e1of::e 
         }
         <3> {
           N = pint^0 value: 3
           d = bool^1
             {
-              0 = ::e1of::d[0] 
-              1 = ::e1of::d[1] 
-              2 = ::e1of::d[2] 
+              0 = e1of::d[0] 
+              1 = e1of::d[1] 
+              2 = e1of::d[2] 
             }
-          e = bool^0 = ::e1of::e 
+          e = bool^0 = e1of::e 
         }
         <4> {
           N = pint^0 value: 4
           d = bool^1
             {
-              0 = ::e1of::d[0] 
-              1 = ::e1of::d[1] 
-              2 = ::e1of::d[2] 
-              3 = ::e1of::d[3] 
+              0 = e1of::d[0] 
+              1 = e1of::d[1] 
+              2 = e1of::d[2] 
+              3 = e1of::d[3] 
             }
-          e = bool^0 = ::e1of::e 
+          e = bool^0 = e1of::e 
         }
         <5> {
           N = pint^0 value: 5
           d = bool^1
             {
-              0 = ::e1of::d[0] 
-              1 = ::e1of::d[1] 
-              2 = ::e1of::d[2] 
-              3 = ::e1of::d[3] 
-              4 = ::e1of::d[4] 
+              0 = e1of::d[0] 
+              1 = e1of::d[1] 
+              2 = e1of::d[2] 
+              3 = e1of::d[3] 
+              4 = e1of::d[4] 
             }
-          e = bool^0 = ::e1of::e 
+          e = bool^0 = e1of::e 
         }
       }
       }
@@ -876,7 +876,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::eMx1ofN::N> b[0..M-1]
+        c1of<eMx1ofN::N> b[0..M-1]
         bool<> e
       )
       In definition "eMx1ofN", we have: {
@@ -884,10 +884,10 @@ In namespace "", we have: {
         M = pint<> eMx1ofN::M
         N = pint<> eMx1ofN::N
       Instances:
-        b = c1of<::eMx1ofN::N> eMx1ofN::b^1
+        b = c1of<eMx1ofN::N> eMx1ofN::b^1
         e = bool<> eMx1ofN::e
       unroll sequence: 
-        c1of<::eMx1ofN::N> b[0..M-1]
+        c1of<eMx1ofN::N> b[0..M-1]
         bool<> e
       }
 
@@ -1077,49 +1077,49 @@ In namespace "", we have: {
 }
 
 footprint: {
-  A = process e1of<1>^0 = ::A (
+  A = process e1of<1>^0 = A (
     d = bool^1
       {
-        0 = ::D.d[0] 
+        0 = D.d[0] 
       }
-    e = bool^0 = ::A.e 
+    e = bool^0 = A.e 
   )
-  B = process e1of<2>^0 = ::B (
+  B = process e1of<2>^0 = B (
     d = bool^1
       {
-        0 = ::C.d[0] 
-        1 = ::B.d[1] 
+        0 = C.d[0] 
+        1 = B.d[1] 
       }
-    e = bool^0 = ::B.e 
+    e = bool^0 = B.e 
   )
-  C = process e1of<3>^0 = ::C (
+  C = process e1of<3>^0 = C (
     d = bool^1
       {
-        0 = ::D.d[0] 
-        1 = ::C.d[1] 
-        2 = ::C.d[2] 
+        0 = D.d[0] 
+        1 = C.d[1] 
+        2 = C.d[2] 
       }
-    e = bool^0 = ::C.e 
+    e = bool^0 = C.e 
   )
-  D = process e1of<4>^0 = ::D (
+  D = process e1of<4>^0 = D (
     d = bool^1
       {
-        0 = ::E.d[0] 
-        1 = ::D.d[1] 
-        2 = ::D.d[2] 
-        3 = ::D.d[3] 
+        0 = E.d[0] 
+        1 = D.d[1] 
+        2 = D.d[2] 
+        3 = D.d[3] 
       }
-    e = bool^0 = ::D.e 
+    e = bool^0 = D.e 
   )
-  E = process e1of<5>^0 = ::E (
+  E = process e1of<5>^0 = E (
     d = bool^1
       {
-        0 = ::E.d[0] 
-        1 = ::E.d[1] 
-        2 = ::E.d[2] 
-        3 = ::E.d[3] 
-        4 = ::E.d[4] 
+        0 = E.d[0] 
+        1 = E.d[1] 
+        2 = E.d[2] 
+        3 = E.d[3] 
+        4 = E.d[4] 
       }
-    e = bool^0 = ::E.e 
+    e = bool^0 = E.e 
   )
 }

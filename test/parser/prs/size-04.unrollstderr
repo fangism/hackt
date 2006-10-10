@@ -77,8 +77,8 @@ In namespace "", we have: {
         a<30,3> -> b-
         ~a<30,3> -> b+
       footprint: {
-        a = bool^0 = ::sized_prs::a 
-        b = bool^0 = ::sized_prs::b 
+        a = bool^0 = sized_prs::a 
+        b = bool^0 = sized_prs::b 
       }
       }
 
@@ -87,8 +87,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  z = process sized_prs<>^0 = ::z (
-    a = bool^0 = ::z.a 
-    b = bool^0 = ::z.b 
+  z = process sized_prs<>^0 = z (
+    a = bool^0 = z.a 
+    b = bool^0 = z.b 
   )
 }

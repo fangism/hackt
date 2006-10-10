@@ -166,9 +166,9 @@ In namespace "", we have: {
               [2][1] = 0
               [2][2] = 1
             }
-          x = bool^0 = ::ass::x 
-          y = bool^0 = ::ass::y 
-          z = bool^0 = ::ass::z 
+          x = bool^0 = ass::x 
+          y = bool^0 = ass::y 
+          z = bool^0 = ass::z 
         }
       }
       }
@@ -177,17 +177,17 @@ In namespace "", we have: {
     a = bool<> a
     b = bool<> b
     c = bool<> c
-    myass = ass<3, ::p> myass
+    myass = ass<3, p> myass
 }
 
 footprint: {
-  a = bool^0 = ::myass.x 
-  b = bool^0 = ::myass.y 
-  c = bool^0 = ::myass.z 
-  myass = process ass<3, {{1,0,1},{0,1,0},{1,0,1}}>^0 = ::myass (
-    x = bool^0 = ::myass.x 
-    y = bool^0 = ::myass.y 
-    z = bool^0 = ::myass.z 
+  a = bool^0 = myass.x 
+  b = bool^0 = myass.y 
+  c = bool^0 = myass.z 
+  myass = process ass<3, {{1,0,1},{0,1,0},{1,0,1}}>^0 = myass (
+    x = bool^0 = myass.x 
+    y = bool^0 = myass.y 
+    z = bool^0 = myass.z 
   )
   p = pint^2
     unrolled index-value pairs: {

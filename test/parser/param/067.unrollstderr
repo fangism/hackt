@@ -55,7 +55,7 @@ In namespace "", we have: {
           Parameters:
             N = pint<> bar::foo::N^1
           unroll sequence: 
-            pint<> N[0..::Q-1]
+            pint<> N[0..Q-1]
             N[0] = 11;
           footprint: {
             N = pint^1
@@ -84,5 +84,5 @@ In namespace "", we have: {
 
 footprint: {
   Q = pint^0 value: 13
-  f = process bar::foo<>^0 = ::f 
+  f = process bar::foo<>^0 = f 
 }

@@ -76,8 +76,8 @@ In namespace "", we have: {
       unroll sequence: 
         egg<> egg_array
       footprint: {
-        egg_array = process egg<>^0 = ::basket::egg_array (
-          yolk = int<32>^0 = ::basket::egg_array.yolk 
+        egg_array = process egg<>^0 = basket::egg_array (
+          yolk = int<32>^0 = basket::egg_array.yolk 
         )
       }
       }
@@ -91,9 +91,9 @@ In namespace "", we have: {
       unroll sequence: 
         basket<> c
       footprint: {
-        c = process basket<>^0 = ::bundle::c (
-          egg_array = process egg<>^0 = ::bundle::c.egg_array (
-            yolk = int<32>^0 = ::bundle::c.egg_array.yolk 
+        c = process basket<>^0 = bundle::c (
+          egg_array = process egg<>^0 = bundle::c.egg_array (
+            yolk = int<32>^0 = bundle::c.egg_array.yolk 
           )
         )
       }
@@ -108,7 +108,7 @@ In namespace "", we have: {
       unroll sequence: 
         int<32> yolk
       footprint: {
-        yolk = int<32>^0 = ::egg::yolk 
+        yolk = int<32>^0 = egg::yolk 
       }
       }
 
@@ -119,14 +119,14 @@ In namespace "", we have: {
 }
 
 footprint: {
-  count = int<32>^0 = ::load.c.egg_array.yolk 
-  golden = process egg<>^0 = ::golden (
-    yolk = int<32>^0 = ::load.c.egg_array.yolk 
+  count = int<32>^0 = load.c.egg_array.yolk 
+  golden = process egg<>^0 = golden (
+    yolk = int<32>^0 = load.c.egg_array.yolk 
   )
-  load = process bundle<>^0 = ::load (
-    c = process basket<>^0 = ::load.c (
-      egg_array = process egg<>^0 = ::golden (
-        yolk = int<32>^0 = ::load.c.egg_array.yolk 
+  load = process bundle<>^0 = load (
+    c = process basket<>^0 = load.c (
+      egg_array = process egg<>^0 = golden (
+        yolk = int<32>^0 = load.c.egg_array.yolk 
       )
     )
   )

@@ -45,8 +45,8 @@ In namespace "", we have: {
         bool<> b
         a = b;
       footprint: {
-        a = bool^0 = ::foo::b 
-        b = bool^0 = ::foo::b 
+        a = bool^0 = foo::b 
+        b = bool^0 = foo::b 
       }
       }
 
@@ -55,8 +55,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process foo<>^0 = ::poo (
-    a = bool^0 = ::poo.a 
-    b = bool^0 = ::poo.b 
+  poo = process foo<>^0 = poo (
+    a = bool^0 = poo.a 
+    b = bool^0 = poo.b 
   )
 }

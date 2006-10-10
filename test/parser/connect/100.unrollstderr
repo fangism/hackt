@@ -72,8 +72,8 @@ In namespace "", we have: {
         foo<1> a
         foo<2> b
       footprint: {
-        a = process foo<1>^0 = ::bar::a 
-        b = process foo<2>^0 = ::bar::b 
+        a = process foo<1>^0 = bar::a 
+        b = process foo<2>^0 = bar::b 
       }
       }
 
@@ -101,12 +101,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  w = process bar<>^0 = ::w (
-    a = process foo<1>^0 = ::z.a 
-    b = process foo<2>^0 = ::z.b 
+  w = process bar<>^0 = w (
+    a = process foo<1>^0 = z.a 
+    b = process foo<2>^0 = z.b 
   )
-  z = process bar<>^0 = ::z (
-    a = process foo<1>^0 = ::z.a 
-    b = process foo<2>^0 = ::z.b 
+  z = process bar<>^0 = z (
+    a = process foo<1>^0 = z.a 
+    b = process foo<2>^0 = z.b 
   )
 }

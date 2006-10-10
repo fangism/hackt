@@ -1,4 +1,4 @@
-FATAL: reference to uninstantiated pint at ::foo [2]
+FATAL: reference to uninstantiated pint at foo [2]
 ERROR: unrolling aliases.
 ERROR: unrolling lvalue references in pint assignment.
 ERROR: at position 1 of expression-assignment list.

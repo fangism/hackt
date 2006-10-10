@@ -87,23 +87,23 @@ In namespace "", we have: {
       footprint: {
         p = process pbit<>^1
           {
-            0 = ::lut::pbint[0].pb (
-              t = bool^0 = ::lut::p[0].t 
+            0 = lut::pbint[0].pb (
+              t = bool^0 = lut::p[0].t 
             )
-            1 = ::lut::pbint[1].pb (
-              t = bool^0 = ::lut::p[1].t 
+            1 = lut::pbint[1].pb (
+              t = bool^0 = lut::p[1].t 
             )
           }
         pbint = process pbitint<>^1
           {
-            0 = ::lut::pbint[0] (
-              pb = process pbit<>^0 = ::lut::pbint[0].pb (
-                t = bool^0 = ::lut::p[0].t 
+            0 = lut::pbint[0] (
+              pb = process pbit<>^0 = lut::pbint[0].pb (
+                t = bool^0 = lut::p[0].t 
               )
             )
-            1 = ::lut::pbint[1] (
-              pb = process pbit<>^0 = ::lut::pbint[1].pb (
-                t = bool^0 = ::lut::p[1].t 
+            1 = lut::pbint[1] (
+              pb = process pbit<>^0 = lut::pbint[1].pb (
+                t = bool^0 = lut::p[1].t 
               )
             )
           }
@@ -119,7 +119,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> t
       footprint: {
-        t = bool^0 = ::pbit::t 
+        t = bool^0 = pbit::t 
       }
       }
 
@@ -132,8 +132,8 @@ In namespace "", we have: {
       unroll sequence: 
         pbit<> pb
       footprint: {
-        pb = process pbit<>^0 = ::pbitint::pb (
-          t = bool^0 = ::pbitint::pb.t 
+        pb = process pbit<>^0 = pbitint::pb (
+          t = bool^0 = pbitint::pb.t 
         )
       }
       }
@@ -143,17 +143,17 @@ In namespace "", we have: {
 }
 
 footprint: {
-  l = process lut<>^0 = ::l (
+  l = process lut<>^0 = l (
     pbint = process pbitint<>^1
       {
-        0 = ::l.pbint[0] (
-          pb = process pbit<>^0 = ::l.pbint[0].pb (
-            t = bool^0 = ::l.pbint[0].pb.t 
+        0 = l.pbint[0] (
+          pb = process pbit<>^0 = l.pbint[0].pb (
+            t = bool^0 = l.pbint[0].pb.t 
           )
         )
-        1 = ::l.pbint[1] (
-          pb = process pbit<>^0 = ::l.pbint[1].pb (
-            t = bool^0 = ::l.pbint[1].pb.t 
+        1 = l.pbint[1] (
+          pb = process pbit<>^0 = l.pbint[1].pb (
+            t = bool^0 = l.pbint[1].pb.t 
           )
         )
       }

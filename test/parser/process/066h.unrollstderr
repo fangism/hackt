@@ -57,9 +57,9 @@ In namespace "", we have: {
       unroll sequence: 
         foo<> x
       footprint: {
-        x = process foo<>^0 = ::bar::x (
-          a = process ick<>^0 = ::bar::x.a 
-          b = process ick<>^0 = ::bar::x.b 
+        x = process foo<>^0 = bar::x (
+          a = process ick<>^0 = bar::x.a 
+          b = process ick<>^0 = bar::x.b 
         )
       }
       }
@@ -77,8 +77,8 @@ In namespace "", we have: {
         ick<> b
         a = b;
       footprint: {
-        a = process ick<>^0 = ::foo::b 
-        b = process ick<>^0 = ::foo::b 
+        a = process ick<>^0 = foo::b 
+        b = process ick<>^0 = foo::b 
       }
       }
 
@@ -95,10 +95,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process bar<>^0 = ::poo (
-    x = process foo<>^0 = ::poo.x (
-      a = process ick<>^0 = ::poo.x.a 
-      b = process ick<>^0 = ::poo.x.b 
+  poo = process bar<>^0 = poo (
+    x = process foo<>^0 = poo.x (
+      a = process ick<>^0 = poo.x.a 
+      b = process ick<>^0 = poo.x.b 
     )
   )
 }

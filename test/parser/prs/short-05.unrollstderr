@@ -227,10 +227,10 @@ In namespace "", we have: {
           N = pint^0 value: 2
           in = bool^1
             {
-              0 = ::celem::in[0] 
-              1 = ::celem::in[1] 
+              0 = celem::in[0] 
+              1 = celem::in[1] 
             }
-          out = bool^0 = ::celem::out 
+          out = bool^0 = celem::out 
         }
       }
       }
@@ -274,12 +274,12 @@ In namespace "", we have: {
           N = pint^0 value: 4
           in = bool^1
             {
-              0 = ::nand::in[0] 
-              1 = ::nand::in[1] 
-              2 = ::nand::in[2] 
-              3 = ::nand::in[3] 
+              0 = nand::in[0] 
+              1 = nand::in[1] 
+              2 = nand::in[2] 
+              3 = nand::in[3] 
             }
-          out = bool^0 = ::nand::out 
+          out = bool^0 = nand::out 
         }
       }
       }
@@ -307,12 +307,12 @@ In namespace "", we have: {
           N = pint^0 value: 4
           in = bool^1
             {
-              0 = ::nor::in[0] 
-              1 = ::nor::in[1] 
-              2 = ::nor::in[2] 
-              3 = ::nor::in[3] 
+              0 = nor::in[0] 
+              1 = nor::in[1] 
+              2 = nor::in[2] 
+              3 = nor::in[3] 
             }
-          out = bool^0 = ::nor::out 
+          out = bool^0 = nor::out 
         }
       }
       }
@@ -325,33 +325,33 @@ In namespace "", we have: {
 }
 
 footprint: {
-  _c = process celem<2>^0 = ::_c (
+  _c = process celem<2>^0 = _c (
     in = bool^1
       {
-        0 = ::_c.in[0] 
-        1 = ::_c.in[1] 
+        0 = _c.in[0] 
+        1 = _c.in[1] 
       }
-    out = bool^0 = ::_c.out 
+    out = bool^0 = _c.out 
   )
-  _nand = process nand<4>^0 = ::_nand (
+  _nand = process nand<4>^0 = _nand (
     in = bool^1
       {
-        0 = ::_nand.in[0] 
-        1 = ::_nand.in[1] 
-        2 = ::_nand.in[2] 
-        3 = ::_nand.in[3] 
+        0 = _nand.in[0] 
+        1 = _nand.in[1] 
+        2 = _nand.in[2] 
+        3 = _nand.in[3] 
       }
-    out = bool^0 = ::_nor.out 
+    out = bool^0 = _nor.out 
   )
-  _nor = process nor<4>^0 = ::_nor (
+  _nor = process nor<4>^0 = _nor (
     in = bool^1
       {
-        0 = ::_nor.in[0] 
-        1 = ::_nor.in[1] 
-        2 = ::_nor.in[2] 
-        3 = ::_nor.in[3] 
+        0 = _nor.in[0] 
+        1 = _nor.in[1] 
+        2 = _nor.in[2] 
+        3 = _nor.in[3] 
       }
-    out = bool^0 = ::_c.out 
+    out = bool^0 = _c.out 
   )
-  z = bool^0 = ::_nor.out 
+  z = bool^0 = _nor.out 
 }

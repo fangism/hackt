@@ -50,7 +50,7 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        b = bool^0 = ::assignme::b 
+        b = bool^0 = assignme::b 
         c = pbool^0 value: ?
       }
       }
@@ -60,7 +60,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  X = process assignme<>^0 = ::X (
-    b = bool^0 = ::X.b 
+  X = process assignme<>^0 = X (
+    b = bool^0 = X.b 
   )
 }

@@ -72,16 +72,16 @@ In namespace "", we have: {
       pint<> N
       pint<> D[0..N-1]
       >(
-        foo<2*::bar::N, ::bar::D # ::bar::D> x
+        foo<2*bar::N, bar::D # bar::D> x
       )
       In definition "bar", we have: {
       Parameters:
         D = pint<> bar::D^1
         N = pint<> bar::N
       Instances:
-        x = foo<2*::bar::N, ::bar::D # ::bar::D> bar::x
+        x = foo<2*bar::N, bar::D # bar::D> bar::x
       unroll sequence: 
-        foo<2*::bar::N, ::bar::D # ::bar::D> x
+        foo<2*bar::N, bar::D # bar::D> x
       footprint collection: {
         <2, {0,1}> {
           D = pint^1
@@ -90,7 +90,7 @@ In namespace "", we have: {
               1 = 1
             }
           N = pint^0 value: 2
-          x = process foo<4, {0,1,0,1}>^0 = ::bar::x 
+          x = process foo<4, {0,1,0,1}>^0 = bar::x 
         }
       }
       }
@@ -124,7 +124,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  X = process bar<2, {0,1}>^0 = ::X (
-    x = process foo<4, {0,1,0,1}>^0 = ::X.x 
+  X = process bar<2, {0,1}>^0 = X (
+    x = process foo<4, {0,1,0,1}>^0 = X.x 
   )
 }

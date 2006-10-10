@@ -30,6 +30,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  x = int<32>^0 = ::x 
-  y = bool^0 = ::y 
+  x = int<32>^0 = x 
+  y = bool^0 = y 
 }

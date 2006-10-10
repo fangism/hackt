@@ -141,8 +141,8 @@ In namespace "", we have: {
       footprint collection: {
         <0> {
           I = pint^0 value: 0
-          index = channel chan?(int<32>)^0 = ::send_indexed::index 
-          out = channel chan!(int<32>)^0 = ::send_indexed::out 
+          index = channel chan?(int<32>)^0 = send_indexed::index 
+          out = channel chan!(int<32>)^0 = send_indexed::out 
           x = pint^2
             unrolled index-value pairs: {
               [0][0] = 1
@@ -150,12 +150,12 @@ In namespace "", we have: {
               [1][0] = 3
               [1][1] = 4
             }
-          y = int<32>^0 = ::send_indexed::y 
+          y = int<32>^0 = send_indexed::y 
         }
         <1> {
           I = pint^0 value: 1
-          index = channel chan?(int<32>)^0 = ::send_indexed::index 
-          out = channel chan!(int<32>)^0 = ::send_indexed::out 
+          index = channel chan?(int<32>)^0 = send_indexed::index 
+          out = channel chan!(int<32>)^0 = send_indexed::out 
           x = pint^2
             unrolled index-value pairs: {
               [0][0] = 1
@@ -163,7 +163,7 @@ In namespace "", we have: {
               [1][0] = 3
               [1][1] = 4
             }
-          y = int<32>^0 = ::send_indexed::y 
+          y = int<32>^0 = send_indexed::y 
         }
       }
       }
@@ -174,12 +174,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar = process send_indexed<1>^0 = ::bar (
-    index = channel chan?(int<32>)^0 = ::bar.index 
-    out = channel chan!(int<32>)^0 = ::bar.out 
+  bar = process send_indexed<1>^0 = bar (
+    index = channel chan?(int<32>)^0 = bar.index 
+    out = channel chan!(int<32>)^0 = bar.out 
   )
-  foo = process send_indexed<0>^0 = ::foo (
-    index = channel chan?(int<32>)^0 = ::foo.index 
-    out = channel chan!(int<32>)^0 = ::foo.out 
+  foo = process send_indexed<0>^0 = foo (
+    index = channel chan?(int<32>)^0 = foo.index 
+    out = channel chan!(int<32>)^0 = foo.out 
   )
 }

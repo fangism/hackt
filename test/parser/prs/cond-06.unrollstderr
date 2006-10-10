@@ -63,7 +63,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> q
       footprint: {
-        q = bool^0 = ::bar::q 
+        q = bool^0 = bar::q 
       }
       }
 
@@ -86,14 +86,14 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           N = pbool^0 value: 0
-          x = bool^0 = ::foo::x 
+          x = bool^0 = foo::x 
         }
         <true> {
           N = pbool^0 value: 1
-          b = process bar<>^0 = ::foo::b (
-            q = bool^0 = ::foo::b.q 
+          b = process bar<>^0 = foo::b (
+            q = bool^0 = foo::b.q 
           )
-          x = bool^0 = ::foo::b.q 
+          x = bool^0 = foo::b.q 
         }
       }
       }
@@ -104,6 +104,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  f = process foo<false>^0 = ::f 
-  g = process foo<true>^0 = ::g 
+  f = process foo<false>^0 = f 
+  g = process foo<true>^0 = g 
 }

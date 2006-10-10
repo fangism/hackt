@@ -86,15 +86,15 @@ In namespace "", we have: {
           N = pint^0 value: 3
           a = bool^1
             {
-              0 = ::lvs_order::a[0] 
-              1 = ::lvs_order::a[1] 
-              2 = ::lvs_order::a[2] 
+              0 = lvs_order::a[0] 
+              1 = lvs_order::a[1] 
+              2 = lvs_order::a[2] 
             }
           b = bool^1
             {
-              0 = ::lvs_order::b[0] 
-              1 = ::lvs_order::b[1] 
-              2 = ::lvs_order::b[2] 
+              0 = lvs_order::b[0] 
+              1 = lvs_order::b[1] 
+              2 = lvs_order::b[2] 
             }
         }
       }
@@ -105,12 +105,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foo = process lvs_order<3>^0 = ::foo (
+  foo = process lvs_order<3>^0 = foo (
     a = bool^1
       {
-        0 = ::foo.a[0] 
-        1 = ::foo.a[1] 
-        2 = ::foo.a[2] 
+        0 = foo.a[0] 
+        1 = foo.a[1] 
+        2 = foo.a[2] 
       }
   )
 }

@@ -138,7 +138,7 @@ In namespace "", we have: {
         <0, 0> {
           I = pint^0 value: 0
           J = pint^0 value: 0
-          out = channel chan!(int<32>)^0 = ::send_indexed::out 
+          out = channel chan!(int<32>)^0 = send_indexed::out 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -148,7 +148,7 @@ In namespace "", we have: {
         <0, 1> {
           I = pint^0 value: 0
           J = pint^0 value: 1
-          out = channel chan!(int<32>)^0 = ::send_indexed::out 
+          out = channel chan!(int<32>)^0 = send_indexed::out 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -158,7 +158,7 @@ In namespace "", we have: {
         <1, 0> {
           I = pint^0 value: 1
           J = pint^0 value: 0
-          out = channel chan!(int<32>)^0 = ::send_indexed::out 
+          out = channel chan!(int<32>)^0 = send_indexed::out 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -168,7 +168,7 @@ In namespace "", we have: {
         <1, 1> {
           I = pint^0 value: 1
           J = pint^0 value: 1
-          out = channel chan!(int<32>)^0 = ::send_indexed::out 
+          out = channel chan!(int<32>)^0 = send_indexed::out 
           x = pint^1
             unrolled index-value pairs: {
               0 = 1
@@ -186,16 +186,16 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar = process send_indexed<1, 1>^0 = ::bar (
-    out = channel chan!(int<32>)^0 = ::bar.out 
+  bar = process send_indexed<1, 1>^0 = bar (
+    out = channel chan!(int<32>)^0 = bar.out 
   )
-  foo = process send_indexed<0, 0>^0 = ::foo (
-    out = channel chan!(int<32>)^0 = ::foo.out 
+  foo = process send_indexed<0, 0>^0 = foo (
+    out = channel chan!(int<32>)^0 = foo.out 
   )
-  ick = process send_indexed<0, 1>^0 = ::ick (
-    out = channel chan!(int<32>)^0 = ::ick.out 
+  ick = process send_indexed<0, 1>^0 = ick (
+    out = channel chan!(int<32>)^0 = ick.out 
   )
-  poo = process send_indexed<1, 0>^0 = ::poo (
-    out = channel chan!(int<32>)^0 = ::poo.out 
+  poo = process send_indexed<1, 0>^0 = poo (
+    out = channel chan!(int<32>)^0 = poo.out 
   )
 }

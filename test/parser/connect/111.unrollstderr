@@ -55,8 +55,8 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = ::wrap::a 
-        b = bool^0 = ::wrap::b 
+        a = bool^0 = wrap::a 
+        b = bool^0 = wrap::b 
       }
       }
 
@@ -66,12 +66,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  j = process wrap<>^0 = ::k (
-    a = bool^0 = ::j.b 
-    b = bool^0 = ::j.b 
+  j = process wrap<>^0 = k (
+    a = bool^0 = j.b 
+    b = bool^0 = j.b 
   )
-  k = process wrap<>^0 = ::k (
-    a = bool^0 = ::j.a 
-    b = bool^0 = ::j.b 
+  k = process wrap<>^0 = k (
+    a = bool^0 = j.a 
+    b = bool^0 = j.b 
   )
 }

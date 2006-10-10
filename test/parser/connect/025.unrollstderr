@@ -56,8 +56,8 @@ In namespace "", we have: {
         int<32> a
         int<32> b
       footprint: {
-        a = int<32>^0 = ::bar::a 
-        b = int<32>^0 = ::bar::b 
+        a = int<32>^0 = bar::a 
+        b = int<32>^0 = bar::b 
       }
       }
 
@@ -67,9 +67,9 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foo = int<32>^0 = ::none.b 
-  none = process bar<>^0 = ::none (
-    a = int<32>^0 = ::foo 
-    b = int<32>^0 = ::none.b 
+  foo = int<32>^0 = none.b 
+  none = process bar<>^0 = none (
+    a = int<32>^0 = foo 
+    b = int<32>^0 = none.b 
   )
 }

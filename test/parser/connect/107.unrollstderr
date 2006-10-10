@@ -87,31 +87,31 @@ In namespace "", we have: {
       pint<> X
       pint<> Y
       >(
-        foo<::bar::X> a
-        foo<::bar::Y> b
+        foo<bar::X> a
+        foo<bar::Y> b
       )
       In definition "bar", we have: {
       Parameters:
         X = pint<> bar::X
         Y = pint<> bar::Y
       Instances:
-        a = foo<::bar::X> bar::a
-        b = foo<::bar::Y> bar::b
+        a = foo<bar::X> bar::a
+        b = foo<bar::Y> bar::b
       unroll sequence: 
-        foo<::bar::X> a
-        foo<::bar::Y> b
+        foo<bar::X> a
+        foo<bar::Y> b
       footprint collection: {
         <2, 3> {
           X = pint^0 value: 2
           Y = pint^0 value: 3
-          a = process foo<2>^0 = ::bar::a 
-          b = process foo<3>^0 = ::bar::b 
+          a = process foo<2>^0 = bar::a 
+          b = process foo<3>^0 = bar::b 
         }
         <3, 4> {
           X = pint^0 value: 3
           Y = pint^0 value: 4
-          a = process foo<3>^0 = ::bar::a 
-          b = process foo<4>^0 = ::bar::b 
+          a = process foo<3>^0 = bar::a 
+          b = process foo<4>^0 = bar::b 
         }
       }
       }
@@ -143,12 +143,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  w = process bar<2, 3>^0 = ::w (
-    a = process foo<2>^0 = ::w.a 
-    b = process foo<3>^0 = ::z.a 
+  w = process bar<2, 3>^0 = w (
+    a = process foo<2>^0 = w.a 
+    b = process foo<3>^0 = z.a 
   )
-  z = process bar<3, 4>^0 = ::z (
-    a = process foo<3>^0 = ::z.a 
-    b = process foo<4>^0 = ::z.b 
+  z = process bar<3, 4>^0 = z (
+    a = process foo<3>^0 = z.a 
+    b = process foo<4>^0 = z.b 
   )
 }

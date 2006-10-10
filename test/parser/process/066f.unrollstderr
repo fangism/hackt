@@ -49,8 +49,8 @@ In namespace "", we have: {
         ick<> b
         a = b;
       footprint: {
-        a = process ick<>^0 = ::foo::b 
-        b = process ick<>^0 = ::foo::b 
+        a = process ick<>^0 = foo::b 
+        b = process ick<>^0 = foo::b 
       }
       }
 
@@ -67,8 +67,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process foo<>^0 = ::poo (
-    a = process ick<>^0 = ::poo.a 
-    b = process ick<>^0 = ::poo.b 
+  poo = process foo<>^0 = poo (
+    a = process ick<>^0 = poo.a 
+    b = process ick<>^0 = poo.b 
   )
 }

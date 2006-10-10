@@ -124,7 +124,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> d
       footprint: {
-        d = bool^0 = ::e1of2::d 
+        d = bool^0 = e1of2::d 
       }
       }
 
@@ -149,31 +149,31 @@ In namespace "", we have: {
         pand<> pnd
         pnd (g, pa0);
       footprint: {
-        a0copy = process pupcopy<>^0 = ::funit::a0copy (
-          r = process e1of2<>^0 = ::funit::lt.a (
-            d = bool^0 = ::funit::aa.d 
+        a0copy = process pupcopy<>^0 = funit::a0copy (
+          r = process e1of2<>^0 = funit::lt.a (
+            d = bool^0 = funit::aa.d 
           )
-          rp = process e1of2<>^0 = ::funit::pnd.a (
-            d = bool^0 = ::funit::pa0.d 
-          )
-        )
-        aa = process e1of2<>^0 = ::funit::a0copy.r (
-          d = bool^0 = ::funit::aa.d 
-        )
-        g = process globals<>^0 = ::funit::lt.g 
-        lt = process pand<>^0 = ::funit::lt (
-          g = process globals<>^0 = ::funit::pnd.g 
-          a = process e1of2<>^0 = ::funit::lt.a (
-            d = bool^0 = ::funit::aa.d 
+          rp = process e1of2<>^0 = funit::pnd.a (
+            d = bool^0 = funit::pa0.d 
           )
         )
-        pa0 = process e1of2<>^0 = ::funit::a0copy.rp (
-          d = bool^0 = ::funit::pa0.d 
+        aa = process e1of2<>^0 = funit::a0copy.r (
+          d = bool^0 = funit::aa.d 
         )
-        pnd = process pand<>^0 = ::funit::pnd (
-          g = process globals<>^0 = ::funit::pnd.g 
-          a = process e1of2<>^0 = ::funit::pnd.a (
-            d = bool^0 = ::funit::pa0.d 
+        g = process globals<>^0 = funit::lt.g 
+        lt = process pand<>^0 = funit::lt (
+          g = process globals<>^0 = funit::pnd.g 
+          a = process e1of2<>^0 = funit::lt.a (
+            d = bool^0 = funit::aa.d 
+          )
+        )
+        pa0 = process e1of2<>^0 = funit::a0copy.rp (
+          d = bool^0 = funit::pa0.d 
+        )
+        pnd = process pand<>^0 = funit::pnd (
+          g = process globals<>^0 = funit::pnd.g 
+          a = process e1of2<>^0 = funit::pnd.a (
+            d = bool^0 = funit::pa0.d 
           )
         )
       }
@@ -199,10 +199,10 @@ In namespace "", we have: {
         globals<> g
         e1of2<> a
       footprint: {
-        a = process e1of2<>^0 = ::pand::a (
-          d = bool^0 = ::pand::a.d 
+        a = process e1of2<>^0 = pand::a (
+          d = bool^0 = pand::a.d 
         )
-        g = process globals<>^0 = ::pand::g 
+        g = process globals<>^0 = pand::g 
       }
       }
 
@@ -219,11 +219,11 @@ In namespace "", we have: {
         e1of2<> rp
         r.d = rp.d;
       footprint: {
-        r = process e1of2<>^0 = ::pupcopy::r (
-          d = bool^0 = ::pupcopy::rp.d 
+        r = process e1of2<>^0 = pupcopy::r (
+          d = bool^0 = pupcopy::rp.d 
         )
-        rp = process e1of2<>^0 = ::pupcopy::rp (
-          d = bool^0 = ::pupcopy::rp.d 
+        rp = process e1of2<>^0 = pupcopy::rp (
+          d = bool^0 = pupcopy::rp.d 
         )
       }
       }
@@ -233,5 +233,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  X = process funit<>^0 = ::X 
+  X = process funit<>^0 = X 
 }

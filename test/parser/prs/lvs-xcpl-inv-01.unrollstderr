@@ -54,8 +54,8 @@ In namespace "", we have: {
         exclhi(x,y)
         excllo(x,y)
       footprint: {
-        x = bool^0 = ::xcpl_inv::x 
-        y = bool^0 = ::xcpl_inv::y 
+        x = bool^0 = xcpl_inv::x 
+        y = bool^0 = xcpl_inv::y 
       }
       }
 
@@ -64,8 +64,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  Z = process xcpl_inv<>^0 = ::Z (
-    x = bool^0 = ::Z.x 
-    y = bool^0 = ::Z.y 
+  Z = process xcpl_inv<>^0 = Z (
+    x = bool^0 = Z.x 
+    y = bool^0 = Z.y 
   )
 }

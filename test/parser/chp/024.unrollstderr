@@ -83,13 +83,13 @@ In namespace "", we have: {
       Instances:
         L = chan?(bool<>) one_shot::L
         R = chan!(bool<>) one_shot::R
-        x = int<::one_shot::Y> one_shot::x
-        z = int<::one_shot::X> one_shot::z
+        x = int<one_shot::Y> one_shot::x
+        z = int<one_shot::X> one_shot::z
       unroll sequence: 
         chan?(bool<>) L
         chan!(bool<>) R
-        int<::one_shot::X> z
-        int<::one_shot::Y> x
+        int<one_shot::X> z
+        int<one_shot::Y> x
       chp:
         concurrent: {
           sequential: {

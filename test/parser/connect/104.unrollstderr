@@ -102,8 +102,8 @@ In namespace "", we have: {
         foo<1> a
         foo<2> b
       footprint: {
-        a = process foo<1>^0 = ::bar::a 
-        b = process foo<2>^0 = ::bar::b 
+        a = process foo<1>^0 = bar::a 
+        b = process foo<2>^0 = bar::b 
       }
       }
 
@@ -126,9 +126,9 @@ In namespace "", we have: {
       }
 
   Instances:
-    p = foo<::Q[0]> p
-    q = foo<::Q[1]> q
-    r = foo<::Q[0]> r
+    p = foo<Q[0]> p
+    q = foo<Q[1]> q
+    r = foo<Q[0]> r
     w = bar<> w
 }
 
@@ -138,11 +138,11 @@ footprint: {
       0 = 1
       1 = 2
     }
-  p = process foo<1>^0 = ::w.a 
-  q = process foo<2>^0 = ::w.b 
-  r = process foo<1>^0 = ::w.a 
-  w = process bar<>^0 = ::w (
-    a = process foo<1>^0 = ::w.a 
-    b = process foo<2>^0 = ::w.b 
+  p = process foo<1>^0 = w.a 
+  q = process foo<2>^0 = w.b 
+  r = process foo<1>^0 = w.a 
+  w = process bar<>^0 = w (
+    a = process foo<1>^0 = w.a 
+    b = process foo<2>^0 = w.b 
   )
 }

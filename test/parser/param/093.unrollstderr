@@ -63,11 +63,11 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = foo<::y> bar
+    bar = foo<y> bar
 }
 
 footprint: {
-  bar = process foo<{{0,1},{2,3}}>^0 = ::bar 
+  bar = process foo<{{0,1},{2,3}}>^0 = bar 
   y = pint^2
     unrolled index-value pairs: {
       [0][0] = 0

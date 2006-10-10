@@ -100,11 +100,11 @@ In namespace "", we have: {
         (p & q) | (r & s) -> z-
         ~((p & q) | (r & s)) -> z+
       footprint: {
-        p = bool^0 = ::echo::p 
-        q = bool^0 = ::echo::q 
-        r = bool^0 = ::echo::r 
-        s = bool^0 = ::echo::s 
-        z = bool^0 = ::echo::z 
+        p = bool^0 = echo::p 
+        q = bool^0 = echo::q 
+        r = bool^0 = echo::r 
+        s = bool^0 = echo::s 
+        z = bool^0 = echo::z 
       }
       }
 
@@ -113,11 +113,11 @@ In namespace "", we have: {
 }
 
 footprint: {
-  E = process echo<>^0 = ::E (
-    p = bool^0 = ::E.p 
-    q = bool^0 = ::E.q 
-    r = bool^0 = ::E.r 
-    s = bool^0 = ::E.s 
-    z = bool^0 = ::E.z 
+  E = process echo<>^0 = E (
+    p = bool^0 = E.p 
+    q = bool^0 = E.q 
+    r = bool^0 = E.r 
+    s = bool^0 = E.s 
+    z = bool^0 = E.z 
   )
 }

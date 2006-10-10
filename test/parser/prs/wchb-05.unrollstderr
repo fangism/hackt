@@ -89,10 +89,10 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            0 = ::e1of2::d[0] 
-            1 = ::e1of2::d[1] 
+            0 = e1of2::d[0] 
+            1 = e1of2::d[1] 
           }
-        e = bool^0 = ::e1of2::e 
+        e = bool^0 = e1of2::e 
       }
       }
 
@@ -112,24 +112,24 @@ In namespace "", we have: {
         bool<> _r
         bool<> l1
       footprint: {
-        L = process e1of2<>^0 = ::wchb_e1of2::L (
+        L = process e1of2<>^0 = wchb_e1of2::L (
           d = bool^1
             {
-              0 = ::wchb_e1of2::L.d[0] 
-              1 = ::wchb_e1of2::L.d[1] 
+              0 = wchb_e1of2::L.d[0] 
+              1 = wchb_e1of2::L.d[1] 
             }
-          e = bool^0 = ::wchb_e1of2::L.e 
+          e = bool^0 = wchb_e1of2::L.e 
         )
-        R = process e1of2<>^0 = ::wchb_e1of2::R (
+        R = process e1of2<>^0 = wchb_e1of2::R (
           d = bool^1
             {
-              0 = ::wchb_e1of2::R.d[0] 
-              1 = ::wchb_e1of2::R.d[1] 
+              0 = wchb_e1of2::R.d[0] 
+              1 = wchb_e1of2::R.d[1] 
             }
-          e = bool^0 = ::wchb_e1of2::R.e 
+          e = bool^0 = wchb_e1of2::R.e 
         )
-        _r = bool^0 = ::wchb_e1of2::_r 
-        l1 = bool^0 = ::wchb_e1of2::l1 
+        _r = bool^0 = wchb_e1of2::_r 
+        l1 = bool^0 = wchb_e1of2::l1 
       }
       }
 
@@ -140,38 +140,38 @@ In namespace "", we have: {
 }
 
 footprint: {
-  L = process e1of2<>^0 = ::b.L (
+  L = process e1of2<>^0 = b.L (
     d = bool^1
       {
-        0 = ::L.d[0] 
-        1 = ::L.d[1] 
+        0 = L.d[0] 
+        1 = L.d[1] 
       }
-    e = bool^0 = ::L.e 
+    e = bool^0 = L.e 
   )
-  R = process e1of2<>^0 = ::b.R (
+  R = process e1of2<>^0 = b.R (
     d = bool^1
       {
-        0 = ::R.d[0] 
-        1 = ::R.d[1] 
+        0 = R.d[0] 
+        1 = R.d[1] 
       }
-    e = bool^0 = ::R.e 
+    e = bool^0 = R.e 
   )
-  b = process wchb_e1of2<>^0 = ::b (
-    L = process e1of2<>^0 = ::b.L (
+  b = process wchb_e1of2<>^0 = b (
+    L = process e1of2<>^0 = b.L (
       d = bool^1
         {
-          0 = ::L.d[0] 
-          1 = ::L.d[1] 
+          0 = L.d[0] 
+          1 = L.d[1] 
         }
-      e = bool^0 = ::L.e 
+      e = bool^0 = L.e 
     )
-    R = process e1of2<>^0 = ::b.R (
+    R = process e1of2<>^0 = b.R (
       d = bool^1
         {
-          0 = ::R.d[0] 
-          1 = ::R.d[1] 
+          0 = R.d[0] 
+          1 = R.d[1] 
         }
-      e = bool^0 = ::R.e 
+      e = bool^0 = R.e 
     )
   )
 }

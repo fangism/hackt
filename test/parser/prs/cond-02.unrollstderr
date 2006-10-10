@@ -74,13 +74,13 @@ In namespace "", we have: {
       footprint collection: {
         <1> {
           N = pint^0 value: 1
-          a = bool^0 = ::ass::a 
-          x = bool^0 = ::ass::x 
+          a = bool^0 = ass::a 
+          x = bool^0 = ass::x 
         }
         <2> {
           N = pint^0 value: 2
-          a = bool^0 = ::ass::a 
-          x = bool^0 = ::ass::x 
+          a = bool^0 = ass::a 
+          x = bool^0 = ass::x 
         }
       }
       }
@@ -91,6 +91,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  x = process ass<1>^0 = ::x 
-  y = process ass<2>^0 = ::y 
+  x = process ass<1>^0 = x 
+  y = process ass<2>^0 = y 
 }

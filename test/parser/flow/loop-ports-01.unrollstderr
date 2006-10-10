@@ -58,7 +58,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> d
       footprint: {
-        d = bool^0 = ::ch1of1::d 
+        d = bool^0 = ch1of1::d 
       }
       }
 
@@ -71,7 +71,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> a
       footprint: {
-        a = bool^0 = ::dcelm::a 
+        a = bool^0 = dcelm::a 
       }
       }
 
@@ -88,11 +88,11 @@ In namespace "", we have: {
           ce (ad.d);
         )
       footprint: {
-        ad = process ch1of1<>^0 = ::lut::ad (
-          d = bool^0 = ::lut::ce.a 
+        ad = process ch1of1<>^0 = lut::ad (
+          d = bool^0 = lut::ce.a 
         )
-        ce = process dcelm<>^0 = ::lut::ce (
-          a = bool^0 = ::lut::ce.a 
+        ce = process dcelm<>^0 = lut::ce (
+          a = bool^0 = lut::ce.a 
         )
       }
       }
@@ -102,5 +102,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  l = process lut<>^0 = ::l 
+  l = process lut<>^0 = l 
 }

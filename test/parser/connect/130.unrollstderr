@@ -80,11 +80,11 @@ In namespace "", we have: {
           N = pint^0 value: 3
           l = bool^1
             {
-              0 = ::ass::l[0] 
-              1 = ::ass::l[1] 
-              2 = ::ass::l[2] 
+              0 = ass::l[0] 
+              1 = ass::l[1] 
+              2 = ass::l[2] 
             }
-          r = bool^0 = ::ass::r 
+          r = bool^0 = ass::r 
         }
       }
       }
@@ -98,17 +98,17 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = bool^0 = ::myass.l[0] 
-  b = bool^0 = ::myass.l[1] 
-  c = bool^0 = ::myass.l[2] 
-  myass = process ass<3>^0 = ::myass (
+  a = bool^0 = myass.l[0] 
+  b = bool^0 = myass.l[1] 
+  c = bool^0 = myass.l[2] 
+  myass = process ass<3>^0 = myass (
     l = bool^1
       {
-        0 = ::myass.l[0] 
-        1 = ::myass.l[1] 
-        2 = ::myass.l[2] 
+        0 = myass.l[0] 
+        1 = myass.l[1] 
+        2 = myass.l[2] 
       }
-    r = bool^0 = ::myass.r 
+    r = bool^0 = myass.r 
   )
-  r = bool^0 = ::myass.r 
+  r = bool^0 = myass.r 
 }

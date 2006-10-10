@@ -2154,7 +2154,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::aMx1ofN::N> b[0..M-1]
+        c1of<aMx1ofN::N> b[0..M-1]
         bool<> a
       )
       In definition "aMx1ofN", we have: {
@@ -2163,9 +2163,9 @@ In namespace "", we have: {
         N = pint<> aMx1ofN::N
       Instances:
         a = bool<> aMx1ofN::a
-        b = c1of<::aMx1ofN::N> aMx1ofN::b^1
+        b = c1of<aMx1ofN::N> aMx1ofN::b^1
       unroll sequence: 
-        c1of<::aMx1ofN::N> b[0..M-1]
+        c1of<aMx1ofN::N> b[0..M-1]
         bool<> a
       }
 
@@ -2294,7 +2294,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::eMx1ofN::N> b[0..M-1]
+        c1of<eMx1ofN::N> b[0..M-1]
         bool<> e
       )
       In definition "eMx1ofN", we have: {
@@ -2302,10 +2302,10 @@ In namespace "", we have: {
         M = pint<> eMx1ofN::M
         N = pint<> eMx1ofN::N
       Instances:
-        b = c1of<::eMx1ofN::N> eMx1ofN::b^1
+        b = c1of<eMx1ofN::N> eMx1ofN::b^1
         e = bool<> eMx1ofN::e
       unroll sequence: 
-        c1of<::eMx1ofN::N> b[0..M-1]
+        c1of<eMx1ofN::N> b[0..M-1]
         bool<> e
       }
 
@@ -2356,24 +2356,24 @@ In namespace "", we have: {
     pcefb_en1ofN = process-definition (defined) pcefb_en1ofN<
       pint<> N
       >(
-        en1of<::pcefb_en1ofN::N> l
-        en1of<::pcefb_en1ofN::N> r
+        en1of<pcefb_en1ofN::N> l
+        en1of<pcefb_en1ofN::N> r
       )
       In definition "pcefb_en1ofN", we have: {
       Parameters:
         N = pint<> pcefb_en1ofN::N
       Instances:
         _en = bool<> pcefb_en1ofN::_en
-        _r = _c1of<::pcefb_en1ofN::N> pcefb_en1ofN::_r
+        _r = _c1of<pcefb_en1ofN::N> pcefb_en1ofN::_r
         en = bool<> pcefb_en1ofN::en
-        l = en1of<::pcefb_en1ofN::N> pcefb_en1ofN::l
+        l = en1of<pcefb_en1ofN::N> pcefb_en1ofN::l
         lv = bool<> pcefb_en1ofN::lv
-        r = en1of<::pcefb_en1ofN::N> pcefb_en1ofN::r
+        r = en1of<pcefb_en1ofN::N> pcefb_en1ofN::r
         rv = bool<> pcefb_en1ofN::rv
       unroll sequence: 
-        en1of<::pcefb_en1ofN::N> l
-        en1of<::pcefb_en1ofN::N> r
-        _c1of<::pcefb_en1ofN::N> _r
+        en1of<pcefb_en1ofN::N> l
+        en1of<pcefb_en1ofN::N> r
+        _c1of<pcefb_en1ofN::N> _r
         bool<> _en
         bool<> en
         bool<> lv
@@ -2408,8 +2408,8 @@ In namespace "", we have: {
     pcefb_en1ofN_reh = process-definition (defined) pcefb_en1ofN_reh<
       pint<> N
       >(
-        en1of<::pcefb_en1ofN_reh::N> l
-        en1of<::pcefb_en1ofN_reh::N> r
+        en1of<pcefb_en1ofN_reh::N> l
+        en1of<pcefb_en1ofN_reh::N> r
         bool<> _Reset
       )
       In definition "pcefb_en1ofN_reh", we have: {
@@ -2418,17 +2418,17 @@ In namespace "", we have: {
       Instances:
         _Reset = bool<> pcefb_en1ofN_reh::_Reset
         _en = bool<> pcefb_en1ofN_reh::_en
-        _r = _c1of<::pcefb_en1ofN_reh::N> pcefb_en1ofN_reh::_r
+        _r = _c1of<pcefb_en1ofN_reh::N> pcefb_en1ofN_reh::_r
         en = bool<> pcefb_en1ofN_reh::en
-        l = en1of<::pcefb_en1ofN_reh::N> pcefb_en1ofN_reh::l
+        l = en1of<pcefb_en1ofN_reh::N> pcefb_en1ofN_reh::l
         lv = bool<> pcefb_en1ofN_reh::lv
-        r = en1of<::pcefb_en1ofN_reh::N> pcefb_en1ofN_reh::r
+        r = en1of<pcefb_en1ofN_reh::N> pcefb_en1ofN_reh::r
         rv = bool<> pcefb_en1ofN_reh::rv
       unroll sequence: 
-        en1of<::pcefb_en1ofN_reh::N> l
-        en1of<::pcefb_en1ofN_reh::N> r
+        en1of<pcefb_en1ofN_reh::N> l
+        en1of<pcefb_en1ofN_reh::N> r
         bool<> _Reset
-        _c1of<::pcefb_en1ofN_reh::N> _r
+        _c1of<pcefb_en1ofN_reh::N> _r
         bool<> _en
         bool<> en
         bool<> lv

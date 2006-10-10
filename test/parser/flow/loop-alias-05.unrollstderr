@@ -74,12 +74,12 @@ In namespace "", we have: {
           p.t = pbint.pb.t;
         )
       footprint: {
-        p = process pbit<>^0 = ::lut::p (
-          t = bool^0 = ::lut::pbint.pb.t 
+        p = process pbit<>^0 = lut::p (
+          t = bool^0 = lut::pbint.pb.t 
         )
-        pbint = process pbitint<>^0 = ::lut::pbint (
-          pb = process pbit<>^0 = ::lut::pbint.pb (
-            t = bool^0 = ::lut::pbint.pb.t 
+        pbint = process pbitint<>^0 = lut::pbint (
+          pb = process pbit<>^0 = lut::pbint.pb (
+            t = bool^0 = lut::pbint.pb.t 
           )
         )
       }
@@ -94,7 +94,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> t
       footprint: {
-        t = bool^0 = ::pbit::t 
+        t = bool^0 = pbit::t 
       }
       }
 
@@ -107,8 +107,8 @@ In namespace "", we have: {
       unroll sequence: 
         pbit<> pb
       footprint: {
-        pb = process pbit<>^0 = ::pbitint::pb (
-          t = bool^0 = ::pbitint::pb.t 
+        pb = process pbit<>^0 = pbitint::pb (
+          t = bool^0 = pbitint::pb.t 
         )
       }
       }
@@ -118,10 +118,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  l = process lut<>^0 = ::l (
-    pbint = process pbitint<>^0 = ::l.pbint (
-      pb = process pbit<>^0 = ::l.pbint.pb (
-        t = bool^0 = ::l.pbint.pb.t 
+  l = process lut<>^0 = l (
+    pbint = process pbitint<>^0 = l.pbint (
+      pb = process pbit<>^0 = l.pbint.pb (
+        t = bool^0 = l.pbint.pb.t 
       )
     )
   )

@@ -373,12 +373,12 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            0 = ::e1of2::f 
-            1 = ::e1of2::t 
+            0 = e1of2::f 
+            1 = e1of2::t 
           }
-        e = bool^0 = ::e1of2::e 
-        f = bool^0 = ::e1of2::f 
-        t = bool^0 = ::e1of2::t 
+        e = bool^0 = e1of2::e 
+        f = bool^0 = e1of2::f 
+        t = bool^0 = e1of2::t 
       }
       }
 
@@ -411,46 +411,46 @@ In namespace "", we have: {
         e1of2<> c
         e1of2<> x
       footprint: {
-        a = process e1of2<>^0 = ::merge::a (
+        a = process e1of2<>^0 = merge::a (
           d = bool^1
             {
-              0 = ::merge::a.d[0] 
-              1 = ::merge::a.d[1] 
+              0 = merge::a.d[0] 
+              1 = merge::a.d[1] 
             }
-          t = bool^0 = ::merge::a.t 
-          f = bool^0 = ::merge::a.f 
-          e = bool^0 = ::merge::a.e 
+          t = bool^0 = merge::a.t 
+          f = bool^0 = merge::a.f 
+          e = bool^0 = merge::a.e 
         )
-        b = process e1of2<>^0 = ::merge::b (
+        b = process e1of2<>^0 = merge::b (
           d = bool^1
             {
-              0 = ::merge::b.d[0] 
-              1 = ::merge::b.d[1] 
+              0 = merge::b.d[0] 
+              1 = merge::b.d[1] 
             }
-          t = bool^0 = ::merge::b.t 
-          f = bool^0 = ::merge::b.f 
-          e = bool^0 = ::merge::b.e 
+          t = bool^0 = merge::b.t 
+          f = bool^0 = merge::b.f 
+          e = bool^0 = merge::b.e 
         )
-        c = process e1of2<>^0 = ::merge::c (
+        c = process e1of2<>^0 = merge::c (
           d = bool^1
             {
-              0 = ::merge::c.d[0] 
-              1 = ::merge::c.d[1] 
+              0 = merge::c.d[0] 
+              1 = merge::c.d[1] 
             }
-          t = bool^0 = ::merge::c.t 
-          f = bool^0 = ::merge::c.f 
-          e = bool^0 = ::merge::c.e 
+          t = bool^0 = merge::c.t 
+          f = bool^0 = merge::c.f 
+          e = bool^0 = merge::c.e 
         )
-        g = process globals<>^0 = ::merge::g 
-        x = process e1of2<>^0 = ::merge::x (
+        g = process globals<>^0 = merge::g 
+        x = process e1of2<>^0 = merge::x (
           d = bool^1
             {
-              0 = ::merge::x.d[0] 
-              1 = ::merge::x.d[1] 
+              0 = merge::x.d[0] 
+              1 = merge::x.d[1] 
             }
-          t = bool^0 = ::merge::x.t 
-          f = bool^0 = ::merge::x.f 
-          e = bool^0 = ::merge::x.e 
+          t = bool^0 = merge::x.t 
+          f = bool^0 = merge::x.f 
+          e = bool^0 = merge::x.e 
         )
       }
       }
@@ -467,16 +467,16 @@ In namespace "", we have: {
         globals<> g
         e1of2<> r
       footprint: {
-        g = process globals<>^0 = ::source_e1of2_1::g 
-        r = process e1of2<>^0 = ::source_e1of2_1::r (
+        g = process globals<>^0 = source_e1of2_1::g 
+        r = process e1of2<>^0 = source_e1of2_1::r (
           d = bool^1
             {
-              0 = ::source_e1of2_1::r.d[0] 
-              1 = ::source_e1of2_1::r.d[1] 
+              0 = source_e1of2_1::r.d[0] 
+              1 = source_e1of2_1::r.d[1] 
             }
-          t = bool^0 = ::source_e1of2_1::r.t 
-          f = bool^0 = ::source_e1of2_1::r.f 
-          e = bool^0 = ::source_e1of2_1::r.e 
+          t = bool^0 = source_e1of2_1::r.t 
+          f = bool^0 = source_e1of2_1::r.f 
+          e = bool^0 = source_e1of2_1::r.e 
         )
       }
       }
@@ -502,46 +502,46 @@ In namespace "", we have: {
         e1of2<> a
         e1of2<> b
       footprint: {
-        a = process e1of2<>^0 = ::split4::a (
+        a = process e1of2<>^0 = split4::a (
           d = bool^1
             {
-              0 = ::split4::a.d[0] 
-              1 = ::split4::a.d[1] 
+              0 = split4::a.d[0] 
+              1 = split4::a.d[1] 
             }
-          t = bool^0 = ::split4::a.t 
-          f = bool^0 = ::split4::a.f 
-          e = bool^0 = ::split4::a.e 
+          t = bool^0 = split4::a.t 
+          f = bool^0 = split4::a.f 
+          e = bool^0 = split4::a.e 
         )
-        b = process e1of2<>^0 = ::split4::b (
+        b = process e1of2<>^0 = split4::b (
           d = bool^1
             {
-              0 = ::split4::b.d[0] 
-              1 = ::split4::b.d[1] 
+              0 = split4::b.d[0] 
+              1 = split4::b.d[1] 
             }
-          t = bool^0 = ::split4::b.t 
-          f = bool^0 = ::split4::b.f 
-          e = bool^0 = ::split4::b.e 
+          t = bool^0 = split4::b.t 
+          f = bool^0 = split4::b.f 
+          e = bool^0 = split4::b.e 
         )
-        c = process e1of2<>^0 = ::split4::c (
+        c = process e1of2<>^0 = split4::c (
           d = bool^1
             {
-              0 = ::split4::c.d[0] 
-              1 = ::split4::c.d[1] 
+              0 = split4::c.d[0] 
+              1 = split4::c.d[1] 
             }
-          t = bool^0 = ::split4::c.t 
-          f = bool^0 = ::split4::c.f 
-          e = bool^0 = ::split4::c.e 
+          t = bool^0 = split4::c.t 
+          f = bool^0 = split4::c.f 
+          e = bool^0 = split4::c.e 
         )
-        g = process globals<>^0 = ::split4::g 
-        l = process e1of2<>^0 = ::split4::l (
+        g = process globals<>^0 = split4::g 
+        l = process e1of2<>^0 = split4::l (
           d = bool^1
             {
-              0 = ::split4::l.d[0] 
-              1 = ::split4::l.d[1] 
+              0 = split4::l.d[0] 
+              1 = split4::l.d[1] 
             }
-          t = bool^0 = ::split4::l.t 
-          f = bool^0 = ::split4::l.f 
-          e = bool^0 = ::split4::l.e 
+          t = bool^0 = split4::l.t 
+          f = bool^0 = split4::l.f 
+          e = bool^0 = split4::l.e 
         )
       }
       }
@@ -559,25 +559,25 @@ In namespace "", we have: {
         e1of2<> r
         l.d = r.d;
       footprint: {
-        l = process e1of2<>^0 = ::upcopy::l (
+        l = process e1of2<>^0 = upcopy::l (
           d = bool^1
             {
-              0 = ::upcopy::r.d[0] 
-              1 = ::upcopy::r.d[1] 
+              0 = upcopy::r.d[0] 
+              1 = upcopy::r.d[1] 
             }
-          t = bool^0 = ::upcopy::l.t 
-          f = bool^0 = ::upcopy::l.f 
-          e = bool^0 = ::upcopy::l.e 
+          t = bool^0 = upcopy::l.t 
+          f = bool^0 = upcopy::l.f 
+          e = bool^0 = upcopy::l.e 
         )
-        r = process e1of2<>^0 = ::upcopy::r (
+        r = process e1of2<>^0 = upcopy::r (
           d = bool^1
             {
-              0 = ::upcopy::r.d[0] 
-              1 = ::upcopy::r.d[1] 
+              0 = upcopy::r.d[0] 
+              1 = upcopy::r.d[1] 
             }
-          t = bool^0 = ::upcopy::r.t 
-          f = bool^0 = ::upcopy::r.f 
-          e = bool^0 = ::upcopy::r.e 
+          t = bool^0 = upcopy::r.t 
+          f = bool^0 = upcopy::r.f 
+          e = bool^0 = upcopy::r.e 
         )
       }
       }
@@ -600,216 +600,216 @@ In namespace "", we have: {
 }
 
 footprint: {
-  cpywcon = process upcopy<>^0 = ::cpywcon (
-    l = process e1of2<>^0 = ::srcwcon.r (
+  cpywcon = process upcopy<>^0 = cpywcon (
+    l = process e1of2<>^0 = srcwcon.r (
       d = bool^1
         {
-          0 = ::wcon.d[0] 
-          1 = ::wcon.d[1] 
+          0 = wcon.d[0] 
+          1 = wcon.d[1] 
         }
-      t = bool^0 = ::wcon.t 
-      f = bool^0 = ::wcon.f 
-      e = bool^0 = ::wcon.e 
+      t = bool^0 = wcon.t 
+      f = bool^0 = wcon.f 
+      e = bool^0 = wcon.e 
     )
-    r = process e1of2<>^0 = ::cpywcon.r (
+    r = process e1of2<>^0 = cpywcon.r (
       d = bool^1
         {
-          0 = ::wcons.d[0] 
-          1 = ::wcons.d[1] 
+          0 = wcons.d[0] 
+          1 = wcons.d[1] 
         }
-      t = bool^0 = ::wcons.t 
-      f = bool^0 = ::wcons.f 
-      e = bool^0 = ::wcons.e 
+      t = bool^0 = wcons.t 
+      f = bool^0 = wcons.f 
+      e = bool^0 = wcons.e 
     )
   )
-  g = process globals<>^0 = ::mrg.g 
-  ja = process e1of2<>^0 = ::splt.a (
+  g = process globals<>^0 = mrg.g 
+  ja = process e1of2<>^0 = splt.a (
     d = bool^1
       {
-        0 = ::ja.d[0] 
-        1 = ::ja.d[1] 
+        0 = ja.d[0] 
+        1 = ja.d[1] 
       }
-    t = bool^0 = ::ja.t 
-    f = bool^0 = ::ja.f 
-    e = bool^0 = ::ja.e 
+    t = bool^0 = ja.t 
+    f = bool^0 = ja.f 
+    e = bool^0 = ja.e 
   )
-  jb = process e1of2<>^0 = ::splt.b (
+  jb = process e1of2<>^0 = splt.b (
     d = bool^1
       {
-        0 = ::jb.d[0] 
-        1 = ::jb.d[1] 
+        0 = jb.d[0] 
+        1 = jb.d[1] 
       }
-    t = bool^0 = ::jb.t 
-    f = bool^0 = ::jb.f 
-    e = bool^0 = ::jb.e 
+    t = bool^0 = jb.t 
+    f = bool^0 = jb.f 
+    e = bool^0 = jb.e 
   )
-  l = process e1of2<>^0 = ::splt.l (
+  l = process e1of2<>^0 = splt.l (
     d = bool^1
       {
-        0 = ::l.d[0] 
-        1 = ::l.d[1] 
+        0 = l.d[0] 
+        1 = l.d[1] 
       }
-    t = bool^0 = ::l.t 
-    f = bool^0 = ::l.f 
-    e = bool^0 = ::l.e 
+    t = bool^0 = l.t 
+    f = bool^0 = l.f 
+    e = bool^0 = l.e 
   )
-  mrg = process merge<>^0 = ::mrg (
-    g = process globals<>^0 = ::srcwcon.g 
-    a = process e1of2<>^0 = ::mrg.a (
+  mrg = process merge<>^0 = mrg (
+    g = process globals<>^0 = srcwcon.g 
+    a = process e1of2<>^0 = mrg.a (
       d = bool^1
         {
-          0 = ::xa.d[0] 
-          1 = ::xa.d[1] 
+          0 = xa.d[0] 
+          1 = xa.d[1] 
         }
-      t = bool^0 = ::xa.t 
-      f = bool^0 = ::xa.f 
-      e = bool^0 = ::xa.e 
+      t = bool^0 = xa.t 
+      f = bool^0 = xa.f 
+      e = bool^0 = xa.e 
     )
-    b = process e1of2<>^0 = ::mrg.b (
+    b = process e1of2<>^0 = mrg.b (
       d = bool^1
         {
-          0 = ::xb.d[0] 
-          1 = ::xb.d[1] 
+          0 = xb.d[0] 
+          1 = xb.d[1] 
         }
-      t = bool^0 = ::xb.t 
-      f = bool^0 = ::xb.f 
-      e = bool^0 = ::xb.e 
+      t = bool^0 = xb.t 
+      f = bool^0 = xb.f 
+      e = bool^0 = xb.e 
     )
-    c = process e1of2<>^0 = ::mrg.c (
+    c = process e1of2<>^0 = mrg.c (
       d = bool^1
         {
-          0 = ::wconm.d[0] 
-          1 = ::wconm.d[1] 
+          0 = wconm.d[0] 
+          1 = wconm.d[1] 
         }
-      t = bool^0 = ::wconm.t 
-      f = bool^0 = ::wconm.f 
-      e = bool^0 = ::wconm.e 
+      t = bool^0 = wconm.t 
+      f = bool^0 = wconm.f 
+      e = bool^0 = wconm.e 
     )
-    x = process e1of2<>^0 = ::mrg.x (
+    x = process e1of2<>^0 = mrg.x (
       d = bool^1
         {
-          0 = ::xw.d[0] 
-          1 = ::xw.d[1] 
+          0 = xw.d[0] 
+          1 = xw.d[1] 
         }
-      t = bool^0 = ::xw.t 
-      f = bool^0 = ::xw.f 
-      e = bool^0 = ::xw.e 
-    )
-  )
-  splt = process split4<>^0 = ::splt (
-    g = process globals<>^0 = ::mrg.g 
-    l = process e1of2<>^0 = ::splt.l (
-      d = bool^1
-        {
-          0 = ::l.d[0] 
-          1 = ::l.d[1] 
-        }
-      t = bool^0 = ::l.t 
-      f = bool^0 = ::l.f 
-      e = bool^0 = ::l.e 
-    )
-    c = process e1of2<>^0 = ::cpywcon.r (
-      d = bool^1
-        {
-          0 = ::wcons.d[0] 
-          1 = ::wcons.d[1] 
-        }
-      t = bool^0 = ::wcons.t 
-      f = bool^0 = ::wcons.f 
-      e = bool^0 = ::wcons.e 
-    )
-    a = process e1of2<>^0 = ::splt.a (
-      d = bool^1
-        {
-          0 = ::ja.d[0] 
-          1 = ::ja.d[1] 
-        }
-      t = bool^0 = ::ja.t 
-      f = bool^0 = ::ja.f 
-      e = bool^0 = ::ja.e 
-    )
-    b = process e1of2<>^0 = ::splt.b (
-      d = bool^1
-        {
-          0 = ::jb.d[0] 
-          1 = ::jb.d[1] 
-        }
-      t = bool^0 = ::jb.t 
-      f = bool^0 = ::jb.f 
-      e = bool^0 = ::jb.e 
+      t = bool^0 = xw.t 
+      f = bool^0 = xw.f 
+      e = bool^0 = xw.e 
     )
   )
-  srcwcon = process source_e1of2_1<>^0 = ::srcwcon (
-    g = process globals<>^0 = ::srcwcon.g 
-    r = process e1of2<>^0 = ::srcwcon.r (
+  splt = process split4<>^0 = splt (
+    g = process globals<>^0 = mrg.g 
+    l = process e1of2<>^0 = splt.l (
       d = bool^1
         {
-          0 = ::wcon.d[0] 
-          1 = ::wcon.d[1] 
+          0 = l.d[0] 
+          1 = l.d[1] 
         }
-      t = bool^0 = ::wcon.t 
-      f = bool^0 = ::wcon.f 
-      e = bool^0 = ::wcon.e 
+      t = bool^0 = l.t 
+      f = bool^0 = l.f 
+      e = bool^0 = l.e 
+    )
+    c = process e1of2<>^0 = cpywcon.r (
+      d = bool^1
+        {
+          0 = wcons.d[0] 
+          1 = wcons.d[1] 
+        }
+      t = bool^0 = wcons.t 
+      f = bool^0 = wcons.f 
+      e = bool^0 = wcons.e 
+    )
+    a = process e1of2<>^0 = splt.a (
+      d = bool^1
+        {
+          0 = ja.d[0] 
+          1 = ja.d[1] 
+        }
+      t = bool^0 = ja.t 
+      f = bool^0 = ja.f 
+      e = bool^0 = ja.e 
+    )
+    b = process e1of2<>^0 = splt.b (
+      d = bool^1
+        {
+          0 = jb.d[0] 
+          1 = jb.d[1] 
+        }
+      t = bool^0 = jb.t 
+      f = bool^0 = jb.f 
+      e = bool^0 = jb.e 
     )
   )
-  wcon = process e1of2<>^0 = ::cpywcon.l (
+  srcwcon = process source_e1of2_1<>^0 = srcwcon (
+    g = process globals<>^0 = srcwcon.g 
+    r = process e1of2<>^0 = srcwcon.r (
+      d = bool^1
+        {
+          0 = wcon.d[0] 
+          1 = wcon.d[1] 
+        }
+      t = bool^0 = wcon.t 
+      f = bool^0 = wcon.f 
+      e = bool^0 = wcon.e 
+    )
+  )
+  wcon = process e1of2<>^0 = cpywcon.l (
     d = bool^1
       {
-        0 = ::wcon.d[0] 
-        1 = ::wcon.d[1] 
+        0 = wcon.d[0] 
+        1 = wcon.d[1] 
       }
-    t = bool^0 = ::wcon.t 
-    f = bool^0 = ::wcon.f 
-    e = bool^0 = ::wcon.e 
+    t = bool^0 = wcon.t 
+    f = bool^0 = wcon.f 
+    e = bool^0 = wcon.e 
   )
-  wconm = process e1of2<>^0 = ::mrg.c (
+  wconm = process e1of2<>^0 = mrg.c (
     d = bool^1
       {
-        0 = ::wconm.d[0] 
-        1 = ::wconm.d[1] 
+        0 = wconm.d[0] 
+        1 = wconm.d[1] 
       }
-    t = bool^0 = ::wconm.t 
-    f = bool^0 = ::wconm.f 
-    e = bool^0 = ::wconm.e 
+    t = bool^0 = wconm.t 
+    f = bool^0 = wconm.f 
+    e = bool^0 = wconm.e 
   )
-  wcons = process e1of2<>^0 = ::splt.c (
+  wcons = process e1of2<>^0 = splt.c (
     d = bool^1
       {
-        0 = ::wcons.d[0] 
-        1 = ::wcons.d[1] 
+        0 = wcons.d[0] 
+        1 = wcons.d[1] 
       }
-    t = bool^0 = ::wcons.t 
-    f = bool^0 = ::wcons.f 
-    e = bool^0 = ::wcons.e 
+    t = bool^0 = wcons.t 
+    f = bool^0 = wcons.f 
+    e = bool^0 = wcons.e 
   )
-  xa = process e1of2<>^0 = ::mrg.a (
+  xa = process e1of2<>^0 = mrg.a (
     d = bool^1
       {
-        0 = ::xa.d[0] 
-        1 = ::xa.d[1] 
+        0 = xa.d[0] 
+        1 = xa.d[1] 
       }
-    t = bool^0 = ::xa.t 
-    f = bool^0 = ::xa.f 
-    e = bool^0 = ::xa.e 
+    t = bool^0 = xa.t 
+    f = bool^0 = xa.f 
+    e = bool^0 = xa.e 
   )
-  xb = process e1of2<>^0 = ::mrg.b (
+  xb = process e1of2<>^0 = mrg.b (
     d = bool^1
       {
-        0 = ::xb.d[0] 
-        1 = ::xb.d[1] 
+        0 = xb.d[0] 
+        1 = xb.d[1] 
       }
-    t = bool^0 = ::xb.t 
-    f = bool^0 = ::xb.f 
-    e = bool^0 = ::xb.e 
+    t = bool^0 = xb.t 
+    f = bool^0 = xb.f 
+    e = bool^0 = xb.e 
   )
-  xw = process e1of2<>^0 = ::mrg.x (
+  xw = process e1of2<>^0 = mrg.x (
     d = bool^1
       {
-        0 = ::xw.d[0] 
-        1 = ::xw.d[1] 
+        0 = xw.d[0] 
+        1 = xw.d[1] 
       }
-    t = bool^0 = ::xw.t 
-    f = bool^0 = ::xw.f 
-    e = bool^0 = ::xw.e 
+    t = bool^0 = xw.t 
+    f = bool^0 = xw.f 
+    e = bool^0 = xw.e 
   )
 }

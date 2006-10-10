@@ -625,7 +625,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::aMx1ofN::N> b[0..M-1]
+        c1of<aMx1ofN::N> b[0..M-1]
         bool<> a
       )
       In definition "aMx1ofN", we have: {
@@ -634,9 +634,9 @@ In namespace "", we have: {
         N = pint<> aMx1ofN::N
       Instances:
         a = bool<> aMx1ofN::a
-        b = c1of<::aMx1ofN::N> aMx1ofN::b^1
+        b = c1of<aMx1ofN::N> aMx1ofN::b^1
       unroll sequence: 
-        c1of<::aMx1ofN::N> b[0..M-1]
+        c1of<aMx1ofN::N> b[0..M-1]
         bool<> a
       }
 
@@ -722,9 +722,9 @@ In namespace "", we have: {
           N = pint^0 value: 1
           d = bool^1
             {
-              0 = ::e1of::d[0] 
+              0 = e1of::d[0] 
             }
-          e = bool^0 = ::e1of::e 
+          e = bool^0 = e1of::e 
         }
       }
       }
@@ -775,7 +775,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::eMx1ofN::N> b[0..M-1]
+        c1of<eMx1ofN::N> b[0..M-1]
         bool<> e
       )
       In definition "eMx1ofN", we have: {
@@ -783,10 +783,10 @@ In namespace "", we have: {
         M = pint<> eMx1ofN::M
         N = pint<> eMx1ofN::N
       Instances:
-        b = c1of<::eMx1ofN::N> eMx1ofN::b^1
+        b = c1of<eMx1ofN::N> eMx1ofN::b^1
         e = bool<> eMx1ofN::e
       unroll sequence: 
-        c1of<::eMx1ofN::N> b[0..M-1]
+        c1of<eMx1ofN::N> b[0..M-1]
         bool<> e
       }
 
@@ -972,11 +972,11 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foo = process e1of<1>^0 = ::foo (
+  foo = process e1of<1>^0 = foo (
     d = bool^1
       {
-        0 = ::foo.d[0] 
+        0 = foo.d[0] 
       }
-    e = bool^0 = ::foo.e 
+    e = bool^0 = foo.e 
   )
 }

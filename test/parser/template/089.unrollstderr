@@ -51,6 +51,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  dar = process foo<5>^0 = ::dar 
-  ear = process foo<5>^0 = ::ear 
+  dar = process foo<5>^0 = dar 
+  ear = process foo<5>^0 = ear 
 }

@@ -48,11 +48,11 @@ In namespace "", we have: {
       footprint: {
         x = process foo<>^1
           {
-            0 = ::bar::x[0] (
-              a = bool^0 = ::bar::x[0].a 
+            0 = bar::x[0] (
+              a = bool^0 = bar::x[0].a 
             )
-            1 = ::bar::x[1] (
-              a = bool^0 = ::bar::x[1].a 
+            1 = bar::x[1] (
+              a = bool^0 = bar::x[1].a 
             )
           }
       }
@@ -67,7 +67,7 @@ In namespace "", we have: {
       unroll sequence: 
         bool<> a
       footprint: {
-        a = bool^0 = ::foo::a 
+        a = bool^0 = foo::a 
       }
       }
 
@@ -76,14 +76,14 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process bar<>^0 = ::poo (
+  poo = process bar<>^0 = poo (
     x = process foo<>^1
       {
-        0 = ::poo.x[0] (
-          a = bool^0 = ::poo.x[0].a 
+        0 = poo.x[0] (
+          a = bool^0 = poo.x[0].a 
         )
-        1 = ::poo.x[1] (
-          a = bool^0 = ::poo.x[1].a 
+        1 = poo.x[1] (
+          a = bool^0 = poo.x[1].a 
         )
       }
   )

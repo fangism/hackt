@@ -51,22 +51,22 @@ In namespace "", we have: {
     adjacent_diff = process-definition (defined) adjacent_diff<
       pint<> W
       >(
-        chan?(int<::adjacent_diff::W>) L
-        chan!(int<::adjacent_diff::W>) R
+        chan?(int<adjacent_diff::W>) L
+        chan!(int<adjacent_diff::W>) R
       )
       In definition "adjacent_diff", we have: {
       Parameters:
         W = pint<> adjacent_diff::W
       Instances:
-        L = chan?(int<::adjacent_diff::W>) adjacent_diff::L
-        R = chan!(int<::adjacent_diff::W>) adjacent_diff::R
-        x = int<::adjacent_diff::W> adjacent_diff::x
-        z = int<::adjacent_diff::W> adjacent_diff::z
+        L = chan?(int<adjacent_diff::W>) adjacent_diff::L
+        R = chan!(int<adjacent_diff::W>) adjacent_diff::R
+        x = int<adjacent_diff::W> adjacent_diff::x
+        z = int<adjacent_diff::W> adjacent_diff::z
       unroll sequence: 
-        chan?(int<::adjacent_diff::W>) L
-        chan!(int<::adjacent_diff::W>) R
-        int<::adjacent_diff::W> x
-        int<::adjacent_diff::W> z
+        chan?(int<adjacent_diff::W>) L
+        chan!(int<adjacent_diff::W>) R
+        int<adjacent_diff::W> x
+        int<adjacent_diff::W> z
       chp:
         concurrent: {
           sequential: {

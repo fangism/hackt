@@ -41,5 +41,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  x = int<32>^0 = ::x 
+  x = int<32>^0 = x 
 }

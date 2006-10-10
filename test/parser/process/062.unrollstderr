@@ -92,21 +92,21 @@ In namespace "", we have: {
             }
           a = bool^1
             {
-              0 = ::foo::a[0] 
-              1 = ::foo::a[1] 
+              0 = foo::a[0] 
+              1 = foo::a[1] 
             }
           b = bool^1
             {
-              0 = ::foo::b[0] 
-              1 = ::foo::b[1] 
-              2 = ::foo::b[2] 
+              0 = foo::b[0] 
+              1 = foo::b[1] 
+              2 = foo::b[2] 
             }
         }
       }
       }
 
   Instances:
-    poo = foo<::Q> poo
+    poo = foo<Q> poo
 }
 
 footprint: {
@@ -115,17 +115,17 @@ footprint: {
       0 = 2
       1 = 3
     }
-  poo = process foo<{2,3}>^0 = ::poo (
+  poo = process foo<{2,3}>^0 = poo (
     a = bool^1
       {
-        0 = ::poo.a[0] 
-        1 = ::poo.a[1] 
+        0 = poo.a[0] 
+        1 = poo.a[1] 
       }
     b = bool^1
       {
-        0 = ::poo.b[0] 
-        1 = ::poo.b[1] 
-        2 = ::poo.b[2] 
+        0 = poo.b[0] 
+        1 = poo.b[1] 
+        2 = poo.b[2] 
       }
   )
 }

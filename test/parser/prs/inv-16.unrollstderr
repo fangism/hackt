@@ -90,8 +90,8 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = ::inv::a 
-        b = bool^0 = ::inv::b 
+        a = bool^0 = inv::a 
+        b = bool^0 = inv::b 
       }
       }
 
@@ -106,20 +106,20 @@ In namespace "", we have: {
 }
 
 footprint: {
-  i1 = process inv<>^0 = ::i1 (
-    a = bool^0 = ::i1.a 
-    b = bool^0 = ::i1.b 
+  i1 = process inv<>^0 = i1 (
+    a = bool^0 = i1.a 
+    b = bool^0 = i1.b 
   )
-  i2 = process inv<>^0 = ::i2 (
-    a = bool^0 = ::i2.a 
-    b = bool^0 = ::i2.b 
+  i2 = process inv<>^0 = i2 (
+    a = bool^0 = i2.a 
+    b = bool^0 = i2.b 
   )
-  i3 = process inv<>^0 = ::i3 (
-    a = bool^0 = ::i3.a 
-    b = bool^0 = ::i3.b 
+  i3 = process inv<>^0 = i3 (
+    a = bool^0 = i3.a 
+    b = bool^0 = i3.b 
   )
-  p = bool^0 = ::i2.a 
-  q = bool^0 = ::i3.b 
-  x = bool^0 = ::i1.a 
-  y = bool^0 = ::i1.b 
+  p = bool^0 = i2.a 
+  q = bool^0 = i3.b 
+  x = bool^0 = i1.a 
+  y = bool^0 = i1.b 
 }

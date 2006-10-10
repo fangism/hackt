@@ -41,5 +41,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  BQ = process foo::bar<>^0 = ::BQ 
+  BQ = process foo::bar<>^0 = BQ 
 }

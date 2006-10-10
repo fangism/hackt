@@ -84,5 +84,5 @@ In namespace "", we have: {
 
 footprint: {
   bar::Q = pint^0 value: 13
-  f = process bar::foo<>^0 = ::f 
+  f = process bar::foo<>^0 = f 
 }

@@ -113,21 +113,21 @@ In namespace "", we have: {
           N = pint^0 value: 2
           in = bool^1
             {
-              0 = ::nand::in[0] 
-              1 = ::nand::in[1] 
+              0 = nand::in[0] 
+              1 = nand::in[1] 
             }
-          out = bool^0 = ::nand::out 
+          out = bool^0 = nand::out 
         }
         <4> {
           N = pint^0 value: 4
           in = bool^1
             {
-              0 = ::nand::in[0] 
-              1 = ::nand::in[1] 
-              2 = ::nand::in[2] 
-              3 = ::nand::in[3] 
+              0 = nand::in[0] 
+              1 = nand::in[1] 
+              2 = nand::in[2] 
+              3 = nand::in[3] 
             }
-          out = bool^0 = ::nand::out 
+          out = bool^0 = nand::out 
         }
       }
       }
@@ -139,23 +139,23 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = process nand<2>^0 = ::a (
+  a = process nand<2>^0 = a (
     in = bool^1
       {
-        0 = ::a.in[0] 
-        1 = ::a.in[1] 
+        0 = a.in[0] 
+        1 = a.in[1] 
       }
-    out = bool^0 = ::b.out 
+    out = bool^0 = b.out 
   )
-  b = process nand<4>^0 = ::b (
+  b = process nand<4>^0 = b (
     in = bool^1
       {
-        0 = ::b.in[0] 
-        1 = ::b.in[1] 
-        2 = ::b.in[2] 
-        3 = ::b.in[3] 
+        0 = b.in[0] 
+        1 = b.in[1] 
+        2 = b.in[2] 
+        3 = b.in[3] 
       }
-    out = bool^0 = ::b.out 
+    out = bool^0 = b.out 
   )
-  z = bool^0 = ::a.out 
+  z = bool^0 = a.out 
 }

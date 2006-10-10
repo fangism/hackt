@@ -58,37 +58,37 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       >(
-        int<::foo::N> a
+        int<foo::N> a
       )
       In definition "foo", we have: {
       Parameters:
         N = pint<> foo::N
       Instances:
-        a = int<::foo::N> foo::a
-        blah = int<::foo::N> foo::blah^1
+        a = int<foo::N> foo::a
+        blah = int<foo::N> foo::blah^1
       unroll sequence: 
-        int<::foo::N> a
-        int<::foo::N> blah[0..2]
+        int<foo::N> a
+        int<foo::N> blah[0..2]
         blah[1] = a;
       footprint collection: {
         <8> {
           N = pint^0 value: 8
-          a = int<8>^0 = ::foo::a 
+          a = int<8>^0 = foo::a 
           blah = int<8>^1
             {
-              0 = ::foo::blah[0] 
-              1 = ::foo::a 
-              2 = ::foo::blah[2] 
+              0 = foo::blah[0] 
+              1 = foo::a 
+              2 = foo::blah[2] 
             }
         }
         <11> {
           N = pint^0 value: 11
-          a = int<11>^0 = ::foo::a 
+          a = int<11>^0 = foo::a 
           blah = int<11>^1
             {
-              0 = ::foo::blah[0] 
-              1 = ::foo::a 
-              2 = ::foo::blah[2] 
+              0 = foo::blah[0] 
+              1 = foo::a 
+              2 = foo::blah[2] 
             }
         }
       }
@@ -100,10 +100,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  achoo = process foo<11>^0 = ::achoo (
-    a = int<11>^0 = ::achoo.a 
+  achoo = process foo<11>^0 = achoo (
+    a = int<11>^0 = achoo.a 
   )
-  poo = process foo<8>^0 = ::poo (
-    a = int<8>^0 = ::poo.a 
+  poo = process foo<8>^0 = poo (
+    a = int<8>^0 = poo.a 
   )
 }

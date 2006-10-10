@@ -113,8 +113,8 @@ In namespace "", we have: {
         a<tenf*threef,threef> -> b-
         ~a<tenf*threef,threef> -> b+
       footprint: {
-        a = bool^0 = ::sized_prs::a 
-        b = bool^0 = ::sized_prs::b 
+        a = bool^0 = sized_prs::a 
+        b = bool^0 = sized_prs::b 
         ten = pint^0 value: 10
         tenf = preal^0 value: 10
         threef = preal^0 value: 3
@@ -126,8 +126,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  z = process sized_prs<>^0 = ::z (
-    a = bool^0 = ::z.a 
-    b = bool^0 = ::z.b 
+  z = process sized_prs<>^0 = z (
+    a = bool^0 = z.a 
+    b = bool^0 = z.b 
   )
 }

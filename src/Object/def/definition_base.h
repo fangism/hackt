@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.8.8.6 2006/10/08 21:51:52 fang Exp $
+	$Id: definition_base.h,v 1.8.8.7 2006/10/10 07:11:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -228,8 +228,7 @@ virtual	excl_ptr<definition_base>
 	const string&
 	get_name(void) const { return get_key(); }
 
-// need not be virtual?
-virtual	string
+	string
 	get_qualified_name(void) const;
 
 	ostream&

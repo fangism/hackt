@@ -77,15 +77,15 @@ In namespace "", we have: {
       footprint collection: {
         <123> {
           B = pint^0 value: 123
-          b = int<32>^0 = ::assign_me::b 
+          b = int<32>^0 = assign_me::b 
         }
         <456> {
           B = pint^0 value: 456
-          b = int<32>^0 = ::assign_me::b 
+          b = int<32>^0 = assign_me::b 
         }
         <789> {
           B = pint^0 value: 789
-          b = int<32>^0 = ::assign_me::b 
+          b = int<32>^0 = assign_me::b 
         }
       }
       }
@@ -97,13 +97,13 @@ In namespace "", we have: {
 }
 
 footprint: {
-  X = process assign_me<123>^0 = ::X (
-    b = int<32>^0 = ::X.b 
+  X = process assign_me<123>^0 = X (
+    b = int<32>^0 = X.b 
   )
-  Y = process assign_me<456>^0 = ::Y (
-    b = int<32>^0 = ::Y.b 
+  Y = process assign_me<456>^0 = Y (
+    b = int<32>^0 = Y.b 
   )
-  Z = process assign_me<789>^0 = ::Z (
-    b = int<32>^0 = ::Z.b 
+  Z = process assign_me<789>^0 = Z (
+    b = int<32>^0 = Z.b 
   )
 }

@@ -49,9 +49,9 @@ In namespace "", we have: {
       Parameters:
         W = pint<> foo::W
       Instances:
-        my_bar = bar<6><::foo::W> foo::my_bar
+        my_bar = bar<6><foo::W> foo::my_bar
       unroll sequence: 
-        bar<6><::foo::W> my_bar
+        bar<6><foo::W> my_bar
       }
 
 }

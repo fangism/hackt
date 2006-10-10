@@ -39,13 +39,13 @@ In namespace "", we have: {
     bar = process-definition (declared) bar<
       pint<> N
       >(
-        int<::bar::N> ick
+        int<bar::N> ick
       )
       In definition "bar", we have: {
       Parameters:
         N = pint<> bar::N
       Instances:
-        ick = int<::bar::N> bar::ick
+        ick = int<bar::N> bar::ick
       }
 
     foo = process-definition (declared) foo<

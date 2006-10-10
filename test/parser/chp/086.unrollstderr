@@ -134,10 +134,10 @@ In namespace "", we have: {
       footprint: {
         index = channel chan?(int<1>)^1
           {
-            0 = ::send_indexed::index[0] 
-            1 = ::send_indexed::index[1] 
+            0 = send_indexed::index[0] 
+            1 = send_indexed::index[1] 
           }
-        out = channel chan!(int<32>)^0 = ::send_indexed::out 
+        out = channel chan!(int<32>)^0 = send_indexed::out 
         x = pint^2
           unrolled index-value pairs: {
             [0][0] = 1
@@ -145,8 +145,8 @@ In namespace "", we have: {
             [1][0] = 3
             [1][1] = 4
           }
-        y = int<1>^0 = ::send_indexed::y 
-        z = int<1>^0 = ::send_indexed::z 
+        y = int<1>^0 = send_indexed::y 
+        z = int<1>^0 = send_indexed::z 
       }
       }
 
@@ -155,12 +155,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  foo = process send_indexed<>^0 = ::foo (
+  foo = process send_indexed<>^0 = foo (
     index = channel chan?(int<1>)^1
       {
-        0 = ::foo.index[0] 
-        1 = ::foo.index[1] 
+        0 = foo.index[0] 
+        1 = foo.index[1] 
       }
-    out = channel chan!(int<32>)^0 = ::foo.out 
+    out = channel chan!(int<32>)^0 = foo.out 
   )
 }

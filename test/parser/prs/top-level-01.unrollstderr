@@ -30,6 +30,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a = bool^0 = ::a 
-  b = bool^0 = ::b 
+  a = bool^0 = a 
+  b = bool^0 = b 
 }

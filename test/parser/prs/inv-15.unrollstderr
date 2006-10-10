@@ -51,8 +51,8 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        a = bool^0 = ::inv::a 
-        b = bool^0 = ::inv::b 
+        a = bool^0 = inv::a 
+        b = bool^0 = inv::b 
       }
       }
 
@@ -61,8 +61,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  __inv__ = process inv<>^0 = ::__inv__ (
-    a = bool^0 = ::__inv__.a 
-    b = bool^0 = ::__inv__.b 
+  __inv__ = process inv<>^0 = __inv__ (
+    a = bool^0 = __inv__.a 
+    b = bool^0 = __inv__.b 
   )
 }

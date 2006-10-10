@@ -77,20 +77,20 @@ In namespace "", we have: {
 footprint: {
   bar = process foo<5>^1
     {
-      0<4> = ::bar[0] 
-      1<4> = ::bar[1] 
-      2<4> = ::bar[2] 
+      0<4> = bar[0] 
+      1<4> = bar[1] 
+      2<4> = bar[2] 
     }
   car = process foo<5><4>^1
     {
-      0 = ::car[0] 
-      1 = ::car[1] 
-      2 = ::car[2] 
+      0 = car[0] 
+      1 = car[1] 
+      2 = car[2] 
     }
   dar = process foo<5>^1
     {
-      0 = ::dar[0] 
-      1 = ::dar[1] 
-      2 = ::dar[2] 
+      0 = dar[0] 
+      1 = dar[1] 
+      2 = dar[2] 
     }
 }

@@ -57,7 +57,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar = process foo<1>^0 = ::ick 
-  ick = process foo<1>^0 = ::ick 
-  poo = process foo<1>^0 = ::poo 
+  bar = process foo<1>^0 = ick 
+  ick = process foo<1>^0 = ick 
+  poo = process foo<1>^0 = poo 
 }

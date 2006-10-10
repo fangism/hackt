@@ -70,11 +70,11 @@ In namespace "", we have: {
       footprint collection: {
         <false> {
           B = pbool^0 value: 0
-          b = channel chan!(bool<>)^0 = ::send_me::b 
+          b = channel chan!(bool<>)^0 = send_me::b 
         }
         <true> {
           B = pbool^0 value: 1
-          b = channel chan!(bool<>)^0 = ::send_me::b 
+          b = channel chan!(bool<>)^0 = send_me::b 
         }
       }
       }
@@ -85,10 +85,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  X = process send_me<true>^0 = ::X (
-    b = channel chan!(bool<>)^0 = ::X.b 
+  X = process send_me<true>^0 = X (
+    b = channel chan!(bool<>)^0 = X.b 
   )
-  Y = process send_me<false>^0 = ::Y (
-    b = channel chan!(bool<>)^0 = ::Y.b 
+  Y = process send_me<false>^0 = Y (
+    b = channel chan!(bool<>)^0 = Y.b 
   )
 }

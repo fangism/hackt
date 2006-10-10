@@ -75,16 +75,16 @@ In namespace "", we have: {
         bool<> fo
         bool<> fum[0..1]
       footprint: {
-        fee = bool^0 = ::my_data::fee 
-        fi = bool^0 = ::my_data::fi 
-        fo = bool^0 = ::my_data::fo 
+        fee = bool^0 = my_data::fee 
+        fi = bool^0 = my_data::fi 
+        fo = bool^0 = my_data::fo 
         fum = bool^1
           {
-            0 = ::my_data::fum[0] 
-            1 = ::my_data::fum[1] 
+            0 = my_data::fum[0] 
+            1 = my_data::fum[1] 
           }
-        x = int<8>^0 = ::my_data::x 
-        y = bool^0 = ::my_data::y 
+        x = int<8>^0 = my_data::x 
+        y = bool^0 = my_data::y 
       }
       }
 
@@ -95,13 +95,13 @@ In namespace "", we have: {
 footprint: {
   Z = struct my_data<>^1
     {
-      0 = ::Z[0] (
-        x = int<8>^0 = ::Z[0].x 
-        y = bool^0 = ::Z[0].y 
+      0 = Z[0] (
+        x = int<8>^0 = Z[0].x 
+        y = bool^0 = Z[0].y 
       )
-      1 = ::Z[1] (
-        x = int<8>^0 = ::Z[1].x 
-        y = bool^0 = ::Z[1].y 
+      1 = Z[1] (
+        x = int<8>^0 = Z[1].x 
+        y = bool^0 = Z[1].y 
       )
     }
 }

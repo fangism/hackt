@@ -42,16 +42,16 @@ In namespace "", we have: {
     assignme = process-definition (defined) assignme<
       pint<> W
       >(
-        int<::assignme::W> b
+        int<assignme::W> b
       )
       In definition "assignme", we have: {
       Parameters:
         W = pint<> assignme::W
         c = pint<> assignme::c
       Instances:
-        b = int<::assignme::W> assignme::b
+        b = int<assignme::W> assignme::b
       unroll sequence: 
-        int<::assignme::W> b
+        int<assignme::W> b
         pint<> c
       chp:
         concurrent: {
@@ -62,7 +62,7 @@ In namespace "", we have: {
       footprint collection: {
         <8> {
           W = pint^0 value: 8
-          b = int<8>^0 = ::assignme::b 
+          b = int<8>^0 = assignme::b 
           c = pint^0 value: ?
         }
       }
@@ -73,7 +73,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  X = process assignme<8>^0 = ::X (
-    b = int<8>^0 = ::X.b 
+  X = process assignme<8>^0 = X (
+    b = int<8>^0 = X.b 
   )
 }

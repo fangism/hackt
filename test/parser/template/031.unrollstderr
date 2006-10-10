@@ -62,7 +62,7 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = foo<::W> bar
+    bar = foo<W> bar
 }
 
 footprint: {
@@ -71,5 +71,5 @@ footprint: {
       0 = 0
       1 = 1
     }
-  bar = process foo<{0,1}>^0 = ::bar 
+  bar = process foo<{0,1}>^0 = bar 
 }

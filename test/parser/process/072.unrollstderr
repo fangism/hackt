@@ -55,28 +55,28 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       >(
-        int<::foo::N> a
+        int<foo::N> a
       )
       In definition "foo", we have: {
       Parameters:
         N = pint<> foo::N
       Instances:
-        a = int<::foo::N> foo::a
-        b = int<::foo::N> foo::b
+        a = int<foo::N> foo::a
+        b = int<foo::N> foo::b
       unroll sequence: 
-        int<::foo::N> a
-        int<::foo::N> b
+        int<foo::N> a
+        int<foo::N> b
         a = b;
       footprint collection: {
         <8> {
           N = pint^0 value: 8
-          a = int<8>^0 = ::foo::b 
-          b = int<8>^0 = ::foo::b 
+          a = int<8>^0 = foo::b 
+          b = int<8>^0 = foo::b 
         }
         <16> {
           N = pint^0 value: 16
-          a = int<16>^0 = ::foo::b 
-          b = int<16>^0 = ::foo::b 
+          a = int<16>^0 = foo::b 
+          b = int<16>^0 = foo::b 
         }
       }
       }
@@ -87,10 +87,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  pew = process foo<16>^0 = ::pew (
-    a = int<16>^0 = ::pew.a 
+  pew = process foo<16>^0 = pew (
+    a = int<16>^0 = pew.a 
   )
-  poo = process foo<8>^0 = ::poo (
-    a = int<8>^0 = ::poo.a 
+  poo = process foo<8>^0 = poo (
+    a = int<8>^0 = poo.a 
   )
 }

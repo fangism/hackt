@@ -71,8 +71,8 @@ In namespace "", we have: {
         foo<> x
         foo<> y
       footprint: {
-        x = process foo<>^0 = ::bar::x 
-        y = process foo<>^0 = ::bar::y 
+        x = process foo<>^0 = bar::x 
+        y = process foo<>^0 = bar::y 
       }
       }
 
@@ -86,8 +86,8 @@ In namespace "", we have: {
         bool<> a
         bool<> b
       footprint: {
-        a = bool^0 = ::foo::a 
-        b = bool^0 = ::foo::b 
+        a = bool^0 = foo::a 
+        b = bool^0 = foo::b 
       }
       }
 
@@ -103,11 +103,11 @@ In namespace "", we have: {
         bar<> p
         bar<> q
       footprint: {
-        p = process bar<>^0 = ::ick::p (
-          x = process foo<>^0 = ::ick::p.x 
+        p = process bar<>^0 = ick::p (
+          x = process foo<>^0 = ick::p.x 
         )
-        q = process bar<>^0 = ::ick::q (
-          x = process foo<>^0 = ::ick::q.x 
+        q = process bar<>^0 = ick::q (
+          x = process foo<>^0 = ick::q.x 
         )
       }
       }
@@ -117,12 +117,12 @@ In namespace "", we have: {
 }
 
 footprint: {
-  poo = process ick<>^0 = ::poo (
-    p = process bar<>^0 = ::poo.p (
-      x = process foo<>^0 = ::poo.p.x 
+  poo = process ick<>^0 = poo (
+    p = process bar<>^0 = poo.p (
+      x = process foo<>^0 = poo.p.x 
     )
-    q = process bar<>^0 = ::poo.q (
-      x = process foo<>^0 = ::poo.q.x 
+    q = process bar<>^0 = poo.q (
+      x = process foo<>^0 = poo.q.x 
     )
   )
 }

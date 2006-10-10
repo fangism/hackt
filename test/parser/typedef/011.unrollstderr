@@ -47,11 +47,11 @@ In namespace "", we have: {
     col = process-definition-alias: col<
       pint<> K
       >
-      = array2d<::col::K, 1>
+      = array2d<col::K, 1>
     row = process-definition-alias: row<
       pint<> Q
       >
-      = array2d<1, ::row::Q>
+      = array2d<1, row::Q>
 }
 
 footprint: {

@@ -55,11 +55,11 @@ In namespace "", we have: {
         (&:i:[0..-1]: z[$i]) -> o-
         (|:i:[0..-1]: ~z[$i]) -> o+
       footprint: {
-        o = bool^0 = ::null::o 
+        o = bool^0 = null::o 
         z = bool^1
           {
-            0 = ::null::z[0] 
-            1 = ::null::z[1] 
+            0 = null::z[0] 
+            1 = null::z[1] 
           }
       }
       }
@@ -69,5 +69,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  q = process null<>^0 = ::q 
+  q = process null<>^0 = q 
 }

@@ -2353,7 +2353,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::aMx1ofN::N> b[0..M-1]
+        c1of<aMx1ofN::N> b[0..M-1]
         bool<> a
       )
       In definition "aMx1ofN", we have: {
@@ -2362,9 +2362,9 @@ In namespace "", we have: {
         N = pint<> aMx1ofN::N
       Instances:
         a = bool<> aMx1ofN::a
-        b = c1of<::aMx1ofN::N> aMx1ofN::b^1
+        b = c1of<aMx1ofN::N> aMx1ofN::b^1
       unroll sequence: 
-        c1of<::aMx1ofN::N> b[0..M-1]
+        c1of<aMx1ofN::N> b[0..M-1]
         bool<> a
       }
 
@@ -2416,7 +2416,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        a1of<::bitbucket_Mxa1of::N> r[0..(M-1)-1]
+        a1of<bitbucket_Mxa1of::N> r[0..(M-1)-1]
         bool<> _Reset
       )
       In definition "bitbucket_Mxa1of", we have: {
@@ -2425,16 +2425,16 @@ In namespace "", we have: {
         N = pint<> bitbucket_Mxa1of::N
       Instances:
         _Reset = bool<> bitbucket_Mxa1of::_Reset
-        ba = bitbucket_a1of<::bitbucket_Mxa1of::N> bitbucket_Mxa1of::ba^1
-        r = a1of<::bitbucket_Mxa1of::N> bitbucket_Mxa1of::r^1
-        s = a1of<::bitbucket_Mxa1of::N> bitbucket_Mxa1of::s^1
+        ba = bitbucket_a1of<bitbucket_Mxa1of::N> bitbucket_Mxa1of::ba^1
+        r = a1of<bitbucket_Mxa1of::N> bitbucket_Mxa1of::r^1
+        s = a1of<bitbucket_Mxa1of::N> bitbucket_Mxa1of::s^1
         sa = bool<> bitbucket_Mxa1of::sa
       unroll sequence: 
-        a1of<::bitbucket_Mxa1of::N> r[0..(M-1)-1]
+        a1of<bitbucket_Mxa1of::N> r[0..(M-1)-1]
         bool<> _Reset
-        a1of<::bitbucket_Mxa1of::N> s[0..M-1]
+        a1of<bitbucket_Mxa1of::N> s[0..M-1]
         bool<> sa
-        bitbucket_a1of<::bitbucket_Mxa1of::N> ba[0..(M-1)-1]
+        bitbucket_a1of<bitbucket_Mxa1of::N> ba[0..(M-1)-1]
         (;i:[0..M-1]:
           r[$i].d = s[$i].d;
           r[$i].a = sa;
@@ -2443,15 +2443,15 @@ In namespace "", we have: {
           ba[$i] (s[$i], _Reset);
         )
       prs:
-        (&:i:[0..M-1]: s[$i].a) -> sa+ [after=::EnvDelay; ]
-        (&:i:[0..M-1]: ~s[$i].a) -> sa- [after=::EnvDelay; ]
+        (&:i:[0..M-1]: s[$i].a) -> sa+ [after=EnvDelay; ]
+        (&:i:[0..M-1]: ~s[$i].a) -> sa- [after=EnvDelay; ]
       }
 
     bitbucket_Mxe1of = process-definition (defined) bitbucket_Mxe1of<
       pint<> N
       pint<> M
       >(
-        e1of<::bitbucket_Mxe1of::N> r[0..(M-1)-1]
+        e1of<bitbucket_Mxe1of::N> r[0..(M-1)-1]
         bool<> _Reset
       )
       In definition "bitbucket_Mxe1of", we have: {
@@ -2460,16 +2460,16 @@ In namespace "", we have: {
         N = pint<> bitbucket_Mxe1of::N
       Instances:
         _Reset = bool<> bitbucket_Mxe1of::_Reset
-        be = bitbucket_e1of<::bitbucket_Mxe1of::N> bitbucket_Mxe1of::be^1
-        r = e1of<::bitbucket_Mxe1of::N> bitbucket_Mxe1of::r^1
-        s = e1of<::bitbucket_Mxe1of::N> bitbucket_Mxe1of::s^1
+        be = bitbucket_e1of<bitbucket_Mxe1of::N> bitbucket_Mxe1of::be^1
+        r = e1of<bitbucket_Mxe1of::N> bitbucket_Mxe1of::r^1
+        s = e1of<bitbucket_Mxe1of::N> bitbucket_Mxe1of::s^1
         se = bool<> bitbucket_Mxe1of::se
       unroll sequence: 
-        e1of<::bitbucket_Mxe1of::N> r[0..(M-1)-1]
+        e1of<bitbucket_Mxe1of::N> r[0..(M-1)-1]
         bool<> _Reset
-        e1of<::bitbucket_Mxe1of::N> s[0..M-1]
+        e1of<bitbucket_Mxe1of::N> s[0..M-1]
         bool<> se
-        bitbucket_e1of<::bitbucket_Mxe1of::N> be[0..(M-1)-1]
+        bitbucket_e1of<bitbucket_Mxe1of::N> be[0..(M-1)-1]
         (;i:[0..M-1]:
           r[$i].d = s[$i].d;
           r[$i].e = se;
@@ -2478,14 +2478,14 @@ In namespace "", we have: {
           be[$i] (s[$i], _Reset);
         )
       prs:
-        (&:i:[0..M-1]: ~s[$i].e) -> se- [after=::EnvDelay; ]
-        (&:i:[0..M-1]: s[$i].e) -> se+ [after=::EnvDelay; ]
+        (&:i:[0..M-1]: ~s[$i].e) -> se- [after=EnvDelay; ]
+        (&:i:[0..M-1]: s[$i].e) -> se+ [after=EnvDelay; ]
       }
 
     bitbucket_a1of = process-definition (defined) bitbucket_a1of<
       pint<> N
       >(
-        a1of<::bitbucket_a1of::N> l
+        a1of<bitbucket_a1of::N> l
         bool<> _Reset
       )
       In definition "bitbucket_a1of", we have: {
@@ -2495,25 +2495,25 @@ In namespace "", we have: {
         _Reset = bool<> bitbucket_a1of::_Reset
         __la = bool<> bitbucket_a1of::__la
         _la = bool<> bitbucket_a1of::_la
-        l = a1of<::bitbucket_a1of::N> bitbucket_a1of::l
+        l = a1of<bitbucket_a1of::N> bitbucket_a1of::l
       unroll sequence: 
-        a1of<::bitbucket_a1of::N> l
+        a1of<bitbucket_a1of::N> l
         bool<> _Reset
         bool<> __la
         bool<> _la
       prs:
-        ~_Reset | (|:i:[0..N-1]: l.d[$i]) -> __la+ [after=::EnvDelay; ]
-        _Reset & (&:i:[0..N-1]: ~l.d[$i]) -> __la- [after=::EnvDelay; ]
-        __la -> _la- [after=::EnvDelay; ]
-        ~__la -> _la+ [after=::EnvDelay; ]
-        ~_la -> l.a+ [after=::EnvDelay; ]
-        _la -> l.a- [after=::EnvDelay; ]
+        ~_Reset | (|:i:[0..N-1]: l.d[$i]) -> __la+ [after=EnvDelay; ]
+        _Reset & (&:i:[0..N-1]: ~l.d[$i]) -> __la- [after=EnvDelay; ]
+        __la -> _la- [after=EnvDelay; ]
+        ~__la -> _la+ [after=EnvDelay; ]
+        ~_la -> l.a+ [after=EnvDelay; ]
+        _la -> l.a- [after=EnvDelay; ]
       }
 
     bitbucket_e1of = process-definition (defined) bitbucket_e1of<
       pint<> N
       >(
-        e1of<::bitbucket_e1of::N> l
+        e1of<bitbucket_e1of::N> l
         bool<> _Reset
       )
       In definition "bitbucket_e1of", we have: {
@@ -2523,19 +2523,19 @@ In namespace "", we have: {
         _Reset = bool<> bitbucket_e1of::_Reset
         __le = bool<> bitbucket_e1of::__le
         _le = bool<> bitbucket_e1of::_le
-        l = e1of<::bitbucket_e1of::N> bitbucket_e1of::l
+        l = e1of<bitbucket_e1of::N> bitbucket_e1of::l
       unroll sequence: 
-        e1of<::bitbucket_e1of::N> l
+        e1of<bitbucket_e1of::N> l
         bool<> _Reset
         bool<> __le
         bool<> _le
       prs:
-        ~_Reset | (|:i:[0..N-1]: l.d[$i]) -> __le- [after=::EnvDelay; ]
-        _Reset & (&:i:[0..N-1]: ~l.d[$i]) -> __le+ [after=::EnvDelay; ]
-        ~__le -> _le+ [after=::EnvDelay; ]
-        __le -> _le- [after=::EnvDelay; ]
-        _le -> l.e- [after=::EnvDelay; ]
-        ~_le -> l.e+ [after=::EnvDelay; ]
+        ~_Reset | (|:i:[0..N-1]: l.d[$i]) -> __le- [after=EnvDelay; ]
+        _Reset & (&:i:[0..N-1]: ~l.d[$i]) -> __le+ [after=EnvDelay; ]
+        ~__le -> _le+ [after=EnvDelay; ]
+        __le -> _le- [after=EnvDelay; ]
+        _le -> l.e- [after=EnvDelay; ]
+        ~_le -> l.e+ [after=EnvDelay; ]
       }
 
     c1of = process-definition (defined) c1of<
@@ -2557,8 +2557,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           d = bool^1
             {
-              0 = ::c1of::d[0] 
-              1 = ::c1of::d[1] 
+              0 = c1of::d[0] 
+              1 = c1of::d[1] 
             }
         }
       }
@@ -2586,18 +2586,18 @@ In namespace "", we have: {
           N = pint^0 value: 1
           d = bool^1
             {
-              0 = ::e1of::d[0] 
+              0 = e1of::d[0] 
             }
-          e = bool^0 = ::e1of::e 
+          e = bool^0 = e1of::e 
         }
         <2> {
           N = pint^0 value: 2
           d = bool^1
             {
-              0 = ::e1of::d[0] 
-              1 = ::e1of::d[1] 
+              0 = e1of::d[0] 
+              1 = e1of::d[1] 
             }
-          e = bool^0 = ::e1of::e 
+          e = bool^0 = e1of::e 
         }
       }
       }
@@ -2648,7 +2648,7 @@ In namespace "", we have: {
       pint<> N
       pint<> M
       >(
-        c1of<::eMx1ofN::N> b[0..M-1]
+        c1of<eMx1ofN::N> b[0..M-1]
         bool<> e
       )
       In definition "eMx1ofN", we have: {
@@ -2656,10 +2656,10 @@ In namespace "", we have: {
         M = pint<> eMx1ofN::M
         N = pint<> eMx1ofN::N
       Instances:
-        b = c1of<::eMx1ofN::N> eMx1ofN::b^1
+        b = c1of<eMx1ofN::N> eMx1ofN::b^1
         e = bool<> eMx1ofN::e
       unroll sequence: 
-        c1of<::eMx1ofN::N> b[0..M-1]
+        c1of<eMx1ofN::N> b[0..M-1]
         bool<> e
       }
 
@@ -2710,7 +2710,7 @@ In namespace "", we have: {
     inactive_reset_bitbucket_a1of = process-definition (defined) inactive_reset_bitbucket_a1of<
       pint<> N
       >(
-        a1of<::inactive_reset_bitbucket_a1of::N> r
+        a1of<inactive_reset_bitbucket_a1of::N> r
         bool<> _Reset
       )
       In definition "inactive_reset_bitbucket_a1of", we have: {
@@ -2719,22 +2719,22 @@ In namespace "", we have: {
       Instances:
         _Reset = bool<> inactive_reset_bitbucket_a1of::_Reset
         _ra = bool<> inactive_reset_bitbucket_a1of::_ra
-        r = a1of<::inactive_reset_bitbucket_a1of::N> inactive_reset_bitbucket_a1of::r
+        r = a1of<inactive_reset_bitbucket_a1of::N> inactive_reset_bitbucket_a1of::r
       unroll sequence: 
-        a1of<::inactive_reset_bitbucket_a1of::N> r
+        a1of<inactive_reset_bitbucket_a1of::N> r
         bool<> _Reset
         bool<> _ra
       prs:
-        (|:i:[0..N-1]: r.d[$i]) & _Reset -> _ra- [after=::EnvDelay; ]
-        (&:i:[0..N-1]: ~r.d[$i]) | ~_Reset -> _ra+ [after=::EnvDelay; ]
-        _ra -> r.a- [after=::EnvDelay; ]
-        ~_ra -> r.a+ [after=::EnvDelay; ]
+        (|:i:[0..N-1]: r.d[$i]) & _Reset -> _ra- [after=EnvDelay; ]
+        (&:i:[0..N-1]: ~r.d[$i]) | ~_Reset -> _ra+ [after=EnvDelay; ]
+        _ra -> r.a- [after=EnvDelay; ]
+        ~_ra -> r.a+ [after=EnvDelay; ]
       }
 
     inactive_reset_bitbucket_e1of = process-definition (defined) inactive_reset_bitbucket_e1of<
       pint<> N
       >(
-        e1of<::inactive_reset_bitbucket_e1of::N> r
+        e1of<inactive_reset_bitbucket_e1of::N> r
         bool<> _Reset
       )
       In definition "inactive_reset_bitbucket_e1of", we have: {
@@ -2744,19 +2744,19 @@ In namespace "", we have: {
         _Reset = bool<> inactive_reset_bitbucket_e1of::_Reset
         __re = bool<> inactive_reset_bitbucket_e1of::__re
         _re = bool<> inactive_reset_bitbucket_e1of::_re
-        r = e1of<::inactive_reset_bitbucket_e1of::N> inactive_reset_bitbucket_e1of::r
+        r = e1of<inactive_reset_bitbucket_e1of::N> inactive_reset_bitbucket_e1of::r
       unroll sequence: 
-        e1of<::inactive_reset_bitbucket_e1of::N> r
+        e1of<inactive_reset_bitbucket_e1of::N> r
         bool<> _Reset
         bool<> __re
         bool<> _re
       prs:
-        _Reset & (|:i:[0..N-1]: r.d[$i]) -> __re- [after=::EnvDelay; ]
-        ~_Reset | (&:i:[0..N-1]: ~r.d[$i]) -> __re+ [after=::EnvDelay; ]
-        __re -> _re- [after=::EnvDelay; ]
-        ~__re -> _re+ [after=::EnvDelay; ]
-        _re -> r.e- [after=::EnvDelay; ]
-        ~_re -> r.e+ [after=::EnvDelay; ]
+        _Reset & (|:i:[0..N-1]: r.d[$i]) -> __re- [after=EnvDelay; ]
+        ~_Reset | (&:i:[0..N-1]: ~r.d[$i]) -> __re+ [after=EnvDelay; ]
+        __re -> _re- [after=EnvDelay; ]
+        ~__re -> _re+ [after=EnvDelay; ]
+        _re -> r.e- [after=EnvDelay; ]
+        ~_re -> r.e+ [after=EnvDelay; ]
       }
 
     source_a = process-definition (defined) source_a<
@@ -2764,7 +2764,7 @@ In namespace "", we have: {
       pint<> M
       pint<> d[0..N-1]
       >(
-        a1of<::source_a::M> rr
+        a1of<source_a::M> rr
         bool<> _Reset
       )
       In definition "source_a", we have: {
@@ -2776,16 +2776,16 @@ In namespace "", we have: {
         _Reset = bool<> source_a::_Reset
         l = bool<> source_a::l^1
         le = bool<> source_a::le^1
-        r = c1of<::source_a::M> source_a::r
-        rr = a1of<::source_a::M> source_a::rr
-        s = e1of<::source_a::N> source_a::s
+        r = c1of<source_a::M> source_a::r
+        rr = a1of<source_a::M> source_a::rr
+        s = e1of<source_a::N> source_a::s
         sc = source_cell<false> source_a::sc^1
         stc = start_cell<> source_a::stc
       unroll sequence: 
-        a1of<::source_a::M> rr
+        a1of<source_a::M> rr
         bool<> _Reset
-        c1of<::source_a::M> r
-        e1of<::source_a::N> s
+        c1of<source_a::M> r
+        e1of<source_a::N> s
         bool<> l[0..N+1-1]
         bool<> le[0..N+1-1]
         source_cell<false> sc[0..N-1]
@@ -2796,19 +2796,19 @@ In namespace "", we have: {
         stc (l[N], le[N], l[0], le[0], _Reset);
       prs:
         (:i:[0..N-1]:
-          s.d[$i] -> r.d[d[$i]]+ [after=::EnvDelay; ]
+          s.d[$i] -> r.d[d[$i]]+ [after=EnvDelay; ]
         )
         (:i:[0..M-1]:
-          (&:j:[0..N-1]: ~s.d[$j]) -> r.d[$i]- [after=::EnvDelay; ]
+          (&:j:[0..N-1]: ~s.d[$j]) -> r.d[$i]- [after=EnvDelay; ]
         )
         (:i:[0..M-1]:
-          r.d[$i] -> rr.d[$i]+ [after=::EnvDelay; ]
+          r.d[$i] -> rr.d[$i]+ [after=EnvDelay; ]
         )
         (:i:[0..M-1]:
-          ~r.d[$i] -> rr.d[$i]- [after=::EnvDelay; ]
+          ~r.d[$i] -> rr.d[$i]- [after=EnvDelay; ]
         )
-        rr.a -> s.e- [after=::EnvDelay; ]
-        ~rr.a -> s.e+ [after=::EnvDelay; ]
+        rr.a -> s.e- [after=EnvDelay; ]
+        ~rr.a -> s.e+ [after=EnvDelay; ]
       }
 
     source_cell = process-definition (defined) source_cell<
@@ -2847,26 +2847,26 @@ In namespace "", we have: {
         bool<> y
         s = r;
       prs:
-        _Reset & ~x & ~y & l -> le- [after=::EnvDelay; ]
-        _Reset & ~y & ~le -> x+ [after=::EnvDelay; ]
-        ~_Reset | (x & ~y & ~l) -> le+ [after=::EnvDelay; ]
-        _Reset & x & le -> y+ [after=::EnvDelay; ]
-        _Reset & x & y & se & re -> s+ [after=::EnvDelay; ]
-        ~_Reset | (y & s) -> x- [after=::EnvDelay; ]
-        ~_Reset | (~x & y & ~se & ~re) -> s- [after=::EnvDelay; ]
-        ~_Reset | (~x & ~s) -> y- [after=::EnvDelay; ]
+        _Reset & ~x & ~y & l -> le- [after=EnvDelay; ]
+        _Reset & ~y & ~le -> x+ [after=EnvDelay; ]
+        ~_Reset | (x & ~y & ~l) -> le+ [after=EnvDelay; ]
+        _Reset & x & le -> y+ [after=EnvDelay; ]
+        _Reset & x & y & se & re -> s+ [after=EnvDelay; ]
+        ~_Reset | (y & s) -> x- [after=EnvDelay; ]
+        ~_Reset | (~x & y & ~se & ~re) -> s- [after=EnvDelay; ]
+        ~_Reset | (~x & ~s) -> y- [after=EnvDelay; ]
       footprint collection: {
         <false> {
-          _Reset = bool^0 = ::source_cell::_Reset 
-          l = bool^0 = ::source_cell::l 
-          le = bool^0 = ::source_cell::le 
-          r = bool^0 = ::source_cell::r 
-          re = bool^0 = ::source_cell::re 
-          s = bool^0 = ::source_cell::r 
-          se = bool^0 = ::source_cell::se 
+          _Reset = bool^0 = source_cell::_Reset 
+          l = bool^0 = source_cell::l 
+          le = bool^0 = source_cell::le 
+          r = bool^0 = source_cell::r 
+          re = bool^0 = source_cell::re 
+          s = bool^0 = source_cell::r 
+          se = bool^0 = source_cell::se 
           start = pbool^0 value: 0
-          x = bool^0 = ::source_cell::x 
-          y = bool^0 = ::source_cell::y 
+          x = bool^0 = source_cell::x 
+          y = bool^0 = source_cell::y 
         }
       }
       }
@@ -2876,7 +2876,7 @@ In namespace "", we have: {
       pint<> M
       pint<> d[0..N-1]
       >(
-        e1of<::source_e::M> rr
+        e1of<source_e::M> rr
         bool<> _Reset
       )
       In definition "source_e", we have: {
@@ -2888,16 +2888,16 @@ In namespace "", we have: {
         _Reset = bool<> source_e::_Reset
         l = bool<> source_e::l^1
         le = bool<> source_e::le^1
-        r = c1of<::source_e::M> source_e::r
-        rr = e1of<::source_e::M> source_e::rr
-        s = e1of<::source_e::N> source_e::s
+        r = c1of<source_e::M> source_e::r
+        rr = e1of<source_e::M> source_e::rr
+        s = e1of<source_e::N> source_e::s
         sc = source_cell<false> source_e::sc^1
         stc = start_cell<> source_e::stc
       unroll sequence: 
-        e1of<::source_e::M> rr
+        e1of<source_e::M> rr
         bool<> _Reset
-        c1of<::source_e::M> r
-        e1of<::source_e::N> s
+        c1of<source_e::M> r
+        e1of<source_e::N> s
         s.e = rr.e;
         bool<> l[0..N+1-1]
         bool<> le[0..N+1-1]
@@ -2909,76 +2909,76 @@ In namespace "", we have: {
         stc (l[N], le[N], l[0], le[0], _Reset);
       prs:
         (:i:[0..N-1]:
-          s.d[$i] -> r.d[d[$i]]+ [after=::EnvDelay; ]
+          s.d[$i] -> r.d[d[$i]]+ [after=EnvDelay; ]
         )
         (:i:[0..M-1]:
-          (&:j:[0..N-1]: ~s.d[$j]) -> r.d[$i]- [after=::EnvDelay; ]
+          (&:j:[0..N-1]: ~s.d[$j]) -> r.d[$i]- [after=EnvDelay; ]
         )
         (:i:[0..M-1]:
-          r.d[$i] -> rr.d[$i]+ [after=::EnvDelay; ]
+          r.d[$i] -> rr.d[$i]+ [after=EnvDelay; ]
         )
         (:i:[0..M-1]:
-          ~r.d[$i] -> rr.d[$i]- [after=::EnvDelay; ]
+          ~r.d[$i] -> rr.d[$i]- [after=EnvDelay; ]
         )
       footprint collection: {
         <1, 2, {1}> {
           M = pint^0 value: 2
           N = pint^0 value: 1
-          _Reset = bool^0 = ::source_e::sc[0]._Reset 
+          _Reset = bool^0 = source_e::sc[0]._Reset 
           d = pint^1
             unrolled index-value pairs: {
               0 = 1
             }
           l = bool^1
             {
-              0 = ::source_e::sc[0].l 
-              1 = ::source_e::sc[0].r 
+              0 = source_e::sc[0].l 
+              1 = source_e::sc[0].r 
             }
           le = bool^1
             {
-              0 = ::source_e::sc[0].le 
-              1 = ::source_e::sc[0].re 
+              0 = source_e::sc[0].le 
+              1 = source_e::sc[0].re 
             }
-          r = process c1of<2>^0 = ::source_e::r (
+          r = process c1of<2>^0 = source_e::r (
             d = bool^1
               {
-                0 = ::source_e::r.d[0] 
-                1 = ::source_e::r.d[1] 
+                0 = source_e::r.d[0] 
+                1 = source_e::r.d[1] 
               }
           )
-          rr = process e1of<2>^0 = ::source_e::rr (
+          rr = process e1of<2>^0 = source_e::rr (
             d = bool^1
               {
-                0 = ::source_e::rr.d[0] 
-                1 = ::source_e::rr.d[1] 
+                0 = source_e::rr.d[0] 
+                1 = source_e::rr.d[1] 
               }
-            e = bool^0 = ::source_e::sc[0].se 
+            e = bool^0 = source_e::sc[0].se 
           )
-          s = process e1of<1>^0 = ::source_e::s (
+          s = process e1of<1>^0 = source_e::s (
             d = bool^1
               {
-                0 = ::source_e::sc[0].s 
+                0 = source_e::sc[0].s 
               }
-            e = bool^0 = ::source_e::rr.e 
+            e = bool^0 = source_e::rr.e 
           )
           sc = process source_cell<false>^1
             {
-              0 = ::source_e::sc[0] (
-                l = bool^0 = ::source_e::stc.r 
-                le = bool^0 = ::source_e::stc.re 
-                s = bool^0 = ::source_e::sc[0].s 
-                se = bool^0 = ::source_e::sc[0].se 
-                r = bool^0 = ::source_e::stc.l 
-                re = bool^0 = ::source_e::stc.le 
-                _Reset = bool^0 = ::source_e::stc._Reset 
+              0 = source_e::sc[0] (
+                l = bool^0 = source_e::stc.r 
+                le = bool^0 = source_e::stc.re 
+                s = bool^0 = source_e::sc[0].s 
+                se = bool^0 = source_e::sc[0].se 
+                r = bool^0 = source_e::stc.l 
+                re = bool^0 = source_e::stc.le 
+                _Reset = bool^0 = source_e::stc._Reset 
               )
             }
-          stc = process start_cell<>^0 = ::source_e::stc (
-            l = bool^0 = ::source_e::stc.l 
-            le = bool^0 = ::source_e::stc.le 
-            r = bool^0 = ::source_e::stc.r 
-            re = bool^0 = ::source_e::stc.re 
-            _Reset = bool^0 = ::source_e::stc._Reset 
+          stc = process start_cell<>^0 = source_e::stc (
+            l = bool^0 = source_e::stc.l 
+            le = bool^0 = source_e::stc.le 
+            r = bool^0 = source_e::stc.r 
+            re = bool^0 = source_e::stc.re 
+            _Reset = bool^0 = source_e::stc._Reset 
           )
         }
       }
@@ -3009,22 +3009,22 @@ In namespace "", we have: {
         bool<> x
         bool<> y
       prs:
-        _Reset & ~x & ~y & re -> r+ [after=::EnvDelay; ]
-        _Reset & ~y & r -> x+ [after=::EnvDelay; ]
-        ~_Reset | (x & ~y & ~re) -> r- [after=::EnvDelay; ]
-        _Reset & x & ~r -> y+ [after=::EnvDelay; ]
-        _Reset & x & y & l -> le- [after=::EnvDelay; ]
-        ~_Reset | (y & ~le) -> x- [after=::EnvDelay; ]
-        ~_Reset | (~x & y & ~l) -> le+ [after=::EnvDelay; ]
-        ~_Reset | (~x & le) -> y- [after=::EnvDelay; ]
+        _Reset & ~x & ~y & re -> r+ [after=EnvDelay; ]
+        _Reset & ~y & r -> x+ [after=EnvDelay; ]
+        ~_Reset | (x & ~y & ~re) -> r- [after=EnvDelay; ]
+        _Reset & x & ~r -> y+ [after=EnvDelay; ]
+        _Reset & x & y & l -> le- [after=EnvDelay; ]
+        ~_Reset | (y & ~le) -> x- [after=EnvDelay; ]
+        ~_Reset | (~x & y & ~l) -> le+ [after=EnvDelay; ]
+        ~_Reset | (~x & le) -> y- [after=EnvDelay; ]
       footprint: {
-        _Reset = bool^0 = ::start_cell::_Reset 
-        l = bool^0 = ::start_cell::l 
-        le = bool^0 = ::start_cell::le 
-        r = bool^0 = ::start_cell::r 
-        re = bool^0 = ::start_cell::re 
-        x = bool^0 = ::start_cell::x 
-        y = bool^0 = ::start_cell::y 
+        _Reset = bool^0 = start_cell::_Reset 
+        l = bool^0 = start_cell::l 
+        le = bool^0 = start_cell::le 
+        r = bool^0 = start_cell::r 
+        re = bool^0 = start_cell::re 
+        x = bool^0 = start_cell::x 
+        y = bool^0 = start_cell::y 
       }
       }
 
@@ -3098,19 +3098,19 @@ In namespace "", we have: {
     bitbucket_Mxa1of2 = process-definition-alias: bitbucket_Mxa1of2<
       pint<> M
       >
-      = bitbucket_Mxa1of<2, ::bitbucket_Mxa1of2::M>
+      = bitbucket_Mxa1of<2, bitbucket_Mxa1of2::M>
     bitbucket_Mxa1of4 = process-definition-alias: bitbucket_Mxa1of4<
       pint<> M
       >
-      = bitbucket_Mxa1of<4, ::bitbucket_Mxa1of4::M>
+      = bitbucket_Mxa1of<4, bitbucket_Mxa1of4::M>
     bitbucket_Mxe1of2 = process-definition-alias: bitbucket_Mxe1of2<
       pint<> M
       >
-      = bitbucket_Mxe1of<2, ::bitbucket_Mxe1of2::M>
+      = bitbucket_Mxe1of<2, bitbucket_Mxe1of2::M>
     bitbucket_Mxe1of4 = process-definition-alias: bitbucket_Mxe1of4<
       pint<> M
       >
-      = bitbucket_Mxe1of<4, ::bitbucket_Mxe1of4::M>
+      = bitbucket_Mxe1of<4, bitbucket_Mxe1of4::M>
     bitbucket_a1of1 = process-definition-alias: bitbucket_a1of1
       = bitbucket_a1of<1>
     bitbucket_a1of2 = process-definition-alias: bitbucket_a1of2
@@ -3245,72 +3245,72 @@ In namespace "", we have: {
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_a<::source_a1of2::N, 2, ::source_a1of2::d>
+      = source_a<source_a1of2::N, 2, source_a1of2::d>
     source_a1of3 = process-definition-alias: source_a1of3<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_a<::source_a1of3::N, 3, ::source_a1of3::d>
+      = source_a<source_a1of3::N, 3, source_a1of3::d>
     source_a1of4 = process-definition-alias: source_a1of4<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_a<::source_a1of4::N, 4, ::source_a1of4::d>
+      = source_a<source_a1of4::N, 4, source_a1of4::d>
     source_a1of5 = process-definition-alias: source_a1of5<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_a<::source_a1of5::N, 5, ::source_a1of5::d>
+      = source_a<source_a1of5::N, 5, source_a1of5::d>
     source_a1of6 = process-definition-alias: source_a1of6<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_a<::source_a1of6::N, 6, ::source_a1of6::d>
+      = source_a<source_a1of6::N, 6, source_a1of6::d>
     source_a1of7 = process-definition-alias: source_a1of7<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_a<::source_a1of7::N, 7, ::source_a1of7::d>
+      = source_a<source_a1of7::N, 7, source_a1of7::d>
     source_a1of8 = process-definition-alias: source_a1of8<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_a<::source_a1of8::N, 8, ::source_a1of8::d>
+      = source_a<source_a1of8::N, 8, source_a1of8::d>
     source_e1of2 = process-definition-alias: source_e1of2<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_e<::source_e1of2::N, 2, ::source_e1of2::d>
+      = source_e<source_e1of2::N, 2, source_e1of2::d>
     source_e1of3 = process-definition-alias: source_e1of3<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_e<::source_e1of3::N, 3, ::source_e1of3::d>
+      = source_e<source_e1of3::N, 3, source_e1of3::d>
     source_e1of4 = process-definition-alias: source_e1of4<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_e<::source_e1of4::N, 4, ::source_e1of4::d>
+      = source_e<source_e1of4::N, 4, source_e1of4::d>
     source_e1of5 = process-definition-alias: source_e1of5<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_e<::source_e1of5::N, 5, ::source_e1of5::d>
+      = source_e<source_e1of5::N, 5, source_e1of5::d>
     source_e1of6 = process-definition-alias: source_e1of6<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_e<::source_e1of6::N, 6, ::source_e1of6::d>
+      = source_e<source_e1of6::N, 6, source_e1of6::d>
     source_e1of7 = process-definition-alias: source_e1of7<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_e<::source_e1of7::N, 7, ::source_e1of7::d>
+      = source_e<source_e1of7::N, 7, source_e1of7::d>
     source_e1of8 = process-definition-alias: source_e1of8<
       pint<> N
       pint<> d[0..N-1]
       >
-      = source_e<::source_e1of8::N, 8, ::source_e1of8::d>
+      = source_e<source_e1of8::N, 8, source_e1of8::d>
   Instances:
     _Reset = bool<> _Reset
     p1 = e1of2<> p1
@@ -3319,24 +3319,24 @@ In namespace "", we have: {
 
 footprint: {
   EnvDelay = pint^0 value: 100
-  _Reset = bool^0 = ::src_p1._Reset 
-  p1 = process e1of<2>^0 = ::src_p1.rr (
+  _Reset = bool^0 = src_p1._Reset 
+  p1 = process e1of<2>^0 = src_p1.rr (
     d = bool^1
       {
-        0 = ::p1.d[0] 
-        1 = ::p1.d[1] 
+        0 = p1.d[0] 
+        1 = p1.d[1] 
       }
-    e = bool^0 = ::p1.e 
+    e = bool^0 = p1.e 
   )
-  src_p1 = process source_e<1, 2, {1}>^0 = ::src_p1 (
-    rr = process e1of<2>^0 = ::src_p1.rr (
+  src_p1 = process source_e<1, 2, {1}>^0 = src_p1 (
+    rr = process e1of<2>^0 = src_p1.rr (
       d = bool^1
         {
-          0 = ::p1.d[0] 
-          1 = ::p1.d[1] 
+          0 = p1.d[0] 
+          1 = p1.d[1] 
         }
-      e = bool^0 = ::p1.e 
+      e = bool^0 = p1.e 
     )
-    _Reset = bool^0 = ::src_p1._Reset 
+    _Reset = bool^0 = src_p1._Reset 
   )
 }

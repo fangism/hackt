@@ -1,5 +1,5 @@
 FATAL: reference to uninstantiated process portaproc<> index [0]
 ERROR: unrolling aliases.
-ERROR: resolving super instance of port connection: ::p[0]
+ERROR: resolving super instance of port connection: p[0]
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

@@ -66,8 +66,8 @@ In namespace "", we have: {
         fake_chan<>? L
         fake_chan<>! R
       footprint: {
-        L = channel fake_chan<>?^0 = ::chan_proc::L 
-        R = channel fake_chan<>!^0 = ::chan_proc::R 
+        L = channel fake_chan<>?^0 = chan_proc::L 
+        R = channel fake_chan<>!^0 = chan_proc::R 
       }
       }
 
@@ -95,10 +95,10 @@ In namespace "", we have: {
 }
 
 footprint: {
-  P = process chan_proc<>^0 = ::P (
-    L = channel fake_chan<>?^0 = ::P.L 
-    R = channel fake_chan<>!^0 = ::P.R 
+  P = process chan_proc<>^0 = P (
+    L = channel fake_chan<>?^0 = P.L 
+    R = channel fake_chan<>!^0 = P.R 
   )
-  X = channel fake_chan<>^0 = ::P.L 
-  Y = channel fake_chan<>^0 = ::P.R 
+  X = channel fake_chan<>^0 = P.L 
+  Y = channel fake_chan<>^0 = P.R 
 }

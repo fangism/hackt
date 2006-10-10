@@ -117,10 +117,10 @@ In namespace "", we have: {
           J = pint^0 value: 0
           out = channel chan!(int<32>)^2
             {
-              [0][0] = ::send_indexed::out[0][0] 
-              [0][1] = ::send_indexed::out[0][1] 
-              [1][0] = ::send_indexed::out[1][0] 
-              [1][1] = ::send_indexed::out[1][1] 
+              [0][0] = send_indexed::out[0][0] 
+              [0][1] = send_indexed::out[0][1] 
+              [1][0] = send_indexed::out[1][0] 
+              [1][1] = send_indexed::out[1][1] 
             }
         }
         <0, 1> {
@@ -128,10 +128,10 @@ In namespace "", we have: {
           J = pint^0 value: 1
           out = channel chan!(int<32>)^2
             {
-              [0][0] = ::send_indexed::out[0][0] 
-              [0][1] = ::send_indexed::out[0][1] 
-              [1][0] = ::send_indexed::out[1][0] 
-              [1][1] = ::send_indexed::out[1][1] 
+              [0][0] = send_indexed::out[0][0] 
+              [0][1] = send_indexed::out[0][1] 
+              [1][0] = send_indexed::out[1][0] 
+              [1][1] = send_indexed::out[1][1] 
             }
         }
         <1, 0> {
@@ -139,10 +139,10 @@ In namespace "", we have: {
           J = pint^0 value: 0
           out = channel chan!(int<32>)^2
             {
-              [0][0] = ::send_indexed::out[0][0] 
-              [0][1] = ::send_indexed::out[0][1] 
-              [1][0] = ::send_indexed::out[1][0] 
-              [1][1] = ::send_indexed::out[1][1] 
+              [0][0] = send_indexed::out[0][0] 
+              [0][1] = send_indexed::out[0][1] 
+              [1][0] = send_indexed::out[1][0] 
+              [1][1] = send_indexed::out[1][1] 
             }
         }
         <1, 1> {
@@ -150,10 +150,10 @@ In namespace "", we have: {
           J = pint^0 value: 1
           out = channel chan!(int<32>)^2
             {
-              [0][0] = ::send_indexed::out[0][0] 
-              [0][1] = ::send_indexed::out[0][1] 
-              [1][0] = ::send_indexed::out[1][0] 
-              [1][1] = ::send_indexed::out[1][1] 
+              [0][0] = send_indexed::out[0][0] 
+              [0][1] = send_indexed::out[0][1] 
+              [1][0] = send_indexed::out[1][0] 
+              [1][1] = send_indexed::out[1][1] 
             }
         }
       }
@@ -167,40 +167,40 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar = process send_indexed<1, 1>^0 = ::bar (
+  bar = process send_indexed<1, 1>^0 = bar (
     out = channel chan!(int<32>)^2
       {
-        [0][0] = ::bar.out[0][0] 
-        [0][1] = ::bar.out[0][1] 
-        [1][0] = ::bar.out[1][0] 
-        [1][1] = ::bar.out[1][1] 
+        [0][0] = bar.out[0][0] 
+        [0][1] = bar.out[0][1] 
+        [1][0] = bar.out[1][0] 
+        [1][1] = bar.out[1][1] 
       }
   )
-  foo = process send_indexed<0, 0>^0 = ::foo (
+  foo = process send_indexed<0, 0>^0 = foo (
     out = channel chan!(int<32>)^2
       {
-        [0][0] = ::foo.out[0][0] 
-        [0][1] = ::foo.out[0][1] 
-        [1][0] = ::foo.out[1][0] 
-        [1][1] = ::foo.out[1][1] 
+        [0][0] = foo.out[0][0] 
+        [0][1] = foo.out[0][1] 
+        [1][0] = foo.out[1][0] 
+        [1][1] = foo.out[1][1] 
       }
   )
-  ick = process send_indexed<0, 1>^0 = ::ick (
+  ick = process send_indexed<0, 1>^0 = ick (
     out = channel chan!(int<32>)^2
       {
-        [0][0] = ::ick.out[0][0] 
-        [0][1] = ::ick.out[0][1] 
-        [1][0] = ::ick.out[1][0] 
-        [1][1] = ::ick.out[1][1] 
+        [0][0] = ick.out[0][0] 
+        [0][1] = ick.out[0][1] 
+        [1][0] = ick.out[1][0] 
+        [1][1] = ick.out[1][1] 
       }
   )
-  poo = process send_indexed<1, 0>^0 = ::poo (
+  poo = process send_indexed<1, 0>^0 = poo (
     out = channel chan!(int<32>)^2
       {
-        [0][0] = ::poo.out[0][0] 
-        [0][1] = ::poo.out[0][1] 
-        [1][0] = ::poo.out[1][0] 
-        [1][1] = ::poo.out[1][1] 
+        [0][0] = poo.out[0][0] 
+        [0][1] = poo.out[0][1] 
+        [1][0] = poo.out[1][0] 
+        [1][1] = poo.out[1][1] 
       }
   )
 }

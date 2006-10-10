@@ -64,8 +64,8 @@ In namespace "", we have: {
       footprint collection: {
         <31> {
           D = pint^0 value: 31
-          a = bool^0 = ::afterburn::a 
-          b = bool^0 = ::afterburn::b 
+          a = bool^0 = afterburn::a 
+          b = bool^0 = afterburn::b 
         }
       }
       }
@@ -75,8 +75,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  xyz = process afterburn<31>^0 = ::xyz (
-    a = bool^0 = ::xyz.a 
-    b = bool^0 = ::xyz.b 
+  xyz = process afterburn<31>^0 = xyz (
+    a = bool^0 = xyz.a 
+    b = bool^0 = xyz.b 
   )
 }

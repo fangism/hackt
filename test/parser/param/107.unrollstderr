@@ -1,5 +1,5 @@
 Error: trailing dimensions mismatch between sub-collection 1 and 2.
 	got: [2][3] and: [2][2]
-ERROR: failed to resolve source values of pint-val-ref ::x # pint-val-ref ::y in pint assignment.
+ERROR: failed to resolve source values of pint-val-ref x # pint-val-ref y in pint assignment.
 Error encountered during module::unroll.
 ERROR in unrolling.  Aborting.

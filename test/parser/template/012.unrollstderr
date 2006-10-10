@@ -71,8 +71,8 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar = process foo<7>^0 = ::bar 
-  blah = process foo<7>^0 = ::blah 
-  ick = process foo<6>^0 = ::ick 
-  poo = process foo<7>^0 = ::poo 
+  bar = process foo<7>^0 = bar 
+  blah = process foo<7>^0 = blah 
+  ick = process foo<6>^0 = ick 
+  poo = process foo<7>^0 = poo 
 }

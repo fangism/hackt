@@ -629,53 +629,53 @@ In namespace "", we have: {
       footprint: {
         egg_array = process egg<>^1
           {
-            0 = ::basket::egg_array[0] (
-              white = bool^0 = ::basket::egg_array[0].white 
-              yolk = int<32>^0 = ::basket::egg_array[0].yolk 
+            0 = basket::egg_array[0] (
+              white = bool^0 = basket::egg_array[0].white 
+              yolk = int<32>^0 = basket::egg_array[0].yolk 
             )
-            1 = ::basket::egg_array[1] (
-              white = bool^0 = ::basket::egg_array[1].white 
-              yolk = int<32>^0 = ::basket::egg_array[1].yolk 
+            1 = basket::egg_array[1] (
+              white = bool^0 = basket::egg_array[1].white 
+              yolk = int<32>^0 = basket::egg_array[1].yolk 
             )
-            2 = ::basket::egg_array[2] (
-              white = bool^0 = ::basket::egg_array[2].white 
-              yolk = int<32>^0 = ::basket::egg_array[2].yolk 
+            2 = basket::egg_array[2] (
+              white = bool^0 = basket::egg_array[2].white 
+              yolk = int<32>^0 = basket::egg_array[2].yolk 
             )
-            3 = ::basket::egg_array[3] (
-              white = bool^0 = ::basket::egg_array[3].white 
-              yolk = int<32>^0 = ::basket::egg_array[3].yolk 
+            3 = basket::egg_array[3] (
+              white = bool^0 = basket::egg_array[3].white 
+              yolk = int<32>^0 = basket::egg_array[3].yolk 
             )
-            4 = ::basket::egg_array[4] (
-              white = bool^0 = ::basket::egg_array[4].white 
-              yolk = int<32>^0 = ::basket::egg_array[4].yolk 
+            4 = basket::egg_array[4] (
+              white = bool^0 = basket::egg_array[4].white 
+              yolk = int<32>^0 = basket::egg_array[4].yolk 
             )
-            5 = ::basket::egg_array[5] (
-              white = bool^0 = ::basket::egg_array[5].white 
-              yolk = int<32>^0 = ::basket::egg_array[5].yolk 
+            5 = basket::egg_array[5] (
+              white = bool^0 = basket::egg_array[5].white 
+              yolk = int<32>^0 = basket::egg_array[5].yolk 
             )
-            6 = ::basket::egg_array[6] (
-              white = bool^0 = ::basket::egg_array[6].white 
-              yolk = int<32>^0 = ::basket::egg_array[6].yolk 
+            6 = basket::egg_array[6] (
+              white = bool^0 = basket::egg_array[6].white 
+              yolk = int<32>^0 = basket::egg_array[6].yolk 
             )
-            7 = ::basket::egg_array[7] (
-              white = bool^0 = ::basket::egg_array[7].white 
-              yolk = int<32>^0 = ::basket::egg_array[7].yolk 
+            7 = basket::egg_array[7] (
+              white = bool^0 = basket::egg_array[7].white 
+              yolk = int<32>^0 = basket::egg_array[7].yolk 
             )
-            8 = ::basket::egg_array[8] (
-              white = bool^0 = ::basket::egg_array[8].white 
-              yolk = int<32>^0 = ::basket::egg_array[8].yolk 
+            8 = basket::egg_array[8] (
+              white = bool^0 = basket::egg_array[8].white 
+              yolk = int<32>^0 = basket::egg_array[8].yolk 
             )
-            9 = ::basket::egg_array[9] (
-              white = bool^0 = ::basket::egg_array[9].white 
-              yolk = int<32>^0 = ::basket::egg_array[9].yolk 
+            9 = basket::egg_array[9] (
+              white = bool^0 = basket::egg_array[9].white 
+              yolk = int<32>^0 = basket::egg_array[9].yolk 
             )
-            10 = ::basket::egg_array[10] (
-              white = bool^0 = ::basket::egg_array[10].white 
-              yolk = int<32>^0 = ::basket::egg_array[10].yolk 
+            10 = basket::egg_array[10] (
+              white = bool^0 = basket::egg_array[10].white 
+              yolk = int<32>^0 = basket::egg_array[10].yolk 
             )
-            11 = ::basket::egg_array[11] (
-              white = bool^0 = ::basket::egg_array[11].white 
-              yolk = int<32>^0 = ::basket::egg_array[11].yolk 
+            11 = basket::egg_array[11] (
+              white = bool^0 = basket::egg_array[11].white 
+              yolk = int<32>^0 = basket::egg_array[11].yolk 
             )
           }
       }
@@ -696,429 +696,429 @@ In namespace "", we have: {
         basket<> b
         basket<> c[0..5]
       footprint: {
-        a = process basket<>^0 = ::bundle::a (
+        a = process basket<>^0 = bundle::a (
           egg_array = process egg<>^1
             {
-              0 = ::bundle::a.egg_array[0] (
-                white = bool^0 = ::bundle::a.egg_array[0].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[0].yolk 
+              0 = bundle::a.egg_array[0] (
+                white = bool^0 = bundle::a.egg_array[0].white 
+                yolk = int<32>^0 = bundle::a.egg_array[0].yolk 
               )
-              1 = ::bundle::a.egg_array[1] (
-                white = bool^0 = ::bundle::a.egg_array[1].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[1].yolk 
+              1 = bundle::a.egg_array[1] (
+                white = bool^0 = bundle::a.egg_array[1].white 
+                yolk = int<32>^0 = bundle::a.egg_array[1].yolk 
               )
-              2 = ::bundle::a.egg_array[2] (
-                white = bool^0 = ::bundle::a.egg_array[2].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[2].yolk 
+              2 = bundle::a.egg_array[2] (
+                white = bool^0 = bundle::a.egg_array[2].white 
+                yolk = int<32>^0 = bundle::a.egg_array[2].yolk 
               )
-              3 = ::bundle::a.egg_array[3] (
-                white = bool^0 = ::bundle::a.egg_array[3].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[3].yolk 
+              3 = bundle::a.egg_array[3] (
+                white = bool^0 = bundle::a.egg_array[3].white 
+                yolk = int<32>^0 = bundle::a.egg_array[3].yolk 
               )
-              4 = ::bundle::a.egg_array[4] (
-                white = bool^0 = ::bundle::a.egg_array[4].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[4].yolk 
+              4 = bundle::a.egg_array[4] (
+                white = bool^0 = bundle::a.egg_array[4].white 
+                yolk = int<32>^0 = bundle::a.egg_array[4].yolk 
               )
-              5 = ::bundle::a.egg_array[5] (
-                white = bool^0 = ::bundle::a.egg_array[5].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[5].yolk 
+              5 = bundle::a.egg_array[5] (
+                white = bool^0 = bundle::a.egg_array[5].white 
+                yolk = int<32>^0 = bundle::a.egg_array[5].yolk 
               )
-              6 = ::bundle::a.egg_array[6] (
-                white = bool^0 = ::bundle::a.egg_array[6].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[6].yolk 
+              6 = bundle::a.egg_array[6] (
+                white = bool^0 = bundle::a.egg_array[6].white 
+                yolk = int<32>^0 = bundle::a.egg_array[6].yolk 
               )
-              7 = ::bundle::a.egg_array[7] (
-                white = bool^0 = ::bundle::a.egg_array[7].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[7].yolk 
+              7 = bundle::a.egg_array[7] (
+                white = bool^0 = bundle::a.egg_array[7].white 
+                yolk = int<32>^0 = bundle::a.egg_array[7].yolk 
               )
-              8 = ::bundle::a.egg_array[8] (
-                white = bool^0 = ::bundle::a.egg_array[8].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[8].yolk 
+              8 = bundle::a.egg_array[8] (
+                white = bool^0 = bundle::a.egg_array[8].white 
+                yolk = int<32>^0 = bundle::a.egg_array[8].yolk 
               )
-              9 = ::bundle::a.egg_array[9] (
-                white = bool^0 = ::bundle::a.egg_array[9].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[9].yolk 
+              9 = bundle::a.egg_array[9] (
+                white = bool^0 = bundle::a.egg_array[9].white 
+                yolk = int<32>^0 = bundle::a.egg_array[9].yolk 
               )
-              10 = ::bundle::a.egg_array[10] (
-                white = bool^0 = ::bundle::a.egg_array[10].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[10].yolk 
+              10 = bundle::a.egg_array[10] (
+                white = bool^0 = bundle::a.egg_array[10].white 
+                yolk = int<32>^0 = bundle::a.egg_array[10].yolk 
               )
-              11 = ::bundle::a.egg_array[11] (
-                white = bool^0 = ::bundle::a.egg_array[11].white 
-                yolk = int<32>^0 = ::bundle::a.egg_array[11].yolk 
+              11 = bundle::a.egg_array[11] (
+                white = bool^0 = bundle::a.egg_array[11].white 
+                yolk = int<32>^0 = bundle::a.egg_array[11].yolk 
               )
             }
         )
-        b = process basket<>^0 = ::bundle::b (
+        b = process basket<>^0 = bundle::b (
           egg_array = process egg<>^1
             {
-              0 = ::bundle::b.egg_array[0] (
-                white = bool^0 = ::bundle::b.egg_array[0].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[0].yolk 
+              0 = bundle::b.egg_array[0] (
+                white = bool^0 = bundle::b.egg_array[0].white 
+                yolk = int<32>^0 = bundle::b.egg_array[0].yolk 
               )
-              1 = ::bundle::b.egg_array[1] (
-                white = bool^0 = ::bundle::b.egg_array[1].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[1].yolk 
+              1 = bundle::b.egg_array[1] (
+                white = bool^0 = bundle::b.egg_array[1].white 
+                yolk = int<32>^0 = bundle::b.egg_array[1].yolk 
               )
-              2 = ::bundle::b.egg_array[2] (
-                white = bool^0 = ::bundle::b.egg_array[2].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[2].yolk 
+              2 = bundle::b.egg_array[2] (
+                white = bool^0 = bundle::b.egg_array[2].white 
+                yolk = int<32>^0 = bundle::b.egg_array[2].yolk 
               )
-              3 = ::bundle::b.egg_array[3] (
-                white = bool^0 = ::bundle::b.egg_array[3].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[3].yolk 
+              3 = bundle::b.egg_array[3] (
+                white = bool^0 = bundle::b.egg_array[3].white 
+                yolk = int<32>^0 = bundle::b.egg_array[3].yolk 
               )
-              4 = ::bundle::b.egg_array[4] (
-                white = bool^0 = ::bundle::b.egg_array[4].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[4].yolk 
+              4 = bundle::b.egg_array[4] (
+                white = bool^0 = bundle::b.egg_array[4].white 
+                yolk = int<32>^0 = bundle::b.egg_array[4].yolk 
               )
-              5 = ::bundle::b.egg_array[5] (
-                white = bool^0 = ::bundle::b.egg_array[5].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[5].yolk 
+              5 = bundle::b.egg_array[5] (
+                white = bool^0 = bundle::b.egg_array[5].white 
+                yolk = int<32>^0 = bundle::b.egg_array[5].yolk 
               )
-              6 = ::bundle::b.egg_array[6] (
-                white = bool^0 = ::bundle::b.egg_array[6].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[6].yolk 
+              6 = bundle::b.egg_array[6] (
+                white = bool^0 = bundle::b.egg_array[6].white 
+                yolk = int<32>^0 = bundle::b.egg_array[6].yolk 
               )
-              7 = ::bundle::b.egg_array[7] (
-                white = bool^0 = ::bundle::b.egg_array[7].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[7].yolk 
+              7 = bundle::b.egg_array[7] (
+                white = bool^0 = bundle::b.egg_array[7].white 
+                yolk = int<32>^0 = bundle::b.egg_array[7].yolk 
               )
-              8 = ::bundle::b.egg_array[8] (
-                white = bool^0 = ::bundle::b.egg_array[8].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[8].yolk 
+              8 = bundle::b.egg_array[8] (
+                white = bool^0 = bundle::b.egg_array[8].white 
+                yolk = int<32>^0 = bundle::b.egg_array[8].yolk 
               )
-              9 = ::bundle::b.egg_array[9] (
-                white = bool^0 = ::bundle::b.egg_array[9].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[9].yolk 
+              9 = bundle::b.egg_array[9] (
+                white = bool^0 = bundle::b.egg_array[9].white 
+                yolk = int<32>^0 = bundle::b.egg_array[9].yolk 
               )
-              10 = ::bundle::b.egg_array[10] (
-                white = bool^0 = ::bundle::b.egg_array[10].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[10].yolk 
+              10 = bundle::b.egg_array[10] (
+                white = bool^0 = bundle::b.egg_array[10].white 
+                yolk = int<32>^0 = bundle::b.egg_array[10].yolk 
               )
-              11 = ::bundle::b.egg_array[11] (
-                white = bool^0 = ::bundle::b.egg_array[11].white 
-                yolk = int<32>^0 = ::bundle::b.egg_array[11].yolk 
+              11 = bundle::b.egg_array[11] (
+                white = bool^0 = bundle::b.egg_array[11].white 
+                yolk = int<32>^0 = bundle::b.egg_array[11].yolk 
               )
             }
         )
         c = process basket<>^1
           {
-            0 = ::bundle::c[0] (
+            0 = bundle::c[0] (
               egg_array = process egg<>^1
                 {
-                  0 = ::bundle::c[0].egg_array[0] (
-                    white = bool^0 = ::bundle::c[0].egg_array[0].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[0].yolk 
+                  0 = bundle::c[0].egg_array[0] (
+                    white = bool^0 = bundle::c[0].egg_array[0].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[0].yolk 
                   )
-                  1 = ::bundle::c[0].egg_array[1] (
-                    white = bool^0 = ::bundle::c[0].egg_array[1].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[1].yolk 
+                  1 = bundle::c[0].egg_array[1] (
+                    white = bool^0 = bundle::c[0].egg_array[1].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[1].yolk 
                   )
-                  2 = ::bundle::c[0].egg_array[2] (
-                    white = bool^0 = ::bundle::c[0].egg_array[2].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[2].yolk 
+                  2 = bundle::c[0].egg_array[2] (
+                    white = bool^0 = bundle::c[0].egg_array[2].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[2].yolk 
                   )
-                  3 = ::bundle::c[0].egg_array[3] (
-                    white = bool^0 = ::bundle::c[0].egg_array[3].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[3].yolk 
+                  3 = bundle::c[0].egg_array[3] (
+                    white = bool^0 = bundle::c[0].egg_array[3].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[3].yolk 
                   )
-                  4 = ::bundle::c[0].egg_array[4] (
-                    white = bool^0 = ::bundle::c[0].egg_array[4].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[4].yolk 
+                  4 = bundle::c[0].egg_array[4] (
+                    white = bool^0 = bundle::c[0].egg_array[4].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[4].yolk 
                   )
-                  5 = ::bundle::c[0].egg_array[5] (
-                    white = bool^0 = ::bundle::c[0].egg_array[5].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[5].yolk 
+                  5 = bundle::c[0].egg_array[5] (
+                    white = bool^0 = bundle::c[0].egg_array[5].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[5].yolk 
                   )
-                  6 = ::bundle::c[0].egg_array[6] (
-                    white = bool^0 = ::bundle::c[0].egg_array[6].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[6].yolk 
+                  6 = bundle::c[0].egg_array[6] (
+                    white = bool^0 = bundle::c[0].egg_array[6].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[6].yolk 
                   )
-                  7 = ::bundle::c[0].egg_array[7] (
-                    white = bool^0 = ::bundle::c[0].egg_array[7].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[7].yolk 
+                  7 = bundle::c[0].egg_array[7] (
+                    white = bool^0 = bundle::c[0].egg_array[7].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[7].yolk 
                   )
-                  8 = ::bundle::c[0].egg_array[8] (
-                    white = bool^0 = ::bundle::c[0].egg_array[8].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[8].yolk 
+                  8 = bundle::c[0].egg_array[8] (
+                    white = bool^0 = bundle::c[0].egg_array[8].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[8].yolk 
                   )
-                  9 = ::bundle::c[0].egg_array[9] (
-                    white = bool^0 = ::bundle::c[0].egg_array[9].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[9].yolk 
+                  9 = bundle::c[0].egg_array[9] (
+                    white = bool^0 = bundle::c[0].egg_array[9].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[9].yolk 
                   )
-                  10 = ::bundle::c[0].egg_array[10] (
-                    white = bool^0 = ::bundle::c[0].egg_array[10].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[10].yolk 
+                  10 = bundle::c[0].egg_array[10] (
+                    white = bool^0 = bundle::c[0].egg_array[10].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[10].yolk 
                   )
-                  11 = ::bundle::c[0].egg_array[11] (
-                    white = bool^0 = ::bundle::c[0].egg_array[11].white 
-                    yolk = int<32>^0 = ::bundle::c[0].egg_array[11].yolk 
+                  11 = bundle::c[0].egg_array[11] (
+                    white = bool^0 = bundle::c[0].egg_array[11].white 
+                    yolk = int<32>^0 = bundle::c[0].egg_array[11].yolk 
                   )
                 }
             )
-            1 = ::bundle::c[1] (
+            1 = bundle::c[1] (
               egg_array = process egg<>^1
                 {
-                  0 = ::bundle::c[1].egg_array[0] (
-                    white = bool^0 = ::bundle::c[1].egg_array[0].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[0].yolk 
+                  0 = bundle::c[1].egg_array[0] (
+                    white = bool^0 = bundle::c[1].egg_array[0].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[0].yolk 
                   )
-                  1 = ::bundle::c[1].egg_array[1] (
-                    white = bool^0 = ::bundle::c[1].egg_array[1].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[1].yolk 
+                  1 = bundle::c[1].egg_array[1] (
+                    white = bool^0 = bundle::c[1].egg_array[1].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[1].yolk 
                   )
-                  2 = ::bundle::c[1].egg_array[2] (
-                    white = bool^0 = ::bundle::c[1].egg_array[2].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[2].yolk 
+                  2 = bundle::c[1].egg_array[2] (
+                    white = bool^0 = bundle::c[1].egg_array[2].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[2].yolk 
                   )
-                  3 = ::bundle::c[1].egg_array[3] (
-                    white = bool^0 = ::bundle::c[1].egg_array[3].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[3].yolk 
+                  3 = bundle::c[1].egg_array[3] (
+                    white = bool^0 = bundle::c[1].egg_array[3].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[3].yolk 
                   )
-                  4 = ::bundle::c[1].egg_array[4] (
-                    white = bool^0 = ::bundle::c[1].egg_array[4].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[4].yolk 
+                  4 = bundle::c[1].egg_array[4] (
+                    white = bool^0 = bundle::c[1].egg_array[4].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[4].yolk 
                   )
-                  5 = ::bundle::c[1].egg_array[5] (
-                    white = bool^0 = ::bundle::c[1].egg_array[5].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[5].yolk 
+                  5 = bundle::c[1].egg_array[5] (
+                    white = bool^0 = bundle::c[1].egg_array[5].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[5].yolk 
                   )
-                  6 = ::bundle::c[1].egg_array[6] (
-                    white = bool^0 = ::bundle::c[1].egg_array[6].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[6].yolk 
+                  6 = bundle::c[1].egg_array[6] (
+                    white = bool^0 = bundle::c[1].egg_array[6].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[6].yolk 
                   )
-                  7 = ::bundle::c[1].egg_array[7] (
-                    white = bool^0 = ::bundle::c[1].egg_array[7].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[7].yolk 
+                  7 = bundle::c[1].egg_array[7] (
+                    white = bool^0 = bundle::c[1].egg_array[7].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[7].yolk 
                   )
-                  8 = ::bundle::c[1].egg_array[8] (
-                    white = bool^0 = ::bundle::c[1].egg_array[8].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[8].yolk 
+                  8 = bundle::c[1].egg_array[8] (
+                    white = bool^0 = bundle::c[1].egg_array[8].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[8].yolk 
                   )
-                  9 = ::bundle::c[1].egg_array[9] (
-                    white = bool^0 = ::bundle::c[1].egg_array[9].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[9].yolk 
+                  9 = bundle::c[1].egg_array[9] (
+                    white = bool^0 = bundle::c[1].egg_array[9].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[9].yolk 
                   )
-                  10 = ::bundle::c[1].egg_array[10] (
-                    white = bool^0 = ::bundle::c[1].egg_array[10].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[10].yolk 
+                  10 = bundle::c[1].egg_array[10] (
+                    white = bool^0 = bundle::c[1].egg_array[10].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[10].yolk 
                   )
-                  11 = ::bundle::c[1].egg_array[11] (
-                    white = bool^0 = ::bundle::c[1].egg_array[11].white 
-                    yolk = int<32>^0 = ::bundle::c[1].egg_array[11].yolk 
+                  11 = bundle::c[1].egg_array[11] (
+                    white = bool^0 = bundle::c[1].egg_array[11].white 
+                    yolk = int<32>^0 = bundle::c[1].egg_array[11].yolk 
                   )
                 }
             )
-            2 = ::bundle::c[2] (
+            2 = bundle::c[2] (
               egg_array = process egg<>^1
                 {
-                  0 = ::bundle::c[2].egg_array[0] (
-                    white = bool^0 = ::bundle::c[2].egg_array[0].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[0].yolk 
+                  0 = bundle::c[2].egg_array[0] (
+                    white = bool^0 = bundle::c[2].egg_array[0].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[0].yolk 
                   )
-                  1 = ::bundle::c[2].egg_array[1] (
-                    white = bool^0 = ::bundle::c[2].egg_array[1].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[1].yolk 
+                  1 = bundle::c[2].egg_array[1] (
+                    white = bool^0 = bundle::c[2].egg_array[1].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[1].yolk 
                   )
-                  2 = ::bundle::c[2].egg_array[2] (
-                    white = bool^0 = ::bundle::c[2].egg_array[2].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[2].yolk 
+                  2 = bundle::c[2].egg_array[2] (
+                    white = bool^0 = bundle::c[2].egg_array[2].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[2].yolk 
                   )
-                  3 = ::bundle::c[2].egg_array[3] (
-                    white = bool^0 = ::bundle::c[2].egg_array[3].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[3].yolk 
+                  3 = bundle::c[2].egg_array[3] (
+                    white = bool^0 = bundle::c[2].egg_array[3].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[3].yolk 
                   )
-                  4 = ::bundle::c[2].egg_array[4] (
-                    white = bool^0 = ::bundle::c[2].egg_array[4].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[4].yolk 
+                  4 = bundle::c[2].egg_array[4] (
+                    white = bool^0 = bundle::c[2].egg_array[4].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[4].yolk 
                   )
-                  5 = ::bundle::c[2].egg_array[5] (
-                    white = bool^0 = ::bundle::c[2].egg_array[5].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[5].yolk 
+                  5 = bundle::c[2].egg_array[5] (
+                    white = bool^0 = bundle::c[2].egg_array[5].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[5].yolk 
                   )
-                  6 = ::bundle::c[2].egg_array[6] (
-                    white = bool^0 = ::bundle::c[2].egg_array[6].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[6].yolk 
+                  6 = bundle::c[2].egg_array[6] (
+                    white = bool^0 = bundle::c[2].egg_array[6].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[6].yolk 
                   )
-                  7 = ::bundle::c[2].egg_array[7] (
-                    white = bool^0 = ::bundle::c[2].egg_array[7].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[7].yolk 
+                  7 = bundle::c[2].egg_array[7] (
+                    white = bool^0 = bundle::c[2].egg_array[7].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[7].yolk 
                   )
-                  8 = ::bundle::c[2].egg_array[8] (
-                    white = bool^0 = ::bundle::c[2].egg_array[8].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[8].yolk 
+                  8 = bundle::c[2].egg_array[8] (
+                    white = bool^0 = bundle::c[2].egg_array[8].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[8].yolk 
                   )
-                  9 = ::bundle::c[2].egg_array[9] (
-                    white = bool^0 = ::bundle::c[2].egg_array[9].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[9].yolk 
+                  9 = bundle::c[2].egg_array[9] (
+                    white = bool^0 = bundle::c[2].egg_array[9].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[9].yolk 
                   )
-                  10 = ::bundle::c[2].egg_array[10] (
-                    white = bool^0 = ::bundle::c[2].egg_array[10].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[10].yolk 
+                  10 = bundle::c[2].egg_array[10] (
+                    white = bool^0 = bundle::c[2].egg_array[10].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[10].yolk 
                   )
-                  11 = ::bundle::c[2].egg_array[11] (
-                    white = bool^0 = ::bundle::c[2].egg_array[11].white 
-                    yolk = int<32>^0 = ::bundle::c[2].egg_array[11].yolk 
+                  11 = bundle::c[2].egg_array[11] (
+                    white = bool^0 = bundle::c[2].egg_array[11].white 
+                    yolk = int<32>^0 = bundle::c[2].egg_array[11].yolk 
                   )
                 }
             )
-            3 = ::bundle::c[3] (
+            3 = bundle::c[3] (
               egg_array = process egg<>^1
                 {
-                  0 = ::bundle::c[3].egg_array[0] (
-                    white = bool^0 = ::bundle::c[3].egg_array[0].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[0].yolk 
+                  0 = bundle::c[3].egg_array[0] (
+                    white = bool^0 = bundle::c[3].egg_array[0].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[0].yolk 
                   )
-                  1 = ::bundle::c[3].egg_array[1] (
-                    white = bool^0 = ::bundle::c[3].egg_array[1].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[1].yolk 
+                  1 = bundle::c[3].egg_array[1] (
+                    white = bool^0 = bundle::c[3].egg_array[1].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[1].yolk 
                   )
-                  2 = ::bundle::c[3].egg_array[2] (
-                    white = bool^0 = ::bundle::c[3].egg_array[2].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[2].yolk 
+                  2 = bundle::c[3].egg_array[2] (
+                    white = bool^0 = bundle::c[3].egg_array[2].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[2].yolk 
                   )
-                  3 = ::bundle::c[3].egg_array[3] (
-                    white = bool^0 = ::bundle::c[3].egg_array[3].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[3].yolk 
+                  3 = bundle::c[3].egg_array[3] (
+                    white = bool^0 = bundle::c[3].egg_array[3].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[3].yolk 
                   )
-                  4 = ::bundle::c[3].egg_array[4] (
-                    white = bool^0 = ::bundle::c[3].egg_array[4].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[4].yolk 
+                  4 = bundle::c[3].egg_array[4] (
+                    white = bool^0 = bundle::c[3].egg_array[4].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[4].yolk 
                   )
-                  5 = ::bundle::c[3].egg_array[5] (
-                    white = bool^0 = ::bundle::c[3].egg_array[5].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[5].yolk 
+                  5 = bundle::c[3].egg_array[5] (
+                    white = bool^0 = bundle::c[3].egg_array[5].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[5].yolk 
                   )
-                  6 = ::bundle::c[3].egg_array[6] (
-                    white = bool^0 = ::bundle::c[3].egg_array[6].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[6].yolk 
+                  6 = bundle::c[3].egg_array[6] (
+                    white = bool^0 = bundle::c[3].egg_array[6].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[6].yolk 
                   )
-                  7 = ::bundle::c[3].egg_array[7] (
-                    white = bool^0 = ::bundle::c[3].egg_array[7].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[7].yolk 
+                  7 = bundle::c[3].egg_array[7] (
+                    white = bool^0 = bundle::c[3].egg_array[7].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[7].yolk 
                   )
-                  8 = ::bundle::c[3].egg_array[8] (
-                    white = bool^0 = ::bundle::c[3].egg_array[8].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[8].yolk 
+                  8 = bundle::c[3].egg_array[8] (
+                    white = bool^0 = bundle::c[3].egg_array[8].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[8].yolk 
                   )
-                  9 = ::bundle::c[3].egg_array[9] (
-                    white = bool^0 = ::bundle::c[3].egg_array[9].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[9].yolk 
+                  9 = bundle::c[3].egg_array[9] (
+                    white = bool^0 = bundle::c[3].egg_array[9].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[9].yolk 
                   )
-                  10 = ::bundle::c[3].egg_array[10] (
-                    white = bool^0 = ::bundle::c[3].egg_array[10].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[10].yolk 
+                  10 = bundle::c[3].egg_array[10] (
+                    white = bool^0 = bundle::c[3].egg_array[10].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[10].yolk 
                   )
-                  11 = ::bundle::c[3].egg_array[11] (
-                    white = bool^0 = ::bundle::c[3].egg_array[11].white 
-                    yolk = int<32>^0 = ::bundle::c[3].egg_array[11].yolk 
+                  11 = bundle::c[3].egg_array[11] (
+                    white = bool^0 = bundle::c[3].egg_array[11].white 
+                    yolk = int<32>^0 = bundle::c[3].egg_array[11].yolk 
                   )
                 }
             )
-            4 = ::bundle::c[4] (
+            4 = bundle::c[4] (
               egg_array = process egg<>^1
                 {
-                  0 = ::bundle::c[4].egg_array[0] (
-                    white = bool^0 = ::bundle::c[4].egg_array[0].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[0].yolk 
+                  0 = bundle::c[4].egg_array[0] (
+                    white = bool^0 = bundle::c[4].egg_array[0].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[0].yolk 
                   )
-                  1 = ::bundle::c[4].egg_array[1] (
-                    white = bool^0 = ::bundle::c[4].egg_array[1].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[1].yolk 
+                  1 = bundle::c[4].egg_array[1] (
+                    white = bool^0 = bundle::c[4].egg_array[1].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[1].yolk 
                   )
-                  2 = ::bundle::c[4].egg_array[2] (
-                    white = bool^0 = ::bundle::c[4].egg_array[2].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[2].yolk 
+                  2 = bundle::c[4].egg_array[2] (
+                    white = bool^0 = bundle::c[4].egg_array[2].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[2].yolk 
                   )
-                  3 = ::bundle::c[4].egg_array[3] (
-                    white = bool^0 = ::bundle::c[4].egg_array[3].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[3].yolk 
+                  3 = bundle::c[4].egg_array[3] (
+                    white = bool^0 = bundle::c[4].egg_array[3].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[3].yolk 
                   )
-                  4 = ::bundle::c[4].egg_array[4] (
-                    white = bool^0 = ::bundle::c[4].egg_array[4].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[4].yolk 
+                  4 = bundle::c[4].egg_array[4] (
+                    white = bool^0 = bundle::c[4].egg_array[4].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[4].yolk 
                   )
-                  5 = ::bundle::c[4].egg_array[5] (
-                    white = bool^0 = ::bundle::c[4].egg_array[5].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[5].yolk 
+                  5 = bundle::c[4].egg_array[5] (
+                    white = bool^0 = bundle::c[4].egg_array[5].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[5].yolk 
                   )
-                  6 = ::bundle::c[4].egg_array[6] (
-                    white = bool^0 = ::bundle::c[4].egg_array[6].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[6].yolk 
+                  6 = bundle::c[4].egg_array[6] (
+                    white = bool^0 = bundle::c[4].egg_array[6].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[6].yolk 
                   )
-                  7 = ::bundle::c[4].egg_array[7] (
-                    white = bool^0 = ::bundle::c[4].egg_array[7].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[7].yolk 
+                  7 = bundle::c[4].egg_array[7] (
+                    white = bool^0 = bundle::c[4].egg_array[7].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[7].yolk 
                   )
-                  8 = ::bundle::c[4].egg_array[8] (
-                    white = bool^0 = ::bundle::c[4].egg_array[8].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[8].yolk 
+                  8 = bundle::c[4].egg_array[8] (
+                    white = bool^0 = bundle::c[4].egg_array[8].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[8].yolk 
                   )
-                  9 = ::bundle::c[4].egg_array[9] (
-                    white = bool^0 = ::bundle::c[4].egg_array[9].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[9].yolk 
+                  9 = bundle::c[4].egg_array[9] (
+                    white = bool^0 = bundle::c[4].egg_array[9].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[9].yolk 
                   )
-                  10 = ::bundle::c[4].egg_array[10] (
-                    white = bool^0 = ::bundle::c[4].egg_array[10].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[10].yolk 
+                  10 = bundle::c[4].egg_array[10] (
+                    white = bool^0 = bundle::c[4].egg_array[10].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[10].yolk 
                   )
-                  11 = ::bundle::c[4].egg_array[11] (
-                    white = bool^0 = ::bundle::c[4].egg_array[11].white 
-                    yolk = int<32>^0 = ::bundle::c[4].egg_array[11].yolk 
+                  11 = bundle::c[4].egg_array[11] (
+                    white = bool^0 = bundle::c[4].egg_array[11].white 
+                    yolk = int<32>^0 = bundle::c[4].egg_array[11].yolk 
                   )
                 }
             )
-            5 = ::bundle::c[5] (
+            5 = bundle::c[5] (
               egg_array = process egg<>^1
                 {
-                  0 = ::bundle::c[5].egg_array[0] (
-                    white = bool^0 = ::bundle::c[5].egg_array[0].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[0].yolk 
+                  0 = bundle::c[5].egg_array[0] (
+                    white = bool^0 = bundle::c[5].egg_array[0].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[0].yolk 
                   )
-                  1 = ::bundle::c[5].egg_array[1] (
-                    white = bool^0 = ::bundle::c[5].egg_array[1].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[1].yolk 
+                  1 = bundle::c[5].egg_array[1] (
+                    white = bool^0 = bundle::c[5].egg_array[1].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[1].yolk 
                   )
-                  2 = ::bundle::c[5].egg_array[2] (
-                    white = bool^0 = ::bundle::c[5].egg_array[2].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[2].yolk 
+                  2 = bundle::c[5].egg_array[2] (
+                    white = bool^0 = bundle::c[5].egg_array[2].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[2].yolk 
                   )
-                  3 = ::bundle::c[5].egg_array[3] (
-                    white = bool^0 = ::bundle::c[5].egg_array[3].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[3].yolk 
+                  3 = bundle::c[5].egg_array[3] (
+                    white = bool^0 = bundle::c[5].egg_array[3].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[3].yolk 
                   )
-                  4 = ::bundle::c[5].egg_array[4] (
-                    white = bool^0 = ::bundle::c[5].egg_array[4].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[4].yolk 
+                  4 = bundle::c[5].egg_array[4] (
+                    white = bool^0 = bundle::c[5].egg_array[4].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[4].yolk 
                   )
-                  5 = ::bundle::c[5].egg_array[5] (
-                    white = bool^0 = ::bundle::c[5].egg_array[5].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[5].yolk 
+                  5 = bundle::c[5].egg_array[5] (
+                    white = bool^0 = bundle::c[5].egg_array[5].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[5].yolk 
                   )
-                  6 = ::bundle::c[5].egg_array[6] (
-                    white = bool^0 = ::bundle::c[5].egg_array[6].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[6].yolk 
+                  6 = bundle::c[5].egg_array[6] (
+                    white = bool^0 = bundle::c[5].egg_array[6].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[6].yolk 
                   )
-                  7 = ::bundle::c[5].egg_array[7] (
-                    white = bool^0 = ::bundle::c[5].egg_array[7].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[7].yolk 
+                  7 = bundle::c[5].egg_array[7] (
+                    white = bool^0 = bundle::c[5].egg_array[7].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[7].yolk 
                   )
-                  8 = ::bundle::c[5].egg_array[8] (
-                    white = bool^0 = ::bundle::c[5].egg_array[8].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[8].yolk 
+                  8 = bundle::c[5].egg_array[8] (
+                    white = bool^0 = bundle::c[5].egg_array[8].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[8].yolk 
                   )
-                  9 = ::bundle::c[5].egg_array[9] (
-                    white = bool^0 = ::bundle::c[5].egg_array[9].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[9].yolk 
+                  9 = bundle::c[5].egg_array[9] (
+                    white = bool^0 = bundle::c[5].egg_array[9].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[9].yolk 
                   )
-                  10 = ::bundle::c[5].egg_array[10] (
-                    white = bool^0 = ::bundle::c[5].egg_array[10].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[10].yolk 
+                  10 = bundle::c[5].egg_array[10] (
+                    white = bool^0 = bundle::c[5].egg_array[10].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[10].yolk 
                   )
-                  11 = ::bundle::c[5].egg_array[11] (
-                    white = bool^0 = ::bundle::c[5].egg_array[11].white 
-                    yolk = int<32>^0 = ::bundle::c[5].egg_array[11].yolk 
+                  11 = bundle::c[5].egg_array[11] (
+                    white = bool^0 = bundle::c[5].egg_array[11].white 
+                    yolk = int<32>^0 = bundle::c[5].egg_array[11].yolk 
                   )
                 }
             )
@@ -1138,8 +1138,8 @@ In namespace "", we have: {
         bool<> white
         int<32> yolk
       footprint: {
-        white = bool^0 = ::egg::white 
-        yolk = int<32>^0 = ::egg::yolk 
+        white = bool^0 = egg::white 
+        yolk = int<32>^0 = egg::yolk 
       }
       }
 
@@ -1154,494 +1154,494 @@ In namespace "", we have: {
 }
 
 footprint: {
-  a_basket = process basket<>^0 = ::load.a (
+  a_basket = process basket<>^0 = load.a (
     egg_array = process egg<>^1
       {
-        0 = ::load.c[4].egg_array[11] (
-          white = bool^0 = ::load.a.egg_array[0].white 
-          yolk = int<32>^0 = ::load.a.egg_array[0].yolk 
+        0 = load.c[4].egg_array[11] (
+          white = bool^0 = load.a.egg_array[0].white 
+          yolk = int<32>^0 = load.a.egg_array[0].yolk 
         )
-        1 = ::load.b.egg_array[3] (
-          white = bool^0 = ::load.a.egg_array[1].white 
-          yolk = int<32>^0 = ::load.a.egg_array[1].yolk 
+        1 = load.b.egg_array[3] (
+          white = bool^0 = load.a.egg_array[1].white 
+          yolk = int<32>^0 = load.a.egg_array[1].yolk 
         )
-        2 = ::load.b.egg_array[4] (
-          white = bool^0 = ::load.a.egg_array[2].white 
-          yolk = int<32>^0 = ::load.a.egg_array[2].yolk 
+        2 = load.b.egg_array[4] (
+          white = bool^0 = load.a.egg_array[2].white 
+          yolk = int<32>^0 = load.a.egg_array[2].yolk 
         )
-        3 = ::a_basket.egg_array[3] (
-          white = bool^0 = ::load.a.egg_array[3].white 
-          yolk = int<32>^0 = ::load.c[2].egg_array[3].yolk 
+        3 = a_basket.egg_array[3] (
+          white = bool^0 = load.a.egg_array[3].white 
+          yolk = int<32>^0 = load.c[2].egg_array[3].yolk 
         )
-        4 = ::a_basket.egg_array[4] (
-          white = bool^0 = ::load.a.egg_array[4].white 
-          yolk = int<32>^0 = ::load.a.egg_array[4].yolk 
+        4 = a_basket.egg_array[4] (
+          white = bool^0 = load.a.egg_array[4].white 
+          yolk = int<32>^0 = load.a.egg_array[4].yolk 
         )
-        5 = ::a_basket.egg_array[5] (
-          white = bool^0 = ::load.c[2].egg_array[5].white 
-          yolk = int<32>^0 = ::load.a.egg_array[5].yolk 
+        5 = a_basket.egg_array[5] (
+          white = bool^0 = load.c[2].egg_array[5].white 
+          yolk = int<32>^0 = load.a.egg_array[5].yolk 
         )
-        6 = ::a_basket.egg_array[6] (
-          white = bool^0 = ::load.a.egg_array[6].white 
-          yolk = int<32>^0 = ::load.a.egg_array[6].yolk 
+        6 = a_basket.egg_array[6] (
+          white = bool^0 = load.a.egg_array[6].white 
+          yolk = int<32>^0 = load.a.egg_array[6].yolk 
         )
-        7 = ::a_basket.egg_array[7] (
-          white = bool^0 = ::load.a.egg_array[7].white 
-          yolk = int<32>^0 = ::load.a.egg_array[7].yolk 
+        7 = a_basket.egg_array[7] (
+          white = bool^0 = load.a.egg_array[7].white 
+          yolk = int<32>^0 = load.a.egg_array[7].yolk 
         )
-        8 = ::a_basket.egg_array[8] (
-          white = bool^0 = ::load.a.egg_array[8].white 
-          yolk = int<32>^0 = ::load.a.egg_array[8].yolk 
+        8 = a_basket.egg_array[8] (
+          white = bool^0 = load.a.egg_array[8].white 
+          yolk = int<32>^0 = load.a.egg_array[8].yolk 
         )
-        9 = ::a_basket.egg_array[9] (
-          white = bool^0 = ::load.a.egg_array[9].white 
-          yolk = int<32>^0 = ::load.a.egg_array[9].yolk 
+        9 = a_basket.egg_array[9] (
+          white = bool^0 = load.a.egg_array[9].white 
+          yolk = int<32>^0 = load.a.egg_array[9].yolk 
         )
-        10 = ::a_basket.egg_array[10] (
-          white = bool^0 = ::load.a.egg_array[10].white 
-          yolk = int<32>^0 = ::load.a.egg_array[10].yolk 
+        10 = a_basket.egg_array[10] (
+          white = bool^0 = load.a.egg_array[10].white 
+          yolk = int<32>^0 = load.a.egg_array[10].yolk 
         )
-        11 = ::a_basket.egg_array[11] (
-          white = bool^0 = ::load.a.egg_array[11].white 
-          yolk = int<32>^0 = ::load.a.egg_array[11].yolk 
+        11 = a_basket.egg_array[11] (
+          white = bool^0 = load.a.egg_array[11].white 
+          yolk = int<32>^0 = load.a.egg_array[11].yolk 
         )
       }
   )
-  count = int<32>^0 = ::load.c[0].egg_array[1].yolk 
-  crack = bool^0 = ::load.c[0].egg_array[1].white 
-  golden = process egg<>^0 = ::golden (
-    white = bool^0 = ::load.c[0].egg_array[1].white 
-    yolk = int<32>^0 = ::load.c[0].egg_array[1].yolk 
+  count = int<32>^0 = load.c[0].egg_array[1].yolk 
+  crack = bool^0 = load.c[0].egg_array[1].white 
+  golden = process egg<>^0 = golden (
+    white = bool^0 = load.c[0].egg_array[1].white 
+    yolk = int<32>^0 = load.c[0].egg_array[1].yolk 
   )
-  load = process bundle<>^0 = ::load (
-    a = process basket<>^0 = ::load.c[2] (
+  load = process bundle<>^0 = load (
+    a = process basket<>^0 = load.c[2] (
       egg_array = process egg<>^1
         {
-          0 = ::load.c[4].egg_array[11] (
-            white = bool^0 = ::load.c[2].egg_array[0].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[0].yolk 
+          0 = load.c[4].egg_array[11] (
+            white = bool^0 = load.c[2].egg_array[0].white 
+            yolk = int<32>^0 = load.c[2].egg_array[0].yolk 
           )
-          1 = ::a_basket.egg_array[1] (
-            white = bool^0 = ::load.c[2].egg_array[1].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[1].yolk 
+          1 = a_basket.egg_array[1] (
+            white = bool^0 = load.c[2].egg_array[1].white 
+            yolk = int<32>^0 = load.c[2].egg_array[1].yolk 
           )
-          2 = ::a_basket.egg_array[2] (
-            white = bool^0 = ::load.c[2].egg_array[2].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[2].yolk 
+          2 = a_basket.egg_array[2] (
+            white = bool^0 = load.c[2].egg_array[2].white 
+            yolk = int<32>^0 = load.c[2].egg_array[2].yolk 
           )
-          3 = ::a_basket.egg_array[3] (
-            white = bool^0 = ::load.c[2].egg_array[3].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[3].yolk 
+          3 = a_basket.egg_array[3] (
+            white = bool^0 = load.c[2].egg_array[3].white 
+            yolk = int<32>^0 = load.c[2].egg_array[3].yolk 
           )
-          4 = ::a_basket.egg_array[4] (
-            white = bool^0 = ::load.c[2].egg_array[4].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[4].yolk 
+          4 = a_basket.egg_array[4] (
+            white = bool^0 = load.c[2].egg_array[4].white 
+            yolk = int<32>^0 = load.c[2].egg_array[4].yolk 
           )
-          5 = ::a_basket.egg_array[5] (
-            white = bool^0 = ::load.c[2].egg_array[5].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[5].yolk 
+          5 = a_basket.egg_array[5] (
+            white = bool^0 = load.c[2].egg_array[5].white 
+            yolk = int<32>^0 = load.c[2].egg_array[5].yolk 
           )
-          6 = ::a_basket.egg_array[6] (
-            white = bool^0 = ::load.c[2].egg_array[6].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[6].yolk 
+          6 = a_basket.egg_array[6] (
+            white = bool^0 = load.c[2].egg_array[6].white 
+            yolk = int<32>^0 = load.c[2].egg_array[6].yolk 
           )
-          7 = ::a_basket.egg_array[7] (
-            white = bool^0 = ::load.c[2].egg_array[7].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[7].yolk 
+          7 = a_basket.egg_array[7] (
+            white = bool^0 = load.c[2].egg_array[7].white 
+            yolk = int<32>^0 = load.c[2].egg_array[7].yolk 
           )
-          8 = ::a_basket.egg_array[8] (
-            white = bool^0 = ::load.c[2].egg_array[8].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[8].yolk 
+          8 = a_basket.egg_array[8] (
+            white = bool^0 = load.c[2].egg_array[8].white 
+            yolk = int<32>^0 = load.c[2].egg_array[8].yolk 
           )
-          9 = ::a_basket.egg_array[9] (
-            white = bool^0 = ::load.c[2].egg_array[9].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[9].yolk 
+          9 = a_basket.egg_array[9] (
+            white = bool^0 = load.c[2].egg_array[9].white 
+            yolk = int<32>^0 = load.c[2].egg_array[9].yolk 
           )
-          10 = ::a_basket.egg_array[10] (
-            white = bool^0 = ::load.c[2].egg_array[10].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[10].yolk 
+          10 = a_basket.egg_array[10] (
+            white = bool^0 = load.c[2].egg_array[10].white 
+            yolk = int<32>^0 = load.c[2].egg_array[10].yolk 
           )
-          11 = ::a_basket.egg_array[11] (
-            white = bool^0 = ::load.c[2].egg_array[11].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[11].yolk 
+          11 = a_basket.egg_array[11] (
+            white = bool^0 = load.c[2].egg_array[11].white 
+            yolk = int<32>^0 = load.c[2].egg_array[11].yolk 
           )
         }
     )
-    b = process basket<>^0 = ::load.b (
+    b = process basket<>^0 = load.b (
       egg_array = process egg<>^1
         {
-          0 = ::load.b.egg_array[0] (
-            white = bool^0 = ::load.b.egg_array[0].white 
-            yolk = int<32>^0 = ::load.b.egg_array[0].yolk 
+          0 = load.b.egg_array[0] (
+            white = bool^0 = load.b.egg_array[0].white 
+            yolk = int<32>^0 = load.b.egg_array[0].yolk 
           )
-          1 = ::load.b.egg_array[1] (
-            white = bool^0 = ::load.b.egg_array[1].white 
-            yolk = int<32>^0 = ::load.b.egg_array[1].yolk 
+          1 = load.b.egg_array[1] (
+            white = bool^0 = load.b.egg_array[1].white 
+            yolk = int<32>^0 = load.b.egg_array[1].yolk 
           )
-          2 = ::load.b.egg_array[2] (
-            white = bool^0 = ::load.c[2].egg_array[0].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[0].yolk 
+          2 = load.b.egg_array[2] (
+            white = bool^0 = load.c[2].egg_array[0].white 
+            yolk = int<32>^0 = load.c[2].egg_array[0].yolk 
           )
-          3 = ::load.b.egg_array[3] (
-            white = bool^0 = ::load.c[2].egg_array[1].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[1].yolk 
+          3 = load.b.egg_array[3] (
+            white = bool^0 = load.c[2].egg_array[1].white 
+            yolk = int<32>^0 = load.c[2].egg_array[1].yolk 
           )
-          4 = ::load.b.egg_array[4] (
-            white = bool^0 = ::load.c[2].egg_array[2].white 
-            yolk = int<32>^0 = ::load.c[2].egg_array[2].yolk 
+          4 = load.b.egg_array[4] (
+            white = bool^0 = load.c[2].egg_array[2].white 
+            yolk = int<32>^0 = load.c[2].egg_array[2].yolk 
           )
-          5 = ::load.b.egg_array[5] (
-            white = bool^0 = ::load.b.egg_array[5].white 
-            yolk = int<32>^0 = ::load.b.egg_array[5].yolk 
+          5 = load.b.egg_array[5] (
+            white = bool^0 = load.b.egg_array[5].white 
+            yolk = int<32>^0 = load.b.egg_array[5].yolk 
           )
-          6 = ::load.b.egg_array[6] (
-            white = bool^0 = ::load.b.egg_array[6].white 
-            yolk = int<32>^0 = ::load.b.egg_array[6].yolk 
+          6 = load.b.egg_array[6] (
+            white = bool^0 = load.b.egg_array[6].white 
+            yolk = int<32>^0 = load.b.egg_array[6].yolk 
           )
-          7 = ::load.b.egg_array[7] (
-            white = bool^0 = ::load.b.egg_array[7].white 
-            yolk = int<32>^0 = ::load.b.egg_array[7].yolk 
+          7 = load.b.egg_array[7] (
+            white = bool^0 = load.b.egg_array[7].white 
+            yolk = int<32>^0 = load.b.egg_array[7].yolk 
           )
-          8 = ::load.b.egg_array[8] (
-            white = bool^0 = ::load.b.egg_array[8].white 
-            yolk = int<32>^0 = ::load.b.egg_array[8].yolk 
+          8 = load.b.egg_array[8] (
+            white = bool^0 = load.b.egg_array[8].white 
+            yolk = int<32>^0 = load.b.egg_array[8].yolk 
           )
-          9 = ::load.b.egg_array[9] (
-            white = bool^0 = ::load.b.egg_array[9].white 
-            yolk = int<32>^0 = ::load.b.egg_array[9].yolk 
+          9 = load.b.egg_array[9] (
+            white = bool^0 = load.b.egg_array[9].white 
+            yolk = int<32>^0 = load.b.egg_array[9].yolk 
           )
-          10 = ::load.b.egg_array[10] (
-            white = bool^0 = ::load.b.egg_array[10].white 
-            yolk = int<32>^0 = ::load.b.egg_array[10].yolk 
+          10 = load.b.egg_array[10] (
+            white = bool^0 = load.b.egg_array[10].white 
+            yolk = int<32>^0 = load.b.egg_array[10].yolk 
           )
-          11 = ::load.b.egg_array[11] (
-            white = bool^0 = ::load.b.egg_array[11].white 
-            yolk = int<32>^0 = ::load.b.egg_array[11].yolk 
+          11 = load.b.egg_array[11] (
+            white = bool^0 = load.b.egg_array[11].white 
+            yolk = int<32>^0 = load.b.egg_array[11].yolk 
           )
         }
     )
     c = process basket<>^1
       {
-        0 = ::load.c[0] (
+        0 = load.c[0] (
           egg_array = process egg<>^1
             {
-              0 = ::load.c[0].egg_array[0] (
-                white = bool^0 = ::load.c[0].egg_array[0].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[0].yolk 
+              0 = load.c[0].egg_array[0] (
+                white = bool^0 = load.c[0].egg_array[0].white 
+                yolk = int<32>^0 = load.c[0].egg_array[0].yolk 
               )
-              1 = ::golden (
-                white = bool^0 = ::load.c[0].egg_array[1].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[1].yolk 
+              1 = golden (
+                white = bool^0 = load.c[0].egg_array[1].white 
+                yolk = int<32>^0 = load.c[0].egg_array[1].yolk 
               )
-              2 = ::load.c[0].egg_array[2] (
-                white = bool^0 = ::load.c[0].egg_array[2].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[2].yolk 
+              2 = load.c[0].egg_array[2] (
+                white = bool^0 = load.c[0].egg_array[2].white 
+                yolk = int<32>^0 = load.c[0].egg_array[2].yolk 
               )
-              3 = ::load.c[0].egg_array[3] (
-                white = bool^0 = ::load.c[0].egg_array[3].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[3].yolk 
+              3 = load.c[0].egg_array[3] (
+                white = bool^0 = load.c[0].egg_array[3].white 
+                yolk = int<32>^0 = load.c[0].egg_array[3].yolk 
               )
-              4 = ::load.c[0].egg_array[4] (
-                white = bool^0 = ::load.c[0].egg_array[4].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[4].yolk 
+              4 = load.c[0].egg_array[4] (
+                white = bool^0 = load.c[0].egg_array[4].white 
+                yolk = int<32>^0 = load.c[0].egg_array[4].yolk 
               )
-              5 = ::load.c[0].egg_array[5] (
-                white = bool^0 = ::load.c[0].egg_array[5].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[5].yolk 
+              5 = load.c[0].egg_array[5] (
+                white = bool^0 = load.c[0].egg_array[5].white 
+                yolk = int<32>^0 = load.c[0].egg_array[5].yolk 
               )
-              6 = ::load.c[0].egg_array[6] (
-                white = bool^0 = ::load.c[0].egg_array[6].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[6].yolk 
+              6 = load.c[0].egg_array[6] (
+                white = bool^0 = load.c[0].egg_array[6].white 
+                yolk = int<32>^0 = load.c[0].egg_array[6].yolk 
               )
-              7 = ::load.c[0].egg_array[7] (
-                white = bool^0 = ::load.c[0].egg_array[7].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[7].yolk 
+              7 = load.c[0].egg_array[7] (
+                white = bool^0 = load.c[0].egg_array[7].white 
+                yolk = int<32>^0 = load.c[0].egg_array[7].yolk 
               )
-              8 = ::load.c[0].egg_array[8] (
-                white = bool^0 = ::load.c[0].egg_array[8].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[8].yolk 
+              8 = load.c[0].egg_array[8] (
+                white = bool^0 = load.c[0].egg_array[8].white 
+                yolk = int<32>^0 = load.c[0].egg_array[8].yolk 
               )
-              9 = ::load.c[0].egg_array[9] (
-                white = bool^0 = ::load.c[0].egg_array[9].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[9].yolk 
+              9 = load.c[0].egg_array[9] (
+                white = bool^0 = load.c[0].egg_array[9].white 
+                yolk = int<32>^0 = load.c[0].egg_array[9].yolk 
               )
-              10 = ::load.c[0].egg_array[10] (
-                white = bool^0 = ::load.c[0].egg_array[10].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[10].yolk 
+              10 = load.c[0].egg_array[10] (
+                white = bool^0 = load.c[0].egg_array[10].white 
+                yolk = int<32>^0 = load.c[0].egg_array[10].yolk 
               )
-              11 = ::load.c[0].egg_array[11] (
-                white = bool^0 = ::load.c[0].egg_array[11].white 
-                yolk = int<32>^0 = ::load.c[0].egg_array[11].yolk 
+              11 = load.c[0].egg_array[11] (
+                white = bool^0 = load.c[0].egg_array[11].white 
+                yolk = int<32>^0 = load.c[0].egg_array[11].yolk 
               )
             }
         )
-        1 = ::load.c[1] (
+        1 = load.c[1] (
           egg_array = process egg<>^1
             {
-              0 = ::load.c[1].egg_array[0] (
-                white = bool^0 = ::load.c[1].egg_array[0].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[0].yolk 
+              0 = load.c[1].egg_array[0] (
+                white = bool^0 = load.c[1].egg_array[0].white 
+                yolk = int<32>^0 = load.c[1].egg_array[0].yolk 
               )
-              1 = ::load.c[1].egg_array[1] (
-                white = bool^0 = ::load.c[1].egg_array[1].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[1].yolk 
+              1 = load.c[1].egg_array[1] (
+                white = bool^0 = load.c[1].egg_array[1].white 
+                yolk = int<32>^0 = load.c[1].egg_array[1].yolk 
               )
-              2 = ::load.c[1].egg_array[2] (
-                white = bool^0 = ::load.c[1].egg_array[2].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[2].yolk 
+              2 = load.c[1].egg_array[2] (
+                white = bool^0 = load.c[1].egg_array[2].white 
+                yolk = int<32>^0 = load.c[1].egg_array[2].yolk 
               )
-              3 = ::load.c[1].egg_array[3] (
-                white = bool^0 = ::load.c[1].egg_array[3].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[3].yolk 
+              3 = load.c[1].egg_array[3] (
+                white = bool^0 = load.c[1].egg_array[3].white 
+                yolk = int<32>^0 = load.c[1].egg_array[3].yolk 
               )
-              4 = ::load.c[1].egg_array[4] (
-                white = bool^0 = ::load.c[1].egg_array[4].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[4].yolk 
+              4 = load.c[1].egg_array[4] (
+                white = bool^0 = load.c[1].egg_array[4].white 
+                yolk = int<32>^0 = load.c[1].egg_array[4].yolk 
               )
-              5 = ::load.c[1].egg_array[5] (
-                white = bool^0 = ::load.c[1].egg_array[5].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[5].yolk 
+              5 = load.c[1].egg_array[5] (
+                white = bool^0 = load.c[1].egg_array[5].white 
+                yolk = int<32>^0 = load.c[1].egg_array[5].yolk 
               )
-              6 = ::load.c[1].egg_array[6] (
-                white = bool^0 = ::load.c[1].egg_array[6].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[6].yolk 
+              6 = load.c[1].egg_array[6] (
+                white = bool^0 = load.c[1].egg_array[6].white 
+                yolk = int<32>^0 = load.c[1].egg_array[6].yolk 
               )
-              7 = ::load.c[1].egg_array[7] (
-                white = bool^0 = ::load.c[1].egg_array[7].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[7].yolk 
+              7 = load.c[1].egg_array[7] (
+                white = bool^0 = load.c[1].egg_array[7].white 
+                yolk = int<32>^0 = load.c[1].egg_array[7].yolk 
               )
-              8 = ::load.c[1].egg_array[8] (
-                white = bool^0 = ::load.c[1].egg_array[8].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[8].yolk 
+              8 = load.c[1].egg_array[8] (
+                white = bool^0 = load.c[1].egg_array[8].white 
+                yolk = int<32>^0 = load.c[1].egg_array[8].yolk 
               )
-              9 = ::load.c[1].egg_array[9] (
-                white = bool^0 = ::load.c[1].egg_array[9].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[9].yolk 
+              9 = load.c[1].egg_array[9] (
+                white = bool^0 = load.c[1].egg_array[9].white 
+                yolk = int<32>^0 = load.c[1].egg_array[9].yolk 
               )
-              10 = ::load.c[1].egg_array[10] (
-                white = bool^0 = ::load.c[1].egg_array[10].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[10].yolk 
+              10 = load.c[1].egg_array[10] (
+                white = bool^0 = load.c[1].egg_array[10].white 
+                yolk = int<32>^0 = load.c[1].egg_array[10].yolk 
               )
-              11 = ::load.c[1].egg_array[11] (
-                white = bool^0 = ::load.c[1].egg_array[11].white 
-                yolk = int<32>^0 = ::load.c[1].egg_array[11].yolk 
+              11 = load.c[1].egg_array[11] (
+                white = bool^0 = load.c[1].egg_array[11].white 
+                yolk = int<32>^0 = load.c[1].egg_array[11].yolk 
               )
             }
         )
-        2 = ::load.c[2] (
+        2 = load.c[2] (
           egg_array = process egg<>^1
             {
-              0 = ::a_basket.egg_array[0] (
-                white = bool^0 = ::load.c[2].egg_array[0].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[0].yolk 
+              0 = a_basket.egg_array[0] (
+                white = bool^0 = load.c[2].egg_array[0].white 
+                yolk = int<32>^0 = load.c[2].egg_array[0].yolk 
               )
-              1 = ::a_basket.egg_array[1] (
-                white = bool^0 = ::load.c[2].egg_array[1].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[1].yolk 
+              1 = a_basket.egg_array[1] (
+                white = bool^0 = load.c[2].egg_array[1].white 
+                yolk = int<32>^0 = load.c[2].egg_array[1].yolk 
               )
-              2 = ::a_basket.egg_array[2] (
-                white = bool^0 = ::load.c[2].egg_array[2].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[2].yolk 
+              2 = a_basket.egg_array[2] (
+                white = bool^0 = load.c[2].egg_array[2].white 
+                yolk = int<32>^0 = load.c[2].egg_array[2].yolk 
               )
-              3 = ::a_basket.egg_array[3] (
-                white = bool^0 = ::load.c[2].egg_array[3].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[3].yolk 
+              3 = a_basket.egg_array[3] (
+                white = bool^0 = load.c[2].egg_array[3].white 
+                yolk = int<32>^0 = load.c[2].egg_array[3].yolk 
               )
-              4 = ::a_basket.egg_array[4] (
-                white = bool^0 = ::load.c[2].egg_array[4].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[4].yolk 
+              4 = a_basket.egg_array[4] (
+                white = bool^0 = load.c[2].egg_array[4].white 
+                yolk = int<32>^0 = load.c[2].egg_array[4].yolk 
               )
-              5 = ::a_basket.egg_array[5] (
-                white = bool^0 = ::load.c[2].egg_array[5].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[5].yolk 
+              5 = a_basket.egg_array[5] (
+                white = bool^0 = load.c[2].egg_array[5].white 
+                yolk = int<32>^0 = load.c[2].egg_array[5].yolk 
               )
-              6 = ::a_basket.egg_array[6] (
-                white = bool^0 = ::load.c[2].egg_array[6].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[6].yolk 
+              6 = a_basket.egg_array[6] (
+                white = bool^0 = load.c[2].egg_array[6].white 
+                yolk = int<32>^0 = load.c[2].egg_array[6].yolk 
               )
-              7 = ::a_basket.egg_array[7] (
-                white = bool^0 = ::load.c[2].egg_array[7].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[7].yolk 
+              7 = a_basket.egg_array[7] (
+                white = bool^0 = load.c[2].egg_array[7].white 
+                yolk = int<32>^0 = load.c[2].egg_array[7].yolk 
               )
-              8 = ::a_basket.egg_array[8] (
-                white = bool^0 = ::load.c[2].egg_array[8].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[8].yolk 
+              8 = a_basket.egg_array[8] (
+                white = bool^0 = load.c[2].egg_array[8].white 
+                yolk = int<32>^0 = load.c[2].egg_array[8].yolk 
               )
-              9 = ::a_basket.egg_array[9] (
-                white = bool^0 = ::load.c[2].egg_array[9].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[9].yolk 
+              9 = a_basket.egg_array[9] (
+                white = bool^0 = load.c[2].egg_array[9].white 
+                yolk = int<32>^0 = load.c[2].egg_array[9].yolk 
               )
-              10 = ::a_basket.egg_array[10] (
-                white = bool^0 = ::load.c[2].egg_array[10].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[10].yolk 
+              10 = a_basket.egg_array[10] (
+                white = bool^0 = load.c[2].egg_array[10].white 
+                yolk = int<32>^0 = load.c[2].egg_array[10].yolk 
               )
-              11 = ::a_basket.egg_array[11] (
-                white = bool^0 = ::load.c[2].egg_array[11].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[11].yolk 
+              11 = a_basket.egg_array[11] (
+                white = bool^0 = load.c[2].egg_array[11].white 
+                yolk = int<32>^0 = load.c[2].egg_array[11].yolk 
               )
             }
         )
-        3 = ::load.c[3] (
+        3 = load.c[3] (
           egg_array = process egg<>^1
             {
-              0 = ::load.c[3].egg_array[0] (
-                white = bool^0 = ::load.c[3].egg_array[0].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[0].yolk 
+              0 = load.c[3].egg_array[0] (
+                white = bool^0 = load.c[3].egg_array[0].white 
+                yolk = int<32>^0 = load.c[3].egg_array[0].yolk 
               )
-              1 = ::load.c[3].egg_array[1] (
-                white = bool^0 = ::load.c[3].egg_array[1].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[1].yolk 
+              1 = load.c[3].egg_array[1] (
+                white = bool^0 = load.c[3].egg_array[1].white 
+                yolk = int<32>^0 = load.c[3].egg_array[1].yolk 
               )
-              2 = ::load.c[3].egg_array[2] (
-                white = bool^0 = ::load.c[3].egg_array[2].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[2].yolk 
+              2 = load.c[3].egg_array[2] (
+                white = bool^0 = load.c[3].egg_array[2].white 
+                yolk = int<32>^0 = load.c[3].egg_array[2].yolk 
               )
-              3 = ::load.c[3].egg_array[3] (
-                white = bool^0 = ::load.c[3].egg_array[3].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[3].yolk 
+              3 = load.c[3].egg_array[3] (
+                white = bool^0 = load.c[3].egg_array[3].white 
+                yolk = int<32>^0 = load.c[3].egg_array[3].yolk 
               )
-              4 = ::load.c[3].egg_array[4] (
-                white = bool^0 = ::load.c[3].egg_array[4].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[4].yolk 
+              4 = load.c[3].egg_array[4] (
+                white = bool^0 = load.c[3].egg_array[4].white 
+                yolk = int<32>^0 = load.c[3].egg_array[4].yolk 
               )
-              5 = ::load.c[3].egg_array[5] (
-                white = bool^0 = ::load.c[3].egg_array[5].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[5].yolk 
+              5 = load.c[3].egg_array[5] (
+                white = bool^0 = load.c[3].egg_array[5].white 
+                yolk = int<32>^0 = load.c[3].egg_array[5].yolk 
               )
-              6 = ::load.c[3].egg_array[6] (
-                white = bool^0 = ::load.c[3].egg_array[6].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[6].yolk 
+              6 = load.c[3].egg_array[6] (
+                white = bool^0 = load.c[3].egg_array[6].white 
+                yolk = int<32>^0 = load.c[3].egg_array[6].yolk 
               )
-              7 = ::load.c[3].egg_array[7] (
-                white = bool^0 = ::load.c[3].egg_array[7].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[7].yolk 
+              7 = load.c[3].egg_array[7] (
+                white = bool^0 = load.c[3].egg_array[7].white 
+                yolk = int<32>^0 = load.c[3].egg_array[7].yolk 
               )
-              8 = ::load.c[3].egg_array[8] (
-                white = bool^0 = ::load.c[3].egg_array[8].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[8].yolk 
+              8 = load.c[3].egg_array[8] (
+                white = bool^0 = load.c[3].egg_array[8].white 
+                yolk = int<32>^0 = load.c[3].egg_array[8].yolk 
               )
-              9 = ::load.c[3].egg_array[9] (
-                white = bool^0 = ::load.c[3].egg_array[9].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[9].yolk 
+              9 = load.c[3].egg_array[9] (
+                white = bool^0 = load.c[3].egg_array[9].white 
+                yolk = int<32>^0 = load.c[3].egg_array[9].yolk 
               )
-              10 = ::load.c[3].egg_array[10] (
-                white = bool^0 = ::load.c[3].egg_array[10].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[10].yolk 
+              10 = load.c[3].egg_array[10] (
+                white = bool^0 = load.c[3].egg_array[10].white 
+                yolk = int<32>^0 = load.c[3].egg_array[10].yolk 
               )
-              11 = ::load.c[3].egg_array[11] (
-                white = bool^0 = ::load.c[3].egg_array[11].white 
-                yolk = int<32>^0 = ::load.c[3].egg_array[11].yolk 
+              11 = load.c[3].egg_array[11] (
+                white = bool^0 = load.c[3].egg_array[11].white 
+                yolk = int<32>^0 = load.c[3].egg_array[11].yolk 
               )
             }
         )
-        4 = ::load.c[4] (
+        4 = load.c[4] (
           egg_array = process egg<>^1
             {
-              0 = ::load.c[4].egg_array[0] (
-                white = bool^0 = ::load.c[4].egg_array[0].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[0].yolk 
+              0 = load.c[4].egg_array[0] (
+                white = bool^0 = load.c[4].egg_array[0].white 
+                yolk = int<32>^0 = load.c[4].egg_array[0].yolk 
               )
-              1 = ::load.c[4].egg_array[1] (
-                white = bool^0 = ::load.c[4].egg_array[1].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[1].yolk 
+              1 = load.c[4].egg_array[1] (
+                white = bool^0 = load.c[4].egg_array[1].white 
+                yolk = int<32>^0 = load.c[4].egg_array[1].yolk 
               )
-              2 = ::load.c[4].egg_array[2] (
-                white = bool^0 = ::load.c[4].egg_array[2].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[2].yolk 
+              2 = load.c[4].egg_array[2] (
+                white = bool^0 = load.c[4].egg_array[2].white 
+                yolk = int<32>^0 = load.c[4].egg_array[2].yolk 
               )
-              3 = ::load.c[4].egg_array[3] (
-                white = bool^0 = ::load.c[4].egg_array[3].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[3].yolk 
+              3 = load.c[4].egg_array[3] (
+                white = bool^0 = load.c[4].egg_array[3].white 
+                yolk = int<32>^0 = load.c[4].egg_array[3].yolk 
               )
-              4 = ::load.c[4].egg_array[4] (
-                white = bool^0 = ::load.c[4].egg_array[4].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[4].yolk 
+              4 = load.c[4].egg_array[4] (
+                white = bool^0 = load.c[4].egg_array[4].white 
+                yolk = int<32>^0 = load.c[4].egg_array[4].yolk 
               )
-              5 = ::load.c[4].egg_array[5] (
-                white = bool^0 = ::load.c[4].egg_array[5].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[5].yolk 
+              5 = load.c[4].egg_array[5] (
+                white = bool^0 = load.c[4].egg_array[5].white 
+                yolk = int<32>^0 = load.c[4].egg_array[5].yolk 
               )
-              6 = ::load.c[4].egg_array[6] (
-                white = bool^0 = ::load.c[4].egg_array[6].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[6].yolk 
+              6 = load.c[4].egg_array[6] (
+                white = bool^0 = load.c[4].egg_array[6].white 
+                yolk = int<32>^0 = load.c[4].egg_array[6].yolk 
               )
-              7 = ::load.c[4].egg_array[7] (
-                white = bool^0 = ::load.c[4].egg_array[7].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[7].yolk 
+              7 = load.c[4].egg_array[7] (
+                white = bool^0 = load.c[4].egg_array[7].white 
+                yolk = int<32>^0 = load.c[4].egg_array[7].yolk 
               )
-              8 = ::load.c[4].egg_array[8] (
-                white = bool^0 = ::load.c[4].egg_array[8].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[8].yolk 
+              8 = load.c[4].egg_array[8] (
+                white = bool^0 = load.c[4].egg_array[8].white 
+                yolk = int<32>^0 = load.c[4].egg_array[8].yolk 
               )
-              9 = ::load.c[4].egg_array[9] (
-                white = bool^0 = ::load.c[4].egg_array[9].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[9].yolk 
+              9 = load.c[4].egg_array[9] (
+                white = bool^0 = load.c[4].egg_array[9].white 
+                yolk = int<32>^0 = load.c[4].egg_array[9].yolk 
               )
-              10 = ::load.c[4].egg_array[10] (
-                white = bool^0 = ::load.c[4].egg_array[10].white 
-                yolk = int<32>^0 = ::load.c[4].egg_array[10].yolk 
+              10 = load.c[4].egg_array[10] (
+                white = bool^0 = load.c[4].egg_array[10].white 
+                yolk = int<32>^0 = load.c[4].egg_array[10].yolk 
               )
-              11 = ::load.b.egg_array[2] (
-                white = bool^0 = ::load.c[2].egg_array[0].white 
-                yolk = int<32>^0 = ::load.c[2].egg_array[0].yolk 
+              11 = load.b.egg_array[2] (
+                white = bool^0 = load.c[2].egg_array[0].white 
+                yolk = int<32>^0 = load.c[2].egg_array[0].yolk 
               )
             }
         )
-        5 = ::load.c[5] (
+        5 = load.c[5] (
           egg_array = process egg<>^1
             {
-              0 = ::load.c[5].egg_array[0] (
-                white = bool^0 = ::load.c[5].egg_array[0].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[0].yolk 
+              0 = load.c[5].egg_array[0] (
+                white = bool^0 = load.c[5].egg_array[0].white 
+                yolk = int<32>^0 = load.c[5].egg_array[0].yolk 
               )
-              1 = ::load.c[5].egg_array[1] (
-                white = bool^0 = ::load.c[5].egg_array[1].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[1].yolk 
+              1 = load.c[5].egg_array[1] (
+                white = bool^0 = load.c[5].egg_array[1].white 
+                yolk = int<32>^0 = load.c[5].egg_array[1].yolk 
               )
-              2 = ::load.c[5].egg_array[2] (
-                white = bool^0 = ::load.c[5].egg_array[2].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[2].yolk 
+              2 = load.c[5].egg_array[2] (
+                white = bool^0 = load.c[5].egg_array[2].white 
+                yolk = int<32>^0 = load.c[5].egg_array[2].yolk 
               )
-              3 = ::load.c[5].egg_array[3] (
-                white = bool^0 = ::load.c[5].egg_array[3].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[3].yolk 
+              3 = load.c[5].egg_array[3] (
+                white = bool^0 = load.c[5].egg_array[3].white 
+                yolk = int<32>^0 = load.c[5].egg_array[3].yolk 
               )
-              4 = ::load.c[5].egg_array[4] (
-                white = bool^0 = ::load.c[5].egg_array[4].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[4].yolk 
+              4 = load.c[5].egg_array[4] (
+                white = bool^0 = load.c[5].egg_array[4].white 
+                yolk = int<32>^0 = load.c[5].egg_array[4].yolk 
               )
-              5 = ::load.c[5].egg_array[5] (
-                white = bool^0 = ::load.c[5].egg_array[5].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[5].yolk 
+              5 = load.c[5].egg_array[5] (
+                white = bool^0 = load.c[5].egg_array[5].white 
+                yolk = int<32>^0 = load.c[5].egg_array[5].yolk 
               )
-              6 = ::load.c[5].egg_array[6] (
-                white = bool^0 = ::load.c[5].egg_array[6].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[6].yolk 
+              6 = load.c[5].egg_array[6] (
+                white = bool^0 = load.c[5].egg_array[6].white 
+                yolk = int<32>^0 = load.c[5].egg_array[6].yolk 
               )
-              7 = ::load.c[5].egg_array[7] (
-                white = bool^0 = ::load.c[5].egg_array[7].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[7].yolk 
+              7 = load.c[5].egg_array[7] (
+                white = bool^0 = load.c[5].egg_array[7].white 
+                yolk = int<32>^0 = load.c[5].egg_array[7].yolk 
               )
-              8 = ::load.c[5].egg_array[8] (
-                white = bool^0 = ::load.c[5].egg_array[8].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[8].yolk 
+              8 = load.c[5].egg_array[8] (
+                white = bool^0 = load.c[5].egg_array[8].white 
+                yolk = int<32>^0 = load.c[5].egg_array[8].yolk 
               )
-              9 = ::load.c[5].egg_array[9] (
-                white = bool^0 = ::load.c[5].egg_array[9].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[9].yolk 
+              9 = load.c[5].egg_array[9] (
+                white = bool^0 = load.c[5].egg_array[9].white 
+                yolk = int<32>^0 = load.c[5].egg_array[9].yolk 
               )
-              10 = ::load.c[5].egg_array[10] (
-                white = bool^0 = ::load.c[5].egg_array[10].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[10].yolk 
+              10 = load.c[5].egg_array[10] (
+                white = bool^0 = load.c[5].egg_array[10].white 
+                yolk = int<32>^0 = load.c[5].egg_array[10].yolk 
               )
-              11 = ::load.c[5].egg_array[11] (
-                white = bool^0 = ::load.c[5].egg_array[11].white 
-                yolk = int<32>^0 = ::load.c[5].egg_array[11].yolk 
+              11 = load.c[5].egg_array[11] (
+                white = bool^0 = load.c[5].egg_array[11].white 
+                yolk = int<32>^0 = load.c[5].egg_array[11].yolk 
               )
             }
         )
       }
   )
-  uncount = int<32>^0 = ::load.c[2].egg_array[3].yolk 
-  uncrack = bool^0 = ::load.c[2].egg_array[5].white 
+  uncount = int<32>^0 = load.c[2].egg_array[3].yolk 
+  uncrack = bool^0 = load.c[2].egg_array[5].white 
 }

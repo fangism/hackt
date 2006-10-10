@@ -49,25 +49,25 @@ In namespace "", we have: {
       pint<> N
       pint<> K
       >(
-        int<::fangism::K> ick[0..N-1]
+        int<fangism::K> ick[0..N-1]
       )
       In definition "fangism", we have: {
       Parameters:
         K = pint<> fangism::K
         N = pint<> fangism::N
       Instances:
-        ick = int<::fangism::K> fangism::ick^1
+        ick = int<fangism::K> fangism::ick^1
       }
 
   Typedefs:
     double_int = datatype-definition-alias: double_int<
       pint<> W
       >
-      = int<2*::double_int::W>
+      = int<2*double_int::W>
     fangism_0 = process-definition-alias: fangism_0<
       pint<> K
       >
-      = fangism<0, ::fangism_0::K>
+      = fangism<0, fangism_0::K>
 }
 
 footprint: {
