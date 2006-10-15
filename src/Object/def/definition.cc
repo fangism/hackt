@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27.2.11 2006/10/10 07:11:54 fang Exp $
+ 	$Id: definition.cc,v 1.27.2.12 2006/10/15 21:35:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -3190,21 +3190,10 @@ process_definition::__create_complete_type(
 		return good_bool(false);
 	}
 	if (!f.is_created()) {
-		const canonical_type_base canonical_params(p);
-		const template_actuals
-			canonical_actuals(canonical_params.get_template_params(
-				template_formals.num_strict_formals()));
-		const canonical_process_type
-			cpt(make_canonical_type(canonical_actuals));
 #if RESOLVE_VALUES_WITH_FOOTPRINT
 		const unroll_context c(&f, &top);
-		// no parent b/c doing away with lookup of globals, 
-		// when we do, need to chain the context with parent...
-		if (!template_formals.unroll_formal_parameters(
-				c, canonical_actuals).good) {
-			cerr << "ERROR: unrolling template formals." << endl;
-			return good_bool(false);
-		}
+		// no need to re-unroll formal parameters, 
+		// already expanded in footprint
 #else
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		const unroll_context

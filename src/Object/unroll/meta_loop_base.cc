@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.4.50.3 2006/10/08 21:52:29 fang Exp $
+	$Id: meta_loop_base.cc,v 1.4.50.4 2006/10/15 21:35:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -36,6 +36,7 @@
 //=============================================================================
 namespace HAC {
 namespace entity {
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class meta_loop_base method definitions
@@ -72,11 +73,11 @@ meta_loop_base::initialize_footprint(footprint& f) const {
 	const good_bool g(pis.unroll(temp));
 	// doesn't assign init. value
 	INVARIANT(g.good);
-	const count_ptr<pint_scalar>
-		ret(f[ind_var->get_name()].is_a<pint_scalar>());
+	const string& key(ind_var->get_name());
+	const count_ptr<pint_scalar> ret(f[key].is_a<pint_scalar>());
 	NEVER_NULL(ret);
 	// other back-linking collection to placeholder? for diagnostics?
-	// assign it some value to make it valid
+	// assign it some value to make it valid initially
 	ret->get_instance() = 0;
 	return ret;
 }

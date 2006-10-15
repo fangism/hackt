@@ -3,6 +3,18 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-34:
+	  instance_placeholder_base::get_footprint_key():
+		now does the same thing as get_qualified_name(), 
+		except for loop induction variables.  
+		No tests needed to be updated.  
+	  Fixed ICE on process_definition::__create_complete_type():
+		no need to re-unroll template parameters, because
+		they are already in the footprint.  
+
+
 2006-10-10	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-33:

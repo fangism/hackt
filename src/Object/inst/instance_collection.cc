@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.22.4.14 2006/10/10 07:11:57 fang Exp $
+ 	$Id: instance_collection.cc,v 1.22.4.15 2006/10/15 21:35:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -944,9 +944,14 @@ if (owner) {
 string
 instance_placeholder_base::get_footprint_key(void) const {
 	const never_ptr<const name_space> ns(owner.is_a<const name_space>());
-	if (ns && ns->get_parent())
-		return ns->get_qualified_name() + "::" + key;
-	else return key;
+	if (ns && ns->get_parent()) {
+		// use this, now that leading global namespace is dropped
+		return get_qualified_name();
+//		return ns->get_qualified_name() + "::" + key;
+	} else {
+		// also covers loop-induction variables
+		return key;
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
