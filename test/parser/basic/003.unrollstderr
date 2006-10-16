@@ -33,5 +33,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  rajit::parser = int<32>^0 = ::rajit::parser 
+  rajit::parser = int<32>^0 = rajit::parser 
 }

@@ -54,7 +54,7 @@ In namespace "", we have: {
 }
 
 footprint: {
-  cat::meow = int<32>^0 = ::cat::meow 
-  dog::moo = int<32>^0 = ::dog::moo 
-  dog::woof = int<32>^0 = ::dog::woof 
+  cat::meow = int<32>^0 = cat::meow 
+  dog::moo = int<32>^0 = dog::moo 
+  dog::woof = int<32>^0 = dog::woof 
 }

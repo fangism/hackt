@@ -51,5 +51,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  yo::whazzup = int<32>^0 = ::yo::yo::yo::whazzup 
+  yo::whazzup = int<32>^0 = yo::yo::yo::whazzup 
 }

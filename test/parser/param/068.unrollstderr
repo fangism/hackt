@@ -68,14 +68,14 @@ In namespace "", we have: {
           )
           In definition "foo", we have: {
           Instances:
-            zoo = bar::ick<::bar::Q> bar::foo::zoo^1
+            zoo = bar::ick<bar::Q> bar::foo::zoo^1
           unroll sequence: 
-            bar::ick<::bar::Q> zoo[0..::bar::Q-1]
+            bar::ick<bar::Q> zoo[0..bar::Q-1]
           footprint: {
             zoo = process bar::ick<2>^1
               {
-                0 = ::bar::foo::zoo[0] 
-                1 = ::bar::foo::zoo[1] 
+                0 = bar::foo::zoo[0] 
+                1 = bar::foo::zoo[1] 
               }
           }
           }
@@ -96,8 +96,8 @@ In namespace "", we have: {
               X = pint^0 value: 2
               z = bool^1
                 {
-                  0 = ::bar::ick::z[0] 
-                  1 = ::bar::ick::z[1] 
+                  0 = bar::ick::z[0] 
+                  1 = bar::ick::z[1] 
                 }
             }
           }

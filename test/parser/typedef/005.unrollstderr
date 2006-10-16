@@ -59,6 +59,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  fang::crazy = bool^0 = ::fang::crazy 
+  fang::crazy = bool^0 = fang::crazy 
   tada = bool^0 = tada 
 }

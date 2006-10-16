@@ -48,5 +48,5 @@ In namespace "", we have: {
 footprint: {
   N = int<32>^0 = N 
   Q = bool^0 = Q 
-  rajit::parser = int<32>^0 = ::rajit::parser 
+  rajit::parser = int<32>^0 = rajit::parser 
 }

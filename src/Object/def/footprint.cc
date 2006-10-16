@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.7 2006/10/05 01:15:30 fang Exp $
+	$Id: footprint.cc,v 1.24.4.8 2006/10/16 00:21:08 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -264,6 +264,10 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			i->second->dump(o, df) << endl;
 		}
 #endif
+#if MODULE_PROCESS
+	if (is_created()) {
+		o << "Created state:" << endl;
+#endif
 		dump(o);
 		port_aliases.dump(o);
 #if ENABLE_STACKTRACE
@@ -273,7 +277,10 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		prs_footprint.dump(o, *this);
 		chp_footprint.dump(o, *this, dc);
 		spec_footprint.dump(o, *this);
-	}
+#if MODULE_PROCESS
+	}	// end if is_created
+#endif
+	}	// end if collection_map is not empty
 	return o;
 }
 

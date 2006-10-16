@@ -275,13 +275,13 @@ In namespace "", we have: {
               Parameters:
                 N = pint<> std::logic::celeminv::N
               Instances:
-                c = std::logic::gceleminv<::std::logic::celeminv::N, ::std::logic::celeminv::N> std::logic::celeminv::c
+                c = std::logic::gceleminv<std::logic::celeminv::N, std::logic::celeminv::N> std::logic::celeminv::c
                 i = bool<> std::logic::celeminv::i^1
                 o = bool<> std::logic::celeminv::o
               unroll sequence: 
                 bool<> i[0..N-1]
                 bool<> o
-                std::logic::gceleminv<::std::logic::celeminv::N, ::std::logic::celeminv::N> c
+                std::logic::gceleminv<std::logic::celeminv::N, std::logic::celeminv::N> c
                 c (i, i, o);
               }
 

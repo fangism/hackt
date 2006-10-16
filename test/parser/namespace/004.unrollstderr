@@ -220,5 +220,5 @@ In namespace "", we have: {
 }
 
 footprint: {
-  cornell::foo = int<32>^0 = ::cornell::foo 
+  cornell::foo = int<32>^0 = cornell::foo 
 }

@@ -48,6 +48,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  A::foo = int<32>^0 = ::A::foo 
-  B::foo = int<32>^0 = ::B::foo 
+  A::foo = int<32>^0 = A::foo 
+  B::foo = int<32>^0 = B::foo 
 }

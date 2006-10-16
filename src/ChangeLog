@@ -9,10 +9,13 @@
 	  instance_placeholder_base::get_footprint_key():
 		now does the same thing as get_qualified_name(), 
 		except for loop induction variables.  
-		No tests needed to be updated.  
+	  name_space::dump_qualified_name() updated to omit the leading "::"
+		for global namespace references.  
+		Test-expects updated accordingly.  
 	  Fixed ICE on process_definition::__create_complete_type():
 		no need to re-unroll template parameters, because
 		they are already in the footprint.  
+	  Updated module's dump to use footprint::dump().  
 
 
 2006-10-10	David Fang		<fangism@users.sourceforge.net>

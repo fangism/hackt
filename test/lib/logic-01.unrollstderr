@@ -344,42 +344,42 @@ In namespace "", we have: {
               Parameters:
                 N = pint<> std::logic::celeminv::N
               Instances:
-                c = std::logic::gceleminv<::std::logic::celeminv::N, ::std::logic::celeminv::N> std::logic::celeminv::c
+                c = std::logic::gceleminv<std::logic::celeminv::N, std::logic::celeminv::N> std::logic::celeminv::c
                 i = bool<> std::logic::celeminv::i^1
                 o = bool<> std::logic::celeminv::o
               unroll sequence: 
                 bool<> i[0..N-1]
                 bool<> o
-                std::logic::gceleminv<::std::logic::celeminv::N, ::std::logic::celeminv::N> c
+                std::logic::gceleminv<std::logic::celeminv::N, std::logic::celeminv::N> c
                 c (i, i, o);
               footprint collection: {
                 <4> {
                   N = pint^0 value: 4
-                  c = process std::logic::gceleminv<4, 4>^0 = ::std::logic::celeminv::c (
+                  c = process std::logic::gceleminv<4, 4>^0 = std::logic::celeminv::c (
                     id = bool^1
                       {
-                        0 = ::std::logic::celeminv::c.iu[0] 
-                        1 = ::std::logic::celeminv::c.iu[1] 
-                        2 = ::std::logic::celeminv::c.iu[2] 
-                        3 = ::std::logic::celeminv::c.iu[3] 
+                        0 = std::logic::celeminv::c.iu[0] 
+                        1 = std::logic::celeminv::c.iu[1] 
+                        2 = std::logic::celeminv::c.iu[2] 
+                        3 = std::logic::celeminv::c.iu[3] 
                       }
                     iu = bool^1
                       {
-                        0 = ::std::logic::celeminv::c.iu[0] 
-                        1 = ::std::logic::celeminv::c.iu[1] 
-                        2 = ::std::logic::celeminv::c.iu[2] 
-                        3 = ::std::logic::celeminv::c.iu[3] 
+                        0 = std::logic::celeminv::c.iu[0] 
+                        1 = std::logic::celeminv::c.iu[1] 
+                        2 = std::logic::celeminv::c.iu[2] 
+                        3 = std::logic::celeminv::c.iu[3] 
                       }
-                    o = bool^0 = ::std::logic::celeminv::c.o 
+                    o = bool^0 = std::logic::celeminv::c.o 
                   )
                   i = bool^1
                     {
-                      0 = ::std::logic::celeminv::c.id[0] 
-                      1 = ::std::logic::celeminv::c.id[1] 
-                      2 = ::std::logic::celeminv::c.id[2] 
-                      3 = ::std::logic::celeminv::c.id[3] 
+                      0 = std::logic::celeminv::c.id[0] 
+                      1 = std::logic::celeminv::c.id[1] 
+                      2 = std::logic::celeminv::c.id[2] 
+                      3 = std::logic::celeminv::c.id[3] 
                     }
-                  o = bool^0 = ::std::logic::celeminv::c.o 
+                  o = bool^0 = std::logic::celeminv::c.o 
                 }
               }
               }
@@ -413,19 +413,19 @@ In namespace "", we have: {
                   U = pint^0 value: 4
                   id = bool^1
                     {
-                      0 = ::std::logic::gceleminv::id[0] 
-                      1 = ::std::logic::gceleminv::id[1] 
-                      2 = ::std::logic::gceleminv::id[2] 
-                      3 = ::std::logic::gceleminv::id[3] 
+                      0 = std::logic::gceleminv::id[0] 
+                      1 = std::logic::gceleminv::id[1] 
+                      2 = std::logic::gceleminv::id[2] 
+                      3 = std::logic::gceleminv::id[3] 
                     }
                   iu = bool^1
                     {
-                      0 = ::std::logic::gceleminv::iu[0] 
-                      1 = ::std::logic::gceleminv::iu[1] 
-                      2 = ::std::logic::gceleminv::iu[2] 
-                      3 = ::std::logic::gceleminv::iu[3] 
+                      0 = std::logic::gceleminv::iu[0] 
+                      1 = std::logic::gceleminv::iu[1] 
+                      2 = std::logic::gceleminv::iu[2] 
+                      3 = std::logic::gceleminv::iu[3] 
                     }
-                  o = bool^0 = ::std::logic::gceleminv::o 
+                  o = bool^0 = std::logic::gceleminv::o 
                 }
               }
               }
@@ -469,12 +469,12 @@ In namespace "", we have: {
                   N = pint^0 value: 4
                   i = bool^1
                     {
-                      0 = ::std::logic::nand::i[0] 
-                      1 = ::std::logic::nand::i[1] 
-                      2 = ::std::logic::nand::i[2] 
-                      3 = ::std::logic::nand::i[3] 
+                      0 = std::logic::nand::i[0] 
+                      1 = std::logic::nand::i[1] 
+                      2 = std::logic::nand::i[2] 
+                      3 = std::logic::nand::i[3] 
                     }
-                  o = bool^0 = ::std::logic::nand::o 
+                  o = bool^0 = std::logic::nand::o 
                 }
               }
               }
@@ -502,12 +502,12 @@ In namespace "", we have: {
                   N = pint^0 value: 4
                   i = bool^1
                     {
-                      0 = ::std::logic::nor::i[0] 
-                      1 = ::std::logic::nor::i[1] 
-                      2 = ::std::logic::nor::i[2] 
-                      3 = ::std::logic::nor::i[3] 
+                      0 = std::logic::nor::i[0] 
+                      1 = std::logic::nor::i[1] 
+                      2 = std::logic::nor::i[2] 
+                      3 = std::logic::nor::i[3] 
                     }
-                  o = bool^0 = ::std::logic::nor::o 
+                  o = bool^0 = std::logic::nor::o 
                 }
               }
               }

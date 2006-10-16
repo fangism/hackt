@@ -40,6 +40,6 @@ In namespace "", we have: {
 }
 
 footprint: {
-  bar::foo = int<32>^0 = ::bar::foo 
+  bar::foo = int<32>^0 = bar::foo 
   foo = int<32>^0 = foo 
 }

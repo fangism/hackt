@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.22.4.2 2006/10/05 01:15:25 fang Exp $
+ 	$Id: module.cc,v 1.22.4.3 2006/10/16 00:21:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -267,6 +267,7 @@ module::dump(ostream& o) const {
 #endif
 	}
 #endif
+#if !MODULE_PROCESS
 	if (is_created()) {
 		o << "Created state:" << endl;
 		_footprint.dump(o) << endl;
@@ -274,6 +275,7 @@ module::dump(ostream& o) const {
 		_footprint.get_scope_alias_tracker().dump(o << "BUH: ");
 #endif
 	}
+#endif
 	if (is_allocated()) {
 #if 0
 		// only for debugging
