@@ -1,10 +1,10 @@
 globID	super		localID	canonical	footprint-frame
 [global process entries]
-1	(top)	-	1	f	foo<>
+1	(top)	-	1	f	bar::foo<>
 	process: 2,3
-2	process	1	1	f.zoo[0]	ick<2>
+2	process	1	1	f.zoo[0]	bar::ick<2>
 	bool: 1,2
-3	process	1	2	f.zoo[1]	ick<2>
+3	process	1	2	f.zoo[1]	bar::ick<2>
 	bool: 3,4
 [global bool entries]
 1	process	2	1	f.zoo[0].z[0]	

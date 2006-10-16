@@ -5,6 +5,15 @@
 
 2006-10-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-36:
+	  Enabled and re-confirmed ALL alloc regression tests.
+	  Again, some top-level canonical names changed due to
+		traversal ordering, which should not be depended upon.  
+	  global_entry::dump_canonical_name() updated to use 
+		dump_flags::no_definition_owner.  
+	  Next: cflat tests.
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-35:
 	  Re-enabled all create tests in regression suite.  
 	  Updated all/most create tests (stderr): no regressions!!!

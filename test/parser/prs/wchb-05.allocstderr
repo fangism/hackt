@@ -14,5 +14,5 @@ globID	super		localID	canonical	footprint-frame
 4	(top)	-	4	R.d[0]	
 5	(top)	-	5	R.d[1]	
 6	(top)	-	6	R.e	
-7	process	3	1	b._r	
-8	process	3	2	b.l1	
+7	process	3	1	b.l1	
+8	process	3	2	b._r	

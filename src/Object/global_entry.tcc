@@ -1,6 +1,6 @@
 /**
 	\file "Object/global_entry.tcc"
-	$Id: global_entry.tcc,v 1.13 2006/02/26 05:19:57 fang Exp $
+	$Id: global_entry.tcc,v 1.13.30.1 2006/10/16 06:15:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_GLOBAL_ENTRY_TCC__
@@ -448,7 +448,7 @@ template <class Tag>
 ostream&
 global_entry<Tag>::dump_canonical_name(ostream& o,
 		const footprint& topfp, const state_manager& sm) const {
-#if 0
+#if 1
 	return __dump_canonical_name(o, dump_flags::no_definition_owner,
 		topfp, sm);
 #else
