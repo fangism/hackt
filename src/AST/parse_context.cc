@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.11.4.9 2006/10/08 21:51:45 fang Exp $
+ 	$Id: parse_context.cc,v 1.11.4.10 2006/10/16 17:11:52 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -690,7 +690,9 @@ context::get_current_named_scope(void) const {
 #endif
 	} else {
 #if SUPPORT_NESTED_DEFINITIONS
-		ICE(cerr, cerr << "Reached the unreachable code!" << endl;)
+		// This code can be reached only when calling parser
+		// using a read-only parse-context.  
+		// ICE(cerr, cerr << "Reached the unreachable code!" << endl;)
 #endif
 		return namespace_stack.top().as_a<scopespace>();
 	}

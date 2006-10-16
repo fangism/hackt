@@ -5,6 +5,15 @@
 
 2006-10-16	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-37:
+	  Enabled and re-confirmed all cflat-related tests.
+		A scant few test cases had outputs re-ordered, updated them.
+	  AST::parse_context::get_current_named_scope():
+		Don't ICE -- last case is reachable when using a read-only
+		context attached to module.
+	  Next: prsim tests.
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-36:
 	  Enabled and re-confirmed ALL alloc regression tests.
 	  Again, some top-level canonical names changed due to
