@@ -2,7 +2,7 @@
 	\file "Object/module.cc"
 	Method definitions for module class.  
 	This file was renamed from "Object/art_object_module.cc".
- 	$Id: module.cc,v 1.22.4.3 2006/10/16 00:21:04 fang Exp $
+ 	$Id: module.cc,v 1.22.4.4 2006/10/16 04:34:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_CC__
@@ -284,11 +284,14 @@ module::dump(ostream& o) const {
 		o << "Globally allocated state:" << endl;
 		global_state.dump(o, _footprint);
 	}
+#if !MODULE_PROCESS
 	dump_top_level_unrolled_prs(o);
+#endif
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MODULE_PROCESS
 ostream&
 module::dump_top_level_unrolled_prs(ostream& o) const {
 	// footprint::dump doesn't contain unrolled prs
@@ -299,6 +302,7 @@ module::dump_top_level_unrolled_prs(ostream& o) const {
 	Pfp.dump(o, _footprint);
 	return o;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if MODULE_PROCESS
@@ -440,6 +444,7 @@ module::create_unique(void) {
 			// alraedy have error mesage
 			return good_bool(false);
 		}
+#if !MODULE_PROCESS
 	{
 #if MODULE_PROCESS
 		footprint& _footprint(get_footprint());
@@ -463,6 +468,7 @@ module::create_unique(void) {
 			return good_bool(false);
 		}
 	}
+#endif
 	}
 	return good_bool(true);
 }

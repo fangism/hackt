@@ -4,30 +4,30 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	3440
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	3432
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	14	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
@@ -36,14 +36,14 @@ Persistent Object Manager text dump:
 	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	34	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	35	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	36	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	38	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	42	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	43	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	45	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -73,16 +73,17 @@ Persistent Object Manager text dump:
 	69	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	70	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	71	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	72	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	73	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	116
-	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	207
-	76	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	116
-	77	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	78	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	79	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	80	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	81	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	72	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	73	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	107
+	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	198
+	76	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	107
+	77	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	78	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	79	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	80	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	81	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	82	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -99,18 +100,13 @@ In namespace "", we have: {
       )
       In definition "div", we have: {
       Parameters:
-        P = pint<> P
-        Q = pint<> Q
+        P = pint<> div::P
+        Q = pint<> div::Q
       Instances:
-        x = bool<> x
-
-        y = bool<> y
-
-        z = bool<> z
-
+        x = bool<> div::x^1
+        y = bool<> div::y^1
+        z = bool<> div::z^1
       unroll sequence: 
-        pint<> P
-        pint<> Q
         bool<> x[1..Q-1]
         bool<> y[1..P-1]
         bool<> z[1..Q-1]
@@ -126,74 +122,75 @@ In namespace "", we have: {
         )
       footprint collection: {
         <15, 8> {
-          pint^0 P value: ?
-          pint^0 Q value: ?
-          bool^1 x
-            unrolled indices: {
-              1 = ::div::x[1] (1) 
-              2 = ::div::x[2] (2) 
-              3 = ::div::x[3] (3) 
-              4 = ::div::x[4] (4) 
-              5 = ::div::x[5] (5) 
-              6 = ::div::x[6] (6) 
-              7 = ::div::x[7] (7) 
+          P = pint^0 value: 15
+          Q = pint^0 value: 8
+          x = bool^1
+            {
+              1 = div::x[1] (1) 
+              2 = div::x[2] (2) 
+              3 = div::x[3] (3) 
+              4 = div::x[4] (4) 
+              5 = div::x[5] (5) 
+              6 = div::x[6] (6) 
+              7 = div::x[7] (7) 
             }
-          bool^1 y
-            unrolled indices: {
-              1 = ::div::y[1] (8) 
-              2 = ::div::y[2] (9) 
-              3 = ::div::y[3] (10) 
-              4 = ::div::y[4] (11) 
-              5 = ::div::y[5] (12) 
-              6 = ::div::y[6] (13) 
-              7 = ::div::y[7] (14) 
-              8 = ::div::y[8] (15) 
-              9 = ::div::y[9] (16) 
-              10 = ::div::y[10] (17) 
-              11 = ::div::y[11] (18) 
-              12 = ::div::y[12] (19) 
-              13 = ::div::y[13] (20) 
-              14 = ::div::y[14] (21) 
+          y = bool^1
+            {
+              1 = div::y[1] (8) 
+              2 = div::y[2] (9) 
+              3 = div::y[3] (10) 
+              4 = div::y[4] (11) 
+              5 = div::y[5] (12) 
+              6 = div::y[6] (13) 
+              7 = div::y[7] (14) 
+              8 = div::y[8] (15) 
+              9 = div::y[9] (16) 
+              10 = div::y[10] (17) 
+              11 = div::y[11] (18) 
+              12 = div::y[12] (19) 
+              13 = div::y[13] (20) 
+              14 = div::y[14] (21) 
             }
-          bool^1 z
-            unrolled indices: {
-              1 = ::div::z[1] (22) 
-              2 = ::div::z[2] (23) 
-              3 = ::div::z[3] (24) 
-              4 = ::div::z[4] (25) 
-              5 = ::div::z[5] (26) 
-              6 = ::div::z[6] (27) 
-              7 = ::div::z[7] (28) 
+          z = bool^1
+            {
+              1 = div::z[1] (22) 
+              2 = div::z[2] (23) 
+              3 = div::z[3] (24) 
+              4 = div::z[4] (25) 
+              5 = div::z[5] (26) 
+              6 = div::z[6] (27) 
+              7 = div::z[7] (28) 
             }
+          Created state:
           bool instance pool:
-          1	::div::x[1]
-          2	::div::x[2]
-          3	::div::x[3]
-          4	::div::x[4]
-          5	::div::x[5]
-          6	::div::x[6]
-          7	::div::x[7]
-          8	::div::y[1]
-          9	::div::y[2]
-          10	::div::y[3]
-          11	::div::y[4]
-          12	::div::y[5]
-          13	::div::y[6]
-          14	::div::y[7]
-          15	::div::y[8]
-          16	::div::y[9]
-          17	::div::y[10]
-          18	::div::y[11]
-          19	::div::y[12]
-          20	::div::y[13]
-          21	::div::y[14]
-          22	::div::z[1]
-          23	::div::z[2]
-          24	::div::z[3]
-          25	::div::z[4]
-          26	::div::z[5]
-          27	::div::z[6]
-          28	::div::z[7]
+          1	div::x[1]
+          2	div::x[2]
+          3	div::x[3]
+          4	div::x[4]
+          5	div::x[5]
+          6	div::x[6]
+          7	div::x[7]
+          8	div::y[1]
+          9	div::y[2]
+          10	div::y[3]
+          11	div::y[4]
+          12	div::y[5]
+          13	div::y[6]
+          14	div::y[7]
+          15	div::y[8]
+          16	div::y[9]
+          17	div::y[10]
+          18	div::y[11]
+          19	div::y[12]
+          20	div::y[13]
+          21	div::y[14]
+          22	div::z[1]
+          23	div::z[2]
+          24	div::z[3]
+          25	div::z[4]
+          26	div::z[5]
+          27	div::z[6]
+          28	div::z[7]
           resolved prs:
           x[1] -> y[1]-
           y[1] -> z[2]+
@@ -298,10 +295,12 @@ In namespace "", we have: {
       }
 
   Instances:
-    K = process div<15, 8>^0 K (instantiated) = ::K (1) 
+    K = div<15, 8> K
 }
 
-Created state:
-process instance pool:
-1	::K
-
+footprint: {
+  K = process div<15, 8>^0 = K (1) 
+  Created state:
+  process instance pool:
+  1	K
+}

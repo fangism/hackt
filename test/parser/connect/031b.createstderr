@@ -4,57 +4,60 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	207
-	10	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	191
-	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
-	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	207
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	191
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
+	13	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	58
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
-	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	44	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
-	45	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	47	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	51	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -69,17 +72,18 @@ In namespace "", we have: {
       )
       In definition "basket", we have: {
       Instances:
-        egg_array = egg<> egg_array
+        egg_array = egg<> basket::egg_array
       unroll sequence: 
         egg<> egg_array
       footprint: {
-        process egg<>^0 egg_array (instantiated) = ::basket::egg_array (1) (
-          int<32>^0 yolk (instantiated) = ::basket::egg_array.yolk (1) 
+        egg_array = process egg<>^0 = basket::egg_array (1) (
+          yolk = int<32>^0 = basket::egg_array.yolk (1) 
         )
+        Created state:
         process instance pool:
-        1	::basket::egg_array
+        1	basket::egg_array
         int instance pool:
-        1	::basket::egg_array.yolk
+        1	basket::egg_array.yolk
       }
       }
 
@@ -88,20 +92,21 @@ In namespace "", we have: {
       )
       In definition "bundle", we have: {
       Instances:
-        c = basket<> c
+        c = basket<> bundle::c
       unroll sequence: 
         basket<> c
       footprint: {
-        process basket<>^0 c (instantiated) = ::bundle::c (1) (
-          process egg<>^0 egg_array (instantiated) = ::bundle::c.egg_array (2) (
-            int<32>^0 yolk (instantiated) = ::bundle::c.egg_array.yolk (1) 
+        c = process basket<>^0 = bundle::c (1) (
+          egg_array = process egg<>^0 = bundle::c.egg_array (2) (
+            yolk = int<32>^0 = bundle::c.egg_array.yolk (1) 
           )
         )
+        Created state:
         process instance pool:
-        1	::bundle::c
-        2	::bundle::c.egg_array
+        1	bundle::c
+        2	bundle::c.egg_array
         int instance pool:
-        1	::bundle::c.egg_array.yolk
+        1	bundle::c.egg_array.yolk
       }
       }
 
@@ -110,35 +115,40 @@ In namespace "", we have: {
       )
       In definition "egg", we have: {
       Instances:
-        yolk = int<32> yolk
+        yolk = int<32> egg::yolk
       unroll sequence: 
         int<32> yolk
       footprint: {
-        int<32>^0 yolk (instantiated) = ::egg::yolk (1) 
+        yolk = int<32>^0 = egg::yolk (1) 
+        Created state:
         int instance pool:
-        1	::egg::yolk
+        1	egg::yolk
       }
       }
 
   Instances:
-    count = int<32>^0 count (instantiated) = ::count (1) 
-    golden = process egg<>^0 golden (instantiated) = ::golden (1) (
-      int<32>^0 yolk (instantiated) = ::count (1) 
-    )
-    load = process bundle<>^0 load (instantiated) = ::load (2) (
-      process basket<>^0 c (instantiated) = ::load.c (3) (
-        process egg<>^0 egg_array (instantiated) = ::golden (1) (
-          int<32>^0 yolk (instantiated) = ::count (1) 
-        )
-      )
-    )
+    count = int<32> count
+    golden = egg<> golden
+    load = bundle<> load
 }
 
-Created state:
-process instance pool:
-1	::golden
-2	::load
-3	::load.c
-int instance pool:
-1	::count
-
+footprint: {
+  count = int<32>^0 = count (1) 
+  golden = process egg<>^0 = golden (1) (
+    yolk = int<32>^0 = count (1) 
+  )
+  load = process bundle<>^0 = load (2) (
+    c = process basket<>^0 = load.c (3) (
+      egg_array = process egg<>^0 = golden (1) (
+        yolk = int<32>^0 = count (1) 
+      )
+    )
+  )
+  Created state:
+  process instance pool:
+  1	golden
+  2	load
+  3	load.c
+  int instance pool:
+  1	count
+}

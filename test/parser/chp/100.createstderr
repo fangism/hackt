@@ -5,33 +5,33 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	160
-	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	12	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	21	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	22	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	23	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	29	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	20	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	CHPseqnc	0	#HEAD#	#TAIL#	24
@@ -84,15 +84,15 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        A = chan?(int<32>) A
-        B = chan?(int<32>) B
-        C = chan!(int<32>) C
-        D = chan!(int<32>) D
-        E = chan!(int<32>) E
-        F = chan!(int<32>) F
-        a = int<32> a
-        b = int<32> b
-        z = int<32> z
+        A = chan?(int<32>) foo::A
+        B = chan?(int<32>) foo::B
+        C = chan!(int<32>) foo::C
+        D = chan!(int<32>) foo::D
+        E = chan!(int<32>) foo::E
+        F = chan!(int<32>) foo::F
+        a = int<32> foo::a
+        b = int<32> foo::b
+        z = int<32> foo::z
       unroll sequence: 
         chan?(int<32>) A
         chan?(int<32>) B
@@ -125,5 +125,5 @@ In namespace "", we have: {
 
 }
 
-Created state:
-
+footprint: {
+}

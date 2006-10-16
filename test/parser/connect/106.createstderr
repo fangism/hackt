@@ -4,61 +4,65 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	248
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	244
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	23	##ADDR##	procdefn	0	#HEAD#	#TAIL#	204
-	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	204
+	15	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	38	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	50	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	51	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	52	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	53	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	54	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	24
-	55	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	58	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -74,17 +78,18 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        a = foo<1> a
-        b = foo<2> b
+        a = foo<1> bar::a
+        b = foo<2> bar::b
       unroll sequence: 
         foo<1> a
         foo<2> b
       footprint: {
-        process foo<1>^0 a (instantiated) = ::bar::a (1) 
-        process foo<2>^0 b (instantiated) = ::bar::b (2) 
+        a = process foo<1>^0 = bar::a (1) 
+        b = process foo<2>^0 = bar::b (2) 
+        Created state:
         process instance pool:
-        1	::bar::a
-        2	::bar::b
+        1	bar::a
+        2	bar::b
       }
       }
 
@@ -94,36 +99,42 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        A = pint<> A
+        A = pint<> foo::A
       unroll sequence: 
-        pint<> A
       footprint collection: {
         <1> {
-          pint^0 A value: ?
+          A = pint^0 value: 1
+          Created state:
         }
         <2> {
-          pint^0 A value: ?
+          A = pint^0 value: 2
+          Created state:
         }
       }
       }
 
   Instances:
-    a = process foo<1>^0 a (instantiated) = ::a (1) 
-    b = process foo<2>^0 b (instantiated) = ::b (2) 
-    w = process bar<>^0 w (instantiated) = ::w (3) (
-      process foo<1>^0 a (instantiated) = ::a (1) 
-      process foo<2>^0 b (instantiated) = ::b (2) 
-    )
-    z = process bar<>^0 z (instantiated) = ::z (4) (
-      process foo<1>^0 a (instantiated) = ::a (1) 
-      process foo<2>^0 b (instantiated) = ::b (2) 
-    )
+    a = foo<1> a
+    b = foo<2> b
+    w = bar<> w
+    z = bar<> z
 }
 
-Created state:
-process instance pool:
-1	::a
-2	::b
-3	::w
-4	::z
-
+footprint: {
+  a = process foo<1>^0 = a (1) 
+  b = process foo<2>^0 = b (2) 
+  w = process bar<>^0 = w (3) (
+    a = process foo<1>^0 = a (1) 
+    b = process foo<2>^0 = b (2) 
+  )
+  z = process bar<>^0 = z (4) (
+    a = process foo<1>^0 = a (1) 
+    b = process foo<2>^0 = b (2) 
+  )
+  Created state:
+  process instance pool:
+  1	a
+  2	b
+  3	w
+  4	z
+}

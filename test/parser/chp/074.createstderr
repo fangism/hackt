@@ -4,11 +4,11 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	318
-	5	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	314
+	5	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -17,28 +17,30 @@ Persistent Object Manager text dump:
 	13	##ADDR##	sdbnref_	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	spbnref_	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	16	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	18	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	21	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	22	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	22	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	24	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -55,11 +57,10 @@ In namespace "", we have: {
       )
       In definition "assign_me", we have: {
       Parameters:
-        B = pbool<> B
+        B = pbool<> assign_me::B
       Instances:
-        b = bool<> b
+        b = bool<> assign_me::b
       unroll sequence: 
-        pbool<> B
         bool<> b
       chp:
         concurrent: {
@@ -69,20 +70,22 @@ In namespace "", we have: {
         }
       footprint collection: {
         <false> {
-          pbool^0 B value: ?
-          bool^0 b (instantiated) = ::assign_me::b (1) 
+          B = pbool^0 value: 0
+          b = bool^0 = assign_me::b (1) 
+          Created state:
           bool instance pool:
-          1	::assign_me::b
+          1	assign_me::b
           resolved concurrent actions:
             *[
               b := false
             ]
         }
         <true> {
-          pbool^0 B value: ?
-          bool^0 b (instantiated) = ::assign_me::b (1) 
+          B = pbool^0 value: 1
+          b = bool^0 = assign_me::b (1) 
+          Created state:
           bool instance pool:
-          1	::assign_me::b
+          1	assign_me::b
           resolved concurrent actions:
             *[
               b := true
@@ -92,19 +95,22 @@ In namespace "", we have: {
       }
 
   Instances:
-    X = process assign_me<true>^0 X (instantiated) = ::X (1) (
-      bool^0 b (instantiated) = ::X.b (1) 
-    )
-    Y = process assign_me<false>^0 Y (instantiated) = ::Y (2) (
-      bool^0 b (instantiated) = ::Y.b (2) 
-    )
+    X = assign_me<true> X
+    Y = assign_me<false> Y
 }
 
-Created state:
-process instance pool:
-1	::X
-2	::Y
-bool instance pool:
-1	::X.b
-2	::Y.b
-
+footprint: {
+  X = process assign_me<true>^0 = X (1) (
+    b = bool^0 = X.b (1) 
+  )
+  Y = process assign_me<false>^0 = Y (2) (
+    b = bool^0 = Y.b (2) 
+  )
+  Created state:
+  process instance pool:
+  1	X
+  2	Y
+  bool instance pool:
+  1	X.b
+  2	Y.b
+}

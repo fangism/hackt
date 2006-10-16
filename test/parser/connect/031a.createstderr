@@ -4,74 +4,77 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	44
-	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	367
-	10	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	procdefn	0	#HEAD#	#TAIL#	239
-	14	##ADDR##	proccoll	1	#HEAD#	#TAIL#	41
-	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
-	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	proccoll	1	#HEAD#	#TAIL#	91
-	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	28	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	proccoll	1	#HEAD#	#TAIL#	91
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	35	##ADDR##	proccoll	1	#HEAD#	#TAIL#	91
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	55
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
-	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
-	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	50	##ADDR##	proccoll	1	#HEAD#	#TAIL#	95
-	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	53	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
-	54	##ADDR##	proccoll	1	#HEAD#	#TAIL#	91
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	57	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	58	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	59	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	61	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
-	63	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	65	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
-	68	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	69	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
-	70	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	367
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	239
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	33
+	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
+	13	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	28	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	procplch	0	#HEAD#	#TAIL#	30
+	37	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	38	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	39	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	40	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	41	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	42	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	mprocref	0	#HEAD#	#TAIL#	20
+	47	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	dialias_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	56	##ADDR##	mdintref	0	#HEAD#	#TAIL#	20
+	57	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	65	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	66	##ADDR##	proccoll	1	#HEAD#	#TAIL#	78
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	69	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	70	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	73	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -86,26 +89,26 @@ In namespace "", we have: {
       )
       In definition "basket", we have: {
       Instances:
-        egg_array = egg<> egg_array
-
+        egg_array = egg<> basket::egg_array^1
       unroll sequence: 
         egg<> egg_array[0..1]
       footprint: {
-        process egg<>^1 egg_array
-          unrolled indices: {
-            0 = ::basket::egg_array[0] (1) (
-              int<32>^0 yolk (instantiated) = ::basket::egg_array[0].yolk (1) 
+        egg_array = process egg<>^1
+          {
+            0 = basket::egg_array[0] (1) (
+              yolk = int<32>^0 = basket::egg_array[0].yolk (1) 
             )
-            1 = ::basket::egg_array[1] (2) (
-              int<32>^0 yolk (instantiated) = ::basket::egg_array[1].yolk (2) 
+            1 = basket::egg_array[1] (2) (
+              yolk = int<32>^0 = basket::egg_array[1].yolk (2) 
             )
           }
+        Created state:
         process instance pool:
-        1	::basket::egg_array[0]
-        2	::basket::egg_array[1]
+        1	basket::egg_array[0]
+        2	basket::egg_array[1]
         int instance pool:
-        1	::basket::egg_array[0].yolk
-        2	::basket::egg_array[1].yolk
+        1	basket::egg_array[0].yolk
+        2	basket::egg_array[1].yolk
       }
       }
 
@@ -114,48 +117,48 @@ In namespace "", we have: {
       )
       In definition "bundle", we have: {
       Instances:
-        c = basket<> c
-
+        c = basket<> bundle::c^1
       unroll sequence: 
         basket<> c[0..1]
       footprint: {
-        process basket<>^1 c
-          unrolled indices: {
-            0 = ::bundle::c[0] (1) (
-              process egg<>^1 egg_array
-                unrolled indices: {
-                  0 = ::bundle::c[0].egg_array[0] (2) (
-                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[0].yolk (1) 
+        c = process basket<>^1
+          {
+            0 = bundle::c[0] (1) (
+              egg_array = process egg<>^1
+                {
+                  0 = bundle::c[0].egg_array[0] (2) (
+                    yolk = int<32>^0 = bundle::c[0].egg_array[0].yolk (1) 
                   )
-                  1 = ::bundle::c[0].egg_array[1] (3) (
-                    int<32>^0 yolk (instantiated) = ::bundle::c[0].egg_array[1].yolk (2) 
+                  1 = bundle::c[0].egg_array[1] (3) (
+                    yolk = int<32>^0 = bundle::c[0].egg_array[1].yolk (2) 
                   )
                 }
             )
-            1 = ::bundle::c[1] (4) (
-              process egg<>^1 egg_array
-                unrolled indices: {
-                  0 = ::bundle::c[1].egg_array[0] (5) (
-                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[0].yolk (3) 
+            1 = bundle::c[1] (4) (
+              egg_array = process egg<>^1
+                {
+                  0 = bundle::c[1].egg_array[0] (5) (
+                    yolk = int<32>^0 = bundle::c[1].egg_array[0].yolk (3) 
                   )
-                  1 = ::bundle::c[1].egg_array[1] (6) (
-                    int<32>^0 yolk (instantiated) = ::bundle::c[1].egg_array[1].yolk (4) 
+                  1 = bundle::c[1].egg_array[1] (6) (
+                    yolk = int<32>^0 = bundle::c[1].egg_array[1].yolk (4) 
                   )
                 }
             )
           }
+        Created state:
         process instance pool:
-        1	::bundle::c[0]
-        2	::bundle::c[0].egg_array[0]
-        3	::bundle::c[0].egg_array[1]
-        4	::bundle::c[1]
-        5	::bundle::c[1].egg_array[0]
-        6	::bundle::c[1].egg_array[1]
+        1	bundle::c[0]
+        2	bundle::c[0].egg_array[0]
+        3	bundle::c[0].egg_array[1]
+        4	bundle::c[1]
+        5	bundle::c[1].egg_array[0]
+        6	bundle::c[1].egg_array[1]
         int instance pool:
-        1	::bundle::c[0].egg_array[0].yolk
-        2	::bundle::c[0].egg_array[1].yolk
-        3	::bundle::c[1].egg_array[0].yolk
-        4	::bundle::c[1].egg_array[1].yolk
+        1	bundle::c[0].egg_array[0].yolk
+        2	bundle::c[0].egg_array[1].yolk
+        3	bundle::c[1].egg_array[0].yolk
+        4	bundle::c[1].egg_array[1].yolk
       }
       }
 
@@ -164,62 +167,67 @@ In namespace "", we have: {
       )
       In definition "egg", we have: {
       Instances:
-        yolk = int<32> yolk
+        yolk = int<32> egg::yolk
       unroll sequence: 
         int<32> yolk
       footprint: {
-        int<32>^0 yolk (instantiated) = ::egg::yolk (1) 
+        yolk = int<32>^0 = egg::yolk (1) 
+        Created state:
         int instance pool:
-        1	::egg::yolk
+        1	egg::yolk
       }
       }
 
   Instances:
-    count = int<32>^0 count (instantiated) = ::count (1) 
-    golden = process egg<>^0 golden (instantiated) = ::golden (1) (
-      int<32>^0 yolk (instantiated) = ::count (1) 
-    )
-    load = process bundle<>^0 load (instantiated) = ::load (2) (
-      process basket<>^1 c
-        unrolled indices: {
-          0 = ::load.c[0] (3) (
-            process egg<>^1 egg_array
-              unrolled indices: {
-                0 = ::load.c[0].egg_array[0] (4) (
-                  int<32>^0 yolk (instantiated) = ::load.c[0].egg_array[0].yolk (2) 
-                )
-                1 = ::golden (1) (
-                  int<32>^0 yolk (instantiated) = ::count (1) 
-                )
-              }
-          )
-          1 = ::load.c[1] (5) (
-            process egg<>^1 egg_array
-              unrolled indices: {
-                0 = ::load.c[1].egg_array[0] (6) (
-                  int<32>^0 yolk (instantiated) = ::load.c[1].egg_array[0].yolk (3) 
-                )
-                1 = ::load.c[1].egg_array[1] (7) (
-                  int<32>^0 yolk (instantiated) = ::load.c[1].egg_array[1].yolk (4) 
-                )
-              }
-          )
-        }
-    )
+    count = int<32> count
+    golden = egg<> golden
+    load = bundle<> load
 }
 
-Created state:
-process instance pool:
-1	::golden
-2	::load
-3	::load.c[0]
-4	::load.c[0].egg_array[0]
-5	::load.c[1]
-6	::load.c[1].egg_array[0]
-7	::load.c[1].egg_array[1]
-int instance pool:
-1	::count
-2	::load.c[0].egg_array[0].yolk
-3	::load.c[1].egg_array[0].yolk
-4	::load.c[1].egg_array[1].yolk
-
+footprint: {
+  count = int<32>^0 = count (1) 
+  golden = process egg<>^0 = golden (1) (
+    yolk = int<32>^0 = count (1) 
+  )
+  load = process bundle<>^0 = load (2) (
+    c = process basket<>^1
+      {
+        0 = load.c[0] (3) (
+          egg_array = process egg<>^1
+            {
+              0 = load.c[0].egg_array[0] (4) (
+                yolk = int<32>^0 = load.c[0].egg_array[0].yolk (2) 
+              )
+              1 = golden (1) (
+                yolk = int<32>^0 = count (1) 
+              )
+            }
+        )
+        1 = load.c[1] (5) (
+          egg_array = process egg<>^1
+            {
+              0 = load.c[1].egg_array[0] (6) (
+                yolk = int<32>^0 = load.c[1].egg_array[0].yolk (3) 
+              )
+              1 = load.c[1].egg_array[1] (7) (
+                yolk = int<32>^0 = load.c[1].egg_array[1].yolk (4) 
+              )
+            }
+        )
+      }
+  )
+  Created state:
+  process instance pool:
+  1	golden
+  2	load
+  3	load.c[0]
+  4	load.c[0].egg_array[0]
+  5	load.c[1]
+  6	load.c[1].egg_array[0]
+  7	load.c[1].egg_array[1]
+  int instance pool:
+  1	count
+  2	load.c[0].egg_array[0].yolk
+  3	load.c[1].egg_array[0].yolk
+  4	load.c[1].egg_array[1].yolk
+}

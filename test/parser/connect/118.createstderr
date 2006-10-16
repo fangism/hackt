@@ -4,36 +4,40 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
-	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	10	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	14	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	172
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	22	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	35	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -48,30 +52,36 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        a = bool<> a
+        a = bool<> bar::a
       unroll sequence: 
         bool<> a
       footprint: {
-        bool^0 a (instantiated) = ::bar::a (1) 
+        a = bool^0 = bar::a (1) 
+        Created state:
         bool instance pool:
-        1	::bar::a
+        1	bar::a
       }
       }
 
   Instances:
-    p = process bar<>^0 p (instantiated) = ::p (1) (
-      bool^0 a (instantiated) = ::x (1) 
-    )
-    q = process bar<>^0 q (instantiated) = ::p (1) (
-      bool^0 a (instantiated) = ::x (1) 
-    )
-    x = bool^0 x (instantiated) = ::x (1) 
-    y = bool^0 y (instantiated) = ::x (1) 
+    p = bar<> p
+    q = bar<> q
+    x = bool<> x
+    y = bool<> y
 }
 
-Created state:
-process instance pool:
-1	::p
-bool instance pool:
-1	::x
-
+footprint: {
+  p = process bar<>^0 = p (1) (
+    a = bool^0 = x (1) 
+  )
+  q = process bar<>^0 = p (1) (
+    a = bool^0 = x (1) 
+  )
+  x = bool^0 = x (1) 
+  y = bool^0 = x (1) 
+  Created state:
+  process instance pool:
+  1	p
+  bool instance pool:
+  1	x
+}

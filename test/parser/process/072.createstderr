@@ -4,16 +4,16 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	328
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	324
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -22,25 +22,27 @@ Persistent Object Manager text dump:
 	18	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	28	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	34	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -53,51 +55,55 @@ In namespace "", we have: {
     foo = process-definition (defined) foo<
       pint<> N
       >(
-        int<::foo::N> a
+        int<foo::N> a
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> foo::N
       Instances:
-        a = int<::foo::N> a
-        b = int<::foo::N> b
+        a = int<foo::N> foo::a
+        b = int<foo::N> foo::b
       unroll sequence: 
-        pint<> N
-        int<::foo::N> a
-        int<::foo::N> b
+        int<foo::N> a
+        int<foo::N> b
         a = b;
       footprint collection: {
         <8> {
-          pint^0 N value: ?
-          int<8>^0 a (instantiated) = ::foo::a (1) 
-          int<8>^0 b (instantiated) = ::foo::a (1) 
+          N = pint^0 value: 8
+          a = int<8>^0 = foo::a (1) 
+          b = int<8>^0 = foo::a (1) 
+          Created state:
           int instance pool:
-          1	::foo::a
+          1	foo::a
         }
         <16> {
-          pint^0 N value: ?
-          int<16>^0 a (instantiated) = ::foo::a (1) 
-          int<16>^0 b (instantiated) = ::foo::a (1) 
+          N = pint^0 value: 16
+          a = int<16>^0 = foo::a (1) 
+          b = int<16>^0 = foo::a (1) 
+          Created state:
           int instance pool:
-          1	::foo::a
+          1	foo::a
         }
       }
       }
 
   Instances:
-    pew = process foo<16>^0 pew (instantiated) = ::pew (1) (
-      int<16>^0 a (instantiated) = ::pew.a (1) 
-    )
-    poo = process foo<8>^0 poo (instantiated) = ::poo (2) (
-      int<8>^0 a (instantiated) = ::poo.a (2) 
-    )
+    pew = foo<16> pew
+    poo = foo<8> poo
 }
 
-Created state:
-process instance pool:
-1	::pew
-2	::poo
-int instance pool:
-1	::pew.a
-2	::poo.a
-
+footprint: {
+  pew = process foo<16>^0 = pew (1) (
+    a = int<16>^0 = pew.a (1) 
+  )
+  poo = process foo<8>^0 = poo (2) (
+    a = int<8>^0 = poo.a (2) 
+  )
+  Created state:
+  process instance pool:
+  1	pew
+  2	poo
+  int instance pool:
+  1	pew.a
+  2	poo.a
+}

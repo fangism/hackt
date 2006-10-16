@@ -1,7 +1,7 @@
 /**
 	\file "Object/art_object_module.h"
 	Classes that represent a single compilation module, a file.  
-	$Id: module.h,v 1.12.4.1 2006/10/01 21:13:46 fang Exp $
+	$Id: module.h,v 1.12.4.2 2006/10/16 04:34:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_MODULE_H__
@@ -157,8 +157,10 @@ public:
 	ostream&
 	dump(ostream& o) const;
 
+#if !MODULE_PROCESS
 	ostream&
 	dump_top_level_unrolled_prs(ostream&) const;
+#endif
 
 #if MODULE_PROCESS
 	bool

@@ -4,26 +4,28 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	149
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
-	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	10	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	proccoll	1	#HEAD#	#TAIL#	137
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -42,21 +44,24 @@ In namespace "", we have: {
       }
 
   Instances:
-    bag = process barf<>^0 bag (instantiated) = ::sack[0] (1) 
-    sack = process barf<>^1 sack
-      unrolled indices: {
-        0 = ::sack[0] (1) 
-        1 = ::sack[1] (2) 
-        2 = ::sack[2] (3) 
-        3 = ::sack[3] (4) 
-        4 = ::sack[0] (1) 
-      }
+    bag = barf<> bag
+    sack = barf<> sack^1
 }
 
-Created state:
-process instance pool:
-1	::sack[0]
-2	::sack[1]
-3	::sack[2]
-4	::sack[3]
-
+footprint: {
+  bag = process barf<>^0 = sack[0] (1) 
+  sack = process barf<>^1
+    {
+      0 = sack[0] (1) 
+      1 = sack[1] (2) 
+      2 = sack[2] (3) 
+      3 = sack[3] (4) 
+      4 = sack[0] (1) 
+    }
+  Created state:
+  process instance pool:
+  1	sack[0]
+  2	sack[1]
+  3	sack[2]
+  4	sack[3]
+}

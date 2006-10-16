@@ -4,26 +4,30 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	3	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	7	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	8	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	10	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	6	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	11	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	13	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	14	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	17	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	21
 	20	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	30
+	24	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -33,15 +37,20 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    w = pbool^1 w
-      unrolled index-value pairs: {
-        0 = 1
-        1 = 0
-      }
-    x = pbool^0 x (init = true) value: 1
-    y = pbool^0 y (init = false) value: 0
-    z = pbool^0 z value: ?
+    w = pbool<> w^1
+    x = pbool<> x
+    y = pbool<> y
+    z = pbool<> z
 }
 
-Created state:
-
+footprint: {
+  w = pbool^1
+    unrolled index-value pairs: {
+      0 = 1
+      1 = 0
+    }
+  x = pbool^0 value: 1
+  y = pbool^0 value: 0
+  z = pbool^0 value: ?
+  Created state:
+}

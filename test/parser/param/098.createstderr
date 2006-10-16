@@ -4,13 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	77
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
@@ -28,6 +28,9 @@ Persistent Object Manager text dump:
 	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	28	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	29	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	68
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -37,24 +40,28 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    x = pint^1 x
-      unrolled index-value pairs: {
-        0 = 0
-        1 = 1
-      }
-    y = pint^1 y
-      unrolled index-value pairs: {
-        0 = 2
-        1 = 3
-      }
-    z = pint^1 z
-      unrolled index-value pairs: {
-        0 = 0
-        1 = 1
-        2 = 2
-        3 = 3
-      }
+    x = pint<> x^1
+    y = pint<> y^1
+    z = pint<> z^1
 }
 
-Created state:
-
+footprint: {
+  x = pint^1
+    unrolled index-value pairs: {
+      0 = 0
+      1 = 1
+    }
+  y = pint^1
+    unrolled index-value pairs: {
+      0 = 2
+      1 = 3
+    }
+  z = pint^1
+    unrolled index-value pairs: {
+      0 = 0
+      1 = 1
+      2 = 2
+      3 = 3
+    }
+  Created state:
+}

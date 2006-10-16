@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-35:
+	  Re-enabled all create tests in regression suite.  
+	  Updated all/most create tests (stderr): no regressions!!!
+		A few top-level canonical names were chosen differently.  
+	  Module's prs dump is obsolete, now just uses footprint's dump.  
+	  Next: alloc regression tests.  
+
+
 2006-10-15	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-34:

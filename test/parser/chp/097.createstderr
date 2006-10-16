@@ -4,19 +4,19 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	260
-	5	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	9	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	CHPconcr	0	#HEAD#	#TAIL#	20
@@ -26,13 +26,14 @@ Persistent Object Manager text dump:
 	22	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -46,10 +47,10 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        w = int<32> w
-        x = int<32> x
-        y = int<32> y
-        z = int<32> z
+        w = int<32> foo::w
+        x = int<32> foo::x
+        y = int<32> foo::y
+        z = int<32> foo::z
       unroll sequence: 
         int<32> x
         int<32> y
@@ -65,15 +66,16 @@ In namespace "", we have: {
           ]
         }
       footprint: {
-        int<32>^0 w (instantiated) = ::foo::w (1) 
-        int<32>^0 x (instantiated) = ::foo::x (2) 
-        int<32>^0 y (instantiated) = ::foo::y (3) 
-        int<32>^0 z (instantiated) = ::foo::z (4) 
+        w = int<32>^0 = foo::w (1) 
+        x = int<32>^0 = foo::x (2) 
+        y = int<32>^0 = foo::y (3) 
+        z = int<32>^0 = foo::z (4) 
+        Created state:
         int instance pool:
-        1	::foo::w
-        2	::foo::x
-        3	::foo::y
-        4	::foo::z
+        1	foo::w
+        2	foo::x
+        3	foo::y
+        4	foo::z
         resolved concurrent actions:
           *[
             concurrent: {
@@ -85,10 +87,12 @@ In namespace "", we have: {
       }
 
   Instances:
-    f = process foo<>^0 f (instantiated) = ::f (1) 
+    f = foo<> f
 }
 
-Created state:
-process instance pool:
-1	::f
-
+footprint: {
+  f = process foo<>^0 = f (1) 
+  Created state:
+  process instance pool:
+  1	f
+}

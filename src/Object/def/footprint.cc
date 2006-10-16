@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24.4.8 2006/10/16 00:21:08 fang Exp $
+	$Id: footprint.cc,v 1.24.4.9 2006/10/16 04:34:18 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -266,7 +266,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 #endif
 #if MODULE_PROCESS
 	if (is_created()) {
-		o << "Created state:" << endl;
+		o << auto_indent << "Created state:" << endl;
 #endif
 		dump(o);
 		port_aliases.dump(o);

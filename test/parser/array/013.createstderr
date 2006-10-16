@@ -4,9 +4,10 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	509
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	6	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	500
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -16,34 +17,36 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    x = pint^3 x
-      unrolled index-value pairs: {
-        [0][0][6] = ?
-        [0][0][7] = ?
-        [0][0][8] = ?
-        [0][0][9] = ?
-        [0][0][10] = ?
-        [0][0][11] = ?
-        [1][0][6] = ?
-        [1][0][7] = ?
-        [1][0][8] = ?
-        [1][0][9] = ?
-        [1][0][10] = ?
-        [1][0][11] = ?
-        [2][0][6] = ?
-        [2][0][7] = ?
-        [2][0][8] = ?
-        [2][0][9] = ?
-        [2][0][10] = ?
-        [2][0][11] = ?
-        [3][0][6] = ?
-        [3][0][7] = ?
-        [3][0][8] = ?
-        [3][0][9] = ?
-        [3][0][10] = ?
-        [3][0][11] = ?
-      }
+    x = pint<> x^3
 }
 
-Created state:
-
+footprint: {
+  x = pint^3
+    unrolled index-value pairs: {
+      [0][0][6] = ?
+      [0][0][7] = ?
+      [0][0][8] = ?
+      [0][0][9] = ?
+      [0][0][10] = ?
+      [0][0][11] = ?
+      [1][0][6] = ?
+      [1][0][7] = ?
+      [1][0][8] = ?
+      [1][0][9] = ?
+      [1][0][10] = ?
+      [1][0][11] = ?
+      [2][0][6] = ?
+      [2][0][7] = ?
+      [2][0][8] = ?
+      [2][0][9] = ?
+      [2][0][10] = ?
+      [2][0][11] = ?
+      [3][0][6] = ?
+      [3][0][7] = ?
+      [3][0][8] = ?
+      [3][0][9] = ?
+      [3][0][10] = ?
+      [3][0][11] = ?
+    }
+  Created state:
+}

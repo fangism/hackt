@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	221
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	6	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
@@ -28,6 +28,7 @@ Persistent Object Manager text dump:
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	212
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -37,22 +38,24 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    z = pint^2 z
-      unrolled index-value pairs: {
-        [0][0] = 0
-        [0][1] = 1
-        [0][2] = 2
-        [1][0] = 3
-        [1][1] = 4
-        [1][2] = 5
-        [2][0] = 6
-        [2][1] = 7
-        [2][2] = 8
-        [3][0] = 9
-        [3][1] = 10
-        [3][2] = 11
-      }
+    z = pint<> z^2
 }
 
-Created state:
-
+footprint: {
+  z = pint^2
+    unrolled index-value pairs: {
+      [0][0] = 0
+      [0][1] = 1
+      [0][2] = 2
+      [1][0] = 3
+      [1][1] = 4
+      [1][2] = 5
+      [2][0] = 6
+      [2][1] = 7
+      [2][2] = 8
+      [3][0] = 9
+      [3][1] = 10
+      [3][2] = 11
+    }
+  Created state:
+}

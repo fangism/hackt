@@ -4,10 +4,10 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	182
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	178
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
@@ -28,13 +28,14 @@ Persistent Object Manager text dump:
 	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	28	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	31	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -50,31 +51,32 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        E = pint<> E
-        M = pint<> M
-
+        E = pint<> bogus::E
+        M = pint<> bogus::M^1
       unroll sequence: 
-        pint<> E
         pint<> M[0..E-1]
         M[0] = 3;
         M[E-1] = 5;
       footprint collection: {
         <2> {
-          pint^0 E value: ?
-          pint^1 M
+          E = pint^0 value: 2
+          M = pint^1
             unrolled index-value pairs: {
               0 = 3
               1 = 5
             }
+          Created state:
         }
       }
       }
 
   Instances:
-    x = process bogus<2>^0 x (instantiated) = ::x (1) 
+    x = bogus<2> x
 }
 
-Created state:
-process instance pool:
-1	::x
-
+footprint: {
+  x = process bogus<2>^0 = x (1) 
+  Created state:
+  process instance pool:
+  1	x
+}
