@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.13.16.5 2006/10/08 21:52:13 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.13.16.6 2006/10/17 04:46:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -149,9 +149,17 @@ simple_lookup_footprint_frame(
 			instance_collection_generic_type<Tag>::type& inst, 
 #endif
 		index_list_ptr_arg_type ind,
-		const state_manager& sm) {
+		const state_manager& sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) {
 	STACKTRACE_VERBOSE;
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	const unroll_context uc(&top, &top);
+#else
 	const unroll_context uc(NULL, NULL);
+#endif
 #if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<substructure_alias>
 		alias(unroll_generic_scalar_substructure_reference<Tag>(
@@ -178,9 +186,17 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>& _this, 
-		const state_manager& sm) {
+		const state_manager& sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) {
 	STACKTRACE_VERBOSE;
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	const size_t id = _this.lookup_globally_allocated_index(sm, top);
+#else
 	const size_t id = _this.lookup_globally_allocated_index(sm);
+#endif
 	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	if (!id) {
 		// already have error message
@@ -299,7 +315,11 @@ simple_lookup_footprint_frame(
 		const typename instance_collection_generic_type<Tag>::type&, 
 #endif
 		index_list_ptr_arg_type,
-		const state_manager&) {
+		const state_manager&
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) {
 	// ICE?
 	return NULL;
 }
@@ -314,7 +334,11 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>&, 
-		const state_manager&) {
+		const state_manager&
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint&
+#endif
+		) {
 	// ICE?
 	return NULL;
 }

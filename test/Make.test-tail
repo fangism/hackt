@@ -3,7 +3,7 @@
 # a template makefile for testing, to be included in recursive invocations
 # Include this Makefile at the end of every subdirectoy's Makefile.am.
 # The counterpart header Makefile is "test/Make.test-head".
-#	$Id: Make.test-tail,v 1.48.2.6 2006/10/16 17:11:53 fang Exp $
+#	$Id: Make.test-tail,v 1.48.2.7 2006/10/17 04:47:06 fang Exp $
 
 HACKT_EXE = $(top_builddir)/src/hackt
 PARSE_TEST_EXE = $(HACKT_EXE) parse_test
@@ -550,14 +550,12 @@ TESTS += $(HACKT_PARSE_TEST_SUBJECTS:=.hacktcmpltest) \
 	$(HACKT_CFLAT_TEST_SUBJECTS:=.hacktcflattest) \
 	$(HACKT_CFLAT_LVS_TEST_SUBJECTS:=.hacktcflatlvstest) \
 	$(HACKT_CFLAT_SEU_TEST_SUBJECTS:=.hacktcflatseutest) \
-	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest)
-
-# temporarily disabled on branch until features restored
-#	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
-#	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
-#	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
-#	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest) \
-#	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.hacktprsdottest)
+	$(HACKT_CFLAT_SPRS_TEST_SUBJECTS:=.hacktsprstest) \
+	$(HACKT_PRSIMEXPR_TEST_SUBJECTS:=.hacktprsimexprtest) \
+	$(HACKT_PRSIMRC_TEST_SCRIPTS_BASES:=.prsimtest) \
+	$(HACKT_PRSIM_CKPT_TEST_SCRIPTS_BASES:=.prsimckpttest) \
+	$(HACKT_PRSIM_OPT_TEST_SCRIPTS_BASES:=.prsimopttest) \
+	$(HACKT_PRS_DOT_TEST_SUBJECTS:=.hacktprsdottest)
 # end temporary quarantine
 
 EMPTY_CFLAT_PRS = $(EMPTY_CFLAT_PRS_TESTS:=.expect-prs)

@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.11.20.2 2006/10/02 03:19:26 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.11.20.3 2006/10/17 04:47:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -34,6 +34,7 @@ class aliases_connection_base;
 class port_connection_base;
 class const_range_list;
 class unroll_context;
+class footprint;
 class aggregate_meta_instance_reference_base;
 using util::bad_bool;
 using util::memory::excl_ptr;
@@ -139,9 +140,15 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO = 0;
 
 virtual	CONNECT_PORT_PROTO = 0;
 
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+#define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
+	const footprint_frame*						\
+	lookup_footprint_frame(const state_manager&, footprint&) const
+#else
 #define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
 	const footprint_frame*						\
 	lookup_footprint_frame(const state_manager&) const
+#endif
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 

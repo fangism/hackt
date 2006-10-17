@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.8.4.2 2006/10/02 03:19:23 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.8.4.3 2006/10/17 04:46:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -131,7 +131,11 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager&) const {
+		const state_manager&
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint&
+#endif
+		) const {
 	ICE_NEVER_CALL(cerr);
 	return NULL;
 }

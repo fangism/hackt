@@ -3,6 +3,20 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-38:
+	  Added additional footprint& argument for all top-level lookup
+		related functions in the instance_reference hierarchy, 
+		to fix ISE on reference lookups using the new unroll_context
+		with distinct target and lookup footprints.
+		TODO: future cleanup: rewrite without const_cast kludge.  
+	  Enabled and re-confirmed all prsim-related tests.
+	  Good news: no regressions remain on branch!!!  distcheck passes too.
+	  Decide: merge trunk to branch first?
+	  Next phase (new branch): using densely packed arrays for ports
+		and template formals.  
+
 2006-10-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-03-instance-00-37:

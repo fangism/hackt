@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.16.4.3 2006/10/05 01:15:43 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.16.4.4 2006/10/17 04:47:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -162,7 +162,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm) const {
+		const state_manager& sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
 	if (_parent_inst_ref.dimensions()) {
@@ -175,7 +179,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		return 0;
 	}
 	const footprint_frame* const fpf =
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		_parent_inst_ref.lookup_footprint_frame(sm, top);
+#else
 		_parent_inst_ref.lookup_footprint_frame(sm);
+#endif
 	if (!fpf) {
 		// TODO: better error message
 		cerr << "Failure resolving parent instance reference" << endl;
@@ -200,7 +208,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	// now need to compute the offset into the corresponding 
 	// footprint_frame_map
 	// we look for the local alias to get the local offset!
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	const unroll_context uc(&top, &top);
+#else
 	const unroll_context uc(NULL, NULL);
+#endif
 		// until we pass a global context
 	const instance_alias_base_ptr_type
 #if USE_INSTANCE_PLACEHOLDERS
@@ -326,10 +338,18 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm) const {
+		const state_manager& sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	return parent_type::substructure_implementation_policy::
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		template member_lookup_footprint_frame<Tag>(*this, sm, top);
+#else
 		template member_lookup_footprint_frame<Tag>(*this, sm);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
