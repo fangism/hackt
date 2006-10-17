@@ -1,5 +1,12 @@
 "lib/ChangeLog"
 
+2006-10-17	David Fang	<fangism@users.sourceforce.net>
+
+	* HACKT-00-01-04-main-00-80-28:
+	  alternator.hac: added missing literal in a cross-couple feedback term,
+		replaced dynamic drive of an acknowledge with inverter pair.
+
+
 2006-09-27	David Fang	<fangism@users.sourceforce.net>
 
 	* HACKT-00-01-04-main-00-80-24:

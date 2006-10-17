@@ -10,7 +10,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.12 2006/09/28 03:36:18 fang Exp $
+	$Id: alternator.hac,v 1.13 2006/10/17 18:11:31 fang Exp $
  */
 
 import "channel.hac";
@@ -495,9 +495,10 @@ defproc alternator_bucket_passive_fast(
 c1of2 x, y;
 bool i[2], _o[2], o[2];
 i[0] = L[0].d[0];
-_o[0] = L[0].e;
 i[1] = L[1].d[0];
-_o[1] = L[1].e;
+// _o[0] = L[0].e;	// horrible implementation: dynamic logic driving ack.
+// _o[1] = L[1].e;	// horrible implementation: dynamic logic driving ack.
+bool _le[2];
 alternator_bucket_half b[2];
 	b[0](i, x.d, y.d, _o, o, _Reset, Reset);
 	b[1]({i[1], i[0]}, {x.d[1], x.d[0]}, {y.d[1], y.d[0]},
@@ -511,6 +512,11 @@ prs {
 	~_Reset					-> x.d[1]+
 	Reset					-> y.d[0]-
 	~_Reset					-> y.d[1]+
+
+(:j:2:
+	_o[j]					=> _le[j]-
+	_le[j]					=> L[j].e-
+)
 
 /***
 	// All the following production rules have been folded into:
@@ -812,7 +818,7 @@ prs {
 	_o.d[1] & y.d[0]			-> r1-		// y.d[0]?
 //	~R.d[0] & ~r1				-> L.e+		// dupl.
 	L.e & y.d[0] & _o.d[1]			-> x.d[1]-
-	~x.d[1] & ~(L.e & y.d[1])		-> x.d[0]+	// x-coupled
+	~x.d[1] & ~(L.e & y.d[1] & _o.d[0])	-> x.d[0]+	// x-coupled
 }
 }
 
@@ -1077,7 +1083,9 @@ prs {
 defproc wchb_alternator_repeater_2_merge(e1of1 L, R; bool _Reset, Reset) {
 c1of2 x, y;
 bool _o[2], o[2];
-_o[0] = L.e;
+bool _le;
+// this is horrible in practice: driving enable with weak dynamic logic
+// _o[0] = L.e;	
 spec {
 	excllo(_o)
 }
@@ -1091,6 +1099,9 @@ prs {
 	~_Reset					-> _o[1]+
 	Reset					-> o[0]-
 	Reset					-> o[1]-
+
+	_o[0]					=> _le-
+	_le					=> L.e-
 
 	~_o[0] | ~_o[1]				-> R.d[0]+
 	 _o[0] &  _o[1]				-> R.d[0]-
@@ -1535,8 +1546,9 @@ bool _o[2], o[2];
 bool i[2];
 i[0] = L[0].d[0];
 i[1] = L[1].d[0];
-_o[0] = L[0].e;
-_o[1] = L[1].e;
+// _o[0] = L[0].e;		// horrible implementation
+// _o[1] = L[1].e;		// horrible implementation
+bool _le[2];
 spec {
 	excllo(L[0].e, L[1].e)
 	excllo(_o)
@@ -1553,6 +1565,11 @@ prs {
 	~_Reset					-> _o[1]+
 	Reset					-> o[0]-
 	Reset					-> o[1]-
+
+(:j:2:
+	_o[j]					=> _le[j]-
+	_le[j]					=> L[j].e-
+)
 
 	~_o[0] | ~_o[1]				-> R.d[0]+
 	 _o[0] &  _o[1]				-> R.d[0]-
