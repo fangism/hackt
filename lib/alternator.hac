@@ -10,7 +10,7 @@
 
 	TODO: e1ofN alterators.
 
-	$Id: alternator.hac,v 1.13 2006/10/17 18:11:31 fang Exp $
+	$Id: alternator.hac,v 1.14 2006/10/17 23:12:28 fang Exp $
  */
 
 import "channel.hac";
@@ -1550,7 +1550,6 @@ i[1] = L[1].d[0];
 // _o[1] = L[1].e;		// horrible implementation
 bool _le[2];
 spec {
-	excllo(L[0].e, L[1].e)
 	excllo(_o)
 	exclhi(o)
 }
