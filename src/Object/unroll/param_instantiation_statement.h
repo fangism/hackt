@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.9.28.4 2006/10/08 21:52:30 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.9.28.5 2006/10/17 20:34:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -11,6 +11,9 @@
 
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#endif
 #include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.8.28.4 2006/10/08 21:52:29 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.8.28.5 2006/10/17 20:34:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -11,6 +11,9 @@
 
 #include <iostream>
 #include "Object/traits/class_traits.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#endif
 #include "Object/expr/const_param_expr_list.h"
 #include "util/persistent_object_manager.h"
 #include "Object/def/footprint.h"
@@ -18,7 +21,6 @@
 namespace HAC {
 namespace entity {
 class param_expr_list;
-class const_param_expr_list;
 using util::persistent_object_manager;
 #include "util/using_ostream.h"
 

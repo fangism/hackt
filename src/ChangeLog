@@ -5,6 +5,11 @@
 
 2006-10-17	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-03-instance-00-39:
+	  Minor patches for gcc-4+ standard conformance, checked against 4.1.
+	  Status: branch is ready to merge.  
+
+
 	* HACKT-00-01-04-main-00-80-03-instance-00-38:
 	  Added additional footprint& argument for all top-level lookup
 		related functions in the instance_reference hierarchy, 

@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.1.2.9 2006/10/02 03:19:16 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.1.2.10 2006/10/17 20:33:59 fang Exp $
 	TODO: trim includes
  */
 
@@ -298,7 +298,7 @@ INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 ostream&
 INSTANCE_PLACEHOLDER_CLASS::dump_formal(ostream& o) const {
 //	this->dump_base(o);
-	this->get_unresolved_type_ref()->dump(o) << ' ' << key;
+	this->get_unresolved_type_ref()->dump(o) << ' ' << this->key;
 #if 0
 	// placeholders don't have collections
 	this->dump_collection_only(o);

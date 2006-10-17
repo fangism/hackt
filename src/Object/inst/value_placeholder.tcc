@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.1.2.14 2006/10/03 19:41:41 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.1.2.15 2006/10/17 20:34:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -213,7 +213,7 @@ ostream&
 VALUE_PLACEHOLDER_CLASS::dump_formal(ostream& o) const {
 	INVARIANT(this->is_template_formal());
 	// this->dump_base(o);
-	this->get_unresolved_type_ref()->dump(o) << ' ' << key;
+	this->get_unresolved_type_ref()->dump(o) << ' ' << this->key;
 	// placeholders don't have collections
 #if 0
 	this->dump_collection_only(o);
