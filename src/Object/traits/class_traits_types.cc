@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.14 2006/10/18 08:51:59 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.15 2006/10/18 18:38:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -28,11 +28,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/value_placeholder.h"
 #endif
 #include "Object/expr/dynamic_param_expr_list.h"
-#if MODULE_PROCESS
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/param_instantiation_statement.h"
 #include "Object/expr/meta_range_list.h"
-#endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_collection.h"
 #include "Object/expr/pint_const.h"
@@ -163,7 +161,6 @@ __ATTRIBUTE_UNUSED_CTOR__((int_def_width->assign_default_value(int_def_width_def
 
 // INVARIANT(__good_int_width.good);
 
-#if MODULE_PROCESS
 /**
 	Since we unroll all template formals now, we need an initial
 	instantiation statement per formal parameter.  
@@ -179,7 +176,6 @@ static const size_t int_inst_base_receipt =
 
 static const size_t width_receipt = 
 	(int_def_width->attach_initial_instantiation_statement(width_inst), 0);
-#endif	// MODULE_PROCESS
 
 // need to fake adding the template formal and instantiating it
 // or creating a footprint?

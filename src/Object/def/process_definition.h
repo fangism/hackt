@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition.h,v 1.11 2006/10/18 01:19:12 fang Exp $
+	$Id: process_definition.h,v 1.12 2006/10/18 18:38:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_H__
@@ -47,11 +47,9 @@ protected:
 protected:
 	process_definition();
 
-#if MODULE_PROCESS
 	// only intended for module
 	explicit
 	process_definition(const string& s); 
-#endif
 public:
 	process_definition(const never_ptr<const name_space> o,
 		const string& s); 

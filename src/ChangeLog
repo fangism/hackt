@@ -5,6 +5,11 @@
 
 2006-10-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-34:
+	  Perm'd MODULE_PROCESS (-530 LoC)
+		Kiss a significant chunk of dirtily hacked code Goodbye.  
+
+
 	* HACKT-00-01-04-main-00-80-33:
 	  Perm'd ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST.  (-500 LoC)
 

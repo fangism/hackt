@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.22 2006/10/18 08:51:47 fang Exp $
+	$Id: devel_switches.h,v 1.23 2006/10/18 18:38:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -84,15 +84,6 @@
 #define	RESOLVE_VALUES_WITH_FOOTPRINT	(1 && USE_INSTANCE_PLACEHOLDERS)
 
 /**
-	Define to 1 to derive module from process_definition, 
-	re-using many of the facilities already available.  
-	Goal: 1
-	Status: so far unroll phase testing and regression fixing has begun, 
-		haven't started create-phase work yet.  
- */
-#define	MODULE_PROCESS			(1 && USE_INSTANCE_PLACEHOLDERS)
-
-/**
 	Define to 0 to remove formal instance management (template, port)
 	from the main body of sequential unrolling.  
 	Rationale: remove duplicates
@@ -140,7 +131,7 @@
 	Goal: 1
 	Status: complete, basically tested.
  */
-#define	SUPPORT_NESTED_DEFINITIONS	(1 && MODULE_PROCESS)
+#define	SUPPORT_NESTED_DEFINITIONS	1
 
 //=============================================================================
 

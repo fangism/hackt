@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.25 2006/10/18 01:19:10 fang Exp $
+	$Id: footprint.cc,v 1.26 2006/10/18 18:38:16 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -264,10 +264,8 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			i->second->dump(o, df) << endl;
 		}
 #endif
-#if MODULE_PROCESS
 	if (is_created()) {
 		o << auto_indent << "Created state:" << endl;
-#endif
 		dump(o);
 		port_aliases.dump(o);
 #if ENABLE_STACKTRACE
@@ -277,9 +275,7 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		prs_footprint.dump(o, *this);
 		chp_footprint.dump(o, *this, dc);
 		spec_footprint.dump(o, *this);
-#if MODULE_PROCESS
 	}	// end if is_created
-#endif
 	}	// end if collection_map is not empty
 	return o;
 }
@@ -323,147 +319,6 @@ footprint::operator [] (const string& k) const {
 #endif
 	return (f != e) ? f->second : instance_collection_ptr_type(NULL);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MODULE_PROCESS
-/**
-	This copies instance_collections (physical and parameter)
-	into its own map.  
-	If this scopespace has already been popluated, then it won't actually
-	reload the map, will just exit.  
-	NOTE: This is entended for importing from definitions' scopespaces
-		because templated types need to work with their own copies
-		of instance collections; the definitions' instance
-		collections are merely placeholders.  
-		We make a deep copy of the collections (while they're empty).  
- */
-void
-footprint::import_scopespace(const scopespace& s) {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("at: " << this << endl);
-if (instance_collection_map.empty()) {
-	typedef	scopespace::const_map_iterator	const_map_iterator;
-	const_map_iterator si(s.id_map_begin());
-	const const_map_iterator se(s.id_map_end());
-	for ( ; si!=se; si++) {
-#if USE_INSTANCE_PLACEHOLDERS
-		const never_ptr<const instance_placeholder_base>
-			icb(si->second.is_a<const instance_placeholder_base>());
-#else
-		const never_ptr<const instance_collection_base>
-			icb(si->second.is_a<const instance_collection_base>());
-#endif
-		if (icb) {
-			// then we need to make a deep copy of it 
-			// in our own footprint's instance collection map
-			const count_ptr<instance_collection_base>
-#if USE_INSTANCE_PLACEHOLDERS
-			fc(icb->make_instance_collection_footprint_copy());
-#else
-			fc(icb->make_instance_collection_footprint_copy(*this));
-#endif
-			NEVER_NULL(fc);
-			STACKTRACE_INDENT_PRINT(
-				"deep-copying " << fc->get_name() << endl);
-			instance_collection_map[fc->get_name()] = fc;
-		}
-		// else is not instance collection, we don't care
-	}
-}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MODULE_PROCESS
-/**
-	The difference is that the key used for the collection
-	map is a hierarchical (qualified) name to avoid collisions
-	as a result of collating over all namespaces.  
-	Called by top-level module only.
-	TODO: Arg -- code duplication -- clean later.  
-	TODO: this won't be necessary once placeholders and collections
-		are decoupled.  
- */
-void
-footprint::import_hierarchical_scopespace(const scopespace& s) {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("at: " << this << endl);
-if (instance_collection_map.empty()) {
-	typedef	scopespace::const_map_iterator	const_map_iterator;
-	const_map_iterator si(s.id_map_begin());
-	const const_map_iterator se(s.id_map_end());
-	for ( ; si!=se; si++) {
-		const never_ptr<const physical_instance_collection>
-		pc(si->second.is_a<const physical_instance_collection>());
-		if (pc) {
-		/***
-			DIRTY HACK ALERT:
-			collection wants count_ptr, but shallow pointer copy
-			comes from never_ptr!  can't mix oil and water!
-			The hack, initialize the count_ptr with count 1
-			instead of 0.  The last and only weak reference
-			will never delete.  
-			const_cast is safe: we promise to never modify
-			the contents from the top-level module.  
-
-			ACTUALLY, this won't work, persistent object manager
-			will restore and detect inconsistent pointer
-			ownership (owned and shared), resulting in 
-			fatal error.  FOILED by my own protective measures!
-
-			SOLUTION: guarantee that populating the footprint
-			with these pointers is only ever temporary and
-			never escapes to object serialization.  (Done.)
-		***/
-			static size_t one = 1;
-#if USE_INSTANCE_PLACEHOLDERS
-			instance_collection_map[pc->get_placeholder_base()->get_qualified_name()] =
-#else
-			instance_collection_map[pc->get_qualified_name()] =
-#endif
-				count_ptr<instance_collection_base>(
-				&const_cast<physical_instance_collection&>(*pc), &one);
-		}
-		// else is not instance collection, we don't care
-	}
-}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !MODULE_PROCESS
-/**
-	Temporary hack.  
-	Hybrid of import_scopespace and import_hierarchical scopespace:
-	does shallow pointer copying (temporary), but uses unqualified
-	identifier names.  
-	Rationale: cflat on top-level prs works directly with
-		the module's global namespace collections, and thus
-		requires direct access to the collections.  
-		Promises not to modify; read-only for the sake of lookup.  
- */
-void
-footprint::import_scopespace_shallow(const scopespace& s) {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("at: " << this << endl);
-if (instance_collection_map.empty()) {
-	typedef	scopespace::const_map_iterator	const_map_iterator;
-	const_map_iterator si(s.id_map_begin());
-	const const_map_iterator se(s.id_map_end());
-	for ( ; si!=se; si++) {
-		const never_ptr<const physical_instance_collection>
-		pc(si->second.is_a<const physical_instance_collection>());
-		if (pc) {
-			static size_t one = 1;
-			instance_collection_map[pc->get_name()] =
-				count_ptr<instance_collection_base>(
-				&const_cast<physical_instance_collection&>(*pc), &one);
-		}
-		// else is not instance collection, we don't care
-	}
-}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
