@@ -5,7 +5,7 @@
 
 2006-10-17	David Fang		<fangism@users.sourceforge.net>
 
-	* HACKT-00-01-04-main-00-80-29-merged-instance-00-39:
+	* HACKT-00-01-04-main-00-80-30-merged-instance-00-39:
 	  Major branch merge.
 	  Summary: instance/value_collections separated into placeholder and 
 		collection counterpart classes to avoid massive duplication.  

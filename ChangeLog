@@ -1,5 +1,13 @@
 "ChangeLog"
 
+2006-10-17	David Fang	<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-30-merged-instance-00-39:
+	  Merged -instance-00 branch in its entirety.
+	  BRANCHES: updated, closing the -instance-00 branch.  
+	  configure.ac: date bump.
+
+
 2006-10-05	David Fang	<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-26:
