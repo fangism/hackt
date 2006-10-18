@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.20 2006/10/18 05:32:28 fang Exp $
+	$Id: devel_switches.h,v 1.21 2006/10/18 07:39:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -84,14 +84,6 @@
 #define	RESOLVE_VALUES_WITH_FOOTPRINT	(1 && USE_INSTANCE_PLACEHOLDERS)
 
 /**
-	Define to 0 to disable compile-time (pre-unroll) analysis
-	of expressions and value references.  
-	Goal: 0
-	Status: stable, committable up-branch.
- */
-#define	ENABLE_STATIC_ANALYSIS		(0 && !USE_INSTANCE_PLACEHOLDERS)
-
-/**
 	Define to 1 to derive module from process_definition, 
 	re-using many of the facilities already available.  
 	Goal: 1
@@ -141,7 +133,7 @@
 	It is do-able, now that we've eliminated much static analysis
 		at compile time.  
  */
-#define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	(1 && !ENABLE_STATIC_ANALYSIS)
+#define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	1
 
 /**
 	Define to 1 to use dynamic_meta_index_list instead of
@@ -150,7 +142,7 @@
 	Goal: 1
 	Status: not begun
  */
-#define	ALWAYS_USE_DYNAMIC_INDEX_LIST		(0 && !ENABLE_STATIC_ANALYSIS)
+#define	ALWAYS_USE_DYNAMIC_INDEX_LIST		0
 
 /**
 	Define to 1 to allow the parse_context class to support 

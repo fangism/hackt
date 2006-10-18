@@ -3,7 +3,7 @@
 	Arithmetic on integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_arith_expr.h,v 1.14 2006/10/18 05:32:41 fang Exp $
+	$Id: pint_arith_expr.h,v 1.15 2006/10/18 07:39:39 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_ARITH_EXPR_H__
@@ -89,18 +89,6 @@ public:
 
 	size_t
 	dimensions(void) const { return 0; }
-
-#if ENABLE_STATIC_ANALYSIS
-	bool
-	may_be_initialized(void) const {
-		return lx->may_be_initialized() && rx->may_be_initialized();
-	}
-
-	bool
-	must_be_initialized(void) const {
-		return lx->must_be_initialized() && rx->must_be_initialized();
-	}
-#endif
 
 	bool
 	is_static_constant(void) const;

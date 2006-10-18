@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.10 2006/10/18 05:32:49 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.11 2006/10/18 07:39:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -112,21 +112,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-/**
-	This is only for the sake of static compile-time
-	initialization analysis which is just sugar-coating.  
-	This just ignores the argument pointer.  
-	\return good, conservatively.  
- */
-AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-good_bool
-AGGREGATE_META_VALUE_REFERENCE_CLASS::initialize(const init_arg_type&) {
-	return good_bool(true);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just adds a reference to the end of the list.  (push_back)
 	Dimension checking done later.  
@@ -189,46 +174,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-/**
-	Don't bother checking at parse time, leave until unroll time.  
-	\pre no subreferences may be NULL, array must be non-empty.
- */
-AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-AGGREGATE_META_VALUE_REFERENCE_CLASS::may_be_initialized(void) const {
-	INVARIANT(!subreferences.empty());
-	const_iterator i(subreferences.begin());
-	const const_iterator e(subreferences.end());
-	for ( ; i!=e; ++i) {
-		if (!(*i)->may_be_initialized())
-			return false;
-		// else keep checking...
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Really should use an expression visitor for this...
-	\pre no subreferences may be NULL.
- */
-AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-AGGREGATE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
-	INVARIANT(!subreferences.empty());
-	const_iterator i(subreferences.begin());
-	const const_iterator e(subreferences.end());
-	for ( ; i!=e; ++i) {
-		if (!(*i)->must_be_initialized())
-			return false;
-		// else keep checking...
-	}
-	return true;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Just conservatively return false.
 	Following this, the reference is expected to produce a
@@ -237,19 +182,7 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 AGGREGATE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
-#if 0
-	INVARIANT(!subreferences.empty());
-	const_iterator i(subreferences.begin());
-	const const_iterator e(subreferences.end());
-	for ( ; i!=e; ++i) {
-		if (!(*i)->is_static_constant())
-			return false;
-		// else keep checking...
-	}
-	return true;
-#else
 	return false;
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

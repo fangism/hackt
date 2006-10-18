@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.13 2006/10/18 05:32:42 fang Exp $
+	$Id: pint_expr.h,v 1.14 2006/10/18 07:39:40 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -65,14 +65,6 @@ virtual	size_t
 	GET_UNRESOLVED_DATA_TYPE_REF_PROTO;
 #if USE_RESOLVED_DATA_TYPES
 	GET_RESOLVED_DATA_TYPE_REF_PROTO;
-#endif
-
-#if ENABLE_STATIC_ANALYSIS
-virtual bool
-	may_be_initialized(void) const = 0;
-
-virtual bool
-	must_be_initialized(void) const = 0;
 #endif
 
 	bool

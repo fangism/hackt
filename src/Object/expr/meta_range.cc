@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.14 2006/10/18 05:32:40 fang Exp $
+ 	$Id: meta_range.cc,v 1.15 2006/10/18 07:39:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -188,20 +188,6 @@ pint_range::dump(ostream& o, const expr_dump_context& c) const {
 	return upper->dump(
 		lower->dump(o << '[', c) << "..", c) << ']';
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-bool
-pint_range::may_be_initialized(void) const {
-	return lower->may_be_initialized() && upper->may_be_initialized();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_range::must_be_initialized(void) const {
-	return lower->must_be_initialized() && upper->must_be_initialized();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

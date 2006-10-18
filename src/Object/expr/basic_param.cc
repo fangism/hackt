@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.20 2006/10/18 05:32:36 fang Exp $
+ 	$Id: basic_param.cc,v 1.21 2006/10/18 07:39:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -107,19 +107,7 @@ count_ptr<param_expression_assignment>
 param_expr::make_param_expression_assignment(
 		const count_ptr<const param_expr>& p) {
 	NEVER_NULL(p);
-#if ENABLE_STATIC_ANALYSIS
-	if (!p->may_be_initialized()) {
-		typedef	assignment_ptr_type		return_type;
-		p->dump(cerr << "ERROR: rhs of expr-assignment is "
-			"not initialized or dependent on formals: ",
-			expr_dump_context::error_mode) << endl;
-		THROW_EXIT;		// temporary
-		return return_type(NULL);
-	} else	
-#else
-	// we're not bothering with compile-time static analysis any more...
-		return p->make_param_expression_assignment_private(p);
-#endif
+	return p->make_param_expression_assignment_private(p);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

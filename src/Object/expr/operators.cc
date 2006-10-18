@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.19 2006/10/18 05:32:40 fang Exp $
+ 	$Id: operators.cc,v 1.20 2006/10/18 07:39:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -1187,20 +1187,6 @@ pint_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-bool
-pint_relational_expr::may_be_initialized(void) const {
-	return lx->may_be_initialized() && rx->may_be_initialized();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-pint_relational_expr::must_be_initialized(void) const {
-	return lx->must_be_initialized() && rx->must_be_initialized();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
 pint_relational_expr::is_static_constant(void) const {
 	return lx->is_static_constant() && rx->is_static_constant();
@@ -1848,20 +1834,6 @@ ostream&
 preal_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 	return rx->dump(lx->dump(o, c) << reverse_op_map[op], c);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-bool
-preal_relational_expr::may_be_initialized(void) const {
-	return lx->may_be_initialized() && rx->may_be_initialized();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-preal_relational_expr::must_be_initialized(void) const {
-	return lx->must_be_initialized() && rx->must_be_initialized();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

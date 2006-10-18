@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.20 2006/10/18 05:32:40 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.21 2006/10/18 07:39:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -180,37 +180,6 @@ bool
 const_param_expr_list::is_all_true(void) const {
 	return is_all_true(*this);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-bool
-const_param_expr_list::may_be_initialized(void) const {
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-const_param_expr_list::must_be_initialized(void) const {
-	return true;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Precondition: all expressions must be non-NULL.  
- */
-list<const param_expr&>
-const_param_expr_list::get_const_ref_list(void) const {
-	list<const param_expr&> ret;
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		ret.push_back(**i);
-	}
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -894,54 +863,6 @@ dynamic_param_expr_list::is_relaxed_formal_dependent(void) const {
 	}
 	return false;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-bool
-dynamic_param_expr_list::may_be_initialized(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		const count_ptr<const param_expr> ip(*i);
-		NEVER_NULL(ip);	// nothing may be NULL at this point!
-		if (!ip->may_be_initialized())
-			return false;
-		// else continue checking...
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_param_expr_list::must_be_initialized(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		const count_ptr<const param_expr> ip(*i);
-		NEVER_NULL(ip);	// nothing may be NULL at this point!
-		if (!ip->must_be_initialized())
-			return false;
-		// else continue checking...
-	}
-	return true;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	Precondition: all expressions must be non-NULL.  
- */
-list<const param_expr&>
-dynamic_param_expr_list::get_const_ref_list(void) const {
-	list<const param_expr&> ret;
-	const_iterator i(begin());
-	for ( ; i!=end(); i++, j++) {
-		count_ptr<const param_expr> ip(*i);
-		NEVER_NULL(ip);
-		ret.push_back(*ip);
-	}
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

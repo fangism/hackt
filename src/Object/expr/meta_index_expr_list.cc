@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.17 2006/10/18 05:32:40 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.18 2006/10/18 07:39:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -243,20 +243,6 @@ const_index_list::push_back(const const_index_ptr_type& i) {
 	INVARIANT(i->dimensions() == 0);
 	parent_type::push_back(i);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-bool
-const_index_list::may_be_initialized(void) const {
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-const_index_list::must_be_initialized(void) const {
-	return true;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -549,32 +535,6 @@ dynamic_meta_index_list::dimensions_collapsed(void) const {
 	}
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-bool
-dynamic_meta_index_list::may_be_initialized(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if (!(*i)->may_be_initialized())
-			return false;
-	}
-	return true;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-bool
-dynamic_meta_index_list::must_be_initialized(void) const {
-	const_iterator i(begin());
-	for ( ; i!=end(); i++) {
-		NEVER_NULL(*i);
-		if (!(*i)->must_be_initialized())
-			return false;
-	}
-	return true;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

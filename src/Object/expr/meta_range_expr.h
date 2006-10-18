@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_expr.h,v 1.8 2006/10/18 01:19:20 fang Exp $
+	$Id: meta_range_expr.h,v 1.9 2006/10/18 07:39:38 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_RANGE_EXPR_H__
@@ -58,15 +58,6 @@ virtual	ostream&
  */
 virtual	size_t
 	dimensions(void) const { return 0; }
-
-#if ENABLE_STATIC_ANALYSIS
-/** is initialized if is resolved to constant or some other formal */
-virtual bool
-	may_be_initialized(void) const = 0;
-
-virtual bool
-	must_be_initialized(void) const = 0;
-#endif
 
 /** is sane if range makes sense */
 virtual	bool

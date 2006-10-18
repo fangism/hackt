@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.16 2006/10/18 01:20:05 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.17 2006/10/18 07:39:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -178,21 +178,12 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 	size_t dim = this->src->dimensions();
 	if (!this->validate_dimensions_match(e, dim).good)
 		err.bad = true;
-#if ENABLE_STATIC_ANALYSIS
-	if (!this->validate_reference_is_uninitialized(e).good)
-		err.bad = true;
-#endif
 	dest_ptr_type pb(e.template is_a<value_reference_type>());
 	if (!pb) {
 		cerr << "ERROR: Cannot initialize a " <<
 			traits_type::tag_name << " with a ";
 		e->what(cerr) << " expression!" << endl;
 		err.bad = true;
-#if ENABLE_STATIC_ANALYSIS
-	} else if (!pb->initialize(src).good) {	// type check
-		// if scalar, initialize for static analysis
-		err.bad = true;
-#endif
 	}
 	if (err.bad) {
 		cerr << "Error initializing item " << size()+1 <<

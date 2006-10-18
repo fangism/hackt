@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.12 2006/10/18 01:19:22 fang Exp $
+	$Id: param_expr_list.h,v 1.13 2006/10/18 07:39:39 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -79,14 +79,6 @@ virtual	excl_ptr<param_expr_list>
 
 virtual	count_ptr<const param_expr>
 	operator [] (const size_t) const = 0;
-
-#if ENABLE_STATIC_ANALYSIS
-virtual	bool
-	may_be_initialized(void) const = 0;
-
-virtual	bool
-	must_be_initialized(void) const = 0;
-#endif
 
 virtual	bool
 	may_be_equivalent(const param_expr_list& p) const = 0;

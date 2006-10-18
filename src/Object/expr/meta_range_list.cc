@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.16 2006/10/18 01:19:21 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.17 2006/10/18 07:39:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -686,13 +686,9 @@ dynamic_meta_range_list::must_be_formal_size_equivalent(
 		const meta_range_list& rl) const {
 	const const_range_list* const crl = IS_A(const const_range_list*, &rl);
 	if (crl) {
-#if ENABLE_STATIC_ANALYSIS
-		INVARIANT(size() == crl->size());
-#else
 		if (size() != crl->size()) {
 			return false;
 		}
-#endif
 		const_iterator i(begin());
 		const const_iterator e(end());
 		const_range_list::const_iterator j(crl->begin());
@@ -706,13 +702,9 @@ dynamic_meta_range_list::must_be_formal_size_equivalent(
 		const dynamic_meta_range_list* const
 			drl = IS_A(const dynamic_meta_range_list*, &rl);
 		INVARIANT(drl);
-#if ENABLE_STATIC_ANALYSIS
-		INVARIANT(size() == drl->size());
-#else
 		if (size() != drl->size()) {
 			return false;
 		}
-#endif
 		const_iterator i(begin());
 		const const_iterator e(end());
 		const_iterator j(drl->begin());

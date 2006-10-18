@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.7 2006/10/18 05:32:47 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.8 2006/10/18 07:39:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -118,19 +118,6 @@ public:
 	never_ptr<const param_value_collection>
 #endif
 	get_coll_base(void) const;
-
-#if ENABLE_STATIC_ANALYSIS
-	good_bool
-	initialize(const init_arg_type&);
-
-	/// conservatively return true for simplicity
-	bool
-	may_be_initialized(void) const;
-
-	/// conservatively return false for simplicity
-	bool
-	must_be_initialized(void) const;
-#endif
 
 	/// conservatively return false?
 	bool

@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.23 2006/10/18 01:19:29 fang Exp $
+ 	$Id: instance_collection.cc,v 1.24 2006/10/18 07:39:41 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -1151,71 +1151,6 @@ param_value_placeholder::template_formal_equivalent(const this_type& b) const {
 	// then compare sizes and dimensionality
 	return formal_size_equivalent(b);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-/**
-	NOTE: just copied from param_value_collection.
-	NOTE: can we get rid of this altogether?
-
-	For multidimensional instances, we don't keep track of initialization
-	of individual elements at compile-time, just conservatively 
-	return true, that the instance MAY be initialized.  
-	Template formals are considered initialized because concrete
-	types will always have supplied parameters.  
-	The counterpart must_be_initialized will check at unroll time
-	whether or not an instance is definitely initialized.  
-	\return true if the instance may be initialized.  
-	\sa must_be_initialized
- */
-bool
-param_value_placeholder::may_be_initialized(void) const {
-	if (dimensions || is_template_formal() || is_loop_variable())
-		return true;
-	else {
-		// is not a template formal, thus we interpret
-		// the "default_value" field as a one-time initialization
-		// value.  
-		const count_ptr<const param_expr>
-			ret(default_value());
-		if (ret)
-			return ret->may_be_initialized();
-		// if there's no initial value, then it is definitely
-		// NOT already initialized.  
-		else return false;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	NOTE: just copied from param_value_collection.
-	At compile time, we don't keep track of arrays, thus
-	one cannot conclude that a member of an array is definitely 
-	initialized.  
-	Can just conservatively return false, for all laziness.
-	\sa may_be_initialized
- */
-bool
-param_value_placeholder::must_be_initialized(void) const {
-	STACKTRACE_VERBOSE;
-	if (dimensions)
-		return false;
-	else if (is_template_formal() || is_loop_variable()) {
-		return true;
-	} else {
-		// is not a template formal, thus we interpret
-		// the "default_value" field as a one-time initialization
-		// value.  
-		const count_ptr<const param_expr>
-			ret(default_value());
-		if (ret)
-			return ret->must_be_initialized();
-		// if there's no initial value, then it is definitely
-		// NOT already initialized.  
-		else return false;
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

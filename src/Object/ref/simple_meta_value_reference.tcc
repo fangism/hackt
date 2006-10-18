@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.24 2006/10/18 05:32:52 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.25 2006/10/18 07:39:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -199,34 +199,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 	array_indices = i;
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if ENABLE_STATIC_ANALYSIS
-/**
-	IMPORTANT: This initialization is only for static analysis and is
-	not the actual initialization that takes place during unrolling.  
-	\return true if sucessfully initialized with valid expression.  
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-good_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::initialize(const init_arg_type& i) {
-	return this->value_collection_ref->initialize(i);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::may_be_initialized(void) const {
-	return this->value_collection_ref->may_be_initialized();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::must_be_initialized(void) const {
-	return this->value_collection_ref->must_be_initialized();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

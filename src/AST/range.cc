@@ -2,9 +2,9 @@
 	\file "AST/range.cc"
 	Class method definitions for HAC::parser, 
 	related to ranges and range lists.  
-	$Id: range.cc,v 1.6 2006/10/18 01:19:00 fang Exp $
+	$Id: range.cc,v 1.7 2006/10/18 07:39:26 fang Exp $
 	This file used to be the following before it was renamed:
-	$Id: range.cc,v 1.6 2006/10/18 01:19:00 fang Exp $
+	$Id: range.cc,v 1.7 2006/10/18 07:39:26 fang Exp $
  */
 
 #ifndef	__HAC_AST_RANGE_CC__
@@ -432,22 +432,6 @@ range_list::check_meta_ranges(const context& c) const {
 			} else {
 				is_static_constant = false;
 			}
-#if ENABLE_STATIC_ANALYSIS
-			if (p->may_be_initialized()) {  // definite
-				continue;
-			} else {
-				is_initialized = false;
-				// not initialized! error.
-				cerr << "int expression is definitely "
-					"not initialized.  ERROR!  "
-					<< endl;        // where?
-				err.bad = true;
-			}
-			// can it be initialized, but non-const?
-			// yes, if a dimension depends on another formal param
-			// can be loop-independent, do we need to track?
-			// can be conditional, do we need to track?
-#endif
 		} else if (r) {
 			// same thing... copy
 			if (r->dimensions() != 0) {
@@ -462,18 +446,6 @@ range_list::check_meta_ranges(const context& c) const {
 			} else {
 				is_static_constant = false;
 			}
-#if ENABLE_STATIC_ANALYSIS
-			if (r->may_be_initialized()) {  // definite
-				continue;
-			} else {
-				is_initialized = false;
-				// not initialized! error.
-				cerr << "range expression is definitely "
-					"not initialized.  ERROR!  "
-					<< endl;        // where?
-				err.bad = true;
-			}
-#endif
 		} else {
 			// is neither pint_expr nor meta_range_expr
 			INVARIANT(!i->is_a<pint_const>());
@@ -658,19 +630,6 @@ dense_range_list::check_formal_dense_ranges(const context& c) const {
 			} else {
 				is_static_constant = false;
 			}
-#if ENABLE_STATIC_ANALYSIS
-			if (p->may_be_initialized()) {
-				continue;
-			} else {
-				is_initialized = false;
-				// not initialized! error.
-				cerr << "int expression is not initialized.  "
-					"ERROR!  " << endl;     // where?
-				err.bad = true;
-			}
-#endif
-			// can it be initialized, but non-const?
-			// yes, if a dimension depends on another formal param
 		}
 	}
 	if (err.bad) {

@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.2 2006/10/18 01:19:38 fang Exp $
+	$Id: param_value_placeholder.h,v 1.3 2006/10/18 07:39:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -116,27 +116,6 @@ public:
 	/** appropriate for the context of a template parameter formal */
 virtual	count_ptr<const param_expr>
 	default_value(void) const = 0;
-
-#if ENABLE_STATIC_ANALYSIS
-/**
-	A parameter is considered "usable" if it is either initialized
-	to another expression, or it is a template formal.  
-
-	Think we may need two flavors of initialization query, 
-	because of conservativeness and imprecision:
-	"may_be_initialized" and "definitely_initialized"
-
-	TECHNICALITY: what about conditional assignments to a variable?
-	Will need assignment expression stack to resolve statically...
-	\return true if initialized to an expression.  
-	\sa initialize
- */
-	bool
-	may_be_initialized(void) const;
-
-	bool
-	must_be_initialized(void) const;
-#endif
 
 virtual	good_bool
 	assign_default_value(const count_ptr<const param_expr>& p) = 0;

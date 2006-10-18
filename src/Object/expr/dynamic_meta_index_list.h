@@ -3,7 +3,7 @@
 	Dynamic meta parameter index list class.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_meta_index_list.h,v 1.9 2006/10/18 05:32:39 fang Exp $
+	$Id: dynamic_meta_index_list.h,v 1.10 2006/10/18 07:39:36 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_META_INDEX_LIST_H__
@@ -66,14 +66,6 @@ public:
 
 	size_t
 	dimensions_collapsed(void) const;
-
-#if ENABLE_STATIC_ANALYSIS
-	bool
-	may_be_initialized(void) const;
-
-	bool
-	must_be_initialized(void) const;
-#endif
 
 	bool
 	is_static_constant(void) const;

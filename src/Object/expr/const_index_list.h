@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.12 2006/10/18 05:32:39 fang Exp $
+	$Id: const_index_list.h,v 1.13 2006/10/18 07:39:33 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -91,14 +91,6 @@ public:
 
 	void
 	push_back(const const_index_ptr_type& i);
-
-#if ENABLE_STATIC_ANALYSIS
-	bool
-	may_be_initialized(void) const;
-
-	bool
-	must_be_initialized(void) const;
-#endif
 
 	bool
 	is_static_constant(void) const;

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_param_expr_list.h,v 1.14 2006/10/18 01:19:17 fang Exp $
+	$Id: const_param_expr_list.h,v 1.15 2006/10/18 07:39:35 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_PARAM_EXPR_LIST_H__
@@ -100,14 +100,6 @@ public:
 	static
 	bool
 	is_all_true(const parent_type&);
-
-#if ENABLE_STATIC_ANALYSIS
-	bool
-	may_be_initialized(void) const;
-
-	bool
-	must_be_initialized(void) const;
-#endif
 
 	bool
 	may_be_equivalent(const param_expr_list& p) const;
