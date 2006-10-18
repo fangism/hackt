@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.16 2006/10/18 01:19:19 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.17 2006/10/18 05:32:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -409,7 +409,6 @@ const_index_list::must_be_equivalent_indices(const meta_index_list& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return shallow copy of self, no substitutions.  
  */
@@ -421,7 +420,6 @@ const_index_list::substitute_default_positional_parameters(
 	INVARIANT(l == this);
 	return l;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -707,7 +705,6 @@ dynamic_meta_index_list::unroll_resolve_indices(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	Visibility hidden is ok.  
 	Copied from meta_value_reference::positional_substituter.
@@ -750,7 +747,6 @@ dynamic_meta_index_list::substitute_default_positional_parameters(
 		return temp;
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

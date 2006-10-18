@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.18 2006/10/18 01:20:05 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.19 2006/10/18 05:33:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -154,10 +154,6 @@ INSTANTIATION_STATEMENT_CLASS::attach_collection(
 #endif
 	NEVER_NULL(c);
 	this->inst_base = c;
-#if !REF_COUNT_INSTANCE_MANAGEMENT
-	const never_ptr<const this_type> _this(this);
-	type_ref_parent_type::attach_initial_instantiation_statement(*c, _this);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

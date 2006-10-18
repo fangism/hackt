@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.10 2006/10/18 01:19:00 fang Exp $
+	$Id: parse_context.h,v 1.11 2006/10/18 05:32:27 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -364,21 +364,11 @@ public:
 
 	void
 	add_connection(
-#if REF_COUNT_INSTANCE_MANAGEMENT
-		const count_ptr<const meta_instance_reference_connection>&
-#else
-		excl_ptr<const meta_instance_reference_connection>& c
-#endif
-		);
+		const count_ptr<const meta_instance_reference_connection>&);
 
 	void
 	add_assignment(
-#if REF_COUNT_INSTANCE_MANAGEMENT
-		const count_ptr<const param_expression_assignment>&
-#else
-		excl_ptr<const param_expression_assignment>& a
-#endif
-		);
+		const count_ptr<const param_expression_assignment>&);
 
 	never_ptr<sequential_scope>
 	get_current_sequential_scope(void) const {
@@ -529,11 +519,7 @@ public:
 	 */
 	struct loop_scope_frame {
 		context&			_context;
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		loop_scope_frame(context&, const count_ptr<loop_scope>&);
-#else
-		loop_scope_frame(context&, excl_ptr<loop_scope>&);
-#endif
 		~loop_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 
@@ -543,12 +529,8 @@ public:
 	struct conditional_scope_frame {
 		context&			_context;
 		const bool			parent_cond;
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		conditional_scope_frame(context&, 
 			const count_ptr<conditional_scope>&);
-#else
-		conditional_scope_frame(context&, excl_ptr<conditional_scope>&);
-#endif
 		~conditional_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 

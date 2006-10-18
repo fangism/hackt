@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.2 2006/10/18 01:19:42 fang Exp $
+	$Id: value_placeholder.h,v 1.3 2006/10/18 05:32:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -101,11 +101,7 @@ public:
 
 	typedef typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	typedef	count_ptr<const initial_instantiation_statement_type>
-#else
-	typedef	never_ptr<const initial_instantiation_statement_type>
-#endif
 				initial_instantiation_statement_ptr_type;
 	typedef	typename traits_type::value_reference_collection_type
 					value_reference_collection_type;
@@ -157,12 +153,7 @@ public:
 
 	void
 	attach_initial_instantiation_statement(
-#if REF_COUNT_INSTANCE_MANAGEMENT
-		const count_ptr<const instantiation_statement_base>& i
-#else
-		const initial_instantiation_statement_ptr_type i
-#endif
-		);
+		const count_ptr<const instantiation_statement_base>&);
 
 	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const;

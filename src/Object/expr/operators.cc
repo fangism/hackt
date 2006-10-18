@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.18 2006/10/18 01:19:21 fang Exp $
+ 	$Id: operators.cc,v 1.19 2006/10/18 05:32:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -265,7 +265,6 @@ pint_unary_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -288,7 +287,6 @@ pint_unary_expr::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -472,7 +470,6 @@ preal_unary_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -495,7 +492,6 @@ preal_unary_expr::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -675,7 +671,6 @@ pbool_unary_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -698,7 +693,6 @@ pbool_unary_expr::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1026,7 +1020,6 @@ pint_arith_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -1050,7 +1043,6 @@ pint_arith_expr::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1364,7 +1356,6 @@ pint_relational_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -1389,7 +1380,6 @@ pint_relational_expr::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -1690,7 +1680,6 @@ preal_arith_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -1714,7 +1703,6 @@ preal_arith_expr::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2019,7 +2007,6 @@ preal_relational_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -2044,7 +2031,6 @@ preal_relational_expr::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
@@ -2335,7 +2321,6 @@ pbool_logical_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -2359,7 +2344,6 @@ pbool_logical_expr::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.23 2006/10/18 01:19:51 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.24 2006/10/18 05:32:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -33,9 +33,7 @@
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.h"
 #endif
-#if REF_COUNT_ARRAY_INDICES
 #include "util/memory/count_ptr.tcc"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -336,11 +334,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference(
 #else
 		const instance_collection_generic_type& inst, 
 #endif
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>& ind, 
-#else
-		const never_ptr<const index_list_type> ind, 
-#endif
 		const unroll_context& c
 #if !USE_INSTANCE_PLACEHOLDERS
 		, const bool lookup
@@ -391,11 +385,7 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 typename SIMPLE_META_INSTANCE_REFERENCE_CLASS::instance_alias_base_ptr_type
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_reference_no_lookup(
 		const instance_collection_generic_type& inst, 
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>& ind, 
-#else
-		const never_ptr<const index_list_type> ind, 
-#endif
 		const unroll_context& c) {
 	typedef instance_alias_base_ptr_type 	return_type;
 	STACKTRACE_VERBOSE;
@@ -431,11 +421,7 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references(
 #else
 		const instance_collection_generic_type& inst, 
 #endif
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>& ind, 
-#else
-		const never_ptr<const index_list_type> ind, 
-#endif
 		const unroll_context& c, 
 #if !USE_INSTANCE_PLACEHOLDERS
 		const bool lookup, 
@@ -461,11 +447,7 @@ SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::__unroll_generic_scalar_references_no_lookup(
 		const instance_collection_generic_type& inst, 
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>& ind, 
-#else
-		const never_ptr<const index_list_type> ind, 
-#endif
 		const unroll_context& c, 
 		alias_collection_type& aliases) {
 	STACKTRACE_VERBOSE;

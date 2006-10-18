@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.14 2006/10/18 01:19:14 fang Exp $
+	$Id: template_formals_manager.cc,v 1.15 2006/10/18 05:32:35 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -356,10 +356,7 @@ template_formals_manager::certify_template_arguments(
 #else
 		const count_ptr<param_expr_list> rep(spl->copy());
 #endif
-		sg = rep->certify_template_arguments(
-#if SUBSTITUTE_DEFAULT_PARAMETERS
-			*this, 
-#endif
+		sg = rep->certify_template_arguments(*this, 
 			strict_template_formals_list);
 		if (sg.good) {
 			t.replace_strict_args(rep);

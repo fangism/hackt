@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/simple_meta_indexed_reference_base.h"
 	Base implementation class for meta-indexed references in HAC.  
-	$Id: simple_meta_indexed_reference_base.h,v 1.4 2006/10/18 01:19:50 fang Exp $
+	$Id: simple_meta_indexed_reference_base.h,v 1.5 2006/10/18 05:32:51 fang Exp $
 	This file was "Object/simple_meta_instance_reference_base.h"
 		in a previous life.  
 	Id: simple_meta_instance_reference_base.h,v 1.9 2006/02/21 04:48:38 fang Exp
@@ -16,11 +16,7 @@
 #include "Object/devel_switches.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
-#if REF_COUNT_ARRAY_INDICES
 #include "util/memory/count_ptr.h"
-#else
-#include "util/memory/excl_ptr.h"
-#endif
 #include "Object/common/util_types.h"
 #include "Object/ref/meta_index_list_fwd.h"
 
@@ -38,11 +34,7 @@ class const_range_list;
 using std::ostream;
 using std::istream;
 using util::good_bool;
-#if REF_COUNT_ARRAY_INDICES
 using util::memory::count_ptr;
-#else
-using util::memory::excl_ptr;
-#endif
 using util::persistent_object_manager;
 
 //=============================================================================
@@ -59,13 +51,8 @@ private:
 	struct has_substructure { };
 public:
 	typedef	meta_index_list_type		index_list_type;
-#if REF_COUNT_ARRAY_INDICES
 	typedef	count_ptr<const index_list_type>	indices_ptr_type;
 	typedef	const indices_ptr_type&			indices_ptr_arg_type;
-#else
-	typedef	excl_ptr<index_list_type>		indices_ptr_type;
-	typedef	indices_ptr_type&			indices_ptr_arg_type;
-#endif
 protected:
 	/**
 		The indices (optional) for this particular reference.

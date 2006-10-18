@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_unary_expr.h"
 	Unary negation of meta real value.  
-	$Id: preal_unary_expr.h,v 1.8 2006/10/18 01:19:25 fang Exp $
+	$Id: preal_unary_expr.h,v 1.9 2006/10/18 05:32:45 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_UNARY_EXPR_H__
@@ -88,10 +88,9 @@ public:
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
 
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO;
 	using parent_type::substitute_default_positional_parameters;
-#endif
+
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

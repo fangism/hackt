@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.9 2006/10/18 01:19:09 fang Exp $
+	$Id: definition_base.h,v 1.10 2006/10/18 05:32:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -249,33 +249,18 @@ virtual	good_bool
  */
 virtual	never_ptr<const value_placeholder_type>
 	add_strict_template_formal(
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<instantiation_statement_base>&, 
-#else
-		const never_ptr<instantiation_statement_base> f, 
-#endif
 		const token_identifier& id);
 
 virtual	never_ptr<const value_placeholder_type>
 	add_relaxed_template_formal(
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<instantiation_statement_base>&, 
-#else
-		const never_ptr<instantiation_statement_base> f, 
-#endif
 		const token_identifier& id);
 
-#if REF_COUNT_INSTANCE_MANAGEMENT
 #define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
 	never_ptr<const instance_placeholder_type>			\
 	add_port_formal(const count_ptr<instantiation_statement_base>&,	\
 		const token_identifier&)
-#else
-#define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
-	never_ptr<const instance_placeholder_type>			\
-	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
-		const token_identifier&)
-#endif
 
 /**
 	Really, only some definitions should have ports...

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.19 2006/10/18 01:19:01 fang Exp $
+	$Id: devel_switches.h,v 1.20 2006/10/18 05:32:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -101,17 +101,6 @@
 #define	MODULE_PROCESS			(1 && USE_INSTANCE_PLACEHOLDERS)
 
 /**
-	Define to 1 to reference-count instance-management statements.  
-	Rationale: don't want duplicate instantiations of ports, 
-		placeholders owning instantiation-statements make it 
-		difficult to back-reference non-ports' placeholders
-		without ownership conflicts.  
-	Goal: 1
-	Status: in-place, just needs to undergo heavy testing.  
- */
-#define	REF_COUNT_INSTANCE_MANAGEMENT	1
-
-/**
 	Define to 0 to remove formal instance management (template, port)
 	from the main body of sequential unrolling.  
 	Rationale: remove duplicates
@@ -155,15 +144,6 @@
 #define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	(1 && !ENABLE_STATIC_ANALYSIS)
 
 /**
-	Define to 1 to reference count index lists of 
-	simple_meta_indexed_reference_base.  
-	Simplifies unrolling, and more consistent.  
-	Goal: 1?
-	Status: committed, basic tested.
- */
-#define	REF_COUNT_ARRAY_INDICES			1
-
-/**
 	Define to 1 to use dynamic_meta_index_list instead of
 	abstract meta_index_list, again because we don't need
 	compile-time static analysis anymore.
@@ -182,14 +162,6 @@
 	Status: complete, basically tested.
  */
 #define	SUPPORT_NESTED_DEFINITIONS	(1 && MODULE_PROCESS)
-
-/**
-	Define to 1 to perform positional parameter substitution
-	of default expressions of templates.  
-	Goal: 1
-	Status: Tested and ready to commit up.  
- */
-#define	SUBSTITUTE_DEFAULT_PARAMETERS	(1 && ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST && USE_INSTANCE_PLACEHOLDERS)
 
 //=============================================================================
 

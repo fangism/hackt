@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.14 2006/10/18 01:19:51 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.15 2006/10/18 05:32:51 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -22,11 +22,9 @@ class const_param;
 class const_index_list;
 class const_range_list;
 class unroll_context;
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 class param_expr;
 class template_formals_manager;
 class dynamic_param_expr_list;
-#endif
 using util::good_bool;
 using util::bad_bool;
 
@@ -207,14 +205,13 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 
-#if SUBSTITUTE_DEFAULT_PARAMETERS
         count_ptr<const expr_base_type>
         substitute_default_positional_parameters(
                 const template_formals_manager&,
                 const dynamic_param_expr_list&,
                 const count_ptr<const expr_base_type>&) const;
 	using parent_type::substitute_default_positional_parameters;
-#endif
+
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

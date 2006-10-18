@@ -1,7 +1,7 @@
 /**
 	\file "AST/expr.cc"
 	Class method definitions for HAC::parser, related to expressions.  
-	$Id: expr.cc,v 1.18 2006/10/18 01:18:58 fang Exp $
+	$Id: expr.cc,v 1.19 2006/10/18 05:32:25 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_expr.cc,v 1.27.12.1 2005/12/11 00:45:05 fang Exp
  */
@@ -1549,10 +1549,7 @@ index_expr::intercept_base_nonmeta_ref_error(const context& c) const {
 inst_ref_expr::meta_return_type
 index_expr::check_meta_reference(const context& c) const {
 	STACKTRACE_VERBOSE;
-#if REF_COUNT_ARRAY_INDICES
-	const
-#endif
-	range_list::checked_meta_indices_type
+	const range_list::checked_meta_indices_type
 		checked_indices(intercept_meta_indices_error(c));
 	const inst_ref_expr::meta_return_type
 		base_expr(intercept_base_meta_ref_error(c));
@@ -1569,13 +1566,7 @@ index_expr::check_meta_reference(const context& c) const {
 			);
 	NEVER_NULL(base_inst);
 
-#if REF_COUNT_ARRAY_INDICES
 	const bad_bool ai(base_inst->attach_indices(checked_indices));
-#else
-	excl_ptr<range_list::checked_meta_indices_type::element_type>
-		passing_indices(checked_indices.exclusive_release());
-	const bad_bool ai(base_inst->attach_indices(passing_indices));
-#endif
 	if (ai.bad) {
 		cerr << where(*ranges) << endl;
 		THROW_EXIT;

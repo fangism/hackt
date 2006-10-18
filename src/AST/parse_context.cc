@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.12 2006/10/18 01:19:00 fang Exp $
+ 	$Id: parse_context.cc,v 1.13 2006/10/18 05:32:27 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -554,21 +554,9 @@ context::alias_definition(const never_ptr<const definition_base> d,
  */
 void
 context::add_connection(
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<const meta_instance_reference_connection>& c
-#else
-		excl_ptr<const meta_instance_reference_connection>& c
-#endif
 		) {
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	get_current_sequential_scope()->append_instance_management(c);
-#else
-	typedef	excl_ptr<const instance_management_base> im_pointer_type;
-	STACKTRACE("context::add_connection()");
-	im_pointer_type imb(c);	// is not const, should be transferrable
-	get_current_sequential_scope()->append_instance_management(imb);
-	INVARIANT(!imb);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -581,21 +569,9 @@ context::add_connection(
  */
 void
 context::add_assignment(
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<const param_expression_assignment>& c
-#else
-		excl_ptr<const param_expression_assignment>& c
-#endif
 		) {
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	get_current_sequential_scope()->append_instance_management(c);
-#else
-	typedef	excl_ptr<const instance_management_base> im_pointer_type;
-	STACKTRACE("context::add_assignment()");
-	im_pointer_type imb(c);
-	get_current_sequential_scope()->append_instance_management(imb);
-	INVARIANT(!imb);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -802,15 +778,9 @@ context::add_instance(const token_identifier& id,
 	}
 	// processes may contain anything
 
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	const count_ptr<instantiation_statement_base> inst_stmt(
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim, a));
-#else
-	excl_ptr<instantiation_statement_base> inst_stmt =
-		fundamental_type_reference::make_instantiation_statement(
-			current_fundamental_type, dim, a);
-#endif
 	NEVER_NULL(inst_stmt);
 	const return_type
 		inst_base(current_named_scope->add_instance(inst_stmt, id, 
@@ -823,20 +793,8 @@ context::add_instance(const token_identifier& id,
 		THROW_EXIT;
 	}
 
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	NEVER_NULL(get_current_sequential_scope());
 	get_current_sequential_scope()->append_instance_management(inst_stmt);
-#else
-	{
-	excl_ptr<const instance_management_base>
-		imb = inst_stmt.as_a_xfer<const instance_management_base>();
-	NEVER_NULL(imb);
-	INVARIANT(!inst_stmt);
-	NEVER_NULL(get_current_sequential_scope());
-	get_current_sequential_scope()->append_instance_management(imb);
-	INVARIANT(!imb);
-	}
-#endif
 	return inst_base;
 }
 
@@ -865,15 +823,9 @@ context::add_template_formal(const token_identifier& id,
 	// Don't use fundamental_type_reference::add_instance_to_scope()
 	// Use a variant of scopespace::add_instance.  
 	const relaxed_args_ptr_type bogus(NULL);
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	const count_ptr<instantiation_statement_base> inst_stmt(
 		fundamental_type_reference::make_instantiation_statement(
 			ptype, dim, bogus));
-#else
-	excl_ptr<instantiation_statement_base> inst_stmt =
-		fundamental_type_reference::make_instantiation_statement(
-			ptype, dim, bogus);
-#endif
 	// template formals cannot have relaxed types!
 	NEVER_NULL(inst_stmt);
 	// formal instance is constructed and added in add_instance
@@ -924,15 +876,7 @@ context::add_template_formal(const token_identifier& id,
 	const never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 	NEVER_NULL(seq_scope);
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	seq_scope->append_instance_management(inst_stmt);
-#else
-	excl_ptr<const instance_management_base>
-		imb = inst_stmt.as_a_xfer<const instance_management_base>();
-		// same as current_sequential_scope? perhaps assert check?
-	NEVER_NULL(seq_scope);
-	seq_scope->append_instance_management(imb);
-#endif
 #endif	// SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	return inst_base;
 }	// end context::add_template_formal()
@@ -965,15 +909,9 @@ context::add_port_formal(const token_identifier& id,
 	INVARIANT(current_prototype);	// valid definition_base
 	INVARIANT(!current_fundamental_type.is_a<const param_type_reference>());
 		// valid port type to instantiate
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	const count_ptr<instantiation_statement_base> inst_stmt(
 		fundamental_type_reference::make_instantiation_statement(
 			current_fundamental_type, dim));
-#else
-	excl_ptr<instantiation_statement_base> inst_stmt =
-		fundamental_type_reference::make_instantiation_statement(
-			current_fundamental_type, dim);
-#endif
 	NEVER_NULL(inst_stmt);
 	// instance is constructed and added in add_instance
 #if USE_INSTANCE_PLACEHOLDERS
@@ -993,15 +931,7 @@ context::add_port_formal(const token_identifier& id,
 	const never_ptr<sequential_scope>
 		seq_scope(current_prototype.is_a<sequential_scope>());
 	NEVER_NULL(seq_scope);
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	seq_scope->append_instance_management(inst_stmt);
-#else
-	excl_ptr<const instance_management_base>
-		imb = inst_stmt.as_a_xfer<const instance_management_base>();
-		// same as current_sequential_scope? perhaps assert check?
-	NEVER_NULL(seq_scope);
-	seq_scope->append_instance_management(imb);
-#endif
 #endif	// SEQUENTIAL_SCOPE_INCLUDES_FORMALS
 	return inst_base;
 }	// end context::add_port_formal()
@@ -1155,25 +1085,11 @@ context::loop_var_frame::~loop_var_frame() {
 	then pushes it onto the sequential scope stack.  
  */
 context::loop_scope_frame::loop_scope_frame(context& c, 
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<loop_scope>& l
-#else
-		excl_ptr<loop_scope>& l
-#endif
 		) : _context(c) {
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	NEVER_NULL(l);
 	_context.get_current_sequential_scope()->append_instance_management(l);
 	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));
-#else
-	const never_ptr<sequential_scope> lss(l);
-	excl_ptr<const instance_management_base>
-		imb = l.as_a_xfer<const instance_management_base>();
-	_context.get_current_sequential_scope()->append_instance_management(imb);
-	MUST_BE_NULL(l);
-	MUST_BE_NULL(imb);
-	_context.sequential_scope_stack.push(lss);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1193,26 +1109,11 @@ context::loop_scope_frame::~loop_scope_frame() {
 	Also saves status of the in_conditional_scope flag.
  */
 context::conditional_scope_frame::conditional_scope_frame(context& c, 
-#if REF_COUNT_INSTANCE_MANAGEMENT
-		const count_ptr<conditional_scope>& l
-#else
-		excl_ptr<conditional_scope>& l
-#endif
-		) :
+		const count_ptr<conditional_scope>& l) :
 		_context(c), parent_cond(c.in_conditional_scope) {
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	NEVER_NULL(l);
 	_context.get_current_sequential_scope()->append_instance_management(l);
 	_context.sequential_scope_stack.push(never_ptr<sequential_scope>(&*l));
-#else
-	const never_ptr<sequential_scope> lss(l);
-	excl_ptr<const instance_management_base>
-		imb = l.as_a_xfer<const instance_management_base>();
-	_context.get_current_sequential_scope()->append_instance_management(imb);
-	MUST_BE_NULL(l);
-	MUST_BE_NULL(imb);
-	_context.sequential_scope_stack.push(lss);
-#endif
 	_context.in_conditional_scope = true;
 }
 

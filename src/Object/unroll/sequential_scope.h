@@ -3,7 +3,7 @@
 	Base class for any sequential instantiation or manupulation.  
 	This file came from "Object/art_object_instance_management_base.h"
 		in prehistoric revisions.  
-	$Id: sequential_scope.h,v 1.11 2006/10/18 01:20:08 fang Exp $
+	$Id: sequential_scope.h,v 1.12 2006/10/18 05:33:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_SEQUENTIAL_SCOPE_H__
@@ -15,12 +15,7 @@
 #include "util/boolean_types.h"
 #include "Object/unroll/instance_management_base.h"
 	// for prototype macros
-#include "Object/devel_switches.h"
-#if REF_COUNT_INSTANCE_MANAGEMENT
 #include "util/memory/count_ptr.h"
-#else
-#include "util/memory/excl_ptr.h"	// contains sticky_ptr
-#endif
 
 namespace HAC {
 namespace parser {
@@ -33,12 +28,7 @@ using std::istream;
 using std::ostream;
 using util::persistent;
 using util::persistent_object_manager;
-#if REF_COUNT_INSTANCE_MANAGEMENT
 using util::memory::count_ptr;
-#else
-using util::memory::excl_ptr;
-using util::memory::sticky_ptr;
-#endif
 using util::good_bool;
 using parser::context;
 class unroll_context;
@@ -54,11 +44,7 @@ public:
 	/**
 		By using sticky_ptr, this is not copy-constructible.
 	 */
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	typedef list<count_ptr<const instance_management_base> >
-#else
-	typedef list<sticky_ptr<const instance_management_base> >
-#endif
 					instance_management_list_type;
 	typedef	instance_management_list_type::const_iterator
 							const_iterator;
@@ -84,12 +70,7 @@ public:
 
 	void
 	append_instance_management(
-#if REF_COUNT_INSTANCE_MANAGEMENT
-		const instance_management_list_type::value_type&
-#else
-		excl_ptr<const instance_management_base>&
-#endif
-		);
+		const instance_management_list_type::value_type&);
 
 protected:
 	void

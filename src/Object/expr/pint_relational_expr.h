@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_relational_expr.h,v 1.13 2006/10/18 01:19:23 fang Exp $
+	$Id: pint_relational_expr.h,v 1.14 2006/10/18 05:32:42 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RELATIONAL_EXPR_H__
@@ -132,10 +132,9 @@ public:
 
 	UNROLL_RESOLVE_COPY_PBOOL_PROTO;
 
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 	SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO;
 	using parent_type::substitute_default_positional_parameters;
-#endif
+
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

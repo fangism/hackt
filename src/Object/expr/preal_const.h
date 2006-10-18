@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: preal_const.h,v 1.10 2006/10/18 01:19:24 fang Exp $
+	$Id: preal_const.h,v 1.11 2006/10/18 05:32:45 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
@@ -105,9 +105,8 @@ public:
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
 
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO;
-#endif
+
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

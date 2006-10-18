@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.13 2006/10/18 01:19:50 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.14 2006/10/18 05:32:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -189,11 +189,7 @@ bad_bool
 META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper_no_lookup(
 		const unroll_context& c,
 		const instance_collection_generic_type& inst,
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>& ind,
-#else
-		const never_ptr<const index_list_type> ind,
-#endif
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
 if (inst.get_dimensions()) {
@@ -299,11 +295,7 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 #else
 		const instance_collection_generic_type& _inst,
 #endif
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>& ind,
-#else
-		const never_ptr<const index_list_type> ind,
-#endif
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
 #if USE_INSTANCE_PLACEHOLDERS
@@ -382,11 +374,7 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 	// see comment: we can just use simplified helper function
 	const bad_bool port_err(unroll_references_packed_helper_no_lookup(
 		c, coll, 
-#if REF_COUNT_ARRAY_INDICES
 		count_ptr<const index_list_type>(NULL), 
-#else
-		never_ptr<const index_list_type>(NULL), 
-#endif
 		port_aliases));
 	if (port_err.bad) {
 		cerr << "ERROR unrolling member instance reference "

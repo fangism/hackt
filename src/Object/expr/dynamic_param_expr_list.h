@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.9 2006/10/18 01:19:18 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.10 2006/10/18 05:32:39 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -16,9 +16,7 @@
 namespace HAC {
 namespace entity {
 class const_param_expr_list;
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 class template_formals_manager;
-#endif
 using std::vector;
 
 //=============================================================================
@@ -111,10 +109,7 @@ public:
 #endif
 
 	good_bool
-	certify_template_arguments(
-#if SUBSTITUTE_DEFAULT_PARAMETERS
-		const template_formals_manager&,
-#endif
+	certify_template_arguments(const template_formals_manager&,
 		const template_formals_list_type&);
 
 	good_bool

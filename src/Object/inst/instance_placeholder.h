@@ -2,7 +2,7 @@
 	\file "Object/inst/instance_placeholder.h"
 	Instance placeholders are used to represent instantiated collections
 	that actually reside in footprints and other allocated locations.  
-	$Id: instance_placeholder.h,v 1.2 2006/10/18 01:19:30 fang Exp $
+	$Id: instance_placeholder.h,v 1.3 2006/10/18 05:32:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_H__
@@ -135,11 +135,7 @@ protected:
 public:
 	typedef	typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	typedef	count_ptr<const initial_instantiation_statement_type>
-#else
-	typedef	never_ptr<const initial_instantiation_statement_type>
-#endif
 				initial_instantiation_statement_ptr_type;
 protected:
 	/**
@@ -186,12 +182,7 @@ public:
 
 	void
 	attach_initial_instantiation_statement(
-#if REF_COUNT_INSTANCE_MANAGEMENT
-		const count_ptr<const instantiation_statement_base>& i
-#else
-		const initial_instantiation_statement_ptr_type i
-#endif
-		);
+		const count_ptr<const instantiation_statement_base>&);
 
 #if 0
 	/**

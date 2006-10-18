@@ -2,7 +2,7 @@
 	\file "Object/unroll/instance_management_base.cc"
 	Method definitions for basic sequential instance management.  
 	This file was moved from "Object/art_object_instance_management_base.cc"
- 	$Id: instance_management_base.cc,v 1.15 2006/10/18 01:20:05 fang Exp $
+ 	$Id: instance_management_base.cc,v 1.16 2006/10/18 05:33:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANCE_MANAGEMENT_BASE_CC__
@@ -23,9 +23,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/instance_management_base.h"
 #include "Object/unroll/sequential_scope.h"
 
-#if REF_COUNT_INSTANCE_MANAGEMENT
 #include "util/memory/count_ptr.tcc"
-#endif
 #include "util/dereference.h"
 #include "util/compose.h"
 #include "util/binders.h"
@@ -73,40 +71,8 @@ sequential_scope::dump(ostream& o, const expr_dump_context& dc) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 sequential_scope::append_instance_management(
-#if REF_COUNT_INSTANCE_MANAGEMENT
-		const count_ptr<const instance_management_base>& i
-#else
-		excl_ptr<const instance_management_base>& i
-#endif
-		) {
-#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const instance_management_base>& i) {
 	instance_management_list.push_back(i);
-#else
-	STACKTRACE("sequential_scope::append_instance_management()");
-	NEVER_NULL(i);
-	// PROBLEM ownership isn't being trasnfered:
-	// push_back -> insert -> _M_create_node -> std::_Construct( , );
-	// std::_Construct takes (T1*, const T2&) arguments
-	// _M_create_node takes only const value_type& as argument, 
-	// thus preventing transfer...
-	// we need a mechanism for explicit transfer, see excl_ptr_ref
-	// SOLUTION: we specialized std::_Construct for sticky_ptr's
-	// see "util/memory/pointer_classes.h"
-
-#if 0
-	instance_management_list.push_back(i);
-#else
-	// explicitly take ownership (needed for gcc-3.4.0?, but not 3.3?)
-	// awkward...
-	static excl_ptr<const instance_management_base> null(NULL);
-	instance_management_list.push_back(null);
-	instance_management_list.back() = i;
-#endif
-
-	// accidental deallocation of i here?  not anymore
-	NEVER_NULL(instance_management_list.back());
-	INVARIANT(!i);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

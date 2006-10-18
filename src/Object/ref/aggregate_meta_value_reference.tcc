@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.9 2006/10/18 01:19:48 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.10 2006/10/18 05:32:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -640,7 +640,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	Bound transformer functor.  
  */
@@ -691,7 +690,6 @@ AGGREGATE_META_VALUE_REFERENCE_CLASS::substitute_default_positional_parameters(
 		return temp;
 	}
 }
-#endif	// SUBSTITUTE_DEFAULT_PARAMETERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE

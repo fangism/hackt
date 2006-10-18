@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_base.h
-	$Id: param_expr.h,v 1.14 2006/10/18 01:19:21 fang Exp $
+	$Id: param_expr.h,v 1.15 2006/10/18 05:32:41 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_H__
@@ -24,10 +24,8 @@ class const_param;
 class const_range_list;
 class unroll_context;
 struct expr_dump_context;
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 class template_formals_manager;
 class dynamic_param_expr_list;
-#endif
 using util::persistent;
 using std::ostream;
 using util::memory::count_ptr;
@@ -45,11 +43,7 @@ using util::memory::excl_ptr;
 class param_expr : virtual public persistent {
 	typedef	param_expr			this_type;
 public:
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	typedef	count_ptr<param_expression_assignment>	assignment_ptr_type;
-#else
-	typedef	excl_ptr<param_expression_assignment>	assignment_ptr_type;
-#endif
 protected:
 	param_expr() : persistent() { }
 public:
@@ -104,7 +98,6 @@ virtual	count_ptr<const const_param>
 	// helper functor, defined in "Object/expr/param_expr_functor.h"
 	struct unroller;
 
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	Performs copy-on-write expression substitution.  
 	If the referenced value placeholder
@@ -121,7 +114,6 @@ virtual	count_ptr<const const_param>
 		const count_ptr<const param_expr>&) const
 
 virtual	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO = 0;
-#endif
 
 private:
 #define	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO				\

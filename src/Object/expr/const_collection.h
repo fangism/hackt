@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.13 2006/10/18 01:19:16 fang Exp $
+	$Id: const_collection.h,v 1.14 2006/10/18 05:32:38 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -29,10 +29,8 @@ class unroll_context;
 class param_expr;
 class const_param;
 struct expr_dump_context;
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 class template_formals_manager;
 class dynamic_param_expr_list;
-#endif
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
@@ -180,7 +178,6 @@ public:
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
 
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 	count_ptr<const expr_base_type>
 	substitute_default_positional_parameters(
 		const template_formals_manager&,
@@ -188,7 +185,6 @@ public:
 		const count_ptr<const expr_base_type>&) const;
 
 	using expr_base_type::substitute_default_positional_parameters;
-#endif
 
 	this_type
 	make_value_slice(const const_index_list&) const;

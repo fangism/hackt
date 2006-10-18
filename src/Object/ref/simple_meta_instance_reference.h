@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.15 2006/10/18 01:19:51 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.16 2006/10/18 05:32:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -192,11 +192,7 @@ protected:
 #else
 		const instance_collection_generic_type&, 
 #endif
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>&,
-#else
-		const never_ptr<const index_list_type>,
-#endif
 		const unroll_context&
 #if !USE_INSTANCE_PLACEHOLDERS
 			, const bool
@@ -208,11 +204,7 @@ protected:
 	instance_alias_base_ptr_type
 	__unroll_generic_scalar_reference_no_lookup(
 		const instance_collection_generic_type&, 
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>&,
-#else
-		const never_ptr<const index_list_type>,
-#endif
 		const unroll_context&);
 #endif	// USE_INSTANCE_PLACEHOLDERS
 
@@ -224,11 +216,7 @@ protected:
 #else
 		const instance_collection_generic_type&, 
 #endif
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>&,
-#else
-		const never_ptr<const index_list_type>,
-#endif
 		const unroll_context&, 
 #if !USE_INSTANCE_PLACEHOLDERS
 		const bool, 
@@ -240,11 +228,7 @@ protected:
 	good_bool
 	__unroll_generic_scalar_references_no_lookup(
 		const instance_collection_generic_type&, 
-#if REF_COUNT_ARRAY_INDICES
 		const count_ptr<const index_list_type>&,
-#else
-		const never_ptr<const index_list_type>,
-#endif
 		const unroll_context&, 
 		alias_collection_type&);
 #endif	// USE_INSTANCE_PLACEHOLDERS

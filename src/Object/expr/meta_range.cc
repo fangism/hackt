@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.13 2006/10/18 01:19:20 fang Exp $
+ 	$Id: meta_range.cc,v 1.14 2006/10/18 05:32:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -280,7 +280,6 @@ pint_range::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 count_ptr<const meta_index_expr>
 pint_range::substitute_default_positional_parameters(
 		const template_formals_manager& f, 
@@ -304,7 +303,6 @@ pint_range::substitute_default_positional_parameters(
 		return return_type(NULL);
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -590,7 +588,6 @@ const_range::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 count_ptr<const meta_index_expr>
 const_range::substitute_default_positional_parameters(
 		const template_formals_manager& f, 
@@ -600,7 +597,6 @@ const_range::substitute_default_positional_parameters(
 	INVARIANT(i == this);
 	return i;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

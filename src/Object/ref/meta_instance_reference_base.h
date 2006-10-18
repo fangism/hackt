@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.12 2006/10/18 01:19:49 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.13 2006/10/18 05:32:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -15,7 +15,6 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
-// #include "util/STL/vector_fwd.h"
 #include "Object/devel_switches.h"
 
 namespace HAC {
@@ -59,17 +58,10 @@ using util::persistent;
 class meta_instance_reference_base : virtual public persistent {
 	typedef	meta_instance_reference_base		this_type;
 public:
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	typedef	count_ptr<aliases_connection_base>
 						alias_connection_ptr_type;
 	typedef	count_ptr<port_connection_base>
 						port_connection_ptr_type;
-#else
-	typedef	excl_ptr<aliases_connection_base>
-						aliases_connection_ptr_type;
-	typedef	excl_ptr<port_connection_base>
-						port_connection_ptr_type;
-#endif
 public:
 	meta_instance_reference_base() : persistent() { }
 

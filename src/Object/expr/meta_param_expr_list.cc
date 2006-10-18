@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.19 2006/10/18 01:19:20 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.20 2006/10/18 05:32:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -1073,11 +1073,8 @@ dynamic_param_expr_list::unroll_resolve_rvalues(const unroll_context& c,
  */
 good_bool
 dynamic_param_expr_list::certify_template_arguments(
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 		const template_formals_manager& tfm, 
-#endif
-		const template_formals_list_type& tfl
-		) {
+		const template_formals_list_type& tfl) {
 	const size_t a_size = size();
 	const size_t f_size = tfl.size();
 	template_formals_list_type::const_iterator f_iter(tfl.begin());
@@ -1137,8 +1134,6 @@ if (a_size != f_size) {
 				return good_bool(false);
 			} else {
 				// else, actually assign it a copy in the list
-				// TODO: positional parameter substitution!
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 				*p_iter = default_expr->
 					substitute_default_positional_parameters(
 						tfm, *this, default_expr);
@@ -1149,9 +1144,6 @@ if (a_size != f_size) {
 						<< endl;
 					return good_bool(false);
 				}
-#else
-				*p_iter = default_expr;
-#endif
 /***
 	Example of default positional parameter substitution:
 		template <pint D, E=D+1>

@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.9 2006/10/18 01:20:06 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.10 2006/10/18 05:33:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -94,21 +94,6 @@ protected:
 
 	// default destructor
 	~instantiation_statement_type_ref_default() { }
-
-#if !REF_COUNT_INSTANCE_MANAGEMENT
-	template <class InstStmtType>
-	static
-	void
-	attach_initial_instantiation_statement(
-#if USE_INSTANCE_PLACEHOLDERS
-			instance_placeholder_type& i, 
-#else
-			instance_collection_generic_type& i, 
-#endif
-			const never_ptr<const InstStmtType> t) {
-		i.attach_initial_instantiation_statement(t);
-	}
-#endif
 
 	type_ref_ptr_type
 	get_type(void) const { return type; }

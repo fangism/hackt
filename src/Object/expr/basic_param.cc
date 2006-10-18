@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.19 2006/10/18 01:19:15 fang Exp $
+ 	$Id: basic_param.cc,v 1.20 2006/10/18 05:32:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -103,11 +103,7 @@ REQUIRES_STACKTRACE_STATIC_INIT
 	NOTE: the check for may_be_initialized is optional, just an
 		attempt to catch obvious errors earlier.  
  */
-#if REF_COUNT_INSTANCE_MANAGEMENT
 count_ptr<param_expression_assignment>
-#else
-excl_ptr<param_expression_assignment>
-#endif
 param_expr::make_param_expression_assignment(
 		const count_ptr<const param_expr>& p) {
 	NEVER_NULL(p);
@@ -236,7 +232,6 @@ pbool_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	Forwarding function.  
  */
@@ -248,14 +243,9 @@ pbool_expr::substitute_default_positional_parameters(
 	return substitute_default_positional_parameters(f, e, 
 		p.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if REF_COUNT_INSTANCE_MANAGEMENT
 count_ptr<param_expression_assignment>
-#else
-excl_ptr<param_expression_assignment>
-#endif
 pbool_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	typedef	assignment_ptr_type		return_type;
@@ -384,7 +374,6 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	Forwarding function.  
  */
@@ -409,14 +398,9 @@ pint_expr::substitute_default_positional_parameters(
 	return substitute_default_positional_parameters(f, e, 
 		p.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if REF_COUNT_INSTANCE_MANAGEMENT
 count_ptr<param_expression_assignment>
-#else
-excl_ptr<param_expression_assignment>
-#endif
 pint_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	typedef	assignment_ptr_type		return_type;
@@ -560,7 +544,6 @@ preal_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	Forwarding function.  
  */
@@ -572,14 +555,9 @@ preal_expr::substitute_default_positional_parameters(
 	return substitute_default_positional_parameters(f, e, 
 		p.is_a<const this_type>());
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if REF_COUNT_INSTANCE_MANAGEMENT
 count_ptr<param_expression_assignment>
-#else
-excl_ptr<param_expression_assignment>
-#endif
 preal_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	typedef	assignment_ptr_type		return_type;
@@ -757,11 +735,7 @@ pint_const::range_size_equivalent(const const_index& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if REF_COUNT_INSTANCE_MANAGEMENT
 count_ptr<param_expression_assignment>
-#else
-excl_ptr<param_expression_assignment>
-#endif
 pint_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return pint_expr::make_param_expression_assignment_private(p);
@@ -791,7 +765,6 @@ pint_const::unroll_resolve_rvalues(const unroll_context&,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return itself, there's nothing to substitute.
  */
@@ -803,7 +776,6 @@ pint_const::substitute_default_positional_parameters(
 	INVARIANT(p == this);
 	return p;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_index>
@@ -916,11 +888,7 @@ pbool_const::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if REF_COUNT_INSTANCE_MANAGEMENT
 count_ptr<param_expression_assignment>
-#else
-excl_ptr<param_expression_assignment>
-#endif
 pbool_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return pbool_expr::make_param_expression_assignment_private(p);
@@ -963,7 +931,6 @@ pbool_const::unroll_resolve_rvalues(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return itself, there's nothing to substitute.
  */
@@ -975,7 +942,6 @@ pbool_const::substitute_default_positional_parameters(
 	INVARIANT(p == this);
 	return p;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1094,11 +1060,7 @@ preal_const::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if REF_COUNT_INSTANCE_MANAGEMENT
 count_ptr<param_expression_assignment>
-#else
-excl_ptr<param_expression_assignment>
-#endif
 preal_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return preal_expr::make_param_expression_assignment_private(p);
@@ -1152,7 +1114,6 @@ preal_const::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return itself, there's nothing to substitute.
  */
@@ -1164,7 +1125,6 @@ preal_const::substitute_default_positional_parameters(
 	INVARIANT(p == this);
 	return p;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

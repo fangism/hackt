@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.9 2006/10/18 01:19:24 fang Exp $
+	$Id: preal_arith_expr.h,v 1.10 2006/10/18 05:32:44 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -131,10 +131,9 @@ public:
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
 
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO;
 	using parent_type::substitute_default_positional_parameters;
-#endif
+
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

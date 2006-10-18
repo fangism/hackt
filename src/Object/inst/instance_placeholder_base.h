@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.2 2006/10/18 01:19:31 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.3 2006/10/18 05:32:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -37,9 +37,7 @@ class const_param_expr_list;
 class instance_collection_base;
 class physical_instance_placeholder;
 class unroll_context;
-#if REF_COUNT_INSTANCE_MANAGEMENT
 class instantiation_statement_base;
-#endif
 using std::list;
 using std::istream;
 using std::string;
@@ -208,11 +206,9 @@ protected:
 #endif
 
 public:
-#if REF_COUNT_INSTANCE_MANAGEMENT
 virtual	void
 	attach_initial_instantiation_statement(
 		const count_ptr<const instantiation_statement_base>&) = 0;
-#endif
 
 	/**
 		Depending on whether the collection is partially unrolled, 

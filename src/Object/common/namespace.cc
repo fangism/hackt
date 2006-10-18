@@ -3,7 +3,7 @@
 	Method definitions for base classes for semantic objects.  
 	This file was "Object/common/namespace.cc"
 		in a previous lifetime.  
- 	$Id: namespace.cc,v 1.21 2006/10/18 01:19:06 fang Exp $
+ 	$Id: namespace.cc,v 1.22 2006/10/18 05:32:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_NAMESPACE_CC__
@@ -354,11 +354,7 @@ never_ptr<const instance_placeholder_base>
 never_ptr<const instance_collection_base>
 #endif
 scopespace::add_instance(
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		const count_ptr<instantiation_statement_base>& inst_stmt, 
-#else
-		const never_ptr<instantiation_statement_base> inst_stmt, 
-#endif
 		const token_identifier& id, const bool cond) {
 	STACKTRACE("scopespace::add_instance(never_ptr<inst_stmt>, id)");
 #if USE_INSTANCE_PLACEHOLDERS
@@ -476,9 +472,7 @@ if (probe) {
 			little benefit didn't warrant the effort. 
 		**/
 		inst_stmt->attach_collection(probe_inst);
-#if REF_COUNT_INSTANCE_MANAGEMENT
 		probe_inst->attach_initial_instantiation_statement(inst_stmt);
-#endif
 		return probe_inst;
 	} else {
 		probe->what(cerr << id << " is already declared ")
@@ -496,9 +490,7 @@ if (probe) {
 			never_ptr<const scopespace>(this), id, dim);
 	// attach non-const back-reference
 	inst_stmt->attach_collection(new_inst);
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	new_inst->attach_initial_instantiation_statement(inst_stmt);
-#endif
 	// attaching collection will automatically set the first
 	// instantiation_statement pointer to it.  
 	INVARIANT(inst_stmt->get_name() == id);

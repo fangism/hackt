@@ -3,7 +3,7 @@
 	Base class related to lists of meta index expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_expr.h,v 1.9 2006/10/18 01:19:19 fang Exp $
+	$Id: meta_index_expr.h,v 1.10 2006/10/18 05:32:40 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_EXPR_H__
@@ -18,11 +18,9 @@ namespace HAC {
 namespace entity {
 class const_index;
 class unroll_context;
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 class param_expr;
 class template_formals_manager;
 class dynamic_param_expr_list;
-#endif
 using util::memory::count_ptr;
 
 //=============================================================================
@@ -87,7 +85,6 @@ virtual	bool
 
 virtual	UNROLL_RESOLVE_COPY_META_INDEX_PROTO = 0;
 
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 #define	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO			\
 	count_ptr<const meta_index_expr>				\
 	substitute_default_positional_parameters(			\
@@ -96,7 +93,6 @@ virtual	UNROLL_RESOLVE_COPY_META_INDEX_PROTO = 0;
 		const count_ptr<const meta_index_expr>&) const
 
 virtual	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO = 0;
-#endif
 
 // additional virtual functions for dimensionality...
 };	// end class meta_index_expr

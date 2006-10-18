@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.12 2006/10/18 01:19:54 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.13 2006/10/18 05:32:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -170,19 +170,11 @@ __ATTRIBUTE_UNUSED_CTOR__((int_def_width->assign_default_value(int_def_width_def
 	Since we unroll all template formals now, we need an initial
 	instantiation statement per formal parameter.  
  */
-#if REF_COUNT_INSTANCE_MANAGEMENT
 static const count_ptr<pint_instantiation_statement>
 width_inst = fundamental_type_reference::make_instantiation_statement(
 		int_def_width->get_unresolved_type_ref(),
 		index_collection_item_ptr_type(NULL)
 	).is_a<pint_instantiation_statement>();
-#else
-static const excl_ptr<pint_instantiation_statement>
-width_inst = fundamental_type_reference::make_instantiation_statement(
-		int_def_width->get_unresolved_type_ref(),
-		index_collection_item_ptr_type(NULL)
-	).is_a_xfer<pint_instantiation_statement>();
-#endif	// REF_COUNT_INSTANCE_MANAGEMENT
 
 static const size_t int_inst_base_receipt =
 	(width_inst->attach_collection(int_def_width), 0);

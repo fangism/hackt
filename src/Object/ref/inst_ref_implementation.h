@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.14 2006/10/18 01:19:48 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.15 2006/10/18 05:32:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -13,9 +13,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
 #include "Object/ref/simple_meta_indexed_reference_base.h"
-#if REF_COUNT_INSTANCE_MANAGEMENT
 #include "Object/ref/meta_instance_reference_base.h"
-#endif
 #include "Object/inst/instance_alias.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.h"
@@ -58,15 +56,9 @@ struct simple_meta_instance_reference_implementation<true> {
 					type;
 	};
 
-#if REF_COUNT_ARRAY_INDICES
 	typedef	const count_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>&
 				index_list_ptr_arg_type;
-#else
-	typedef	const never_ptr<
-		const simple_meta_indexed_reference_base::index_list_type>
-				index_list_ptr_arg_type;
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -239,15 +231,9 @@ struct simple_meta_instance_reference_implementation<false> {
 					type;
 	};
 
-#if REF_COUNT_ARRAY_INDICES
 	typedef	const count_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>&
 				index_list_ptr_arg_type;
-#else
-	typedef	const never_ptr<
-		const simple_meta_indexed_reference_base::index_list_type>
-				index_list_ptr_arg_type;
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>

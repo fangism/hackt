@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.23 2006/10/18 01:19:51 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.24 2006/10/18 05:32:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -40,18 +40,15 @@
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
 #endif
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 #include "Object/expr/dynamic_param_expr_list.h"
-#endif
+
 #include "common/ICE.h"
 #include "common/TODO.h"
 
 // experimental: suppressing automatic instantiation of template code
 // #include "Object/common/extern_templates.h"
 
-#if REF_COUNT_ARRAY_INDICES
 #include "util/memory/count_ptr.tcc"
-#endif
 #include "util/multikey.h"
 #include "util/packed_array.tcc"
 #include "util/macros.h"
@@ -842,7 +839,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_copy(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if SUBSTITUTE_DEFAULT_PARAMETERS
 /**
 	\return expression with any positional parameters substituted.  
  */
@@ -913,7 +909,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::substitute_default_positional_parameters(
 		}
 	}
 }
-#endif	// SUBSTITUTE_DEFAULT_PARAMETERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.7 2006/10/18 01:19:59 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.8 2006/10/18 05:32:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -66,11 +66,7 @@ public:
 	typedef	template_actuals::arg_list_ptr_type	template_args_ptr_type;
 	typedef	template_actuals::const_arg_list_ptr_type
 						const_template_args_ptr_type;
-#if REF_COUNT_INSTANCE_MANAGEMENT
 	typedef	count_ptr<instantiation_statement_base>
-#else
-	typedef	excl_ptr<instantiation_statement_base>
-#endif
 					instantiation_statement_ptr_type;
 protected:
 	/// set of template parameters passed to this type
