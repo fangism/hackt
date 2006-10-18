@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.26 2006/10/18 21:38:37 fang Exp $
+	$Id: devel_switches.h,v 1.27 2006/10/18 22:31:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -63,16 +63,6 @@
 	Status: complete, just needs complete testing
  */
 #define	SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS	1
-
-/**
-	Define to 1 to distinguish lvalue from rvalue lookups at unroll time.
-	Rationale: global (out-of-scope) values may be only referenced 
-		read-only, while local (target footprint) values may be
-		modified.  
-	Goal: 1
-	Status: looks good so far, awaiting complete testing
- */
-#define	RVALUE_LVALUE_LOOKUPS	(1 && SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS)
 
 /**
 	Define to 1 to use dynamic_meta_index_list instead of

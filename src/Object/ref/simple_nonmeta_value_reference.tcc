@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.13 2006/10/18 20:58:18 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.14 2006/10/18 22:31:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -153,11 +153,7 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 	if (i.make_const_index_list(k).good) {
 		data_value_type _val;
 		const count_ptr<const param_value_collection>
-#if RVALUE_LVALUE_LOOKUPS
 			pvc(c.lookup_rvalue_collection(vc));
-#else
-			pvc(c.lookup_value_collection(vc));
-#endif
 		if (!pvc) {
 			return return_type(NULL);
 		}
@@ -229,13 +225,8 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		// code ripped from:
 		// simple_meta_value_reference::unroll_resolve_rvalues
 		const count_ptr<const param_value_collection>
-#if RVALUE_LVALUE_LOOKUPS
 			pvc(c.lookup_rvalue_collection(
 				*_this.value_collection_ref));
-#else
-			pvc(c.lookup_value_collection(
-				*_this.value_collection_ref));
-#endif
 		if (!pvc) {
 			return error;
 		}

@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.20 2006/10/18 21:38:54 fang Exp $
+	$Id: unroll_context.cc,v 1.21 2006/10/18 22:31:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -239,11 +239,7 @@ unroll_context::lookup_instance_collection(
 	TODO: distinguish lvalue from rvalue lookups?
  */
 count_ptr<param_value_collection>
-#if RVALUE_LVALUE_LOOKUPS
 unroll_context::lookup_rvalue_collection
-#else
-unroll_context::lookup_value_collection
-#endif
 		(const param_value_placeholder& p) const {
 	typedef	count_ptr<param_value_collection>	return_type;
 	STACKTRACE_VERBOSE;
@@ -290,22 +286,17 @@ unroll_context::lookup_value_collection
 	}
 	if (next) {
 		// this might be a loop or other local scope.  
-#if RVALUE_LVALUE_LOOKUPS
 		const return_type
 			ret(next->lookup_rvalue_collection(p));
 		if (ret) {
 			STACKTRACE_INDENT_PRINT("found it." << endl);
 			return ret;
 		}
-#else
-		return next->lookup_value_collection(p);
-#endif
 	}
 	return return_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if RVALUE_LVALUE_LOOKUPS
 /**
 	Lookup reserved for lvalues, which uses the target footprint.  
  */
@@ -332,7 +323,6 @@ unroll_context::lookup_lvalue_collection(
 	}
 	return return_type(NULL);
 }
-#endif	// RVALUE_LVALUE_LOOKUPS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<physical_instance_collection>
@@ -345,12 +335,8 @@ unroll_context::lookup_collection(
 count_ptr<param_value_collection>
 unroll_context::lookup_collection(
 		const param_value_placeholder& p) const {
-#if RVALUE_LVALUE_LOOKUPS
 	// defaults to using rvalue lookup, is this "the right thing"?
 	return lookup_rvalue_collection(p);
-#else
-	return lookup_value_collection(p);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

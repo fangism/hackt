@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.26 2006/10/18 20:58:17 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.27 2006/10/18 22:31:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -364,12 +364,8 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// collection of value collections!
 	// unroll_context::lookup_value_collection
 	const count_ptr<const param_value_collection>
-#if RVALUE_LVALUE_LOOKUPS
 		pvc(c.lookup_rvalue_collection(*this->value_collection_ref));
 		// is it ok to always lookup rvalue for dimension resolving?
-#else
-		pvc(c.lookup_value_collection(*this->value_collection_ref));
-#endif
 	if (!pvc) {
 		return const_index_list();
 	}
@@ -453,11 +449,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 	// actuals from the context where necessary (2005-06-30)
 	// this is where argument-dependent lookup occurs
 	const count_ptr<const param_value_collection>
-#if RVALUE_LVALUE_LOOKUPS
 		cpptr(c.lookup_rvalue_collection(*value_collection_ref));
-#else
-		cpptr(c.lookup_value_collection(*value_collection_ref));
-#endif
 	if (!cpptr) {
 		cerr << "Error unroll-resolving parameter values." << endl;
 		return return_type(NULL);
@@ -743,13 +735,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 		value_reference_collection_type& a) const {
 	STACKTRACE_VERBOSE;
 	const count_ptr<value_collection_type>
-		vals_ptr(
-#if RVALUE_LVALUE_LOOKUPS
-			c.lookup_lvalue_collection
-#else
-			c.lookup_value_collection
-#endif
-			(*this->value_collection_ref)
+		vals_ptr(c.lookup_lvalue_collection(*this->value_collection_ref)
 				.template is_a<value_collection_type>());
 	NEVER_NULL(vals_ptr);
 	value_collection_type& _vals(*vals_ptr);

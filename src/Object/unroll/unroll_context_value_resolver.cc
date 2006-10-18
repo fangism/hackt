@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.7 2006/10/18 20:58:31 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.8 2006/10/18 22:31:55 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
@@ -15,9 +15,6 @@
 
 namespace HAC {
 namespace entity {
-#if RVALUE_LVALUE_LOOKUPS
-#define	lookup_value_collection		lookup_rvalue_collection
-#endif
 
 //=============================================================================
 // class unroll_context_value_resolver<pint_tag> method definitions
@@ -41,7 +38,7 @@ unroll_context_value_resolver<pint_tag>::operator ()
 	// lookup is same for all meta variable types (consistency!)
 	// including loop induction variables
 	const count_ptr<const value_collection_type>
-		val_p(c.lookup_value_collection(v).
+		val_p(c.lookup_rvalue_collection(v).
 			is_a<const value_collection_type>());
 	const value_collection_type* _vals(&*val_p);
 	return const_return_type(false, _vals);
@@ -56,7 +53,7 @@ unroll_context_value_resolver<pbool_tag>::operator ()
 		value_type& i) const {
 	// this will lookup globals already...
 	const count_ptr<const value_collection_type>
-		val_p(c.lookup_value_collection(v).
+		val_p(c.lookup_rvalue_collection(v).
 			is_a<const value_collection_type>());
 	const value_collection_type* _vals(&*val_p);
 	return const_return_type(false, _vals);
@@ -74,7 +71,7 @@ unroll_context_value_resolver<preal_tag>::operator ()
 		value_type& i) const {
 	// this will lookup globals already...
 	const count_ptr<const value_collection_type>
-		val_p(c.lookup_value_collection(v).
+		val_p(c.lookup_rvalue_collection(v).
 			is_a<const value_collection_type>());
 	const value_collection_type* _vals(&*val_p);
 	return const_return_type(false, _vals);
