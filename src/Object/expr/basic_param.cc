@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.22 2006/10/18 19:07:53 fang Exp $
+ 	$Id: basic_param.cc,v 1.23 2006/10/18 20:57:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -417,23 +417,6 @@ pint_expr::unroll_resolve_index(const unroll_context& c) const {
 		return_type(new pint_const(i)) :
 		return_type(NULL);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	\return deep copy of resolve constant integer value, 
-	if it is successfully resolved.  
- */
-count_ptr<const_index>
-pint_expr::resolve_index(void) const {
-	STACKTRACE("pint_expr::resolve_index()");
-	typedef count_ptr<const_index> return_type;
-	value_type i;
-	return (resolve_value(i).good) ? 
-		return_type(new pint_const(i)) :
-		return_type(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

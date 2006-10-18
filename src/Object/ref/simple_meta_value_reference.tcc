@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.tcc"
 	Class method definitions for semantic expression.  
 	This file was reincarnated from "Object/art_object_value_reference.tcc".
- 	$Id: simple_meta_value_reference.tcc,v 1.25 2006/10/18 07:39:46 fang Exp $
+ 	$Id: simple_meta_value_reference.tcc,v 1.26 2006/10/18 20:58:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_TCC__
@@ -37,9 +37,7 @@
 #include "Object/unroll/unroll_context_value_resolver.h"
 #include "Object/def/footprint.h"
 #include "Object/ref/meta_value_reference.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
-#endif
 #include "Object/expr/dynamic_param_expr_list.h"
 
 #include "common/ICE.h"
@@ -82,12 +80,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference() :
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
-#if USE_INSTANCE_PLACEHOLDERS
-		const value_placeholder_ptr_type pi
-#else
-		const value_collection_ptr_type pi
-#endif
-		) :
+		const value_placeholder_ptr_type pi) :
 		simple_meta_indexed_reference_base(), 
 		parent_type(), 
 		value_collection_ref(pi) {
@@ -96,11 +89,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 SIMPLE_META_VALUE_REFERENCE_CLASS::simple_meta_value_reference(
-#if USE_INSTANCE_PLACEHOLDERS
 		const value_placeholder_ptr_type pi,
-#else
-		const value_collection_ptr_type pi,
-#endif
 		indices_ptr_arg_type i) :
 		simple_meta_indexed_reference_base(i), 
 		parent_type(), 
@@ -117,11 +106,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::~simple_meta_value_reference() {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-#if USE_INSTANCE_PLACEHOLDERS
 never_ptr<const param_value_placeholder>
-#else
-never_ptr<const param_value_collection>
-#endif
 SIMPLE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
 	return value_collection_ref;
 }
@@ -143,19 +128,13 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->what(o) << " ";
 	}
 	NEVER_NULL(this->value_collection_ref);
-#if USE_INSTANCE_PLACEHOLDERS
-#define	dump_hierarchical_name	dump_qualified_name
-#endif
 	if (c.enclosing_scope) {
-		this->value_collection_ref->dump_hierarchical_name(o,
+		this->value_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
 	} else {
-		this->value_collection_ref->dump_hierarchical_name(o,
+		this->value_collection_ref->dump_qualified_name(o,
 			dump_flags::default_value);
 	}
-#if USE_INSTANCE_PLACEHOLDERS
-#undef	dump_hierarchical_name
-#endif
 	return simple_meta_indexed_reference_base::dump_indices(o, c);
 }
 
@@ -209,15 +188,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 bool
 SIMPLE_META_VALUE_REFERENCE_CLASS::is_static_constant(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	return false;
-#else
-	if (this->array_indices)
-		return false;
-	else if (this->value_collection_ref->get_dimensions())
-		return false;
-	else	return this->value_collection_ref->is_static_constant();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -344,11 +315,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 			}
 			// what if this references a formal parameter?
 			// then we need to get the template actuals
-#if USE_INSTANCE_PLACEHOLDERS
 			return _vals.lookup_value(i, lower);
-#else
-			return _vals.lookup_value(i, lower, c);
-#endif
 		} else {
 			cerr << "Unable to unroll-resolve array_indices!"
 				<< endl;
@@ -360,94 +327,9 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_value(
 		// what if is pbool_const or pint_const?
 		const value_scalar_type&
 			scalar_inst(IS_A(const value_scalar_type&, _vals));
-#if USE_INSTANCE_PLACEHOLDERS
 		return scalar_inst.lookup_value(i);
-#else
-		return scalar_inst.lookup_value(i, c);
-#endif
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-// OBSOLETE, with placeholders
-/**
-	This version specifically asks for one integer value, 
-	thus the array indices must be scalar (0-D).  
-	\return true if resolution succeeds, else false.
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-good_bool
-SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_value(value_type& i) const {
-	if (this->array_indices) {
-		const const_index_list
-			indices(this->array_indices->resolve_index_list());
-		if (!indices.empty()) {
-			const multikey_index_type
-				lower(indices.lower_multikey());
-			const multikey_index_type
-				upper(indices.upper_multikey());
-			if (lower != upper) {
-				cerr << "ERROR: upper != lower" << endl;
-				return good_bool(false);
-			}
-			// can no longer lookup values of placeholders
-			return value_collection_ref->lookup_value(
-				i, lower, unroll_context());
-		} else {
-			cerr << "Unable to resolve array_indices!" << endl;
-			return good_bool(false);
-		}
-	} else {
-		const never_ptr<value_scalar_type>
-			scalar_inst(value_collection_ref.template is_a<value_scalar_type>());
-		NEVER_NULL(scalar_inst);
-		return scalar_inst->lookup_value(i, unroll_context());
-	}
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	NOTE: (2006-08-31)
-	Cannot possibly resolve dimensions using placeholder
-	and without context to lookup!
-
-	Returns the dimensions of the collection in the current state, 
-	ONLY IF, the indexed reference to the current state is all valid.  
-	Otherwise, returns an empty list, which is interpreted as an error.  
-
-	Really this should be independent of type?
-	Except for checking implicit indices...
- */
-SIMPLE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-const_index_list
-SIMPLE_META_VALUE_REFERENCE_CLASS::resolve_dimensions(void) const {
-	// criterion 1: indices (if any) must be resolved to constant values.  
-	if (this->array_indices) {
-		const const_index_list
-			c_i(this->array_indices->resolve_index_list());
-		if (c_i.empty()) {
-			cerr << "ERROR: failed to resolve index list." << endl;
-			return c_i;
-		}
-		// else let c_i remain empty, underspecified
-		// check for implicit indices, that sub-arrays are
-		// densely packed with the same dimensions.  
-		const const_index_list
-			r_i(value_collection_ref->resolve_indices(c_i));
-		if (r_i.empty()) {
-			cerr << "ERROR: implicitly resolving index list."
-				<< endl;
-		}
-		return r_i;
-		// Elsewhere (during assign) check for initialization.
-	}
-	else return const_index_list();
-	// Elsewhere (during assign) check for initialization.  
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -477,7 +359,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	// check for implicit indices, that sub-arrays are
 	// densely packed with the same dimensions.  
 	// try to form dense index list for entire collection
-#if USE_INSTANCE_PLACEHOLDERS
 	// TODO: translate placeholder to actual collection
 	// This depends on the values being unrolled in the footprint's 
 	// collection of value collections!
@@ -494,10 +375,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_dimensions(
 	}
 	const const_index_list
 		r_i(pvc->resolve_indices(c_i));
-#else
-	const const_index_list
-		r_i(value_collection_ref->resolve_indices(c_i));
-#endif
 	if (r_i.empty()) {
 		cerr << "ERROR: implicitly unroll-resolving index list."
 			<< endl;
@@ -574,7 +451,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 #endif
 	// this replaces template formal references with template
 	// actuals from the context where necessary (2005-06-30)
-#if USE_INSTANCE_PLACEHOLDERS
 	// this is where argument-dependent lookup occurs
 	const count_ptr<const param_value_collection>
 #if RVALUE_LVALUE_LOOKUPS
@@ -592,77 +468,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_resolve_rvalues(
 	const value_collection_type& vcref(*ce);
 	// resolve indices
 	// lookup values
-#else
-if (value_collection_ref->is_template_formal()) {
-	const count_ptr<const const_param>
-		// beware mutual recursion...
-		cpptr(c.lookup_actual(*value_collection_ref));
-	if (!cpptr) {
-		cerr << "Error unroll-resolving parameter values." << endl;
-		return return_type(NULL);
-	} else if (value_collection_ref->get_dimensions()) {
-		// since this is a template formal, we can be sure that the
-		// collection of constants is complete, and that if 
-		// !array_indices, it refers to the entire collection.
-		// the actual parameter value collection cannot be augmented
-		// by sparse declarations, as dictated by the language.
-		const const_collection_type&
-			ce(IS_A(const const_collection_type&, *cpptr));
-		// NOTE: not reached yet by any test cases
-		// ... until NOW! (20060211)
-		if (this->array_indices) {
-			// no need to use the collection's resolving
-			// because we already know the dimensions of the 
-			// collection, so we only need to resolve
-			// parameter references in the indices.
-			const const_index_list
-				cil(this->array_indices->unroll_resolve_indices(c));
-			// damn it, array_indices is an excl_ptr :S
-			// can't use static meta_index_list::unroll_resolve_rvalues
-			if (cil.empty()) {
-				cerr << "Error resolving indices of " <<
-					util::what<this_type>::name() << endl;
-				return return_type(NULL);
-			}
-			// NOTE: still need to handle implicit indices
-			// but is efficient, because no searching required.  
-			try {
-				return return_type(new const_collection_type(
-					ce.make_value_slice(cil)));
-			} catch (const std::out_of_range&) {
-				// cerr << r.what() << endl;
-				cerr << "Error: indices out of range of " <<
-					util::what<this_type>::name() << 
-					".  got: ";
-				cil.dump(cerr) << endl;
-				return return_type(NULL);
-			} catch (...) {
-				// have no idea! re-throw
-				throw;
-			}
-		} else {
-			// just return deep copy of the whole const_collection
-			return return_type(new const_collection_type(ce));
-		}
-	} else {
-		// is scalar
-		const const_expr_type&
-			ce(IS_A(const const_expr_type&, *cpptr));
-		return return_type(new const_expr_type(ce));
-	}
-} else {
-	// non template formal, normal param collection referenced
-	// catches case of loop variable resolution (hackish)
-	value_type cv = 0;
-	const pair<bool, const value_collection_type*>
-		_r(unroll_context_value_resolver<Tag>().operator()
-			(c, *value_collection_ref, cv));
-	if (_r.first) {
-		// then we resolved a loop variable (scalar)
-		return count_ptr<const_expr_type>(new const_expr_type(cv));
-	}
-	const value_collection_type& vcref(*_r.second);
-#endif	// USE_INSTANCE_PLACEHOLDERS
 	if (vcref.get_dimensions()) {
 		// dimension resolution should depend on current 
 		// state of instance collection, not static analysis
@@ -737,12 +542,7 @@ if (value_collection_ref->is_template_formal()) {
 			// using local value is necessary because bool's 
 			// reference is std::_Bit_reference.
 			value_type val;
-#if USE_INSTANCE_PLACEHOLDERS
-			if (!vcref.lookup_value(val, key_gen).good)
-#else
-			if (!vcref.lookup_value(val, key_gen, c).good)
-#endif
-			{
+			if (!vcref.lookup_value(val, key_gen).good) {
 #if 0
 				// callee already has error message
 				cerr << "ERROR: looking up index " <<
@@ -775,11 +575,7 @@ if (value_collection_ref->is_template_formal()) {
 		const never_ptr<const value_scalar_type>
 			ps(IS_A(const value_scalar_type*, &vcref));
 		INVARIANT(ps);
-#if USE_INSTANCE_PLACEHOLDERS
 		const bad_bool valid(ps->lookup_value(_val));
-#else
-		const bad_bool valid(ps->lookup_value(_val, c));
-#endif
 		if (valid.bad) {
 			cerr << "ERROR: in unroll_resolve-ing "
 				"simple_meta_value_reference, "
@@ -790,9 +586,6 @@ if (value_collection_ref->is_template_formal()) {
 			return return_type(new const_expr_type(_val));
 		}
 	}
-#if !USE_INSTANCE_PLACEHOLDERS
-}
-#endif
 }	// end method unroll_resolve_rvalues
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -933,13 +726,7 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::load_object(
 	m.read_pointer(f, value_collection_ref);
 	NEVER_NULL(value_collection_ref);
 	m.load_object_once(
-#if USE_INSTANCE_PLACEHOLDERS
-		const_cast<value_placeholder_type*>
-#else
-		const_cast<value_collection_type*>
-#endif
-			(&*value_collection_ref)
-		);
+		const_cast<value_placeholder_type*>(&*value_collection_ref));
 	this->load_object_base(m, f);
 }
 
@@ -955,7 +742,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 		const unroll_context& c, 
 		value_reference_collection_type& a) const {
 	STACKTRACE_VERBOSE;
-#if USE_INSTANCE_PLACEHOLDERS
 	const count_ptr<value_collection_type>
 		vals_ptr(
 #if RVALUE_LVALUE_LOOKUPS
@@ -967,11 +753,6 @@ SIMPLE_META_VALUE_REFERENCE_CLASS::unroll_lvalue_references(
 				.template is_a<value_collection_type>());
 	NEVER_NULL(vals_ptr);
 	value_collection_type& _vals(*vals_ptr);
-#else
-	value_collection_type&
-		_vals(unroll_context_value_resolver<Tag>().operator()
-			(c, *value_collection_ref));
-#endif
 if (_vals.get_dimensions()) {
 	STACKTRACE("is array");
 	const_index_list cil;

@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.15 2006/10/18 07:39:38 fang Exp $
+ 	$Id: meta_range.cc,v 1.16 2006/10/18 20:57:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -239,18 +239,6 @@ pint_range::unroll_resolve_range(const unroll_context& c,
 		return good_bool(false);
 	return good_bool(true);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-good_bool
-pint_range::resolve_range(const_range& r) const {
-	if (!lower->resolve_value(r.first).good)
-		return good_bool(false);
-	if (!upper->resolve_value(r.second).good)
-		return good_bool(false);
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_index>
@@ -538,15 +526,6 @@ const_range::unroll_resolve_range(const unroll_context&, const_range& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-good_bool
-const_range::resolve_range(const_range& r) const {
-	r = *this;
-	return good_bool(true);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return deep copy of this constant range, always succeeds.  
  */
@@ -554,17 +533,6 @@ count_ptr<const_index>
 const_range::unroll_resolve_index(const unroll_context& c) const {
 	return count_ptr<const_index>(new const_range(*this));
 }
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	\return deep copy of this constant range, always succeeds.  
- */
-count_ptr<const_index>
-const_range::resolve_index(void) const {
-	return count_ptr<const_index>(new const_range(*this));
-}
-#endif
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_index>
 const_range::unroll_resolve_copy(const unroll_context& c, 
@@ -641,21 +609,6 @@ meta_range_expr::unroll_resolve_index(const unroll_context& c) const {
 		return_type(new const_range(tmp)) :
 		return_type(NULL);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	\return a resolve constant range, or NULL if resolution fails.  
- */
-count_ptr<const_index>
-meta_range_expr::resolve_index(void) const {
-	typedef	count_ptr<const_index>	return_type;
-	const_range tmp;
-	return (resolve_range(tmp).good) ?
-		return_type(new const_range(tmp)) :
-		return_type(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

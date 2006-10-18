@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_range.h,v 1.11 2006/10/18 07:39:40 fang Exp $
+	$Id: pint_range.h,v 1.12 2006/10/18 20:57:57 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RANGE_H__
@@ -66,11 +66,6 @@ public:
 
 	const_range
 	static_constant_range(void) const;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	good_bool
-	resolve_range(const_range& r) const;
-#endif
 
 	good_bool
 	unroll_resolve_range(const unroll_context&, const_range& r) const;

@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_range_list.h,v 1.8 2006/10/18 01:19:21 fang Exp $
+	$Id: meta_range_list.h,v 1.9 2006/10/18 20:57:55 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_RANGE_LIST_H__
@@ -11,7 +11,6 @@
 
 #include "util/persistent.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -57,12 +56,6 @@ virtual	bool
 
 virtual	const_range_list
 	static_overlap(const meta_range_list& r) const = 0;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-// is this obsolete?
-virtual	good_bool
-	resolve_ranges(const_range_list& r) const = 0;
-#endif
 
 virtual	good_bool
 	unroll_resolve_rvalues(const_range_list&, const unroll_context&) const = 0;

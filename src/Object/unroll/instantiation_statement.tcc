@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.20 2006/10/18 08:52:15 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.21 2006/10/18 20:58:29 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -36,10 +36,8 @@
 #include "Object/def/footprint.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/common/dump_flags.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
-#endif
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -90,7 +88,6 @@ INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 		const placeholder_ptr_type p, 
@@ -98,7 +95,6 @@ INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 		const index_collection_item_ptr_type& i) :
 		parent_type(i), type_ref_parent_type(t), inst_base(p) {
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
@@ -136,47 +132,16 @@ INSTANTIATION_STATEMENT_CLASS::dump(ostream& o,
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 void
 INSTANTIATION_STATEMENT_CLASS::attach_collection(
-#if USE_INSTANCE_PLACEHOLDERS
-		const never_ptr<const instance_placeholder_base> i
-#else
-		const never_ptr<instance_collection_base> i
-#endif
-		) {
+		const never_ptr<const instance_placeholder_base> i) {
 	INVARIANT(!this->inst_base);
-#if USE_INSTANCE_PLACEHOLDERS
 	const placeholder_ptr_type c(i.template is_a<const placeholder_type>());
-#else
-	const never_ptr<collection_type> c(i.template is_a<collection_type>());
-#endif
 	NEVER_NULL(c);
 	this->inst_base = c;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-#if USE_INSTANCE_PLACEHOLDERS
 never_ptr<const instance_placeholder_base>
-#else
-never_ptr<instance_collection_base>
-#endif
-INSTANTIATION_STATEMENT_CLASS::get_inst_base(void) {
-	NEVER_NULL(this->inst_base);
-#if USE_INSTANCE_PLACEHOLDERS
-	return this->inst_base.template as_a<const instance_placeholder_base>();
-#else
-	return this->inst_base.template as_a<instance_collection_base>();
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
-#if USE_INSTANCE_PLACEHOLDERS
-never_ptr<const instance_placeholder_base>
-#else
-never_ptr<const instance_collection_base>
-#endif
 INSTANTIATION_STATEMENT_CLASS::get_inst_base(void) const {
 	NEVER_NULL(this->inst_base);
 	return this->inst_base;
@@ -233,22 +198,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	c.dump(cerr << "context: ") << endl;
 #endif
 	NEVER_NULL(this->inst_base);
-#if !USE_INSTANCE_PLACEHOLDERS
-	const footprint* const f(c.get_target_footprint());
-#if USE_INSTANCE_PLACEHOLDERS
-	// beware top-level unrolling!!! TODO: fix
-	NEVER_NULL(f);
-#else
-#if ENABLE_STACKTRACE
-	if (f) {
-		f->dump(cerr << "footprint: ") << endl;
-		cerr << "looking up: " << this->inst_base->get_name() << endl;
-	}
-#endif
-#endif
-#endif
 
-#if USE_INSTANCE_PLACEHOLDERS
 	// TODO: currently will not work with instances inside namespaces
 	// may require qualified names in top-level footprint search!
 	// TODO: this is a modifying lookup, using target_footprint
@@ -273,16 +223,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #endif
 	}
 	collection_type& _inst(*inst_ptr);
-#if 0
-	collection_type& _inst(IS_A(collection_type&, 
-		*(*f)[this->inst_base->get_name()]));
-	// failed dynamic cast will throw a bad_cast
-#endif
-#else
-	collection_type& _inst(f ? IS_A(collection_type&, 
-			*(*f)[this->inst_base->get_name()])
-		: *this->inst_base);
-#endif
 	// 2005-07-07:
 	// HACK: detect that this is the first type commit to the 
 	// collection, because unroll_type_reference combines the

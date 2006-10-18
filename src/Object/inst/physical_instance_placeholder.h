@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/physical_instance_placeholder.h"
-	$Id: physical_instance_placeholder.h,v 1.2 2006/10/18 01:19:39 fang Exp $
+	$Id: physical_instance_placeholder.h,v 1.3 2006/10/18 20:58:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PHYSICAL_INSTANCE_PLACEHOLDER_H__
@@ -45,15 +45,8 @@ protected:
 	physical_instance_placeholder(const scopespace& o, const string& n, 
 		const size_t d);
 
-#if 0
-	physical_instance_placeholder(const this_type& t, const footprint& f) :
-		parent_type(t, f) { }
-#endif
-
 protected:
-#if USE_INSTANCE_PLACEHOLDERS
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
-#endif
 
 public:
 virtual	~physical_instance_placeholder();
@@ -79,56 +72,6 @@ virtual	UNROLL_PORT_ONLY_PROTO = 0;
 
 	bool
 	port_formal_equivalent(const this_type&) const;
-
-// none of the following are appropriate for placeholders
-#if 0
-virtual bool
-	is_partially_unrolled(void) const = 0;
-
-virtual ostream&
-	dump_unrolled_instances(ostream&, const dump_flags&) const = 0;
-
-#define	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO				\
-	good_bool							\
-	allocate_local_instance_ids(footprint&)
-
-virtual	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO = 0;
-
-#define	CONNECT_PORT_ALIASES_RECURSIVE_PROTO				\
-	good_bool							\
-	connect_port_aliases_recursive(physical_instance_placeholder&)
-
-virtual	CONNECT_PORT_ALIASES_RECURSIVE_PROTO = 0;
-
-#define	CREATE_DEPENDENT_TYPES_PROTO					\
-	good_bool							\
-	create_dependent_types(void)
-
-virtual	CREATE_DEPENDENT_TYPES_PROTO = 0;
-
-#define	COLLECT_PORT_ALIASES_PROTO					\
-	void								\
-	collect_port_aliases(port_alias_tracker&) const
-
-virtual	COLLECT_PORT_ALIASES_PROTO = 0;
-
-#define	CONSTRUCT_PORT_CONTEXT_PROTO					\
-	void								\
-	construct_port_context(port_placeholder_context&, 		\
-		const footprint_frame&) const
-
-virtual	CONSTRUCT_PORT_CONTEXT_PROTO = 0;
-
-#define	ASSIGN_FOOTPRINT_FRAME_PROTO					\
-	void								\
-	assign_footprint_frame(footprint_frame&,			\
-		const port_placeholder_context&) const
-
-virtual	ASSIGN_FOOTPRINT_FRAME_PROTO = 0;
-
-virtual	void
-	accept(alias_visitor&) const = 0;
-#endif
 
 virtual	count_ptr<meta_instance_reference_base>
 	make_meta_instance_reference(void) const = 0;

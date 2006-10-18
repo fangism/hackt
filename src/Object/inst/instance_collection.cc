@@ -3,7 +3,7 @@
 	Method definitions for instance collection classes.
 	This file was originally "Object/art_object_instance.cc"
 		in a previous (long) life.  
- 	$Id: instance_collection.cc,v 1.24 2006/10/18 07:39:41 fang Exp $
+ 	$Id: instance_collection.cc,v 1.25 2006/10/18 20:58:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_CC__
@@ -51,11 +51,9 @@
 #include "Object/inst/struct_instance_collection.h"
 #include "Object/inst/param_value_collection.h"	// for dynamic_cast
 #include "Object/common/dump_flags.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/type/param_type_reference.h"	// for must_be_type_eq
 #include "Object/inst/param_value_placeholder.h"
 #include "Object/inst/datatype_instance_placeholder.h"
-#endif
 
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
@@ -87,30 +85,6 @@ const never_ptr<const instance_collection_base>
 instance_collection_base::null(NULL);
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Instantiation base constructor.  
-	The first time an instance is declared, its dimensions are
-	set by the array-dimension list, if provided, else 0.
-	The first set of indices given will be pushed onto the 
-	instance collection stack.  
-	\param o the owning scope.  
-	\param n the name of the instance (collection).
-	\param d the number of dimensions of this collection ([0,4]).  
-		WAS: initial collection of indices, already resolved 
-		as param_expr's.  
- */
-// inline
-instance_collection_base::instance_collection_base(const scopespace& o, 
-		const string& n, const size_t d) : 
-		object(), owner(owner_ptr_type(&o)),
-		key(n), 
-		dimensions(d), 
-		super_instance() {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 instance_collection_base::~instance_collection_base() {
 	STACKTRACE_DTOR("~instance_collection_base()");
 }
@@ -123,45 +97,10 @@ instance_collection_base::~instance_collection_base() {
 ostream&
 instance_collection_base::dump_collection_only(ostream& o) const {
 	NEVER_NULL(this);
-#if !USE_INSTANCE_PLACEHOLDERS
-	if (is_partially_unrolled()) {
-#endif
-		type_dump(o);		// pure virtual
-		// if (dimensions)
-#if USE_INSTANCE_PLACEHOLDERS
+	type_dump(o);		// pure virtual
+	// if (dimensions)
 		o << '^' << get_dimensions();
-#else
-		o << '^' << dimensions;
-#endif
-#if !USE_INSTANCE_PLACEHOLDERS
-	}
-	else {
-		const param_value_collection*
-			p(IS_A(const param_value_collection*, this));
-#if USE_INSTANCE_PLACEHOLDERS
-		if (p && p->get_placeholder_base()->is_loop_variable())
-#else
-		if (p && p->is_loop_variable())
-#endif
-		{
-			// loop induction variables don't have unroll statements
-			o << "(loop induction pint)";
-		} else {
-			// TODO: use the collection's resolved type
-			const count_ptr<const fundamental_type_reference>
-				t(get_unresolved_type_ref());
-			if (t)	t->dump(o);
-			else	o << "(not unrolled yet)";
-		}
-	}
-#if USE_INSTANCE_PLACEHOLDERS
-	return o << ' ' << get_name();
-#else
-	return o << ' ' << key;
-#endif
-#else
 	return o;
-#endif	// USE_INSTANCE_PLACEHOLDERS
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -185,32 +124,10 @@ instance_collection_base::dump_base(ostream& o) const {
  */
 ostream&
 instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
-#if 0
-	// but we need a version for unrolled and resolved parameters.  
-	if (is_partially_unrolled()) {
-		type_dump(o);		// pure virtual
-	} else {
-		// this dump is appropriate for pre-unrolled, unresolved dumping
-		// get_type_ref just grabs the type of the first statement
-		get_type_ref()->dump(o);
-	}
-	o << ' ' << key;
-#else
 	dump_collection_only(o);
-#endif
-#if USE_INSTANCE_PLACEHOLDERS
 	const size_t dimensions = get_dimensions();
-#endif
 	if (dimensions) {
-#if 0
-		// TODO: get rid of this, and update tests
-		// this was kept temporarily for the sake of easing
-		// test difference analysis
-		o << " with indices: {" << endl;
-		o << auto_indent << '}' << endl;
-#else
 		o << endl;
-#endif
 	} else {
 		// the list contains exactly one instantiation statement
 	}
@@ -218,23 +135,6 @@ instance_collection_base::dump_base(ostream& o, const dump_flags& df) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-ostream&
-instance_collection_base::pair_dump(ostream& o) const {
-	o << auto_indent << get_name() << " = ";
-	return dump(o, dump_flags::no_owners) << endl;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-ostream&
-instance_collection_base::pair_dump_top_level(ostream& o) const {
-	o << auto_indent << get_name() << " = ";
-	return dump(o, dump_flags::verbose) << endl;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 string
 instance_collection_base::get_footprint_key(void) const {
 	const never_ptr<const instance_placeholder_base>
@@ -242,66 +142,6 @@ instance_collection_base::get_footprint_key(void) const {
 	NEVER_NULL(p);
 	return p->get_footprint_key();
 }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-string
-instance_collection_base::get_qualified_name(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
-	return __get_placeholder_base()->get_qualified_name();
-#else
-	if (owner)
-		return owner->get_qualified_name() + "::" +key;
-		// "::" should be the same as HAC::parser::scope
-	else return key;
-#endif
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	We catch a special case: when we refer to induction variables, 
-	we drop any qualifiers.  
- */
-ostream&
-instance_collection_base::dump_qualified_name(ostream& o, 
-		const dump_flags& df) const {
-#if 0
-	o << "[dump flags: " << (df.show_definition_owner ? "(def) " : " ") <<
-		(df.show_namespace_owner ? "(ns) " : " ") <<
-		(df.show_leading_scope ? "(::)]" : "]");
-#endif
-#if USE_INSTANCE_PLACEHOLDERS
-	const owner_ptr_type owner(get_owner());
-#endif
-if (owner) {
-	const param_value_collection* const
-		p(IS_A(const param_value_collection*, this));
-#if USE_INSTANCE_PLACEHOLDERS
-	if (p && p->get_placeholder_base()->is_loop_variable())
-#else
-	if (p && p->is_loop_variable())
-#endif
-	{
-		// nothing, just print the plain key
-		// maybe '$' to indicate variable?
-		o << '$';
-	} else if (owner.is_a<const definition_base>() &&
-			df.show_definition_owner) {
-		owner->dump_qualified_name(o, df) << "::";
-	} else if (owner.is_a<const name_space>() &&
-			(df.show_namespace_owner &&
-			!owner->is_global_namespace())) {
-		owner->dump_qualified_name(o, df) << "::";
-	}
-}
-#if USE_INSTANCE_PLACEHOLDERS
-	return o << get_name();
-#else
-	return o << key;
-#endif
-}
-#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -309,19 +149,10 @@ instance_collection_base::dump_hierarchical_name(ostream& o) const {
 	STACKTRACE_VERBOSE;
 	if (super_instance) {
 		return super_instance->dump_hierarchical_name(o,
-			dump_flags::default_value) << '.' <<
-#if USE_INSTANCE_PLACEHOLDERS
-				get_name();
-#else
-				key;
-#endif
+			dump_flags::default_value) << '.' << get_name();
 	} else {
-#if USE_INSTANCE_PLACEHOLDERS
 		return __get_placeholder_base()->
 			dump_qualified_name(o, dump_flags::default_value);
-#else
-		return dump_qualified_name(o, dump_flags::default_value);
-#endif
 	}
 }
 
@@ -332,18 +163,9 @@ instance_collection_base::dump_hierarchical_name(ostream& o,
 	STACKTRACE_VERBOSE;
 	if (super_instance) {
 		return super_instance->dump_hierarchical_name(o, df)
-			<< '.' << 
-#if USE_INSTANCE_PLACEHOLDERS
-			get_name();
-#else
-			key;
-#endif
+			<< '.' << get_name();
 	} else {
-#if USE_INSTANCE_PLACEHOLDERS
 		return __get_placeholder_base()->dump_qualified_name(o, df);
-#else
-		return dump_qualified_name(o, df);
-#endif
 	}
 }
 
@@ -354,205 +176,15 @@ instance_collection_base::hierarchical_depth(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Return's the type's base definition.
-	TODO: far future, types may be template parameters, 
-		which makes the base definition argument-dependent.  
- */
-never_ptr<const definition_base>
-instance_collection_base::get_base_def(void) const {
-	return get_unresolved_type_ref()->get_base_def();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Checks whether or not this is a relaxed template formal parameter.  
- */
-bool
-instance_collection_base::is_relaxed_template_formal(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
-	const owner_ptr_type owner(get_owner());
-#endif
-	const never_ptr<const definition_base>
-		def(owner.is_a<const definition_base>());
-	if (def) {
-#if USE_INSTANCE_PLACEHOLDERS
-		return def->probe_relaxed_template_formal(get_name());
-#else
-		return def->probe_relaxed_template_formal(key);
-#endif
-	} else return false;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Queries whether or not this is a template formal, by 
-	checking its membership in the owner.  
-	\return 0 (false) if is not a template formal, 
-		otherwise returns the position (1-indexed)
-		of the instance referenced, 
-		useful for determining template parameter equivalence.  
-	TODO: is there potential confusion here if the key shadows
-		a declaration else where?
- */
-size_t
-instance_collection_base::is_template_formal(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
-	const owner_ptr_type owner(get_owner());
-#endif
-	const never_ptr<const definition_base>
-		def(owner.is_a<const definition_base>());
-	if (def)
-#if USE_INSTANCE_PLACEHOLDERS
-		return def->lookup_template_formal_position(get_name());
-#else
-		return def->lookup_template_formal_position(key);
-#endif
-	else {
-		// owner is not a definition
-		INVARIANT(owner.is_a<const name_space>());
-		// is owned by a namespace, i.e. actually instantiated
-		return 0;
-	}
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Really, this should be in physical_instance_placeholder.  
-
-	Queries whether or not this is a port formal, by 
-	checking its membership in the owner.  
-	\return 1-indexed position into port list, else 0 if not found.
- */
-size_t
-instance_collection_base::is_port_formal(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
-	const owner_ptr_type owner(get_owner());
-#endif
-	const never_ptr<const definition_base>
-		def(owner.is_a<const definition_base>());
-	return def ? def->lookup_port_formal_position(*this) : 0;
-}
-#endif	// USE_INSTANCE_PLACEHOLDERS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	\return offset into definition's subinstance array that contains
-		the member.  
-	NOTE: this is called by subinstance_manager::lookup_member_instance,
-		which attempts to lookup a subinstance-index for a 
-		private member.  Private members, however, are not
-		pre-allocated during the create phase, which makes
-		this inappropriate for any use.  
-		This is a dead-end, do not call this.  
-		rewrite elsewhere (20060120).
- */
-size_t
-instance_collection_base::is_member_instance(void) const {
-#if 0
-	const never_ptr<const definition_base>
-		def(owner.is_a<const definition_base>());
-	return def ? def->lookup_member_position(*this) : 0;
-#endif
-	ICE(cerr, 
-		cerr << "This code is never supposed to be called, "
-			"refer to source code around here for the reason."
-			<< endl;
-	)
-	return 0;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Whether or not this instance is a reference to a collection
 	local to a definition, else is a top-level (global).
  */
 bool
 instance_collection_base::is_local_to_definition(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	const owner_ptr_type owner(get_owner());
-#endif
 	return owner.is_a<const definition_base>();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Much like equivalence for template formals, except that
-	names also need to match for port formals.  
-	Rationale: need to be able to refer to the public ports
-	of a prototype, which must correspond to those of the definition, 
-	and vice versa.  
- */
-bool
-instance_collection_base::port_formal_equivalent(const this_type& b) const {
-	// first make sure base types are equivalent.  
-	const count_ptr<const fundamental_type_reference>
-		t_type(get_unresolved_type_ref());
-	const count_ptr<const fundamental_type_reference>
-		b_type(b.get_unresolved_type_ref());
-	if (!t_type->may_be_connectibly_type_equivalent(*b_type)) {
-		// then their instantiation types differ
-		return false;
-	}
-	// then compare sizes and dimensionality
-	if (!formal_size_equivalent(b))
-		return false;
-	// last, but not least, name must match
-#if USE_INSTANCE_PLACEHOLDERS
-	return get_name() == b.get_name();
-#else
-	return key == b.get_name();
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Just compares dimensionality and sizes of an instantiation
-	in a template formal context.  
-	This applies to both template formals and port formals.  
-	Is conservative, not precise, in the case where one of the
-	parameter sizes (dimension) is dynamic.  
-	In this case, the initial instantiation is guaranteed to be
-		unconditional because it is a template or port formal. 
-	\param b the other template formal instantiation to compare against.  
-	\return true if dimensionality and sizes are equal.  
-	TODO: need to account for relaxed parameters of physical
-		instance collections?
- */
-bool
-instance_collection_base::formal_size_equivalent(const this_type& b) const {
-#if USE_INSTANCE_PLACEHOLDERS
-	const size_t dimensions = get_dimensions();
-	const size_t bdim = b.get_dimensions();
-#else
-	const size_t bdim = b.dimensions;
-#endif
-	if (dimensions != bdim) {
-		// useful error message here: dimensions don't match
-		return false;
-	}
-#if USE_INSTANCE_PLACEHOLDERS
-	return this->__get_placeholder_base()->formal_size_equivalent(
-			*b.__get_placeholder_base());
-#else
-	const index_collection_item_ptr_type
-		ii(this->get_initial_instantiation_indices()),
-		ji(b.get_initial_instantiation_indices());
-	if (ii && ji) {
-		return ii->must_be_formal_size_equivalent(*ji);
-	} else 	return (!ii && !ji);
-	// both NULL is ok too
-#endif
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -582,42 +214,24 @@ instance_collection_base::collect_transient_info_base(
 void
 instance_collection_base::write_object_base(
 		const persistent_object_manager& m, ostream& o) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	// m.write_pointer(o, super_instance);
-#else
-	m.write_pointer(o, owner);
-	write_string(o, key);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 instance_collection_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
-#if USE_INSTANCE_PLACEHOLDERS
 	// m.read_pointer(i, super_instance);
-#else
-	m.read_pointer(i, owner);
-	read_string(i, const_cast<string&>(key));
-#endif
 }
 
 //=============================================================================
 // class physical_instance_collection method definitions
-
-#if !USE_INSTANCE_PLACEHOLDERS
-physical_instance_collection::physical_instance_collection(
-		const scopespace& o, const string& n, const size_t d) :
-		parent_type(o, n, d) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 physical_instance_collection::~physical_instance_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 never_ptr<const instance_placeholder_base>
 physical_instance_collection::__get_placeholder_base(void) const {
 	return get_placeholder_base();
@@ -641,7 +255,6 @@ physical_instance_collection::get_owner(void) const {
 	return get_placeholder_base()->get_owner();
 }
 
-#endif	// USE_INSTANCE_PLACEHOLDERS
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
@@ -651,20 +264,11 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 		(df.show_leading_scope ? "(::) " : " ") << endl << auto_indent;
 #endif
 	parent_type::dump_base(o, df);
-#if !USE_INSTANCE_PLACEHOLDERS
-	if (is_partially_unrolled()) {
-#endif
 	// it IS partially unrolled
-#if USE_INSTANCE_PLACEHOLDERS
 		const size_t dimensions = get_dimensions();
-#endif
 		if (dimensions) {
 			INDENT_SECTION(o);
-#if USE_INSTANCE_PLACEHOLDERS
 			o << auto_indent << "{" << endl;
-#else
-			o << auto_indent << "unrolled indices: {" << endl;
-#endif
 			{
 				// INDENT_SECTION macro not making unique IDs
 				INDENT_SECTION(o);
@@ -673,44 +277,18 @@ physical_instance_collection::dump(ostream& o, const dump_flags& df) const {
 			o << auto_indent << "}";        // << endl;
 		} else {
 			// else nothing to say, just one scalar instance
-#if !USE_INSTANCE_PLACEHOLDERS
-			o << " (instantiated)";
-#endif
 			dump_unrolled_instances(o, df);
 		}
-#if !USE_INSTANCE_PLACEHOLDERS
-	}
-#endif
 	return o;
 }
 
 //=============================================================================
 // class param_value_collection method definitions
 
-#if USE_INSTANCE_PLACEHOLDERS
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 param_value_collection::~param_value_collection() { }
-#endif
-
-#if 0
-count_ptr<meta_instance_reference_base>
-param_value_collection::make_meta_instance_reference(void) const {
-	ICE_NEVER_CALL(cerr);
-	return count_ptr<meta_instance_reference_base>(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-count_ptr<nonmeta_instance_reference_base>
-param_value_collection::make_nonmeta_instance_reference(void) const {
-	ICE_NEVER_CALL(cerr);
-	return count_ptr<nonmeta_instance_reference_base>(NULL);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 never_ptr<const instance_placeholder_base>
 param_value_collection::__get_placeholder_base(void) const {
 	return get_placeholder_base();
@@ -735,10 +313,6 @@ param_value_collection::get_owner(void) const {
 	return get_placeholder_base()->get_owner();
 }
 
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-#endif	// USE_INSTANCE_PLACEHOLDERS
-
 //=============================================================================
 // class datatype_instance_collection method definitions
 
@@ -750,14 +324,6 @@ param_value_collection::get_owner(void) const {
 datatype_instance_collection::datatype_instance_collection() :
 		parent_type() {
 	// no assert
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-datatype_instance_collection::datatype_instance_collection(
-		const scopespace& o, const string& n, const size_t d) :
-		parent_type(o, n, d) {
 }
 #endif
 
@@ -876,7 +442,7 @@ datatype_instance_collection::check_established_type(
 }
 
 //=============================================================================
-#if USE_INSTANCE_PLACEHOLDERS
+// class instance_placeholder_base method definitions
 
 instance_placeholder_base::instance_placeholder_base(
 		const scopespace& s, const string& k, const size_t d) :
@@ -1394,7 +960,6 @@ datatype_instance_placeholder::make_collection(void) const {
 }
 
 //=============================================================================
-#endif	// USE_INSTANCE_PLACEHOLDERS
 }	// end namespace entity
 }	// end namespace HAC
 

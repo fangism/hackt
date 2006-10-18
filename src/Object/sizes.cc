@@ -2,7 +2,7 @@
 	\file "Object/sizes.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes.cc,v 1.4 2006/10/18 01:19:05 fang Exp $
+	$Id: sizes.cc,v 1.5 2006/10/18 20:57:39 fang Exp $
  */
 
 #include <iostream>
@@ -113,11 +113,9 @@
 #include "Object/inst/subinstance_manager.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/value_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/datatype_instance_placeholder.h"
-#endif
 
 #include "Object/ref/aggregate_meta_instance_reference.h"
 #include "Object/ref/aggregate_meta_value_reference.h"
@@ -290,7 +288,6 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<pbool_scalar>(o);
 	__dump_class_size<pbool_array_1D>(o);
 	__dump_class_size<pbool_array_4D>(o);
-#if USE_INSTANCE_PLACEHOLDERS
 	__dump_class_size<instance_placeholder_base>(o);
 	__dump_class_size<physical_instance_placeholder>(o);
 	__dump_class_size<param_value_placeholder>(o);
@@ -300,7 +297,6 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<pbool_value_placeholder>(o);
 	__dump_class_size<pint_value_placeholder>(o);
 	__dump_class_size<preal_value_placeholder>(o);
-#endif
 
 	o << "HAC::entity reference classes:" << endl;
 	__dump_class_size<nonmeta_instance_reference_base>(o);

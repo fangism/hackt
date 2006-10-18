@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.15 2006/10/18 05:32:49 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.16 2006/10/18 20:58:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
@@ -41,14 +41,13 @@ template <class> class simple_meta_instance_reference;
  */
 template <>
 struct simple_meta_instance_reference_implementation<true> {
-#if USE_INSTANCE_PLACEHOLDERS
 	template <class Tag>
 	struct instance_placeholder_type {
 		typedef	typename
 			class_traits<Tag>::instance_placeholder_type
 					type;
 	};
-#endif
+
 	template <class Tag>
 	struct instance_collection_generic_type {
 		typedef	typename
@@ -70,29 +69,14 @@ template <class Tag>
 static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
-		const typename
-#if USE_INSTANCE_PLACEHOLDERS
-			instance_placeholder_type<Tag>::type& inst, 
-#else
-			instance_collection_generic_type<Tag>::type& inst, 
-#endif
+		const typename instance_placeholder_type<Tag>::type& inst, 
 		index_list_ptr_arg_type ind,
-		const unroll_context& c
-#if !USE_INSTANCE_PLACEHOLDERS
-		, const bool lookup
-#endif
-		) {
-#if USE_INSTANCE_PLACEHOLDERS
+		const unroll_context& c) {
 	return simple_meta_instance_reference<Tag>::
 		__unroll_generic_scalar_reference(inst, ind, c);
-#else
-	return simple_meta_instance_reference<Tag>::
-		__unroll_generic_scalar_reference(inst, ind, c, lookup);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 // rename or overload?
 template <class Tag>
 static
@@ -105,7 +89,6 @@ unroll_generic_scalar_substructure_reference(
 	return simple_meta_instance_reference<Tag>::
 		__unroll_generic_scalar_reference_no_lookup(inst, ind, c);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -134,12 +117,7 @@ template <class Tag>
 static
 const footprint_frame*
 simple_lookup_footprint_frame(
-		const typename
-#if USE_INSTANCE_PLACEHOLDERS
-			instance_placeholder_type<Tag>::type& inst, 
-#else
-			instance_collection_generic_type<Tag>::type& inst, 
-#endif
+		const typename instance_placeholder_type<Tag>::type& inst, 
 		index_list_ptr_arg_type ind,
 		const state_manager& sm
 #if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
@@ -152,15 +130,9 @@ simple_lookup_footprint_frame(
 #else
 	const unroll_context uc(NULL, NULL);
 #endif
-#if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<substructure_alias>
 		alias(unroll_generic_scalar_substructure_reference<Tag>(
 			inst, ind, uc));
-#else
-	const never_ptr<substructure_alias>
-		alias(unroll_generic_scalar_substructure_reference<Tag>(
-			inst, ind, uc, true));
-#endif
 	if (!alias) {
 		cerr << "Error resolving a single instance alias." << endl;
 		return NULL;
@@ -216,14 +188,13 @@ make_port_connection(
  */
 template <>
 struct simple_meta_instance_reference_implementation<false> {
-#if USE_INSTANCE_PLACEHOLDERS
 	template <class Tag>
 	struct instance_placeholder_type {
 		typedef	typename
 			class_traits<Tag>::instance_placeholder_type
 					type;
 	};
-#endif
+
 	template <class Tag>
 	struct instance_collection_generic_type {
 		typedef	typename
@@ -240,24 +211,14 @@ template <class Tag>
 static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
-		const typename
-#if USE_INSTANCE_PLACEHOLDERS
-			instance_placeholder_type<Tag>::type& inst, 
-#else
-			instance_collection_generic_type<Tag>::type& inst, 
-#endif
+		const typename instance_placeholder_type<Tag>::type& inst, 
 		index_list_ptr_arg_type ind,
-		const unroll_context&
-#if !USE_INSTANCE_PLACEHOLDERS
-		, const bool
-#endif
-		) {
+		const unroll_context&) {
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 // rename? or overload?
 template <class Tag>
 static
@@ -270,7 +231,6 @@ unroll_generic_scalar_substructure_reference(
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -295,11 +255,7 @@ template <class Tag>
 static
 const footprint_frame*
 simple_lookup_footprint_frame(
-#if USE_INSTANCE_PLACEHOLDERS
 		const typename instance_placeholder_type<Tag>::type&, 
-#else
-		const typename instance_collection_generic_type<Tag>::type&, 
-#endif
 		index_list_ptr_arg_type,
 		const state_manager&
 #if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS

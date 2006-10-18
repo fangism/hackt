@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.10 2006/10/18 19:08:02 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.11 2006/10/18 20:58:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -11,7 +11,6 @@
 #include "Object/type/canonical_type_fwd.h"	// just for conditional
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 #include "util/memory/pointer_classes_fwd.h"
 
 namespace HAC {
@@ -60,13 +59,6 @@ protected:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&) { }
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	const type_ref_ptr_type&
-	get_type(const instance_collection_generic_type&) const {
-		return this->get_type();
-	}
-#endif
 
 public:
 	// distinguish internal type from canonical_type

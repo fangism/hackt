@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.11 2006/10/18 19:08:02 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.12 2006/10/18 20:58:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -12,7 +12,6 @@
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
 #include "Object/expr/types.h"		// for pint_value_type
-#include "Object/devel_switches.h"
 #include "util/memory/pointer_classes_fwd.h"
 
 namespace HAC {
@@ -44,10 +43,8 @@ protected:
 					instance_collection_generic_type;
 	typedef typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef typename traits_type::instance_placeholder_type
 					instance_placeholder_type;
-#endif
 	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
 	typedef typename traits_type::resolved_type_ref_type
@@ -75,12 +72,6 @@ protected:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	// because we may need to extract from the index_collection
-	type_ref_ptr_type
-	get_type(const instance_collection_generic_type&) const;
-#endif
 
 public:
 	const instance_collection_parameter_type&

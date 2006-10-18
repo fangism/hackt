@@ -3,14 +3,13 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.11 2006/10/18 08:52:15 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.12 2006/10/18 20:58:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 #define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 
 #include "util/string_fwd.h"
-#include "Object/devel_switches.h"
 #include "Object/unroll/instance_management_base.h"
 #include "Object/common/util_types.h"
 #include "util/memory/excl_ptr.h"
@@ -20,13 +19,8 @@ namespace HAC {
 namespace entity {
 class const_range_list;
 class dynamic_param_expr_list;
-#if USE_INSTANCE_PLACEHOLDERS
 class instance_placeholder_base;
 class physical_instance_placeholder;
-#else
-class instance_collection_base;
-class physical_instance_collection;
-#endif
 class fundamental_type_reference;
 using std::string;
 using std::istream;
@@ -68,22 +62,10 @@ virtual	~instantiation_statement_base();
 	dump(ostream&, const expr_dump_context&) const;
 
 virtual	void
-#if USE_INSTANCE_PLACEHOLDERS
 	attach_collection(const never_ptr<const instance_placeholder_base>) = 0;
-#else
-	attach_collection(const never_ptr<instance_collection_base> i) = 0;
-#endif
 
-#if USE_INSTANCE_PLACEHOLDERS
 virtual	never_ptr<const instance_placeholder_base>
 	get_inst_base(void) const = 0;
-#else
-virtual	never_ptr<instance_collection_base>
-	get_inst_base(void) = 0;
-
-virtual	never_ptr<const instance_collection_base>
-	get_inst_base(void) const = 0;
-#endif
 
 	string
 	get_name(void) const;

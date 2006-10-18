@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.14 2006/10/18 05:32:51 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.15 2006/10/18 20:58:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -290,44 +290,16 @@ META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		const unroll_context& c,
-#if USE_INSTANCE_PLACEHOLDERS
 		const instance_placeholder_type& _inst,
-#else
-		const instance_collection_generic_type& _inst,
-#endif
 		const count_ptr<const index_list_type>& ind,
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
-#if USE_INSTANCE_PLACEHOLDERS
 	const count_ptr<physical_instance_collection>
 		inst_p(c.lookup_instance_collection(_inst));
 	NEVER_NULL(inst_p);
 	// assert dynamic_cast
 	const instance_collection_generic_type&
 		inst(IS_A(const instance_collection_generic_type&, *inst_p));
-#else
-	const footprint* const f(c.get_target_footprint());
-	const string& inst_name(_inst.get_name());
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("looking up instance name: "
-		<< inst_name << endl);
-	c.dump(cerr << "unroll_context c:" << endl) << endl;
-#endif
-	if (f) {
-		INVARIANT((*f)[inst_name]);
-	}
-	// assert not-NULL and dynamic_cast!
-#if USE_INSTANCE_PLACEHOLDERS
-	NEVER_NULL(f);
-	const instance_collection_generic_type&
-		inst(IS_A(const instance_collection_generic_type&,
-			*(*f)[inst_name]));
-#else
-	const instance_collection_generic_type&
-		inst(f ? IS_A(const instance_collection_generic_type&,
-			*(*f)[inst_name]) : _inst);
-#endif
-#endif	// USE_INSTANCE_PLACEHOLDERS
 	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_packed_helper
 

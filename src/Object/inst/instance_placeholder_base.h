@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_placeholder_base.h,v 1.3 2006/10/18 05:32:46 fang Exp $
+	$Id: instance_placeholder_base.h,v 1.4 2006/10/18 20:58:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_PLACEHOLDER_BASE_H__
@@ -15,7 +15,6 @@
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -162,22 +161,14 @@ virtual	~instance_placeholder_base();
 	The footprint argument WAS just for distiguishing constructors.  
 	NOTE: not any more! TODO: delete comment
  */
-#if USE_INSTANCE_PLACEHOLDERS
 #define	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO			\
 	instance_collection_base*					\
 	make_instance_collection_footprint_copy(void) const
 
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
-#endif
 
 	size_t
 	get_dimensions(void) const { return dimensions; }
-
-	// inappropriate for placeholders
-#if 0
-virtual	bool
-	is_partially_unrolled(void) const = 0;
-#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -198,12 +189,6 @@ protected:
 	// just to satisfy object_base forwards to public dump()
 	ostream&
 	dump(ostream&) const;
-
-	// NOTE: cannot dump collection anymore with placeholder decoupling
-#if 0
-	ostream&
-	dump_collection_only(ostream&) const;
-#endif
 
 public:
 virtual	void
@@ -278,37 +263,6 @@ public:
 virtual	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const = 0;
 
-public:
-#if 0
-	size_t
-	is_template_formal(void) const;
-
-	bool
-	is_relaxed_template_formal(void) const;
-
-	size_t
-	is_port_formal(void) const;
-
-	size_t
-	is_member_instance(void) const;
-#endif
-
-#if 0
-	bool
-	is_local_to_definition(void) const;
-#endif
-
-#if 0
-	bool
-	port_formal_equivalent(const this_type& b) const;
-#endif
-
-#if 0
-	bool
-	is_template_dependent(void) const;
-#endif
-
-public:
 
 virtual	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const = 0;
@@ -317,11 +271,6 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const = 0;
-
-#if 0
-virtual	const_index_list
-	resolve_indices(const const_index_list&) const = 0;
-#endif
 
 private:
 	// utility functions for handling index collection (inlined)

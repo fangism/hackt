@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.19 2006/10/18 08:52:10 fang Exp $
+ 	$Id: type_reference.cc,v 1.20 2006/10/18 20:58:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -37,11 +37,8 @@
 #include "Object/inst/struct_instance_collection.h"
 #include "Object/inst/pbool_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
-// #include "Object/inst/datatype_instance_placeholder.h"
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
-#endif
 #include "Object/expr/pint_const.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
@@ -462,19 +459,11 @@ data_type_reference::make_instantiation_statement_private(
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-#if USE_INSTANCE_PLACEHOLDERS
 excl_ptr<instance_placeholder_base>
-#else
-excl_ptr<instance_collection_base>
-#endif
 data_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef excl_ptr<instance_placeholder_base>	return_type;
-#else
-	typedef excl_ptr<instance_collection_base>	return_type;
-#endif
 /***
 	datatype_instance_collection is now pure virtual, 
 	we use a temporary shortcut to effectively sub-class...
@@ -485,41 +474,19 @@ data_type_reference::make_instance_collection(
 		alias(base_type_def->resolve_canonical_datatype_definition());
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
-		return return_type(
-#if USE_INSTANCE_PLACEHOLDERS
-			new struct_instance_placeholder(*s, id, d)
-#else
-			struct_instance_collection::make_array(*s, id, d)
-#endif
-			);
+		return return_type(new struct_instance_placeholder(*s, id, d));
 	} else if (alias.is_a<const enum_datatype_def>()) {
-		return return_type(
-#if USE_INSTANCE_PLACEHOLDERS
-			new enum_instance_placeholder(*s, id, d)
-#else
-			enum_instance_collection::make_array(*s, id, d)
-#endif
-			);
+		return return_type(new enum_instance_placeholder(*s, id, d));
 	} else {
 		// what about typedefs/aliases of built-in types? Ahhhh....
 		INVARIANT(alias.is_a<const built_in_datatype_def>());
 		// just compare pointers
 		if (alias == &bool_traits::built_in_definition) {
 			return return_type(
-#if USE_INSTANCE_PLACEHOLDERS
-				new bool_instance_placeholder(*s, id, d)
-#else
-				bool_instance_collection::make_array(*s, id, d)
-#endif
-				);
+				new bool_instance_placeholder(*s, id, d));
 		} else if (alias == &int_traits::built_in_definition) {
 			return return_type(
-#if USE_INSTANCE_PLACEHOLDERS
-				new int_instance_placeholder(*s, id, d)
-#else
-				int_instance_collection::make_array(*s, id, d)
-#endif
-				);
+				new int_instance_placeholder(*s, id, d));
 		} else {
 			DIE;	// WTF!?
 			return return_type(NULL);
@@ -1190,21 +1157,12 @@ builtin_channel_type_reference::make_instantiation_statement_private(
 		for making instantiation collections?
 	(2005-05-28: decide later)
  */
-#if USE_INSTANCE_PLACEHOLDERS
 excl_ptr<instance_placeholder_base>
-#else
-excl_ptr<instance_collection_base>
-#endif
 builtin_channel_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	return excl_ptr<instance_placeholder_base>(
 		new channel_instance_placeholder(*s, id, d));
-#else
-	return excl_ptr<instance_collection_base>(
-		channel_instance_collection::make_array(*s, id, d));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1501,21 +1459,12 @@ channel_type_reference::make_instantiation_statement_private(
 /**
 	Returns a newly constructed channel instance object.  
  */
-#if USE_INSTANCE_PLACEHOLDERS
 excl_ptr<instance_placeholder_base>
-#else
-excl_ptr<instance_collection_base>
-#endif
 channel_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	return excl_ptr<instance_placeholder_base>(
 		new channel_instance_placeholder(*s, id, d));
-#else
-	return excl_ptr<instance_collection_base>(
-		channel_instance_collection::make_array(*s, id, d));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1790,21 +1739,12 @@ process_type_reference::make_instantiation_statement_private(
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-#if USE_INSTANCE_PLACEHOLDERS
 excl_ptr<instance_placeholder_base>
-#else
-excl_ptr<instance_collection_base>
-#endif
 process_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	return excl_ptr<instance_placeholder_base>(
 		new process_instance_placeholder(*s, id, d));
-#else
-	return excl_ptr<instance_collection_base>(
-		process_instance_collection::make_array(*s, id, d));
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2034,20 +1974,12 @@ param_type_reference::make_instantiation_statement_private(
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
-#if USE_INSTANCE_PLACEHOLDERS
 excl_ptr<instance_placeholder_base>
-#else
-excl_ptr<instance_collection_base>
-#endif
 param_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	// hard coded... yucky, but efficient.  
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	excl_ptr<instance_placeholder_base>	return_type;
-#else
-	typedef	excl_ptr<instance_collectionr_base>	return_type;
-#endif
 	static const pbool_traits::type_ref_ptr_type&
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&
@@ -2055,29 +1987,11 @@ param_type_reference::make_instance_collection(
 	static const preal_traits::type_ref_ptr_type&
 		preal_type_ptr(preal_traits::built_in_type_ptr);
 	if (must_be_type_equivalent(*pbool_type_ptr))
-		return return_type(
-#if USE_INSTANCE_PLACEHOLDERS
-			new pbool_value_placeholder(*s, id, d)
-#else
-			pbool_instance_collection::make_array(*s, id, d)
-#endif
-			);
+		return return_type(new pbool_value_placeholder(*s, id, d));
 	else if (must_be_type_equivalent(*pint_type_ptr))
-		return return_type(
-#if USE_INSTANCE_PLACEHOLDERS
-			new pint_value_placeholder(*s, id, d)
-#else
-			pint_instance_collection::make_array(*s, id, d)
-#endif
-			);
+		return return_type(new pint_value_placeholder(*s, id, d));
 	else if (must_be_type_equivalent(*preal_type_ptr))
-		return return_type(
-#if USE_INSTANCE_PLACEHOLDERS
-			new preal_value_placeholder(*s, id, d)
-#else
-			preal_instance_collection::make_array(*s, id, d)
-#endif
-			);
+		return return_type(new preal_value_placeholder(*s, id, d));
 	else {
 	ICE(cerr, 
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;

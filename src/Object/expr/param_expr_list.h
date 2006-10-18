@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.14 2006/10/18 08:51:58 fang Exp $
+	$Id: param_expr_list.h,v 1.15 2006/10/18 20:57:56 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -22,11 +22,7 @@ namespace HAC {
 namespace entity {
 class param_expr;
 class const_param_expr_list;
-#if USE_INSTANCE_PLACEHOLDERS
 class param_value_placeholder;
-#else
-class param_value_collection;
-#endif
 class unroll_context;
 class template_actuals;
 struct expr_dump_context;
@@ -47,11 +43,7 @@ using util::persistent;
  */
 class param_expr_list : public persistent {
 public:
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	param_value_placeholder		placeholder_type;
-#else
-	typedef	param_value_collection		placeholder_type;
-#endif
 	typedef	never_ptr<const placeholder_type>	placeholder_ptr_type;
 
 	param_expr_list() : persistent() { }

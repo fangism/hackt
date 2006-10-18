@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.3 2006/10/18 07:39:42 fang Exp $
+	$Id: param_value_placeholder.h,v 1.4 2006/10/18 20:58:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -13,6 +13,7 @@
 #include "Object/expr/types.h"
 #include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -45,18 +46,8 @@ protected:
 	explicit
 	param_value_placeholder(const size_t d);
 
-#if 0
-	param_value_placeholder(const this_type& t, const footprint& f) :
-		parent_type(t, f) { }
-#endif
-
 	param_value_placeholder(const scopespace& o, const string& n, 
 		const size_t d);
-
-private:
-#if 0
-virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
-#endif
 
 public:
 virtual	~param_value_placeholder();
@@ -64,18 +55,8 @@ virtual	~param_value_placeholder();
 virtual	ostream&
 	what(ostream&) const = 0;
 
-#if 0
-virtual	bool
-	is_partially_unrolled(void) const = 0;
-#endif
-
 virtual	bool
 	is_loop_variable(void) const = 0;
-
-#if 0
-virtual	ostream&
-	dump_unrolled_values(ostream& o) const = 0;
-#endif
 
 virtual	ostream&
 	dump_formal(ostream&, const unroll_context&) const = 0;
@@ -88,12 +69,6 @@ virtual	ostream&
 
 	bool
 	is_relaxed_template_formal(void) const;
-
-#if 0
-// inherited
-virtual	count_ptr<const fundamental_type_reference>
-	get_unresolved_type_ref(void) const = 0;
-#endif
 
 virtual	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const = 0;
@@ -147,20 +122,6 @@ protected:
 		const unroll_context&) const;
 
 public:
-#if 0
-/**
-	whether or not this can be resolved to some static constant value.
-	Will also need two flavors.  
- */
-	bool
-	is_static_constant(void) const;
-#endif
-
-#if 0
-virtual	const_index_list
-	resolve_indices(const const_index_list&) const = 0;
-#endif
-
 #if 0
 NOTE: these functions should only be applicable to simple_param_meta_value_references.  
 /**

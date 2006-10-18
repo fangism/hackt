@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.35 2006/10/18 19:08:02 fang Exp $
+	$Id: instance_collection.tcc,v 1.36 2006/10/18 20:58:01 fang Exp $
 	TODO: trim includes
  */
 
@@ -29,9 +29,7 @@
 #include "Object/common/extern_templates.h"
 
 #include "Object/inst/instance_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.h"
-#endif
 #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/subinstance_manager.tcc"
 #include "Object/inst/instance_pool.tcc"
@@ -213,7 +211,6 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
 // class instance_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 /**
 	Private empty constructor.  
  */
@@ -232,32 +229,6 @@ INSTANCE_COLLECTION_CLASS::instance_collection(
 		collection_type_manager_parent_type(), 
 		source_placeholder(p) {
 }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-INSTANCE_COLLECTION_CLASS::instance_collection(const scopespace& o, 
-		const string& n, const size_t d) :
-		parent_type(o, n, d), collection_type_manager_parent_type(), 
-		initial_instantiation_statement_ptr() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Note: we don't bother copying the initial_instantiation_statement_ptr.
-	Or should we? we need it to get_type_ref(), sometimes for diagnostics
-		after deep-copying collection to footprint.  
- */
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-INSTANCE_COLLECTION_CLASS::instance_collection(const this_type& t, 
-		const footprint& f) :
-		parent_type(t, f),
-		collection_type_manager_parent_type(t), 
-		initial_instantiation_statement_ptr(
-			t.initial_instantiation_statement_ptr) {
-}
-#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
@@ -277,30 +248,6 @@ INSTANCE_COLLECTION_CLASS::type_dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	TODO: for port collections with relaxed types, might want to expand
-	relaxed actuals at some point for diagnostics.  
- */
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-ostream&
-INSTANCE_COLLECTION_CLASS::dump_formal(ostream& o) const {
-//	this->dump_base(o);
-	this->dump_collection_only(o);
-	expr_dump_context dc(expr_dump_context::default_value);
-	dc.enclosing_scope = this->owner;
-	if (this->dimensions) {
-		const index_collection_item_ptr_type
-			i(this->get_initial_instantiation_indices());
-		NEVER_NULL(i);
-		i->dump(o, dc);
-	}
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 /**
 	Covariant return of a virtual function.  
  */
@@ -309,8 +256,6 @@ never_ptr<const physical_instance_placeholder>
 INSTANCE_COLLECTION_CLASS::get_placeholder_base(void) const {
 	return this->source_placeholder;
 }
-
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -322,36 +267,9 @@ INSTANCE_COLLECTION_CLASS::get_placeholder_base(void) const {
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
 INSTANCE_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	NEVER_NULL(this->source_placeholder);
 	return this->source_placeholder->get_unresolved_type_ref();
-#else
-	NEVER_NULL(this->initial_instantiation_statement_ptr);
-	return initial_instantiation_statement_ptr->get_type_ref();
-#endif
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Ripped off from instance_collection_base::formal_size_equivalent.  
- */
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-index_collection_item_ptr_type
-INSTANCE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
-	NEVER_NULL(initial_instantiation_statement_ptr);
-	return initial_instantiation_statement_ptr->get_indices();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
-INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
-	return collection_type_manager_parent_type::get_type(*this);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -403,55 +321,6 @@ INSTANCE_COLLECTION_CLASS::check_established_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Just creates a simple instance_reference to this collection.  
-	If indexed, the index is set by the caller.  
- */
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<meta_instance_reference_base>
-INSTANCE_COLLECTION_CLASS::make_meta_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//      check array dimensions -- when attach_indices() invoked
-	typedef	count_ptr<meta_instance_reference_base>	ptr_return_type;
-	return ptr_return_type(new simple_meta_instance_reference_type(
-			never_ptr<const this_type>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Creates a nonmeta instance reference.  
- */
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<nonmeta_instance_reference_base>
-INSTANCE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
-	// depends on whether this instance is collective, 
-	//      check array dimensions -- when attach_indices() invoked
-	typedef	count_ptr<nonmeta_instance_reference_base>	ptr_return_type;
-	return ptr_return_type(new simple_nonmeta_instance_reference_type(
-			never_ptr<const this_type>(this)));
-		// omitting index argument, set it later...
-		// done by parser::instance_array::check_build()
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Does exactly what it says.  
- */
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-typename INSTANCE_COLLECTION_CLASS::member_inst_ref_ptr_type
-INSTANCE_COLLECTION_CLASS::make_member_meta_instance_reference(
-		const inst_ref_ptr_type& b) const {
-	NEVER_NULL(b);
-	return member_inst_ref_ptr_type(
-		new member_simple_meta_instance_reference_type(
-			b, never_ptr<const this_type>(this)));
-}
-#endif	// USE_INSTANCE_PLACEHOLDERS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need to return a legitmate reference to a parameter list!
  */
@@ -470,30 +339,14 @@ INSTANCE_COLLECTION_CLASS::get_actual_param_list(void) const {
  */
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 INSTANCE_COLLECTION_CLASS*
-INSTANCE_COLLECTION_CLASS::make_array(
-#if USE_INSTANCE_PLACEHOLDERS
-		const instance_placeholder_ptr_type p
-#else
-		const scopespace& o, const string& n, const size_t d
-#endif
-		) {
-#if USE_INSTANCE_PLACEHOLDERS
+INSTANCE_COLLECTION_CLASS::make_array(const instance_placeholder_ptr_type p) {
 	const size_t d = p->get_dimensions();
-#endif
 	switch(d) {
-#if USE_INSTANCE_PLACEHOLDERS
 		case 0: return new instance_array<Tag,0>(p);
 		case 1: return new instance_array<Tag,1>(p);
 		case 2: return new instance_array<Tag,2>(p);
 		case 3: return new instance_array<Tag,3>(p);
 		case 4: return new instance_array<Tag,4>(p);
-#else
-		case 0: return new instance_array<Tag,0>(o, n);
-		case 1: return new instance_array<Tag,1>(o, n);
-		case 2: return new instance_array<Tag,2>(o, n);
-		case 3: return new instance_array<Tag,3>(o, n);
-		case 4: return new instance_array<Tag,4>(o, n);
-#endif
 		default:
 			cerr << "FATAL: dimension limit is 4!" << endl;
 			return NULL;
@@ -512,15 +365,9 @@ INSTANCE_COLLECTION_CLASS::collect_transient_info_base(
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::collect_base()");
 	parent_type::collect_transient_info_base(m);
 	collection_type_manager_parent_type::collect_transient_info_base(m);
-#if USE_INSTANCE_PLACEHOLDERS
 	if (this->source_placeholder) {
 		source_placeholder->collect_transient_info(m);
 	}
-#else
-	if (this->initial_instantiation_statement_ptr) {
-		initial_instantiation_statement_ptr->collect_transient_info(m);
-	}
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -531,11 +378,7 @@ INSTANCE_COLLECTION_CLASS::write_object_base(
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::write_base()");
 	parent_type::write_object_base(m, o);
 	collection_type_manager_parent_type::write_object_base(m, o);
-#if USE_INSTANCE_PLACEHOLDERS
 	m.write_pointer(o, this->source_placeholder);
-#else
-	m.write_pointer(o, this->initial_instantiation_statement_ptr);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -546,16 +389,12 @@ INSTANCE_COLLECTION_CLASS::load_object_base(
 	STACKTRACE_PERSISTENT("instance_collection<Tag>::load_base()");
 	parent_type::load_object_base(m, i);
 	collection_type_manager_parent_type::load_object_base(m, i);
-#if USE_INSTANCE_PLACEHOLDERS
 	m.read_pointer(i, this->source_placeholder);
 	// TODO: need to load in advance to make the key available
 	// what about placeholder's parent namespaces???
 	NEVER_NULL(this->source_placeholder);
 	m.load_object_once(const_cast<instance_placeholder_type*>(
 		&*this->source_placeholder));
-#else
-	m.read_pointer(i, this->initial_instantiation_statement_ptr);
-#endif
 }
 
 //=============================================================================
@@ -587,74 +426,18 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, INSTANCE_ARRAY_CLASS)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array() : 
-#if USE_INSTANCE_PLACEHOLDERS
 		parent_type(), 
-#else
-		parent_type(D), 
-#endif
 		collection() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::instance_array(const instance_placeholder_ptr_type p) :
 		parent_type(p), collection() {
 }
 
-#else
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::instance_array(const scopespace& o, const string& n) :
-		parent_type(o, n, D), collection() {
-	// until we eliminate that field from instance_collection_base
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Partial deep-copy constructor for footprint management.  
-	NOTE: the alias connection information is not retained
-		whether implemented as ring-node or union-find.
-		When copying for footprints, the aliases must be replayed
-		separately.  
-	\pre The source collection must be empty.  
-	\post The source collection must be empty.  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::instance_array(const this_type& t, const footprint& f) :
-		parent_type(t, f),
-		collection() {
-	INVARIANT(t.collection.empty());
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private copy-constructor, reserved for port instantiation.  
-	\pre The source collection must be empty.  
-	\post The source collection must be empty.  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-INSTANCE_ARRAY_CLASS::instance_array(const this_type& t) :
-		parent_type(t),
-		collection() {
-	INVARIANT(t.collection.empty());
-}
-#endif	// USE_INSTANCE_PLACEHOLDERS
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 INSTANCE_ARRAY_CLASS::~instance_array() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Partial deep copy constructor for the footprint.  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-instance_collection_base*
-INSTANCE_ARRAY_CLASS::make_instance_collection_footprint_copy(
-		const footprint& f) const {
-	return new this_type(*this, f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
@@ -760,11 +543,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			const bool attached(new_elem->attach_actuals(actuals));
 			if (!attached) {
 				cerr << "ERROR: attaching relaxed actuals to "
-#if USE_INSTANCE_PLACEHOLDERS
 					<< this->source_placeholder->get_qualified_name() <<
-#else
-					<< this->get_qualified_name() <<
-#endif
 					key_gen << endl;
 				err = true;
 			}
@@ -774,11 +553,7 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			// more detailed message, please!
 			cerr << "ERROR: Index " << key_gen << " of ";
 			what(cerr) << ' ' <<
-#if USE_INSTANCE_PLACEHOLDERS
 				this->source_placeholder->get_qualified_name() <<
-#else
-				this->get_qualified_name() <<
-#endif
 				" already instantiated!" << endl;
 			err = true;
 		}
@@ -858,11 +633,7 @@ INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
 	if (it == this->collection.end()) {
 		this->type_dump(
 			cerr << "ERROR: reference to uninstantiated ") << " "
-#if USE_INSTANCE_PLACEHOLDERS
 				<< this->source_placeholder->get_qualified_name()
-#else
-				<< this->get_qualified_name()
-#endif
 				<< " at index: " << index << endl;
 		return ptr_return_type(NULL);
 	}
@@ -876,11 +647,7 @@ INSTANCE_ARRAY_CLASS::operator [] (const key_type& index) const {
 		// not necessary, but could keep the collection "clean"
 		this->type_dump(
 			cerr << "ERROR: reference to uninstantiated ") << " "
-#if USE_INSTANCE_PLACEHOLDERS
 				<< this->source_placeholder->get_qualified_name()
-#else
-				<< this->get_qualified_name()
-#endif
 				<< " at index: " << index << endl;
 		return ptr_return_type(NULL);
 	}
@@ -989,32 +756,6 @@ INSTANCE_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 	INVARIANT(a_iter == a.end());
 	return bad_bool(ret);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Q: is this method relevant with placeholders?
-
-	Expands this collection into a copy for a port formal.  
-	Is safe to use the initial instantiation statement because
-	public ports are unconditionally instantiated once.  
-	\return owned pointer to new created collection.  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-count_ptr<physical_instance_collection>
-INSTANCE_ARRAY_CLASS::unroll_port_only(const unroll_context& c) const {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("this = " << this << endl);
-	const count_ptr<this_type> ret(new this_type(*this));
-	NEVER_NULL(ret);
-	// Is this really copy-constructible?
-	INVARIANT(this->initial_instantiation_statement_ptr);
-	if (this->initial_instantiation_statement_ptr->
-			instantiate_port(c, *ret).good) {
-		return ret;
-	} else 	return count_ptr<physical_instance_collection>(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1377,74 +1118,19 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, INSTANCE_SCALAR_CLASS)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array() : 
-#if USE_INSTANCE_PLACEHOLDERS
 		parent_type(), 
-#else
-		parent_type(0), 
-#endif
 		the_instance() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::instance_array(const instance_placeholder_ptr_type p) :
 		parent_type(p), the_instance() {
 }
 
-#else
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-INSTANCE_SCALAR_CLASS::instance_array(const scopespace& o, const string& n) :
-		parent_type(o, n, 0), the_instance() {
-	// until we eliminate that field from instance_collection_base
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Partial deep-copy constructor for footprint management.  
-	NOTE: this collection should be empty.
-	NOTE: the alias connection information is not retained
-		whether implemented as ring-node or union-find.
-		When copying for footprints, the aliases must be replayed
-		separately.  
-	\pre The source collection must be empty.  
-	\post The source collection must be empty.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-INSTANCE_SCALAR_CLASS::instance_array(const this_type& t, const footprint& f) :
-		parent_type(t, f),
-		the_instance() {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Private copy-constructor, reserved for port instantiation.  
-	\pre The source collection must be empty.  
-	\post The source collection must be empty.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-INSTANCE_SCALAR_CLASS::instance_array(const this_type& t) :
-		parent_type(t),
-		the_instance() {
-}
-#endif	// USE_INSTANCE_PLACEHOLDERS
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
 INSTANCE_SCALAR_CLASS::~instance_array() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Deep (partial) copy-constructor for footprint.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-instance_collection_base*
-INSTANCE_SCALAR_CLASS::make_instance_collection_footprint_copy(
-		const footprint& f) const {
-	return new this_type(*this, f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_SCALAR_TEMPLATE_SIGNATURE
@@ -1528,11 +1214,7 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 	if (!attached) {
 		cerr << "ERROR: attaching relaxed actuals to scalar ";
 		this->type_dump(cerr) << " " <<
-#if USE_INSTANCE_PLACEHOLDERS
 			this->source_placeholder->get_qualified_name()
-#else
-			this->get_qualified_name()
-#endif
 			<< endl;
 	}
 	return good_bool(attached);
@@ -1630,29 +1312,6 @@ INSTANCE_SCALAR_CLASS::unroll_aliases(const multikey_index_type& l,
 		return bad_bool(true);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Q: is this method applicable to placeholders?
-
-	Expands this collection into a copy for a port formal.  
-	\return owned pointer to new created collection.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-count_ptr<physical_instance_collection>
-INSTANCE_SCALAR_CLASS::unroll_port_only(const unroll_context& c) const {
-	STACKTRACE_VERBOSE;
-	STACKTRACE_INDENT_PRINT("this = " << this << endl);
-	const count_ptr<this_type> ret(new this_type(*this));
-	NEVER_NULL(ret);
-	INVARIANT(this->initial_instantiation_statement_ptr);
-	if (this->initial_instantiation_statement_ptr->
-			instantiate_port(c, *ret).good) {
-		return ret;
-	} else 	return count_ptr<physical_instance_collection>(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

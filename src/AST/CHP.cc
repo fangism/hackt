@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.10 2006/10/18 01:18:56 fang Exp $
+	$Id: CHP.cc,v 1.11 2006/10/18 20:57:34 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -33,9 +33,7 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/channel_instance_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.h"
-#endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"

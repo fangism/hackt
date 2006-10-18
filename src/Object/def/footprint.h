@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.h"
 	Data structure for each complete type's footprint template.  
-	$Id: footprint.h,v 1.18 2006/10/18 01:19:10 fang Exp $
+	$Id: footprint.h,v 1.19 2006/10/18 20:57:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_FOOTPRINT_H__
@@ -273,10 +273,8 @@ public:
 	void
 	clear_instance_collection_map(void);
 
-#if USE_INSTANCE_PLACEHOLDERS
 	good_bool
 	register_collection(const count_ptr<instance_collection_base>&);
-#endif
 
 	good_bool
 	create_dependent_types(const footprint&);

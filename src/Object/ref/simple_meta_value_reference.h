@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.16 2006/10/18 07:39:46 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.17 2006/10/18 20:58:16 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -60,10 +60,8 @@ private:
 public:
 	typedef	common_base_type::indices_ptr_arg_type	indices_ptr_arg_type;
 	typedef	count_ptr<const interface_type>		init_arg_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename traits_type::value_placeholder_parent_type
 						value_placeholder_parent_type;
-#endif
 	typedef	typename traits_type::value_collection_parent_type
 						value_collection_parent_type;
 	typedef	typename traits_type::value_reference_collection_type
@@ -71,7 +69,6 @@ public:
 protected:
 	typedef	typename traits_type::template value_array<0>::type
 							value_scalar_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename traits_type::instance_placeholder_type
 							value_placeholder_type;
 	/**
@@ -79,7 +76,6 @@ protected:
 	 */
 	typedef	never_ptr<const value_placeholder_type>
 						value_placeholder_ptr_type;
-#endif
 	typedef	typename traits_type::value_collection_generic_type
 							value_collection_type;
 	typedef	typename traits_type::const_collection_type
@@ -88,27 +84,15 @@ protected:
 							const_expr_type;
 	typedef	never_ptr<value_collection_type>
 						value_collection_ptr_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	value_placeholder_ptr_type			value_collection_ref;
-#else
-	value_collection_ptr_type			value_collection_ref;
-#endif
 private:
 	simple_meta_value_reference();
 public:
-#if USE_INSTANCE_PLACEHOLDERS
 	explicit
 	simple_meta_value_reference(const value_placeholder_ptr_type);
 
 	simple_meta_value_reference(const value_placeholder_ptr_type, 
 		indices_ptr_arg_type);
-#else
-	explicit
-	simple_meta_value_reference(const value_collection_ptr_type);
-
-	simple_meta_value_reference(const value_collection_ptr_type, 
-		indices_ptr_arg_type);
-#endif
 
 	~simple_meta_value_reference();
 
@@ -121,19 +105,11 @@ public:
 	good_bool
 	attach_indices(indices_ptr_arg_type);
 
-#if USE_INSTANCE_PLACEHOLDERS
 	never_ptr<const param_value_placeholder>
 	get_coll_base(void) const;
 
 	never_ptr<const value_placeholder_parent_type>
 	get_param_inst_base(void) const;
-#else
-	never_ptr<const param_value_collection>
-	get_coll_base(void) const;
-
-	never_ptr<const value_collection_parent_type>
-	get_param_inst_base(void) const;
-#endif
 
 	size_t
 	dimensions(void) const;
@@ -150,20 +126,8 @@ public:
 	bool
 	must_be_equivalent(const interface_type& ) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	good_bool
-	resolve_value(value_type& i) const;
-#endif
-
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	// why is this not available to other meta-instance-references?
-	// doesn't this need context?
-	const_index_list
-	resolve_dimensions(void) const;
-#endif
 
 	const_index_list
 	unroll_resolve_dimensions(const unroll_context&) const;

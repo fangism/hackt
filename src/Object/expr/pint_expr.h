@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pint_expr.h,v 1.15 2006/10/18 19:08:00 fang Exp $
+	$Id: pint_expr.h,v 1.16 2006/10/18 20:57:57 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_EXPR_H__
@@ -14,7 +14,6 @@
 #include "Object/expr/int_expr.h"
 #include "Object/expr/types.h"
 #include "util/boolean_types.h"
-#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -89,26 +88,11 @@ virtual	count_ptr<const const_param>
 virtual value_type
 	static_constant_value(void) const = 0;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	count_ptr<const_index>
-	resolve_index(void) const;
-#endif
-
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-virtual	good_bool
-	resolve_value(value_type& i) const = 0;
-#endif
-
 virtual	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const = 0;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-virtual	const_index_list
-	resolve_dimensions(void) const = 0;
-#endif
 
 virtual	count_ptr<const pint_const>
 	__unroll_resolve_rvalue(const unroll_context&, 

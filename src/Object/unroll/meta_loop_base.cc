@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.6 2006/10/18 08:52:16 fang Exp $
+	$Id: meta_loop_base.cc,v 1.7 2006/10/18 20:58:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -10,7 +10,6 @@
 
 #include "Object/unroll/meta_loop_base.h"
 #include "Object/expr/meta_range_expr.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/unroll/instantiation_statement_base.h"
@@ -20,7 +19,6 @@
 #include "Object/expr/meta_range_list.h"
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
-#endif
 #include "Object/inst/pint_value_collection.h"
 
 // #include "common/TODO.h"
@@ -51,7 +49,6 @@ meta_loop_base::meta_loop_base(const ind_var_ptr_type& i,
 meta_loop_base::~meta_loop_base() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 /**
 	Populates a footprint with an actual instance of the induction
 	variable and returns a pointer to the scalar variable 
@@ -77,7 +74,6 @@ meta_loop_base::initialize_footprint(footprint& f) const {
 	ret->get_instance() = 0;
 	return ret;
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

@@ -3,7 +3,7 @@
 	Class methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.cc" in a previous life.  
- 	$Id: parse_context.cc,v 1.15 2006/10/18 18:38:10 fang Exp $
+ 	$Id: parse_context.cc,v 1.16 2006/10/18 20:57:35 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_CC__
@@ -33,12 +33,8 @@
 #include "Object/unroll/alias_connection.h"
 #include "Object/unroll/loop_scope.h"
 #include "Object/unroll/conditional_scope.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
-#else
-#include "Object/inst/physical_instance_collection.h"
-#endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/module.h"
 
@@ -53,13 +49,8 @@ namespace parser {
 using entity::object_handle;
 using entity::enum_datatype_def;
 using entity::instantiation_statement_base;
-#if USE_INSTANCE_PLACEHOLDERS
 using entity::physical_instance_placeholder;
 using entity::param_value_placeholder;
-#else
-using entity::physical_instance_collection;
-using entity::param_value_collection;
-#endif
 using entity::param_type_reference;
 using entity::process_definition;
 using entity::user_def_chan;
@@ -597,11 +588,7 @@ context::placeholder_ptr_type
 context::lookup_instance(const token_identifier& id) const {
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
-#if USE_INSTANCE_PLACEHOLDERS
 	return o.is_a<const instance_placeholder_base>();
-#else
-	return o.is_a<const instance_collection_base>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -613,11 +600,7 @@ context::placeholder_ptr_type
 context::lookup_instance(const qualified_id& id) const {
 	INVARIANT(get_current_namespace());
 	const never_ptr<const object> o(lookup_object(id));
-#if USE_INSTANCE_PLACEHOLDERS
 	return o.is_a<const instance_placeholder_base>();
-#else
-	return o.is_a<const instance_collection_base>();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -837,17 +820,10 @@ context::add_template_formal(const token_identifier& id,
 
 	if (d) {
 		// need modifiable pointer to param_value_collection
-#if USE_INSTANCE_PLACEHOLDERS
 		const never_ptr<const instance_placeholder_base>
 			ib(inst_stmt->get_inst_base());
 		const never_ptr<const param_value_placeholder>
 			pic(ib.is_a<const param_value_placeholder>());
-#else
-		const never_ptr<instance_collection_base>
-			ib(inst_stmt->get_inst_base());
-		const never_ptr<param_value_collection>
-			pic(ib.is_a<param_value_collection>());
-#endif
 		NEVER_NULL(pic);
 		// TODO: when I have time, propagate the changes
 		// to make this const-correct...
@@ -902,11 +878,7 @@ context::add_port_formal(const token_identifier& id,
 			current_fundamental_type, dim));
 	NEVER_NULL(inst_stmt);
 	// instance is constructed and added in add_instance
-#if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<const physical_instance_placeholder>
-#else
-	const never_ptr<const physical_instance_collection>
-#endif
 		inst_base(current_prototype->add_port_formal(inst_stmt, id));
 		// same as current_named_scope? perhaps assert check?
 
@@ -966,11 +938,7 @@ context::push_loop_var(const token_identifier& i) {
 	// nevertheless, it needs to associate with some parent scope.  
 	const return_type
 		ret(new loop_var_placeholder_type(
-			*get_current_named_scope(), i
-#if USE_INSTANCE_PLACEHOLDERS
-			, 0
-#endif
-			));
+			*get_current_named_scope(), i , 0));
 	INVARIANT(ret);
 	loop_var_stack.push_front(ret);
 	return ret;

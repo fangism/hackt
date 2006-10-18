@@ -2,7 +2,7 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.14 2006/10/18 19:08:06 fang Exp $
+	$Id: int_traits.h,v 1.15 2006/10/18 20:58:21 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
@@ -53,11 +53,9 @@ struct class_traits<int_tag> {
 
 	typedef	int_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	datatype_instance_placeholder
 					instance_placeholder_parent_type;
 	typedef	int_instance_placeholder	instance_placeholder_type;
-#endif
 	typedef	int_collection_type_manager<tag_type>
 					collection_type_manager_parent_type;
 	template <size_t D>

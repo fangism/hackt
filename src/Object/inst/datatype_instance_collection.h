@@ -2,7 +2,7 @@
 	\file "Object/inst/datatype_instance_collection.h"
 	Instance collection classes for HAC.  
 	This file came from "Object/art_object_instance.h" in a previous life. 
-	$Id: datatype_instance_collection.h,v 1.11 2006/10/18 01:19:28 fang Exp $
+	$Id: datatype_instance_collection.h,v 1.12 2006/10/18 20:58:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_DATATYPE_INSTANCE_COLLECTION_H__
@@ -40,30 +40,13 @@ protected:
 	typedef	traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
 protected:
-#if USE_INSTANCE_PLACEHOLDERS
 	datatype_instance_collection() : parent_type() { }
-#else
-	explicit
-	datatype_instance_collection(const size_t d) : parent_type(d) { }
-
-	datatype_instance_collection(const scopespace& o, const string& n, 
-		const size_t d);
-
-	datatype_instance_collection(const this_type& t, const footprint& f) :
-		parent_type(t, f) { }
-#endif
 
 public:
 virtual	~datatype_instance_collection();
 
 virtual	ostream&
 	what(ostream& o) const = 0;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-virtual	void
-	attach_initial_instantiation_statement(
-		const never_ptr<const data_instantiation_statement>) = 0;
-#endif
 
 virtual bool
 	is_partially_unrolled(void) const = 0;
@@ -81,10 +64,6 @@ virtual ostream&
 
 // need to do this for real... using object not parse tree
 //	bool equals_template_formal(const template_formal_decl& tf) const;
-#if !USE_INSTANCE_PLACEHOLDERS
-virtual	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const = 0;
-#endif
 
 virtual good_bool
 	instantiate_indices(const const_range_list& i, 

@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.16 2006/10/18 08:51:50 fang Exp $
+	$Id: template_formals_manager.cc,v 1.17 2006/10/18 20:57:49 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,11 +14,7 @@
 #include "util/hash_specializations.h"	// include as early as possible
 
 #include "Object/def/template_formals_manager.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/param_value_placeholder.h"
-#else
-#include "Object/inst/param_value_collection.h"
-#endif
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
@@ -74,17 +70,7 @@ template_formals_manager::dump_formals_list(ostream& o,
 	const template_formals_list_type::const_iterator e(l.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-		// sanity check
-		// not true any more: may be loop induction variable
-		// INVARIANT((*i)->is_template_formal());
-#if USE_INSTANCE_PLACEHOLDERS
-		// not using template formals managers anymore
-		// to hack support for induction variables.  
 		INVARIANT((*i)->is_template_formal());
-#else
-		INVARIANT((*i)->is_template_formal() ||
-			(*i)->is_loop_variable());
-#endif
 		(*i)->dump_formal(o << auto_indent) << endl;
 	}
 	return o << auto_indent << '>';

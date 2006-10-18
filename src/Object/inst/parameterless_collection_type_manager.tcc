@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.12 2006/10/18 19:08:03 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.13 2006/10/18 20:58:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -64,27 +64,6 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, this->type_parameter);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
-typename PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::type_ref_ptr_type
-PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::get_type(
-		const instance_collection_generic_type& e) const {
-#if 0
-	// can't to this, may be NULL because the collection's type
-	// hasn't been set yet
-	NEVER_NULL(this->type_parameter);	// NOT true
-	return type_ref_ptr_type(
-		new data_type_reference(this->type_parameter));
-#else
-	return type_ref_ptr_type(new data_type_reference(
-		// want get_base_def_subtype!!!
-		e.get_base_def()
-		.template is_a<const datatype_definition_base>()));
-#endif
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE

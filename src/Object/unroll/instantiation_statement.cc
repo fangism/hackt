@@ -2,7 +2,7 @@
 	\file "Object/unroll/instantiation_statement.cc"
 	Method definitions for instantiation statement classes.  
 	This file was moved from "Object/art_object_inst_stmt.cc".
- 	$Id: instantiation_statement.cc,v 1.15 2006/10/18 01:20:05 fang Exp $
+ 	$Id: instantiation_statement.cc,v 1.16 2006/10/18 20:58:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_CC__
@@ -34,15 +34,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/traits/class_traits.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/param_value_placeholder.h"
-#else
-#include "Object/inst/instance_collection.h"
-#include "Object/inst/value_collection.h"
-#include "Object/inst/physical_instance_collection.h"
-#endif
 
 // required by use of canonical_type
 #include "Object/def/user_def_datatype.h"
@@ -155,11 +149,7 @@ instantiation_statement_base::dump(ostream& o,
 		ra->dump(o << '<', dc) << '>';
 	}
 	o << " ";
-#if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<const instance_placeholder_base>
-#else
-	const never_ptr<const instance_collection_base>
-#endif
 		inst_base(get_inst_base());
 	if(inst_base) {
 		o << inst_base->get_name();
@@ -174,11 +164,7 @@ instantiation_statement_base::dump(ostream& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 instantiation_statement_base::get_name(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<const instance_placeholder_base>
-#else
-	const never_ptr<const instance_collection_base>
-#endif
 		inst_base(get_inst_base());
 	NEVER_NULL(inst_base);
 	return inst_base->get_name();

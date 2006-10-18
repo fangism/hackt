@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.9 2006/10/18 01:20:08 fang Exp $
+	$Id: unroll_context.h,v 1.10 2006/10/18 20:58:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -25,11 +25,9 @@ class pint_const;
 class footprint;
 class template_actuals;
 class template_formals_manager;
-#if USE_INSTANCE_PLACEHOLDERS
 class instance_collection_base;
 class param_value_placeholder;
 class physical_instance_placeholder;
-#endif
 class physical_instance_collection;
 class param_value_collection;
 #if !RESOLVE_VALUES_WITH_FOOTPRINT
@@ -187,12 +185,6 @@ public:
 	ostream&
 	dump(ostream&) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	// may bcome obsolete
-	const footprint*
-	get_target_footprint(void) const;
-#endif
-
 	const footprint*
 	get_top_footprint(void) const { return top_footprint; }
 
@@ -215,7 +207,6 @@ public:
 	have_template_actuals(void) const { return template_args; }
 #endif
 
-#if USE_INSTANCE_PLACEHOLDERS
 	void
 	instantiate_collection(
 		const count_ptr<instance_collection_base>&) const;
@@ -241,15 +232,9 @@ public:
 	/// overloaded name call-forwarding for the lazy...
 	count_ptr<param_value_collection>
 	lookup_collection(const param_value_placeholder& p) const;
-#endif
 
-#if USE_INSTANCE_PLACEHOLDERS
 	count_ptr<const const_param>
 	lookup_actual(const param_value_placeholder&) const;
-#else
-	count_ptr<const const_param>
-	lookup_actual(const param_value_collection&) const;
-#endif
 
 #if !RESOLVE_VALUES_WITH_FOOTPRINT
 protected:

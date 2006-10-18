@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range_list.cc,v 1.17 2006/10/18 07:39:38 fang Exp $
+ 	$Id: meta_range_list.cc,v 1.18 2006/10/18 20:57:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_LIST_CC__
@@ -396,15 +396,6 @@ const_range_list::must_be_formal_size_equivalent(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-good_bool
-const_range_list::resolve_ranges(const_range_list& r) const {
-	r = *this;
-	return good_bool(true);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 const_range_list::unroll_resolve_rvalues(const_range_list& r, 
 		const unroll_context& c) const {
@@ -633,32 +624,6 @@ const_range_list
 dynamic_meta_range_list::static_overlap(const meta_range_list& r) const {
 	return const_range_list();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	\param r reference to return value of const_range_list, 
-		where final range bounds are saved.  
-	\return true if success, false if fail.  
- */
-good_bool
-dynamic_meta_range_list::resolve_ranges(const_range_list& r) const {
-	// resolve ranges each step, each dynamic_range
-	r.clear();
-	const_iterator i(begin());
-	const const_iterator e(end());
-	for ( ; i!=e; i++) {
-		const_range c;
-		const count_ptr<const pint_range> ip(*i);
-		if (ip->resolve_range(c).good) {
-			r.push_back(c);
-		} else {
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool

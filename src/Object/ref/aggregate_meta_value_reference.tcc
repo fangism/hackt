@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.tcc"
 	Implementation of aggregate_meta_value_reference class.  
-	$Id: aggregate_meta_value_reference.tcc,v 1.11 2006/10/18 07:39:44 fang Exp $
+	$Id: aggregate_meta_value_reference.tcc,v 1.12 2006/10/18 20:58:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_TCC__
@@ -97,18 +97,10 @@ if (subreferences.size()) {
 	Aggregates have more than one base collection!
  */
 AGGREGATE_META_VALUE_REFERENCE_TEMPLATE_SIGNATURE
-#if USE_INSTANCE_PLACEHOLDERS
 never_ptr<const param_value_placeholder>
-#else
-never_ptr<const param_value_collection>
-#endif
 AGGREGATE_META_VALUE_REFERENCE_CLASS::get_coll_base(void) const {
 	ICE_NEVER_CALL(cerr);
-#if USE_INSTANCE_PLACEHOLDERS
 	return never_ptr<const param_value_placeholder>(NULL);
-#else
-	return never_ptr<const param_value_collection>(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

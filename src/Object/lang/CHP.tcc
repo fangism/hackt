@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.tcc"
 	Template method definitions for CHP classes.
-	$Id: CHP.tcc,v 1.9 2006/10/18 01:19:44 fang Exp $
+	$Id: CHP.tcc,v 1.10 2006/10/18 20:58:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_CHP_TCC__
@@ -12,9 +12,7 @@
 #include "util/memory/count_ptr.tcc"
 #include "Object/lang/CHP.h"
 #include "Object/inst/channel_instance_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.h"
-#endif
 #include "Object/type/data_type_reference.h"
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/ref/simple_nonmeta_instance_reference.h"
@@ -41,11 +39,7 @@ template <class L>
 good_bool
 channel_send::add_expressions(const L& l) {
 	// get chan's type, in canonical form
-#if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<const channel_instance_placeholder>
-#else
-	const never_ptr<const channel_instance_collection>
-#endif
 		inst_base(chan->get_inst_base_subtype());
 	const count_ptr<const channel_type_reference_base>
 		type_ref(inst_base->get_unresolved_type_ref()
@@ -128,11 +122,7 @@ template <class L>
 good_bool
 channel_receive::add_references(const L& l) {
 	// get chan's type, in canonical form
-#if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<const channel_instance_placeholder>
-#else
-	const never_ptr<const channel_instance_collection>
-#endif
 		inst_base(chan->get_inst_base_subtype());
 	const count_ptr<const channel_type_reference_base>
 		type_ref(inst_base->get_unresolved_type_ref()

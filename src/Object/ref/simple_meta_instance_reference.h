@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.16 2006/10/18 05:32:51 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.17 2006/10/18 20:58:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -20,9 +20,7 @@
 namespace HAC {
 namespace entity {
 using util::packed_array_generic;
-#if USE_INSTANCE_PLACEHOLDERS
 class instance_placeholder_base;
-#endif
 
 template <bool>	struct simple_meta_instance_reference_implementation;
 
@@ -68,12 +66,10 @@ public:
 	/// the instance collection base type
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename traits_type::instance_placeholder_type
 					instance_placeholder_type;
 	typedef	never_ptr<const instance_placeholder_type>
 					instance_placeholder_ptr_type;
-#endif
 	/// the type of alias element contained by instance collections
 	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
@@ -93,21 +89,12 @@ public:
 	typedef	typename parent_type::port_connection_ptr_type
 						port_connection_ptr_type;
 private:
-#if USE_INSTANCE_PLACEHOLDERS
 	const instance_placeholder_ptr_type	inst_collection_ref;
-#else
-	const instance_collection_ptr_type	inst_collection_ref;
-#endif
 protected:
 	simple_meta_instance_reference();
 public:
-#if USE_INSTANCE_PLACEHOLDERS
 	explicit
 	simple_meta_instance_reference(const instance_placeholder_ptr_type);
-#else
-	explicit
-	simple_meta_instance_reference(const instance_collection_ptr_type);
-#endif
 
 virtual	~simple_meta_instance_reference();
 
@@ -117,19 +104,13 @@ virtual	~simple_meta_instance_reference();
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const;
 
-#if USE_INSTANCE_PLACEHOLDERS
 	never_ptr<const instance_placeholder_base>
-#else
-	never_ptr<const instance_collection_base>
-#endif
 	get_inst_base(void) const;
 
-#if USE_INSTANCE_PLACEHOLDERS
 	instance_placeholder_ptr_type
 	get_inst_base_subtype(void) const {
 		return this->inst_collection_ref;
 	}
-#endif
 
 	ostream&
 	dump_type_size(ostream&) const;
@@ -187,43 +168,25 @@ protected:
 	static
 	instance_alias_base_ptr_type
 	__unroll_generic_scalar_reference(
-#if USE_INSTANCE_PLACEHOLDERS
 		const instance_placeholder_type&, 
-#else
-		const instance_collection_generic_type&, 
-#endif
 		const count_ptr<const index_list_type>&,
-		const unroll_context&
-#if !USE_INSTANCE_PLACEHOLDERS
-			, const bool
-#endif
-			);
+		const unroll_context&);
 
-#if USE_INSTANCE_PLACEHOLDERS
 	static
 	instance_alias_base_ptr_type
 	__unroll_generic_scalar_reference_no_lookup(
 		const instance_collection_generic_type&, 
 		const count_ptr<const index_list_type>&,
 		const unroll_context&);
-#endif	// USE_INSTANCE_PLACEHOLDERS
 
 	static
 	good_bool
 	__unroll_generic_scalar_references(
-#if USE_INSTANCE_PLACEHOLDERS
 		const instance_placeholder_type&, 
-#else
-		const instance_collection_generic_type&, 
-#endif
 		const count_ptr<const index_list_type>&,
 		const unroll_context&, 
-#if !USE_INSTANCE_PLACEHOLDERS
-		const bool, 
-#endif
 		alias_collection_type&);
 
-#if USE_INSTANCE_PLACEHOLDERS
 	static
 	good_bool
 	__unroll_generic_scalar_references_no_lookup(
@@ -231,7 +194,6 @@ protected:
 		const count_ptr<const index_list_type>&,
 		const unroll_context&, 
 		alias_collection_type&);
-#endif	// USE_INSTANCE_PLACEHOLDERS
 
 	void
 	collect_transient_info_base(persistent_object_manager& ) const;

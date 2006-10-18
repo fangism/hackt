@@ -5,7 +5,7 @@
 		This NEEDS to be templated somehow...
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: operators.cc,v 1.20 2006/10/18 07:39:38 fang Exp $
+ 	$Id: operators.cc,v 1.21 2006/10/18 20:57:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_OPERATORS_CC__
@@ -192,21 +192,6 @@ pint_unary_expr::unroll_resolve_value(const unroll_context& c,
 	i = (op == '-') ? -j : ~j;		// regardless of ret
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Returns resolved value of negation expression.  
- */
-good_bool
-pint_unary_expr::resolve_value(value_type& i) const {
-	value_type j;
-	NEVER_NULL(ex);
-	const good_bool ret(ex->resolve_value(j));
-	i = (op == '-') ? -j : ~j;		// regardless of ret
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -408,21 +393,6 @@ preal_unary_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Returns resolved value of negation expression.  
- */
-good_bool
-preal_unary_expr::resolve_value(value_type& i) const {
-	value_type j;
-	NEVER_NULL(ex);
-	const good_bool ret(ex->resolve_value(j));
-	i = -j;		// regardless of ret
-	return ret;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return empty list, signifying a scalar value, because all 
 		expressions operations only work on scalars.  
@@ -613,17 +583,6 @@ pbool_unary_expr::unroll_resolve_value(const unroll_context& c,
 	i = !j;		// regardless of ret
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-good_bool
-pbool_unary_expr::resolve_value(value_type& i) const {
-	value_type b;
-	const good_bool ret(ex->resolve_value(b));
-	i = !b;
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -904,31 +863,6 @@ pint_arith_expr::must_be_equivalent(const pint_expr& p) const {
 		return false;
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-good_bool
-pint_arith_expr::resolve_value(value_type& i) const {
-	static const expr_dump_context& c(expr_dump_context::default_value);
-	arg_type a, b;
-	NEVER_NULL(lx);	NEVER_NULL(rx);
-	const good_bool lret(lx->resolve_value(a));
-	const good_bool rret(rx->resolve_value(b));
-	if (!lret.good) {
-		cerr << "ERROR: resolving left operand of: ";
-		dump(cerr, c) << endl;
-		return good_bool(false);
-	} else if (!rret.good) {
-		cerr << "ERROR: resolving right operand of: ";
-		dump(cerr, c) << endl;
-		return good_bool(false);
-	} else {
-		// Oooooh, virtual operator dispatch!
-		i = (*op)(a,b);
-		return good_bool(true);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1275,22 +1209,6 @@ pint_relational_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	TO DO: switch on relational expression operator.  
- */
-good_bool
-pint_relational_expr::resolve_value(value_type& i) const {
-	arg_type li, ri;
-	const good_bool l_ret(lx->resolve_value(li));
-	const good_bool r_ret(rx->resolve_value(ri));
-	// SWITCH
-	i = (*op)(li, ri);
-	return good_bool(l_ret.good && r_ret.good);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return pbool_const of the resolved value.
  */
@@ -1561,31 +1479,6 @@ preal_arith_expr::must_be_equivalent(const preal_expr& p) const {
 		return false;
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-good_bool
-preal_arith_expr::resolve_value(value_type& i) const {
-	static const expr_dump_context& c(expr_dump_context::default_value);
-	arg_type a, b;
-	NEVER_NULL(lx);	NEVER_NULL(rx);
-	const good_bool lret(lx->resolve_value(a));
-	const good_bool rret(rx->resolve_value(b));
-	if (!lret.good) {
-		cerr << "ERROR: resolving left operand of: ";
-		dump(cerr, c) << endl;
-		return good_bool(false);
-	} else if (!rret.good) {
-		cerr << "ERROR: resolving right operand of: ";
-		dump(cerr, c) << endl;
-		return good_bool(false);
-	} else {
-		// Oooooh, virtual operator dispatch!
-		i = (*op)(a,b);
-		return good_bool(true);
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1924,22 +1817,6 @@ preal_relational_expr::unroll_resolve_value(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	TO DO: switch on relational expression operator.  
- */
-good_bool
-preal_relational_expr::resolve_value(value_type& i) const {
-	arg_type li, ri;
-	const good_bool l_ret(lx->resolve_value(li));
-	const good_bool r_ret(rx->resolve_value(ri));
-	// SWITCH
-	i = (*op)(li, ri);
-	return good_bool(l_ret.good && r_ret.good);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\return pbool_const of the resolved value.
  */
@@ -2226,21 +2103,6 @@ pbool_logical_expr::unroll_resolve_value(const unroll_context& c,
 		return good_bool(true);
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	TO DO: switch on logical expression operator.  
- */
-good_bool
-pbool_logical_expr::resolve_value(value_type& i) const {
-	arg_type lb, rb;
-	const good_bool l_ret(lx->resolve_value(lb));
-	const good_bool r_ret(rx->resolve_value(rb));
-	i = (*op)(lb, rb);
-	return good_bool(l_ret.good && r_ret.good);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

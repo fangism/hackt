@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.12 2006/10/18 01:19:40 fang Exp $
+	$Id: process_instance_collection.cc,v 1.13 2006/10/18 20:58:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -27,9 +27,7 @@
 #include "Object/inst/alias_actuals.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.tcc"
-#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -46,11 +44,9 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_3D, "process_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_4D, "process_array_4D")
 
-#if USE_INSTANCE_PLACEHOLDERS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_instance_placeholder, 
 	PROCESS_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-#endif
 #if 0
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_instance, UNIQUE_PROCESS_INSTANCE_TYPE_KEY, 0)
@@ -73,9 +69,7 @@ namespace entity {
 //=============================================================================
 // explicit template clas instantiations
 
-#if USE_INSTANCE_PLACEHOLDERS
 template class instance_placeholder<process_tag>;
-#endif
 template class state_instance<process_tag>;
 template class instance_pool<state_instance<process_tag> >;
 template class instance_alias_info<process_tag>;

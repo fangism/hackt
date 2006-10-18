@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_type_ref_default.h"
 		in a previous life.  
-	$Id: instantiation_statement_type_ref_default.h,v 1.11 2006/10/18 08:52:15 fang Exp $
+	$Id: instantiation_statement_type_ref_default.h,v 1.12 2006/10/18 20:58:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TYPE_REF_DEFAULT_H__
@@ -39,10 +39,8 @@ class instantiation_statement_type_ref_default {
 public:
 	typedef	typename class_traits<Tag>::type_ref_ptr_type
 							type_ref_ptr_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename class_traits<Tag>::instance_placeholder_type
 					instance_placeholder_type;
-#endif
 	typedef	typename class_traits<Tag>::instance_collection_generic_type
 					instance_collection_generic_type;
 	typedef	typename class_traits<Tag>::instance_collection_parameter_type

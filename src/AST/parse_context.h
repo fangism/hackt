@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.12 2006/10/18 08:51:46 fang Exp $
+	$Id: parse_context.h,v 1.13 2006/10/18 20:57:36 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -34,12 +34,8 @@ namespace entity {
 	class process_definition_base;
 	class fundamental_type_reference;
 	class sequential_scope;
-#if USE_INSTANCE_PLACEHOLDERS
 	class instance_placeholder_base;
 	template <class> class value_placeholder;
-#else
-	class instance_collection_base;
-#endif
 	class instance_management_base;
 	class meta_instance_reference_connection;
 	class param_expr;
@@ -48,9 +44,6 @@ namespace entity {
 	class loop_scope;
 	class conditional_scope;
 	struct pint_tag;
-#if !USE_INSTANCE_PLACEHOLDERS
-	template <class, size_t> class value_array;
-#endif
 namespace PRS {
 	class rule;
 	class rule_set;
@@ -80,13 +73,8 @@ using entity::channel_definition_base;
 using entity::process_definition_base;
 using entity::fundamental_type_reference;
 using entity::sequential_scope;
-#if USE_INSTANCE_PLACEHOLDERS
 using entity::instance_placeholder_base;
 using entity::value_placeholder;
-#else
-using entity::instance_collection_base;
-using entity::value_array;
-#endif
 using entity::instance_management_base;
 using entity::meta_instance_reference_connection;
 using entity::param_expr;
@@ -134,11 +122,7 @@ public:
 	typedef	count_ptr<const dynamic_param_expr_list>
 							relaxed_args_ptr_type;
 	typedef list<string>			file_name_stack_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	never_ptr<const instance_placeholder_base>
-#else
-	typedef	never_ptr<const instance_collection_base>
-#endif
 						placeholder_ptr_type;
 private:
 // are we in some expression? what depth?
@@ -205,14 +189,8 @@ private:
 	 */
 	entity::PRS::rule_set&			top_prs;
 
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	value_placeholder<pint_tag>	loop_var_placeholder_type;
 	typedef	list<count_ptr<const loop_var_placeholder_type> >
-#else
-	typedef	value_array<pint_tag, 0>	pint_scalar;
-	typedef	pint_scalar			loop_var_placeholder_type;
-	typedef	list<count_ptr<const pint_scalar> >
-#endif
 						loop_var_stack_type;
 	loop_var_stack_type			loop_var_stack;
 

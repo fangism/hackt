@@ -2,7 +2,7 @@
 	\file "Object/traits/preal_traits.h"
 	Traits and policies for parameter floats.  
 	This file used to be "Object/art_object_preal_traits.h".
-	$Id: preal_traits.h,v 1.9 2006/10/18 19:08:07 fang Exp $
+	$Id: preal_traits.h,v 1.10 2006/10/18 20:58:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PREAL_TRAITS_H__
@@ -34,10 +34,8 @@ struct class_traits<preal_tag> {
 	typedef	instance_collection_generic_type
 						value_collection_generic_type;
 	typedef	param_value_collection		value_collection_parent_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	param_value_placeholder		value_placeholder_parent_type;
 	typedef	preal_value_placeholder		instance_placeholder_type;
-#endif
 	template <size_t D>
 	struct value_array {
 		typedef	entity::value_array<tag_type,D>	type;

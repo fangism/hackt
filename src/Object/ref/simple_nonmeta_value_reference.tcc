@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.12 2006/10/18 19:08:04 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.13 2006/10/18 20:58:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -26,12 +26,10 @@
 #include "Object/traits/class_traits.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/type/data_type_reference.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/param_value_placeholder.h"
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/unroll/unroll_context.h"
-#endif
 #include "Object/type/canonical_generic_datatype.h"
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
@@ -137,11 +135,9 @@ struct nonmeta_unroll_resolve_copy_policy<Tag, parameter_value_tag> {
 	 */
 	typedef	typename reference_type::value_collection_type
 							value_collection_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	// for lack of better name...
 	typedef	typename traits_type::value_collection_generic_type
 						value_array_generic_type;
-#endif
 
 /**
 	See comment of value_array::lookup_value for new usage.  
@@ -156,7 +152,6 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 	multikey_index_type k(i.size());	// pre-size
 	if (i.make_const_index_list(k).good) {
 		data_value_type _val;
-#if USE_INSTANCE_PLACEHOLDERS
 		const count_ptr<const param_value_collection>
 #if RVALUE_LVALUE_LOOKUPS
 			pvc(c.lookup_rvalue_collection(vc));
@@ -176,14 +171,6 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 		} else {
 			return return_type(NULL);
 		}
-#else
-		if (vc.lookup_value(_val, k, c).good) {
-			return return_type(new const_expr_type(_val));
-		} else {
-			// already have error message
-			return return_type(NULL);
-		}
-#endif
 	} else {
 		// there is some nonmeta value in index expr
 		return ret;
@@ -241,7 +228,6 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		// therefore, just look this up
 		// code ripped from:
 		// simple_meta_value_reference::unroll_resolve_rvalues
-#if USE_INSTANCE_PLACEHOLDERS
 		const count_ptr<const param_value_collection>
 #if RVALUE_LVALUE_LOOKUPS
 			pvc(c.lookup_rvalue_collection(
@@ -264,22 +250,6 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
                                 "uninitialized value." << endl;
                         return error;
 		}
-#else
-		const never_ptr<const value_scalar_type>
-			ps(_this.value_collection_ref.
-				template is_a<const value_scalar_type>());
-		NEVER_NULL(ps);
-		data_value_type _val;
-		const bad_bool valid(ps->lookup_value(_val, c));
-		if (valid.bad) {
-                        cerr << "ERROR: in unroll_resolve-ing "
-                                "simple_meta_value_reference, "
-                                "uninitialized value." << endl;
-                        return error;
-		} else {
-			return return_type(new const_expr_type(_val));
-		}
-#endif
 	}
 }	// end method unroll_resolve_copy
 } __VISIBILITY_HIDDEN__ ;	// end struct nonmeta_unroll_resolve_copy_policy
@@ -340,19 +310,13 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->what(o) << " ";
 	}
 	NEVER_NULL(this->value_collection_ref);
-#if USE_INSTANCE_PLACEHOLDERS
-#define	dump_hierarchical_name	dump_qualified_name
-#endif
 	if (c.enclosing_scope) {
-		this->value_collection_ref->dump_hierarchical_name(o,
+		this->value_collection_ref->dump_qualified_name(o,
 			dump_flags::no_definition_owner);
 	} else {
-		this->value_collection_ref->dump_hierarchical_name(o,
+		this->value_collection_ref->dump_qualified_name(o,
 			dump_flags::default_value);
 	}
-#if USE_INSTANCE_PLACEHOLDERS
-#undef	dump_hierarchical_name
-#endif
 	return simple_nonmeta_instance_reference_base::dump_indices(o, c);
 }
 

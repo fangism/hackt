@@ -3,7 +3,7 @@
 	Class template for nonmeta instance references in HAC.  
 	This file originated from "Object/art_object_nonmeta_inst_ref.h"
 		in a previous life.  
-	$Id: simple_nonmeta_instance_reference.h,v 1.9 2006/10/18 01:19:52 fang Exp $
+	$Id: simple_nonmeta_instance_reference.h,v 1.10 2006/10/18 20:58:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_INSTANCE_REFERENCE_H__
@@ -13,7 +13,6 @@
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "util/packed_array_fwd.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -54,11 +53,7 @@ protected:
 						parent_type;
 public:
 	/// the instance collection base type
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename traits_type::instance_placeholder_type
-#else
-	typedef	typename traits_type::instance_collection_generic_type
-#endif
 					instance_placeholder_type;
 	/// pointer type for instance collections
 	typedef	never_ptr<const instance_placeholder_type>

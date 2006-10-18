@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.13 2006/10/18 07:39:36 fang Exp $
+	$Id: const_range.h,v 1.14 2006/10/18 20:57:52 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__
@@ -147,18 +147,8 @@ public:
 	pint_value_type
 	upper_bound(void) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	good_bool
-	resolve_range(const_range& r) const;
-#endif
-
 	good_bool
 	unroll_resolve_range(const unroll_context&, const_range& r) const;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	count_ptr<const_index>
-	resolve_index(void) const;
-#endif
 
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;

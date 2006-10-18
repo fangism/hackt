@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.24 2006/10/18 19:07:52 fang Exp $
+	$Id: devel_switches.h,v 1.25 2006/10/18 20:57:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -45,13 +45,6 @@
 #define	LOOKUP_GLOBAL_META_PARAMETERS		1
 
 /**
-	Replace instance collection replications with placeholders, 
-	and use back-references to the placeholders.  
-	Goal: 1
- */
-#define	USE_INSTANCE_PLACEHOLDERS		1
-
-/**
 	All values, including template parameters shall be resolved
 	through footprints.  
 	Unroll_context will no longer use template_formals and actuals
@@ -59,7 +52,7 @@
 	Goal: 1
 	Status: still undergoing testing as development continues
  */
-#define	RESOLVE_VALUES_WITH_FOOTPRINT	(1 && USE_INSTANCE_PLACEHOLDERS)
+#define	RESOLVE_VALUES_WITH_FOOTPRINT	1
 
 /**
 	Define to 0 to remove formal instance management (template, port)
@@ -79,7 +72,7 @@
 	Goal: 1
 	Status: complete, just needs complete testing
  */
-#define	SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS	(1 && USE_INSTANCE_PLACEHOLDERS)
+#define	SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS	1
 
 /**
 	Define to 1 to distinguish lvalue from rvalue lookups at unroll time.

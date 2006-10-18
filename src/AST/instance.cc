@@ -1,7 +1,7 @@
 /**
 	\file "AST/instance.cc"
 	Class method definitions for HAC::parser for instance-related classes.
-	$Id: instance.cc,v 1.17 2006/10/18 05:32:26 fang Exp $
+	$Id: instance.cc,v 1.18 2006/10/18 20:57:35 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_instance.cc,v 1.31.10.1 2005/12/11 00:45:08 fang Exp
  */
@@ -28,11 +28,7 @@
 
 #include "Object/devel_switches.h"
 #include "Object/common/namespace.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder_base.h"
-#else
-#include "Object/inst/instance_collection_base.h"
-#endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/definition_base.h"
 #include "Object/type/fundamental_type_reference.h"
@@ -609,11 +605,7 @@ if (ranges) {
 			THROW_EXIT;
 		}
 	}
-#if USE_INSTANCE_PLACEHOLDERS
 	const never_ptr<const instance_placeholder_base>
-#else
-	const never_ptr<const instance_collection_base>
-#endif
 		t(c.add_instance(*id, checked_relaxed_actuals, d));
 	// if there was error, would've THROW_EXIT'd (temporary)
 	return t;

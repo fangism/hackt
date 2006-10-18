@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range_list.h,v 1.12 2006/10/18 01:19:17 fang Exp $
+	$Id: const_range_list.h,v 1.13 2006/10/18 20:57:52 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_LIST_H__
@@ -98,11 +98,6 @@ public:
 	// may be obsolete by must_be_formal_size_equivalent...
 	bool
 	operator == (const const_range_list& c) const;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	good_bool
-	resolve_ranges(const_range_list& r) const;
-#endif
 
 	multikey_index_type
 	upper_multikey(void) const;

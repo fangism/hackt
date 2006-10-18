@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.26 2006/10/18 18:38:16 fang Exp $
+	$Id: footprint.cc,v 1.27 2006/10/18 20:57:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -24,9 +24,7 @@
 #include "Object/common/alias_string_cache.h"
 #include "Object/common/dump_flags.h"
 #include "Object/inst/alias_printer.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/physical_instance_placeholder.h"
-#endif
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
@@ -239,7 +237,6 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			i(instance_collection_map.begin());
 		const const_instance_map_iterator
 			e(instance_collection_map.end());
-#if USE_INSTANCE_PLACEHOLDERS
 		set<string> keys;
 		for ( ; i!=e; ++i) {
 			keys.insert(i->first);
@@ -253,17 +250,6 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			o << auto_indent << j->first << " = ";
 			j->second->dump(o, df) << endl;
 		}
-#else
-		for ( ; i!=e; i++) {
-			NEVER_NULL(i->second);
-			o << auto_indent;
-#if USE_INSTANCE_PLACEHOLDERS
-			// print the key first
-			o << i->first << " = ";
-#endif
-			i->second->dump(o, df) << endl;
-		}
-#endif
 	if (is_created()) {
 		o << auto_indent << "Created state:" << endl;
 		dump(o);
@@ -332,7 +318,6 @@ footprint::clear_instance_collection_map(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 /**
 	TODO: qualified names needed for top-level footprint. 
 	\pre Not already registered.  
@@ -349,7 +334,6 @@ footprint::register_collection(const count_ptr<instance_collection_base>& p) {
 	instance_collection_map[key] = p;
 	return good_bool(true);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -431,11 +415,7 @@ footprint::evaluate_scope_aliases(void) {
 			// but it collects everything in scope
 			// good re-use of function!
 			pic->collect_port_aliases(scope_aliases);
-#if USE_INSTANCE_PLACEHOLDERS
 			if (pic->get_placeholder_base()->is_port_formal())
-#else
-			if (pic->is_port_formal())
-#endif
 				pic->collect_port_aliases(port_aliases);
 		}
 	}
@@ -531,11 +511,7 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 			// note: port formal is 1-indexed
 			// where as member array is 0-indexed
 			const size_t pfp = 
-#if USE_INSTANCE_PLACEHOLDERS
 				coll_ptr->get_placeholder_base()->is_port_formal();
-#else
-				coll_ptr->is_port_formal();
-#endif
 			if (pfp) {
 				coll_ptr->assign_footprint_frame(
 					ff, pmc.member_array[pfp -1]);

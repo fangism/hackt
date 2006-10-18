@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.15 2006/10/18 18:38:19 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.16 2006/10/18 20:58:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -24,9 +24,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/namespace.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/param_type_reference.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
-#endif
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/param_instantiation_statement.h"
@@ -146,14 +144,9 @@ dummy_bool(new pbool_const(true));
 ***/
 
 // will transfer ownership to definition
-#if USE_INSTANCE_PLACEHOLDERS
 static excl_ptr<pint_value_placeholder>
 int_def_width(new pint_value_placeholder(
 	int_traits::built_in_definition, "width", 0));
-#else
-static excl_ptr<pint_scalar>
-int_def_width(new pint_scalar(int_traits::built_in_definition, "width"));
-#endif
 
 static const good_bool
 __good_int_width
@@ -179,18 +172,10 @@ static const size_t width_receipt =
 
 // need to fake adding the template formal and instantiating it
 // or creating a footprint?
-#if USE_INSTANCE_PLACEHOLDERS
 static excl_ptr<param_value_placeholder>
-#else
-static excl_ptr<instance_collection_base>
-#endif
 int_def_width_base(int_def_width);
 
-#if USE_INSTANCE_PLACEHOLDERS
 static const never_ptr<const param_value_placeholder>
-#else
-static const never_ptr<const instance_collection_base>
-#endif
 int_def_width_ref
 __ATTRIBUTE_UNUSED_CTOR__((const_cast<built_in_datatype_def&>(
 	int_traits::built_in_definition).add_template_formal(int_def_width_base)));

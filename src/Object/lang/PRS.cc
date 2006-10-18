@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.cc"
 	Implementation of PRS objects.
-	$Id: PRS.cc,v 1.20 2006/10/18 01:19:44 fang Exp $
+	$Id: PRS.cc,v 1.21 2006/10/18 20:58:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_CC__
@@ -31,10 +31,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/inst/pint_value_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
 #include "Object/def/footprint.h"
-#endif
 #include "Object/def/template_formals_manager.h"
 #include "Object/common/dump_flags.h"
 #include "Object/type/template_actuals.h"
@@ -947,7 +945,6 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	// in a loop:
 	// create context chain of lookup
 	//	using unroll_context's template_formal/actual mechanism.  
-#if USE_INSTANCE_PLACEHOLDERS
 	// copied from loop_scope::unroll()
 	entity::footprint f;
 	const count_ptr<pint_scalar>
@@ -956,51 +953,16 @@ rule_loop::unroll(const unroll_context& c, const node_pool_type& np,
 	// induction variable into the footprint as an actual variable
 	pint_value_type& p(var->get_instance().value);  
 		// acquire direct reference
-#if 0
-	unroll_context cc(&f);
-	cc.chain_context(c);
-#else
 	const unroll_context cc(&f, c);
-#endif
 	for (p = min; p <= max; ++p) {
 		if (!rules.unroll(cc, np, pfp).good) {
 			cerr << "Error resolving production rule in loop:"
 				<< endl;
-#if USE_INSTANCE_PLACEHOLDERS
 			ind_var->dump_qualified_name(cerr, dump_flags::verbose)
 				<< " = " << p << endl;
-#else
-			ind_var->dump_hierarchical_name(cerr,
-				dump_flags::verbose)
-				<< " = " << p << endl;
-#endif
 			return good_bool(false);
 		}
 	}
-
-#else
-	template_formals_manager tfm;
-	const never_ptr<const pint_scalar> pvc(&*ind_var);
-	tfm.add_strict_template_formal(pvc);
-
-	const count_ptr<pint_const> ind(new pint_const(min));
-	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
-	NEVER_NULL(al);
-	al->push_back(ind);
-	const template_actuals::const_arg_list_ptr_type sl(NULL);
-	const template_actuals ta(al, sl);
-	unroll_context cc(ta, tfm);
-	cc.chain_context(c);
-	pint_value_type ind_val = min;
-	for ( ; ind_val <= max; ind_val++) {
-		*ind = ind_val;
-		if (!rules.unroll(cc, np, pfp).good) {
-			cerr << "Error resolving production rule in loop:"
-				<< endl;
-			return good_bool(false);
-		}
-	}
-#endif
 	return good_bool(true);
 }
 
@@ -1108,7 +1070,6 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	// in a loop:
 	// create context chain of lookup
 	//	using unroll_context's template_formal/actual mechanism.  
-#if USE_INSTANCE_PLACEHOLDERS
 	// copied from loop_scope::unroll()
 	entity::footprint f;
 	const count_ptr<pint_scalar>
@@ -1117,37 +1078,11 @@ expr_loop_base::unroll_base(const unroll_context& c, const node_pool_type& np,
 	// induction variable into the footprint as an actual variable
 	pint_value_type& p(var->get_instance().value);  
 		// acquire direct reference
-#if 0
-	unroll_context cc(&f);
-	cc.chain_context(c);
-#else
 	const unroll_context cc(&f, c);
-#endif
 	list<size_t> expr_indices;
 	for (p = min; p <= max; ++p) {
 		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
 	}
-#else
-	template_formals_manager tfm;
-	const never_ptr<const pint_scalar> pvc(&*ind_var);
-	tfm.add_strict_template_formal(pvc);
-
-	const count_ptr<pint_const> ind(new pint_const(min));
-	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
-	NEVER_NULL(al);
-	al->push_back(ind);
-	const template_actuals::const_arg_list_ptr_type sl(NULL);
-	const template_actuals ta(al, sl);
-	unroll_context cc(ta, tfm);
-	cc.chain_context(c);
-	pint_value_type ind_val = min;
-	list<size_t> expr_indices;
-	for ( ; ind_val <= max; ind_val++) {
-		*ind = ind_val;
-		expr_indices.push_back(body_expr->unroll(cc, np, pfp));
-		// check for errors after loop
-	}
-#endif
 	PRS::footprint::expr_node&
 		new_expr(pfp.push_back_expr(type_enum, expr_indices.size()));
 	copy(expr_indices.begin(), expr_indices.end(), &new_expr[1]);

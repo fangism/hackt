@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/substructure_alias_base.h"
-	$Id: substructure_alias_base.h,v 1.17 2006/10/18 01:19:41 fang Exp $
+	$Id: substructure_alias_base.h,v 1.18 2006/10/18 20:58:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SUBSTRUCTURE_ALIAS_BASE_H__
@@ -11,17 +11,12 @@
 #include "Object/inst/subinstance_manager.h"
 #include "util/persistent_fwd.h"
 #include "Object/def/footprint.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
 struct dump_flags;
 class instance_collection_base;
-#if USE_INSTANCE_PLACEHOLDERS
 class physical_instance_placeholder;
-#else
-class physical_instance_collection;
-#endif
 class unroll_context;
 class port_alias_tracker;
 class footprint;
@@ -45,11 +40,7 @@ private:
 	typedef	substructure_alias_base<true>	this_type;
 	typedef	subinstance_manager::connection_references_type
 						connection_references_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	physical_instance_placeholder	port_type;
-#else
-	typedef	physical_instance_collection	port_type;
-#endif
 protected:
 	/**
 		Container of sub-instances.  
@@ -88,12 +79,6 @@ public:
 	// just a forwarded call
 	subinstance_manager::value_type
 	lookup_port_instance(const port_type& i) const;
-
-#if 0
-// OBSOLETE -- remove
-	subinstance_manager::value_type
-	lookup_member_instance(const port_type& i) const;
-#endif
 
 virtual	never_ptr<const physical_instance_collection>
 	get_container_base(void) const;

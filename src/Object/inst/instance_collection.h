@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.24 2006/10/18 19:08:01 fang Exp $
+	$Id: instance_collection.h,v 1.25 2006/10/18 20:58:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -100,10 +100,8 @@ public:
 						instance_alias_base_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename traits_type::instance_placeholder_type
 					instance_placeholder_type;
-#endif
 	typedef	typename traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
 	typedef	typename traits_type::simple_meta_instance_reference_type
@@ -128,54 +126,21 @@ protected:
 public:
 	typedef	typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	never_ptr<const instance_placeholder_type>
 				instance_placeholder_ptr_type;
-#else
-	// instantiation statement pointers belong only in placeholders
-	typedef	never_ptr<const initial_instantiation_statement_type>
-				initial_instantiation_statement_ptr_type;
-#endif
 protected:
-#if USE_INSTANCE_PLACEHOLDERS
 	/**
 		This is a back-reference to the placeholder that resides
 		in the scopespace, that contains basic collection information,
 		prior to unrolling.
 	 */
 	instance_placeholder_ptr_type	source_placeholder;
-#else
-	/**
-		All collections track the first instantiation statement,
-		for the sake of deducing the type.  
-		Scalars instance collections need this too because
-		of the possibility of relaxed template arguments.  
-	 */
-	initial_instantiation_statement_ptr_type
-					initial_instantiation_statement_ptr;
-#endif
 protected:
-#if USE_INSTANCE_PLACEHOLDERS
 	instance_collection();
 
 	/// requires a back-reference to the source collection placeholder
 	explicit
 	instance_collection(const instance_placeholder_ptr_type);
-#else
-	explicit
-	instance_collection(const size_t d) :
-		parent_type(d), collection_type_manager_parent_type(),
-		initial_instantiation_statement_ptr(NULL) { }
-
-	instance_collection(const this_type&, const footprint&);
-
-private:
-virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
-
-public:
-	instance_collection(const scopespace& o, const string& n, 
-		const size_t d);
-#endif
 public:
 
 virtual	~instance_collection();
@@ -186,12 +151,6 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream&) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	ostream&
-	dump_formal(ostream&) const;
-#endif
-
-#if USE_INSTANCE_PLACEHOLDERS
 	never_ptr<const physical_instance_placeholder>
 	get_placeholder_base(void) const;
 
@@ -199,41 +158,6 @@ virtual	ostream&
 	get_placeholder(void) const {
 		return this->source_placeholder;
 	}
-
-#if 0
-	size_t
-	get_dimensions(void) const;
-
-	never_ptr<const scopespace>
-	get_owner(void) const;
-
-	const string&
-	get_name(void) const;
-#endif
-#endif
-
-// collections don't need any information about instantiation statements
-#if !USE_INSTANCE_PLACEHOLDERS
-	void
-	attach_initial_instantiation_statement(
-		const initial_instantiation_statement_ptr_type i) {
-		NEVER_NULL(i);
-		if (!initial_instantiation_statement_ptr)
-			initial_instantiation_statement_ptr = i;
-		// else skip
-	}
-
-	/**
-		CAVEAT: this statement could be conditional.  
-	 */
-	initial_instantiation_statement_ptr_type
-	get_initial_instantiation_statement(void) const {
-		return initial_instantiation_statement_ptr;
-	}
-
-	index_collection_item_ptr_type
-	get_initial_instantiation_indices(void) const;
-#endif
 
 virtual	bool
 	is_partially_unrolled(void) const = 0;
@@ -243,10 +167,6 @@ virtual	bool
 	count_ptr<const fundamental_type_reference>
 	get_unresolved_type_ref(void) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	type_ref_ptr_type
-	get_type_ref_subtype(void) const;
-#endif
 	using collection_type_manager_parent_type::get_resolved_canonical_type;
 
 	bool
@@ -264,17 +184,6 @@ virtual	bool
 	// 2005-07-07: now intended for use AFTER collection type is established
 	bad_bool
 	check_established_type(const instance_collection_parameter_type&) const;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	count_ptr<meta_instance_reference_base>
-	make_meta_instance_reference(void) const;
-
-	count_ptr<nonmeta_instance_reference_base>
-	make_nonmeta_instance_reference(void) const;
-
-	member_inst_ref_ptr_type
-	make_member_meta_instance_reference(const inst_ref_ptr_type&) const;
-#endif
 
 /**
 	Prototype for instantiating alias indices during unroll phase.  
@@ -331,15 +240,9 @@ public:
 virtual	instance_alias_base_type&
 	load_reference(istream& i) const = 0;
 
-#if USE_INSTANCE_PLACEHOLDERS
 	static
 	this_type*
 	make_array(const instance_placeholder_ptr_type);
-#else
-	static
-	this_type*
-	make_array(const scopespace& o, const string& n, const size_t d);
-#endif
 
 	static
 	persistent*
@@ -407,13 +310,11 @@ public:
 	typedef	typename collection_type::value_type	value_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename parent_type::instance_placeholder_type
 					instance_placeholder_type;
 	typedef	typename parent_type::instance_placeholder_ptr_type
 					instance_placeholder_ptr_type;
 	enum { dimensions = D };
-#endif
 private:
 	typedef	typename util::multikey<D, pint_value_type>::generator_type
 							key_generator_type;
@@ -426,21 +327,10 @@ private:
 private:
 	instance_array();
 
-#if USE_INSTANCE_PLACEHOLDERS
 public:
 	explicit
 	instance_array(const instance_placeholder_ptr_type);
-#else
-	explicit
-	instance_array(const this_type&);
 
-	instance_array(const this_type&, const footprint&);
-
-	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
-
-public:
-	instance_array(const scopespace& o, const string& n);
-#endif
 	~instance_array();
 
 	ostream&
@@ -474,10 +364,6 @@ public:
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	UNROLL_PORT_ONLY_PROTO;
-#endif
 
 	instance_alias_base_type&
 	load_reference(istream& i) const;
@@ -544,33 +430,20 @@ public:
 							instance_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename parent_type::instance_placeholder_type
 					instance_placeholder_type;
 	typedef	typename parent_type::instance_placeholder_ptr_type
 					instance_placeholder_ptr_type;
 	enum { dimensions = 0 };
-#endif
 private:
 	instance_type					the_instance;
 
 private:
 	instance_array();
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	explicit
-	instance_array(const this_type&);
-
-	instance_array(const this_type&, const footprint&);
-
-	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
-#endif
 public:
-#if USE_INSTANCE_PLACEHOLDERS
+	explicit
 	instance_array(const instance_placeholder_ptr_type);
-#else
-	instance_array(const scopespace& o, const string& n);
-#endif
 
 	~instance_array();
 
@@ -598,10 +471,6 @@ public:
 		const const_range_list& r) const;
 
 	UNROLL_ALIASES_PROTO;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	UNROLL_PORT_ONLY_PROTO;
-#endif
 
 	instance_alias_base_type&
 	load_reference(istream& i) const;

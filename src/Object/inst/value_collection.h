@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.18 2006/10/18 01:19:41 fang Exp $
+	$Id: value_collection.h,v 1.19 2006/10/18 20:58:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -97,12 +97,9 @@ public:
 						const_collection_type;
 	typedef	count_ptr<const expr_type>	init_arg_type;
 
-#if USE_INSTANCE_PLACEHOLDERS
-	// TODO: rename me!
 	typedef	typename traits_type::instance_placeholder_type
 						value_placeholder_type;
 	typedef	never_ptr<const value_placeholder_type>	value_placeholder_ptr_type;
-#endif
 
 	typedef typename traits_type::instantiation_statement_type
 					initial_instantiation_statement_type;
@@ -111,14 +108,12 @@ public:
 	typedef	typename traits_type::value_reference_collection_type
 					value_reference_collection_type;
 protected:
-#if USE_INSTANCE_PLACEHOLDERS
 	/**
 		This is a back-reference to the placeholder that resides in the 
 		enclosing scopespace, that contains the basic collection information, 
 		prior to unrolling.  
 	 */
 	value_placeholder_ptr_type	source_placeholder;
-#endif
 	/**
 		TODO: 20060214: eliminate static initial value analysis?
 
@@ -135,31 +130,12 @@ protected:
 	 */
 	count_ptr<const expr_type>		ival;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	initial_instantiation_statement_ptr_type
-					initial_instantiation_statement_ptr;
-#endif
 protected:
-#if USE_INSTANCE_PLACEHOLDERS
 	value_collection();
 
 	explicit
 	value_collection(const value_placeholder_ptr_type);
-#else
-	explicit
-	value_collection(const size_t d);
 
-	value_collection(const this_type& t, const footprint& f);
-#endif
-
-private:
-#if !USE_INSTANCE_PLACEHOLDERS
-virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
-
-public:
-	value_collection(const scopespace& o, const string& n, 
-		const size_t d);
-#endif
 public:
 
 virtual	~value_collection();
@@ -170,7 +146,6 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream& o) const;
 
-#if USE_INSTANCE_PLACEHOLDERS
 	never_ptr<const param_value_placeholder>
 	get_placeholder_base(void) const;
 
@@ -179,44 +154,11 @@ virtual	ostream&
 		return this->source_placeholder;
 	}
 
-#if 0
-	const string&
-	get_name(void) const;
-
-	never_ptr<const scopespace>
-	get_owner(void) const;
-
-	size_t
-	get_dimensions(void) const;
-#endif
-#endif
-#if !USE_INSTANCE_PLACEHOLDERS
-	void
-	attach_initial_instantiation_statement(
-		const initial_instantiation_statement_ptr_type i) {
-		NEVER_NULL(i);
-		if (!initial_instantiation_statement_ptr) {
-			initial_instantiation_statement_ptr = i;
-		}
-	}
-
-	index_collection_item_ptr_type
-	get_initial_instantiation_indices(void) const;
-#endif
-
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
 virtual	ostream&
 	dump_unrolled_values(ostream& o) const = 0;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	ostream&
-	dump_formal(ostream&, const unroll_context&) const;
-
-	ostream&
-	dump_formal(ostream&) const;
-#endif
 
 protected:
 	using parent_type::dump;
@@ -232,25 +174,6 @@ public:
 	count_ptr<const param_type_reference>
 	get_param_type_ref(void) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	count_ptr<meta_value_reference_base>
-	make_meta_value_reference(void) const;
-#endif
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	good_bool
-	initialize(const init_arg_type& e);
-
-	good_bool
-	assign_default_value(const count_ptr<const param_expr>& p);
-
-	count_ptr<const param_expr>
-	default_value(void) const;
-
-	count_ptr<const expr_type>
-	initial_value(void) const;
-#endif
-
 	good_bool
 	may_type_check_actual_param_expr(const param_expr&) const;
 
@@ -262,17 +185,10 @@ virtual	good_bool
 	instantiate_indices(const const_range_list& i) = 0;
 
 // possibly DEPRECATED
-#if USE_INSTANCE_PLACEHOLDERS
 // is resolved by context elsewhere, now that we have placeholders
 #define	LOOKUP_VALUE_INDEXED_PROTO					\
 	good_bool							\
 	lookup_value(value_type& v, const multikey_index_type& i) const
-#else
-#define	LOOKUP_VALUE_INDEXED_PROTO					\
-	good_bool							\
-	lookup_value(value_type& v, const multikey_index_type& i, 	\
-		const unroll_context&) const
-#endif
 
 virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
 	// need methods for looking up dense sub-collections of values?
@@ -289,22 +205,10 @@ virtual	const_index_list
 
 virtual	UNROLL_LVALUE_REFERENCES_PROTO = 0;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-protected:
-	count_ptr<nonmeta_instance_reference_base>
-	make_nonmeta_instance_reference(void) const;
-#endif
-
 public:
-#if USE_INSTANCE_PLACEHOLDERS
 	static
 	this_type*
 	make_array(const value_placeholder_ptr_type);
-#else
-	static
-	this_type*
-	make_array(const scopespace& o, const string& n, const size_t d);
-#endif
 public:
 	void
 	collect_transient_info(persistent_object_manager& m) const;
@@ -357,12 +261,10 @@ public:
 							const_collection_type;
 	typedef	typename traits_type::value_reference_collection_type
 					value_reference_collection_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename parent_type::value_placeholder_type
 							value_placeholder_type;
 	typedef typename parent_type::value_placeholder_ptr_type
 						value_placeholder_ptr_type;
-#endif
 private:
 	/// the collection of boolean instances
 	collection_type					collection;
@@ -372,18 +274,10 @@ private:
 
 	value_array();
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	value_array(const this_type&, const footprint&);
-
-	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
-
-public:
-	value_array(const scopespace& o, const string& n);
-#else
 public:
 	explicit
 	value_array(const value_placeholder_ptr_type);
-#endif
+
 	~value_array();
 
 	ostream&
@@ -391,11 +285,6 @@ public:
 
 	bool
 	is_partially_unrolled(void) const;
-
-#if !USE_INSTANCE_PLACEHOLDERS
-	bool
-	is_loop_variable(void) const;
-#endif
 
 	ostream&
 	dump_unrolled_values(ostream& o) const;
@@ -459,12 +348,10 @@ public:
 	typedef	typename traits_type::const_expr_type	const_expr_type;
 	typedef	typename traits_type::value_reference_collection_type
 					value_reference_collection_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	typename parent_type::value_placeholder_type
 							value_placeholder_type;
 	typedef typename parent_type::value_placeholder_ptr_type
 						value_placeholder_ptr_type;
-#endif
 private:
 	instance_type					the_instance;
 	const_expr_type					cached_value;
@@ -472,27 +359,16 @@ private:
 public:
 	value_array();
 
-#if USE_INSTANCE_PLACEHOLDERS
 	explicit
 	value_array(const value_placeholder_ptr_type);
-#else
-	value_array(const scopespace& o, const string& n);
-
-private:
-	value_array(const this_type&, const footprint&);
-
-	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO;
-#endif
 public:
 	~value_array();
 
-#if USE_INSTANCE_PLACEHOLDERS
 	instance_type&
 	get_instance(void) { return this->the_instance; }
 
 	const instance_type&
 	get_instance(void) const { return this->the_instance; }
-#endif
 
 	ostream&
 	what(ostream& ) const;
@@ -500,20 +376,11 @@ public:
 	bool
 	is_partially_unrolled(void) const;
 
-#if !USE_INSTANCE_PLACEHOLDERS
-	bool
-	is_loop_variable(void) const;
-#endif
-
 	ostream&
 	dump_unrolled_values(ostream& o) const;
 
 	good_bool
-	lookup_value(value_type& i
-#if !USE_INSTANCE_PLACEHOLDERS
-		, const unroll_context&
-#endif
-		) const;
+	lookup_value(value_type&) const;
 
 // there are implemented to do nothing but sanity check, 
 // since it doesn't even make sense to call these.  

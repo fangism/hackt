@@ -5,6 +5,15 @@
 
 2006-10-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-36:
+	  This is it, what we've all been waiting for:
+	  "Forty-four thousand lines of rotten spaghetti code! 
+		GONE! MWAHAHAHAHAHHAAHAHAA!!!!" -- gcc-bugzilla quip
+	  Perm'd USE_INSTANCE_PLACEHOLDERS (-5000 LoC).
+		Along with it go comments and documentation for the deleted 
+		code.  :S  Cleaner code /should/ require fewer comments.
+
+
 	* HACKT-00-01-04-main-00-80-35:
 	  Perm'd USE_RESOLVED_DATA_TYPES and USE_UNRESOLVED_DATA_TYPES, 
 		-560 LoC.

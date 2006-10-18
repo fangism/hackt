@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.11 2006/10/18 02:57:58 fang Exp $
+ 	$Id: loop_scope.cc,v 1.12 2006/10/18 20:58:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -17,9 +17,7 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_range.h"
 #include "Object/inst/pint_value_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
-#endif
 #include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
 #include "common/TODO.h"
@@ -99,7 +97,6 @@ loop_scope::unroll(const unroll_context& c) const {
 		// range is either empty or backwards
 		return good_bool(true);
 	}
-#if USE_INSTANCE_PLACEHOLDERS
 	// since we need a new lookup scope that uses
 	// a placeholder for the pint variable...
 	// new unroll_context lookup searches footprints
@@ -110,12 +107,7 @@ loop_scope::unroll(const unroll_context& c) const {
 	// induction variable into the footprint as an actual variable
 	pint_value_type& p(var->get_instance().value);
 		// acquire direct reference
-#if 0
-	unroll_context cc(&f);
-	cc.chain_context(c);
-#else
 	const unroll_context cc(&f, c);
-#endif
 	for (p = min; p <= max; ++p) {
 		if (!parent_type::unroll(cc).good) {
 			cerr << "Error resolving loop-body during iteration: ";
@@ -125,43 +117,6 @@ loop_scope::unroll(const unroll_context& c) const {
 			return good_bool(false);
 		}
 	}
-#else
-	template_formals_manager tfm;
-	const never_ptr<const pint_scalar> pvc(&*ind_var);
-	tfm.add_strict_template_formal(pvc);
-
-	const count_ptr<pint_const> ind(new pint_const(min));
-	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
-	NEVER_NULL(al);
-	NEVER_NULL(ind);
-	al->push_back(ind);
-	const template_actuals::const_arg_list_ptr_type sl(NULL);
-	const template_actuals ta(al, sl);
-	const unroll_context cc(ta, tfm, c);
-	// cc.chain_context(c);	// same effect
-#if 0 && ENABLE_STACKTRACE
-	cerr << "parent context, c: " << endl;
-	c.dump(cerr) << endl;
-	cerr << "cc @ " << &cc << endl;
-	cc.dump(cerr) << endl;
-	const footprint* const f = cc.get_target_footprint();
-	if (f) {
-		cerr << "cc\'s target footprint: " << endl;
-		f->dump_with_collections(cerr) << endl;
-	}
-#endif
-	pint_value_type ind_val = min;
-	for ( ; ind_val <= max; ind_val++) {
-		*ind = ind_val;
-		if (!parent_type::unroll(cc).good) {
-			cerr << "Error resolving loop-body during iteration: ";
-			ind_var->dump_hierarchical_name(cerr,
-				dump_flags::verbose)
-				<< " = " << ind_val << endl;
-			return good_bool(false);
-		}
-	}
-#endif
 	return good_bool(true);
 }
 

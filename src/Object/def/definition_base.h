@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.10 2006/10/18 05:32:34 fang Exp $
+	$Id: definition_base.h,v 1.11 2006/10/18 20:57:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -12,7 +12,6 @@
 #include "util/macros.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
-#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent.h"		// for persistent object interface
@@ -35,14 +34,9 @@ using parser::token_identifier;
 //=============================================================================
 namespace entity {
 class scopespace;
-#if USE_INSTANCE_PLACEHOLDERS
 class instance_placeholder_base;
 class physical_instance_placeholder;
 class param_value_placeholder;
-#else
-class instance_collection_base;
-class physical_instance_collection;
-#endif
 class fundamental_type_reference;
 class template_actuals;
 class const_param_expr_list;
@@ -82,15 +76,9 @@ public:
 
 	typedef	template_actuals	make_type_ptr_type;
 	typedef	template_actuals	make_type_arg_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	instance_placeholder_base	placeholder_base_type;
 	typedef	param_value_placeholder		value_placeholder_type;
 	typedef	physical_instance_placeholder	instance_placeholder_type;
-#else
-	typedef	instance_collection_base	placeholder_base_type;
-	typedef	param_value_collection		value_placeholder_type;
-	typedef	physical_instance_collection	instance_placeholder_type;
-#endif
 protected:
 	template_formals_manager	template_formals;
 

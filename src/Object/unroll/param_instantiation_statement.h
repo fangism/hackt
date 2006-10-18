@@ -4,7 +4,7 @@
 	Possibly factor out implementations into another file?
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.12 2006/10/18 08:52:16 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.13 2006/10/18 20:58:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -12,9 +12,7 @@
 
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
-#endif
 #include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
@@ -131,11 +129,7 @@ protected:
 	static
 	void
 	attach_initial_instantiation_statement(
-#if USE_INSTANCE_PLACEHOLDERS
 		instance_placeholder_type& v,
-#else
-		value_collection_generic_type& v,
-#endif
 		const count_ptr<const InstStmtType>& i) {
 		v.attach_initial_instantiation_statement(i);
 	}
@@ -215,11 +209,7 @@ protected:
 	static
 	void
 	attach_initial_instantiation_statement(
-#if USE_INSTANCE_PLACEHOLDERS
 		instance_placeholder_type& v,
-#else
-		value_collection_generic_type& v,
-#endif
 		const count_ptr<const InstStmtType>& i) {
 		v.attach_initial_instantiation_statement(i);
 	}

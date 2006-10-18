@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.22 2006/10/18 08:51:58 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.23 2006/10/18 20:57:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -27,11 +27,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/expr_dump_context.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
-#else
-#include "Object/inst/param_value_collection.h"
-#endif
 #include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
 #include "common/ICE.h"

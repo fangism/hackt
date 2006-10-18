@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.18 2006/10/18 01:20:08 fang Exp $
+	$Id: unroll_context.cc,v 1.19 2006/10/18 20:58:31 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -24,11 +24,9 @@
 #include "Object/def/template_formals_manager.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/ref/meta_value_reference_base.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/physical_instance_placeholder.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/physical_instance_collection.h"
-#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
@@ -40,39 +38,6 @@ namespace entity {
 //=============================================================================
 // class unroll_context method definitions
 
-#if 0
-unroll_context::unroll_context() :
-		next(),
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-		template_args(), template_formals(),
-#endif
-		target_footprint(NULL)
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, lookup_footprint(NULL)
-#endif
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(NULL)
-#endif
-		{ }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-unroll_context::unroll_context(footprint* const f) :
-		next(),
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-		template_args(), template_formals(), 
-#endif
-		target_footprint(f)
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, lookup_footprint(f)
-#endif
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(NULL)
-#endif
-		{
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#else
 /**
 	Constructor intended for top-level context.  
  */
@@ -158,8 +123,6 @@ unroll_context::unroll_context(footprint* const f,
 #endif
 		{
 }
-
-#endif	// if 0
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if !RESOLVE_VALUES_WITH_FOOTPRINT
@@ -387,7 +350,6 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 /**
 	Only lookup footprints, not scopespaces!
 	No need to determine whether or not instance is formal.  
@@ -422,10 +384,8 @@ unroll_context::lookup_instance_collection(
 	return return_type(NULL);
 #endif
 }
-#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 /**
 	Only lookup footprints, not scopespaces!
 	No need to determine whether or not instance is formal.  
@@ -530,10 +490,8 @@ unroll_context::lookup_lvalue_collection(
 	return return_type(NULL);
 }
 #endif	// RVALUE_LVALUE_LOOKUPS
-#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 count_ptr<physical_instance_collection>
 unroll_context::lookup_collection(
 		const physical_instance_placeholder& p) const {
@@ -551,10 +509,8 @@ unroll_context::lookup_collection(
 	return lookup_value_collection(p);
 #endif
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 /**
 	TODO: fix so that target (instantiating) footprints (writable)
 	can be distinguished from read-only footprints.  
@@ -573,146 +529,6 @@ unroll_context::instantiate_collection(
 	const good_bool g(f->register_collection(p));
 	INVARIANT(g.good);
 }
-#endif	// USE_INSTANCE_PLACEHOLDERS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-// getting rid of this shit in favor of simpler, more consistent lookup
-/**
-	NOTE: this method is SO CRITICAL...
-	FYI: this is called by simple_meta_value_reference::unroll_resolve().
-	\param p reference to the formal instance, cannot be non-formal!
-	\return actual value, a bunch of constants.  
-		NOT the same as lookup_const_collection (below)
-	\pre the context has formal and actual parameters.  
-	\pre the type used to expand the formals and actuals
-		was canonical and has the same base definition
-		as the (definition) owner of p.  
-	TODO: completely rewrite this.
- */
-count_ptr<const const_param>
-unroll_context::lookup_actual(
-#if USE_INSTANCE_PLACEHOLDERS
-		const param_value_placeholder& p
-#else
-		const param_value_collection& p
-#endif
-		) const {
-	typedef	count_ptr<const const_param>	return_type;
-	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("looking up: " <<
-		p.get_footprint_key() << endl);
-	dump(cerr << "with: ") << endl;
-#endif
-	INVARIANT(!empty());
-	if (!p.is_template_formal()) {
-		// could be either loop variable or local variable!
-		const pint_scalar* ps(IS_A(const pint_scalar*, &p));
-		if (ps && ps->is_loop_variable()) {
-			return lookup_loop_var(*ps);
-		} else {
-			// otherwise, we have a private local parameter variable
-			// need to look it up in footprint
-			const footprint* const tfp = get_target_footprint();
-			NEVER_NULL(tfp);
-			const count_ptr<instance_collection_base>
-				ic((*tfp)[p.get_footprint_key()]);
-			NEVER_NULL(ic);
-			FINISH_ME_EXIT(Fang);
-		}
-	}
-	// else is a template formal, use unroll context to translate
-
-	// not the position of the template formal in its own list
-	// but in the current context!!!
-	// very awkward...
-#if USE_INSTANCE_PLACEHOLDERS
-	const instance_placeholder_base::owner_ptr_type
-#else
-	const instance_collection_base::owner_ptr_type
-#endif
-		p_owner(p.get_owner());
-	const never_ptr<const definition_base>
-		p_def(p_owner.is_a<const definition_base>());
-	NEVER_NULL(p_def);
-	const template_formals_manager&
-		p_tfm(p_def->get_template_formals_manager());
-	// need to make sure we're lookin up the correct set
-	// of formals...
-	// why don't we just search up the context chain until
-	// we find the matching template formals reference?
-	if (template_formals == &p_tfm) {
-		// template formal names are never qualified
-		const size_t index(p_tfm.lookup_template_formal_position(
-			p.get_name()));
-		INVARIANT(index);
-//		cerr << "I got index " << index << "!!!" << endl;
-		// remember, index is 1-indexed, whereas [] is 0-indexed.
-		const count_ptr<const param_expr>
-			ret(template_args[index-1]);
-		NEVER_NULL(ret);
-		const return_type const_ret(ret.is_a<const const_param>());
-		// actual may STILL be another formal reference!
-		if (const_ret) {
-			return const_ret;
-		} else {
-#if ENABLE_STACKTRACE
-			{
-			const expr_dump_context edc;
-			ret->what(STACKTRACE_INDENT << "expr (");
-			ret->dump(STACKTRACE_STREAM << ") = ", edc) << endl;
-			}
-#endif
-			const count_ptr<const meta_value_reference_base>
-				self(ret.is_a<const meta_value_reference_base>());
-			if (self) {
-#if USE_INSTANCE_PLACEHOLDERS
-				const never_ptr<const param_value_placeholder>
-#else
-				const never_ptr<const param_value_collection>
-#endif
-					pbase(self->get_coll_base());
-				if (pbase == &p) {
-				// need to safeguard against self-lookup
-				// may happen with value_reference
-				// else will have infinite mutual recursion
-				if (next) {
-					// self-reference detected
-					return ret->unroll_resolve_rvalues(*next, ret);
-				} else {
-					lookup_panic(cerr);	// no return
-					return return_type(NULL);
-				}
-				} else {
-					// check this scope again
-					// for parameter-dependent-parameter
-					// e.g. in default parameter exprs.
-					return ret->unroll_resolve_rvalues(*this, ret);
-				}
-			} else {
-				// not self references, safe to lookup again
-				// NOTE: expressions cannot be cyclic
-				// so checking self-reference is sufficient
-				// for safety
-				return ret->unroll_resolve_rvalues(*this, ret);
-				// guaranteed that this will terminate
-				// even if recursive
-			}
-		}
-	} else if (next) {
-		// STACKTRACE("checking parent context");
-		return next->lookup_actual(p);
-	} else {
-	ICE(cerr, 
-		cerr << "expected to resolve ";
-		p.dump(cerr, dump_flags::verbose)
-			<< " to constant value(s), but failed!" << endl;
-	)
-		return return_type(NULL);
-	}
-}	// end method lookup_actual
-#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

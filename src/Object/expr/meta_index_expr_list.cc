@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.18 2006/10/18 07:39:37 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.19 2006/10/18 20:57:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -249,14 +249,6 @@ bool
 const_index_list::is_static_constant(void) const {
 	return true;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-const_index_list
-const_index_list::resolve_index_list(void) const {
-	return *this;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
@@ -563,42 +555,6 @@ dynamic_meta_index_list::is_relaxed_formal_dependent(void) const {
 	}
 	return false;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	For now const_index_list constains count_ptr<const_index>, 
-	not count_const_ptr, so we have to make deep copies, 
-	until it is changed?
-	\return resolve list of constant indices if every term can be resolved, 
-		otherwise, returns an empty list.  
- */
-const_index_list
-dynamic_meta_index_list::resolve_index_list(void) const {
-	const_index_list ret;
-	const_iterator i(begin());
-	const const_iterator e(end());
-	size_t j = 0;
-	for ( ; i!=e; i++, j++) {
-		const count_ptr<meta_index_expr> ind(*i);
-		const count_ptr<const_index> c_ind(ind.is_a<const_index>());
-		if (c_ind) {
-			// direct reference copy
-			ret.push_back(c_ind);
-		} else {
-			const count_ptr<const_index>
-				r_ind(ind->resolve_index());
-			if (r_ind) {
-				ret.push_back(r_ind);
-			} else {
-				// failed to resolve as constant!
-				return const_index_list();
-			}
-		}
-	}
-	return ret;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.17 2006/10/18 19:08:08 fang Exp $
+	$Id: struct_traits.h,v 1.18 2006/10/18 20:58:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -59,10 +59,8 @@ struct class_traits<datastruct_tag> {
 
 	typedef	struct_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	datatype_instance_placeholder	instance_placeholder_parent_type;
 	typedef	struct_instance_placeholder	instance_placeholder_type;
-#endif
 	typedef	general_collection_type_manager<tag_type>
 					collection_type_manager_parent_type;
 	template <size_t D>

@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/CHP.cc"
 	Class implementations of CHP objects.  
-	$Id: CHP.cc,v 1.11 2006/10/18 01:19:43 fang Exp $
+	$Id: CHP.cc,v 1.12 2006/10/18 20:58:07 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -27,10 +27,8 @@
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/inst/instance_collection.h"
 #include "Object/inst/pint_value_collection.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
 #include "Object/def/footprint.h"
-#endif
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"
 
@@ -719,8 +717,6 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 		return action_ptr_type(NULL);
 	}
 	selection_list_type result;	// unroll into here
-	// using unroll_context's template_formal/actual mechanism.  
-#if USE_INSTANCE_PLACEHOLDERS
 	entity::footprint f;
 	const count_ptr<pint_scalar>
 		var(initialize_footprint(f));
@@ -728,12 +724,7 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 	// induction variable into the footprint as an actual variable
 	pint_value_type& i(var->get_instance().value);
 		// acquire direct reference
-#if 0
-	unroll_context cc(&f);
-	cc.chain_context(c);
-#else
 	const unroll_context cc(&f, c);
-#endif
 	for (i = min; i <= max; ++i) {
 		const selection_list_type::value_type	// guarded_action
 			g(body->unroll_resolve_copy(c, body));
@@ -744,32 +735,6 @@ metaloop_selection::unroll_resolve_copy(const unroll_context& c,
 		}
 		result.push_back(g);
 	}
-#else
-	template_formals_manager tfm;
-	const never_ptr<const pint_scalar> pvc(&*ind_var);
-	tfm.add_strict_template_formal(pvc);
-
-	const count_ptr<pint_const> ind(new pint_const(min));
-	const count_ptr<const_param_expr_list> al(new const_param_expr_list);
-	NEVER_NULL(al);
-	al->push_back(ind);
-	const template_actuals::const_arg_list_ptr_type sl(NULL);
-	const template_actuals ta(al, sl);
-	unroll_context cc(ta, tfm);
-	cc.chain_context(c);
-	pint_value_type ind_val = min;
-	for ( ; ind_val <= max; ind_val++) {
-		*ind = ind_val;
-		const selection_list_type::value_type	// guarded_action
-			g(body->unroll_resolve_copy(c, body));
-		if (!g) {
-			cerr << "Error resolving metaloop_selection at "
-				"iteration " << ind_val << "." << endl;
-			return action_ptr_type(NULL);
-		}
-		result.push_back(g);
-	}
-#endif
 	if (selection_type) {
 		const count_ptr<deterministic_selection>
 			ret(new deterministic_selection);

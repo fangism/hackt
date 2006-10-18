@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.8 2006/10/18 08:51:51 fang Exp $
+	$Id: template_formals_manager.h,v 1.9 2006/10/18 20:57:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -24,11 +24,7 @@ namespace HAC {
 namespace entity {
 //=============================================================================
 class const_param;
-#if USE_INSTANCE_PLACEHOLDERS
 class param_value_placeholder;
-#else
-class param_value_collection;
-#endif
 class param_expr_list;
 class dynamic_param_expr_list;
 class const_param_expr_list;
@@ -53,11 +49,7 @@ using util::memory::count_ptr;
  */
 class template_formals_manager {
 public:
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	param_value_placeholder		placeholder_type;
-#else
-	typedef	param_value_collection		placeholder_type;
-#endif
 	/**
 		Table of template formals.  
 		Needs to be ordered for argument checking, 

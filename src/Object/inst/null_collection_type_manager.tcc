@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.tcc,v 1.7 2006/10/18 01:19:37 fang Exp $
+	$Id: null_collection_type_manager.tcc,v 1.8 2006/10/18 20:58:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_TCC__
@@ -35,18 +35,6 @@ struct NULL_COLLECTION_TYPE_MANAGER_CLASS::dumper {
 		return os << traits_type::tag_name;
 	}
 };	// end struct dumper
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Returns  built in type pointer. 
- */
-NULL_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
-const typename NULL_COLLECTION_TYPE_MANAGER_CLASS::type_ref_ptr_type&
-NULL_COLLECTION_TYPE_MANAGER_CLASS::get_type(void) const {
-	return traits_type::built_in_type_ptr;
-}
-#endif
 
 //=============================================================================
 }	// end namespace entity

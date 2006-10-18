@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.30 2006/10/18 08:51:49 fang Exp $
+ 	$Id: definition.cc,v 1.31 2006/10/18 20:57:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -40,13 +40,8 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/type/channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/param_value_placeholder.h"
 #include "Object/inst/physical_instance_placeholder.h"
-#else
-#include "Object/inst/param_value_collection.h"
-#include "Object/inst/physical_instance_collection.h"
-#endif
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
@@ -2175,29 +2170,7 @@ void
 user_def_datatype::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	if (p) {
-		INVARIANT(p->size() == footprint_map.arity());
-		footprint& f = footprint_map[*p];
-		f.import_scopespace(*this);
-	} else {
-		INVARIANT(!footprint_map.arity());
-		// register the only map only if it doesn't exist yet
-		// otherwise will force a comparison of null pointers
-		if (!footprint_map.size()) {
-			// create the one-and-only entry
-			footprint& f = footprint_map.only();
-			f.import_scopespace(*this);
-		}
-		// else it was already registered
-	}
-#else
-#if USE_INSTANCE_PLACEHOLDERS
-	footprint_map[p];
-#else
-	footprint_map[p].import_scopespace(*this);
-#endif
-#endif
+	footprint_map[p];	// operator []
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3034,30 +3007,7 @@ void
 process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
-#if 0
-	// this has a fooprint manager
-	if (p) {
-		INVARIANT(p->size() == footprint_map.arity());
-		footprint& f = footprint_map[*p];
-		f.import_scopespace(*this);
-	} else {
-		INVARIANT(!footprint_map.arity());
-		// register the only map only if it doesn't exist yet
-		// otherwise will force a comparison of null pointers
-		if (!footprint_map.size()) {
-			// create the one-and-only entry
-			footprint& f = footprint_map.only();
-			f.import_scopespace(*this);
-		}
-		// else it was already registered
-	}
-#else
-#if USE_INSTANCE_PLACEHOLDERS
-	footprint_map[p];
-#else
-	footprint_map[p].import_scopespace(*this);
-#endif
-#endif
+	footprint_map[p];	// operator []
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

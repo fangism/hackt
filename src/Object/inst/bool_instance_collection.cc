@@ -3,7 +3,7 @@
 	Method definitions for boolean data type instance classes.
 	This file came from "Object/art_object_instance_bool.cc"
 		in a previous life.  
-	$Id: bool_instance_collection.cc,v 1.11 2006/10/18 01:19:27 fang Exp $
+	$Id: bool_instance_collection.cc,v 1.12 2006/10/18 20:57:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_BOOL_INSTANCE_COLLECTION_CC__
@@ -32,9 +32,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/null_collection_type_manager.tcc"
 #include "Object/inst/instance_collection.tcc"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.tcc"
-#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/state_instance.tcc"
 // #include "util/memory/chunk_map_pool.tcc"
@@ -53,11 +51,9 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_3D, "bool_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::bool_array_4D, "bool_array_4D")
 
-#if USE_INSTANCE_PLACEHOLDERS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_instance_placeholder, 
 	DBOOL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::bool_scalar, DBOOL_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -93,9 +89,7 @@ operator << (ostream& o, const bool_instance_alias_base& b) {
 //=============================================================================
 // explicit instantiations
 
-#if USE_INSTANCE_PLACEHOLDERS
 template class instance_placeholder<bool_tag>;
-#endif
 template class state_instance<bool_tag>;
 template class instance_pool<state_instance<bool_tag> >;
 template class instance_alias_info<bool_tag>;

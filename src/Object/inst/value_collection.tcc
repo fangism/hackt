@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.22 2006/10/18 08:51:58 fang Exp $
+ 	$Id: value_collection.tcc,v 1.23 2006/10/18 20:58:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -48,9 +48,7 @@
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
-#endif
 #include "Object/expr/dynamic_param_expr_list.h"
 
 #include "common/ICE.h"
@@ -113,7 +111,6 @@ operator << (ostream& o, const pint_instance& p) {
 // class value_collection method definitions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS::value_collection() :
 		parent_type(), source_placeholder(NULL), ival(NULL) {
@@ -124,35 +121,6 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS::value_collection(const value_placeholder_ptr_type p) :
 		parent_type(), source_placeholder(p), ival(NULL) {
 }
-
-#endif
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Private empty constructor.
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-VALUE_COLLECTION_CLASS::value_collection(const size_t d) :
-		parent_type(d), ival(NULL) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-VALUE_COLLECTION_CLASS::value_collection(const scopespace& o, 
-		const string& n, const size_t d) :
-		parent_type(o, n, d), ival(NULL) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Partial copy constructor.  
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-VALUE_COLLECTION_CLASS::value_collection(const this_type& t, 
-		const footprint& f) :
-		parent_type(t, f), ival(NULL) {
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
@@ -174,105 +142,11 @@ VALUE_COLLECTION_CLASS::what(ostream& o) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-index_collection_item_ptr_type
-VALUE_COLLECTION_CLASS::get_initial_instantiation_indices(void) const {
-	NEVER_NULL(this->initial_instantiation_statement_ptr);
-	return this->initial_instantiation_statement_ptr->get_indices();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 never_ptr<const param_value_placeholder>
 VALUE_COLLECTION_CLASS::get_placeholder_base(void) const {
 	return this->source_placeholder;
 }
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	This variant is called by template_formal_manager::dump_*.  
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-ostream&
-VALUE_COLLECTION_CLASS::dump_formal(ostream& o) const {
-#if USE_INSTANCE_PLACEHOLDERS
-	INVARIANT(this->source_placeholder->is_template_formal());
-#else
-	INVARIANT(this->is_template_formal());
-#endif
-//	this->dump_base(o);
-	this->dump_collection_only(o);
-	expr_dump_context dc(expr_dump_context::default_value);
-#if USE_INSTANCE_PLACEHOLDERS
-	dc.enclosing_scope = this->source_placeholder->get_owner();
-#else
-	dc.enclosing_scope = this->owner;
-#endif
-#if USE_INSTANCE_PLACEHOLDERS
-	if (this->source_placeholder->get_dimensions())
-#else
-	if (this->dimensions)
-#endif
-	{
-		const index_collection_item_ptr_type
-#if USE_INSTANCE_PLACEHOLDERS
-			i(this->source_placeholder->get_initial_instantiation_indices());
-#else
-			i(this->get_initial_instantiation_indices());
-#endif
-		NEVER_NULL(i);
-		i->dump(o, dc);
-	}
-	if (this->ival) {
-		this->ival->dump(o << " (default = ", dc) << ")";
-	}
-	return o;
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	This variant is used when there is an unroll_context available.  
-	Intended for diagnostic use, printing resolved dimensions
-	of template formal parameter value collection.  
-	\param c unroll_context is needed in case of template dependence.  
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-ostream&
-VALUE_COLLECTION_CLASS::dump_formal(ostream& o, const unroll_context& c) const {
-	this->type_dump(o);
-#if USE_INSTANCE_PLACEHOLDERS
-if (this->source_placeholder->get_dimensions())
-#else
-if (this->dimensions)
-#endif
-{
-	// do we still want to do this?
-	const index_collection_item_ptr_type
-#if USE_INSTANCE_PLACEHOLDERS
-		i(this->source_placeholder->get_initial_instantiation_indices());
-#else
-		i(this->get_initial_instantiation_indices());
-#endif
-	NEVER_NULL(i);
-	const_range_list crl;
-	if (!i->unroll_resolve_rvalues(crl, c).good) {
-		ICE(cerr, 
-			cerr << "Unable to deduce formal parameter collection "
-				"size!  Little help, please." << endl;
-		);
-	}
-	crl.dump(o << ' ');
-}
-	return o;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -284,35 +158,8 @@ VALUE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 VALUE_COLLECTION_CLASS::dump(ostream& o, const dump_flags& df) const {
 	parent_type::dump_base(o, df);
-#if !USE_INSTANCE_PLACEHOLDERS
-	const count_ptr<const param_expr>
-		init_def(this->default_value());
-	if (init_def) {
-		expr_dump_context dc(expr_dump_context::default_value);
-#if USE_INSTANCE_PLACEHOLDERS
-		dc.enclosing_scope = this->source_placeholder->get_owner();
-#else
-		dc.enclosing_scope = this->owner;
-#endif
-#if USE_INSTANCE_PLACEHOLDERS
-		if (this->source_placeholder->is_template_formal())
-#else
-		if (this->is_template_formal())
-#endif
-			init_def->dump(o << " (default = ", dc) << ")";
-		else    init_def->dump(o << " (init = ", dc) << ")";
-	}
-#endif
 	// print out the values of instances that have been unrolled
-#if !USE_INSTANCE_PLACEHOLDERS
-	if (this->is_partially_unrolled()) {
-#endif
-#if USE_INSTANCE_PLACEHOLDERS
-		if (this->source_placeholder->get_dimensions())
-#else
-		if (this->dimensions)
-#endif
-		{
+		if (this->source_placeholder->get_dimensions()) {
 			INDENT_SECTION(o);
 			o << auto_indent <<
 				"unrolled index-value pairs: {" << endl;
@@ -327,9 +174,6 @@ VALUE_COLLECTION_CLASS::dump(ostream& o, const dump_flags& df) const {
 			// suppress indent
 			dump_unrolled_values(o);	// already endl
 		}
-#if !USE_INSTANCE_PLACEHOLDERS
-	}
-#endif
 	return o;
 }
 
@@ -355,124 +199,6 @@ count_ptr<const fundamental_type_reference>
 VALUE_COLLECTION_CLASS::get_unresolved_type_ref(void) const {
 	return get_param_type_ref();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Initializes a parameter instance with an expression, 
-	for the sake of COMPILE-TIME analysis only.
-	The real assignment will be tracked in a param_expression_assignment
-		object at UNROLL-TIME.  
-
-	The ival may only be initialized once, enforced by assertions.  
-	Note: a parameter is considered "usable" if it is 
-	initialized OR it is a template formal.  
-	Only bother initializing scalar variables, 
-		ignore for initialization of non-scalars.  
-
-	MAKE sure this is not a template_formal, 
-	template-formal parameters are NEVER initialized, 
-	only given default values.  
-
-	\param e the rvalue expression.
-	\return false if there was error.  
-	\sa may_be_initialized
-	\sa must_be_initialized
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-good_bool
-VALUE_COLLECTION_CLASS::initialize(const init_arg_type& e) {
-	NEVER_NULL(e);
-	INVARIANT(!ival);
-#if USE_INSTANCE_PLACEHOLDERS
-	if (this->source_placeholder->get_dimensions() == 0)
-#else
-	if (this->dimensions == 0)
-#endif
-	{
-		if (may_type_check_actual_param_expr(*e).good) {
-			ival = e;
-			return good_bool(true);
-		} else {
-			return good_bool(false);
-		}
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Assigning default value(s) to parameters is only valid
-	in the context of template-formal parameters.  
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-good_bool
-VALUE_COLLECTION_CLASS::assign_default_value(
-		const count_ptr<const param_expr>& p) {
-	const count_ptr<const expr_type> i(p.template is_a<const expr_type>());
-	if (i && may_type_check_actual_param_expr(*i).good) {
-		ival = i;
-		return good_bool(true);
-	}
-	else return good_bool(false);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Interprets ival as a default_value in the context of template
-	formal parameters.
-	\return pointer to default value expression.
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<const param_expr>
-VALUE_COLLECTION_CLASS::default_value(void) const {
-//	STACKTRACE("VALUE_COLLECTION_CLASS::default_value()");
-	return ival;
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Interprets ival as an initial_value outside the context
-	of template formals.  
-	\return pointer to initial value expression.  
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<const typename VALUE_COLLECTION_CLASS::expr_type>
-VALUE_COLLECTION_CLASS::initial_value(void) const {
-	return ival;
-}
-#endif	// USE_INSTANCE_PLACEHOLDERS
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<meta_value_reference_base>
-VALUE_COLLECTION_CLASS::make_meta_value_reference(void) const {
-	// depends on whether this instance is collective, 
-	//	check array dimensions.  
-
-	// problem: needs to be modifiable for later initialization
-	return count_ptr<meta_value_reference_base>(
-		new simple_meta_value_reference_type(
-			never_ptr<this_type>(const_cast<this_type*>(this))));
-		// omitting index argument
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	New: Create an rvalue reference to a meta parameter, possibly
-		indexed with a nonmeta-value subscript.  
- */
-VALUE_COLLECTION_TEMPLATE_SIGNATURE
-count_ptr<nonmeta_instance_reference_base>
-VALUE_COLLECTION_CLASS::make_nonmeta_instance_reference(void) const {
-	typedef	count_ptr<nonmeta_instance_reference_base>	ptr_return_type;
-	return ptr_return_type(new simple_nonmeta_instance_reference_type(
-		never_ptr<const this_type>(this)));
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -528,27 +254,16 @@ VALUE_COLLECTION_CLASS::collect_transient_info(
 		persistent_object_manager& m) const {
 if (!m.register_transient_object(this,
 		persistent_traits<this_type>::type_key, 
-#if USE_INSTANCE_PLACEHOLDERS
-			this->source_placeholder->get_dimensions()
-#else
-			this->dimensions
-#endif
-			)) {
+			this->source_placeholder->get_dimensions())) {
 	// don't bother visit the owner, assuming that's the caller
 	// go through index_collection
 	parent_type::collect_transient_info_base(m);
 	// Is ival really crucial in object?  will be unrolled anyhow
 	if (ival)
 		ival->collect_transient_info(m);
-#if USE_INSTANCE_PLACEHOLDERS
 	if (this->source_placeholder) {
 		source_placeholder->collect_transient_info(m);
 	}
-#else
-	if (this->initial_instantiation_statement_ptr) {
-		initial_instantiation_statement_ptr->collect_transient_info(m);
-	}
-#endif
 }
 // else already visited
 }
@@ -556,31 +271,15 @@ if (!m.register_transient_object(this,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_COLLECTION_TEMPLATE_SIGNATURE
 VALUE_COLLECTION_CLASS*
-VALUE_COLLECTION_CLASS::make_array(
-#if USE_INSTANCE_PLACEHOLDERS
-		const value_placeholder_ptr_type p
-#else
-		const scopespace& o, const string& n, const size_t D
-#endif
-		) {
-#if USE_INSTANCE_PLACEHOLDERS
+VALUE_COLLECTION_CLASS::make_array(const value_placeholder_ptr_type p) {
 	NEVER_NULL(p);
 	const size_t D = p->get_dimensions();
-#endif
 	switch (D) {
-#if USE_INSTANCE_PLACEHOLDERS
 		case 0:	return new value_array<Tag,0>(p);
 		case 1:	return new value_array<Tag,1>(p);
 		case 2:	return new value_array<Tag,2>(p);
 		case 3:	return new value_array<Tag,3>(p);
 		case 4:	return new value_array<Tag,4>(p);
-#else
-		case 0:	return new value_array<Tag,0>(o, n);
-		case 1:	return new value_array<Tag,1>(o, n);
-		case 2:	return new value_array<Tag,2>(o, n);
-		case 3:	return new value_array<Tag,3>(o, n);
-		case 4:	return new value_array<Tag,4>(o, n);
-#endif
 		default:
 			cerr << "FATAL: dimension limit is 4!" << endl;
 			// THROW_EXIT;
@@ -596,11 +295,7 @@ VALUE_COLLECTION_CLASS::write_object_base(
 	STACKTRACE("value_collection<>::write_object_base()");
 	parent_type::write_object_base(m, f);
 	m.write_pointer(f, ival);
-#if USE_INSTANCE_PLACEHOLDERS
 	m.write_pointer(f, this->source_placeholder);
-#else
-	m.write_pointer(f, this->initial_instantiation_statement_ptr);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -611,16 +306,12 @@ VALUE_COLLECTION_CLASS::load_object_base(const persistent_object_manager& m,
 	STACKTRACE("value_collection<>::load_object_base()");
 	parent_type::load_object_base(m, f);
 	m.read_pointer(f, ival);
-#if USE_INSTANCE_PLACEHOLDERS
 	m.read_pointer(f, this->source_placeholder);
 	// TODO: need to load in advance to make the key available
 	// what about placeholder's parent namespaces???
 	NEVER_NULL(this->source_placeholder);
 	m.load_object_once(const_cast<value_placeholder_type*>(
 		&*this->source_placeholder));
-#else
-	m.read_pointer(f, this->initial_instantiation_statement_ptr);
-#endif
 }
 
 //=============================================================================
@@ -652,55 +343,19 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, VALUE_ARRAY_CLASS)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array() :
-#if USE_INSTANCE_PLACEHOLDERS
 	parent_type(), 
-#else
-	parent_type(D), 
-#endif
 	collection(), cached_values(D) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::value_array(const value_placeholder_ptr_type p) :
 	parent_type(p), collection(), cached_values(D) {
 }
 
-#else	// USE_INSTANCE_PLACEHOLDERS
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-VALUE_ARRAY_CLASS::value_array(const scopespace& o, const string& n) :
-	parent_type(o, n, D), collection(), cached_values(D) {
-// until we eliminate that field from instance_collection_base
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-Partial copy constructor for the footprint use.  
-*/
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-VALUE_ARRAY_CLASS::value_array(const this_type& t, const footprint& f) :
-		parent_type(t, f), collection(t.collection), 
-		cached_values(D) {
-}
-#endif	// USE_INSTANCE_PLACEHOLDERS
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 VALUE_ARRAY_CLASS::~value_array() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Partial deep copy for footprint map.  
- */
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-instance_collection_base*
-VALUE_ARRAY_CLASS::make_instance_collection_footprint_copy(
-		const footprint& f) const {
-	return new this_type(*this, f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
@@ -715,18 +370,6 @@ bool
 VALUE_ARRAY_CLASS::is_partially_unrolled(void) const {
 	return !collection.empty();
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Arrays cannot be loop variables.  
- */
-VALUE_ARRAY_TEMPLATE_SIGNATURE
-bool
-VALUE_ARRAY_CLASS::is_loop_variable(void) const {
-	return false;
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_ARRAY_TEMPLATE_SIGNATURE
@@ -769,11 +412,7 @@ VALUE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges) {
 		element_type& pi = collection[key_gen];
 		if (pi.instantiated) {
 			cerr << "ERROR: Index " << key_gen << " of " <<
-#if USE_INSTANCE_PLACEHOLDERS
 				this->source_placeholder->get_qualified_name() <<
-#else
-				this->get_qualified_name() <<
-#endif
 				" already instantiated!" << endl;
 			ret.good = false;
 			// THROW_EXIT;
@@ -847,52 +486,9 @@ VALUE_ARRAY_CLASS::resolve_indices(const const_index_list& l) const {
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 VALUE_ARRAY_CLASS::lookup_value(value_type& v, 
-		const multikey_index_type& i
-#if !USE_INSTANCE_PLACEHOLDERS
-		, const unroll_context& c
-#endif
-		) const {
+		const multikey_index_type& i) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(D == i.dimensions());
-#if !USE_INSTANCE_PLACEHOLDERS
-	if (this->owner.template is_a<const definition_base>()) {
-		INVARIANT(!c.empty());
-#if 1
-		if (!this->is_template_formal()) {
-			// must be definition local
-			// can't be loop variable b/c would be scalar
-			const pair<bool, const parent_type*>
-				_r(unroll_context_value_resolver<Tag>()
-					.operator()(c, *this, v));
-			INVARIANT(!_r.first);
-			// I hate this ugly code...
-			// the rest is COPIED from the end of this method
-			const this_type&
-				_val_array(IS_A(const this_type&, *_r.second));
-			const key_type index(i);
-			const element_type& pi(_val_array.collection[index]);
-			if (pi.valid) {
-				v = pi.value;
-			} else {
-				cerr << "ERROR: reference to uninitialized " <<
-					traits_type::tag_name << ' ' <<
-					this->get_qualified_name() << " at index: " <<
-					i << endl;
-			}
-			return good_bool(pi.valid);
-		}
-		// else is template formal, lookup actual
-#endif
-		const count_ptr<const const_param>
-			ac(c.lookup_actual(*this));
-		NEVER_NULL(ac);
-		const count_ptr<const const_collection_type>
-			sc(ac.template is_a<const const_collection_type>());
-		NEVER_NULL(sc);
-		v = (*sc)[i];
-		return good_bool(true);
-	}
-#endif	// USE_INSTANCE_PLACEHOLDERS
 	// else is top-level
 	const key_type index(i);
 	typedef	typename collection_type::const_iterator	const_iterator;
@@ -900,11 +496,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 	if (f == collection.end()) {
 		cerr << "ERROR: reference to uninstantiated " <<
 			traits_type::tag_name << ' ' <<
-#if USE_INSTANCE_PLACEHOLDERS
 			this->source_placeholder->get_qualified_name() <<
-#else
-			this->get_qualified_name() <<
-#endif
 			" at index: " << i << endl;
 		return good_bool(false);
 	}
@@ -914,11 +506,7 @@ VALUE_ARRAY_CLASS::lookup_value(value_type& v,
 	} else {
 		cerr << "ERROR: reference to uninitialized " <<
 			traits_type::tag_name << ' ' <<
-#if USE_INSTANCE_PLACEHOLDERS
 			this->source_placeholder->get_qualified_name() <<
-#else
-			this->get_qualified_name() <<
-#endif
 			" at index: " << i << endl;
 	}
 	return good_bool(pi.valid);
@@ -1022,18 +610,13 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, VALUE_SCALAR_CLASS)
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::value_array() :
-#if USE_INSTANCE_PLACEHOLDERS
 		parent_type(), 
-#else
-		parent_type(0), 
-#endif
 		the_instance(),
 		cached_value(const_expr_type::default_value), 
 		cache_validity(false) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_INSTANCE_PLACEHOLDERS
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::value_array(const value_placeholder_ptr_type p) :
 		parent_type(p), the_instance(), 
@@ -1041,55 +624,12 @@ VALUE_SCALAR_CLASS::value_array(const value_placeholder_ptr_type p) :
 		cache_validity(false) {
 }
 
-#else
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-VALUE_SCALAR_CLASS::value_array(const scopespace& o, const string& n) :
-		parent_type(o, n, 0), the_instance(),
-		cached_value(const_expr_type::default_value), 
-		cache_validity(false) {
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-VALUE_SCALAR_CLASS::value_array(const scopespace& o, const string& n, 
-		const count_ptr<const pint_const>& i) :
-		parent_type(o, n, 0, i), the_instance() {
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Partial copy-constructor for footprint use.  
- */
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-VALUE_SCALAR_CLASS::value_array(const this_type& t, const footprint& f) :
-		parent_type(t, f),
-		the_instance(t.the_instance), 
-		cached_value(const_expr_type::default_value), 
-		cache_validity(false) {
-}
-#endif
-
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 VALUE_SCALAR_CLASS::~value_array() {
 	STACKTRACE_DTOR("~value_scalar()");
 //	STACKTRACE_STREAM << "@ " << this << endl;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	Deep copy-constructor for making a footprint copy of this collection.  
- */
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-instance_collection_base*
-VALUE_SCALAR_CLASS::make_instance_collection_footprint_copy(
-		const footprint& f) const {
-	return new this_type(*this, f);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
@@ -1104,30 +644,6 @@ bool
 VALUE_SCALAR_CLASS::is_partially_unrolled(void) const {
 	return the_instance.instantiated;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !USE_INSTANCE_PLACEHOLDERS
-/**
-	NOTE: note sure if this is still valid after using placeholders...
-
-	This is a loop variable if the parent scopespace
-	doesn't not contain it!
- */
-VALUE_SCALAR_TEMPLATE_SIGNATURE
-bool
-VALUE_SCALAR_CLASS::is_loop_variable(void) const {
-#if USE_INSTANCE_PLACEHOLDERS
-	const typename value_placeholder_type::owner_ptr_type
-		owner(this->source_placeholder->get_owner());
-	const string& key(this->source_placeholder->get_name());
-	INVARIANT(owner);
-	return !owner->lookup_member(key);
-#else
-	INVARIANT(this->owner);
-	return !this->owner->lookup_member(this->key);
-#endif
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 VALUE_SCALAR_TEMPLATE_SIGNATURE
@@ -1152,13 +668,9 @@ VALUE_SCALAR_CLASS::instantiate_indices(const const_range_list& r) {
 	// 0-D, or scalar
 	if (the_instance.instantiated) {
 		// should never happen... but just in case
-#if USE_INSTANCE_PLACEHOLDERS
 		this->source_placeholder->dump(cerr << "ERROR: ", 
 				dump_flags::default_value) <<
 			" is already instantiated!" << endl;
-#else
-		cerr << "ERROR: already instantiated!" << endl;
-#endif
 		return good_bool(false);
 		// THROW_EXIT;
 	}
@@ -1194,13 +706,8 @@ VALUE_SCALAR_CLASS::resolve_indices(const const_index_list& l) const {
  */
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
-VALUE_SCALAR_CLASS::lookup_value(value_type& v
-#if !USE_INSTANCE_PLACEHOLDERS
-		, const unroll_context& c
-#endif
-		) const {
+VALUE_SCALAR_CLASS::lookup_value(value_type& v) const {
 	STACKTRACE_VERBOSE;
-#if USE_INSTANCE_PLACEHOLDERS
 	if (this->the_instance.valid) {
 		v = this->the_instance.value;
 		STACKTRACE_INDENT_PRINT("valid scalar." << endl);
@@ -1209,66 +716,6 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v
 		STACKTRACE_INDENT_PRINT("invalid scalar." << endl);
 		return good_bool(false);
 	}
-#else
-	if (this->owner.template is_a<const definition_base>()) {
-		INVARIANT(!c.empty());
-#if 1
-		if (!this->is_template_formal() && !this->is_loop_variable()) {
-			// must be definition local
-			// can't be loop variable b/c would be scalar
-			const pair<bool, const parent_type*>
-				_r(unroll_context_value_resolver<Tag>()
-					.operator()(c, *this, v));
-			INVARIANT(!_r.first);
-			// I hate this ugly code...
-			// the rest is COPIED from the end of this method
-			const this_type&
-				_val(IS_A(const this_type&, *_r.second));
-			if (!_val.the_instance.instantiated) {
-				cerr << "ERROR: Reference to uninstantiated " <<
-					traits_type::tag_name << ' ' <<
-					this->get_qualified_name() << "!" << endl;
-				return good_bool(false);
-			}
-			if (_val.the_instance.valid) {
-				v = _val.the_instance.value;
-			} else {
-				this->dump(cerr <<
-					"ERROR: use of uninitialized ", 
-					dump_flags::default_value) << endl;
-			}
-			return good_bool(_val.the_instance.valid);
-		}
-		// else is template formal, lookup actual
-#endif
-		const count_ptr<const const_param>
-			ac(c.lookup_actual(*this));
-		NEVER_NULL(ac);
-		const count_ptr<const expr_type>
-			sc(ac.template is_a<const expr_type>());
-		NEVER_NULL(sc);
-		v = sc->static_constant_value();
-		return good_bool(true);
-	} else {
-		// NOT TRUE. see test case template/009,040,041.in
-		// INVARIANT(c.empty());
-		// no need for context in top-level!
-	}
-	// else is top-level
-	if (!the_instance.instantiated) {
-		cerr << "ERROR: Reference to uninstantiated " <<
-			traits_type::tag_name << ' ' <<
-			this->get_qualified_name() << "!" << endl;
-		return good_bool(false);
-	}
-	if (the_instance.valid) {
-		v = the_instance.value;
-	} else {
-		this->dump(cerr << "ERROR: use of uninitialized ", 
-			dump_flags::default_value) << endl;
-	}
-	return good_bool(the_instance.valid);
-#endif
 }	// end method lookup_value
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1278,11 +725,7 @@ VALUE_SCALAR_CLASS::lookup_value(value_type& v
 VALUE_SCALAR_TEMPLATE_SIGNATURE
 good_bool
 VALUE_SCALAR_CLASS::lookup_value(value_type& v, 
-		const multikey_index_type& i
-#if !USE_INSTANCE_PLACEHOLDERS
-		, const unroll_context&
-#endif
-		) const {
+		const multikey_index_type& i) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }

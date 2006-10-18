@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.18 2006/10/18 01:19:40 fang Exp $
+	$Id: subinstance_manager.cc,v 1.19 2006/10/18 20:58:06 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,9 +14,7 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/port_context.h"
 #include "Object/common/dump_flags.h"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/physical_instance_placeholder.h"
-#endif
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -62,13 +60,9 @@ if (subinstance_array.empty()) {
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
-#if USE_INSTANCE_PLACEHOLDERS
 		// unqualified name is sufficient
 		o << auto_indent << (*i)->get_name() << " = ";
 		(*i)->dump(o, df) << endl;
-#else
-		(*i)->dump(o << auto_indent, df) << endl;
-#endif
 	}
 	}
 	return o << auto_indent << ')';

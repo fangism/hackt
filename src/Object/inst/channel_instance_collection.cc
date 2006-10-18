@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file originated from "Object/art_object_instance_chan.cc"
 		in a previous life.  
-	$Id: channel_instance_collection.cc,v 1.11 2006/10/18 01:19:27 fang Exp $
+	$Id: channel_instance_collection.cc,v 1.12 2006/10/18 20:57:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_CHANNEL_INSTANCE_COLLECTION_CC__
@@ -24,9 +24,7 @@
 #include "Object/type/channel_type_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
-#if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/instance_placeholder.tcc"
-#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -44,11 +42,9 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_3D, "channel_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::channel_array_4D, "channel_array_4D")
 
-#if USE_INSTANCE_PLACEHOLDERS
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_instance_placeholder, 
 	CHANNEL_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
-#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::channel_scalar, CHANNEL_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -66,9 +62,7 @@ namespace entity {
 //=============================================================================
 // explicit template class instantiations
 
-#if USE_INSTANCE_PLACEHOLDERS
 template class instance_placeholder<channel_tag>;
-#endif
 template class state_instance<channel_tag>;
 template class instance_pool<state_instance<channel_tag> >;
 template class instance_alias_info<channel_tag>;

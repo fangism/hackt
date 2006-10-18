@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.16 2006/10/18 19:08:05 fang Exp $
+	$Id: chan_traits.h,v 1.17 2006/10/18 20:58:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -63,11 +63,9 @@ struct class_traits<channel_tag> {
 
 	typedef	channel_instance_collection	instance_collection_generic_type;
 	typedef	physical_instance_collection	instance_collection_parent_type;
-#if USE_INSTANCE_PLACEHOLDERS
 	typedef	physical_instance_placeholder
 					instance_placeholder_parent_type;
 	typedef	channel_instance_placeholder	instance_placeholder_type;
-#endif
 #if 0
 	// 7.1.5.3 Elaborated type specifiers.
 	// If the identifier resolves to a typedef name or template type
