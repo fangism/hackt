@@ -1,5 +1,14 @@
 # "test/ChangeLog"
 
+2006-10-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-29:
+	  test/lib: removing unroll/create/alloc tests because they
+		cause too much trouble.  Will re-instate later when 
+		test framework is revamped.  Not removing stderr
+		outputs from CVS until their fate is decided later.  
+
+
 2006-09-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-21:
