@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.cc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: simple_meta_instance_reference.tcc,v 1.25 2006/10/18 20:58:15 fang Exp $
+ 	$Id: simple_meta_instance_reference.tcc,v 1.26 2006/10/18 22:52:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_TCC__
@@ -181,17 +181,9 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::attach_indices(indices_ptr_arg_type i) {
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, footprint& top
-#endif
-		) const {
+		const state_manager& sm, footprint& top) const {
 	STACKTRACE_VERBOSE;
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	const unroll_context uc(&top, &top);
-#else
-	const unroll_context uc(NULL, NULL);
-#endif
 	const instance_alias_base_ptr_type
 		alias(__unroll_generic_scalar_reference(
 			*this->inst_collection_ref, this->array_indices,
@@ -214,19 +206,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 good_bool
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
-		const state_manager& sm, 
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		footprint& top, 
-#endif
+		const state_manager& sm, footprint& top, 
 		vector<size_t>& indices) const {
 	typedef	vector<size_t>				indices_type;
 	typedef	typename alias_collection_type::const_iterator	const_iterator;
 	alias_collection_type aliases;
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	const unroll_context dummy(&top, &top);
-#else
-	const unroll_context dummy(NULL, NULL);	// top-level context-free
-#endif
 	// reminder: call to unroll_references_packed is virtual
 #if 0
 	if (!__unroll_generic_scalar_references(
@@ -261,19 +246,12 @@ SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_indices(
 SIMPLE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 SIMPLE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, footprint& top
-#endif
-		) const {
+		const state_manager& sm, footprint& top) const {
 	STACKTRACE_VERBOSE;
 	return substructure_implementation_policy::
 		template simple_lookup_footprint_frame<Tag>(
-			*this->inst_collection_ref, this->array_indices, sm
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-			, top
-#endif
-			);
+			*this->inst_collection_ref, this->array_indices, 
+				sm, top);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

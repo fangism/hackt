@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.15 2006/10/18 20:58:15 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.16 2006/10/18 22:52:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -105,12 +105,9 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
 	const size_t index = _this.lookup_globally_allocated_index(
-		mod.get_state_manager()
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		mod.get_state_manager(), 
 		// temporary kludge until we clean up
-		, const_cast<footprint&>(mod.get_footprint())
-#endif
-		);
+		const_cast<footprint&>(mod.get_footprint()));
 	INVARIANT(index);	// because we already checked reference?
 	mod.template match_aliases<Tag>(aliases, index);
 }
@@ -129,17 +126,12 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
 	const state_manager& sm(mod.get_state_manager());
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	// temporary kludge until we clean up
 	footprint& top(const_cast<footprint&>(mod.get_footprint()));
-#endif
 	if (_this.dimensions()) {
 		vector<size_t> inds;
 		if (!_this.lookup_globally_allocated_indices(sm, 
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-				top, 
-#endif
-				inds).good) {
+				top, inds).good) {
 			// got error message already
 			THROW_EXIT;
 		}
@@ -149,11 +141,8 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 			sm.template collect_subentries<Tag>(v, *i);
 		}
 	} else {
-		const size_t index = _this.lookup_globally_allocated_index(sm
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-			, top
-#endif
-			);
+		const size_t index =
+			_this.lookup_globally_allocated_index(sm, top);
 		INVARIANT(index);	// because we already checked reference?
 		sm.template collect_subentries<Tag>(v, index);
 	}

@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.27 2006/10/18 22:31:48 fang Exp $
+	$Id: devel_switches.h,v 1.28 2006/10/18 22:52:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -52,17 +52,6 @@
 	Status: applied to templates, haven't applied to ports yet
  */
 #define	SEQUENTIAL_SCOPE_INCLUDES_FORMALS	0
-
-/**
-	Define to 1 to distinguish target (instantiation) footprints
-	from lookup-only footprints in the unroll_context.
-	Rationale: easy distinction between instantiation and lookup.
-	This needs to be done before we chain contexts to prevent
-	accidental instantiation in the wrong context.  
-	Goal: 1
-	Status: complete, just needs complete testing
- */
-#define	SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS	1
 
 /**
 	Define to 1 to use dynamic_meta_index_list instead of

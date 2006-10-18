@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.21 2006/10/18 22:31:52 fang Exp $
+	$Id: unroll_context.cc,v 1.22 2006/10/18 22:52:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -45,9 +45,7 @@ unroll_context::unroll_context(footprint* const f,
 		const footprint* const t) :
 		next(),
 		target_footprint(f),
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 		lookup_footprint(f), 
-#endif
 		top_footprint(t)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
@@ -63,9 +61,7 @@ unroll_context::unroll_context(const footprint* const f,
 		const unroll_context& c) :
 		next(&c),
 		target_footprint(NULL),
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 		lookup_footprint(f), 
-#endif
 		top_footprint(c.top_footprint)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
@@ -81,9 +77,7 @@ unroll_context::unroll_context(footprint* const f,
 		const unroll_context& c) :
 		next(&c),
 		target_footprint(c.target_footprint),
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 		lookup_footprint(f), 
-#endif
 		top_footprint(c.top_footprint)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
@@ -102,9 +96,7 @@ unroll_context::unroll_context(footprint* const f,
 		const auxiliary_target_tag) :
 		next(&c),
 		target_footprint(f),
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 		lookup_footprint(f), 
-#endif
 		top_footprint(c.top_footprint)
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
@@ -125,14 +117,12 @@ unroll_context::dump(ostream& o) const {
 #if STACKTRACE_DUMP
 	STACKTRACE_VERBOSE;
 #endif
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	if (lookup_footprint) {
 		lookup_footprint->dump_with_collections(
 			cerr << endl << "lookup footprint: " << endl,
 			dump_flags::default_value, 
 			expr_dump_context::default_value);
 	}
-#endif
 	if (target_footprint) {
 	if (target_footprint != lookup_footprint) {
 		target_footprint->dump_with_collections(
@@ -207,25 +197,9 @@ unroll_context::lookup_instance_collection(
 		const physical_instance_placeholder& p) const {
 	typedef	count_ptr<physical_instance_collection>	return_type;
 	STACKTRACE_VERBOSE;
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	NEVER_NULL(target_footprint);
 	return (*target_footprint)[p.get_footprint_key()]
 		.is_a<physical_instance_collection>();
-#else
-	if (target_footprint) {
-		// TODO: error-handle qualified lookups?
-		const return_type
-			ret((*target_footprint)[p.get_footprint_key()]
-				.is_a<physical_instance_collection>());
-		if (ret)
-			return ret;
-	}
-	if (next) {
-		// this might be a loop or other local scope.  
-		return next->lookup_instance_collection(p);
-	}
-	return return_type(NULL);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -247,7 +221,6 @@ unroll_context::lookup_rvalue_collection
 #if ENABLE_STACKTRACE
 	dump(cerr << "looking up \"" << key << "\" in context:") << endl;
 #endif
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	// should really only lookup rvalues with this...
 	// target footprint should be covered (and searched last)
 	if (lookup_footprint) {
@@ -260,19 +233,6 @@ unroll_context::lookup_rvalue_collection
 			return ret;
 		}
 	}
-#else
-	if (target_footprint && target_footprint != lookup_footprint) {
-		STACKTRACE_INDENT_PRINT("trying target_footprint..." << endl);
-		// TODO: error-handle qualified lookups?
-		const return_type
-			ret((*target_footprint)[key]
-				.is_a<param_value_collection>());
-		if (ret) {
-			STACKTRACE_INDENT_PRINT("found it." << endl);
-			return ret;
-		}
-	}
-#endif
 	// TODO: shouldn't top-footprint be checked last???
 	if (top_footprint && top_footprint != lookup_footprint) {
 		STACKTRACE_INDENT_PRINT("trying top_footprint..." << endl);

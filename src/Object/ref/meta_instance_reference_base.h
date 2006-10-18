@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.13 2006/10/18 05:32:50 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.14 2006/10/18 22:52:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -15,7 +15,6 @@
 #include "Object/inst/substructure_alias_fwd.h"
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -132,15 +131,9 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO = 0;
 
 virtual	CONNECT_PORT_PROTO = 0;
 
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 #define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
 	const footprint_frame*						\
 	lookup_footprint_frame(const state_manager&, footprint&) const
-#else
-#define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
-	const footprint_frame*						\
-	lookup_footprint_frame(const state_manager&) const
-#endif
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 

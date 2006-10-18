@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_instance_reference.h"
 	Class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_inst_ref.h".
-	$Id: simple_meta_instance_reference.h,v 1.17 2006/10/18 20:58:15 fang Exp $
+	$Id: simple_meta_instance_reference.h,v 1.18 2006/10/18 22:52:56 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_META_INSTANCE_REFERENCE_H__
@@ -12,7 +12,6 @@
 #include "Object/ref/simple_meta_indexed_reference_base.h"
 #include "Object/inst/instance_collection_base.h"
 #include "Object/traits/class_traits_fwd.h"
-#include "Object/devel_switches.h"
 #include "util/packed_array_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
 #include "util/STL/vector_fwd.h"
@@ -145,18 +144,11 @@ virtual	instance_alias_base_ptr_type
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO;
 
 virtual	size_t
-	lookup_globally_allocated_index(const state_manager&
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, footprint&
-#endif
-		) const;
+	lookup_globally_allocated_index(const state_manager&, footprint&) const;
 
 	good_bool
 	lookup_globally_allocated_indices(const state_manager&, 
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		footprint&, 
-#endif
-		std::default_vector<size_t>::type&) const;
+		footprint&, std::default_vector<size_t>::type&) const;
 
 private:
 	port_connection_ptr_type

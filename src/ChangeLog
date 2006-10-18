@@ -5,6 +5,10 @@
 
 2006-10-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-39:
+	  Perm'd SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS (-180 LoC).
+
+
 	* HACKT-00-01-04-main-00-80-38:
 	  Perm'd RVALUE_LVALUE_LOOKUPS (-60 LoC).
 

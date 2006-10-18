@@ -1,14 +1,13 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.16 2006/10/18 20:58:13 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.17 2006/10/18 22:52:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 #define	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 
 #include <iostream>
-#include "Object/devel_switches.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
@@ -119,17 +118,9 @@ const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename instance_placeholder_type<Tag>::type& inst, 
 		index_list_ptr_arg_type ind,
-		const state_manager& sm
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, footprint& top
-#endif
-		) {
+		const state_manager& sm, footprint& top) {
 	STACKTRACE_VERBOSE;
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	const unroll_context uc(&top, &top);
-#else
-	const unroll_context uc(NULL, NULL);
-#endif
 	const never_ptr<substructure_alias>
 		alias(unroll_generic_scalar_substructure_reference<Tag>(
 			inst, ind, uc));
@@ -150,17 +141,9 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>& _this, 
-		const state_manager& sm
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, footprint& top
-#endif
-		) {
+		const state_manager& sm, footprint& top) {
 	STACKTRACE_VERBOSE;
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	const size_t id = _this.lookup_globally_allocated_index(sm, top);
-#else
-	const size_t id = _this.lookup_globally_allocated_index(sm);
-#endif
 	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	if (!id) {
 		// already have error message
@@ -257,11 +240,7 @@ const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename instance_placeholder_type<Tag>::type&, 
 		index_list_ptr_arg_type,
-		const state_manager&
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, footprint& top
-#endif
-		) {
+		const state_manager&, footprint& top) {
 	// ICE?
 	return NULL;
 }
@@ -276,11 +255,7 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>&, 
-		const state_manager&
-#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
-		, footprint&
-#endif
-		) {
+		const state_manager&, footprint&) {
 	// ICE?
 	return NULL;
 }
