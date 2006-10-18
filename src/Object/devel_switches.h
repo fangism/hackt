@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.21 2006/10/18 07:39:27 fang Exp $
+	$Id: devel_switches.h,v 1.22 2006/10/18 08:51:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -121,19 +121,6 @@
 	Status: looks good so far, awaiting complete testing
  */
 #define	RVALUE_LVALUE_LOOKUPS	(1 && SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS)
-
-/**
-	Define to 1 to always compile objects using dynamic_param_expr_lists.
-	This takes care of a reject-valid bug (never tripped)
-	and greatly simplifies expression substitution.  
-	Goal: 1
-	Status: looks ok, didn't cause new regressions, awaiting full tests
-	TODO: also consider doing something similar for
-		meta-index-lists and meta-range-lists.  
-	It is do-able, now that we've eliminated much static analysis
-		at compile time.  
- */
-#define	ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST	1
 
 /**
 	Define to 1 to use dynamic_meta_index_list instead of

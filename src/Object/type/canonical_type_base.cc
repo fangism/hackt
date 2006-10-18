@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.cc,v 1.6 2006/10/18 01:19:59 fang Exp $
+	$Id: canonical_type_base.cc,v 1.7 2006/10/18 08:52:03 fang Exp $
  */
 
 #include <algorithm>
@@ -9,9 +9,7 @@
 #include "Object/type/template_actuals.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 #include "Object/expr/dynamic_param_expr_list.h"
-#endif
 #include "Object/expr/expr_dump_context.h"
 #include "util/memory/count_ptr.tcc"
 
@@ -56,7 +54,6 @@ template_actuals
 canonical_type_base::get_template_params(const size_t num_strict) const {
 	if (!param_list_ptr)
 		return template_actuals();
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	const template_actuals::arg_list_ptr_type
 		sp(new template_actuals::expr_list_type());
 	copy(param_list_ptr->begin(), param_list_ptr->begin() +num_strict, 
@@ -69,18 +66,6 @@ canonical_type_base::get_template_params(const size_t num_strict) const {
 		copy(param_list_ptr->begin() +num_strict,
 			param_list_ptr->begin() +s, back_inserter(*rp));
 	}
-#else
-	const param_list_ptr_type
-		sp(new param_list_type(
-			param_list_ptr->begin(),
-			param_list_ptr->begin() +num_strict));
-	const size_t s = param_list_ptr->size();
-	const const_param_list_ptr_type
-		rp((num_strict < s) ?
-			new param_list_type(
-			param_list_ptr->begin() +num_strict,
-			param_list_ptr->begin() +s) : NULL);
-#endif
 	return template_actuals(sp, rp);
 }
 

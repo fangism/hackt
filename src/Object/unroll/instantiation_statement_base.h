@@ -3,7 +3,7 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.10 2006/10/18 01:20:06 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.11 2006/10/18 08:52:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
@@ -19,11 +19,7 @@
 namespace HAC {
 namespace entity {
 class const_range_list;
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 class dynamic_param_expr_list;
-#else
-class param_expr_list;
-#endif
 #if USE_INSTANCE_PLACEHOLDERS
 class instance_placeholder_base;
 class physical_instance_placeholder;
@@ -53,14 +49,9 @@ using util::persistent_object_manager;
  */
 class instantiation_statement_base : public instance_management_base {
 public:
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	typedef	count_ptr<const dynamic_param_expr_list>
 						const_relaxed_args_type;
 	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_type;
-#else
-	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
-	typedef	count_ptr<param_expr_list>		relaxed_args_type;
-#endif
 protected:
 	index_collection_item_ptr_type		indices;
 protected:

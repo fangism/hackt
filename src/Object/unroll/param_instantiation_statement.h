@@ -1,9 +1,10 @@
 /**
 	\file "Object/unroll/param_instantiation_statement.h"
 	Contains definition of nested, specialized class_traits types.  
+	Possibly factor out implementations into another file?
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.11 2006/10/18 05:33:03 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.12 2006/10/18 08:52:16 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -20,9 +21,7 @@
 #include "Object/traits/preal_traits.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/expr/const_param_expr_list.h"
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 #include "Object/expr/dynamic_param_expr_list.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -105,12 +104,8 @@ class class_traits<preal_tag>::instantiation_statement_type_ref_base :
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	typedef	count_ptr<const dynamic_param_expr_list>
 						const_relaxed_args_type;
-#else
-	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
-#endif
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
 	// probably null_parameter_type
@@ -196,12 +191,8 @@ class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 public:
 	typedef	traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	typedef	count_ptr<const dynamic_param_expr_list>
 						const_relaxed_args_type;
-#else
-	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
-#endif
 protected:
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;

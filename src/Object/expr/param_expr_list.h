@@ -4,7 +4,7 @@
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
 	TODO: rename to meta_expr_list_base.h
-	$Id: param_expr_list.h,v 1.13 2006/10/18 07:39:39 fang Exp $
+	$Id: param_expr_list.h,v 1.14 2006/10/18 08:51:58 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PARAM_EXPR_LIST_H__
@@ -58,11 +58,6 @@ public:
 
 virtual	~param_expr_list() { }
 
-#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
-virtual	count_ptr<param_expr_list>
-	copy(void) const = 0;
-#endif
-
 virtual	size_t
 	size(void) const = 0;
 
@@ -71,11 +66,6 @@ virtual	ostream&
 
 virtual	ostream&
 	dump(ostream& o, const expr_dump_context&) const = 0;
-
-#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
-virtual	excl_ptr<param_expr_list>
-	make_copy(void) const = 0;
-#endif
 
 virtual	count_ptr<const param_expr>
 	operator [] (const size_t) const = 0;
@@ -96,32 +86,10 @@ virtual	bool
 	typedef	count_ptr<const const_param_expr_list>
 					unroll_resolve_rvalues_return_type;
 
-#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
-virtual	unroll_resolve_rvalues_return_type
-	unroll_resolve_rvalues(const unroll_context&, 
-		const count_ptr<const param_expr_list>&) const = 0;
-#endif
-
 // coordinate with template_formals_manager::template_formals_list_type
 protected:
 	typedef	default_vector<placeholder_ptr_type>::type
 					template_formals_list_type;
-
-#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
-public:
-#if RESOLVE_VALUES_WITH_FOOTPRINT
-virtual	good_bool
-	unroll_assign_formal_parameters(const unroll_context&, 
-		const template_formals_list_type&) const = 0;
-#endif
-
-virtual	good_bool
-	certify_template_arguments(const template_formals_list_type&) = 0;
-
-virtual	good_bool
-	certify_template_arguments_without_defaults(
-		const template_formals_list_type&) const = 0;
-#endif
 
 };	// end class param_expr_list
 

@@ -3,7 +3,7 @@
 	Class for template arguments, a.k.a. actuals.  
 	This file came from "Object/type/template_actuals.h"
 		in a previous life.  
-	$Id: template_actuals.h,v 1.7 2006/10/18 01:20:01 fang Exp $
+	$Id: template_actuals.h,v 1.8 2006/10/18 08:52:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TEMPLATE_ACTUALS_H__
@@ -21,11 +21,7 @@ class persistent_object_manager;
 namespace HAC {
 namespace entity {
 class unroll_context;
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 class dynamic_param_expr_list;
-#else
-class param_expr_list;
-#endif
 class const_param_expr_list;
 class fundamental_type_reference;
 class template_formals_manager;
@@ -46,11 +42,7 @@ friend class fundamental_type_reference;
 public:
 	typedef	template_actuals		this_type;
 	// later this will become more generalized, as template_expr_list_type
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	typedef	dynamic_param_expr_list		expr_list_type;
-#else
-	typedef	param_expr_list			expr_list_type;
-#endif
 	typedef	count_ptr<expr_list_type>	arg_list_ptr_type;
 	typedef	count_ptr<const expr_list_type>	const_arg_list_ptr_type;
 protected:

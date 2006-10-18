@@ -5,6 +5,10 @@
 
 2006-10-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-33:
+	  Perm'd ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST.  (-500 LoC)
+
+
 	* HACKT-00-01-04-main-00-80-32:
 	  Perm'd the disabling of ENABLE_STATIC_ANALYSIS.  (-700 LoC)
 

@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.18 2006/10/18 01:20:02 fang Exp $
+ 	$Id: type_reference.cc,v 1.19 2006/10/18 08:52:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -44,9 +44,7 @@
 #endif
 #include "Object/expr/pint_const.h"
 #include "Object/expr/const_param_expr_list.h"
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 #include "Object/expr/dynamic_param_expr_list.h"
-#endif
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
 #include "util/persistent_object_manager.tcc"
@@ -719,19 +717,9 @@ data_type_reference*
 data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
 	INVARIANT(w >= 0);
 	// is an excl_ptr, incidentally
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	const count_ptr<const param_expr> wd(new pint_const(w));
-#else
-	const count_ptr<const pint_const> wd(new pint_const(w));
-#endif
 	const fundamental_type_reference::template_args_ptr_type
-		width_params(
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
-			new dynamic_param_expr_list
-#else
-			new const_param_expr_list
-#endif
-			(wd));
+		width_params(new dynamic_param_expr_list (wd));
 	const template_actuals
 		tpl(width_params, template_actuals::arg_list_ptr_type());
 	return new data_type_reference(never_ptr<const built_in_datatype_def>(
@@ -744,19 +732,9 @@ canonical_generic_datatype
 data_type_reference::make_canonical_int_type_ref(const pint_value_type w) {
 	INVARIANT(w >= 0);
 	// is an excl_ptr, incidentally
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	const count_ptr<const param_expr> wd(new pint_const(w));
-#else
-	const count_ptr<const pint_const> wd(new pint_const(w));
-#endif
 	const fundamental_type_reference::template_args_ptr_type
-		width_params(
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
-			new dynamic_param_expr_list
-#else
-			new const_param_expr_list
-#endif
-			(wd));
+		width_params(new dynamic_param_expr_list(wd));
 	const template_actuals
 		tpl(width_params, template_actuals::arg_list_ptr_type());
 	return canonical_generic_datatype(

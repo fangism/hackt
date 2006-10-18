@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.15 2006/10/18 05:32:35 fang Exp $
+	$Id: template_formals_manager.cc,v 1.16 2006/10/18 08:51:50 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -341,21 +341,13 @@ template_formals_manager::equivalent_template_formals(
 good_bool
 template_formals_manager::certify_template_arguments(
 		template_actuals& t) const {
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	const template_actuals::const_arg_list_ptr_type&
 		spl(t.get_strict_args());
-#else
-	const count_ptr<const param_expr_list>& spl(t.get_strict_args());
-#endif
 	good_bool sg;
 	if (spl) {
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 		// make deep copy
 		const count_ptr<dynamic_param_expr_list>
 			rep(new dynamic_param_expr_list(*spl));
-#else
-		const count_ptr<param_expr_list> rep(spl->copy());
-#endif
 		sg = rep->certify_template_arguments(*this, 
 			strict_template_formals_list);
 		if (sg.good) {
@@ -412,33 +404,21 @@ template_formals_manager::must_validate_actuals(
 #else
 	const unroll_context c(t, *this);
 #endif
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	const count_ptr<const_param_expr_list> null(NULL);
 	const count_ptr<const dynamic_param_expr_list>&
 		spl(t.get_strict_args());
 	const count_ptr<const const_param_expr_list>
 		cspl(spl ? spl->make_const_param_expr_list() : null);
-#else
-	const count_ptr<const param_expr_list> spl(t.get_strict_args());
-	const count_ptr<const const_param_expr_list>
-		cspl(spl.is_a<const const_param_expr_list>());
-#endif
 	if (spl) NEVER_NULL(cspl);
 	const good_bool sg(cspl ?
 		cspl->must_validate_template_arguments(
 			strict_template_formals_list, c) :
 		partial_check_null_template_argument(
 			strict_template_formals_list));
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	const count_ptr<const dynamic_param_expr_list>&
 		rpl(t.get_relaxed_args());
 	const count_ptr<const const_param_expr_list>
 		crpl(rpl ? rpl->make_const_param_expr_list() : null);
-#else
-	const count_ptr<const param_expr_list> rpl(t.get_relaxed_args());
-	const count_ptr<const const_param_expr_list>
-		crpl(rpl.is_a<const const_param_expr_list>());
-#endif
 	if (rpl) NEVER_NULL(crpl);
 	// if relaxed actuals are NULL, don't check them for defaults
 	const good_bool rg(crpl ?

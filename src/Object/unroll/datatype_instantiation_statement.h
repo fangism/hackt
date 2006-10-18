@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_data.h"
 		in a previous life.  
-	$Id: datatype_instantiation_statement.h,v 1.11 2006/10/18 05:33:01 fang Exp $
+	$Id: datatype_instantiation_statement.h,v 1.12 2006/10/18 08:52:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_DATATYPE_INSTANTIATION_STATEMENT_H__
@@ -19,9 +19,7 @@
 #endif
 #include "Object/inst/datatype_instance_collection.h"
 #include "Object/expr/const_param_expr_list.h"
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 #include "Object/expr/dynamic_param_expr_list.h"
-#endif
 #include "Object/inst/alias_empty.h"
 #include "Object/def/footprint.h"
 #include "util/persistent_object_manager.h"
@@ -49,12 +47,8 @@ class class_traits<datatype_tag>::instantiation_statement_type_ref_base {
 	typedef instantiation_statement_type_ref_base	this_type;
 public:
 	// typedef	count_ptr<param_expr_list>	relaxed_args_type;
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	typedef	count_ptr<const dynamic_param_expr_list>
 						const_relaxed_args_type;
-#else
-	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
-#endif
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
 	typedef	traits_type::instance_collection_parameter_type

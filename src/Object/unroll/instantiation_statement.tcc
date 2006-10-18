@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.19 2006/10/18 05:33:02 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.20 2006/10/18 08:52:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -30,11 +30,7 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 #include "Object/expr/dynamic_param_expr_list.h"
-#else
-#include "Object/expr/param_expr_list.h"
-#endif
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/def/footprint.h"
@@ -351,11 +347,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		// passing in relaxed arguments from final_type_ref!
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 		const count_ptr<const dynamic_param_expr_list>
-#else
-		const count_ptr<const param_expr_list>
-#endif
 			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
 		count_ptr<const const_param_expr_list>
 			relaxed_const_actuals;
@@ -435,11 +427,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		// passing in relaxed arguments from final_type_ref!
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 		const count_ptr<const dynamic_param_expr_list>
-#else
-		const count_ptr<const param_expr_list>
-#endif
 			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
 		count_ptr<const const_param_expr_list>
 			relaxed_const_actuals;

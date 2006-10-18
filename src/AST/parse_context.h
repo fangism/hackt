@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.11 2006/10/18 05:32:27 fang Exp $
+	$Id: parse_context.h,v 1.12 2006/10/18 08:51:46 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -43,11 +43,7 @@ namespace entity {
 	class instance_management_base;
 	class meta_instance_reference_connection;
 	class param_expr;
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	class dynamic_param_expr_list;
-#else
-	class param_expr_list;
-#endif
 	class param_expression_assignment;
 	class loop_scope;
 	class conditional_scope;
@@ -94,11 +90,7 @@ using entity::value_array;
 using entity::instance_management_base;
 using entity::meta_instance_reference_connection;
 using entity::param_expr;
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 using entity::dynamic_param_expr_list;
-#else
-using entity::param_expr_list;
-#endif
 using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
@@ -139,12 +131,8 @@ class token_paramtype;
  */
 class context {
 public:
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 	typedef	count_ptr<const dynamic_param_expr_list>
 							relaxed_args_ptr_type;
-#else
-	typedef	count_ptr<const param_expr_list>	relaxed_args_ptr_type;
-#endif
 	typedef list<string>			file_name_stack_type;
 #if USE_INSTANCE_PLACEHOLDERS
 	typedef	never_ptr<const instance_placeholder_base>

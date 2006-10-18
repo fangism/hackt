@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.21 2006/10/18 01:19:41 fang Exp $
+ 	$Id: value_collection.tcc,v 1.22 2006/10/18 08:51:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -51,9 +51,7 @@
 #if USE_INSTANCE_PLACEHOLDERS
 #include "Object/inst/value_placeholder.h"
 #endif
-#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 #include "Object/expr/dynamic_param_expr_list.h"
-#endif
 
 #include "common/ICE.h"
 
