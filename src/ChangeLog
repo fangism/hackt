@@ -5,6 +5,11 @@
 
 2006-10-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-35:
+	  Perm'd USE_RESOLVED_DATA_TYPES and USE_UNRESOLVED_DATA_TYPES, 
+		-560 LoC.
+
+
 	* HACKT-00-01-04-main-00-80-34:
 	  Perm'd MODULE_PROCESS (-530 LoC)
 		Kiss a significant chunk of dirtily hacked code Goodbye.  

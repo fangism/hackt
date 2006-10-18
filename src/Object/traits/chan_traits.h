@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.15 2006/10/18 01:19:54 fang Exp $
+	$Id: chan_traits.h,v 1.16 2006/10/18 19:08:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -122,11 +122,9 @@ struct class_traits<channel_tag> {
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
 
-#if USE_RESOLVED_DATA_TYPES
 	// same type info as parameter_type
 	typedef	canonical_generic_chan_type	resolved_type_ref_type;
 	// pointer not necessary
-#endif
 };	// end struct class_traits<channel_tag>
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

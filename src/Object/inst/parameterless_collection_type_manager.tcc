@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.11 2006/10/18 01:19:38 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.12 2006/10/18 19:08:03 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -87,13 +87,11 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::get_type(
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 typename PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::resolved_type_ref_type
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::get_resolved_canonical_type(void) const {
 	return resolved_type_ref_type(this->type_parameter);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

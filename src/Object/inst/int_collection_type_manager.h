@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.h,v 1.10 2006/10/18 01:19:32 fang Exp $
+	$Id: int_collection_type_manager.h,v 1.11 2006/10/18 19:08:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_H__
@@ -50,10 +50,8 @@ protected:
 #endif
 	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
-#if USE_RESOLVED_DATA_TYPES
 	typedef typename traits_type::resolved_type_ref_type
 					resolved_type_ref_type;
-#endif
 
 	/**
 		Type is a constant integer.  
@@ -78,11 +76,6 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&);
 
-#if 0
-	type_ref_ptr_type
-	get_type(void) const;
-#endif
-
 #if !USE_INSTANCE_PLACEHOLDERS
 	// because we may need to extract from the index_collection
 	type_ref_ptr_type
@@ -90,7 +83,6 @@ protected:
 #endif
 
 public:
-#if USE_RESOLVED_DATA_TYPES
 	const instance_collection_parameter_type&
 	__get_raw_type(void) const { return type_parameter; }
 
@@ -102,10 +94,6 @@ public:
 			const count_ptr<const const_param_expr_list>&) const {
 		return good_bool(true);
 	}
-#else
-	const instance_collection_parameter_type&
-	get_canonical_type(void) const { return type_parameter; }
-#endif
 
 	bool
 	is_complete_type(void) const { return true; }

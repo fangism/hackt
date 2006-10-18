@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.h,v 1.9 2006/10/18 01:19:38 fang Exp $
+	$Id: parameterless_collection_type_manager.h,v 1.10 2006/10/18 19:08:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_H__
@@ -44,10 +44,8 @@ protected:
 					instance_collection_parameter_type;
 	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
-#if USE_RESOLVED_DATA_TYPES
 	typedef typename traits_type::resolved_type_ref_type
 					resolved_type_ref_type;
-#endif
 
 	/**
 		The type parameter is ONLY a definition.
@@ -72,7 +70,6 @@ protected:
 #endif
 
 public:
-#if USE_RESOLVED_DATA_TYPES
 	const instance_collection_parameter_type&
 	__get_raw_type(void) const { return this->type_parameter; }
 
@@ -84,10 +81,7 @@ public:
 			const count_ptr<const const_param_expr_list>& r) const {
 		return good_bool(true);
 	}
-#else
-	const instance_collection_parameter_type&
-	get_canonical_type(void) const { return this->type_parameter; }
-#endif
+
 	bool
 	is_complete_type(void) const { return this->type_parameter; }
 

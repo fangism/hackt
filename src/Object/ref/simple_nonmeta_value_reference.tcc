@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.11 2006/10/18 01:19:52 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.12 2006/10/18 19:08:04 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -32,9 +32,7 @@
 #include "Object/inst/value_placeholder.h"
 #include "Object/unroll/unroll_context.h"
 #endif
-#if USE_RESOLVED_DATA_TYPES
 #include "Object/type/canonical_generic_datatype.h"
-#endif
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
 #include "Object/common/dump_flags.h"
@@ -378,7 +376,6 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::is_lvalue(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_UNRESOLVED_DATA_TYPES
 /**
 	2006-09-03: re-written to lookup the corresponding footprint
 	instance, using the unrolli_context.  
@@ -388,17 +385,14 @@ count_ptr<const data_type_reference>
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_unresolved_data_type_ref(void) const {
 	return data_type_resolver<Tag>()(*this);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 canonical_generic_datatype
 SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_resolved_data_type_ref(
 		const unroll_context& c) const {
 	return data_type_resolver<Tag>()(*this, c);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

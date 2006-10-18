@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: preal_expr.h,v 1.9 2006/10/18 07:39:41 fang Exp $
+	$Id: preal_expr.h,v 1.10 2006/10/18 19:08:00 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_EXPR_H__
@@ -59,9 +59,7 @@ virtual	size_t
 	dimensions(void) const = 0;
 
 	GET_UNRESOLVED_DATA_TYPE_REF_PROTO;
-#if USE_RESOLVED_DATA_TYPES
 	GET_RESOLVED_DATA_TYPE_REF_PROTO;
-#endif
 
 	bool
 	may_be_equivalent_generic(const param_expr& p) const;

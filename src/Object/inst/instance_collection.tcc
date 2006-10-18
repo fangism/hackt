@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.34 2006/10/18 01:19:30 fang Exp $
+	$Id: instance_collection.tcc,v 1.35 2006/10/18 19:08:02 fang Exp $
 	TODO: trim includes
  */
 
@@ -350,15 +350,6 @@ INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 typename INSTANCE_COLLECTION_CLASS::type_ref_ptr_type
 INSTANCE_COLLECTION_CLASS::get_type_ref_subtype(void) const {
 	return collection_type_manager_parent_type::get_type(*this);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0 && USE_RESOLVED_DATA_TYPES
-INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
-typename INSTANCE_COLLECTION_CLASS::resolved_type_ref_type
-INSTANCE_COLLECTION_CLASS::get_resolved_canonical_type(void) const {
-	return collection_type_manager_parent_type::get_resolved_canonical_type(*this);
 }
 #endif
 
@@ -731,13 +722,11 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 			expr_dump_context::default_value) << endl;
 		return good_bool(false);
 	}
-#if USE_RESOLVED_DATA_TYPES
 	// for process only (or anything with relaxed typing)
 	if (!collection_type_manager_parent_type::
 			complete_type_definition_footprint(actuals).good) {
 		return good_bool(false);
 	}
-#endif
 	// now iterate through, unrolling one at a time...
 	// stop as soon as there is a conflict
 	// later: factor this out into common helper class
@@ -1094,11 +1083,7 @@ if (this->has_relaxed_type()) {
 	// type of container is already strict, 
 	// evaluate it once and re-use it when replaying internal aliases
 	const typename parent_type::instance_collection_parameter_type
-#if USE_RESOLVED_DATA_TYPES
 		t(collection_type_manager_parent_type::__get_raw_type());
-#else
-		t(collection_type_manager_parent_type::get_canonical_type());
-#endif
 	if (!create_definition_footprint(t, top).good) {
 		return good_bool(false);
 	}
@@ -1533,13 +1518,11 @@ INSTANCE_SCALAR_CLASS::instantiate_indices(
 	}
 	// here we need an explicit instantiation (recursive)
 	this->the_instance.instantiate(never_ptr<const this_type>(this), c);
-#if USE_RESOLVED_DATA_TYPES
 	// for process only (or anything with relaxed typing)
 	if (!collection_type_manager_parent_type::
 			complete_type_definition_footprint(actuals).good) {
 		return good_bool(false);
 	}
-#endif
 	const bool attached(actuals ?
 		this->the_instance.attach_actuals(actuals) : true);
 	if (!attached) {
@@ -1706,11 +1689,7 @@ if (this->has_relaxed_type()) {
 	}
 } else {
 	const typename parent_type::instance_collection_parameter_type
-#if USE_RESOLVED_DATA_TYPES
 		t(collection_type_manager_parent_type::__get_raw_type());
-#else
-		t(collection_type_manager_parent_type::get_canonical_type());
-#endif
 	if (!create_definition_footprint(t, top).good) {
 		return good_bool(false);
 	}

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/general_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: general_collection_type_manager.h,v 1.10 2006/10/18 01:19:29 fang Exp $
+	$Id: general_collection_type_manager.h,v 1.11 2006/10/18 19:08:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_GENERAL_COLLECTION_TYPE_MANAGER_H__
@@ -51,10 +51,8 @@ protected:
 					type_ref_ptr_type;
 	typedef	typename type_ref_ptr_type::element_type
 					type_ref_type;
-#if USE_RESOLVED_DATA_TYPES
 	typedef typename traits_type::resolved_type_ref_type
 					resolved_type_ref_type;
-#endif
 
 	/**
 		General type reference pointer for the collection.  
@@ -88,7 +86,6 @@ protected:
 #endif
 
 public:
-#if USE_RESOLVED_DATA_TYPES
 	const instance_collection_parameter_type&
 	__get_raw_type(void) const {
 #if ENABLE_STACKTRACE
@@ -119,19 +116,6 @@ public:
 			return good_bool(true);
 		}
 	}
-#else	// USE_RESOLVED_DATA_TYPES
-	const instance_collection_parameter_type&
-	get_canonical_type(void) const {
-#if ENABLE_STACKTRACE
-		const instance_collection_parameter_type&
-			ret(this->type_parameter);
-		ret.dump(STACKTRACE_INDENT << "canonical type: ") << endl;
-		return ret;
-#else
-		return this->type_parameter;
-#endif
-	}
-#endif	// USE_RESOLVED_DATA_TYPES
 
 	bool
 	is_complete_type(void) const;

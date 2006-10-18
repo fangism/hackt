@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/null_collection_type_manager.h"
 	Template class for instance_collection's type manager.  
-	$Id: null_collection_type_manager.h,v 1.9 2006/10/18 01:19:36 fang Exp $
+	$Id: null_collection_type_manager.h,v 1.10 2006/10/18 19:08:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_NULL_COLLECTION_TYPE_MANAGER_H__
@@ -45,10 +45,8 @@ protected:
 					instance_collection_parameter_type;
 	typedef typename traits_type::type_ref_ptr_type
 					type_ref_ptr_type;
-#if USE_RESOLVED_DATA_TYPES
 	typedef typename traits_type::resolved_type_ref_type
 					resolved_type_ref_type;
-#endif
 
 	// has no type parameter
 
@@ -63,11 +61,6 @@ protected:
 	void
 	load_object_base(const persistent_object_manager&, istream&) { }
 
-#if 0
-	const type_ref_ptr_type&
-	get_type(void) const;
-#endif
-
 #if !USE_INSTANCE_PLACEHOLDERS
 	const type_ref_ptr_type&
 	get_type(const instance_collection_generic_type&) const {
@@ -76,7 +69,6 @@ protected:
 #endif
 
 public:
-#if USE_RESOLVED_DATA_TYPES
 	// distinguish internal type from canonical_type
 
 	/**
@@ -95,12 +87,7 @@ public:
 			const count_ptr<const const_param_expr_list>& r) const {
 		return good_bool(true);
 	}
-#else
-	instance_collection_parameter_type
-	get_canonical_type(void) const {
-		return instance_collection_parameter_type();
-	}
-#endif
+
 	bool
 	is_complete_type(void) const { return true; }
 

@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.6 2006/10/18 01:19:57 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.7 2006/10/18 19:08:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -65,7 +65,6 @@ canonical_generic_chan_type::canonical_type(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 canonical_generic_chan_type::canonical_type(
 		const this_type& d,
 		const const_param_list_ptr_type& p) :
@@ -73,7 +72,6 @@ canonical_generic_chan_type::canonical_type(
 		direction() {
 	ICE_NEVER_CALL(cerr);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(

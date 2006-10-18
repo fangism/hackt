@@ -4,7 +4,7 @@
 		and instance_alias_info_empty.
 	This file was "Object/art_object_instance_alias_actuals.tcc"
 		in a previous life.  
-	$Id: alias_actuals.tcc,v 1.12 2006/10/18 01:19:26 fang Exp $
+	$Id: alias_actuals.tcc,v 1.13 2006/10/18 19:08:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_ACTUALS_TCC__
@@ -41,11 +41,7 @@ instance_alias_info_actuals::complete_type_actuals(
 	STACKTRACE_VERBOSE;
 	typedef	typename InstColl::instance_collection_parameter_type
 						canonical_type_type;
-#if USE_RESOLVED_DATA_TYPES
 	canonical_type_type _type(_inst.__get_raw_type());
-#else
-	canonical_type_type _type(_inst.get_canonical_type());
-#endif
 	if (_type.is_relaxed()) {
 		if (actuals) {
 			// then merge actuals and return

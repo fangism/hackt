@@ -4,7 +4,7 @@
 	Like references to arrays of constants with run-time index values.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: nonmeta_param_value_reference.cc,v 1.10 2006/10/18 01:19:21 fang Exp $
+ 	$Id: nonmeta_param_value_reference.cc,v 1.11 2006/10/18 19:08:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_NONMETA_PARAM_VALUE_REFERENCE_CC__
@@ -40,9 +40,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/inst/pint_instance.h"
 #include "Object/inst/pbool_instance.h"
 #include "Object/inst/preal_instance.h"
-#if USE_RESOLVED_DATA_TYPES
 #include "Object/type/canonical_generic_datatype.h"
-#endif
 #include "common/TODO.h"
 #include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
@@ -83,14 +81,11 @@ template <>
 struct data_type_resolver<pint_tag> {
 	typedef	class_traits<pint_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
-#if USE_UNRESOLVED_DATA_TYPES
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
 		return int_traits::magic_int_type_ptr;
 	}
-#endif
 
-#if USE_RESOLVED_DATA_TYPES
 	/**
 		Uses magic width of zero, 
 		from "Object/traits/class_traits_type.cc".
@@ -100,7 +95,6 @@ struct data_type_resolver<pint_tag> {
 			const unroll_context& c) const {
 		return data_type_reference::make_canonical_int_type_ref(0);
 	}
-#endif
 
 };      // end struct data_type_resolver
 
@@ -109,21 +103,18 @@ template <>
 struct data_type_resolver<pbool_tag> {
 	typedef	class_traits<pbool_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
-#if USE_UNRESOLVED_DATA_TYPES
+
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
 		return bool_traits::built_in_type_ptr;
 	}
-#endif
 
-#if USE_RESOLVED_DATA_TYPES
 	canonical_generic_datatype
 	operator () (const data_value_reference_type&, 
 			const unroll_context&) const {
 		return canonical_generic_datatype(
 			bool_traits::built_in_type_ptr->get_base_datatype_def());
 	}
-#endif
 };      // end struct data_type_resolver
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -131,7 +122,6 @@ template <>
 struct data_type_resolver<preal_tag> {
 	typedef	class_traits<preal_tag>::simple_nonmeta_instance_reference_type
 						data_value_reference_type;
-#if USE_UNRESOLVED_DATA_TYPES
 	count_ptr<const data_type_reference>
 	operator () (const data_value_reference_type&) const {
 #if 0
@@ -141,16 +131,13 @@ struct data_type_resolver<preal_tag> {
 		return count_ptr<const data_type_reference>(NULL);
 #endif
 	}
-#endif
 
-#if USE_RESOLVED_DATA_TYPES
 	canonical_generic_datatype
 	operator () (const data_value_reference_type&, 
 			const unroll_context&) const {
 		FINISH_ME(Fang);
 		return canonical_generic_datatype();
 	}
-#endif
 
 };      // end struct data_type_resolver
 

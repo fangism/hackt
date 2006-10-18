@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.21 2006/10/18 07:39:29 fang Exp $
+ 	$Id: basic_param.cc,v 1.22 2006/10/18 19:07:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -43,9 +43,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 	// for aggregate_value_references' base
 #include "Object/ref/aggregate_meta_value_reference.h"
 #include "Object/ref/meta_value_reference.h"
-#if USE_RESOLVED_DATA_TYPES
 #include "Object/type/canonical_generic_datatype.h"
-#endif
 
 #include "common/TODO.h"
 
@@ -154,12 +152,10 @@ pbool_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 canonical_generic_datatype
 pbool_expr::get_resolved_data_type_ref(const unroll_context&) const {
 	return bool_traits::built_in_type_ptr->make_canonical_type();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -274,7 +270,6 @@ pint_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 /**
 	TODO: write a built_in_resolved_type for pint.
  */
@@ -282,7 +277,6 @@ canonical_generic_datatype
 pint_expr::get_resolved_data_type_ref(const unroll_context&) const {
 	return int_traits::magic_int_type_ptr->make_canonical_type();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -470,7 +464,6 @@ preal_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 /**
 	Shouldn't be called, don't have nonmeta reals yet...
  */
@@ -479,7 +472,6 @@ preal_expr::get_resolved_data_type_ref(const unroll_context&) const {
 	FINISH_ME_EXIT(Fang);
 	return canonical_generic_datatype();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

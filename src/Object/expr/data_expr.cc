@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.10 2006/10/18 01:19:18 fang Exp $
+	$Id: data_expr.cc,v 1.11 2006/10/18 19:07:56 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -29,9 +29,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
-#if USE_RESOLVED_DATA_TYPES
 #include "Object/type/canonical_generic_datatype.h"
-#endif
 #include "Object/traits/bool_traits.h"
 
 #include "util/reserve.h"
@@ -286,7 +284,6 @@ int_arith_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 /**
 	Can/should this use a stricter must-equivalence check?
  */
@@ -311,7 +308,6 @@ int_arith_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 		return return_type();
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
@@ -511,7 +507,6 @@ int_relational_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 canonical_generic_datatype
 int_relational_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 	typedef	canonical_generic_datatype	return_type;
@@ -534,7 +529,6 @@ int_relational_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 		return return_type();
 	}
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
@@ -708,7 +702,6 @@ bool_logical_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 /**
 	Passing an unroll context for this seems rather silly, no?
 	Will a future situation ever need it?
@@ -729,7 +722,6 @@ bool_logical_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 	// idea: if one type is complete and resolvable, then prefer it.
 	else	return return_type();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
@@ -811,12 +803,10 @@ int_negation_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 canonical_generic_datatype
 int_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 	return ex->get_resolved_data_type_ref(c);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
@@ -886,12 +876,10 @@ bool_negation_expr::get_unresolved_data_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if USE_RESOLVED_DATA_TYPES
 canonical_generic_datatype
 bool_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
 	return ex->get_resolved_data_type_ref(c);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>

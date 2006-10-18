@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.8 2006/10/18 01:19:27 fang Exp $
+	$Id: alias_empty.tcc,v 1.9 2006/10/18 19:08:01 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -98,11 +98,7 @@ instance_alias_info_empty::create_dependent_types(const AliasType& _alias,
 				complete_type_type;
 	STACKTRACE_VERBOSE;
 	const complete_type_type
-#if USE_RESOLVED_DATA_TYPES
 		_type(_alias.container->__get_raw_type());
-#else
-		_type(_alias.container->get_canonical_type());
-#endif
 	if (!_type) {
 		// already have error message
 		_alias.dump_hierarchical_name(cerr << "Failed to instantiate ", 

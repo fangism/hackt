@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.23 2006/10/18 18:38:11 fang Exp $
+	$Id: devel_switches.h,v 1.24 2006/10/18 19:07:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -50,28 +50,6 @@
 	Goal: 1
  */
 #define	USE_INSTANCE_PLACEHOLDERS		1
-
-/**
-	Define to 1 to distinguish get_type() between unresolved
-	and resolved variants.  Unresolved types are deduced from
-	the first instantiation statement associated with a 
-	particular placeholder, whereas resolved types (canonical)
-	are resolved from context (+footprint) at the actual collection.  
-	Depends on USE_INSTANCE_PLACEHOLDERS.
-	Goal: 1
- */
-#define	USE_RESOLVED_DATA_TYPES		(1 && USE_INSTANCE_PLACEHOLDERS)
-
-/**
-	Define to 1 if we want to be able to infer the fundamental
-	(pre-unroll-resolved) data type of a nonmeta data expression.
-	This is used to type-check (nonmeta) CHP expressions.  
-	This option is not exclusive with USE_RESOLVED_DATA_TYPES.  
-	Without this, check is just deferred until unroll-time.  
-	Goal: 1
-	Status: 'probably' OK to keep, but will wait until testing
- */
-#define	USE_UNRESOLVED_DATA_TYPES	(1 && USE_INSTANCE_PLACEHOLDERS)
 
 /**
 	All values, including template parameters shall be resolved

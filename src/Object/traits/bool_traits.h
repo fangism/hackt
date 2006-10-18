@@ -2,7 +2,7 @@
 	\file "Object/traits/bool_traits.h"
 	Traits and policies for boolean data types.  
 	This file used to be "Object/art_object_bool_traits.h".
-	$Id: bool_traits.h,v 1.14 2006/10/18 01:19:53 fang Exp $
+	$Id: bool_traits.h,v 1.15 2006/10/18 19:08:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_BOOL_TRAITS_H__
@@ -92,10 +92,7 @@ struct class_traits<bool_tag> {
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
-#if USE_RESOLVED_DATA_TYPES
 	typedef	canonical_generic_datatype	resolved_type_ref_type;
-	// pointer not necessary
-#endif
 
 	enum { print_cflat_leaf = true };
 
