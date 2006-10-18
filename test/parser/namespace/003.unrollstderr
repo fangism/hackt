@@ -5,21 +5,24 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	31
-	4	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	36
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	10	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
-	15	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	37
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	6	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -36,7 +39,7 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        meow = int<32>^0 meow (instantiated) = ::cat::meow 
+        meow = int<32> cat::meow
     }
     dog =     In namespace "dog", we have: {
       0 parameter-collections
@@ -45,8 +48,13 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        moo = int<32>^0 moo (instantiated) = ::dog::moo 
-        woof = int<32>^0 woof (instantiated) = ::dog::woof 
+        moo = int<32> dog::moo
+        woof = int<32> dog::woof
     }
 }
 
+footprint: {
+  cat::meow = int<32>^0 = cat::meow 
+  dog::moo = int<32>^0 = dog::moo 
+  dog::woof = int<32>^0 = dog::woof 
+}

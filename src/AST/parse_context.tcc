@@ -3,7 +3,7 @@
 	Template methods for context object passed around during 
 	type-checking, and object construction.  
 	This file was "Object/art_context.tcc" in a previous life.
- 	$Id: parse_context.tcc,v 1.5 2006/01/22 06:52:54 fang Exp $
+ 	$Id: parse_context.tcc,v 1.6 2006/10/18 01:19:00 fang Exp $
  */
 
 #ifndef	__AST_PARSE_CONTEXT_TCC__
@@ -41,7 +41,7 @@ context::open_definition(const token_identifier& pname) {
 	// concept check code
 	INVARIANT(!static_cast<const definition_base*>(NULL));
 	const never_ptr<D>
-		def(current_namespace->lookup_member_with_modify(pname)
+		def(get_current_namespace()->lookup_member_with_modify(pname)
 				.template is_a<D>());
 	if (def) {
 		if (def->is_defined()) {
@@ -49,8 +49,12 @@ context::open_definition(const token_identifier& pname) {
 				"redefinition at " << where(pname) << endl;
 			THROW_EXIT;
 		}
+#if SUPPORT_NESTED_DEFINITIONS
+		open_definition_stack.push(def);
+#else
 		INVARIANT(!current_open_definition);	// sanity check
 		current_open_definition = def;
+#endif
 		sequential_scope_stack.push(
 			def.template as_a<sequential_scope>());
 		def->mark_defined();
@@ -73,9 +77,10 @@ template <class D>
 void
 context::close_definition(void) {
 	// sanity check
-	current_open_definition.template must_be_a<D>();
+	get_current_open_definition().template must_be_a<D>();
 	sequential_scope_stack.pop();
 	close_current_definition();
+	// pops the open_definition_stack
 }
 
 //=============================================================================

@@ -4,10 +4,10 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	218
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	214
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
@@ -15,7 +15,7 @@ Persistent Object Manager text dump:
 	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	14	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	14	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	15	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
@@ -38,14 +38,15 @@ Persistent Object Manager text dump:
 	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	38	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	53
-	39	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	65
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	38	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	39	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	56
+	40	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -61,26 +62,23 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        E = pint<> E
-        M = pint<> M
-
-        N = pint<> N
-
+        E = pint<> bogus::E
+        M = pint<> bogus::M^1
+        N = pint<> bogus::N^1
       unroll sequence: 
-        pint<> E
         pint<> M[0..E-1]
         M[0] = 3;
         M[E-1] = 5;
         pint<> N[0..M[0]-1]
       footprint collection: {
         <2> {
-          pint^0 E value: ?
-          pint^1 M
+          E = pint^0 value: 2
+          M = pint^1
             unrolled index-value pairs: {
               0 = 3
               1 = 5
             }
-          pint^1 N
+          N = pint^1
             unrolled index-value pairs: {
               0 = ?
               1 = ?
@@ -91,6 +89,9 @@ In namespace "", we have: {
       }
 
   Instances:
-    x = process bogus<2>^0 x (instantiated) = ::x 
+    x = bogus<2> x
 }
 
+footprint: {
+  x = process bogus<2>^0 = x 
+}

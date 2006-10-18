@@ -1,6 +1,6 @@
 /**
 	\file "parser/instref.cc"
-	$Id: instref.cc,v 1.2 2006/09/16 22:06:59 fang Exp $
+	$Id: instref.cc,v 1.3 2006/10/18 01:20:11 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -50,6 +50,7 @@ using entity::state_manager;
 using entity::unroll_context;
 using entity::expr_dump_context;
 using entity::module;
+using entity::footprint;
 using entity::simple_bool_meta_instance_reference;
 using entity::substructure_alias;
 using entity::entry_collection;
@@ -218,7 +219,15 @@ parse_node_to_index(const string& n, const module& m) {
 	// this code uses the allocation information from the 
 	// alloc phase to find the canonical ID number.  
 	const state_manager& sm(m.get_state_manager());
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	// const_cast is temporary until call trace is rewritten to 
+	// perform lookup using a read-only target footprint.  
+	// we promise not to modify it in this call.  
+	footprint& top(const_cast<footprint&>(m.get_footprint()));
+	const size_t ret = b->lookup_globally_allocated_index(sm, top);
+#else
 	const size_t ret = b->lookup_globally_allocated_index(sm);
+#endif
 #if 0
 	cerr << "index = " << ret << endl;
 #endif

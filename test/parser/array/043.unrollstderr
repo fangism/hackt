@@ -4,23 +4,27 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	59
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	3	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	adbmiref	0	#HEAD#	#TAIL#	21
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -30,13 +34,19 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    w = bool^1 w
-      unrolled indices: {
-        0 = ::x 
-        1 = ::y 
-      }
-    x = bool^0 x (instantiated) = ::x 
-    y = bool^0 y (instantiated) = ::y 
-    z = bool^0 z (instantiated) = ::z 
+    w = bool<> w^1
+    x = bool<> x
+    y = bool<> y
+    z = bool<> z
 }
 
+footprint: {
+  w = bool^1
+    {
+      0 = x 
+      1 = y 
+    }
+  x = bool^0 = x 
+  y = bool^0 = y 
+  z = bool^0 = z 
+}

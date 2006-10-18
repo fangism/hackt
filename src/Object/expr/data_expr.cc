@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.9 2006/07/16 03:34:45 fang Exp $
+	$Id: data_expr.cc,v 1.10 2006/10/18 01:19:18 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -29,6 +29,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/persistent_type_hash.h"
 #include "Object/type/data_type_reference.h"
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/type/canonical_generic_datatype.h"
+#endif
 #include "Object/traits/bool_traits.h"
 
 #include "util/reserve.h"
@@ -261,10 +264,10 @@ int_arith_expr::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
-int_arith_expr::get_data_type_ref(void) const {
+int_arith_expr::get_unresolved_data_type_ref(void) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
-	const return_type lt(lx->get_data_type_ref());
-	const return_type rt(rx->get_data_type_ref());
+	const return_type lt(lx->get_unresolved_data_type_ref());
+	const return_type rt(rx->get_unresolved_data_type_ref());
 	if (!lt || !rt) {
 		return return_type(NULL);
 	}
@@ -281,6 +284,34 @@ int_arith_expr::get_data_type_ref(void) const {
 		return return_type(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+/**
+	Can/should this use a stricter must-equivalence check?
+ */
+canonical_generic_datatype
+int_arith_expr::get_resolved_data_type_ref(const unroll_context& c) const {
+	typedef	canonical_generic_datatype	return_type;
+	const return_type lt(lx->get_resolved_data_type_ref(c));
+	const return_type rt(rx->get_resolved_data_type_ref(c));
+	if (!lt || !rt) {
+		return return_type();
+	}
+	// check that they may be equivalent...
+	// this call currently uses generic check, which is ok.
+	if (lt.must_be_connectibly_type_equivalent(rt)) {
+		return lt;	// or rt, doesn't matter in this phase
+	// idea: if one type is complete and resolvable, then prefer it.
+	} else {
+		cerr << "Operand types mismatch in int_arith_expr, got:"
+			<< endl;
+		lt.dump(cerr << "\tleft = ") << endl;
+		rt.dump(cerr << "\tright = ") << endl;
+		return return_type();
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
@@ -452,16 +483,17 @@ int_relational_expr::dump(ostream& o, const expr_dump_context& c) const {
 /**
 	BUG: may_be_type_equivalent rejects pint vs. int comparison.  
 		(last confirmed? test case?)
-	TODO: replace get_data_type_ref with nonmeta_inst_ref
+	TODO: replace get_unresolved_data_type_ref with nonmeta_inst_ref
 		type_equivalence call directly.  
+		Fixed by get_resolved_data_type_ref?
 	\return NULL to signal error.  
  */
 count_ptr<const data_type_reference>
-int_relational_expr::get_data_type_ref(void) const {
+int_relational_expr::get_unresolved_data_type_ref(void) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
 	STACKTRACE_VERBOSE;
-	const return_type lt(lx->get_data_type_ref());
-	const return_type rt(rx->get_data_type_ref());
+	const return_type lt(lx->get_unresolved_data_type_ref());
+	const return_type rt(rx->get_unresolved_data_type_ref());
 	if (!lt || !rt)
 		return return_type(NULL);
 	// check that they may be equivalent...
@@ -477,6 +509,32 @@ int_relational_expr::get_data_type_ref(void) const {
 		return return_type(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+canonical_generic_datatype
+int_relational_expr::get_resolved_data_type_ref(const unroll_context& c) const {
+	typedef	canonical_generic_datatype	return_type;
+	STACKTRACE_VERBOSE;
+	const return_type lt(lx->get_resolved_data_type_ref(c));
+	const return_type rt(rx->get_resolved_data_type_ref(c));
+	if (!lt || !rt)
+		return return_type();
+	// check that they may be equivalent...
+	// this call currently uses generic check, which is ok.
+	if (lt.must_be_connectibly_type_equivalent(rt)) {
+		// allow comparisons of different width integers?
+		// or requires explicit conversion?
+		return lt;		// or rt, same.
+	} else {
+		cerr << "Operand types mismatch in int_relational_expr, got:"
+			<< endl;
+		lt.dump(cerr << "\tleft = ") << endl;
+		rt.dump(cerr << "\tright = ") << endl;
+		return return_type();
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
@@ -633,10 +691,10 @@ bool_logical_expr::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
-bool_logical_expr::get_data_type_ref(void) const {
+bool_logical_expr::get_unresolved_data_type_ref(void) const {
 	typedef	count_ptr<const data_type_reference>	return_type;
-	const return_type lt(lx->get_data_type_ref());
-	const return_type rt(rx->get_data_type_ref());
+	const return_type lt(lx->get_unresolved_data_type_ref());
+	const return_type rt(rx->get_unresolved_data_type_ref());
 	if (!lt || !rt)
 		return return_type(NULL);
 	// check that they may be equivalent...
@@ -648,6 +706,30 @@ bool_logical_expr::get_data_type_ref(void) const {
 	// idea: if one type is complete and resolvable, then prefer it.
 	else	return return_type(NULL);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+/**
+	Passing an unroll context for this seems rather silly, no?
+	Will a future situation ever need it?
+ */
+canonical_generic_datatype
+bool_logical_expr::get_resolved_data_type_ref(const unroll_context& c) const {
+	typedef canonical_generic_datatype	return_type;
+	const return_type lt(lx->get_resolved_data_type_ref(c));
+	const return_type rt(rx->get_resolved_data_type_ref(c));
+	if (!lt || !rt)
+		return return_type();
+	// check that they may be equivalent...
+	// type's MAY actually be template dependent
+	// so it's possible to defer, don't just assume they are boolean.
+	// this call currently uses generic check, which is ok.
+	if (lt.must_be_connectibly_type_equivalent(rt))
+		return lt;	// or rt, same.
+	// idea: if one type is complete and resolvable, then prefer it.
+	else	return return_type();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>
@@ -724,9 +806,17 @@ int_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
-int_negation_expr::get_data_type_ref(void) const {
-	return ex->get_data_type_ref();
+int_negation_expr::get_unresolved_data_type_ref(void) const {
+	return ex->get_unresolved_data_type_ref();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+canonical_generic_datatype
+int_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
+	return ex->get_resolved_data_type_ref(c);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const int_expr>
@@ -791,9 +881,17 @@ bool_negation_expr::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const data_type_reference>
-bool_negation_expr::get_data_type_ref(void) const {
-	return ex->get_data_type_ref();
+bool_negation_expr::get_unresolved_data_type_ref(void) const {
+	return ex->get_unresolved_data_type_ref();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+canonical_generic_datatype
+bool_negation_expr::get_resolved_data_type_ref(const unroll_context& c) const {
+	return ex->get_resolved_data_type_ref(c);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const bool_expr>

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/int_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: int_collection_type_manager.tcc,v 1.10 2006/06/26 01:46:13 fang Exp $
+	$Id: int_collection_type_manager.tcc,v 1.11 2006/10/18 01:19:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_COLLECTION_TYPE_MANAGER_TCC__
@@ -63,6 +63,7 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::load_object_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 INT_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 typename INT_COLLECTION_TYPE_MANAGER_CLASS::type_ref_ptr_type
 INT_COLLECTION_TYPE_MANAGER_CLASS::get_type(
@@ -76,12 +77,19 @@ INT_COLLECTION_TYPE_MANAGER_CLASS::get_type(
 		// first instantiation statement.
 		// extract as in pulling teeth...
 		// TODO: subtype versions of the following calls
+#if USE_INSTANCE_PLACEHOLDERS
+		return i.get_placeholder()->
+			get_initial_instantiation_statement().
+				template is_a<const data_type_reference>();
+#else
 		const never_ptr<const data_instantiation_statement>
 			first(i.get_initial_instantiation_statement());
 		return first->get_type_ref()
 			.template is_a<const data_type_reference>();
+#endif
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

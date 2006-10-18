@@ -5,40 +5,41 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	174
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	9	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	10	##ADDR##	procdefn	0	#HEAD#	#TAIL#	220
-	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
-	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	procdefn	0	#HEAD#	#TAIL#	175
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procdefn	0	#HEAD#	#TAIL#	175
+	16	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	22	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	23	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	24	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
 	28	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	35	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	36	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -53,13 +54,14 @@ In namespace "", we have: {
       )
       In definition "ch1of1", we have: {
       Instances:
-        d = bool<> d
+        d = bool<> ch1of1::d
       unroll sequence: 
         bool<> d
       footprint: {
-        bool^0 d (instantiated) = ::ch1of1::d (1) 
+        d = bool^0 = ch1of1::d (1) 
+        Created state:
         bool instance pool:
-        1	::ch1of1::d
+        1	ch1of1::d
       }
       }
 
@@ -68,13 +70,14 @@ In namespace "", we have: {
       )
       In definition "dcelm", we have: {
       Instances:
-        a = bool<> a
+        a = bool<> dcelm::a
       unroll sequence: 
         bool<> a
       footprint: {
-        bool^0 a (instantiated) = ::dcelm::a (1) 
+        a = bool^0 = dcelm::a (1) 
+        Created state:
         bool instance pool:
-        1	::dcelm::a
+        1	dcelm::a
       }
       }
 
@@ -82,8 +85,8 @@ In namespace "", we have: {
       )
       In definition "lut", we have: {
       Instances:
-        ad = ch1of1<> ad
-        ce = dcelm<> ce
+        ad = ch1of1<> lut::ad
+        ce = dcelm<> lut::ce
       unroll sequence: 
         ch1of1<> ad
         dcelm<> ce
@@ -91,25 +94,28 @@ In namespace "", we have: {
           ce (ad.d);
         )
       footprint: {
-        process ch1of1<>^0 ad (instantiated) = ::lut::ad (1) (
-          bool^0 d (instantiated) = ::lut::ad.d (1) 
+        ad = process ch1of1<>^0 = lut::ad (1) (
+          d = bool^0 = lut::ad.d (1) 
         )
-        process dcelm<>^0 ce (instantiated) = ::lut::ce (2) (
-          bool^0 a (instantiated) = ::lut::ad.d (1) 
+        ce = process dcelm<>^0 = lut::ce (2) (
+          a = bool^0 = lut::ad.d (1) 
         )
+        Created state:
         process instance pool:
-        1	::lut::ad
-        2	::lut::ce
+        1	lut::ad
+        2	lut::ce
         bool instance pool:
-        1	::lut::ad.d
+        1	lut::ad.d
       }
       }
 
   Instances:
-    l = process lut<>^0 l (instantiated) = ::l (1) 
+    l = lut<> l
 }
 
-Created state:
-process instance pool:
-1	::l
-
+footprint: {
+  l = process lut<>^0 = l (1) 
+  Created state:
+  process instance pool:
+  1	l
+}

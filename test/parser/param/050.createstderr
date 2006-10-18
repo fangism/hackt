@@ -4,13 +4,15 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	prealcol	0	#HEAD#	#TAIL#	35
+	3	##ADDR##	prealplh	0	#HEAD#	#TAIL#	34
 	4	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	prealcol	0	#HEAD#	#TAIL#	37
-	6	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
-	7	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	5	##ADDR##	prealplh	0	#HEAD#	#TAIL#	36
+	6	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	cnstpr__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	sprmvref	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	prealcol	0	#HEAD#	#TAIL#	21
+	11	##ADDR##	prealcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -20,9 +22,12 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    thirteen = preal^0 thirteen (init = 13.13) value: 13.13
-    uninit = preal^0 uninit value: ?
+    thirteen = preal<> thirteen
+    uninit = preal<> uninit
 }
 
-Created state:
-
+footprint: {
+  thirteen = preal^0 value: 13.13
+  uninit = preal^0 value: ?
+  Created state:
+}

@@ -3,7 +3,7 @@
 	Base class family for instance references in HAC.  
 	This file was "Object/art_object_inst_ref_base.h"
 		in a previous life.  
-	$Id: meta_instance_reference_base.h,v 1.11 2006/04/11 07:54:44 fang Exp $
+	$Id: meta_instance_reference_base.h,v 1.12 2006/10/18 01:19:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_BASE_H__
@@ -16,6 +16,7 @@
 #include "util/boolean_types.h"
 #include "util/tokenize_fwd.h"		// for util::string_list
 // #include "util/STL/vector_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -33,6 +34,7 @@ class aliases_connection_base;
 class port_connection_base;
 class const_range_list;
 class unroll_context;
+class footprint;
 class aggregate_meta_instance_reference_base;
 using util::bad_bool;
 using util::memory::excl_ptr;
@@ -57,6 +59,18 @@ using util::persistent;
 class meta_instance_reference_base : virtual public persistent {
 	typedef	meta_instance_reference_base		this_type;
 public:
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<aliases_connection_base>
+						alias_connection_ptr_type;
+	typedef	count_ptr<port_connection_base>
+						port_connection_ptr_type;
+#else
+	typedef	excl_ptr<aliases_connection_base>
+						aliases_connection_ptr_type;
+	typedef	excl_ptr<port_connection_base>
+						port_connection_ptr_type;
+#endif
+public:
 	meta_instance_reference_base() : persistent() { }
 
 virtual	~meta_instance_reference_base() { }
@@ -77,7 +91,7 @@ virtual	never_ptr<const definition_base>
 	get_base_def(void) const = 0;
 
 virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	get_unresolved_type_ref(void) const = 0;
 
 
 // what kind of type equivalence?
@@ -94,7 +108,7 @@ virtual	bool
 		NOTE: connections are only made in the meta-language.  
 	 */
 	static
-	excl_ptr<aliases_connection_base>
+	alias_connection_ptr_type
 	make_aliases_connection(
 		const count_ptr<const this_type>&);
 
@@ -104,7 +118,7 @@ virtual	bool
 		const count_ptr<const this_type>&);
 
 	static
-	excl_ptr<port_connection_base>
+	port_connection_ptr_type
 	make_port_connection(
 		const count_ptr<const this_type>&);
 
@@ -126,9 +140,15 @@ virtual	UNROLL_SCALAR_SUBSTRUCTURE_REFERENCE_PROTO = 0;
 
 virtual	CONNECT_PORT_PROTO = 0;
 
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+#define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
+	const footprint_frame*						\
+	lookup_footprint_frame(const state_manager&, footprint&) const
+#else
 #define	LOOKUP_FOOTPRINT_FRAME_PROTO					\
 	const footprint_frame*						\
 	lookup_footprint_frame(const state_manager&) const
+#endif
 
 virtual	LOOKUP_FOOTPRINT_FRAME_PROTO = 0;
 
@@ -145,13 +165,13 @@ virtual	COLLECT_ALIASES_PROTO = 0;
 virtual	COLLECT_SUBENTRIES_PROTO = 0;
 
 private:
-virtual	excl_ptr<aliases_connection_base>
+virtual	alias_connection_ptr_type
 	make_aliases_connection_private(void) const = 0;
 
 virtual	count_ptr<aggregate_meta_instance_reference_base>
 	make_aggregate_meta_instance_reference_private(void) const = 0;
 
-virtual	excl_ptr<port_connection_base>
+virtual	port_connection_ptr_type
 	make_port_connection_private(
 		const count_ptr<const this_type>&) const = 0;
 

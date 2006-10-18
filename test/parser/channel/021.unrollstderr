@@ -4,12 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	chancoll	0	#HEAD#	#TAIL#	60
+	3	##ADDR##	chanplch	0	#HEAD#	#TAIL#	30
 	4	##ADDR##	enumdefn	0	#HEAD#	#TAIL#	59
-	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	6	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
+	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -22,6 +23,9 @@ In namespace "", we have: {
     ick = enum-datatype-def: ick
       { FEE, FO, FIE, FUM,  }
   Instances:
-    foobar = channel chan(ick<>)^0 foobar (instantiated) = ::foobar 
+    foobar = chan(ick<>) foobar
 }
 
+footprint: {
+  foobar = channel chan(ick<>)^0 = foobar 
+}

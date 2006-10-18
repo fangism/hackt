@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.h"
 	Base class family for instance references in HAC.  
 	This file was reincarnated from "Object/art_object_member_inst_ref.h"
-	$Id: member_meta_instance_reference.h,v 1.12 2006/08/08 05:46:40 fang Exp $
+	$Id: member_meta_instance_reference.h,v 1.13 2006/10/18 01:19:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_MEMBER_META_INSTANCE_REFERENCE_H__
@@ -46,6 +46,12 @@ public:
 							parent_type;
 	typedef	typename traits_type::instance_collection_generic_type
 						instance_collection_generic_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::instance_placeholder_type
+						instance_placeholder_type;
+	typedef	never_ptr<const instance_placeholder_type>
+						instance_placeholder_ptr_type;
+#endif
 	typedef	typename traits_type::alias_collection_type
 						alias_collection_type;
 	typedef	never_ptr<const instance_collection_generic_type>
@@ -68,7 +74,12 @@ private:
 	member_meta_instance_reference();
 public:
 	member_meta_instance_reference(const base_inst_ptr_type& b, 
-		const instance_collection_ptr_type m);
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_ptr_type m
+#else
+		const instance_collection_ptr_type m
+#endif
+		);
 
 	~member_meta_instance_reference();
 
@@ -96,7 +107,11 @@ public:
 
 	// overrides simple_meta...
 	size_t
-	lookup_globally_allocated_index(const state_manager&) const;
+	lookup_globally_allocated_index(const state_manager&
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint&
+#endif
+		) const;
 
 protected:
 	using parent_type::__unroll_generic_scalar_reference;

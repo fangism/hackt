@@ -4,30 +4,31 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	176
-	5	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	procdefn	0	#HEAD#	#TAIL#	198
-	9	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	33
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	38
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -42,15 +43,15 @@ In namespace "", we have: {
       )
       In definition "array", we have: {
       Instances:
-        composite = bool<> composite
-        x = bool<> x
+        composite = bool<> array::composite
+        x = bool<> array::x
       unroll sequence: 
         bool<> x
         bool<> composite
         x = composite;
       footprint: {
-        bool^0 composite (instantiated) = ::array::composite 
-        bool^0 x (instantiated) = ::array::composite 
+        composite = bool^0 = array::composite 
+        x = bool^0 = array::composite 
       }
       }
 
@@ -58,17 +59,20 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        p = array<> p
+        p = array<> foo::p
       unroll sequence: 
         array<> p
       footprint: {
-        process array<>^0 p (instantiated) = ::foo::p (
-          bool^0 x (instantiated) = ::foo::p.x 
+        p = process array<>^0 = foo::p (
+          x = bool^0 = foo::p.x 
         )
       }
       }
 
   Instances:
-    x = process foo<>^0 x (instantiated) = ::x 
+    x = foo<> x
 }
 
+footprint: {
+  x = process foo<>^0 = x 
+}

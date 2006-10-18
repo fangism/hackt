@@ -4,15 +4,15 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	307
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	303
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	14	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	20
@@ -28,17 +28,18 @@ Persistent Object Manager text dump:
 	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	32	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -56,12 +57,11 @@ In namespace "", we have: {
       )
       In definition "size_test", we have: {
       Parameters:
-        P = pint<> P
+        P = pint<> size_test::P
       Instances:
-        a = bool<> a
-        b = bool<> b
+        a = bool<> size_test::a
+        b = bool<> size_test::b
       unroll sequence: 
-        pint<> P
         bool<> a
         bool<> b
       prs:
@@ -69,12 +69,13 @@ In namespace "", we have: {
         ~a<2*P> -> b+
       footprint collection: {
         <8> {
-          pint^0 P value: ?
-          bool^0 a (instantiated) = ::size_test::a (1) 
-          bool^0 b (instantiated) = ::size_test::b (2) 
+          P = pint^0 value: 8
+          a = bool^0 = size_test::a (1) 
+          b = bool^0 = size_test::b (2) 
+          Created state:
           bool instance pool:
-          1	::size_test::a
-          2	::size_test::b
+          1	size_test::a
+          2	size_test::b
           resolved prs:
           a<8> -> b-
           ~a<16> -> b+
@@ -83,16 +84,18 @@ In namespace "", we have: {
       }
 
   Instances:
-    x = process size_test<8>^0 x (instantiated) = ::x (1) (
-      bool^0 a (instantiated) = ::x.a (1) 
-      bool^0 b (instantiated) = ::x.b (2) 
-    )
+    x = size_test<8> x
 }
 
-Created state:
-process instance pool:
-1	::x
-bool instance pool:
-1	::x.a
-2	::x.b
-
+footprint: {
+  x = process size_test<8>^0 = x (1) (
+    a = bool^0 = x.a (1) 
+    b = bool^0 = x.b (2) 
+  )
+  Created state:
+  process instance pool:
+  1	x
+  bool instance pool:
+  1	x.a
+  2	x.b
+}

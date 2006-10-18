@@ -1,3 +1,3 @@
-Warning (promoted to error): loop variable "i" shadows another object by the same name: bool<> i
+Warning (promoted to error): loop variable "i" shadows another object by the same name: bool<> celemNinv::i
 Error registering loop variable: i at [9:5]
 ERROR in production rule guard at [9:2..15].

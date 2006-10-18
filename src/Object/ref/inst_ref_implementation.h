@@ -1,17 +1,21 @@
 /**
 	\file "Object/inst/inst_ref_implementation.h"
 	Implementation details of instance references.  
- 	$Id: inst_ref_implementation.h,v 1.13 2006/04/27 00:15:37 fang Exp $
+ 	$Id: inst_ref_implementation.h,v 1.14 2006/10/18 01:19:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 #define	__HAC_OBJECT_REF_INST_REF_IMPLEMENTATION_H__
 
 #include <iostream>
+#include "Object/devel_switches.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/ref/inst_ref_implementation_fwd.h"
 #include "Object/ref/simple_meta_indexed_reference_base.h"
+#if REF_COUNT_INSTANCE_MANAGEMENT
+#include "Object/ref/meta_instance_reference_base.h"
+#endif
 #include "Object/inst/instance_alias.h"
 #include "Object/inst/alias_actuals.h"
 #include "Object/state_manager.h"
@@ -39,6 +43,14 @@ template <class> class simple_meta_instance_reference;
  */
 template <>
 struct simple_meta_instance_reference_implementation<true> {
+#if USE_INSTANCE_PLACEHOLDERS
+	template <class Tag>
+	struct instance_placeholder_type {
+		typedef	typename
+			class_traits<Tag>::instance_placeholder_type
+					type;
+	};
+#endif
 	template <class Tag>
 	struct instance_collection_generic_type {
 		typedef	typename
@@ -46,9 +58,15 @@ struct simple_meta_instance_reference_implementation<true> {
 					type;
 	};
 
-	typedef	never_ptr<
+#if REF_COUNT_ARRAY_INDICES
+	typedef	const count_ptr<
+		const simple_meta_indexed_reference_base::index_list_type>&
+				index_list_ptr_arg_type;
+#else
+	typedef	const never_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>
-				index_list_ptr_type;
+				index_list_ptr_arg_type;
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -61,13 +79,41 @@ static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_placeholder_type<Tag>::type& inst, 
+#else
 			instance_collection_generic_type<Tag>::type& inst, 
-		const index_list_ptr_type ind,
-		const unroll_context& c, 
-		const bool lookup) {
+#endif
+		index_list_ptr_arg_type ind,
+		const unroll_context& c
+#if !USE_INSTANCE_PLACEHOLDERS
+		, const bool lookup
+#endif
+		) {
+#if USE_INSTANCE_PLACEHOLDERS
+	return simple_meta_instance_reference<Tag>::
+		__unroll_generic_scalar_reference(inst, ind, c);
+#else
 	return simple_meta_instance_reference<Tag>::
 		__unroll_generic_scalar_reference(inst, ind, c, lookup);
+#endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+// rename or overload?
+template <class Tag>
+static
+never_ptr<substructure_alias>
+unroll_generic_scalar_substructure_reference(
+		const typename
+			instance_collection_generic_type<Tag>::type& inst, 
+		index_list_ptr_arg_type ind,
+		const unroll_context& c) {
+	return simple_meta_instance_reference<Tag>::
+		__unroll_generic_scalar_reference_no_lookup(inst, ind, c);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -97,14 +143,32 @@ static
 const footprint_frame*
 simple_lookup_footprint_frame(
 		const typename
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_placeholder_type<Tag>::type& inst, 
+#else
 			instance_collection_generic_type<Tag>::type& inst, 
-		const index_list_ptr_type ind,
-		const state_manager& sm) {
+#endif
+		index_list_ptr_arg_type ind,
+		const state_manager& sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) {
 	STACKTRACE_VERBOSE;
-	const unroll_context uc;
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	const unroll_context uc(&top, &top);
+#else
+	const unroll_context uc(NULL, NULL);
+#endif
+#if USE_INSTANCE_PLACEHOLDERS
+	const never_ptr<substructure_alias>
+		alias(unroll_generic_scalar_substructure_reference<Tag>(
+			inst, ind, uc));
+#else
 	const never_ptr<substructure_alias>
 		alias(unroll_generic_scalar_substructure_reference<Tag>(
 			inst, ind, uc, true));
+#endif
 	if (!alias) {
 		cerr << "Error resolving a single instance alias." << endl;
 		return NULL;
@@ -122,9 +186,17 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>& _this, 
-		const state_manager& sm) {
+		const state_manager& sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) {
 	STACKTRACE_VERBOSE;
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	const size_t id = _this.lookup_globally_allocated_index(sm, top);
+#else
 	const size_t id = _this.lookup_globally_allocated_index(sm);
+#endif
 	STACKTRACE_INDENT_PRINT("id = " << id << endl);
 	if (!id) {
 		// already have error message
@@ -136,11 +208,12 @@ member_lookup_footprint_frame(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 static
-excl_ptr<port_connection_base>
+meta_instance_reference_base::port_connection_ptr_type
 make_port_connection(
 	const count_ptr<const simple_meta_instance_reference<Tag> >& r) {
 	NEVER_NULL(r);
-	return excl_ptr<port_connection_base>(new port_connection<Tag>(r));
+	return meta_instance_reference_base::port_connection_ptr_type(
+		new port_connection<Tag>(r));
 }
 
 };	// end struct simple_meta_instance_reference_implementation<true>
@@ -151,6 +224,14 @@ make_port_connection(
  */
 template <>
 struct simple_meta_instance_reference_implementation<false> {
+#if USE_INSTANCE_PLACEHOLDERS
+	template <class Tag>
+	struct instance_placeholder_type {
+		typedef	typename
+			class_traits<Tag>::instance_placeholder_type
+					type;
+	};
+#endif
 	template <class Tag>
 	struct instance_collection_generic_type {
 		typedef	typename
@@ -158,9 +239,15 @@ struct simple_meta_instance_reference_implementation<false> {
 					type;
 	};
 
-	typedef	never_ptr<
+#if REF_COUNT_ARRAY_INDICES
+	typedef	const count_ptr<
+		const simple_meta_indexed_reference_base::index_list_type>&
+				index_list_ptr_arg_type;
+#else
+	typedef	const never_ptr<
 		const simple_meta_indexed_reference_base::index_list_type>
-				index_list_ptr_type;
+				index_list_ptr_arg_type;
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
@@ -168,13 +255,36 @@ static
 never_ptr<substructure_alias>
 unroll_generic_scalar_substructure_reference(
 		const typename
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_placeholder_type<Tag>::type& inst, 
+#else
 			instance_collection_generic_type<Tag>::type& inst, 
-		const index_list_ptr_type ind,
-		const unroll_context&, 
-		const bool) {
+#endif
+		index_list_ptr_arg_type ind,
+		const unroll_context&
+#if !USE_INSTANCE_PLACEHOLDERS
+		, const bool
+#endif
+		) {
 	STACKTRACE_VERBOSE;
 	return never_ptr<substructure_alias>(NULL);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+// rename? or overload?
+template <class Tag>
+static
+never_ptr<substructure_alias>
+unroll_generic_scalar_substructure_reference(
+		const typename
+			instance_collection_generic_type<Tag>::type& inst, 
+		index_list_ptr_arg_type ind,
+		const unroll_context&) {
+	STACKTRACE_VERBOSE;
+	return never_ptr<substructure_alias>(NULL);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -199,9 +309,17 @@ template <class Tag>
 static
 const footprint_frame*
 simple_lookup_footprint_frame(
+#if USE_INSTANCE_PLACEHOLDERS
+		const typename instance_placeholder_type<Tag>::type&, 
+#else
 		const typename instance_collection_generic_type<Tag>::type&, 
-		const index_list_ptr_type,
-		const state_manager&) {
+#endif
+		index_list_ptr_arg_type,
+		const state_manager&
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) {
 	// ICE?
 	return NULL;
 }
@@ -216,7 +334,11 @@ static
 const footprint_frame*
 member_lookup_footprint_frame(
 		const member_meta_instance_reference<Tag>&, 
-		const state_manager&) {
+		const state_manager&
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint&
+#endif
+		) {
 	// ICE?
 	return NULL;
 }
@@ -224,12 +346,12 @@ member_lookup_footprint_frame(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 template <class Tag>
 static
-excl_ptr<port_connection_base>
+meta_instance_reference_base::port_connection_ptr_type
 make_port_connection(
 	const count_ptr<const simple_meta_instance_reference<Tag> >& r) {
 	NEVER_NULL(r);
 	ICE_NEVER_CALL(cerr);
-	return excl_ptr<port_connection_base>(NULL);
+	return meta_instance_reference_base::port_connection_ptr_type(NULL);
 }
 
 };	// end struct simple_meta_instance_reference_implementation<false>

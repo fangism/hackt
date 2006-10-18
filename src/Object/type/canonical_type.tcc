@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_type.tcc,v 1.9 2006/08/14 04:50:02 fang Exp $
+	$Id: canonical_type.tcc,v 1.10 2006/10/18 01:19:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_TCC__
@@ -65,6 +65,21 @@ CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param p relaxed template arguments to append.  
+	TODO: check correct number of parameters?
+ */
+CANONICAL_TYPE_TEMPLATE_SIGNATURE
+CANONICAL_TYPE_CLASS::canonical_type(const this_type& t,
+		const const_param_list_ptr_type& p) :
+		base_type(t.param_list_ptr, p),
+		canonical_definition_ptr(t.canonical_definition_ptr) {
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(canonical_definition_ptr);
+	INVARIANT(!canonical_definition_ptr.template is_a<const typedef_base>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 CANONICAL_TYPE_CLASS::canonical_type(const canonical_definition_ptr_type d,
 		const template_actuals& p) :
@@ -107,18 +122,24 @@ CANONICAL_TYPE_CLASS::what(ostream& o) const {
 /**
 	Should print template actuals in the same manner as
 	template_actuals::dump().
+	NOTE: canonical_definition_ptr may be incomplete if
+		we're still in the middle of instantiating it!
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 ostream&
 CANONICAL_TYPE_CLASS::dump(ostream& o) const {
 	// STACKTRACE_VERBOSE;
-	NEVER_NULL(canonical_definition_ptr);
-	o << canonical_definition_ptr->get_key();	// get_name()
+if (canonical_definition_ptr) {
+	o << canonical_definition_ptr->get_qualified_name();	// get_name()
 	return base_type::dump_template_args(o,
 		canonical_definition_ptr->num_strict_formals());
+} else {
+	return o << "(incomplete type)";
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	TODO: FIX ME
 	BUG!? template-params are constructed ephemerally!
@@ -133,6 +154,7 @@ CANONICAL_TYPE_CLASS::make_unroll_context(void) const {
 	return unroll_context(this->get_template_params(), 
 		canonical_definition_ptr->get_template_formals_manager());
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -201,6 +223,10 @@ CANONICAL_TYPE_CLASS::type_mismatch_error(ostream& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
+/**
+	This is only applicable to process_definitions.
+	Don't delete this, good for reference.  
+ */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 const footprint&
 CANONICAL_TYPE_CLASS::get_definition_footprint(void) const {
@@ -218,11 +244,13 @@ CANONICAL_TYPE_CLASS::get_definition_footprint(void) const {
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 good_bool
-CANONICAL_TYPE_CLASS::unroll_definition_footprint(void) const {
+CANONICAL_TYPE_CLASS::unroll_definition_footprint(const footprint& top) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(this->is_strict());
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
-	return canonical_definition_ptr->unroll_complete_type(param_list_ptr);
+	return canonical_definition_ptr->unroll_complete_type(
+		param_list_ptr, top);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -232,11 +260,13 @@ CANONICAL_TYPE_CLASS::unroll_definition_footprint(void) const {
  */
 CANONICAL_TYPE_TEMPLATE_SIGNATURE
 good_bool
-CANONICAL_TYPE_CLASS::create_definition_footprint(void) const {
+CANONICAL_TYPE_CLASS::create_definition_footprint(const footprint& top) const {
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(this->is_strict());
 	canonical_definition_ptr->register_complete_type(param_list_ptr);
-	return canonical_definition_ptr->create_complete_type(param_list_ptr);
+	return canonical_definition_ptr->create_complete_type(
+		param_list_ptr, top);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -305,6 +335,7 @@ CANONICAL_TYPE_TEMPLATE_SIGNATURE
 void
 CANONICAL_TYPE_CLASS::unroll_port_instances(const unroll_context& c, 
 		subinstance_manager& sub) const {
+	STACKTRACE_VERBOSE;
 	unroll_port_instances_policy<DefType>()(*this, c, sub);
 }
 

@@ -1,6 +1,6 @@
 #!@SH_PATH@
 # "hackt-unroll-expect.sh.in"
-#	$Id: hackt-unroll-expect.sh.in,v 1.3 2006/01/30 07:42:08 fang Exp $
+#	$Id: hackt-unroll-expect.sh.in,v 1.4 2006/10/18 01:20:14 fang Exp $
 # This file used to be:
 #	Id: artobjunroll-expect.sh.in,v 1.5 2005/12/08 22:01:15 fang Exp
 # This file came from "artobjunroll-expect.sh" in revision prehistory.
@@ -59,8 +59,8 @@ then
 fi
 
 # ignore whitespace differences
-@DIFF@ -buw $srcroot.unrollstderr $bldroot.unrolldump.filter 2>&1 | \
-	@CAT@ > $bldroot.unrolldiff
+@DIFF@ -buw $srcroot.unrollstderr $bldroot.unrolldump.filter > \
+	$bldroot.unrolldiff 2>&1
 
 if test -s $bldroot.unrolldiff
 then
@@ -74,8 +74,8 @@ then
 		@CAT@ $bldroot.unrolldump.filter | \
 			$indfilter > $bldroot.unrolldump.noindex
 		@DIFF@ -buw $bldroot.unrollstderr.noindex \
-			$bldroot.unrolldump.noindex 2>&1 | \
-			@CAT@ > $bldroot.unrolldiff.noindex
+			$bldroot.unrolldump.noindex > \
+			$bldroot.unrolldiff.noindex 2>&1
 		$analdiff -v quiet=0 $bldroot.unrolldiff.noindex
 	# else don't bother with further analysis
 	fi

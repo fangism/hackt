@@ -4,34 +4,34 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	225
-	4	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	26
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	19	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	221
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	19	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	22	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	28	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	29	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
-	30	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	30	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	31	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	33	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -39,14 +39,14 @@ Persistent Object Manager text dump:
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	37	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
-	38	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	38	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	39	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	42	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	45	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	46	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	48	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -61,14 +61,14 @@ Persistent Object Manager text dump:
 	57	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	58	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	59	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	60	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	60	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	61	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	62	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	63	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	64	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	66	##ADDR##	PRSorlp_	0	#HEAD#	#TAIL#	20
-	67	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	67	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	68	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	69	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	70	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -89,16 +89,17 @@ Persistent Object Manager text dump:
 	85	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	88	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	593
-	89	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
-	91	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	92	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	93	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	94	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	95	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	96	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	593
-	97	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
+	88	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	583
+	89	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	91	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	92	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	93	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	95	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	96	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	97	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	583
+	98	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -116,13 +117,11 @@ In namespace "", we have: {
       )
       In definition "triangle", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> triangle::N
       Instances:
-        _out = bool<> _out
-        in = bool<> in
-
+        _out = bool<> triangle::_out
+        in = bool<> triangle::in^3
       unroll sequence: 
-        pint<> N
         bool<> in[0..N-1][0..N-1][0..N-1]
         bool<> _out
       prs:
@@ -132,75 +131,78 @@ In namespace "", we have: {
         )
       footprint collection: {
         <3> {
-          bool^3 in
-            unrolled indices: {
-              [0][0][0] = ::triangle::in[0][0][0] 
-              [0][0][1] = ::triangle::in[0][0][1] 
-              [0][0][2] = ::triangle::in[0][0][2] 
-              [0][1][0] = ::triangle::in[0][1][0] 
-              [0][1][1] = ::triangle::in[0][1][1] 
-              [0][1][2] = ::triangle::in[0][1][2] 
-              [0][2][0] = ::triangle::in[0][2][0] 
-              [0][2][1] = ::triangle::in[0][2][1] 
-              [0][2][2] = ::triangle::in[0][2][2] 
-              [1][0][0] = ::triangle::in[1][0][0] 
-              [1][0][1] = ::triangle::in[1][0][1] 
-              [1][0][2] = ::triangle::in[1][0][2] 
-              [1][1][0] = ::triangle::in[1][1][0] 
-              [1][1][1] = ::triangle::in[1][1][1] 
-              [1][1][2] = ::triangle::in[1][1][2] 
-              [1][2][0] = ::triangle::in[1][2][0] 
-              [1][2][1] = ::triangle::in[1][2][1] 
-              [1][2][2] = ::triangle::in[1][2][2] 
-              [2][0][0] = ::triangle::in[2][0][0] 
-              [2][0][1] = ::triangle::in[2][0][1] 
-              [2][0][2] = ::triangle::in[2][0][2] 
-              [2][1][0] = ::triangle::in[2][1][0] 
-              [2][1][1] = ::triangle::in[2][1][1] 
-              [2][1][2] = ::triangle::in[2][1][2] 
-              [2][2][0] = ::triangle::in[2][2][0] 
-              [2][2][1] = ::triangle::in[2][2][1] 
-              [2][2][2] = ::triangle::in[2][2][2] 
+          N = pint^0 value: 3
+          _out = bool^0 = triangle::_out 
+          in = bool^3
+            {
+              [0][0][0] = triangle::in[0][0][0] 
+              [0][0][1] = triangle::in[0][0][1] 
+              [0][0][2] = triangle::in[0][0][2] 
+              [0][1][0] = triangle::in[0][1][0] 
+              [0][1][1] = triangle::in[0][1][1] 
+              [0][1][2] = triangle::in[0][1][2] 
+              [0][2][0] = triangle::in[0][2][0] 
+              [0][2][1] = triangle::in[0][2][1] 
+              [0][2][2] = triangle::in[0][2][2] 
+              [1][0][0] = triangle::in[1][0][0] 
+              [1][0][1] = triangle::in[1][0][1] 
+              [1][0][2] = triangle::in[1][0][2] 
+              [1][1][0] = triangle::in[1][1][0] 
+              [1][1][1] = triangle::in[1][1][1] 
+              [1][1][2] = triangle::in[1][1][2] 
+              [1][2][0] = triangle::in[1][2][0] 
+              [1][2][1] = triangle::in[1][2][1] 
+              [1][2][2] = triangle::in[1][2][2] 
+              [2][0][0] = triangle::in[2][0][0] 
+              [2][0][1] = triangle::in[2][0][1] 
+              [2][0][2] = triangle::in[2][0][2] 
+              [2][1][0] = triangle::in[2][1][0] 
+              [2][1][1] = triangle::in[2][1][1] 
+              [2][1][2] = triangle::in[2][1][2] 
+              [2][2][0] = triangle::in[2][2][0] 
+              [2][2][1] = triangle::in[2][2][1] 
+              [2][2][2] = triangle::in[2][2][2] 
             }
-          pint^0 N value: ?
-          bool^0 _out (instantiated) = ::triangle::_out 
         }
       }
       }
 
   Instances:
-    foo = process triangle<3>^0 foo (instantiated) = ::foo (
-      bool^3 in
-        unrolled indices: {
-          [0][0][0] = ::foo.in[0][0][0] 
-          [0][0][1] = ::foo.in[0][0][1] 
-          [0][0][2] = ::foo.in[0][0][2] 
-          [0][1][0] = ::foo.in[0][1][0] 
-          [0][1][1] = ::foo.in[0][1][1] 
-          [0][1][2] = ::foo.in[0][1][2] 
-          [0][2][0] = ::foo.in[0][2][0] 
-          [0][2][1] = ::foo.in[0][2][1] 
-          [0][2][2] = ::foo.in[0][2][2] 
-          [1][0][0] = ::foo.in[1][0][0] 
-          [1][0][1] = ::foo.in[1][0][1] 
-          [1][0][2] = ::foo.in[1][0][2] 
-          [1][1][0] = ::foo.in[1][1][0] 
-          [1][1][1] = ::foo.in[1][1][1] 
-          [1][1][2] = ::foo.in[1][1][2] 
-          [1][2][0] = ::foo.in[1][2][0] 
-          [1][2][1] = ::foo.in[1][2][1] 
-          [1][2][2] = ::foo.in[1][2][2] 
-          [2][0][0] = ::foo.in[2][0][0] 
-          [2][0][1] = ::foo.in[2][0][1] 
-          [2][0][2] = ::foo.in[2][0][2] 
-          [2][1][0] = ::foo.in[2][1][0] 
-          [2][1][1] = ::foo.in[2][1][1] 
-          [2][1][2] = ::foo.in[2][1][2] 
-          [2][2][0] = ::foo.in[2][2][0] 
-          [2][2][1] = ::foo.in[2][2][1] 
-          [2][2][2] = ::foo.in[2][2][2] 
-        }
-      bool^0 _out (instantiated) = ::foo._out 
-    )
+    foo = triangle<3> foo
 }
 
+footprint: {
+  foo = process triangle<3>^0 = foo (
+    in = bool^3
+      {
+        [0][0][0] = foo.in[0][0][0] 
+        [0][0][1] = foo.in[0][0][1] 
+        [0][0][2] = foo.in[0][0][2] 
+        [0][1][0] = foo.in[0][1][0] 
+        [0][1][1] = foo.in[0][1][1] 
+        [0][1][2] = foo.in[0][1][2] 
+        [0][2][0] = foo.in[0][2][0] 
+        [0][2][1] = foo.in[0][2][1] 
+        [0][2][2] = foo.in[0][2][2] 
+        [1][0][0] = foo.in[1][0][0] 
+        [1][0][1] = foo.in[1][0][1] 
+        [1][0][2] = foo.in[1][0][2] 
+        [1][1][0] = foo.in[1][1][0] 
+        [1][1][1] = foo.in[1][1][1] 
+        [1][1][2] = foo.in[1][1][2] 
+        [1][2][0] = foo.in[1][2][0] 
+        [1][2][1] = foo.in[1][2][1] 
+        [1][2][2] = foo.in[1][2][2] 
+        [2][0][0] = foo.in[2][0][0] 
+        [2][0][1] = foo.in[2][0][1] 
+        [2][0][2] = foo.in[2][0][2] 
+        [2][1][0] = foo.in[2][1][0] 
+        [2][1][1] = foo.in[2][1][1] 
+        [2][1][2] = foo.in[2][1][2] 
+        [2][2][0] = foo.in[2][2][0] 
+        [2][2][1] = foo.in[2][2][1] 
+        [2][2][2] = foo.in[2][2][2] 
+      }
+    _out = bool^0 = foo._out 
+  )
+}

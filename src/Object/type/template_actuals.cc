@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.11 2006/08/14 04:50:04 fang Exp $
+	$Id: template_actuals.cc,v 1.12 2006/10/18 01:20:00 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -17,7 +17,13 @@
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_param_expr_list.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#endif
 #include "Object/expr/expr_dump_context.h"
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+#include "Object/def/footprint.h"
+#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -130,16 +136,27 @@ template_actuals::make_const_param_list(void) const {
 	STACKTRACE_VERBOSE;
 	const count_ptr<const_param_expr_list> ret(new const_param_expr_list);
 	if (strict_template_args) {
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+		const count_ptr<const const_param_expr_list>
+			csa(strict_template_args->make_const_param_expr_list());
+#else
 		const count_ptr<const const_param_expr_list>
 			csa(strict_template_args.
 				is_a<const const_param_expr_list>());
+#endif
 		INVARIANT(csa);
 		copy(csa->begin(), csa->end(), back_inserter(*ret));
 	}
 	if (relaxed_template_args) {
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+		const count_ptr<const const_param_expr_list>
+			rsa(relaxed_template_args->
+				make_const_param_expr_list());
+#else
 		const count_ptr<const const_param_expr_list>
 			rsa(relaxed_template_args.
 				is_a<const const_param_expr_list>());
+#endif
 		INVARIANT(rsa);
 		copy(rsa->begin(), rsa->end(), back_inserter(*ret));
 	}
@@ -238,12 +255,21 @@ template_actuals::get_relaxed_args(void) const {
 		defaulting template parameters.  
 		Template formals are NOT available here, 
 		so we must require the caller to provide them in context.  
+	TODO: return resolved_template_actuals instead, for use
+		with canonical_type_base.  
  */
 template_actuals
 template_actuals::unroll_resolve(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_STREAM << "actuals: ") << endl;
+#endif
 	bool err = false;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	param_expr_list::unroll_resolve_rvalues_return_type sr, rr;
+#else
 	const_arg_list_ptr_type sr, rr;
+#endif
 	if (strict_template_args) {
 		sr = strict_template_args->unroll_resolve_rvalues(c, 
 			strict_template_args);
@@ -266,22 +292,42 @@ template_actuals::unroll_resolve(const unroll_context& c) const {
 			err = true;
 		}
 	}
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	const_arg_list_ptr_type csr, crr;
+	if (sr) csr = sr->to_dynamic_list();
+	if (rr) crr = rr->to_dynamic_list();
+	return err ? this_type() : this_type(csr, crr);
+#else
 	return err ? this_type() : this_type(sr, rr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Perhaps flag OBSOLETE after rewriting definitions' use of
+	this function, callling unroll_formal_parameters directly.  
 	\param a set of resolved, constant template parameters.
 	\param m the map from instance reference to template actuals.  
 		Value reference in this set of actuals that depend
 		on template parameters will map to the actuals
 		provided in argument a.  
+	\pre formal-actual size/types already checked.  
  */
 template_actuals
 template_actuals::transform_template_actuals(const this_type& a, 
 		const template_formals_manager& m) const {
+	STACKTRACE_VERBOSE;
 	INVARIANT(a.is_constant());
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+	footprint f;	// temporary footprint for unroll-resolving
+	const unroll_context c(&f, &f);
+	const good_bool b(m.unroll_formal_parameters(c, a));
+	INVARIANT(b.good);
+	// unrolling and assigning have to be interleaved to handle
+	// parameter-dependent template parameters.  
+#else
 	const unroll_context c(a, m);
+#endif
 	return unroll_resolve(c);
 }
 

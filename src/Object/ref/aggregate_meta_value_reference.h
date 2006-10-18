@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_value_reference.h"
 	This is going to be exciting...
-	$Id: aggregate_meta_value_reference.h,v 1.5 2006/07/04 07:26:12 fang Exp $
+	$Id: aggregate_meta_value_reference.h,v 1.6 2006/10/18 01:19:47 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_VALUE_REFERENCE_H__
@@ -25,6 +25,10 @@ class expr_dump_context;
 class const_param;
 class const_range_list;
 class param_value_collection;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+class template_formals_manager;
+class dynamic_param_expr_list;
+#endif
 using std::istream;
 using std::ostream;
 using util::memory::never_ptr;
@@ -76,6 +80,12 @@ private:
 						value_scalar_type;
 	typedef	typename traits_type::value_collection_generic_type
 						value_collection_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::instance_placeholder_type
+						value_placeholder_type;
+	typedef	never_ptr<value_placeholder_type>
+						value_placeholder_ptr_type;
+#endif
 	typedef	typename traits_type::const_collection_type
 						const_collection_type;
 	typedef	typename traits_type::const_expr_type
@@ -84,6 +94,9 @@ private:
 						value_collection_ptr_type;
 	typedef	typename subreferences_array_type::const_iterator
 						const_iterator;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	struct positional_substituter;
+#endif
 private:
 	subreferences_array_type		subreferences;
 public:
@@ -103,9 +116,14 @@ public:
 	size_t
 	dimensions(void) const;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const param_value_placeholder>
+#else
 	never_ptr<const param_value_collection>
+#endif
 	get_coll_base(void) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	good_bool
 	initialize(const init_arg_type&);
 
@@ -116,6 +134,7 @@ public:
 	/// conservatively return false for simplicity
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	/// conservatively return false?
 	bool
@@ -161,6 +180,16 @@ public:
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+        count_ptr<const expr_base_type>
+        substitute_default_positional_parameters(
+                const template_formals_manager&,
+                const dynamic_param_expr_list&,
+                const count_ptr<const expr_base_type>&) const;
+
+	using expr_base_type::substitute_default_positional_parameters;
+#endif
 protected:
 	using expr_base_type::unroll_resolve_rvalues;
 	using expr_base_type::unroll_resolve_copy;

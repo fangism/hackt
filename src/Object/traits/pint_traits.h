@@ -2,7 +2,7 @@
 	\file "Object/traits/pint_traits.h"
 	Traits and policies for parameter integers.  
 	This file used to be "Object/art_object_pint_traits.h".
-	$Id: pint_traits.h,v 1.12 2006/06/26 01:46:27 fang Exp $
+	$Id: pint_traits.h,v 1.13 2006/10/18 01:19:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_PINT_TRAITS_H__
@@ -27,6 +27,10 @@ struct class_traits<pint_tag> {
 	enum {		is_nonmeta_data_lvalue = false		};
 
 	typedef	pint_instance_collection	instance_collection_generic_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	param_value_placeholder		value_placeholder_parent_type;
+	typedef	pint_value_placeholder		instance_placeholder_type;
+#endif
 	typedef	instance_collection_generic_type
 						value_collection_generic_type;
 	typedef	param_value_collection		value_collection_parent_type;
@@ -71,6 +75,11 @@ struct class_traits<pint_tag> {
 	typedef	param_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	// distinguish between meta-type and nonmeta-type
+	// typedef	canonical_generic_datatype	resolved_type_ref_type;
+	// pointer not necessary
+#endif
 
 	/**
 		Replacement for built-in type pointer.  

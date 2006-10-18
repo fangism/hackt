@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.138 2006/10/07 20:58:29 fang Exp $
+#	$Id: Makefile.am,v 1.139 2006/10/18 01:18:54 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -273,8 +273,10 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/alias_empty.tcc \
 	Object/inst/instance_alias.tcc \
 	Object/inst/instance_collection.tcc \
+	Object/inst/instance_placeholder.tcc \
 	Object/inst/internal_aliases_policy.tcc \
 	Object/inst/value_collection.tcc \
+	Object/inst/value_placeholder.tcc \
 	Object/inst/instance_pool.tcc \
 	Object/inst/state_instance.tcc
 
@@ -291,6 +293,12 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/instance_collection_base.h \
 	Object/inst/physical_instance_collection.h \
 	Object/inst/datatype_instance_collection.h \
+	Object/inst/instance_placeholder_base.h \
+	Object/inst/instance_placeholder.h \
+	Object/inst/value_placeholder.h \
+	Object/inst/physical_instance_placeholder.h \
+	Object/inst/datatype_instance_placeholder.h \
+	Object/inst/param_value_placeholder.h \
 	Object/inst/instance_alias_info.h \
 	Object/inst/instance_alias.h \
 	Object/inst/internal_aliases_policy_fwd.h \
@@ -545,6 +553,7 @@ OBJECT_H_FILES = $(OBJECT_CC_FILES:.cc=.h) \
 	Object/type/process_type_reference.h \
 	Object/type/type_reference_base.h \
 	Object/type/canonical_type_fwd.h \
+	Object/type/canonical_generic_datatype.h \
 	Object/unroll/unroll_fwd.h \
 	Object/unroll/alias_connection.h \
 	Object/unroll/aliases_connection_base.h \

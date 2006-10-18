@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_index_list.h,v 1.10 2006/06/26 01:45:58 fang Exp $
+	$Id: const_index_list.h,v 1.11 2006/10/18 01:19:17 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_INDEX_LIST_H__
@@ -92,11 +92,13 @@ public:
 	void
 	push_back(const const_index_ptr_type& i);
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	bool
 	is_static_constant(void) const;
@@ -104,8 +106,10 @@ public:
 	bool
 	is_relaxed_formal_dependent(void) const { return false; }
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	const_index_list
 	resolve_index_list(void) const;
+#endif
 
 	const_index_list
 	unroll_resolve_indices(const unroll_context&) const;
@@ -113,6 +117,10 @@ public:
 #if 0
 	bool
 	resolve_multikey(excl_ptr<multikey_index_type>& k) const;
+#endif
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_INDEX_LIST_PROTO;
 #endif
 
 	multikey_index_type

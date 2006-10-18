@@ -1,7 +1,7 @@
 /**
 	\file "AST/formal.cc"
 	Class method definitions for HAC::parser for formal-related classes.
-	$Id: formal.cc,v 1.4 2006/07/17 02:53:33 fang Exp $
+	$Id: formal.cc,v 1.5 2006/10/18 01:18:59 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_formal.cc,v 1.27.10.1 2005/12/11 00:45:06 fang Exp
  */
@@ -30,7 +30,11 @@
 #include "AST/parse_context.h"
 
 #include "Object/type/fundamental_type_reference.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder_base.h"
+#else
 #include "Object/inst/instance_collection_base.h"
+#endif
 #include "Object/def/user_def_chan.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/dynamic_param_expr_list.h"
@@ -101,7 +105,8 @@ data_param_id::check_build(context& c) const {
 	STACKTRACE("data_param_id::check_build()");
 	// INVARIANT(c.get_current_prototype().is_a<user_def_chan>());
 	// not true anymore!
-	never_ptr<const instance_collection_base> t;
+//	never_ptr<const instance_collection_base> t;
+	context::placeholder_ptr_type t;
 		// should be anything but param_instantiation
 #if 0
 	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_ptr_type;
@@ -249,7 +254,8 @@ port_formal_id::rightmost(void) const {
 never_ptr<const object>
 port_formal_id::check_build(context& c) const {
 	STACKTRACE("port_formal_id::check_build()");
-	never_ptr<const instance_collection_base> t;
+//	never_ptr<const instance_collection_base> t;
+	context::placeholder_ptr_type t;
 		// should be anything but param_instantiation
 #if 0
 	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_ptr_type;
@@ -392,7 +398,8 @@ template_formal_id::rightmost(void) const {
 never_ptr<const object>
 template_formal_id::check_build(context& c) const {
 	STACKTRACE("template_formal_id::check_build()");
-	never_ptr<const instance_collection_base> t;
+//	never_ptr<const instance_collection_base> t;
+	context::placeholder_ptr_type t;
 		// should be param_instantiation
 	// there should be some open definition already
 	// type should already be set in the context

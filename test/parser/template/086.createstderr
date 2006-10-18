@@ -4,34 +4,34 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	185
-	4	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	177
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	9	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	10	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	15	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
-	16	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	41
-	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	219
-	20	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	29
+	16	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	32
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	211
+	20	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	21	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
 	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	27	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	28	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
@@ -39,16 +39,17 @@ Persistent Object Manager text dump:
 	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	37	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	28
-	38	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	41
-	39	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	38	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	32
+	39	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	46	##ADDR##	apimvref	0	#HEAD#	#TAIL#	17
-	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	43	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	44	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	apimvref	0	#HEAD#	#TAIL#	17
+	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -65,19 +66,17 @@ In namespace "", we have: {
       )
       In definition "internal", we have: {
       Parameters:
-        A = pint<> A
-
-        N = pint<> N
+        A = pint<> internal::A^1
+        N = pint<> internal::N
       unroll sequence: 
-        pint<> N
-        pint<> A[0..N-1]
       footprint collection: {
         <1, {1}> {
-          pint^1 A
+          A = pint^1
             unrolled index-value pairs: {
-              0 = ?
+              0 = 1
             }
-          pint^0 N value: ?
+          N = pint^0 value: 1
+          Created state:
         }
       }
       }
@@ -89,34 +88,34 @@ In namespace "", we have: {
       )
       In definition "use_the_source", we have: {
       Parameters:
-        A = pint<> A
-
-        N = pint<> N
+        A = pint<> use_the_source::A^1
+        N = pint<> use_the_source::N
       Instances:
-        s = internal<::use_the_source::N, ::use_the_source::A> s
+        s = internal<use_the_source::N, use_the_source::A> use_the_source::s
       unroll sequence: 
-        pint<> N
-        pint<> A[0..N-1]
-        internal<::use_the_source::N, ::use_the_source::A> s
+        internal<use_the_source::N, use_the_source::A> s
       footprint collection: {
         <1, {1}> {
-          pint^1 A
+          A = pint^1
             unrolled index-value pairs: {
-              0 = ?
+              0 = 1
             }
-          pint^0 N value: ?
-          process internal<1, {1}>^0 s (instantiated) = ::use_the_source::s (1) 
+          N = pint^0 value: 1
+          s = process internal<1, {1}>^0 = use_the_source::s (1) 
+          Created state:
           process instance pool:
-          1	::use_the_source::s
+          1	use_the_source::s
         }
       }
       }
 
   Instances:
-    luke = process use_the_source<1, {1}>^0 luke (instantiated) = ::luke (1) 
+    luke = use_the_source<1, { 1 }> luke
 }
 
-Created state:
-process instance pool:
-1	::luke
-
+footprint: {
+  luke = process use_the_source<1, {1}>^0 = luke (1) 
+  Created state:
+  process instance pool:
+  1	luke
+}

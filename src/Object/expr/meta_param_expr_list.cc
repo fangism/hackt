@@ -3,7 +3,7 @@
 	Definitions for meta parameter expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_param_expr_list.cc,v 1.18 2006/07/04 07:25:57 fang Exp $
+ 	$Id: meta_param_expr_list.cc,v 1.19 2006/10/18 01:19:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_PARAM_EXPR_LIST_CC__
@@ -19,12 +19,19 @@
 #include "util/static_trace.h"
 DEFAULT_STATIC_TRACE_BEGIN
 
+#include <algorithm>
+#include <iterator>
+
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/param_expr.h"
 #include "Object/expr/const_param.h"
 #include "Object/expr/expr_dump_context.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#else
 #include "Object/inst/param_value_collection.h"
+#endif
 #include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
 #include "common/ICE.h"
@@ -88,10 +95,12 @@ const_param_expr_list::~const_param_expr_list() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 count_ptr<param_expr_list>
 const_param_expr_list::copy(void) const {
 	return count_ptr<param_expr_list>(new this_type(*this));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(const_param_expr_list)
@@ -134,12 +143,14 @@ const_param_expr_list::size(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 excl_ptr<param_expr_list>
 const_param_expr_list::make_copy(void) const {
 	return excl_ptr<param_expr_list>(
 		new const_param_expr_list(*this));
 	// use default copy constructor
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const param_expr>
@@ -171,6 +182,7 @@ const_param_expr_list::is_all_true(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 const_param_expr_list::may_be_initialized(void) const {
 	return true;
@@ -181,6 +193,7 @@ bool
 const_param_expr_list::must_be_initialized(void) const {
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -371,6 +384,17 @@ const_param_expr_list::must_be_equivalent(const this_type& cpl) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+count_ptr<dynamic_param_expr_list>
+const_param_expr_list::to_dynamic_list(void) const {
+	const count_ptr<dynamic_param_expr_list>
+		ret(new dynamic_param_expr_list);
+	std::copy(begin(), end(), std::back_inserter(*ret));
+	return ret;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#else
 /**
 	\return newly allocated copy of itself, always succeeds.  
 	Eventually will add some context argument, though it is not needed
@@ -405,7 +429,7 @@ if (a_size != f_size) {
 	// else a_size == 0, passed actuals list is empty, 
 	// try to fill in all default arguments
 	for ( ; f_iter!=f_end; f_iter++) {
-		const never_ptr<const param_value_collection>
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		// does default expression have to be constant to be
@@ -433,7 +457,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param> pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		if (pex) {
@@ -474,12 +498,13 @@ if (a_size != f_size) {
 			} else {
 				// else, actually assign it a copy in the list
 				*p_iter = default_expr;
+				// TODO: positional parameter substitution
 			}
 		}
 	}
 	return good_bool(true);
 }
-}
+}	// end method certify_template_arguments
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -506,7 +531,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param> pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);
@@ -523,6 +548,7 @@ if (a_size != f_size) {
 	return good_bool(true);
 }
 }
+#endif	// ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -555,7 +581,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const const_param>& pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);
@@ -578,6 +604,57 @@ if (a_size != f_size) {
 	return good_bool(true);
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RESOLVE_VALUES_WITH_FOOTPRINT && !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+/**
+	This combines the functionality of certify_template_actuals
+	with unroll_resolve_rvalues, in addition to instantiating
+	template formal parameters in the context's footprint. 
+	Q: should this expect prior type-checking or perform it here?
+ */
+good_bool
+const_param_expr_list::unroll_assign_formal_parameters(
+		const unroll_context& c,
+		const template_formals_list_type& tfl) const {
+	STACKTRACE_VERBOSE;
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	typedef template_formals_list_type::const_iterator
+			const_formal_iterator;
+	const const_formal_iterator f_begin(tfl.begin()), f_end(tfl.end());
+	const_formal_iterator f_iter(f_begin);
+	const_iterator p_iter(begin());
+	const const_iterator p_end(end());
+	INVARIANT(a_size <= f_size);
+	// may try to fill in all default arguments
+	for ( ; p_iter!=p_end; ++f_iter, ++p_iter) {
+		const placeholder_ptr_type pinst(*f_iter);
+		NEVER_NULL(pinst);
+		// instantiate and assign
+		if (!pinst->unroll_assign_formal_parameter(c, *p_iter).good) {
+			cerr << "ERROR: with template actual at position "
+				<< distance(f_begin, f_iter)+1 << endl;
+			return good_bool(false);
+		}
+	}
+	// if there are any trailing unspecified parameters, 
+	// try to find default values for them.  
+	for ( ; f_iter != f_end; ++f_iter) {
+		const placeholder_ptr_type pinst(*f_iter);
+		NEVER_NULL(pinst);
+		if (!pinst->unroll_assign_formal_parameter(
+				c, value_type(NULL)).good) {
+			cerr << "ERROR: with default parameter at position "
+				<< distance(f_begin, f_iter)+1 << endl;
+			return good_bool(false);
+		}
+	}
+	// if it fails, then list will be incomplete.  
+	// if this point is reached, then fill-in was successfull
+	return good_bool(true);
+}	// end method unroll_assign_formal_parameters
+#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -684,6 +761,12 @@ dynamic_param_expr_list::dynamic_param_expr_list() :
 		param_expr_list(), parent_type() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+dynamic_param_expr_list::dynamic_param_expr_list(const value_type& p) :
+		param_expr_list(), parent_type() {
+	push_back(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 dynamic_param_expr_list::dynamic_param_expr_list(const size_t s) :
 		param_expr_list(), parent_type() {
 	util::reserve(AS_A(parent_type&, *this), s);
@@ -709,10 +792,12 @@ dynamic_param_expr_list::~dynamic_param_expr_list() {
 PERSISTENT_WHAT_DEFAULT_IMPLEMENTATION(dynamic_param_expr_list)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
 count_ptr<param_expr_list>
 dynamic_param_expr_list::copy(void) const {
 	return count_ptr<param_expr_list>(new this_type(*this));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
@@ -734,17 +819,39 @@ dynamic_param_expr_list::dump(ostream& o, const expr_dump_context& c) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 size_t
 dynamic_param_expr_list::size(void) const {
-	STACKTRACE_VERBOSE;
+	// STACKTRACE_VERBOSE;
 	return parent_type::size();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+/**
+	\return a const_param_expr_list if all elements successfully
+		dynamic_cast to const_params.  
+ */
+count_ptr<const_param_expr_list>
+dynamic_param_expr_list::make_const_param_expr_list(void) const {
+	typedef	count_ptr<const_param_expr_list>	return_type;
+	const count_ptr<const_param_expr_list> ret(new const_param_expr_list);
+	const_iterator i(begin()), e(end());
+	for ( ; i!=e; ++i) {
+		const count_ptr<const const_param>
+			cp(i->is_a<const const_param>());
+		if (!cp)
+			return return_type(NULL);
+		ret->push_back(cp);
+	}
+	return ret;
+}
+
+#else
 excl_ptr<param_expr_list>
 dynamic_param_expr_list::make_copy(void) const {
 	return excl_ptr<param_expr_list>(
 		new dynamic_param_expr_list(*this));
 	// use default copy constructor
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const param_expr>
@@ -789,6 +896,7 @@ dynamic_param_expr_list::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 dynamic_param_expr_list::may_be_initialized(void) const {
 	const_iterator i(begin());
@@ -815,6 +923,7 @@ dynamic_param_expr_list::must_be_initialized(void) const {
 	}
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -964,7 +1073,11 @@ dynamic_param_expr_list::unroll_resolve_rvalues(const unroll_context& c,
  */
 good_bool
 dynamic_param_expr_list::certify_template_arguments(
-		const template_formals_list_type& tfl) {
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+		const template_formals_manager& tfm, 
+#endif
+		const template_formals_list_type& tfl
+		) {
 	const size_t a_size = size();
 	const size_t f_size = tfl.size();
 	template_formals_list_type::const_iterator f_iter(tfl.begin());
@@ -975,7 +1088,7 @@ if (a_size != f_size) {
 	// else a_size == 0, passed actuals list is empty, 
 	// try to fill in all default arguments
 	for ( ; f_iter!=f_end; f_iter++) {
-		const never_ptr<const param_value_collection>
+		placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		const count_ptr<const param_expr>
@@ -998,9 +1111,8 @@ if (a_size != f_size) {
 		// need method to check param_value_collection against param_expr
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
-		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_value_collection>
-			pinst(*f_iter);
+		const count_ptr<const param_expr>& pex(*p_iter);
+		const placeholder_ptr_type pinst(*f_iter);
 		NEVER_NULL(pinst);
 		if (pex) {
 			// type-check assignment, conservative w.r.t. arrays
@@ -1025,14 +1137,43 @@ if (a_size != f_size) {
 				return good_bool(false);
 			} else {
 				// else, actually assign it a copy in the list
+				// TODO: positional parameter substitution!
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+				*p_iter = default_expr->
+					substitute_default_positional_parameters(
+						tfm, *this, default_expr);
+				if (!*p_iter) {
+					cerr << "Error substituting default "
+						"expression at position " <<
+						distance(tfl.begin(), f_iter)+1
+						<< endl;
+					return good_bool(false);
+				}
+#else
 				*p_iter = default_expr;
+#endif
+/***
+	Example of default positional parameter substitution:
+		template <pint D, E=D+1>
+		defproc foo() { }
+
+		template <pint M>
+		defproc bar(foo<M, > x) { }	// <-- HERE
+		// shouldn't expand to <M, D+1>, but <M, M+1>
+		// D should be substituted for the parameter expression
+		// in the same position as D.
+		// Likewise, 
+		template <pint M>
+		defproc bar(foo<2*M, > x) { }
+		// should be expanded as <2*M, (2*M)+1>
+***/
 			}
 		}
 	}
 	// end of checking reached, everything passed
 	return good_bool(true);
 }
-}
+}	// end method certify_template_arguments
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1059,7 +1200,7 @@ if (a_size != f_size) {
 		// eventually also work for complex aggregate types!
 		// "I promise this pointer is only local."  
 		const count_ptr<const param_expr> pex(*p_iter);
-		const never_ptr<const param_value_collection>
+		const placeholder_ptr_type
 			pinst(*f_iter);
 		NEVER_NULL(pinst);
 		NEVER_NULL(pex);
@@ -1077,6 +1218,54 @@ if (a_size != f_size) {
 	return good_bool(true);
 }
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+/**
+	Code carbon-copied from
+	const_param_expr_list::unroll_assign_formal_parameters.  
+ */
+good_bool
+dynamic_param_expr_list::unroll_assign_formal_parameters(
+		const unroll_context& c,
+		const template_formals_list_type& tfl) const {
+	const size_t a_size = size();
+	const size_t f_size = tfl.size();
+	typedef template_formals_list_type::const_iterator
+			const_formal_iterator;
+	const const_formal_iterator f_begin(tfl.begin()), f_end(tfl.end());
+	const_formal_iterator f_iter(f_begin);
+	const_iterator p_iter(begin());
+	const const_iterator p_end(end());
+	INVARIANT(a_size <= f_size);
+	// may try to fill in all default arguments
+	for ( ; p_iter!=p_end; ++f_iter, ++p_iter) {
+		const placeholder_ptr_type pinst(*f_iter);
+		NEVER_NULL(pinst);
+		// instantiate and assign
+		if (!pinst->unroll_assign_formal_parameter(c, *p_iter).good) {
+			cerr << "ERROR: with template actual at position "
+				<< distance(f_begin, f_iter)+1 << endl;
+			return good_bool(false);
+		}
+	}
+	// if there are any trailing unspecified parameters, 
+	// try to find default values for them.  
+	for ( ; f_iter != f_end; ++f_iter) {
+		const placeholder_ptr_type pinst(*f_iter);
+		NEVER_NULL(pinst);
+		if (!pinst->unroll_assign_formal_parameter(
+				c, value_type(NULL)).good) {
+			cerr << "ERROR: with default parameter at position "
+				<< distance(f_begin, f_iter)+1 << endl;
+			return good_bool(false);
+		}
+	}
+	// if it fails, then list will be incomplete.  
+	// if this point is reached, then fill-in was successfull
+	return good_bool(true);
+}	// end method unroll_assign_formal_parameters
+#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

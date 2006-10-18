@@ -3,7 +3,7 @@
 	Base classes for instance and instance collection objects.  
 	This file was "Object/art_object_instance_base.h"
 		in a previous life.  
-	$Id: instance_collection_base.h,v 1.12 2006/02/21 04:48:29 fang Exp $
+	$Id: instance_collection_base.h,v 1.13 2006/10/18 01:19:30 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_BASE_H__
@@ -12,6 +12,7 @@
 #include <string>
 #include "util/macros.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
 #include "Object/inst/substructure_alias_fwd.h"
@@ -35,6 +36,9 @@ class param_expr;
 class const_param_expr_list;
 class physical_instance_collection;
 class unroll_context;
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+#endif
 using std::list;
 using std::istream;
 using std::string;
@@ -67,7 +71,11 @@ using util::memory::count_ptr;
 		statements per collection, but they were removed on the
 		HACKT-00-01-04-main-00-77-8-aggregate-01-02-ref branch.
  */
-class instance_collection_base : public object, public persistent {
+class instance_collection_base : 
+#if !USE_INSTANCE_PLACEHOLDERS
+		public object, 
+#endif
+		public persistent {
 	typedef	instance_collection_base	this_type;
 public:
 	typedef	never_ptr<const scopespace>	owner_ptr_type;
@@ -83,6 +91,7 @@ public:
 	typedef	never_ptr<const substructure_alias>
 						super_instance_ptr_type;
 protected:
+#if !USE_INSTANCE_PLACEHOLDERS
 	/**
 		Back-pointer to the namespace to which this instantiation
 		belongs.  
@@ -112,6 +121,9 @@ protected:
 		Wants to be const.  
 	 */
 	size_t				dimensions;
+#else
+	// subclasses should contain reference back-links to placeholders
+#endif
 
 	// children will implement unrolled collection of instances?
 	// but only instances that are not found in definitions?
@@ -136,14 +148,19 @@ protected:
 	 */
 	super_instance_ptr_type		super_instance;
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	instance_collection_base() : persistent(), super_instance() { }
+#else
 	/**
 		Private, dimensions-specific construct, intended for
 		childrens' use only.  
 	 */
 	explicit
 	instance_collection_base(const size_t d) :
-		object(), persistent(), owner(), key(), 
-		dimensions(d), super_instance() { }
+		object(), 
+		persistent(), 
+		owner(), key(), dimensions(d), 
+		super_instance() { }
 
 	/**
 		Partial copy-constructor, copies everything 
@@ -152,17 +169,23 @@ protected:
 		which should be NULL anyhow.  
 	 */
 	instance_collection_base(const this_type& t, const footprint&) :
-		object(), persistent(), owner(t.owner), key(t.key), 
+		object(), 
+		persistent(), 
+		owner(t.owner), key(t.key), 
 		dimensions(t.dimensions),
 		super_instance() { }
+#endif
 
 public:
+#if !USE_INSTANCE_PLACEHOLDERS
 	// o should be reference, not pointer
 	instance_collection_base(const scopespace& o, const string& n, 
 		const size_t d);
+#endif
 
 virtual	~instance_collection_base();
 
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Makes a deep copy of the instance collection for
 	the sake of mapping in the footprint's instance collection map.
@@ -175,9 +198,23 @@ virtual	~instance_collection_base();
 	make_instance_collection_footprint_copy(const footprint&) const
 
 virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
+#endif
 
+#if USE_INSTANCE_PLACEHOLDERS
+private:
+// this was added just to support formal_size_equivalent()...
+virtual	never_ptr<const instance_placeholder_base>
+	__get_placeholder_base(void) const = 0;
+#endif
+
+public:
+#if USE_INSTANCE_PLACEHOLDERS
+virtual	size_t
+	get_dimensions(void) const = 0;
+#else
 	size_t
 	get_dimensions(void) const { return dimensions; }
+#endif
 
 	bool
 	is_subinstance(void) const { return super_instance; }
@@ -196,8 +233,10 @@ virtual	MAKE_INSTANCE_COLLECTION_FOOTPRINT_COPY_PROTO = 0;
 	create_super_instance(footprint&);
 #endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	bool
 	is_partially_unrolled(void) const = 0;
+#endif
 
 virtual	ostream&
 	what(ostream&) const = 0;
@@ -230,21 +269,33 @@ public:
 virtual	ostream&
 	type_dump(ostream& o) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	ostream&
 	pair_dump(ostream& o) const;
 
 	// provides a fixed dump_flags
 	ostream&
 	pair_dump_top_level(ostream& o) const;
+#endif
 
+#if USE_INSTANCE_PLACEHOLDERS
+virtual	const string&
+	get_name(void) const = 0;
+
+	string
+	get_footprint_key(void) const;
+#else
 	const string&
 	get_name(void) const { return key; }
+#endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	string
 	get_qualified_name(void) const;
 
 	ostream&
 	dump_qualified_name(ostream&, const dump_flags&) const;
+#endif
 
 	ostream&
 	dump_hierarchical_name(ostream&) const;
@@ -255,8 +306,15 @@ virtual	string
 	size_t
 	hierarchical_depth(void) const;
 
+#if USE_INSTANCE_PLACEHOLDERS
+#if 0
+virtual	string
+	hash_string(void) const = 0;
+#endif
+#else
 virtual	string
 	hash_string(void) const { return key; }
+#endif
 
 /**
 	Why is this a count_ptr?  because type_references can be reused
@@ -271,23 +329,35 @@ virtual	string
 	instantiation statement.  
  */
 virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	get_unresolved_type_ref(void) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	never_ptr<const definition_base>
 	get_base_def(void) const;
+#endif
 
+#if USE_INSTANCE_PLACEHOLDERS
+virtual	owner_ptr_type
+	get_owner(void) const = 0;
+#else
 	owner_ptr_type
 	get_owner(void) const { return owner; }
+#endif
 
 protected:
+#if !USE_INSTANCE_PLACEHOLDERS
 	// to grant access to param_value_collection
 	bool
 	formal_size_equivalent(const this_type& b) const;
+#endif
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const = 0;
+#endif
 
 public:
+#if !USE_INSTANCE_PLACEHOLDERS
 	size_t
 	is_template_formal(void) const;
 
@@ -299,18 +369,21 @@ public:
 
 	size_t
 	is_member_instance(void) const;
+#endif
 
 	bool
 	is_local_to_definition(void) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	bool
 	port_formal_equivalent(const this_type& b) const;
+#endif
 
 	bool
 	is_template_dependent(void) const;
 
 public:
-
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const = 0;
 
@@ -318,6 +391,7 @@ virtual	count_ptr<nonmeta_instance_reference_base>
 virtual	member_inst_ref_ptr_type
 	make_member_meta_instance_reference(
 		const inst_ref_ptr_type& b) const = 0;
+#endif
 
 virtual	const_index_list
 	resolve_indices(const const_index_list&) const = 0;
@@ -325,12 +399,11 @@ virtual	const_index_list
 private:
 	// utility functions for handling index collection (inlined)
 	void
-	collect_index_collection_pointers(
-		persistent_object_manager& m) const;
+	collect_index_collection_pointers(persistent_object_manager& m) const;
 
 	void
 	write_index_collection_pointers(
-		const persistent_object_manager& m, ostream& ) const;
+		const persistent_object_manager& m, ostream&) const;
 
 	void
 	load_index_collection_pointers(

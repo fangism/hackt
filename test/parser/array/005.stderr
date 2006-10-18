@@ -1,2 +1,1 @@
-pint<> y
- was originally declared as a 1-D array, so the new declaration cannot add a 0-D array, ERROR!  [4:6]
+pint<> y^1 was originally declared as a 1-D array, so the new declaration cannot add a 0-D array, ERROR!  [4:6]

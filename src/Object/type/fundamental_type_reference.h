@@ -2,7 +2,7 @@
 	\file "Object/type/fundamental_type_reference.h"
 	Base classes for type objects.  
 	This file originated from "Object/art_object_type_ref_base.h".
-	$Id: fundamental_type_reference.h,v 1.6 2006/01/26 21:33:26 fang Exp $
+	$Id: fundamental_type_reference.h,v 1.7 2006/10/18 01:19:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_FUNDAMENTAL_TYPE_REFERENCE_H__
@@ -12,6 +12,7 @@
 #include "util/memory/count_ptr.h"
 #include "util/boolean_types.h"
 
+#include "Object/devel_switches.h"
 #include "Object/type/type_reference_base.h"
 #include "Object/common/util_types.h"
 #include "Object/type/template_actuals.h"
@@ -23,7 +24,11 @@ class token_identifier;
 
 namespace entity {
 class definition_base;
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+#else
 class instance_collection_base;
+#endif
 class scopespace;
 class subinstance_manager;	// from "Object/inst/subinstance_manager.h"
 using parser::token_identifier;
@@ -61,6 +66,12 @@ public:
 	typedef	template_actuals::arg_list_ptr_type	template_args_ptr_type;
 	typedef	template_actuals::const_arg_list_ptr_type
 						const_template_args_ptr_type;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+	typedef	count_ptr<instantiation_statement_base>
+#else
+	typedef	excl_ptr<instantiation_statement_base>
+#endif
+					instantiation_statement_ptr_type;
 protected:
 	/// set of template parameters passed to this type
 	template_actuals			template_args;
@@ -125,21 +136,21 @@ virtual bool
 	merge_relaxed_actuals(const const_template_args_ptr_type&) const
 
 	static	
-	excl_ptr<instantiation_statement_base>
+	instantiation_statement_ptr_type
 	make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type&);
 
 	static	
-	excl_ptr<instantiation_statement_base>
+	instantiation_statement_ptr_type
 	make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d);
 
 private:
 #define	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO			\
-	excl_ptr<instantiation_statement_base>				\
+	instantiation_statement_ptr_type				\
 	make_instantiation_statement_private(				\
 		const count_ptr<const fundamental_type_reference>& t, 	\
 		const index_collection_item_ptr_type& d, 		\
@@ -149,10 +160,18 @@ virtual	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO = 0;
 
 public:
 
+#if USE_INSTANCE_PLACEHOLDERS
+// rename macro and function name later after committing rework
+#define	MAKE_INSTANCE_COLLECTION_PROTO					\
+	excl_ptr<instance_placeholder_base>				\
+	make_instance_collection(const never_ptr<const scopespace> s, 	\
+		const token_identifier& id, const size_t d) const
+#else
 #define	MAKE_INSTANCE_COLLECTION_PROTO					\
 	excl_ptr<instance_collection_base>				\
 	make_instance_collection(const never_ptr<const scopespace> s, 	\
 		const token_identifier& id, const size_t d) const
+#endif
 
 virtual	MAKE_INSTANCE_COLLECTION_PROTO = 0;
 

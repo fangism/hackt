@@ -4,29 +4,30 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	204
-	5	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
-	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	51
+	19	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	20	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	21	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -41,32 +42,34 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        r = bool<> r
-
-        x = int<32> x
-        y = bool<> y
+        r = bool<> foo::r^1
+        x = int<32> foo::x
+        y = bool<> foo::y
       unroll sequence: 
         bool<> r[0..1]
         int<32> x
         bool<> y
       footprint: {
-        bool^1 r
-          unrolled indices: {
-            0 = ::foo::r[0] 
-            1 = ::foo::r[1] 
+        r = bool^1
+          {
+            0 = foo::r[0] 
+            1 = foo::r[1] 
           }
-        int<32>^0 x (instantiated) = ::foo::x 
-        bool^0 y (instantiated) = ::foo::y 
+        x = int<32>^0 = foo::x 
+        y = bool^0 = foo::y 
       }
       }
 
   Instances:
-    burp = process foo<>^0 burp (instantiated) = ::burp (
-      bool^1 r
-        unrolled indices: {
-          0 = ::burp.r[0] 
-          1 = ::burp.r[1] 
-        }
-    )
+    burp = foo<> burp
 }
 
+footprint: {
+  burp = process foo<>^0 = burp (
+    r = bool^1
+      {
+        0 = burp.r[0] 
+        1 = burp.r[1] 
+      }
+  )
+}

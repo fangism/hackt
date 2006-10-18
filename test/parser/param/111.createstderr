@@ -4,15 +4,15 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	93
+	11	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	12	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	14	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
@@ -51,6 +51,11 @@ Persistent Object Manager text dump:
 	47	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	48	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	84
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -60,18 +65,24 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    a = pint^0 a value: 0
-    b = pint^0 b value: 1
-    c = pint^0 c value: 2
-    d = pint^0 d value: 3
-    x = pint^2 x
-      unrolled index-value pairs: {
-        [0][0] = 0
-        [0][1] = 1
-        [1][0] = 2
-        [1][1] = 3
-      }
+    a = pint<> a
+    b = pint<> b
+    c = pint<> c
+    d = pint<> d
+    x = pint<> x^2
 }
 
-Created state:
-
+footprint: {
+  a = pint^0 value: 0
+  b = pint^0 value: 1
+  c = pint^0 value: 2
+  d = pint^0 value: 3
+  x = pint^2
+    unrolled index-value pairs: {
+      [0][0] = 0
+      [0][1] = 1
+      [1][0] = 2
+      [1][1] = 3
+    }
+  Created state:
+}

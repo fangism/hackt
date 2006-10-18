@@ -4,39 +4,42 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	98
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	204
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	14	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	17	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	18	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	proccoll	1	#HEAD#	#TAIL#	98
-	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	27	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	proccoll	1	#HEAD#	#TAIL#	98
-	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	34	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	31	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -54,37 +57,40 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        Q = pint<> Q
-        R = pint<> R
+        Q = pint<> foo::Q
+        R = pint<> foo::R
       unroll sequence: 
-        pint<> Q
-        pint<> R
       footprint collection: {
         <5, 4> {
-          pint^0 Q value: ?
-          pint^0 R value: ?
+          Q = pint^0 value: 5
+          R = pint^0 value: 4
         }
       }
       }
 
   Instances:
-    bar = process foo<5>^1 bar
-      unrolled indices: {
-        0<4> = ::bar[0] 
-        1<4> = ::bar[1] 
-        2<4> = ::bar[2] 
-      }
-    car = process foo<5><4>^1 car
-      unrolled indices: {
-        0 = ::car[0] 
-        1 = ::car[1] 
-        2 = ::car[2] 
-      }
-    dar = process foo<5>^1 dar
-      unrolled indices: {
-        0 = ::dar[0] 
-        1 = ::dar[1] 
-        2 = ::dar[2] 
-      }
+    bar = foo<5> bar^1
+    car = foo<5><4> car^1
+    dar = foo<5> dar^1
 }
 
+footprint: {
+  bar = process foo<5>^1
+    {
+      0<4> = bar[0] 
+      1<4> = bar[1] 
+      2<4> = bar[2] 
+    }
+  car = process foo<5><4>^1
+    {
+      0 = car[0] 
+      1 = car[1] 
+      2 = car[2] 
+    }
+  dar = process foo<5>^1
+    {
+      0 = dar[0] 
+      1 = dar[1] 
+      2 = dar[2] 
+    }
+}

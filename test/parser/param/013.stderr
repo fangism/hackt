@@ -1,1 +1,0 @@
-ERROR: rhs of expr-assignment is not initialized or dependent on formals: pint-val-ref ::N

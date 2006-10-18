@@ -4,13 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	99
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	35
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	33
+	6	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	33
 	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	36
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	32
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
@@ -29,11 +29,12 @@ In namespace "", we have: {
       )
       In definition "barbar", we have: {
       Parameters:
-        milk = pint<> milk
-        tea = pint<> tea
-        water = pbool<> water
-
+        milk = pint<> barbar::milk
+        tea = pint<> barbar::tea
+        water = pbool<> barbar::water^1
       }
 
 }
 
+footprint: {
+}

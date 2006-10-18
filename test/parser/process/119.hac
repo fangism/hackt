@@ -1,0 +1,26 @@
+// "119.hac" should pass, will recursively instantiate ports
+// copy-modified from "065.hac"
+// even crazier...
+
+template <pint D, N[D], E=N[D-1]>
+defproc foo(bool a[D]) { }
+
+template <pint M, D[M]>
+defproc bar(foo<2*M, D#D, > x[M]) { }
+
+bar<3,{2,1,0}> poo;
+
+/**
+expecting:
+template <pint M, D[M]>
+defproc bar(foo<2*M, D#D, (D#D)[(2*M)-1]> x[M]) { }
+	difficulty: need indexable aggregates!
+	at least in intermediate representation
+
+instantiated:
+bar<3,{2,1,0}> poo (
+	foo<6,{2,1,0,2,1,0}> x[3], which becomes
+	foo<6,{2,1,0,2,1,0},0> x[3]
+)
+**/
+

@@ -3,7 +3,7 @@
 	Implementation of alias info that has no actual parameters.  
 	This file originated from "Object/art_object_instance_alias_empty.h"
 		in a previous life.  
-	$Id: alias_empty.h,v 1.8 2006/03/15 04:38:17 fang Exp $
+	$Id: alias_empty.h,v 1.9 2006/10/18 01:19:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_H__
@@ -15,6 +15,7 @@
 #include "util/memory/pointer_classes_fwd.h"
 #include "util/persistent_fwd.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -115,7 +116,7 @@ public:
 	template <class AliasType>
 	static
 	good_bool
-	create_dependent_types(const AliasType&);
+	create_dependent_types(const AliasType&, const footprint&);
 
 	// called by footprint_frame::dump_footprint.
 	template <class AliasType>
@@ -130,7 +131,11 @@ public:
 	template <class InstColl>
 	typename InstColl::instance_collection_parameter_type
 	complete_type_actuals(const InstColl& _inst) const {
+#if USE_RESOLVED_DATA_TYPES
+		return _inst.__get_raw_type();
+#else
 		return _inst.get_canonical_type();
+#endif
 	}
 
 public:

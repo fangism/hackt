@@ -4,29 +4,31 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	2	#HEAD#	#TAIL#	697
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	165
-	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	134
-	10	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	19	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	12	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	proccoll	2	#HEAD#	#TAIL#	685
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	proccoll	1	#HEAD#	#TAIL#	123
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -45,39 +47,43 @@ In namespace "", we have: {
       }
 
   Instances:
-    bag = process barf<>^1 bag
-      unrolled indices: {
-        2 = ::sack[4][0] 
-        3 = ::sack[4][1] 
-        4 = ::sack[4][2] 
-      }
-    sack = process barf<>^2 sack
-      unrolled indices: {
-        [0][0] = ::sack[0][0] 
-        [0][1] = ::sack[0][1] 
-        [0][2] = ::sack[0][2] 
-        [0][3] = ::sack[0][3] 
-        [0][4] = ::sack[0][4] 
-        [1][0] = ::sack[4][0] 
-        [1][1] = ::sack[1][1] 
-        [1][2] = ::sack[1][2] 
-        [1][3] = ::sack[1][3] 
-        [1][4] = ::sack[1][4] 
-        [2][0] = ::sack[4][1] 
-        [2][1] = ::sack[2][1] 
-        [2][2] = ::sack[2][2] 
-        [2][3] = ::sack[2][3] 
-        [2][4] = ::sack[2][4] 
-        [3][0] = ::sack[4][2] 
-        [3][1] = ::sack[3][1] 
-        [3][2] = ::sack[3][2] 
-        [3][3] = ::sack[3][3] 
-        [3][4] = ::sack[3][4] 
-        [4][0] = ::sack[4][0] 
-        [4][1] = ::sack[4][1] 
-        [4][2] = ::sack[4][2] 
-        [4][3] = ::sack[4][3] 
-        [4][4] = ::sack[4][4] 
-      }
+    bag = barf<> bag^1
+    sack = barf<> sack^2
 }
 
+footprint: {
+  bag = process barf<>^1
+    {
+      2 = sack[4][0] 
+      3 = sack[4][1] 
+      4 = sack[4][2] 
+    }
+  sack = process barf<>^2
+    {
+      [0][0] = sack[0][0] 
+      [0][1] = sack[0][1] 
+      [0][2] = sack[0][2] 
+      [0][3] = sack[0][3] 
+      [0][4] = sack[0][4] 
+      [1][0] = sack[4][0] 
+      [1][1] = sack[1][1] 
+      [1][2] = sack[1][2] 
+      [1][3] = sack[1][3] 
+      [1][4] = sack[1][4] 
+      [2][0] = sack[4][1] 
+      [2][1] = sack[2][1] 
+      [2][2] = sack[2][2] 
+      [2][3] = sack[2][3] 
+      [2][4] = sack[2][4] 
+      [3][0] = sack[4][2] 
+      [3][1] = sack[3][1] 
+      [3][2] = sack[3][2] 
+      [3][3] = sack[3][3] 
+      [3][4] = sack[3][4] 
+      [4][0] = sack[4][0] 
+      [4][1] = sack[4][1] 
+      [4][2] = sack[4][2] 
+      [4][3] = sack[4][3] 
+      [4][4] = sack[4][4] 
+    }
+}

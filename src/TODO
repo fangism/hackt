@@ -1,5 +1,5 @@
 "TODO"
-#	$Id: TODO,v 1.43 2006/10/04 23:18:22 fang Exp $
+#	$Id: TODO,v 1.44 2006/10/18 01:18:55 fang Exp $
 
 ===============================================================================
 NOTE: see util/TODO for library-related TODO
@@ -84,7 +84,9 @@ conditional instance management: (BUG, easy)
 
 ===============================================================================
 PRIORITY HIGH: MEMORY HOG
-instance collections:
+	in progress...
+
+instance collections (OVERLOADED CLASS):
 	instance_collections and their contents are being 
 		replicated too many places.  
 	Unrolled instance collections should just reference source
@@ -96,6 +98,19 @@ instance collections:
 	Member instance references? public vs. generic (private)
 	Possibly introduce use of placeholders.   
 	This fix will be highly invasive.  
+
+Once placeholders are distinguished from actualy collections, 
+	also introduce packed_array collections (in addition to the 
+	current sparse-only representations), which is useful for compacting
+	deduced dense arrays post-unrolling.  
+	Packed arrays: able to compute key from position! (huge save)
+	(prerequisite random iterable container in internal representation)
+	Compare the structure size difference.
+	Exclude those with non-zero offset?
+	IDEA: use a flat sorted-vector representation of map,
+		and perform lookups using std::binary_search (lexicographical)
+		on random-access iterators.  
+		Should take far less memory than red-black tree (true map).
 
 diagnostic statistics:
 	memory self-profiling statistics from pooled-allocators, etc.
@@ -275,6 +290,17 @@ hackt diff (or objdiff):
 	also consider implementing this as a script in combination
 		with executable.  
 		run unix diff first, etc...
+
+REWORK:
+	give developers option whether or not to
+	derive classes safely from a common 'persistent' base?
+	Is there an alternative to remove this level of inheritance? of course.
+	Eventually replace current scheme with single-pass 
+	serialization without having to load entire binary in memory...
+	Will save considerable memory.
+
+dictionaries:
+	for strings and common value compression.  
 
 (200601--)
 Need consistency checking between different ways of generating

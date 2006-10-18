@@ -3,7 +3,7 @@
 	Contains definition of nested, specialized class_traits types.  
 	This file came from "Object/art_object_inst_stmt_param.h"
 		in a previous life.  
-	$Id: param_instantiation_statement.h,v 1.9 2006/03/15 04:38:24 fang Exp $
+	$Id: param_instantiation_statement.h,v 1.10 2006/10/18 01:20:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_PARAM_INSTANTIATION_STATEMENT_H__
@@ -11,12 +11,18 @@
 
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#endif
 #include "Object/unroll/empty_instantiation_statement_type_ref_base.h"
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/pbool_traits.h"
 #include "Object/traits/preal_traits.h"
 #include "Object/type/param_type_reference.h"
 #include "Object/expr/const_param_expr_list.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#endif
 
 namespace HAC {
 namespace entity {
@@ -50,14 +56,25 @@ protected:
 
 	~instantiation_statement_type_ref_base() { }
 
+#if !REF_COUNT_INSTANCE_MANAGEMENT
 	template <class InstStmtType>
 	static
 	void
 	attach_initial_instantiation_statement(
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_placeholder_type& v,
+#else
 			value_collection_generic_type& v,
-			const never_ptr<const InstStmtType> i) {
+#endif
+#if REF_COUNT_INSTANCE_MANAGEMENT
+			const count_ptr<const InstStmtType>& i
+#else
+			const never_ptr<const InstStmtType> i
+#endif
+			) {
 		v.attach_initial_instantiation_statement(i);
 	}
+#endif
 
 	const type_ref_ptr_type&
 	get_type(void) const { return built_in_type_ptr; }
@@ -71,7 +88,8 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -79,7 +97,8 @@ protected:
 	static
 	good_bool
 	commit_type_first_time(value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no-op
 		return good_bool(true);
 	}
@@ -106,7 +125,12 @@ class class_traits<preal_tag>::instantiation_statement_type_ref_base :
 	// has no type member!
 	// consider importing built-in type ref as a static member
 public:
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	typedef	count_ptr<const dynamic_param_expr_list>
+						const_relaxed_args_type;
+#else
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+#endif
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
 	// probably null_parameter_type
@@ -132,8 +156,17 @@ protected:
 	static
 	void
 	attach_initial_instantiation_statement(
+#if USE_INSTANCE_PLACEHOLDERS
+		instance_placeholder_type& v,
+#else
 		value_collection_generic_type& v,
-		const never_ptr<const InstStmtType> i) {
+#endif
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const InstStmtType>& i
+#else
+		const never_ptr<const InstStmtType> i
+#endif
+		) {
 		v.attach_initial_instantiation_statement(i);
 	}
 
@@ -149,7 +182,8 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -157,7 +191,8 @@ protected:
 	static
 	good_bool
 	commit_type_first_time(value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no-op
 		return good_bool(true);
 	}
@@ -186,7 +221,12 @@ class class_traits<pbool_tag>::instantiation_statement_type_ref_base :
 public:
 	typedef	traits_type::instance_collection_parameter_type
 					instance_collection_parameter_type;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	typedef	count_ptr<const dynamic_param_expr_list>
+						const_relaxed_args_type;
+#else
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
+#endif
 protected:
 	typedef	count_ptr<const const_param_expr_list>
 						instance_relaxed_actuals_type;
@@ -209,8 +249,17 @@ protected:
 	static
 	void
 	attach_initial_instantiation_statement(
+#if USE_INSTANCE_PLACEHOLDERS
+		instance_placeholder_type& v,
+#else
 		value_collection_generic_type& v,
-		const never_ptr<const InstStmtType> i) {
+#endif
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const InstStmtType>& i
+#else
+		const never_ptr<const InstStmtType> i
+#endif
+		) {
 		v.attach_initial_instantiation_statement(i);
 	}
 
@@ -226,7 +275,8 @@ protected:
 	static
 	good_bool
 	commit_type_check(const value_collection_generic_type& v, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no need to type-check
 		return good_bool(true);
 	}
@@ -234,7 +284,8 @@ protected:
 	static
 	good_bool
 	commit_type_first_time(value_collection_generic_type&, 
-			const instance_collection_parameter_type&) {
+			const instance_collection_parameter_type&, 
+			const footprint& top) {
 		// no-op
 		return good_bool(true);
 	}

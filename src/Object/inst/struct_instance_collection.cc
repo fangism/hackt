@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_struct.cc"
 		in a previous life.  
-	$Id: struct_instance_collection.cc,v 1.9 2006/02/26 05:19:58 fang Exp $
+	$Id: struct_instance_collection.cc,v 1.10 2006/10/18 01:19:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_STRUCT_INSTANCE_COLLECTION_CC__
@@ -25,6 +25,9 @@
 #include "Object/persistent_type_hash.h"
 
 #include "Object/inst/instance_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.tcc"
+#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/general_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -39,6 +42,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_3D, "struct_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::struct_array_4D, "struct_array_4D")
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::struct_instance_placeholder, 
+	STRUCT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::struct_scalar, STRUCT_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -57,6 +65,9 @@ namespace entity {
 //=============================================================================
 // explicit template class instantiations
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class instance_placeholder<datastruct_tag>;
+#endif
 template class state_instance<datastruct_tag>;
 template class instance_pool<state_instance<datastruct_tag> >;
 template class instance_alias_info<datastruct_tag>;

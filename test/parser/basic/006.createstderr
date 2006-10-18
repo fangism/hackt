@@ -4,24 +4,27 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	103
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	namespc_	0	#HEAD#	#TAIL#	39
-	11	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	881
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	16	##ADDR##	dintcoll	2	#HEAD#	#TAIL#	294
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	34
+	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	39
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	37
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	35
+	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	21	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	85
+	22	##ADDR##	dintcoll	2	#HEAD#	#TAIL#	275
+	23	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	860
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -38,139 +41,143 @@ In namespace "", we have: {
       0 definitions
       0 typedefs
       Instances:
-        fancier_array = int<32>^3 fancier_array
-          unrolled indices: {
-            [0][0][1] = ::more_arrays::fancier_array[0][0][1] (6) 
-            [0][0][2] = ::more_arrays::fancier_array[0][0][2] (7) 
-            [0][1][1] = ::more_arrays::fancier_array[0][1][1] (8) 
-            [0][1][2] = ::more_arrays::fancier_array[0][1][2] (9) 
-            [0][2][1] = ::more_arrays::fancier_array[0][2][1] (10) 
-            [0][2][2] = ::more_arrays::fancier_array[0][2][2] (11) 
-            [0][3][1] = ::more_arrays::fancier_array[0][3][1] (12) 
-            [0][3][2] = ::more_arrays::fancier_array[0][3][2] (13) 
-            [0][4][1] = ::more_arrays::fancier_array[0][4][1] (14) 
-            [0][4][2] = ::more_arrays::fancier_array[0][4][2] (15) 
-            [1][0][1] = ::more_arrays::fancier_array[1][0][1] (16) 
-            [1][0][2] = ::more_arrays::fancier_array[1][0][2] (17) 
-            [1][1][1] = ::more_arrays::fancier_array[1][1][1] (18) 
-            [1][1][2] = ::more_arrays::fancier_array[1][1][2] (19) 
-            [1][2][1] = ::more_arrays::fancier_array[1][2][1] (20) 
-            [1][2][2] = ::more_arrays::fancier_array[1][2][2] (21) 
-            [1][3][1] = ::more_arrays::fancier_array[1][3][1] (22) 
-            [1][3][2] = ::more_arrays::fancier_array[1][3][2] (23) 
-            [1][4][1] = ::more_arrays::fancier_array[1][4][1] (24) 
-            [1][4][2] = ::more_arrays::fancier_array[1][4][2] (25) 
-            [2][0][1] = ::more_arrays::fancier_array[2][0][1] (26) 
-            [2][0][2] = ::more_arrays::fancier_array[2][0][2] (27) 
-            [2][1][1] = ::more_arrays::fancier_array[2][1][1] (28) 
-            [2][1][2] = ::more_arrays::fancier_array[2][1][2] (29) 
-            [2][2][1] = ::more_arrays::fancier_array[2][2][1] (30) 
-            [2][2][2] = ::more_arrays::fancier_array[2][2][2] (31) 
-            [2][3][1] = ::more_arrays::fancier_array[2][3][1] (32) 
-            [2][3][2] = ::more_arrays::fancier_array[2][3][2] (33) 
-            [2][4][1] = ::more_arrays::fancier_array[2][4][1] (34) 
-            [2][4][2] = ::more_arrays::fancier_array[2][4][2] (35) 
-            [3][0][1] = ::more_arrays::fancier_array[3][0][1] (36) 
-            [3][0][2] = ::more_arrays::fancier_array[3][0][2] (37) 
-            [3][1][1] = ::more_arrays::fancier_array[3][1][1] (38) 
-            [3][1][2] = ::more_arrays::fancier_array[3][1][2] (39) 
-            [3][2][1] = ::more_arrays::fancier_array[3][2][1] (40) 
-            [3][2][2] = ::more_arrays::fancier_array[3][2][2] (41) 
-            [3][3][1] = ::more_arrays::fancier_array[3][3][1] (42) 
-            [3][3][2] = ::more_arrays::fancier_array[3][3][2] (43) 
-            [3][4][1] = ::more_arrays::fancier_array[3][4][1] (44) 
-            [3][4][2] = ::more_arrays::fancier_array[3][4][2] (45) 
-          }
-        fancy_array = int<32>^2 fancy_array
-          unrolled indices: {
-            [0][0] = ::more_arrays::fancy_array[0][0] (46) 
-            [0][1] = ::more_arrays::fancy_array[0][1] (47) 
-            [0][2] = ::more_arrays::fancy_array[0][2] (48) 
-            [1][0] = ::more_arrays::fancy_array[1][0] (49) 
-            [1][1] = ::more_arrays::fancy_array[1][1] (50) 
-            [1][2] = ::more_arrays::fancy_array[1][2] (51) 
-            [2][0] = ::more_arrays::fancy_array[2][0] (52) 
-            [2][1] = ::more_arrays::fancy_array[2][1] (53) 
-            [2][2] = ::more_arrays::fancy_array[2][2] (54) 
-            [3][0] = ::more_arrays::fancy_array[3][0] (55) 
-            [3][1] = ::more_arrays::fancy_array[3][1] (56) 
-            [3][2] = ::more_arrays::fancy_array[3][2] (57) 
-            [4][0] = ::more_arrays::fancy_array[4][0] (58) 
-            [4][1] = ::more_arrays::fancy_array[4][1] (59) 
-            [4][2] = ::more_arrays::fancy_array[4][2] (60) 
-          }
+        fancier_array = int<32> more_arrays::fancier_array^3
+        fancy_array = int<32> more_arrays::fancy_array^2
     }
   Instances:
-    good_array = int<32>^1 good_array
-      unrolled indices: {
-        0 = ::good_array[0] (1) 
-        1 = ::good_array[1] (2) 
-        2 = ::good_array[2] (3) 
-        3 = ::good_array[3] (4) 
-        4 = ::good_array[4] (5) 
-      }
+    good_array = int<32> good_array^1
 }
 
-Created state:
-int instance pool:
-1	::good_array[0]
-2	::good_array[1]
-3	::good_array[2]
-4	::good_array[3]
-5	::good_array[4]
-6	::more_arrays::fancier_array[0][0][1]
-7	::more_arrays::fancier_array[0][0][2]
-8	::more_arrays::fancier_array[0][1][1]
-9	::more_arrays::fancier_array[0][1][2]
-10	::more_arrays::fancier_array[0][2][1]
-11	::more_arrays::fancier_array[0][2][2]
-12	::more_arrays::fancier_array[0][3][1]
-13	::more_arrays::fancier_array[0][3][2]
-14	::more_arrays::fancier_array[0][4][1]
-15	::more_arrays::fancier_array[0][4][2]
-16	::more_arrays::fancier_array[1][0][1]
-17	::more_arrays::fancier_array[1][0][2]
-18	::more_arrays::fancier_array[1][1][1]
-19	::more_arrays::fancier_array[1][1][2]
-20	::more_arrays::fancier_array[1][2][1]
-21	::more_arrays::fancier_array[1][2][2]
-22	::more_arrays::fancier_array[1][3][1]
-23	::more_arrays::fancier_array[1][3][2]
-24	::more_arrays::fancier_array[1][4][1]
-25	::more_arrays::fancier_array[1][4][2]
-26	::more_arrays::fancier_array[2][0][1]
-27	::more_arrays::fancier_array[2][0][2]
-28	::more_arrays::fancier_array[2][1][1]
-29	::more_arrays::fancier_array[2][1][2]
-30	::more_arrays::fancier_array[2][2][1]
-31	::more_arrays::fancier_array[2][2][2]
-32	::more_arrays::fancier_array[2][3][1]
-33	::more_arrays::fancier_array[2][3][2]
-34	::more_arrays::fancier_array[2][4][1]
-35	::more_arrays::fancier_array[2][4][2]
-36	::more_arrays::fancier_array[3][0][1]
-37	::more_arrays::fancier_array[3][0][2]
-38	::more_arrays::fancier_array[3][1][1]
-39	::more_arrays::fancier_array[3][1][2]
-40	::more_arrays::fancier_array[3][2][1]
-41	::more_arrays::fancier_array[3][2][2]
-42	::more_arrays::fancier_array[3][3][1]
-43	::more_arrays::fancier_array[3][3][2]
-44	::more_arrays::fancier_array[3][4][1]
-45	::more_arrays::fancier_array[3][4][2]
-46	::more_arrays::fancy_array[0][0]
-47	::more_arrays::fancy_array[0][1]
-48	::more_arrays::fancy_array[0][2]
-49	::more_arrays::fancy_array[1][0]
-50	::more_arrays::fancy_array[1][1]
-51	::more_arrays::fancy_array[1][2]
-52	::more_arrays::fancy_array[2][0]
-53	::more_arrays::fancy_array[2][1]
-54	::more_arrays::fancy_array[2][2]
-55	::more_arrays::fancy_array[3][0]
-56	::more_arrays::fancy_array[3][1]
-57	::more_arrays::fancy_array[3][2]
-58	::more_arrays::fancy_array[4][0]
-59	::more_arrays::fancy_array[4][1]
-60	::more_arrays::fancy_array[4][2]
-
+footprint: {
+  good_array = int<32>^1
+    {
+      0 = good_array[0] (1) 
+      1 = good_array[1] (2) 
+      2 = good_array[2] (3) 
+      3 = good_array[3] (4) 
+      4 = good_array[4] (5) 
+    }
+  more_arrays::fancier_array = int<32>^3
+    {
+      [0][0][1] = more_arrays::fancier_array[0][0][1] (21) 
+      [0][0][2] = more_arrays::fancier_array[0][0][2] (22) 
+      [0][1][1] = more_arrays::fancier_array[0][1][1] (23) 
+      [0][1][2] = more_arrays::fancier_array[0][1][2] (24) 
+      [0][2][1] = more_arrays::fancier_array[0][2][1] (25) 
+      [0][2][2] = more_arrays::fancier_array[0][2][2] (26) 
+      [0][3][1] = more_arrays::fancier_array[0][3][1] (27) 
+      [0][3][2] = more_arrays::fancier_array[0][3][2] (28) 
+      [0][4][1] = more_arrays::fancier_array[0][4][1] (29) 
+      [0][4][2] = more_arrays::fancier_array[0][4][2] (30) 
+      [1][0][1] = more_arrays::fancier_array[1][0][1] (31) 
+      [1][0][2] = more_arrays::fancier_array[1][0][2] (32) 
+      [1][1][1] = more_arrays::fancier_array[1][1][1] (33) 
+      [1][1][2] = more_arrays::fancier_array[1][1][2] (34) 
+      [1][2][1] = more_arrays::fancier_array[1][2][1] (35) 
+      [1][2][2] = more_arrays::fancier_array[1][2][2] (36) 
+      [1][3][1] = more_arrays::fancier_array[1][3][1] (37) 
+      [1][3][2] = more_arrays::fancier_array[1][3][2] (38) 
+      [1][4][1] = more_arrays::fancier_array[1][4][1] (39) 
+      [1][4][2] = more_arrays::fancier_array[1][4][2] (40) 
+      [2][0][1] = more_arrays::fancier_array[2][0][1] (41) 
+      [2][0][2] = more_arrays::fancier_array[2][0][2] (42) 
+      [2][1][1] = more_arrays::fancier_array[2][1][1] (43) 
+      [2][1][2] = more_arrays::fancier_array[2][1][2] (44) 
+      [2][2][1] = more_arrays::fancier_array[2][2][1] (45) 
+      [2][2][2] = more_arrays::fancier_array[2][2][2] (46) 
+      [2][3][1] = more_arrays::fancier_array[2][3][1] (47) 
+      [2][3][2] = more_arrays::fancier_array[2][3][2] (48) 
+      [2][4][1] = more_arrays::fancier_array[2][4][1] (49) 
+      [2][4][2] = more_arrays::fancier_array[2][4][2] (50) 
+      [3][0][1] = more_arrays::fancier_array[3][0][1] (51) 
+      [3][0][2] = more_arrays::fancier_array[3][0][2] (52) 
+      [3][1][1] = more_arrays::fancier_array[3][1][1] (53) 
+      [3][1][2] = more_arrays::fancier_array[3][1][2] (54) 
+      [3][2][1] = more_arrays::fancier_array[3][2][1] (55) 
+      [3][2][2] = more_arrays::fancier_array[3][2][2] (56) 
+      [3][3][1] = more_arrays::fancier_array[3][3][1] (57) 
+      [3][3][2] = more_arrays::fancier_array[3][3][2] (58) 
+      [3][4][1] = more_arrays::fancier_array[3][4][1] (59) 
+      [3][4][2] = more_arrays::fancier_array[3][4][2] (60) 
+    }
+  more_arrays::fancy_array = int<32>^2
+    {
+      [0][0] = more_arrays::fancy_array[0][0] (6) 
+      [0][1] = more_arrays::fancy_array[0][1] (7) 
+      [0][2] = more_arrays::fancy_array[0][2] (8) 
+      [1][0] = more_arrays::fancy_array[1][0] (9) 
+      [1][1] = more_arrays::fancy_array[1][1] (10) 
+      [1][2] = more_arrays::fancy_array[1][2] (11) 
+      [2][0] = more_arrays::fancy_array[2][0] (12) 
+      [2][1] = more_arrays::fancy_array[2][1] (13) 
+      [2][2] = more_arrays::fancy_array[2][2] (14) 
+      [3][0] = more_arrays::fancy_array[3][0] (15) 
+      [3][1] = more_arrays::fancy_array[3][1] (16) 
+      [3][2] = more_arrays::fancy_array[3][2] (17) 
+      [4][0] = more_arrays::fancy_array[4][0] (18) 
+      [4][1] = more_arrays::fancy_array[4][1] (19) 
+      [4][2] = more_arrays::fancy_array[4][2] (20) 
+    }
+  Created state:
+  int instance pool:
+  1	good_array[0]
+  2	good_array[1]
+  3	good_array[2]
+  4	good_array[3]
+  5	good_array[4]
+  6	more_arrays::fancy_array[0][0]
+  7	more_arrays::fancy_array[0][1]
+  8	more_arrays::fancy_array[0][2]
+  9	more_arrays::fancy_array[1][0]
+  10	more_arrays::fancy_array[1][1]
+  11	more_arrays::fancy_array[1][2]
+  12	more_arrays::fancy_array[2][0]
+  13	more_arrays::fancy_array[2][1]
+  14	more_arrays::fancy_array[2][2]
+  15	more_arrays::fancy_array[3][0]
+  16	more_arrays::fancy_array[3][1]
+  17	more_arrays::fancy_array[3][2]
+  18	more_arrays::fancy_array[4][0]
+  19	more_arrays::fancy_array[4][1]
+  20	more_arrays::fancy_array[4][2]
+  21	more_arrays::fancier_array[0][0][1]
+  22	more_arrays::fancier_array[0][0][2]
+  23	more_arrays::fancier_array[0][1][1]
+  24	more_arrays::fancier_array[0][1][2]
+  25	more_arrays::fancier_array[0][2][1]
+  26	more_arrays::fancier_array[0][2][2]
+  27	more_arrays::fancier_array[0][3][1]
+  28	more_arrays::fancier_array[0][3][2]
+  29	more_arrays::fancier_array[0][4][1]
+  30	more_arrays::fancier_array[0][4][2]
+  31	more_arrays::fancier_array[1][0][1]
+  32	more_arrays::fancier_array[1][0][2]
+  33	more_arrays::fancier_array[1][1][1]
+  34	more_arrays::fancier_array[1][1][2]
+  35	more_arrays::fancier_array[1][2][1]
+  36	more_arrays::fancier_array[1][2][2]
+  37	more_arrays::fancier_array[1][3][1]
+  38	more_arrays::fancier_array[1][3][2]
+  39	more_arrays::fancier_array[1][4][1]
+  40	more_arrays::fancier_array[1][4][2]
+  41	more_arrays::fancier_array[2][0][1]
+  42	more_arrays::fancier_array[2][0][2]
+  43	more_arrays::fancier_array[2][1][1]
+  44	more_arrays::fancier_array[2][1][2]
+  45	more_arrays::fancier_array[2][2][1]
+  46	more_arrays::fancier_array[2][2][2]
+  47	more_arrays::fancier_array[2][3][1]
+  48	more_arrays::fancier_array[2][3][2]
+  49	more_arrays::fancier_array[2][4][1]
+  50	more_arrays::fancier_array[2][4][2]
+  51	more_arrays::fancier_array[3][0][1]
+  52	more_arrays::fancier_array[3][0][2]
+  53	more_arrays::fancier_array[3][1][1]
+  54	more_arrays::fancier_array[3][1][2]
+  55	more_arrays::fancier_array[3][2][1]
+  56	more_arrays::fancier_array[3][2][2]
+  57	more_arrays::fancier_array[3][3][1]
+  58	more_arrays::fancier_array[3][3][2]
+  59	more_arrays::fancier_array[3][4][1]
+  60	more_arrays::fancier_array[3][4][2]
+}

@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition_base.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_base.h,v 1.5 2006/01/22 18:19:37 fang Exp $
+	$Id: process_definition_base.h,v 1.6 2006/10/18 01:19:13 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_BASE_H__

@@ -4,13 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	3	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	6	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	pboolcol	2	#HEAD#	#TAIL#	65
+	9	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	12	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
@@ -38,6 +38,9 @@ Persistent Object Manager text dump:
 	34	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	36	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	30
+	38	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	30
+	39	##ADDR##	pboolcol	2	#HEAD#	#TAIL#	56
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -47,22 +50,27 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    x = pbool^1 x
-      unrolled index-value pairs: {
-        0 = 0
-        1 = 1
-      }
-    y = pbool^1 y
-      unrolled index-value pairs: {
-        0 = 1
-        1 = 0
-      }
-    z = pbool^2 z
-      unrolled index-value pairs: {
-        [0][0] = 0
-        [0][1] = 1
-        [1][0] = 1
-        [1][1] = 0
-      }
+    x = pbool<> x^1
+    y = pbool<> y^1
+    z = pbool<> z^2
 }
 
+footprint: {
+  x = pbool^1
+    unrolled index-value pairs: {
+      0 = 0
+      1 = 1
+    }
+  y = pbool^1
+    unrolled index-value pairs: {
+      0 = 1
+      1 = 0
+    }
+  z = pbool^2
+    unrolled index-value pairs: {
+      [0][0] = 0
+      [0][1] = 1
+      [1][0] = 1
+      [1][1] = 0
+    }
+}

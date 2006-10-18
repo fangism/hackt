@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: meta_index_list.h,v 1.7 2006/02/21 04:48:23 fang Exp $
+	$Id: meta_index_list.h,v 1.8 2006/10/18 01:19:19 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_META_INDEX_LIST_H__
@@ -11,6 +11,7 @@
 
 #include "util/persistent.h"
 #include "util/memory/pointer_classes_fwd.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -18,6 +19,10 @@ namespace entity {
 class const_index_list;
 class unroll_context;
 struct expr_dump_context;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+class template_formals_manager;
+class dynamic_param_expr_list;
+#endif
 using std::ostream;
 using util::persistent;
 using util::memory::count_ptr;
@@ -56,11 +61,13 @@ virtual	size_t
 virtual	size_t
 	dimensions_collapsed(void) const = 0;
 
+#if ENABLE_STATIC_ANALYSIS
 virtual	bool
 	may_be_initialized(void) const = 0;
 
 virtual	bool
 	must_be_initialized(void) const = 0;
+#endif
 
 virtual	bool
 	is_static_constant(void) const = 0;
@@ -68,8 +75,10 @@ virtual	bool
 virtual	bool
 	is_relaxed_formal_dependent(void) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	const_index_list
 	resolve_index_list(void) const = 0;
+#endif
 
 	static
 	count_ptr<const const_index_list>
@@ -79,9 +88,15 @@ virtual	const_index_list
 virtual	const_index_list
 	unroll_resolve_indices(const unroll_context&) const = 0;
 
-#if 0
-virtual	bool
-	resolve_multikey(excl_ptr<multikey_index_type>& k) const = 0;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+#define	SUBSTITUTE_DEFAULT_PARAMETERS_INDEX_LIST_PROTO			\
+	count_ptr<const meta_index_list>				\
+	substitute_default_positional_parameters(			\
+		const template_formals_manager&, 			\
+		const dynamic_param_expr_list&,				\
+		const count_ptr<const meta_index_list>&) const
+
+virtual	SUBSTITUTE_DEFAULT_PARAMETERS_INDEX_LIST_PROTO = 0;
 #endif
 
 virtual	bool

@@ -2,7 +2,7 @@
 	\file "Object/traits/enum_traits.h"
 	Traits and policies for enum data types.  
 	This file used to be "Object/art_object_enum_traits.h".
-	$Id: enum_traits.h,v 1.12 2006/06/26 01:46:26 fang Exp $
+	$Id: enum_traits.h,v 1.13 2006/10/18 01:19:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_ENUM_TRAITS_H__
@@ -45,6 +45,11 @@ struct class_traits<enum_tag> {
 
 	typedef	enum_instance_collection	instance_collection_generic_type;
 	typedef	datatype_instance_collection	instance_collection_parent_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	datatype_instance_placeholder
+					instance_placeholder_parent_type;
+	typedef	enum_instance_placeholder	instance_placeholder_type;
+#endif
 	typedef	parameterless_collection_type_manager<tag_type>
 					collection_type_manager_parent_type;
 	template <size_t D>
@@ -77,6 +82,10 @@ struct class_traits<enum_tag> {
 	typedef	data_type_reference		type_ref_type;
 	typedef	fundamental_type_reference	type_ref_parent_type;
 	typedef	count_ptr<const type_ref_type>	type_ref_ptr_type;
+#if USE_RESOLVED_DATA_TYPES
+	typedef	canonical_generic_datatype	resolved_type_ref_type;
+	// pointer not necessary
+#endif
 
 	enum { print_cflat_leaf = false };
 

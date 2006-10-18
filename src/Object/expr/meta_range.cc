@@ -3,7 +3,7 @@
 	Meta range expression class definitions.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_range.cc,v 1.12 2006/06/26 01:46:02 fang Exp $
+ 	$Id: meta_range.cc,v 1.13 2006/10/18 01:19:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_RANGE_CC__
@@ -190,6 +190,7 @@ pint_range::dump(ostream& o, const expr_dump_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 pint_range::may_be_initialized(void) const {
 	return lower->may_be_initialized() && upper->may_be_initialized();
@@ -200,6 +201,7 @@ bool
 pint_range::must_be_initialized(void) const {
 	return lower->must_be_initialized() && upper->must_be_initialized();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -253,6 +255,7 @@ pint_range::unroll_resolve_range(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 good_bool
 pint_range::resolve_range(const_range& r) const {
 	if (!lower->resolve_value(r.first).good)
@@ -261,6 +264,7 @@ pint_range::resolve_range(const_range& r) const {
 		return good_bool(false);
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_index>
@@ -274,6 +278,33 @@ pint_range::unroll_resolve_copy(const unroll_context& c,
 		return count_ptr<const const_index>(NULL);
 	}
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+count_ptr<const meta_index_expr>
+pint_range::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_expr>& i) const {
+	typedef	count_ptr<const meta_index_expr>	return_type;
+	NEVER_NULL(i);
+	INVARIANT(i == this);
+	const count_ptr<const pint_expr>
+		lb(lower->substitute_default_positional_parameters(f, e, lower)),
+		ub(upper->substitute_default_positional_parameters(f, e, upper));
+	if (lb && ub) {
+		if (lb == lower && ub == upper) {
+			// return copy of self, unsubstituted
+			return i;
+		} else {
+			// something was different, return new range
+			return return_type(new this_type(lb, ub));
+		}
+	} else {
+		return return_type(NULL);
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -523,11 +554,13 @@ const_range::unroll_resolve_range(const unroll_context&, const_range& r) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 good_bool
 const_range::resolve_range(const_range& r) const {
 	r = *this;
 	return good_bool(true);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -538,6 +571,7 @@ const_range::unroll_resolve_index(const unroll_context& c) const {
 	return count_ptr<const_index>(new const_range(*this));
 }
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	\return deep copy of this constant range, always succeeds.  
  */
@@ -545,6 +579,7 @@ count_ptr<const_index>
 const_range::resolve_index(void) const {
 	return count_ptr<const_index>(new const_range(*this));
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const const_index>
@@ -553,6 +588,19 @@ const_range::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p.is_a<const const_range>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+count_ptr<const meta_index_expr>
+const_range::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_expr>& i) const {
+	NEVER_NULL(i);
+	INVARIANT(i == this);
+	return i;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -613,6 +661,7 @@ meta_range_expr::unroll_resolve_index(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	\return a resolve constant range, or NULL if resolution fails.  
  */
@@ -624,6 +673,7 @@ meta_range_expr::resolve_index(void) const {
 		return_type(new const_range(tmp)) :
 		return_type(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

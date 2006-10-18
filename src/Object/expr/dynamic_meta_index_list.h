@@ -3,7 +3,7 @@
 	Dynamic meta parameter index list class.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_meta_index_list.h,v 1.7 2006/02/21 04:48:23 fang Exp $
+	$Id: dynamic_meta_index_list.h,v 1.8 2006/10/18 01:19:18 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_META_INDEX_LIST_H__
@@ -25,16 +25,21 @@ using util::memory::count_ptr;
 	Elements of this index list are no necessarily static constants.  
  */
 class dynamic_meta_index_list : public meta_index_list, 
-		private vector<count_ptr<meta_index_expr> > {
+		private vector<count_ptr<const meta_index_expr> > {
 	typedef	dynamic_meta_index_list			this_type;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	struct positional_substituter;
+#endif
 protected:
-	typedef	vector<count_ptr<meta_index_expr> >	parent_type;
+	typedef	vector<count_ptr<const meta_index_expr> >	parent_type;
 public:
 	typedef	parent_type::value_type			value_type;
+	typedef	parent_type::const_reference		const_reference;
 	typedef parent_type::iterator			iterator;
 	typedef parent_type::const_iterator		const_iterator;
 	typedef parent_type::reverse_iterator		reverse_iterator;
 	typedef parent_type::const_reverse_iterator	const_reverse_iterator;
+	typedef parent_type::allocator_type		allocator_type;
 public:
 	dynamic_meta_index_list();
 
@@ -55,7 +60,7 @@ public:
 	using parent_type::rend;
 
 	void
-	push_back(const count_ptr<meta_index_expr>& i);
+	push_back(const value_type&);
 
 /** NOT THE SAME **/
 	size_t
@@ -64,11 +69,13 @@ public:
 	size_t
 	dimensions_collapsed(void) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	bool
 	is_static_constant(void) const;
@@ -76,8 +83,10 @@ public:
 	bool
 	is_relaxed_formal_dependent(void) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	const_index_list
 	resolve_index_list(void) const;
+#endif
 
 #if 0
 	bool
@@ -86,6 +95,10 @@ public:
 
 	const_index_list
 	unroll_resolve_indices(const unroll_context&) const;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_INDEX_LIST_PROTO;
+#endif
 
 	bool
 	must_be_equivalent_indices(const meta_index_list& ) const;

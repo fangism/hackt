@@ -6,18 +6,19 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
-	5	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	75
+	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	66
 	10	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	12	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	proccoll	1	#HEAD#	#TAIL#	75
-	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	proccoll	1	#HEAD#	#TAIL#	66
+	17	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -32,15 +33,14 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> x
-
+        x = foo<> bar::x^1
       unroll sequence: 
         foo<> x[0..1]
       footprint: {
-        process foo<>^1 x
-          unrolled indices: {
-            0 = ::bar::x[0] 
-            1 = ::bar::x[1] 
+        x = process foo<>^1
+          {
+            0 = bar::x[0] 
+            1 = bar::x[1] 
           }
       }
       }
@@ -54,12 +54,15 @@ In namespace "", we have: {
       }
 
   Instances:
-    poo = process bar<>^0 poo (instantiated) = ::poo (
-      process foo<>^1 x
-        unrolled indices: {
-          0 = ::poo.x[0] 
-          1 = ::poo.x[1] 
-        }
-    )
+    poo = bar<> poo
 }
 
+footprint: {
+  poo = process bar<>^0 = poo (
+    x = process foo<>^1
+      {
+        0 = poo.x[0] 
+        1 = poo.x[1] 
+      }
+  )
+}

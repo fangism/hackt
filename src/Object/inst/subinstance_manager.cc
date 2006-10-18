@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/subinstance_manager.cc"
 	Class implementation of the subinstance_manager.
-	$Id: subinstance_manager.cc,v 1.17 2006/04/24 00:28:06 fang Exp $
+	$Id: subinstance_manager.cc,v 1.18 2006/10/18 01:19:40 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -14,6 +14,9 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/port_context.h"
 #include "Object/common/dump_flags.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#endif
 #include "common/ICE.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -59,7 +62,13 @@ if (subinstance_array.empty()) {
 	const const_iterator e(subinstance_array.end());
 	for ( ; i!=e; i++) {
 		NEVER_NULL(*i);
+#if USE_INSTANCE_PLACEHOLDERS
+		// unqualified name is sufficient
+		o << auto_indent << (*i)->get_name() << " = ";
+		(*i)->dump(o, df) << endl;
+#else
 		(*i)->dump(o << auto_indent, df) << endl;
+#endif
 	}
 	}
 	return o << auto_indent << ')';
@@ -89,43 +98,12 @@ subinstance_manager::reserve(const size_t s) {
  */
 subinstance_manager::value_type
 subinstance_manager::lookup_port_instance(
-		const instance_collection_type& i) const {
+		const lookup_arg_type& i) const {
 	STACKTRACE_VERBOSE;
 	const size_t index = i.is_port_formal();
 	if (index > subinstance_array.size()) {
 	ICE(cerr, 
 		cerr << "got port index of " << index
-			<< " when limit is " << subinstance_array.size()
-			<< endl;
-		i.dump(cerr << "\twhile looking up: ", 
-			dump_flags::verbose) << endl;
-//		cerr << "Here\'s the complete dump of this subinstance set: "
-//			"at " << this << endl;
-//		dump(cerr) << endl;
-	)
-	}
-	INVARIANT(index);
-	INVARIANT(index <= subinstance_array.size());
-	return subinstance_array[index-1];
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	This is used to lookup any instance member, public or private.
-	Q: are private instances allocated space in the subinstance array?
-	NOTE: this code is a dead-end, do NOT call this.  
-	Reason: cannot lookup the subinstance index of a private instance
-		using the unroll/create information.  Such information
-		is only available after global allocation.  
- */
-subinstance_manager::value_type
-subinstance_manager::lookup_member_instance(
-		const instance_collection_type& i) const {
-	STACKTRACE_VERBOSE;
-	const size_t index = i.is_member_instance();
-	if (index > subinstance_array.size()) {
-	ICE(cerr, 
-		cerr << "got member index of " << index
 			<< " when limit is " << subinstance_array.size()
 			<< endl;
 		i.dump(cerr << "\twhile looking up: ", 
@@ -207,25 +185,6 @@ subinstance_manager::connect_port_aliases_recursive(this_type& r) {
 			// already have error message?
 			return good_bool(false);
 		}	// else good to continue
-	}
-	return good_bool(true);
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Copied from footprint::create_dependent_types
-	and module::create_dependent_types.
-	TODO: rename call to create_dependent_types...
- */
-good_bool
-subinstance_manager::replay_internal_aliases(void) const {
-	STACKTRACE_VERBOSE;
-	const_iterator i(subinstance_array.begin());
-	const const_iterator e(subinstance_array.end());
-	for ( ; i!=e ; i++) {
-		// creating dependent types also connects internal aliases
-		if (!(*i)->create_dependent_types().good)
-			return good_bool(false);
 	}
 	return good_bool(true);
 }

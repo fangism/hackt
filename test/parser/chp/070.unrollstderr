@@ -4,31 +4,32 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	221
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	217
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	15	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
 	16	##ADDR##	CHPassgn	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	25	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	25	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -41,17 +42,16 @@ In namespace "", we have: {
     assignme = process-definition (defined) assignme<
       pint<> W
       >(
-        int<::assignme::W> b
+        int<assignme::W> b
       )
       In definition "assignme", we have: {
       Parameters:
-        W = pint<> W
-        c = pint<> c
+        W = pint<> assignme::W
+        c = pint<> assignme::c
       Instances:
-        b = int<::assignme::W> b
+        b = int<assignme::W> assignme::b
       unroll sequence: 
-        pint<> W
-        int<::assignme::W> b
+        int<assignme::W> b
         pint<> c
       chp:
         concurrent: {
@@ -61,16 +61,19 @@ In namespace "", we have: {
         }
       footprint collection: {
         <8> {
-          pint^0 W value: ?
-          int<8>^0 b (instantiated) = ::assignme::b 
-          pint^0 c value: ?
+          W = pint^0 value: 8
+          b = int<8>^0 = assignme::b 
+          c = pint^0 value: ?
         }
       }
       }
 
   Instances:
-    X = process assignme<8>^0 X (instantiated) = ::X (
-      int<8>^0 b (instantiated) = ::X.b 
-    )
+    X = assignme<8> X
 }
 
+footprint: {
+  X = process assignme<8>^0 = X (
+    b = int<8>^0 = X.b 
+  )
+}

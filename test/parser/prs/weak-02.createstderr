@@ -5,16 +5,16 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	503
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	46
 	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -38,10 +38,10 @@ Persistent Object Manager text dump:
 	34	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	46
 	35	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
@@ -50,12 +50,13 @@ Persistent Object Manager text dump:
 	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	52	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	49	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	50	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	51	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	55	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -71,10 +72,10 @@ In namespace "", we have: {
       )
       In definition "weakness", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
-        c = bool<> c
-        d = bool<> d
+        a = bool<> weakness::a
+        b = bool<> weakness::b
+        c = bool<> weakness::c
+        d = bool<> weakness::d
       unroll sequence: 
         bool<> a
         bool<> b
@@ -86,15 +87,16 @@ In namespace "", we have: {
         c -> d- [after=20; weak=1; ]
         ~c -> d+ [after=20; weak=1; ]
       footprint: {
-        bool^0 a (instantiated) = ::weakness::a (1) 
-        bool^0 b (instantiated) = ::weakness::b (2) 
-        bool^0 c (instantiated) = ::weakness::c (3) 
-        bool^0 d (instantiated) = ::weakness::d (4) 
+        a = bool^0 = weakness::a (1) 
+        b = bool^0 = weakness::b (2) 
+        c = bool^0 = weakness::c (3) 
+        d = bool^0 = weakness::d (4) 
+        Created state:
         bool instance pool:
-        1	::weakness::a
-        2	::weakness::b
-        3	::weakness::c
-        4	::weakness::d
+        1	weakness::a
+        2	weakness::b
+        3	weakness::c
+        4	weakness::d
         resolved prs:
         a -> b- [weak=1; after=10; ]
         ~a -> b+ [weak=1; after=10; ]
@@ -104,16 +106,18 @@ In namespace "", we have: {
       }
 
   Instances:
-    xyz = process weakness<>^0 xyz (instantiated) = ::xyz (1) (
-      bool^0 a (instantiated) = ::xyz.a (1) 
-      bool^0 b (instantiated) = ::xyz.b (2) 
-    )
+    xyz = weakness<> xyz
 }
 
-Created state:
-process instance pool:
-1	::xyz
-bool instance pool:
-1	::xyz.a
-2	::xyz.b
-
+footprint: {
+  xyz = process weakness<>^0 = xyz (1) (
+    a = bool^0 = xyz.a (1) 
+    b = bool^0 = xyz.b (2) 
+  )
+  Created state:
+  process instance pool:
+  1	xyz
+  bool instance pool:
+  1	xyz.a
+  2	xyz.b
+}

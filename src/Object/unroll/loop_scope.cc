@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.9 2006/03/15 04:38:24 fang Exp $
+ 	$Id: loop_scope.cc,v 1.10 2006/10/18 01:20:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -17,6 +17,9 @@
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/const_range.h"
 #include "Object/inst/pint_value_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "OBject/inst/value_placeholder.h"
+#endif
 #include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
 #include "common/TODO.h"
@@ -96,6 +99,33 @@ loop_scope::unroll(const unroll_context& c) const {
 		// range is either empty or backwards
 		return good_bool(true);
 	}
+#if USE_INSTANCE_PLACEHOLDERS
+	// since we need a new lookup scope that uses
+	// a placeholder for the pint variable...
+	// new unroll_context lookup searches footprints
+	footprint f;
+	const count_ptr<pint_scalar>
+		var(initialize_footprint(f));
+	// create a temporary by unrolling the placeholder 
+	// induction variable into the footprint as an actual variable
+	pint_value_type& p(var->get_instance().value);
+		// acquire direct reference
+#if 0
+	unroll_context cc(&f);
+	cc.chain_context(c);
+#else
+	const unroll_context cc(&f, c);
+#endif
+	for (p = min; p <= max; ++p) {
+		if (!parent_type::unroll(cc).good) {
+			cerr << "Error resolving loop-body during iteration: ";
+			ind_var->dump_qualified_name(cerr,
+				dump_flags::verbose)
+				<< " = " << p << endl;
+			return good_bool(false);
+		}
+	}
+#else
 	template_formals_manager tfm;
 	const never_ptr<const pint_scalar> pvc(&*ind_var);
 	tfm.add_strict_template_formal(pvc);
@@ -131,6 +161,7 @@ loop_scope::unroll(const unroll_context& c) const {
 			return good_bool(false);
 		}
 	}
+#endif
 	return good_bool(true);
 }
 

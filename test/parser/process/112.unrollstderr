@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
-	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -19,9 +19,9 @@ Persistent Object Manager text dump:
 	15	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	105
+	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	96
 	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
-	20	##ADDR##	proccoll	2	#HEAD#	#TAIL#	33
+	20	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	21	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	22	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
@@ -34,12 +34,13 @@ Persistent Object Manager text dump:
 	30	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	proccoll	2	#HEAD#	#TAIL#	145
+	33	##ADDR##	proccoll	2	#HEAD#	#TAIL#	136
 	34	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
-	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	37	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	38	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	39	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -53,18 +54,17 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> x
-
+        x = foo<> bar::x^2
       unroll sequence: 
         foo<> x[0..1][0..1]
         x[0][1] = x[1][0];
       footprint: {
-        process foo<>^2 x
-          unrolled indices: {
-            [0][0] = ::bar::x[0][0] 
-            [0][1] = ::bar::x[1][0] 
-            [1][0] = ::bar::x[1][0] 
-            [1][1] = ::bar::x[1][1] 
+        x = process foo<>^2
+          {
+            [0][0] = bar::x[0][0] 
+            [0][1] = bar::x[1][0] 
+            [1][0] = bar::x[1][0] 
+            [1][1] = bar::x[1][1] 
           }
       }
       }
@@ -73,23 +73,25 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> a
-
+        a = bool<> foo::a^2
       unroll sequence: 
         bool<> a[0..1][0..1]
         a[0][0] = a[1][1];
       footprint: {
-        bool^2 a
-          unrolled indices: {
-            [0][0] = ::foo::a[1][1] 
-            [0][1] = ::foo::a[0][1] 
-            [1][0] = ::foo::a[1][0] 
-            [1][1] = ::foo::a[1][1] 
+        a = bool^2
+          {
+            [0][0] = foo::a[1][1] 
+            [0][1] = foo::a[0][1] 
+            [1][0] = foo::a[1][0] 
+            [1][1] = foo::a[1][1] 
           }
       }
       }
 
   Instances:
-    poo = process bar<>^0 poo (instantiated) = ::poo 
+    poo = bar<> poo
 }
 
+footprint: {
+  poo = process bar<>^0 = poo 
+}

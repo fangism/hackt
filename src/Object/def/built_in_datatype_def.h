@@ -2,7 +2,7 @@
 	\file "Object/def/built_in_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: built_in_datatype_def.h,v 1.8 2006/06/02 20:15:15 fang Exp $
+	$Id: built_in_datatype_def.h,v 1.9 2006/10/18 01:19:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_BUILT_IN_DATATYPE_DEF_H__
@@ -68,8 +68,8 @@ public:
 
 	MAKE_CANONICAL_DATA_TYPE_PROTO;
 
-	never_ptr<const instance_collection_base>
-	add_template_formal(excl_ptr<instance_collection_base>& f);
+	never_ptr<const value_placeholder_type>
+	add_template_formal(excl_ptr<value_placeholder_type>& f);
 
 	good_bool
 	require_signature_match(const never_ptr<const definition_base> d) const

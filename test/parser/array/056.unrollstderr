@@ -4,19 +4,19 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	4	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	5	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	9	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
-	11	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
-	12	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	3	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	8	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
+	10	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	13	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
 	16	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
 	18	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	21
@@ -25,6 +25,10 @@ Persistent Object Manager text dump:
 	21	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	21
 	22	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	23	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	25	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	27	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -34,9 +38,15 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    w = pbool^0 w (init = false) value: 0
-    x = pbool^0 x value: 1
-    y = pbool^0 y value: 0
-    z = pbool^0 z (init = true) value: 1
+    w = pbool<> w
+    x = pbool<> x
+    y = pbool<> y
+    z = pbool<> z
 }
 
+footprint: {
+  w = pbool^0 value: 0
+  x = pbool^0 value: 1
+  y = pbool^0 value: 0
+  z = pbool^0 value: 1
+}

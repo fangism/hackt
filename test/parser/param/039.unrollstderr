@@ -5,20 +5,26 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	194
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	35
-	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	31
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	12	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	35
-	13	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	67
-	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
-	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	31
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	18	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	56
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -32,25 +38,27 @@ In namespace "", we have: {
       )
       In definition "bogus", we have: {
       Parameters:
-        bar = pint<> bar
-
-        foo = pint<> foo (init = 3)
+        bar = pint<> bogus::bar^1
+        foo = pint<> bogus::foo
       unroll sequence: 
         pint<> foo
         foo = 3;
-        pint<> bar[0..2]
+        pint<> bar[0..foo-1]
       footprint: {
-        pint^0 foo value: 3
-        pint^1 bar
+        bar = pint^1
           unrolled index-value pairs: {
             0 = ?
             1 = ?
             2 = ?
           }
+        foo = pint^0 value: 3
       }
       }
 
   Instances:
-    x = process bogus<>^0 x (instantiated) = ::x 
+    x = bogus<> x
 }
 
+footprint: {
+  x = process bogus<>^0 = x 
+}

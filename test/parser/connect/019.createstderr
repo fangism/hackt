@@ -5,29 +5,53 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	141
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	5	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	proccoll	2	#HEAD#	#TAIL#	186
-	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	15	##ADDR##	proccoll	2	#HEAD#	#TAIL#	258
-	16	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	20	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
+	10	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	24	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	31	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	20
+	32	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	34	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	35	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	36	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	38	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	39	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	40	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	46	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	proccoll	2	#HEAD#	#TAIL#	174
+	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	49	##ADDR##	proccoll	2	#HEAD#	#TAIL#	246
+	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -37,8 +61,8 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    M = pint^0 M (init = 3) value: 3
-    N = pint^0 N (init = 2) value: 2
+    M = pint<> M
+    N = pint<> N
   Definitions:
     fang = process-definition (defined) fang(
       )
@@ -49,32 +73,37 @@ In namespace "", we have: {
       }
 
   Instances:
-    that = process fang<>^2 that
-      unrolled indices: {
-        [0][0] = ::that[0][0] (1) 
-        [0][1] = ::that[0][1] (2) 
-        [0][2] = ::that[0][2] (3) 
-        [1][0] = ::that[1][0] (4) 
-        [1][1] = ::that[1][1] (5) 
-        [1][2] = ::that[1][2] (6) 
-      }
-    this = process fang<>^2 this
-      unrolled indices: {
-        [0][0] = ::that[0][0] (1) 
-        [0][1] = ::that[0][1] (2) 
-        [0][2] = ::that[0][2] (3) 
-        [1][0] = ::that[1][0] (4) 
-        [1][1] = ::that[1][1] (5) 
-        [1][2] = ::that[1][2] (6) 
-      }
+    that = fang<> that^2
+    this = fang<> this^2
 }
 
-Created state:
-process instance pool:
-1	::that[0][0]
-2	::that[0][1]
-3	::that[0][2]
-4	::that[1][0]
-5	::that[1][1]
-6	::that[1][2]
-
+footprint: {
+  M = pint^0 value: 3
+  N = pint^0 value: 2
+  that = process fang<>^2
+    {
+      [0][0] = that[0][0] (1) 
+      [0][1] = that[0][1] (2) 
+      [0][2] = that[0][2] (3) 
+      [1][0] = that[1][0] (4) 
+      [1][1] = that[1][1] (5) 
+      [1][2] = that[1][2] (6) 
+    }
+  this = process fang<>^2
+    {
+      [0][0] = that[0][0] (1) 
+      [0][1] = that[0][1] (2) 
+      [0][2] = that[0][2] (3) 
+      [1][0] = that[1][0] (4) 
+      [1][1] = that[1][1] (5) 
+      [1][2] = that[1][2] (6) 
+    }
+  Created state:
+  process instance pool:
+  1	that[0][0]
+  2	that[0][1]
+  3	that[0][2]
+  4	that[1][0]
+  5	that[1][1]
+  6	that[1][2]
+}

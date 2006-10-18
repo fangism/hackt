@@ -1,7 +1,45 @@
 "ChangeLog"
 
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
-# This version tag is used in building "main/version.cc".
+# This version tag is used in building "cvstag.h" for version identification.
+
+2006-10-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-29-merged-instance-00-39:
+	  Major branch merge.
+	  Summary: instance/value_collections separated into placeholder and 
+		collection counterpart classes to avoid massive duplication.  
+		Scoped spaces now may only include placeholders, 
+			whereas footprints include collections.  
+		Types: fundamental (unresolved) types are associated
+			with placeholders while canonical (resolved)
+			types are associated with collections.  
+		Unroll: context now uses placeholders to lookup collections, 
+			also now distinguishes between target and lookup
+			footprints, for instantiation and references.  
+		Lookup: template actuals are now included in footprint.
+			Distinguish rvalue from lvalue parameter lookups.  
+		Parameter defaulting: now performs compile-time expression
+			substitution based on parameter positions.  
+		Module: now subclass of process_definition, making efficient
+			reuse of functionality.  During post-parse 
+			type-checking, module is registered as top-most 
+			open definition on stack, for convenience.  
+		Top-level instance references functions now require
+			top-level footprint argument.  
+		May-analysis functions, and pre-unroll static analyses
+			have been discarded, in favor of cleaner simpler code.
+		parser: allow array-concatenations as template arguments.  
+		Instance management statements: now reference counting.
+		instance reference array-indices: now reference counting.  
+		param-expr-lists: now use dynamic_param_expr_list instead of
+			abstract param_expr_list in many places (simplified).  
+		Test dump diagnostics: more consistent naming.  
+	  Next: series of source clean-ups on main trunk, 
+		then next phase of alias-collection memory reduction:
+			refactoring sparse and dense collections.  
+	  TODO: packaging (minor) -- make distcheck-able from VPATH build.
+
 
 2006-10-17	David Fang		<fangism@users.sourceforge.net>
 
@@ -11,6 +49,196 @@
 
 	* HACKT-00-01-04-main-00-80-28:
 	  No source revision, lib/ updates only.  
+
+
+2006-10-17	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-39:
+	  Minor patches for gcc-4+ standard conformance, checked against 4.1.
+	  Status: branch is ready to merge.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-38:
+	  Added additional footprint& argument for all top-level lookup
+		related functions in the instance_reference hierarchy, 
+		to fix ISE on reference lookups using the new unroll_context
+		with distinct target and lookup footprints.
+		TODO: future cleanup: rewrite without const_cast kludge.  
+	  Enabled and re-confirmed all prsim-related tests.
+	  Good news: no regressions remain on branch!!!  distcheck passes too.
+	  Decide: merge trunk to branch first?
+	  Next phase (new branch): using densely packed arrays for ports
+		and template formals.  
+
+
+2006-10-16	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-37:
+	  Enabled and re-confirmed all cflat-related tests.
+		A scant few test cases had outputs re-ordered, updated them.
+	  AST::parse_context::get_current_named_scope():
+		Don't ICE -- last case is reachable when using a read-only
+		context attached to module.
+	  Next: prsim tests.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-36:
+	  Enabled and re-confirmed ALL alloc regression tests.
+	  Again, some top-level canonical names changed due to
+		traversal ordering, which should not be depended upon.  
+	  global_entry::dump_canonical_name() updated to use 
+		dump_flags::no_definition_owner.  
+	  Next: cflat tests.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-35:
+	  Re-enabled all create tests in regression suite.  
+	  Updated all/most create tests (stderr): no regressions!!!
+		A few top-level canonical names were chosen differently.  
+	  Module's prs dump is obsolete, now just uses footprint's dump.  
+	  Next: alloc regression tests.  
+
+
+2006-10-15	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-34:
+	  instance_placeholder_base::get_footprint_key():
+		now does the same thing as get_qualified_name(), 
+		except for loop induction variables.  
+	  name_space::dump_qualified_name() updated to omit the leading "::"
+		for global namespace references.  
+		Test-expects updated accordingly.  
+	  Fixed ICE on process_definition::__create_complete_type():
+		no need to re-unroll template parameters, because
+		they are already in the footprint.  
+	  Updated module's dump to use footprint::dump().  
+
+
+2006-10-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-33:
+	  Another round of dump output updating, finally gotten rid
+		of leading "::" in qualified names consistently, 
+		in dump_qualified_name() and dump_hierarchical_name().
+	  Tons of test outputs updated accordingly.  
+	  No unroll regressions left.  
+	  Next: onto create phase regression testing.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-32:
+	  Updated dumping of qualified names to definition names.  
+		Could make definition_base::get_qualified_name() non-virtual.
+	  Bunch of tests updated because of key-name reordering, 
+		and mostly trivial string substitution.  
+	  This takes care of the last of the remaining unroll regressions!
+
+
+2006-10-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-31:
+	  Fixed remaining ICE regressions in template:
+		incomplete relaxed type was unrolling into the wrong footprint,
+		so we've forced such unrolls to go into a temporary
+		auxiliary footprint, until type is (strictly) complete.  
+	  One more trivial regression remains (qualified typename),
+		before proceeding to create phase.
+
+
+2006-10-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-30:
+	  Fixed some of remaining regressions (3 down):
+		Do not try to lookup footprint with incomplete (not strict)
+		type because wrong arity, instead create an auxiliary footprint
+		(of parameters) for the purposes of unrolling ports.  
+	  Remaining regressions (template):
+		Footprint isn't being correctly unrolled when unrolling an
+		instance with a relaxed template argument.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-29-merged-exprlist-08:
+	  Child branch merge.
+	  Summary:
+		Now always use dynamic_param_expr_list instead of 
+			abstract param_expr_list with template arguments.  
+		Perform proper default positional template parameter
+			substitution at compile time, which fixes
+			half of the remaining unroll regressions.  
+		Various diagnostic message improvements.  
+		references' array_indices are now reference-counted for ease.
+		Parser fix: array-concatenations are permitted in 
+			template argument lists.  
+	  Next: fix template arity mismatch ICEs.  
+
+
+2006-10-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-08:
+	  Cleaned up abandoned revisions. 
+	  End of this branch, merge up.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-07:
+	  Completed default positional parameter substitution.  (YES!)
+		Added some new test cases for some obtuse uses of this.  
+		Corresponding test cases updated.  
+	  Fixed diagnostic messages about uninstantiated references.  
+		This knocks off all regressions related to this, leaving:
+		parser/namespace: (1) should qualify typename with namespace
+		parser/template:
+			(10) ICE: footprint key arity mismatch
+				in template/, connect/.
+		Total: 11 remaining.
+	  Some clean-ups might be in order before merging to parent branch.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-06:
+	  First round of implementing default positional parameter 
+		substitution in expression hierarchy, enabled.
+	  Does not link, as some needed definitions are still missing.  
+
+
+2006-10-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-05:
+	  Now ref-counting array_indices (of meta_indexed_references).
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-04:
+	  Parser fixed to allow concatenation expressions in
+		template argument lists.  
+	  One test case updated: parser/template/048.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-03:
+	  Top-level module is now registered with the parse_context as the
+		outer-most open definition (now implemented as stack).
+	  Other minor clean-ups in parse_context.{h,tcc,cc}.
+	  Next: pass parent template contexts for default substitution.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-02:
+	  Start of bunch of rewritten code (currently disabled) to rework
+		positional template parameter substitution.
+	  Head start on param_expr::substitute_positional_parameters()
+		in method hierarchy.  
+	  Plan: perform substitution by passing parent template context
+		at the time the fundamental type reference is created.
+	  Next: parse_context clean-ups to be able to use top-level
+		module as a definition, to simplify passing of (null)
+		template formals.  Will need an open definition stack.  
+		
+
+2006-10-06	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28-exprlist-01:
+	  Branch objectives:
+		phase out use of param_expr_list as a base class 
+		of dynamic_param_expr_list, which simplifies life greatly.
+		Goal: perform positional parameter substitution on
+		default template parameter expressions, at compile time.  
+	  This revision: no new regressions, same ones.  
+	  Next: default param substitution.  
 
 
 2006-10-06	David Fang		<fangism@users.sourceforge.net>
@@ -28,6 +256,34 @@
 	  dox/lang/ some notes about PRS macros.  
 
 
+2006-10-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-28:
+	  No source revision, just massive regression test updating.
+		Updated most tests in suite, leaving a few known regressions
+		to be tackled one at a time.  
+	  Summary of remaining (unroll) regressions:
+		parser/namespace: (1) should qualify typename with namespace
+		parser/process: (2) default parameter expressions need to be
+			positionally *substituted* before resolving.
+		parser/template: (4) same as process/, 
+			(2) different diagnostic message,
+			(10) ICE: footprint key arity mismatch
+				in template, connect.
+		Total cases remaining: 19
+	  This has to be the most boring task for this project...
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-27:
+	  canonical_type::unroll_port_instances():
+		opened up read-only reference to footprint to provide
+		context for template-dependent port instantiations.  
+		Nice that footprint contains the necessary values!
+	  Updated another batch of parser/process test cases, 
+		two unroll regressions remain therein.  
+	  TODO: unroll ports up-front, remove from body sequential scope.  
+
+
 2006-10-04	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-25:
@@ -38,6 +294,180 @@
 	  lib/mk Makefiles added support to make .lvssprs (sized lvsprs).
 	  New test cases added.  
 	  minor: renamed PRS::attribute_list_type -> rule_attribute_list_type.
+
+
+2006-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-26:
+	  Fixed subinstance_manager::dump to print port keys first.  
+		Updated bunch of parser/process test cases.
+		Remain regressions: ICE-on-valid, rejects-valid
+	  TODO: unroll ports up-front in processes, and remove from 
+		body sequential scope.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-25:
+	  dynamic_meta_index_list updated to take const meta_index_expr.  
+	  unroll test updates:
+		parser/array (all complete), parser/process (partial)
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-24-merged-context-04:
+	  Merged context-related fixes from child-branch.
+		Summary: unroll_context now has separate footprints
+			for different purposes: top-level, target, lookup.  
+			top-level is just another lookup.  
+	  Next: continue updating all unroll regression tests.
+
+
+2006-10-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-04:
+	  Fixed last remaining unroll regressions in parser/param, 
+		just had to make loop variable valid after instantiation.  
+	  Instantiation statements now take const placeholders.  
+	  Expurgated "replay_*" in instance_alias and hierarchy.
+	  Ready to merge branch up.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-03:
+	  propagated top-level footprint down through entire
+		unroll call subgraph to be able to lookup
+		out-of-scope global parameters.  Tons of prototypes updated.
+	  unroll_context::lookup_rvalue_collection():
+		now tries to lookup top_footprint for globals.  
+	  Regressions fixed: parser/param/06{6,7,8,9}, few more left in param/.
+	  DO: Cleanup references to "replay_*" methods (delete the obsolete).
+
+
+2006-10-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-02:
+	  Now distinguishing lvalue from rvalue lookups, using the switch
+		RVALUE_LVALUE_LOOKUPS in Object/devel_switches.h.
+	  Next: chain context to make top-level context searchable.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23-context-01:
+	  unroll_context: separate footprints for looking up, 
+		one for instantiating and modifying, the other for 
+		just read-only lookups, which may search out-of-context.  
+	  Some expected momentary regressions in parser/param.  
+	  Marked unroll_context::get_target_footprint() obsolete.  
+	  Next: distinguish lvalue from rvalue lookups.  
+		Then chain the contexts (global) appropriately.  
+
+
+2006-10-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-23:
+	  Debugging fixes: be able to partially dump collection before
+		its type has been completely resolved.  
+	  Next: split footprint member of unroll_context to be able to
+		chain the contexts without instantiation conflict.  
+
+
+2006-10-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-22:
+	  New switch SEQUENTIAL_SCOPE_INCLUDES_FORMALS -> 0:
+		Defined to zero to separate formal instantiations out.
+		Punted removing port formals instantiations for now.  
+	  Cleaned out PLACEHOLDERS_OWN_INSTANTIATIONS use (abandoned).  
+	  Batch of unroll-expect tests updated in parser/{namespace,param}.
+		Still some regressions to fix.  
+
+
+2006-10-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-21:
+	  Switched over all instance-management pointers to reference-count.
+	  Intent: remove template and port formal instantiation statements 
+		from sequential-scopes, only using in placeholders.  
+	  Targeting one remaining regression in parser/basic.
+	  Next: don't add template/port formal statements to seq.-scope.
+
+
+2006-10-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-20-merged-module-06:
+	  Merged revisions from -module child branch.
+	  Summary: module has been defined to use process_definition's 
+		facilities for more consistent unrolling implementation.
+		Haven't handled module 'create' phase yet.  
+	  Next: revise instantiations of template and port formals
+		to avoid double instantiations, i.e. ports are implicitly
+		unrolled before body sequential instance management.  
+
+
+2006-09-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-06:
+	  Implemented get_footprint_key(), but still has leading "::"
+		for qualified names (who cares? clean it later)
+	  footprint::dump_with_collections is now sorted alphabetically.
+	  Removed any uses of footprint::import_scopespace.
+	  Updated most parser/basic test cases, 
+		  one more regression left in parser/basic.
+
+
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-05:
+	  module: dump is done, and looks satisfactory.
+	  footprint::dump now prints the key too.  
+	  {instance,value}_collection::load_object():
+		now loads the placeholder so that its key is available.
+		However, their parent namespaces aren't guaranteed yet! (TODO)
+	  Next: use get_footprint_key() instead get_name() for footprint
+		collection maps, to allow top-level instances residing
+		in namespaces to be given qualified ID string.  
+	  Goal: get parser/basic cases to work satisfactorily.
+
+
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-04-merged-definition-02:
+	  Merge, minor.  
+	  TODO: module should dump footprint when unrolled.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03-definition-02:
+	  Cleaned out traces of DEFINITION_FOOTPRINT.  
+	  Added missing type-dump in instance_placeholder::dump_formal().
+	  Made more use of footprint_manager::operator[ptr-to-expr-list].
+	  Next: merge branch, and return to module dump, using footprint.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03-definition-01:
+	  Mini-experimental branch testing the implications of adding
+		footprints to all non-alias definition types.  
+	  Discovered one-line solution to footprint problem --
+		make a temporary for validating template parameters!
+		See template_formals_manager::must_validate_actuals().
+	  Going to revert most abandoned revisions.  
+
+
+2006-09-28	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-03:
+	  module: now using process_definition::__unroll_complete_type()
+	  completed value_placeholder::dump()
+	  Some trouble with unroll-assigning formal parameters because
+		not all definition types have footprints!
+		This causes assert fail where expecting footprint, obviously.
+	  Object/traits/class_traits_type.cc:
+		mutually attached pint_instantiation_statement to 
+		pint_value_placeholder for the int::width template formal.
+	  Next: make definitions have footprints [manager], even the 
+		simple built-in ones, for the sake of consistency, 
+		will probably do on branch.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-02:
+	  More #if MODULE_PROCESS implementation code.
+	  It compiles, but don't expect it to run successfully yet!
+	  Next: rewrite module methods to re-use process_definition code.
 
 
 2006-09-27	David Fang		<fangism@users.sourceforge.net>
@@ -53,6 +483,15 @@
 		it to be enqueued, useful for instability tracing.  
 		prsim test expects updated accordingly.  
 	  lib: alternator.hac additions, see lib/ChangeLog.
+
+
+2006-09-18	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-module-01:
+	  This child branch intended to refactor the module class to 
+		work like a process_definition (nullary_template)
+		and reuse the same functionality.
+	  This revision only changed the module.h header, and does not compile.
 
 
 2006-09-18	David Fang		<fangism@users.sourceforge.net>
@@ -131,6 +570,80 @@
 		a few test/lib test dump updates.
 
 
+2006-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-19-merged-template-02:
+	  Child branch merge: rework unroll_context, disabled some
+		static analysis, tested template typedef parameter unrolling,
+		disabled tests after compile-phase.
+
+
+2006-09-11	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-18-template-02:
+	  Tests: temporarily disabled all tests except for pre-unroll
+		compile-phase tests.
+	  Compile-time regressions ALL addressed/fixed, 
+		very few tests updated as a result of new diagnostic messages.  
+	  Rewrote parts of unroll instantiation for template parameters
+		using the new target-footprint.  Part of 
+		unroll_context_value_resolved phased out.  
+	  Unrolling a collection for the first time adds it to the 
+		footprint in instantiation_statement::unroll.  
+	  TODO: later, distinguish modifiable from non-modifiable 
+		out-of-scope footprints in the unroll-context.
+	  Status: ok to merge to parent branch, then start trying 
+		unroll testing one-by-one, rework top-level module.
+
+
+2006-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-18-template-01:
+	  Sub-branch for rewriting unroll_context to not embed 
+		template actuals and formals, but rather lookup 
+		all values and instances in the footprint.
+		Consequently, template-parameter substitution (in typedefs)
+		will need to create a temporary footprint for the purpose
+		of value expansion.  
+	  Disabled pre-unroll static analysis of initialization state
+		with switch: ENABLE_STATIC_ANALYSIS (0).
+		Now value_placeholder pointee of value_references may be const.
+	  New switch: RESOLVE_VALUES_WITH_FOOTPRINT (1)
+		unroll_context no longer distinguishes formals from 
+		non-formals and loads all value_collections into the
+		invoking footprint, done at the beginning of 
+		complete-type unrolling/creation.  
+	  Possible flag: certify_template_* methods as obsolete, 
+		since formal-actual default value filling and type-checking
+		can now be done in 
+		param_expr_list::unroll_assign_formal_parameters.  
+	  Refactored some code in expression_assignment class template.  
+	  TODO: add parent_namespace ctor parameter back to unroll_context
+		to support out-of-scope lookups again, but will need
+		mechanism for qualified placeholder lookups in namespaces, 
+		once we rework the top-level module.  
+
+
+2006-09-10	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-18:
+	  Fixed placeholder persistence and reconstruction.  
+	  Next: update the use of unroll_context for template parameter
+		substitution, since all values need to be looked-up in
+		footprints now.  
+
+
+2006-09-09	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-17:
+	  In case you missed the fact: everything compiles/links (finally).  
+	  All test/lexer and test/parser/basic *compile* tests pass.
+		Minor obvious fixes applied to namespace, definition.  
+	  All unroll tests expected to fail until top-level module class
+		is reworked in the upcoming branch.  
+	  Next: fix/address all compile-phase regressions (many).  
+
+
 2006-09-08	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-11:
@@ -148,6 +661,50 @@
 	  State: added flag to support random fanout evaluation ordering.  
 
 
+2006-09-08	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-16:
+	  Completed unroll_context::lookup_{value,instance}_collection, 
+		the last undefined references... defined!
+	  Fixed minor type in is_loop_variable.  
+	  Tests: lexer/ is clean, parser/basic bombs as expected.
+	  Upcoming: sub-branch to rework module since top-level instances
+		are now relocated to footprint.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-15:
+	  Only two undefined references left!!!
+	  Implemented most of remaining definitions, many copy-modified
+		from param_value_collection to param_value_placeholder, 
+		including many boolean query functions.  
+	  Got rid of PLACEHOLDER_SUPER_INSTANCES switch.   
+	  Many other methods commented out from old instance and value
+		collection headers and modules, now obsolete w/ placeholders.  
+
+
+2006-09-07	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-14:
+	  Marked more obsolete functions, and defined more missing references.
+	  Considering doing-away with pre-unroll-time 'may-analyses'
+		and forget about trying to catch errors earlier than necessary.
+		Minimize the risk of reject-valid or accept-invalid.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-13:
+	  Switched off more compile-time (pre-unroll) resolve functions.
+	  More missing definitions filled in for placeholder classes.
+	  Few more rounds before all undefined references resolved...
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-12:
+	  Implemented more dump/get_name category methods for placeholders,
+		and marked others obsolete or unused.  
+	  Implemented instance/parameter formal queries.  
+	  Re-implemented simple_meta_value_reference::unroll_resolve_rvalues
+		*much* more cleanly than before.  
+
+
 2006-09-06	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-10:
@@ -157,6 +714,74 @@
 
 	* HACKT-00-01-04-main-00-80-09:
 	  No source revision.  Just README maintainence.  
+
+
+2006-09-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-11-merged-type-04:
+	  Child-branch merge: new type reference methods with clear
+		distinction between unresolved and resolved-canonicals.  
+
+
+2006-09-05	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-04:
+	  Finished implementing a draft of USE_RESOLVED_DATA_TYPES, 
+		includes instance_collection::get_resolved_canonical_type(), 
+		and related canonical type functions in the nonmeta
+		instance and value reference classes and type managers. 
+	  Added type/canonical_generic_datatype.h for convenience.
+	  Unable to test until all undefined references are resolved, 
+		so going to merge branch (and pray) and revert entire 
+		branch later if all else fails.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-03:
+	  Enabled USE_RESOLVED_DATA_TYPES (which really should be renamed
+		USE_RESOLVED_NONMETA_TYPES) in devel_switches.
+	  Bunch of missing definition (for next revision).  
+	  data_expr::get_resolved_data_type_ref 
+		now returns canonical_generic_type.
+	  data_type_resolver<>::operator(...)
+		now returns canonical_generic_datatype.
+	  Old get_canonical_type renamed to __get_raw_type because they
+		only work with internal collection parameters, not canonical.
+	  instance_reference_datatype.cc: implemented resolving
+		of canonical types based on resolved collection.  
+	  *_traits.h: class-traits new member: resolved_type_ref_type.
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-02:
+	  Mostly renamed get_type_ref to get_unresolved_type_ref
+		for clarity (b/c it took me an hour to read what I wrote...).
+	  However, the old instance_collection::get_type_ref_subtype 
+		used to deduce a resolved type from the collection's
+		type-manager, but will be replaced by get_resolved_type_ref
+		in the next revision.  
+
+
+2006-09-04	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-10-type-01:
+	  This mini-branch for rework of get_data_type_ref().
+		First we make a distinction between unresolved (fundamental)
+		and resolved (canonical) types.  
+	  Renamed functions for clear distinction.
+	  This revision has enabled the old unresolved types and left the
+		newly proposed resolved types switched off.  
+		They will be needed in the future for checking when unrolling
+		CHP footprints.  
+
+
+2006-09-03	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-10:
+	  Round 2 of defining missing functions: references, collections, 
+		placeholders and flagging some methods obsolete.  
+		Still doesn't link.
+	  Upcoming: sub-branch for refactoring type system:
+		matching "fundamental" types with placeholders, and 
+		"resolved" types with collections.  
 
 
 2006-09-03	David Fang		<fangism@users.sourceforge.net>
@@ -173,6 +798,59 @@
 		1of1 synchronizations.  All untested.  
 	  Few tests updated after inlining some production rules in defs.  
 	  see lib/ChangeLog.
+
+
+2006-09-02	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-09:
+	  Round 1 of defining missing functions.  Mostly obvious stuff.
+
+
+2006-09-01	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-08:
+	  This actually compiles... but stops at many undefined references
+		to newly promised class methods.  Time to fill in the ______.
+	  meta-loop code rewritten to accommodate pint placeholders
+		using instantiation (unroll) into temporary footprint.  
+	  Future TODO: refactor context lookup, replacing formals
+		and actuals method of resolving values with more consistent
+		footprint-based lookup.  
+
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-07:
+	  Nope.
+	  Most of the mind-numbing re-coding is done, now the real work begins.
+	  Next: rewriting scoped lookup functions for unroll instance
+		and value resolution, most affected: meta-loops.  
+
+
+2006-08-31	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-06:
+	  Compiles not.
+	  Invasion of the placeholders: definition, expressions, 
+		instance and value arrays, collection type managers, 
+		lookup methods, instance and value references...
+
+
+2006-08-30	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-05:
+	  Welcome to another installment of "Does this sh-- compile yet?"
+	  More placeholders: port_formals_manager, template_formals_manager,
+		instance_collection, value_placeholders, simple and member 
+		instance_references, value_references, type_references.  
+
+
+2006-08-29	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-04:
+	  Nope, still doesn't compile.
+	  More propagating use of instance/value placeholders.  
+	  Most affected in this revision:
+		unroll_context, value_references, instance_references, 
+		instance_alias (substructured)
 
 
 2006-08-29	David Fang		<fangism@users.sourceforge.net>
@@ -201,6 +879,41 @@
 	* HACKT-00-01-04-main-00-80-04:
 	  Minor bug fix in prsim's 'who' command, check that an alias
 		is actualy instantiated in the case of conditionals.  
+
+
+2006-08-27	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-03:
+	  Still does not compile.
+	  Spread use of instance and value placeholders further.  
+		Affected: AST, parse_context, scopespace, namespace, 
+		definitions, lookup methods, footprint, unroll_context, 
+		instance and value references and collections, traits, 
+		instantiation statements, ...
+
+
+2006-08-26	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-02:
+	  Does not compile.
+	  Enabled USE_INSTANCE_PLACEHOLDERS switch and continued to mark code 
+		revisions to use instance-placeholders, in AST/expr, 
+		scopespace, namespace, type-reference, instance-reference.
+	  More of the same coming.  
+
+
+2006-08-25	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-03-instance-00-01:
+	  Welcome to the instance-collection rewrite branch!
+	  Plans: replace deep-copy strucutres of instance/value collections
+		with placeholders and back-references.  
+	  Benefits: reducing memory footprint (and object) by at least
+		an order of magnitude.
+	  Risks: highly invasive reworking of instance collection
+		and classes that work immediately with them.  
+	  Early revisions will attempt to mark the cuts for all affected code.
+	  This first revision DOES NOT COMPILE, welcome to the bleeding edge.
 
 
 2006-08-24	David Fang		<fangism@users.sourceforge.net>

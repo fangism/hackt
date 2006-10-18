@@ -3,7 +3,7 @@
 	Method definitions for port_formals_manager.
 	This file was "Object/def/port_formals_manager.cc"
 		in a former life.  
- 	$Id: port_formals_manager.cc,v 1.10 2006/06/03 00:14:49 fang Exp $
+ 	$Id: port_formals_manager.cc,v 1.11 2006/10/18 01:19:11 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PORT_FORMALS_MANAGER_CC__
@@ -25,6 +25,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 
 #include "Object/def/port_formals_manager.h"
 #include "Object/persistent_type_hash.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#endif
 #include "Object/inst/physical_instance_collection.h"
 #include "Object/inst/subinstance_manager.h"
 #include "Object/ref/meta_instance_reference_base.h"
@@ -290,7 +293,7 @@ port_formals_manager::load_object_base(
 	for ( ; i!=e; i++) {
 		const port_formals_value_type inst_ptr(*i);
 		NEVER_NULL(inst_ptr);
-		m.load_object_once(const_cast<instance_collection_type*>(
+		m.load_object_once(const_cast<instance_placeholder_type*>(
 			&*inst_ptr));
 		port_formals_map[inst_ptr->get_name()] = inst_ptr;
 	}

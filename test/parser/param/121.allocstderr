@@ -1,0 +1,5 @@
+globID	super		localID	canonical	footprint-frame
+[global process entries]
+1	(top)	-	1	f	bar::foo<>
+	process: 2
+2	process	1	1	f.zoo	bar::ick<2>

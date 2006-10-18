@@ -1,3 +1,6 @@
+lvalue/rvalue references dimensions mismatch in pint assignment.
+	got: [2] and: [1]
+ERROR: with template actual at position 1
 Size of dimension 1 does not match!  got: 2 and 1.
 ERROR: type/size mismatch between template formal and actual.
 	got: {1}

@@ -5,30 +5,30 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
-	4	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
+	4	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
 	5	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	procdefn	0	#HEAD#	#TAIL#	181
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	13	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	16	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	17	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
-	18	##ADDR##	proccoll	1	#HEAD#	#TAIL#	37
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
+	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	19	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	26	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	27	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	28	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	dbalias_	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	mdbolref	0	#HEAD#	#TAIL#	20
@@ -40,29 +40,30 @@ Persistent Object Manager text dump:
 	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	39	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
+	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	47	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	47	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
 	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	53	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	54	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
-	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
-	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	59	##ADDR##	proccoll	0	#HEAD#	#TAIL#	51
-	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	49	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	53	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	54	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	55	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	58	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	60	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -77,10 +78,8 @@ In namespace "", we have: {
       )
       In definition "lut", we have: {
       Instances:
-        p = pbit<> p
-
-        pbint = pbitint<> pbint
-
+        p = pbit<> lut::p^1
+        pbint = pbitint<> lut::pbint^1
       unroll sequence: 
         pbitint<> pbint[0..1]
         pbit<> p[0..1]
@@ -88,26 +87,26 @@ In namespace "", we have: {
           p[$i].t = pbint[$i].pb.t;
         )
       footprint: {
-        process pbitint<>^1 pbint
-          unrolled indices: {
-            0 = ::lut::pbint[0] (
-              process pbit<>^0 pb (instantiated) = ::lut::pbint[0].pb (
-                bool^0 t (instantiated) = ::lut::pbint[0].pb.t 
-              )
+        p = process pbit<>^1
+          {
+            0 = lut::p[0] (
+              t = bool^0 = lut::pbint[0].pb.t 
             )
-            1 = ::lut::pbint[1] (
-              process pbit<>^0 pb (instantiated) = ::lut::pbint[1].pb (
-                bool^0 t (instantiated) = ::lut::pbint[1].pb.t 
-              )
+            1 = lut::p[1] (
+              t = bool^0 = lut::pbint[1].pb.t 
             )
           }
-        process pbit<>^1 p
-          unrolled indices: {
-            0 = ::lut::p[0] (
-              bool^0 t (instantiated) = ::lut::pbint[0].pb.t 
+        pbint = process pbitint<>^1
+          {
+            0 = lut::pbint[0] (
+              pb = process pbit<>^0 = lut::pbint[0].pb (
+                t = bool^0 = lut::pbint[0].pb.t 
+              )
             )
-            1 = ::lut::p[1] (
-              bool^0 t (instantiated) = ::lut::pbint[1].pb.t 
+            1 = lut::pbint[1] (
+              pb = process pbit<>^0 = lut::pbint[1].pb (
+                t = bool^0 = lut::pbint[1].pb.t 
+              )
             )
           }
       }
@@ -118,11 +117,11 @@ In namespace "", we have: {
       )
       In definition "pbit", we have: {
       Instances:
-        t = bool<> t
+        t = bool<> pbit::t
       unroll sequence: 
         bool<> t
       footprint: {
-        bool^0 t (instantiated) = ::pbit::t 
+        t = bool^0 = pbit::t 
       }
       }
 
@@ -131,31 +130,34 @@ In namespace "", we have: {
       )
       In definition "pbitint", we have: {
       Instances:
-        pb = pbit<> pb
+        pb = pbit<> pbitint::pb
       unroll sequence: 
         pbit<> pb
       footprint: {
-        process pbit<>^0 pb (instantiated) = ::pbitint::pb (
-          bool^0 t (instantiated) = ::pbitint::pb.t 
+        pb = process pbit<>^0 = pbitint::pb (
+          t = bool^0 = pbitint::pb.t 
         )
       }
       }
 
   Instances:
-    l = process lut<>^0 l (instantiated) = ::l (
-      process pbitint<>^1 pbint
-        unrolled indices: {
-          0 = ::l.pbint[0] (
-            process pbit<>^0 pb (instantiated) = ::l.pbint[0].pb (
-              bool^0 t (instantiated) = ::l.pbint[0].pb.t 
-            )
-          )
-          1 = ::l.pbint[1] (
-            process pbit<>^0 pb (instantiated) = ::l.pbint[1].pb (
-              bool^0 t (instantiated) = ::l.pbint[1].pb.t 
-            )
-          )
-        }
-    )
+    l = lut<> l
 }
 
+footprint: {
+  l = process lut<>^0 = l (
+    pbint = process pbitint<>^1
+      {
+        0 = l.pbint[0] (
+          pb = process pbit<>^0 = l.pbint[0].pb (
+            t = bool^0 = l.pbint[0].pb.t 
+          )
+        )
+        1 = l.pbint[1] (
+          pb = process pbit<>^0 = l.pbint[1].pb (
+            t = bool^0 = l.pbint[1].pb.t 
+          )
+        )
+      }
+  )
+}

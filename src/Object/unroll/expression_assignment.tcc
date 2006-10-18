@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.15 2006/07/04 07:26:18 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.16 2006/10/18 01:20:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -178,17 +178,21 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 	size_t dim = this->src->dimensions();
 	if (!this->validate_dimensions_match(e, dim).good)
 		err.bad = true;
+#if ENABLE_STATIC_ANALYSIS
 	if (!this->validate_reference_is_uninitialized(e).good)
 		err.bad = true;
+#endif
 	dest_ptr_type pb(e.template is_a<value_reference_type>());
 	if (!pb) {
 		cerr << "ERROR: Cannot initialize a " <<
 			traits_type::tag_name << " with a ";
 		e->what(cerr) << " expression!" << endl;
 		err.bad = true;
+#if ENABLE_STATIC_ANALYSIS
 	} else if (!pb->initialize(src).good) {	// type check
 		// if scalar, initialize for static analysis
 		err.bad = true;
+#endif
 	}
 	if (err.bad) {
 		cerr << "Error initializing item " << size()+1 <<
@@ -202,16 +206,82 @@ EXPRESSION_ASSIGNMENT_CLASS::append_simple_param_meta_value_reference(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Assigns values for a single source-destination pair.  
+	Called by __unroll().
+ */
+EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
+good_bool
+EXPRESSION_ASSIGNMENT_CLASS::assign_dest(const value_reference_type& lv, 
+		const const_collection_type& rv, const unroll_context& c) {
+	// lvalue reference collection
+	value_reference_collection_type temp;
+	if (lv.unroll_lvalue_references(c, temp).bad) {
+		cerr << "ERROR: unrolling lvalue references in " <<
+			traits_type::tag_name << " assignment." << endl;
+		return good_bool(false);
+	}
+	typedef	typename value_reference_collection_type::key_type
+					lvalue_key_type;
+	typedef	typename const_collection_type::key_type
+					rvalue_key_type;
+	// these should be the same type
+	const lvalue_key_type ls(temp.size());
+	const rvalue_key_type rs(rv.array_dimensions());
+	if (ls != rs) {
+		cerr << "lvalue/rvalue references dimensions mismatch "
+			"in " << traits_type::tag_name <<
+			" assignment." << endl;
+		cerr << "\tgot: " << ls << " and: " << rs << endl;
+		return good_bool(false);
+	}
+	typedef	typename value_reference_collection_type::const_iterator
+						lvalue_iterator;
+	typedef	typename const_collection_type::const_iterator
+						rvalue_iterator;
+	lvalue_iterator li(temp.begin());
+	rvalue_iterator ri(rv.begin()), re(rv.end());
+	// c'mon gcc, auto-vectorize this loop!
+	bool assign_err = false;
+	size_t k = 1;
+	for ( ; ri!=re; ++ri, ++li, ++k) {
+		NEVER_NULL(*li);
+		if (!(**li = *ri).good) {
+			assign_err = true;
+			cerr << "Error: lvalue referenced at position "
+				<< k << " is already assigned value "
+				<< **li << endl;
+		}
+	}
+	if (assign_err) {
+		cerr << "At least one error in assignment." << endl;
+		return good_bool(false);
+	}
+	INVARIANT(li == temp.end());
+	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Helper function.
 	TODO: deprecate assign_value_collection.
  */
 EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
 good_bool
-EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i, 
+EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const const_dest_iterator& b, 
 		const const_dest_iterator& e, const const_collection_type& v, 
 		const unroll_context& c) {
 	STACKTRACE_VERBOSE;
+	const_dest_iterator i(b);
 	for ( ; i!=e; ++i) {
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		NEVER_NULL(*i);
+		if (!assign_dest(**i, v, c).good) {
+			cerr << "ERROR: at position " <<
+				std::distance(b, i)+1 <<
+				" of expression-assignment list." << endl;
+			return good_bool(false);
+		}
+#else
 		value_reference_collection_type temp;
 		if ((*i)->unroll_lvalue_references(c, temp).bad) {
 			cerr << "ERROR: unrolling lvalue references in " <<
@@ -255,8 +325,50 @@ EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const_dest_iterator i,
 			return good_bool(false);
 		}
 		INVARIANT(li == temp.end());
+#endif
 	}
 	return good_bool(true);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Helper function for unrolling a single dest = src assignment.  
+	Called during unroll-assignment of template formal parameters.  
+ */
+EXPRESSION_ASSIGNMENT_TEMPLATE_SIGNATURE
+good_bool
+EXPRESSION_ASSIGNMENT_CLASS::__unroll(const unroll_context& c, 
+		const value_reference_type& lv, 
+		const src_const_ptr_type& rv) {
+	STACKTRACE_VERBOSE;
+	INVARIANT(rv);
+	// works for scalars and multidimensional arrays alike
+	const count_ptr<const const_param>
+		src_values(rv->unroll_resolve_rvalues(c, rv));
+	if (!src_values) {
+		rv->dump(
+			cerr << "ERROR: failed to resolve source values of ",
+			expr_dump_context::error_mode) <<
+			" in " << traits_type::tag_name <<
+			" assignment." << endl;
+		return good_bool(false);
+	}
+	const count_ptr<const const_expr_type>
+		scalar_const(src_values.template is_a<const const_expr_type>());
+	const count_ptr<const const_collection_type>
+		bunch_of_consts(src_values
+			.template is_a<const const_collection_type>());
+	if (scalar_const) {
+		static const multikey_index_type blank;
+		// temporary 0-D, scalar value
+		const_collection_type the_lonesome_value(blank);
+		*the_lonesome_value.begin() =
+			scalar_const->static_constant_value();
+		return assign_dest(lv, the_lonesome_value, c);
+	} else {
+		NEVER_NULL(bunch_of_consts);
+		return assign_dest(lv, *bunch_of_consts, c);
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

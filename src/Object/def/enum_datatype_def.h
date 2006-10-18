@@ -2,7 +2,7 @@
 	\file "Object/def/enum_datatype_def.h"
 	Definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_data.h".
-	$Id: enum_datatype_def.h,v 1.8 2006/06/02 20:15:19 fang Exp $
+	$Id: enum_datatype_def.h,v 1.9 2006/10/18 01:19:10 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_ENUM_DATATYPE_DEF_H__

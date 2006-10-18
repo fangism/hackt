@@ -5,20 +5,20 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	395
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	SPCdrctv	0	#HEAD#	#TAIL#	73
 	20	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
@@ -27,19 +27,20 @@ Persistent Object Manager text dump:
 	23	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	32	##ADDR##	proccoll	0	#HEAD#	#TAIL#	60
-	33	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	36	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	28	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	37	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	39	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -56,12 +57,12 @@ In namespace "", we have: {
       )
       In definition "lvs_order", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
-        c = bool<> c
-        d = bool<> d
-        e = bool<> e
-        f = bool<> f
+        a = bool<> lvs_order::a
+        b = bool<> lvs_order::b
+        c = bool<> lvs_order::c
+        d = bool<> lvs_order::d
+        e = bool<> lvs_order::e
+        f = bool<> lvs_order::f
       unroll sequence: 
         bool<> a
         bool<> b
@@ -72,37 +73,40 @@ In namespace "", we have: {
       spec:
         order(f,e,d,c,b,a)
       footprint: {
-        bool^0 a (instantiated) = ::lvs_order::a (1) 
-        bool^0 b (instantiated) = ::lvs_order::b (2) 
-        bool^0 c (instantiated) = ::lvs_order::c (3) 
-        bool^0 d (instantiated) = ::lvs_order::d (4) 
-        bool^0 e (instantiated) = ::lvs_order::e (5) 
-        bool^0 f (instantiated) = ::lvs_order::f (6) 
+        a = bool^0 = lvs_order::a (1) 
+        b = bool^0 = lvs_order::b (2) 
+        c = bool^0 = lvs_order::c (3) 
+        d = bool^0 = lvs_order::d (4) 
+        e = bool^0 = lvs_order::e (5) 
+        f = bool^0 = lvs_order::f (6) 
+        Created state:
         bool instance pool:
-        1	::lvs_order::a
-        2	::lvs_order::b
-        3	::lvs_order::c
-        4	::lvs_order::d
-        5	::lvs_order::e
-        6	::lvs_order::f
+        1	lvs_order::a
+        2	lvs_order::b
+        3	lvs_order::c
+        4	lvs_order::d
+        5	lvs_order::e
+        6	lvs_order::f
         resolved specs:
         order(f,e,d,c,b,a)
       }
       }
 
   Instances:
-    foo = process lvs_order<>^0 foo (instantiated) = ::foo (1) (
-      bool^0 a (instantiated) = ::foo.a (1) 
-      bool^0 b (instantiated) = ::foo.b (2) 
-      bool^0 c (instantiated) = ::foo.c (3) 
-    )
+    foo = lvs_order<> foo
 }
 
-Created state:
-process instance pool:
-1	::foo
-bool instance pool:
-1	::foo.a
-2	::foo.b
-3	::foo.c
-
+footprint: {
+  foo = process lvs_order<>^0 = foo (1) (
+    a = bool^0 = foo.a (1) 
+    b = bool^0 = foo.b (2) 
+    c = bool^0 = foo.c (3) 
+  )
+  Created state:
+  process instance pool:
+  1	foo
+  bool instance pool:
+  1	foo.a
+  2	foo.b
+  3	foo.c
+}

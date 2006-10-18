@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_instance_preal.cc"
 		in a previous life.  
- 	$Id: preal_value_collection.cc,v 1.3 2006/02/21 04:48:31 fang Exp $
+ 	$Id: preal_value_collection.cc,v 1.4 2006/10/18 01:19:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PREAL_VALUE_COLLECTION_CC__
@@ -27,6 +27,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/unroll/param_instantiation_statement.h"
 #include "Object/traits/preal_traits.h"
 #include "Object/inst/value_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.tcc"
+#endif
 
 //=============================================================================
 // specializations in other namespace (local to this file)
@@ -81,6 +84,11 @@ struct persistent_traits<HAC::entity::preal_instance_collection> {
 	static const persistent::hash_key	type_key;
 };
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::preal_value_placeholder, 
+	PREAL_VALUE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 const persistent::hash_key
 persistent_traits<HAC::entity::preal_instance_collection>::type_key(
 	PREAL_INSTANCE_COLLECTION_TYPE_KEY);
@@ -142,6 +150,9 @@ operator << (ostream& o, const preal_instance& p) {
 //=============================================================================
 // class preal_instance_collection method definitions
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class value_placeholder<preal_tag>;
+#endif
 template class value_collection<preal_tag>;
 template class value_array<preal_tag,0>;
 template class value_array<preal_tag,1>;

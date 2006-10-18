@@ -6,7 +6,7 @@ globID	super		localID	canonical	footprint-frame
 	bool: 4,5,6
 3	(top)	-	3	b	wchb_e1of2<>
 	process: 4,5,6,7,8,1,2,9
-	bool: 1,6,7,8,2,4,5,9,3
+	bool: 1,6,7,2,8,4,5,9,3
 4	process	3	1	b.l0	celem2inv<>
 	bool: 7,1,6
 5	process	3	2	b.l1	celem2inv<>
@@ -27,5 +27,5 @@ globID	super		localID	canonical	footprint-frame
 5	(top)	-	5	R.d[1]	
 6	(top)	-	6	R.e	
 7	process	3	3	b._r[0]	
-8	process	3	4	b._r[1]	
+8	process	3	5	b._r[1]	
 9	process	3	8	b.rv	

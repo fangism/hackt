@@ -1,7 +1,7 @@
 /**
 	\file "AST/PRS.cc"
 	PRS-related syntax class method definitions.
-	$Id: PRS.cc,v 1.19 2006/10/04 23:18:23 fang Exp $
+	$Id: PRS.cc,v 1.20 2006/10/18 01:18:57 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_prs.cc,v 1.21.10.1 2005/12/11 00:45:09 fang Exp
  */
@@ -42,6 +42,9 @@
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/ref/simple_meta_instance_reference.h"	// for conversion
 #include "Object/ref/meta_reference_union.h"
+#if SUPPORT_NESTED_DEFINITIONS
+#include "Object/module.h"
+#endif
 
 #include "common/TODO.h"
 
@@ -73,6 +76,7 @@ using entity::process_definition;
 using entity::pint_scalar;
 using entity::pbool_expr;
 using entity::meta_range_expr;
+using entity::meta_loop_base;
 using std::find;
 using std::find_if;
 using std::mem_fun_ref;
@@ -323,7 +327,7 @@ loop::check_rule(context& c) const {
 	NEVER_NULL(loop_range);
 	// create loop index variable and push onto context stack
 	const context::loop_var_frame _lvf(c, *index);
-	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	const meta_loop_base::ind_var_ptr_type& loop_ind(_lvf.var);
 	if (!loop_ind) {
 		// then push didn't succeed, no need to pop
 		cerr << "Error registering loop variable: " << *index <<
@@ -531,7 +535,12 @@ if (rules) {
 		// no errors found, add them too the process definition
 		checked_rules_type::iterator i(checked_rules.begin());
 		const checked_rules_type::iterator e(checked_rules.end());
-		if (pd) {
+#if SUPPORT_NESTED_DEFINITIONS
+		if (pd && !pd.is_a<module>())
+#else
+		if (pd)
+#endif
+		{
 			for ( ; i!=e; i++) {
 				excl_ptr<entity::PRS::rule>
 					xfer(i->exclusive_release());
@@ -639,7 +648,7 @@ op_loop::check_prs_expr(context& c) const {
 	NEVER_NULL(loop_range);
 	// create loop index variable and push onto context stack
 	const context::loop_var_frame _lvf(c, *index);
-	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	const meta_loop_base::ind_var_ptr_type& loop_ind(_lvf.var);
 	if (!loop_ind) {
 		// then push didn't succeed, no need to pop
 		cerr << "Error registering loop variable: " << *index <<

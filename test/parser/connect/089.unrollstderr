@@ -4,32 +4,35 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	6	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	proccoll	1	#HEAD#	#TAIL#	77
-	14	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	proccoll	1	#HEAD#	#TAIL#	81
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	prcalias	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	prcalias	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	23	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	proccoll	1	#HEAD#	#TAIL#	66
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	proccoll	1	#HEAD#	#TAIL#	70
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -45,27 +48,31 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        A = pint<> A
+        A = pint<> foo::A
       unroll sequence: 
-        pint<> A
       footprint collection: {
         <1> {
-          pint^0 A value: ?
+          A = pint^0 value: 1
         }
       }
       }
 
   Instances:
-    bar = process foo<1>^1 bar
-      unrolled indices: {
-        0 = ::ick 
-        1 = ::bar[1] 
-      }
-    ick = process foo<1>^0 ick (instantiated) = ::poo[1] 
-    poo = process foo<1>^1 poo
-      unrolled indices: {
-        0 = ::poo[0] 
-        1 = ::poo[1] 
-      }
+    bar = foo<1> bar^1
+    ick = foo<1> ick
+    poo = foo<1> poo^1
 }
 
+footprint: {
+  bar = process foo<1>^1
+    {
+      0 = ick 
+      1 = bar[1] 
+    }
+  ick = process foo<1>^0 = poo[1] 
+  poo = process foo<1>^1
+    {
+      0 = poo[0] 
+      1 = poo[1] 
+    }
+}

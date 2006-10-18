@@ -3,7 +3,7 @@
 	Boolean relations between integer parameters.  
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: pint_range.h,v 1.8 2006/06/26 01:46:06 fang Exp $
+	$Id: pint_range.h,v 1.9 2006/10/18 01:19:23 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PINT_RANGE_H__
@@ -55,11 +55,13 @@ public:
 	ostream&
 	dump(ostream& o, const expr_dump_context&) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const;
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	bool
 	is_sane(void) const;
@@ -73,8 +75,10 @@ public:
 	const_range
 	static_constant_range(void) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	good_bool
 	resolve_range(const_range& r) const;
+#endif
 
 	good_bool
 	unroll_resolve_range(const unroll_context&, const_range& r) const;
@@ -83,6 +87,9 @@ public:
 	must_be_formal_size_equivalent(const meta_range_expr& ) const;
 
 	UNROLL_RESOLVE_COPY_META_INDEX_PROTO;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO;
+#endif
 protected:
 	using parent_type::unroll_resolve_copy;
 

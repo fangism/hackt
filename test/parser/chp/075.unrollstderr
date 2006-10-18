@@ -4,11 +4,11 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	442
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	438
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
@@ -19,31 +19,34 @@ Persistent Object Manager text dump:
 	15	##ADDR##	sdinref_	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	21	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	31	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	32	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	33	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	34	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	35	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	36	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	35	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	42	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	39	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	40	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	41	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	45	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -60,11 +63,10 @@ In namespace "", we have: {
       )
       In definition "assign_me", we have: {
       Parameters:
-        B = pint<> B
+        B = pint<> assign_me::B
       Instances:
-        b = int<32> b
+        b = int<32> assign_me::b
       unroll sequence: 
-        pint<> B
         int<32> b
       chp:
         concurrent: {
@@ -74,29 +76,34 @@ In namespace "", we have: {
         }
       footprint collection: {
         <123> {
-          pint^0 B value: ?
-          int<32>^0 b (instantiated) = ::assign_me::b 
+          B = pint^0 value: 123
+          b = int<32>^0 = assign_me::b 
         }
         <456> {
-          pint^0 B value: ?
-          int<32>^0 b (instantiated) = ::assign_me::b 
+          B = pint^0 value: 456
+          b = int<32>^0 = assign_me::b 
         }
         <789> {
-          pint^0 B value: ?
-          int<32>^0 b (instantiated) = ::assign_me::b 
+          B = pint^0 value: 789
+          b = int<32>^0 = assign_me::b 
         }
       }
       }
 
   Instances:
-    X = process assign_me<123>^0 X (instantiated) = ::X (
-      int<32>^0 b (instantiated) = ::X.b 
-    )
-    Y = process assign_me<456>^0 Y (instantiated) = ::Y (
-      int<32>^0 b (instantiated) = ::Y.b 
-    )
-    Z = process assign_me<789>^0 Z (instantiated) = ::Z (
-      int<32>^0 b (instantiated) = ::Z.b 
-    )
+    X = assign_me<123> X
+    Y = assign_me<456> Y
+    Z = assign_me<789> Z
 }
 
+footprint: {
+  X = process assign_me<123>^0 = X (
+    b = int<32>^0 = X.b 
+  )
+  Y = process assign_me<456>^0 = Y (
+    b = int<32>^0 = Y.b 
+  )
+  Z = process assign_me<789>^0 = Z (
+    b = int<32>^0 = Z.b 
+  )
+}

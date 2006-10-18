@@ -3,7 +3,7 @@
 	Class definitions for basic parameter expression types.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: basic_param.cc,v 1.18 2006/07/04 07:25:51 fang Exp $
+ 	$Id: basic_param.cc,v 1.19 2006/10/18 01:19:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_BASIC_PARAM_CC_
@@ -43,6 +43,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 	// for aggregate_value_references' base
 #include "Object/ref/aggregate_meta_value_reference.h"
 #include "Object/ref/meta_value_reference.h"
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/type/canonical_generic_datatype.h"
+#endif
 
 #include "common/TODO.h"
 
@@ -100,18 +103,27 @@ REQUIRES_STACKTRACE_STATIC_INIT
 	NOTE: the check for may_be_initialized is optional, just an
 		attempt to catch obvious errors earlier.  
  */
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 param_expr::make_param_expression_assignment(
 		const count_ptr<const param_expr>& p) {
-	typedef	excl_ptr<param_expression_assignment>	return_type;
 	NEVER_NULL(p);
+#if ENABLE_STATIC_ANALYSIS
 	if (!p->may_be_initialized()) {
+		typedef	assignment_ptr_type		return_type;
 		p->dump(cerr << "ERROR: rhs of expr-assignment is "
 			"not initialized or dependent on formals: ",
 			expr_dump_context::error_mode) << endl;
 		THROW_EXIT;		// temporary
 		return return_type(NULL);
-	} else	return p->make_param_expression_assignment_private(p);
+	} else	
+#else
+	// we're not bothering with compile-time static analysis any more...
+		return p->make_param_expression_assignment_private(p);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -153,9 +165,17 @@ pbool_expr::~pbool_expr() {
 	When pint is interpreted as an int, in non-meta language...
  */
 count_ptr<const data_type_reference>
-pbool_expr::get_data_type_ref(void) const {
+pbool_expr::get_unresolved_data_type_ref(void) const {
 	return bool_traits::built_in_type_ptr;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+canonical_generic_datatype
+pbool_expr::get_resolved_data_type_ref(const unroll_context&) const {
+	return bool_traits::built_in_type_ptr->make_canonical_type();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -216,10 +236,29 @@ pbool_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Forwarding function.  
+ */
+count_ptr<const param_expr>
+pbool_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const param_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 pbool_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
-	typedef	excl_ptr<param_expression_assignment>	return_type;
+	typedef	assignment_ptr_type		return_type;
 	INVARIANT(p == this);
 	return return_type(
 		new pbool_expression_assignment(p.is_a<const this_type>()));
@@ -252,9 +291,20 @@ pint_expr::~pint_expr() {
 	TODO: return int<0>? to signal something special?
  */
 count_ptr<const data_type_reference>
-pint_expr::get_data_type_ref(void) const {
+pint_expr::get_unresolved_data_type_ref(void) const {
 	return int_traits::int32_type_ptr;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+/**
+	TODO: write a built_in_resolved_type for pint.
+ */
+canonical_generic_datatype
+pint_expr::get_resolved_data_type_ref(const unroll_context&) const {
+	return int_traits::magic_int_type_ptr->make_canonical_type();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -323,6 +373,7 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 		.is_a<const const_index>();
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need this as a final unique overrider of virtual grandparent.  
  */
@@ -333,10 +384,42 @@ pint_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Forwarding function.  
+ */
+count_ptr<const param_expr>
+pint_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const param_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Forwarding function.  
+ */
+count_ptr<const meta_index_expr>
+pint_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 pint_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
-	typedef	excl_ptr<param_expression_assignment>	return_type;
+	typedef	assignment_ptr_type		return_type;
 	INVARIANT(p == this);
 	return return_type(
 		new pint_expression_assignment(p.is_a<const pint_expr>()));
@@ -370,6 +453,7 @@ pint_expr::unroll_resolve_index(const unroll_context& c) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	\return deep copy of resolve constant integer value, 
 	if it is successfully resolved.  
@@ -383,6 +467,7 @@ pint_expr::resolve_index(void) const {
 		return_type(new pint_const(i)) :
 		return_type(NULL);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -403,7 +488,7 @@ pint_expr::must_be_equivalent_index(const meta_index_expr& i) const {
 	When pint is interpreted as an int, in non-meta language...
  */
 count_ptr<const data_type_reference>
-preal_expr::get_data_type_ref(void) const {
+preal_expr::get_unresolved_data_type_ref(void) const {
 #if 1
 	FINISH_ME_EXIT(Fang);
 	return count_ptr<const data_type_reference>(NULL);
@@ -411,6 +496,18 @@ preal_expr::get_data_type_ref(void) const {
 	return bool_traits::built_in_type_ptr;
 #endif
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+/**
+	Shouldn't be called, don't have nonmeta reals yet...
+ */
+canonical_generic_datatype
+preal_expr::get_resolved_data_type_ref(const unroll_context&) const {
+	FINISH_ME_EXIT(Fang);
+	return canonical_generic_datatype();
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -463,10 +560,29 @@ preal_expr::unroll_resolve_copy(const unroll_context& c,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Forwarding function.  
+ */
+count_ptr<const param_expr>
+preal_expr::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const param_expr>& p) const {
+	return substitute_default_positional_parameters(f, e, 
+		p.is_a<const this_type>());
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 preal_expr::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
-	typedef	excl_ptr<param_expression_assignment>	return_type;
+	typedef	assignment_ptr_type		return_type;
 	INVARIANT(p == this);
 	return return_type(
 		new preal_expression_assignment(p.is_a<const preal_expr>()));
@@ -641,7 +757,11 @@ pint_const::range_size_equivalent(const const_index& i) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 pint_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return pint_expr::make_param_expression_assignment_private(p);
@@ -669,6 +789,21 @@ pint_const::unroll_resolve_rvalues(const unroll_context&,
 	INVARIANT(p == this);
 	return p.is_a<const pint_const>();	// must be true: this
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return itself, there's nothing to substitute.
+ */
+count_ptr<const pint_expr>
+pint_const::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pint_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 count_ptr<const_index>
@@ -781,7 +916,11 @@ pbool_const::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 pbool_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return pbool_expr::make_param_expression_assignment_private(p);
@@ -822,6 +961,21 @@ pbool_const::unroll_resolve_rvalues(const unroll_context& c,
 	INVARIANT(p == this);
 	return p.is_a<const pbool_const>();
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return itself, there's nothing to substitute.
+ */
+count_ptr<const pbool_expr>
+pbool_const::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const pbool_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -940,7 +1094,11 @@ preal_const::static_constant_dimensions(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if REF_COUNT_INSTANCE_MANAGEMENT
+count_ptr<param_expression_assignment>
+#else
 excl_ptr<param_expression_assignment>
+#endif
 preal_const::make_param_expression_assignment_private(
 		const count_ptr<const param_expr>& p) const {
 	return preal_expr::make_param_expression_assignment_private(p);
@@ -992,6 +1150,21 @@ preal_const::unroll_resolve_copy(const unroll_context& c,
 	INVARIANT(p == this);
 	return p;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return itself, there's nothing to substitute.
+ */
+count_ptr<const preal_expr>
+preal_const::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e,
+		const count_ptr<const preal_expr>& p) const {
+	INVARIANT(p == this);
+	return p;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool

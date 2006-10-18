@@ -4,10 +4,10 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	204
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	200
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -25,14 +25,15 @@ Persistent Object Manager text dump:
 	21	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	111
-	26	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	29	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	30	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	103
+	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	25	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	102
+	26	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	94
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -49,41 +50,42 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> foo::N
       Instances:
-        a = bool<> a
-
+        a = bool<> foo::a^1
       unroll sequence: 
-        pint<> N
         bool<> a[0..N-1]
         a[0] = a[4];
       footprint collection: {
         <6> {
-          pint^0 N value: ?
-          bool^1 a
-            unrolled indices: {
-              0 = ::foo::a[4] 
-              1 = ::foo::a[1] 
-              2 = ::foo::a[2] 
-              3 = ::foo::a[3] 
-              4 = ::foo::a[4] 
-              5 = ::foo::a[5] 
+          N = pint^0 value: 6
+          a = bool^1
+            {
+              0 = foo::a[4] 
+              1 = foo::a[1] 
+              2 = foo::a[2] 
+              3 = foo::a[3] 
+              4 = foo::a[4] 
+              5 = foo::a[5] 
             }
         }
       }
       }
 
   Instances:
-    poo = process foo<6>^0 poo (instantiated) = ::poo (
-      bool^1 a
-        unrolled indices: {
-          0 = ::poo.a[0] 
-          1 = ::poo.a[1] 
-          2 = ::poo.a[2] 
-          3 = ::poo.a[3] 
-          4 = ::poo.a[4] 
-          5 = ::poo.a[5] 
-        }
-    )
+    poo = foo<6> poo
 }
 
+footprint: {
+  poo = process foo<6>^0 = poo (
+    a = bool^1
+      {
+        0 = poo.a[0] 
+        1 = poo.a[1] 
+        2 = poo.a[2] 
+        3 = poo.a[3] 
+        4 = poo.a[4] 
+        5 = poo.a[5] 
+      }
+  )
+}

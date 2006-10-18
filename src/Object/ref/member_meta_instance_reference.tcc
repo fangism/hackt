@@ -2,7 +2,7 @@
 	\file "Object/ref/member_meta_instance_reference.tcc"
 	Method definitions for the meta_instance_reference family of objects.
 	This file was reincarnated from "Object/art_object_member_inst_ref.tcc"
- 	$Id: member_meta_instance_reference.tcc,v 1.16 2006/08/08 05:46:41 fang Exp $
+ 	$Id: member_meta_instance_reference.tcc,v 1.17 2006/10/18 01:19:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_MEMBER_META_INSTANCE_REFERENCE_TCC__
@@ -12,6 +12,9 @@
 #include "util/what.h"
 #include "util/persistent_object_manager.h"
 #include "Object/inst/physical_instance_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#endif
 #include "Object/ref/member_meta_instance_reference.h"
 #include "Object/ref/inst_ref_implementation.h"
 #include "Object/inst/substructure_alias_base.h"
@@ -46,7 +49,12 @@ MEMBER_INSTANCE_REFERENCE_CLASS::member_meta_instance_reference() :
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 MEMBER_INSTANCE_REFERENCE_CLASS::member_meta_instance_reference(
 		const base_inst_ptr_type& b, 
-		const instance_collection_ptr_type m) :
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_ptr_type m
+#else
+		const instance_collection_ptr_type m
+#endif
+		) :
 		parent_type(m), base_inst_ref(b) {
 }
 
@@ -94,9 +102,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 	this->dump(STACKTRACE_INDENT << "ref: ",
 		expr_dump_context::default_value) << endl;
 	STACKTRACE_INDENT_PRINT("c\'s target footprint:" << endl);
-	c.get_target_footprint()->dump_with_collections(cerr, 
-		dump_flags::default_value, 
-		expr_dump_context::default_value) << endl;
+	c.dump(cerr) << endl;
 #endif
 	// this also include member_meta_instance_references
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
@@ -118,9 +124,15 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 		return return_type(NULL);
 	}
 	// assert dynamic cast
+#if USE_INSTANCE_PLACEHOLDERS
+	const physical_instance_placeholder&
+		phys_inst(IS_A(const physical_instance_placeholder&, 
+			*this->get_inst_base()));
+#else
 	const physical_instance_collection&
 		phys_inst(IS_A(const physical_instance_collection&, 
 			*this->get_inst_base()));
+#endif
 	const count_ptr<instance_collection_base>
 		resolved_instance(
 			parent_struct->lookup_port_instance(phys_inst));
@@ -150,7 +162,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::resolve_parent_member_helper(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 size_t
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
-		const state_manager& sm) const {
+		const state_manager& sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	const base_inst_type& _parent_inst_ref(*this->base_inst_ref);
 	if (_parent_inst_ref.dimensions()) {
@@ -163,7 +179,11 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 		return 0;
 	}
 	const footprint_frame* const fpf =
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		_parent_inst_ref.lookup_footprint_frame(sm, top);
+#else
 		_parent_inst_ref.lookup_footprint_frame(sm);
+#endif
 	if (!fpf) {
 		// TODO: better error message
 		cerr << "Failure resolving parent instance reference" << endl;
@@ -188,10 +208,20 @@ MEMBER_INSTANCE_REFERENCE_CLASS::lookup_globally_allocated_index(
 	// now need to compute the offset into the corresponding 
 	// footprint_frame_map
 	// we look for the local alias to get the local offset!
-	const unroll_context uc;	// until we pass a global context
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	const unroll_context uc(&top, &top);
+#else
+	const unroll_context uc(NULL, NULL);
+#endif
+		// until we pass a global context
 	const instance_alias_base_ptr_type
+#if USE_INSTANCE_PLACEHOLDERS
+		local_alias(__unroll_generic_scalar_reference_no_lookup(
+			pi, this->array_indices, uc));
+#else
 		local_alias(__unroll_generic_scalar_reference(
 			pi, this->array_indices, uc, false));
+#endif
 	if (!local_alias) {
 		// TODO: better error message
 		cerr << "Error resolving member instance alias." << endl;
@@ -223,9 +253,7 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_references_packed(
 		expr_dump_context::default_value) << endl;
 	STACKTRACE_INDENT << "&c = " << &c << endl;
 	STACKTRACE_INDENT << "c\'s target footprint:" << endl;
-	c.get_target_footprint()->dump_with_collections(cerr, 
-		dump_flags::default_value, 
-		expr_dump_context::default_value) << endl;
+	c.dump(cerr) << endl;
 #endif
 	const count_ptr<instance_collection_generic_type>
 		inst_base(resolve_parent_member_helper(c));
@@ -260,8 +288,13 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_generic_scalar_reference(
 	}
 	const unroll_context cc(c.make_member_context());
 	// The following call should NOT be doing extra lookup! (pass false)
+#if USE_INSTANCE_PLACEHOLDERS
+	return __unroll_generic_scalar_reference_no_lookup(
+			*inst_base, this->array_indices, cc);
+#else
 	return __unroll_generic_scalar_reference(
 			*inst_base, this->array_indices, cc, false);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -285,9 +318,15 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 	// only the ultimate parent of the reference should use the footprint
 	// copy the unroll_context *except* for the footprint pointer
 	// The following should NOT be doing extra lookup! (pass false)
+#if USE_INSTANCE_PLACEHOLDERS
+	return parent_type::substructure_implementation_policy::
+		template unroll_generic_scalar_substructure_reference<Tag>(
+			*inst_base, this->array_indices, cc);
+#else
 	return parent_type::substructure_implementation_policy::
 		template unroll_generic_scalar_substructure_reference<Tag>(
 			*inst_base, this->array_indices, cc, false);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -299,10 +338,18 @@ MEMBER_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 MEMBER_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 MEMBER_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager& sm) const {
+		const state_manager& sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint& top
+#endif
+		) const {
 	STACKTRACE_VERBOSE;
 	return parent_type::substructure_implementation_policy::
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		template member_lookup_footprint_frame<Tag>(*this, sm, top);
+#else
 		template member_lookup_footprint_frame<Tag>(*this, sm);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.4 2006/01/22 18:20:59 fang Exp $
+	$Id: meta_loop_base.cc,v 1.5 2006/10/18 01:20:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -10,6 +10,21 @@
 
 #include "Object/unroll/meta_loop_base.h"
 #include "Object/expr/meta_range_expr.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#include "Object/traits/pint_traits.h"
+#include "Object/unroll/instantiation_statement_base.h"
+#include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/param_instantiation_statement.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#else
+#include "Object/expr/param_expr_list.h"
+#endif
+#include "Object/expr/meta_range_list.h"
+#include "Object/def/footprint.h"
+#include "Object/unroll/unroll_context.h"
+#endif
 #include "Object/inst/pint_value_collection.h"
 
 // #include "common/TODO.h"
@@ -21,6 +36,7 @@
 //=============================================================================
 namespace HAC {
 namespace entity {
+#include "util/using_ostream.h"
 
 //=============================================================================
 // class meta_loop_base method definitions
@@ -37,6 +53,35 @@ meta_loop_base::meta_loop_base(const ind_var_ptr_type& i,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 meta_loop_base::~meta_loop_base() { }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	Populates a footprint with an actual instance of the induction
+	variable and returns a pointer to the scalar variable 
+	for the caller to manipulate in a loop. 
+ */
+count_ptr<pint_scalar>
+meta_loop_base::initialize_footprint(footprint& f) const {
+	// temporary instantiation statement
+	const never_ptr<const pint_value_placeholder> ivr(&*ind_var);
+	const pint_instantiation_statement
+		pis(ivr, pint_traits::built_in_type_ptr, 
+			index_collection_item_ptr_type());
+	// fake a context, no additional information necessary to instantiate
+	const unroll_context temp(&f, &f);
+	const good_bool g(pis.unroll(temp));
+	// doesn't assign init. value
+	INVARIANT(g.good);
+	const string& key(ind_var->get_name());
+	const count_ptr<pint_scalar> ret(f[key].is_a<pint_scalar>());
+	NEVER_NULL(ret);
+	// other back-linking collection to placeholder? for diagnostics?
+	// assign it some value to make it valid initially
+	ret->get_instance() = 0;
+	return ret;
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void

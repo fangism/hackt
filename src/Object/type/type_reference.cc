@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.17 2006/08/14 04:50:06 fang Exp $
+ 	$Id: type_reference.cc,v 1.18 2006/10/18 01:20:02 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -37,8 +37,16 @@
 #include "Object/inst/struct_instance_collection.h"
 #include "Object/inst/pbool_value_collection.h"
 #include "Object/inst/pint_value_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+// #include "Object/inst/datatype_instance_placeholder.h"
+#include "Object/inst/instance_placeholder.h"
+#include "Object/inst/value_placeholder.h"
+#endif
 #include "Object/expr/pint_const.h"
 #include "Object/expr/const_param_expr_list.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#endif
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
 #include "util/persistent_object_manager.tcc"
@@ -119,7 +127,11 @@ fundamental_type_reference::~fundamental_type_reference() {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 fundamental_type_reference::dump(ostream& o) const {
+#if 0
 	return template_args.dump(o << get_base_def()->get_name());
+#else
+	return template_args.dump(o << get_base_def()->get_qualified_name());
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -171,7 +183,7 @@ fundamental_type_reference::is_resolved(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
@@ -181,7 +193,7 @@ fundamental_type_reference::make_instantiation_statement(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // is static
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 fundamental_type_reference::make_instantiation_statement(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d) {
@@ -352,12 +364,13 @@ data_type_reference::is_accepted_in_channel(void) const {
  */
 good_bool
 data_type_reference::must_be_valid(void) const {
+	STACKTRACE_VERBOSE;
 	return base_type_def->get_template_formals_manager()
 		.must_validate_actuals(template_args);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 1
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Creates a translation context between formals and actuals.  
  */
@@ -384,8 +397,12 @@ data_type_reference::unroll_resolve(const unroll_context& c) const {
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context& cc(c);
+#else
 		unroll_context cc(make_unroll_context());
 		cc.chain_context(c);
+#endif
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
@@ -427,12 +444,12 @@ data_type_reference::merge_relaxed_actuals(
 /**
 	Returns a newly constructed data instantiation statement object.
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 data_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
-	return excl_ptr<instantiation_statement_base>(
+	return instantiation_statement_ptr_type(
 		new data_instantiation_statement(
 			t.is_a<const data_type_reference>(), d, a));
 }
@@ -447,11 +464,19 @@ data_type_reference::make_instantiation_statement_private(
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+excl_ptr<instance_placeholder_base>
+#else
 excl_ptr<instance_collection_base>
+#endif
 data_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef excl_ptr<instance_placeholder_base>	return_type;
+#else
 	typedef excl_ptr<instance_collection_base>	return_type;
+#endif
 /***
 	datatype_instance_collection is now pure virtual, 
 	we use a temporary shortcut to effectively sub-class...
@@ -463,20 +488,40 @@ data_type_reference::make_instance_collection(
 	// hideous switch-case... only temporary
 	if (alias.is_a<const user_def_datatype>()) {
 		return return_type(
-			struct_instance_collection::make_array(*s, id, d));
+#if USE_INSTANCE_PLACEHOLDERS
+			new struct_instance_placeholder(*s, id, d)
+#else
+			struct_instance_collection::make_array(*s, id, d)
+#endif
+			);
 	} else if (alias.is_a<const enum_datatype_def>()) {
 		return return_type(
-			enum_instance_collection::make_array(*s, id, d));
+#if USE_INSTANCE_PLACEHOLDERS
+			new enum_instance_placeholder(*s, id, d)
+#else
+			enum_instance_collection::make_array(*s, id, d)
+#endif
+			);
 	} else {
 		// what about typedefs/aliases of built-in types? Ahhhh....
 		INVARIANT(alias.is_a<const built_in_datatype_def>());
 		// just compare pointers
 		if (alias == &bool_traits::built_in_definition) {
 			return return_type(
-				bool_instance_collection::make_array(*s, id, d));
+#if USE_INSTANCE_PLACEHOLDERS
+				new bool_instance_placeholder(*s, id, d)
+#else
+				bool_instance_collection::make_array(*s, id, d)
+#endif
+				);
 		} else if (alias == &int_traits::built_in_definition) {
 			return return_type(
-				int_instance_collection::make_array(*s, id, d));
+#if USE_INSTANCE_PLACEHOLDERS
+				new int_instance_placeholder(*s, id, d)
+#else
+				int_instance_collection::make_array(*s, id, d)
+#endif
+				);
 		} else {
 			DIE;	// WTF!?
 			return return_type(NULL);
@@ -637,9 +682,13 @@ data_type_reference::unroll_port_instances(
 		STACKTRACE("local context");
 		const template_actuals
 			resolved_template_args(ta.unroll_resolve(c));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context& cc(c);
+#else
 		const unroll_context
 			cc(resolved_template_args, 
 				data_def->get_template_formals_manager());
+#endif
 		// should the contexts be chained?
 		// or can the actuals always be resolved one scope at a time?
 		port_formals.unroll_ports(cc, sub);
@@ -670,13 +719,50 @@ data_type_reference*
 data_type_reference::make_quick_int_type_ref(const pint_value_type w) {
 	INVARIANT(w >= 0);
 	// is an excl_ptr, incidentally
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	const count_ptr<const param_expr> wd(new pint_const(w));
+#else
+	const count_ptr<const pint_const> wd(new pint_const(w));
+#endif
 	const fundamental_type_reference::template_args_ptr_type
-		width_params(new const_param_expr_list(
-			count_ptr<const pint_const>(new pint_const(w))));
-	const template_actuals tpl(width_params, 
-		template_actuals::arg_list_ptr_type());
+		width_params(
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+			new dynamic_param_expr_list
+#else
+			new const_param_expr_list
+#endif
+			(wd));
+	const template_actuals
+		tpl(width_params, template_actuals::arg_list_ptr_type());
 	return new data_type_reference(never_ptr<const built_in_datatype_def>(
 		&int_traits::built_in_definition), tpl);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+canonical_generic_datatype
+data_type_reference::make_canonical_int_type_ref(const pint_value_type w) {
+	INVARIANT(w >= 0);
+	// is an excl_ptr, incidentally
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	const count_ptr<const param_expr> wd(new pint_const(w));
+#else
+	const count_ptr<const pint_const> wd(new pint_const(w));
+#endif
+	const fundamental_type_reference::template_args_ptr_type
+		width_params(
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+			new dynamic_param_expr_list
+#else
+			new const_param_expr_list
+#endif
+			(wd));
+	const template_actuals
+		tpl(width_params, template_actuals::arg_list_ptr_type());
+	return canonical_generic_datatype(
+		never_ptr<const built_in_datatype_def>(
+			&int_traits::built_in_definition),
+		tpl);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1062,6 +1148,7 @@ builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Creates a translation context between formals and actuals.  
  */
@@ -1070,6 +1157,7 @@ builtin_channel_type_reference::make_unroll_context(void) const {
 	// doesn't have template formals...
 	return unroll_context();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1106,13 +1194,13 @@ builtin_channel_type_reference::unroll_resolve(const unroll_context& c) const {
 		for making instantiation statements?
 	(2005-05-28: decide later)
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 builtin_channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
 	// technically built-in channel types never have relaxed actuals...
-	return excl_ptr<instantiation_statement_base>(
+	return instantiation_statement_ptr_type(
 		new channel_instantiation_statement(
 			t.is_a<const this_type>(), d, a));
 }
@@ -1124,12 +1212,21 @@ builtin_channel_type_reference::make_instantiation_statement_private(
 		for making instantiation collections?
 	(2005-05-28: decide later)
  */
+#if USE_INSTANCE_PLACEHOLDERS
+excl_ptr<instance_placeholder_base>
+#else
 excl_ptr<instance_collection_base>
+#endif
 builtin_channel_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	return excl_ptr<instance_placeholder_base>(
+		new channel_instance_placeholder(*s, id, d));
+#else
 	return excl_ptr<instance_collection_base>(
 		channel_instance_collection::make_array(*s, id, d));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1282,6 +1379,7 @@ channel_type_reference::resolve_builtin_channel_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Creates a translation context between formals and actuals.  
  */
@@ -1290,6 +1388,7 @@ channel_type_reference::make_unroll_context(void) const {
 	return unroll_context(template_args,
 		base_chan_def->get_template_formals_manager());
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1307,8 +1406,12 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context& cc(c);
+#else
 		unroll_context cc(make_unroll_context());
 		cc.chain_context(c);
+#endif
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
@@ -1406,12 +1509,12 @@ channel_type_reference::merge_relaxed_actuals(
 /**
 	Returns a newly constructed channel instantiation statement object.
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 channel_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
-	return excl_ptr<instantiation_statement_base>(
+	return instantiation_statement_ptr_type(
 		new channel_instantiation_statement(
 			t.is_a<const this_type>(), d, a));
 }
@@ -1420,12 +1523,21 @@ channel_type_reference::make_instantiation_statement_private(
 /**
 	Returns a newly constructed channel instance object.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+excl_ptr<instance_placeholder_base>
+#else
 excl_ptr<instance_collection_base>
+#endif
 channel_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	return excl_ptr<instance_placeholder_base>(
+		new channel_instance_placeholder(*s, id, d));
+#else
 	return excl_ptr<instance_collection_base>(
 		channel_instance_collection::make_array(*s, id, d));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1578,6 +1690,7 @@ process_type_reference::must_be_valid(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Creates a translation context between formals and actuals.  
  */
@@ -1586,12 +1699,13 @@ process_type_reference::make_unroll_context(void) const {
 	return unroll_context(template_args,
 		base_proc_def->get_template_formals_manager());
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
-	NOTE: this procudure will be the model for data and channel types'
+	NOTE: this procedure will be the model for data and channel types'
 		unroll_resolve, so perfect this first!
 	TODO: resolve data-type aliases (may already be done now)
 	\return a copy of itself, but with type parameters resolved, 
@@ -1606,8 +1720,16 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
 		// chaining the contexts solves the problem of having
 		// parameters in the same actuals list resolve through
 		// formal parameters of different scopes.  
+#if ENABLE_STACKTRACE
+		template_args.dump(STACKTRACE_STREAM << "template_args: ")
+			<< endl;
+#endif
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context& cc(c);
+#else
 		unroll_context cc(make_unroll_context());
 		cc.chain_context(c);
+#endif
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		if (actuals) {
@@ -1636,7 +1758,7 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
  */
 count_ptr<const process_type_reference>
 process_type_reference::unroll_resolve(void) const {
-	return unroll_resolve(unroll_context());
+	return unroll_resolve(unroll_context(NULL, NULL));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1673,12 +1795,12 @@ process_type_reference::merge_relaxed_actuals(
 /**
 	Returns a newly constructed process instantiation statement object.
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 process_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
-	return excl_ptr<instantiation_statement_base>(
+	return instantiation_statement_ptr_type(
 		new process_instantiation_statement(
 			t.is_a<const process_type_reference>(), d, a));
 }
@@ -1690,12 +1812,21 @@ process_type_reference::make_instantiation_statement_private(
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+excl_ptr<instance_placeholder_base>
+#else
 excl_ptr<instance_collection_base>
+#endif
 process_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	return excl_ptr<instance_placeholder_base>(
+		new process_instance_placeholder(*s, id, d));
+#else
 	return excl_ptr<instance_collection_base>(
 		process_instance_collection::make_array(*s, id, d));
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1789,9 +1920,13 @@ process_type_reference::unroll_port_instances(
 		STACKTRACE("local context");
 		const template_actuals
 			resolved_template_args(template_args.unroll_resolve(c));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context& cc(c);
+#else
 		const unroll_context
 			cc(resolved_template_args, 
 				proc_def->get_template_formals_manager());
+#endif
 		// should the contexts be chained?
 		// or can the actuals always be resolved one scope at a time?
 		port_formals.unroll_ports(cc, sub);
@@ -1879,12 +2014,12 @@ param_type_reference::is_accepted_in_channel(void) const {
 /**
 	Returns a newly constructed param instantiation statement object.
  */
-excl_ptr<instantiation_statement_base>
+fundamental_type_reference::instantiation_statement_ptr_type
 param_type_reference::make_instantiation_statement_private(
 		const count_ptr<const fundamental_type_reference>& t, 
 		const index_collection_item_ptr_type& d, 
 		const const_template_args_ptr_type& a) const {
-	typedef	excl_ptr<instantiation_statement_base>	return_type;
+	typedef	instantiation_statement_ptr_type	return_type;
 	static const pbool_traits::type_ref_ptr_type&
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&
@@ -1921,11 +2056,20 @@ param_type_reference::make_instantiation_statement_private(
 	\param id the local name of this instance.  
 	\return pointer to the created instance.  
  */
+#if USE_INSTANCE_PLACEHOLDERS
+excl_ptr<instance_placeholder_base>
+#else
 excl_ptr<instance_collection_base>
+#endif
 param_type_reference::make_instance_collection(
 		const never_ptr<const scopespace> s, 
 		const token_identifier& id, const size_t d) const {
 	// hard coded... yucky, but efficient.  
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	excl_ptr<instance_placeholder_base>	return_type;
+#else
+	typedef	excl_ptr<instance_collectionr_base>	return_type;
+#endif
 	static const pbool_traits::type_ref_ptr_type&
 		pbool_type_ptr(pbool_traits::built_in_type_ptr);
 	static const pint_traits::type_ref_ptr_type&
@@ -1933,14 +2077,29 @@ param_type_reference::make_instance_collection(
 	static const preal_traits::type_ref_ptr_type&
 		preal_type_ptr(preal_traits::built_in_type_ptr);
 	if (must_be_type_equivalent(*pbool_type_ptr))
-		return excl_ptr<instance_collection_base>(
-			pbool_instance_collection::make_array(*s, id, d));
+		return return_type(
+#if USE_INSTANCE_PLACEHOLDERS
+			new pbool_value_placeholder(*s, id, d)
+#else
+			pbool_instance_collection::make_array(*s, id, d)
+#endif
+			);
 	else if (must_be_type_equivalent(*pint_type_ptr))
-		return excl_ptr<instance_collection_base>(
-			pint_instance_collection::make_array(*s, id, d));
+		return return_type(
+#if USE_INSTANCE_PLACEHOLDERS
+			new pint_value_placeholder(*s, id, d)
+#else
+			pint_instance_collection::make_array(*s, id, d)
+#endif
+			);
 	else if (must_be_type_equivalent(*preal_type_ptr))
-		return excl_ptr<instance_collection_base>(
-			preal_instance_collection::make_array(*s, id, d));
+		return return_type(
+#if USE_INSTANCE_PLACEHOLDERS
+			new preal_value_placeholder(*s, id, d)
+#else
+			preal_instance_collection::make_array(*s, id, d)
+#endif
+			);
 	else {
 	ICE(cerr, 
 		pbool_type_ptr->dump(cerr) << " at " << &*pbool_type_ptr << endl;
@@ -1948,7 +2107,7 @@ param_type_reference::make_instance_collection(
 		preal_type_ptr->dump(cerr) << " at " << &*preal_type_ptr << endl;
 		dump(cerr << "this: ") << " at " << this << endl;
 	);
-		return excl_ptr<instance_collection_base>(NULL);
+		return return_type(NULL);
 	}
 }
 
@@ -1981,6 +2140,7 @@ param_type_reference::must_be_type_equivalent(const this_type& t) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Creates a translation context between formals and actuals.  
  */
@@ -1988,6 +2148,7 @@ unroll_context
 param_type_reference::make_unroll_context(void) const {
 	return unroll_context();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

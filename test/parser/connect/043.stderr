@@ -1,1 +1,1 @@
-ERROR: process-definition ::basket has no public member named "bogus" at [22:24..28]
+ERROR: process-definition basket has no public member named "bogus" at [22:24..28]

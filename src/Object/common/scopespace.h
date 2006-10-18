@@ -3,7 +3,7 @@
 	Classes for scoped objects including namespaces.  
 	This file came from "Object/common/scopespace.h"
 		in its previous short-lived history.  
-	$Id: scopespace.h,v 1.13 2006/08/04 02:15:12 fang Exp $
+	$Id: scopespace.h,v 1.14 2006/10/18 01:19:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_COMMON_SCOPESPACE_H__
@@ -12,6 +12,7 @@
 #include <list>
 #include <map>
 #include "Object/common/util_types.h"
+#include "Object/devel_switches.h"
 #include "util/persistent.h"		// for persistent object interface
 #include "util/boolean_types.h"
 #include "util/STL/map_fwd.h"
@@ -35,8 +36,13 @@ class object;
 struct dump_flags;
 class definition_base;
 class typedef_base;
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+class param_value_placeholder;
+#else
 class instance_collection_base;
 class param_value_collection;
+#endif
 using std::list;
 using std::string;
 using std::istream;
@@ -133,11 +139,21 @@ protected:
 		typedef std::default_map<string,
 				never_ptr<typedef_base> >::type
 							alias_bin_type;
+#if USE_INSTANCE_PLACEHOLDERS
+		typedef std::default_map<string,
+				never_ptr<instance_placeholder_base> >::type
+#else
 		typedef std::default_map<string,
 				never_ptr<instance_collection_base> >::type
+#endif
 							inst_bin_type;
+#if USE_INSTANCE_PLACEHOLDERS
+		typedef std::default_map<string,
+				never_ptr<param_value_placeholder> >::type
+#else
 		typedef std::default_map<string,
 				never_ptr<param_value_collection> >::type
+#endif
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -168,11 +184,21 @@ protected:
 		typedef std::default_map<string,
 				never_ptr<const typedef_base> >::type
 							alias_bin_type;
+#if USE_INSTANCE_PLACEHOLDERS
+		typedef std::default_map<string,
+				never_ptr<const instance_placeholder_base> >::type
+#else
 		typedef std::default_map<string,
 				never_ptr<const instance_collection_base> >::type
+#endif
 							inst_bin_type;
+#if USE_INSTANCE_PLACEHOLDERS
+		typedef std::default_map<string,
+				never_ptr<const param_value_placeholder> >::type
+#else
 		typedef std::default_map<string,
 				never_ptr<const param_value_collection> >::type
+#endif
 							param_bin_type;
 
 		ns_bin_type		ns_bin;
@@ -269,12 +295,26 @@ virtual	never_ptr<const scopespace>
 	lookup_namespace(const qualified_id_slice& id) const;
 
 protected:
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const instance_placeholder_base>
+	add_instance(excl_ptr<instance_placeholder_base>&);
+#else
 	never_ptr<const instance_collection_base>
 	add_instance(excl_ptr<instance_collection_base>& i);
+#endif
 public:
 	// need id because instantiation statement won't be named yet!
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const instance_placeholder_base>
+#else
 	never_ptr<const instance_collection_base>
-	add_instance(const never_ptr<instantiation_statement_base> i, 
+#endif
+	add_instance(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& i, 
+#else
+		const never_ptr<instantiation_statement_base> i, 
+#endif
 		const token_identifier& id, const bool);
 
 	good_bool

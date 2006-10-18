@@ -5,70 +5,77 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	386
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	29
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
-	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	48	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	49	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	50	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	52	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	55	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	56	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	57	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	58	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	59	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	60	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	61	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
-	63	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	65	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	66	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	57	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
+	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	59	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	60	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
+	61	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	65	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	67	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	68	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	69	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	72	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	73	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	74	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -86,139 +93,146 @@ In namespace "", we have: {
       )
       In definition "portaproc", we have: {
       Instances:
-        b = bool<> b
-        c = bool<> c
-
-        i = int<32> i
-        j = int<32> j
-
+        b = bool<> portaproc::b
+        c = bool<> portaproc::c^1
+        i = int<32> portaproc::i
+        j = int<32> portaproc::j^1
       unroll sequence: 
         bool<> b
         bool<> c[0..3]
         int<32> i
         int<32> j[0..1]
       footprint: {
-        bool^0 b (instantiated) = ::portaproc::b (1) 
-        bool^1 c
-          unrolled indices: {
-            0 = ::portaproc::c[0] (2) 
-            1 = ::portaproc::c[1] (3) 
-            2 = ::portaproc::c[2] (4) 
-            3 = ::portaproc::c[3] (5) 
+        b = bool^0 = portaproc::b (1) 
+        c = bool^1
+          {
+            0 = portaproc::c[0] (2) 
+            1 = portaproc::c[1] (3) 
+            2 = portaproc::c[2] (4) 
+            3 = portaproc::c[3] (5) 
           }
-        int<32>^0 i (instantiated) = ::portaproc::i (1) 
-        int<32>^1 j
-          unrolled indices: {
-            0 = ::portaproc::j[0] (2) 
-            1 = ::portaproc::j[1] (3) 
+        i = int<32>^0 = portaproc::i (1) 
+        j = int<32>^1
+          {
+            0 = portaproc::j[0] (2) 
+            1 = portaproc::j[1] (3) 
           }
+        Created state:
         int instance pool:
-        1	::portaproc::i
-        2	::portaproc::j[0]
-        3	::portaproc::j[1]
+        1	portaproc::i
+        2	portaproc::j[0]
+        3	portaproc::j[1]
         bool instance pool:
-        1	::portaproc::b
-        2	::portaproc::c[0]
-        3	::portaproc::c[1]
-        4	::portaproc::c[2]
-        5	::portaproc::c[3]
+        1	portaproc::b
+        2	portaproc::c[0]
+        3	portaproc::c[1]
+        4	portaproc::c[2]
+        5	portaproc::c[3]
       }
       }
 
   Instances:
-    a = bool^0 a (instantiated) = ::a (1) 
-    p = process portaproc<>^0 p (instantiated) = ::p (1) (
-      bool^0 b (instantiated) = ::a (1) 
-      bool^1 c
-        unrolled indices: {
-          0 = ::x[0] (2) 
-          1 = ::x[1] (3) 
-          2 = ::x[2] (4) 
-          3 = ::x[3] (5) 
-        }
-      int<32>^0 i (instantiated) = ::q (1) 
-      int<32>^1 j
-        unrolled indices: {
-          0 = ::r[0] (2) 
-          1 = ::r[1] (3) 
-        }
-    )
-    q = int<32>^0 q (instantiated) = ::q (1) 
-    r = int<32>^1 r
-      unrolled indices: {
-        0 = ::r[0] (2) 
-        1 = ::r[1] (3) 
-      }
-    s = process portaproc<>^0 s (instantiated) = ::s (2) (
-      bool^0 b (instantiated) = ::s.b (6) 
-      bool^1 c
-        unrolled indices: {
-          0 = ::s.c[0] (7) 
-          1 = ::s.c[1] (8) 
-          2 = ::s.c[2] (9) 
-          3 = ::s.c[3] (10) 
-        }
-      int<32>^0 i (instantiated) = ::s.i (4) 
-      int<32>^1 j
-        unrolled indices: {
-          0 = ::s.j[0] (5) 
-          1 = ::s.j[1] (6) 
-        }
-    )
-    t = process portaproc<>^0 t (instantiated) = ::t (3) (
-      bool^0 b (instantiated) = ::t.b (11) 
-      bool^1 c
-        unrolled indices: {
-          0 = ::t.c[0] (12) 
-          1 = ::t.c[1] (13) 
-          2 = ::t.c[2] (14) 
-          3 = ::t.c[3] (15) 
-        }
-      int<32>^0 i (instantiated) = ::t.i (7) 
-      int<32>^1 j
-        unrolled indices: {
-          0 = ::t.j[0] (8) 
-          1 = ::t.j[1] (9) 
-        }
-    )
-    x = bool^1 x
-      unrolled indices: {
-        0 = ::x[0] (2) 
-        1 = ::x[1] (3) 
-        2 = ::x[2] (4) 
-        3 = ::x[3] (5) 
-      }
+    a = bool<> a
+    p = portaproc<> p
+    q = int<32> q
+    r = int<32> r^1
+    s = portaproc<> s
+    t = portaproc<> t
+    x = bool<> x^1
 }
 
-Created state:
-process instance pool:
-1	::p
-2	::s
-3	::t
-int instance pool:
-1	::q
-2	::r[0]
-3	::r[1]
-4	::s.i
-5	::s.j[0]
-6	::s.j[1]
-7	::t.i
-8	::t.j[0]
-9	::t.j[1]
-bool instance pool:
-1	::a
-2	::x[0]
-3	::x[1]
-4	::x[2]
-5	::x[3]
-6	::s.b
-7	::s.c[0]
-8	::s.c[1]
-9	::s.c[2]
-10	::s.c[3]
-11	::t.b
-12	::t.c[0]
-13	::t.c[1]
-14	::t.c[2]
-15	::t.c[3]
-
+footprint: {
+  a = bool^0 = a (1) 
+  p = process portaproc<>^0 = p (1) (
+    b = bool^0 = a (1) 
+    c = bool^1
+      {
+        0 = x[0] (2) 
+        1 = x[1] (3) 
+        2 = x[2] (4) 
+        3 = x[3] (5) 
+      }
+    i = int<32>^0 = q (1) 
+    j = int<32>^1
+      {
+        0 = r[0] (2) 
+        1 = r[1] (3) 
+      }
+  )
+  q = int<32>^0 = q (1) 
+  r = int<32>^1
+    {
+      0 = r[0] (2) 
+      1 = r[1] (3) 
+    }
+  s = process portaproc<>^0 = s (2) (
+    b = bool^0 = s.b (6) 
+    c = bool^1
+      {
+        0 = s.c[0] (7) 
+        1 = s.c[1] (8) 
+        2 = s.c[2] (9) 
+        3 = s.c[3] (10) 
+      }
+    i = int<32>^0 = s.i (4) 
+    j = int<32>^1
+      {
+        0 = s.j[0] (5) 
+        1 = s.j[1] (6) 
+      }
+  )
+  t = process portaproc<>^0 = t (3) (
+    b = bool^0 = t.b (11) 
+    c = bool^1
+      {
+        0 = t.c[0] (12) 
+        1 = t.c[1] (13) 
+        2 = t.c[2] (14) 
+        3 = t.c[3] (15) 
+      }
+    i = int<32>^0 = t.i (7) 
+    j = int<32>^1
+      {
+        0 = t.j[0] (8) 
+        1 = t.j[1] (9) 
+      }
+  )
+  x = bool^1
+    {
+      0 = x[0] (2) 
+      1 = x[1] (3) 
+      2 = x[2] (4) 
+      3 = x[3] (5) 
+    }
+  Created state:
+  process instance pool:
+  1	p
+  2	s
+  3	t
+  int instance pool:
+  1	q
+  2	r[0]
+  3	r[1]
+  4	s.i
+  5	s.j[0]
+  6	s.j[1]
+  7	t.i
+  8	t.j[0]
+  9	t.j[1]
+  bool instance pool:
+  1	a
+  2	x[0]
+  3	x[1]
+  4	x[2]
+  5	x[3]
+  6	s.b
+  7	s.c[0]
+  8	s.c[1]
+  9	s.c[2]
+  10	s.c[3]
+  11	t.b
+  12	t.c[0]
+  13	t.c[1]
+  14	t.c[2]
+  15	t.c[3]
+}

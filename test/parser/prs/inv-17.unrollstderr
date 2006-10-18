@@ -5,11 +5,11 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	202
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	11	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -20,12 +20,13 @@ Persistent Object Manager text dump:
 	16	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	17	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	18	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	23	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	procplch	0	#HEAD#	#TAIL#	31
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -39,8 +40,8 @@ In namespace "", we have: {
       )
       In definition "silly_inv", we have: {
       Instances:
-        a = bool<> a
-        b = bool<> b
+        a = bool<> silly_inv::a
+        b = bool<> silly_inv::b
       unroll sequence: 
         bool<> a
         bool<> b
@@ -48,12 +49,15 @@ In namespace "", we have: {
         a -> b-
         ~a -> b+
       footprint: {
-        bool^0 a (instantiated) = ::silly_inv::a 
-        bool^0 b (instantiated) = ::silly_inv::b 
+        a = bool^0 = silly_inv::a 
+        b = bool^0 = silly_inv::b 
       }
       }
 
   Instances:
-    __inv__ = process silly_inv<>^0 __inv__ (instantiated) = ::__inv__ 
+    __inv__ = silly_inv<> __inv__
 }
 
+footprint: {
+  __inv__ = process silly_inv<>^0 = __inv__ 
+}

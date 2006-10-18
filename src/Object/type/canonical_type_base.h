@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type_base.h"
-	$Id: canonical_type_base.h,v 1.4 2006/01/22 18:20:42 fang Exp $
+	$Id: canonical_type_base.h,v 1.5 2006/10/18 01:19:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_BASE_H__
@@ -50,6 +50,9 @@ public:
 
 	explicit
 	canonical_type_base(const const_param_list_ptr_type&);
+
+	canonical_type_base(const const_param_list_ptr_type&, 
+		const const_param_list_ptr_type&);
 
 	// default copy-constructor suffices
 

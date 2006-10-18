@@ -2,7 +2,7 @@
 	\file "Object/ref/meta_instance_reference_subtypes.h"
 	Subtype classification for meta-instance-reference base classes.
 	This file was reincarnated from "Object/art_object_inst_ref_subtypes.h".
-	$Id: meta_instance_reference_subtypes.h,v 1.8 2006/08/08 05:46:42 fang Exp $
+	$Id: meta_instance_reference_subtypes.h,v 1.9 2006/10/18 01:19:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_H__
@@ -11,6 +11,7 @@
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/ref/meta_index_list_fwd.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 
 namespace HAC {
@@ -45,6 +46,10 @@ public:
 	/// the instance collection base type
 	typedef typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef typename traits_type::instance_placeholder_type
+					instance_placeholder_type;
+#endif
 
 	/// keep this typedef consistent with 
 	/// simple_meta_indexed_reference_base::index_list_type
@@ -63,7 +68,7 @@ virtual	size_t
 
 	// consider sub-typing?
 virtual	count_ptr<const fundamental_type_reference>
-	get_type_ref(void) const = 0;
+	get_unresolved_type_ref(void) const = 0;
 
 virtual bad_bool
 	unroll_references_packed(const unroll_context&,
@@ -84,22 +89,34 @@ protected:
 	static
 	bad_bool
 	unroll_references_packed_helper(const unroll_context&,
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_type&,
+#else
 		const instance_collection_generic_type&,
+#endif
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>&,
+#else
 		const never_ptr<const index_list_type>,
+#endif
 		alias_collection_type&);
 
 	static
 	bad_bool
 	unroll_references_packed_helper_no_lookup(const unroll_context&,
 		const instance_collection_generic_type&,
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>&,
+#else
 		const never_ptr<const index_list_type>,
+#endif
 		alias_collection_type&);
 
 	COLLECT_ALIASES_PROTO;
 	COLLECT_SUBENTRIES_PROTO;
 
 private:
-	excl_ptr<aliases_connection_base>
+	alias_connection_ptr_type
 	make_aliases_connection_private(void) const;
 
 	count_ptr<aggregate_meta_instance_reference_base>

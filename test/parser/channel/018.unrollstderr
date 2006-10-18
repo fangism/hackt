@@ -5,18 +5,19 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	chandefn	0	#HEAD#	#TAIL#	67
-	4	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	10	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	13	##ADDR##	chancoll	0	#HEAD#	#TAIL#	52
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	11	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	chanplch	0	#HEAD#	#TAIL#	30
 	14	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	uchntprf	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	chancoll	0	#HEAD#	#TAIL#	38
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -35,12 +36,15 @@ In namespace "", we have: {
       )
       In channel definition "mychan", we have: {
       Instances:
-        i = int<32> i
+        i = int<32> mychan::i
       unroll sequence: 
         int<32> i
       }
 
   Instances:
-    foobar = channel mychan<>^0 foobar (instantiated) = ::foobar 
+    foobar = mychan<> foobar
 }
 
+footprint: {
+  foobar = channel mychan<>^0 = foobar 
+}

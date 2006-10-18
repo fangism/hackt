@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint_manager.cc"
 	Implementation of footprint_manager class. 
-	$Id: footprint_manager.cc,v 1.9 2006/06/26 01:45:53 fang Exp $
+	$Id: footprint_manager.cc,v 1.10 2006/10/18 01:19:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -145,6 +145,20 @@ footprint_manager::only(void) {
 		(*this)[key_type()];
 	}
 	return begin()->second;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Convenient method that handles both cases.  
+ */
+footprint_manager::mapped_type&
+footprint_manager::operator [] (const count_ptr<const key_type>& k) {
+	if (k) {
+		INVARIANT(k->size() == arity());
+		return (*this)[*k];
+	} else {
+		return only();
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

@@ -2,7 +2,7 @@
 	\file "Object/ref/instance_reference.cc"
 	Class instantiations for the meta_instance_reference family of objects.
 	Thie file was reincarnated from "Object/art_object_inst_ref.cc".
- 	$Id: instance_reference.cc,v 1.18 2006/07/04 07:26:14 fang Exp $
+ 	$Id: instance_reference.cc,v 1.19 2006/10/18 01:19:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_INSTANCE_REFERENCE_CC__
@@ -116,7 +116,7 @@ using util::persistent_traits;
 /**
 	Wrapped interface to constructing type-specific alias connections.  
  */
-excl_ptr<aliases_connection_base>
+meta_instance_reference_base::alias_connection_ptr_type
 meta_instance_reference_base::make_aliases_connection(
 		const count_ptr<const this_type>& i) {
 	NEVER_NULL(i);
@@ -138,7 +138,7 @@ meta_instance_reference_base::make_aggregate_meta_instance_reference(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-excl_ptr<port_connection_base>
+meta_instance_reference_base::port_connection_ptr_type
 meta_instance_reference_base::make_port_connection(
 		const count_ptr<const meta_instance_reference_base>& r) {
 	return r->make_port_connection_private(r);
@@ -152,6 +152,13 @@ meta_instance_reference_base::make_port_connection(
  */
 simple_meta_indexed_reference_base::simple_meta_indexed_reference_base() :
 		array_indices(NULL) {
+	// no assert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+simple_meta_indexed_reference_base::simple_meta_indexed_reference_base(
+		indices_ptr_arg_type i) :
+		array_indices(i) {
 	// no assert
 }
 
@@ -188,8 +195,7 @@ simple_meta_indexed_reference_base::dump_indices(ostream& o,
 	\return true if successful, else false.  
  */
 good_bool
-simple_meta_indexed_reference_base::attach_indices(
-		excl_ptr<index_list_type>& i) {
+simple_meta_indexed_reference_base::attach_indices(indices_ptr_arg_type i) {
 	/**
 		We used to perform static checks for index collisions, 
 		but there was little benefit in catching early errors, 
@@ -236,8 +242,14 @@ simple_meta_indexed_reference_base::load_object_base(
 		const persistent_object_manager& m, istream& i) {
 	m.read_pointer(i, array_indices);
 	// must load the indices early?
-	if (array_indices)
+	if (array_indices) {
+#if REF_COUNT_ARRAY_INDICES
+		m.load_object_once(
+			const_cast<index_list_type*>(&*array_indices));
+#else
 		m.load_object_once(array_indices);
+#endif
+	}
 }
 
 //=============================================================================

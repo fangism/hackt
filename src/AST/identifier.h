@@ -1,7 +1,7 @@
 /**
 	\file "AST/identifier.h"
 	Base set of classes for the HAC parser.  
-	$Id: identifier.h,v 1.3 2006/01/22 06:52:53 fang Exp $
+	$Id: identifier.h,v 1.4 2006/10/18 01:18:59 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_identifier.h,v 1.7.12.1 2005/12/11 00:45:07 fang Exp
  */
@@ -11,17 +11,26 @@
 
 #include "AST/node_list.h"
 #include "util/sublist.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 using util::sublist;
 using util::memory::excl_ptr;
 
 namespace entity {
+#if USE_INSTANCE_PLACEHOLDERS
+	class instance_placeholder_base;
+#else
 	class instance_collection_base;
+#endif
 }
 
 namespace parser {
+#if USE_INSTANCE_PLACEHOLDERS
+using entity::instance_placeholder_base;
+#else
 using entity::instance_collection_base;
+#endif
 
 //=============================================================================
 typedef	node_list<const token_identifier>	qualified_id_base;
@@ -77,7 +86,11 @@ public:
 	never_ptr<const object>
 	check_build(const context& c) const;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const instance_placeholder_base>
+#else
 	never_ptr<const instance_collection_base>
+#endif
 	lookup_instance(const context& c) const;
 
 using parent_type::begin;

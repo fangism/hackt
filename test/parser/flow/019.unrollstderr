@@ -4,12 +4,12 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	601
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	593
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -25,7 +25,7 @@ Persistent Object Manager text dump:
 	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	24	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	25	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -34,7 +34,7 @@ Persistent Object Manager text dump:
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	loopscop	0	#HEAD#	#TAIL#	28
-	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	33	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	34	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	36	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -70,48 +70,52 @@ Persistent Object Manager text dump:
 	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	69	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	70	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	71	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	262
+	69	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	70	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	71	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	253
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	74	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	75	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	76	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	349
+	74	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	75	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	76	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	340
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	79	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	80	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	81	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	349
+	79	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	80	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	81	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	340
 	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	83	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	84	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	85	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	86	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	465
-	87	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	88	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	89	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	90	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	91	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	92	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	178
-	93	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	94	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	95	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	96	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	97	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	98	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	229
-	99	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	100	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	101	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	102	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	103	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	104	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	229
-	105	##ADDR##	proccoll	0	#HEAD#	#TAIL#	50
-	106	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
-	107	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	108	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	109	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
-	110	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	297
+	84	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	85	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	86	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	456
+	87	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	88	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	89	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	90	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	91	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	92	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	93	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	94	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	95	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	96	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	97	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	98	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	99	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	100	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	101	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	102	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	103	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	104	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	105	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	169
+	106	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	107	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	108	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	220
+	109	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	110	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	111	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	220
+	112	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	113	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	114	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	288
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -129,14 +133,11 @@ In namespace "", we have: {
       )
       In definition "checkers", we have: {
       Parameters:
-        M = pint<> M
-        N = pint<> N
+        M = pint<> checkers::M
+        N = pint<> checkers::N
       Instances:
-        m = bool<> m
-
+        m = bool<> checkers::m^2
       unroll sequence: 
-        pint<> M
-        pint<> N
         bool<> m[0..M-1][0..N-1]
         (;i:[0..(M-1)-1]:
           (;j:[0..(N-1)-1]:
@@ -146,154 +147,160 @@ In namespace "", we have: {
         )
       footprint collection: {
         <3, 3> {
-          pint^0 M value: ?
-          pint^0 N value: ?
-          bool^2 m
-            unrolled indices: {
-              [0][0] = ::checkers::m[1][1] 
-              [0][1] = ::checkers::m[1][2] 
-              [0][2] = ::checkers::m[2][2] 
-              [1][0] = ::checkers::m[1][2] 
-              [1][1] = ::checkers::m[0][2] 
-              [1][2] = ::checkers::m[2][1] 
-              [2][0] = ::checkers::m[0][2] 
-              [2][1] = ::checkers::m[2][1] 
-              [2][2] = ::checkers::m[2][2] 
+          M = pint^0 value: 3
+          N = pint^0 value: 3
+          m = bool^2
+            {
+              [0][0] = checkers::m[1][1] 
+              [0][1] = checkers::m[1][2] 
+              [0][2] = checkers::m[2][2] 
+              [1][0] = checkers::m[1][2] 
+              [1][1] = checkers::m[0][2] 
+              [1][2] = checkers::m[2][1] 
+              [2][0] = checkers::m[0][2] 
+              [2][1] = checkers::m[2][1] 
+              [2][2] = checkers::m[2][2] 
             }
         }
         <3, 4> {
-          pint^0 M value: ?
-          pint^0 N value: ?
-          bool^2 m
-            unrolled indices: {
-              [0][0] = ::checkers::m[1][1] 
-              [0][1] = ::checkers::m[0][3] 
-              [0][2] = ::checkers::m[1][3] 
-              [0][3] = ::checkers::m[2][1] 
-              [1][0] = ::checkers::m[0][3] 
-              [1][1] = ::checkers::m[1][3] 
-              [1][2] = ::checkers::m[2][1] 
-              [1][3] = ::checkers::m[2][2] 
-              [2][0] = ::checkers::m[1][3] 
-              [2][1] = ::checkers::m[2][3] 
-              [2][2] = ::checkers::m[2][2] 
-              [2][3] = ::checkers::m[2][3] 
+          M = pint^0 value: 3
+          N = pint^0 value: 4
+          m = bool^2
+            {
+              [0][0] = checkers::m[1][1] 
+              [0][1] = checkers::m[0][3] 
+              [0][2] = checkers::m[1][3] 
+              [0][3] = checkers::m[2][1] 
+              [1][0] = checkers::m[0][3] 
+              [1][1] = checkers::m[1][3] 
+              [1][2] = checkers::m[2][1] 
+              [1][3] = checkers::m[2][2] 
+              [2][0] = checkers::m[1][3] 
+              [2][1] = checkers::m[2][3] 
+              [2][2] = checkers::m[2][2] 
+              [2][3] = checkers::m[2][3] 
             }
         }
         <4, 3> {
-          pint^0 M value: ?
-          pint^0 N value: ?
-          bool^2 m
-            unrolled indices: {
-              [0][0] = ::checkers::m[1][1] 
-              [0][1] = ::checkers::m[1][2] 
-              [0][2] = ::checkers::m[2][2] 
-              [1][0] = ::checkers::m[1][2] 
-              [1][1] = ::checkers::m[0][2] 
-              [1][2] = ::checkers::m[2][1] 
-              [2][0] = ::checkers::m[2][2] 
-              [2][1] = ::checkers::m[3][2] 
-              [2][2] = ::checkers::m[3][1] 
-              [3][0] = ::checkers::m[2][1] 
-              [3][1] = ::checkers::m[3][1] 
-              [3][2] = ::checkers::m[3][2] 
+          M = pint^0 value: 4
+          N = pint^0 value: 3
+          m = bool^2
+            {
+              [0][0] = checkers::m[1][1] 
+              [0][1] = checkers::m[1][2] 
+              [0][2] = checkers::m[2][2] 
+              [1][0] = checkers::m[1][2] 
+              [1][1] = checkers::m[0][2] 
+              [1][2] = checkers::m[2][1] 
+              [2][0] = checkers::m[2][2] 
+              [2][1] = checkers::m[3][2] 
+              [2][2] = checkers::m[3][1] 
+              [3][0] = checkers::m[2][1] 
+              [3][1] = checkers::m[3][1] 
+              [3][2] = checkers::m[3][2] 
             }
         }
         <4, 4> {
-          pint^0 M value: ?
-          pint^0 N value: ?
-          bool^2 m
-            unrolled indices: {
-              [0][0] = ::checkers::m[1][1] 
-              [0][1] = ::checkers::m[0][3] 
-              [0][2] = ::checkers::m[1][3] 
-              [0][3] = ::checkers::m[2][1] 
-              [1][0] = ::checkers::m[0][3] 
-              [1][1] = ::checkers::m[1][3] 
-              [1][2] = ::checkers::m[2][1] 
-              [1][3] = ::checkers::m[2][2] 
-              [2][0] = ::checkers::m[2][2] 
-              [2][1] = ::checkers::m[2][3] 
-              [2][2] = ::checkers::m[3][1] 
-              [2][3] = ::checkers::m[3][2] 
-              [3][0] = ::checkers::m[2][3] 
-              [3][1] = ::checkers::m[3][3] 
-              [3][2] = ::checkers::m[3][2] 
-              [3][3] = ::checkers::m[3][3] 
+          M = pint^0 value: 4
+          N = pint^0 value: 4
+          m = bool^2
+            {
+              [0][0] = checkers::m[1][1] 
+              [0][1] = checkers::m[0][3] 
+              [0][2] = checkers::m[1][3] 
+              [0][3] = checkers::m[2][1] 
+              [1][0] = checkers::m[0][3] 
+              [1][1] = checkers::m[1][3] 
+              [1][2] = checkers::m[2][1] 
+              [1][3] = checkers::m[2][2] 
+              [2][0] = checkers::m[2][2] 
+              [2][1] = checkers::m[2][3] 
+              [2][2] = checkers::m[3][1] 
+              [2][3] = checkers::m[3][2] 
+              [3][0] = checkers::m[2][3] 
+              [3][1] = checkers::m[3][3] 
+              [3][2] = checkers::m[3][2] 
+              [3][3] = checkers::m[3][3] 
             }
         }
       }
       }
 
   Instances:
-    a = process checkers<3, 3>^0 a (instantiated) = ::a (
-      bool^2 m
-        unrolled indices: {
-          [0][0] = ::a.m[0][0] 
-          [0][1] = ::a.m[0][1] 
-          [0][2] = ::a.m[0][2] 
-          [1][0] = ::a.m[1][0] 
-          [1][1] = ::a.m[1][1] 
-          [1][2] = ::a.m[1][2] 
-          [2][0] = ::a.m[2][0] 
-          [2][1] = ::a.m[2][1] 
-          [2][2] = ::a.m[2][2] 
-        }
-    )
-    b = process checkers<3, 4>^0 b (instantiated) = ::b (
-      bool^2 m
-        unrolled indices: {
-          [0][0] = ::b.m[0][0] 
-          [0][1] = ::b.m[0][1] 
-          [0][2] = ::b.m[0][2] 
-          [0][3] = ::b.m[0][3] 
-          [1][0] = ::b.m[1][0] 
-          [1][1] = ::b.m[1][1] 
-          [1][2] = ::b.m[1][2] 
-          [1][3] = ::b.m[1][3] 
-          [2][0] = ::b.m[2][0] 
-          [2][1] = ::b.m[2][1] 
-          [2][2] = ::b.m[2][2] 
-          [2][3] = ::b.m[2][3] 
-        }
-    )
-    c = process checkers<4, 3>^0 c (instantiated) = ::c (
-      bool^2 m
-        unrolled indices: {
-          [0][0] = ::c.m[0][0] 
-          [0][1] = ::c.m[0][1] 
-          [0][2] = ::c.m[0][2] 
-          [1][0] = ::c.m[1][0] 
-          [1][1] = ::c.m[1][1] 
-          [1][2] = ::c.m[1][2] 
-          [2][0] = ::c.m[2][0] 
-          [2][1] = ::c.m[2][1] 
-          [2][2] = ::c.m[2][2] 
-          [3][0] = ::c.m[3][0] 
-          [3][1] = ::c.m[3][1] 
-          [3][2] = ::c.m[3][2] 
-        }
-    )
-    d = process checkers<4, 4>^0 d (instantiated) = ::d (
-      bool^2 m
-        unrolled indices: {
-          [0][0] = ::d.m[0][0] 
-          [0][1] = ::d.m[0][1] 
-          [0][2] = ::d.m[0][2] 
-          [0][3] = ::d.m[0][3] 
-          [1][0] = ::d.m[1][0] 
-          [1][1] = ::d.m[1][1] 
-          [1][2] = ::d.m[1][2] 
-          [1][3] = ::d.m[1][3] 
-          [2][0] = ::d.m[2][0] 
-          [2][1] = ::d.m[2][1] 
-          [2][2] = ::d.m[2][2] 
-          [2][3] = ::d.m[2][3] 
-          [3][0] = ::d.m[3][0] 
-          [3][1] = ::d.m[3][1] 
-          [3][2] = ::d.m[3][2] 
-          [3][3] = ::d.m[3][3] 
-        }
-    )
+    a = checkers<3, 3> a
+    b = checkers<3, 4> b
+    c = checkers<4, 3> c
+    d = checkers<4, 4> d
 }
 
+footprint: {
+  a = process checkers<3, 3>^0 = a (
+    m = bool^2
+      {
+        [0][0] = a.m[0][0] 
+        [0][1] = a.m[0][1] 
+        [0][2] = a.m[0][2] 
+        [1][0] = a.m[1][0] 
+        [1][1] = a.m[1][1] 
+        [1][2] = a.m[1][2] 
+        [2][0] = a.m[2][0] 
+        [2][1] = a.m[2][1] 
+        [2][2] = a.m[2][2] 
+      }
+  )
+  b = process checkers<3, 4>^0 = b (
+    m = bool^2
+      {
+        [0][0] = b.m[0][0] 
+        [0][1] = b.m[0][1] 
+        [0][2] = b.m[0][2] 
+        [0][3] = b.m[0][3] 
+        [1][0] = b.m[1][0] 
+        [1][1] = b.m[1][1] 
+        [1][2] = b.m[1][2] 
+        [1][3] = b.m[1][3] 
+        [2][0] = b.m[2][0] 
+        [2][1] = b.m[2][1] 
+        [2][2] = b.m[2][2] 
+        [2][3] = b.m[2][3] 
+      }
+  )
+  c = process checkers<4, 3>^0 = c (
+    m = bool^2
+      {
+        [0][0] = c.m[0][0] 
+        [0][1] = c.m[0][1] 
+        [0][2] = c.m[0][2] 
+        [1][0] = c.m[1][0] 
+        [1][1] = c.m[1][1] 
+        [1][2] = c.m[1][2] 
+        [2][0] = c.m[2][0] 
+        [2][1] = c.m[2][1] 
+        [2][2] = c.m[2][2] 
+        [3][0] = c.m[3][0] 
+        [3][1] = c.m[3][1] 
+        [3][2] = c.m[3][2] 
+      }
+  )
+  d = process checkers<4, 4>^0 = d (
+    m = bool^2
+      {
+        [0][0] = d.m[0][0] 
+        [0][1] = d.m[0][1] 
+        [0][2] = d.m[0][2] 
+        [0][3] = d.m[0][3] 
+        [1][0] = d.m[1][0] 
+        [1][1] = d.m[1][1] 
+        [1][2] = d.m[1][2] 
+        [1][3] = d.m[1][3] 
+        [2][0] = d.m[2][0] 
+        [2][1] = d.m[2][1] 
+        [2][2] = d.m[2][2] 
+        [2][3] = d.m[2][3] 
+        [3][0] = d.m[3][0] 
+        [3][1] = d.m[3][1] 
+        [3][2] = d.m[3][2] 
+        [3][3] = d.m[3][3] 
+      }
+  )
+}

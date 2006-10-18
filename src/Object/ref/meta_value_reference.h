@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_value_reference.h"
-	$Id: meta_value_reference.h,v 1.4 2006/07/04 07:26:14 fang Exp $
+	$Id: meta_value_reference.h,v 1.5 2006/10/18 01:19:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_VALUE_REFERENCE_H__
@@ -55,8 +55,11 @@ virtual	ostream&
 virtual	ostream&
 	dump(ostream&, const expr_dump_context&) const = 0;
 
+#if ENABLE_STATIC_ANALYSIS
+	// OBSOLETE
 virtual	good_bool
 	initialize(const init_arg_type&) = 0;
+#endif
 
 virtual	bad_bool
 	unroll_lvalue_references(const unroll_context&,

@@ -4,11 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	5	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	89
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	7	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	80
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -18,14 +20,18 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    N = pint^0 N value: ?
-    x = pint^1 x
-      unrolled index-value pairs: {
-        0 = ?
-        1 = ?
-        2 = ?
-        3 = ?
-        4 = ?
-      }
+    N = pint<> N
+    x = pint<> x^1
 }
 
+footprint: {
+  N = pint^0 value: ?
+  x = pint^1
+    unrolled index-value pairs: {
+      0 = ?
+      1 = ?
+      2 = ?
+      3 = ?
+      4 = ?
+    }
+}

@@ -1,7 +1,7 @@
 /**
 	\file "AST/CHP.cc"
 	Class method definitions for CHP parser classes.
-	$Id: CHP.cc,v 1.9 2006/08/01 06:35:47 fang Exp $
+	$Id: CHP.cc,v 1.10 2006/10/18 01:18:56 fang Exp $
 	This file used to be the following before it was renamed:
 	Id: art_parser_chp.cc,v 1.21.20.1 2005/12/11 00:45:03 fang Exp
  */
@@ -33,6 +33,9 @@
 #include "Object/traits/bool_traits.h"
 #include "Object/traits/chan_traits.h"
 #include "Object/inst/channel_instance_collection.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.h"
+#endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/def/user_def_datatype.h"
 #include "Object/def/user_def_chan.h"
@@ -92,6 +95,7 @@ using entity::process_definition;
 using entity::data_nonmeta_instance_reference;
 using entity::data_type_reference;
 using entity::pint_scalar;
+using entity::meta_loop_base;
 
 //=============================================================================
 // class statement method definitions
@@ -417,7 +421,7 @@ guarded_command::check_guarded_action(context& c) const {
 	static const bool_traits::type_ref_ptr_type&
 		bool_type_ptr(bool_traits::built_in_type_ptr);
 	const count_ptr<const data_type_reference>
-		gtype(checked_guard->get_data_type_ref());
+		gtype(checked_guard->get_unresolved_data_type_ref());
 	if (!gtype) {
 		cerr << "Error resolving guard type at " << where(*guard)
 			<< endl;
@@ -595,7 +599,7 @@ binary_assignment::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	const count_ptr<const data_type_reference>
-		ltype(lref->get_data_type_ref());
+		ltype(lref->get_unresolved_data_type_ref());
 	if (!ltype) {
 		// may be template-dependent, but shouldn't be null
 		cerr << "Error resolving type of lval at " <<
@@ -603,7 +607,7 @@ binary_assignment::check_action(context& c) const {
 		return statement::return_type(NULL);
 	}
 	const count_ptr<const data_type_reference>
-		rtype(rv->get_data_type_ref());
+		rtype(rv->get_unresolved_data_type_ref());
 	if (!rtype) {
 		// may be template-dependent, but shouldn't be null
 		cerr << "Error resolving type of rval at " <<
@@ -687,7 +691,7 @@ bool_assignment::check_action(context& c) const {
 	// wait, there is no rvalue in this assignment, it is implicit
 	// in the direction (dir: +/-) field.  
 	const count_ptr<const data_type_reference>
-		ltype(lref->get_data_type_ref());
+		ltype(lref->get_unresolved_data_type_ref());
 	if (!ltype) {
 		// may be template-dependent, but shouldn't be null
 		cerr << "Error resolving type of lval at " <<
@@ -758,12 +762,12 @@ char
 communication::get_channel_direction(
 		const checked_channel_type::element_type& c) {
 	typedef	checked_channel_type::element_type	ret_chan_type;
-	const ret_chan_type::instance_collection_ptr_type
+	const ret_chan_type::instance_placeholder_ptr_type
 		inst_base(c.get_inst_base_subtype());
 	NEVER_NULL(inst_base);
 	// get type reference
 	const count_ptr<const channel_type_reference_base>
-		type_ref(inst_base->get_type_ref()
+		type_ref(inst_base->get_unresolved_type_ref()
 			.is_a<const channel_type_reference_base>());
 	NEVER_NULL(type_ref);
 	return type_ref->get_direction();
@@ -1078,7 +1082,7 @@ metaloop_selection::check_action(context& c) const {
 	NEVER_NULL(loop_range);
 	// induction variable scope in effect until return
 	const context::loop_var_frame _lvf(c, *index);
-	const count_ptr<pint_scalar>& loop_ind(_lvf.var);
+	const meta_loop_base::ind_var_ptr_type& loop_ind(_lvf.var);
 	if (!loop_ind) {
 		cerr << "Error registering loop variable: " << *index <<
 			" at " << where(*index) << endl;

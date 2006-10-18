@@ -4,38 +4,40 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	93
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
-	7	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	29
+	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	7	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 	10	##ADDR##	cnstpic_	3	#HEAD#	#TAIL#	64
-	11	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	189
-	12	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
-	13	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	11	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	180
+	12	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	13	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	15	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	19	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	23	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	25	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	24	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
 	27	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
-	28	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	31	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	30	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	32	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	33	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	34	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	33	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	34	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	84
+	35	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	36	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -45,13 +47,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    y = pint^2 y
-      unrolled index-value pairs: {
-        [0][0] = 3
-        [0][1] = 2
-        [1][0] = 1
-        [1][1] = 0
-      }
+    y = pint<> y^2
   Definitions:
     foo = process-definition (defined) foo<
       pint<> x[0..1][0..1][0..1]
@@ -59,28 +55,36 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        x = pint<> x
-
+        x = pint<> foo::x^3
       unroll sequence: 
-        pint<> x[0..1][0..1][0..1]
       footprint collection: {
         <{{{0,1},{2,3}},{{3,2},{1,0}}}> {
-          pint^3 x
+          x = pint^3
             unrolled index-value pairs: {
-              [0][0][0] = ?
-              [0][0][1] = ?
-              [0][1][0] = ?
-              [0][1][1] = ?
-              [1][0][0] = ?
-              [1][0][1] = ?
-              [1][1][0] = ?
-              [1][1][1] = ?
+              [0][0][0] = 0
+              [0][0][1] = 1
+              [0][1][0] = 2
+              [0][1][1] = 3
+              [1][0][0] = 3
+              [1][0][1] = 2
+              [1][1][0] = 1
+              [1][1][1] = 0
             }
         }
       }
       }
 
   Instances:
-    bar = process foo<{{{0,1},{2,3}},{{3,2},{1,0}}}>^0 bar (instantiated) = ::bar 
+    bar = foo<{ { { 0, 1 }, { 2, 3 } }, y }> bar
 }
 
+footprint: {
+  bar = process foo<{{{0,1},{2,3}},{{3,2},{1,0}}}>^0 = bar 
+  y = pint^2
+    unrolled index-value pairs: {
+      [0][0] = 3
+      [0][1] = 2
+      [1][0] = 1
+      [1][1] = 0
+    }
+}

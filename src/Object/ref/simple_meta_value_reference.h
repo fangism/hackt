@@ -2,7 +2,7 @@
 	\file "Object/ref/simple_meta_value_reference.h"
 	Classes related to meta parameter instance reference expressions. 
 	This file was reincarnated from "Object/art_object_value_reference.h".
-	$Id: simple_meta_value_reference.h,v 1.13 2006/08/23 20:57:21 fang Exp $
+	$Id: simple_meta_value_reference.h,v 1.14 2006/10/18 01:19:51 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_REF_SIMPLE_META_VALUE_REFERENCE_H__
@@ -22,6 +22,11 @@ class const_param;
 class const_index_list;
 class const_range_list;
 class unroll_context;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+class param_expr;
+class template_formals_manager;
+class dynamic_param_expr_list;
+#endif
 using util::good_bool;
 using util::bad_bool;
 
@@ -55,7 +60,12 @@ private:
 	typedef	simple_meta_indexed_reference_base	common_base_type;
 	typedef	expr_base_type				interface_type;
 public:
+	typedef	common_base_type::indices_ptr_arg_type	indices_ptr_arg_type;
 	typedef	count_ptr<const interface_type>		init_arg_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::value_placeholder_parent_type
+						value_placeholder_parent_type;
+#endif
 	typedef	typename traits_type::value_collection_parent_type
 						value_collection_parent_type;
 	typedef	typename traits_type::value_reference_collection_type
@@ -63,6 +73,15 @@ public:
 protected:
 	typedef	typename traits_type::template value_array<0>::type
 							value_scalar_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	typename traits_type::instance_placeholder_type
+							value_placeholder_type;
+	/**
+		Reference never modifies the source placeholder, hence const.  
+	 */
+	typedef	never_ptr<const value_placeholder_type>
+						value_placeholder_ptr_type;
+#endif
 	typedef	typename traits_type::value_collection_generic_type
 							value_collection_type;
 	typedef	typename traits_type::const_collection_type
@@ -71,15 +90,27 @@ protected:
 							const_expr_type;
 	typedef	never_ptr<value_collection_type>
 						value_collection_ptr_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	value_placeholder_ptr_type			value_collection_ref;
+#else
 	value_collection_ptr_type			value_collection_ref;
+#endif
 private:
 	simple_meta_value_reference();
 public:
+#if USE_INSTANCE_PLACEHOLDERS
+	explicit
+	simple_meta_value_reference(const value_placeholder_ptr_type);
+
+	simple_meta_value_reference(const value_placeholder_ptr_type, 
+		indices_ptr_arg_type);
+#else
 	explicit
 	simple_meta_value_reference(const value_collection_ptr_type);
 
 	simple_meta_value_reference(const value_collection_ptr_type, 
-		excl_ptr<index_list_type>&);
+		indices_ptr_arg_type);
+#endif
 
 	~simple_meta_value_reference();
 
@@ -90,17 +121,26 @@ public:
 	dump(ostream& o, const expr_dump_context&) const;
 
 	good_bool
-	attach_indices(excl_ptr<index_list_type>&);
+	attach_indices(indices_ptr_arg_type);
 
+#if USE_INSTANCE_PLACEHOLDERS
+	never_ptr<const param_value_placeholder>
+	get_coll_base(void) const;
+
+	never_ptr<const value_placeholder_parent_type>
+	get_param_inst_base(void) const;
+#else
 	never_ptr<const param_value_collection>
 	get_coll_base(void) const;
 
 	never_ptr<const value_collection_parent_type>
 	get_param_inst_base(void) const;
+#endif
 
 	size_t
 	dimensions(void) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	good_bool
 	initialize(const init_arg_type& i);
 
@@ -109,6 +149,7 @@ public:
 
 	bool
 	must_be_initialized(void) const;
+#endif
 
 	bool
 	is_static_constant(void) const;
@@ -122,16 +163,20 @@ public:
 	bool
 	must_be_equivalent(const interface_type& ) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	good_bool
 	resolve_value(value_type& i) const;
+#endif
 
 	good_bool
 	unroll_resolve_value(const unroll_context&, value_type& i) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	// why is this not available to other meta-instance-references?
 	// doesn't this need context?
 	const_index_list
 	resolve_dimensions(void) const;
+#endif
 
 	const_index_list
 	unroll_resolve_dimensions(const unroll_context&) const;
@@ -161,6 +206,15 @@ public:
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+        count_ptr<const expr_base_type>
+        substitute_default_positional_parameters(
+                const template_formals_manager&,
+                const dynamic_param_expr_list&,
+                const count_ptr<const expr_base_type>&) const;
+	using parent_type::substitute_default_positional_parameters;
+#endif
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

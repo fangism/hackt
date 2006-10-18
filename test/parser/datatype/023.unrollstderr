@@ -5,9 +5,10 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	enumdefn	0	#HEAD#	#TAIL#	32
-	4	##ADDR##	enumcoll	0	#HEAD#	#TAIL#	36
+	4	##ADDR##	enumplch	0	#HEAD#	#TAIL#	27
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	enumcoll	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -19,6 +20,9 @@ In namespace "", we have: {
   Definitions:
     foo = enum-datatype-def: foo (undefined)
   Instances:
-    bar = enum ::foo^0 bar (instantiated) = ::bar 
+    bar = foo<> bar
 }
 
+footprint: {
+  bar = enum foo^0 = bar 
+}

@@ -4,26 +4,26 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	54
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	230
-	5	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	6	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	11	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	226
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	12	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	21	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	22	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	23	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	38	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	39	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	39	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	40	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	42	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -57,15 +57,16 @@ Persistent Object Manager text dump:
 	53	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	54	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	55	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
-	57	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	58	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	59	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	60	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	61	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	62	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	63	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	31
+	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	57	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	58	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	59	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	60	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	63	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -83,13 +84,11 @@ In namespace "", we have: {
       )
       In definition "celemNinv", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> celemNinv::N
       Instances:
-        _o = bool<> _o
-        a = bool<> a
-
+        _o = bool<> celemNinv::_o
+        a = bool<> celemNinv::a^1
       unroll sequence: 
-        pint<> N
         bool<> a[0..N-1]
         bool<> _o
       prs:
@@ -97,29 +96,32 @@ In namespace "", we have: {
         (&:i:[0..N-1]: ~a[($i+1)%N]) -> _o+
       footprint collection: {
         <4> {
-          bool^0 _o (instantiated) = ::celemNinv::_o 
-          pint^0 N value: ?
-          bool^1 a
-            unrolled indices: {
-              0 = ::celemNinv::a[0] 
-              1 = ::celemNinv::a[1] 
-              2 = ::celemNinv::a[2] 
-              3 = ::celemNinv::a[3] 
+          N = pint^0 value: 4
+          _o = bool^0 = celemNinv::_o 
+          a = bool^1
+            {
+              0 = celemNinv::a[0] 
+              1 = celemNinv::a[1] 
+              2 = celemNinv::a[2] 
+              3 = celemNinv::a[3] 
             }
         }
       }
       }
 
   Instances:
-    c = process celemNinv<4>^0 c (instantiated) = ::c (
-      bool^1 a
-        unrolled indices: {
-          0 = ::c.a[0] 
-          1 = ::c.a[1] 
-          2 = ::c.a[2] 
-          3 = ::c.a[3] 
-        }
-      bool^0 _o (instantiated) = ::c._o 
-    )
+    c = celemNinv<4> c
 }
 
+footprint: {
+  c = process celemNinv<4>^0 = c (
+    a = bool^1
+      {
+        0 = c.a[0] 
+        1 = c.a[1] 
+        2 = c.a[2] 
+        3 = c.a[3] 
+      }
+    _o = bool^0 = c._o 
+  )
+}

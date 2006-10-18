@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.17 2006/07/30 05:49:32 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.18 2006/10/18 01:20:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -30,11 +30,20 @@
 #include "Object/type/fundamental_type_reference.h"
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#else
 #include "Object/expr/param_expr_list.h"
+#endif
 #include "Object/expr/meta_range_list.h"
 #include "Object/expr/const_range_list.h"
 #include "Object/def/footprint.h"
 #include "Object/inst/instance_collection.h"
+#include "Object/common/dump_flags.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.h"
+#include "Object/inst/value_placeholder.h"
+#endif
 
 #include "util/what.tcc"
 #include "util/memory/list_vector_pool.tcc"
@@ -85,6 +94,17 @@ INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
+		const placeholder_ptr_type p, 
+		const type_ref_ptr_type& t, 
+		const index_collection_item_ptr_type& i) :
+		parent_type(i), type_ref_parent_type(t), inst_base(p) {
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 INSTANTIATION_STATEMENT_CLASS::instantiation_statement(
 		const type_ref_ptr_type& t, 
@@ -115,30 +135,56 @@ INSTANTIATION_STATEMENT_CLASS::dump(ostream& o,
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	\pre inst_base is not yet set.
+	NOTE: not attaching this to inst_base here anymore... hassle.
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 void
 INSTANTIATION_STATEMENT_CLASS::attach_collection(
-		const never_ptr<instance_collection_base> i) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const instance_placeholder_base> i
+#else
+		const never_ptr<instance_collection_base> i
+#endif
+		) {
 	INVARIANT(!this->inst_base);
+#if USE_INSTANCE_PLACEHOLDERS
+	const placeholder_ptr_type c(i.template is_a<const placeholder_type>());
+#else
 	const never_ptr<collection_type> c(i.template is_a<collection_type>());
+#endif
 	NEVER_NULL(c);
 	this->inst_base = c;
+#if !REF_COUNT_INSTANCE_MANAGEMENT
 	const never_ptr<const this_type> _this(this);
 	type_ref_parent_type::attach_initial_instantiation_statement(*c, _this);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<instance_collection_base>
+#endif
 INSTANTIATION_STATEMENT_CLASS::get_inst_base(void) {
 	NEVER_NULL(this->inst_base);
+#if USE_INSTANCE_PLACEHOLDERS
+	return this->inst_base.template as_a<const instance_placeholder_base>();
+#else
 	return this->inst_base.template as_a<instance_collection_base>();
+#endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+#if USE_INSTANCE_PLACEHOLDERS
+never_ptr<const instance_placeholder_base>
+#else
 never_ptr<const instance_collection_base>
+#endif
 INSTANTIATION_STATEMENT_CLASS::get_inst_base(void) const {
 	NEVER_NULL(this->inst_base);
 	return this->inst_base;
@@ -152,6 +198,16 @@ INSTANTIATION_STATEMENT_CLASS::get_type_ref(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Covariant return version.  
+ */
+INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
+typename INSTANTIATION_STATEMENT_CLASS::type_ref_ptr_type
+INSTANTIATION_STATEMENT_CLASS::get_type_ref_subtype(void) const {
+	return type_ref_parent_type::get_type();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 instantiation_statement_base::const_relaxed_args_type
 INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
@@ -160,6 +216,7 @@ INSTANTIATION_STATEMENT_CLASS::get_relaxed_actuals(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	TODO: rewrite cleaner after reworking code (2006-10-03)
 	Interprets a physical instantiation statement and instantiates
 	the members of the collection specified.  
 	(this will require some serious specialization)
@@ -178,16 +235,62 @@ good_bool
 INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	typedef	typename type_ref_ptr_type::element_type	element_type;
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	this->dump(STACKTRACE_INDENT << "statement: ",
+		expr_dump_context::default_value) << endl;
+	c.dump(cerr << "context: ") << endl;
+#endif
+	NEVER_NULL(this->inst_base);
+#if !USE_INSTANCE_PLACEHOLDERS
 	const footprint* const f(c.get_target_footprint());
+#if USE_INSTANCE_PLACEHOLDERS
+	// beware top-level unrolling!!! TODO: fix
+	NEVER_NULL(f);
+#else
 #if ENABLE_STACKTRACE
 	if (f) {
 		f->dump(cerr << "footprint: ") << endl;
 		cerr << "looking up: " << this->inst_base->get_name() << endl;
 	}
 #endif
+#endif
+#endif
+
+#if USE_INSTANCE_PLACEHOLDERS
+	// TODO: currently will not work with instances inside namespaces
+	// may require qualified names in top-level footprint search!
+	// TODO: this is a modifying lookup, using target_footprint
+	count_ptr<collection_type>
+		inst_ptr(c.lookup_collection(*this->inst_base)
+			.template is_a<collection_type>());
+	if (!inst_ptr) {
+#if 0
+		this->inst_base->dump(cerr << "ERROR: ", dump_flags::verbose)
+			<< " not found." << endl;
+		return good_bool(false);
+#else
+		// then we need to instantiate it
+		inst_ptr = count_ptr<collection_type>(
+			IS_A(collection_type*,
+				this->inst_base->make_collection()));
+		NEVER_NULL(inst_ptr);
+		// NOTE: instantiated here just registers the footprint entry, 
+		// but type is still incomplete until type committed, below.  
+		c.instantiate_collection(inst_ptr);
+		// could handle first-time type checking work here...
+#endif
+	}
+	collection_type& _inst(*inst_ptr);
+#if 0
+	collection_type& _inst(IS_A(collection_type&, 
+		*(*f)[this->inst_base->get_name()]));
+	// failed dynamic cast will throw a bad_cast
+#endif
+#else
 	collection_type& _inst(f ? IS_A(collection_type&, 
 			*(*f)[this->inst_base->get_name()])
 		: *this->inst_base);
+#endif
 	// 2005-07-07:
 	// HACK: detect that this is the first type commit to the 
 	// collection, because unroll_type_reference combines the
@@ -208,7 +311,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		}
 		// note: commit_type_first_time also unrolls the complete type
 		if (!type_ref_parent_type::commit_type_first_time(
-				_inst, cft).good) {
+				_inst, cft, *c.get_top_footprint()).good) {
 			type_ref_parent_type::get_type()->dump(
 				cerr << "Instantiated from: ") << endl;
 			return good_bool(false);
@@ -238,7 +341,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	// 2005-07-07: answer is above under "HACK"
 	const good_bool
 		tc(type_ref_parent_type::commit_type_check(
-			_inst, final_type_ref));
+			_inst, final_type_ref, *c.get_top_footprint()));
 	// should be optimized away where there is no type-check to be done
 	if (!tc.good) {
 		cerr << "ERROR: type-mismatch during " <<
@@ -252,7 +355,11 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		// passing in relaxed arguments from final_type_ref!
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+		const count_ptr<const dynamic_param_expr_list>
+#else
 		const count_ptr<const param_expr_list>
+#endif
 			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
 		count_ptr<const const_param_expr_list>
 			relaxed_const_actuals;
@@ -274,7 +381,11 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		STACKTRACE_INDENT_PRINT("&_inst = " << &_inst << endl);
 		return type_ref_parent_type::instantiate_indices_with_actuals(
 				_inst, crl, 
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+				c, 
+#else
 				final_type_ref.make_unroll_context(), 
+#endif
 				relaxed_const_actuals);
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
@@ -298,23 +409,29 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		currently only supports one level context.  
 		Thus, we need to partially resolve SOME of the 
 		parameters first.  
+	TODO: what about placeholder?
  */
 INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE
 good_bool
 INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		physical_instance_collection& p) const {
 	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	c.dump(cerr << "context: ") << endl;
+#endif
 	// dynamic cast assertion, until we fix class hierarchy
 	collection_type& coll(IS_A(collection_type&, p));
 	INVARIANT(!coll.is_partially_unrolled());
 	const instance_collection_parameter_type
 		ft(type_ref_parent_type::get_canonical_type(c));
 	// ft will either be strict or relaxed.  
-	type_ref_parent_type::commit_type_first_time(coll, ft);
+	type_ref_parent_type::commit_type_first_time(
+		coll, ft, *c.get_top_footprint());
 	// no need to re-evaluate type, since get_resolved_type is
 	// (for now) the same as unroll_type_reference.
 	const bool good __ATTRIBUTE_UNUSED_CTOR__((
-		type_ref_parent_type::commit_type_check(coll, ft).good));
+		type_ref_parent_type::commit_type_check(
+			coll, ft, *c.get_top_footprint()).good));
 	INVARIANT(good);
 	// everything below is copied from unroll(), above
 	// TODO: factor out common code.  
@@ -322,7 +439,11 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 	const good_bool rr(this->resolve_instantiation_range(crl, c));
 	if (rr.good) {
 		// passing in relaxed arguments from final_type_ref!
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+		const count_ptr<const dynamic_param_expr_list>
+#else
 		const count_ptr<const param_expr_list>
+#endif
 			relaxed_actuals(type_ref_parent_type::get_relaxed_actuals());
 		count_ptr<const const_param_expr_list>
 			relaxed_const_actuals;
@@ -342,7 +463,12 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				coll, crl, ft.make_unroll_context(), 
+				coll, crl,
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+				c, 
+#else
+				ft.make_unroll_context(), 
+#endif
 				relaxed_const_actuals);
 	} else {
 		// consider different message

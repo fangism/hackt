@@ -4,10 +4,10 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	93
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	6	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	189
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 	9	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
@@ -24,6 +24,8 @@ Persistent Object Manager text dump:
 	20	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	84
+	24	##ADDR##	pintcoll	3	#HEAD#	#TAIL#	180
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -33,23 +35,27 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    x = pint^2 x
-      unrolled index-value pairs: {
-        [0][0] = 0
-        [0][1] = 1
-        [1][0] = 2
-        [1][1] = 3
-      }
-    y = pint^3 y
-      unrolled index-value pairs: {
-        [0][0][0] = 0
-        [0][0][1] = 1
-        [0][1][0] = 2
-        [0][1][1] = 3
-        [1][0][0] = 0
-        [1][0][1] = 1
-        [1][1][0] = 2
-        [1][1][1] = 3
-      }
+    x = pint<> x^2
+    y = pint<> y^3
 }
 
+footprint: {
+  x = pint^2
+    unrolled index-value pairs: {
+      [0][0] = 0
+      [0][1] = 1
+      [1][0] = 2
+      [1][1] = 3
+    }
+  y = pint^3
+    unrolled index-value pairs: {
+      [0][0][0] = 0
+      [0][0][1] = 1
+      [0][1][0] = 2
+      [0][1][1] = 3
+      [1][0][0] = 0
+      [1][0][1] = 1
+      [1][1][0] = 2
+      [1][1][1] = 3
+    }
+}

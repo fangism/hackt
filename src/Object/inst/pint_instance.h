@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/pint_instance.h"
-	$Id: pint_instance.h,v 1.2 2006/02/21 04:48:31 fang Exp $
+	$Id: pint_instance.h,v 1.3 2006/10/18 01:19:39 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PINT_INSTANCE_H__
@@ -20,6 +20,8 @@ using util::good_bool;
 //=============================================================================
 /**
 	Run-time instance of integer parameter.  
+	TODO: add a 'relaxed' poison bit to trace origin of value, 
+		to avoid polluting strict template parameters with relaxed ones.
  */
 struct pint_instance {
 public:

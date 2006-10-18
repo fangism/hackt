@@ -18,7 +18,7 @@
  *	and specific to each module.  
  *	As a convention, all enumerations are suffixed with _TYPE_KEY.  
  *
- *	$Id: persistent_type_hash.h,v 1.10 2006/07/17 02:53:36 fang Exp $
+ *	$Id: persistent_type_hash.h,v 1.11 2006/10/18 01:19:05 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_PERSISTENT_TYPE_HASH_H__
@@ -52,6 +52,18 @@
 #define	DATA_TYPE_REFERENCE_TYPE_KEY				"datatprf"
 	// no need for param type reference, or built-in data type reference
 
+// instance and value placeholders
+#define	PROCESS_INSTANCE_PLACEHOLDER_TYPE_KEY			"procplch"
+#define	CHANNEL_INSTANCE_PLACEHOLDER_TYPE_KEY			"chanplch"
+#define	STRUCT_INSTANCE_PLACEHOLDER_TYPE_KEY			"dstrplch"
+#define	ENUM_INSTANCE_PLACEHOLDER_TYPE_KEY			"enumplch"
+#define	DBOOL_INSTANCE_PLACEHOLDER_TYPE_KEY			"dboolplh"
+#define	DINT_INSTANCE_PLACEHOLDER_TYPE_KEY			"dintplch"
+#define	PBOOL_VALUE_PLACEHOLDER_TYPE_KEY			"pboolplh"
+#define	PINT_VALUE_PLACEHOLDER_TYPE_KEY				"pintplch"
+#define	PREAL_VALUE_PLACEHOLDER_TYPE_KEY			"prealplh"
+
+// Unique instances, post-unrolling:
 // Instantiations, collections (non-unique):
 #define	PROCESS_INSTANCE_COLLECTION_TYPE_KEY			"proccoll"
 #define	CHANNEL_INSTANCE_COLLECTION_TYPE_KEY			"chancoll"

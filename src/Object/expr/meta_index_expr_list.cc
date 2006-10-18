@@ -3,7 +3,7 @@
 	Definition of meta index expression lists.  
 	NOTE: This file was shaved down from the original 
 		"Object/art_object_expr.cc" for revision history tracking.  
- 	$Id: meta_index_expr_list.cc,v 1.15 2006/06/26 01:46:01 fang Exp $
+ 	$Id: meta_index_expr_list.cc,v 1.16 2006/10/18 01:19:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_EXPR_META_INDEX_EXPR_LIST_CC__
@@ -81,6 +81,7 @@ count_ptr<const const_index_list>
 meta_index_list::unroll_resolve_indices(const count_ptr<const this_type>& _this, 
 		const unroll_context& c) {
 	typedef	count_ptr<const const_index_list>	return_type;
+	STACKTRACE_VERBOSE;
 	NEVER_NULL(_this);
 	const return_type ret(_this.is_a<const const_index_list>());
 	if (ret)
@@ -244,6 +245,7 @@ const_index_list::push_back(const const_index_ptr_type& i) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 const_index_list::may_be_initialized(void) const {
 	return true;
@@ -254,6 +256,7 @@ bool
 const_index_list::must_be_initialized(void) const {
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -262,14 +265,17 @@ const_index_list::is_static_constant(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 const_index_list
 const_index_list::resolve_index_list(void) const {
 	return *this;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 const_index_list
 const_index_list::unroll_resolve_indices(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	return *this;
 }
 
@@ -403,6 +409,21 @@ const_index_list::must_be_equivalent_indices(const meta_index_list& l) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	\return shallow copy of self, no substitutions.  
+ */
+count_ptr<const meta_index_list>
+const_index_list::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_list>& l) const {
+	INVARIANT(l == this);
+	return l;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Recursively visits pointer list to register expression
 	objects with the persistent object manager.
@@ -498,7 +519,7 @@ dynamic_meta_index_list::dump(ostream& o, const expr_dump_context& c) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-dynamic_meta_index_list::push_back(const count_ptr<meta_index_expr>& i) {
+dynamic_meta_index_list::push_back(const count_ptr<const meta_index_expr>& i) {
 	NEVER_NULL(i);
 	if (i->dimensions() != 0) {
 		cerr << "i->dimensions = " << i->dimensions() << endl;
@@ -532,6 +553,7 @@ dynamic_meta_index_list::dimensions_collapsed(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if ENABLE_STATIC_ANALYSIS
 bool
 dynamic_meta_index_list::may_be_initialized(void) const {
 	const_iterator i(begin());
@@ -554,6 +576,7 @@ dynamic_meta_index_list::must_be_initialized(void) const {
 	}
 	return true;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -584,6 +607,7 @@ dynamic_meta_index_list::is_relaxed_formal_dependent(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	For now const_index_list constains count_ptr<const_index>, 
 	not count_const_ptr, so we have to make deep copies, 
@@ -616,6 +640,7 @@ dynamic_meta_index_list::resolve_index_list(void) const {
 	}
 	return ret;
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 bool
@@ -655,18 +680,20 @@ dynamic_meta_index_list::must_be_equivalent_indices(
  */
 const_index_list
 dynamic_meta_index_list::unroll_resolve_indices(const unroll_context& c) const {
+	STACKTRACE_VERBOSE;
 	const_index_list ret;
 	const_iterator i(begin());
 	const const_iterator e(end());
 	size_t j = 0;
 	for ( ; i!=e; i++, j++) {
-		const count_ptr<meta_index_expr> ind(*i);
-		const count_ptr<const_index> c_ind(ind.is_a<const_index>());
+		const count_ptr<const meta_index_expr> ind(*i);
+		const count_ptr<const const_index>
+			c_ind(ind.is_a<const const_index>());
 		if (c_ind) {
 			// direct reference copy
 			ret.push_back(c_ind);
 		} else {
-			const count_ptr<const_index>
+			const count_ptr<const const_index>
 				r_ind(ind->unroll_resolve_index(c));
 			if (r_ind) {
 				ret.push_back(r_ind);
@@ -678,6 +705,52 @@ dynamic_meta_index_list::unroll_resolve_indices(const unroll_context& c) const {
 	}
 	return ret;
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+/**
+	Visibility hidden is ok.  
+	Copied from meta_value_reference::positional_substituter.
+	Consider making this a helper class template.  
+ */
+struct dynamic_meta_index_list::positional_substituter {
+	typedef count_ptr<const meta_index_expr>	return_type;
+	const template_formals_manager&		formals;
+	const dynamic_param_expr_list&		exprs;
+
+	positional_substituter(const template_formals_manager& f,
+			const dynamic_param_expr_list& e) :
+			formals(f), exprs(e) {
+	}
+
+	return_type
+	operator () (const return_type& p) {
+		return p->substitute_default_positional_parameters(
+				formals, exprs, p);
+	}
+
+};      // end class positional_substituter
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<const meta_index_list>
+dynamic_meta_index_list::substitute_default_positional_parameters(
+		const template_formals_manager& f, 
+		const dynamic_param_expr_list& e, 
+		const count_ptr<const meta_index_list>& l) const {
+	INVARIANT(l == this);
+	const count_ptr<this_type> temp(new this_type);
+	NEVER_NULL(temp);
+	util::reserve(*temp, parent_type::size());
+	transform(begin(), end(), back_inserter(*temp),
+		positional_substituter(f, e));
+	if (equal(begin(), end(), temp->begin())) {
+		// no substitutions, return this
+		return l;
+	} else {
+		return temp;
+	}
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0

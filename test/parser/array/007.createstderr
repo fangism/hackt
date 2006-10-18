@@ -4,15 +4,18 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	89
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	125
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	185
+	9	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	10	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	80
+	13	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	116
+	14	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	176
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -22,42 +25,46 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    x = pint^1 x
-      unrolled index-value pairs: {
-        0 = ?
-        1 = ?
-        2 = ?
-        3 = ?
-        4 = ?
-      }
-    y = pint^1 y
-      unrolled index-value pairs: {
-        5 = ?
-        6 = ?
-        7 = ?
-        8 = ?
-        9 = ?
-        10 = ?
-        11 = ?
-        12 = ?
-      }
-    z = pint^1 z
-      unrolled index-value pairs: {
-        -6 = ?
-        -5 = ?
-        -4 = ?
-        -3 = ?
-        -2 = ?
-        -1 = ?
-        0 = ?
-        1 = ?
-        2 = ?
-        3 = ?
-        4 = ?
-        5 = ?
-        6 = ?
-      }
+    x = pint<> x^1
+    y = pint<> y^1
+    z = pint<> z^1
 }
 
-Created state:
-
+footprint: {
+  x = pint^1
+    unrolled index-value pairs: {
+      0 = ?
+      1 = ?
+      2 = ?
+      3 = ?
+      4 = ?
+    }
+  y = pint^1
+    unrolled index-value pairs: {
+      5 = ?
+      6 = ?
+      7 = ?
+      8 = ?
+      9 = ?
+      10 = ?
+      11 = ?
+      12 = ?
+    }
+  z = pint^1
+    unrolled index-value pairs: {
+      -6 = ?
+      -5 = ?
+      -4 = ?
+      -3 = ?
+      -2 = ?
+      -1 = ?
+      0 = ?
+      1 = ?
+      2 = ?
+      3 = ?
+      4 = ?
+      5 = ?
+      6 = ?
+    }
+  Created state:
+}

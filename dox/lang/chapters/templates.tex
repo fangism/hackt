@@ -1,6 +1,6 @@
 % "chapters/templates.tex"
 
-%	$Id: templates.tex,v 1.13 2006/01/22 06:52:50 fang Exp $
+%	$Id: templates.tex,v 1.14 2006/10/18 01:18:53 fang Exp $
 
 \chapter{Templates}
 \label{sec:templates}
@@ -423,6 +423,23 @@ We use this section to slap down issues that may arise.
 Once these issues are resolved, the text for their resolutions
 belong to some sort of ``rationale'' document, possibly
 in footnotes or appendices in this language specification.  
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+\subsection{Relaxed Parameters}
+\label{sec:templates:issues:relaxed}
+
+In a sequential scope, an instance of relaxed type
+may have its relaxed actuals bound at any time (but once only).  
+This means that at the time of unbound instantiation (during unroll), 
+the relaxed parameters will not be available for use with unrolling.
+However, at the point of instantiation, the public ports
+of the instance (which should never depend on relaxed parameters)
+should be made available for connections.  
+Q: how do we unroll ports in this situation?
+Q: do we need to worry about internal aliases differing between
+difference different complete types?  Perhaps not because internal
+aliases \emph{should} be replayed at create-time before
+finalizing footprints.  
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 \subsection{Template Parameter References}

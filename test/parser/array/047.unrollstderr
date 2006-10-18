@@ -4,14 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	39
+	3	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
+	8	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	9	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
+	10	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	11	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	12	##ADDR##	pbassign	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
@@ -28,6 +28,10 @@ Persistent Object Manager text dump:
 	24	##ADDR##	apbmvref	0	#HEAD#	#TAIL#	21
 	25	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	spbmvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	30
+	28	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	29	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
+	30	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -37,13 +41,19 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    w = pbool^1 w
-      unrolled index-value pairs: {
-        0 = 0
-        1 = 1
-      }
-    x = pbool^0 x value: 0
-    y = pbool^0 y value: 1
-    z = pbool^0 z value: ?
+    w = pbool<> w^1
+    x = pbool<> x
+    y = pbool<> y
+    z = pbool<> z
 }
 
+footprint: {
+  w = pbool^1
+    unrolled index-value pairs: {
+      0 = 0
+      1 = 1
+    }
+  x = pbool^0 value: 0
+  y = pbool^0 value: 1
+  z = pbool^0 value: ?
+}

@@ -4,22 +4,24 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	4	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	procdefn	0	#HEAD#	#TAIL#	184
-	7	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	10	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	11	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
-	12	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	14	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
-	18	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	3	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	4	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	9	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	11	##ADDR##	piassign	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	13	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	20	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -29,7 +31,7 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    W = pint^0 W (init = 42) value: 42
+    W = pint<> W
   Definitions:
     foo = process-definition (defined) foo<
       pint<> N
@@ -37,17 +39,20 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> foo::N
       unroll sequence: 
-        pint<> N
       footprint collection: {
         <42> {
-          pint^0 N value: ?
+          N = pint^0 value: 42
         }
       }
       }
 
   Instances:
-    bar = process foo<42>^0 bar (instantiated) = ::bar 
+    bar = foo<W> bar
 }
 
+footprint: {
+  W = pint^0 value: 42
+  bar = process foo<42>^0 = bar 
+}

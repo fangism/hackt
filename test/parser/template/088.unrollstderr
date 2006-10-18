@@ -1,0 +1,130 @@
+
+Persistent Object Manager text dump: 
+	i	addr		type		arg	head	tail	size
+	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
+	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
+	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	196
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	8	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	11	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	13	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+	17	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	68
+	18	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	procdefn	0	#HEAD#	#TAIL#	212
+	20	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	21	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	26	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	28	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	34	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	36	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	37	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	41	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	32
+	42	##ADDR##	pintcoll	1	#HEAD#	#TAIL#	44
+	43	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	47	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	48	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	20
+	49	##ADDR##	apimvref	0	#HEAD#	#TAIL#	21
+	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	51	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	52	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	53	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	54	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	55	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
+	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	57	##ADDR##	cnstpic_	1	#HEAD#	#TAIL#	40
+
+In module created from: ##FILE## (unrolled)
+In namespace "", we have: {
+  0 parameter-collections
+  1 instantiation-collections
+  0 sub-namespaces
+  2 definitions
+  0 typedefs
+  Definitions:
+    bar = process-definition (defined) bar<
+      pint<> N
+      pint<> D[0..N-1]
+      >(
+        foo<2*bar::N, bar::D # bar::D> x
+      )
+      In definition "bar", we have: {
+      Parameters:
+        D = pint<> bar::D^1
+        N = pint<> bar::N
+      Instances:
+        x = foo<2*bar::N, bar::D # bar::D> bar::x
+      unroll sequence: 
+        foo<2*bar::N, bar::D # bar::D> x
+      footprint collection: {
+        <2, {0,1}> {
+          D = pint^1
+            unrolled index-value pairs: {
+              0 = 0
+              1 = 1
+            }
+          N = pint^0 value: 2
+          x = process foo<4, {0,1,0,1}>^0 = bar::x 
+        }
+      }
+      }
+
+    foo = process-definition (defined) foo<
+      pint<> N
+      pint<> D[0..N-1]
+      >(
+      )
+      In definition "foo", we have: {
+      Parameters:
+        D = pint<> foo::D^1
+        N = pint<> foo::N
+      unroll sequence: 
+      footprint collection: {
+        <4, {0,1,0,1}> {
+          D = pint^1
+            unrolled index-value pairs: {
+              0 = 0
+              1 = 1
+              2 = 0
+              3 = 1
+            }
+          N = pint^0 value: 4
+        }
+      }
+      }
+
+  Instances:
+    X = bar<2, { 0, 1 }> X
+}
+
+footprint: {
+  X = process bar<2, {0,1}>^0 = X (
+    x = process foo<4, {0,1,0,1}>^0 = X.x 
+  )
+}

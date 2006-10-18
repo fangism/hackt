@@ -4,26 +4,29 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	36
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	84
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	76
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
-	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	8	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	9	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	14	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	14	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	16	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	17	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
-	18	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	21	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	25	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -41,13 +44,18 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Parameters:
-        A = pint<> A
-        B = pint<> B
+        A = pint<> foo::A
+        B = pint<> foo::B
       }
 
   Instances:
-    bar = process foo<1>^0 bar (instantiated) = ::ick 
-    ick = process foo<1>^0 ick (instantiated) = ::ick 
-    poo = process foo<1>^0 poo (instantiated) = ::poo 
+    bar = foo<1> bar
+    ick = foo<1> ick
+    poo = foo<1> poo
 }
 
+footprint: {
+  bar = process foo<1>^0 = ick 
+  ick = process foo<1>^0 = ick 
+  poo = process foo<1>^0 = poo 
+}

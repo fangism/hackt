@@ -2,7 +2,7 @@
 	\file "Object/def/process_definition_alias.h"
 	Process-definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_proc.h".
-	$Id: process_definition_alias.h,v 1.7 2006/06/02 20:15:19 fang Exp $
+	$Id: process_definition_alias.h,v 1.8 2006/10/18 01:19:12 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_PROCESS_DEFINITION_ALIAS_H__

@@ -4,14 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	230
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	226
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	7	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	10	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	6	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	34
 	13	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
@@ -23,16 +23,17 @@ Persistent Object Manager text dump:
 	19	##ADDR##	PRSnot__	0	#HEAD#	#TAIL#	12
 	20	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	21	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	25	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	26	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	27	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	28	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	22	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	23	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	26	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	27	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	28	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	29	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	32	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -50,12 +51,11 @@ In namespace "", we have: {
       )
       In definition "afterburn", we have: {
       Parameters:
-        D = pint<> D
+        D = pint<> afterburn::D
       Instances:
-        a = bool<> a
-        b = bool<> b
+        a = bool<> afterburn::a
+        b = bool<> afterburn::b
       unroll sequence: 
-        pint<> D
         bool<> a
         bool<> b
       prs:
@@ -63,17 +63,20 @@ In namespace "", we have: {
         ~a -> b+ [after=D; ]
       footprint collection: {
         <31> {
-          pint^0 D value: ?
-          bool^0 a (instantiated) = ::afterburn::a 
-          bool^0 b (instantiated) = ::afterburn::b 
+          D = pint^0 value: 31
+          a = bool^0 = afterburn::a 
+          b = bool^0 = afterburn::b 
         }
       }
       }
 
   Instances:
-    xyz = process afterburn<31>^0 xyz (instantiated) = ::xyz (
-      bool^0 a (instantiated) = ::xyz.a 
-      bool^0 b (instantiated) = ::xyz.b 
-    )
+    xyz = afterburn<31> xyz
 }
 
+footprint: {
+  xyz = process afterburn<31>^0 = xyz (
+    a = bool^0 = xyz.a 
+    b = bool^0 = xyz.b 
+  )
+}

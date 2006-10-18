@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.9 2006/06/26 01:46:31 fang Exp $
+ 	$Id: data_type_reference.h,v 1.10 2006/10/18 01:19:59 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -87,6 +87,10 @@ public:
 	data_type_reference*
 	make_quick_int_type_ref(const pint_value_type);
 
+	static
+	canonical_generic_datatype
+	make_canonical_int_type_ref(const pint_value_type);
+
 	// sub-typed helper
 	count_ptr<const this_type>
 	make_canonical_data_type_reference(void) const;
@@ -125,7 +129,7 @@ public:
 	UNROLL_PORT_INSTANCES_PROTO;
 
 private:
-#if 1
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context
 	make_unroll_context(void) const;
 #endif

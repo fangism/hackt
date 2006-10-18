@@ -5,35 +5,37 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
-	4	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	25
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	9	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
-	10	##ADDR##	proccoll	1	#HEAD#	#TAIL#	137
-	11	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	15	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
-	16	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
-	17	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
-	18	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	127
-	19	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	817
-	20	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	23	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
-	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	25	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
-	26	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	28	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	29	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	30	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	31	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
-	32	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	118
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	29
+	11	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	loopscop	0	#HEAD#	#TAIL#	24
+	19	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	20	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	20
+	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	23	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	24	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	25	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	26	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
+	27	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	28	##ADDR##	proccoll	1	#HEAD#	#TAIL#	124
+	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	30	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	118
+	31	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	118
+	32	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	118
+	33	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	118
+	34	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	808
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -48,97 +50,100 @@ In namespace "", we have: {
       )
       In definition "ass", we have: {
       Instances:
-        q = bool<> q
-
+        q = bool<> ass::q^2
       unroll sequence: 
         bool<> q[0..2][0..1]
       footprint: {
-        bool^2 q
-          unrolled indices: {
-            [0][0] = ::ass::q[0][0] 
-            [0][1] = ::ass::q[0][1] 
-            [1][0] = ::ass::q[1][0] 
-            [1][1] = ::ass::q[1][1] 
-            [2][0] = ::ass::q[2][0] 
-            [2][1] = ::ass::q[2][1] 
+        q = bool^2
+          {
+            [0][0] = ass::q[0][0] 
+            [0][1] = ass::q[0][1] 
+            [1][0] = ass::q[1][0] 
+            [1][1] = ass::q[1][1] 
+            [2][0] = ass::q[2][0] 
+            [2][1] = ass::q[2][1] 
           }
       }
       }
 
   Instances:
-    myass = process ass<>^1 myass
-      unrolled indices: {
-        0 = ::myass[0] (
-          bool^2 q
-            unrolled indices: {
-              [0][0] = ::myass[0].q[0][0] 
-              [0][1] = ::myass[0].q[0][1] 
-              [1][0] = ::myass[0].q[1][0] 
-              [1][1] = ::myass[0].q[1][1] 
-              [2][0] = ::myass[0].q[2][0] 
-              [2][1] = ::myass[0].q[2][1] 
-            }
-        )
-        1 = ::myass[1] (
-          bool^2 q
-            unrolled indices: {
-              [0][0] = ::myass[1].q[0][0] 
-              [0][1] = ::myass[1].q[0][1] 
-              [1][0] = ::myass[1].q[1][0] 
-              [1][1] = ::myass[1].q[1][1] 
-              [2][0] = ::myass[1].q[2][0] 
-              [2][1] = ::myass[1].q[2][1] 
-            }
-        )
-        2 = ::myass[2] (
-          bool^2 q
-            unrolled indices: {
-              [0][0] = ::myass[2].q[0][0] 
-              [0][1] = ::myass[2].q[0][1] 
-              [1][0] = ::myass[2].q[1][0] 
-              [1][1] = ::myass[2].q[1][1] 
-              [2][0] = ::myass[2].q[2][0] 
-              [2][1] = ::myass[2].q[2][1] 
-            }
-        )
-        3 = ::myass[3] (
-          bool^2 q
-            unrolled indices: {
-              [0][0] = ::myass[3].q[0][0] 
-              [0][1] = ::myass[3].q[0][1] 
-              [1][0] = ::myass[3].q[1][0] 
-              [1][1] = ::myass[3].q[1][1] 
-              [2][0] = ::myass[3].q[2][0] 
-              [2][1] = ::myass[3].q[2][1] 
-            }
-        )
-      }
-    x = bool^3 x
-      unrolled indices: {
-        [0][0][0] = ::myass[0].q[0][0] 
-        [0][0][1] = ::myass[0].q[0][1] 
-        [0][1][0] = ::myass[0].q[1][0] 
-        [0][1][1] = ::myass[0].q[1][1] 
-        [0][2][0] = ::myass[0].q[2][0] 
-        [0][2][1] = ::myass[0].q[2][1] 
-        [1][0][0] = ::myass[1].q[0][0] 
-        [1][0][1] = ::myass[1].q[0][1] 
-        [1][1][0] = ::myass[1].q[1][0] 
-        [1][1][1] = ::myass[1].q[1][1] 
-        [1][2][0] = ::myass[1].q[2][0] 
-        [1][2][1] = ::myass[1].q[2][1] 
-        [2][0][0] = ::myass[2].q[0][0] 
-        [2][0][1] = ::myass[2].q[0][1] 
-        [2][1][0] = ::myass[2].q[1][0] 
-        [2][1][1] = ::myass[2].q[1][1] 
-        [2][2][0] = ::myass[2].q[2][0] 
-        [2][2][1] = ::myass[2].q[2][1] 
-        [3][0][0] = ::myass[3].q[0][0] 
-        [3][0][1] = ::myass[3].q[0][1] 
-        [3][1][0] = ::myass[3].q[1][0] 
-        [3][1][1] = ::myass[3].q[1][1] 
-        [3][2][0] = ::myass[3].q[2][0] 
-        [3][2][1] = ::myass[3].q[2][1] 
-      }
+    myass = ass<> myass^1
+    x = bool<> x^3
 }
 
+footprint: {
+  myass = process ass<>^1
+    {
+      0 = myass[0] (
+        q = bool^2
+          {
+            [0][0] = myass[0].q[0][0] 
+            [0][1] = myass[0].q[0][1] 
+            [1][0] = myass[0].q[1][0] 
+            [1][1] = myass[0].q[1][1] 
+            [2][0] = myass[0].q[2][0] 
+            [2][1] = myass[0].q[2][1] 
+          }
+      )
+      1 = myass[1] (
+        q = bool^2
+          {
+            [0][0] = myass[1].q[0][0] 
+            [0][1] = myass[1].q[0][1] 
+            [1][0] = myass[1].q[1][0] 
+            [1][1] = myass[1].q[1][1] 
+            [2][0] = myass[1].q[2][0] 
+            [2][1] = myass[1].q[2][1] 
+          }
+      )
+      2 = myass[2] (
+        q = bool^2
+          {
+            [0][0] = myass[2].q[0][0] 
+            [0][1] = myass[2].q[0][1] 
+            [1][0] = myass[2].q[1][0] 
+            [1][1] = myass[2].q[1][1] 
+            [2][0] = myass[2].q[2][0] 
+            [2][1] = myass[2].q[2][1] 
+          }
+      )
+      3 = myass[3] (
+        q = bool^2
+          {
+            [0][0] = myass[3].q[0][0] 
+            [0][1] = myass[3].q[0][1] 
+            [1][0] = myass[3].q[1][0] 
+            [1][1] = myass[3].q[1][1] 
+            [2][0] = myass[3].q[2][0] 
+            [2][1] = myass[3].q[2][1] 
+          }
+      )
+    }
+  x = bool^3
+    {
+      [0][0][0] = myass[0].q[0][0] 
+      [0][0][1] = myass[0].q[0][1] 
+      [0][1][0] = myass[0].q[1][0] 
+      [0][1][1] = myass[0].q[1][1] 
+      [0][2][0] = myass[0].q[2][0] 
+      [0][2][1] = myass[0].q[2][1] 
+      [1][0][0] = myass[1].q[0][0] 
+      [1][0][1] = myass[1].q[0][1] 
+      [1][1][0] = myass[1].q[1][0] 
+      [1][1][1] = myass[1].q[1][1] 
+      [1][2][0] = myass[1].q[2][0] 
+      [1][2][1] = myass[1].q[2][1] 
+      [2][0][0] = myass[2].q[0][0] 
+      [2][0][1] = myass[2].q[0][1] 
+      [2][1][0] = myass[2].q[1][0] 
+      [2][1][1] = myass[2].q[1][1] 
+      [2][2][0] = myass[2].q[2][0] 
+      [2][2][1] = myass[2].q[2][1] 
+      [3][0][0] = myass[3].q[0][0] 
+      [3][0][1] = myass[3].q[0][1] 
+      [3][1][0] = myass[3].q[1][0] 
+      [3][1][1] = myass[3].q[1][1] 
+      [3][2][0] = myass[3].q[2][0] 
+      [3][2][1] = myass[3].q[2][1] 
+    }
+}

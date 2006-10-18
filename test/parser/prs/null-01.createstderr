@@ -1,5 +1,5 @@
 Sorry, empty expression loops are not yet supported.  Currently waiting for resolution on language defect report.
 Error unrolling production rule: 
-	(&:i:[0..-1]: ::null::z[$i]) -> ::null::o-
+	(&:i:[0..-1]: null::z[$i]) -> null::o-
 Error during create_unique.
 ERROR in creating.  Aborting.

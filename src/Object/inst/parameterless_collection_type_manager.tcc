@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/parameterless_collection_type_manager.tcc"
 	Template class for instance_collection's type manager.  
-	$Id: parameterless_collection_type_manager.tcc,v 1.10 2006/06/26 01:46:13 fang Exp $
+	$Id: parameterless_collection_type_manager.tcc,v 1.11 2006/10/18 01:19:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAMETERLESS_COLLECTION_TYPE_MANAGER_TCC__
@@ -66,6 +66,7 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::load_object_base(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
 typename PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::type_ref_ptr_type
 PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::get_type(
@@ -83,6 +84,16 @@ PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::get_type(
 		.template is_a<const datatype_definition_base>()));
 #endif
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+PARAMETERLESS_COLLECTION_TYPE_MANAGER_TEMPLATE_SIGNATURE
+typename PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::resolved_type_ref_type
+PARAMETERLESS_COLLECTION_TYPE_MANAGER_CLASS::get_resolved_canonical_type(void) const {
+	return resolved_type_ref_type(this->type_parameter);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

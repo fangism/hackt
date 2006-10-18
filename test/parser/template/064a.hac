@@ -1,0 +1,12 @@
+// "064a.hac" should pass, relaxed actuals differ in same relaxed collection
+// copy-modified from "064.hac"
+
+template <pint Q><pint R>
+defproc foo() { }
+
+foo<5> bar<4>[3];
+foo<5> bar[7..9];		// unspecified parameters OK
+foo<5> bar[4..6];		// unspecified parameters OK
+
+
+

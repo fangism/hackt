@@ -1,7 +1,7 @@
 /**
 	\file "Object/def/footprint.cc"
 	Implementation of footprint class. 
-	$Id: footprint.cc,v 1.24 2006/07/31 22:22:30 fang Exp $
+	$Id: footprint.cc,v 1.25 2006/10/18 01:19:10 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -9,6 +9,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <set>				// to sort keys
 #include "util/hash_specializations.h"
 #include "Object/def/footprint.h"
 #include "Object/common/scopespace.h"
@@ -23,6 +24,9 @@
 #include "Object/common/alias_string_cache.h"
 #include "Object/common/dump_flags.h"
 #include "Object/inst/alias_printer.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#endif
 #if ENABLE_STACKTRACE
 #include "Object/expr/expr_dump_context.h"
 #endif
@@ -44,6 +48,7 @@ using util::read_value;
 using util::auto_indent;
 using std::ostream_iterator;
 using std::copy;
+using std::set;
 using HASH_MAP_NAMESPACE::copy_map_reverse_bucket;
 
 //=============================================================================
@@ -234,10 +239,35 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 			i(instance_collection_map.begin());
 		const const_instance_map_iterator
 			e(instance_collection_map.end());
+#if USE_INSTANCE_PLACEHOLDERS
+		set<string> keys;
+		for ( ; i!=e; ++i) {
+			keys.insert(i->first);
+		}
+		set<string>::const_iterator
+			ii(keys.begin()), ee(keys.end());
+		for ( ; ii!=ee; ++ii) {
+			const const_instance_map_iterator
+				j(instance_collection_map.find(*ii));
+			NEVER_NULL(j->second);
+			o << auto_indent << j->first << " = ";
+			j->second->dump(o, df) << endl;
+		}
+#else
 		for ( ; i!=e; i++) {
 			NEVER_NULL(i->second);
-			i->second->dump(o << auto_indent, df) << endl;
+			o << auto_indent;
+#if USE_INSTANCE_PLACEHOLDERS
+			// print the key first
+			o << i->first << " = ";
+#endif
+			i->second->dump(o, df) << endl;
 		}
+#endif
+#if MODULE_PROCESS
+	if (is_created()) {
+		o << auto_indent << "Created state:" << endl;
+#endif
 		dump(o);
 		port_aliases.dump(o);
 #if ENABLE_STACKTRACE
@@ -247,7 +277,10 @@ footprint::dump_with_collections(ostream& o, const dump_flags& df,
 		prs_footprint.dump(o, *this);
 		chp_footprint.dump(o, *this, dc);
 		spec_footprint.dump(o, *this);
-	}
+#if MODULE_PROCESS
+	}	// end if is_created
+#endif
+	}	// end if collection_map is not empty
 	return o;
 }
 
@@ -292,6 +325,7 @@ footprint::operator [] (const string& k) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MODULE_PROCESS
 /**
 	This copies instance_collections (physical and parameter)
 	into its own map.  
@@ -312,13 +346,22 @@ if (instance_collection_map.empty()) {
 	const_map_iterator si(s.id_map_begin());
 	const const_map_iterator se(s.id_map_end());
 	for ( ; si!=se; si++) {
+#if USE_INSTANCE_PLACEHOLDERS
+		const never_ptr<const instance_placeholder_base>
+			icb(si->second.is_a<const instance_placeholder_base>());
+#else
 		const never_ptr<const instance_collection_base>
 			icb(si->second.is_a<const instance_collection_base>());
+#endif
 		if (icb) {
 			// then we need to make a deep copy of it 
 			// in our own footprint's instance collection map
 			const count_ptr<instance_collection_base>
+#if USE_INSTANCE_PLACEHOLDERS
+			fc(icb->make_instance_collection_footprint_copy());
+#else
 			fc(icb->make_instance_collection_footprint_copy(*this));
+#endif
 			NEVER_NULL(fc);
 			STACKTRACE_INDENT_PRINT(
 				"deep-copying " << fc->get_name() << endl);
@@ -328,14 +371,18 @@ if (instance_collection_map.empty()) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MODULE_PROCESS
 /**
 	The difference is that the key used for the collection
 	map is a hierarchical (qualified) name to avoid collisions
 	as a result of collating over all namespaces.  
 	Called by top-level module only.
 	TODO: Arg -- code duplication -- clean later.  
+	TODO: this won't be necessary once placeholders and collections
+		are decoupled.  
  */
 void
 footprint::import_hierarchical_scopespace(const scopespace& s) {
@@ -369,7 +416,11 @@ if (instance_collection_map.empty()) {
 			never escapes to object serialization.  (Done.)
 		***/
 			static size_t one = 1;
+#if USE_INSTANCE_PLACEHOLDERS
+			instance_collection_map[pc->get_placeholder_base()->get_qualified_name()] =
+#else
 			instance_collection_map[pc->get_qualified_name()] =
+#endif
 				count_ptr<instance_collection_base>(
 				&const_cast<physical_instance_collection&>(*pc), &one);
 		}
@@ -377,8 +428,10 @@ if (instance_collection_map.empty()) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !MODULE_PROCESS
 /**
 	Temporary hack.  
 	Hybrid of import_scopespace and import_hierarchical scopespace:
@@ -410,6 +463,7 @@ if (instance_collection_map.empty()) {
 	}
 }
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -423,13 +477,33 @@ footprint::clear_instance_collection_map(void) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	TODO: qualified names needed for top-level footprint. 
+	\pre Not already registered.  
+ */
+good_bool
+footprint::register_collection(const count_ptr<instance_collection_base>& p) {
+	STACKTRACE_VERBOSE;
+	NEVER_NULL(p);
+	// will want hash_string() or get_footprint_key()
+	const string key(p->get_footprint_key());
+	STACKTRACE_INDENT_PRINT("whoami: \"" << key << "\"" << endl);
+	INVARIANT(instance_collection_map.find(key)
+		== instance_collection_map.end());
+	instance_collection_map[key] = p;
+	return good_bool(true);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	For all instance collections, expand their canonical types.  
 	This does not unroll/create PRS footprints, that's done separately.  
 	(called by process_definition::create)
  */
 good_bool
-footprint::create_dependent_types(void) {
+footprint::create_dependent_types(const footprint& top) {
 	STACKTRACE_VERBOSE;
 	const instance_map_iterator
 		// b(instance_collection_map.begin()),
@@ -447,7 +521,7 @@ footprint::create_dependent_types(void) {
 			pic(i->second.is_a<physical_instance_collection>());
 		// not only does this create dependent types, but it also
 		// replays all internal aliases as well.
-		if (pic && !pic->create_dependent_types().good) {
+		if (pic && !pic->create_dependent_types(top).good) {
 			return good_bool(false);
 		}
 	}
@@ -502,7 +576,11 @@ footprint::evaluate_scope_aliases(void) {
 			// but it collects everything in scope
 			// good re-use of function!
 			pic->collect_port_aliases(scope_aliases);
+#if USE_INSTANCE_PLACEHOLDERS
+			if (pic->get_placeholder_base()->is_port_formal())
+#else
 			if (pic->is_port_formal())
+#endif
 				pic->collect_port_aliases(port_aliases);
 		}
 	}
@@ -597,7 +675,12 @@ footprint::assign_footprint_frame(footprint_frame& ff,
 		if (coll_ptr) {
 			// note: port formal is 1-indexed
 			// where as member array is 0-indexed
-			const size_t pfp = coll_ptr->is_port_formal();
+			const size_t pfp = 
+#if USE_INSTANCE_PLACEHOLDERS
+				coll_ptr->get_placeholder_base()->is_port_formal();
+#else
+				coll_ptr->is_port_formal();
+#endif
 			if (pfp) {
 				coll_ptr->assign_footprint_frame(
 					ff, pmc.member_array[pfp -1]);
@@ -752,7 +835,8 @@ footprint::load_object_base(const persistent_object_manager& m, istream& i) {
 		NEVER_NULL(coll_ptr);
 		// need to load the collection to get its key.  
 		m.load_object_once(coll_ptr);
-		instance_collection_map[coll_ptr->get_name()] = coll_ptr;
+		// TODO: replace with get_footprint_key()!
+		instance_collection_map[coll_ptr->get_footprint_key()] = coll_ptr;
 	}
 }
 	footprint_base<process_tag>::_pool.load_object_base(m, i);

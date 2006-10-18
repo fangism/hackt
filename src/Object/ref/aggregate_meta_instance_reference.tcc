@@ -1,7 +1,7 @@
 /**
 	\file "Object/ref/aggregate_meta_instance_reference.tcc"
 	Implementation of aggregate_meta_instance_reference class.  
-	$Id: aggregate_meta_instance_reference.tcc,v 1.8 2006/08/08 05:46:39 fang Exp $
+	$Id: aggregate_meta_instance_reference.tcc,v 1.9 2006/10/18 01:19:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_AGGREGATE_META_INSTANCE_REFERENCE_TCC__
@@ -93,7 +93,7 @@ ostream&
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::dump_type_size(ostream& o) const {
 	const subreference_ptr_type& front(subreferences.front());
 	NEVER_NULL(front);
-	front->get_type_ref()->dump(o);
+	front->get_unresolved_type_ref()->dump(o);
 	const size_t d = this->dimensions();
 	if (d) {
 		o << '{' << d << "-dim}";
@@ -111,8 +111,8 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::get_base_def(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const fundamental_type_reference>
-AGGREGATE_META_INSTANCE_REFERENCE_CLASS::get_type_ref(void) const {
-	return subreferences.front()->get_type_ref();
+AGGREGATE_META_INSTANCE_REFERENCE_CLASS::get_unresolved_type_ref(void) const {
+	return subreferences.front()->get_unresolved_type_ref();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -131,7 +131,11 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::unroll_scalar_substructure_reference(
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 const footprint_frame*
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::lookup_footprint_frame(
-		const state_manager&) const {
+		const state_manager&
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, footprint&
+#endif
+		) const {
 	ICE_NEVER_CALL(cerr);
 	return NULL;
 }
@@ -274,11 +278,11 @@ AGGREGATE_META_INSTANCE_REFERENCE_CLASS::append_meta_instance_reference(
 	Aggregates are non-scalar, and hence, cannot be ported!
  */
 AGGREGATE_META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-excl_ptr<port_connection_base>
+typename AGGREGATE_META_INSTANCE_REFERENCE_CLASS::port_connection_ptr_type
 AGGREGATE_META_INSTANCE_REFERENCE_CLASS::make_port_connection_private(
 		const count_ptr<const meta_instance_reference_base>&) const {
 	ICE_NEVER_CALL(cerr);
-	return excl_ptr<port_connection_base>(NULL);
+	return port_connection_ptr_type(NULL);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

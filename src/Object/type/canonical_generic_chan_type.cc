@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.5 2006/06/26 01:46:27 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.6 2006/10/18 01:19:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -26,6 +26,7 @@
 #include "util/persistent_object_manager.tcc"
 #include "util/indent.h"
 #include "common/TODO.h"
+#include "common/ICE.h"
 #include "util/stacktrace.h"
 
 namespace HAC {
@@ -62,6 +63,17 @@ canonical_generic_chan_type::canonical_type(
 	NEVER_NULL(canonical_definition_ptr);
 	INVARIANT(!canonical_definition_ptr.is_a<const typedef_base>());
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+canonical_generic_chan_type::canonical_type(
+		const this_type& d,
+		const const_param_list_ptr_type& p) :
+		base_type(), canonical_definition_ptr(), datatype_list(), 
+		direction() {
+	ICE_NEVER_CALL(cerr);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_generic_chan_type::canonical_type(
@@ -127,7 +139,7 @@ canonical_generic_chan_type::dump(ostream& o) const {
 #if STACKTRACE_DUMPS
 		STACKTRACE_INDENT_PRINT("user-def-chan" << endl);
 #endif
-		o << canonical_definition_ptr->get_name();
+		o << canonical_definition_ptr->get_qualified_name();
 		base_type::dump_template_args(o,
 			canonical_definition_ptr->num_strict_formals());
 		return channel_type_reference_base::dump_direction(o,direction);
@@ -151,6 +163,7 @@ canonical_generic_chan_type::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 unroll_context
 canonical_generic_chan_type::make_unroll_context(void) const {
 	if (canonical_definition_ptr) {
@@ -161,6 +174,7 @@ canonical_generic_chan_type::make_unroll_context(void) const {
 		return unroll_context();
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -245,18 +259,19 @@ canonical_generic_chan_type::type_mismatch_error(ostream& o,
 	A: could use a compiler flag to conditionally postpone... oooh.
  */
 good_bool
-canonical_generic_chan_type::unroll_definition_footprint(void) const {
+canonical_generic_chan_type::unroll_definition_footprint(
+		const footprint& top) const {
 	if (canonical_definition_ptr) {
 		canonical_definition_ptr->register_complete_type(param_list_ptr);
 		return canonical_definition_ptr->
-			unroll_complete_type(param_list_ptr);
+			unroll_complete_type(param_list_ptr, top);
 	} else {
 	// else? does built-in channel have footprint? don't think so...
 		typedef	datatype_list_type::const_iterator	const_iterator;
 		const_iterator i(datatype_list.begin());
 		const const_iterator e(datatype_list.end());
 		for ( ; i!=e; i++) {
-			if (!i->unroll_definition_footprint().good)
+			if (!i->unroll_definition_footprint(top).good)
 				return good_bool(false);
 		}
 		// else everything matches
@@ -382,7 +397,8 @@ if (canonical_definition_ptr) {
 	but when they do... TODO!
  */
 good_bool
-canonical_generic_chan_type::create_definition_footprint(void) const {
+canonical_generic_chan_type::create_definition_footprint(
+		const footprint& top) const {
 	return good_bool(true);
 }
 

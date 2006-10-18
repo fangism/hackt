@@ -2,7 +2,7 @@
 	\file "Object/def/definition_base.h"
 	Base classes for definition objects.  
 	This file used to be "Object/art_object_definition_base.h".
-	$Id: definition_base.h,v 1.8 2006/06/02 20:15:18 fang Exp $
+	$Id: definition_base.h,v 1.9 2006/10/18 01:19:09 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_DEFINITION_BASE_H__
@@ -12,6 +12,7 @@
 #include "util/macros.h"
 #include "Object/common/object_base.h"
 #include "Object/common/util_types.h"
+#include "Object/devel_switches.h"
 
 #include "util/boolean_types.h"
 #include "util/persistent.h"		// for persistent object interface
@@ -34,12 +35,19 @@ using parser::token_identifier;
 //=============================================================================
 namespace entity {
 class scopespace;
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+class physical_instance_placeholder;
+class param_value_placeholder;
+#else
 class instance_collection_base;
 class physical_instance_collection;
+#endif
 class fundamental_type_reference;
 class template_actuals;
 class const_param_expr_list;
 class port_formals_manager;
+class footprint;
 struct dump_flags;
 using std::string;
 using std::istream;
@@ -74,7 +82,15 @@ public:
 
 	typedef	template_actuals	make_type_ptr_type;
 	typedef	template_actuals	make_type_arg_type;
-
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	instance_placeholder_base	placeholder_base_type;
+	typedef	param_value_placeholder		value_placeholder_type;
+	typedef	physical_instance_placeholder	instance_placeholder_type;
+#else
+	typedef	instance_collection_base	placeholder_base_type;
+	typedef	param_value_collection		value_placeholder_type;
+	typedef	physical_instance_collection	instance_placeholder_type;
+#endif
 protected:
 	template_formals_manager	template_formals;
 
@@ -126,7 +142,7 @@ virtual	never_ptr<const scopespace>
 virtual	void
 	commit_arity(void) { }
 
-	never_ptr<const param_value_collection>
+	never_ptr<const value_placeholder_type>
 	lookup_template_formal(const string& id) const;
 
 	bool
@@ -145,11 +161,11 @@ virtual	never_ptr<const scopespace>
 	get_scopespace(void) const = 0;
 
 	// non-virtual
-	never_ptr<const instance_collection_base>
+	never_ptr<const placeholder_base_type>
 	lookup_port_formal(const string& id) const;
 
 	size_t
-	lookup_port_formal_position(const instance_collection_base&) const;
+	lookup_port_formal_position(const instance_placeholder_type&) const;
 
 	never_ptr<const object>
 	lookup_nonparameter_member(const string& id) const;
@@ -212,8 +228,7 @@ virtual	excl_ptr<definition_base>
 	const string&
 	get_name(void) const { return get_key(); }
 
-// need not be virtual?
-virtual	string
+	string
 	get_qualified_name(void) const;
 
 	ostream&
@@ -230,21 +245,37 @@ virtual	good_bool
 	TODO: This function should be pure virtual and belong 
 		to a different interface!
 	TODO: shouldn't argument be a param_instantiation_statement?
+	TODO: shouldn't return type be param_value_placeholder?
  */
-virtual	never_ptr<const instance_collection_base>
+virtual	never_ptr<const value_placeholder_type>
 	add_strict_template_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>&, 
+#else
 		const never_ptr<instantiation_statement_base> f, 
+#endif
 		const token_identifier& id);
 
-virtual	never_ptr<const instance_collection_base>
+virtual	never_ptr<const value_placeholder_type>
 	add_relaxed_template_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>&, 
+#else
 		const never_ptr<instantiation_statement_base> f, 
+#endif
 		const token_identifier& id);
 
+#if REF_COUNT_INSTANCE_MANAGEMENT
 #define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
-	never_ptr<const physical_instance_collection>			\
+	never_ptr<const instance_placeholder_type>			\
+	add_port_formal(const count_ptr<instantiation_statement_base>&,	\
+		const token_identifier&)
+#else
+#define	DEFINITION_ADD_PORT_FORMAL_PROTO				\
+	never_ptr<const instance_placeholder_type>			\
 	add_port_formal(const never_ptr<instantiation_statement_base>, 	\
 		const token_identifier&)
+#endif
 
 /**
 	Really, only some definitions should have ports...
@@ -256,15 +287,23 @@ virtual	DEFINITION_ADD_PORT_FORMAL_PROTO;
 	register_complete_type(						\
 		const count_ptr<const const_param_expr_list>&) const
 
+/**
+	Need footprint argument to pass top-level footprint.  
+ */
 #define	UNROLL_COMPLETE_TYPE_PROTO					\
 	good_bool							\
 	unroll_complete_type(						\
-		const count_ptr<const const_param_expr_list>&) const
+		const count_ptr<const const_param_expr_list>&, 		\
+			const footprint&) const
 
+/**
+	Need footprint argument to pass top-level footprint.  
+ */
 #define	CREATE_COMPLETE_TYPE_PROTO					\
 	good_bool							\
 	create_complete_type(						\
-		const count_ptr<const const_param_expr_list>&) const
+		const count_ptr<const const_param_expr_list>&,		\
+			const footprint&) const
 
 protected:
 	void

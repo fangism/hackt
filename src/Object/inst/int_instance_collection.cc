@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_int.cc"
 		in a previous life.  
-	$Id: int_instance_collection.cc,v 1.9 2006/03/15 04:38:18 fang Exp $
+	$Id: int_instance_collection.cc,v 1.10 2006/10/18 01:19:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INT_INSTANCE_COLLECTION_CC__
@@ -33,6 +33,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/data_type_reference.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/inst/instance_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/instance_placeholder.tcc"
+#endif
 #include "Object/inst/instance_alias.tcc"
 #include "Object/inst/int_collection_type_manager.tcc"
 #include "Object/inst/state_instance.tcc"
@@ -50,6 +53,11 @@ namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::int_array_3D, "int_array_3D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::int_array_4D, "int_array_4D")
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::int_instance_placeholder, 
+	DINT_INSTANCE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::int_scalar, DINT_INSTANCE_COLLECTION_TYPE_KEY, 0)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
@@ -76,6 +84,9 @@ operator << (ostream& o, const int_instance_alias_base& i) {
 //=============================================================================
 // explicit template instantiations
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class instance_placeholder<int_tag>;
+#endif
 template class state_instance<int_tag>;
 template class instance_pool<state_instance<int_tag> >;
 template class instance_alias_info<int_tag>;

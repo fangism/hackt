@@ -6,7 +6,7 @@ Persistent Object Manager text dump:
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	datadefn	0	#HEAD#	#TAIL#	76
 	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -30,12 +30,12 @@ In namespace "", we have: {
       )
       In datatype definition "my_data", we have: {
       Instances:
-        x = int<28> x
+        x = int<28> my_data::x
       unroll sequence: 
         int<28> x
       }
 
 }
 
-Created state:
-
+footprint: {
+}

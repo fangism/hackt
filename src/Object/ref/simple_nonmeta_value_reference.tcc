@@ -3,7 +3,7 @@
 	Class method definitions for semantic expression.  
 	This file was reincarnated from 
 		"Object/art_object_nonmeta_value_reference.cc"
- 	$Id: simple_nonmeta_value_reference.tcc,v 1.10 2006/06/26 01:46:21 fang Exp $
+ 	$Id: simple_nonmeta_value_reference.tcc,v 1.11 2006/10/18 01:19:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_SIMPLE_NONMETA_VALUE_REFERENCE_TCC__
@@ -26,6 +26,15 @@
 #include "Object/traits/class_traits.h"
 #include "Object/ref/nonmeta_instance_reference_subtypes.h"
 #include "Object/type/data_type_reference.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/param_value_placeholder.h"
+#include "Object/inst/instance_placeholder.h"
+#include "Object/inst/value_placeholder.h"
+#include "Object/unroll/unroll_context.h"
+#endif
+#if USE_RESOLVED_DATA_TYPES
+#include "Object/type/canonical_generic_datatype.h"
+#endif
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/value_collection.h"
 #include "Object/common/dump_flags.h"
@@ -125,10 +134,19 @@ struct nonmeta_unroll_resolve_copy_policy<Tag, parameter_value_tag> {
 							value_scalar_type;
 	typedef	typename traits_type::data_value_type	data_value_type;
 	typedef	typename traits_type::const_expr_type	const_expr_type;
+	/**
+		This is now a placeholder type.
+	 */
 	typedef	typename reference_type::value_collection_type
 							value_collection_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	// for lack of better name...
+	typedef	typename traits_type::value_collection_generic_type
+						value_array_generic_type;
+#endif
 
 /**
+	See comment of value_array::lookup_value for new usage.  
 	\param i resolved indices.  
  */
 static
@@ -140,18 +158,45 @@ __lookup_unroll_resolved_value(const value_collection_type& vc,
 	multikey_index_type k(i.size());	// pre-size
 	if (i.make_const_index_list(k).good) {
 		data_value_type _val;
+#if USE_INSTANCE_PLACEHOLDERS
+		const count_ptr<const param_value_collection>
+#if RVALUE_LVALUE_LOOKUPS
+			pvc(c.lookup_rvalue_collection(vc));
+#else
+			pvc(c.lookup_value_collection(vc));
+#endif
+		if (!pvc) {
+			return return_type(NULL);
+		}
+		const count_ptr<const value_array_generic_type>
+			va(pvc.template is_a<const value_array_generic_type>());
+		if (!va) {
+			return return_type(NULL);
+		}
+		if (va->lookup_value(_val, k).good) {
+			return return_type(new const_expr_type(_val));
+		} else {
+			return return_type(NULL);
+		}
+#else
 		if (vc.lookup_value(_val, k, c).good) {
 			return return_type(new const_expr_type(_val));
 		} else {
 			// already have error message
 			return return_type(NULL);
 		}
+#endif
 	} else {
 		// there is some nonmeta value in index expr
 		return ret;
 	}
 }
 
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This may be obsolete with the use of placeholders.  
+	Well, is it?
+ */
 static
 return_type
 unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
@@ -198,6 +243,30 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		// therefore, just look this up
 		// code ripped from:
 		// simple_meta_value_reference::unroll_resolve_rvalues
+#if USE_INSTANCE_PLACEHOLDERS
+		const count_ptr<const param_value_collection>
+#if RVALUE_LVALUE_LOOKUPS
+			pvc(c.lookup_rvalue_collection(
+				*_this.value_collection_ref));
+#else
+			pvc(c.lookup_value_collection(
+				*_this.value_collection_ref));
+#endif
+		if (!pvc) {
+			return error;
+		}
+		data_value_type _val;
+		const count_ptr<const value_scalar_type>
+			va(pvc.template is_a<const value_scalar_type>());
+		if (va && va->lookup_value(_val).good) {
+			return return_type(new const_expr_type(_val));
+		} else {
+                        cerr << "ERROR: in unroll_resolve-ing "
+                                "simple_meta_value_reference, "
+                                "uninitialized value." << endl;
+                        return error;
+		}
+#else
 		const never_ptr<const value_scalar_type>
 			ps(_this.value_collection_ref.
 				template is_a<const value_scalar_type>());
@@ -212,6 +281,7 @@ unroll_resolve_copy(const reference_type& _this, const unroll_context& c,
 		} else {
 			return return_type(new const_expr_type(_val));
 		}
+#endif
 	}
 }	// end method unroll_resolve_copy
 } __VISIBILITY_HIDDEN__ ;	// end struct nonmeta_unroll_resolve_copy_policy
@@ -272,6 +342,9 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->what(o) << " ";
 	}
 	NEVER_NULL(this->value_collection_ref);
+#if USE_INSTANCE_PLACEHOLDERS
+#define	dump_hierarchical_name	dump_qualified_name
+#endif
 	if (c.enclosing_scope) {
 		this->value_collection_ref->dump_hierarchical_name(o,
 			dump_flags::no_definition_owner);
@@ -279,6 +352,9 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::dump(ostream& o,
 		this->value_collection_ref->dump_hierarchical_name(o,
 			dump_flags::default_value);
 	}
+#if USE_INSTANCE_PLACEHOLDERS
+#undef	dump_hierarchical_name
+#endif
 	return simple_nonmeta_instance_reference_base::dump_indices(o, c);
 }
 
@@ -302,11 +378,27 @@ SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::is_lvalue(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_UNRESOLVED_DATA_TYPES
+/**
+	2006-09-03: re-written to lookup the corresponding footprint
+	instance, using the unrolli_context.  
+ */
 SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
 count_ptr<const data_type_reference>
-SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_data_type_ref(void) const {
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_unresolved_data_type_ref(void) const {
 	return data_type_resolver<Tag>()(*this);
 }
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_RESOLVED_DATA_TYPES
+SIMPLE_NONMETA_VALUE_REFERENCE_TEMPLATE_SIGNATURE
+canonical_generic_datatype
+SIMPLE_NONMETA_VALUE_REFERENCE_CLASS::get_resolved_data_type_ref(
+		const unroll_context& c) const {
+	return data_type_resolver<Tag>()(*this, c);
+}
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

@@ -2,7 +2,7 @@
 	\file "Object/def/definition.cc"
 	Method definitions for definition-related classes.  
 	This file used to be "Object/art_object_definition.cc".
- 	$Id: definition.cc,v 1.27 2006/08/14 04:49:59 fang Exp $
+ 	$Id: definition.cc,v 1.28 2006/10/18 01:19:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEFINITION_CC__
@@ -40,13 +40,22 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/type/builtin_channel_type_reference.h"
 #include "Object/type/channel_type_reference.h"
 #include "Object/type/process_type_reference.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/param_value_placeholder.h"
+#include "Object/inst/physical_instance_placeholder.h"
+#else
 #include "Object/inst/param_value_collection.h"
 #include "Object/inst/physical_instance_collection.h"
+#endif
 #include "Object/unroll/instantiation_statement.h"
 #include "Object/unroll/datatype_instantiation_statement.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/expr/expr_dump_context.h"
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#else
 #include "Object/expr/param_expr_list.h"
+#endif
 #include "Object/expr/meta_range_list.h"
 #include "Object/persistent_type_hash.h"
 #include "Object/common/namespace.h"
@@ -114,7 +123,6 @@ definition_base::null(NULL);
 /**
 	Definition basic constructor.  
  */
-inline
 definition_base::definition_base() :
 		persistent(), object(), 
 		template_formals(), 
@@ -123,7 +131,6 @@ definition_base::definition_base() :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-inline
 definition_base::~definition_base() {
 	STACKTRACE_DTOR("~definition_base()");
 #if 0
@@ -159,7 +166,7 @@ definition_base::pair_dump(ostream& o) const {
 /**
 	Only looks up the identifier in the set of template formals.  
  */
-never_ptr<const param_value_collection>
+never_ptr<const definition_base::value_placeholder_type>
 definition_base::lookup_template_formal(const string& id) const {
 	return template_formals.lookup_template_formal(id);
 }
@@ -289,14 +296,14 @@ definition_base::get_port_formals_manager(void) const {
 	A default lookup that always returns NULL.  
 	Overridden in process_definition.  
  */
-never_ptr<const instance_collection_base>
+never_ptr<const definition_base::placeholder_base_type>
 definition_base::lookup_port_formal(const string& id) const {
 	const never_ptr<const port_formals_manager>
 		pfm(get_port_formals_manager());
 	if (pfm) {
 		return pfm->lookup_port_formal(id);
 	} else {
-		return never_ptr<const instance_collection_base>(NULL);
+		return never_ptr<const placeholder_base_type>(NULL);
 	}
 }
 
@@ -309,7 +316,7 @@ definition_base::lookup_port_formal(const string& id) const {
  */
 size_t
 definition_base::lookup_port_formal_position(
-		const instance_collection_base& i) const {
+		const instance_placeholder_type& i) const {
 	STACKTRACE_VERBOSE;
 	const never_ptr<const port_formals_manager>
 		pfm(get_port_formals_manager());
@@ -346,7 +353,7 @@ string
 definition_base::get_qualified_name(void) const {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
-	if (parent)
+	if (parent && !parent->is_global_namespace())
 		return parent->get_qualified_name() +scope +key;
 	else return key;
 }
@@ -362,7 +369,7 @@ definition_base::dump_qualified_name(ostream& o, const dump_flags& df) const {
 if (df.show_definition_owner) {
 	const string& key(get_key());
 	const never_ptr<const scopespace> parent(get_parent());
-	if (parent) {
+	if (parent && !parent->is_global_namespace()) {
 		parent->dump_qualified_name(o, df) << scope;
 	}
 	return o << key;
@@ -429,17 +436,21 @@ definition_base::make_fundamental_type_reference(void) const {
 	also registers it in the list of template formals for 
 	template argument checking.  
 	What if template formal is an array, or collective?
-	TO DO: convert to pointer-classes...
+	TODO: convert to pointer-classes...
 	\param f needs to be a param_value_collection... what about array?
 		need to be non-const? storing to hash_map_of_ptr...
 		must be modifiable for used_id_map
  */
-never_ptr<const instance_collection_base>
+never_ptr<const definition_base::value_placeholder_type>
 definition_base::add_strict_template_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& i, 
+#else
 		const never_ptr<instantiation_statement_base> i, 
+#endif
 		const token_identifier& id) {
 	STACKTRACE("definition_base::add_strict_template_formal()");
-	typedef	never_ptr<const instance_collection_base>	return_type;
+	typedef	never_ptr<const value_placeholder_type>	return_type;
 	// const string id(pf->get_name());	// won't have name yet!
 	// check and make sure identifier wasn't repeated in formal list!
 	{
@@ -458,14 +469,14 @@ definition_base::add_strict_template_formal(
 	// COMPILE: pf is const, but used_id_map members are not
 	// wrap around with object_handle?
 
-	// this construction is ugly, TO DO: define clean interface
+	// this construction is ugly, TODO: define clean interface
 	scopespace* ss = IS_A(scopespace*, this);
 	NEVER_NULL(ss);
 	// this creates and adds to the definition
 	// and bi-links statement to collection
-	const never_ptr<const param_value_collection>
+	const return_type
 		pf(ss->add_instance(i, id, false)
-			.is_a<const param_value_collection>());
+			.is_a<const value_placeholder_type>());
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
@@ -483,12 +494,16 @@ definition_base::add_strict_template_formal(
 	Same as add_strict_template_formal, except distinguished as
 	a relaxed template formal parameter.  
  */
-never_ptr<const instance_collection_base>
+never_ptr<const definition_base::value_placeholder_type>
 definition_base::add_relaxed_template_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& i, 
+#else
 		const never_ptr<instantiation_statement_base> i, 
+#endif
 		const token_identifier& id) {
 	STACKTRACE("definition_base::add_relaxed_template_formal()");
-	typedef	never_ptr<const instance_collection_base>	return_type;
+	typedef	never_ptr<const value_placeholder_type>	return_type;
 	{
 	const never_ptr<const object>
 		probe(lookup_member(id));
@@ -499,9 +514,9 @@ definition_base::add_relaxed_template_formal(
 	}
 	scopespace* ss = IS_A(scopespace*, this);
 	NEVER_NULL(ss);
-	const never_ptr<const param_value_collection>
+	const return_type
 		pf(ss->add_instance(i, id, false)
-			.is_a<const param_value_collection>());
+			.is_a<const value_placeholder_type>());
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);	// consistency check
@@ -516,10 +531,14 @@ definition_base::add_relaxed_template_formal(
 	Only temporary.
 	Override in appropriate subclasses.  
  */
-never_ptr<const physical_instance_collection>
+never_ptr<const definition_base::instance_placeholder_type>
 definition_base::add_port_formal(
-		const never_ptr<instantiation_statement_base> f, 
-		const token_identifier& i) {
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>&, 
+#else
+		const never_ptr<instantiation_statement_base>, 
+#endif
+		const token_identifier&) {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -832,6 +851,7 @@ user_def_chan::dump(ostream& o) const {
 			INDENT_SECTION(o);
 			recv_chp.dump(o << auto_indent, dc) << endl;
 		}
+		// TODO: dump footprints?
 	}	// end indent scope
 	return o << auto_indent << "}" << endl;
 }
@@ -845,19 +865,13 @@ user_def_chan::get_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 user_def_chan::get_qualified_name(void) const {
-	if (parent)
-		return parent->get_qualified_name() + scope + key;
-	else return string(scope) + key;
+	return definition_base::get_qualified_name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_chan::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_definition_owner) {
-	if (parent)
-		parent->dump_qualified_name(o, df);
-	return o << scope << key;
-} else	return o;
+	return definition_base::dump_qualified_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -898,10 +912,15 @@ user_def_chan::attach_base_channel_type(
 	Ripped off from process_definition's.
 	Last touched: 2005-05-25.
  */
-never_ptr<const physical_instance_collection>
-user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f, 
+never_ptr<const definition_base::instance_placeholder_type>
+user_def_chan::add_port_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& f, 
+#else
+		const never_ptr<instantiation_statement_base> f, 
+#endif
 		const token_identifier& id) {
-	typedef	never_ptr<const physical_instance_collection>	return_type;
+	typedef	never_ptr<const instance_placeholder_type>	return_type;
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -915,7 +934,7 @@ user_def_chan::add_port_formal(const never_ptr<instantiation_statement_base> f,
 	}
 
 	const return_type pf(add_instance(f, id, false)
-		.is_a<const physical_instance_collection>());
+		.is_a<const instance_placeholder_type>());
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
@@ -967,7 +986,8 @@ user_def_chan::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
 user_def_chan::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing until this has a footprint manager
 	return good_bool(true);
 }
@@ -975,7 +995,8 @@ user_def_chan::unroll_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 good_bool
 user_def_chan::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing until this has a footprint manager
 	return good_bool(true);
 }
@@ -1043,13 +1064,13 @@ user_def_chan::load_object(const persistent_object_manager& m, istream& f) {
 void
 user_def_chan::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	if (o.is_a<instance_collection_base>()) {
-		excl_ptr<instance_collection_base>
-			icbp = o.is_a_xfer<instance_collection_base>();
+	if (o.is_a<placeholder_base_type>()) {
+		excl_ptr<placeholder_base_type>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
-		o->what(cerr << "TO DO: define method for adding ")
+		o->what(cerr << "TODO: define method for adding ")
 			<< " back to user-def channel definition." << endl;
 	}
 }
@@ -1168,14 +1189,16 @@ channel_definition_alias::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 channel_definition_alias::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 channel_definition_alias::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 }
 
@@ -1234,13 +1257,13 @@ channel_definition_alias::load_object(
  */
 void
 channel_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
-	if (o.is_a<instance_collection_base>()) {
-		excl_ptr<instance_collection_base>
-			icbp = o.is_a_xfer<instance_collection_base>();
+	if (o.is_a<placeholder_base_type>()) {
+		excl_ptr<placeholder_base_type>
+			icbp = o.is_a_xfer<instance_placeholder_base>();
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
-		o->what(cerr << "TO DO: define method for adding ")
+		o->what(cerr << "TODO: define method for adding ")
 			<< " back to channel typedef." << endl;
 	}
 }
@@ -1397,12 +1420,12 @@ built_in_datatype_def::make_canonical_fundamental_type_reference(
 	KLUDGE: redesign interface classes, please!
 	\param f the param instance collection, will keep ownership.  
  */
-never_ptr<const instance_collection_base>
+never_ptr<const definition_base::value_placeholder_type>
 built_in_datatype_def::add_template_formal(
-		excl_ptr<instance_collection_base>& f) {
+		excl_ptr<value_placeholder_type>& f) {
 	STACKTRACE("add_template_formal(excl_ptr<>)");
-	const never_ptr<const param_value_collection>
-		pf(f.is_a<const param_value_collection>());
+	const never_ptr<const value_placeholder_type>
+		pf(f.is_a<const value_placeholder_type>());
 	NEVER_NULL(pf);
 	// check and make sure identifier wasn't repeated in formal list!
 	const never_ptr<const object>
@@ -1410,7 +1433,7 @@ built_in_datatype_def::add_template_formal(
 			pf->get_name()));
 	if (probe) {
 		probe->what(cerr << " already taken as a ") << " ERROR!";
-		return never_ptr<const instance_collection_base>(NULL);
+		return never_ptr<const value_placeholder_type>(NULL);
 	}
 
 // built-in definitions (int) only use strict template formals so far
@@ -1439,7 +1462,8 @@ built_in_datatype_def::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 built_in_datatype_def::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing, built-in types have no footprint manater
 	return good_bool(true);
 }
@@ -1447,7 +1471,8 @@ built_in_datatype_def::unroll_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 built_in_datatype_def::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing, built-in types have no footprint manater
 	return good_bool(true);
 }
@@ -1585,8 +1610,8 @@ built_in_param_def::make_typedef(never_ptr<const scopespace> s,
 /**
 	This implementation is deprecated, no longer constructing
 	param_type_reference, always using built-in types
-	declared in "Object/art_object_{pint,pbool}_traits.h",
-	initialized in "Object/art_built_ins.cc".
+	declared in "Object/traits/{pint,pbool}_traits.h",
+	initialized in "Object/traits/class_traits_types.cc".
 	\param ta template arguments are never used.  
  */
 definition_base::type_ref_ptr_type
@@ -1678,19 +1703,13 @@ enum_datatype_def::get_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 enum_datatype_def::get_qualified_name(void) const {
-	if (parent)
-		return parent->get_qualified_name() + scope + key;
-	else	return string(scope) + key;
+	return definition_base::get_qualified_name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 enum_datatype_def::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_definition_owner) {
-	if (parent)
-		parent->dump_qualified_name(o, df);
-	return o << scope << key;
-} else	return o;
+	return definition_base::dump_qualified_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1819,7 +1838,8 @@ enum_datatype_def::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 enum_datatype_def::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing, doesn't have a footprint manager
 	return good_bool(true);
 }
@@ -1827,7 +1847,8 @@ enum_datatype_def::unroll_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 enum_datatype_def::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	// nothing, doesn't have a footprint manager
 	return good_bool(true);
 }
@@ -2008,19 +2029,13 @@ user_def_datatype::get_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 user_def_datatype::get_qualified_name(void) const {
-	if (parent)
-		return parent->get_qualified_name() + scope + key;
-	else return string(scope) + key;
+	return datatype_definition_base::get_qualified_name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 user_def_datatype::dump_qualified_name(ostream& o, const dump_flags& df) const {
-if (df.show_definition_owner) {
-	if (parent)
-		parent->dump_qualified_name(o, df);
-	return o << scope << key;
-}	return o;
+	return definition_base::dump_qualified_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2067,11 +2082,15 @@ user_def_datatype::attach_base_data_type(
 	Shamelessly ripped off from user_def_chan's, 
 	Ripped off from process_definition's.
  */
-never_ptr<const physical_instance_collection>
+never_ptr<const definition_base::instance_placeholder_type>
 user_def_datatype::add_port_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& f, 
+#else
 		const never_ptr<instantiation_statement_base> f, 
+#endif
 		const token_identifier& id) {
-	typedef	never_ptr<const physical_instance_collection>	return_type;
+	typedef	never_ptr<const instance_placeholder_type>	return_type;
 	NEVER_NULL(f);
 	INVARIANT(f.is_a<data_instantiation_statement>());
 	// check and make sure identifier wasn't repeated in formal list!
@@ -2085,7 +2104,7 @@ user_def_datatype::add_port_formal(
 	}
 
 	const return_type pf(add_instance(f, id, false)
-		.is_a<const physical_instance_collection>());
+		.is_a<const instance_placeholder_type>());
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
@@ -2154,6 +2173,7 @@ const footprint&
 user_def_datatype::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		if (p->size() != footprint_map.arity()) {
 			ICE(cerr, 
@@ -2166,6 +2186,9 @@ user_def_datatype::get_footprint(
 	} else {
 		return footprint_map.only();
 	}
+#else
+	return footprint_map[p];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2176,6 +2199,7 @@ void
 user_def_datatype::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		footprint& f = footprint_map[*p];
@@ -2191,6 +2215,13 @@ user_def_datatype::register_complete_type(
 		}
 		// else it was already registered
 	}
+#else
+#if USE_INSTANCE_PLACEHOLDERS
+	footprint_map[p];
+#else
+	footprint_map[p].import_scopespace(*this);
+#endif
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2199,17 +2230,11 @@ user_def_datatype::register_complete_type(
  */
 good_bool
 user_def_datatype::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
-	if (p) {
-		INVARIANT(p->size() == footprint_map.arity());
-		f = &footprint_map[*p];
-	} else {
-		INVARIANT(!footprint_map.arity());
-		f = &footprint_map.only();
-	}
+	footprint* const f = &footprint_map[p];
 	if (!f->is_unrolled()) {
 		const canonical_type_base canonical_params(p);
 		const template_actuals
@@ -2217,12 +2242,23 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_user_def_data_type
 			cpt(make_canonical_type(canonical_actuals));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context c(f, &top);
+		// no parent b/c doing away with lookup of globals, 
+		// when we do, need to chain the context with parent...
+		if (!template_formals.unroll_formal_parameters(
+				c, canonical_actuals).good) {
+			cerr << "ERROR: unrolling template formals." << endl;
+			return good_bool(false);
+		}
+#else
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		const unroll_context
 			c(canonical_actuals, template_formals, f, parent);
 #else
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
+#endif
 #endif
 #if 0 && ENABLE_STACKTRACE
 		STACKTRACE_INDENT << "new context c @ " << &c << endl;
@@ -2252,10 +2288,12 @@ if (defined) {
  */
 good_bool
 user_def_datatype::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -2263,8 +2301,9 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
+#endif
 	// will automatically unroll first if not already unrolled
-	if (!f->is_unrolled() && !unroll_complete_type(p).good) {
+	if (!f->is_unrolled() && !unroll_complete_type(p, top).good) {
 		// already have error message
 		return good_bool(false);
 	}
@@ -2275,6 +2314,16 @@ if (defined) {
 				template_formals.num_strict_formals()));
 		const canonical_user_def_data_type
 			cpt(make_canonical_type(canonical_actuals));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context c(f, &top);
+		// no parent b/c doing away with lookup of globals, 
+		// when we do, need to chain the context with parent...
+		if (!template_formals.unroll_formal_parameters(
+				c, canonical_actuals).good) {
+			cerr << "ERROR: unrolling template formals." << endl;
+			return good_bool(false);
+		}
+#else
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		const unroll_context
 			c(canonical_actuals, template_formals, f, parent);
@@ -2282,8 +2331,9 @@ if (defined) {
 		const unroll_context
 			c(canonical_actuals, template_formals, f);
 #endif
+#endif
 		// this replays internal aliases of all instances in this scope
-		if (!f->create_dependent_types().good) {
+		if (!f->create_dependent_types(top).good) {
 			// error message
 			return good_bool(false);
 		}
@@ -2369,13 +2419,13 @@ user_def_datatype::load_object(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
 user_def_datatype::load_used_id_map_object(excl_ptr<persistent>& o) {
-	if (o.is_a<instance_collection_base>()) {
-		excl_ptr<instance_collection_base>
-			icbp = o.is_a_xfer<instance_collection_base>();
+	if (o.is_a<placeholder_base_type>()) {
+		excl_ptr<placeholder_base_type>
+			icbp = o.is_a_xfer<placeholder_base_type>();
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
-		o->what(cerr << "TO DO: define method for adding ")
+		o->what(cerr << "TODO: define method for adding ")
 			<< " back to user-def data definition." << endl;
 	}
 }
@@ -2531,7 +2581,8 @@ datatype_definition_alias::register_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 datatype_definition_alias::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
@@ -2539,7 +2590,8 @@ datatype_definition_alias::unroll_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 datatype_definition_alias::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	ICE_NEVER_CALL(cerr);
 	return good_bool(false);
 }
@@ -2599,13 +2651,13 @@ datatype_definition_alias::load_object(
 void
 datatype_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	if (o.is_a<instance_collection_base>()) {
-		excl_ptr<instance_collection_base>
-			icbp = o.is_a_xfer<instance_collection_base>();
+	if (o.is_a<placeholder_base_type>()) {
+		excl_ptr<placeholder_base_type>
+			icbp = o.is_a_xfer<placeholder_base_type>();
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
-		o->what(cerr << "TO DO: define method for adding ")
+		o->what(cerr << "TODO: define method for adding ")
 			<< " back to datatype typedef." << endl;
 	}
 }
@@ -2646,6 +2698,22 @@ process_definition::process_definition() :
 		prs(), chp(), 
 		footprint_map() {
 	// no null check: because of partial reconstruction
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This constructor is reserved for the module.  
+ */
+process_definition::process_definition(const string& s) :
+		definition_base(), 
+		process_definition_base(),
+		scopespace(),
+		sequential_scope(), 
+		key(s), 
+		parent(), 
+		port_formals(), 
+		prs(), chp(), 
+		footprint_map() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2742,16 +2810,14 @@ process_definition::get_key(void) const {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 string
 process_definition::get_qualified_name(void) const {
-	return parent->get_qualified_name() + scope + key;
+	return definition_base::get_qualified_name();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ostream&
 process_definition::dump_qualified_name(ostream& o,
 		const dump_flags& df) const {
-if (df.show_definition_owner) {
-	return parent->dump_qualified_name(o, df) << scope << key;
-} else	return o;
+	return definition_base::dump_qualified_name(o, df);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2834,11 +2900,15 @@ process_definition::make_canonical_fundamental_type_reference(
 /**
 	Adds a port formal instance to this process definition.  
  */
-never_ptr<const physical_instance_collection>
+never_ptr<const definition_base::instance_placeholder_type>
 process_definition::add_port_formal(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<instantiation_statement_base>& f, 
+#else
 		const never_ptr<instantiation_statement_base> f, 
+#endif
 		const token_identifier& id) {
-	typedef	never_ptr<const physical_instance_collection>	return_type;
+	typedef	never_ptr<const instance_placeholder_type>	return_type;
 	NEVER_NULL(f);
 	// check and make sure identifier wasn't repeated in formal list!
 	{
@@ -2851,7 +2921,7 @@ process_definition::add_port_formal(
 	}
 
 	const return_type pf(add_instance(f, id, false)
-		.is_a<const physical_instance_collection>());
+		.is_a<const instance_placeholder_type>());
 		// false -- formals are never conditional
 	NEVER_NULL(pf);
 	INVARIANT(pf->get_name() == id);
@@ -2966,6 +3036,7 @@ const footprint&
 process_definition::get_footprint(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	if (p) {
 		if (p->size() != footprint_map.arity()) {
 			ICE(cerr, 
@@ -2978,6 +3049,9 @@ process_definition::get_footprint(
 	} else {
 		return footprint_map.only();
 	}
+#else
+	return footprint_map[p];
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -2988,6 +3062,7 @@ void
 process_definition::register_complete_type(
 		const count_ptr<const const_param_expr_list>& p) const {
 	STACKTRACE_VERBOSE;
+#if 0
 	// this has a fooprint manager
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
@@ -3004,17 +3079,26 @@ process_definition::register_complete_type(
 		}
 		// else it was already registered
 	}
+#else
+#if USE_INSTANCE_PLACEHOLDERS
+	footprint_map[p];
+#else
+	footprint_map[p].import_scopespace(*this);
+#endif
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: this can be used to unroll a process definition
 	into a top-level footprint.  
+	NOTE: this is also intended for a top-level module to invoke.  
  */
 good_bool
 process_definition::__unroll_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
-		footprint& f) const {
+		footprint& f, 
+		const footprint& top) const {
 	// unroll using the footprint manager
 	STACKTRACE_VERBOSE;
 	if (!f.is_unrolled()) {
@@ -3022,6 +3106,16 @@ process_definition::__unroll_complete_type(
 		const template_actuals
 			canonical_actuals(canonical_params.get_template_params(
 				template_formals.num_strict_formals()));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context c(&f, &top);
+		// no parent b/c doing away with lookup of globals, 
+		// when we do, need to chain the context with parent...
+		if (!template_formals.unroll_formal_parameters(
+				c, canonical_actuals).good) {
+			cerr << "ERROR: unrolling template formals." << endl;
+			return good_bool(false);
+		}
+#else
 		const canonical_process_type
 			cpt(make_canonical_type(canonical_actuals));
 #if LOOKUP_GLOBAL_META_PARAMETERS
@@ -3030,6 +3124,7 @@ process_definition::__unroll_complete_type(
 #else
 		const unroll_context
 			c(canonical_actuals, template_formals, &f);
+#endif
 #endif
 		if (sequential_scope::unroll(c).good) {
 			// NOTE: nothing can be done with production rules
@@ -3054,10 +3149,12 @@ process_definition::__unroll_complete_type(
  */
 good_bool
 process_definition::unroll_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* const f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -3065,7 +3162,8 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
-	return __unroll_complete_type(p, *f);
+#endif
+	return __unroll_complete_type(p, *f, top);
 } else {
 	cerr << "ERROR: cannot unroll incomplete process type " <<
 			get_qualified_name() << endl;
@@ -3083,20 +3181,20 @@ if (defined) {
 good_bool
 process_definition::__create_complete_type(
 		const count_ptr<const const_param_expr_list>& p, 
-		footprint& f) const {
+		footprint& f, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 	// will automatically unroll first if not already unrolled
-	if (!f.is_unrolled() && !__unroll_complete_type(p, f).good) {
+	if (!f.is_unrolled() && !__unroll_complete_type(p, f, top).good) {
 		// already have error message
 		return good_bool(false);
 	}
 	if (!f.is_created()) {
-		const canonical_type_base canonical_params(p);
-		const template_actuals
-			canonical_actuals(canonical_params.get_template_params(
-				template_formals.num_strict_formals()));
-		const canonical_process_type
-			cpt(make_canonical_type(canonical_actuals));
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		const unroll_context c(&f, &top);
+		// no need to re-unroll formal parameters, 
+		// already expanded in footprint
+#else
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		const unroll_context
 			c(canonical_actuals, template_formals, &f, parent);
@@ -3104,10 +3202,11 @@ process_definition::__create_complete_type(
 		const unroll_context
 			c(canonical_actuals, template_formals, &f);
 #endif
+#endif
 		// this replays internal aliases of all instances in this scope
 		// doesn't use context? what if dependent on global parameter?
 		// probably need to pass it in!
-		if (!f.create_dependent_types().good) {
+		if (!f.create_dependent_types(top).good) {
 			// error message
 			return good_bool(false);
 		}
@@ -3135,10 +3234,12 @@ process_definition::__create_complete_type(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 good_bool
 process_definition::create_complete_type(
-		const count_ptr<const const_param_expr_list>& p) const {
+		const count_ptr<const const_param_expr_list>& p, 
+		const footprint& top) const {
 	STACKTRACE_VERBOSE;
 if (defined) {
-	footprint* f;
+	footprint* const f = &footprint_map[p];
+#if 0
 	if (p) {
 		INVARIANT(p->size() == footprint_map.arity());
 		f = &footprint_map[*p];
@@ -3146,7 +3247,8 @@ if (defined) {
 		INVARIANT(!footprint_map.arity());
 		f = &footprint_map.only();
 	}
-	return __create_complete_type(p, *f);
+#endif
+	return __create_complete_type(p, *f, top);
 } else {
 	cerr << "ERROR: cannot create incomplete process type " <<
 			get_qualified_name() << endl;
@@ -3161,10 +3263,8 @@ if (defined) {
 	with the persistent object manager.  
  */
 void
-process_definition::collect_transient_info(persistent_object_manager& m) const {
-	STACKTRACE_PERSISTENT_VERBOSE;
-if (!m.register_transient_object(this, 
-		persistent_traits<this_type>::type_key)) {
+process_definition::collect_transient_info_base(
+		persistent_object_manager& m) const {
 #if 0
 	cerr << "registering definition: " << key << endl;
 #endif
@@ -3182,6 +3282,15 @@ if (!m.register_transient_object(this,
 	spec.collect_transient_info_base(m);
 	footprint_map.collect_transient_info_base(m);
 }
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::collect_transient_info(persistent_object_manager& m) const {
+	STACKTRACE_PERSISTENT_VERBOSE;
+if (!m.register_transient_object(this, 
+		persistent_traits<this_type>::type_key)) {
+	collect_transient_info_base(m);
+}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3189,7 +3298,7 @@ if (!m.register_transient_object(this,
 	Not recursive, manager will call this once.  
  */
 void
-process_definition::write_object(
+process_definition::write_object_base(
 		const persistent_object_manager& m, ostream& f) const {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	write_string(f, key);
@@ -3208,7 +3317,14 @@ process_definition::write_object(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
-process_definition::load_object(
+process_definition::write_object(
+		const persistent_object_manager& m, ostream& f) const {
+	write_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
+process_definition::load_object_base(
 		const persistent_object_manager& m, istream& f) {
 	STACKTRACE_PERSISTENT_VERBOSE;
 	read_string(f, const_cast<string&>(key));
@@ -3227,15 +3343,22 @@ process_definition::load_object(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void
+process_definition::load_object(
+		const persistent_object_manager& m, istream& f) {
+	load_object_base(m, f);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+void
 process_definition::load_used_id_map_object(excl_ptr<persistent>& o) {
 	STACKTRACE_PERSISTENT_VERBOSE;
-	if (o.is_a<instance_collection_base>()) {
-		excl_ptr<instance_collection_base>
-			icbp = o.is_a_xfer<instance_collection_base>();
+	if (o.is_a<placeholder_base_type>()) {
+		excl_ptr<placeholder_base_type>
+			icbp = o.is_a_xfer<placeholder_base_type>();
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
-		o->what(cerr << "TO DO: define method for adding ")
+		o->what(cerr << "TODO: define method for adding ")
 			<< " back to process definition." << endl;
 	}
 }
@@ -3345,6 +3468,7 @@ process_definition_alias::make_fundamental_type_reference(
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 canonical_process_type
 process_definition_alias::make_canonical_type(const template_actuals& a) const {
+	STACKTRACE_VERBOSE;
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
@@ -3358,6 +3482,7 @@ process_definition_alias::make_canonical_type(const template_actuals& a) const {
 count_ptr<const process_type_reference>
 process_definition_alias::make_canonical_fundamental_type_reference(
 		const template_actuals& a) const {
+	STACKTRACE_VERBOSE;
 	const template_actuals& ba(base->get_template_params());
 	const template_actuals
 		ta(ba.transform_template_actuals(a, template_formals));
@@ -3425,13 +3550,13 @@ process_definition_alias::load_used_id_map_object(excl_ptr<persistent>& o) {
 	cerr << "WARNING: didn't expect to call "
 		"process_definition_alias::load_used_id_map_object()." << endl;
 #endif
-	if (o.is_a<instance_collection_base>()) {
-		excl_ptr<instance_collection_base>
-			icbp = o.is_a_xfer<instance_collection_base>();
+	if (o.is_a<placeholder_base_type>()) {
+		excl_ptr<placeholder_base_type>
+			icbp = o.is_a_xfer<placeholder_base_type>();
 		add_instance(icbp);
 		INVARIANT(!icbp);
 	} else {
-		o->what(cerr << "TO DO: define method for adding ")
+		o->what(cerr << "TODO: define method for adding ")
 			<< " back to process typedef." << endl;
 	}
 }

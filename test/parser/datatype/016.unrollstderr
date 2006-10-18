@@ -17,3 +17,5 @@ In namespace "", we have: {
     foo = enum-datatype-def: foo (undefined)
 }
 
+footprint: {
+}

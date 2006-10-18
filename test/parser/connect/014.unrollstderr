@@ -4,26 +4,28 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	1	#HEAD#	#TAIL#	99
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	164
-	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	5	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	8	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	9	##ADDR##	proccoll	1	#HEAD#	#TAIL#	122
-	10	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	17	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	18	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	22	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	12	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	16	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	17	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	19	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	20	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	21	##ADDR##	proccoll	1	#HEAD#	#TAIL#	87
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	proccoll	1	#HEAD#	#TAIL#	111
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -42,17 +44,21 @@ In namespace "", we have: {
       }
 
   Instances:
-    bar = process foo<>^1 bar
-      unrolled indices: {
-        0 = ::blah[0] 
-        1 = ::blah[1] 
-        2 = ::blah[2] 
-      }
-    blah = process foo<>^1 blah
-      unrolled indices: {
-        0 = ::blah[0] 
-        1 = ::blah[1] 
-        2 = ::blah[2] 
-      }
+    bar = foo<> bar^1
+    blah = foo<> blah^1
 }
 
+footprint: {
+  bar = process foo<>^1
+    {
+      0 = blah[0] 
+      1 = blah[1] 
+      2 = blah[2] 
+    }
+  blah = process foo<>^1
+    {
+      0 = blah[0] 
+      1 = blah[1] 
+      2 = blah[2] 
+    }
+}

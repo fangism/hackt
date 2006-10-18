@@ -5,7 +5,7 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	73
-	4	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
@@ -25,8 +25,10 @@ In namespace "", we have: {
       )
       In definition "food", we have: {
       Instances:
-        sleep = int<32> sleep
+        sleep = int<32> food::sleep
       }
 
 }
 
+footprint: {
+}

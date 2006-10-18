@@ -4,33 +4,37 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	40
-	3	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	39
-	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	12	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	35
-	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	18	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	40
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	dintplch	0	#HEAD#	#TAIL#	26
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	27
+	7	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
+	8	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	9	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	10	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	11	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	14	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	16	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	17	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	18	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	19	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	20	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	datatpdf	0	#HEAD#	#TAIL#	42
-	22	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	23	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	21	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	22	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	24	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	25	##ADDR##	dialias_	0	#HEAD#	#TAIL#	28
 	26	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
 	29	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	30	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	31	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -43,9 +47,15 @@ In namespace "", we have: {
     int32 = datatype-definition-alias: int32
       = int<32>
   Instances:
-    fe = int<32>^0 fe (instantiated) = ::fi 
-    fi = int<32>^0 fi (instantiated) = ::fo 
-    fo = int<32>^0 fo (instantiated) = ::fo 
-    fum = int<32>^0 fum (instantiated) = ::fi 
+    fe = int<32> fe
+    fi = int<32> fi
+    fo = int<32> fo
+    fum = int32<> fum
 }
 
+footprint: {
+  fe = int<32>^0 = fi 
+  fi = int<32>^0 = fo 
+  fo = int<32>^0 = fo 
+  fum = int<32>^0 = fi 
+}

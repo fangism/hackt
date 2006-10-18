@@ -1,7 +1,7 @@
 /**
 	\file "Object/expr/preal_arith_expr.h"
 	Arithmetic on real-valued parameters.  
-	$Id: preal_arith_expr.h,v 1.8 2006/07/16 03:34:52 fang Exp $
+	$Id: preal_arith_expr.h,v 1.9 2006/10/18 01:19:24 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_ARITH_EXPR_H__
@@ -67,6 +67,9 @@ public:
 	preal_arith_expr(const operand_ptr_type& l, const char o, 
 		const operand_ptr_type& r);
 
+	preal_arith_expr(const operand_ptr_type& l, const op_type* o, 
+		const operand_ptr_type& r);
+
 	~preal_arith_expr();
 
 	ostream&
@@ -78,6 +81,7 @@ public:
 	size_t
 	dimensions(void) const { return 0; }
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const
 		{ return lx->may_be_initialized() && rx->may_be_initialized(); }
@@ -86,6 +90,7 @@ public:
 	must_be_initialized(void) const {
 		return lx->must_be_initialized() && rx->must_be_initialized();
 	}
+#endif
 
 	bool
 	is_static_constant(void) const;
@@ -125,6 +130,11 @@ public:
 		const count_ptr<const preal_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO;
+	using parent_type::substitute_default_positional_parameters;
+#endif
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;

@@ -4,18 +4,18 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	48
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	532
-	5	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	528
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	7	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	11	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	10	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	11	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
 	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	13	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
-	14	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	14	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	15	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -29,22 +29,24 @@ Persistent Object Manager text dump:
 	25	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	26	##ADDR##	PRSlitrl	0	#HEAD#	#TAIL#	16
 	27	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	28	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	28	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	29	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	30	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	35	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	33	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	34	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	35	##ADDR##	procplch	0	#HEAD#	#TAIL#	28
 	36	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	37	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	41	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	42	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	43	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	44	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -60,12 +62,11 @@ In namespace "", we have: {
       )
       In definition "null", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> null::N
       Instances:
-        x = bool<> x
-        y = bool<> y
+        x = bool<> null::x
+        y = bool<> null::y
       unroll sequence: 
-        pint<> N
         bool<> x
         bool<> y
       prs:
@@ -75,20 +76,22 @@ In namespace "", we have: {
         )
       footprint collection: {
         <0> {
-          pint^0 N value: ?
-          bool^0 x (instantiated) = ::null::x (1) 
-          bool^0 y (instantiated) = ::null::y (2) 
+          N = pint^0 value: 0
+          x = bool^0 = null::x (1) 
+          y = bool^0 = null::y (2) 
+          Created state:
           bool instance pool:
-          1	::null::x
-          2	::null::y
+          1	null::x
+          2	null::y
         }
         <3> {
-          pint^0 N value: ?
-          bool^0 x (instantiated) = ::null::x (1) 
-          bool^0 y (instantiated) = ::null::y (2) 
+          N = pint^0 value: 3
+          x = bool^0 = null::x (1) 
+          y = bool^0 = null::y (2) 
+          Created state:
           bool instance pool:
-          1	::null::x
-          2	::null::y
+          1	null::x
+          2	null::y
           resolved prs:
           ~x -> y+
           x -> y-
@@ -101,12 +104,15 @@ In namespace "", we have: {
       }
 
   Instances:
-    foo = process null<3>^0 foo (instantiated) = ::foo (1) 
-    none = process null<0>^0 none (instantiated) = ::none (2) 
+    foo = null<3> foo
+    none = null<0> none
 }
 
-Created state:
-process instance pool:
-1	::foo
-2	::none
-
+footprint: {
+  foo = process null<3>^0 = foo (1) 
+  none = process null<0>^0 = none (2) 
+  Created state:
+  process instance pool:
+  1	foo
+  2	none
+}

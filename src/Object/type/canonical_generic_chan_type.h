@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_generic_chan_type.h"
-	$Id: canonical_generic_chan_type.h,v 1.6 2006/06/26 01:46:28 fang Exp $
+	$Id: canonical_generic_chan_type.h,v 1.7 2006/10/18 01:19:57 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_H__
@@ -74,6 +74,13 @@ public:
 	canonical_type(const canonical_definition_ptr_type, 
 		const char dir);
 
+#if USE_RESOLVED_DATA_TYPES
+	// dummy prototype, not supposed to be used (never relaxed!)
+	// called from "Object/inst/general_collection_type_manager.h"
+	canonical_type(const this_type&, 
+		const const_param_list_ptr_type&);
+#endif
+
 	canonical_type(const canonical_definition_ptr_type, 
 		const param_list_ptr_type&, const char dir);
 
@@ -130,8 +137,10 @@ public:
 	ostream&
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context
 	make_unroll_context(void) const;
+#endif
 
 	void
 	unroll_port_instances(const unroll_context&, 
@@ -139,10 +148,10 @@ public:
 
 	// like fundamental_type_reference::unroll_register_complete_type()
 	good_bool
-	unroll_definition_footprint(void) const;
+	unroll_definition_footprint(const footprint&) const;
 
 	good_bool
-	create_definition_footprint(void) const;
+	create_definition_footprint(const footprint&) const;
 
 	using base_type::combine_relaxed_actuals;
 	using base_type::match_relaxed_actuals;

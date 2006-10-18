@@ -1,7 +1,7 @@
 /**
 	\file "Object/lang/PRS.h"
 	Structures for production rules.
-	$Id: PRS.h,v 1.16 2006/10/04 23:18:26 fang Exp $
+	$Id: PRS.h,v 1.17 2006/10/18 01:19:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_LANG_PRS_H__
@@ -423,7 +423,12 @@ public:
 class expr_loop_base : protected meta_loop_base {
 	typedef	meta_loop_base			parent_type;
 public:
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	parent_type::pint_placeholder_type
+						pint_placeholder_type;
+#else
 	typedef	parent_type::pint_scalar	pint_scalar;
+#endif
 	typedef	parent_type::ind_var_ptr_type	ind_var_ptr_type;
 	typedef	parent_type::range_ptr_type	range_ptr_type;
 protected:

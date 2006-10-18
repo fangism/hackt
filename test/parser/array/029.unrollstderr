@@ -4,14 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	197
-	4	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	5	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	6	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	7	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	9	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
-	10	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	197
+	3	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	4	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	8	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	9	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
@@ -48,6 +48,8 @@ Persistent Object Manager text dump:
 	44	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	45	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	46	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	36
+	47	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	188
+	48	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	188
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -57,27 +59,31 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Instances:
-    y = int<32>^3 y
-      unrolled indices: {
-        [0][0][0] = ::y[0][0][0] 
-        [0][0][1] = ::y[0][0][1] 
-        [0][1][0] = ::y[0][1][0] 
-        [0][1][1] = ::y[0][1][1] 
-        [1][0][0] = ::y[1][0][0] 
-        [1][0][1] = ::y[1][0][1] 
-        [1][1][0] = ::y[1][1][0] 
-        [1][1][1] = ::y[1][1][1] 
-      }
-    z = int<32>^3 z
-      unrolled indices: {
-        [0][0][0] = ::z[0][0][0] 
-        [0][0][1] = ::z[0][0][1] 
-        [0][1][0] = ::z[0][1][0] 
-        [0][1][1] = ::z[0][1][1] 
-        [1][0][0] = ::z[1][0][0] 
-        [1][0][1] = ::z[1][0][1] 
-        [1][1][0] = ::z[1][1][0] 
-        [1][1][1] = ::z[1][1][1] 
-      }
+    y = int<32> y^3
+    z = int<32> z^3
 }
 
+footprint: {
+  y = int<32>^3
+    {
+      [0][0][0] = y[0][0][0] 
+      [0][0][1] = y[0][0][1] 
+      [0][1][0] = y[0][1][0] 
+      [0][1][1] = y[0][1][1] 
+      [1][0][0] = y[1][0][0] 
+      [1][0][1] = y[1][0][1] 
+      [1][1][0] = y[1][1][0] 
+      [1][1][1] = y[1][1][1] 
+    }
+  z = int<32>^3
+    {
+      [0][0][0] = z[0][0][0] 
+      [0][0][1] = z[0][0][1] 
+      [0][1][0] = z[0][1][0] 
+      [0][1][1] = z[0][1][1] 
+      [1][0][0] = z[1][0][0] 
+      [1][0][1] = z[1][0][1] 
+      [1][1][0] = z[1][1][0] 
+      [1][1][1] = z[1][1][1] 
+    }
+}

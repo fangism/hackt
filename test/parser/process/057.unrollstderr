@@ -5,28 +5,29 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	32
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	8	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	9	##ADDR##	procdefn	0	#HEAD#	#TAIL#	180
-	10	##ADDR##	proccoll	1	#HEAD#	#TAIL#	33
+	10	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	11	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
+	14	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
 	15	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	18	##ADDR##	proccoll	0	#HEAD#	#TAIL#	52
-	19	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	20	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	21	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	22	##ADDR##	proccoll	1	#HEAD#	#TAIL#	83
-	23	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
+	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	17	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	18	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	19	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	20	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	21	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	23	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	24	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	25	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	26	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -41,18 +42,17 @@ In namespace "", we have: {
       )
       In definition "bar", we have: {
       Instances:
-        x = foo<> x
-
+        x = foo<> bar::x^1
       unroll sequence: 
         foo<> x[0..1]
       footprint: {
-        process foo<>^1 x
-          unrolled indices: {
-            0 = ::bar::x[0] (
-              bool^0 a (instantiated) = ::bar::x[0].a 
+        x = process foo<>^1
+          {
+            0 = bar::x[0] (
+              a = bool^0 = bar::x[0].a 
             )
-            1 = ::bar::x[1] (
-              bool^0 a (instantiated) = ::bar::x[1].a 
+            1 = bar::x[1] (
+              a = bool^0 = bar::x[1].a 
             )
           }
       }
@@ -63,25 +63,28 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        a = bool<> a
+        a = bool<> foo::a
       unroll sequence: 
         bool<> a
       footprint: {
-        bool^0 a (instantiated) = ::foo::a 
+        a = bool^0 = foo::a 
       }
       }
 
   Instances:
-    poo = process bar<>^0 poo (instantiated) = ::poo (
-      process foo<>^1 x
-        unrolled indices: {
-          0 = ::poo.x[0] (
-            bool^0 a (instantiated) = ::poo.x[0].a 
-          )
-          1 = ::poo.x[1] (
-            bool^0 a (instantiated) = ::poo.x[1].a 
-          )
-        }
-    )
+    poo = bar<> poo
 }
 
+footprint: {
+  poo = process bar<>^0 = poo (
+    x = process foo<>^1
+      {
+        0 = poo.x[0] (
+          a = bool^0 = poo.x[0].a 
+        )
+        1 = poo.x[1] (
+          a = bool^0 = poo.x[1].a 
+        )
+      }
+  )
+}

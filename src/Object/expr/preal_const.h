@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: preal_const.h,v 1.9 2006/07/04 07:26:07 fang Exp $
+	$Id: preal_const.h,v 1.10 2006/10/18 01:19:24 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PREAL_CONST_H__
@@ -63,11 +63,13 @@ public:
 	const_range_list
 	static_constant_dimensions(void) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return true; }
 
 	bool
 	must_be_initialized(void) const { return true; }
+#endif
 
 	bool
 	is_static_constant(void) const { return true; }
@@ -102,16 +104,19 @@ public:
 		const count_ptr<const preal_expr>&) const;
 
 	UNROLL_RESOLVE_COPY_PREAL_PROTO;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_PREAL_PROTO;
+#endif
 protected:
 	using parent_type::unroll_resolve_rvalues;
 	using parent_type::unroll_resolve_copy;
+	using parent_type::substitute_default_positional_parameters;
 
 	LESS_OPERATOR_PROTO;
 
 private:
-	excl_ptr<param_expression_assignment>
-	make_param_expression_assignment_private(
-		const count_ptr<const param_expr>& p) const;
+	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO;
 public:
 	FRIEND_PERSISTENT_TRAITS
 	PERSISTENT_METHODS_DECLARATIONS

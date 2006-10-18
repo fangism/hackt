@@ -1,0 +1,21 @@
+// "068.hac"
+// copy-reduced from "068.hac"
+// should pass
+// reference to global parameter as rvalue
+
+namespace bar {
+pint Q;
+Q = 2;
+
+template <pint X>
+defproc ick() {
+}
+
+defproc foo() {
+	ick<Q> zoo;
+}
+
+}	// end namespace bar
+
+bar::foo f;
+

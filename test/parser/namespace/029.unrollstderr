@@ -7,7 +7,7 @@ Persistent Object Manager text dump:
 	3	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
 	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	60
 	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	68
-	6	##ADDR##	proccoll	0	#HEAD#	#TAIL#	46
+	6	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	7	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	8	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 
@@ -38,10 +38,12 @@ In namespace "", we have: {
       )
       In definition "foo", we have: {
       Instances:
-        x = bar<> x
+        x = std::bar<> foo::x
       unroll sequence: 
-        bar<> x
+        std::bar<> x
       }
 
 }
 
+footprint: {
+}

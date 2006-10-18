@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_pint.cc"
 		in a previous life.  
- 	$Id: pint_value_collection.cc,v 1.8 2006/03/16 03:40:25 fang Exp $
+ 	$Id: pint_value_collection.cc,v 1.9 2006/10/18 01:19:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PINT_VALUE_COLLECTION_CC__
@@ -30,6 +30,9 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/persistent_type_hash.h"
 #include "Object/unroll/param_instantiation_statement.h"
 #include "Object/inst/value_collection.tcc"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.tcc"
+#endif
 #include "Object/traits/pint_traits.h"
 #include "Object/traits/int_traits.h"
 
@@ -46,6 +49,11 @@ struct persistent_traits<HAC::entity::pint_instance_collection> {
 	static const persistent::hash_key	type_key;
 };
 
+#if USE_INSTANCE_PLACEHOLDERS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::pint_value_placeholder, 
+	PINT_VALUE_PLACEHOLDER_TYPE_KEY, 0)
+#endif
 const persistent::hash_key
 persistent_traits<HAC::entity::pint_instance_collection>::type_key(
 	PINT_INSTANCE_COLLECTION_TYPE_KEY);
@@ -111,6 +119,9 @@ operator << (ostream& o, const pint_instance& p) {
 //=============================================================================
 // class pint_instance_collection method definitions
 
+#if USE_INSTANCE_PLACEHOLDERS
+template class value_placeholder<pint_tag>;
+#endif
 template class value_collection<pint_tag>;
 template class value_array<pint_tag,0>;
 template class value_array<pint_tag,1>;

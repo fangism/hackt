@@ -3,7 +3,7 @@
 	Classes related to constant expressions, symbolic and parameters.  
 	This file was "Object/expr/const_collection.h"
 		in a previous life.  
-	$Id: const_collection.h,v 1.12 2006/07/04 07:25:52 fang Exp $
+	$Id: const_collection.h,v 1.13 2006/10/18 01:19:16 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_COLLECTION_H__
@@ -12,6 +12,7 @@
 #include <iosfwd>
 #include "Object/expr/types.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 #include "util/STL/construct_fwd.h"
 #include "util/packed_array.h"
 #include "util/persistent.h"
@@ -25,8 +26,13 @@ namespace entity {
 class const_index_list;
 class const_range_list;
 class unroll_context;
+class param_expr;
 class const_param;
 struct expr_dump_context;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+class template_formals_manager;
+class dynamic_param_expr_list;
+#endif
 USING_CONSTRUCT
 using std::ostream;
 using std::istream;
@@ -133,11 +139,13 @@ public:
 	value_type
 	operator [] (const key_type&) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return true; }
 
 	bool
 	must_be_initialized(void) const { return true; }
+#endif
 
 	// required by pint_expr or pbool_expr
 	bool
@@ -171,6 +179,16 @@ public:
 	count_ptr<const expr_base_type>
 	unroll_resolve_copy(const unroll_context&, 
 		const count_ptr<const expr_base_type>&) const;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	count_ptr<const expr_base_type>
+	substitute_default_positional_parameters(
+		const template_formals_manager&,
+		const dynamic_param_expr_list&,
+		const count_ptr<const expr_base_type>&) const;
+
+	using expr_base_type::substitute_default_positional_parameters;
+#endif
 
 	this_type
 	make_value_slice(const const_index_list&) const;

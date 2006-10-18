@@ -2,7 +2,7 @@
 # "hackt-obj-diff.sh.in"
 
 # compares textual object dumps
-#	$Id: hackt-obj-diff.sh.in,v 1.4 2006/01/30 07:42:08 fang Exp $
+#	$Id: hackt-obj-diff.sh.in,v 1.5 2006/10/18 01:20:14 fang Exp $
 # This file used to be:
 #	Id: artobj-diff.sh.in,v 1.6.2.1 2005/12/12 19:35:52 fang Exp
 # This file came from "artobj-diff.sh" in revision prehistory.  
@@ -40,8 +40,8 @@ if test $? -ne 0 ; then exit 1; fi
 
 @CAT@ $bldroot.outdump | $filter > $bldroot.outdump.filter
 @CAT@ $bldroot.indump | $filter > $bldroot.indump.filter
-@DIFF@ -b -u $bldroot.outdump.filter $bldroot.indump.filter 2>&1 | \
-	@CAT@ > $bldroot.objdiff
+@DIFF@ -b -u $bldroot.outdump.filter $bldroot.indump.filter > \
+	$bldroot.objdiff 2>&1
 
 if test -s $bldroot.objdiff ; then
 	@ECHO@ "$bldroot.objdiff is non-empty!"

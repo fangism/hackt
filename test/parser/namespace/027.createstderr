@@ -4,12 +4,13 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	proccoll	0	#HEAD#	#TAIL#	47
-	4	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
-	5	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	3	##ADDR##	procplch	0	#HEAD#	#TAIL#	26
+	4	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	5	##ADDR##	procdefn	0	#HEAD#	#TAIL#	140
 	6	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	7	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	namespc_	0	#HEAD#	#TAIL#	27
+	8	##ADDR##	proccoll	0	#HEAD#	#TAIL#	37
+	9	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -36,10 +37,12 @@ In namespace "", we have: {
 
     }
   Instances:
-    BQ = process bar<>^0 BQ (instantiated) = ::BQ (1) 
+    BQ = foo::bar<> BQ
 }
 
-Created state:
-process instance pool:
-1	::BQ
-
+footprint: {
+  BQ = process foo::bar<>^0 = BQ (1) 
+  Created state:
+  process instance pool:
+  1	BQ
+}

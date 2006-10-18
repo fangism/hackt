@@ -1,0 +1,13 @@
+// "067a.hac" should fail, attempt to reinstantiate what's already instantiated
+// copy-modified from "067.hac"
+
+template <pint Q><pint R>
+defproc foo() { }
+
+foo<5> bar[3];
+foo<5> bar<4>[3];
+// what is really meant is:
+// bar<4>[3];
+// assigning relaxed actuals to a range of already instantiated objects
+
+

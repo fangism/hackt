@@ -1,6 +1,6 @@
 /**
 	\file "Object/ref/meta_instance_reference_subtypes.tcc"
-	$Id: meta_instance_reference_subtypes.tcc,v 1.12 2006/08/08 05:46:42 fang Exp $
+	$Id: meta_instance_reference_subtypes.tcc,v 1.13 2006/10/18 01:19:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_REF_META_INSTANCE_REFERENCE_SUBTYPES_TCC__
@@ -55,9 +55,9 @@ META_INSTANCE_REFERENCE_CLASS::may_be_type_equivalent(
 		return false;
 	}
 	const count_ptr<const fundamental_type_reference>
-		ltr(this->get_type_ref());
+		ltr(this->get_unresolved_type_ref());
 	const count_ptr<const fundamental_type_reference>
-		rtr(rr->get_type_ref());
+		rtr(rr->get_unresolved_type_ref());
 	const bool type_eq = ltr->may_be_connectibly_type_equivalent(*rtr);
 	// if base types differ, then cannot be equivalent
 	if (!type_eq) {
@@ -105,7 +105,12 @@ META_INSTANCE_REFERENCE_CLASS::collect_aliases(const module& mod,
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
 	const size_t index = _this.lookup_globally_allocated_index(
-		mod.get_state_manager());
+		mod.get_state_manager()
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		// temporary kludge until we clean up
+		, const_cast<footprint&>(mod.get_footprint())
+#endif
+		);
 	INVARIANT(index);	// because we already checked reference?
 	mod.template match_aliases<Tag>(aliases, index);
 }
@@ -124,9 +129,17 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 	const simple_reference_type&
 		_this(IS_A(const simple_reference_type&, *this));
 	const state_manager& sm(mod.get_state_manager());
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	// temporary kludge until we clean up
+	footprint& top(const_cast<footprint&>(mod.get_footprint()));
+#endif
 	if (_this.dimensions()) {
 		vector<size_t> inds;
-		if (!_this.lookup_globally_allocated_indices(sm, inds).good) {
+		if (!_this.lookup_globally_allocated_indices(sm, 
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+				top, 
+#endif
+				inds).good) {
 			// got error message already
 			THROW_EXIT;
 		}
@@ -136,7 +149,11 @@ META_INSTANCE_REFERENCE_CLASS::collect_subentries(const module& mod,
 			sm.template collect_subentries<Tag>(v, *i);
 		}
 	} else {
-		const size_t index = _this.lookup_globally_allocated_index(sm);
+		const size_t index = _this.lookup_globally_allocated_index(sm
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+			, top
+#endif
+			);
 		INVARIANT(index);	// because we already checked reference?
 		sm.template collect_subentries<Tag>(v, index);
 	}
@@ -172,7 +189,11 @@ bad_bool
 META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper_no_lookup(
 		const unroll_context& c,
 		const instance_collection_generic_type& inst,
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>& ind,
+#else
 		const never_ptr<const index_list_type> ind,
+#endif
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
 if (inst.get_dimensions()) {
@@ -273,10 +294,26 @@ META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
 bad_bool
 META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		const unroll_context& c,
+#if USE_INSTANCE_PLACEHOLDERS
+		const instance_placeholder_type& _inst,
+#else
 		const instance_collection_generic_type& _inst,
+#endif
+#if REF_COUNT_ARRAY_INDICES
+		const count_ptr<const index_list_type>& ind,
+#else
 		const never_ptr<const index_list_type> ind,
+#endif
 		alias_collection_type& a) {
 	STACKTRACE_VERBOSE;
+#if USE_INSTANCE_PLACEHOLDERS
+	const count_ptr<physical_instance_collection>
+		inst_p(c.lookup_instance_collection(_inst));
+	NEVER_NULL(inst_p);
+	// assert dynamic_cast
+	const instance_collection_generic_type&
+		inst(IS_A(const instance_collection_generic_type&, *inst_p));
+#else
 	const footprint* const f(c.get_target_footprint());
 	const string& inst_name(_inst.get_name());
 #if ENABLE_STACKTRACE
@@ -288,9 +325,17 @@ META_INSTANCE_REFERENCE_CLASS::unroll_references_packed_helper(
 		INVARIANT((*f)[inst_name]);
 	}
 	// assert not-NULL and dynamic_cast!
+#if USE_INSTANCE_PLACEHOLDERS
+	NEVER_NULL(f);
+	const instance_collection_generic_type&
+		inst(IS_A(const instance_collection_generic_type&,
+			*(*f)[inst_name]));
+#else
 	const instance_collection_generic_type&
 		inst(f ? IS_A(const instance_collection_generic_type&,
 			*(*f)[inst_name]) : _inst);
+#endif
+#endif	// USE_INSTANCE_PLACEHOLDERS
 	return unroll_references_packed_helper_no_lookup(c, inst, ind, a);
 }	// end method unroll_references_packed_helper
 
@@ -336,7 +381,13 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 	// bug fixed here: 20060124 (fangism)
 	// see comment: we can just use simplified helper function
 	const bad_bool port_err(unroll_references_packed_helper_no_lookup(
-		c, coll, never_ptr<const index_list_type>(NULL), port_aliases));
+		c, coll, 
+#if REF_COUNT_ARRAY_INDICES
+		count_ptr<const index_list_type>(NULL), 
+#else
+		never_ptr<const index_list_type>(NULL), 
+#endif
+		port_aliases));
 	if (port_err.bad) {
 		cerr << "ERROR unrolling member instance reference "
 			"during port connection: ";
@@ -391,9 +442,9 @@ META_INSTANCE_REFERENCE_CLASS::connect_port(
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 META_INSTANCE_REFERENCE_TEMPLATE_SIGNATURE
-excl_ptr<aliases_connection_base>
+meta_instance_reference_base::alias_connection_ptr_type
 META_INSTANCE_REFERENCE_CLASS::make_aliases_connection_private(void) const {
-	return excl_ptr<aliases_connection_base>(new alias_connection_type);
+	return alias_connection_ptr_type(new alias_connection_type);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

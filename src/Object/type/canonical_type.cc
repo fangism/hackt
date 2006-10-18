@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.9 2006/03/15 04:38:21 fang Exp $
+	$Id: canonical_type.cc,v 1.10 2006/10/18 01:19:58 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -86,15 +86,57 @@ struct unroll_port_instances_policy<user_def_chan> {
 //-----------------------------------------------------------------------------
 template <>
 struct unroll_port_instances_policy<process_definition> {
+	/**
+		Is this missing the top-level const footprint&?
+	 */
 	void
 	operator () (const canonical_process_type& p, 
 			const unroll_context& c,
 			subinstance_manager& sub) const {
+		STACKTRACE_VERBOSE;
 		// modeled after process_type_reference::unroll_port_instances()
 		const port_formals_manager&
 			pf(p.canonical_definition_ptr->get_port_formals());
+#if RESOLVE_VALUES_WITH_FOOTPRINT
+		// template formals/actuals included in footprint already
+/***
+	Problem: when type is incomplete, we can't access a footprint
+	because relaxed actuals are missing but required.
+	Solution: since read-only footprint is only needed for
+		the purpose of unrolling ports.  
+***/
+	if (p.is_strict()) {
+		STACKTRACE_INDENT_PRINT("have strict type." << endl);
+		const footprint&
+			f(p.canonical_definition_ptr->get_footprint(
+				p.param_list_ptr));
+		const unroll_context cc(&f, c);
+		pf.unroll_ports(cc, sub);
+	} else {
+		STACKTRACE_INDENT_PRINT("have relaxed type." << endl);
+		// unroll temporary footprint using partial template params
+		NEVER_NULL(p.param_list_ptr);
+		typedef	count_ptr<const dynamic_param_expr_list>
+			params_ptr_type;
+		const params_ptr_type d(p.param_list_ptr->to_dynamic_list());
+		const template_actuals a(d, params_ptr_type(NULL));
+		footprint f;
+		const unroll_context
+			cc(&f, c, unroll_context::auxiliary_target_tag());
+		if (p.canonical_definition_ptr->get_template_formals_manager()
+				.unroll_formal_parameters(cc, a).good) {
+			pf.unroll_ports(cc, sub);
+		} else {
+			cerr << "FATAL: unexpected error unrolling temporary "
+				"parameter-only footprint." << endl;
+			p.dump(cerr << "with canonical type: ") << endl;
+			THROW_EXIT;
+		}
+	}
+#else
 		const unroll_context cc(p.make_unroll_context());
 		pf.unroll_ports(cc, sub);
+#endif
 	}
 };	// end struct unroll_port_instances_policy
 
@@ -211,6 +253,10 @@ check_footprint_policy<user_def_datatype>::operator () (
 //=============================================================================
 template
 canonical_user_def_data_type::canonical_type(const canonical_generic_datatype&);
+#if USE_RESOLVED_DATA_TYPES
+template
+canonical_generic_datatype::canonical_type(const canonical_user_def_data_type&);
+#endif
 
 template class canonical_type<datatype_definition_base>;
 template class canonical_type<user_def_datatype>;

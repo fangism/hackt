@@ -4,28 +4,28 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	222
-	4	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	26
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	11	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
-	12	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	13	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	14	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	15	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	16	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	218
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	26
+	5	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
+	6	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
+	7	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	28
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	drnglst_	0	#HEAD#	#TAIL#	16
+	12	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
+	13	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	14	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
+	15	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	17	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	18	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	19	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	28
-	20	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	20	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	21	##ADDR##	cnstrng_	0	#HEAD#	#TAIL#	16
 	22	##ADDR##	PRSpuldn	0	#HEAD#	#TAIL#	21
 	23	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	24	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	24	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	25	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	26	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	27	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -41,7 +41,7 @@ Persistent Object Manager text dump:
 	37	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	39	##ADDR##	PRSrloop	0	#HEAD#	#TAIL#	24
-	40	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	40	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	41	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -49,7 +49,7 @@ Persistent Object Manager text dump:
 	45	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	46	##ADDR##	PRSpulup	0	#HEAD#	#TAIL#	21
 	47	##ADDR##	PRSandlp	0	#HEAD#	#TAIL#	20
-	48	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	48	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	49	##ADDR##	dynrng__	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	51	##ADDR##	piarthex	0	#HEAD#	#TAIL#	17
@@ -68,16 +68,17 @@ Persistent Object Manager text dump:
 	64	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	66	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	67	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
-	68	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
-	70	##ADDR##	proccoll	0	#HEAD#	#TAIL#	56
-	71	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	72	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	73	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	74	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	75	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	78
-	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	33
+	67	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	68	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
+	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	70	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
+	71	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	72	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	73	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	74	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	76	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	77	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -95,13 +96,11 @@ In namespace "", we have: {
       )
       In definition "nandN", we have: {
       Parameters:
-        N = pint<> N
+        N = pint<> nandN::N
       Instances:
-        _out = bool<> _out
-        in = bool<> in
-
+        _out = bool<> nandN::_out
+        in = bool<> nandN::in^1
       unroll sequence: 
-        pint<> N
         bool<> in[0..N-1]
         bool<> _out
       prs:
@@ -113,29 +112,32 @@ In namespace "", we have: {
         )
       footprint collection: {
         <4> {
-          bool^1 in
-            unrolled indices: {
-              0 = ::nandN::in[0] 
-              1 = ::nandN::in[1] 
-              2 = ::nandN::in[2] 
-              3 = ::nandN::in[3] 
+          N = pint^0 value: 4
+          _out = bool^0 = nandN::_out 
+          in = bool^1
+            {
+              0 = nandN::in[0] 
+              1 = nandN::in[1] 
+              2 = nandN::in[2] 
+              3 = nandN::in[3] 
             }
-          pint^0 N value: ?
-          bool^0 _out (instantiated) = ::nandN::_out 
         }
       }
       }
 
   Instances:
-    foo = process nandN<4>^0 foo (instantiated) = ::foo (
-      bool^1 in
-        unrolled indices: {
-          0 = ::foo.in[0] 
-          1 = ::foo.in[1] 
-          2 = ::foo.in[2] 
-          3 = ::foo.in[3] 
-        }
-      bool^0 _out (instantiated) = ::foo._out 
-    )
+    foo = nandN<4> foo
 }
 
+footprint: {
+  foo = process nandN<4>^0 = foo (
+    in = bool^1
+      {
+        0 = foo.in[0] 
+        1 = foo.in[1] 
+        2 = foo.in[2] 
+        3 = foo.in[3] 
+      }
+    _out = bool^0 = foo._out 
+  )
+}

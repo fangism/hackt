@@ -1,1 +1,1 @@
-ERROR: process-definition ::bar has no public member named "c" at [10:12]
+ERROR: process-definition bar has no public member named "c" at [10:12]

@@ -3,7 +3,7 @@
 	Classes related to constant expressions.
 	NOTE: this file was spanwed from "Object/art_object_expr_const.h"
 		for revision history tracking purposes.  
-	$Id: const_range.h,v 1.10 2006/07/04 07:25:55 fang Exp $
+	$Id: const_range.h,v 1.11 2006/10/18 01:19:17 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_CONST_RANGE_H__
@@ -124,11 +124,13 @@ public:
 	bool
 	operator == (const const_range& c) const;
 
+#if ENABLE_STATIC_ANALYSIS
 	bool
 	may_be_initialized(void) const { return !empty(); }
 
 	bool
 	must_be_initialized(void) const { return !empty(); }
+#endif
 
 	bool
 	is_sane(void) const;
@@ -153,19 +155,26 @@ public:
 	pint_value_type
 	upper_bound(void) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	good_bool
 	resolve_range(const_range& r) const;
+#endif
 
 	good_bool
 	unroll_resolve_range(const unroll_context&, const_range& r) const;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 	count_ptr<const_index>
 	resolve_index(void) const;
+#endif
 
 	count_ptr<const_index>
 	unroll_resolve_index(const unroll_context&) const;
 
 	UNROLL_RESOLVE_COPY_META_INDEX_PROTO;
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+	SUBSTITUTE_DEFAULT_PARAMETERS_META_INDEX_PROTO;
+#endif
 protected:
 	using meta_index_expr::unroll_resolve_copy;
 public:

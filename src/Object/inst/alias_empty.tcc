@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/alias_empty.tcc"
-	$Id: alias_empty.tcc,v 1.7 2006/02/26 05:19:57 fang Exp $
+	$Id: alias_empty.tcc,v 1.8 2006/10/18 01:19:27 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_ALIAS_EMPTY_TCC__
@@ -91,13 +91,18 @@ instance_alias_info_empty::dump_complete_type(const AliasType& _alias,
  */
 template <class AliasType>
 good_bool
-instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {
+instance_alias_info_empty::create_dependent_types(const AliasType& _alias, 
+		const footprint& top) {
 	typedef	typename AliasType::container_type	container_type;
 	typedef typename container_type::instance_collection_parameter_type
 				complete_type_type;
 	STACKTRACE_VERBOSE;
 	const complete_type_type
+#if USE_RESOLVED_DATA_TYPES
+		_type(_alias.container->__get_raw_type());
+#else
 		_type(_alias.container->get_canonical_type());
+#endif
 	if (!_type) {
 		// already have error message
 		_alias.dump_hierarchical_name(cerr << "Failed to instantiate ", 
@@ -105,7 +110,7 @@ instance_alias_info_empty::create_dependent_types(const AliasType& _alias) {
 		return good_bool(false);
 	}
 	else if (!container_type::collection_type_manager_parent_type
-			::create_definition_footprint(_type).good) {
+			::create_definition_footprint(_type, top).good) {
 		// have error message already
 		_alias.dump_hierarchical_name(cerr << "Instantiated by: ", 
 			dump_flags::default_value) << endl;

@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	prealcol	2	#HEAD#	#TAIL#	112
+	3	##ADDR##	prealplh	0	#HEAD#	#TAIL#	34
 	4	##ADDR##	prealins	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
 	6	##ADDR##	prassign	0	#HEAD#	#TAIL#	20
@@ -33,6 +33,7 @@ Persistent Object Manager text dump:
 	29	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
 	30	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	32	##ADDR##	prealcol	2	#HEAD#	#TAIL#	98
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -42,14 +43,17 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    matrix = preal^2 matrix
-      unrolled index-value pairs: {
-        [0][0] = 1.1
-        [0][1] = 2.4
-        [0][2] = ?
-        [1][0] = ?
-        [1][1] = ?
-        [1][2] = 3.5
-      }
+    matrix = preal<> matrix^2
 }
 
+footprint: {
+  matrix = preal^2
+    unrolled index-value pairs: {
+      [0][0] = 1.1
+      [0][1] = 2.4
+      [0][2] = ?
+      [1][0] = ?
+      [1][1] = ?
+      [1][2] = 3.5
+    }
+}

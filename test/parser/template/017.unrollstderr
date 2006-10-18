@@ -4,18 +4,19 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	91
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	87
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	45
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	41
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
 	8	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	9	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	41
+	9	##ADDR##	dintplch	0	#HEAD#	#TAIL#	32
 	10	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	11	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	12	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
 	13	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	14	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
+	15	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -25,21 +26,23 @@ In namespace "", we have: {
   1 definitions
   0 typedefs
   Parameters:
-    default_width = pint^0 default_width value: ?
+    default_width = pint<> default_width
   Definitions:
     something_wide = process-definition (defined) something_wide<
-      pint<> W (default = ::default_width)
+      pint<> W (default = default_width)
       >(
       )
       In definition "something_wide", we have: {
       Parameters:
-        W = pint<> W (default = ::default_width)
+        W = pint<> something_wide::W (default = default_width)
       Instances:
-        wide_int = int<::something_wide::W> wide_int
+        wide_int = int<something_wide::W> something_wide::wide_int
       unroll sequence: 
-        pint<> W
-        int<::something_wide::W> wide_int
+        int<something_wide::W> wide_int
       }
 
 }
 
+footprint: {
+  default_width = pint^0 value: ?
+}

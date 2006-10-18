@@ -3,7 +3,7 @@
 	Context class for traversing syntax tree, type-checking, 
 	and constructing persistent objects.  
 	This file came from "Object/art_context.h" in a previous life.  
-	$Id: parse_context.h,v 1.9 2006/07/31 22:22:25 fang Exp $
+	$Id: parse_context.h,v 1.10 2006/10/18 01:19:00 fang Exp $
  */
 
 #ifndef __AST_PARSE_CONTEXT_H__
@@ -17,6 +17,7 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "Object/common/util_types.h"
+#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/attributes.h"
 
@@ -33,16 +34,27 @@ namespace entity {
 	class process_definition_base;
 	class fundamental_type_reference;
 	class sequential_scope;
+#if USE_INSTANCE_PLACEHOLDERS
+	class instance_placeholder_base;
+	template <class> class value_placeholder;
+#else
 	class instance_collection_base;
+#endif
 	class instance_management_base;
 	class meta_instance_reference_connection;
 	class param_expr;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	class dynamic_param_expr_list;
+#else
 	class param_expr_list;
+#endif
 	class param_expression_assignment;
 	class loop_scope;
 	class conditional_scope;
 	struct pint_tag;
+#if !USE_INSTANCE_PLACEHOLDERS
 	template <class, size_t> class value_array;
+#endif
 namespace PRS {
 	class rule;
 	class rule_set;
@@ -72,15 +84,24 @@ using entity::channel_definition_base;
 using entity::process_definition_base;
 using entity::fundamental_type_reference;
 using entity::sequential_scope;
+#if USE_INSTANCE_PLACEHOLDERS
+using entity::instance_placeholder_base;
+using entity::value_placeholder;
+#else
 using entity::instance_collection_base;
+using entity::value_array;
+#endif
 using entity::instance_management_base;
 using entity::meta_instance_reference_connection;
 using entity::param_expr;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+using entity::dynamic_param_expr_list;
+#else
 using entity::param_expr_list;
+#endif
 using entity::param_expression_assignment;
 using entity::index_collection_item_ptr_type;
 using entity::pint_tag;
-using entity::value_array;
 using entity::loop_scope;
 using entity::conditional_scope;
 
@@ -118,8 +139,19 @@ class token_paramtype;
  */
 class context {
 public:
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	typedef	count_ptr<const dynamic_param_expr_list>
+							relaxed_args_ptr_type;
+#else
 	typedef	count_ptr<const param_expr_list>	relaxed_args_ptr_type;
+#endif
 	typedef list<string>			file_name_stack_type;
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	never_ptr<const instance_placeholder_base>
+#else
+	typedef	never_ptr<const instance_collection_base>
+#endif
+						placeholder_ptr_type;
 private:
 // are we in some expression? what depth?
 // what language context are we in? global? prs, chp, hse?
@@ -138,18 +170,22 @@ private:
 			are modifiable.  
 	 */
 	stack<never_ptr<name_space> >	namespace_stack;
-#define current_namespace	namespace_stack.top()
 
 	/**
 		Pointer to the current definition that is open for 
 		modification, intended for adding items to the body.  
 		One pointer is sufficient for all definitions because
 		only one definition can be open at a time.  
+		Until now! (2006-10-07)
 		Never delete's because the definition has already 
 		been registered to some scopespace that owns it.  
 		Q: is this made redundant by current_scope?
 	 */
+#if SUPPORT_NESTED_DEFINITIONS
+	stack<never_ptr<definition_base> >	open_definition_stack;
+#else
 	never_ptr<definition_base>	current_open_definition;
+#endif
 
 	/**
 		This pointer is the scratch space for constructing
@@ -175,15 +211,20 @@ private:
 		Remember to push NULL initially.  
 	 */
 	stack<never_ptr<sequential_scope> >	sequential_scope_stack;
-#define	current_sequential_scope		sequential_scope_stack.top()
 
 	/**
 		TODO: should just contain reference to module...
 	 */
 	entity::PRS::rule_set&			top_prs;
 
+#if USE_INSTANCE_PLACEHOLDERS
+	typedef	value_placeholder<pint_tag>	loop_var_placeholder_type;
+	typedef	list<count_ptr<const loop_var_placeholder_type> >
+#else
 	typedef	value_array<pint_tag, 0>	pint_scalar;
+	typedef	pint_scalar			loop_var_placeholder_type;
 	typedef	list<count_ptr<const pint_scalar> >
+#endif
 						loop_var_stack_type;
 	loop_var_stack_type			loop_var_stack;
 
@@ -322,10 +363,27 @@ public:
 		const token_identifier& id);
 
 	void
-	add_connection(excl_ptr<const meta_instance_reference_connection>& c);
+	add_connection(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const meta_instance_reference_connection>&
+#else
+		excl_ptr<const meta_instance_reference_connection>& c
+#endif
+		);
 
 	void
-	add_assignment(excl_ptr<const param_expression_assignment>& a);
+	add_assignment(
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		const count_ptr<const param_expression_assignment>&
+#else
+		excl_ptr<const param_expression_assignment>& a
+#endif
+		);
+
+	never_ptr<sequential_scope>
+	get_current_sequential_scope(void) const {
+		return sequential_scope_stack.top();
+	}
 
 	never_ptr<const scopespace>
 	get_current_named_scope(void) const;
@@ -335,7 +393,7 @@ public:
 
 	never_ptr<const name_space>
 	get_current_namespace(void) const
-		{ return current_namespace; }
+		{ return namespace_stack.top(); }
 
 	never_ptr<definition_base>
 	set_current_prototype(excl_ptr<definition_base>& d);
@@ -354,7 +412,11 @@ public:
 
 	never_ptr<definition_base>
 	get_current_open_definition(void) const {
+#if SUPPORT_NESTED_DEFINITIONS
+		return open_definition_stack.top();
+#else
 		return current_open_definition;
+#endif
 	}
 
 	/**
@@ -395,38 +457,39 @@ public:
 	never_ptr<const definition_base>
 	lookup_definition(const qualified_id& id) const;
 
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	lookup_instance(const token_identifier& id) const;
 
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	lookup_instance(const qualified_id& id) const;
 
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type&);
 
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	add_instance(const token_identifier& id, 
 		const relaxed_args_ptr_type&, 
 		index_collection_item_ptr_type dim);
 
-	// should be param_value_collection
-	never_ptr<const instance_collection_base>
+	// should be param_value_placeholder
+	placeholder_ptr_type
 	add_template_formal(const token_identifier& id, 
 		count_ptr<const param_expr> d);
 
-	// should be param_value_collection
-	never_ptr<const instance_collection_base>
+	// should be param_value_placeholder
+	placeholder_ptr_type
 	add_template_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim, 
 		const count_ptr<const param_expr>& d);
 
 	// port formals are not allowed to have instance-relaxed actuals.  
-	never_ptr<const instance_collection_base>
+	// should be physical_instance_placeholder
+	placeholder_ptr_type
 	add_port_formal(const token_identifier& id);
 
 	// port formals are not allowed to have instance-relaxed actuals.  
-	never_ptr<const instance_collection_base>
+	placeholder_ptr_type
 	add_port_formal(const token_identifier& id, 
 		index_collection_item_ptr_type dim);
 
@@ -439,7 +502,7 @@ public:
 private:
 	// TODO:
 	// use nested struct for automatic construction/destruction matching...
-	count_ptr<pint_scalar>
+	count_ptr<loop_var_placeholder_type>
 	push_loop_var(const token_identifier&);
 
 	void
@@ -454,7 +517,7 @@ public:
 	 */
 	struct loop_var_frame {
 		context&			_context;
-		count_ptr<pint_scalar>		var;
+		count_ptr<loop_var_placeholder_type>	var;
 		loop_var_frame(context&, const token_identifier&);
 		~loop_var_frame();
 	} __ATTRIBUTE_UNUSED__;	// end struct loop_var_frame
@@ -466,7 +529,11 @@ public:
 	 */
 	struct loop_scope_frame {
 		context&			_context;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		loop_scope_frame(context&, const count_ptr<loop_scope>&);
+#else
 		loop_scope_frame(context&, excl_ptr<loop_scope>&);
+#endif
 		~loop_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 
@@ -476,7 +543,12 @@ public:
 	struct conditional_scope_frame {
 		context&			_context;
 		const bool			parent_cond;
+#if REF_COUNT_INSTANCE_MANAGEMENT
+		conditional_scope_frame(context&, 
+			const count_ptr<conditional_scope>&);
+#else
 		conditional_scope_frame(context&, excl_ptr<conditional_scope>&);
+#endif
 		~conditional_scope_frame();
 	} __ATTRIBUTE_UNUSED__;
 

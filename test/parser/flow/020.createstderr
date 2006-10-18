@@ -4,10 +4,11 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	26
+	3	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	cnstpb__	0	#HEAD#	#TAIL#	9
+	7	##ADDR##	pboolcol	0	#HEAD#	#TAIL#	17
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -17,8 +18,10 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    b = pbool^0 b value: ?
+    b = pbool<> b
 }
 
-Created state:
-
+footprint: {
+  b = pbool^0 value: ?
+  Created state:
+}

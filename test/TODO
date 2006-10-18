@@ -1,5 +1,12 @@
 "test/TODO"
-	$Id: TODO,v 1.3 2005/11/20 09:24:14 fang Exp $
+	$Id: TODO,v 1.4 2006/10/18 01:20:14 fang Exp $
+
+rewrite tests so they can be "run" in parallel
+	use check_TESTS, check_TESTS as a target and use dependency rules
+	to run the tests as targets, and have the scripts
+	just echo/return the result of the test.
+	This also requires heavy automatic dependency generation
+	for all tests.  
 
 Detected whether or not we are VPATH building, for the cases
 	where we copy or link tests (.stderr) from srcdir to builddir, 

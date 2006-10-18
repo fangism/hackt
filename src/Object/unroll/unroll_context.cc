@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.17 2006/07/04 07:26:20 fang Exp $
+	$Id: unroll_context.cc,v 1.18 2006/10/18 01:20:08 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -24,6 +24,11 @@
 #include "Object/def/template_formals_manager.h"
 #include "Object/expr/param_expr_list.h"
 #include "Object/ref/meta_value_reference_base.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/physical_instance_placeholder.h"
+#include "Object/inst/value_placeholder.h"
+#include "Object/inst/physical_instance_collection.h"
+#endif
 #include "common/ICE.h"
 #include "common/TODO.h"
 #include "util/memory/count_ptr.tcc"
@@ -35,9 +40,16 @@ namespace entity {
 //=============================================================================
 // class unroll_context method definitions
 
+#if 0
 unroll_context::unroll_context() :
-		next(), template_args(), template_formals(),
+		next(),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(),
+#endif
 		target_footprint(NULL)
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, lookup_footprint(NULL)
+#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
 #endif
@@ -45,8 +57,14 @@ unroll_context::unroll_context() :
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::unroll_context(footprint* const f) :
-		next(), template_args(), template_formals(), 
+		next(),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
+#endif
 		target_footprint(f)
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		, lookup_footprint(f)
+#endif
 #if LOOKUP_GLOBAL_META_PARAMETERS
 		, parent_namespace(NULL)
 #endif
@@ -54,6 +72,97 @@ unroll_context::unroll_context(footprint* const f) :
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#else
+/**
+	Constructor intended for top-level context.  
+ */
+unroll_context::unroll_context(footprint* const f, 
+		const footprint* const t) :
+		next(),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
+#endif
+		target_footprint(f),
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		lookup_footprint(f), 
+#endif
+		top_footprint(t)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Read-only context, no target footprint
+ */
+unroll_context::unroll_context(const footprint* const f, 
+		const unroll_context& c) :
+		next(&c),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
+#endif
+		target_footprint(NULL),
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		lookup_footprint(f), 
+#endif
+		top_footprint(c.top_footprint)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intended for contexts that are scoped continuations.  
+ */
+unroll_context::unroll_context(footprint* const f, 
+		const unroll_context& c) :
+		next(&c),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
+#endif
+		target_footprint(c.target_footprint),
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		lookup_footprint(f), 
+#endif
+		top_footprint(c.top_footprint)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Intended for contexts used for unrolling temporary footprints.  
+	In such cases, we don't want to unroll into the parent context's
+	footprint.  
+ */
+unroll_context::unroll_context(footprint* const f, 
+		const unroll_context& c, 
+		const auxiliary_target_tag) :
+		next(&c),
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
+		template_args(), template_formals(), 
+#endif
+		target_footprint(f),
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+		lookup_footprint(f), 
+#endif
+		top_footprint(c.top_footprint)
+#if LOOKUP_GLOBAL_META_PARAMETERS
+		, parent_namespace(NULL)
+#endif
+		{
+}
+
+#endif	// if 0
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Construct a context (translator) between actuals and formals.  
  */
@@ -106,11 +215,13 @@ unroll_context::unroll_context(const template_actuals& a,
 #endif
 		{
 }
+#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::~unroll_context() { }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	What does it mean whe n one level is empty, but the next pointer
 	points to a continuation?  Shouldn't allow that to happen...
@@ -119,6 +230,7 @@ bool
 unroll_context::empty(void) const {
 	return (!template_args && !template_formals);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -130,17 +242,42 @@ unroll_context::dump(ostream& o) const {
 #if STACKTRACE_DUMP
 	STACKTRACE_VERBOSE;
 #endif
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	o << "formals: ";
 	if (template_formals)
 		template_formals->dump(o);
 	else	o << "(none)";
 	o << endl << "actuals: ";
 	template_args.dump(o);
-	if (target_footprint)
-		target_footprint->dump_with_collections(
-			cerr << endl << "footprint: ",
+#endif
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	if (lookup_footprint) {
+		lookup_footprint->dump_with_collections(
+			cerr << endl << "lookup footprint: " << endl,
 			dump_flags::default_value, 
 			expr_dump_context::default_value);
+	}
+#endif
+	if (target_footprint) {
+	if (target_footprint != lookup_footprint) {
+		target_footprint->dump_with_collections(
+			cerr << endl << "target footprint: " << endl,
+			dump_flags::default_value, 
+			expr_dump_context::default_value);
+	} else {
+		cerr << endl << "(target == lookup)" << endl;
+	}
+	}
+	if (top_footprint) {
+	if (top_footprint != lookup_footprint) {
+		top_footprint->dump_with_collections(
+			cerr << endl << "top footprint: " << endl,
+			dump_flags::default_value, 
+			expr_dump_context::default_value);
+	} else {
+		cerr << endl << "(top == lookup)" << endl;
+	}
+	}
 #if 1
 	// chain dump:
 	if (next) {
@@ -152,7 +289,9 @@ unroll_context::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 /**
+	OBSOLETE: after introducing separate target and lookup footprints.
 	20051011: Fixed bug where loop context would fail to 
 		translate instance reference correctly because
 		target_footprint of innermost context was NULL.  
@@ -182,6 +321,7 @@ unroll_context::get_target_footprint(void) const {
 	}
 #endif
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if LOOKUP_GLOBAL_META_PARAMETERS
@@ -213,6 +353,7 @@ unroll_context::make_member_context(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Used only for looking up loop variables.  
 	Must get the scope correct, check the template formals manager, 
@@ -243,8 +384,200 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 #endif
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	Only lookup footprints, not scopespaces!
+	No need to determine whether or not instance is formal.  
+	However, lookup of instance_reference must remain in context, 
+	and not go outside scope!  (as far as unrolling is concerned)
+	NOTE: looking up of instances should only use the target-footprint, 
+		and NOT the lookup-footprint.  
+		Lookup should never look out-of-context.  
+ */
+count_ptr<physical_instance_collection>
+unroll_context::lookup_instance_collection(
+		const physical_instance_placeholder& p) const {
+	typedef	count_ptr<physical_instance_collection>	return_type;
+	STACKTRACE_VERBOSE;
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	NEVER_NULL(target_footprint);
+	return (*target_footprint)[p.get_footprint_key()]
+		.is_a<physical_instance_collection>();
+#else
+	if (target_footprint) {
+		// TODO: error-handle qualified lookups?
+		const return_type
+			ret((*target_footprint)[p.get_footprint_key()]
+				.is_a<physical_instance_collection>());
+		if (ret)
+			return ret;
+	}
+	if (next) {
+		// this might be a loop or other local scope.  
+		return next->lookup_instance_collection(p);
+	}
+	return return_type(NULL);
+#endif
+}
+#endif	// USE_INSTANCE_PLACEHOLDERS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	Only lookup footprints, not scopespaces!
+	No need to determine whether or not instance is formal.  
+	However, lookup of instance_reference must remain in context, 
+	and not go outside scope!  (as far as unrolling is concerned)
+	NOTE: rvalues may lookup parent contexts, 
+		but lvalues may NOT.  
+	TODO: distinguish lvalue from rvalue lookups?
+ */
+count_ptr<param_value_collection>
+#if RVALUE_LVALUE_LOOKUPS
+unroll_context::lookup_rvalue_collection
+#else
+unroll_context::lookup_value_collection
+#endif
+		(const param_value_placeholder& p) const {
+	typedef	count_ptr<param_value_collection>	return_type;
+	STACKTRACE_VERBOSE;
+	const string key(p.get_footprint_key());
+#if ENABLE_STACKTRACE
+	dump(cerr << "looking up \"" << key << "\" in context:") << endl;
+#endif
+#if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
+	// should really only lookup rvalues with this...
+	// target footprint should be covered (and searched last)
+	if (lookup_footprint) {
+		STACKTRACE_INDENT_PRINT("trying lookup_footprint..." << endl);
+		const return_type
+			ret((*lookup_footprint)[key]
+				.is_a<param_value_collection>());
+		if (ret) {
+			STACKTRACE_INDENT_PRINT("found it." << endl);
+			return ret;
+		}
+	}
+#else
+	if (target_footprint && target_footprint != lookup_footprint) {
+		STACKTRACE_INDENT_PRINT("trying target_footprint..." << endl);
+		// TODO: error-handle qualified lookups?
+		const return_type
+			ret((*target_footprint)[key]
+				.is_a<param_value_collection>());
+		if (ret) {
+			STACKTRACE_INDENT_PRINT("found it." << endl);
+			return ret;
+		}
+	}
+#endif
+	// TODO: shouldn't top-footprint be checked last???
+	if (top_footprint && top_footprint != lookup_footprint) {
+		STACKTRACE_INDENT_PRINT("trying top_footprint..." << endl);
+		const return_type
+			ret((*top_footprint)[key]
+				.is_a<param_value_collection>());
+		if (ret) {
+			STACKTRACE_INDENT_PRINT("found it." << endl);
+			return ret;
+		}
+	}
+	if (next) {
+		// this might be a loop or other local scope.  
+#if RVALUE_LVALUE_LOOKUPS
+		const return_type
+			ret(next->lookup_rvalue_collection(p));
+		if (ret) {
+			STACKTRACE_INDENT_PRINT("found it." << endl);
+			return ret;
+		}
+#else
+		return next->lookup_value_collection(p);
+#endif
+	}
+	return return_type(NULL);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if RVALUE_LVALUE_LOOKUPS
+/**
+	Lookup reserved for lvalues, which uses the target footprint.  
+ */
+count_ptr<param_value_collection>
+unroll_context::lookup_lvalue_collection(
+		const param_value_placeholder& p) const {
+	typedef	count_ptr<param_value_collection>	return_type;
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	dump(cerr << "looking up in context:") << endl;
+#endif
+	// use the first context with a valid target footprint
+	// do not use parents' target footprints
+	if (target_footprint) {
+		// TODO: error-handle qualified lookups?
+		const return_type
+			ret((*target_footprint)[p.get_footprint_key()]
+				.is_a<param_value_collection>());
+		if (ret)
+			return ret;
+	} else if (next) {
+		// this might be a loop or other local scope.  
+		return next->lookup_lvalue_collection(p);
+	}
+	return return_type(NULL);
+}
+#endif	// RVALUE_LVALUE_LOOKUPS
+#endif	// USE_INSTANCE_PLACEHOLDERS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+count_ptr<physical_instance_collection>
+unroll_context::lookup_collection(
+		const physical_instance_placeholder& p) const {
+	return lookup_instance_collection(p);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+count_ptr<param_value_collection>
+unroll_context::lookup_collection(
+		const param_value_placeholder& p) const {
+#if RVALUE_LVALUE_LOOKUPS
+	// defaults to using rvalue lookup, is this "the right thing"?
+	return lookup_rvalue_collection(p);
+#else
+	return lookup_value_collection(p);
+#endif
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if USE_INSTANCE_PLACEHOLDERS
+/**
+	TODO: fix so that target (instantiating) footprints (writable)
+	can be distinguished from read-only footprints.  
+ */
+void
+unroll_context::instantiate_collection(
+		const count_ptr<instance_collection_base>& p) const {
+	STACKTRACE_VERBOSE;
+	footprint* f = target_footprint;
+	never_ptr<const this_type> c(this);
+	do {
+		f = c->target_footprint;
+		c = c->next;
+	} while (!f && c);
+	NEVER_NULL(f);
+	const good_bool g(f->register_collection(p));
+	INVARIANT(g.good);
+}
+#endif	// USE_INSTANCE_PLACEHOLDERS
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
+// getting rid of this shit in favor of simpler, more consistent lookup
 /**
 	NOTE: this method is SO CRITICAL...
 	FYI: this is called by simple_meta_value_reference::unroll_resolve().
@@ -258,11 +591,18 @@ unroll_context::lookup_loop_var(const pint_scalar& ps) const {
 	TODO: completely rewrite this.
  */
 count_ptr<const const_param>
-unroll_context::lookup_actual(const param_value_collection& p) const {
+unroll_context::lookup_actual(
+#if USE_INSTANCE_PLACEHOLDERS
+		const param_value_placeholder& p
+#else
+		const param_value_collection& p
+#endif
+		) const {
 	typedef	count_ptr<const const_param>	return_type;
 	STACKTRACE_VERBOSE;
 #if ENABLE_STACKTRACE
-	STACKTRACE_INDENT_PRINT("looking up: " << p.get_name() << endl);
+	STACKTRACE_INDENT_PRINT("looking up: " <<
+		p.get_footprint_key() << endl);
 	dump(cerr << "with: ") << endl;
 #endif
 	INVARIANT(!empty());
@@ -277,7 +617,7 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 			const footprint* const tfp = get_target_footprint();
 			NEVER_NULL(tfp);
 			const count_ptr<instance_collection_base>
-				ic((*tfp)[p.get_name()]);
+				ic((*tfp)[p.get_footprint_key()]);
 			NEVER_NULL(ic);
 			FINISH_ME_EXIT(Fang);
 		}
@@ -287,7 +627,11 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 	// not the position of the template formal in its own list
 	// but in the current context!!!
 	// very awkward...
+#if USE_INSTANCE_PLACEHOLDERS
+	const instance_placeholder_base::owner_ptr_type
+#else
 	const instance_collection_base::owner_ptr_type
+#endif
 		p_owner(p.get_owner());
 	const never_ptr<const definition_base>
 		p_def(p_owner.is_a<const definition_base>());
@@ -299,6 +643,7 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 	// why don't we just search up the context chain until
 	// we find the matching template formals reference?
 	if (template_formals == &p_tfm) {
+		// template formal names are never qualified
 		const size_t index(p_tfm.lookup_template_formal_position(
 			p.get_name()));
 		INVARIANT(index);
@@ -322,7 +667,11 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 			const count_ptr<const meta_value_reference_base>
 				self(ret.is_a<const meta_value_reference_base>());
 			if (self) {
+#if USE_INSTANCE_PLACEHOLDERS
+				const never_ptr<const param_value_placeholder>
+#else
 				const never_ptr<const param_value_collection>
+#endif
 					pbase(self->get_coll_base());
 				if (pbase == &p) {
 				// need to safeguard against self-lookup
@@ -363,6 +712,7 @@ unroll_context::lookup_actual(const param_value_collection& p) const {
 		return return_type(NULL);
 	}
 }	// end method lookup_actual
+#endif	// USE_INSTANCE_PLACEHOLDERS
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

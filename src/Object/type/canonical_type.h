@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.6 2006/01/27 08:07:19 fang Exp $
+	$Id: canonical_type.h,v 1.7 2006/10/18 01:19:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -8,6 +8,7 @@
 
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/type/canonical_type_base.h"
+#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/memory/excl_ptr.h"
 
@@ -71,6 +72,9 @@ public:
 	canonical_type(const canonical_definition_ptr_type, 
 		const param_list_ptr_type&);
 
+	// used to append relaxed template arguments
+	canonical_type(const this_type&, const const_param_list_ptr_type&);
+
 	canonical_type(const canonical_definition_ptr_type, 
 		const template_actuals&);
 
@@ -115,22 +119,27 @@ public:
 	ostream&
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
 
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context
 	make_unroll_context(void) const;
+#endif
 
 	void
 	unroll_port_instances(const unroll_context&,
 		subinstance_manager&) const;
 
+#if 0
+	// don't delete, useful for copying
 	const footprint&
 	get_definition_footprint(void) const;
+#endif
 
 	// like fundamental_type_reference::unroll_register_complete_type()
 	good_bool
-	unroll_definition_footprint(void) const;
+	unroll_definition_footprint(const footprint&) const;
 
 	good_bool
-	create_definition_footprint(void) const;
+	create_definition_footprint(const footprint&) const;
 
 	using base_type::combine_relaxed_actuals;
 	using base_type::match_relaxed_actuals;

@@ -5,122 +5,129 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	52
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	386
-	4	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	5	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	7	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
-	8	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
-	9	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	10	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	11	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	12	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	14	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
-	15	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	16	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	17	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	29
+	4	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	8	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
+	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	13	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	14	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	15	##ADDR##	datadefn	0	#HEAD#	#TAIL#	60
+	16	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	17	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	24	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	25	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	26	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	27	##ADDR##	proccoll	0	#HEAD#	#TAIL#	62
-	28	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
-	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	32	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	33	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	34	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	35	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	36	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	37	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	38	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
-	39	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	40	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	41	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	42	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
-	43	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	44	##ADDR##	proccoll	2	#HEAD#	#TAIL#	402
-	45	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	46	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	47	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
-	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	49	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	50	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	51	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	53	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	54	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	55	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	56	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	57	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	58	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	59	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	60	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	61	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	62	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	63	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	64	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	65	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	66	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	67	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	69	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	70	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	71	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	73	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	74	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	75	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	77	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	78	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	79	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	30
-	81	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	82	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	34
-	83	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	55
-	84	##ADDR##	proccoll	1	#HEAD#	#TAIL#	180
-	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	86	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
-	87	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	89	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	90	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	91	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
-	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	93	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	94	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	95	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
-	96	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	34
-	97	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	109
-	98	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	38
-	99	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	71
-	100	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	77
-	101	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
-	102	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	103	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	104	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
-	105	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	106	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	107	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
-	108	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	109	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
-	110	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
-	111	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	112	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
-	113	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	114	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	115	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
-	116	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	117	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
-	118	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
-	119	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	27	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25
+	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	29	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
+	30	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
+	31	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	32	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	33	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	34	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	35	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	36	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	37	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	38	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	39	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
+	40	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	41	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
+	42	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	43	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	44	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
+	45	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	46	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	47	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
+	49	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	50	##ADDR##	sdimiref	0	#HEAD#	#TAIL#	16
+	51	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	52	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	28
+	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
+	54	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
+	55	##ADDR##	prcprtcn	0	#HEAD#	#TAIL#	32
+	56	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	20
+	58	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	59	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	60	##ADDR##	prcalias	0	#HEAD#	#TAIL#	20
+	61	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	62	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
+	63	##ADDR##	cindlst_	0	#HEAD#	#TAIL#	16
+	64	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	66	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	67	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	69	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
+	70	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	71	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	72	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
+	73	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	74	##ADDR##	proccoll	2	#HEAD#	#TAIL#	393
+	75	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	77	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	78	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	79	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	81	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	82	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	83	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	84	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	85	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	86	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	87	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	89	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	90	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	91	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	93	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	94	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	95	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	96	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	97	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	98	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	99	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	100	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	101	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	102	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	103	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	104	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	105	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	106	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	107	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	108	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	109	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	110	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	111	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	112	##ADDR##	proccoll	1	#HEAD#	#TAIL#	171
+	113	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	114	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	115	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
+	116	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	117	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
+	118	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	119	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
+	120	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	121	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
+	122	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	123	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	100
+	124	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	29
+	125	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	62
+	126	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -138,368 +145,375 @@ In namespace "", we have: {
       )
       In definition "portaproc", we have: {
       Instances:
-        b = bool<> b
-        c = bool<> c
-
-        i = int<32> i
-        j = int<32> j
-
+        b = bool<> portaproc::b
+        c = bool<> portaproc::c^1
+        i = int<32> portaproc::i
+        j = int<32> portaproc::j^1
       unroll sequence: 
         bool<> b
         bool<> c[0..3]
         int<32> i
         int<32> j[0..1]
       footprint: {
-        bool^0 b (instantiated) = ::portaproc::b (1) 
-        bool^1 c
-          unrolled indices: {
-            0 = ::portaproc::c[0] (2) 
-            1 = ::portaproc::c[1] (3) 
-            2 = ::portaproc::c[2] (4) 
-            3 = ::portaproc::c[3] (5) 
+        b = bool^0 = portaproc::b (1) 
+        c = bool^1
+          {
+            0 = portaproc::c[0] (2) 
+            1 = portaproc::c[1] (3) 
+            2 = portaproc::c[2] (4) 
+            3 = portaproc::c[3] (5) 
           }
-        int<32>^0 i (instantiated) = ::portaproc::i (1) 
-        int<32>^1 j
-          unrolled indices: {
-            0 = ::portaproc::j[0] (2) 
-            1 = ::portaproc::j[1] (3) 
+        i = int<32>^0 = portaproc::i (1) 
+        j = int<32>^1
+          {
+            0 = portaproc::j[0] (2) 
+            1 = portaproc::j[1] (3) 
           }
+        Created state:
         int instance pool:
-        1	::portaproc::i
-        2	::portaproc::j[0]
-        3	::portaproc::j[1]
+        1	portaproc::i
+        2	portaproc::j[0]
+        3	portaproc::j[1]
         bool instance pool:
-        1	::portaproc::b
-        2	::portaproc::c[0]
-        3	::portaproc::c[1]
-        4	::portaproc::c[2]
-        5	::portaproc::c[3]
+        1	portaproc::b
+        2	portaproc::c[0]
+        3	portaproc::c[1]
+        4	portaproc::c[2]
+        5	portaproc::c[3]
       }
       }
 
   Instances:
-    a = bool^0 a (instantiated) = ::a (1) 
-    p = process portaproc<>^0 p (instantiated) = ::p (1) (
-      bool^0 b (instantiated) = ::a (1) 
-      bool^1 c
-        unrolled indices: {
-          0 = ::x[0] (2) 
-          1 = ::x[1] (3) 
-          2 = ::x[2] (4) 
-          3 = ::x[3] (5) 
-        }
-      int<32>^0 i (instantiated) = ::q (1) 
-      int<32>^1 j
-        unrolled indices: {
-          0 = ::r[0] (2) 
-          1 = ::r[1] (3) 
-        }
-    )
-    q = int<32>^0 q (instantiated) = ::q (1) 
-    r = int<32>^1 r
-      unrolled indices: {
-        0 = ::r[0] (2) 
-        1 = ::r[1] (3) 
-      }
-    s = process portaproc<>^2 s
-      unrolled indices: {
-        [1][1] = ::s[1][1] (2) (
-          bool^0 b (instantiated) = ::s[1][1].b (6) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[1][1].c[0] (7) 
-              1 = ::s[1][1].c[1] (8) 
-              2 = ::s[1][1].c[2] (9) 
-              3 = ::s[1][1].c[3] (10) 
-            }
-          int<32>^0 i (instantiated) = ::s[1][1].i (4) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[1][1].j[0] (5) 
-              1 = ::s[1][1].j[1] (6) 
-            }
-        )
-        [1][2] = ::s[1][2] (3) (
-          bool^0 b (instantiated) = ::s[1][2].b (11) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[1][2].c[0] (12) 
-              1 = ::s[1][2].c[1] (13) 
-              2 = ::s[1][2].c[2] (14) 
-              3 = ::s[1][2].c[3] (15) 
-            }
-          int<32>^0 i (instantiated) = ::s[1][2].i (7) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[1][2].j[0] (8) 
-              1 = ::s[1][2].j[1] (9) 
-            }
-        )
-        [1][3] = ::s[1][3] (4) (
-          bool^0 b (instantiated) = ::s[1][3].b (16) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[1][3].c[0] (17) 
-              1 = ::s[1][3].c[1] (18) 
-              2 = ::s[1][3].c[2] (19) 
-              3 = ::s[1][3].c[3] (20) 
-            }
-          int<32>^0 i (instantiated) = ::s[1][3].i (10) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[1][3].j[0] (11) 
-              1 = ::s[1][3].j[1] (12) 
-            }
-        )
-        [2][1] = ::s[2][1] (5) (
-          bool^0 b (instantiated) = ::s[2][1].b (21) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[2][1].c[0] (22) 
-              1 = ::s[2][1].c[1] (23) 
-              2 = ::s[2][1].c[2] (24) 
-              3 = ::s[2][1].c[3] (25) 
-            }
-          int<32>^0 i (instantiated) = ::s[2][1].i (13) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[2][1].j[0] (14) 
-              1 = ::s[2][1].j[1] (15) 
-            }
-        )
-        [2][2] = ::s[2][2] (6) (
-          bool^0 b (instantiated) = ::s[2][2].b (26) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[2][2].c[0] (27) 
-              1 = ::s[2][2].c[1] (28) 
-              2 = ::s[2][2].c[2] (29) 
-              3 = ::s[2][2].c[3] (30) 
-            }
-          int<32>^0 i (instantiated) = ::s[2][2].i (16) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[2][2].j[0] (17) 
-              1 = ::s[2][2].j[1] (18) 
-            }
-        )
-        [2][3] = ::s[2][3] (7) (
-          bool^0 b (instantiated) = ::s[2][3].b (31) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[2][3].c[0] (32) 
-              1 = ::s[2][3].c[1] (33) 
-              2 = ::s[2][3].c[2] (34) 
-              3 = ::s[2][3].c[3] (35) 
-            }
-          int<32>^0 i (instantiated) = ::s[2][3].i (19) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[2][3].j[0] (20) 
-              1 = ::s[2][3].j[1] (21) 
-            }
-        )
-        [3][1] = ::s[3][1] (8) (
-          bool^0 b (instantiated) = ::s[3][1].b (36) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[3][1].c[0] (37) 
-              1 = ::s[3][1].c[1] (38) 
-              2 = ::s[3][1].c[2] (39) 
-              3 = ::s[3][1].c[3] (40) 
-            }
-          int<32>^0 i (instantiated) = ::s[3][1].i (22) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[3][1].j[0] (23) 
-              1 = ::s[3][1].j[1] (24) 
-            }
-        )
-        [3][2] = ::s[3][2] (9) (
-          bool^0 b (instantiated) = ::s[3][2].b (41) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[3][2].c[0] (42) 
-              1 = ::s[3][2].c[1] (43) 
-              2 = ::s[3][2].c[2] (44) 
-              3 = ::s[3][2].c[3] (45) 
-            }
-          int<32>^0 i (instantiated) = ::s[3][2].i (25) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[3][2].j[0] (26) 
-              1 = ::s[3][2].j[1] (27) 
-            }
-        )
-        [3][3] = ::s[3][3] (10) (
-          bool^0 b (instantiated) = ::s[3][3].b (46) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[3][3].c[0] (47) 
-              1 = ::s[3][3].c[1] (48) 
-              2 = ::s[3][3].c[2] (49) 
-              3 = ::s[3][3].c[3] (50) 
-            }
-          int<32>^0 i (instantiated) = ::s[3][3].i (28) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[3][3].j[0] (29) 
-              1 = ::s[3][3].j[1] (30) 
-            }
-        )
-      }
-    t = process portaproc<>^1 t
-      unrolled indices: {
-        2 = ::s[1][1] (2) (
-          bool^0 b (instantiated) = ::s[1][1].b (6) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[1][1].c[0] (7) 
-              1 = ::s[1][1].c[1] (8) 
-              2 = ::s[1][1].c[2] (9) 
-              3 = ::s[1][1].c[3] (10) 
-            }
-          int<32>^0 i (instantiated) = ::s[1][1].i (4) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[1][1].j[0] (5) 
-              1 = ::s[1][1].j[1] (6) 
-            }
-        )
-        3 = ::s[1][2] (3) (
-          bool^0 b (instantiated) = ::s[1][2].b (11) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[1][2].c[0] (12) 
-              1 = ::s[1][2].c[1] (13) 
-              2 = ::s[1][2].c[2] (14) 
-              3 = ::s[1][2].c[3] (15) 
-            }
-          int<32>^0 i (instantiated) = ::s[1][2].i (7) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[1][2].j[0] (8) 
-              1 = ::s[1][2].j[1] (9) 
-            }
-        )
-        4 = ::s[1][3] (4) (
-          bool^0 b (instantiated) = ::s[1][3].b (16) 
-          bool^1 c
-            unrolled indices: {
-              0 = ::s[1][3].c[0] (17) 
-              1 = ::s[1][3].c[1] (18) 
-              2 = ::s[1][3].c[2] (19) 
-              3 = ::s[1][3].c[3] (20) 
-            }
-          int<32>^0 i (instantiated) = ::s[1][3].i (10) 
-          int<32>^1 j
-            unrolled indices: {
-              0 = ::s[1][3].j[0] (11) 
-              1 = ::s[1][3].j[1] (12) 
-            }
-        )
-      }
-    x = bool^1 x
-      unrolled indices: {
-        0 = ::x[0] (2) 
-        1 = ::x[1] (3) 
-        2 = ::x[2] (4) 
-        3 = ::x[3] (5) 
-      }
+    a = bool<> a
+    p = portaproc<> p
+    q = int<32> q
+    r = int<32> r^1
+    s = portaproc<> s^2
+    t = portaproc<> t^1
+    x = bool<> x^1
 }
 
-Created state:
-process instance pool:
-1	::p
-2	::s[1][1]
-3	::s[1][2]
-4	::s[1][3]
-5	::s[2][1]
-6	::s[2][2]
-7	::s[2][3]
-8	::s[3][1]
-9	::s[3][2]
-10	::s[3][3]
-int instance pool:
-1	::q
-2	::r[0]
-3	::r[1]
-4	::s[1][1].i
-5	::s[1][1].j[0]
-6	::s[1][1].j[1]
-7	::s[1][2].i
-8	::s[1][2].j[0]
-9	::s[1][2].j[1]
-10	::s[1][3].i
-11	::s[1][3].j[0]
-12	::s[1][3].j[1]
-13	::s[2][1].i
-14	::s[2][1].j[0]
-15	::s[2][1].j[1]
-16	::s[2][2].i
-17	::s[2][2].j[0]
-18	::s[2][2].j[1]
-19	::s[2][3].i
-20	::s[2][3].j[0]
-21	::s[2][3].j[1]
-22	::s[3][1].i
-23	::s[3][1].j[0]
-24	::s[3][1].j[1]
-25	::s[3][2].i
-26	::s[3][2].j[0]
-27	::s[3][2].j[1]
-28	::s[3][3].i
-29	::s[3][3].j[0]
-30	::s[3][3].j[1]
-bool instance pool:
-1	::a
-2	::x[0]
-3	::x[1]
-4	::x[2]
-5	::x[3]
-6	::s[1][1].b
-7	::s[1][1].c[0]
-8	::s[1][1].c[1]
-9	::s[1][1].c[2]
-10	::s[1][1].c[3]
-11	::s[1][2].b
-12	::s[1][2].c[0]
-13	::s[1][2].c[1]
-14	::s[1][2].c[2]
-15	::s[1][2].c[3]
-16	::s[1][3].b
-17	::s[1][3].c[0]
-18	::s[1][3].c[1]
-19	::s[1][3].c[2]
-20	::s[1][3].c[3]
-21	::s[2][1].b
-22	::s[2][1].c[0]
-23	::s[2][1].c[1]
-24	::s[2][1].c[2]
-25	::s[2][1].c[3]
-26	::s[2][2].b
-27	::s[2][2].c[0]
-28	::s[2][2].c[1]
-29	::s[2][2].c[2]
-30	::s[2][2].c[3]
-31	::s[2][3].b
-32	::s[2][3].c[0]
-33	::s[2][3].c[1]
-34	::s[2][3].c[2]
-35	::s[2][3].c[3]
-36	::s[3][1].b
-37	::s[3][1].c[0]
-38	::s[3][1].c[1]
-39	::s[3][1].c[2]
-40	::s[3][1].c[3]
-41	::s[3][2].b
-42	::s[3][2].c[0]
-43	::s[3][2].c[1]
-44	::s[3][2].c[2]
-45	::s[3][2].c[3]
-46	::s[3][3].b
-47	::s[3][3].c[0]
-48	::s[3][3].c[1]
-49	::s[3][3].c[2]
-50	::s[3][3].c[3]
-
+footprint: {
+  a = bool^0 = a (1) 
+  p = process portaproc<>^0 = p (1) (
+    b = bool^0 = a (1) 
+    c = bool^1
+      {
+        0 = x[0] (2) 
+        1 = x[1] (3) 
+        2 = x[2] (4) 
+        3 = x[3] (5) 
+      }
+    i = int<32>^0 = q (1) 
+    j = int<32>^1
+      {
+        0 = r[0] (2) 
+        1 = r[1] (3) 
+      }
+  )
+  q = int<32>^0 = q (1) 
+  r = int<32>^1
+    {
+      0 = r[0] (2) 
+      1 = r[1] (3) 
+    }
+  s = process portaproc<>^2
+    {
+      [1][1] = s[1][1] (2) (
+        b = bool^0 = s[1][1].b (6) 
+        c = bool^1
+          {
+            0 = s[1][1].c[0] (7) 
+            1 = s[1][1].c[1] (8) 
+            2 = s[1][1].c[2] (9) 
+            3 = s[1][1].c[3] (10) 
+          }
+        i = int<32>^0 = s[1][1].i (4) 
+        j = int<32>^1
+          {
+            0 = s[1][1].j[0] (5) 
+            1 = s[1][1].j[1] (6) 
+          }
+      )
+      [1][2] = s[1][2] (3) (
+        b = bool^0 = s[1][2].b (11) 
+        c = bool^1
+          {
+            0 = s[1][2].c[0] (12) 
+            1 = s[1][2].c[1] (13) 
+            2 = s[1][2].c[2] (14) 
+            3 = s[1][2].c[3] (15) 
+          }
+        i = int<32>^0 = s[1][2].i (7) 
+        j = int<32>^1
+          {
+            0 = s[1][2].j[0] (8) 
+            1 = s[1][2].j[1] (9) 
+          }
+      )
+      [1][3] = s[1][3] (4) (
+        b = bool^0 = s[1][3].b (16) 
+        c = bool^1
+          {
+            0 = s[1][3].c[0] (17) 
+            1 = s[1][3].c[1] (18) 
+            2 = s[1][3].c[2] (19) 
+            3 = s[1][3].c[3] (20) 
+          }
+        i = int<32>^0 = s[1][3].i (10) 
+        j = int<32>^1
+          {
+            0 = s[1][3].j[0] (11) 
+            1 = s[1][3].j[1] (12) 
+          }
+      )
+      [2][1] = s[2][1] (5) (
+        b = bool^0 = s[2][1].b (21) 
+        c = bool^1
+          {
+            0 = s[2][1].c[0] (22) 
+            1 = s[2][1].c[1] (23) 
+            2 = s[2][1].c[2] (24) 
+            3 = s[2][1].c[3] (25) 
+          }
+        i = int<32>^0 = s[2][1].i (13) 
+        j = int<32>^1
+          {
+            0 = s[2][1].j[0] (14) 
+            1 = s[2][1].j[1] (15) 
+          }
+      )
+      [2][2] = s[2][2] (6) (
+        b = bool^0 = s[2][2].b (26) 
+        c = bool^1
+          {
+            0 = s[2][2].c[0] (27) 
+            1 = s[2][2].c[1] (28) 
+            2 = s[2][2].c[2] (29) 
+            3 = s[2][2].c[3] (30) 
+          }
+        i = int<32>^0 = s[2][2].i (16) 
+        j = int<32>^1
+          {
+            0 = s[2][2].j[0] (17) 
+            1 = s[2][2].j[1] (18) 
+          }
+      )
+      [2][3] = s[2][3] (7) (
+        b = bool^0 = s[2][3].b (31) 
+        c = bool^1
+          {
+            0 = s[2][3].c[0] (32) 
+            1 = s[2][3].c[1] (33) 
+            2 = s[2][3].c[2] (34) 
+            3 = s[2][3].c[3] (35) 
+          }
+        i = int<32>^0 = s[2][3].i (19) 
+        j = int<32>^1
+          {
+            0 = s[2][3].j[0] (20) 
+            1 = s[2][3].j[1] (21) 
+          }
+      )
+      [3][1] = s[3][1] (8) (
+        b = bool^0 = s[3][1].b (36) 
+        c = bool^1
+          {
+            0 = s[3][1].c[0] (37) 
+            1 = s[3][1].c[1] (38) 
+            2 = s[3][1].c[2] (39) 
+            3 = s[3][1].c[3] (40) 
+          }
+        i = int<32>^0 = s[3][1].i (22) 
+        j = int<32>^1
+          {
+            0 = s[3][1].j[0] (23) 
+            1 = s[3][1].j[1] (24) 
+          }
+      )
+      [3][2] = s[3][2] (9) (
+        b = bool^0 = s[3][2].b (41) 
+        c = bool^1
+          {
+            0 = s[3][2].c[0] (42) 
+            1 = s[3][2].c[1] (43) 
+            2 = s[3][2].c[2] (44) 
+            3 = s[3][2].c[3] (45) 
+          }
+        i = int<32>^0 = s[3][2].i (25) 
+        j = int<32>^1
+          {
+            0 = s[3][2].j[0] (26) 
+            1 = s[3][2].j[1] (27) 
+          }
+      )
+      [3][3] = s[3][3] (10) (
+        b = bool^0 = s[3][3].b (46) 
+        c = bool^1
+          {
+            0 = s[3][3].c[0] (47) 
+            1 = s[3][3].c[1] (48) 
+            2 = s[3][3].c[2] (49) 
+            3 = s[3][3].c[3] (50) 
+          }
+        i = int<32>^0 = s[3][3].i (28) 
+        j = int<32>^1
+          {
+            0 = s[3][3].j[0] (29) 
+            1 = s[3][3].j[1] (30) 
+          }
+      )
+    }
+  t = process portaproc<>^1
+    {
+      2 = s[1][1] (2) (
+        b = bool^0 = s[1][1].b (6) 
+        c = bool^1
+          {
+            0 = s[1][1].c[0] (7) 
+            1 = s[1][1].c[1] (8) 
+            2 = s[1][1].c[2] (9) 
+            3 = s[1][1].c[3] (10) 
+          }
+        i = int<32>^0 = s[1][1].i (4) 
+        j = int<32>^1
+          {
+            0 = s[1][1].j[0] (5) 
+            1 = s[1][1].j[1] (6) 
+          }
+      )
+      3 = s[1][2] (3) (
+        b = bool^0 = s[1][2].b (11) 
+        c = bool^1
+          {
+            0 = s[1][2].c[0] (12) 
+            1 = s[1][2].c[1] (13) 
+            2 = s[1][2].c[2] (14) 
+            3 = s[1][2].c[3] (15) 
+          }
+        i = int<32>^0 = s[1][2].i (7) 
+        j = int<32>^1
+          {
+            0 = s[1][2].j[0] (8) 
+            1 = s[1][2].j[1] (9) 
+          }
+      )
+      4 = s[1][3] (4) (
+        b = bool^0 = s[1][3].b (16) 
+        c = bool^1
+          {
+            0 = s[1][3].c[0] (17) 
+            1 = s[1][3].c[1] (18) 
+            2 = s[1][3].c[2] (19) 
+            3 = s[1][3].c[3] (20) 
+          }
+        i = int<32>^0 = s[1][3].i (10) 
+        j = int<32>^1
+          {
+            0 = s[1][3].j[0] (11) 
+            1 = s[1][3].j[1] (12) 
+          }
+      )
+    }
+  x = bool^1
+    {
+      0 = x[0] (2) 
+      1 = x[1] (3) 
+      2 = x[2] (4) 
+      3 = x[3] (5) 
+    }
+  Created state:
+  process instance pool:
+  1	p
+  2	s[1][1]
+  3	s[1][2]
+  4	s[1][3]
+  5	s[2][1]
+  6	s[2][2]
+  7	s[2][3]
+  8	s[3][1]
+  9	s[3][2]
+  10	s[3][3]
+  int instance pool:
+  1	q
+  2	r[0]
+  3	r[1]
+  4	s[1][1].i
+  5	s[1][1].j[0]
+  6	s[1][1].j[1]
+  7	s[1][2].i
+  8	s[1][2].j[0]
+  9	s[1][2].j[1]
+  10	s[1][3].i
+  11	s[1][3].j[0]
+  12	s[1][3].j[1]
+  13	s[2][1].i
+  14	s[2][1].j[0]
+  15	s[2][1].j[1]
+  16	s[2][2].i
+  17	s[2][2].j[0]
+  18	s[2][2].j[1]
+  19	s[2][3].i
+  20	s[2][3].j[0]
+  21	s[2][3].j[1]
+  22	s[3][1].i
+  23	s[3][1].j[0]
+  24	s[3][1].j[1]
+  25	s[3][2].i
+  26	s[3][2].j[0]
+  27	s[3][2].j[1]
+  28	s[3][3].i
+  29	s[3][3].j[0]
+  30	s[3][3].j[1]
+  bool instance pool:
+  1	a
+  2	x[0]
+  3	x[1]
+  4	x[2]
+  5	x[3]
+  6	s[1][1].b
+  7	s[1][1].c[0]
+  8	s[1][1].c[1]
+  9	s[1][1].c[2]
+  10	s[1][1].c[3]
+  11	s[1][2].b
+  12	s[1][2].c[0]
+  13	s[1][2].c[1]
+  14	s[1][2].c[2]
+  15	s[1][2].c[3]
+  16	s[1][3].b
+  17	s[1][3].c[0]
+  18	s[1][3].c[1]
+  19	s[1][3].c[2]
+  20	s[1][3].c[3]
+  21	s[2][1].b
+  22	s[2][1].c[0]
+  23	s[2][1].c[1]
+  24	s[2][1].c[2]
+  25	s[2][1].c[3]
+  26	s[2][2].b
+  27	s[2][2].c[0]
+  28	s[2][2].c[1]
+  29	s[2][2].c[2]
+  30	s[2][2].c[3]
+  31	s[2][3].b
+  32	s[2][3].c[0]
+  33	s[2][3].c[1]
+  34	s[2][3].c[2]
+  35	s[2][3].c[3]
+  36	s[3][1].b
+  37	s[3][1].c[0]
+  38	s[3][1].c[1]
+  39	s[3][1].c[2]
+  40	s[3][1].c[3]
+  41	s[3][2].b
+  42	s[3][2].c[0]
+  43	s[3][2].c[1]
+  44	s[3][2].c[2]
+  45	s[3][2].c[3]
+  46	s[3][3].b
+  47	s[3][3].c[0]
+  48	s[3][3].c[1]
+  49	s[3][3].c[2]
+  50	s[3][3].c[3]
+}

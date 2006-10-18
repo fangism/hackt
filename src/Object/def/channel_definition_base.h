@@ -2,7 +2,7 @@
 	\file "Object/def/channel_definition_base.h"
 	Channel definition-related HAC object classes.  
 	This file came from "Object/art_object_definition_chan.h".
-	$Id: channel_definition_base.h,v 1.5 2006/01/22 18:19:30 fang Exp $
+	$Id: channel_definition_base.h,v 1.6 2006/10/18 01:19:07 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_CHANNEL_DEFINITION_BASE_H__

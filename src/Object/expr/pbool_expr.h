@@ -3,7 +3,7 @@
 	Base class related to lists of meta expressions.
 	NOTE: this file originally came from "Object/art_object_expr_base.h"
 		for the sake of revision history tracking.  
-	$Id: pbool_expr.h,v 1.11 2006/07/04 07:26:01 fang Exp $
+	$Id: pbool_expr.h,v 1.12 2006/10/18 01:19:22 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_PBOOL_EXPR_H__
@@ -13,6 +13,7 @@
 #include "Object/expr/bool_expr.h"
 #include "Object/expr/types.h"
 #include "util/boolean_types.h"
+#include "Object/devel_switches.h"
 
 //=============================================================================
 namespace HAC {
@@ -57,13 +58,18 @@ virtual	ostream&
 virtual	size_t
 	dimensions(void) const = 0;
 
-	GET_DATA_TYPE_REF_PROTO;
+	GET_UNRESOLVED_DATA_TYPE_REF_PROTO;
+#if USE_RESOLVED_DATA_TYPES
+	GET_RESOLVED_DATA_TYPE_REF_PROTO;
+#endif
 
+#if ENABLE_STATIC_ANALYSIS
 virtual bool
 	may_be_initialized(void) const = 0;
 
 virtual bool
 	must_be_initialized(void) const = 0;
+#endif
 
 	bool
 	may_be_equivalent_generic(const param_expr& p) const;
@@ -83,14 +89,18 @@ virtual	count_ptr<const const_param>
 virtual value_type
 	static_constant_value(void) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	good_bool
 	resolve_value(value_type& i) const = 0;
+#endif
 
 virtual	good_bool
 	unroll_resolve_value(const unroll_context&, value_type&) const = 0;
 
+#if !USE_INSTANCE_PLACEHOLDERS
 virtual	const_index_list
 	resolve_dimensions(void) const = 0;
+#endif
 
 virtual	count_ptr<const pbool_const>
 	__unroll_resolve_rvalue(const unroll_context&, 
@@ -112,17 +122,26 @@ virtual	count_ptr<const const_param>
 	UNROLL_RESOLVE_COPY_BOOL_PROTO;
 
 virtual	UNROLL_RESOLVE_COPY_PBOOL_PROTO = 0;
+
+#if SUBSTITUTE_DEFAULT_PARAMETERS
+#define SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO			\
+	count_ptr<const pbool_expr>					\
+	substitute_default_positional_parameters(			\
+		const template_formals_manager&,			\
+		const dynamic_param_expr_list&,				\
+		const count_ptr<const pbool_expr>&) const
+
+	SUBSTITUTE_DEFAULT_PARAMETERS_PROTO;
+
+virtual SUBSTITUTE_DEFAULT_PARAMETERS_PBOOL_PROTO = 0;
+#endif
+
 protected:
 	using bool_expr::unroll_resolve_copy;
 
 protected:
-	excl_ptr<param_expression_assignment>
-	make_param_expression_assignment_private(
-		const count_ptr<const param_expr>&) const;
-
-	count_ptr<aggregate_meta_value_reference_base>
-	make_aggregate_meta_value_reference_private(
-		const count_ptr<const param_expr>&) const;
+	MAKE_PARAM_EXPRESSION_ASSIGNMENT_PROTO;
+	MAKE_AGGREGATE_META_VALUE_REFERENCE_PROTO;
 
 };	// end class pbool_expr
 

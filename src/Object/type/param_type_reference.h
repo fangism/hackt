@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: param_type_reference.h,v 1.6 2006/01/26 21:33:26 fang Exp $
+ 	$Id: param_type_reference.h,v 1.7 2006/10/18 01:20:00 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_PARAM_TYPE_REFERENCE_H__
@@ -70,8 +70,10 @@ public:
 	null_parameter_type
 	make_canonical_type(void) const;
 
+#if !RESOLVE_VALUES_WITH_FOOTPRINT
 	unroll_context
 	make_unroll_context(void) const;
+#endif
 private:
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			

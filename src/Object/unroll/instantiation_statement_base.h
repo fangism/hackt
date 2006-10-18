@@ -3,13 +3,14 @@
 	Instance statement base class.
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt_base.h"
-	$Id: instantiation_statement_base.h,v 1.9 2006/03/15 04:38:23 fang Exp $
+	$Id: instantiation_statement_base.h,v 1.10 2006/10/18 01:20:06 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 #define	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_BASE_H__
 
 #include "util/string_fwd.h"
+#include "Object/devel_switches.h"
 #include "Object/unroll/instance_management_base.h"
 #include "Object/common/util_types.h"
 #include "util/memory/excl_ptr.h"
@@ -18,9 +19,18 @@
 namespace HAC {
 namespace entity {
 class const_range_list;
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+class dynamic_param_expr_list;
+#else
 class param_expr_list;
+#endif
+#if USE_INSTANCE_PLACEHOLDERS
+class instance_placeholder_base;
+class physical_instance_placeholder;
+#else
 class instance_collection_base;
 class physical_instance_collection;
+#endif
 class fundamental_type_reference;
 using std::string;
 using std::istream;
@@ -34,7 +44,8 @@ using util::persistent_object_manager;
 	This is what will be unrolled.  
 	No parent, is a globally sequential item.  
 	Every sub-class will contain a modifiable
-	back-reference to an (sub-type of) instance_collection_base, 
+	back-reference to an (sub-type of) 
+	<strike>instance_collection_base</strike> instance_placeholder, 
 	where the collection will be unrolled.  
 	Should this point to an unrolled instance?
 	No, it will be looked up.  
@@ -42,8 +53,14 @@ using util::persistent_object_manager;
  */
 class instantiation_statement_base : public instance_management_base {
 public:
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+	typedef	count_ptr<const dynamic_param_expr_list>
+						const_relaxed_args_type;
+	typedef	count_ptr<dynamic_param_expr_list>	relaxed_args_type;
+#else
 	typedef	count_ptr<const param_expr_list>	const_relaxed_args_type;
 	typedef	count_ptr<param_expr_list>		relaxed_args_type;
+#endif
 protected:
 	index_collection_item_ptr_type		indices;
 protected:
@@ -60,13 +77,22 @@ virtual	~instantiation_statement_base();
 	dump(ostream&, const expr_dump_context&) const;
 
 virtual	void
+#if USE_INSTANCE_PLACEHOLDERS
+	attach_collection(const never_ptr<const instance_placeholder_base>) = 0;
+#else
 	attach_collection(const never_ptr<instance_collection_base> i) = 0;
+#endif
 
+#if USE_INSTANCE_PLACEHOLDERS
+virtual	never_ptr<const instance_placeholder_base>
+	get_inst_base(void) const = 0;
+#else
 virtual	never_ptr<instance_collection_base>
 	get_inst_base(void) = 0;
 
 virtual	never_ptr<const instance_collection_base>
 	get_inst_base(void) const = 0;
+#endif
 
 	string
 	get_name(void) const;
@@ -93,6 +119,7 @@ virtual	good_bool
 /**
 	2005-07-13:
 	After reworking class hierarchy, this should not be virtual.
+	Don't know what to do here w.r.t. placeholders...
  */
 #define	INSTANTIATE_PORT_PROTO						\
 	good_bool							\

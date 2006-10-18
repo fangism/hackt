@@ -5,16 +5,16 @@ Persistent Object Manager text dump:
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	28
 	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	99
-	4	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	5	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	6	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	7	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	8	##ADDR##	enumdefn	0	#HEAD#	#TAIL#	55
-	9	##ADDR##	chancoll	0	#HEAD#	#TAIL#	47
-	10	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
-	11	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
-	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
-	13	##ADDR##	enumcoll	0	#HEAD#	#TAIL#	34
+	4	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	5	##ADDR##	chanplch	0	#HEAD#	#TAIL#	25
+	6	##ADDR##	enumplch	0	#HEAD#	#TAIL#	25
+	7	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	8	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	9	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
+	10	##ADDR##	enumdefn	0	#HEAD#	#TAIL#	55
+	11	##ADDR##	chaninst	0	#HEAD#	#TAIL#	24
+	12	##ADDR##	bchntprf	0	#HEAD#	#TAIL#	25
+	13	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	14	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	15	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	16	##ADDR##	CHPloop_	0	#HEAD#	#TAIL#	12
@@ -40,9 +40,9 @@ In namespace "", we have: {
       )
       In definition "buffer", we have: {
       Instances:
-        S = chan?(foo<>) S
-        T = chan!(foo<>) T
-        b = foo<> b
+        S = chan?(foo<>) buffer::S
+        T = chan!(foo<>) buffer::T
+        b = foo<> buffer::b
       unroll sequence: 
         chan?(foo<>) S
         chan!(foo<>) T
@@ -62,3 +62,5 @@ In namespace "", we have: {
       { THREE, TWO, ONE,  }
 }
 
+footprint: {
+}

@@ -1,11 +1,5 @@
 ~"_pReset" -> "g.Vdd"+
 "g.Vdd" -> "g.GND"-
-= "_sReset" "g._sReset"
-= "g.Vdd" "g.vdd"
-= "_pReset" "g._pReset"
-= "g.GND" "g.gnd"
-= "x.d[0]" "x.f"
-= "x.d[1]" "x.t"
 = "_sReset" "src.src.g._sReset"
 = "g.Vdd" "src.src.g.Vdd"
 = "g.Vdd" "src.src.g.vdd"
@@ -29,3 +23,9 @@
 = "x.d[0]" "src.s.d[0]"
 = "x.d[1]" "src.s.d[1]"
 = "x.e" "src.s.e"
+= "_sReset" "g._sReset"
+= "g.Vdd" "g.vdd"
+= "_pReset" "g._pReset"
+= "g.GND" "g.gnd"
+= "x.d[0]" "x.f"
+= "x.d[1]" "x.t"

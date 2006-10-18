@@ -4,14 +4,14 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	122
-	4	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	3	##ADDR##	procdefn	0	#HEAD#	#TAIL#	110
+	4	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	5	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	6	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	6	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	7	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	8	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	33
+	8	##ADDR##	pintplch	0	#HEAD#	#TAIL#	29
 	9	##ADDR##	pintinst	0	#HEAD#	#TAIL#	16
-	10	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	25
+	10	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	11	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	12	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20
 	13	##ADDR##	datadefn	0	#HEAD#	#TAIL#	61
@@ -56,16 +56,12 @@ In namespace "", we have: {
       )
       In definition "crazy_inv", we have: {
       Parameters:
-        I = pint<> I
-        J = pint<> J
-        N = pint<> N
+        I = pint<> crazy_inv::I
+        J = pint<> crazy_inv::J
+        N = pint<> crazy_inv::N
       Instances:
-        a = bool<> a
-
+        a = bool<> crazy_inv::a^1
       unroll sequence: 
-        pint<> N
-        pint<> I
-        pint<> J
         bool<> a[0..N-1]
       prs:
         a[I] -> a[J]-
@@ -74,3 +70,5 @@ In namespace "", we have: {
 
 }
 
+footprint: {
+}

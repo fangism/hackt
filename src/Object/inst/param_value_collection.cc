@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file used to be "Object/art_object_instance_param.cc"
 		in a previous life.  
- 	$Id: param_value_collection.cc,v 1.14 2006/06/02 20:15:20 fang Exp $
+ 	$Id: param_value_collection.cc,v 1.15 2006/10/18 01:19:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_COLLECTION_CC__
@@ -19,6 +19,9 @@
 #include "Object/inst/param_value_collection.h"
 #include "Object/ref/meta_instance_reference_base.h"
 #include "Object/unroll/instantiation_statement_base.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/param_value_placeholder.h"
+#endif
 #include "Object/expr/const_param.h"
 #include "Object/expr/const_range.h"
 #include "Object/expr/const_index_list.h"
@@ -41,6 +44,7 @@ using util::disable_indent;
 //=============================================================================
 // class param_value_collection method definitions
 
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	Private empty constructor.  
  */
@@ -58,9 +62,13 @@ param_value_collection::param_value_collection(const scopespace& o,
 param_value_collection::~param_value_collection() {
 	STACKTRACE_DTOR("~param_value_collection()");
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
+	NOTE: can we get rid of this altogether?
+
 	For multidimensional instances, we don't keep track of initialization
 	of individual elements at compile-time, just conservatively 
 	return true, that the instance MAY be initialized.  
@@ -73,6 +81,9 @@ param_value_collection::~param_value_collection() {
  */
 bool
 param_value_collection::may_be_initialized(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t dimensions = get_dimensions();
+#endif
 	if (dimensions || is_template_formal() || is_loop_variable())
 		return true;
 	else {
@@ -88,8 +99,10 @@ param_value_collection::may_be_initialized(void) const {
 		else return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	At compile time, we don't keep track of arrays, thus
 	one cannot conclude that a member of an array is definitely 
@@ -98,9 +111,17 @@ param_value_collection::may_be_initialized(void) const {
  */
 bool
 param_value_collection::must_be_initialized(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t dimensions = get_dimensions();
+#endif
 	if (dimensions)
 		return false;
+#if USE_INSTANCE_PLACEHOLDERS
+	else if (get_placeholder_base()->is_template_formal() || 
+			get_placeholder_base()->is_loop_variable())
+#else
 	else if (is_template_formal() || is_loop_variable())
+#endif
 		return true;
 	else {
 		// is not a template formal, thus we interpret
@@ -115,8 +136,10 @@ param_value_collection::must_be_initialized(void) const {
 		else return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	For two template formals to be equivalent, their
 	type and size must match, names need not.  
@@ -144,8 +167,7 @@ param_value_collection::template_formal_equivalent(const this_type& b) const {
 	// then compare sizes and dimensionality
 	return formal_size_equivalent(b);
 }
-
-
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -176,8 +198,12 @@ param_value_collection::may_check_expression_dimensions(
 	//      which is safe as long as no other global (outside of
 	//      art_built_ins.cc) depends on it.
 	// we choose 2 because it is a general solution.  
-
-	if (dimensions != pe.dimensions()) {
+#if USE_INSTANCE_PLACEHOLDERS
+	// shouldn't we just virtual get_dimensions here?
+	const size_t dimensions = get_placeholder_base()->get_dimensions();
+#endif
+	const size_t pdim = pe.dimensions();
+	if (dimensions != pdim) {
 		// number of dimensions doesn't even match!
 		// useful error message?
 		return good_bool(false);
@@ -193,7 +219,7 @@ param_value_collection::may_check_expression_dimensions(
 	} else {
 		// dimensions == 0 means instantiation is a single instance.  
 		// size may be zero b/c first statement hasn't been added yet
-		return good_bool(pe.dimensions() == 0);
+		return good_bool(pdim == 0);
 	}
 }
 
@@ -231,7 +257,9 @@ param_value_collection::must_check_expression_dimensions(
 	//      which is safe as long as no other global (outside of
 	//      art_built_ins.cc) depends on it.
 	// we choose 2 because it is a general solution.  
-
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t dimensions = get_dimensions();
+#endif
 	if (dimensions != pe.dimensions()) {
 		// number of dimensions doesn't even match!
 		// useful error message?
@@ -251,7 +279,11 @@ param_value_collection::must_check_expression_dimensions(
 
 		// make sure sizes in each dimension
 		const index_collection_item_ptr_type
+#if USE_INSTANCE_PLACEHOLDERS
+			mrl(get_placeholder_base()->get_initial_instantiation_indices());
+#else
 			mrl(this->get_initial_instantiation_indices());
+#endif
 		NEVER_NULL(mrl);
 		const count_ptr<const const_range_list>
 			crl(mrl.is_a<const const_range_list>());
@@ -294,12 +326,20 @@ param_value_collection::must_check_expression_dimensions(
 }	// end method param_value_collection::must_check_expression_dimensions
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 bool
 param_value_collection::is_static_constant(void) const {
+#if USE_INSTANCE_PLACEHOLDERS
+	const size_t dimensions = get_dimensions();
+#endif
 	if (dimensions) {
 		// conservatively return... depends on may or must...
 		return false;
+#if USE_INSTANCE_PLACEHOLDERS
+	} else if (get_placeholder_base()->is_template_formal()) {
+#else
 	} else if (is_template_formal()) {
+#endif
 		return false;
 	} else {
 		const count_ptr<const param_expr>
@@ -309,6 +349,7 @@ param_value_collection::is_static_constant(void) const {
 		else return false;
 	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if 0
@@ -327,6 +368,7 @@ param_value_collection::is_loop_independent(void) const {
 #endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !USE_INSTANCE_PLACEHOLDERS
 /**
 	1) Parameters cannot be in public ports.  
 	2) Thus they cannot even be referenced.  
@@ -341,6 +383,7 @@ param_value_collection::make_member_meta_instance_reference(
 	DIE;
 	return return_type(NULL);
 }
+#endif
 
 //=============================================================================
 }	// end namespace entity

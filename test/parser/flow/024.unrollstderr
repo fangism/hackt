@@ -4,7 +4,7 @@ Persistent Object Manager text dump:
 	0	##ADDR##	________	0	#HEAD#	#TAIL#	0
 	1	##ADDR##	module__	0	#HEAD#	#TAIL#	##SIZE##
 	2	##ADDR##	namespc_	0	#HEAD#	#TAIL#	24
-	3	##ADDR##	pboolcol	1	#HEAD#	#TAIL#	29
+	3	##ADDR##	pboolplh	0	#HEAD#	#TAIL#	29
 	4	##ADDR##	pboolins	0	#HEAD#	#TAIL#	16
 	5	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	6	##ADDR##	condscop	0	#HEAD#	#TAIL#	20
@@ -22,7 +22,8 @@ In namespace "", we have: {
   0 definitions
   0 typedefs
   Parameters:
-    b = pbool<> b
-
+    b = pbool<> b^1
 }
 
+footprint: {
+}

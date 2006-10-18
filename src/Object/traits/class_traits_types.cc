@@ -3,7 +3,7 @@
 	Definitions and instantiations for built-ins of the HAC language.  
 	Includes static globals.  
 	This file used to be "Object/art_built_ins.cc".
- 	$Id: class_traits_types.cc,v 1.11 2006/06/26 01:46:25 fang Exp $
+ 	$Id: class_traits_types.cc,v 1.12 2006/10/18 01:19:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CLASS_TRAITS_TYPES_CC__
@@ -24,6 +24,17 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "Object/common/namespace.h"
 #include "Object/type/data_type_reference.h"
 #include "Object/type/param_type_reference.h"
+#if USE_INSTANCE_PLACEHOLDERS
+#include "Object/inst/value_placeholder.h"
+#endif
+#if ALWAYS_USE_DYNAMIC_PARAM_EXPR_LIST
+#include "Object/expr/dynamic_param_expr_list.h"
+#endif
+#if MODULE_PROCESS
+#include "Object/unroll/instantiation_statement.h"
+#include "Object/unroll/param_instantiation_statement.h"
+#include "Object/expr/meta_range_list.h"
+#endif
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_collection.h"
 #include "Object/expr/pint_const.h"
@@ -139,8 +150,14 @@ dummy_bool(new pbool_const(true));
 ***/
 
 // will transfer ownership to definition
+#if USE_INSTANCE_PLACEHOLDERS
+static excl_ptr<pint_value_placeholder>
+int_def_width(new pint_value_placeholder(
+	int_traits::built_in_definition, "width", 0));
+#else
 static excl_ptr<pint_scalar>
 int_def_width(new pint_scalar(int_traits::built_in_definition, "width"));
+#endif
 
 static const good_bool
 __good_int_width
@@ -148,10 +165,46 @@ __ATTRIBUTE_UNUSED_CTOR__((int_def_width->assign_default_value(int_def_width_def
 
 // INVARIANT(__good_int_width.good);
 
+#if MODULE_PROCESS
+/**
+	Since we unroll all template formals now, we need an initial
+	instantiation statement per formal parameter.  
+ */
+#if REF_COUNT_INSTANCE_MANAGEMENT
+static const count_ptr<pint_instantiation_statement>
+width_inst = fundamental_type_reference::make_instantiation_statement(
+		int_def_width->get_unresolved_type_ref(),
+		index_collection_item_ptr_type(NULL)
+	).is_a<pint_instantiation_statement>();
+#else
+static const excl_ptr<pint_instantiation_statement>
+width_inst = fundamental_type_reference::make_instantiation_statement(
+		int_def_width->get_unresolved_type_ref(),
+		index_collection_item_ptr_type(NULL)
+	).is_a_xfer<pint_instantiation_statement>();
+#endif	// REF_COUNT_INSTANCE_MANAGEMENT
+
+static const size_t int_inst_base_receipt =
+	(width_inst->attach_collection(int_def_width), 0);
+
+static const size_t width_receipt = 
+	(int_def_width->attach_initial_instantiation_statement(width_inst), 0);
+#endif	// MODULE_PROCESS
+
+// need to fake adding the template formal and instantiating it
+// or creating a footprint?
+#if USE_INSTANCE_PLACEHOLDERS
+static excl_ptr<param_value_placeholder>
+#else
 static excl_ptr<instance_collection_base>
+#endif
 int_def_width_base(int_def_width);
 
+#if USE_INSTANCE_PLACEHOLDERS
+static const never_ptr<const param_value_placeholder>
+#else
 static const never_ptr<const instance_collection_base>
+#endif
 int_def_width_ref
 __ATTRIBUTE_UNUSED_CTOR__((const_cast<built_in_datatype_def&>(
 	int_traits::built_in_definition).add_template_formal(int_def_width_base)));
