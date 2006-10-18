@@ -3,7 +3,7 @@
 	Parameter instance placeholder classes for HAC.  
 	This file came from "Object/art_object_instance_param.h"
 		in a previous life.  
-	$Id: param_value_placeholder.h,v 1.4 2006/10/18 20:58:03 fang Exp $
+	$Id: param_value_placeholder.h,v 1.5 2006/10/18 21:38:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PARAM_VALUE_PLACEHOLDER_H__
@@ -13,7 +13,6 @@
 #include "Object/expr/types.h"
 #include "util/boolean_types.h"
 #include "util/memory/count_ptr.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -106,11 +105,9 @@ virtual	good_bool
 	must_type_check_actual_param_expr(const const_param&, 
 		const unroll_context&) const = 0;
 
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 virtual	good_bool
 	unroll_assign_formal_parameter(const unroll_context&, 
 		const count_ptr<const param_expr>&) const = 0;
-#endif
 
 // down-copied from instance_placeholder_base
 protected:

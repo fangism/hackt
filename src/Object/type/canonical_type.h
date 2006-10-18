@@ -1,6 +1,6 @@
 /**
 	\file "Object/type/canonical_type.h"
-	$Id: canonical_type.h,v 1.7 2006/10/18 01:19:58 fang Exp $
+	$Id: canonical_type.h,v 1.8 2006/10/18 21:38:48 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_TYPE_H__
@@ -8,7 +8,6 @@
 
 #include "Object/type/canonical_type_fwd.h"
 #include "Object/type/canonical_type_base.h"
-#include "Object/devel_switches.h"
 #include "util/boolean_types.h"
 #include "util/memory/excl_ptr.h"
 
@@ -118,11 +117,6 @@ public:
 	static
 	ostream&
 	type_mismatch_error(ostream&, const this_type&, const this_type&);
-
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	unroll_context
-	make_unroll_context(void) const;
-#endif
 
 	void
 	unroll_port_instances(const unroll_context&,

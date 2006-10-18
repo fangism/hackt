@@ -1,7 +1,7 @@
 /**
 	\file "Object/type/canonical_generic_type.tcc"
 	Implementation of canonical_type template class.  
-	$Id: canonical_generic_chan_type.cc,v 1.7 2006/10/18 19:08:08 fang Exp $
+	$Id: canonical_generic_chan_type.cc,v 1.8 2006/10/18 21:38:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_CANONICAL_GENERIC_CHAN_TYPE_CC__
@@ -159,20 +159,6 @@ canonical_generic_chan_type::dump(ostream& o) const {
 		return o << ')';
 	}
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-unroll_context
-canonical_generic_chan_type::make_unroll_context(void) const {
-	if (canonical_definition_ptr) {
-		return unroll_context(get_template_params(), 
-			canonical_definition_ptr->get_template_formals_manager());
-	} else {
-		// built-in channel type has not template signature
-		return unroll_context();
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

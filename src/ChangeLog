@@ -5,6 +5,10 @@
 
 2006-10-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-37:
+	  Perm'd RESOLVE_VALUES_WITH_FOOTPRINT (-560 LoC).
+
+
 	* HACKT-00-01-04-main-00-80-36:
 	  This is it, what we've all been waiting for:
 	  "Forty-four thousand lines of rotten spaghetti code! 

@@ -3,7 +3,7 @@
 	Template formals manager implementation.
 	This file was "Object/def/template_formals_manager.cc"
 		in a previous life.  
-	$Id: template_formals_manager.cc,v 1.17 2006/10/18 20:57:49 fang Exp $
+	$Id: template_formals_manager.cc,v 1.18 2006/10/18 21:38:39 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -21,9 +21,7 @@
 #include "Object/type/template_actuals.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/common/dump_flags.h"
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 #include "Object/def/footprint.h"
-#endif
 
 #include "util/persistent_object_manager.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -383,13 +381,9 @@ template_formals_manager::must_validate_actuals(
 		looked-up) footprint when it comes time to unroll/instantiate
 		the complete type.  
 	***/
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 	footprint f;
 	unroll_context c(&f, &f);
 	unroll_formal_parameters(c, t);
-#else
-	const unroll_context c(t, *this);
-#endif
 	const count_ptr<const_param_expr_list> null(NULL);
 	const count_ptr<const dynamic_param_expr_list>&
 		spl(t.get_strict_args());
@@ -479,7 +473,6 @@ template_formals_manager::add_relaxed_template_formal(
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	Helper function for unrolling and assigning actual values to
 	template formal parameters.  
@@ -528,7 +521,6 @@ template_formals_manager::unroll_formal_parameters(
 		__unroll_formal_parameters(c, relaxed_template_formals_list, 
 			a.get_relaxed_args()).good);
 }
-#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

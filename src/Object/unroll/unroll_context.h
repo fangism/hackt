@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.10 2006/10/18 20:58:31 fang Exp $
+	$Id: unroll_context.h,v 1.11 2006/10/18 21:38:55 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -12,9 +12,6 @@
 #include "util/memory/count_ptr.h"
 #include "util/memory/excl_ptr.h"
 #include "Object/devel_switches.h"
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-#include "Object/type/template_actuals.h"
-#endif
 
 namespace HAC {
 namespace entity {
@@ -30,11 +27,6 @@ class param_value_placeholder;
 class physical_instance_placeholder;
 class physical_instance_collection;
 class param_value_collection;
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-struct pint_tag;
-struct pbool_tag;
-template <class, size_t> class value_array;
-#endif
 using std::ostream;
 using util::memory::never_ptr;
 using util::memory::count_ptr;
@@ -60,25 +52,6 @@ template <class Tag> class unroll_context_value_resolver;
  */
 class unroll_context {
 	typedef	unroll_context				this_type;
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	/**
-		If true, then the template args are a copy of the 
-		template actuals, not just a pointer hitherto.  
-		This is a critical bug fix required by the 
-		canonical_type's implementation of make_unroll_context, 
-		because it creates a temporary list from a single
-		const_param_expr_list from canonical_type_base.  
-
-		The other option is to replace the pointer to 
-		template actuals with a pointer to const_param_expr_list, 
-		or a const_param_expr_list.  
-
-		PLAN: first conver pointer to template_actuals, 
-		then experiment around with const_param_expr_list.  
-	 */
-	typedef	template_actuals			template_args_type;
-	typedef	value_array<pint_tag, 0>		pint_scalar;
-#endif
 	template <class Tag> friend class unroll_context_value_resolver;
 private:
 	/**
@@ -88,14 +61,6 @@ private:
 		(Enforce by comparing stack addresses?)
 	 */
 	never_ptr<const unroll_context>			next;
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	/**
-		INVARIANT: template_args and template_formals are either
-		both NULL or both valid at all times.  
-	 */
-	template_args_type				template_args;
-	never_ptr<const template_formals_manager>	template_formals;
-#endif
 
 	/**
 		If set to non-NULL, this is used to translate
@@ -160,27 +125,7 @@ public:
 	unroll_context(footprint* const, const unroll_context&, 
 		const auxiliary_target_tag);
 
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	unroll_context(const template_actuals&,
-		const template_formals_manager&);
-
-	unroll_context(const template_actuals&,
-		const template_formals_manager&, footprint* const
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, const never_ptr<const name_space>
-#endif
-		);
-
-	unroll_context(const template_actuals&,
-		const template_formals_manager&, const this_type&);
-#endif
-
 	~unroll_context();
-
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	bool
-	empty(void) const;
-#endif
 
 	ostream&
 	dump(ostream&) const;
@@ -201,11 +146,6 @@ public:
 
 	void
 	chain_context(const this_type&);
-
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	bool
-	have_template_actuals(void) const { return template_args; }
-#endif
 
 	void
 	instantiate_collection(
@@ -235,13 +175,6 @@ public:
 
 	count_ptr<const const_param>
 	lookup_actual(const param_value_placeholder&) const;
-
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-protected:
-	// flagged: OBSOLETE
-	count_ptr<const pint_const>
-	lookup_loop_var(const pint_scalar&) const;
-#endif
 
 private:
 	static

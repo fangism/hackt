@@ -3,7 +3,7 @@
 	Non-constant meta parameter expression list.
 	NOTE: this file was spawned from the old
 		"Object/art_object_expr.h" for revision history tracking.  
-	$Id: dynamic_param_expr_list.h,v 1.12 2006/10/18 08:51:58 fang Exp $
+	$Id: dynamic_param_expr_list.h,v 1.13 2006/10/18 21:38:40 fang Exp $
  */
 
 #ifndef __HAC_OBJECT_EXPR_DYNAMIC_PARAM_EXPR_LIST_H__
@@ -84,11 +84,9 @@ public:
 	unroll_resolve_rvalues(const unroll_context&, 
 		const count_ptr<const param_expr_list>&) const;
 
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 	good_bool
 	unroll_assign_formal_parameters(const unroll_context&, 
 		const template_formals_list_type&) const;
-#endif
 
 	good_bool
 	certify_template_arguments(const template_formals_manager&,

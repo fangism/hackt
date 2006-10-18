@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.19 2006/10/18 20:58:31 fang Exp $
+	$Id: unroll_context.cc,v 1.20 2006/10/18 21:38:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -44,9 +44,6 @@ namespace entity {
 unroll_context::unroll_context(footprint* const f, 
 		const footprint* const t) :
 		next(),
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-		template_args(), template_formals(), 
-#endif
 		target_footprint(f),
 #if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 		lookup_footprint(f), 
@@ -65,9 +62,6 @@ unroll_context::unroll_context(footprint* const f,
 unroll_context::unroll_context(const footprint* const f, 
 		const unroll_context& c) :
 		next(&c),
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-		template_args(), template_formals(), 
-#endif
 		target_footprint(NULL),
 #if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 		lookup_footprint(f), 
@@ -86,9 +80,6 @@ unroll_context::unroll_context(const footprint* const f,
 unroll_context::unroll_context(footprint* const f, 
 		const unroll_context& c) :
 		next(&c),
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-		template_args(), template_formals(), 
-#endif
 		target_footprint(c.target_footprint),
 #if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 		lookup_footprint(f), 
@@ -110,9 +101,6 @@ unroll_context::unroll_context(footprint* const f,
 		const unroll_context& c, 
 		const auxiliary_target_tag) :
 		next(&c),
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-		template_args(), template_formals(), 
-#endif
 		target_footprint(f),
 #if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 		lookup_footprint(f), 
@@ -125,75 +113,7 @@ unroll_context::unroll_context(footprint* const f,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-/**
-	Construct a context (translator) between actuals and formals.  
- */
-unroll_context::unroll_context(const template_actuals& a, 
-		const template_formals_manager& f) :
-		next(),
-		template_args(a),
-		template_formals(&f), 
-		target_footprint(NULL)
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(NULL)
-#endif
-		{
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	Called in process_definition::unroll_complete_type.
- */
-unroll_context::unroll_context(const template_actuals& a, 
-		const template_formals_manager& f, footprint* const fp
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, const never_ptr<const name_space> n
-#endif
-		) :
-		next(), 
-		template_args(a), 
-		template_formals(&f), 
-		target_footprint(fp)
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(n)
-#endif
-		{
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/**
-	In addition to standard construction, also chains to 
-	a parent context.  
- */
-unroll_context::unroll_context(const template_actuals& a, 
-		const template_formals_manager& f, 
-		const this_type& c) :
-		next(&c),
-		template_args(a),
-		template_formals(&f), 
-		target_footprint(NULL)
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(NULL)
-#endif
-		{
-}
-#endif	// RESOLVE_VALUES_WITH_FOOTPRINT
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 unroll_context::~unroll_context() { }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-/**
-	What does it mean whe n one level is empty, but the next pointer
-	points to a continuation?  Shouldn't allow that to happen...
- */
-bool
-unroll_context::empty(void) const {
-	return (!template_args && !template_formals);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -204,14 +124,6 @@ ostream&
 unroll_context::dump(ostream& o) const {
 #if STACKTRACE_DUMP
 	STACKTRACE_VERBOSE;
-#endif
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	o << "formals: ";
-	if (template_formals)
-		template_formals->dump(o);
-	else	o << "(none)";
-	o << endl << "actuals: ";
-	template_args.dump(o);
 #endif
 #if SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS
 	if (lookup_footprint) {
@@ -252,41 +164,6 @@ unroll_context::dump(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if 0
-/**
-	OBSOLETE: after introducing separate target and lookup footprints.
-	20051011: Fixed bug where loop context would fail to 
-		translate instance reference correctly because
-		target_footprint of innermost context was NULL.  
-	\return (read-only) pointer to footprint.
-		What does it mean if footprint returned is NULL?
-		It means we're accessing a top-level instance 
-		of the module, as opposed to an instance local to 
-		a particular definition's footprint.  
- */
-const footprint*
-unroll_context::get_target_footprint(void) const {
-	STACKTRACE_VERBOSE;
-#if 0
-	if (!target_footprint && next) {
-		return next->get_target_footprint();
-	} else {
-		// may be NULL
-		return target_footprint;
-	}
-#else
-	if (target_footprint) {
-		return target_footprint;
-	} else if (next) {
-		return next->get_target_footprint();
-	} else {
-		return NULL;
-	}
-#endif
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #if LOOKUP_GLOBAL_META_PARAMETERS
 /**
 	\return pointer to the deepest namespace in which this unroll
@@ -314,40 +191,6 @@ unroll_context::make_member_context(void) const {
 	ret.target_footprint = NULL;
 	return ret;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-/**
-	Used only for looking up loop variables.  
-	Must get the scope correct, check the template formals manager, 
-	acting on behalf of the actual value of the loop variable.  
-	\return NULL if not found.
- */
-count_ptr<const pint_const>
-unroll_context::lookup_loop_var(const pint_scalar& ps) const {
-	STACKTRACE_VERBOSE;
-	INVARIANT(template_args.get_strict_args()->size() == 1);
-		// not true if this is called when looking up general variables
-	const never_ptr<const pint_scalar>
-		probe(template_formals->lookup_template_formal(ps.get_name())
-			.is_a<const pint_scalar>());
-	if (probe) {
-		return template_args[0].is_a<const pint_const>();
-	} else if (next) {
-		return next->lookup_loop_var(ps);
-	} else {
-#if 1
-		ICE(cerr, 
-			cerr << "expected to resolve ";
-			ps.dump(cerr, dump_flags::verbose) <<
-				" loop variable, but failed!" << endl;
-		)
-#else
-		return count_ptr<const pint_const>(NULL);
-#endif
-	}
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

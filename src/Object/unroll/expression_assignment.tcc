@@ -3,7 +3,7 @@
 	Method definitions pertaining to connections and assignments.  
 	This file came from "Object/art_object_assign.tcc"
 		in a previoius life.  
- 	$Id: expression_assignment.tcc,v 1.17 2006/10/18 07:39:48 fang Exp $
+ 	$Id: expression_assignment.tcc,v 1.18 2006/10/18 21:38:53 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_EXPRESSION_ASSIGNMENT_TCC__
@@ -264,7 +264,6 @@ EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const const_dest_iterator& b,
 	STACKTRACE_VERBOSE;
 	const_dest_iterator i(b);
 	for ( ; i!=e; ++i) {
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 		NEVER_NULL(*i);
 		if (!assign_dest(**i, v, c).good) {
 			cerr << "ERROR: at position " <<
@@ -272,51 +271,6 @@ EXPRESSION_ASSIGNMENT_CLASS::assign_dests(const const_dest_iterator& b,
 				" of expression-assignment list." << endl;
 			return good_bool(false);
 		}
-#else
-		value_reference_collection_type temp;
-		if ((*i)->unroll_lvalue_references(c, temp).bad) {
-			cerr << "ERROR: unrolling lvalue references in " <<
-				traits_type::tag_name << " assignment." << endl;
-			return good_bool(false);
-		}
-		typedef	typename value_reference_collection_type::key_type
-						lvalue_key_type;
-		typedef	typename const_collection_type::key_type
-						rvalue_key_type;
-		// these should be the same type
-		const lvalue_key_type ls(temp.size());
-		const rvalue_key_type rs(v.array_dimensions());
-		if (ls != rs) {
-			cerr << "lvalue/rvalue references dimensions mismatch "
-				"in " << traits_type::tag_name <<
-				" assignment." << endl;
-			cerr << "\tgot: " << ls << " and: " << rs << endl;
-			return good_bool(false);
-		}
-		typedef	typename value_reference_collection_type::const_iterator
-							lvalue_iterator;
-		typedef	typename const_collection_type::const_iterator
-							rvalue_iterator;
-		lvalue_iterator li(temp.begin());
-		rvalue_iterator ri(v.begin()), re(v.end());
-		// c'mon gcc, auto-vectorize this loop!
-		bool assign_err = false;
-		size_t k = 1;
-		for ( ; ri!=re; ++ri, ++li, ++k) {
-			NEVER_NULL(*li);
-			if (!(**li = *ri).good) {
-				assign_err = true;
-				cerr << "Error: lvalue referenced at position "
-					<< k << " is already assigned value "
-					<< **li << endl;
-			}
-		}
-		if (assign_err) {
-			cerr << "At least one error in assignment." << endl;
-			return good_bool(false);
-		}
-		INVARIANT(li == temp.end());
-#endif
 	}
 	return good_bool(true);
 }

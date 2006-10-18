@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.21 2006/10/18 20:58:29 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.22 2006/10/18 21:38:54 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -308,13 +308,7 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		// have relaxed actuals.  
 		STACKTRACE_INDENT_PRINT("&_inst = " << &_inst << endl);
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				_inst, crl, 
-#if RESOLVE_VALUES_WITH_FOOTPRINT
-				c, 
-#else
-				final_type_ref.make_unroll_context(), 
-#endif
-				relaxed_const_actuals);
+				_inst, crl, c, relaxed_const_actuals);
 	} else {
 		cerr << "ERROR: resolving index range of instantiation!"
 			<< endl;
@@ -387,13 +381,7 @@ INSTANTIATION_STATEMENT_CLASS::instantiate_port(const unroll_context& c,
 		// will be required to be NULL, e.g. for types that never
 		// have relaxed actuals.  
 		return type_ref_parent_type::instantiate_indices_with_actuals(
-				coll, crl,
-#if RESOLVE_VALUES_WITH_FOOTPRINT
-				c, 
-#else
-				ft.make_unroll_context(), 
-#endif
-				relaxed_const_actuals);
+				coll, crl, c, relaxed_const_actuals);
 	} else {
 		// consider different message
 		cerr << "ERROR: resolving index range of instantiation!"

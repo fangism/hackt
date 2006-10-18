@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: process_type_reference.h,v 1.9 2006/10/18 01:20:00 fang Exp $
+ 	$Id: process_type_reference.h,v 1.10 2006/10/18 21:38:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_PROCESS_TYPE_REFERENCE_H__
@@ -95,11 +95,6 @@ public:
 	make_canonical_type(void) const;
 
 private:
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	unroll_context
-	make_unroll_context(void) const;
-#endif
-
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;

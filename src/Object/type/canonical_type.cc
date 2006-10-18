@@ -3,7 +3,7 @@
 	Explicit template instantiation of canonical type classes.  
 	Probably better to include the .tcc where needed, 
 	as this is just temporary and convenient.  
-	$Id: canonical_type.cc,v 1.11 2006/10/18 19:08:10 fang Exp $
+	$Id: canonical_type.cc,v 1.12 2006/10/18 21:38:48 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE			0
@@ -97,7 +97,6 @@ struct unroll_port_instances_policy<process_definition> {
 		// modeled after process_type_reference::unroll_port_instances()
 		const port_formals_manager&
 			pf(p.canonical_definition_ptr->get_port_formals());
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 		// template formals/actuals included in footprint already
 /***
 	Problem: when type is incomplete, we can't access a footprint
@@ -133,10 +132,6 @@ struct unroll_port_instances_policy<process_definition> {
 			THROW_EXIT;
 		}
 	}
-#else
-		const unroll_context cc(p.make_unroll_context());
-		pf.unroll_ports(cc, sub);
-#endif
 	}
 };	// end struct unroll_port_instances_policy
 

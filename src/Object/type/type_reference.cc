@@ -3,7 +3,7 @@
 	Type-reference class method definitions.  
 	This file originally came from "Object/art_object_type_ref.cc"
 		in a previous life.  
- 	$Id: type_reference.cc,v 1.20 2006/10/18 20:58:25 fang Exp $
+ 	$Id: type_reference.cc,v 1.21 2006/10/18 21:38:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_TYPE_REFERENCE_CC__
@@ -365,18 +365,6 @@ data_type_reference::must_be_valid(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-/**
-	Creates a translation context between formals and actuals.  
- */
-unroll_context
-data_type_reference::make_unroll_context(void) const {
-	return unroll_context(template_args,
-		base_type_def->get_template_formals_manager());
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
@@ -392,12 +380,7 @@ data_type_reference::unroll_resolve(const unroll_context& c) const {
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 		const unroll_context& cc(c);
-#else
-		unroll_context cc(make_unroll_context());
-		cc.chain_context(c);
-#endif
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
@@ -647,13 +630,7 @@ data_type_reference::unroll_port_instances(
 		STACKTRACE("local context");
 		const template_actuals
 			resolved_template_args(ta.unroll_resolve(c));
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 		const unroll_context& cc(c);
-#else
-		const unroll_context
-			cc(resolved_template_args, 
-				data_def->get_template_formals_manager());
-#endif
 		// should the contexts be chained?
 		// or can the actuals always be resolved one scope at a time?
 		port_formals.unroll_ports(cc, sub);
@@ -1093,18 +1070,6 @@ builtin_channel_type_reference::resolve_builtin_channel_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-/**
-	Creates a translation context between formals and actuals.  
- */
-unroll_context
-builtin_channel_type_reference::make_unroll_context(void) const {
-	// doesn't have template formals...
-	return unroll_context();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
@@ -1315,18 +1280,6 @@ channel_type_reference::resolve_builtin_channel_type(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-/**
-	Creates a translation context between formals and actuals.  
- */
-unroll_context
-channel_type_reference::make_unroll_context(void) const {
-	return unroll_context(template_args,
-		base_chan_def->get_template_formals_manager());
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
@@ -1342,12 +1295,7 @@ channel_type_reference::unroll_resolve(const unroll_context& c) const {
 	if (template_args) {
 		// if template actuals depends on other template parameters, 
 		// then we need to pass actuals into its own context!
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 		const unroll_context& cc(c);
-#else
-		unroll_context cc(make_unroll_context());
-		cc.chain_context(c);
-#endif
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		// check for errors??? at least try-catch
@@ -1617,18 +1565,6 @@ process_type_reference::must_be_valid(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-/**
-	Creates a translation context between formals and actuals.  
- */
-unroll_context
-process_type_reference::make_unroll_context(void) const {
-	return unroll_context(template_args,
-		base_proc_def->get_template_formals_manager());
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Makes a copy of this type reference, but with strictly resolved
 	constant parameter arguments.  
@@ -1651,12 +1587,7 @@ process_type_reference::unroll_resolve(const unroll_context& c) const {
 		template_args.dump(STACKTRACE_STREAM << "template_args: ")
 			<< endl;
 #endif
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 		const unroll_context& cc(c);
-#else
-		unroll_context cc(make_unroll_context());
-		cc.chain_context(c);
-#endif
 		const template_actuals
 			actuals(template_args.unroll_resolve(cc));
 		if (actuals) {
@@ -1838,13 +1769,7 @@ process_type_reference::unroll_port_instances(
 		STACKTRACE("local context");
 		const template_actuals
 			resolved_template_args(template_args.unroll_resolve(c));
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 		const unroll_context& cc(c);
-#else
-		const unroll_context
-			cc(resolved_template_args, 
-				proc_def->get_template_formals_manager());
-#endif
 		// should the contexts be chained?
 		// or can the actuals always be resolved one scope at a time?
 		port_formals.unroll_ports(cc, sub);
@@ -2030,17 +1955,6 @@ bool
 param_type_reference::must_be_type_equivalent(const this_type& t) const {
 	return base_param_def == t.base_param_def;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-/**
-	Creates a translation context between formals and actuals.  
- */
-unroll_context
-param_type_reference::make_unroll_context(void) const {
-	return unroll_context();
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**

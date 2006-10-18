@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.3 2006/10/18 05:32:47 fang Exp $
+	$Id: value_placeholder.h,v 1.4 2006/10/18 21:38:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -210,11 +210,6 @@ public:
 	must_type_check_actual_param_expr(const const_param&,
 		const unroll_context&) const;
 
-#if 0
-virtual	good_bool
-	instantiate_indices(const const_range_list& i) = 0;
-#endif
-
 // possibly DEPRECATED
 #define	LOOKUP_VALUE_INDEXED_PROTO					\
 	good_bool							\
@@ -226,37 +221,15 @@ virtual	good_bool
 	// need methods for looking up dense sub-collections of values?
 	// what should they return?
 
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 	good_bool
 	unroll_assign_formal_parameter(const unroll_context&, 
 		const count_ptr<const param_expr>&) const;
-#endif
-
-#if 0
-virtual	const_index_list
-	resolve_indices(const const_index_list& l) const = 0;
-
-#define	UNROLL_LVALUE_REFERENCES_PROTO					\
-	bad_bool							\
-	unroll_lvalue_references(const multikey_index_type&, 		\
-		const multikey_index_type&, 				\
-		value_reference_collection_type&) const
-
-virtual	UNROLL_LVALUE_REFERENCES_PROTO = 0;
-#endif
 
 protected:
 	// never call!
 	count_ptr<nonmeta_instance_reference_base>
 	make_nonmeta_instance_reference(void) const;
 
-#if 0
-public:
-	static
-	// won't be this_type anymore!
-	value_collection_generic_type*
-	make_array(const scopespace& o, const string& n, const size_t d);
-#endif
 public:
 	void
 	collect_transient_info(persistent_object_manager& m) const;

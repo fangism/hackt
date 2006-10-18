@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.25 2006/10/18 20:57:38 fang Exp $
+	$Id: devel_switches.h,v 1.26 2006/10/18 21:38:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -43,16 +43,6 @@
 		through footprints with the switch below.  
  */
 #define	LOOKUP_GLOBAL_META_PARAMETERS		1
-
-/**
-	All values, including template parameters shall be resolved
-	through footprints.  
-	Unroll_context will no longer use template_formals and actuals
-	directly.  
-	Goal: 1
-	Status: still undergoing testing as development continues
- */
-#define	RESOLVE_VALUES_WITH_FOOTPRINT	1
 
 /**
 	Define to 0 to remove formal instance management (template, port)

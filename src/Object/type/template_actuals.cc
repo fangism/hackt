@@ -2,7 +2,7 @@
 	\file "Object/type/template_actuals.cc"
 	Class implementation of template actuals.
 	This file was previously named "Object/type/template_actuals.cc"
-	$Id: template_actuals.cc,v 1.13 2006/10/18 08:52:09 fang Exp $
+	$Id: template_actuals.cc,v 1.14 2006/10/18 21:38:51 fang Exp $
  */
 
 #define	ENABLE_STACKTRACE		0
@@ -19,9 +19,7 @@
 #include "Object/expr/const_param_expr_list.h"
 #include "Object/expr/dynamic_param_expr_list.h"
 #include "Object/expr/expr_dump_context.h"
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 #include "Object/def/footprint.h"
-#endif
 #include "util/memory/count_ptr.tcc"
 #include "util/persistent_object_manager.tcc"
 #include "util/stacktrace.h"
@@ -296,16 +294,12 @@ template_actuals::transform_template_actuals(const this_type& a,
 		const template_formals_manager& m) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(a.is_constant());
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 	footprint f;	// temporary footprint for unroll-resolving
 	const unroll_context c(&f, &f);
 	const good_bool b(m.unroll_formal_parameters(c, a));
 	INVARIANT(b.good);
 	// unrolling and assigning have to be interleaved to handle
 	// parameter-dependent template parameters.  
-#else
-	const unroll_context c(a, m);
-#endif
 	return unroll_resolve(c);
 }
 

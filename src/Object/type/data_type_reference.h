@@ -4,7 +4,7 @@
 	TODO: must pool-allocate these, they're created frequently!
 	This file originated from "Object/art_object_type_ref.h"
 		in a previous life.  
- 	$Id: data_type_reference.h,v 1.10 2006/10/18 01:19:59 fang Exp $
+ 	$Id: data_type_reference.h,v 1.11 2006/10/18 21:38:49 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TYPE_DATA_TYPE_REFERENCE_H__
@@ -129,10 +129,6 @@ public:
 	UNROLL_PORT_INSTANCES_PROTO;
 
 private:
-#if !RESOLVE_VALUES_WITH_FOOTPRINT
-	unroll_context
-	make_unroll_context(void) const;
-#endif
 	MAKE_INSTANTIATION_STATEMENT_PRIVATE_PROTO;
 			
 	MAKE_INSTANCE_COLLECTION_PROTO;

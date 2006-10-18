@@ -3,7 +3,7 @@
 	Template formal manager class.  
 	This file was "Object/def/template_formals_manager.h"
 		in a former life.  
-	$Id: template_formals_manager.h,v 1.9 2006/10/18 20:57:49 fang Exp $
+	$Id: template_formals_manager.h,v 1.10 2006/10/18 21:38:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEF_TEMPLATE_FORMALS_MANAGER_H__
@@ -18,7 +18,6 @@
 #include "util/STL/hash_map.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -149,14 +148,6 @@ public:
 	void
 	add_relaxed_template_formal(const template_formals_value_type);
 
-#if 0
-	// called by unroll-context
-	// was const param_value_collection&
-	count_ptr<const const_param>
-	resolve_template_actual(const param_value_collection&, 
-		const template_actuals&) const;
-#endif
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 	good_bool
 	unroll_formal_parameters(const unroll_context&,
 		const template_actuals&) const;
@@ -166,7 +157,6 @@ private:
 	__unroll_formal_parameters(const unroll_context&,
 		const template_formals_list_type&, 
 		const count_ptr<const dynamic_param_expr_list>&);
-#endif
 public:
 	void
 	collect_transient_info_base(persistent_object_manager& m) const;

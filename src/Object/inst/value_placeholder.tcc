@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_placeholder.tcc"
 		in a previous life.  
- 	$Id: value_placeholder.tcc,v 1.2 2006/10/18 01:19:42 fang Exp $
+ 	$Id: value_placeholder.tcc,v 1.3 2006/10/18 21:38:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_TCC__
@@ -49,9 +49,7 @@
 #include "Object/ref/meta_value_reference.h"
 #include "Object/ref/simple_meta_value_reference.h"
 #include "Object/ref/data_nonmeta_instance_reference.h"
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 #include "Object/unroll/expression_assignment.h"
-#endif
 
 #include "common/ICE.h"
 
@@ -513,7 +511,6 @@ VALUE_PLACEHOLDER_CLASS::make_collection(void) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if RESOLVE_VALUES_WITH_FOOTPRINT
 /**
 	\param c the unroll_context in which to instantiate the parameter.
 	\param e the value to assign to the parameter (optional).
@@ -552,7 +549,6 @@ VALUE_PLACEHOLDER_CLASS::unroll_assign_formal_parameter(
 		lv(never_ptr<const this_type>(this));
 	return expression_assignment<Tag>::__unroll(c, lv, p);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
