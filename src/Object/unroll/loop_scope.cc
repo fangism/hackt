@@ -1,7 +1,7 @@
 /**
 	\file "Object/unroll/loop_scope.cc"
 	Control-flow related class method definitions.  
- 	$Id: loop_scope.cc,v 1.10 2006/10/18 01:20:06 fang Exp $
+ 	$Id: loop_scope.cc,v 1.11 2006/10/18 02:57:58 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_LOOP_SCOPE_CC__
@@ -18,7 +18,7 @@
 #include "Object/expr/const_range.h"
 #include "Object/inst/pint_value_collection.h"
 #if USE_INSTANCE_PLACEHOLDERS
-#include "OBject/inst/value_placeholder.h"
+#include "Object/inst/value_placeholder.h"
 #endif
 #include "Object/common/dump_flags.h"
 #include "Object/persistent_type_hash.h"
