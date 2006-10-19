@@ -10,7 +10,7 @@ state	value
 #STATE#	(chan-type) [3:19..22]
 #STATE#	( [3:23]
 #STATE#	datatype: int [3:24..26]
-#STATE#	list<(expr)>: int: 16 ... [3:27..30]
+#STATE#	list<(expr)>: (array-concatenation) ... [3:27..30]
 #STATE#	[ [3:31]
 in state #STATE#, possible rules are:
 	strict_relaxed_template_arguments : expr_optional_list_in_angles . optional_template_arguments_in_angles  (#RULE#)
