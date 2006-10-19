@@ -2,7 +2,7 @@
 	\file "util/list_vector.tcc"
 	Template method definitions for list_vector class.  
 
-	$Id: list_vector.tcc,v 1.14 2006/02/13 02:48:06 fang Exp $
+	$Id: list_vector.tcc,v 1.14.46.1 2006/10/19 20:11:38 fang Exp $
  */
 
 #ifndef	__UTIL_LIST_VECTOR_TCC__
@@ -13,7 +13,6 @@
 // to suppress definition entirely
 #ifndef	EXTERN_TEMPLATE_UTIL_LIST_VECTOR
 
-#include <list>
 #include <iostream>
 #include <numeric>
 
@@ -23,7 +22,7 @@
 #endif
 
 #include "util/attributes.h"
-#include "util/qmap.tcc"
+// #include "util/qmap.tcc"
 
 namespace util {
 #include "util/using_ostream.h"

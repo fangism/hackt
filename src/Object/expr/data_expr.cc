@@ -2,7 +2,7 @@
 	\file "Object/expr/data_expr.cc"
 	Implementation of data expression classes.  
 	NOTE: file was moved from "Object/art_object_data_expr.cc"
-	$Id: data_expr.cc,v 1.11 2006/10/18 19:07:56 fang Exp $
+	$Id: data_expr.cc,v 1.11.2.1 2006/10/19 20:11:40 fang Exp $
  */
 
 #include "util/static_trace.h"
@@ -39,6 +39,7 @@ DEFAULT_STATIC_TRACE_BEGIN
 #include "util/IO_utils.h"
 #include "util/stacktrace.h"
 #include "util/multikey.h"
+#include "util/qmap.tcc"
 
 namespace util {
 using HAC::entity::int_arith_expr;
