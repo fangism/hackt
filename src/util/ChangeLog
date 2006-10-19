@@ -1,5 +1,11 @@
 # "src/util/ChangeLog"
 
+2006-10-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-01:
+	  list_vector: now uses internal map instead of qmap, simplified. 
+
+
 2006-09-16	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-20:
