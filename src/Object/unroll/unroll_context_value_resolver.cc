@@ -1,17 +1,12 @@
 /**
 	\file "Object/unroll/unroll_context_value_resolver.cc"
 	Rationale: separate definition to control eager instantiation.  
-	$Id: unroll_context_value_resolver.cc,v 1.8 2006/10/18 22:31:55 fang Exp $
+	$Id: unroll_context_value_resolver.cc,v 1.9 2006/10/19 03:30:27 fang Exp $
  */
 
 #include "Object/unroll/unroll_context_value_resolver.h"
-#include "Object/expr/pint_const.h"
 #include "Object/inst/pint_value_collection.h"
 #include "Object/inst/value_placeholder.h"
-#if LOOKUP_GLOBAL_META_PARAMETERS
-#include "Object/common/namespace.h"
-#endif
-#include "common/TODO.h"
 
 namespace HAC {
 namespace entity {

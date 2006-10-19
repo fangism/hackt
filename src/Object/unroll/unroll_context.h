@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.h"
 	Class for passing context duing unroll-phase.
 	This file was reincarnated from "Object/art_object_unroll_context.h".
-	$Id: unroll_context.h,v 1.13 2006/10/18 22:52:57 fang Exp $
+	$Id: unroll_context.h,v 1.14 2006/10/19 03:30:26 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_H__
@@ -84,20 +84,6 @@ private:
 		Special top-level footprint for global parameter lookups.  
 	 */
 	const footprint*				top_footprint;
-
-	/**
-		OBSOLETE.
-		NOTE: 2006-09-10
-		TODO: consider a read-only source footprint, because now
-		other nested scopes use footprints for unrolling.  
-		Q: is this still used with the new footprint-based
-		lookup method, and with a module footprint
-		containing all top-level (all namespaces') collections?
-		This may be obsolete.  
-	**/
-#if LOOKUP_GLOBAL_META_PARAMETERS
-	never_ptr<const name_space>			parent_namespace;
-#endif
 public:
 	/**
 		Constructor selection tag for the sake of 
@@ -105,14 +91,7 @@ public:
 		of unrolling into an auxiliary footprint.  
 	 */
 	struct auxiliary_target_tag {};
-#if 0
-	// parameterless types and entity::module need this
-	unroll_context();
 
-	/// only called from the top-level module
-	explicit
-	unroll_context(footprint* const);
-#endif
 	// called by top-module
 	unroll_context(footprint* const, const footprint* const);
 	// read-only footrint, no target
@@ -130,11 +109,6 @@ public:
 
 	const footprint*
 	get_top_footprint(void) const { return top_footprint; }
-
-#if LOOKUP_GLOBAL_META_PARAMETERS
-	never_ptr<const name_space>
-	get_parent_namespace(void) const;
-#endif
 
 	bool
 	in_definition_context(void) const { return target_footprint; }

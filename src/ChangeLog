@@ -5,6 +5,14 @@
 
 2006-10-18	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-40:
+	  Removed and perm'd LOOKUP_GLOBAL_META_PARAMETERS, which is 
+		now cleanly handled by the new lookup implementation 
+		in unroll_context.  Globals are looked up in the
+		top-level footprint, which is found at the bottom of
+		the context stack, or conveniently forwarded to the top.  
+
+
 	* HACKT-00-01-04-main-00-80-39:
 	  Perm'd SRC_DEST_UNROLL_CONTEXT_FOOTPRINTS (-180 LoC).
 

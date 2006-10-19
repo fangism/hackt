@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.28 2006/10/18 22:52:50 fang Exp $
+	$Id: devel_switches.h,v 1.29 2006/10/19 03:30:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -33,16 +33,6 @@
 /**
 	TODO: decide policy for handling relaxed type actuals.  
  */
-
-/**
-	Define to 1 to enable lookup of global meta parameter values.
-	Affects "Object/unroll/unroll_context_value_resolver.cc".
-	Goal: to be decided by language spec.
-	NOTE: 20060-09-10
-	This may no longer be an issue once all values are resolved
-		through footprints with the switch below.  
- */
-#define	LOOKUP_GLOBAL_META_PARAMETERS		1
 
 /**
 	Define to 0 to remove formal instance management (template, port)

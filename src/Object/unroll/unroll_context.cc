@@ -2,7 +2,7 @@
 	\file "Object/unroll/unroll_context.cc"
 	This file originated from "Object/art_object_unroll_context.cc"
 		in a previous life.  
-	$Id: unroll_context.cc,v 1.22 2006/10/18 22:52:57 fang Exp $
+	$Id: unroll_context.cc,v 1.23 2006/10/19 03:30:24 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_UNROLL_CONTEXT_CC__
@@ -46,11 +46,7 @@ unroll_context::unroll_context(footprint* const f,
 		next(),
 		target_footprint(f),
 		lookup_footprint(f), 
-		top_footprint(t)
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(NULL)
-#endif
-		{
+		top_footprint(t) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -62,11 +58,7 @@ unroll_context::unroll_context(const footprint* const f,
 		next(&c),
 		target_footprint(NULL),
 		lookup_footprint(f), 
-		top_footprint(c.top_footprint)
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(NULL)
-#endif
-		{
+		top_footprint(c.top_footprint) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -78,11 +70,7 @@ unroll_context::unroll_context(footprint* const f,
 		next(&c),
 		target_footprint(c.target_footprint),
 		lookup_footprint(f), 
-		top_footprint(c.top_footprint)
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(NULL)
-#endif
-		{
+		top_footprint(c.top_footprint) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -97,11 +85,7 @@ unroll_context::unroll_context(footprint* const f,
 		next(&c),
 		target_footprint(f),
 		lookup_footprint(f), 
-		top_footprint(c.top_footprint)
-#if LOOKUP_GLOBAL_META_PARAMETERS
-		, parent_namespace(NULL)
-#endif
-		{
+		top_footprint(c.top_footprint) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -152,22 +136,6 @@ unroll_context::dump(ostream& o) const {
 #endif
 	return o;
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if LOOKUP_GLOBAL_META_PARAMETERS
-/**
-	\return pointer to the deepest namespace in which this unroll
-		context was created.  
- */
-never_ptr<const name_space>
-unroll_context::get_parent_namespace(void) const {
-	if (parent_namespace)
-		return parent_namespace;
-	else if (next)
-		return next->get_parent_namespace();
-	else	return never_ptr<const name_space>(NULL);
-}
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
