@@ -5,6 +5,10 @@
 
 2006-10-19	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-40-instance-01-02:
+	  New sparse collection data structure, with basic tests.  
+
+
 	* HACKT-00-01-04-main-00-80-40-instance-01-01:
 	  util/ChangeLog: list_vector now uses std::map.
 

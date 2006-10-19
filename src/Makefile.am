@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.139 2006/10/18 01:18:54 fang Exp $
+#	$Id: Makefile.am,v 1.139.2.1 2006/10/19 23:04:35 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -272,6 +272,7 @@ OBJECT_INST_TCC_FILES = \
 	Object/inst/alias_actuals.tcc \
 	Object/inst/alias_empty.tcc \
 	Object/inst/instance_alias.tcc \
+	Object/inst/sparse_collection.tcc \
 	Object/inst/instance_collection.tcc \
 	Object/inst/instance_placeholder.tcc \
 	Object/inst/internal_aliases_policy.tcc \
@@ -293,6 +294,7 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/instance_collection_base.h \
 	Object/inst/physical_instance_collection.h \
 	Object/inst/datatype_instance_collection.h \
+	Object/inst/sparse_collection.h \
 	Object/inst/instance_placeholder_base.h \
 	Object/inst/instance_placeholder.h \
 	Object/inst/value_placeholder.h \
