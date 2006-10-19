@@ -1,5 +1,12 @@
 # "test/ChangeLog"
 
+2006-10-19	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-41:
+	  Make.test-tail: all hac object files in test suite now
+		depend on the executable, to force rebuilds after re-make.
+
+
 2006-10-17	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-29:

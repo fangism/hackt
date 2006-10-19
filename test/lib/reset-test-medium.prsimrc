@@ -1,8 +1,8 @@
 # "reset-test-medium.prsimrc"
-#	$Id: reset-test-medium.prsimrc,v 1.2 2006/10/18 00:03:54 fang Exp $
+#	$Id: reset-test-medium.prsimrc,v 1.3 2006/10/19 17:02:01 fang Exp $
 # common test script for stbility testing, short version
 
-# each 'short' test runs 20x, so tatal is 200
+# each 'short' test runs 10x, so tatal is 50
 
 source reset-test-short.prsimrc
 source reset-test-short.prsimrc
