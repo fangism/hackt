@@ -4,13 +4,18 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.9 2006/03/15 04:38:17 fang Exp $
+	$Id: instance_alias.h,v 1.9.42.1 2006/10/20 04:43:40 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
 #define	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
 
 #include "Object/inst/instance_alias_info.h"
+
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+// then this entire file is obsolete
+#else
+
 #include "Object/expr/types.h"		// for pint_value_type
 #include "util/multikey_set.h"
 
@@ -69,6 +74,7 @@ public:
 	typedef	typename traits_type::instance_alias_info_type
 					instance_alias_info_type;
 private:
+#if !EMBED_UNION_FIND
 	/**
 		grandparent_type is maplikeset_element_derived.
 	 */
@@ -77,6 +83,7 @@ private:
 		great_grandparent_type is ring_node_derived
 	 */
 	typedef	typename grandparent_type::parent_type	great_grandparent_type;
+#endif
 	typedef	typename instance_alias_info_type::internal_alias_policy
 							internal_alias_policy;
 public:
@@ -95,10 +102,12 @@ public:
 	 */
 	instance_alias(const key_type& k) : parent_type(k) { }
 
+#if !EMBED_UNION_FIND
 	instance_alias(const key_type& k, 
 		const never_ptr<const instance_collection_generic_type> p) :
 			parent_type(k, grandparent_type(
 				great_grandparent_type(p))) { }
+#endif
 
 	~instance_alias();
 
@@ -108,17 +117,21 @@ public:
 	 */
 	operator const key_type& () const { return this->key; }
 
+#if !EMBED_UNION_FIND
 	pseudo_iterator
 	find(void);
 
 	pseudo_const_iterator
 	find(void) const;
+#endif
 
 public:
 	using parent_type::instantiate;
 
+#if !EMBED_UNION_FIND
 	void
 	finalize_canonicalize(instance_alias_base_type&);
+#endif
 
 	void
 	write_next_connection(const persistent_object_manager& m, 
@@ -184,14 +197,18 @@ public:
 	ostream&
 	dump_alias(ostream& o, const dump_flags&) const;
 
+#if !EMBED_UNION_FIND
 	pseudo_iterator
 	find(void);
 
 	pseudo_const_iterator
 	find(void) const;
+#endif
 
+#if !EMBED_UNION_FIND
 	void
 	finalize_canonicalize(instance_alias_base_type&);
+#endif
 
 public:
 	TRACE_ALIAS_BASE_PROTO;
@@ -213,6 +230,8 @@ public:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
+
+#endif	// COLLECTION_SEPARATE_KEY_FROM_VALUE
 
 #endif	// __HAC_OBJECT_INST_INSTANCE_ALIAS_H__
 

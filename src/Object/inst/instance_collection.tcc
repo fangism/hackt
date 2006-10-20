@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.36 2006/10/18 20:58:01 fang Exp $
+	$Id: instance_collection.tcc,v 1.36.2.1 2006/10/20 04:43:46 fang Exp $
 	TODO: trim includes
  */
 
@@ -526,6 +526,8 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		if (iter == collection.end()) {
 			// then we can insert a new one
 			// create with back-ref!
+			// NOTE: the following requires copy-constructibility 
+			// of the element_type.  
 			const iterator
 				new_elem(this->collection.insert(
 					element_type(key_gen)));

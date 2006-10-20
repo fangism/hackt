@@ -2,7 +2,7 @@
 	\file "Object/unroll/alias_connection.h"
 	Declarations for classes related to connection of physical entities. 
 	This file was reincarnated from "Object/art_object_connect.h".
-	$Id: alias_connection.h,v 1.8 2006/02/21 23:07:38 fang Exp $
+	$Id: alias_connection.h,v 1.8.46.1 2006/10/20 04:43:52 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_ALIAS_CONNECTION_H__
@@ -14,6 +14,7 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "util/memory/count_ptr.h"
 #include "util/multikey_fwd.h"
+#include "Object/devel_switches.h"
 
 namespace HAC {
 namespace entity {
@@ -50,8 +51,13 @@ public:
 	typedef	typename traits_type::instance_collection_generic_type
 					instance_collection_generic_type;
 	/// the instance alias type resolved by unrolling
+#if EMBED_UNION_FIND
+	typedef	typename traits_type::instance_alias_info_type
+						instance_alias_base_type;
+#else
 	typedef	typename traits_type::instance_alias_base_type
 						instance_alias_base_type;
+#endif
 
 	typedef	typename parent_type::generic_inst_ptr_type
 						generic_inst_ptr_type;

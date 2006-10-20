@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.29 2006/10/19 03:30:23 fang Exp $
+	$Id: devel_switches.h,v 1.29.2.1 2006/10/20 04:43:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -62,6 +62,39 @@
 	Status: complete, basically tested.
  */
 #define	SUPPORT_NESTED_DEFINITIONS	1
+
+/**
+	Define to 1 to use new data structures that maintain key-values
+	of instance alias collections separate.  
+	Goal: 1
+	Status: beginning
+ */
+#define	COLLECTION_SEPARATE_KEY_FROM_VALUE	0
+
+/**
+	Define to 1 to embed union-find functionality in
+	the instance aliases.  
+	Alternative is to use something like CRTP...
+	Goal: 1
+ */
+#define	EMBED_UNION_FIND		1
+
+/**
+	Define to 1 to use dense collection structures for ports.
+	Goal: 1
+	Status: not begun
+ */
+#define	DENSE_FORMAL_COLLECTIONS	(0 && COLLECTION_SEPARATE_KEY_FROM_VALUE)
+
+/**
+	Define to 1 to have port collections use light-weight back-references
+	to footprint's internal collection maps.  
+	This way port instance collections don't need to contain
+	collection mapping information, just refer to footprint.  
+	Goal: 1
+	Status: not begun
+ */
+#define	PORT_COLLECTIONS_USE_BACK_REFERENCE	(0 && DENSE_FORMAL_COLLECTIONS)
 
 //=============================================================================
 

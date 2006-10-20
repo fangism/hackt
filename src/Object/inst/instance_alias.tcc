@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.24 2006/10/18 20:58:01 fang Exp $
+	$Id: instance_alias.tcc,v 1.24.2.1 2006/10/20 04:43:42 fang Exp $
 	TODO: trim includes
  */
 
@@ -90,6 +90,24 @@ using util::persistent_traits;
 //=============================================================================
 // class instance_alias_info method definitions
 
+#if EMBED_UNION_FIND
+/**
+	The only time a copy-contructor is allowed is on a new-born
+	instance alias.  
+	The next pointer is never copied, but re-established. 
+	\param t the source instance_alias_info, should be empty.
+	\pre nothing points to t, because its life is short.  
+ */
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+INSTANCE_ALIAS_INFO_CLASS::instance_alias_info(const this_type& t) : 
+		substructure_parent_type(t), 
+		actuals_parent_type(t),
+		next(this), container(t.container) {
+	INVARIANT(t.next == &t);
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	NOTE: this destructor is non-virtual (protected too) because 
 	deleting this type directly is strictly forbidden and prevented.  
@@ -339,13 +357,18 @@ INSTANCE_ALIAS_INFO_CLASS::must_match_type(const this_type& a) const {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
+	// TODO: check relaxed actuals
 	if (!l.must_match_type(r)) {
 		// already have error message
 		return good_bool(false);
 	}
+#if EMBED_UNION_FIND
+	l.unite(r);
+#else
 	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
 	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
 	ll = rr;			// union
+#endif
 	return l.connect_port_aliases_recursive(r);
 }
 
@@ -365,13 +388,18 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 good_bool
 INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r) {
+	// TODO: check relaxed actuals
 	if (!l.must_match_type(r)) {
 		// already have error message
 		return good_bool(false);
 	}
+#if EMBED_UNION_FIND
+	l.unite(r);
+#else
 	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
 	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
 	ll = rr;	// union
+#endif
 	return l.connect_port_aliases_recursive(r);
 }
 
@@ -514,26 +542,70 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if EMBED_UNION_FIND
+INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+void
+INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
+	STACKTRACE_VERBOSE;
+	this->find()->next = &*r.find();
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) {
+#if EMBED_UNION_FIND
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
+	NEVER_NULL(this->next);
+	if (this->next != this->next->next) {
+		this->next = &*this->next->find();
+	}
+	return pseudo_iterator(this->next);
+#else
 	ICE_NEVER_CALL(cerr);
 	return pseudo_iterator();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_const_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) const {
+#if EMBED_UNION_FIND
+	STACKTRACE_VERBOSE;
+#if ENABLE_STACKTRACE
+	STACKTRACE_INDENT_PRINT("this = " << this << endl);
+#endif
+	const this_type* tmp = this;
+	while (tmp != tmp->next) {
+		tmp = tmp->next;
+	}
+	return pseudo_const_iterator(tmp);
+#else
 	ICE_NEVER_CALL(cerr);
 	return pseudo_const_iterator();
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(instance_alias_base_type&) {
+INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(
+#if EMBED_UNION_FIND
+		this_type& n
+#else
+		instance_alias_base_type&
+#endif
+		) {
+#if EMBED_UNION_FIND
+	this->next = &n;
+#else
 	ICE_NEVER_CALL(cerr);
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -604,7 +676,11 @@ INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
 	Also is counterpart to load_next_connection.
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
+#if EMBED_UNION_FIND
+INSTANCE_ALIAS_INFO_CLASS&
+#else
 typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type&
+#endif
 INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 		const persistent_object_manager& m, istream& i) {
 	never_ptr<container_type> next_container;
@@ -673,6 +749,7 @@ operator << (ostream& o,
 }
 
 //=============================================================================
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 // class instance_alias method definitions
 
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
@@ -697,6 +774,7 @@ INSTANCE_ALIAS_CLASS::dump_alias(ostream& o, const dump_flags& df) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !EMBED_UNION_FIND
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_CLASS::pseudo_iterator
 INSTANCE_ALIAS_CLASS::find(void) {
@@ -709,16 +787,20 @@ typename INSTANCE_ALIAS_CLASS::pseudo_const_iterator
 INSTANCE_ALIAS_CLASS::find(void) const {
 	return instance_alias_base_type::find();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !EMBED_UNION_FIND
 /**
 	Manually update the next pointer of the union-find.  
  */
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_CLASS::finalize_canonicalize(instance_alias_base_type& n) {
+INSTANCE_ALIAS_CLASS::finalize_canonicalize(
+		instance_alias_base_type& n) {
 	this->set(&n);
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_TEMPLATE_SIGNATURE
@@ -783,7 +865,11 @@ INSTANCE_ALIAS_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
 	instance_alias_base_type& n(this->load_alias_reference(m, i));
+#if EMBED_UNION_FIND
+	this->next = &n;
+#else
 	this->set(&n);	// manual unionization without path compression
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -837,6 +923,7 @@ KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o,
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !EMBED_UNION_FIND
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
 typename KEYLESS_INSTANCE_ALIAS_CLASS::pseudo_iterator
 KEYLESS_INSTANCE_ALIAS_CLASS::find(void) {
@@ -849,8 +936,10 @@ typename KEYLESS_INSTANCE_ALIAS_CLASS::pseudo_const_iterator
 KEYLESS_INSTANCE_ALIAS_CLASS::find(void) const {
 	return instance_alias_base_type::find();
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if !EMBED_UNION_FIND
 /**
 	Manually update the next pointer of the union-find.  
  */
@@ -860,6 +949,7 @@ KEYLESS_INSTANCE_ALIAS_CLASS::finalize_canonicalize(
 		instance_alias_base_type& n) {
 	this->set(&n);
 }
+#endif	// EMBED_UNION_FIND
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
@@ -922,7 +1012,11 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_next_connection(
 	// problem: container is a never_ptr<const ...>, yucky
 	m.load_object_once(next_container);
 	instance_alias_base_type& n(next_container->load_reference(i));
+#if EMBED_UNION_FIND
+	this->next = &n;
+#else
 	this->set(&n);	// manual unionization without path compression
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -976,6 +1070,8 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_object(const persistent_object_manager& m,
 		this->load_next_connection(m, i);
 	}
 }
+
+#endif	// COLLECTION_SEPARATE_KEY_FROM_VALUE
 
 //=============================================================================
 // class instance_alias method definitions

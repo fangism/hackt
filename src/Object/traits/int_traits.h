@@ -2,7 +2,7 @@
 	\file "Object/traits/int_traits.h"
 	Traits and policies for data type integers.  
 	This file used to be "Object/art_object_int_traits.h".
-	$Id: int_traits.h,v 1.15 2006/10/18 20:58:21 fang Exp $
+	$Id: int_traits.h,v 1.15.2.1 2006/10/20 04:43:50 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_INT_TRAITS_H__
@@ -45,10 +45,12 @@ struct class_traits<int_tag> {
 			template value_array<D>::type	type;
 	};
 
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
 	};
+#endif
 	enum { instance_pool_chunk_size = 512 };
 
 	typedef	int_instance_collection	instance_collection_generic_type;
@@ -85,7 +87,13 @@ struct class_traits<int_tag> {
 					nonmeta_instance_reference_base_type;
 	typedef	int_member_meta_instance_reference
 				member_simple_meta_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
+#if EMBED_UNION_FIND
+	typedef	packed_array_generic<pint_value_type,
+			never_ptr<instance_alias_info_type> >
+#else
+	typedef	packed_array_generic<pint_value_type,
+			instance_alias_base_ptr_type>
+#endif
 						alias_collection_type;
 	typedef	int_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;

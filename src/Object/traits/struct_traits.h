@@ -2,7 +2,7 @@
 	\file "Object/traits/struct_traits.h"
 	Traits and policies for data structs.  
 	This file used to be "Object/art_object_struct_traits.h".
-	$Id: struct_traits.h,v 1.18 2006/10/18 20:58:22 fang Exp $
+	$Id: struct_traits.h,v 1.18.2.1 2006/10/20 04:43:51 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_STRUCT_TRAITS_H__
@@ -51,10 +51,12 @@ struct class_traits<datastruct_tag> {
 	/// defined in "Object/inst/struct_instance.h"
 	class state_instance_base;
 
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 	template <size_t D>
 	struct instance_alias {
 		typedef	entity::instance_alias<tag_type,D>	type;
 	};
+#endif
 	enum { instance_pool_chunk_size = 64 };
 
 	typedef	struct_instance_collection	instance_collection_generic_type;
@@ -84,7 +86,13 @@ struct class_traits<datastruct_tag> {
 					nonmeta_instance_reference_base_type;
 	typedef	datastruct_member_meta_instance_reference
 				member_simple_meta_instance_reference_type;
-	typedef	packed_array_generic<pint_value_type, instance_alias_base_ptr_type>
+#if EMBED_UNION_FIND
+	typedef	packed_array_generic<pint_value_type,
+			never_ptr<instance_alias_info_type> >
+#else
+	typedef	packed_array_generic<pint_value_type,
+			instance_alias_base_ptr_type>
+#endif
 						alias_collection_type;
 	typedef	datastruct_alias_connection	alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;

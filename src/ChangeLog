@@ -3,6 +3,16 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-03:
+	  Replaced the union_find_derived business with a much simpler,
+		cleaner embedded union-find functions into instance_alias_info.
+		Uses switch EMBED_UNION_FIND.
+	  Next phase: decoupling multikey key from instance_alias value
+		using new sparse collection structure.  
+
+
 2006-10-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-40-instance-01-02:

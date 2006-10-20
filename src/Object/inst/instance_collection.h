@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.25 2006/10/18 20:58:01 fang Exp $
+	$Id: instance_collection.h,v 1.25.2.1 2006/10/20 04:43:45 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -16,6 +16,10 @@
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
+#include "Object/devel_switches.h"
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+#include "Object/inst/sparse_collection.h"
+#endif
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
@@ -280,6 +284,7 @@ instance_array<Tag,0>
  */
 INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 class instance_array :
+	// this is the same as instance_collection<Tag>
 	public class_traits<Tag>::instance_collection_generic_type {
 friend class instance_collection<Tag>;
 	typedef	instance_array<Tag,D>			this_type;
@@ -298,6 +303,16 @@ public:
 						instance_alias_base_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
+
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+	typedef	instance_alias_base_type		element_type;
+	/**
+		The simple_type meta type is specially optimized and 
+		simplified for D == 1.  
+	 */
+	typedef typename util::multikey<D, size_t>::simple_type	key_type;
+	typedef	sparse_collection<key_type, element_type>	collection_type;
+#else
 	// template explicitly required by g++-4.0
 	typedef	typename traits_type::template instance_alias<D>::type
 							element_type;
@@ -307,6 +322,7 @@ public:
 	typedef	typename default_multikey_set<D, element_type>::type
 							collection_type;
 	typedef	typename element_type::key_type		key_type;
+#endif
 	typedef	typename collection_type::value_type	value_type;
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
@@ -319,9 +335,12 @@ private:
 	typedef	typename util::multikey<D, pint_value_type>::generator_type
 							key_generator_type;
 	typedef	element_type&				reference;
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+#else
 	typedef	typename collection_type::iterator	iterator;
 	typedef	typename collection_type::const_iterator
 							const_iterator;
+#endif
 private:
 	collection_type					collection;
 private:
@@ -425,9 +444,13 @@ public:
 						instance_alias_base_ptr_type;
 	typedef	typename traits_type::alias_collection_type
 							alias_collection_type;
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+	typedef	instance_alias_base_type		instance_type;
+#else
 	// template explicitly required by g++-4.0
 	typedef	typename traits_type::template instance_alias<0>::type
 							instance_type;
+#endif
 	typedef	typename parent_type::collection_type_manager_parent_type
 					collection_type_manager_parent_type;
 	typedef	typename parent_type::instance_placeholder_type
@@ -478,8 +501,12 @@ public:
 	const_index_list
 	resolve_indices(const const_index_list& l) const;
 
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+	instance_type&
+#else
 	typename instance_type::parent_type&
-	get_the_instance(void) { return the_instance; }
+#endif
+	get_the_instance(void) { return this->the_instance; }
 
 	CREATE_DEPENDENT_TYPES_PROTO;
 

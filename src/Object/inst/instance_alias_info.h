@@ -4,15 +4,18 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.16 2006/10/18 01:19:29 fang Exp $
+	$Id: instance_alias_info.h,v 1.16.2.1 2006/10/20 04:43:44 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 #define	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
 
+#include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
+#if !EMBED_UNION_FIND
 #include "util/union_find.h"
+#endif
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -40,6 +43,16 @@ template <class Tag>
 
 #define	INSTANCE_ALIAS_INFO_CLASS					\
 instance_alias_info<Tag>
+
+/**
+	The instance_alias_info class is final with the new
+	sparse collection structures.  
+ */
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+#define	VIRTUAL
+#else
+#define	VIRTUAL		virtual
+#endif
 
 /**
 	Information structure for a heirarchical name for a bool.  
@@ -80,6 +93,46 @@ public:
 					instance_collection_generic_type;
 	typedef	instance_collection_generic_type	container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
+#if EMBED_UNION_FIND
+	template <class T>
+	class _iterator {
+	public:
+		typedef	T&		reference;
+		typedef	T*		pointer;
+		typedef	T		value_type;
+	private:
+		T*	ptr;
+	public:
+		explicit
+		_iterator(T* s) : ptr(s) { }
+
+		template <class S>
+		_iterator(const _iterator<S>& i) : ptr(i.ptr) { }
+
+		reference
+		operator * () const { return *this->ptr; }
+
+		pointer
+		operator -> () const { return this->ptr; }
+
+		this_type&
+		operator ++ () {
+			this->ptr = this->ptr->next;
+			return *this;
+		}
+
+		this_type
+		operator ++ (int) {
+			const _iterator temp(*this);
+			this->ptr = this->ptr->next;
+			return temp;
+		}
+	};	// end struct _iterator
+
+	typedef	_iterator<this_type>		pseudo_iterator;
+	typedef	_iterator<const this_type>	pseudo_const_iterator;
+	typedef	this_type			instance_alias_base_type;
+#else
 	typedef	util::union_find_derived<this_type>
 						instance_alias_base_type;
 	// we won't have iterator interface anymore!
@@ -88,9 +141,13 @@ public:
 	typedef	typename iterator_policy::type	pseudo_iterator;
 	typedef	typename iterator_policy::const_type
 						pseudo_const_iterator;
+#endif
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
 public:
+#if EMBED_UNION_FIND
+	this_type*					next;
+#endif
 	// size_t instance_index; // was moved to substructure_base class
 	/**
 		Back-reference to the mother container.
@@ -100,22 +157,38 @@ public:
 	 */
 	container_ptr_type				container;
 
+#if EMBED_UNION_FIND
+	// cannot use default copy-ctor
+	explicit
+	instance_alias_info(const this_type&);
+#endif
+
+#if !EMBED_UNION_FIND
+// something gone awry, wait until after clean-ups to re-protect...
 protected:
+#endif
 	// constructors only intended for children classes
-	instance_alias_info() : container(NULL) { }
+	instance_alias_info() : 
+#if EMBED_UNION_FIND
+		next(this), 
+#endif
+		container(NULL) { }
 
 	/**
 		Plain constructor initializing with container back-ptr.
 	 */
 	explicit
 	instance_alias_info(const container_ptr_type m) :
+#if EMBED_UNION_FIND
+		next(this), 
+#endif
 		container(m) {
 	}
 
 	// default copy-constructor
 
 	// default destructor, non-virtual? yes, but protected.
-virtual	~instance_alias_info();
+VIRTUAL	~instance_alias_info();
 
 	// default assignment
 
@@ -139,10 +212,24 @@ public:
 	void
 	check(const container_type* p) const;
 
-virtual	pseudo_const_iterator
+#if EMBED_UNION_FIND
+	const this_type*
+	peek(void) const { return this->next; }
+
+	void
+	unite(this_type&);
+#endif
+
+#if !EMBED_UNION_FIND
+VIRTUAL	
+#endif
+	pseudo_const_iterator
 	find(void) const;
 
-virtual	pseudo_iterator
+#if !EMBED_UNION_FIND
+VIRTUAL	
+#endif
+	pseudo_iterator
 	find(void);
 
 public:
@@ -154,8 +241,13 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
-virtual	void
+#if EMBED_UNION_FIND
+	void
+	finalize_canonicalize(this_type&);
+#else
+VIRTUAL	void
 	finalize_canonicalize(instance_alias_base_type&);
+#endif
 
 	size_t
 	assign_local_instance_id(footprint&);
@@ -177,6 +269,15 @@ virtual	void
 private:
 	using actuals_parent_type::__initialize_assign_footprint_frame;
 
+#if EMBED_UNION_FIND
+	/**
+		Make this unassignable.  Assignment is an error, 
+		because this has alias semantics.  
+	 */
+	this_type&
+	operator = (const this_type&);
+#endif
+
 protected:
 	physical_instance_collection&
 	trace_collection(const substructure_alias&) const;
@@ -196,8 +297,8 @@ public:
 	instance_alias_info<Tag>&					\
 	trace_alias(const substructure_alias&) const
 
-virtual	TRACE_ALIAS_BASE_PROTO;
-virtual	TRACE_ALIAS_PROTO;
+VIRTUAL	TRACE_ALIAS_BASE_PROTO;
+VIRTUAL	TRACE_ALIAS_PROTO;
 
 public:
 	bool
@@ -218,7 +319,7 @@ public:
 	bool
 	is_port_alias(void) const;
 
-virtual	ostream&
+VIRTUAL	ostream&
 	dump_alias(ostream& o, const dump_flags&) const;
 
 	ostream&
@@ -272,18 +373,22 @@ public:
 	checked_connect_alias(this_type&, this_type&);
 
 	/// counterpart to load_alias_reference (should be pure virtual)
-virtual	void
+VIRTUAL	void
 	write_next_connection(const persistent_object_manager& m, 
 		ostream& o) const;
 
 // probably need not be virtual, same for all children classes.
-virtual	void
+VIRTUAL	void
 	load_next_connection(const persistent_object_manager& m, 
 		istream& i);
 
 	/// counterpart to write_next_connection
 	static
+#if EMBED_UNION_FIND
+	this_type&
+#else
 	instance_alias_base_type&
+#endif
 	load_alias_reference(const persistent_object_manager& m, istream& i);
 
 public:
@@ -308,6 +413,8 @@ public:
 	};	// end class transient_info_collector
 
 };	// end class instance_alias_info
+
+#undef	VIRTUAL
 
 //-----------------------------------------------------------------------------
 
