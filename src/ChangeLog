@@ -5,6 +5,10 @@
 
 2006-10-20	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-40-instance-01-04:
+	  util/ChangeLog: update to multikey_assoc member functions.  
+
+
 	* HACKT-00-01-04-main-00-80-40-instance-01-03:
 	  Replaced the union_find_derived business with a much simpler,
 		cleaner embedded union-find functions into instance_alias_info.

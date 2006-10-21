@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2006-10-20	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-04:
+	   multikey_assoc.{h,tcc}: factored out member functions
+		is_compact and is_compact_slice to make them readily available
+		for use with any multikey associative containers.  
+
+
 2006-10-19	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-40-instance-01-01:
