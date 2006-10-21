@@ -88,14 +88,14 @@ In namespace "", we have: {
             }
           a = bool^1
             {
-              0 = foo::a[0] 
-              1 = foo::a[1] 
+              [0] = foo::a[0] 
+              [1] = foo::a[1] 
             }
           b = bool^1
             {
-              0 = foo::b[0] 
-              1 = foo::b[1] 
-              2 = foo::b[2] 
+              [0] = foo::b[0] 
+              [1] = foo::b[1] 
+              [2] = foo::b[2] 
             }
         }
       }

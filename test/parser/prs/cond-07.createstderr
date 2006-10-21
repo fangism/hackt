@@ -45,8 +45,8 @@ Persistent Object Manager text dump:
 	41	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	47	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	48	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
@@ -116,10 +116,10 @@ In namespace "", we have: {
           N = pbool^0 value: 1
           b = process bar<>^1
             {
-              0 = foo::b[0] (1) (
+              [0] = foo::b[0] (1) (
                 q = bool^0 = foo::x (1) 
               )
-              1 = foo::b[1] (2) (
+              [1] = foo::b[1] (2) (
                 q = bool^0 = foo::y (2) 
               )
             }

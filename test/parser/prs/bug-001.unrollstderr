@@ -176,20 +176,20 @@ In namespace "", we have: {
           c = process gcel<2, 2>^0 = cel::c (
             id = bool^1
               {
-                0 = cel::c.iu[0] 
-                1 = cel::c.iu[1] 
+                [0] = cel::c.iu[0] 
+                [1] = cel::c.iu[1] 
               }
             iu = bool^1
               {
-                0 = cel::c.iu[0] 
-                1 = cel::c.iu[1] 
+                [0] = cel::c.iu[0] 
+                [1] = cel::c.iu[1] 
               }
             o = bool^0 = cel::c.o 
           )
           i = bool^1
             {
-              0 = cel::c.id[0] 
-              1 = cel::c.id[1] 
+              [0] = cel::c.id[0] 
+              [1] = cel::c.id[1] 
             }
           o = bool^0 = cel::c.o 
         }
@@ -256,13 +256,13 @@ In namespace "", we have: {
           U = pint^0 value: 2
           id = bool^1
             {
-              0 = gcel::id[0] 
-              1 = gcel::id[1] 
+              [0] = gcel::id[0] 
+              [1] = gcel::id[1] 
             }
           iu = bool^1
             {
-              0 = gcel::iu[0] 
-              1 = gcel::iu[1] 
+              [0] = gcel::iu[0] 
+              [1] = gcel::iu[1] 
             }
           o = bool^0 = gcel::o 
         }
@@ -278,8 +278,8 @@ footprint: {
   x = process cel<2>^0 = x (
     i = bool^1
       {
-        0 = x.i[0] 
-        1 = x.i[1] 
+        [0] = x.i[0] 
+        [1] = x.i[1] 
       }
     o = bool^0 = x.o 
   )

@@ -68,8 +68,8 @@ In namespace "", we have: {
         _o = bool^0 = celem2inv::_o (1) 
         a = bool^1
           {
-            0 = celem2inv::a[0] (2) 
-            1 = celem2inv::a[1] (3) 
+            [0] = celem2inv::a[0] (2) 
+            [1] = celem2inv::a[1] (3) 
           }
         Created state:
         bool instance pool:
@@ -90,8 +90,8 @@ footprint: {
   c = process celem2inv<>^0 = c (1) (
     a = bool^1
       {
-        0 = c.a[0] (1) 
-        1 = c.a[1] (2) 
+        [0] = c.a[0] (1) 
+        [1] = c.a[1] (2) 
       }
     _o = bool^0 = c._o (3) 
   )

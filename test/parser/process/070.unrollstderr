@@ -61,12 +61,12 @@ In namespace "", we have: {
           N = pint^0 value: 6
           a = bool^1
             {
-              0 = foo::a[4] 
-              1 = foo::a[1] 
-              2 = foo::a[2] 
-              3 = foo::a[3] 
-              4 = foo::a[4] 
-              5 = foo::a[5] 
+              [0] = foo::a[4] 
+              [1] = foo::a[1] 
+              [2] = foo::a[2] 
+              [3] = foo::a[3] 
+              [4] = foo::a[4] 
+              [5] = foo::a[5] 
             }
         }
       }
@@ -80,12 +80,12 @@ footprint: {
   poo = process foo<6>^0 = poo (
     a = bool^1
       {
-        0 = poo.a[0] 
-        1 = poo.a[1] 
-        2 = poo.a[2] 
-        3 = poo.a[3] 
-        4 = poo.a[4] 
-        5 = poo.a[5] 
+        [0] = poo.a[0] 
+        [1] = poo.a[1] 
+        [2] = poo.a[2] 
+        [3] = poo.a[3] 
+        [4] = poo.a[4] 
+        [5] = poo.a[5] 
       }
   )
 }

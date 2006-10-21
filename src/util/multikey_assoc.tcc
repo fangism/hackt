@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.9.30.1 2006/10/21 02:50:11 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.9.30.2 2006/10/21 20:08:27 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -18,9 +18,11 @@
 #include <iterator>
 #include "util/STL/functional.h"
 
-#define	DEBUG_SLICE		0
+#ifndef	DEBUG_MULTIKEY_ASSOC_SLICE
+#define	DEBUG_MULTIKEY_ASSOC_SLICE		0
+#endif
 
-#if DEBUG_SLICE
+#if DEBUG_MULTIKEY_ASSOC_SLICE
 #include "util/stacktrace.h"
 #define	STACKTRACE_MULTIKEY_ASSOC		STACKTRACE_VERBOSE
 #else
@@ -30,13 +32,14 @@
 namespace util {
 #include "util/using_ostream.h"
 using std::pair;
+using std::distance;
 using std::_Select1st;
 using std::_Select2nd;
 using std::numeric_limits;
 using std::list;
 using std::copy;
 using std::back_inserter;
-#if DEBUG_SLICE
+#if DEBUG_MULTIKEY_ASSOC_SLICE
 using std::ostream_iterator;
 #endif
 
@@ -103,7 +106,7 @@ multikey_assoc_compact_helper<D,K>::is_compact_slice(const A& a,
 		INVARIANT(mm.first == l.end() && mm.second == u.end());
 	}
 
-#if DEBUG_SLICE
+#if DEBUG_MULTIKEY_ASSOC_SLICE
 	{
 	cerr << "In multikey_assoc_compact_helper::is_compact_slice(l,u): ";
 	ostream_iterator<index_type> osi(cerr, ",");
@@ -166,7 +169,7 @@ if (key_gen != key_gen.get_lower_corner()) {
 	else	return ret;
 }
 
-#if DEBUG_SLICE
+#if DEBUG_MULTIKEY_ASSOC_SLICE
 	{
 	cerr << "End of multikey_assoc_compact_helper::is_compact_slice(l,u): ";
 	ostream_iterator<index_type> osi(cerr, ",");
@@ -206,7 +209,7 @@ multikey_assoc_compact_helper<D,K>::__is_dense_subslice(
 	INVARIANT(l_size <= D);
 	key_list_type u(l);
 	++u.back();
-#if DEBUG_SLICE
+#if DEBUG_MULTIKEY_ASSOC_SLICE
 	{
 	cerr << "In multikey_assoc::__is_dense_subslice(l,u): ";
 	ostream_iterator<index_type> osi(cerr, ",");
@@ -221,7 +224,7 @@ multikey_assoc_compact_helper<D,K>::__is_dense_subslice(
 	// try to find one range that covers the interval densely
 	key_type lk(l), uk(u);
 	const_iterator lb(a.lower_bound(lk)), ub(a.lower_bound(uk));
-#if DEBUG_SLICE
+#if DEBUG_MULTIKEY_ASSOC_SLICE
 	cerr << "distance (lb,ub) = " << distance(lb, ub) << endl;
 #endif
 	const key_value_type next_min = _Select1st<value_type>()(*lb)[l_size];
@@ -243,7 +246,7 @@ multikey_assoc_compact_helper<D,K>::__is_dense_subslice(
 	key_list_type next_u(l);
 	next_l.push_back(next_min);
 	next_u.push_back(next_max);
-#if DEBUG_SLICE
+#if DEBUG_MULTIKEY_ASSOC_SLICE
 	{
 	cerr << "next_min/max = " << next_min << ", " << next_max << endl;
 	ostream_iterator<index_type> osi(cerr, ",");
@@ -280,6 +283,10 @@ multikey_assoc_compact_helper<D,K>::is_compact(const A& a) {
 }
 
 //-----------------------------------------------------------------------------
+/**
+	If distance between iterators matches the range spanned, 
+	then range is densely populated.
+ */
 template <class K>
 template <class A>
 typename multikey_assoc_compact_helper<1,K>::key_list_pair_type
@@ -288,24 +295,41 @@ multikey_assoc_compact_helper<1,K>::is_compact_slice(const A& a,
 	typedef key_list_pair_type      return_type;
 	typedef	typename A::const_iterator	const_iterator;
 	typedef	typename A::value_type		value_type;
-	typedef	typename A::mapped_type		mapped_type;
+//	typedef	typename A::mapped_type		mapped_type;
 	STACKTRACE_MULTIKEY_ASSOC;
 	INVARIANT(l.size() == 1);
 	INVARIANT(u.size() == 1);
+	const const_iterator this_end(a.end());
+#if 0
 	index_type k = l.front();
 	INVARIANT(k <= u.front());
 	for ( ; k <= u.front(); k++) {
 		const const_iterator i(a.find(k));
-		if (i == a.end() ||
-			_Select2nd<value_type>()(*i) == mapped_type())
+		if (i == this_end
+//			|| _Select2nd<value_type>()(*i) == mapped_type()
+			)
 //		if (i == this->end() || i->second == mapped_type())
 //		if ((*this)[k] == mapped_type())
 		{        // static_cast const?
+#if DEBUG_MULTIKEY_ASSOC_SLICE
+			cerr << "did not find key: " << k << endl;
+#endif
 			return return_type();
 		}
 	}
 	// else success
 	return return_type(l,u);
+#else
+	const index_type j = l.front(), k = u.front();
+	INVARIANT(j <= k);
+	const const_iterator lf(a.find(j)), uf(a.find(k));
+	if (lf != this_end && uf != this_end && 
+			distance(lf, uf) == k-j) {
+		return return_type(l,u);
+	} else {
+		return return_type();
+	}
+#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -316,7 +340,7 @@ multikey_assoc_compact_helper<1,K>::is_compact(const A& a) {
 	typedef key_list_pair_type      return_type;
 	typedef	typename A::const_iterator	const_iterator;
 	typedef	typename A::value_type		value_type;
-	typedef	typename A::mapped_type		mapped_type;
+//	typedef	typename A::mapped_type		mapped_type;
 	STACKTRACE_MULTIKEY_ASSOC;
 	if (a.empty()) {
 		return return_type();
@@ -324,15 +348,20 @@ multikey_assoc_compact_helper<1,K>::is_compact(const A& a) {
 	const const_iterator first(a.begin()), this_end(a.end());
 	const_iterator last(this_end);
 	--last;
+#if 0
 	index_type k = _Select1st<value_type>()(*first);
 	const index_type k_end = _Select1st<value_type>()(*last);
 	for ( ; k <= k_end; k++) {
 		const const_iterator i(a.find(k));
-		if (i == this_end ||
-			_Select2nd<value_type>()(*i) == mapped_type())
+		if (i == this_end
+//			|| _Select2nd<value_type>()(*i) == mapped_type()
+			)
 //		if (i == this_end || i->second == mapped_type())
 //		if ((*this)[k] == mapped_type())
 		{	// static_cast const?
+#if DEBUG_MULTIKEY_ASSOC_SLICE
+			cerr << "did not find key: " << k << endl;
+#endif
 			return return_type();
 		}
 	}
@@ -340,6 +369,21 @@ multikey_assoc_compact_helper<1,K>::is_compact(const A& a) {
 	ret.first.push_back(_Select1st<value_type>()(*first));
 	ret.second.push_back(_Select1st<value_type>()(*last));
 	return ret;
+#else
+	const index_type j = _Select1st<value_type>()(*first),
+		k = _Select1st<value_type>()(*last);
+	INVARIANT(j <= k);
+	const const_iterator lf(a.find(j)), uf(a.find(k));
+	if (lf != this_end && uf != this_end && 
+			distance(lf, uf) == k-j) {
+		return_type ret;
+		ret.first.push_back(_Select1st<value_type>()(*first));
+		ret.second.push_back(_Select1st<value_type>()(*last));
+		return ret;
+	} else {
+		return return_type();
+	}
+#endif
 }
 
 //=============================================================================
@@ -571,7 +615,7 @@ multikey_assoc<1,C>::is_compact(void) const {
 //=============================================================================
 }	// end namespace util
 
-#undef	DEBUG_SLICE
+#undef	DEBUG_MULTIKEY_ASSOC_SLICE
 
 #endif	// EXTERN_TEMPLATE_UTIL_MULTIKEY_ASSOC
 #endif	// __UTIL_MULTIKEY_ASSOC_TCC__

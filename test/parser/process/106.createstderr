@@ -102,13 +102,13 @@ In namespace "", we have: {
           N = pint^0 value: 3
           a = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::a[0] (1) 
-              2 = foo::a[2] (2) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::a[0] (1) 
+              [2] = foo::a[2] (2) 
             }
           q = bool^1
             {
-              0 = foo::a[0] (1) 
+              [0] = foo::a[0] (1) 
             }
           Created state:
           bool instance pool:
@@ -121,15 +121,15 @@ In namespace "", we have: {
           N = pint^0 value: 4
           a = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::a[1] (2) 
-              2 = foo::a[0] (1) 
-              3 = foo::a[3] (3) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::a[1] (2) 
+              [2] = foo::a[0] (1) 
+              [3] = foo::a[3] (3) 
             }
           q = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::q[1] (4) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::q[1] (4) 
             }
           Created state:
           bool instance pool:
@@ -144,16 +144,16 @@ In namespace "", we have: {
           N = pint^0 value: 5
           a = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::a[1] (2) 
-              2 = foo::a[0] (1) 
-              3 = foo::a[3] (3) 
-              4 = foo::a[4] (4) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::a[1] (2) 
+              [2] = foo::a[0] (1) 
+              [3] = foo::a[3] (3) 
+              [4] = foo::a[4] (4) 
             }
           q = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::q[1] (5) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::q[1] (5) 
             }
           Created state:
           bool instance pool:
@@ -178,28 +178,28 @@ footprint: {
   blinky = process foo<3>^0 = blinky (1) (
     a = bool^1
       {
-        0 = blinky.a[0] (1) 
-        1 = blinky.a[0] (1) 
-        2 = blinky.a[2] (2) 
+        [0] = blinky.a[0] (1) 
+        [1] = blinky.a[0] (1) 
+        [2] = blinky.a[2] (2) 
       }
   )
   clyde = process foo<5>^0 = clyde (2) (
     a = bool^1
       {
-        0 = clyde.a[0] (3) 
-        1 = clyde.a[1] (4) 
-        2 = clyde.a[0] (3) 
-        3 = clyde.a[3] (5) 
-        4 = clyde.a[4] (6) 
+        [0] = clyde.a[0] (3) 
+        [1] = clyde.a[1] (4) 
+        [2] = clyde.a[0] (3) 
+        [3] = clyde.a[3] (5) 
+        [4] = clyde.a[4] (6) 
       }
   )
   inky = process foo<4>^0 = inky (3) (
     a = bool^1
       {
-        0 = inky.a[0] (7) 
-        1 = inky.a[1] (8) 
-        2 = inky.a[0] (7) 
-        3 = inky.a[3] (9) 
+        [0] = inky.a[0] (7) 
+        [1] = inky.a[1] (8) 
+        [2] = inky.a[0] (7) 
+        [3] = inky.a[3] (9) 
       }
   )
   Created state:

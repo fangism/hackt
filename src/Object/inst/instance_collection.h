@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.25.2.1 2006/10/20 04:43:45 fang Exp $
+	$Id: instance_collection.h,v 1.25.2.2 2006/10/21 20:08:17 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -24,7 +24,9 @@
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
 #include "util/persistent.h"
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 #include "util/multikey_set.h"
+#endif
 #include "util/boolean_types.h"
 #include "util/memory/chunk_map_pool_fwd.h"
 #include "util/inttypes.h"
@@ -47,8 +49,10 @@ using util::memory::count_ptr;
 using util::memory::never_ptr;
 using util::good_bool;
 using util::bad_bool;
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 using util::default_multikey_set;
 using util::multikey_set_element_derived;
+#endif
 using util::persistent;
 using util::persistent_object_manager;
 
@@ -155,6 +159,18 @@ virtual	ostream&
 	ostream&
 	type_dump(ostream&) const;
 
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+virtual	ostream&
+	dump_element_key(ostream&, const instance_alias_info_type&) const = 0;
+
+virtual	size_t
+	lookup_index(const instance_alias_info_type&) const = 0;
+
+virtual	instance_alias_info_type&
+	get_corresponding_element(const this_type&,
+		const instance_alias_info_type&) = 0;
+#endif
+
 	never_ptr<const physical_instance_placeholder>
 	get_placeholder_base(void) const;
 
@@ -242,7 +258,7 @@ virtual	void
 
 public:
 virtual	instance_alias_base_type&
-	load_reference(istream& i) const = 0;
+	load_reference(istream& i) = 0;
 
 	static
 	this_type*
@@ -310,7 +326,8 @@ public:
 		The simple_type meta type is specially optimized and 
 		simplified for D == 1.  
 	 */
-	typedef typename util::multikey<D, size_t>::simple_type	key_type;
+	typedef typename util::multikey<D, pint_value_type>::simple_type
+							key_type;
 	typedef	sparse_collection<key_type, element_type>	collection_type;
 #else
 	// template explicitly required by g++-4.0
@@ -335,12 +352,9 @@ private:
 	typedef	typename util::multikey<D, pint_value_type>::generator_type
 							key_generator_type;
 	typedef	element_type&				reference;
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-#else
 	typedef	typename collection_type::iterator	iterator;
 	typedef	typename collection_type::const_iterator
 							const_iterator;
-#endif
 private:
 	collection_type					collection;
 private:
@@ -357,6 +371,18 @@ public:
 
 	bool
 	is_partially_unrolled(void) const;
+
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+	ostream&
+	dump_element_key(ostream&, const instance_alias_base_type&) const;
+
+	size_t
+	lookup_index(const instance_alias_base_type&) const;
+
+	instance_alias_base_type&
+	get_corresponding_element(const parent_type&,
+		const instance_alias_base_type&);
+#endif
 
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
@@ -385,7 +411,7 @@ public:
 	UNROLL_ALIASES_PROTO;
 
 	instance_alias_base_type&
-	load_reference(istream& i) const;
+	load_reference(istream& i);
 
 	CREATE_DEPENDENT_TYPES_PROTO;
 
@@ -476,6 +502,18 @@ public:
 	bool
 	is_partially_unrolled(void) const;
 
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+	ostream&
+	dump_element_key(ostream&, const instance_alias_base_type&) const;
+
+	size_t
+	lookup_index(const instance_alias_base_type&) const;
+
+	instance_alias_base_type&
+	get_corresponding_element(const parent_type&,
+		const instance_alias_base_type&);
+#endif
+
 	ostream&
 	dump_unrolled_instances(ostream&, const dump_flags&) const;
 
@@ -496,7 +534,7 @@ public:
 	UNROLL_ALIASES_PROTO;
 
 	instance_alias_base_type&
-	load_reference(istream& i) const;
+	load_reference(istream& i);
 
 	const_index_list
 	resolve_indices(const const_index_list& l) const;

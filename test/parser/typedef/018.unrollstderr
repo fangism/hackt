@@ -55,10 +55,10 @@ Persistent Object Manager text dump:
 	51	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	52	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	53	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	55	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	56	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
-	57	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	54	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	55	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	56	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	57	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	59	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
 
@@ -95,9 +95,9 @@ In namespace "", we have: {
           y = bool^0 = baz::y 
           z = bool^1
             {
-              0 = baz::z[0] 
-              1 = baz::z[1] 
-              2 = baz::z[2] 
+              [0] = baz::z[0] 
+              [1] = baz::z[1] 
+              [2] = baz::z[2] 
             }
         }
         <4> {
@@ -106,10 +106,10 @@ In namespace "", we have: {
           y = bool^0 = baz::y 
           z = bool^1
             {
-              0 = baz::z[0] 
-              1 = baz::z[1] 
-              2 = baz::z[2] 
-              3 = baz::z[3] 
+              [0] = baz::z[0] 
+              [1] = baz::z[1] 
+              [2] = baz::z[2] 
+              [3] = baz::z[3] 
             }
         }
       }
@@ -131,10 +131,10 @@ footprint: {
     y = bool^0 = P.y 
     z = bool^1
       {
-        0 = P.z[0] 
-        1 = P.z[1] 
-        2 = P.z[2] 
-        3 = P.z[3] 
+        [0] = P.z[0] 
+        [1] = P.z[1] 
+        [2] = P.z[2] 
+        [3] = P.z[3] 
       }
   )
   Q = process baz<3>^0 = Q (
@@ -142,9 +142,9 @@ footprint: {
     y = bool^0 = Q.y 
     z = bool^1
       {
-        0 = Q.z[0] 
-        1 = Q.z[1] 
-        2 = Q.z[2] 
+        [0] = Q.z[0] 
+        [1] = Q.z[1] 
+        [2] = Q.z[2] 
       }
   )
 }

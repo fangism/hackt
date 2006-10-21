@@ -41,8 +41,8 @@ In namespace "", we have: {
 footprint: {
   x = bool^1
     {
-      0 = x[0] (1) 
-      1 = x[0] (1) 
+      [0] = x[0] (1) 
+      [1] = x[0] (1) 
     }
   y = bool^0 = x[0] (1) 
   Created state:

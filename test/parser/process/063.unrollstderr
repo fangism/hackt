@@ -73,10 +73,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           a = bool^1
             {
-              0 = foo::a[0] 
-              1 = foo::a[1] 
-              2 = foo::a[2] 
-              3 = foo::a[3] 
+              [0] = foo::a[0] 
+              [1] = foo::a[1] 
+              [2] = foo::a[2] 
+              [3] = foo::a[3] 
             }
         }
       }
@@ -96,19 +96,19 @@ footprint: {
   goo = process foo<4>^0 = goo (
     a = bool^1
       {
-        0 = poo.a[0] 
-        1 = poo.a[1] 
-        2 = poo.a[2] 
-        3 = poo.a[3] 
+        [0] = poo.a[0] 
+        [1] = poo.a[1] 
+        [2] = poo.a[2] 
+        [3] = poo.a[3] 
       }
   )
   poo = process foo<4>^0 = goo (
     a = bool^1
       {
-        0 = poo.a[0] 
-        1 = poo.a[1] 
-        2 = poo.a[2] 
-        3 = poo.a[3] 
+        [0] = poo.a[0] 
+        [1] = poo.a[1] 
+        [2] = poo.a[2] 
+        [3] = poo.a[3] 
       }
   )
 }

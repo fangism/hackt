@@ -1,7 +1,7 @@
 /**
 	\file "sparse_collection_test.cc"
 	NOTE: this tests a structure in the HAC library, not in util.  
-	$Id: sparse_collection_test.cc,v 1.1.2.1 2006/10/19 23:04:42 fang Exp $
+	$Id: sparse_collection_test.cc,v 1.1.2.2 2006/10/21 20:08:27 fang Exp $
  */
 
 // always debug with asserts
@@ -12,6 +12,8 @@
 #define	ENABLE_STACKTRACE	0
 
 #include <iostream>
+#include <algorithm>
+#include <iterator>
 #include <string>
 #include <cassert>
 #include "Object/inst/sparse_collection.tcc"
@@ -121,6 +123,13 @@ main(int argc, char* argv[]) {
 	// const mystring _vier("vier");	// copy won't work
 	// assert(c.lookup_index(_vier) == 0);	// should fail
 }
+{
+	cout << "Testing iterator interface." << endl;
+	std::ostream_iterator<mystring> osi(cout, ", ");
+	std::copy(c.begin(), c.end(), osi);
+	cout << endl;
+}
+	cout << "End of tests." << endl;
 	return 0;
 }
 

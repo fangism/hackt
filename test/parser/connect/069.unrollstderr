@@ -60,13 +60,13 @@ Persistent Object Manager text dump:
 	56	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	57	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	58	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	59	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	60	##ADDR##	proccoll	2	#HEAD#	#TAIL#	270
-	61	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	62	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	63	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
-	64	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	65	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	59	##ADDR##	proccoll	2	#HEAD#	#TAIL#	270
+	60	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	61	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	62	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	63	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
+	64	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	65	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	66	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
 	67	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	68	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
@@ -119,16 +119,16 @@ In namespace "", we have: {
         b = bool^0 = portaproc::b 
         c = bool^1
           {
-            0 = portaproc::c[0] 
-            1 = portaproc::c[1] 
-            2 = portaproc::c[2] 
-            3 = portaproc::c[3] 
+            [0] = portaproc::c[0] 
+            [1] = portaproc::c[1] 
+            [2] = portaproc::c[2] 
+            [3] = portaproc::c[3] 
           }
         i = int<32>^0 = portaproc::i 
         j = int<32>^1
           {
-            0 = portaproc::j[0] 
-            1 = portaproc::j[1] 
+            [0] = portaproc::j[0] 
+            [1] = portaproc::j[1] 
           }
       }
       }
@@ -149,110 +149,110 @@ footprint: {
         b = bool^0 = p[0][0].b 
         c = bool^1
           {
-            0 = p[0][0].c[0] 
-            1 = p[0][0].c[1] 
-            2 = p[0][0].c[2] 
-            3 = p[0][0].c[3] 
+            [0] = p[0][0].c[0] 
+            [1] = p[0][0].c[1] 
+            [2] = p[0][0].c[2] 
+            [3] = p[0][0].c[3] 
           }
         i = int<32>^0 = p[0][0].i 
         j = int<32>^1
           {
-            0 = p[0][0].j[0] 
-            1 = p[0][0].j[1] 
+            [0] = p[0][0].j[0] 
+            [1] = p[0][0].j[1] 
           }
       )
       [0][1] = p[0][1] (
         b = bool^0 = p[0][1].b 
         c = bool^1
           {
-            0 = p[0][1].c[0] 
-            1 = p[0][1].c[1] 
-            2 = p[0][1].c[2] 
-            3 = p[0][1].c[3] 
+            [0] = p[0][1].c[0] 
+            [1] = p[0][1].c[1] 
+            [2] = p[0][1].c[2] 
+            [3] = p[0][1].c[3] 
           }
         i = int<32>^0 = p[0][1].i 
         j = int<32>^1
           {
-            0 = p[0][1].j[0] 
-            1 = p[0][1].j[1] 
+            [0] = p[0][1].j[0] 
+            [1] = p[0][1].j[1] 
           }
       )
       [0][2] = p[0][2] (
         b = bool^0 = p[0][2].b 
         c = bool^1
           {
-            0 = p[0][2].c[0] 
-            1 = p[0][2].c[1] 
-            2 = p[0][2].c[2] 
-            3 = p[0][2].c[3] 
+            [0] = p[0][2].c[0] 
+            [1] = p[0][2].c[1] 
+            [2] = p[0][2].c[2] 
+            [3] = p[0][2].c[3] 
           }
         i = int<32>^0 = p[0][2].i 
         j = int<32>^1
           {
-            0 = p[0][2].j[0] 
-            1 = p[0][2].j[1] 
+            [0] = p[0][2].j[0] 
+            [1] = p[0][2].j[1] 
           }
       )
       [1][0] = p[1][0] (
         b = bool^0 = p[1][0].b 
         c = bool^1
           {
-            0 = p[1][0].c[0] 
-            1 = p[1][0].c[1] 
-            2 = p[1][0].c[2] 
-            3 = p[1][0].c[3] 
+            [0] = p[1][0].c[0] 
+            [1] = p[1][0].c[1] 
+            [2] = p[1][0].c[2] 
+            [3] = p[1][0].c[3] 
           }
         i = int<32>^0 = p[1][0].i 
         j = int<32>^1
           {
-            0 = p[1][0].j[0] 
-            1 = p[1][0].j[1] 
+            [0] = p[1][0].j[0] 
+            [1] = p[1][0].j[1] 
           }
       )
       [1][1] = p[1][1] (
         b = bool^0 = p[1][1].b 
         c = bool^1
           {
-            0 = p[1][1].c[0] 
-            1 = p[1][1].c[1] 
-            2 = p[1][1].c[2] 
-            3 = p[1][1].c[3] 
+            [0] = p[1][1].c[0] 
+            [1] = p[1][1].c[1] 
+            [2] = p[1][1].c[2] 
+            [3] = p[1][1].c[3] 
           }
         i = int<32>^0 = p[1][1].i 
         j = int<32>^1
           {
-            0 = p[1][1].j[0] 
-            1 = p[1][1].j[1] 
+            [0] = p[1][1].j[0] 
+            [1] = p[1][1].j[1] 
           }
       )
       [1][2] = p[1][2] (
         b = bool^0 = p[1][2].b 
         c = bool^1
           {
-            0 = p[1][2].c[0] 
-            1 = p[1][2].c[1] 
-            2 = p[1][2].c[2] 
-            3 = p[1][2].c[3] 
+            [0] = p[1][2].c[0] 
+            [1] = p[1][2].c[1] 
+            [2] = p[1][2].c[2] 
+            [3] = p[1][2].c[3] 
           }
         i = int<32>^0 = p[1][2].i 
         j = int<32>^1
           {
-            0 = p[1][2].j[0] 
-            1 = p[1][2].j[1] 
+            [0] = p[1][2].j[0] 
+            [1] = p[1][2].j[1] 
           }
       )
     }
   q = int<32>^0 = p[0][1].i 
   r = int<32>^1
     {
-      0 = p[0][1].j[0] 
-      1 = p[0][1].j[1] 
+      [0] = p[0][1].j[0] 
+      [1] = p[0][1].j[1] 
     }
   x = bool^1
     {
-      0 = p[0][1].c[0] 
-      1 = p[0][1].c[1] 
-      2 = p[0][1].c[2] 
-      3 = p[0][1].c[3] 
+      [0] = p[0][1].c[0] 
+      [1] = p[0][1].c[1] 
+      [2] = p[0][1].c[2] 
+      [3] = p[0][1].c[3] 
     }
 }

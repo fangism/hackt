@@ -43,13 +43,13 @@ Persistent Object Manager text dump:
 	39	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	42	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	43	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	44	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	47	##ADDR##	proccoll	1	#HEAD#	#TAIL#	82
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	42	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	45	##ADDR##	proccoll	1	#HEAD#	#TAIL#	82
+	46	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	47	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	48	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	49	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	50	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	51	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
@@ -87,21 +87,21 @@ In namespace "", we have: {
       footprint: {
         p = process pbit<>^1
           {
-            0 = lut::pbint[0].pb (
+            [0] = lut::pbint[0].pb (
               t = bool^0 = lut::p[0].t 
             )
-            1 = lut::pbint[1].pb (
+            [1] = lut::pbint[1].pb (
               t = bool^0 = lut::p[1].t 
             )
           }
         pbint = process pbitint<>^1
           {
-            0 = lut::pbint[0] (
+            [0] = lut::pbint[0] (
               pb = process pbit<>^0 = lut::pbint[0].pb (
                 t = bool^0 = lut::p[0].t 
               )
             )
-            1 = lut::pbint[1] (
+            [1] = lut::pbint[1] (
               pb = process pbit<>^0 = lut::pbint[1].pb (
                 t = bool^0 = lut::p[1].t 
               )
@@ -146,12 +146,12 @@ footprint: {
   l = process lut<>^0 = l (
     pbint = process pbitint<>^1
       {
-        0 = l.pbint[0] (
+        [0] = l.pbint[0] (
           pb = process pbit<>^0 = l.pbint[0].pb (
             t = bool^0 = l.pbint[0].pb.t 
           )
         )
-        1 = l.pbint[1] (
+        [1] = l.pbint[1] (
           pb = process pbit<>^0 = l.pbint[1].pb (
             t = bool^0 = l.pbint[1].pb.t 
           )

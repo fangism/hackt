@@ -68,8 +68,8 @@ In namespace "", we have: {
         _o = bool^0 = celem2inv::_o 
         a = bool^1
           {
-            0 = celem2inv::a[0] 
-            1 = celem2inv::a[1] 
+            [0] = celem2inv::a[0] 
+            [1] = celem2inv::a[1] 
           }
       }
       }
@@ -82,8 +82,8 @@ footprint: {
   c = process celem2inv<>^0 = c (
     a = bool^1
       {
-        0 = c.a[0] 
-        1 = c.a[1] 
+        [0] = c.a[0] 
+        [1] = c.a[1] 
       }
     _o = bool^0 = c._o 
   )

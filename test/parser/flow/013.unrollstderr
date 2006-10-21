@@ -81,9 +81,9 @@ Persistent Object Manager text dump:
 	77	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	79	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	80	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	561
-	81	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	141
-	82	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	141
+	80	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	521
+	81	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	121
+	82	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	121
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -132,18 +132,18 @@ footprint: {
     }
   y = bool^1
     {
-      0 = x[0][0] 
-      1 = x[1][0] 
-      2 = x[2][0] 
-      3 = x[3][0] 
-      4 = x[4][0] 
+      [0] = x[0][0] 
+      [1] = x[1][0] 
+      [2] = x[2][0] 
+      [3] = x[3][0] 
+      [4] = x[4][0] 
     }
   z = bool^1
     {
-      0 = x[0][0] 
-      1 = x[1][0] 
-      2 = x[2][0] 
-      3 = x[3][0] 
-      4 = x[4][0] 
+      [0] = x[0][0] 
+      [1] = x[1][0] 
+      [2] = x[2][0] 
+      [3] = x[3][0] 
+      [4] = x[4][0] 
     }
 }

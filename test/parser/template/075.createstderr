@@ -114,10 +114,10 @@ Persistent Object Manager text dump:
 	110	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	111	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	20
 	112	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	113	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	113	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	114	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	115	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	116	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	116	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	117	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	118	##ADDR##	pintcoll	2	#HEAD#	#TAIL#	164
 

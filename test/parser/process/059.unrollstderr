@@ -53,9 +53,9 @@ In namespace "", we have: {
           N = pint^0 value: 3
           a = bool^1
             {
-              0 = foo::a[0] 
-              1 = foo::a[1] 
-              2 = foo::a[2] 
+              [0] = foo::a[0] 
+              [1] = foo::a[1] 
+              [2] = foo::a[2] 
             }
         }
       }
@@ -69,9 +69,9 @@ footprint: {
   poo = process foo<3>^0 = poo (
     a = bool^1
       {
-        0 = poo.a[0] 
-        1 = poo.a[1] 
-        2 = poo.a[2] 
+        [0] = poo.a[0] 
+        [1] = poo.a[1] 
+        [2] = poo.a[2] 
       }
   )
 }

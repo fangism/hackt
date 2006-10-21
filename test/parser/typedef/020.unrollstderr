@@ -99,9 +99,9 @@ In namespace "", we have: {
           y = bool^0 = baz::y 
           z = bool^1
             {
-              0 = baz::z[0] 
-              1 = baz::z[1] 
-              2 = baz::z[2] 
+              [0] = baz::z[0] 
+              [1] = baz::z[1] 
+              [2] = baz::z[2] 
             }
         }
         <4> {
@@ -110,10 +110,10 @@ In namespace "", we have: {
           y = bool^0 = baz::y 
           z = bool^1
             {
-              0 = baz::z[0] 
-              1 = baz::z[1] 
-              2 = baz::z[2] 
-              3 = baz::z[3] 
+              [0] = baz::z[0] 
+              [1] = baz::z[1] 
+              [2] = baz::z[2] 
+              [3] = baz::z[3] 
             }
         }
       }
@@ -135,10 +135,10 @@ footprint: {
     y = bool^0 = P.y 
     z = bool^1
       {
-        0 = P.z[0] 
-        1 = P.z[1] 
-        2 = P.z[2] 
-        3 = Q.z[2] 
+        [0] = P.z[0] 
+        [1] = P.z[1] 
+        [2] = P.z[2] 
+        [3] = Q.z[2] 
       }
   )
   Q = process baz<3>^0 = Q (
@@ -146,9 +146,9 @@ footprint: {
     y = bool^0 = Q.y 
     z = bool^1
       {
-        0 = Q.z[0] 
-        1 = Q.z[1] 
-        2 = Q.z[2] 
+        [0] = Q.z[0] 
+        [1] = Q.z[1] 
+        [2] = Q.z[2] 
       }
   )
 }

@@ -72,22 +72,22 @@ Persistent Object Manager text dump:
 	68	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	69	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	70	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	71	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	253
+	71	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	225
 	72	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	73	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	74	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	75	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	76	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	340
+	76	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	300
 	77	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	78	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	79	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	80	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	81	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	340
+	81	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	300
 	82	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	83	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	84	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	85	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	86	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	456
+	86	##ADDR##	dboolcol	2	#HEAD#	#TAIL#	400
 	87	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	88	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	89	##ADDR##	procplch	0	#HEAD#	#TAIL#	25

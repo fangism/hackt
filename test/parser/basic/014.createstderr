@@ -47,11 +47,11 @@ In namespace "", we have: {
 footprint: {
   good_array = bool^1
     {
-      0 = good_array[0] (1) 
-      1 = good_array[1] (2) 
-      2 = good_array[2] (3) 
-      3 = good_array[3] (4) 
-      4 = good_array[4] (5) 
+      [0] = good_array[0] (1) 
+      [1] = good_array[1] (2) 
+      [2] = good_array[2] (3) 
+      [3] = good_array[3] (4) 
+      [4] = good_array[4] (5) 
     }
   more_arrays::fancier_array = bool^3
     {

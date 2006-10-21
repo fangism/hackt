@@ -43,8 +43,8 @@ In namespace "", we have: {
 footprint: {
   w = bool^1
     {
-      0 = w[0] (1) 
-      1 = w[1] (2) 
+      [0] = w[0] (1) 
+      [1] = w[1] (2) 
     }
   x = bool^0 = w[0] (1) 
   y = bool^0 = w[1] (2) 

@@ -39,8 +39,8 @@ In namespace "", we have: {
       footprint: {
         x = process foo<>^1
           {
-            0 = bar::x[0] 
-            1 = bar::x[1] 
+            [0] = bar::x[0] 
+            [1] = bar::x[1] 
           }
       }
       }
@@ -61,8 +61,8 @@ footprint: {
   poo = process bar<>^0 = poo (
     x = process foo<>^1
       {
-        0 = poo.x[0] 
-        1 = poo.x[1] 
+        [0] = poo.x[0] 
+        [1] = poo.x[1] 
       }
   )
 }

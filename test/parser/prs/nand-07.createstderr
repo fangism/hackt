@@ -94,10 +94,10 @@ In namespace "", we have: {
           _out = bool^0 = nandN::_out (5) 
           in = bool^1
             {
-              0 = nandN::in[0] (1) 
-              1 = nandN::in[1] (2) 
-              2 = nandN::in[2] (3) 
-              3 = nandN::in[3] (4) 
+              [0] = nandN::in[0] (1) 
+              [1] = nandN::in[1] (2) 
+              [2] = nandN::in[2] (3) 
+              [3] = nandN::in[3] (4) 
             }
           Created state:
           bool instance pool:
@@ -124,10 +124,10 @@ footprint: {
   foo = process nandN<4>^0 = foo (1) (
     in = bool^1
       {
-        0 = foo.in[0] (1) 
-        1 = foo.in[1] (2) 
-        2 = foo.in[2] (3) 
-        3 = foo.in[3] (4) 
+        [0] = foo.in[0] (1) 
+        [1] = foo.in[1] (2) 
+        [2] = foo.in[2] (3) 
+        [3] = foo.in[3] (4) 
       }
     _out = bool^0 = foo._out (5) 
   )

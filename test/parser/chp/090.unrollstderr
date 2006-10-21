@@ -151,8 +151,8 @@ In namespace "", we have: {
           y = int<1>^0 = send_indexed::y 
           z = int<32>^1
             {
-              0 = send_indexed::z[0] 
-              1 = send_indexed::z[1] 
+              [0] = send_indexed::z[0] 
+              [1] = send_indexed::z[1] 
             }
         }
         <1> {
@@ -167,8 +167,8 @@ In namespace "", we have: {
           y = int<1>^0 = send_indexed::y 
           z = int<32>^1
             {
-              0 = send_indexed::z[0] 
-              1 = send_indexed::z[1] 
+              [0] = send_indexed::z[0] 
+              [1] = send_indexed::z[1] 
             }
         }
       }

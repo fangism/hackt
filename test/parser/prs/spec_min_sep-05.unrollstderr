@@ -106,9 +106,9 @@ In namespace "", we have: {
         r = bool^0 = groupie::r 
         x = bool^1
           {
-            0 = groupie::x[0] 
-            1 = groupie::x[1] 
-            2 = groupie::x[2] 
+            [0] = groupie::x[0] 
+            [1] = groupie::x[1] 
+            [2] = groupie::x[2] 
           }
       }
       }

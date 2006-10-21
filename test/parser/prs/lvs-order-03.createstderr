@@ -86,15 +86,15 @@ In namespace "", we have: {
           N = pint^0 value: 3
           a = bool^1
             {
-              0 = lvs_order::a[0] (1) 
-              1 = lvs_order::a[1] (2) 
-              2 = lvs_order::a[2] (3) 
+              [0] = lvs_order::a[0] (1) 
+              [1] = lvs_order::a[1] (2) 
+              [2] = lvs_order::a[2] (3) 
             }
           b = bool^1
             {
-              0 = lvs_order::b[0] (4) 
-              1 = lvs_order::b[1] (5) 
-              2 = lvs_order::b[2] (6) 
+              [0] = lvs_order::b[0] (4) 
+              [1] = lvs_order::b[1] (5) 
+              [2] = lvs_order::b[2] (6) 
             }
           Created state:
           bool instance pool:
@@ -119,9 +119,9 @@ footprint: {
   foo = process lvs_order<3>^0 = foo (1) (
     a = bool^1
       {
-        0 = foo.a[0] (1) 
-        1 = foo.a[1] (2) 
-        2 = foo.a[2] (3) 
+        [0] = foo.a[0] (1) 
+        [1] = foo.a[1] (2) 
+        [2] = foo.a[2] (3) 
       }
   )
   Created state:

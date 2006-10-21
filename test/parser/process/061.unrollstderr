@@ -62,8 +62,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           x = int<3>^1
             {
-              0 = bar::x[0] 
-              1 = bar::x[1] 
+              [0] = bar::x[0] 
+              [1] = bar::x[1] 
             }
         }
       }
@@ -77,8 +77,8 @@ footprint: {
   poo = process bar<3, 2>^0 = poo (
     x = int<3>^1
       {
-        0 = poo.x[0] 
-        1 = poo.x[1] 
+        [0] = poo.x[0] 
+        [1] = poo.x[1] 
       }
   )
 }

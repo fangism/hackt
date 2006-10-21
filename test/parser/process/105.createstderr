@@ -76,9 +76,9 @@ In namespace "", we have: {
           a = int<8>^0 = foo::a (1) 
           blah = int<8>^1
             {
-              0 = foo::blah[0] (2) 
-              1 = foo::a (1) 
-              2 = foo::blah[2] (3) 
+              [0] = foo::blah[0] (2) 
+              [1] = foo::a (1) 
+              [2] = foo::blah[2] (3) 
             }
           Created state:
           int instance pool:
@@ -91,9 +91,9 @@ In namespace "", we have: {
           a = int<11>^0 = foo::a (1) 
           blah = int<11>^1
             {
-              0 = foo::blah[0] (2) 
-              1 = foo::a (1) 
-              2 = foo::blah[2] (3) 
+              [0] = foo::blah[0] (2) 
+              [1] = foo::a (1) 
+              [2] = foo::blah[2] (3) 
             }
           Created state:
           int instance pool:

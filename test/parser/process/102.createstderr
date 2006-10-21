@@ -49,8 +49,8 @@ In namespace "", we have: {
       footprint: {
         x = process foo<>^1
           {
-            0 = bar::x[0] (1) 
-            1 = bar::x[1] (2) 
+            [0] = bar::x[0] (1) 
+            [1] = bar::x[1] (2) 
           }
         Created state:
         process instance pool:
@@ -69,8 +69,8 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            0 = foo::a[0] (1) 
-            1 = foo::a[1] (2) 
+            [0] = foo::a[0] (1) 
+            [1] = foo::a[1] (2) 
           }
         Created state:
         bool instance pool:
@@ -89,8 +89,8 @@ In namespace "", we have: {
       footprint: {
         p = process bar<>^1
           {
-            0 = ick::p[0] (1) 
-            1 = ick::p[1] (2) 
+            [0] = ick::p[0] (1) 
+            [1] = ick::p[1] (2) 
           }
         Created state:
         process instance pool:

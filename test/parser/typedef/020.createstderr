@@ -99,9 +99,9 @@ In namespace "", we have: {
           y = bool^0 = baz::y (2) 
           z = bool^1
             {
-              0 = baz::z[0] (3) 
-              1 = baz::z[1] (4) 
-              2 = baz::z[2] (5) 
+              [0] = baz::z[0] (3) 
+              [1] = baz::z[1] (4) 
+              [2] = baz::z[2] (5) 
             }
           Created state:
           bool instance pool:
@@ -117,10 +117,10 @@ In namespace "", we have: {
           y = bool^0 = baz::y (2) 
           z = bool^1
             {
-              0 = baz::z[0] (3) 
-              1 = baz::z[1] (4) 
-              2 = baz::z[2] (5) 
-              3 = baz::z[3] (6) 
+              [0] = baz::z[0] (3) 
+              [1] = baz::z[1] (4) 
+              [2] = baz::z[2] (5) 
+              [3] = baz::z[3] (6) 
             }
           Created state:
           bool instance pool:
@@ -150,10 +150,10 @@ footprint: {
     y = bool^0 = P.y (2) 
     z = bool^1
       {
-        0 = P.z[0] (3) 
-        1 = P.z[1] (4) 
-        2 = P.z[2] (5) 
-        3 = P.z[3] (6) 
+        [0] = P.z[0] (3) 
+        [1] = P.z[1] (4) 
+        [2] = P.z[2] (5) 
+        [3] = P.z[3] (6) 
       }
   )
   Q = process baz<3>^0 = Q (2) (
@@ -161,9 +161,9 @@ footprint: {
     y = bool^0 = Q.y (8) 
     z = bool^1
       {
-        0 = Q.z[0] (9) 
-        1 = Q.z[1] (10) 
-        2 = P.z[3] (6) 
+        [0] = Q.z[0] (9) 
+        [1] = Q.z[1] (10) 
+        [2] = P.z[3] (6) 
       }
   )
   Created state:

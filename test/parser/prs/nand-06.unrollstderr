@@ -81,10 +81,10 @@ In namespace "", we have: {
           _out = bool^0 = nandN::_out 
           in = bool^1
             {
-              0 = nandN::in[0] 
-              1 = nandN::in[1] 
-              2 = nandN::in[2] 
-              3 = nandN::in[3] 
+              [0] = nandN::in[0] 
+              [1] = nandN::in[1] 
+              [2] = nandN::in[2] 
+              [3] = nandN::in[3] 
             }
         }
       }
@@ -98,10 +98,10 @@ footprint: {
   foo = process nandN<4>^0 = foo (
     in = bool^1
       {
-        0 = foo.in[0] 
-        1 = foo.in[1] 
-        2 = foo.in[2] 
-        3 = foo.in[3] 
+        [0] = foo.in[0] 
+        [1] = foo.in[1] 
+        [2] = foo.in[2] 
+        [3] = foo.in[3] 
       }
     _out = bool^0 = foo._out 
   )

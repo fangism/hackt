@@ -66,11 +66,11 @@ In namespace "", we have: {
       footprint: {
         x = process foo<>^1
           {
-            0 = bar::x[1] (
+            [0] = bar::x[1] (
               a = bool^0 = bar::x[0].a 
               b = bool^0 = bar::x[0].b 
             )
-            1 = bar::x[1] (
+            [1] = bar::x[1] (
               a = bool^0 = bar::x[0].a 
               b = bool^0 = bar::x[0].b 
             )
@@ -104,11 +104,11 @@ footprint: {
   poo = process bar<>^0 = poo (
     x = process foo<>^1
       {
-        0 = poo.x[0] (
+        [0] = poo.x[0] (
           a = bool^0 = poo.x[0].a 
           b = bool^0 = poo.x[0].b 
         )
-        1 = poo.x[1] (
+        [1] = poo.x[1] (
           a = bool^0 = poo.x[1].a 
           b = bool^0 = poo.x[1].b 
         )

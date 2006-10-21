@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.16.2.1 2006/10/20 04:43:44 fang Exp $
+	$Id: instance_alias_info.h,v 1.16.2.2 2006/10/21 20:08:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -159,7 +159,7 @@ public:
 
 #if EMBED_UNION_FIND
 	// cannot use default copy-ctor
-	explicit
+	// explicit		// need implicit for vector use
 	instance_alias_info(const this_type&);
 #endif
 
@@ -232,6 +232,19 @@ VIRTUAL
 	pseudo_iterator
 	find(void);
 
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+	size_t
+	get_index(void) const;
+
+	ostream&
+	dump_key(ostream&) const;
+
+#if 0
+	multikey_generic
+	get_key(void) const;
+#endif
+#endif
+
 public:
 	/**
 		Instantiates officially by linking to parent collection.  
@@ -270,6 +283,11 @@ private:
 	using actuals_parent_type::__initialize_assign_footprint_frame;
 
 #if EMBED_UNION_FIND
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+public:	// assignment needs to be accessible to std::vector
+	// for push_back -- but we guarantee that it is never called at
+	// run-time, because this class is not assignable.  
+#endif
 	/**
 		Make this unassignable.  Assignment is an error, 
 		because this has alias semantics.  
@@ -400,6 +418,23 @@ public:
 
 	void
 	load_object_base(const persistent_object_manager&, istream&);
+
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+	void
+	collect_transient_info(persistent_object_manager& m) const {
+		this->collect_transient_info_base(m);
+	}
+
+	void
+	write_object(const persistent_object_manager& m, ostream& o) const {
+		this->write_object_base(m, o);
+	}
+
+	void
+	load_object(const persistent_object_manager& m, istream& i) {
+		this->load_object_base(m, i);
+	}
+#endif
 
 	class transient_info_collector {
 		persistent_object_manager&	manager;

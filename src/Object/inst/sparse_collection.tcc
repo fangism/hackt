@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/sparse_collection.tcc"
-	$Id: sparse_collection.tcc,v 1.1.2.1 2006/10/19 23:04:38 fang Exp $
+	$Id: sparse_collection.tcc,v 1.1.2.2 2006/10/21 20:08:20 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SPARSE_COLLECTION_TCC__
@@ -9,7 +9,6 @@
 #include <iostream>
 #include <iterator>
 #include "Object/inst/sparse_collection.h"
-#include "util/macros.h"
 #include "util/likely.h"
 #include "util/stacktrace.h"
 
@@ -49,10 +48,37 @@ SPARSE_COLLECTION_CLASS::~sparse_collection() {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
 SPARSE_COLLECTION_TEMPLATE_SIGNATURE
 ostream&
 SPARSE_COLLECTION_CLASS::dump(ostream& o) const {
+	// TODO: finish me
 	return o;
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i the internal index (0-indexed).
+	\return reference to indexed element.
+	The returned pointer need not be memory-managed.  
+ */
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+typename SPARSE_COLLECTION_CLASS::index_value_map_const_iterator
+SPARSE_COLLECTION_CLASS::__find_index_value_map_iterator(
+		const size_type i) const {
+	STACKTRACE_BRIEF;
+	STACKTRACE_INDENT_PRINT("i = " << i << endl);
+	if (UNLIKELY(i >= key_index_array.size())) {
+		STACKTRACE_INDENT_PRINT("i out-of-bounds" << endl);
+		STACKTRACE_INDENT_PRINT("key-index-array size == " <<
+			key_index_array.size() << endl);
+		return index_value_map.end();
+	}
+	index_value_map_const_iterator f(index_value_map.upper_bound(i));
+	INVARIANT(f != index_value_map.begin());
+	--f;
+	return f;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -66,15 +92,33 @@ const typename SPARSE_COLLECTION_CLASS::value_type*
 SPARSE_COLLECTION_CLASS::__find(const size_type i) const {
 	STACKTRACE_BRIEF;
 	STACKTRACE_INDENT_PRINT("i = " << i << endl);
-	if (UNLIKELY(i >= key_index_array.size())) {
-		STACKTRACE_INDENT_PRINT("i out-of-bounds" << endl);
-		STACKTRACE_INDENT_PRINT("key-index-array size == " <<
-			key_index_array.size() << endl);
+	const index_value_map_const_iterator
+		f(this->__find_index_value_map_iterator(i));
+	if (f == index_value_map.end()) {
 		return NULL;
 	}
-	index_value_map_const_iterator f(index_value_map.upper_bound(i));
-	INVARIANT(f != index_value_map.begin());
-	--f;
+	const size_type remainder = i - f->first;
+	const value_pool_iterator& p(f->second);
+	INVARIANT(remainder < p->size());
+	return &(*p)[remainder];
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i the internal index (0-indexed).
+	\return reference to indexed element.
+	The returned pointer need not be memory-managed.  
+ */
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+typename SPARSE_COLLECTION_CLASS::value_type*
+SPARSE_COLLECTION_CLASS::__find(const size_type i) {
+	STACKTRACE_BRIEF;
+	STACKTRACE_INDENT_PRINT("i = " << i << endl);
+	const index_value_map_const_iterator
+		f(this->__find_index_value_map_iterator(i));
+	if (f == index_value_map.end()) {
+		return NULL;
+	}
 	const size_type remainder = i - f->first;
 	const value_pool_iterator& p(f->second);
 	INVARIANT(remainder < p->size());
@@ -88,6 +132,17 @@ SPARSE_COLLECTION_CLASS::__find(const size_type i) const {
 SPARSE_COLLECTION_TEMPLATE_SIGNATURE
 const typename SPARSE_COLLECTION_CLASS::value_type*
 SPARSE_COLLECTION_CLASS::find(const size_type i) const {
+	INVARIANT(i);
+	return this->__find(i -1);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i the 1-based indexed.
+ */
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+typename SPARSE_COLLECTION_CLASS::value_type*
+SPARSE_COLLECTION_CLASS::find(const size_type i) {
 	INVARIANT(i);
 	return this->__find(i -1);
 }
@@ -112,6 +167,38 @@ SPARSE_COLLECTION_CLASS::find(const key_type& k) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	Search for value by key.  
+	\return NULL if it doesn't exist.  
+	The returned pointer need not be memory-managed.  
+ */
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+typename SPARSE_COLLECTION_CLASS::value_type*
+SPARSE_COLLECTION_CLASS::find(const key_type& k) {
+	STACKTRACE_BRIEF;
+	const size_type i = this->lookup_index(k);	// 1-based index
+	if (!i) {
+		return NULL;
+	}
+	STACKTRACE_INDENT_PRINT("i(1) = " << i << endl);
+	return this->__find(i -1);	// expects 0-based
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+typename SPARSE_COLLECTION_CLASS::iterator
+SPARSE_COLLECTION_CLASS::find_iterator(const key_type& k) {
+	return iterator(*this, key_index_map.find(k));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+typename SPARSE_COLLECTION_CLASS::const_iterator
+SPARSE_COLLECTION_CLASS::find_iterator(const key_type& k) const {
+	return const_iterator(*this, key_index_map.find(k));
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\param i the internal index (1-indexed)
 	\pre the referenced element must exist.  
  */
@@ -122,7 +209,17 @@ SPARSE_COLLECTION_CLASS::operator [] (const size_type i) const {
 	return *this->__find(i -1);	// expects 0-based
 }
 
-// non-const reference version
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\param i the internal index (1-indexed)
+	\pre the referenced element must exist.  
+ */
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+typename SPARSE_COLLECTION_CLASS::value_type&
+SPARSE_COLLECTION_CLASS::operator [] (const size_type i) {
+	INVARIANT(i);
+	return *this->__find(i -1);	// expects 0-based
+}
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -132,6 +229,19 @@ SPARSE_COLLECTION_CLASS::operator [] (const size_type i) const {
 SPARSE_COLLECTION_TEMPLATE_SIGNATURE
 const typename SPARSE_COLLECTION_CLASS::value_type&
 SPARSE_COLLECTION_CLASS::operator [] (const key_type& k) const {
+	STACKTRACE_BRIEF;
+	const size_type i = this->__lookup_index(k);	// 0-based index
+	return *this->__find(i);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Translates associative key into internal index for lookup.  
+	\pre key-value pair sought must already exist.  
+ */
+SPARSE_COLLECTION_TEMPLATE_SIGNATURE
+typename SPARSE_COLLECTION_CLASS::value_type&
+SPARSE_COLLECTION_CLASS::operator [] (const key_type& k) {
 	STACKTRACE_BRIEF;
 	const size_type i = this->__lookup_index(k);	// 0-based index
 	return *this->__find(i);
@@ -171,18 +281,7 @@ SPARSE_COLLECTION_TEMPLATE_SIGNATURE
 const typename SPARSE_COLLECTION_CLASS::key_type&
 SPARSE_COLLECTION_CLASS::lookup_key(const value_type& v) const {
 	STACKTRACE_BRIEF;
-#if 0
-	address_chunk_map_const_iterator f(address_chunk_map.upper_bound(&v));
-	INVARIANT(f != address_chunk_map.begin());
-	--f;
-	const index_value_map_const_iterator& ivi(f->second);
-	const value_pool_const_iterator vpi(ivi->second);
-	const size_type offset = std::distance(&vpi->front(), &v);
-	INVARIANT(offset <= vpi->size());
-	const size_type i = ivi->first +offset;
-#else
 	const size_type i = this->lookup_index(v);
-#endif
 	return this->lookup_key(i);
 }
 
@@ -260,11 +359,14 @@ SPARSE_COLLECTION_CLASS::lookup_index(const value_type& v) const {
 	Since newly allocated chunks double in size, 
 	the access time through the pool is actually log(log(N)).
 	Algorithm:
+	\param k the key with which to associate the new value.
+	\param v the value (initial) to be added.  
 	\return true if value was actually added, i.e. key didn't already
-		exist.  
+		exist.  Returns a pointer to the location of the newly
+		added value, which is a copy of the value argument.  
  */
 SPARSE_COLLECTION_TEMPLATE_SIGNATURE
-bool
+typename SPARSE_COLLECTION_CLASS::value_type*
 SPARSE_COLLECTION_CLASS::insert(const key_type& k, const value_type& v) {
 	STACKTRACE_BRIEF;
 	const size_type new_index = key_index_array.size();
@@ -273,7 +375,7 @@ SPARSE_COLLECTION_CLASS::insert(const key_type& k, const value_type& v) {
 		kpr(key_index_map.insert(kip));
 	if (!kpr.second) {
 		STACKTRACE_INDENT_PRINT("already in map." << endl);
-		return false;
+		return NULL;
 	}
 	key_index_array.push_back(kpr.first);
 	STACKTRACE_INDENT_PRINT("new_index(0) = " << new_index << endl);
@@ -295,7 +397,9 @@ SPARSE_COLLECTION_CLASS::insert(const key_type& k, const value_type& v) {
 		address_chunk_map[&pb->front()] = r.first;
 	}
 	pb->push_back(v);
-	return true;
+	// guaranteed NOT to realloc because
+	// sufficient space was pre-allocated
+	return &pb->back();
 }
 
 //=============================================================================

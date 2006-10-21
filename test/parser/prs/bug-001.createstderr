@@ -95,8 +95,8 @@ Persistent Object Manager text dump:
 	91	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
 	92	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
 	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	94	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	95	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	94	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	95	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	96	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	97	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	98	##ADDR##	procdefn	0	#HEAD#	#TAIL#	390
@@ -176,20 +176,20 @@ In namespace "", we have: {
           c = process gcel<2, 2>^0 = cel::c (1) (
             id = bool^1
               {
-                0 = cel::i[0] (1) 
-                1 = cel::i[1] (2) 
+                [0] = cel::i[0] (1) 
+                [1] = cel::i[1] (2) 
               }
             iu = bool^1
               {
-                0 = cel::i[0] (1) 
-                1 = cel::i[1] (2) 
+                [0] = cel::i[0] (1) 
+                [1] = cel::i[1] (2) 
               }
             o = bool^0 = cel::o (3) 
           )
           i = bool^1
             {
-              0 = cel::i[0] (1) 
-              1 = cel::i[1] (2) 
+              [0] = cel::i[0] (1) 
+              [1] = cel::i[1] (2) 
             }
           o = bool^0 = cel::o (3) 
           Created state:
@@ -272,13 +272,13 @@ In namespace "", we have: {
           U = pint^0 value: 2
           id = bool^1
             {
-              0 = gcel::id[0] (1) 
-              1 = gcel::id[1] (2) 
+              [0] = gcel::id[0] (1) 
+              [1] = gcel::id[1] (2) 
             }
           iu = bool^1
             {
-              0 = gcel::iu[0] (3) 
-              1 = gcel::iu[1] (4) 
+              [0] = gcel::iu[0] (3) 
+              [1] = gcel::iu[1] (4) 
             }
           o = bool^0 = gcel::o (5) 
           Created state:
@@ -304,8 +304,8 @@ footprint: {
   x = process cel<2>^0 = x (1) (
     i = bool^1
       {
-        0 = x.i[0] (1) 
-        1 = x.i[1] (2) 
+        [0] = x.i[0] (1) 
+        [1] = x.i[1] (2) 
       }
     o = bool^0 = x.o (3) 
   )

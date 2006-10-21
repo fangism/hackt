@@ -92,14 +92,14 @@ In namespace "", we have: {
             }
           a = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::a[1] (2) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::a[1] (2) 
             }
           b = bool^1
             {
-              0 = foo::b[0] (3) 
-              1 = foo::b[1] (4) 
-              2 = foo::b[2] (5) 
+              [0] = foo::b[0] (3) 
+              [1] = foo::b[1] (4) 
+              [2] = foo::b[2] (5) 
             }
           Created state:
           bool instance pool:
@@ -125,14 +125,14 @@ footprint: {
   poo = process foo<{2,3}>^0 = poo (1) (
     a = bool^1
       {
-        0 = poo.a[0] (1) 
-        1 = poo.a[1] (2) 
+        [0] = poo.a[0] (1) 
+        [1] = poo.a[1] (2) 
       }
     b = bool^1
       {
-        0 = poo.b[0] (3) 
-        1 = poo.b[1] (4) 
-        2 = poo.b[2] (5) 
+        [0] = poo.b[0] (3) 
+        [1] = poo.b[1] (4) 
+        [2] = poo.b[2] (5) 
       }
   )
   Created state:

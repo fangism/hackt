@@ -92,13 +92,13 @@ In namespace "", we have: {
             }
           a = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::a[1] (2) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::a[1] (2) 
             }
           b = bool^1
             {
-              0 = foo::a[0] (1) 
-              1 = foo::a[1] (2) 
+              [0] = foo::a[0] (1) 
+              [1] = foo::a[1] (2) 
             }
           Created state:
           bool instance pool:

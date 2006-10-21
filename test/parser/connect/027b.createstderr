@@ -59,8 +59,8 @@ In namespace "", we have: {
         a = bool^0 = bar::a (1) 
         b = bool^1
           {
-            0 = bar::b[0] (2) 
-            1 = bar::b[1] (3) 
+            [0] = bar::b[0] (2) 
+            [1] = bar::b[1] (3) 
           }
         Created state:
         bool instance pool:
@@ -81,8 +81,8 @@ footprint: {
     a = bool^0 = foo (1) 
     b = bool^1
       {
-        0 = foo (1) 
-        1 = none.b[1] (2) 
+        [0] = foo (1) 
+        [1] = none.b[1] (2) 
       }
   )
   Created state:

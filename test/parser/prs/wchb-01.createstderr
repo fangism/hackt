@@ -219,8 +219,8 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            0 = e1of2::d[0] (1) 
-            1 = e1of2::d[1] (2) 
+            [0] = e1of2::d[0] (1) 
+            [1] = e1of2::d[1] (2) 
           }
         e = bool^0 = e1of2::e (3) 
         Created state:
@@ -263,23 +263,23 @@ In namespace "", we have: {
         L = process e1of2<>^0 = wchb_e1of2::L (1) (
           d = bool^1
             {
-              0 = wchb_e1of2::L.d[0] (3) 
-              1 = wchb_e1of2::L.d[1] (4) 
+              [0] = wchb_e1of2::L.d[0] (3) 
+              [1] = wchb_e1of2::L.d[1] (4) 
             }
           e = bool^0 = wchb_e1of2::L.e (5) 
         )
         R = process e1of2<>^0 = wchb_e1of2::R (2) (
           d = bool^1
             {
-              0 = wchb_e1of2::R.d[0] (6) 
-              1 = wchb_e1of2::R.d[1] (7) 
+              [0] = wchb_e1of2::R.d[0] (6) 
+              [1] = wchb_e1of2::R.d[1] (7) 
             }
           e = bool^0 = wchb_e1of2::R.e (8) 
         )
         _r = bool^1
           {
-            0 = wchb_e1of2::_r[0] (1) 
-            1 = wchb_e1of2::_r[1] (2) 
+            [0] = wchb_e1of2::_r[0] (1) 
+            [1] = wchb_e1of2::_r[1] (2) 
           }
         rv = bool^0 = wchb_e1of2::rv (9) 
         Created state:
@@ -322,16 +322,16 @@ footprint: {
   L = process e1of2<>^0 = L (1) (
     d = bool^1
       {
-        0 = L.d[0] (1) 
-        1 = L.d[1] (2) 
+        [0] = L.d[0] (1) 
+        [1] = L.d[1] (2) 
       }
     e = bool^0 = L.e (3) 
   )
   R = process e1of2<>^0 = R (2) (
     d = bool^1
       {
-        0 = R.d[0] (4) 
-        1 = R.d[1] (5) 
+        [0] = R.d[0] (4) 
+        [1] = R.d[1] (5) 
       }
     e = bool^0 = R.e (6) 
   )
@@ -339,16 +339,16 @@ footprint: {
     L = process e1of2<>^0 = L (1) (
       d = bool^1
         {
-          0 = L.d[0] (1) 
-          1 = L.d[1] (2) 
+          [0] = L.d[0] (1) 
+          [1] = L.d[1] (2) 
         }
       e = bool^0 = L.e (3) 
     )
     R = process e1of2<>^0 = R (2) (
       d = bool^1
         {
-          0 = R.d[0] (4) 
-          1 = R.d[1] (5) 
+          [0] = R.d[0] (4) 
+          [1] = R.d[1] (5) 
         }
       e = bool^0 = R.e (6) 
     )

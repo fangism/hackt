@@ -69,15 +69,15 @@ In namespace "", we have: {
         x = process foo<>^0 = bar::y (
           a = bool^1
             {
-              0 = bar::x.a[0] 
-              1 = bar::x.a[1] 
+              [0] = bar::x.a[0] 
+              [1] = bar::x.a[1] 
             }
         )
         y = process foo<>^0 = bar::y (
           a = bool^1
             {
-              0 = bar::x.a[0] 
-              1 = bar::x.a[1] 
+              [0] = bar::x.a[0] 
+              [1] = bar::x.a[1] 
             }
         )
       }
@@ -95,8 +95,8 @@ In namespace "", we have: {
       footprint: {
         a = bool^1
           {
-            0 = foo::a[1] 
-            1 = foo::a[1] 
+            [0] = foo::a[1] 
+            [1] = foo::a[1] 
           }
       }
       }
@@ -110,15 +110,15 @@ footprint: {
     x = process foo<>^0 = poo.x (
       a = bool^1
         {
-          0 = poo.x.a[0] 
-          1 = poo.x.a[1] 
+          [0] = poo.x.a[0] 
+          [1] = poo.x.a[1] 
         }
     )
     y = process foo<>^0 = poo.y (
       a = bool^1
         {
-          0 = poo.y.a[0] 
-          1 = poo.y.a[1] 
+          [0] = poo.y.a[0] 
+          [1] = poo.y.a[1] 
         }
     )
   )

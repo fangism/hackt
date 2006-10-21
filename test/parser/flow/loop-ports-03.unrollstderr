@@ -84,10 +84,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           d = bool^1
             {
-              0 = ch1of::d[0] 
-              1 = ch1of::d[1] 
-              2 = ch1of::d[2] 
-              3 = ch1of::d[3] 
+              [0] = ch1of::d[0] 
+              [1] = ch1of::d[1] 
+              [2] = ch1of::d[2] 
+              [3] = ch1of::d[3] 
             }
         }
       }
@@ -122,15 +122,15 @@ In namespace "", we have: {
         ad = process ch1of<4>^0 = lut::ad (
           d = bool^1
             {
-              0 = lut::ce[0].a 
-              1 = lut::ad.d[1] 
-              2 = lut::ad.d[2] 
-              3 = lut::ad.d[3] 
+              [0] = lut::ce[0].a 
+              [1] = lut::ad.d[1] 
+              [2] = lut::ad.d[2] 
+              [3] = lut::ad.d[3] 
             }
         )
         ce = process dcelm<>^1
           {
-            0 = lut::ce[0] (
+            [0] = lut::ce[0] (
               a = bool^0 = lut::ce[0].a 
             )
           }

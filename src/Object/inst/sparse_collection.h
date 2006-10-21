@@ -1,27 +1,162 @@
 /**
 	\file "Object/inst/sparse_collection.h"
-	$Id: sparse_collection.h,v 1.1.2.1 2006/10/19 23:04:37 fang Exp $
+	$Id: sparse_collection.h,v 1.1.2.2 2006/10/21 20:08:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_SPARSE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_SPARSE_COLLECTION_H__
 
 #include "util/size_t.h"
+#include "util/macros.h"
 // #include "util/list_vector.h"
 #include <iosfwd>
 #include <list>
 #include <vector>
 #include <map>
+#include <iterator>
 
 namespace HAC {
 namespace entity {
-
+//=============================================================================
 #define	SPARSE_COLLECTION_TEMPLATE_SIGNATURE				\
 template <typename Key, typename Value>
 
 #define	SPARSE_COLLECTION_CLASS						\
 sparse_collection<Key, Value>
 
+struct iterator_begin_tag { };
+struct iterator_end_tag { };
+
+//=============================================================================
+/**
+	Iterates through sparse-collection by order of keys.  
+	Access time is log(log(N)) because of mapped index translation.  
+	When not deferenced, this can be used as a key iterator.  
+	\param T container type (const or non-const)
+	\param V value_type (constness should match T)
+ */
+template <class T, class V>
+class _sparse_collection_key_ordered_iterator : public std::iterator<
+		typename std::iterator_traits<
+			typename T::key_index_map_type::iterator>::iterator_category,
+		V,
+		typename std::iterator_traits<
+			typename T::key_index_map_type::iterator>::difference_type,
+		V*, V&> {
+
+	typedef	T					container_type;
+	typedef	_sparse_collection_key_ordered_iterator	this_type;
+	typedef	typename container_type::key_type	key_type;
+	typedef	typename container_type::key_index_map_type	
+							key_index_map_type;
+	typedef	typename key_index_map_type::const_iterator
+							key_iterator;
+template <class T2, class V2>
+friend class _sparse_collection_key_ordered_iterator;
+public:
+	// iterator_category			bidirectional_iterator_tag;
+	typedef	V					value_type;
+	typedef	V&					reference;
+	typedef	V*					pointer;
+private:
+	container_type* const				container;
+	key_iterator					key_iter;
+	/**
+		This invalidated (NULL) automatically upon every advance.  
+		It is only updated (recached) when dereferenced.  
+	 */
+	mutable value_type*				value_ptr;
+public:
+	_sparse_collection_key_ordered_iterator() : 
+			container(NULL), key_iter(), value_ptr(NULL) { }
+
+	explicit
+	_sparse_collection_key_ordered_iterator(container_type& c) : 
+			container(&c), key_iter(), value_ptr(NULL) { }
+
+	_sparse_collection_key_ordered_iterator(container_type& c, 
+			const key_iterator i) : 
+			container(&c), key_iter(i), value_ptr(NULL) { }
+
+	_sparse_collection_key_ordered_iterator(container_type& c, 
+			iterator_begin_tag) : 
+			container(&c),
+			key_iter(c.key_index_map.begin()), 
+			value_ptr(NULL) { }
+
+	_sparse_collection_key_ordered_iterator(container_type& c, 
+			iterator_end_tag) : 
+			container(&c),
+			key_iter(c.key_index_map.end()), 
+			value_ptr(NULL) { }
+
+	/**
+		Re-caches the value_ptr if it was invalidated by an
+		increment or decrement.  Then returns the re-cached pointer.
+	 */
+	pointer
+	operator -> () const {
+		if (!this->value_ptr) {
+			NEVER_NULL(this->container);
+			this->value_ptr = container->__find(key_iter->second);
+		}
+		NEVER_NULL(this->value_ptr);
+		return this->value_ptr;
+	}
+
+	reference
+	operator * () const { return *(this->operator->()); }
+
+	this_type&
+	operator ++ () {
+		++this->key_iter;
+		this->value_ptr = NULL;		// invalidate
+		return *this;
+	}
+
+	this_type&
+	operator -- () {
+		--this->key_iter;
+		this->value_ptr = NULL;		// invalidate
+		return *this;
+	}
+
+	this_type
+	operator ++ (int) {
+		const this_type ret(*this);
+		++(*this);
+		return ret;
+	}
+
+	this_type
+	operator -- (int) {
+		const this_type ret(*this);
+		--(*this);
+		return ret;
+	}
+
+	template <class Iter2>
+	bool
+	operator == (const Iter2& i) const {
+		INVARIANT(this->container && i.container);
+		INVARIANT(this->container == i.container);
+		return this->key_iter == i.key_iter;
+	}
+
+	template <class Iter2>
+	bool
+	operator != (const Iter2& i) const {
+		INVARIANT(this->container && i.container);
+		INVARIANT(this->container == i.container);
+		return this->key_iter != i.key_iter;
+	}
+
+};	// end class _sparse_collection_key_ordered_iterator
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// TODO: unordered iterator -- traverses by order of chunk
+
+//=============================================================================
 /**
 	This special sparse container has the following properties:
 	No memory managed by this container is ever reallocated or moved.
@@ -52,6 +187,8 @@ sparse_collection<Key, Value>
 	This would be a good candidate addition to the library if it 
 	weren't so specialized.  
 
+	This container is difficult to iterate through.  
+
 	\param Key key type for associativity.
 	\param Value the value type contained.  
  */
@@ -62,16 +199,23 @@ class sparse_collection {
 		The initial chunk size to pre-allocate.  
 	 */
 	enum { INITIAL_RESERVE = 4 };
+template <class T, class V>
+friend class _sparse_collection_key_ordered_iterator;
 public:
 	typedef	Key				key_type;
 	typedef	Value				value_type;
 	typedef	size_t				size_type;
 	typedef	size_type			index_type;
-protected:
+	typedef	_sparse_collection_key_ordered_iterator<this_type, value_type>
+						iterator;
+	typedef	_sparse_collection_key_ordered_iterator<
+			const this_type, const value_type>
+						const_iterator;
 	/**
 		Translates key-type to internal index/ID.  
 	 */
 	typedef	std::map<key_type, size_type>	key_index_map_type;
+protected:
 	/**
 		We store these iterators into the map in an array for 
 		efficient constant-time access.  
@@ -164,24 +308,34 @@ public:
 	size_type
 	size(void) const { return this->key_index_array.size(); }
 
+	bool
+	empty(void) const { return this->key_index_array.empty(); }
+
 // accessors: precondition -- element must already exist
+	const key_index_map_type&
+	get_key_index_map(void) const { return this->key_index_map; }
+
 	const value_type&
 	operator [] (const size_type) const;
 
 	const value_type&
 	operator [] (const key_type&) const;
 
-#if 0
 	value_type&
 	operator [] (const size_type);
 
 	value_type&
 	operator [] (const key_type&);
-#endif
 
 private:
+	index_value_map_const_iterator
+	__find_index_value_map_iterator(const size_type) const;
+
 	const value_type*
 	__find(const size_type) const;
+
+	value_type*
+	__find(const size_type);
 
 	const key_type&
 	__lookup_key(const size_type) const;
@@ -199,6 +353,18 @@ public:
 	const value_type*
 	find(const key_type&) const;
 
+	value_type*
+	find(const size_type);
+
+	value_type*
+	find(const key_type&);
+
+	iterator
+	find_iterator(const key_type&);
+
+	const_iterator
+	find_iterator(const key_type&) const;
+
 	const key_type&
 	lookup_key(const value_type&) const;
 
@@ -213,8 +379,29 @@ public:
 
 // mutators
 	// return true if actually inserted
-	bool
+	value_type*
 	insert(const key_type&, const value_type&);
+
+// iterators
+	iterator
+	begin(void) {
+		return iterator(*this, key_index_map.begin());
+	}
+
+	const_iterator
+	begin(void) const {
+		return const_iterator(*this, key_index_map.begin());
+	}
+
+	iterator
+	end(void) {
+		return iterator(*this, key_index_map.end());
+	}
+
+	const_iterator
+	end(void) const {
+		return const_iterator(*this, key_index_map.end());
+	}
 
 // diagnostic
 	std::ostream&
@@ -224,6 +411,7 @@ public:
 
 };	// end class sparse_collection
 
+//=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 

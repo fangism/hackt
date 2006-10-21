@@ -73,7 +73,7 @@ In namespace "", we have: {
           N = pint^0 value: 1
           d = bool^1
             {
-              0 = e1of::d[0] 
+              [0] = e1of::d[0] 
             }
           e = bool^0 = e1of::e 
         }
@@ -88,7 +88,7 @@ footprint: {
   foo = process e1of<1>^0 = foo (
     d = bool^1
       {
-        0 = foo.d[0] 
+        [0] = foo.d[0] 
       }
     e = bool^0 = foo.e 
   )

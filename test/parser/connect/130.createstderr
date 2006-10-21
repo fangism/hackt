@@ -80,9 +80,9 @@ In namespace "", we have: {
           N = pint^0 value: 3
           l = bool^1
             {
-              0 = ass::l[0] (1) 
-              1 = ass::l[1] (2) 
-              2 = ass::l[2] (3) 
+              [0] = ass::l[0] (1) 
+              [1] = ass::l[1] (2) 
+              [2] = ass::l[2] (3) 
             }
           r = bool^0 = ass::r (4) 
           Created state:
@@ -110,9 +110,9 @@ footprint: {
   myass = process ass<3>^0 = myass (1) (
     l = bool^1
       {
-        0 = a (1) 
-        1 = b (2) 
-        2 = c (3) 
+        [0] = a (1) 
+        [1] = b (2) 
+        [2] = c (3) 
       }
     r = bool^0 = r (4) 
   )

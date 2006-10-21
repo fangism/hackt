@@ -47,11 +47,11 @@ Persistent Object Manager text dump:
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	45	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	46	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	47	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
-	48	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	49	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	50	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	46	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
+	47	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	48	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	51	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	52	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	53	##ADDR##	procinst	0	#HEAD#	#TAIL#	24

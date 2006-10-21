@@ -177,8 +177,8 @@ Persistent Object Manager text dump:
 	173	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	174	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	175	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	176	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	177	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	176	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	177	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	178	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	179	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20
 	180	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -229,8 +229,8 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            0 = e1of2::d[0] (1) 
-            1 = e1of2::d[1] (2) 
+            [0] = e1of2::d[0] (1) 
+            [1] = e1of2::d[1] (2) 
           }
         e = bool^0 = e1of2::e (3) 
         Created state:
@@ -303,23 +303,23 @@ In namespace "", we have: {
         L = process e1of2<>^0 = wchb_e1of2::L (3) (
           d = bool^1
             {
-              0 = wchb_e1of2::L.d[0] (5) 
-              1 = wchb_e1of2::L.d[1] (6) 
+              [0] = wchb_e1of2::L.d[0] (5) 
+              [1] = wchb_e1of2::L.d[1] (6) 
             }
           e = bool^0 = wchb_e1of2::L.e (7) 
         )
         R = process e1of2<>^0 = wchb_e1of2::R (4) (
           d = bool^1
             {
-              0 = wchb_e1of2::r0.b (3) 
-              1 = wchb_e1of2::r1.b (4) 
+              [0] = wchb_e1of2::r0.b (3) 
+              [1] = wchb_e1of2::r1.b (4) 
             }
           e = bool^0 = wchb_e1of2::R.e (8) 
         )
         _r = bool^1
           {
-            0 = wchb_e1of2::_r[0] (1) 
-            1 = wchb_e1of2::_r[1] (2) 
+            [0] = wchb_e1of2::_r[0] (1) 
+            [1] = wchb_e1of2::_r[1] (2) 
           }
         r0 = process inv<>^0 = wchb_e1of2::r0 (1) (
           a = bool^0 = wchb_e1of2::_r[0] (1) 
@@ -371,16 +371,16 @@ footprint: {
   L = process e1of2<>^0 = L (1) (
     d = bool^1
       {
-        0 = L.d[0] (1) 
-        1 = L.d[1] (2) 
+        [0] = L.d[0] (1) 
+        [1] = L.d[1] (2) 
       }
     e = bool^0 = L.e (3) 
   )
   R = process e1of2<>^0 = R (2) (
     d = bool^1
       {
-        0 = R.d[0] (4) 
-        1 = R.d[1] (5) 
+        [0] = R.d[0] (4) 
+        [1] = R.d[1] (5) 
       }
     e = bool^0 = R.e (6) 
   )
@@ -388,16 +388,16 @@ footprint: {
     L = process e1of2<>^0 = L (1) (
       d = bool^1
         {
-          0 = L.d[0] (1) 
-          1 = L.d[1] (2) 
+          [0] = L.d[0] (1) 
+          [1] = L.d[1] (2) 
         }
       e = bool^0 = L.e (3) 
     )
     R = process e1of2<>^0 = R (2) (
       d = bool^1
         {
-          0 = R.d[0] (4) 
-          1 = R.d[1] (5) 
+          [0] = R.d[0] (4) 
+          [1] = R.d[1] (5) 
         }
       e = bool^0 = R.e (6) 
     )

@@ -9,3 +9,6 @@ c["dos"] = zwei
 c["tres"] = drei
 c["quatro"] = vier
 testing lookup invariants.
+Testing iterator interface.
+beta, zwei, delta, vier, drei, eins, 
+End of tests.

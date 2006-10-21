@@ -1,5 +1,14 @@
 # "src/util/ChangeLog"
 
+2006-10-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-05:
+	  1-D specialization of multikey is-compact algorithms greatly
+		simplified to O(N) as opposed to O(N lg N).
+		Empty detection, no longer depends on the mapped_type, ever.
+		Added iterator tests to util/test/sparse_collection_test.cc.
+
+
 2006-10-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-40-instance-01-04:

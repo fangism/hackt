@@ -41,7 +41,7 @@ Persistent Object Manager text dump:
 	37	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	38	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	72
 	39	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	1312
-	40	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	1148
+	40	##ADDR##	dintcoll	3	#HEAD#	#TAIL#	1020
 
 In module created from: ##FILE## (unrolled) (created)
 In namespace "", we have: {
@@ -102,10 +102,10 @@ footprint: {
     }
   blah = int<32>^1
     {
-      0 = blah[0] (1) 
-      1 = blah[1] (2) 
-      2 = blah[2] (3) 
-      3 = blah[3] (4) 
+      [0] = blah[0] (1) 
+      [1] = blah[1] (2) 
+      [2] = blah[2] (3) 
+      [3] = blah[3] (4) 
     }
   foo = int<32>^3
     {

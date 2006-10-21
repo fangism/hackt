@@ -190,28 +190,28 @@ Persistent Object Manager text dump:
 	186	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
 	187	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	188	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	189	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	189	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	190	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	191	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	191	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	192	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	193	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	194	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	195	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	196	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	197	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	193	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	194	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	195	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
+	196	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
+	197	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
 	198	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	199	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	200	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	201	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	202	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	203	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
-	204	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	199	##ADDR##	proccoll	0	#HEAD#	#TAIL#	65
+	200	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	201	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	202	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	203	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	204	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	205	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	206	##ADDR##	proccoll	0	#HEAD#	#TAIL#	65
-	207	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	208	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
-	209	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	210	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	206	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	207	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	208	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	209	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	210	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	211	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	212	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	213	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
@@ -256,37 +256,37 @@ Persistent Object Manager text dump:
 	252	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	253	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	254	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	255	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	256	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	257	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	258	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
-	259	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	255	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	256	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	257	##ADDR##	proccoll	0	#HEAD#	#TAIL#	61
+	258	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	259	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	260	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	261	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	261	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	262	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	263	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	263	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	264	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	265	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	266	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	267	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	265	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	266	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	267	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
 	268	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	269	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	269	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	270	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	271	##ADDR##	proccoll	0	#HEAD#	#TAIL#	53
+	271	##ADDR##	proccoll	0	#HEAD#	#TAIL#	65
 	272	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	273	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
-	274	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	273	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	274	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	275	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	276	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	276	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	277	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	278	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	279	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	280	##ADDR##	proccoll	0	#HEAD#	#TAIL#	65
+	278	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	279	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	280	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
 	281	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	282	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	283	##ADDR##	proccoll	0	#HEAD#	#TAIL#	57
-	284	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	285	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	282	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	283	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	284	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	285	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -330,8 +330,8 @@ In namespace "", we have: {
           N = pint^0 value: 2
           d = bool^1
             {
-              0 = e1of::d[0] 
-              1 = e1of::d[1] 
+              [0] = e1of::d[0] 
+              [1] = e1of::d[1] 
             }
           e = bool^0 = e1of::e 
         }
@@ -360,8 +360,8 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            0 = e1of2::f 
-            1 = e1of2::t 
+            [0] = e1of2::f 
+            [1] = e1of2::t 
           }
         e = bool^0 = e1of2::e 
         f = bool^0 = e1of2::f 
@@ -445,8 +445,8 @@ In namespace "", we have: {
         l = process e1of2<>^0 = pseudo_rsource_e1of2a::l (
           d = bool^1
             {
-              0 = pseudo_rsource_e1of2a::l.d[0] 
-              1 = pseudo_rsource_e1of2a::l.d[1] 
+              [0] = pseudo_rsource_e1of2a::l.d[0] 
+              [1] = pseudo_rsource_e1of2a::l.d[1] 
             }
           t = bool^0 = pseudo_rsource_e1of2a::l.t 
           f = bool^0 = pseudo_rsource_e1of2a::l.f 
@@ -455,8 +455,8 @@ In namespace "", we have: {
         s = process e1of<2>^0 = pseudo_rsource_e1of2a::src.rr (
           d = bool^1
             {
-              0 = pseudo_rsource_e1of2a::l.d[0] 
-              1 = pseudo_rsource_e1of2a::l.d[1] 
+              [0] = pseudo_rsource_e1of2a::l.d[0] 
+              [1] = pseudo_rsource_e1of2a::l.d[1] 
             }
           e = bool^0 = pseudo_rsource_e1of2a::l.e 
         )
@@ -472,8 +472,8 @@ In namespace "", we have: {
           rr = process e1of<2>^0 = pseudo_rsource_e1of2a::src.rr (
             d = bool^1
               {
-                0 = pseudo_rsource_e1of2a::l.d[0] 
-                1 = pseudo_rsource_e1of2a::l.d[1] 
+                [0] = pseudo_rsource_e1of2a::l.d[0] 
+                [1] = pseudo_rsource_e1of2a::l.d[1] 
               }
             e = bool^0 = pseudo_rsource_e1of2a::l.e 
           )
@@ -531,8 +531,8 @@ In namespace "", we have: {
           rr = process e1of<2>^0 = source_e::rr (
             d = bool^1
               {
-                0 = source_e::rr.d[0] 
-                1 = source_e::rr.d[1] 
+                [0] = source_e::rr.d[0] 
+                [1] = source_e::rr.d[1] 
               }
             e = bool^0 = source_e::rr.e 
           )
@@ -571,8 +571,8 @@ footprint: {
     l = process e1of2<>^0 = src.l (
       d = bool^1
         {
-          0 = x.d[0] 
-          1 = x.d[1] 
+          [0] = x.d[0] 
+          [1] = x.d[1] 
         }
       t = bool^0 = x.t 
       f = bool^0 = x.f 
@@ -582,8 +582,8 @@ footprint: {
   x = process e1of2<>^0 = src.l (
     d = bool^1
       {
-        0 = x.d[0] 
-        1 = x.d[1] 
+        [0] = x.d[0] 
+        [1] = x.d[1] 
       }
     t = bool^0 = x.t 
     f = bool^0 = x.f 

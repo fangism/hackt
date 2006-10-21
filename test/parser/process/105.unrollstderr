@@ -76,9 +76,9 @@ In namespace "", we have: {
           a = int<8>^0 = foo::a 
           blah = int<8>^1
             {
-              0 = foo::blah[0] 
-              1 = foo::a 
-              2 = foo::blah[2] 
+              [0] = foo::blah[0] 
+              [1] = foo::a 
+              [2] = foo::blah[2] 
             }
         }
         <11> {
@@ -86,9 +86,9 @@ In namespace "", we have: {
           a = int<11>^0 = foo::a 
           blah = int<11>^1
             {
-              0 = foo::blah[0] 
-              1 = foo::a 
-              2 = foo::blah[2] 
+              [0] = foo::blah[0] 
+              [1] = foo::a 
+              [2] = foo::blah[2] 
             }
         }
       }

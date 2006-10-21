@@ -170,13 +170,13 @@ Persistent Object Manager text dump:
 	166	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	167	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
 	168	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	169	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	170	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	171	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	172	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
-	173	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	174	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	175	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	169	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	170	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	171	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
+	172	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	173	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	174	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	175	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	176	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	177	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	178	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -192,20 +192,20 @@ Persistent Object Manager text dump:
 	188	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	189	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
 	190	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	191	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	191	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	192	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	193	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
-	194	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	195	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
+	193	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	194	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	195	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	196	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	197	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
-	198	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	199	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	200	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	201	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
-	202	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	203	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
-	204	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	197	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	198	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	199	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
+	200	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	201	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
+	202	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
+	203	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
+	204	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {
@@ -229,8 +229,8 @@ In namespace "", we have: {
       footprint: {
         d = bool^1
           {
-            0 = e1of2::d[0] 
-            1 = e1of2::d[1] 
+            [0] = e1of2::d[0] 
+            [1] = e1of2::d[1] 
           }
         e = bool^0 = e1of2::e 
       }
@@ -291,23 +291,23 @@ In namespace "", we have: {
         L = process e1of2<>^0 = wchb_e1of2::L (
           d = bool^1
             {
-              0 = wchb_e1of2::L.d[0] 
-              1 = wchb_e1of2::L.d[1] 
+              [0] = wchb_e1of2::L.d[0] 
+              [1] = wchb_e1of2::L.d[1] 
             }
           e = bool^0 = wchb_e1of2::re.b 
         )
         R = process e1of2<>^0 = wchb_e1of2::R (
           d = bool^1
             {
-              0 = wchb_e1of2::r0.b 
-              1 = wchb_e1of2::r1.b 
+              [0] = wchb_e1of2::r0.b 
+              [1] = wchb_e1of2::r1.b 
             }
           e = bool^0 = wchb_e1of2::R.e 
         )
         _r = bool^1
           {
-            0 = wchb_e1of2::r0.a 
-            1 = wchb_e1of2::r1.a 
+            [0] = wchb_e1of2::r0.a 
+            [1] = wchb_e1of2::r1.a 
           }
         r0 = process inv<>^0 = wchb_e1of2::r0 (
           a = bool^0 = wchb_e1of2::r0.a 
@@ -335,16 +335,16 @@ footprint: {
   L = process e1of2<>^0 = b.L (
     d = bool^1
       {
-        0 = L.d[0] 
-        1 = L.d[1] 
+        [0] = L.d[0] 
+        [1] = L.d[1] 
       }
     e = bool^0 = L.e 
   )
   R = process e1of2<>^0 = b.R (
     d = bool^1
       {
-        0 = R.d[0] 
-        1 = R.d[1] 
+        [0] = R.d[0] 
+        [1] = R.d[1] 
       }
     e = bool^0 = R.e 
   )
@@ -352,16 +352,16 @@ footprint: {
     L = process e1of2<>^0 = b.L (
       d = bool^1
         {
-          0 = L.d[0] 
-          1 = L.d[1] 
+          [0] = L.d[0] 
+          [1] = L.d[1] 
         }
       e = bool^0 = L.e 
     )
     R = process e1of2<>^0 = b.R (
       d = bool^1
         {
-          0 = R.d[0] 
-          1 = R.d[1] 
+          [0] = R.d[0] 
+          [1] = R.d[1] 
         }
       e = bool^0 = R.e 
     )

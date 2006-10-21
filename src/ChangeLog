@@ -3,6 +3,34 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-21	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-05:
+	  Major changes to instance-collection structure:
+		Flag: COLLECTION_SEPARATE_KEY_FROM_VALUE (true)
+		Uses new sparse_collection to manage alias collections.  
+		No longer uses multikey_set and friends.  
+	  sparse_collection: wrote iterator class to traverse elements
+		in key-sorted order, whose dereference access is cached
+		and takes O(lg lg N) to re-cache after invalidation.  
+		Also added more find methods, including non-const accessors.  
+	  No more dimension-specific instance_alias, derived from 
+		instance_alias_info -- obsolete!  Functionality has been folded
+		into the base class, also eliminating many virtual calls.  
+	  Alias connections (next) are written more efficiently, using
+		a single internal index instead of a multikey.
+		Again, scalars aliases do not need indexing.  
+		Serialized object binary is smaller as a result.  
+	  instance_array::resolve_indices now makes better use of
+		multikey_assoc's compact-related template routines.  
+	  Updated regression test stderrs to reflect improved index dumping, 
+		where 1D indices were printed 'k' are now '[k]'.
+	  TODO: also apply same transformations to value_collections.
+	  TODO: port collections -- key to eliminating map replication
+		by using back-reference from port actuals to formals.
+	  TODO: dense collections -- enhancement
+
+
 2006-10-20	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-40-instance-01-04:

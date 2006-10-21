@@ -70,50 +70,50 @@ Persistent Object Manager text dump:
 	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	67	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	69	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	70	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	71	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	74	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	75	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	76	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	77	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	78	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	79	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	80	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	81	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	82	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	83	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	84	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	85	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	86	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	87	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	88	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	89	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	91	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	92	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	93	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	94	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	95	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	96	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	96	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	97	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	98	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	99	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
+	99	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	100	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
-	101	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	101	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	102	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	103	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	103	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	104	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	105	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	106	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	106	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	107	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	108	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	109	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	109	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	110	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	111	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	112	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
+	112	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	113	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	114	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	115	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
@@ -146,10 +146,10 @@ In namespace "", we have: {
           N = pint^0 value: 4
           d = bool^1
             {
-              0 = ch1of::d[0] 
-              1 = ch1of::d[1] 
-              2 = ch1of::d[2] 
-              3 = ch1of::d[3] 
+              [0] = ch1of::d[0] 
+              [1] = ch1of::d[1] 
+              [2] = ch1of::d[2] 
+              [3] = ch1of::d[3] 
             }
         }
       }
@@ -192,90 +192,90 @@ In namespace "", we have: {
         ad = process ch1of<4>^0 = lut::ad (
           d = bool^1
             {
-              0 = lut::ce[8].b 
-              1 = lut::ce[9].b 
-              2 = lut::ce[11].a 
-              3 = lut::ce[15].a 
+              [0] = lut::ce[8].b 
+              [1] = lut::ce[9].b 
+              [2] = lut::ce[11].a 
+              [3] = lut::ce[15].a 
             }
         )
         ce = process dcelm<>^1
           {
-            0 = lut::ce[0] (
+            [0] = lut::ce[0] (
               a = bool^0 = lut::ce[0].b 
               b = bool^0 = lut::ce[1].a 
               c = bool^0 = lut::ce[0].c 
             )
-            1 = lut::ce[1] (
+            [1] = lut::ce[1] (
               a = bool^0 = lut::ce[2].a 
               b = bool^0 = lut::ce[4].a 
               c = bool^0 = lut::ce[1].c 
             )
-            2 = lut::ce[2] (
+            [2] = lut::ce[2] (
               a = bool^0 = lut::ce[3].a 
               b = bool^0 = lut::ce[6].b 
               c = bool^0 = lut::ce[2].c 
             )
-            3 = lut::ce[3] (
+            [3] = lut::ce[3] (
               a = bool^0 = lut::ce[4].b 
               b = bool^0 = lut::ce[7].b 
               c = bool^0 = lut::ce[3].c 
             )
-            4 = lut::ce[4] (
+            [4] = lut::ce[4] (
               a = bool^0 = lut::ce[5].a 
               b = bool^0 = lut::ce[8].b 
               c = bool^0 = lut::ce[4].c 
             )
-            5 = lut::ce[5] (
+            [5] = lut::ce[5] (
               a = bool^0 = lut::ce[5].b 
               b = bool^0 = lut::ce[6].a 
               c = bool^0 = lut::ce[5].c 
             )
-            6 = lut::ce[6] (
+            [6] = lut::ce[6] (
               a = bool^0 = lut::ce[7].a 
               b = bool^0 = lut::ce[8].a 
               c = bool^0 = lut::ce[6].c 
             )
-            7 = lut::ce[7] (
+            [7] = lut::ce[7] (
               a = bool^0 = lut::ce[9].b 
               b = bool^0 = lut::ce[11].b 
               c = bool^0 = lut::ce[7].c 
             )
-            8 = lut::ce[8] (
+            [8] = lut::ce[8] (
               a = bool^0 = lut::ce[9].a 
               b = bool^0 = lut::ce[12].b 
               c = bool^0 = lut::ce[8].c 
             )
-            9 = lut::ce[9] (
+            [9] = lut::ce[9] (
               a = bool^0 = lut::ce[10].a 
               b = bool^0 = lut::ce[13].b 
               c = bool^0 = lut::ce[9].c 
             )
-            10 = lut::ce[10] (
+            [10] = lut::ce[10] (
               a = bool^0 = lut::ce[10].b 
               b = bool^0 = lut::ce[11].a 
               c = bool^0 = lut::ce[10].c 
             )
-            11 = lut::ce[11] (
+            [11] = lut::ce[11] (
               a = bool^0 = lut::ce[14].b 
               b = bool^0 = lut::ce[12].a 
               c = bool^0 = lut::ce[11].c 
             )
-            12 = lut::ce[12] (
+            [12] = lut::ce[12] (
               a = bool^0 = lut::ce[13].a 
               b = bool^0 = lut::ce[12].b 
               c = bool^0 = lut::ce[12].c 
             )
-            13 = lut::ce[13] (
+            [13] = lut::ce[13] (
               a = bool^0 = lut::ce[14].a 
               b = bool^0 = lut::ce[13].b 
               c = bool^0 = lut::ce[13].c 
             )
-            14 = lut::ce[14] (
+            [14] = lut::ce[14] (
               a = bool^0 = lut::ce[15].a 
               b = bool^0 = lut::ce[14].b 
               c = bool^0 = lut::ce[14].c 
             )
-            15 = lut::ce[15] (
+            [15] = lut::ce[15] (
               a = bool^0 = lut::ce[15].b 
               b = bool^0 = lut::ce[15].b 
               c = bool^0 = lut::ce[15].c 

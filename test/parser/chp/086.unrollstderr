@@ -134,8 +134,8 @@ In namespace "", we have: {
       footprint: {
         index = channel chan?(int<1>)^1
           {
-            0 = send_indexed::index[0] 
-            1 = send_indexed::index[1] 
+            [0] = send_indexed::index[0] 
+            [1] = send_indexed::index[1] 
           }
         out = channel chan!(int<32>)^0 = send_indexed::out 
         x = pint^2
@@ -158,8 +158,8 @@ footprint: {
   foo = process send_indexed<>^0 = foo (
     index = channel chan?(int<1>)^1
       {
-        0 = foo.index[0] 
-        1 = foo.index[1] 
+        [0] = foo.index[0] 
+        [1] = foo.index[1] 
       }
     out = channel chan!(int<32>)^0 = foo.out 
   )
