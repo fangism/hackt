@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.36.2.2 2006/10/21 20:08:18 fang Exp $
+	$Id: instance_collection.tcc,v 1.36.2.3 2006/10/22 08:03:27 fang Exp $
 	TODO: trim includes
  */
 
@@ -29,6 +29,8 @@
 #include "Object/common/extern_templates.h"
 
 #include "Object/inst/instance_collection.h"
+#include "Object/inst/instance_array.h"
+#include "Object/inst/instance_scalar.h"
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/alias_actuals.tcc"
 #include "Object/inst/subinstance_manager.tcc"
@@ -53,6 +55,7 @@
 #include "Object/unroll/instantiation_statement.h"
 #if COLLECTION_SEPARATE_KEY_FROM_VALUE
 #include "Object/inst/sparse_collection.tcc"
+#include "Object/inst/element_key_dumper.h"
 #endif
 #include "common/ICE.h"
 
@@ -121,27 +124,6 @@ using util::read_value;
 using util::indent;
 using util::auto_indent;
 using util::persistent_traits;
-
-//=============================================================================
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-template <size_t D>
-struct element_key_dumper {
-	template <class K>
-	ostream&
-	operator () (ostream& o, const K& k) const {
-		return o << k;
-	}
-};
-
-template <>
-struct element_key_dumper<1> {
-	template <class K>
-	ostream&
-	operator () (ostream& o, const K& k) const {
-		return o << '[' << k << ']';
-	}
-};
-#endif
 
 //=============================================================================
 // class instance_array member class definitions

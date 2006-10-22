@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.18 2006/08/24 02:01:34 fang Exp $
+	$Id: packed_array.tcc,v 1.18.16.1 2006/10/22 08:03:33 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -19,12 +19,42 @@
 #define	EXTERN_TEMPLATE_UTIL_MULTIKEY
 #endif
 
+// #include "util/addressof.h"
 #include "util/multikey.tcc"
 
 namespace util {
 #include "util/using_ostream.h"
 using std::accumulate;
 // using util::multikey_generator;
+
+//=============================================================================
+template <typename S, typename V>
+struct __lookup_index_policy {
+	template <class A>
+	S
+	operator () (const A& a, typename A::const_reference m) const {
+		const typename A::const_pointer
+			base = &(a.front()),
+			tail = &(a.back());
+		INVARIANT(&m >= base);
+		INVARIANT(&m <= tail);
+		return std::distance(base, &m);
+	}
+};
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	Partial specialization, never supposed to be called.  
+ */
+template <typename S>
+struct __lookup_index_policy<S,bool> {
+	template <class A>
+	S
+	operator () (const A& a, typename A::const_reference m) const {
+		DIE;
+		return 0;
+	}
+};
 
 //=============================================================================
 PACKED_ARRAY_TEMPLATE_SIGNATURE
@@ -111,15 +141,16 @@ PACKED_ARRAY_CLASS::sizes_product(const key_type& k) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Caches the coefficients used in computing the internal index.  
+	If size is [x][y][z], coeffs is [xyz][yz][z]
  */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 void
 PACKED_ARRAY_CLASS::reset_coeffs(void) {
 	coeffs = ones;
 	index_type i = 1;	// skip first
-	for ( ; i < D; i++) {
+	for ( ; i < D; ++i) {
 		index_type j = 0;
-		for ( ; j < i; j++)
+		for ( ; j < i; ++j)
 			coeffs[j] *= sizes[i];
 	}
 }
@@ -134,7 +165,7 @@ PACKED_ARRAY_TEMPLATE_SIGNATURE
 bool
 PACKED_ARRAY_CLASS::range_check(const key_type& k) const {
 	index_type i = 0;
-	for ( ; i < D; i++) {
+	for ( ; i < D; ++i) {
 		if (k[i] >= sizes[i])
 			return false;
 	}
@@ -237,7 +268,7 @@ if (d > 1) {
 		o << values[s];
 		const size_type e = s +sub_count;
 		size_type slice_start = s+1;
-		for ( ; slice_start < e; slice_start++) {
+		for ( ; slice_start < e; ++slice_start) {
 			o << ',' << values[slice_start];
 		}
 	}
@@ -297,7 +328,7 @@ PACKED_OFFSET_ARRAY_TEMPLATE_SIGNATURE
 bool
 PACKED_OFFSET_ARRAY_CLASS::range_check(const key_type& k) const {
 	index_type i = 0;
-	for ( ; i < D; i++) {
+	for ( ; i < D; ++i) {
 		if (k[i] -this->offset[i] >= this->sizes[i])
 			return false;
 	}
@@ -438,6 +469,23 @@ PACKED_ARRAY_GENERIC_CLASS::last_key(void) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	NOTE: THIS WILL NOT WORK ON vector<bool>! because there's no
+		way to compute distances between _Bit_reference's
+		or convert then to _Bit_iterator's.  
+	\pre This is only usable with the guarantee that a realloc
+		has not moved the elements to another memory location
+		since it was first allocated.  
+	\param a reference to an element in this collection.
+	\return 0-based index (direct offset) into the internal array.  
+ */
+PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+typename PACKED_ARRAY_GENERIC_CLASS::size_type
+PACKED_ARRAY_GENERIC_CLASS::lookup_index(const_reference a) const {
+	return __lookup_index_policy<size_type, value_type>()(this->values, a);
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	Helper function to compute the size based on dimensions.  
 	\return product of dimensions, may be 0 if collection is 'thin'.  
  */
@@ -461,9 +509,9 @@ void
 PACKED_ARRAY_GENERIC_CLASS::reset_coeffs(void) {
 	coeffs = key_type(dim ? dim-1 : dim, 1);
 	index_type i = 1;	// skip first
-	for ( ; i < index_type(dim); i++) {
+	for ( ; i < index_type(dim); ++i) {
 		index_type j = 0;
-		for ( ; j < i; j++)
+		for ( ; j < i; ++j)
 			coeffs[j] *= sizes[i];
 	}
 }
@@ -479,7 +527,7 @@ bool
 PACKED_ARRAY_GENERIC_CLASS::range_check(const key_type& k) const {
 //	cerr << "packed_array_generic::range_check" << endl;
 	index_type i = 0;
-	for ( ; i < index_type(dim); i++) {
+	for ( ; i < index_type(dim); ++i) {
 		const index_type k_diff = k[i];
 #if 0
 		// debugging
@@ -503,6 +551,19 @@ typename PACKED_ARRAY_GENERIC_CLASS::index_type
 PACKED_ARRAY_GENERIC_CLASS::key_to_index(const key_type& k) const {
 	return std::inner_product(k.begin(), &k.back(), coeffs.begin(), 
 		k.back());
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
+typename PACKED_ARRAY_GENERIC_CLASS::key_type
+PACKED_ARRAY_GENERIC_CLASS::index_to_key(const size_type i) const {
+	key_type ret(dim);
+	size_type j = 0;
+	for ( ; j<dim; ++j) {
+		// vectorize me, Mr. Compiler!
+		ret[j] = i % coeffs[j];
+	}
+	return ret;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -650,7 +711,7 @@ if (d > 1) {
 		o << values[s];
 		const size_type e = s +sub_count;
 		size_type slice_start = s+1;
-		for ( ; slice_start < e; slice_start++) {
+		for ( ; slice_start < e; ++slice_start) {
 			o << ',' << values[slice_start];
 		}
 	}
@@ -731,7 +792,7 @@ PACKED_OFFSET_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 bool
 PACKED_OFFSET_ARRAY_GENERIC_CLASS::range_check(const key_type& k) const {
 	index_type i = 0;
-	for ( ; i < index_type(this->dim); i++) {
+	for ( ; i < index_type(this->dim); ++i) {
 		const index_type k_diff = k[i] -this->offset[i];
 		if (k_diff >= this->sizes[i]) {
 			return false;

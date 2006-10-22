@@ -1,5 +1,13 @@
 # "src/util/ChangeLog"
 
+2006-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-06:
+	  multikey_assoc.tcc: std::accumulate is in <numeric>, so include it.
+	  Also implemented a lookup_index policy to 'handle' vector<bool> case.
+		also added index_to_key translation member function.
+
+
 2006-10-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-40-instance-01-05:

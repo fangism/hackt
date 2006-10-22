@@ -3,32 +3,22 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.25.2.2 2006/10/21 20:08:17 fang Exp $
+	$Id: instance_collection.h,v 1.25.2.3 2006/10/22 08:03:25 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
 #define	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
 
 #include <iosfwd>
-#include <set>
 
-#include "Object/type/canonical_type_fwd.h"	// for conditional
 #include "Object/traits/class_traits_fwd.h"
 #include "Object/inst/physical_instance_collection.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/devel_switches.h"
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-#include "Object/inst/sparse_collection.h"
-#endif
 #include "util/STL/list_fwd.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#include "util/persistent.h"
-#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
-#include "util/multikey_set.h"
-#endif
 #include "util/boolean_types.h"
-#include "util/memory/chunk_map_pool_fwd.h"
 #include "util/inttypes.h"
 
 /**
@@ -43,16 +33,11 @@ using std::list;
 using std::default_list;
 using std::istream;
 using std::ostream;
-using std::set;
 using std::string;
 using util::memory::count_ptr;
 using util::memory::never_ptr;
 using util::good_bool;
 using util::bad_bool;
-#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
-using util::default_multikey_set;
-using util::multikey_set_element_derived;
-#endif
 using util::persistent;
 using util::persistent_object_manager;
 
@@ -70,6 +55,14 @@ template <bool> class internal_aliases_policy;
 template <class> class instantiation_statement;
 
 //=============================================================================
+template <class, size_t>
+class instance_array;
+
+// forward declaration of partial specialization
+template <class Tag>
+class instance_array<Tag,0>;
+
+//=============================================================================
 #define	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE				\
 template <class Tag>
 
@@ -83,6 +76,8 @@ instance_collection<Tag>
 INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
 class instance_collection :
 	public class_traits<Tag>::instance_collection_parent_type, 
+	// TODO: consider pushing down to instance_array_class
+	// to avoid replication between formals and actuals.
 	public class_traits<Tag>::collection_type_manager_parent_type {
 friend	class class_traits<Tag>::collection_type_manager_parent_type;
 friend	class subinstance_manager;
@@ -138,6 +133,8 @@ public:
 				instance_placeholder_ptr_type;
 protected:
 	/**
+		TODO: consider pushing to instance_array to avoid
+			replicating between formals and actual collections.  
 		This is a back-reference to the placeholder that resides
 		in the scopespace, that contains basic collection information,
 		prior to unrolling.
@@ -179,6 +176,7 @@ virtual	instance_alias_info_type&
 		return this->source_placeholder;
 	}
 
+	// TODO: substitute/rename as collection_type_established()
 virtual	bool
 	is_partially_unrolled(void) const = 0;
 
@@ -280,304 +278,12 @@ protected:
 
 };	// end class instance_collection
 
-//-----------------------------------------------------------------------------
-#define	INSTANCE_ARRAY_TEMPLATE_SIGNATURE				\
-template <class Tag, size_t D>
-
-#define	INSTANCE_SCALAR_TEMPLATE_SIGNATURE				\
-template <class Tag>
-
-
-#define	INSTANCE_ARRAY_CLASS						\
-instance_array<Tag,D>
-
-#define	INSTANCE_SCALAR_CLASS						\
-instance_array<Tag,0>
-
-/**
-	Multidimensional collection of int instance aliases.  
-	\param D the number of dimensions (max. 4).  
- */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
-class instance_array :
-	// this is the same as instance_collection<Tag>
-	public class_traits<Tag>::instance_collection_generic_type {
-friend class instance_collection<Tag>;
-	typedef	instance_array<Tag,D>			this_type;
-public:
-	typedef	class_traits<Tag>			traits_type;
-	typedef	typename traits_type::instance_collection_generic_type
-							parent_type;
-	typedef	typename parent_type::instance_relaxed_actuals_type
-						instance_relaxed_actuals_type;
-	typedef	typename parent_type::internal_alias_policy
-						internal_alias_policy;
-	typedef	typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-//	typedef	typename parent_type::instance_alias_base_ptr_type
-	typedef	typename traits_type::instance_alias_base_ptr_type
-						instance_alias_base_ptr_type;
-	typedef	typename traits_type::alias_collection_type
-							alias_collection_type;
-
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-	typedef	instance_alias_base_type		element_type;
-	/**
-		The simple_type meta type is specially optimized and 
-		simplified for D == 1.  
-	 */
-	typedef typename util::multikey<D, pint_value_type>::simple_type
-							key_type;
-	typedef	sparse_collection<key_type, element_type>	collection_type;
-#else
-	// template explicitly required by g++-4.0
-	typedef	typename traits_type::template instance_alias<D>::type
-							element_type;
-	/**
-		This is the data structure used to implement the collection.  
-	 */
-	typedef	typename default_multikey_set<D, element_type>::type
-							collection_type;
-	typedef	typename element_type::key_type		key_type;
-#endif
-	typedef	typename collection_type::value_type	value_type;
-	typedef	typename parent_type::collection_type_manager_parent_type
-					collection_type_manager_parent_type;
-	typedef	typename parent_type::instance_placeholder_type
-					instance_placeholder_type;
-	typedef	typename parent_type::instance_placeholder_ptr_type
-					instance_placeholder_ptr_type;
-	enum { dimensions = D };
-private:
-	typedef	typename util::multikey<D, pint_value_type>::generator_type
-							key_generator_type;
-	typedef	element_type&				reference;
-	typedef	typename collection_type::iterator	iterator;
-	typedef	typename collection_type::const_iterator
-							const_iterator;
-private:
-	collection_type					collection;
-private:
-	instance_array();
-
-public:
-	explicit
-	instance_array(const instance_placeholder_ptr_type);
-
-	~instance_array();
-
-	ostream&
-	what(ostream& o) const;
-
-	bool
-	is_partially_unrolled(void) const;
-
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-	ostream&
-	dump_element_key(ostream&, const instance_alias_base_type&) const;
-
-	size_t
-	lookup_index(const instance_alias_base_type&) const;
-
-	instance_alias_base_type&
-	get_corresponding_element(const parent_type&,
-		const instance_alias_base_type&);
-#endif
-
-	ostream&
-	dump_unrolled_instances(ostream&, const dump_flags&) const;
-
-	INSTANTIATE_INDICES_PROTO;
-
-	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
-
-	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
-
-	const_index_list
-	resolve_indices(const const_index_list& l) const;
-
-	instance_alias_base_ptr_type
-	lookup_instance(const multikey_index_type& l) const;
-
-	never_ptr<element_type>
-	operator [] (const key_type&) const;
-
-	// is this used? or can it be replaced by unroll_aliases?
-	bool
-	lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l, 
-		const const_range_list& r) const;
-
-	UNROLL_ALIASES_PROTO;
-
-	instance_alias_base_type&
-	load_reference(istream& i);
-
-	CREATE_DEPENDENT_TYPES_PROTO;
-
-	COLLECT_PORT_ALIASES_PROTO;
-
-	CONSTRUCT_PORT_CONTEXT_PROTO;
-
-	ASSIGN_FOOTPRINT_FRAME_PROTO;
-
-	void
-	accept(alias_visitor&) const;
-
-private:
-	class element_collector;
-	class element_writer;
-	class element_loader;
-	class connection_writer;
-	class connection_loader;
-	struct key_dumper;
-
-public:
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
-};	// end class instance_array
-
-//-----------------------------------------------------------------------------
-/**
-	Scalar specialization of an instance collection.  
- */
-INSTANCE_SCALAR_TEMPLATE_SIGNATURE
-class instance_array<Tag,0> :
-		public class_traits<Tag>::instance_collection_generic_type {
-friend class instance_collection<Tag>;
-	typedef	INSTANCE_SCALAR_CLASS			this_type;
-public:
-	typedef	class_traits<Tag>			traits_type;
-	typedef	typename traits_type::instance_collection_generic_type
-							parent_type;
-	typedef	typename parent_type::instance_relaxed_actuals_type
-						instance_relaxed_actuals_type;
-	typedef	typename parent_type::internal_alias_policy
-						internal_alias_policy;
-	typedef	typename traits_type::instance_alias_base_type
-						instance_alias_base_type;
-	typedef	typename traits_type::instance_alias_base_ptr_type
-						instance_alias_base_ptr_type;
-	typedef	typename traits_type::alias_collection_type
-							alias_collection_type;
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-	typedef	instance_alias_base_type		instance_type;
-#else
-	// template explicitly required by g++-4.0
-	typedef	typename traits_type::template instance_alias<0>::type
-							instance_type;
-#endif
-	typedef	typename parent_type::collection_type_manager_parent_type
-					collection_type_manager_parent_type;
-	typedef	typename parent_type::instance_placeholder_type
-					instance_placeholder_type;
-	typedef	typename parent_type::instance_placeholder_ptr_type
-					instance_placeholder_ptr_type;
-	enum { dimensions = 0 };
-private:
-	instance_type					the_instance;
-
-private:
-	instance_array();
-
-public:
-	explicit
-	instance_array(const instance_placeholder_ptr_type);
-
-	~instance_array();
-
-	ostream&
-	what(ostream&) const;
-
-	bool
-	is_partially_unrolled(void) const;
-
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-	ostream&
-	dump_element_key(ostream&, const instance_alias_base_type&) const;
-
-	size_t
-	lookup_index(const instance_alias_base_type&) const;
-
-	instance_alias_base_type&
-	get_corresponding_element(const parent_type&,
-		const instance_alias_base_type&);
-#endif
-
-	ostream&
-	dump_unrolled_instances(ostream&, const dump_flags&) const;
-
-	INSTANTIATE_INDICES_PROTO;
-
-	CONNECT_PORT_ALIASES_RECURSIVE_PROTO;
-
-	ALLOCATE_LOCAL_INSTANCE_IDS_PROTO;
-
-	instance_alias_base_ptr_type
-	lookup_instance(const multikey_index_type& l) const;
-
-	bool
-	lookup_instance_collection(
-		typename default_list<instance_alias_base_ptr_type>::type& l, 
-		const const_range_list& r) const;
-
-	UNROLL_ALIASES_PROTO;
-
-	instance_alias_base_type&
-	load_reference(istream& i);
-
-	const_index_list
-	resolve_indices(const const_index_list& l) const;
-
-#if COLLECTION_SEPARATE_KEY_FROM_VALUE
-	instance_type&
-#else
-	typename instance_type::parent_type&
-#endif
-	get_the_instance(void) { return this->the_instance; }
-
-	CREATE_DEPENDENT_TYPES_PROTO;
-
-	COLLECT_PORT_ALIASES_PROTO;
-
-	CONSTRUCT_PORT_CONTEXT_PROTO;
-
-	ASSIGN_FOOTPRINT_FRAME_PROTO;
-
-	void
-	accept(alias_visitor&) const;
-
-public:
-	FRIEND_PERSISTENT_TRAITS
-	PERSISTENT_METHODS_DECLARATIONS_NO_ALLOC
-#if POOL_ALLOCATE_INSTANCE_COLLECTIONS
-	enum {
-#ifdef	HAVE_UINT64_TYPE
-		pool_chunk_size = 64
-#else
-		pool_chunk_size = 32
-#endif
-	};
-	CHUNK_MAP_POOL_ROBUST_STATIC_DECLARATIONS(pool_chunk_size)
-#endif
-};	// end class instance_array (specialized)
-
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
 
-#undef	UNROLL_ALIASES_PROTO
-#undef	INSTANTIATE_INDICES_PROTO
+// #undef	UNROLL_ALIASES_PROTO
+// #undef	INSTANTIATE_INDICES_PROTO
 
 #endif	// __HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
 

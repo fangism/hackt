@@ -3,6 +3,19 @@
 # NOTE: the latest CVS tag must appear in the first 10 lines of this ChangeLog.
 # This version tag is used in building "cvstag.h" for version identification.
 
+2006-10-22	David Fang		<fangism@users.sourceforge.net>
+
+	* HACKT-00-01-04-main-00-80-40-instance-01-06:
+	  Minor source pecking:
+		Split up instance_collection.h into instance_array.h and
+		instance_scalar.h to reduce include material and clean up
+		headers.  Turns out most other classes don't need to know
+		about the actual arrays.  
+	  Factored multikey key-dumper helper into own file. 
+	  value_array now uses std::map instead of util::qmap internally.  
+	  Checked against gcc-4.1 while we were at it.  
+
+
 2006-10-21	David Fang		<fangism@users.sourceforge.net>
 
 	* HACKT-00-01-04-main-00-80-40-instance-01-05:

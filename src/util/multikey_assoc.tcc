@@ -1,7 +1,7 @@
 /**
 	\file "util/multikey_assoc.tcc"
 	Template method definitions for multikey_assoc class adapter.  
-	$Id: multikey_assoc.tcc,v 1.9.30.2 2006/10/21 20:08:27 fang Exp $
+	$Id: multikey_assoc.tcc,v 1.9.30.3 2006/10/22 08:03:32 fang Exp $
  */
 
 #ifndef	__UTIL_MULTIKEY_ASSOC_TCC__
@@ -16,6 +16,7 @@
 #include <limits>
 #include <algorithm>
 #include <iterator>
+#include <numeric>			// for std::accumlate
 #include "util/STL/functional.h"
 
 #ifndef	DEBUG_MULTIKEY_ASSOC_SLICE

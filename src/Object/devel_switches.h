@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.29.2.2 2006/10/21 20:08:13 fang Exp $
+	$Id: devel_switches.h,v 1.29.2.3 2006/10/22 08:03:22 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -67,7 +67,8 @@
 	Define to 1 to use new data structures that maintain key-values
 	of instance alias collections separate.  
 	Goal: 1
-	Status: in progress
+	Status: done for instance-collections and aliases,
+		not going to bother for value collections.  
  */
 #define	COLLECTION_SEPARATE_KEY_FROM_VALUE	1
 
@@ -79,6 +80,12 @@
 	Status: done, passes all tests with no regressions.
  */
 #define	EMBED_UNION_FIND		1
+
+/**
+	Define to 1 to use std::map instead of util::qmap
+	in value_arrays.  
+ */
+#define	VALUE_COLLECTION_MAP		1
 
 /**
 	Define to 1 to use dense collection structures for ports.

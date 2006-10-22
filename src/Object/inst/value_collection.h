@@ -3,7 +3,7 @@
 	Parameter instance collection classes for HAC.  
 	This file was "Object/art_object_value_collection.h"
 		in a previous life.  
-	$Id: value_collection.h,v 1.19 2006/10/18 20:58:06 fang Exp $
+	$Id: value_collection.h,v 1.19.2.1 2006/10/22 08:03:28 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_H__
@@ -16,13 +16,18 @@
 #include "Object/inst/instance_collection_base.h"	// for macros
 #include "Object/common/multikey_index.h"
 #include "Object/traits/class_traits_fwd.h"
+#include "Object/devel_switches.h"
 
 #include "util/memory/count_ptr.h"
 #include "util/inttypes.h"
 #include "util/persistent_fwd.h"
 #include "util/new_functor_fwd.h"
 #include "util/multikey_fwd.h"
+#if VALUE_COLLECTION_MAP
+#include "util/multikey_map.h"
+#else
 #include "util/multikey_qmap_fwd.h"
+#endif
 #include "util/memory/chunk_map_pool_fwd.h"
 
 /**
@@ -54,7 +59,9 @@ using std::istream;
 using std::ostream;
 using std::string;
 using util::memory::count_ptr;	// for experimental pointer classes
+#if !VALUE_COLLECTION_MAP
 using util::qmap;
+#endif
 using util::default_multikey_map;
 using util::bad_bool;
 using util::good_bool;
@@ -233,6 +240,8 @@ value_array<Tag,D>
 
 /**
 	Dimension-specific array of parameters.
+	NOTE: no need to separate key from value in map because
+	these value collections are not heavily replicated.
  */
 VALUE_ARRAY_TEMPLATE_SIGNATURE
 class value_array : public value_collection<Tag> {
@@ -250,11 +259,15 @@ public:
 private:
 	typedef	default_multikey_map<D, pint_value_type, element_type>
 							__helper_map_type;
+#if VALUE_COLLECTION_MAP
+	typedef	typename __helper_map_type::type	map_type;
+#else
 	typedef	typename __helper_map_type::template rebind_default_map_type<
 				util::default_qmap>::type
-							qmap_type;
+							map_type;
+#endif
 public:
-	typedef	util::multikey_map<D, pint_value_type, element_type, qmap_type>
+	typedef	util::multikey_map<D, pint_value_type, element_type, map_type>
 							collection_type;
 	typedef	typename collection_type::key_type	key_type;
 	typedef	typename traits_type::const_collection_type
