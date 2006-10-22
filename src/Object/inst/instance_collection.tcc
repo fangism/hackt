@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.36.2.3 2006/10/22 08:03:27 fang Exp $
+	$Id: instance_collection.tcc,v 1.36.2.4 2006/10/22 21:25:38 fang Exp $
 	TODO: trim includes
  */
 
@@ -63,9 +63,6 @@
 #include "util/multikey_assoc.tcc"
 #else
 #include "util/multikey_set.tcc"
-#endif
-#if 0
-#include "util/ring_node.tcc"
 #endif
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
@@ -128,6 +125,7 @@ using util::persistent_traits;
 //=============================================================================
 // class instance_array member class definitions
 
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 /**
 	Functor to collect transient info in the aliases.  
  */
@@ -221,6 +219,7 @@ struct INSTANCE_ARRAY_CLASS::key_dumper {
 	ostream&
 	operator () (const value_type&);
 };      // end struct key_dumper
+#endif	// COLLECTION_SEPARATE_KEY_FROM_VALUE
 
 //=============================================================================
 // class instance_collection method definitions
@@ -521,14 +520,18 @@ INSTANCE_ARRAY_CLASS::dump_unrolled_instances(ostream& o,
 		(df.show_leading_scope ? "(::)]" : "]");
 #endif
 	for_each(this->collection.begin(), this->collection.end(),
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+		typename parent_type::
+#endif
 		key_dumper(o, df));
 	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE 
+COLLECTION_HELPER_TEMPLATE_SIGNATURE 
 ostream&
-INSTANCE_ARRAY_CLASS::key_dumper::operator () (const value_type& p) {
+COLLECTION_HELPER_CLASS::key_dumper::operator () (
+		const COLLECTION_HELPER_ARG_TYPE& p) {
 #if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	p.dump_key(os << auto_indent);
 #else
@@ -956,7 +959,6 @@ INSTANCE_ARRAY_TEMPLATE_SIGNATURE
 void
 INSTANCE_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	STACKTRACE_VERBOSE;
-	// TODO: use iterator instead
 	const_iterator i(this->collection.begin());
 	const const_iterator e(this->collection.end());
 	for ( ; i!=e; i++) {
@@ -1005,10 +1007,10 @@ INSTANCE_ARRAY_CLASS::load_reference(istream& i) {
 	Going to need some sort of element_reader counterpart.
 	\param e is a reference to a INSTANCE_ALIAS_CLASS.
  */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+COLLECTION_HELPER_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::element_collector::operator () (
-		const element_type& e) const {
+COLLECTION_HELPER_CLASS::element_collector::operator ()
+		(const COLLECTION_HELPER_ARG_TYPE& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_collector::operator()");
 	e.collect_transient_info_base(pom);
 	// postpone connection writing until next phase
@@ -1019,9 +1021,10 @@ INSTANCE_ARRAY_CLASS::element_collector::operator () (
 	Going to need some sort of element_reader counterpart.
 	\param e is a reference to a INSTANCE_ALIAS_CLASS.
  */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+COLLECTION_HELPER_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::element_writer::operator () (const element_type& e) const {
+COLLECTION_HELPER_CLASS::element_writer::operator () (
+		const COLLECTION_HELPER_ARG_TYPE& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::element_writer::operator()");
 #if COLLECTION_SEPARATE_KEY_FROM_VALUE
 	// elements don't come with keys anymore, keys are managed separately
@@ -1034,7 +1037,15 @@ INSTANCE_ARRAY_CLASS::element_writer::operator () (const element_type& e) const 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+COLLECTION_HELPER_TEMPLATE_SIGNATURE
+void
+COLLECTION_HELPER_CLASS::element_loader::operator () (
+		COLLECTION_HELPER_ARG_TYPE& e) {
+	e.load_object_base(this->pom, this->is);
+}
+
+#else
 /**
 	This must perfectly complement element_writer::operator().
 	construct the element locally first, then insert it into set.
@@ -1068,12 +1079,13 @@ INSTANCE_ARRAY_CLASS::element_loader::operator () (void) {
 	const_cast<element_type&>(static_cast<const element_type&>(*i))
 		.load_object_base(this->pom, this->is);
 }
-#endif
+#endif	// COLLECTION_SEPARATE_KEY_FROM_VALUE
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+COLLECTION_HELPER_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::connection_writer::operator() (const element_type& e) const {
+COLLECTION_HELPER_CLASS::connection_writer::operator() (
+		const COLLECTION_HELPER_ARG_TYPE& e) const {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_writer::operator()");
 	const instance_alias_base_type* const next(e.peek());
 	NEVER_NULL(next);
@@ -1092,14 +1104,23 @@ INSTANCE_ARRAY_CLASS::connection_writer::operator() (const element_type& e) cons
 	returning const references and const iterators, where we intend
 	the non-key part of the object to me mutable.  
  */
-INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+COLLECTION_HELPER_TEMPLATE_SIGNATURE
 void
-INSTANCE_ARRAY_CLASS::connection_loader::operator() (const element_type& e) {
+COLLECTION_HELPER_CLASS::connection_loader::operator() (
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+		// still need const_cast?
+		COLLECTION_HELPER_ARG_TYPE& elem
+#else
+		const COLLECTION_HELPER_ARG_TYPE& e
+#endif
+		) {
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::connection_loader::operator()");
 	char c;
 	read_value(this->is, c);
 	if (c) {
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 		element_type& elem(const_cast<element_type&>(e));
+#endif
 		// lookup the instance in the collection referenced
 		// and connect them
 		elem.load_next_connection(this->pom, this->is);
@@ -1167,6 +1188,9 @@ if (!m.register_transient_object(this,
 	STACKTRACE_PERSISTENT("instance_array<Tag,D>::collect_transients()");
 	parent_type::collect_transient_info_base(m);
 	for_each(this->collection.begin(), this->collection.end(), 
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+		typename parent_type::
+#endif
 		element_collector(m)	// added 2005-07-07
 	);
 	// optimization for later: factor this out into a policy
@@ -1203,9 +1227,15 @@ INSTANCE_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 }
 #endif
 	for_each(this->collection.begin(), this->collection.end(),
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+		typename parent_type::
+#endif
 		element_writer(m, f)
 	);
 	for_each(this->collection.begin(), this->collection.end(), 
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+		typename parent_type::
+#endif
 		connection_writer(m, f)
 	);
 }
@@ -1243,6 +1273,7 @@ INSTANCE_ARRAY_CLASS::load_object(
 }
 	// now can we load connections at the same time?
 	iterator i(collection.begin()), e(collection.end());
+	// can now use element_loader() functor
 	for ( ; i!=e; ++i) {
 		element_type& v(*i);
 		v.load_object_base(m, f);
@@ -1257,6 +1288,9 @@ INSTANCE_ARRAY_CLASS::load_object(
 	}
 #endif
 	for_each(collection.begin(), collection.end(),
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+		typename parent_type::
+#endif
 		connection_loader(m, f)
 	);
 }

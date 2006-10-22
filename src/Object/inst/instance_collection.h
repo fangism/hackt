@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_collection.h,v 1.25.2.3 2006/10/22 08:03:25 fang Exp $
+	$Id: instance_collection.h,v 1.25.2.4 2006/10/22 21:25:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_COLLECTION_H__
@@ -267,6 +267,94 @@ virtual	instance_alias_base_type&
 	construct_empty(const int);
 
 protected:
+#if COLLECTION_SEPARATE_KEY_FROM_VALUE
+	// not that all alias elements are equal, 
+	// we can factor out common functionality
+	/**
+		Functor to collect transient info in the aliases.  
+	 */
+	class element_collector {
+		persistent_object_manager& pom;
+	public:
+		element_collector(persistent_object_manager& m) : pom(m) { }
+
+		void
+		operator () (const instance_alias_info_type&) const;
+	};	// end class element_collector
+
+	/**
+		Functor to write alias elements.  
+	 */
+	class element_writer {
+		ostream& os;
+		const persistent_object_manager& pom;
+	public:
+		element_writer(const persistent_object_manager& m,
+			ostream& o) : os(o), pom(m) { }
+
+		void
+		operator () (const instance_alias_info_type&) const;
+	};	// end class element_writer
+
+	class element_loader {
+		istream& is;
+		const persistent_object_manager& pom;
+	public:
+		element_loader(const persistent_object_manager& m,
+			istream& i) : is(i), pom(m) { }
+
+		void
+		operator () (instance_alias_info_type&);	// const?
+	};	// end class connection_loader
+
+	class connection_writer {
+		ostream& os;
+		const persistent_object_manager& pom;
+	public:
+		connection_writer(const persistent_object_manager& m,
+			ostream& o) : os(o), pom(m) { }
+
+		void
+		operator () (const instance_alias_info_type&) const;
+	};	// end class connection_writer
+
+	class connection_loader {
+		istream& is;
+		const persistent_object_manager& pom;
+	public:
+		connection_loader(const persistent_object_manager& m,
+			istream& i) : is(i), pom(m) { }
+
+		void
+		operator () (instance_alias_info_type&);	// const?
+	};	// end class connection_loader
+
+	struct key_dumper {
+		ostream& os;
+		const dump_flags& df;
+
+		key_dumper(ostream& o, const dump_flags& _df) :
+			os(o), df(_df) { }
+
+		ostream&
+		operator () (const instance_alias_info_type&);
+	};	// end struct key_dumper
+
+#define	COLLECTION_HELPER_TEMPLATE_SIGNATURE				\
+	INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+#define	COLLECTION_HELPER_CLASS						\
+	INSTANCE_COLLECTION_CLASS
+#define	COLLECTION_HELPER_ARG_TYPE					\
+	instance_alias_info_type
+#else
+#define	COLLECTION_HELPER_TEMPLATE_SIGNATURE				\
+	INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+#define	COLLECTION_HELPER_CLASS						\
+	INSTANCE_ARRAY_CLASS
+#define	COLLECTION_HELPER_ARG_TYPE					\
+	element_type
+#endif
+
 	void
 	collect_transient_info_base(persistent_object_manager&) const;
 

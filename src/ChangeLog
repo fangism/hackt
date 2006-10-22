@@ -5,6 +5,14 @@
 
 2006-10-22	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-40-instance-01-07:
+	  Added (but not yet used) Object/inst/port_formal_array.{h,tcc}
+		which serves the purpose of containing dense collections of 
+		aliases, using packed_array_generic representation internally.  
+	  Factored out functor classes of instance_array to the parent
+		instance_collection, to re-used in port_formal_array.
+
+
 	* HACKT-00-01-04-main-00-80-40-instance-01-06:
 	  Minor source pecking:
 		Split up instance_collection.h into instance_array.h and

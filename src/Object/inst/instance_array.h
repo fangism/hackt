@@ -3,7 +3,7 @@
 	Class declarations for scalar instances and instance collections.  
 	This file was originally "Object/art_object_instance_collection.h"
 		in a previous life.  
-	$Id: instance_array.h,v 1.1.2.1 2006/10/22 08:03:58 fang Exp $
+	$Id: instance_array.h,v 1.1.2.2 2006/10/22 21:25:37 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ARRAY_H__
@@ -164,12 +164,14 @@ public:
 	accept(alias_visitor&) const;
 
 private:
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 	class element_collector;
 	class element_writer;
-	class element_loader;
 	class connection_writer;
 	class connection_loader;
 	struct key_dumper;
+	class element_loader;
+#endif
 
 public:
 	FRIEND_PERSISTENT_TRAITS
