@@ -5,7 +5,7 @@
 	This file originally came from 
 		"Object/art_object_instance_collection.tcc"
 		in a previous life.  
-	$Id: instance_collection.tcc,v 1.36.2.4 2006/10/22 21:25:38 fang Exp $
+	$Id: instance_collection.tcc,v 1.36.2.5 2006/10/23 06:51:16 fang Exp $
 	TODO: trim includes
  */
 
@@ -56,6 +56,9 @@
 #if COLLECTION_SEPARATE_KEY_FROM_VALUE
 #include "Object/inst/sparse_collection.tcc"
 #include "Object/inst/element_key_dumper.h"
+#endif
+#if DENSE_FORMAL_COLLECTIONS
+#include "Object/inst/port_formal_array.tcc"
 #endif
 #include "common/ICE.h"
 
@@ -368,6 +371,32 @@ INSTANCE_COLLECTION_CLASS::make_array(const instance_placeholder_ptr_type p) {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if DENSE_FORMAL_COLLECTIONS
+/**
+	\param p the placeholder back-reference pointer, 
+		from which dimensions are inferred.  
+	\return newly constructed d-dimensional array.  
+ */
+INSTANCE_COLLECTION_TEMPLATE_SIGNATURE
+INSTANCE_COLLECTION_CLASS*
+INSTANCE_COLLECTION_CLASS::make_port_array(
+		const instance_placeholder_ptr_type p) {
+	const size_t d = p->get_dimensions();
+	switch(d) {
+		case 0: return new instance_array<Tag,0>(p);
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			return new port_formal_array<Tag>(p);
+		default:
+			cerr << "FATAL: dimension limit is 4!" << endl;
+			return NULL;
+	}
+}
+#endif
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	initial_instantiation_statement_ptr is permitted to be NULL
 	for instance collections that belong to footprints.  
@@ -483,6 +512,18 @@ INSTANCE_ARRAY_CLASS::dump_element_key(ostream& o,
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
+	\return the key corresponding to the referenced element.  
+ */
+INSTANCE_ARRAY_TEMPLATE_SIGNATURE
+multikey_index_type
+INSTANCE_ARRAY_CLASS::lookup_key(const instance_alias_base_type& a) const {
+	// NB: specialized to scalar pint_value_type for D == 1!
+	return multikey<D,pint_value_type>(this->collection.lookup_key(a));
+	// convert
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
 	\return the internal unique nonzero ID number corresponding
 	to the alias argument.  
  */
@@ -546,7 +587,6 @@ COLLECTION_HELPER_CLASS::key_dumper::operator () (
 	if (p.instance_index)
 		os << " (" << p.instance_index << ')';
 	p.dump_ports(os << ' ', df);
-
 	return os << endl;
 }
 
@@ -595,6 +635,9 @@ INSTANCE_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges,
 		if (iter == collection.end())
 #endif
 		{
+			// ALERT: shouldn't relaxed actuals be attached
+			// before calling recursive instantiate?
+			// only so if ports ever depend on relaxed parameters.  
 #if COLLECTION_SEPARATE_KEY_FROM_VALUE
 			// then insertion of new value was successful
 			new_elem->instantiate(
@@ -1363,6 +1406,16 @@ INSTANCE_SCALAR_CLASS::dump_element_key(ostream& o,
 		const instance_alias_base_type& a) const {
 	INVARIANT(&a == &this->the_instance);
 	return o;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\return an empty multikey index because scalars aren't indexed.  
+ */
+INSTANCE_SCALAR_TEMPLATE_SIGNATURE
+multikey_index_type
+INSTANCE_SCALAR_CLASS::lookup_key(const instance_alias_base_type& a) const {
+	return multikey_index_type();
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

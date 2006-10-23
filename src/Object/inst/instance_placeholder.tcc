@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.3 2006/10/18 19:08:02 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.3.2.1 2006/10/23 06:51:17 fang Exp $
 	TODO: trim includes
  */
 
@@ -211,10 +211,16 @@ INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 count_ptr<physical_instance_collection>
 INSTANCE_PLACEHOLDER_CLASS::unroll_port_only(const unroll_context& c) const {
 	STACKTRACE_VERBOSE;
+	INVARIANT(this->initial_instantiation_statement_ptr);
+#if DENSE_FORMAL_COLLECTIONS
+	const count_ptr<instance_collection_generic_type>
+		ret(instance_collection_generic_type::make_port_array(
+			never_ptr<const this_type>(this)));
+#else
 	const count_ptr<instance_collection_generic_type>
 		ret(instance_collection_generic_type::make_array(
 			never_ptr<const this_type>(this)));
-	INVARIANT(this->initial_instantiation_statement_ptr);
+#endif
 	if (this->initial_instantiation_statement_ptr->
 			instantiate_port(c, *ret).good) {
 		return ret;

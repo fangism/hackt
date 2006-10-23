@@ -4,7 +4,7 @@
 	Hint: copied from the bool counterpart, and text substituted.  
 	This file came from "Object/art_object_instance_proc.cc"
 		in a previous life.  
-	$Id: process_instance_collection.cc,v 1.13 2006/10/18 20:58:05 fang Exp $
+	$Id: process_instance_collection.cc,v 1.13.2.1 2006/10/23 06:51:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PROCESS_INSTANCE_COLLECTION_CC__
@@ -38,6 +38,10 @@
 namespace util {
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_instance_collection,
 		"process_instance_collection")
+#if DENSE_FORMAL_COLLECTIONS
+	SPECIALIZE_UTIL_WHAT(HAC::entity::process_port_formal_array,
+		"process_port_formal_array")
+#endif
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_scalar, "process_scalar")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_1D, "process_array_1D")
 	SPECIALIZE_UTIL_WHAT(HAC::entity::process_array_2D, "process_array_2D")
@@ -61,6 +65,11 @@ SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_array_3D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 3)
 SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
 	HAC::entity::process_array_4D, PROCESS_INSTANCE_COLLECTION_TYPE_KEY, 4)
+#if DENSE_FORMAL_COLLECTIONS
+SPECIALIZE_PERSISTENT_TRAITS_FULL_DEFINITION(
+	HAC::entity::process_port_formal_array, 
+	PROCESS_PORT_FORMAL_ARRAY_TYPE_KEY, 0)
+#endif
 
 }	// end namespace util
 
@@ -79,6 +88,9 @@ template class instance_array<process_tag, 1>;
 template class instance_array<process_tag, 2>;
 template class instance_array<process_tag, 3>;
 template class instance_array<process_tag, 4>;
+#if DENSE_FORMAL_COLLECTIONS
+template class port_formal_array<process_tag>;
+#endif
 
 //=============================================================================
 }	// end namespace entity

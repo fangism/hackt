@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/collection_fwd.h"
 	Forward declarations for all instance and value collection classes.  
-	$Id: collection_fwd.h,v 1.4 2006/10/18 20:57:58 fang Exp $
+	$Id: collection_fwd.h,v 1.4.2.1 2006/10/23 06:51:15 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_COLLECTION_FWD_H__
@@ -30,6 +30,13 @@ class instance_array;
 template <class, size_t>
 class value_array;
 
+// forward declare partial specialzation
+template <class Tag>
+class value_array<Tag, 0>;
+
+template <class>
+class port_formal_array;
+
 // subclasses of datatype_instance_collection
 typedef instance_collection<bool_tag>
 	bool_instance_collection;
@@ -56,6 +63,19 @@ typedef instance_placeholder<channel_tag>
 	channel_instance_placeholder;
 typedef instance_placeholder<process_tag>
 	process_instance_placeholder;
+
+typedef port_formal_array<bool_tag>
+	bool_port_formal_array;
+typedef port_formal_array<int_tag>
+	int_port_formal_array;
+typedef port_formal_array<enum_tag>
+	enum_port_formal_array;
+typedef port_formal_array<datastruct_tag>
+	struct_port_formal_array;
+typedef port_formal_array<channel_tag>
+	channel_port_formal_array;
+typedef port_formal_array<process_tag>
+	process_port_formal_array;
 
 // TODO: rename to *_value_collection
 template <class>

@@ -1,10 +1,14 @@
 /**
 	\file "Object/inst/port_formal_array.h"
-	$Id: port_formal_array.tcc,v 1.1.2.1 2006/10/22 21:25:41 fang Exp $
+	$Id: port_formal_array.tcc,v 1.1.2.2 2006/10/23 06:51:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
 #define	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_TCC__
+
+#ifndef	ENABLE_STACKTRACE
+#define	ENABLE_STACKTRACE		0
+#endif
 
 #include <iostream>
 #include <iterator>
@@ -18,6 +22,7 @@
 #include "Object/port_context.h"
 #include "common/ICE.h"
 
+#include "util/stacktrace.h"
 #include "util/persistent_object_manager.tcc"
 #include "util/packed_array.tcc"
 #include "util/memory/chunk_map_pool.tcc"
@@ -61,14 +66,47 @@ __CHUNK_MAP_POOL_ROBUST_OPERATOR_DELETE(EMPTY_ARG, PORT_FORMAL_ARRAY_CLASS)
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+PORT_FORMAL_ARRAY_CLASS::port_formal_array() :
+		parent_type(), value_array() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+PORT_FORMAL_ARRAY_CLASS::port_formal_array(
+		const instance_placeholder_ptr_type p) :
+		parent_type(p), value_array() {
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#if 0
+/**
+	All-in-one constructor.  
+	Recursively instantiates ports.  
+	\param p instance placeholder pointer.
+	\param k the dimensions of the array to instantiate.
+	\param t the collection type information.
+	\param r relaxed actuals to attach to all elements, if applicable.
+	\param c unroll-context for recursive port instantiation.  
+ */
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 PORT_FORMAL_ARRAY_CLASS::port_formal_array(
 		const instance_placeholder_ptr_type p,
-		const key_type& k) :
-		parent_type(p),
+		const key_type& k, 
+		const instance_collection_parameter_type& t, 
+		const count_ptr<const const_param_expr_list>& r, 
+		const unroll_context& c) :
+		parent_type(p, t),
 		value_array(k) {
 	// should instantiate all members without relaxed actuals
 	// TODO: instantiate!
+	// and complete type at the same time?
+	iterator i(this->value_array.begin()), e(this->value_array.end());
+	for ( ; i!=e; ++i) {
+		i->attach_actuals(r);
+		i->instantiate(never_ptr<const this_type>(this), c);
+	}
 }
+#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
@@ -83,12 +121,31 @@ PORT_FORMAL_ARRAY_CLASS::what(ostream& o) const {
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+bool
+PORT_FORMAL_ARRAY_CLASS::is_partially_unrolled(void) const {
+	// we use 0-dimensions to indicate that the array
+	// has not yet been populated.  
+	return this->value_array.dimensions();
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::dump_element_key(ostream& o, 
 		const instance_alias_info_type& a) const {
 	STACKTRACE_VERBOSE;
-	const key_type& k(this->value_array.lookup_key(a));
+	const key_type k(this->value_array.index_to_key(
+		this->value_array.lookup_index(a)));
 	return o << k;
+}
+
+//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
+multikey_index_type
+PORT_FORMAL_ARRAY_CLASS::lookup_key(const instance_alias_info_type& a) const {
+	STACKTRACE_VERBOSE;
+	return this->value_array.index_to_key(
+		this->value_array.lookup_index(a));
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -117,14 +174,23 @@ typename PORT_FORMAL_ARRAY_CLASS::instance_alias_info_type&
 PORT_FORMAL_ARRAY_CLASS::get_corresponding_element(
 		const parent_type& p, const instance_alias_info_type& a) {
 	STACKTRACE_VERBOSE;
-	const this_type& t(IS_A(const this_type&, p));	// assert dynamic cast
-	const size_t o = t.value_array.lookup_index(a);
+	INVARIANT(this->value_array.dimensions());
+	const this_type* t(IS_A(const this_type*, &p));
+	if (t) {
+		const size_t o = t->value_array.lookup_index(a);
 #if 0
-	const key_type k(t.index_to_key(o));
-	return this->value_array[k];
+		const key_type k(t.index_to_key(o));
+		return this->value_array[k];
 #else
-	return *(this->value_array.begin() +o);
+		return *(this->value_array.begin() +o);
 #endif
+	} else {
+		// is a sparse collection
+		const multikey_index_type k(p.lookup_key(a));
+		INVARIANT(k.size());
+		STACKTRACE_INDENT_PRINT("key = " << k << endl);
+		return this->value_array[k];
+	}
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -135,40 +201,40 @@ PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 ostream&
 PORT_FORMAL_ARRAY_CLASS::dump_unrolled_instances(ostream& o, 
 		const dump_flags& df) const {
-	STACKTRACE_VERBOSE;
-	const_iterator i(this->value_array.begin()), 
-		e(this->value_array.end());
-	INVARIANT(i != e);
-	key_generator_type
-		key_gen(this->value_array.first_key(),
-			this->value_array.last_key());
-	key_gen.initialize();
-	do {
-		const instance_alias_info_type& p(*i);
-		p.dump_key(o << auto_indent);
-		NEVER_NULL(p.container);
-		if (p.container->has_relaxed_type())
-			p.dump_actuals(o);
-		o << " = ";
-		NEVER_NULL(p.peek());
-		p.peek()->dump_hierarchical_name(o, df);
-		if (p.instance_index)
-			o << " (" << p.instance_index << ')';
-		p.dump_ports(o << ' ', df);
-		++i;
-		++key_gen;
-	} while (key_gen != key_gen.lower_corner);
-	return o << endl;
+	for_each(this->value_array.begin(), this->value_array.end(), 
+		typename parent_type::key_dumper(o, df));
+	return o;
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	This should only ever be called once per port formal.
+	This is a result of not being able to (conveniently)
+	initialize the entire collection in this constructor... yet.
+ */
 PORT_FORMAL_ARRAY_TEMPLATE_SIGNATURE
 good_bool
 PORT_FORMAL_ARRAY_CLASS::instantiate_indices(const const_range_list& ranges, 
 		const instance_relaxed_actuals_type& actuals, 
 		const unroll_context& c) {
-	ICE_NEVER_CALL(cerr);
-	return good_bool(false);
+	INVARIANT(!this->value_array.dimensions());
+	const key_type k(ranges.resolve_sizes());
+	this->value_array.resize(k);
+	iterator i(this->value_array.begin()), e(this->value_array.end());
+	if (actuals) {
+		// if ports are ever allowed to depend on relaxed parameters,
+		// then must attach actuals first before instantiating.  
+		for ( ; i!=e; ++i) {
+			i->instantiate(never_ptr<this_type>(this), c);
+			const bool attached = i->attach_actuals(actuals);
+			NEVER_NULL(attached);
+		}
+	} else {
+		for ( ; i!=e; ++i) {
+			i->instantiate(never_ptr<this_type>(this), c);
+		}
+	}
+	return good_bool(true);
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -238,7 +304,8 @@ PORT_FORMAL_ARRAY_CLASS::lookup_instance(const multikey_index_type& i) const {
 	typedef	instance_alias_base_ptr_type		return_type;
 	STACKTRACE_VERBOSE;
 	if (this->value_array.range_check(i)) {
-		return return_type(&value_array[i]);
+		return return_type(&const_cast<instance_alias_info_type&>(
+			value_array[i]));
 	} else {
 		return return_type(NULL);
 	}
@@ -256,8 +323,7 @@ PORT_FORMAL_ARRAY_CLASS::lookup_instance_collection(
 		const const_range_list& r) const {
 	STACKTRACE_VERBOSE;
 	INVARIANT(!r.empty());
-	key_generator_type key_gen;
-	r.make_multikey_generator(key_gen);
+	key_generator_type key_gen(r.lower_multikey(), r.upper_multikey());
 	if (!value_array.range_check(key_gen.lower_corner)
 			|| !value_array.range_check(key_gen.upper_corner)) {
 		this->type_dump(cerr << "FATAL: reference to ") <<
@@ -269,11 +335,13 @@ PORT_FORMAL_ARRAY_CLASS::lookup_instance_collection(
 	key_gen.initialize();
 	// TODO: consider a subroutine to grab entire subslice efficiently
 	do {
-		const instance_alias_base_ptr_type pi(&value_array[key_gen]);
+		const instance_alias_base_ptr_type
+			pi(&const_cast<instance_alias_info_type&>(
+				value_array[key_gen]));
 		NEVER_NULL(pi);
 		INVARIANT(pi->valid());	// port must already be instantiated
 		l.push_back(pi);
-		++key_gen;
+		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	return true;
 }
@@ -302,12 +370,14 @@ PORT_FORMAL_ARRAY_CLASS::unroll_aliases(const multikey_index_type& l,
 	alias_collection_iterator a_iter(a.begin());
 //	const const_iterator collection_end(this->value_array.end());
 	do {
-		const instance_alias_base_ptr_type pi(&value_array[key_gen]);
+		const instance_alias_base_ptr_type
+			pi(&const_cast<instance_alias_info_type&>(
+				value_array[key_gen]));
 		NEVER_NULL(pi);
 		INVARIANT(pi->valid());	// port must already be instantiated
 		*a_iter = pi;
 		++a_iter;
-		++key_gen;
+		key_gen++;
 	} while (key_gen != key_gen.lower_corner);
 	INVARIANT(a_iter == a.end());
 	return bad_bool(false);
@@ -387,7 +457,7 @@ PORT_FORMAL_ARRAY_CLASS::collect_port_aliases(port_alias_tracker& t) const {
 	const_iterator i(this->value_array.begin());
 	const const_iterator e(this->value_array.end());
 	for ( ; i!=e; i++) {
-		element_type& ii(*i);
+		element_type& ii(const_cast<element_type&>(*i));
 		INVARIANT(ii.instance_index);
 		// 0 is not an acceptable index
 		t.template get_id_map<Tag>()[ii.instance_index]
@@ -415,9 +485,9 @@ PORT_FORMAL_ARRAY_CLASS::construct_port_context(port_collection_context& pcc,
 	STACKTRACE_VERBOSE;
 	const_iterator i(this->value_array.begin());
 	const const_iterator e(this->value_array.end());
-	pcc.resize(this->value_array.size());
+	pcc.resize(array_type::sizes_product(this->value_array.size()));
 	size_t j = 0;
-	for ( ; i!=e; i++, j++) {
+	for ( ; i!=e; ++i, ++j) {
 		i->construct_port_context(pcc, ff, j);
 	}
 }
@@ -428,11 +498,12 @@ void
 PORT_FORMAL_ARRAY_CLASS::assign_footprint_frame(footprint_frame& ff, 
 		const port_collection_context& pcc) const {
 	STACKTRACE_VERBOSE;
-	INVARIANT(this->value_array.size() == pcc.size());
+	INVARIANT(size_t(array_type::sizes_product(this->value_array.size()))
+		== pcc.size());
 	const_iterator i(this->value_array.begin());
 	const const_iterator e(this->value_array.end());
 	size_t j = 0;
-	for ( ; i!=e; i++, j++) {
+	for ( ; i!=e; ++i, ++j) {
 		i->assign_footprint_frame(ff, pcc, j);
 	}
 }
@@ -476,7 +547,7 @@ PORT_FORMAL_ARRAY_CLASS::write_object(const persistent_object_manager& m,
 	parent_type::write_object_base(m, f);
 	const key_type& k(this->value_array.size());
 	value_writer<key_type> write_key(f);
-	write_key(f, k);
+	write_key(k);
 	const const_iterator b(this->value_array.begin()),
 		e(this->value_array.end());
 	for_each(b, e, typename parent_type::element_writer(m, f));
@@ -491,7 +562,7 @@ PORT_FORMAL_ARRAY_CLASS::load_object(const persistent_object_manager& m,
 	parent_type::load_object_base(m, f);
 	key_type k;
 	value_reader<key_type> read_key(f);
-	read_key(f, k);
+	read_key(k);
 	this->value_array.resize(k);
 	const iterator b(this->value_array.begin()),
 		e(this->value_array.end());

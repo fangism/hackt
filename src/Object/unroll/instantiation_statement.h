@@ -3,7 +3,7 @@
 	Instance statement classes for HAC.  
 	This file used to be "Object/art_object_inst_stmt.h"
 		in a previous life.  
-	$Id: instantiation_statement.h,v 1.14 2006/10/18 20:58:29 fang Exp $
+	$Id: instantiation_statement.h,v 1.14.2.1 2006/10/23 06:51:19 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_H__
@@ -22,6 +22,10 @@ USING_CONSTRUCT
 struct pint_tag;
 struct pbool_tag;
 class physical_instance_collection;
+class const_param_expr_list;
+
+template <class Tag>
+class instantiation_statement;
 
 //=============================================================================
 #define	INSTANTIATION_STATEMENT_TEMPLATE_SIGNATURE			\
@@ -109,6 +113,9 @@ public:
 
 	void
 	attach_collection(const never_ptr<const instance_placeholder_base>);
+
+	placeholder_ptr_type
+	get_placeholder(void) const { return this->inst_base; }
 
 	never_ptr<const instance_placeholder_base>
 	get_inst_base(void) const;

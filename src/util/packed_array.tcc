@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.18.16.1 2006/10/22 08:03:33 fang Exp $
+	$Id: packed_array.tcc,v 1.18.16.2 2006/10/23 06:51:22 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -141,7 +141,7 @@ PACKED_ARRAY_CLASS::sizes_product(const key_type& k) {
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Caches the coefficients used in computing the internal index.  
-	If size is [x][y][z], coeffs is [xyz][yz][z]
+	If size is [x][y][z], coeffs is [yz][z]
  */
 PACKED_ARRAY_TEMPLATE_SIGNATURE
 void
@@ -558,11 +558,17 @@ PACKED_ARRAY_GENERIC_TEMPLATE_SIGNATURE
 typename PACKED_ARRAY_GENERIC_CLASS::key_type
 PACKED_ARRAY_GENERIC_CLASS::index_to_key(const size_type i) const {
 	key_type ret(dim);
-	size_type j = 0;
+if (dim == 1) {
+	// there are no coeffs!
+	ret[0] = i;
+} else {
+	ret[0] = i / coeffs[0];
+	size_type j = 1;
 	for ( ; j<dim; ++j) {
 		// vectorize me, Mr. Compiler!
-		ret[j] = i % coeffs[j];
+		ret[j] = i % coeffs[j-1];
 	}
+}
 	return ret;
 }
 

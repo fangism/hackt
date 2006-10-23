@@ -2,7 +2,7 @@
 	\file "Object/sizes.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes.cc,v 1.5.2.2 2006/10/22 08:03:23 fang Exp $
+	$Id: sizes.cc,v 1.5.2.3 2006/10/23 06:51:09 fang Exp $
  */
 
 #include <iostream>
@@ -90,6 +90,7 @@
 #include "Object/inst/instance_collection_base.h"
 #include "Object/inst/instance_array.h"
 #include "Object/inst/instance_scalar.h"
+#include "Object/inst/port_formal_array.h"
 #include "Object/inst/instance_fwd.h"
 #include "Object/inst/instance_pool.h"
 #include "Object/inst/int_collection_type_manager.h"
@@ -274,6 +275,9 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<bool_scalar>(o);
 	__dump_class_size<bool_array_1D>(o);
 	__dump_class_size<bool_array_4D>(o);
+#if DENSE_FORMAL_COLLECTIONS
+	__dump_class_size<bool_port_formal_array>(o);
+#endif
 	__dump_class_size<process_instance_collection>(o);
 	__dump_class_size<process_instance>(o);
 	__dump_class_size<instance_alias_info<process_tag> >(o);
@@ -284,6 +288,9 @@ dump_class_sizes(ostream& o) {
 	__dump_class_size<process_scalar>(o);
 	__dump_class_size<process_array_1D>(o);
 	__dump_class_size<process_array_4D>(o);
+#if DENSE_FORMAL_COLLECTIONS
+	__dump_class_size<process_port_formal_array>(o);
+#endif
 	__dump_class_size<pint_instance_collection>(o);
 	__dump_class_size<pint_instance>(o);
 	__dump_class_size<pint_scalar>(o);

@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/port_formal_array.h"
 	Wrapper class around packed_array_generic.  
-	$Id: port_formal_array.h,v 1.1.2.1 2006/10/22 21:25:40 fang Exp $
+	$Id: port_formal_array.h,v 1.1.2.2 2006/10/23 06:51:18 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_PORT_FORMAL_ARRAY_H__
@@ -52,7 +52,7 @@ public:
 						array_type;
 	typedef	typename array_type::size_type	size_type;
 	typedef	typename array_type::key_type	key_type;
-	typedef	typename key_type::key_generator_type	key_generator_type;
+	typedef	typename key_type::generator_type	key_generator_type;
 	typedef	typename parent_type::instance_alias_base_ptr_type
 						instance_alias_base_ptr_type;
 	typedef	typename parent_type::internal_alias_policy
@@ -65,13 +65,25 @@ public:
 						alias_collection_type;
 	typedef	typename parent_type::instance_relaxed_actuals_type
 						instance_relaxed_actuals_type;
+	typedef	typename traits_type::instance_collection_parameter_type
+					instance_collection_parameter_type;
 private:
 	typedef	typename array_type::iterator	iterator;
 	typedef	typename array_type::const_iterator	const_iterator;
 private:
 	array_type				value_array;
+private:
+	port_formal_array();
 public:
-	port_formal_array(const instance_placeholder_ptr_type, const key_type&);
+	explicit
+	port_formal_array(const instance_placeholder_ptr_type);
+
+#if 0
+	port_formal_array(const instance_placeholder_ptr_type, const key_type&,
+		const instance_collection_parameter_type&, 
+		const count_ptr<const const_param_expr_list>&, 
+		const unroll_context&);
+#endif
 
 	~port_formal_array();
 
@@ -80,6 +92,9 @@ public:
 
 	ostream&
 	dump_element_key(ostream&, const instance_alias_info_type&) const;
+
+	multikey_index_type
+	lookup_key(const instance_alias_info_type&) const;
 
 	size_t
 	lookup_index(const instance_alias_info_type&) const;

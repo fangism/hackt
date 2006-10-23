@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.24.2.2 2006/10/21 20:08:14 fang Exp $
+	$Id: instance_alias.tcc,v 1.24.2.3 2006/10/23 06:51:16 fang Exp $
 	TODO: trim includes
  */
 
@@ -55,7 +55,9 @@
 #include "Object/inst/alias_printer.h"
 #include "common/ICE.h"
 
+#if !COLLECTION_SEPARATE_KEY_FROM_VALUE
 #include "util/multikey_set.tcc"
+#endif
 #include "util/packed_array.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/sstream.h"
@@ -750,7 +752,10 @@ INSTANCE_ALIAS_INFO_CLASS::write_next_connection(
 	m.write_pointer(o, this->container);
 	if (this->container->get_dimensions()) {
 		const size_t index = this->container->lookup_index(*this);
-		INVARIANT(index);	// 1-indexed
+		// 1-indexed for sparse collections, 0-indexed for dense!
+#if !DENSE_FORMAL_COLLECTIONS
+		INVARIANT(index);
+#endif
 		write_value(o, index);
 	}
 	// else scalar alias reference doesn't need index
