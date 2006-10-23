@@ -22,9 +22,9 @@ Persistent Object Manager text dump:
 	18	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	19	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
 	20	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	21	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	21	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	22	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	23	##ADDR##	dintcoll	1	#HEAD#	#TAIL#	46
+	23	##ADDR##	dintpfar	0	#HEAD#	#TAIL#	42
 	24	##ADDR##	dboolplh	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	procplch	0	#HEAD#	#TAIL#	25
 	26	##ADDR##	dintplch	0	#HEAD#	#TAIL#	25

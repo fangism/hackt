@@ -52,11 +52,11 @@ Persistent Object Manager text dump:
 	48	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	49	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	50	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	51	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	51	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	52	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	53	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	54	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
-	55	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	68
+	55	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	56
 	56	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	57	##ADDR##	datainst	0	#HEAD#	#TAIL#	24
 	58	##ADDR##	datatprf	0	#HEAD#	#TAIL#	20

@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	sprcmref	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	dindlst_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	39	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	40	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	42	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

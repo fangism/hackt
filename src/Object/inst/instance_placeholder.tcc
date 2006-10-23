@@ -1,6 +1,6 @@
 /**
 	\file "Object/inst/instance_placeholder.tcc"
-	$Id: instance_placeholder.tcc,v 1.3.2.1 2006/10/23 06:51:17 fang Exp $
+	$Id: instance_placeholder.tcc,v 1.3.2.2 2006/10/23 19:47:22 fang Exp $
 	TODO: trim includes
  */
 
@@ -289,9 +289,18 @@ INSTANCE_PLACEHOLDER_CLASS::make_instance_collection_footprint_copy(void) const 
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+/**
+	\returns a new collection.  
+ */
 INSTANCE_PLACEHOLDER_TEMPLATE_SIGNATURE
 typename INSTANCE_PLACEHOLDER_CLASS::instance_collection_generic_type*
 INSTANCE_PLACEHOLDER_CLASS::make_collection(void) const {
+#if DENSE_FORMAL_COLLECTIONS
+	if (this->is_port_formal()) {
+		return instance_collection_generic_type::make_port_array(
+			never_ptr<const this_type>(this));
+	} else
+#endif
 	return instance_collection_generic_type::make_array(
 		never_ptr<const this_type>(this));
 }

@@ -28,7 +28,7 @@ Persistent Object Manager text dump:
 	24	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	25	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	26	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	27	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	63
+	27	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	55
 	28	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	29	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
 	30	##ADDR##	proctprf	0	#HEAD#	#TAIL#	20

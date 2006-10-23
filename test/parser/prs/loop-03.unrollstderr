@@ -89,7 +89,7 @@ Persistent Object Manager text dump:
 	85	##ADDR##	spimvref	0	#HEAD#	#TAIL#	16
 	86	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	87	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	88	##ADDR##	dboolcol	3	#HEAD#	#TAIL#	583
+	88	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	271
 	89	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	90	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	91	##ADDR##	procplch	0	#HEAD#	#TAIL#	27

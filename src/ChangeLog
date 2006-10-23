@@ -5,6 +5,16 @@
 
 2006-10-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-40-instance-01-10:
+	  instance_placeholder::make_collection(): now creates a dense
+		collection if it is known to belong to a port formal.
+	  Test suite updated accordingly, only header diffs found in
+		unroll and create tests.  
+	  Next: rework subinstance_manager to use more efficient
+		elements and members, perhaps moving away from 
+		heap-allocations.  (should experiment some)
+
+
 	* HACKT-00-01-04-main-00-80-40-instance-01-09:
 	  Minor source revision, only in util/packed_array.tcc (fix).
 	  No other source touched.

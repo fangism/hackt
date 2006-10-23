@@ -3,7 +3,7 @@
 	Method definitions for instantiation statement classes.  
 	This file's previous revision history is in
 		"Object/art_object_inst_stmt.tcc"
- 	$Id: instantiation_statement.tcc,v 1.22.2.1 2006/10/23 06:51:20 fang Exp $
+ 	$Id: instantiation_statement.tcc,v 1.22.2.2 2006/10/23 19:47:23 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_INSTANTIATION_STATEMENT_TCC__
@@ -201,18 +201,11 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 #endif
 	NEVER_NULL(this->inst_base);
 
-	// TODO: currently will not work with instances inside namespaces
-	// may require qualified names in top-level footprint search!
 	// TODO: this is a modifying lookup, using target_footprint
 	count_ptr<collection_type>
 		inst_ptr(c.lookup_collection(*this->inst_base)
 			.template is_a<collection_type>());
 	if (!inst_ptr) {
-#if 0
-		this->inst_base->dump(cerr << "ERROR: ", dump_flags::verbose)
-			<< " not found." << endl;
-		return good_bool(false);
-#else
 		// then we need to instantiate it
 		inst_ptr = count_ptr<collection_type>(
 			IS_A(collection_type*,
@@ -222,7 +215,6 @@ INSTANTIATION_STATEMENT_CLASS::unroll(const unroll_context& c) const {
 		// but type is still incomplete until type committed, below.  
 		c.instantiate_collection(inst_ptr);
 		// could handle first-time type checking work here...
-#endif
 	}
 	collection_type& _inst(*inst_ptr);
 	// 2005-07-07:

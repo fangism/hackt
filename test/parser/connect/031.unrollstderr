@@ -30,7 +30,7 @@ Persistent Object Manager text dump:
 	26	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	27	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	28	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	29	##ADDR##	proccoll	1	#HEAD#	#TAIL#	372
+	29	##ADDR##	procpfar	0	#HEAD#	#TAIL#	328
 	30	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	31	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	32	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
@@ -115,7 +115,7 @@ Persistent Object Manager text dump:
 	111	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	112	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	113	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
-	114	##ADDR##	proccoll	1	#HEAD#	#TAIL#	174
+	114	##ADDR##	procpfar	0	#HEAD#	#TAIL#	154
 	115	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	116	##ADDR##	procpfar	0	#HEAD#	#TAIL#	328
 	117	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

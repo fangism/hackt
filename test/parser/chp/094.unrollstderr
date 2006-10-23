@@ -31,25 +31,25 @@ Persistent Object Manager text dump:
 	27	##ADDR##	spinref_	0	#HEAD#	#TAIL#	16
 	28	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	29	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	30	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	30	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	97
 	31	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	32	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	33	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	34	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	35	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	36	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	36	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	97
 	37	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	38	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	39	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	40	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	41	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	42	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	42	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	97
 	43	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	44	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	45	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	46	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	47	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
-	48	##ADDR##	chancoll	2	#HEAD#	#TAIL#	121
+	48	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	97
 	49	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	50	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
 	51	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24

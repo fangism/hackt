@@ -22,12 +22,12 @@ Persistent Object Manager text dump:
 	18	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	19	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	20	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	21	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	21	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	22	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	23	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	24	##ADDR##	dintcoll	0	#HEAD#	#TAIL#	25
 	25	##ADDR##	crnglst_	0	#HEAD#	#TAIL#	20
-	26	##ADDR##	proccoll	1	#HEAD#	#TAIL#	74
+	26	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	27	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	28	##ADDR##	procpfar	0	#HEAD#	#TAIL#	70
 	29	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12

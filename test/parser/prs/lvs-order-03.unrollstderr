@@ -46,7 +46,7 @@ Persistent Object Manager text dump:
 	42	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	43	##ADDR##	cnstpi__	0	#HEAD#	#TAIL#	12
 	44	##ADDR##	pintcoll	0	#HEAD#	#TAIL#	24
-	45	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
+	45	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	47
 	46	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	55
 	47	##ADDR##	procplch	0	#HEAD#	#TAIL#	27
 	48	##ADDR##	procinst	0	#HEAD#	#TAIL#	24
