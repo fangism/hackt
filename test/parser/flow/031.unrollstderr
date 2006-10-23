@@ -72,7 +72,7 @@ Persistent Object Manager text dump:
 	68	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	69	##ADDR##	proccoll	0	#HEAD#	#TAIL#	41
 	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	1329
+	71	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	929
 
 In module created from: ##FILE## (unrolled)
 In namespace "", we have: {

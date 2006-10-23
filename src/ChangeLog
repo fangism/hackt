@@ -5,6 +5,14 @@
 
 2006-10-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-40-instance-01-09:
+	  Minor source revision, only in util/packed_array.tcc (fix).
+	  No other source touched.
+	  All unroll/create regression tests have been re-confirmed, 
+		only differences occurred in persistent object headers.  
+	  Next: footprint-local ports should be dense.  
+
+
 	* HACKT-00-01-04-main-00-80-40-instance-01-08:
 	  Completed and enabled DENSE_FORMAL_COLLECTIONS for instantiating
 		ports in the public subinstance hierarchy with 

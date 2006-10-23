@@ -1,6 +1,6 @@
 /**
 	\file "util/packed_array.tcc"
-	$Id: packed_array.tcc,v 1.18.16.2 2006/10/23 06:51:22 fang Exp $
+	$Id: packed_array.tcc,v 1.18.16.3 2006/10/23 18:04:38 fang Exp $
  */
 
 #ifndef	__UTIL_PACKED_ARRAY_TCC__
@@ -564,10 +564,11 @@ if (dim == 1) {
 } else {
 	ret[0] = i / coeffs[0];
 	size_type j = 1;
-	for ( ; j<dim; ++j) {
+	for ( ; j<dim -1; ++j) {
 		// vectorize me, Mr. Compiler!
-		ret[j] = i % coeffs[j-1];
+		ret[j] = (i % coeffs[j-1]) / sizes[j];
 	}
+	ret[j] = i % sizes[j];
 }
 	return ret;
 }

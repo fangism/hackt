@@ -68,11 +68,11 @@ Persistent Object Manager text dump:
 	64	##ADDR##	sdbmiref	0	#HEAD#	#TAIL#	16
 	65	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	66	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	67	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	67	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	68	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	69	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	70	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	71	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	71	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	72	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	73	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 

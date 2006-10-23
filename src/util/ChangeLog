@@ -2,6 +2,12 @@
 
 2006-10-23	David Fang		<fangism@users.sourceforge.net>
 
+	* HACKT-00-01-04-main-00-80-40-instance-01-09:
+	  util/packed_array.tcc: fixed key translation, once again.  
+
+
+2006-10-23	David Fang		<fangism@users.sourceforge.net>
+
 	* HACKT-00-01-04-main-00-80-40-instance-01-08:
 	  util/packed_array.tcc: packed_array_generic::index_to_key()
 		tested and fixed key translation algorithm.  

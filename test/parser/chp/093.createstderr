@@ -87,13 +87,13 @@ Persistent Object Manager text dump:
 	83	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	84	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
 	85	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	86	##ADDR##	chancoll	1	#HEAD#	#TAIL#	71
+	86	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	67
 	87	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	88	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	89	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 	90	##ADDR##	chancoll	0	#HEAD#	#TAIL#	46
 	91	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	92	##ADDR##	chancoll	1	#HEAD#	#TAIL#	71
+	92	##ADDR##	chanpfar	0	#HEAD#	#TAIL#	67
 	93	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
 
 In module created from: ##FILE## (unrolled) (created)

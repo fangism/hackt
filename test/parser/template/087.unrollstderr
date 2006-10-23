@@ -40,7 +40,7 @@ Persistent Object Manager text dump:
 	36	##ADDR##	dprmlst_	0	#HEAD#	#TAIL#	16
 	37	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	38	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	16
-	39	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	29
+	39	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	29
 	40	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 
 In module created from: ##FILE## (unrolled)

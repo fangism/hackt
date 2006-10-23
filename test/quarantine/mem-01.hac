@@ -1,6 +1,6 @@
 /***
 	\file "mem-01.hac"
-
+	$Id: mem-01.hac,v 1.2.2.1 2006/10/23 18:06:00 fang Exp $
 REMARKS:
 For large arrays, unrolling dies running out of memory, need to investigate...
 Known to choke on 40 x 40
@@ -112,9 +112,20 @@ hohoho rum[10][10];
 **/
 
 /** FILE SIZES as of HACKT-00-01-04-main-00-80-03-instance-00-38
+// near completion of placeholder feature
 -rw-r--r-- 1 user     82352 Oct 16 23:19 mem-01.haco
 -rw-r--r-- 1 user 155955547 Oct 16 23:21 mem-01.haco-a
 -rw-r--r-- 1 user 142608647 Oct 16 23:20 mem-01.haco-c
 -rw-r--r-- 1 user 134118350 Oct 16 23:19 mem-01.haco-u
+**/
+
+/** FILE SIZES as of HACKT-00-01-04-main-00-80-03-instance-01-08
+// use of dense port formal arrays to replace sparse collections
+// minor 10% speedup: 18/27/30 s
+// peak memory (using top) about the same
+-rw-r--r-- 1 user     82380 Oct 23 10:12 mem-01.haco
+-rw-r--r-- 1 user 155298463 Oct 23 10:14 mem-01.haco-a
+-rw-r--r-- 1 user 141951563 Oct 23 10:13 mem-01.haco-c
+-rw-r--r-- 1 user 133615282 Oct 23 10:13 mem-01.haco-u
 **/
 

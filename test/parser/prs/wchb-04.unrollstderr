@@ -225,11 +225,11 @@ Persistent Object Manager text dump:
 	221	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	222	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	223	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	224	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
+	224	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	46
 	225	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	226	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	227	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	228	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	50
+	228	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	46
 	229	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	230	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	231	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
@@ -258,29 +258,29 @@ Persistent Object Manager text dump:
 	254	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	255	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	256	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	257	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	257	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	258	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	259	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	260	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	261	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	42
+	261	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	38
 	262	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	21
 	263	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	264	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	265	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
+	265	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
 	266	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	267	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	268	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	269	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
+	269	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
 	270	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	271	##ADDR##	proccoll	0	#HEAD#	#TAIL#	49
 	272	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
 	273	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	274	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	275	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
+	275	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
 	276	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 	277	##ADDR##	proccoll	0	#HEAD#	#TAIL#	45
 	278	##ADDR##	cprmlst_	0	#HEAD#	#TAIL#	12
-	279	##ADDR##	dboolcol	1	#HEAD#	#TAIL#	58
+	279	##ADDR##	dboolpfa	0	#HEAD#	#TAIL#	54
 	280	##ADDR##	dboolcol	0	#HEAD#	#TAIL#	25
 
 In module created from: ##FILE## (unrolled)
