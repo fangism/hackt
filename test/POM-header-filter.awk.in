@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # "POM-header-filter.awk"
-#	$Id: POM-header-filter.awk.in,v 1.1 2006/10/24 18:47:45 fang Exp $
+#	$Id: POM-header-filter.awk.in,v 1.2 2006/10/24 21:09:32 fang Exp $
 # filter for text dump of persistent_object_manager's object header
 
 # NOTE: when used as a pipe redirected from stdout combined with stderr,
@@ -48,7 +48,9 @@ function rewrite_header_entry(ind,addr,type,arg,hd,tl) {
 		print "##SIZE##";
 	} else {
 @OBJECT_ALIGN_CHECKING_TRUE@		print tl-hd;	# no correction needed
-@OBJECT_ALIGN_CHECKING_FALSE@		print tl-hd +8;	# correction term
+@OBJECT_ALIGN_CHECKING_FALSE@		if (ind) {	# correction term needed
+@OBJECT_ALIGN_CHECKING_FALSE@			print tl-hd +8;	# except for 0
+@OBJECT_ALIGN_CHECKING_FALSE@		} else { print tl-hd; }
 	}
 }
 
