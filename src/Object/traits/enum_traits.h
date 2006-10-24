@@ -2,7 +2,7 @@
 	\file "Object/traits/enum_traits.h"
 	Traits and policies for enum data types.  
 	This file used to be "Object/art_object_enum_traits.h".
-	$Id: enum_traits.h,v 1.15.2.1 2006/10/20 04:43:50 fang Exp $
+	$Id: enum_traits.h,v 1.15.2.2 2006/10/24 00:56:42 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_ENUM_TRAITS_H__
@@ -73,13 +73,8 @@ struct class_traits<enum_tag> {
 					nonmeta_instance_reference_base_type;
 	typedef	enum_member_meta_instance_reference
 				member_simple_meta_instance_reference_type;
-#if EMBED_UNION_FIND
 	typedef	packed_array_generic<pint_value_type,
 			never_ptr<instance_alias_info_type> >
-#else
-	typedef	packed_array_generic<pint_value_type,
-			instance_alias_base_ptr_type>
-#endif
 						alias_collection_type;
 	typedef	enum_alias_connection		alias_connection_type;
 	typedef	data_alias_connection_base	alias_connection_parent_type;

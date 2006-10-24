@@ -6,7 +6,7 @@
 		"Object/art_object_instance_collection.tcc"
 		in a previous life, and then was split from
 		"Object/inst/instance_collection.tcc".
-	$Id: instance_alias.tcc,v 1.24.2.3 2006/10/23 06:51:16 fang Exp $
+	$Id: instance_alias.tcc,v 1.24.2.4 2006/10/24 00:56:35 fang Exp $
 	TODO: trim includes
  */
 
@@ -92,7 +92,6 @@ using util::persistent_traits;
 //=============================================================================
 // class instance_alias_info method definitions
 
-#if EMBED_UNION_FIND
 /**
 	The only time a copy-contructor is allowed is on a new-born
 	instance alias.  
@@ -107,7 +106,6 @@ INSTANCE_ALIAS_INFO_CLASS::instance_alias_info(const this_type& t) :
 		next(this), container(t.container) {
 	INVARIANT(t.next == &t);
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -404,13 +402,7 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_port(this_type& l, this_type& r) {
 		// already have error message
 		return good_bool(false);
 	}
-#if EMBED_UNION_FIND
 	l.unite(r);
-#else
-	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
-	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
-	ll = rr;			// union
-#endif
 	return l.connect_port_aliases_recursive(r);
 }
 
@@ -435,13 +427,7 @@ INSTANCE_ALIAS_INFO_CLASS::checked_connect_alias(this_type& l, this_type& r) {
 		// already have error message
 		return good_bool(false);
 	}
-#if EMBED_UNION_FIND
 	l.unite(r);
-#else
-	instance_alias_base_type& ll(AS_A(instance_alias_base_type&, l));
-	instance_alias_base_type& rr(AS_A(instance_alias_base_type&, r));
-	ll = rr;	// union
-#endif
 	return l.connect_port_aliases_recursive(r);
 }
 
@@ -589,70 +575,44 @@ INSTANCE_ALIAS_INFO_CLASS::dump_hierarchical_name(ostream& o) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if EMBED_UNION_FIND
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
 INSTANCE_ALIAS_INFO_CLASS::unite(this_type& r) {
 	STACKTRACE_VERBOSE;
 	this->find()->next = &*r.find();
 }
-#endif
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) {
-#if EMBED_UNION_FIND
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
-#endif
 	NEVER_NULL(this->next);
 	if (this->next != this->next->next) {
 		this->next = &*this->next->find();
 	}
 	return pseudo_iterator(this->next);
-#else
-	ICE_NEVER_CALL(cerr);
-	return pseudo_iterator();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 typename INSTANCE_ALIAS_INFO_CLASS::pseudo_const_iterator
 INSTANCE_ALIAS_INFO_CLASS::find(void) const {
-#if EMBED_UNION_FIND
 	STACKTRACE_VERBOSE;
-#if ENABLE_STACKTRACE
 	STACKTRACE_INDENT_PRINT("this = " << this << endl);
-#endif
 	const this_type* tmp = this;
 	while (tmp != tmp->next) {
 		tmp = tmp->next;
 	}
 	return pseudo_const_iterator(tmp);
-#else
-	ICE_NEVER_CALL(cerr);
-	return pseudo_const_iterator();
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
 void
-INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(
-#if EMBED_UNION_FIND
-		this_type& n
-#else
-		instance_alias_base_type&
-#endif
-		) {
-#if EMBED_UNION_FIND
+INSTANCE_ALIAS_INFO_CLASS::finalize_canonicalize(this_type& n) {
 	this->next = &n;
-#else
-	ICE_NEVER_CALL(cerr);
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -779,11 +739,7 @@ INSTANCE_ALIAS_INFO_CLASS::load_next_connection(
 if (this->container->get_dimensions()) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
 	this_type& n(this->load_alias_reference(m, i));
-#if EMBED_UNION_FIND
 	this->next = &n;
-#else
-	this->set(&n);	// manual unionization without path compression
-#endif
 } else {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,0>::load_next_connection()");
 	instance_collection_generic_type* next_container;
@@ -793,11 +749,7 @@ if (this->container->get_dimensions()) {
 	// problem: container is a never_ptr<const ...>, yucky
 	m.load_object_once(next_container);
 	this_type& n(next_container->load_reference(i));
-#if EMBED_UNION_FIND
 	this->next = &n;
-#else
-	this->set(&n);	// manual unionization without path compression
-#endif
 }
 #else
 	ICE_NEVER_CALL(cerr);
@@ -811,11 +763,7 @@ if (this->container->get_dimensions()) {
 	The key/index load is finished by the call to load_reference.  
  */
 INSTANCE_ALIAS_INFO_TEMPLATE_SIGNATURE
-#if EMBED_UNION_FIND
 INSTANCE_ALIAS_INFO_CLASS&
-#else
-typename INSTANCE_ALIAS_INFO_CLASS::instance_alias_base_type&
-#endif
 INSTANCE_ALIAS_INFO_CLASS::load_alias_reference(
 		const persistent_object_manager& m, istream& i) {
 	never_ptr<container_type> next_container;
@@ -947,35 +895,6 @@ INSTANCE_ALIAS_CLASS::dump_alias(ostream& o, const dump_flags& df) const {
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !EMBED_UNION_FIND
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_CLASS::pseudo_iterator
-INSTANCE_ALIAS_CLASS::find(void) {
-	return instance_alias_base_type::find();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename INSTANCE_ALIAS_CLASS::pseudo_const_iterator
-INSTANCE_ALIAS_CLASS::find(void) const {
-	return instance_alias_base_type::find();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !EMBED_UNION_FIND
-/**
-	Manually update the next pointer of the union-find.  
- */
-INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-INSTANCE_ALIAS_CLASS::finalize_canonicalize(
-		instance_alias_base_type& n) {
-	this->set(&n);
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
 	Need comment, what is this used for again? diagnostics?
  */
@@ -1041,11 +960,7 @@ INSTANCE_ALIAS_CLASS::load_next_connection(
 		const persistent_object_manager& m, istream& i) {
 	STACKTRACE_PERSISTENT("instance_alias<Tag,D>::load_next_connection()");
 	instance_alias_base_type& n(this->load_alias_reference(m, i));
-#if EMBED_UNION_FIND
 	this->next = &n;
-#else
-	this->set(&n);	// manual unionization without path compression
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -1097,35 +1012,6 @@ KEYLESS_INSTANCE_ALIAS_CLASS::dump_alias(ostream& o,
 	NEVER_NULL(this->container);
 	return this->container->dump_hierarchical_name(o, df);
 }
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !EMBED_UNION_FIND
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename KEYLESS_INSTANCE_ALIAS_CLASS::pseudo_iterator
-KEYLESS_INSTANCE_ALIAS_CLASS::find(void) {
-	return instance_alias_base_type::find();
-}
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-typename KEYLESS_INSTANCE_ALIAS_CLASS::pseudo_const_iterator
-KEYLESS_INSTANCE_ALIAS_CLASS::find(void) const {
-	return instance_alias_base_type::find();
-}
-#endif
-
-//- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-#if !EMBED_UNION_FIND
-/**
-	Manually update the next pointer of the union-find.  
- */
-KEYLESS_INSTANCE_ALIAS_TEMPLATE_SIGNATURE
-void
-KEYLESS_INSTANCE_ALIAS_CLASS::finalize_canonicalize(
-		instance_alias_base_type& n) {
-	this->set(&n);
-}
-#endif	// EMBED_UNION_FIND
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /**
@@ -1191,11 +1077,7 @@ KEYLESS_INSTANCE_ALIAS_CLASS::load_next_connection(
 	// problem: container is a never_ptr<const ...>, yucky
 	m.load_object_once(next_container);
 	instance_alias_base_type& n(next_container->load_reference(i));
-#if EMBED_UNION_FIND
 	this->next = &n;
-#else
-	this->set(&n);	// manual unionization without path compression
-#endif
 }
 
 //- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

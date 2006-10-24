@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias_info.h,v 1.16.2.2 2006/10/21 20:08:15 fang Exp $
+	$Id: instance_alias_info.h,v 1.16.2.3 2006/10/24 00:56:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_INFO_H__
@@ -13,9 +13,6 @@
 #include "Object/devel_switches.h"
 #include "util/memory/excl_ptr.h"
 #include "util/memory/count_ptr.h"
-#if !EMBED_UNION_FIND
-#include "util/union_find.h"
-#endif
 #include "util/persistent_fwd.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/traits/class_traits_fwd.h"
@@ -93,7 +90,7 @@ public:
 					instance_collection_generic_type;
 	typedef	instance_collection_generic_type	container_type;
 	typedef	never_ptr<const container_type>	container_ptr_type;
-#if EMBED_UNION_FIND
+
 	template <class T>
 	class _iterator {
 	public:
@@ -132,22 +129,12 @@ public:
 	typedef	_iterator<this_type>		pseudo_iterator;
 	typedef	_iterator<const this_type>	pseudo_const_iterator;
 	typedef	this_type			instance_alias_base_type;
-#else
-	typedef	util::union_find_derived<this_type>
-						instance_alias_base_type;
-	// we won't have iterator interface anymore!
-	typedef	util::union_find_derived_pseudo_iterator_default<this_type>
-						iterator_policy;
-	typedef	typename iterator_policy::type	pseudo_iterator;
-	typedef	typename iterator_policy::const_type
-						pseudo_const_iterator;
-#endif
+
 	typedef	typename actuals_parent_type::alias_actuals_type
 						relaxed_actuals_type;
-public:
-#if EMBED_UNION_FIND
+protected:
 	this_type*					next;
-#endif
+public:
 	// size_t instance_index; // was moved to substructure_base class
 	/**
 		Back-reference to the mother container.
@@ -157,21 +144,13 @@ public:
 	 */
 	container_ptr_type				container;
 
-#if EMBED_UNION_FIND
 	// cannot use default copy-ctor
 	// explicit		// need implicit for vector use
 	instance_alias_info(const this_type&);
-#endif
 
-#if !EMBED_UNION_FIND
-// something gone awry, wait until after clean-ups to re-protect...
-protected:
-#endif
 	// constructors only intended for children classes
 	instance_alias_info() : 
-#if EMBED_UNION_FIND
 		next(this), 
-#endif
 		container(NULL) { }
 
 	/**
@@ -179,9 +158,7 @@ protected:
 	 */
 	explicit
 	instance_alias_info(const container_ptr_type m) :
-#if EMBED_UNION_FIND
 		next(this), 
-#endif
 		container(m) {
 	}
 
@@ -212,23 +189,15 @@ public:
 	void
 	check(const container_type* p) const;
 
-#if EMBED_UNION_FIND
 	const this_type*
 	peek(void) const { return this->next; }
 
 	void
 	unite(this_type&);
-#endif
 
-#if !EMBED_UNION_FIND
-VIRTUAL	
-#endif
 	pseudo_const_iterator
 	find(void) const;
 
-#if !EMBED_UNION_FIND
-VIRTUAL	
-#endif
 	pseudo_iterator
 	find(void);
 
@@ -254,13 +223,8 @@ public:
 	void
 	instantiate(const container_ptr_type p, const unroll_context&);
 
-#if EMBED_UNION_FIND
 	void
 	finalize_canonicalize(this_type&);
-#else
-VIRTUAL	void
-	finalize_canonicalize(instance_alias_base_type&);
-#endif
 
 	size_t
 	assign_local_instance_id(footprint&);
@@ -282,7 +246,6 @@ VIRTUAL	void
 private:
 	using actuals_parent_type::__initialize_assign_footprint_frame;
 
-#if EMBED_UNION_FIND
 #if COLLECTION_SEPARATE_KEY_FROM_VALUE
 public:	// assignment needs to be accessible to std::vector
 	// for push_back -- but we guarantee that it is never called at
@@ -294,7 +257,6 @@ public:	// assignment needs to be accessible to std::vector
 	 */
 	this_type&
 	operator = (const this_type&);
-#endif
 
 protected:
 	physical_instance_collection&
@@ -402,11 +364,7 @@ VIRTUAL	void
 
 	/// counterpart to write_next_connection
 	static
-#if EMBED_UNION_FIND
 	this_type&
-#else
-	instance_alias_base_type&
-#endif
 	load_alias_reference(const persistent_object_manager& m, istream& i);
 
 public:

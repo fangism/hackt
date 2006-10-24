@@ -10,7 +10,7 @@
 	preprocessor definition.  
 	However, in production code, this file should be EMPTY, 
 	and NO translation unit should depend on this i.e. do not include.  
-	$Id: devel_switches.h,v 1.29.2.4 2006/10/23 06:51:06 fang Exp $
+	$Id: devel_switches.h,v 1.29.2.5 2006/10/24 00:56:34 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_DEVEL_SWITCHES_H__
@@ -73,17 +73,10 @@
 #define	COLLECTION_SEPARATE_KEY_FROM_VALUE	1
 
 /**
-	Define to 1 to embed union-find functionality in
-	the instance aliases.  
-	Alternative is to use something like CRTP...
-	Goal: 1
-	Status: done, passes all tests with no regressions.
- */
-#define	EMBED_UNION_FIND		1
-
-/**
 	Define to 1 to use std::map instead of util::qmap
 	in value_arrays.  
+	Goal: 1
+	Status: done
  */
 #define	VALUE_COLLECTION_MAP		1
 
@@ -95,14 +88,34 @@
 #define	DENSE_FORMAL_COLLECTIONS	(1 && COLLECTION_SEPARATE_KEY_FROM_VALUE)
 
 /**
+	Define to 1 to introduce and use dense formal value collections.
+	Not critical since they are not replicated much, 
+	may help performance in lookup a bit, save a little memory
+	from sparse structures.  
+	Goal: 1
+	Status: not begun
+ */
+#define	DENSE_FORMAL_VALUE_COLLECTIONS		0
+
+/**
 	Define to 1 to have port collections use light-weight back-references
 	to footprint's internal collection maps.  
 	This way port instance collections don't need to contain
 	collection mapping information, just refer to footprint.  
-	Goal: 1
+	Goal: 1?
 	Status: not begun
  */
 #define	PORT_COLLECTIONS_USE_BACK_REFERENCE	(0 && DENSE_FORMAL_COLLECTIONS)
+
+/**
+	Define to 1 to use per-module allocated pools of subinstance lists.
+	Purpose: turn individually heap-allocated structures into
+		a pseudo-dense collection, referenced by indices.  
+	Affects: instance_alias_info's substructure, subinstance_manager.
+	Goal: ?
+	Status: not begun
+ */
+#define	MODULE_POOLED_SUBINSTANCE_STRUCTURE	0
 
 //=============================================================================
 

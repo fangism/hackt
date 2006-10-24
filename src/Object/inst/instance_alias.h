@@ -4,7 +4,7 @@
 	Definition of implementation is in "art_object_instance_collection.tcc"
 	This file came from "Object/art_object_instance_alias.h"
 		in a previous life.  
-	$Id: instance_alias.h,v 1.9.42.1 2006/10/20 04:43:40 fang Exp $
+	$Id: instance_alias.h,v 1.9.42.2 2006/10/24 00:56:35 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_INSTANCE_ALIAS_H__
@@ -74,16 +74,6 @@ public:
 	typedef	typename traits_type::instance_alias_info_type
 					instance_alias_info_type;
 private:
-#if !EMBED_UNION_FIND
-	/**
-		grandparent_type is maplikeset_element_derived.
-	 */
-	typedef	typename parent_type::value_type	grandparent_type;
-	/**
-		great_grandparent_type is ring_node_derived
-	 */
-	typedef	typename grandparent_type::parent_type	great_grandparent_type;
-#endif
 	typedef	typename instance_alias_info_type::internal_alias_policy
 							internal_alias_policy;
 public:
@@ -102,13 +92,6 @@ public:
 	 */
 	instance_alias(const key_type& k) : parent_type(k) { }
 
-#if !EMBED_UNION_FIND
-	instance_alias(const key_type& k, 
-		const never_ptr<const instance_collection_generic_type> p) :
-			parent_type(k, grandparent_type(
-				great_grandparent_type(p))) { }
-#endif
-
 	~instance_alias();
 
 	/**
@@ -117,21 +100,8 @@ public:
 	 */
 	operator const key_type& () const { return this->key; }
 
-#if !EMBED_UNION_FIND
-	pseudo_iterator
-	find(void);
-
-	pseudo_const_iterator
-	find(void) const;
-#endif
-
 public:
 	using parent_type::instantiate;
-
-#if !EMBED_UNION_FIND
-	void
-	finalize_canonicalize(instance_alias_base_type&);
-#endif
 
 	void
 	write_next_connection(const persistent_object_manager& m, 
@@ -196,19 +166,6 @@ public:
 
 	ostream&
 	dump_alias(ostream& o, const dump_flags&) const;
-
-#if !EMBED_UNION_FIND
-	pseudo_iterator
-	find(void);
-
-	pseudo_const_iterator
-	find(void) const;
-#endif
-
-#if !EMBED_UNION_FIND
-	void
-	finalize_canonicalize(instance_alias_base_type&);
-#endif
 
 public:
 	TRACE_ALIAS_BASE_PROTO;

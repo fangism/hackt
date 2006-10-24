@@ -2,7 +2,7 @@
 	\file "Object/traits/chan_traits.h"
 	Traits and policies for channels.  
 	This file used to be "Object/art_object_chan_traits.h".
-	$Id: chan_traits.h,v 1.17.2.1 2006/10/20 04:43:48 fang Exp $
+	$Id: chan_traits.h,v 1.17.2.2 2006/10/24 00:56:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_TRAITS_CHAN_TRAITS_H__
@@ -101,13 +101,8 @@ struct class_traits<channel_tag> {
 					nonmeta_instance_reference_base_type;
 	typedef	channel_member_meta_instance_reference
 				member_simple_meta_instance_reference_type;
-#if EMBED_UNION_FIND
 	typedef	packed_array_generic<pint_value_type,
 			never_ptr<instance_alias_info_type> >
-#else
-	typedef	packed_array_generic<pint_value_type,
-			instance_alias_base_ptr_type>
-#endif
 						alias_collection_type;
 	typedef	channel_alias_connection	alias_connection_type;
 	typedef	aliases_connection_base		alias_connection_parent_type;
