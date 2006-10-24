@@ -1,6 +1,6 @@
 /**
 	\file "Object/unroll/meta_loop_base.cc"
-	$Id: meta_loop_base.cc,v 1.7 2006/10/18 20:58:30 fang Exp $
+	$Id: meta_loop_base.cc,v 1.7.2.1 2006/10/24 03:11:46 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_UNROLL_META_LOOP_BASE_CC__
@@ -20,6 +20,7 @@
 #include "Object/def/footprint.h"
 #include "Object/unroll/unroll_context.h"
 #include "Object/inst/pint_value_collection.h"
+#include "Object/inst/value_scalar.h"
 
 // #include "common/TODO.h"
 #include "util/persistent_object_manager.tcc"

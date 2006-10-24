@@ -2,7 +2,7 @@
 	\file "Object/sizes.cc"
 	Just dumps the sizeof for most HAC::entity classes.
 	This file came from "art_persistent_table.cc".
-	$Id: sizes.cc,v 1.5.2.3 2006/10/23 06:51:09 fang Exp $
+	$Id: sizes.cc,v 1.5.2.4 2006/10/24 03:11:31 fang Exp $
  */
 
 #include <iostream>
@@ -116,6 +116,8 @@
 #include "Object/inst/subinstance_manager.h"
 #include "Object/inst/substructure_alias_base.h"
 #include "Object/inst/value_collection.h"
+#include "Object/inst/value_scalar.h"
+#include "Object/inst/value_array.h"
 #include "Object/inst/value_placeholder.h"
 #include "Object/inst/instance_placeholder.h"
 #include "Object/inst/datatype_instance_placeholder.h"

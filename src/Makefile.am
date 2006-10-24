@@ -1,5 +1,5 @@
 # "src/Makefile.am"
-#	$Id: Makefile.am,v 1.139.2.3 2006/10/22 21:25:36 fang Exp $
+#	$Id: Makefile.am,v 1.139.2.4 2006/10/24 03:11:30 fang Exp $
 
 # .yy for yacc (C++), .ll for lex (C++), 
 # .hchk and .tccchk for standalone header checks
@@ -312,6 +312,8 @@ OBJECT_INST_H_FILES = $(OBJECT_INST_CC_FILES:.cc=.h) \
 	Object/inst/alias_empty.h \
 	Object/inst/element_key_dumper.h \
 	Object/inst/value_collection.h \
+	Object/inst/value_array.h \
+	Object/inst/value_scalar.h \
 	Object/inst/instance_pool_fwd.h \
 	Object/inst/instance_pool.h \
 	Object/inst/state_instance.h \

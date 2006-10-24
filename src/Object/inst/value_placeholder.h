@@ -1,7 +1,7 @@
 /**
 	\file "Object/inst/value_placeholder.h"
 	Parameter instance placeholder classes for HAC.  
-	$Id: value_placeholder.h,v 1.4 2006/10/18 21:38:44 fang Exp $
+	$Id: value_placeholder.h,v 1.4.2.1 2006/10/24 03:11:38 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
@@ -158,13 +158,6 @@ public:
 	index_collection_item_ptr_type
 	get_initial_instantiation_indices(void) const;
 
-#if 0
-virtual	bool
-	is_partially_unrolled(void) const = 0;
-
-virtual	ostream&
-	dump_unrolled_values(ostream& o) const = 0;
-#endif
 	bool
 	is_loop_variable(void) const;
 
@@ -210,17 +203,6 @@ public:
 	must_type_check_actual_param_expr(const const_param&,
 		const unroll_context&) const;
 
-// possibly DEPRECATED
-#define	LOOKUP_VALUE_INDEXED_PROTO					\
-	good_bool							\
-	lookup_value(value_type& v, const multikey_index_type& i, 	\
-		const unroll_context&) const
-
-// virtual	LOOKUP_VALUE_INDEXED_PROTO = 0;
-	LOOKUP_VALUE_INDEXED_PROTO;
-	// need methods for looking up dense sub-collections of values?
-	// what should they return?
-
 	good_bool
 	unroll_assign_formal_parameter(const unroll_context&, 
 		const count_ptr<const param_expr>&) const;
@@ -248,9 +230,6 @@ protected:
 //=============================================================================
 }	// end namespace entity
 }	// end namespace HAC
-
-#undef	LOOKUP_VALUE_INDEXED_PROTO
-#undef	UNROLL_LVALUE_REFERENCES_PROTO
 
 #endif	// __HAC_OBJECT_INST_VALUE_PLACEHOLDER_H__
 

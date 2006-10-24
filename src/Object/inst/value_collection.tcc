@@ -3,7 +3,7 @@
 	Method definitions for parameter instance collection classes.
 	This file was "Object/art_object_value_collection.tcc"
 		in a previous life.  
- 	$Id: value_collection.tcc,v 1.23.2.1 2006/10/22 08:03:29 fang Exp $
+ 	$Id: value_collection.tcc,v 1.23.2.2 2006/10/24 03:11:36 fang Exp $
  */
 
 #ifndef	__HAC_OBJECT_INST_VALUE_COLLECTION_TCC__
@@ -29,6 +29,8 @@
 // #define EXTERN_TEMPLATE_UTIL_PACKED_ARRAY
 
 #include "Object/inst/value_collection.h"
+#include "Object/inst/value_array.h"
+#include "Object/inst/value_scalar.h"
 #include "Object/expr/const_collection.h"
 #include "Object/expr/expr_dump_context.h"
 #include "Object/expr/param_expr.h"
@@ -57,11 +59,7 @@
 #include "util/memory/chunk_map_pool.tcc"
 #include "util/memory/count_ptr.tcc"
 #include "util/what.h"
-#if VALUE_COLLECTION_MAP
 #include "util/multikey_map.tcc"
-#else
-#include "util/multikey_qmap.tcc"		// include "qmap.tcc"
-#endif
 #include "util/persistent_object_manager.tcc"
 #include "util/compose.h"
 #include "util/binders.h"
